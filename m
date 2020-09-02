@@ -2,138 +2,117 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A5DC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAEAC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB2D2068F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE522068F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:08:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GnrspJYz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgIBDHB convert rfc822-to-8bit (ORCPT
+        id S1726853AbgIBDIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 23:07:01 -0400
-Received: from mga03.intel.com ([134.134.136.65]:62774 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgIBDHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 23:07:00 -0400
-IronPort-SDR: unM1avL+8Bv4KDKX5LdlKNNHpvgTp8c/uGlUQQAeULU62FTFHVjLXJQ0HJQijyEEGKvu0xFcMZ
- Nk+ChD4fgRIg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="157314554"
-X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
-   d="scan'208";a="157314554"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 20:07:00 -0700
-IronPort-SDR: dLeqMVa6k07q6GfWLy1bB+3vOfmMnoTP2rO/Z3OhbuYRKqvNNOSecXkZNbJOFaa/e5W5oPifUo
- wxSBJ2F+iiIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
-   d="scan'208";a="502498257"
-Received: from hhuan26-mobl1.amr.corp.intel.com ([10.255.35.33])
-  by fmsmga005.fm.intel.com with ESMTP; 01 Sep 2020 20:06:36 -0700
-Content-Type: text/plain; charset=utf-8; format=flowed; delsp=yes
-To:     "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        "Jethro Beekman" <jethro@fortanix.com>,
-        "Chunyang Hui" <sanqian.hcy@antfin.com>,
-        "Jordan Hand" <jorhand@linux.microsoft.com>,
-        "Nathaniel McCallum" <npmccallum@redhat.com>,
-        "Seth Moore" <sethmo@google.com>,
-        "Suresh Siddha" <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, josh@joshtriplett.org,
-        kai.huang@intel.com, kai.svahn@intel.com, kmoy@google.com,
-        ludloff@google.com, luto@kernel.org, nhorman@redhat.com,
-        puiterwijk@redhat.com, rientjes@google.com, tglx@linutronix.de,
-        yaozhangx@google.com
-Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
- <20200702035902.GC1819@linux.intel.com>
- <20200704033025.GA144756@linux.intel.com>
-Date:   Tue, 01 Sep 2020 22:06:32 -0500
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-From:   "Haitao Huang" <haitao.huang@linux.intel.com>
-Organization: Intel Corp
-Message-ID: <op.0qaqw6rvwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
-In-Reply-To: <20200704033025.GA144756@linux.intel.com>
-User-Agent: Opera Mail/1.0 (Win32)
+        Tue, 1 Sep 2020 23:08:05 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:35135 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgIBDIF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 23:08:05 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200902030802epoutp0210c6093357b155393a79740165640e28~w2Kei7qT-2786127861epoutp02K
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 03:08:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200902030802epoutp0210c6093357b155393a79740165640e28~w2Kei7qT-2786127861epoutp02K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599016082;
+        bh=slkGBz03LrKgvrUFE9snJ+DtyTGdHUcvDkNGTiZMA04=;
+        h=Subject:Reply-To:From:To:CC:Date:References:From;
+        b=GnrspJYz5FEMiYcNCmfQ6tZxqI618JXuwq4mLg7chgBIy/9KCJzLAHRY306NuyF6T
+         A0ySD3oKunN9wHCvc8dHSVAmvp1j8Cp4NR51ELummqoQ6hnteGxB3YF7y+2DYsaHH5
+         rxWJmMsko/OlkAhUaDLaYVWoThgQc1N3oQFl0X2Y=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p2.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200902030801epcas1p2da643c4bbf75470a571c436ad5a373f7~w2KeJ1fzf2827628276epcas1p2f;
+        Wed,  2 Sep 2020 03:08:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [PATCH] scsi: ufs: Fix NOP OUT timeout value
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Daejun Park <daejun7.park@samsung.com>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        SEUNGUK SHIN <seunguk.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <231786897.01599016081767.JavaMail.epsvc@epcpadp2>
+Date:   Wed, 02 Sep 2020 11:58:52 +0900
+X-CMS-MailID: 20200902025852epcms2p2a2d4ac934f4fc09233d4272c96df9ff1
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200902025852epcms2p2a2d4ac934f4fc09233d4272c96df9ff1
+References: <CGME20200902025852epcms2p2a2d4ac934f4fc09233d4272c96df9ff1@epcms2p2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 03 Jul 2020 22:31:10 -0500, Jarkko Sakkinen  
-<jarkko.sakkinen@linux.intel.com> wrote:
+In some Samsung UFS devices, there is some booting fail issue with
+low-power UFS device. The reason of this issue is the UFS device has a
+little bit longer latency for NOP OUT response. It causes booting fail
+because NOP OUT command is issued during initialization to check whether
+the device transport protocol is ready or not. This issue is resolved by
+releasing NOP_OUT_TIMEOUT value.
 
-> On Wed, Jul 01, 2020 at 08:59:02PM -0700, Sean Christopherson wrote:
->> On Thu, Jun 18, 2020 at 01:08:33AM +0300, Jarkko Sakkinen wrote:
->> > +static int sgx_validate_secs(const struct sgx_secs *secs,
->> > +			     unsigned long ssaframesize)
->> > +{
->> > +	if (secs->size < (2 * PAGE_SIZE) || !is_power_of_2(secs->size))
->> > +		return -EINVAL;
->> > +
->> > +	if (secs->base & (secs->size - 1))
->> > +		return -EINVAL;
->> > +
->> > +	if (secs->miscselect & sgx_misc_reserved_mask ||
->> > +	    secs->attributes & sgx_attributes_reserved_mask ||
->> > +	    secs->xfrm & sgx_xfrm_reserved_mask)
->> > +		return -EINVAL;
->> > +
->> > +	if (secs->attributes & SGX_ATTR_MODE64BIT) {
->> > +		if (secs->size > sgx_encl_size_max_64)
->> > +			return -EINVAL;
->> > +	} else if (secs->size > sgx_encl_size_max_32)
->> > +		return -EINVAL;
->>
->> These should be >=, not >, the SDM uses one of those fancy ≥ ligatures.
->>
->> Internal versions use more obvious pseudocode, e.g.:
->>
->>     if ((DS:TMP_SECS.ATTRIBUTES.MODE64BIT = 1) AND
->>         (DS:TMP_SECS.SIZE AND (~((1 << CPUID.18.0:EDX[15:8]) – 1)))
->>     {
->>         #GP(0);
->
-> Updated as:
->
-> static int sgx_validate_secs(const struct sgx_secs *secs)
-> {
-> 	u64 max_size = (secs->attributes & SGX_ATTR_MODE64BIT) ?
-> 		       sgx_encl_size_max_64 : sgx_encl_size_max_32;
->
-> 	if (secs->size < (2 * PAGE_SIZE) || !is_power_of_2(secs->size))
-> 		return -EINVAL;
->
-> 	if (secs->base & (secs->size - 1))
-> 		return -EINVAL;
->
-> 	if (secs->miscselect & sgx_misc_reserved_mask ||
-> 	    secs->attributes & sgx_attributes_reserved_mask ||
-> 	    secs->xfrm & sgx_xfrm_reserved_mask)
-> 		return -EINVAL;
->
-> 	if (secs->size >= max_size)
-> 		return -EINVAL;
->
+NOP_OUT_TIMEOUT: 30ms -> 50ms
 
-This should be > not >=. Issue raised and fixed by Fábio Silva for ported  
-patches for OOT SGX support:  
-https://github.com/intel/SGXDataCenterAttestationPrimitives/pull/123
+Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+---
+ drivers/scsi/ufs/ufshcd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I tested and verified with Intel arch, the comparison indeed should be >.
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 06e2439d523c..5cbd0e9e4ef8 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -36,8 +36,8 @@
+ 
+ /* NOP OUT retries waiting for NOP IN response */
+ #define NOP_OUT_RETRIES    10
+-/* Timeout after 30 msecs if NOP OUT hangs without response */
+-#define NOP_OUT_TIMEOUT    30 /* msecs */
++/* Timeout after 50 msecs if NOP OUT hangs without response */
++#define NOP_OUT_TIMEOUT    50 /* msecs */
+ 
+ /* Query request retries */
+ #define QUERY_REQ_RETRIES 3
+-- 
+2.17.1
 
-Thanks
-Haitao
+
