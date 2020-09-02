@@ -2,152 +2,216 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE685C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2015C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 867A320758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF1A20758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:06:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RA6x+9rI"
+	dkim=pass (2048-bit key) header.d=lebedev-lt.20150623.gappssmtp.com header.i=@lebedev-lt.20150623.gappssmtp.com header.b="i2ub9Cyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgIBTFp (ORCPT
+        id S1728270AbgIBTGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 15:05:45 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19867 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgIBTFn (ORCPT
+        Wed, 2 Sep 2020 15:06:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgIBTF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 15:05:43 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4fecd80001>; Wed, 02 Sep 2020 12:04:56 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 02 Sep 2020 12:05:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 02 Sep 2020 12:05:43 -0700
-Received: from [10.2.161.253] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 2 Sep
- 2020 19:05:41 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-CC:     <linux-mm@kvack.org>, Roman Gushchin <guro@fb.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
-Date:   Wed, 2 Sep 2020 15:05:39 -0400
-X-Mailer: MailMate (1.13.1r5705)
-Message-ID: <C5EFA1CC-311C-47D5-9506-D087D9AE58D1@nvidia.com>
-In-Reply-To: <20200902184852.GH24045@ziepe.ca>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200902184053.GF24045@ziepe.ca>
- <E78A0F18-223C-44A8-BCBA-73CF7AF6F8A5@nvidia.com>
- <20200902184852.GH24045@ziepe.ca>
+        Wed, 2 Sep 2020 15:05:58 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F1CAC061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 12:05:57 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id r13so512922ljm.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 12:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lebedev-lt.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UF/XIR74MvxU7fQ8KNSrULOE9J3YgJdlsGJ5K2HXAfw=;
+        b=i2ub9Cyd6rAkAYSxJdki3c/ea+689f9BQENqIOXZwzIMffbXKOLoaR/O+rqkZmI0Ke
+         PGctcDMl/R/m0bstTyuzWIFj5NeEPtcg5ggv+61tBKZrY4lhOTqaeAE/Ef4TIF0T2ePH
+         +cKNWzijR14/2kVxNh42JyKVCYGH7tEQ2Ulca4rPHbhOQb5GHAgyQEFEuygPxhDmC163
+         +nC+a5ElViINkxhoVItF5WVAD1ObixGCppuK8DWVPaeHuQEgA3qs/7z5CkJAq6NQsC8x
+         Uw196KtctH7HDcheDN+klCIoF10qspe109Vy8KAg1/K+Pc18kganDGV/S+FAlb2O14/i
+         ySug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=UF/XIR74MvxU7fQ8KNSrULOE9J3YgJdlsGJ5K2HXAfw=;
+        b=oRXPFd/1Z6165uaYbKUsL5rHI2Jea+BCcq8ZeiIWvHEWjcioP+VIVcNkYi4W9mf0JH
+         CLNFmktAqHZhQqFWWZh/SKeSzSpilt/qeYaLE+3isySJiODW8N4xS1xgHEO1V0lkHydv
+         0GYECfdhHxFLeFI/0S22WtItTCTr/R/Vn/yAl1pjOzSBiJUU39iVNUyOTfKLiZVHkHJ/
+         4mHu/xTBPcbv3usqwvlZDLcFRyfUpd9MzgIELL1K0BIfZxGJhU222geZMVg2RyIRJM/9
+         EuIi9xAE0b9L184rkNtrn7Iy+byGrIRjFb48Ky9VCVamCtDIMheIOPnmX4GQ5UjVPnt2
+         c4Pw==
+X-Gm-Message-State: AOAM532DiWMkaFGNHHKfh402GVYCBjwD6vVuhjrjnpbwOLdIBibDv8du
+        j9GnR1Rtm/3Yl3qk2E1bT4bTfA==
+X-Google-Smtp-Source: ABdhPJweBJYWapXovppUFwV65LFxPYOlGu8gpRdCq0ZrkuxQPueH/lvVE7ghltTuFjgvGVg/eJZNhw==
+X-Received: by 2002:a2e:a0d5:: with SMTP id f21mr4253999ljm.364.1599073555606;
+        Wed, 02 Sep 2020 12:05:55 -0700 (PDT)
+Received: from [192.168.1.108] ([5.20.204.163])
+        by smtp.gmail.com with ESMTPSA id z8sm106506ljh.19.2020.09.02.12.05.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Sep 2020 12:05:55 -0700 (PDT)
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Pascal Roeleven <dev@pascalroeleven.nl>
+References: <ae58976c-a8d7-0d00-fe72-d21579b37240@lebedev.lt>
+ <20200902095402.pombrirqqjdew34b@holly.lan>
+From:   Andrey Lebedev <andrey@lebedev.lt>
+Autocrypt: addr=andrey@lebedev.lt; keydata=
+ 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 c1I=
+Subject: Re: pwm-sun4i: PWM backlight is not turned off on shutdown
+Message-ID: <913a5324-a7d2-f1d5-701e-1c28359286f2@lebedev.lt>
+Date:   Wed, 2 Sep 2020 22:05:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_6ECD70B9-9BD5-48DB-8389-5AAFEF06D26A_=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599073496; bh=zHnARvftjYKXS8WaABUFmtc3hDOq25NBfmLyot+94zY=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=RA6x+9rIILFKif5BaVs9mXrSUtUgx93FsX8N0azOvRh0BIl7xRk235fiFJTUZjlrr
-         nGJGMMJYOBZRbu1+x/w94vPfg6Xs2RVZnc3gqTTssEafwX6uDXEv6fa/NLxSJ8YE66
-         rRB+do/CQQJFeGTnpBVvDH0EHzgXE6fsqDLHrEXt3WVTJsVs2Tri3/apJrtcHQmSZH
-         G34uVIRIz5C0uOD9fxVCbxBQPJuhHPfikC1cVdM+/Xlcfu98+VQG2CmYfI6B5yr4En
-         az2yUVug0xtH84Mqqmzpqbfi45QJXAQYe/uLpV3oGS7FdCE+bCn5hyPUNAxjW8UNdO
-         vaaRhUl0rg6wA==
+In-Reply-To: <20200902095402.pombrirqqjdew34b@holly.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_6ECD70B9-9BD5-48DB-8389-5AAFEF06D26A_=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On 2 Sep 2020, at 14:48, Jason Gunthorpe wrote:
-
-> On Wed, Sep 02, 2020 at 02:45:37PM -0400, Zi Yan wrote:
->
->>> Surprised this doesn't touch mm/pagewalk.c ?
+On 9/2/20 12:54 PM, Daniel Thompson wrote:
+> On Thu, Aug 27, 2020 at 10:55:28PM +0300, Andrey Lebedev wrote:
+>> I think I'm experiencing problem with pwm-sun4i module. I'll describe
+>> the symptoms first.
+>> 
+>> I have a device, based on Allwinner A20 (Cubieboard 2) with LVDS display
+>> that has a PWM-based backlight. The problem is: when linux shuts down,
+>> the backlight stays on. I expect it to be turned off. This used to work
+>> as expected on kernel 5.2-rc2, but after upgrade to 5.8 the backlight
+>> does not turn off anymore (most of the times, see below).
+>> 
+>> The backlight is configured in the device tree [1]. The brightness can
+>> be changed by writing to "brightness" file on sysfs. So, linux can
+>> control the PWM line. Backlight sysfs directory also has a "bl_power"
+>> file, which can accept "0" to power on or "4" to power off the backlight
+>> (according to [2]).
+>> 
+>> Now, writing "4" to bl_power sometimes turns the backlight off and
+>> sometimes not. I've found that the probability of backlight turning off
+>> pretty much correlates with the current screen brightness: on 100%
+>> brightness it will never turn off, on 50% brightness it will turn off on
+>> about half of the times. When backlight does not turn off, it goes on
+>> full brightness. It feels like the line, controlled by pwm stays in
+>> whatever state it was the moment backlight was powered down - either
+>> full 1 or 0.>>
+>> The pwm backlight device driver (pwm_bl) requests to set the duty cycle
+>> to 0 and disable the pwm with the same request [3], but I suspect the
+>> implementation driver (pwm-sun4i) does not actually set the duty cycle
+>> to 0 before disabling the pulse width modulation.
 >>
->> 1GB PUD page support is present for DAX purpose, so the code is there
->> in mm/pagewalk.c already. I only needed to supply ops->pud_entry when =
-using
->> the functions in mm/pagewalk.c. :)
->
-> Yes, but doesn't this change what is possible under the mmap_sem
-> without the page table locks?
->
-> ie I would expect some thing like pmd_trans_unstable() to be required
-> as well for lockless walkers. (and I don't think the pmd code is 100%
-> right either)
->
+>> Is there anything that can be done to fix this?
+> 
+> There's some rather odd logic in sun4i_pwm_apply() that results in the
+> PWM being disabled twice... once when it applies the initial config
+> and again after waiting for a duty_cycle.
+> 
+> I suspect disabling the initial disable would solve your issue... but it
+> might provoke some new ones!
+> 
+> Anyhow, try removing the else clause starting at line 299 and see what
+> happens:
+> https://elixir.bootlin.com/linux/v5.8/source/drivers/pwm/pwm-sun4i.c#L299
+> 
 
-Right. I missed that. Thanks for pointing it out.
-The code like this, right?
+Thanks Daniel,
 
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index e81640d9f177..4fe6ce4a92eb 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -152,10 +152,11 @@ static int walk_pud_range(p4d_t *p4d, unsigned long=
- addr, unsigned long end,
-                    !(ops->pmd_entry || ops->pte_entry))
-                        continue;
+Indeed, this fixes the issue for me. The display goes dark reliably on
+writing 4 to "/sys/.../bl_power" as well as when system is halted. I did
+not notice any negative side effects so far.
 
--               if (walk->vma)
-+               if (walk->vma) {
-                        split_huge_pud(walk->vma, pud, addr);
--               if (pud_none(*pud))
--                       goto again;
-+                       if (pud_trans_unstable(pud))
-+                               goto again;
-+               }
+I'm not completely sure, but this might be a regression after
+d3817a647059a3e5f8791e9b7225d194985aa75f. So, adding Pascal and
+Alexandre to the loop.
 
-                err =3D walk_pmd_range(pud, addr, next, walk);
-                if (err)
+We'll add this as custom patch to our kernel, will let you know if
+something will go wrong because of this.
 
 
-=E2=80=94
-Best Regards,
-Yan Zi
 
---=_MailMate_6ECD70B9-9BD5-48DB-8389-5AAFEF06D26A_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index 5c677c563349..4b0b9aed9bb9 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -296,9 +296,6 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,
+struct pwm_device *pwm,
 
------BEGIN PGP SIGNATURE-----
+        if (state->enabled) {
+                ctrl |= BIT_CH(PWM_EN, pwm->hwpwm);
+-       } else {
+-               ctrl &= ~BIT_CH(PWM_EN, pwm->hwpwm);
+-               ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+        }
 
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl9P7QMPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKfqgQALQBCrz1+UeSW7peSX/j0pjbfBikZjb7aGqj
-X17uNSXNAJZzoXlWqtMxIlWluoAfZf0XXTk1rmjJYklQKujXFBWfP8ND8Tfm5dN6
-31ZeIlD5RgWQcctTYAOGuBwECNjC8jCDHXm2WOiFMzyKhu7rGsQoIiwEeLWwmWUd
-aJe1a/AmuhsZoqtAOP1YziuQybio4skTVYtpfW+WKHeoQEVihGmBHjw3q3YjJl93
-SQegW1O+rE8OSsnBxTG4aOJl9eNgQep3d65rf/U9K4wVl0gB9QUKZDcjO6FdsPwL
-YqyoJvjLMh2x5CSEcpOy3pj8OyyKfLYI+TgQr944Comd8CmhV3CYoREb79PR8qL2
-8atGLWmWGuhWr64EOTKa3Ax5hoICHlSxRqIs5h5yLvS9ZUR50+CPAunyT9WUrHwj
-VgPX9qFeaIT/np3ScXbwg43IGYH7sIArZjzFn91MZ2Lld+eO1StdhoWG2FLwkFzb
-HyC8fKq1t9/j5VjxSmrdqgp5Brn03D287hwXb39CG/D1k/UU/cV4jkByXqAHB/hK
-lbvF1S7QxBYppX7nSSTth5ilaA6JmhXSs3tGI4e55wV+00OmlMZ7islXhuEPnEqO
-Fd/pH4RBmqPv05+u7zd5skJY+EWUeh9UbiXVtdpAAOyO5i/GoO4xGgb1GLNo2i7Q
-8dwyjNIu
-=B2Xz
------END PGP SIGNATURE-----
+        sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
 
---=_MailMate_6ECD70B9-9BD5-48DB-8389-5AAFEF06D26A_=--
+
+
+-- 
+Andrey Lebedev aka -.- . -.. -.. . .-.
+Software engineer
+Homepage: http://lebedev.lt/
