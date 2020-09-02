@@ -2,118 +2,158 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DACC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B7DC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A29DC20773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B2E20829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:47:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="n5uCi6Qv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgIBKow (ORCPT
+        id S1726536AbgIBKrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 06:44:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:35416 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbgIBKov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 06:44:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 294B6D6E;
-        Wed,  2 Sep 2020 03:44:50 -0700 (PDT)
-Received: from [192.168.178.2] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D01D3F66F;
-        Wed,  2 Sep 2020 03:44:43 -0700 (PDT)
-Subject: Re: [PATCH v2] sched/debug: Add new tracepoint to track cpu_capacity
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     vincent.donnefort@arm.com, mingo@redhat.com, peterz@infradead.org,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
-        valentin.schneider@arm.com, Phil Auld <pauld@redhat.com>
-References: <1598605249-72651-1-git-send-email-vincent.donnefort@arm.com>
- <20200828102724.wmng7p6je2pkc33n@e107158-lin.cambridge.arm.com>
- <1e806d48-fd54-fd86-5b3a-372d9876f360@arm.com>
- <20200828172658.dxygk7j672gho4ax@e107158-lin.cambridge.arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <58f5d2e8-493b-7ce1-6abd-57705e5ab437@arm.com>
-Date:   Wed, 2 Sep 2020 12:44:42 +0200
+        Wed, 2 Sep 2020 06:47:00 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:41394 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbgIBKq5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 06:46:57 -0400
+Received: from [192.168.0.20] (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3227C9CC;
+        Wed,  2 Sep 2020 12:46:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1599043613;
+        bh=X2tRxp/cP6y8nsPS8QbANTDygpQjQroMsDNNpO6jKpw=;
+        h=Reply-To:Subject:To:References:From:Date:In-Reply-To:From;
+        b=n5uCi6QvMNj6ksfHU/HoLJUO2pZkv03+VrP7bMqSHK7+aHCsjhX+KvV7w1hLEeLdb
+         wvK8Xcg/ql1Gizrf3F+Wrf2IGzW5lDjC4GPWXobSZ6amJhOjjp5wu8jgc0jjSppCgs
+         w39n3gxvUx2Efg3rPme2ZnSoNdAlrJS9zPIgt/9M=
+Reply-To: kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v3 9/9] media: vimc: Run multiple captures on same thread
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200819180442.11630-1-kgupta@es.iitr.ac.in>
+ <20200819180442.11630-10-kgupta@es.iitr.ac.in>
+From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
+Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
+ 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
+ WZw01QYHU/GUV/zHJSFk
+Organization: Ideas on Board
+Message-ID: <58df4c43-ab07-0001-f725-9098f18a8e6f@ideasonboard.com>
+Date:   Wed, 2 Sep 2020 11:46:50 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200828172658.dxygk7j672gho4ax@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200819180442.11630-10-kgupta@es.iitr.ac.in>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Phil Auld <pauld@redhat.com>
+Hi Kaaira,
 
-On 28/08/2020 19:26, Qais Yousef wrote:
-> On 08/28/20 19:10, Dietmar Eggemann wrote:
->> On 28/08/2020 12:27, Qais Yousef wrote:
->>> On 08/28/20 10:00, vincent.donnefort@arm.com wrote:
->>>> From: Vincent Donnefort <vincent.donnefort@arm.com>
-
-[...]
-
->> Can you remind me why we have all these helper functions like
->> sched_trace_rq_cpu_capacity?
+On 19/08/2020 19:04, Kaaira Gupta wrote:
+> If multiple captures try to enable stream, start their stream but do not
+> initialise the pipeline again. Also, don't start the thread separately.
+> Starting their streams will update the use count and their frames would
+> be processed by the already running thread.
 > 
-> struct rq is defined in kernel/sched/sched.h. It's not exported. Exporting
-> these helper functions was the agreement to help modules trace internal info.
-> By passing generic info you decouple the tracepoint from giving specific info
-> and allow the modules to extract all the info they need from the same
-> tracepoint. IE: if you need more than just cpu_capacity from this tracepoint,
-> you can get that without having to continuously add extra arguments everytime
-> you need an extra piece of info. Unless this info is not in the rq of course.
-
-I think this decoupling is not necessary. The natural place for those
-scheduler trace_event based on trace_points extension files is
-kernel/sched/ and here the internal sched.h can just be included.
-
-If someone really wants to build this as an out-of-tree module there is
-an easy way to make kernel/sched/sched.h visible.
-
-CFLAGS_sched_tp.o := -I$KERNEL_SRC/kernel/sched
-
-all:
-    make -C $KERNEL_SRC M=$(PWD) modules
-
-This allowed me to build our trace_event extension module (sched_tp.c,
-sched_events.h) out-of-tree and I was able to get rid of all the
-sched_trace_foo() functions (in fair.c, include/linux/sched.h) and code
-there content directly in foo.c
-
-There are two things we would need exported from the kernel:
-
-(1) cfs_rq_tg_path() to print the path of a taskgroup cfs_rq or se.
-
-(2) sched_uclamp_used so uclamp_rq_util_with() can be used in
-    sched_events.h.
-
-I put Phil Auld on cc because of his trace_point
-sched_update_nr_running_tp. I think Phil was using sched_tp as a base so
-I can't see an issue why we can't also remove sched_trace_rq_nr_running().
-
->> In case we would let the extra code (which transforms trace points into
->> trace events) know the internals of struct rq we could handle those
->> things in the TRACE_EVENT and/or the register_trace_##name(void
->> (*probe)(data_proto), void *data) thing.
->> We always said when the internal things will change this extra code will
->> break. So that's not an issue.
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> ---
+>  drivers/media/test-drivers/vimc/vimc-streamer.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> The problem is that you need to export struct rq in a public header. Which we
-> don't want to do. I have been trying to find out how to use BTF so we can
-> remove these functions. Haven't gotten far away yet - but it should be doable
-> and it's a question of me finding enough time to understand what was currently
-> done and if I can re-use something or need to come up with extra infrastructure
-> first.
+> diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/drivers/media/test-drivers/vimc/vimc-streamer.c
+> index fade37bee26d..880c31759cc0 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-streamer.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
+> @@ -275,13 +275,14 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
+>  		return ret;
+>  
+>  	if (enable) {
+> -		if (stream->kthread)
+> -			return 0;
+>  
+>  		ret = vimc_streamer_stream_start(ved);
+>  		if (ret)
+>  			goto out;
+>  
+> +		if (stream->kthread)
+> +			goto out;
+> +
 
-Let's keep the footprint of these trace points as small as possible in
-the scheduler code.
+This goto out makes it look like it's an error path. So that probably
+warrants a comment along the lines of 'don't reinitialise the pipeline
+if it has already started'. ?
 
-I'm putting the changes I described above in our monthly EAS integration
-right now and when this worked out nicely I will share the patches on lkml.
+I wonder if it's better to handle the pipeline_init during _stream_start
+'only' in the code path where it's the first stream ?
+
+Then similarly, the pipeline_terminate would happen on stream_stop
+'only' when it's the last stream.
+
+Or I guess that is handled by the refcount ... Hrm it would be nice to
+be able to make/keep it symmetrical somehow.
+
+
+>  		ret = vimc_streamer_pipeline_init(stream, ved);
+>  		if (ret)
+>  			goto out;
+> 
+
+-- 
+Regards
+--
+Kieran
