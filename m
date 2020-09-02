@@ -2,102 +2,187 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029DAC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C214C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1E3A207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599062057;
-	bh=T9iTGJwk3MutXitltZ85MC5KJh0naTlHQ9Yv1BlJG2A=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=myJWXU7hjKSooCdpU/s31WV5hidjkH/EpK4jiCOpQpQveTk/q/04WpLCU4A+7RGUc
-	 BbOqdNnm37mzjexxMcxtbQnfun1XSxG6GXLGzFk5LMEIVIws+MYdCgW4gCJDvZDXqV
-	 DjFlAHv0WbdTStaMRxKjdXmsdashszbxSVdRcEaM=
+	by mail.kernel.org (Postfix) with ESMTP id 16263207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgIBPyP (ORCPT
+        id S1728179AbgIBPyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:54:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43684 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 11:54:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:41322 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgIBPyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:54:11 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF9DC2072A;
-        Wed,  2 Sep 2020 15:54:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599062051;
-        bh=T9iTGJwk3MutXitltZ85MC5KJh0naTlHQ9Yv1BlJG2A=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=QanVEyu0Y8fvXfxzCKQ7+7u25VxbaSQXAFUO6scvERn5gpnqEsKJGv4lwONrQGCu3
-         CZKS4fSd5rDP2lfP5Q0xrEJbGIcWDuMNYGqHjLO3wasWZqLcWZPRGR8cz1phTykO0o
-         fdgmW/YejKomoK4ix6fO/RUO5XzGP/UDUoqFU2kw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 64F07352157A; Wed,  2 Sep 2020 08:54:10 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 08:54:10 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     peterz@infradead.org, mingo@redhat.com, will@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Question on task_blocks_on_rt_mutex()
-Message-ID: <20200902155410.GH29330@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200831224911.GA13114@paulmck-ThinkPad-P72>
- <20200831232130.GA28456@paulmck-ThinkPad-P72>
- <20200901174938.GA8158@paulmck-ThinkPad-P72>
- <20200901235821.GA8516@paulmck-ThinkPad-P72>
- <20200902015128.wsulcxhbo7dutcjz@linux-p48b>
+        id S1726173AbgIBPyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:54:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B6B6101E;
+        Wed,  2 Sep 2020 08:54:21 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 503B43F66F;
+        Wed,  2 Sep 2020 08:54:19 -0700 (PDT)
+Subject: Re: [PATCH v1 1/6] clk: rockchip: Use clk_hw_register_composite
+ instead of clk_register_composite calls
+To:     Elaine Zhang <zhangqing@rock-chips.com>, heiko@sntech.de
+Cc:     huangtao@rock-chips.com, xf@rock-chips.com, sboyd@kernel.org,
+        mturquette@baylibre.com, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, kever.yang@rock-chips.com,
+        linux-rockchip@lists.infradead.org, xxx@rock-chips.com
+References: <20200902064847.18881-1-zhangqing@rock-chips.com>
+ <20200902064847.18881-2-zhangqing@rock-chips.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <862531c8-9d10-ae3e-e12a-f1ba0ed66d61@arm.com>
+Date:   Wed, 2 Sep 2020 16:54:18 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902015128.wsulcxhbo7dutcjz@linux-p48b>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200902064847.18881-2-zhangqing@rock-chips.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 06:51:28PM -0700, Davidlohr Bueso wrote:
-> On Tue, 01 Sep 2020, Paul E. McKenney wrote:
+On 2020-09-02 07:48, Elaine Zhang wrote:
+> clk_hw_register_composite it's already exported.
+> Preparation for compilation of rK common clock drivers into modules.
 > 
-> > And it appears that a default-niced CPU-bound SCHED_OTHER process is
-> > not preempted by a newly awakened MAX_NICE SCHED_OTHER process.  OK,
-> > OK, I never waited for more than 10 minutes, but on my 2.2GHz that is
-> > close enough to a hang for most people.
-> > 
-> > Which means that the patch below prevents the hangs.  And maybe does
-> > other things as well, firing rcutorture up on it to check.
-> > 
-> > But is this indefinite delay expected behavior?
-> > 
-> > This reproduces for me on current mainline as follows:
-> > 
-> > tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --torture lock --duration 3 --configs LOCK05
-> > 
-> > This hangs within a minute of boot on my setup.  Here "hangs" is defined
-> > as stopping the per-15-second console output of:
-> > 	Writes:  Total: 569906696 Max/Min: 81495031/63736508   Fail: 0
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> ---
+>   drivers/clk/rockchip/clk-half-divider.c | 12 +++++----
+>   drivers/clk/rockchip/clk.c              | 35 ++++++++++++++-----------
+>   2 files changed, 27 insertions(+), 20 deletions(-)
 > 
-> Ok this doesn't seem to be related to lockless wake_qs then. fyi there have
-> been missed wakeups in the past where wake_q_add() fails the cmpxchg because
-> the task is already pending a wakeup leading to the actual wakeup ocurring
-> before its corresponding wake_up_q(). This is why we have wake_q_add_safe().
-> But for rtmutexes, because there is no lock stealing only top-waiter is awoken
-> as well as try_to_take_rt_mutex() is done under the lock->wait_lock I was not
-> seeing an actual race here.
+> diff --git a/drivers/clk/rockchip/clk-half-divider.c b/drivers/clk/rockchip/clk-half-divider.c
+> index b333fc28c94b..35db0651ea1d 100644
+> --- a/drivers/clk/rockchip/clk-half-divider.c
+> +++ b/drivers/clk/rockchip/clk-half-divider.c
+> @@ -166,6 +166,7 @@ struct clk *rockchip_clk_register_halfdiv(const char *name,
+>   					  unsigned long flags,
+>   					  spinlock_t *lock)
+>   {
+> +	struct clk_hw *hw;
+>   	struct clk *clk;
+>   	struct clk_mux *mux = NULL;
+>   	struct clk_gate *gate = NULL;
+> @@ -212,12 +213,13 @@ struct clk *rockchip_clk_register_halfdiv(const char *name,
+>   		div_ops = &clk_half_divider_ops;
+>   	}
+>   
+> -	clk = clk_register_composite(NULL, name, parent_names, num_parents,
+> -				     mux ? &mux->hw : NULL, mux_ops,
+> -				     div ? &div->hw : NULL, div_ops,
+> -				     gate ? &gate->hw : NULL, gate_ops,
+> -				     flags);
+> +	hw = clk_hw_register_composite(NULL, name, parent_names, num_parents,
+> +				       mux ? &mux->hw : NULL, mux_ops,
+> +				       div ? &div->hw : NULL, div_ops,
+> +				       gate ? &gate->hw : NULL, gate_ops,
+> +				       flags);
+>   
+> +	clk = hw->clk;
+>   	return clk;
 
-This problem is avoided if stutter_wait() does the occasional sleep.
-I would have expected preemption to take effect, but even setting the
-kthreads in stutter_wait() to MAX_NICE doesn't help.  The current fix
-destroys intended instant-on nature of stutter_wait(), so the eventual
-fix will need to use hrtimer-based sleeps or some such.
+Nit: there's really no point keeping the "clk" variable here, you could 
+simply "return hw->clk" if registration succeeds - note that you also 
+need the rest of the logic from clk_register_composite() to check that 
+"hw" isn't an error value.
 
-							Thanx, Paul
+>   err_div:
+>   	kfree(gate);
+> diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
+> index 546e810c3560..2cfebfb61814 100644
+> --- a/drivers/clk/rockchip/clk.c
+> +++ b/drivers/clk/rockchip/clk.c
+> @@ -43,6 +43,7 @@ static struct clk *rockchip_clk_register_branch(const char *name,
+>   		u8 gate_shift, u8 gate_flags, unsigned long flags,
+>   		spinlock_t *lock)
+>   {
+> +	struct clk_hw *hw;
+>   	struct clk *clk;
+>   	struct clk_mux *mux = NULL;
+>   	struct clk_gate *gate = NULL;
+> @@ -100,12 +101,12 @@ static struct clk *rockchip_clk_register_branch(const char *name,
+>   						: &clk_divider_ops;
+>   	}
+>   
+> -	clk = clk_register_composite(NULL, name, parent_names, num_parents,
+> -				     mux ? &mux->hw : NULL, mux_ops,
+> -				     div ? &div->hw : NULL, div_ops,
+> -				     gate ? &gate->hw : NULL, gate_ops,
+> -				     flags);
+> -
+> +	hw = clk_hw_register_composite(NULL, name, parent_names, num_parents,
+> +				       mux ? &mux->hw : NULL, mux_ops,
+> +				       div ? &div->hw : NULL, div_ops,
+> +				       gate ? &gate->hw : NULL, gate_ops,
+> +				       flags);
+> +	clk = hw->clk;
+>   	if (IS_ERR(clk)) {
+
+Similar to above, this is totally broken - you need to rework all the 
+error handling in terms of "hw" rather than "clk" - dereferencing an 
+ERR_PTR value does not yield another ERR_PTR value, it yields a crash ;)
+
+Robin.
+
+>   		ret = PTR_ERR(clk);
+>   		goto err_composite;
+> @@ -214,6 +215,7 @@ static struct clk *rockchip_clk_register_frac_branch(
+>   		unsigned long flags, struct rockchip_clk_branch *child,
+>   		spinlock_t *lock)
+>   {
+> +	struct clk_hw *hw;
+>   	struct rockchip_clk_frac *frac;
+>   	struct clk *clk;
+>   	struct clk_gate *gate = NULL;
+> @@ -255,11 +257,12 @@ static struct clk *rockchip_clk_register_frac_branch(
+>   	div->approximation = rockchip_fractional_approximation;
+>   	div_ops = &clk_fractional_divider_ops;
+>   
+> -	clk = clk_register_composite(NULL, name, parent_names, num_parents,
+> -				     NULL, NULL,
+> -				     &div->hw, div_ops,
+> -				     gate ? &gate->hw : NULL, gate_ops,
+> -				     flags | CLK_SET_RATE_UNGATE);
+> +	hw = clk_hw_register_composite(NULL, name, parent_names, num_parents,
+> +				       NULL, NULL,
+> +				       &div->hw, div_ops,
+> +				       gate ? &gate->hw : NULL, gate_ops,
+> +				       flags | CLK_SET_RATE_UNGATE);
+> +	clk = hw->clk;
+>   	if (IS_ERR(clk)) {
+>   		kfree(frac);
+>   		return clk;
+> @@ -320,6 +323,7 @@ static struct clk *rockchip_clk_register_factor_branch(const char *name,
+>   		int gate_offset, u8 gate_shift, u8 gate_flags,
+>   		unsigned long flags, spinlock_t *lock)
+>   {
+> +	struct clk_hw *hw;
+>   	struct clk *clk;
+>   	struct clk_gate *gate = NULL;
+>   	struct clk_fixed_factor *fix = NULL;
+> @@ -349,10 +353,11 @@ static struct clk *rockchip_clk_register_factor_branch(const char *name,
+>   	fix->mult = mult;
+>   	fix->div = div;
+>   
+> -	clk = clk_register_composite(NULL, name, parent_names, num_parents,
+> -				     NULL, NULL,
+> -				     &fix->hw, &clk_fixed_factor_ops,
+> -				     &gate->hw, &clk_gate_ops, flags);
+> +	hw = clk_hw_register_composite(NULL, name, parent_names, num_parents,
+> +				       NULL, NULL,
+> +				       &fix->hw, &clk_fixed_factor_ops,
+> +				       &gate->hw, &clk_gate_ops, flags);
+> +	clk = hw->clk;
+>   	if (IS_ERR(clk)) {
+>   		kfree(fix);
+>   		kfree(gate);
+> 
