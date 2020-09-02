@@ -2,132 +2,134 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873A5C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1571FC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6091E2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7257207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:25:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hleKzprA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RWPSGWqX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgIBHZV (ORCPT
+        id S1727861AbgIBHZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:25:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60188 "EHLO
+        Wed, 2 Sep 2020 03:25:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbgIBHZH (ORCPT
+        with ESMTP id S1727823AbgIBHZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:25:07 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6458C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:25:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=N/P10E2Wq6OV5XqWEJzhBkCnrFtL19WUaqQQLyurF0A=; b=hleKzprA/bNnE462tnxN2wX4B4
-        QV2H0OQCmz/sD96hmU0tkZn4WYcfe62w/aIW2t3gmWQi3+UkE7sq6j4E/S0xOBcfDoVXjL9QX6Mzn
-        Le+mtrkUNlrzsJDKbeUQh7oDondJuj8vMLAi8GA1Fy7/lwryBXAl84Q8/Q3+kKyobghJFCBhKSx31
-        VpYfVuvh4uA2xWUZpp2lKsnnuvN3e26uHKy/gGr1DWoftmoRiGv/gKzwm1cNqtcgDqH9uJrSDWfZr
-        DnqzpYOFJs75MYlyQ1WFsEqKEarbZSge6ecG6ElmsVWz7qhZ5X6m3zlvmS21RZdlPz8DMu0H/0DUL
-        mAh9XZ1A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDN8D-00078B-Jb; Wed, 02 Sep 2020 07:24:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AA7B73003E5;
-        Wed,  2 Sep 2020 09:24:32 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 993BE2B774669; Wed,  2 Sep 2020 09:24:32 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 09:24:32 +0200
-From:   peterz@infradead.org
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org,
-        npiggin@gmail.com, elver@google.com, jgross@suse.com,
-        paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
-        joel@joelfernandes.org, svens@linux.ibm.com, tglx@linutronix.de
-Subject: Re: [PATCH v2 11/11] lockdep,trace: Expose tracepoints
-Message-ID: <20200902072432.GI2674@hirez.programming.kicks-ass.net>
-References: <20200821084738.508092956@infradead.org>
- <20200821085348.782688941@infradead.org>
- <20200902035146.GA45826@roeck-us.net>
+        Wed, 2 Sep 2020 03:25:09 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C54C061246
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:25:08 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id m5so2096583pgj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 00:25:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=QakrURdUkg4E7FIP/CypxAR9NETwtzt47NN+BbaWNug=;
+        b=RWPSGWqX08GKXFj5iHZkTa+y4XaDiqWxfL0yK70eGkiIQN/S+3ikTN0IFRwKKzRIyd
+         Ej9S4ynaTJ8vNfXb1YWWnbA3UTwhzXnj0zsmh4prkdWZFzYo0tPp9PWLbx33SVHDDTaK
+         hnL/GS/yLVwSq7nixL0qoJPEOxAbKkRI37eZTn//vbrdPQM5eIPVB67m4BQ5azV4JvmP
+         /MP14dCT6xZe3lW9hFQJRu6dmVgpI2yqe1PBG9cLmX+jmK+RIMV/IXgNBQQ+SYJpcdRy
+         h4a8vAsrw+ByO0Bi346aRy9Kkhcut78cS0bAtFECh5KYUSzsMjr5oQWOa1OXVY2fhD5t
+         dcRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=QakrURdUkg4E7FIP/CypxAR9NETwtzt47NN+BbaWNug=;
+        b=QPF8LyAC6RapZdeCeb3501t1wrI4NBNz5iihxloYO+fg0Cmdp8TA2fI57/+m+FxIQl
+         2WHk9sCFh/cO090Y2JVHSTsjUwHiIne8k6VcZXZMSXRQwfQyKLWoCwoFY5V4Ie3aCyhv
+         AWYj46q8gOLeoOUhRUV501qP5RIOTmwY6rEw2Tx4g4K9CFh1lz31tVdV232GsJyqDrQa
+         uRnrvV9/9/sxc9xa5EZ0ODPA1QJUsC7WY0Y6c4zIqnaWnXZiDkJ0GGmph59LsNa/3Xow
+         VIDgEIWRFADvWs7BxOZ0L5VmqT6UEWHW64+9NNyBmsggFBvbzbahIQi0hu20pYn+WsGZ
+         5sog==
+X-Gm-Message-State: AOAM5315qUgQx4W8XgmBRn0CfmYzOZBWFMRDnTJBEmCZkjwlpod4do9n
+        8AE8eonekNBTFuV6e8Yk8E7H+A==
+X-Google-Smtp-Source: ABdhPJwYKPhGLgGgRTPpDmiSBrRJWDy3BvG7NKeo7XSr+SuLuefADDOnU7M/eyr65Jt0d2n9JeEtzw==
+X-Received: by 2002:aa7:8646:: with SMTP id a6mr2054058pfo.54.1599031507740;
+        Wed, 02 Sep 2020 00:25:07 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id k5sm3656831pjq.5.2020.09.02.00.25.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Sep 2020 00:25:07 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Lukasz Luba <lukasz.luba@arm.com>, cristian.marussi@arm.com,
+        sudeep.holla@arm.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4] cpufreq: stats: Enable stats for fast-switch as well
+Date:   Wed,  2 Sep 2020 12:54:43 +0530
+Message-Id: <6a25f7c9c96dc25bb2acf26b4ab58ed954113965.1599031227.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
+In-Reply-To: <cover.1599031227.git.viresh.kumar@linaro.org>
+References: <cover.1599031227.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902035146.GA45826@roeck-us.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 08:51:46PM -0700, Guenter Roeck wrote:
-> On Fri, Aug 21, 2020 at 10:47:49AM +0200, Peter Zijlstra wrote:
-> > The lockdep tracepoints are under the lockdep recursion counter, this
-> > has a bunch of nasty side effects:
-> > 
-> >  - TRACE_IRQFLAGS doesn't work across the entire tracepoint
-> > 
-> >  - RCU-lockdep doesn't see the tracepoints either, hiding numerous
-> >    "suspicious RCU usage" warnings.
-> > 
-> > Pull the trace_lock_*() tracepoints completely out from under the
-> > lockdep recursion handling and completely rely on the trace level
-> > recusion handling -- also, tracing *SHOULD* not be taking locks in any
-> > case.
-> > 
-> 
-> Wonder what is worse - the problem or its fix. This patch results in
-> a number of WARNING backtraces for several archtectures/platforms.
-> Reverting it fixes the problems.
+Now that all the blockers are gone for enabling stats in fast-switching
+case, enable it.
 
-Without all this there was a recursion that could crash. But yes,
-tedious.
-
-OTOH the warnings are about real bugs that were pre-existing, we now see
-them and can fix them.
-
-I'll reply to ARM separately, but let's have a peek at s390.
-
-> s390:
-> 
-> [   19.490586] =============================
-> [   19.490752] WARNING: suspicious RCU usage
-> [   19.490921] 5.9.0-rc3 #1 Not tainted
-> [   19.491086] -----------------------------
-> [   19.491253] include/trace/events/lock.h:37 suspicious rcu_dereference_check() usage!
-
-> [   19.493147]  [<00000000001d5de2>] lock_acquire+0x41a/0x498
-> [   19.493320]  [<0000000000103b72>] enabled_wait+0xca/0x198
-> [   19.493493]  [<0000000000103f80>] arch_cpu_idle+0x20/0x38
-
-Does this help?
-
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
+ drivers/cpufreq/cpufreq.c       | 6 +++++-
+ drivers/cpufreq/cpufreq_stats.c | 6 ------
+ 2 files changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/arch/s390/kernel/idle.c b/arch/s390/kernel/idle.c
-index c73f50649e7e..f7f1e64e0d98 100644
---- a/arch/s390/kernel/idle.c
-+++ b/arch/s390/kernel/idle.c
-@@ -39,14 +39,13 @@ void enabled_wait(void)
- 	local_irq_restore(flags);
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 47aa90f9a7c2..d5fe64e96be9 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2057,8 +2057,12 @@ unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
+ 					unsigned int target_freq)
+ {
+ 	target_freq = clamp_val(target_freq, policy->min, policy->max);
++	target_freq = cpufreq_driver->fast_switch(policy, target_freq);
  
- 	/* Account time spent with enabled wait psw loaded as idle time. */
--	/* XXX seqcount has tracepoints that require RCU */
--	write_seqcount_begin(&idle->seqcount);
-+	raw_write_seqcount_begin(&idle->seqcount);
- 	idle_time = idle->clock_idle_exit - idle->clock_idle_enter;
- 	idle->clock_idle_enter = idle->clock_idle_exit = 0ULL;
- 	idle->idle_time += idle_time;
- 	idle->idle_count++;
- 	account_idle_time(cputime_to_nsecs(idle_time));
--	write_seqcount_end(&idle->seqcount);
-+	raw_write_seqcount_end(&idle->seqcount);
+-	return cpufreq_driver->fast_switch(policy, target_freq);
++	if (target_freq)
++		cpufreq_stats_record_transition(policy, target_freq);
++
++	return target_freq;
  }
- NOKPROBE_SYMBOL(enabled_wait);
+ EXPORT_SYMBOL_GPL(cpufreq_driver_fast_switch);
  
+diff --git a/drivers/cpufreq/cpufreq_stats.c b/drivers/cpufreq/cpufreq_stats.c
+index d86ea9744649..06b5ee12f3b2 100644
+--- a/drivers/cpufreq/cpufreq_stats.c
++++ b/drivers/cpufreq/cpufreq_stats.c
+@@ -69,9 +69,6 @@ static ssize_t show_time_in_state(struct cpufreq_policy *policy, char *buf)
+ 	ssize_t len = 0;
+ 	int i;
+ 
+-	if (policy->fast_switch_enabled)
+-		return 0;
+-
+ 	for (i = 0; i < stats->state_num; i++) {
+ 		if (pending) {
+ 			if (i == stats->last_index)
+@@ -115,9 +112,6 @@ static ssize_t show_trans_table(struct cpufreq_policy *policy, char *buf)
+ 	ssize_t len = 0;
+ 	int i, j, count;
+ 
+-	if (policy->fast_switch_enabled)
+-		return 0;
+-
+ 	len += scnprintf(buf + len, PAGE_SIZE - len, "   From  :    To\n");
+ 	len += scnprintf(buf + len, PAGE_SIZE - len, "         : ");
+ 	for (i = 0; i < stats->state_num; i++) {
+-- 
+2.25.0.rc1.19.g042ed3e048af
+
