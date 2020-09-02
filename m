@@ -2,88 +2,113 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBD1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A460CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 595F220758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DA820758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgIBR4Y (ORCPT
+        id S1727855AbgIBR64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 13:56:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47338 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgIBR4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:56:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A4685AD5C;
-        Wed,  2 Sep 2020 17:56:23 +0000 (UTC)
-Subject: Re: [Patch v4 5/7] mm/hugetlb: a page from buddy is not on any list
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, bhe@redhat.com
-References: <20200901014636.29737-1-richard.weiyang@linux.alibaba.com>
- <20200901014636.29737-6-richard.weiyang@linux.alibaba.com>
- <fd89ad4a-ef8d-e54e-8769-d6b15c40cc43@suse.cz>
- <6e9aebdf-a7a9-fb60-eadf-02088602cfdd@oracle.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <d25835da-b9cc-45bf-e48a-6de2efcc9f97@suse.cz>
-Date:   Wed, 2 Sep 2020 19:56:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 2 Sep 2020 13:58:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbgIBR6z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 13:58:55 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88BEAC061245
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 10:58:54 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kDX1s-0001Bg-4v; Wed, 02 Sep 2020 19:58:40 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kDX1n-0000s5-Lo; Wed, 02 Sep 2020 19:58:35 +0200
+Date:   Wed, 2 Sep 2020 19:58:35 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@kernel.org>,
+        linux-i2c@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 6/9] i2c: imx: Simplify with dev_err_probe()
+Message-ID: <20200902175835.zr5swdde25eqs2g7@pengutronix.de>
+References: <20200902150643.14839-1-krzk@kernel.org>
+ <20200902150643.14839-6-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <6e9aebdf-a7a9-fb60-eadf-02088602cfdd@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vhkwasl2pcrn4lyq"
+Content-Disposition: inline
+In-Reply-To: <20200902150643.14839-6-krzk@kernel.org>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 7:25 PM, Mike Kravetz wrote:
-> On 9/2/20 3:49 AM, Vlastimil Babka wrote:
->> On 9/1/20 3:46 AM, Wei Yang wrote:
->>> The page allocated from buddy is not on any list, so just use list_add()
->>> is enough.
->>>
->>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->>> Reviewed-by: Baoquan He <bhe@redhat.com>
->>> Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
->>> ---
->>>  mm/hugetlb.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->>> index 441b7f7c623e..c9b292e664c4 100644
->>> --- a/mm/hugetlb.c
->>> +++ b/mm/hugetlb.c
->>> @@ -2405,7 +2405,7 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
->>>  			h->resv_huge_pages--;
->>>  		}
->>>  		spin_lock(&hugetlb_lock);
->>> -		list_move(&page->lru, &h->hugepage_activelist);
->>> +		list_add(&page->lru, &h->hugepage_activelist);
->> 
->> Hmm, how does that list_move() actually not crash today?
->> Page has been taken from free lists, thus there was list_del() and page->lru
->> should be poisoned.
->> list_move() does __list_del_entry() which will either detect the poison with
->> CONFIG_DEBUG_LIST, or crash accessing the poison, no?
->> Am I missing something or does it mean this code is actually never executed in wild?
->> 
-> 
-> There is not enough context in the diff, but the hugetlb page was not taken
-> from the free list.  Rather, it was just created by a call to
-> alloc_buddy_huge_page_with_mpol().  As part of the allocation/creation
-> prep_new_huge_page will be called which will INIT_LIST_HEAD(&page->lru).
 
-Ah so indeed I was missing something :) Thanks. Then this is indeed a an
-optimization and not a bugfix and doesn't need stable@. Sorry for the noise.
+--vhkwasl2pcrn4lyq
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Sep 02, 2020 at 05:06:40PM +0200, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--vhkwasl2pcrn4lyq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl9P3UgACgkQwfwUeK3K
+7AnV4Qf+K3rvo1rpO/1bvi2oBpCqXFZmrMlLsrkw152dg3jynpFtKShAVENKFpGW
+HC5YI/UMJhVuYYI/D1i5iiRTqv2NGmVfK/FLo55A1u6wmAD3fLg1+KvZa72U+HHK
+TriFyBiTb3wtiHiQpENlk5QRdY/qPz8bM3XMVmRyzOWV+EtjJ8vh4G2RWliwH/GT
+WnCWE9JxHwLXMBzCmYpYuzdLt9bU+bMzmfnWS6/RtApRTD16hCglntR434J8MBot
+dUOqpxSiHcCCPZhmgN8P/TWUHuBZ7GjFI3CmByzWA/PcAd1o3C9CWFZsAOhAewcB
+O3De+cBGqZDzY2aVMDlisdUowxv9/A==
+=p6To
+-----END PGP SIGNATURE-----
+
+--vhkwasl2pcrn4lyq--
