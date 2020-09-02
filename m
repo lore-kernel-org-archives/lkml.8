@@ -2,67 +2,78 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D2BC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E9BC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4D01206EF
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4CCA206EF
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbgIBBeY (ORCPT
+        id S1726406AbgIBBfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 21:34:24 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:39256 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726244AbgIBBeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 21:34:24 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kDHf6-0002f5-Ig; Wed, 02 Sep 2020 11:34:09 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 02 Sep 2020 11:34:08 +1000
-Date:   Wed, 2 Sep 2020 11:34:08 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Li Yang <leoyang.li@nxp.com>
-Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] soc: fsl: Remove bogus packed attributes from qman.h
-Message-ID: <20200902013408.GA5012@gondor.apana.org.au>
-References: <20200730125259.GA8948@gondor.apana.org.au>
- <VE1PR04MB6687FB075B9A6A0923F576978F2E0@VE1PR04MB6687.eurprd04.prod.outlook.com>
- <20200901015630.GA9065@gondor.apana.org.au>
- <CADRPPNTt5dCX1pRUp5OenZBuMNJcN+k8jMVmUo5qw5g0VLZ4hQ@mail.gmail.com>
+        Tue, 1 Sep 2020 21:35:01 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:45906 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726122AbgIBBfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 21:35:01 -0400
+Received: from dggeme754-chm.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id ABADAC093936991E11F2;
+        Wed,  2 Sep 2020 09:34:59 +0800 (CST)
+Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
+ dggeme754-chm.china.huawei.com (10.3.19.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Wed, 2 Sep 2020 09:34:59 +0800
+Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
+ dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
+ Wed, 2 Sep 2020 09:34:59 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Oleg Nesterov <oleg@redhat.com>
+CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>,
+        "madhuparnabhowmik10@gmail.com" <madhuparnabhowmik10@gmail.com>,
+        "gustavoars@kernel.org" <gustavoars@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] signal: clean up codestyle
+Thread-Topic: [PATCH] signal: clean up codestyle
+Thread-Index: AdaAyQ7srMplwVgiVkKB1FFjkYtq8Q==
+Date:   Wed, 2 Sep 2020 01:34:59 +0000
+Message-ID: <e436dd19f0e740ebb93133ae3c625af4@huawei.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.174.178.74]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADRPPNTt5dCX1pRUp5OenZBuMNJcN+k8jMVmUo5qw5g0VLZ4hQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 04:40:16PM -0500, Li Yang wrote:
->
-> Looks like the CAAM driver and dependent QBMAN driver doesn't support
-> COMPILE_TEST yet.  Are you trying to add the support for it?
-
-Yes.
-
-> I think this is a valid concern that if the parent structure doesn't
-> meet certain alignment requirements, the alignment for the
-> sub-structure cannot be guaranteed.  If we just remove the __packed
-> attribute from the parent structure, the compiler could try to add
-> padding in the parent structure to fulfill the alignment requirements
-> of the sub structure which is not good.  I think the following changes
-> are a better fix for the warnings:
-
-This works for me.  Thanks!
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Q2hyaXN0aWFuIEJyYXVuZXIgPGNocmlzdGlhbi5icmF1bmVyQHVidW50dS5jb20+IHdyb3RlOg0K
+Pk9uIFR1ZSwgU2VwIDAxLCAyMDIwIGF0IDA2OjM5OjA1UE0gKzAyMDAsIE9sZWcgTmVzdGVyb3Yg
+d3JvdGU6DQo+PiBPbiAwOS8wMSwgQ2hyaXN0aWFuIEJyYXVuZXIgd3JvdGU6DQo+PiA+DQo+PiA+
+IE9uIFR1ZSwgU2VwIDAxLCAyMDIwIGF0IDA3OjU4OjAwQU0gLTA0MDAsIE1pYW9oZSBMaW4gd3Jv
+dGU6DQo+PiA+ID4gTm8gZnVuY3Rpb25hbCBjaGFuZ2UgaW50ZW5kZWQuDQo+PiA+DQo+PiA+IEhl
+eSBNaWFvaGUsDQo+PiA+DQo+PiA+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLg0KPj4gPiBJJ20g
+c3VyZSB0aGlzIGlzIHdlbGwtaW50ZW5kZWQgYnV0IGFmYWljdCB0aGUgd2hvbGUgZmlsZSBoYXMg
+bW9yZSBvciANCj4+ID4gbGVzcyBhIGNvbnNpc3RlbnQgc3R5bGUgYWxyZWFkeSB3aGVyZSBlLmcu
+IHNpZy0xIHdpdGhvdXQgc3BhY2VzIA0KPj4gPiBzZWVtcyB0byBiZSBwcmVmZXJyZWQuIFRoZSBz
+YW1lIGZvciB0aGUgY2FzdHMgd2hlcmUgbW9zdCBwbGFjZXMgdXNlIA0KPj4gPiBhIHNpbmdsZSBz
+cGFjZS4NCj4+ID4NCj4+ID4gTm93LCBJIGtub3cgQ29kaW5nU3R5bGUucnN0IGlzIG9uIHlvdXIg
+c2lkZSBhdCBsZWFzdCB3aGVuIGl0IGNvbWVzIA0KPj4gPiB0byB0aGUgZmlyc3QgcG9pbnQ6DQo+
+PiA+DQo+PiA+IFVzZSBvbmUgc3BhY2UgYXJvdW5kIChvbiBlYWNoIHNpZGUgb2YpIG1vc3QgYmlu
+YXJ5IGFuZCB0ZXJuYXJ5IA0KPj4gPiBvcGVyYXRvcnMsIHN1Y2ggYXMgYW55IG9mIHRoZXNlOjoN
+Cj4+ID4NCj4+ID4gCT0gICsgIC0gIDwgID4gICogIC8gICUgIHwgICYgIF4gIDw9ICA+PSAgPT0g
+ICE9ICA/ICA6DQo+PiA+DQo+PiA+IGJ1dCB0aGVuIHlvdSdkIG5lZWQgdG8gY2hhbmdlIGVhY2gg
+cGxhY2UgaW4ga2VybmVsL3NpZ25hbC5jIHdoZXJlIA0KPj4gPiB0aGF0IGlzIGN1cnJlbnRseSBu
+b3QgdGhlIGNhc2UuDQo+PiANCj4+IE9yIHNpbXBseSBsZWF2ZSB0aGlzIGNvZGUgYWxvbmUgOykN
+Cj4NCj5JIHdhcyB0cnlpbmcgdG8gaW1wbHkgdGhhdCBieSBwb2ludGluZyBvdXQgdGhhdCB0aGlz
+IHdvdWxkIGJlIGZpbGUtZ2xvYmFsIGNoYW5nZS4gSSB3YXMgbGlrZWx5IHRvbyBzdWJ0bGUuIDsp
+DQo+DQo+Q2hyaXN0aWFuDQoNClNvcnJ5IGZvciBJIGRpZCBub3QgZ2V0IHRoZSBpbXBseS4NCg0K
