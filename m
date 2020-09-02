@@ -2,152 +2,182 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87F1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2D0C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A004520829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:59:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="XXkBZ0AU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tWoJdacz"
+	by mail.kernel.org (Postfix) with ESMTP id 9DB1820829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599058814;
+	bh=NFFcFfcgR6lW5+zjEHMMHql6rarIPzttaDhwjZoAU6s=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=S7SjfX5fBz9pcpenBmJu3gn8jGoQnGHgmNlkyObTMXM/UkMTCvi39/T7/WK8jsRsM
+	 bdfMaR8YrhAOp/VEhy2TRsWXIxxsN2kxkP7U/EhGVYopYj6/wLdXr9Abv0X3j3Iqe7
+	 1wBh5yV2A++goE4OGrjtnjHNqupudS8eZO5+GiZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgIBO7V (ORCPT
+        id S1728031AbgIBPAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:59:21 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:59977 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726528AbgIBNwf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:52:35 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 679675DD;
-        Wed,  2 Sep 2020 09:52:33 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 02 Sep 2020 09:52:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=uYl4BPHJHJwCu+IH/QSOVmLDopG
-        QR9pU8iqrt6n2QJ0=; b=XXkBZ0AU1gPtIpCT7UwgtStXIxC4oVjC5FcJH6iX5uu
-        wU8wjbZRK+1vICtZ/tqPMGhwhPvsfFVbDVuin0kFLguFYqVV50GOYS1zHOhHen3i
-        KeeHo1QhqbPDsysn7wll3hIotJ3Cd69FKxgIqtbZiAv8H7Jo/lo/wDHUs51Fhjl9
-        Fxy9ABtJ1odVwjWjiKsdTFMRZSER7IySA/+KejSIreeCxel/DIYZJrl5wO1a1XjI
-        wTEZSN5YjXCj98GWwBOo4QxYVOoU4rTGY5oHFSPX87u2PX5ER6llcTj63hVJ94Be
-        79kH65Z/JoTSk1DYXlsSCpgWMBQVshsyTTo1SRScd2w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=uYl4BP
-        HJHJwCu+IH/QSOVmLDopGQR9pU8iqrt6n2QJ0=; b=tWoJdaczodYmxy9J3bFBoX
-        buLaM3YefbPsTm0YESK7pU2fH2O4d9bhnx1mMLYb1e1MGPjUJw7DmKqkOSn3vAaH
-        cii0IYzDwoc2KYriGH/w0x0dFr+WoE6aqxDPL2QYIvF7Q/WVfWXoLhLsrrrsWxLn
-        lr2YERIwgcuvlIt832jKJXsjfJx7w0lDm5b+6+nCr5UJNKSznDikAtCKmUL479i/
-        fjkPOhVgHUdNr15aa//iCKtzrtFsRV7TfH4ysy0syrENwm/Y674NDOiM2pt2KOpX
-        Avh4zd2A2sjHztEX+71YVf57YMP608BpfL4z0JIavPbzsDUbBut785e9GvY7HTYQ
-        ==
-X-ME-Sender: <xms:n6NPX_qTozjzfe7fC4apLu9gBl2-reHQmCuC-doz2DB5lGMOkSgSGw>
-    <xme:n6NPX5q5BpOf_e2Ys3Ec66brJ63DJNPwSSkiJuqz4WccZWPmi824aRCXvQJL7t0rq
-    LjXYDTPN53sumIMlp0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledgjedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepuddvudfhkeekhefgffetffelgffftdehffduffegveetffehueeivddvjedv
-    gfevnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:n6NPX8O69UHTuexuOmoIizn2havGvGAJxVqtDwjneINQxnWDPV_KXg>
-    <xmx:n6NPXy4jE2Y_PBTupPEGBJBijeDTFyEWOj9ThEqavfUXNml4oOyjcQ>
-    <xmx:n6NPX-4SbTbPsnGqG7FfpQFxNJ0FpD68ZtoqHuh7YL63anamrGAenw>
-    <xmx:oaNPX9RvhgC5IuuXK-6wp4pu4tPY8NNdvcBQt_Nnj2BubG8zLBazXVNhzPg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B013D328005E;
-        Wed,  2 Sep 2020 09:52:31 -0400 (EDT)
-Date:   Wed, 2 Sep 2020 15:52:30 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 00/78] drm/vc4: Support BCM2711 Display Pipeline
-Message-ID: <20200902135230.5hpvfjqsamot5zg6@gilmour.lan>
-References: <CGME20200709070649epcas1p13664bacc66a0f73443bf4d3e8940f933@epcas1p1.samsung.com>
- <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <1a39aedf-b708-e490-6acb-9a07e1b73300@samsung.com>
- <20200902133220.avp6dhfv2fhpiyf3@gilmour.lan>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hfgqy6buhvjnpemx"
-Content-Disposition: inline
-In-Reply-To: <20200902133220.avp6dhfv2fhpiyf3@gilmour.lan>
+        Wed, 2 Sep 2020 11:00:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726674AbgIBPAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:00:05 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60B432078E;
+        Wed,  2 Sep 2020 15:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599058804;
+        bh=NFFcFfcgR6lW5+zjEHMMHql6rarIPzttaDhwjZoAU6s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DQfkiby/xygiMhv1NB8PiP/R/7ozpMbu5hGsDwHNq1vcaTtCAG8S5YAKbp++uuyaw
+         d3zC0ML1W5o87gv3wy858QtzS5TX74Y44tJmCbGuqb5B20f3pP+OWnzRzEDPeX8gFH
+         YcH0ILkxrDRnot2og1JW2D/VkOEHq01YJhcBPuTE=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 1/2] MAINTAINERS: Consolidate Analog Devices IIO entries and remove Beniamin Bia
+Date:   Wed,  2 Sep 2020 16:59:56 +0200
+Message-Id: <20200902145957.13861-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Emails to Beniamin Bia bounce with no such address so remove him from
+maintainers.  After this removal, many entries for Analog Devices Inc
+IIO drivers look exactly the same so consolidate them.
 
---hfgqy6buhvjnpemx
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-iio <linux-iio@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-On Wed, Sep 02, 2020 at 03:32:20PM +0200, Maxime Ripard wrote:
-> Hi Hoegeun
->=20
-> On Fri, Aug 21, 2020 at 04:18:34PM +0900, Hoegeun Kwon wrote:
-> > Hi Maxime,
-> >=20
-> > Thank you for your version 4 patch.
-> > I tested all 78 patches based on the next-20200708.
-> >=20
-> >=20
-> > Dual HDMI opearation does not work normally.
-> > flip_done timed out occurs and doesn't work.
-> > Could you check please it.
-> >=20
-> > [=A0 105.694541] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR*=
-=20
-> > [CRTC:64:crtc-3] flip_done timed out
-> > [=A0 115.934994] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR*=
-=20
-> > [CONNECTOR:32:HDMI-A-1] flip_done timed out
-> > [=A0 126.174545] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR*=
-=20
-> > [PLANE:60:plane-3] flip_done timed out
->=20
-> Thanks for testing and reporting this. I've been looking into it, and it
-> seems that it's not just the dual output that's broken, but HDMI1
-> entirely (so even a single display connected to HDMI1 doesn't work).
->=20
-> Is it happening for you as well?
+---
 
-Nevermind, I had the DSI panel connected and it was interfering
+Changes since v1:
+1. Consolidate IIO entries
+---
+ MAINTAINERS | 56 ++++-------------------------------------------------
+ 1 file changed, 4 insertions(+), 52 deletions(-)
 
-Maxime
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8107b3d5d6df..facffcf7b1d1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -950,38 +950,6 @@ S:	Supported
+ F:	arch/arm64/boot/dts/amd/amd-seattle-xgbe*.dtsi
+ F:	drivers/net/ethernet/amd/xgbe/
+ 
+-ANALOG DEVICES INC AD5686 DRIVER
+-M:	Michael Hennerich <Michael.Hennerich@analog.com>
+-L:	linux-pm@vger.kernel.org
+-S:	Supported
+-W:	http://ez.analog.com/community/linux-device-drivers
+-F:	drivers/iio/dac/ad5686*
+-F:	drivers/iio/dac/ad5696*
+-
+-ANALOG DEVICES INC AD5758 DRIVER
+-M:	Michael Hennerich <Michael.Hennerich@analog.com>
+-L:	linux-iio@vger.kernel.org
+-S:	Supported
+-W:	http://ez.analog.com/community/linux-device-drivers
+-F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
+-F:	drivers/iio/dac/ad5758.c
+-
+-ANALOG DEVICES INC AD7091R5 DRIVER
+-M:	Beniamin Bia <beniamin.bia@analog.com>
+-L:	linux-iio@vger.kernel.org
+-S:	Supported
+-W:	http://ez.analog.com/community/linux-device-drivers
+-F:	Documentation/devicetree/bindings/iio/adc/adi,ad7091r5.yaml
+-F:	drivers/iio/adc/ad7091r5.c
+-
+-ANALOG DEVICES INC AD7124 DRIVER
+-M:	Michael Hennerich <Michael.Hennerich@analog.com>
+-L:	linux-iio@vger.kernel.org
+-S:	Supported
+-W:	http://ez.analog.com/community/linux-device-drivers
+-F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+-F:	drivers/iio/adc/ad7124.c
+-
+ ANALOG DEVICES INC AD7192 DRIVER
+ M:	Alexandru Tachici <alexandru.tachici@analog.com>
+ L:	linux-iio@vger.kernel.org
+@@ -998,15 +966,6 @@ W:	http://ez.analog.com/community/linux-device-drivers
+ F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+ F:	drivers/iio/adc/ad7292.c
+ 
+-ANALOG DEVICES INC AD7606 DRIVER
+-M:	Michael Hennerich <Michael.Hennerich@analog.com>
+-M:	Beniamin Bia <beniamin.bia@analog.com>
+-L:	linux-iio@vger.kernel.org
+-S:	Supported
+-W:	http://ez.analog.com/community/linux-device-drivers
+-F:	Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+-F:	drivers/iio/adc/ad7606.c
+-
+ ANALOG DEVICES INC AD7768-1 DRIVER
+ M:	Michael Hennerich <Michael.Hennerich@analog.com>
+ L:	linux-iio@vger.kernel.org
+@@ -1068,7 +1027,6 @@ F:	drivers/iio/imu/adis16475.c
+ F:	Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+ 
+ ANALOG DEVICES INC ADM1177 DRIVER
+-M:	Beniamin Bia <beniamin.bia@analog.com>
+ M:	Michael Hennerich <Michael.Hennerich@analog.com>
+ L:	linux-hwmon@vger.kernel.org
+ S:	Supported
+@@ -1135,15 +1093,6 @@ S:	Supported
+ W:	http://ez.analog.com/community/linux-device-drivers
+ F:	drivers/dma/dma-axi-dmac.c
+ 
+-ANALOG DEVICES INC HMC425A DRIVER
+-M:	Beniamin Bia <beniamin.bia@analog.com>
+-M:	Michael Hennerich <michael.hennerich@analog.com>
+-L:	linux-iio@vger.kernel.org
+-S:	Supported
+-W:	http://ez.analog.com/community/linux-device-drivers
+-F:	Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+-F:	drivers/iio/amplifiers/hmc425a.c
+-
+ ANALOG DEVICES INC IIO DRIVERS
+ M:	Lars-Peter Clausen <lars@metafoo.de>
+ M:	Michael Hennerich <Michael.Hennerich@analog.com>
+@@ -1152,8 +1101,12 @@ W:	http://wiki.analog.com/
+ W:	http://ez.analog.com/community/linux-device-drivers
+ F:	Documentation/ABI/testing/sysfs-bus-iio-frequency-ad9523
+ F:	Documentation/ABI/testing/sysfs-bus-iio-frequency-adf4350
++F:	Documentation/devicetree/bindings/iio/adc/adi*
++F:	Documentation/devicetree/bindings/iio/amplifiers/adi*
++F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
+ F:	drivers/iio/*/ad*
+ F:	drivers/iio/adc/ltc249*
++F:	drivers/iio/amplifiers/hmc425a.c
+ F:	drivers/staging/iio/*/ad*
+ X:	drivers/iio/*/adjd*
+ 
+@@ -16537,7 +16490,6 @@ F:	drivers/staging/rtl8712/
+ 
+ STAGING - SEPS525 LCD CONTROLLER DRIVERS
+ M:	Michael Hennerich <michael.hennerich@analog.com>
+-M:	Beniamin Bia <beniamin.bia@analog.com>
+ L:	linux-fbdev@vger.kernel.org
+ S:	Supported
+ F:	Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+-- 
+2.17.1
 
-
---hfgqy6buhvjnpemx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0+jngAKCRDj7w1vZxhR
-xVSHAQCnCDlA/SJLCP5PetU7Iyf4P2mZvBCHHAz/RyMCctXhaAEA+AQnVnAQhqZZ
-mmLYhcaotKt4KrJuuhWp61WNWd0RMwQ=
-=1Ln2
------END PGP SIGNATURE-----
-
---hfgqy6buhvjnpemx--
