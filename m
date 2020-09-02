@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC9AC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B89EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0B8620773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44039208DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599059095;
-	bh=FNfm1tmiP1SHAfynJEL7ATFOXsx4dnDu44NKhojfEPA=;
+	s=default; t=1599059098;
+	bh=UZsEqgnFpRCIfv/X8lhKedsjXG7tPysKFsM4O+5c1og=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mbt3oPmrOrRckDWVqAE/qpqFHz/T4f3Bd4u8bzGI7dWcFOv3ECPxNmk75taXtJBpG
-	 uVpll/A+Y5RkObRyOslb5vDxB4u3idTO1O3AzJBTDJOwfq7BX5DgXzfSyqriMM9ffE
-	 oSxG6mUlnrsYOm8iyglw9JweiYHodbZ1nE85T+J0=
+	b=Mno70J74geJhAHQW/X4XX6wjxGLTAskV6MEXvt6S8vNdmdl9OgwKfA2iYsgB2SGgy
+	 5YgJ7CBBTLDVV3X4Q57SewwKR/zB8WgID6mGEsfAFIfhZJeGzLl5wrTFL1MatdGlj6
+	 8r2rFXq4WDOVdnaNSy2PVY8dA3foT9T/r44T+uAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgIBPEv (ORCPT
+        id S1727951AbgIBPEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:04:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41818 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 11:04:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727818AbgIBPEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:04:30 -0400
+        id S1726927AbgIBPEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:04:25 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C637214F1;
-        Wed,  2 Sep 2020 15:04:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9506721527;
+        Wed,  2 Sep 2020 15:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599059069;
-        bh=FNfm1tmiP1SHAfynJEL7ATFOXsx4dnDu44NKhojfEPA=;
+        s=default; t=1599059065;
+        bh=UZsEqgnFpRCIfv/X8lhKedsjXG7tPysKFsM4O+5c1og=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nQQX60L2h/dw5HVupUkQlD1zgBiZVmY6Sewdlbk4yzSvBYGknX6upVlBsPtmbqrRZ
-         jYdpNiDqbblahHoEMcAbKX1i+FaDn89u0TwxJUpqxr9gmf0BrxEqDntza3h6uxJtpX
-         xImEZhMVLadjoDGFhceFvcH+ssVbmoKBO7PFUxuU=
+        b=pFq+pQYc6BCe2NtK7+Ig4Fdw+9S38KkYFXn8TIkEETbiabdtq0tgVHZ/k9Pw74Cqx
+         PCf4+yC0vOzAjjqQrsEfJLtXDD9AgYzuRNQPSlXc2O+fJyET6GDcxzxobEXRbpeY3Y
+         5jVIIsyW/+qgVU+p/Ns2ZuirTc5iI7Zhou59OcVo=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -59,9 +59,9 @@ To:     Michael Turquette <mturquette@baylibre.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 07/10] clk: meson: Simplify with dev_err_probe()
-Date:   Wed,  2 Sep 2020 17:03:45 +0200
-Message-Id: <20200902150348.14465-7-krzk@kernel.org>
+Subject: [PATCH 06/10] clk: keystone: Simplify with dev_err_probe()
+Date:   Wed,  2 Sep 2020 17:03:44 +0200
+Message-Id: <20200902150348.14465-6-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200902150348.14465-1-krzk@kernel.org>
 References: <20200902150348.14465-1-krzk@kernel.org>
@@ -75,28 +75,29 @@ dev_err_probe().  Less code and the error value gets printed.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/clk/meson/axg-audio.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/clk/keystone/syscon-clk.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
-index 53715e36326c..dc22b0c45743 100644
---- a/drivers/clk/meson/axg-audio.c
-+++ b/drivers/clk/meson/axg-audio.c
-@@ -1509,12 +1509,8 @@ static int devm_clk_get_enable(struct device *dev, char *id)
- 	int ret;
+diff --git a/drivers/clk/keystone/syscon-clk.c b/drivers/clk/keystone/syscon-clk.c
+index 5b3d36462174..12ddcbed00e4 100644
+--- a/drivers/clk/keystone/syscon-clk.c
++++ b/drivers/clk/keystone/syscon-clk.c
+@@ -102,12 +102,9 @@ static int ti_syscon_gate_clk_probe(struct platform_device *pdev)
+ 		return -EINVAL;
  
- 	clk = devm_clk_get(dev, id);
--	if (IS_ERR(clk)) {
--		ret = PTR_ERR(clk);
--		if (ret != -EPROBE_DEFER)
--			dev_err(dev, "failed to get %s", id);
--		return ret;
+ 	regmap = syscon_node_to_regmap(dev->of_node);
+-	if (IS_ERR(regmap)) {
+-		if (PTR_ERR(regmap) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-		dev_err(dev, "failed to find parent regmap\n");
+-		return PTR_ERR(regmap);
 -	}
-+	if (IS_ERR(clk))
-+		return dev_err_probe(dev, PTR_ERR(clk), "failed to get %s", id);
++	if (IS_ERR(regmap))
++		return dev_err_probe(dev, PTR_ERR(regmap),
++				     "failed to find parent regmap\n");
  
- 	ret = clk_prepare_enable(clk);
- 	if (ret) {
+ 	num_clks = 0;
+ 	for (p = data; p->name; p++)
 -- 
 2.17.1
 
