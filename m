@@ -2,92 +2,111 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE213C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB7FC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBB5C2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:21:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="icEHl0iw"
+	by mail.kernel.org (Postfix) with ESMTP id AA94A2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:23:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599063816;
+	bh=RJITFA13mQCqYxoOB5UPOQVnK4Vx480+dtACmh6ut/o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BHtxzcPNu1GyNWqblWiN3U63u/wjSWUVJuhFXXydfmWwIBwnxq00mjxEt2hWP9Kw2
+	 2yeD9vMitW/x0l2TGRu/GbeDZRlJNuEY7DDiUJ8GoxuNRLz4d5hZtB+oB4JhGfNvyI
+	 1NAgAqvRx6vYcn7w/kyELC6g9Jw8FDUYVqrxQj5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbgIBQVR (ORCPT
+        id S1727101AbgIBQXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:21:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgIBQVQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:21:16 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3418AC061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 09:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=g7CwtEKfB8taAJKHOl+B6Vy77KBez7Wj8qfNT2rp9Q8=; b=icEHl0iwQMQYNoukIz5Ou1aSLu
-        cIXyBjtpqAND+i1q+6USzF61JoghiwGPI1sXjsx2XZgtc3DqBNrAgZqsWeDiVP4MqZq/tWvtvWkHA
-        fRImhcbj1e8OJB5uT3Sb/jppb92jUTTRYmXoXgIY1f/UPMz8h7z/g6+lbUxYsiPc9e7YmjRkHpfK/
-        6zpw2RSeST1hgiMoxYxS0GeuWcwGIpqdoguHgeAH23e+Ys8oMJ9/EqpzaX0Dw2Ytl9GYW8DZa9NKL
-        eHuH7HEgil7yPzifbQ3D06FxGGVL8fSe1GVuFHcdJ2brhvdoTA3r1Rvu21A4S/h+alq1k2xgKfk5s
-        EShTcTEg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDVVY-0006fb-ST; Wed, 02 Sep 2020 16:21:13 +0000
-Subject: Re: [PATCH v2 2/2] staging: gdm724x: gdm_tty: replaced macro with a
- function
-To:     Antoni Przybylik <antoni.przybylik@wp.pl>,
-        gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20200902161627.64686-1-antoni.przybylik@wp.pl>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <14c3b5c1-a5d8-3843-6538-5f76c4b8d6df@infradead.org>
-Date:   Wed, 2 Sep 2020 09:21:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 2 Sep 2020 12:23:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726247AbgIBQXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:23:34 -0400
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 039A420FC3;
+        Wed,  2 Sep 2020 16:23:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599063814;
+        bh=RJITFA13mQCqYxoOB5UPOQVnK4Vx480+dtACmh6ut/o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=X2W8hvQFB4ALK9iv68uHX+G1jHVkBtqL72qdB3KH1GQfSk07N39TEWUrf4X+EKoU7
+         vu4w/Sn1BNuBJK+hmrEdjtCqAt7dJpo5MAGOixqbkc2tzltTA1OAapRjqDJAvDV/px
+         o99CjILlylsFoibtHn/r1/fMRVKFXhQuJuBaKSUc=
+Received: by mail-ed1-f42.google.com with SMTP id q21so5546558edv.1;
+        Wed, 02 Sep 2020 09:23:33 -0700 (PDT)
+X-Gm-Message-State: AOAM532+4TGw+XwAnoNyqF9GzoYjiE9qvpMog7s/c+GCcS0IZM46hTht
+        Qw9+08O18yZWjHBqmi213QXXsN/79YPVN6xtBRU=
+X-Google-Smtp-Source: ABdhPJzUU8aJWJbuyjEWTDBzeTSsYZUP7N9/p6dhBdP07EBrMjqVyaYzkDcmRbTXkPN8IbfThl9NYXrG39SJOGiVlIE=
+X-Received: by 2002:a05:6402:180a:: with SMTP id g10mr878676edy.18.1599063812518;
+ Wed, 02 Sep 2020 09:23:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200902161627.64686-1-antoni.przybylik@wp.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191112110330.179649-1-pihsun@chromium.org> <20191112110330.179649-5-pihsun@chromium.org>
+ <2abf8fdd-7b7c-73b0-beea-9c9ac56869dc@gmail.com> <CA+G9fYt9AujG6gyfeV5AaAv0EgggUfGT1jow8DJjVfetVWV3EA@mail.gmail.com>
+In-Reply-To: <CA+G9fYt9AujG6gyfeV5AaAv0EgggUfGT1jow8DJjVfetVWV3EA@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 2 Sep 2020 18:23:20 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPeV9zCg4v0kBfToGdJSxswbKtT16LVYADALpYRHqWXBOg@mail.gmail.com>
+Message-ID: <CAJKOXPeV9zCg4v0kBfToGdJSxswbKtT16LVYADALpYRHqWXBOg@mail.gmail.com>
+Subject: Re: [PATCH v21 4/4] arm64: dts: mt8183: add scp node
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Erin Lo <erin.lo@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        lkft-triage@lists.linaro.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 9:16 AM, Antoni Przybylik wrote:
-> Changed return type to bool and removed inline specifier. Also added
->  static specifier.
+On Wed, 2 Sep 2020 at 16:45, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> On Thu, 27 Aug 2020 at 15:44, Matthias Brugger <matthias.bgg@gmail.com> wrote:
+> >
+> >
+> >
+> > On 12/11/2019 12:03, Pi-Hsun Shih wrote:
+> > > From: Eddie Huang <eddie.huang@mediatek.com>
+> > >
+> > > Add scp node to mt8183 and mt8183-evb
+> > >
+> > > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> > > Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> > > Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+> >
+> > Sorry I somehow oversaw this. Next time please don't doubt to ping me.
+> >
+> > Bjorn, do I understand correctly that you don't send emails to the list
+> > informing of the inclusion of a patch/series in your tree?
+> >
+> > Anyway applied now to v5.9-next/dts64 :)
+>
+> arm64 build dtbs failed on linux next 20200902.
 
-why remove the inline specifier?
-thanks.
+I just hit it as well... I wish the kernel was built after applying
+patches... it would make the next a better place.
 
-> Signed-off-by: Antoni Przybylik <antoni.przybylik@wp.pl>
-> ---
->  drivers/staging/gdm724x/gdm_tty.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/gdm724x/gdm_tty.c b/drivers/staging/gdm724x/gdm_tty.c
-> index 34a13d98c029..179fc9b9400b 100644
-> --- a/drivers/staging/gdm724x/gdm_tty.c
-> +++ b/drivers/staging/gdm724x/gdm_tty.c
-> @@ -34,7 +34,7 @@ static DEFINE_MUTEX(gdm_table_lock);
->  static const char *DRIVER_STRING[TTY_MAX_COUNT] = {"GCTATC", "GCTDM"};
->  static char *DEVICE_STRING[TTY_MAX_COUNT] = {"GCT-ATC", "GCT-DM"};
->  
-> -inline int gdm_tty_ready(struct gdm *gdm)
-> +static bool gdm_tty_ready(struct gdm *gdm)
->  {
->  	return (gdm && gdm->tty_dev && gdm->port.count);
->  }
-> 
-
-
--- 
-~Randy
-
+Best regards,
+Krzysztof
