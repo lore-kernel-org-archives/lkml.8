@@ -2,139 +2,144 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F326BC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD72C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF60420767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1122820767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="goAr64A0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="KH2bphu9";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="iMLSBu9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbgIBPaY (ORCPT
+        id S1726938AbgIBPbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:30:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728295AbgIBP3g (ORCPT
+        Wed, 2 Sep 2020 11:31:24 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:59350 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728045AbgIBPaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:29:36 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE8CFC061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 08:29:34 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id e17so4830782wme.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 08:29:34 -0700 (PDT)
+        Wed, 2 Sep 2020 11:30:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1599060619; x=1630596619;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=Tt9BLtkysFXPF66nNHl7neFrmawdQIbAbjpVhEBGRKs=;
+  b=KH2bphu9PkEFvncTXEZdlzon9K6bpMORo9Z98/C8q4GFFTbZE48QiGEl
+   teJMn+2oPMBHhWH5LujTyaRwx8DszajM3Y/CoGegBmhYaQzAXWKK2mM6a
+   FjuHNCwgg/gVAuHGQWAZpRl4WCt3p0xCRLEAoN6iSfyezudHS/0RfIVb4
+   qPzrK5CWZyM82LmCzSBwUPKp+Y8OGUZF8xvSpPUYqeS9Zg0o9Ncrh6lLf
+   Mu/tYH8rRGLYNWKmia8m5+rsXPHfl2PtvQZ1EJ5zV3yg1HgWXtzQbh+qQ
+   6D6ZLvfnv7vWxI/VxPkvqJioo2WNK0IPxx8VSCyxhu7lYt7r4npwH7pN0
+   Q==;
+IronPort-SDR: ul+8WGaS9Q6UHdbADKmLUuKNblUloYfhycMSdyP1lItExoM/yiZVyTWahevYXZOksdHkGE1w4L
+ NqPXXNg624Nsn1grxNzby/sBzbMFLNkkjPozsN30ZPdARRVHlBRGqotPAfWdYi9eu6IlK8t50t
+ GAuN1WPPfmB+A15nr7NnFqfh56dt1GOPdyY6ks2bhD0LOBfSKGuXg4+K5i12tEllj69Q/Sowca
+ Z7d7f5caUQsM9Sb27BGlh6lCNpQBJVY6O3xcPT23+teM5E/CbqREs5Y7qR2paTDKXH+q9JAczk
+ C74=
+X-IronPort-AV: E=Sophos;i="5.76,383,1592841600"; 
+   d="scan'208";a="147641356"
+Received: from mail-bn8nam12lp2173.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.173])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Sep 2020 23:30:17 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aLJ7rU1S6O9c+bzrMp7GS//8uwKW8JKFRzfMV9421yTD82HbiZwpq4TQJ8PSSHUpywC98utC68u1mPK9sgsBYKwFXpXxFgR7YqPsIKSoRYogTyp6PZ2xCmzZeFCJ6zq2B+ZgvpyuRYSr5ohHmcae4JEAkHbYXO+DBYIgmNvmQfY+N+yUnP7xTcsibG21D/NG/2D/sMc5V+PA35xEmiYndJ73f2U6GSOIzarHqrpnWJMgr+1J7y488v80LhmBGa9PZTFvRNyYI0fyrVOmHadr/AnXLuhMGbWXGwa7E2y4S6UsFKqtNPgH80wmFE96ZFsapWbRqDxoK2CVUgfB5xTWHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tt9BLtkysFXPF66nNHl7neFrmawdQIbAbjpVhEBGRKs=;
+ b=nYhzrBorooVEz+j63pmlZpLmvSYBRwdifSHd0uBZxxaoEr9/4EtbBqUDb5ogTNeShNFzB1+IueeHgBSCdTeCYQz4Wj4SRaN/lm20Qvzg5wnjdJMa4/CRFIciNl4lxpQdCxn8vDIl951p6BRH+L3jNz6g41lxS5UjFjQ1E++HX84xK5X+McHo1zBjO8+lZcxVTYPbRYobG7YMSPJiCuPmXaOM3sR5QXFgLVdvTaM/xuEciniYHmuhd0RCPZAuN11sm+XnPkMjGPhmqk6ZaJIp9OOa3OBk8YiwVLQg0nVywtdkGbDqv/AFde26B8RpDQdiqFpPC12fgWES6tQ5s93gtA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jD0lwPUDPqJoqIP/rldiB6/kM7/2nzIIqQ1JR4uJSZ4=;
-        b=goAr64A0/objakxStXGU102b425PEBTJb988kX+Xua1JjIPCNHoE6zdJfzJ1tH2+mY
-         IwPD2wkFcpTH5K9O9OwlD0dX6b+jHW/Dz/ODpLwon6huYezoaUoFUyUC2ZT4zKNMVFQ+
-         ywWe9HT0hJJPbid8kaQsSbLDP6vfcAhfjFA46+pUASi7bed38dyEVbW1PjvLglfEZZuh
-         EyKrMmgIIEgZnqdu+W7XmURWrHyBPRbtVyh3GKtprzmllRSNqILIyGiUwR4U17XB7Xv5
-         ogvKJkDfojETV9KV6trm7WWcIKiFtXd0lnshlQLMwlzuXSF2L+7Q5H9epocaEAizZWAM
-         3miA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jD0lwPUDPqJoqIP/rldiB6/kM7/2nzIIqQ1JR4uJSZ4=;
-        b=JnxNqBVIs747YjaLrM+/Ig+h8tc+j4YxvTQEfTZCA6Rxv0ICdevWlR91EpVjqeiKO9
-         BJlvlDkJwfwZYqkNa0rxPJ87PTldCrGlkIuu5VtTN9SVlht6aF+FTmE35glnWe6zyEo4
-         vDJM7tKCcgi0IzrBYYiswzIdWNyY3Wc/ZDNUIoGTnNsSCUBbQ8Ni1YMbUM1pxdwGHoio
-         JzLJPwHsUdDRB39CE6tjRNAIaJHbp26OK4cdKkTeLHJuSq6a1qjoCg4+/6YiJet8LbdK
-         wYVyKH4SdRlKHAUiGuahGxahNdpVLKXoff4CRKa4ozu9DqBc3A0+oKGdJfPiYJOmip3M
-         Aefg==
-X-Gm-Message-State: AOAM530brOPoMZvC0GbanabyvIWUK1JMuuIbFrqYqdlIJfP+uMsCYn6g
-        hZZ6bq+oRbchKMqMCSmMUes=
-X-Google-Smtp-Source: ABdhPJyVn2q0JT6zajMVClpHSmIoVLXE5vflWYEgw/moF8kWA5xT9WQFQj5qPJ37jT3zOwgTZirTwg==
-X-Received: by 2002:a1c:9a57:: with SMTP id c84mr1218127wme.136.1599060573391;
-        Wed, 02 Sep 2020 08:29:33 -0700 (PDT)
-Received: from medion (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id c14sm66193wrv.12.2020.09.02.08.29.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 08:29:32 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
-Date:   Wed, 2 Sep 2020 16:29:30 +0100
-To:     Joe Perches <joe@perches.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tt9BLtkysFXPF66nNHl7neFrmawdQIbAbjpVhEBGRKs=;
+ b=iMLSBu9eAFjAKj0MieInIskmoReipjbMuYsc6JquX5wnfTBDeihIGW4GkgzwV2p+TqiKOvNkuQShHFOiyy+Hcqvyhv7W0v/dQ0pdx6DzKSStkztqmzZ9oPCUt1bemE+W6O2XpYwHl7KvWdCYtrXe5b+LjiQBKOHij/OIwkpUsyA=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN4PR0401MB3600.namprd04.prod.outlook.com
+ (2603:10b6:803:46::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Wed, 2 Sep
+ 2020 15:30:15 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3326.023; Wed, 2 Sep 2020
+ 15:30:15 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
         "David S. Miller" <davem@davemloft.net>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/2] simple sysfs wrappers for single values
-Message-ID: <20200902152930.mniirxa4iln2fqri@medion>
-References: <20200829233720.42640-1-alex.dewar90@gmail.com>
- <81c3499a5a09a82ddb4f3aa2bd9bfde1c0192b9e.camel@perches.com>
- <fbc74484451e2ef75fbb65665186035301550a1b.camel@perches.com>
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 05/19] swim: use bdev_check_media_change
+Thread-Topic: [PATCH 05/19] swim: use bdev_check_media_change
+Thread-Index: AQHWgTcWjjeF2Hw+gkWVVA7OvkInPg==
+Date:   Wed, 2 Sep 2020 15:30:14 +0000
+Message-ID: <SN4PR0401MB359876A023673111737EB7BE9B2F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200902141218.212614-1-hch@lst.de>
+ <20200902141218.212614-6-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2001:a62:1590:f101:1584:4722:fd5f:b30e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ba315de2-1f2b-4556-573d-08d84f55170a
+x-ms-traffictypediagnostic: SN4PR0401MB3600:
+x-microsoft-antispam-prvs: <SN4PR0401MB36006DAEEA65F49A41B03D829B2F0@SN4PR0401MB3600.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8t7GXuMIYkT7GcBpwgM5y7hMDmFkm/RSrpiB9Ocu29400Q/r+eRESqpXWjRoax7MPqz1AaCrV4feXZ/I2iiz5DHxrILPY8AMPijcqgV/OT9KOtRH8Q/r+T3x+D71pD65DA7ZkXQCwlq48n1qi6/d5Aibuzl8/C35X4vNNBAPpXFpuqH9IkWaX7dj6IguI+erw6dVwaRuWD/qWeL0I6nlRM2XYsQrH2zqfXKK4wFcNOB2elsLzWF1uZ6oJP9GOIYQY6tJZlJlGqs0jlvWZ7ckErcnwV2PlSBaHJVYlWcOw2Xac1hf6bfHCY4NqmftPXTViegqrOcSNxMZNHkUe8lQbA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(39850400004)(366004)(396003)(52536014)(9686003)(8676002)(66946007)(86362001)(7416002)(54906003)(33656002)(316002)(64756008)(66446008)(8936002)(478600001)(66476007)(66556008)(186003)(110136005)(55016002)(6506007)(83380400001)(2906002)(7696005)(91956017)(71200400001)(5660300002)(558084003)(76116006)(4326008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 7UFA+LdLILSaTgerBOMq8m+G+HusU/ssY38AT0dHFGX2W16kXcBQEtsVPxyE+j7uVn2nvr1+1Yi+x8wc1hqqyLoiOD9wT/5lWg+Q3hLTwoc6sMxTePe7UAoz3V65KRukzQsePJnBLCqYnlMDxQ4oycJYGut3sUrxS0kOkpb1ktwZPdh/ME5TiSxVmzlFpM+ST8exjkf4t1tJkqqILc/oqCG3yt6+jmU0Sc+xkedIfwPbjFt9626K6PFWbCyOWZeRp18k+kKZyjv2fLPcYrSO9HIqS5KOmEt4274zUztaI0Cm7ySTzIiucW38gFIhpdOeUFPkh5EVHu4FupDIe4n6O8cyFw3TveiXy75zrCqALKUbn6EU5TqO/rXjjGTn1ZHnpyohVLH94kfXPYH5ycbzP+FZrixcZvLFR8Z/GFvf8IBvNPznNWP8UjovnVxo0GVi7VccR8pxduoxPwicaTVjzFys/nvxD32/dL/srYzphSvv4DHzFGR8FHciys3hoLHd0y/y7Op0sDQafLbKuC47YSl1x1vNefaZaNF5Xp9MMTWFGLBeN7o6y4pmr5VlTAop+r1OzDM/Xy9WGX5Y9T2YXBWgOmZhB9cU5abM9/tdV12VvDEPJ6n80ucjBgl/afvx2evDZRB1eysfdsO7/2jBHmGIgYkmHq7lh77fPXBHANN0ebH0gcQE/8B69ynHNc9rZSdoaXM74JT+plij+92Bag==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fbc74484451e2ef75fbb65665186035301550a1b.camel@perches.com>
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba315de2-1f2b-4556-573d-08d84f55170a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 15:30:14.8564
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5rXXUbdKq87JO/eqXQDDd8T8BG9Fyih/KpOIQ7ccfrO0JaL1e+G1ik1YKe/yJq5vtxH8bWg/QsJNrusysImI9m8slOLy+RqAp9AGAScRBgs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3600
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 06:23:13PM -0700, Joe Perches wrote:
-> On Sat, 2020-08-29 at 17:28 -0700, Joe Perches wrote:
-> > On Sun, 2020-08-30 at 00:37 +0100, Alex Dewar wrote:
-> > > Hi all,
-> > > 
-> > > I've noticed there seems to have been a fair amount of discussion around
-> > > the subject of possible helper methods for use in the context of sysfs
-> > > show methods (which I haven't had a chance to go through in detail yet
-> > > -- sorry!), so I thought I'd send out a couple of patches I've been
-> > > working on for this, in case it's of any interest to anyone.
-> > 
-> > If you really want to do this, I suggest you get use
-> > wrappers like sysfs_emit_string, sysfs_emit_int, sysfs_emit_u64
-> > though I don't see _that_ much value.
-> 
-> Just fyi:
-> 
-> the treewide converted sysfs_emit uses
-> end up with these integer outputs:
-
-Thanks for looking at the code. It does look like my approach was a bit
-too simplistic!
-
-> 
-> $ git grep -P -oh 'sysfs_emit\(buf, "%\d*[luixd]*\\n"' | \
->   sort | uniq -c | sort -rn
->    1482 sysfs_emit(buf, "%d\n"
->     549 sysfs_emit(buf, "%u\n"
->     118 sysfs_emit(buf, "%ld\n"
->     100 sysfs_emit(buf, "%lu\n"
->      78 sysfs_emit(buf, "%llu\n"
->      62 sysfs_emit(buf, "%i\n"
->      47 sysfs_emit(buf, "%x\n"
->      24 sysfs_emit(buf, "%lld\n"
->      12 sysfs_emit(buf, "%llx\n"
->      12 sysfs_emit(buf, "%08x\n"
->      12 sysfs_emit(buf, "%02x\n"
->      10 sysfs_emit(buf, "%016llx\n"
->       8 sysfs_emit(buf, "%04x\n"
->       6 sysfs_emit(buf, "%lx\n"
->       5 sysfs_emit(buf, "%02d\n"
->       4 sysfs_emit(buf, "%04d\n"
->       2 sysfs_emit(buf, "%08lx\n"
->       1 sysfs_emit(buf, "%li\n"
->       1 sysfs_emit(buf, "%4x\n"
->       1 sysfs_emit(buf, "%0x\n"
->       1 sysfs_emit(buf, "%06x\n"
->       1 sysfs_emit(buf, "%03x\n"
->       1 sysfs_emit(buf, "%01x\n"
-> > 
-> 
+Looks good,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+=0A=
+> +static int floppy_revalidate(struct gendisk *disk);=0A=
+=0A=
+Completely unrelated to this series but, this is the 3rd floppy =0A=
+driver in the series defining it's own floppy_revalidate() and =0A=
+naming it floppy_revalidate().=0A=
+=0A=
+This makes grepping and reviewing a pain.=0A=
+=0A=
