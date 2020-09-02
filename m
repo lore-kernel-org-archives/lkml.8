@@ -2,103 +2,145 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA2FC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCC3C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3081720767
+	by mail.kernel.org (Postfix) with ESMTP id F140D207D3
 	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:31:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OBefMpTE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgIBObh (ORCPT
+        id S1728157AbgIBO3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:31:37 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43740 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbgIBO3p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:29:45 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082DZls6028416;
-        Wed, 2 Sep 2020 08:35:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599053747;
-        bh=K5qBBK8U6hjB2NNhfCKUHbnA7a4cstCXECTtIpV0nF4=;
-        h=From:To:CC:Subject:Date;
-        b=OBefMpTEu329mouZhYm8mzO6vDzu1mB4w3S6FXPD0tPzzGyIDcpxl69UsqpnBAAiD
-         SzvFcZr1eebTaOHNyctULecgl2IssIyU534S4rF4/B+/sQsmQwDPW5XYVVyUZiN9v4
-         5ZnoqGI+zwKODqT6KZeefUoZpu/ON7+NnE2vtqP0=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082DZlNm056935
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 2 Sep 2020 08:35:47 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
- 2020 08:35:47 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 2 Sep 2020 08:35:47 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082DZiG9065816;
-        Wed, 2 Sep 2020 08:35:45 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <balbi@kernel.org>
-CC:     <pawell@cadence.com>, <kurahul@cadence.com>, <nsekhar@ti.com>,
-        <vigneshr@ti.com>, <robh+dt@kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 0/3] usb: cdns,usb3: Convert DT binding to YAML
-Date:   Wed, 2 Sep 2020 16:35:40 +0300
-Message-ID: <20200902133543.17222-1-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 2 Sep 2020 10:29:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:39018 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727867AbgIBOZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 10:25:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9D82101E;
+        Wed,  2 Sep 2020 07:25:30 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E31933F71F;
+        Wed,  2 Sep 2020 07:25:28 -0700 (PDT)
+Subject: Re: [PATCH] media: mtk-vcodec: set dma max segment size
+To:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        linux-mediatek@lists.infradead.org
+Cc:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Irui Wang <irui.wang@mediatek.com>,
+        linux-kernel@vger.kernel.org,
+        Anand K Mistry <amistry@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+References: <20200821041414.1560707-1-hsinyi@chromium.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f8c5b7e0-66a2-7ec6-041f-82679a863758@arm.com>
+Date:   Wed, 2 Sep 2020 15:25:27 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200821041414.1560707-1-hsinyi@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2020-08-21 05:14, Hsin-Yi Wang wrote:
+> Set dma max segment size for encoder and decoder driver.
+> 
+> Fix following warning with CONFIG_DMA_API_DEBUG_SG=y
+> 
+> [   75.147825] ------------[ cut here ]------------
+> [   75.147844] mtk-vcodec-enc 19002000.vcodec: DMA-API: mapping sg segment longer than device claims to support [len=983040] [max=65536]
+> [   75.147876] WARNING: CPU: 2 PID: 4069 at kernel/dma/debug.c:1302 debug_dma_map_sg+0x1a8/0x2c4
+> ...
+> [   75.148139] Call trace:
+> [   75.148149]  debug_dma_map_sg+0x1a8/0x2c4
+> [   75.148165]  vb2_dc_get_userptr+0x228/0x364 [videobuf2_dma_contig]
+> [   75.148178]  __buf_prepare+0x3ac/0x8c0 [videobuf2_common]
+> [   75.148188]  vb2_core_qbuf+0xa4/0x58c [videobuf2_common]
+> [   75.148199]  vb2_qbuf+0x88/0xe4 [videobuf2_v4l2]
+> [   75.148211]  v4l2_m2m_qbuf+0x80/0xf8 [v4l2_mem2mem]
+> [   75.148221]  vidioc_venc_qbuf+0x3c/0x70 [mtk_vcodec_enc]
+> [   75.148234]  v4l_qbuf+0x48/0x58
+> [   75.148242]  __video_do_ioctl+0x200/0x37c
+> [   75.148250]  video_usercopy+0x360/0x834
+> [   75.148259]  video_ioctl2+0x38/0x48
+> [   75.148267]  v4l2_ioctl+0x6c/0x80
+> [   75.148276]  do_video_ioctl+0xefc/0x4b70
+> [   75.148284]  v4l2_compat_ioctl32+0x5c/0xcc
+> [   75.148294]  __arm64_compat_sys_ioctl+0xf4/0x240
+> [   75.148304]  el0_svc_common+0xac/0x198
+> [   75.148312]  el0_svc_compat_handler+0x2c/0x40
+> [   75.148321]  el0_svc_compat+0x8/0x18
+> [   75.148328] irq event stamp: 0
+> [   75.148337] hardirqs last  enabled at (0): [<0000000000000000>]           (null)
+> [   75.148347] hardirqs last disabled at (0): [<ffffff90080e65c0>] copy_process+0x380/0x115c
+> [   75.148356] softirqs last  enabled at (0): [<ffffff90080e65d8>] copy_process+0x398/0x115c
+> [   75.148364] softirqs last disabled at (0): [<0000000000000000>]           (null)
+> [   75.148372] ---[ end trace 588bf529451e3531 ]---
+> 
+> Reported-by: Anand K Mistry <amistry@chromium.org>
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+>   drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c | 8 ++++++++
+>   drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c | 8 ++++++++
+>   2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
+> index 97a1b6664c20..3bbd0bac56d6 100644
+> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
+> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
+> @@ -242,6 +242,14 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
+>   		mtk_v4l2_err("[VPU] vpu device in not ready");
+>   		return -EPROBE_DEFER;
+>   	}
+> +	if (!pdev->dev.dma_parms) {
+> +		pdev->dev.dma_parms = devm_kzalloc(&pdev->dev,
+> +						sizeof(*pdev->dev.dma_parms),
+> +						GFP_KERNEL);
+> +		if (!pdev->dev.dma_parms)
+> +			return -ENOMEM;
+> +	}
 
-This series converts DT binding to YAML schema.
-Then adds a new property to enable workaround for USB2.0 PHY
-Rx compliance issues.
+Since 9495b7e92f71, dma_parms is included in the platform_device itself 
+and always set, so you can drop these allocation paths.
 
-cheers,
--roger
+> +	dma_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
 
-Changelog:
-v2:
-- updated commit log to better describe why DT property is required
-for the quirk.
+The segment size is simply a size, not a bitmask, so UINT_MAX would be 
+more semantically appropriate.
 
-Pawel Laszczak (1):
-  usb: cdns3: Enable workaround for USB2.0 PHY Rx compliance test PHY
-    lockup
+Robin.
 
-Roger Quadros (2):
-  dt-bindings: usb: Convert cdns-usb3.txt to YAML schema
-  dt-bindings: usb: cdns,usb3: Add cdns,phyrst-a-enable property
-
- .../devicetree/bindings/usb/cdns,usb3.yaml    | 93 +++++++++++++++++++
- .../devicetree/bindings/usb/cdns-usb3.txt     | 45 ---------
- drivers/usb/cdns3/core.c                      |  2 +
- drivers/usb/cdns3/core.h                      |  1 +
- drivers/usb/cdns3/drd.c                       | 12 +++
- drivers/usb/cdns3/drd.h                       |  5 +-
- 6 files changed, 112 insertions(+), 46 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/cdns,usb3.yaml
- delete mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+>   	vpu_wdt_reg_handler(dev->vpu_plat_dev, mtk_vcodec_dec_reset_handler,
+>   			dev, VPU_RST_DEC);
+> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+> index 4d31f1ed113f..ff4a87485d69 100644
+> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+> @@ -249,6 +249,14 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
+>   		mtk_v4l2_err("[VPU] vpu device in not ready");
+>   		return -EPROBE_DEFER;
+>   	}
+> +	if (!pdev->dev.dma_parms) {
+> +		pdev->dev.dma_parms = devm_kzalloc(&pdev->dev,
+> +						sizeof(*pdev->dev.dma_parms),
+> +						GFP_KERNEL);
+> +		if (!pdev->dev.dma_parms)
+> +			return -ENOMEM;
+> +	}
+> +	dma_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
+>   
+>   	vpu_wdt_reg_handler(dev->vpu_plat_dev, mtk_vcodec_enc_reset_handler,
+>   				dev, VPU_RST_ENC);
+> 
