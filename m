@@ -2,143 +2,115 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D725C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59462C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBECB20829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:53:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="Ik/dePyz";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ovfYQGFG"
+	by mail.kernel.org (Postfix) with ESMTP id 3356A2078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:53:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599058415;
+	bh=fMkJifuCEn8uJKL0YvQ8zIgezv+eq2ISTyQs7pCJMU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jjDMpiYCRQTkt2/At36VhmJZb2JHDxTfIT/tLu2usy2k1LmEP1C8EsVYRsAebhnjT
+	 ZsKC3mBkgwBCme1zTd0QL9jUXyKZ/TeKHutiZBv45ft2mGTG1ebCJUZ4kD6pNCExpP
+	 Sxjb8yLsAFFjkmZExWTNYsA2fj41D0uynsD2jwdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgIBOuP (ORCPT
+        id S1726800AbgIBOx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:50:15 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:57659 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726674AbgIBOK4 (ORCPT
+        Wed, 2 Sep 2020 10:53:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44268 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbgIBOwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:10:56 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id A92C95804E0;
-        Wed,  2 Sep 2020 10:10:02 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 02 Sep 2020 10:10:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=7PqQE5cZt4VblhYOFjuBF76nPi
-        qQ+OY9NWSl6QlW+yY=; b=Ik/dePyzFb9DjEnkX6mBpWhIC5q8lnvR7KVTQIhzNG
-        ZX2MHIsErogNQbToOA0wgSzuT7MzW5m7VEFc8abaQZJbuKAqAMjb8Kche59WgD11
-        nJZR+XvWL5Fmn5XoOF8Tsfr2MbFOtNYvnieUMhu0KwODBMLA5/gH8UhNphCiB3CN
-        POs3ngjUw1sbJpVWCj6gPaFsh6mrHwN6yIHCPp6KJ2N7a+4oeBS6yIX7ZK1WnT40
-        zsJRUC7XtoQ+//WLplFUPUHhHn8qfDdwHRWR7HqQ/OOk1WUuLdC1+Zh95kty4Ia5
-        kc62Q2Ayj3aK+ampuMg8ukY9Ykl6C4nYUmtg6e2ULeMQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=7PqQE5cZt4VblhYOF
-        juBF76nPiqQ+OY9NWSl6QlW+yY=; b=ovfYQGFGto3wTFfVtbTt5ITF4AHVGlqi3
-        etwi4cd9+FDTy+yPbYqDlyKu0G9CTQ9czZmUlN05KMAXuSN6F5OtPd04GTp73jcc
-        RngsOPJzWvkd9X9H1EQINNwuBHIzyyQNXtrxpkMIK6vufY+afa99C26VSGNu3fCT
-        FdQhXwSUj/wzdluhVJSvQ7iZ6eVbYe6v0pwDKzgznk2uD4HLT9tH1wtUbTni3ukY
-        qZiAGmBflvuKJ7SL2E5cre65xzTBCdhkrsMxAMQaocsCvejMVV5xUlDverK0Ip/B
-        BBIE9k+TUu1gqyhApyD1e5mHlITPsdavqIRMIfMboMw2UOqCHCFhw==
-X-ME-Sender: <xms:uadPX3BX95NtbpswHaB2B4hL4ifHjT1JZc8bcbYRzdeTIR1NpVVe_Q>
-    <xme:uadPX9j2FDxgwoeFWSupTqGDFyNcHdTqKttGMbPh4K80C9xfAoFE3c6UpgBX6pPgp
-    Lt71AmXIuj3R7RZc08>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledgjeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefvhigthhhoucet
-    nhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtffrrghtth
-    gvrhhnpeelveehveejgefgkedttedvteffgfelfeeuveduteelvdduhefhjeetjeehheel
-    keenucfkphepuddvkedruddtjedrvdeguddrudejkeenucfuphgrmhfkphfpvghtfihorh
-    hkpeduvdekrddutdejrddvgedurddujeeknecuvehluhhsthgvrhfuihiivgeptdenucfr
-    rghrrghmpehmrghilhhfrhhomhepthihtghhohesthihtghhohdrphhiiiiirg
-X-ME-Proxy: <xmx:uadPXymCM0E46r2hSP4V-HbjLZ7mZcA1egQTM-cG1o1YmFY9Njin3A>
-    <xmx:uadPX5ytjtpYMW5jPtc_bH_MCmWlGBZj4YEtzhOvSZ1t2znzTzzzew>
-    <xmx:uadPX8TXzc5xYLhPNy09UZAJ5dkuTDnOJ8bj2oW53Mz-IfZXdNhKbg>
-    <xmx:uqdPX3eZqinJZMiY8ir1iuPTMbNQdCgXaMWK4gpHmazZlfDxiiXhp8FbYnw>
-Received: from cisco.hsd1.co.comcast.net (unknown [128.107.241.178])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0A334306005F;
-        Wed,  2 Sep 2020 10:09:59 -0400 (EDT)
-From:   Tycho Andersen <tycho@tycho.pizza>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.pizza>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH] seccomp: don't leave dangling ->notif if file allocation fails
-Date:   Wed,  2 Sep 2020 08:09:53 -0600
-Message-Id: <20200902140953.1201956-1-tycho@tycho.pizza>
-X-Mailer: git-send-email 2.25.1
+        Wed, 2 Sep 2020 10:52:50 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B88B3C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 07:52:50 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id w12so4479461qki.6
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 07:52:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Umk5Ulvu4oLoYIO+HUXZ2g8XNW9wJ6mMmUfCXe6cwzE=;
+        b=u1QrlX4tBu3SeweQyeFvKcbd9BBbzKPHcAtreRTlE33njRMc4xrp/YRss9Ci+1XqX+
+         0xWJ6n7UQr5uBOb+HLR1Gi1qqN/3rG4mHZvtQlPi50OjxzIAQ5GVt57+5LQn4Od+lzjl
+         jYGMV86QT9ZunHZEH/BhYUBDXSQblsoWLudOKuTH8j1YF7k27tHzvRVh8Y4hgcDS/6PC
+         +Zk1u8BeT7PHGtED6kcFwnHyMDUoOv9vK31Qca6YjTjUNyAy3yyeOHMxwL4c1B60duVJ
+         qXoKMXatMGF3ZaXHvIDSU0tDAHb6hDyN9jRZhvc6r0HNEm2oANhB8njQAruZnTk08Egb
+         XX1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Umk5Ulvu4oLoYIO+HUXZ2g8XNW9wJ6mMmUfCXe6cwzE=;
+        b=Rb4Wiq3M7pDsMTO+sw7xzhQe3whAIXaa1REuq7/CzV0CADxhg/JjsOn7RKND6KOOr7
+         3pNwuE4ZQCSvd1IlFaXoGPixKhYMIeWvDJsea9D/HjKYkQj7YiroEgCMSony+I6Gb4ap
+         oNlkVgiFlC2NEg6cRzP1PigOJ5uM7XRXfpNg+y5glniVrMgZMR8MS86kPYBzG05v/ySk
+         Dbf7xvAJAbLtgPAJi4kmrUKC9uCLRElUQyDGjJ1Lv2zgwqa9NefW6DaWbKvMZ0QxCvYK
+         7TbJgiizkPpt1q4bpFfrwYFADhfqck6BPiiaeCoBbI70Wso1K0BQ6YJYAd0MCuvG00uE
+         Q98A==
+X-Gm-Message-State: AOAM531dCHrWQzsdPbR/iilY0Wxov48c4I732kht519CesC8cZswW/p1
+        eVWzV0ALAW8tLsTWw4BrFf4=
+X-Google-Smtp-Source: ABdhPJwtF2MnHLtEgYqsM1xBk1VrAbk4U4yp0K+SVFwUEGI/lp1d3JSafaq/2JyqeLrKZqK4fC46LQ==
+X-Received: by 2002:a37:8b01:: with SMTP id n1mr7286182qkd.62.1599058369875;
+        Wed, 02 Sep 2020 07:52:49 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:a198])
+        by smtp.gmail.com with ESMTPSA id r11sm4772987qtt.2.2020.09.02.07.52.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 07:52:49 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 10:52:41 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Marco Elver <elver@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v3 2/6] workqueue: kasan: record workqueue stack
+Message-ID: <20200902145241.GG4230@mtj.thefacebook.com>
+References: <20200825015833.27900-1-walter-zh.wu@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825015833.27900-1-walter-zh.wu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian and Kees both pointed out that this is a bit sloppy to open-code
-both places, and Christian points out that we leave a dangling pointer to
-->notif if file allocation fails. Since we check ->notif for null in order
-to determine if it's ok to install a filter, this means people won't be
-able to install a filter if the file allocation fails for some reason, even
-if they subsequently should be able to.
+On Tue, Aug 25, 2020 at 09:58:33AM +0800, Walter Wu wrote:
+> Records the last two enqueuing work call stacks in order to print them
+> in KASAN report. It is useful for programmers to solve use-after-free
+> or double-free memory workqueue issue.
+> 
+> For workqueue it has turned out to be useful to record the enqueuing
+> work call stacks. Because user can see KASAN report to determine
+> whether it is root cause. They don't need to enable debugobjects,
+> but they have a chance to find out the root cause.
+> 
+> Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> Suggested-by: Marco Elver <elver@google.com>
+> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
 
-To fix this, let's hoist this free+null into its own little helper and use
-it.
+Acked-by: Tejun Heo <tj@kernel.org>
 
-Reported-by: Kees Cook <keescook@chromium.org>
-Reported-by: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: Tycho Andersen <tycho@tycho.pizza>
----
- kernel/seccomp.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Thanks.
 
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index bb0dd9ae699a..676d4af62103 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -1109,6 +1109,12 @@ static long seccomp_set_mode_strict(void)
- }
- 
- #ifdef CONFIG_SECCOMP_FILTER
-+static void seccomp_notify_free(struct seccomp_filter *filter)
-+{
-+	kfree(filter->notif);
-+	filter->notif = NULL;
-+}
-+
- static void seccomp_notify_detach(struct seccomp_filter *filter)
- {
- 	struct seccomp_knotif *knotif;
-@@ -1138,8 +1144,7 @@ static void seccomp_notify_detach(struct seccomp_filter *filter)
- 		complete(&knotif->ready);
- 	}
- 
--	kfree(filter->notif);
--	filter->notif = NULL;
-+	seccomp_notify_free(filter);
- 	mutex_unlock(&filter->notify_lock);
- }
- 
-@@ -1494,7 +1499,7 @@ static struct file *init_listener(struct seccomp_filter *filter)
- 
- out_notif:
- 	if (IS_ERR(ret))
--		kfree(filter->notif);
-+		seccomp_notify_free(filter);
- out:
- 	return ret;
- }
-
-base-commit: 7b6aa0bb62fd6fd50f2d14136136262d28fb2dfe
 -- 
-2.25.1
-
+tejun
