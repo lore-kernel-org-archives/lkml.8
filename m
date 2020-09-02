@@ -2,189 +2,184 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92922C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD42C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F32020767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6950820767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:05:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DFebTShM"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qsAbeb7G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgIBXDa (ORCPT
+        id S1726726AbgIBXFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 19:03:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgIBXCV (ORCPT
+        Wed, 2 Sep 2020 19:05:30 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:45814 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbgIBXF2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 19:02:21 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA1FC061258
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 16:02:21 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k15so517352pji.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 16:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6TZt2amfy5qzjmnWe5xTFuhN9jzSvSMQp9lB8VeO0GI=;
-        b=DFebTShMc8xpKVOBQ2cjdLkpsamauUKkoqnBeCYWLLHkD5A37kEP/3Cq72866RcrzK
-         TkHot7DuwTpHAPZDfyM2otz7atFL/81flusMaxNaQ/0qYiifQUb4IxoUNGDyRZDGqGst
-         YrQPwJfHY6boslEjErd4MZXFKgAFTYkhU9pGA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6TZt2amfy5qzjmnWe5xTFuhN9jzSvSMQp9lB8VeO0GI=;
-        b=DhMfIP1J/KR4eIrxbCWFIewNPpoE52ucZLlopte2HcJKMPLJOGWChnq5pEz/UNWIHN
-         GZsmGglOH6SslHCBN1nTKSqDDcdUarv6g3plkFRkPpSqHT+djQXD9e5HBqh5l0+lZZZ8
-         TwwX07l3q93dbZdv20ZXEXXx7iXlCl2JPOdldL7ApYdBLTICIDBH3A4tGvcSdenTIdrd
-         RPHyhn7yPce0vVxpe75TPtATV9B48j5RvnuF1oMrPLfmmmC7gRQoG9SwBQyYfhrxXUT/
-         kFb1rKnJJlilRTyPpgpet3FbLnHp0ItChfKlNo6D5Leo4pIFLWPUSubMiP5OsShv7+sX
-         4eqw==
-X-Gm-Message-State: AOAM530xtDTxrkIqpeCPnsrMutE54L+aR7E3xgO9+f2mA+Mhr/qSJLQ3
-        A9Fr2JzfxLd1Zo5xz6yawdycgw==
-X-Google-Smtp-Source: ABdhPJwoqwZdfX4vzGy1hAALb8ZdSSp6MKKLSNrANSwIKpt9ZrsGycADNYmWNLF+VaH/7VtrVAI1HQ==
-X-Received: by 2002:a17:90a:fb52:: with SMTP id iq18mr56019pjb.162.1599087740815;
-        Wed, 02 Sep 2020 16:02:20 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id x12sm410277pjq.43.2020.09.02.16.02.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 16:02:20 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark <robdclark@chromium.org>
-Subject: [PATCH v2 02/10] phy: qcom-qmp: Move phy mode into struct qmp_phy
-Date:   Wed,  2 Sep 2020 16:02:07 -0700
-Message-Id: <20200902230215.3452712-3-swboyd@chromium.org>
-X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
-In-Reply-To: <20200902230215.3452712-1-swboyd@chromium.org>
-References: <20200902230215.3452712-1-swboyd@chromium.org>
+        Wed, 2 Sep 2020 19:05:28 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082N5D3f003529;
+        Wed, 2 Sep 2020 18:05:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599087913;
+        bh=kgvzmdT3jeZ6E0CgRBKSKJBSYYL2SuexF1i/gVlvoIQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=qsAbeb7Gi3mKvZaHELNtNgyxAqgLYHYbTRUv2WhIlLuKNXXJGwyJS8V1o5fyEvDsa
+         0roJSqsLSyRBz7+HrChAy2fR/l7LhlQ2U8ZKlbAoKqsJYU56fi6pzodWXmF86vB0nj
+         PbSFWk1TjuN0vmG2M1xLnNNCP3vr6Lc9pJ+aAzYs=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082N5D7F065189;
+        Wed, 2 Sep 2020 18:05:13 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
+ 2020 18:05:13 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 2 Sep 2020 18:05:13 -0500
+Received: from [10.250.34.112] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082N5CWO036329;
+        Wed, 2 Sep 2020 18:05:12 -0500
+Subject: Re: [v2,5/6] reset-controller: ti: Introduce force-update method
+To:     Crystal Guo <crystal.guo@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?U2VpeWEgV2FuZyAo546L6L+65ZCbKQ==?= 
+        <seiya.wang@mediatek.com>,
+        =?UTF-8?B?U3RhbmxleSBDaHUgKOacseWOn+mZnik=?= 
+        <stanley.chu@mediatek.com>,
+        =?UTF-8?B?WWluZ2pvZSBDaGVuICjpmbPoi7HmtLIp?= 
+        <Yingjoe.Chen@mediatek.com>,
+        =?UTF-8?B?RmFuIENoZW4gKOmZs+WHoSk=?= <fan.chen@mediatek.com>,
+        =?UTF-8?B?WW9uZyBMaWFuZyAo5qKB5YuHKQ==?= <Yong.Liang@mediatek.com>
+References: <20200803061511.29555-1-crystal.guo@mediatek.com>
+ <20200803061511.29555-6-crystal.guo@mediatek.com>
+ <3413ca889fcef11c6dafe1d6b135e1887d84a6e4.camel@pengutronix.de>
+ <1597042656.11360.39.camel@mhfsdcap03>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <44c878d8-8138-2afa-b4a3-335823932262@ti.com>
+Date:   Wed, 2 Sep 2020 18:05:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1597042656.11360.39.camel@mhfsdcap03>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The phy mode pertains to the phy itself, i.e. 'struct qmp_phy', not the
-wrapper, i.e. 'struct qcom_qmp'. Move the phy mode into the phy
-structure to more accurately reflect what is going on. This also cleans
-up 'struct qcom_qmp' so that it can eventually be the place where qmp
-wrapper wide data is located, paving the way for the USB3+DP combo phy.
+Hi Crystal,
 
-Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
-Cc: Chandan Uddaraju <chandanu@codeaurora.org>
-Cc: Vara Reddy <varar@codeaurora.org>
-Cc: Tanmay Shah <tanmay@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Manu Gautam <mgautam@codeaurora.org>
-Cc: Sandeep Maheswaram <sanm@codeaurora.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Sean Paul <seanpaul@chromium.org>
-Cc: Jonathan Marek <jonathan@marek.ca>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/phy/qualcomm/phy-qcom-qmp.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+On 8/10/20 1:57 AM, Crystal Guo wrote:
+> On Tue, 2020-08-04 at 15:03 +0800, Philipp Zabel wrote:
+>> Hi Crystal,
+>>
+>> On Mon, 2020-08-03 at 14:15 +0800, Crystal Guo wrote:
+>>> Introduce force-update method for assert and deassert interface,
+>>> which force the write operation in case the read already happens
+>>> to return the correct value.
+>>>
+>>> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
+>>
+>> Added Suman and Andrew for confirmation: I think writing unconditionally
+>> can't break any existing user. Just changing to regmap_write_bits()
+>> instead of adding the update-force property as in v1 should be fine.
+>>
+>> regards
+>> Philipp
+>>
+> Hi Suman, Andrew,
+> 
+> Can you help to give some suggestions about this change.
+> Is this can be changed to write unconditionally, or should I add a
+> update-force property to force the write operation.
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 562053ce9455..7ee9e966dc6d 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -1812,6 +1812,7 @@ struct qmp_phy_cfg {
-  * @index: lane index
-  * @qmp: QMP phy to which this lane belongs
-  * @lane_rst: lane's reset controller
-+ * @mode: current PHY mode
-  */
- struct qmp_phy {
- 	struct phy *phy;
-@@ -1825,6 +1826,7 @@ struct qmp_phy {
- 	unsigned int index;
- 	struct qcom_qmp *qmp;
- 	struct reset_control *lane_rst;
-+	enum phy_mode mode;
- };
- 
- /**
-@@ -1843,7 +1845,6 @@ struct qmp_phy {
-  * @phy_mutex: mutex lock for PHY common block initialization
-  * @init_count: phy common block initialization count
-  * @phy_initialized: indicate if PHY has been initialized
-- * @mode: current PHY mode
-  * @ufs_reset: optional UFS PHY reset handle
-  */
- struct qcom_qmp {
-@@ -1861,7 +1862,6 @@ struct qcom_qmp {
- 	struct mutex phy_mutex;
- 	int init_count;
- 	bool phy_initialized;
--	enum phy_mode mode;
- 
- 	struct reset_control *ufs_reset;
- };
-@@ -2801,9 +2801,8 @@ static int qcom_qmp_phy_set_mode(struct phy *phy,
- 				 enum phy_mode mode, int submode)
- {
- 	struct qmp_phy *qphy = phy_get_drvdata(phy);
--	struct qcom_qmp *qmp = qphy->qmp;
- 
--	qmp->mode = mode;
-+	qphy->mode = mode;
- 
- 	return 0;
- }
-@@ -2816,8 +2815,8 @@ static void qcom_qmp_phy_enable_autonomous_mode(struct qmp_phy *qphy)
- 	void __iomem *pcs_misc = qphy->pcs_misc;
- 	u32 intr_mask;
- 
--	if (qmp->mode == PHY_MODE_USB_HOST_SS ||
--	    qmp->mode == PHY_MODE_USB_DEVICE_SS)
-+	if (qphy->mode == PHY_MODE_USB_HOST_SS ||
-+	    qphy->mode == PHY_MODE_USB_DEVICE_SS)
- 		intr_mask = ARCVR_DTCT_EN | ALFPS_DTCT_EN;
- 	else
- 		intr_mask = ARCVR_DTCT_EN | ARCVR_DTCT_EVENT_SEL;
-@@ -2863,7 +2862,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_suspend(struct device *dev)
- 	struct qmp_phy *qphy = qmp->phys[0];
- 	const struct qmp_phy_cfg *cfg = qmp->cfg;
- 
--	dev_vdbg(dev, "Suspending QMP phy, mode:%d\n", qmp->mode);
-+	dev_vdbg(dev, "Suspending QMP phy, mode:%d\n", qphy->mode);
- 
- 	/* Supported only for USB3 PHY */
- 	if (cfg->type != PHY_TYPE_USB3)
-@@ -2889,7 +2888,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_resume(struct device *dev)
- 	const struct qmp_phy_cfg *cfg = qmp->cfg;
- 	int ret = 0;
- 
--	dev_vdbg(dev, "Resuming QMP phy, mode:%d\n", qmp->mode);
-+	dev_vdbg(dev, "Resuming QMP phy, mode:%d\n", qphy->mode);
- 
- 	/* Supported only for USB3 PHY */
- 	if (cfg->type != PHY_TYPE_USB3)
--- 
-Sent by a computer, using git, on the internet
+Sorry for the delay on this one, I have tested your latest v4, and everything is
+functional on the TI SoCs. We do use the same register for asserting and
+deasserting and is not self-clearing, and have additional non-reset related bits
+in the register, so this change doesn't impact us. I have some minor
+comments/questions that I will post on your v4.
+
+Removing Andrew to not have the emails bounce.
+
+regards
+Suman
+
+> 
+> Best regards
+> Crystal.
+> 
+>>> ---
+>>>  drivers/reset/reset-ti-syscon.c | 15 +++++++++++++--
+>>>  1 file changed, 13 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/reset/reset-ti-syscon.c b/drivers/reset/reset-ti-syscon.c
+>>> index 1c74bcb9a6c3..f4baf78afd14 100644
+>>> --- a/drivers/reset/reset-ti-syscon.c
+>>> +++ b/drivers/reset/reset-ti-syscon.c
+>>> @@ -57,6 +57,7 @@ struct ti_syscon_reset_data {
+>>>  	struct ti_syscon_reset_control *controls;
+>>>  	unsigned int nr_controls;
+>>>  	bool assert_deassert_together;
+>>> +	bool update_force;
+>>>  };
+>>>  
+>>>  #define to_ti_syscon_reset_data(rcdev)	\
+>>> @@ -90,7 +91,10 @@ static int ti_syscon_reset_assert(struct reset_controller_dev *rcdev,
+>>>  	mask = BIT(control->assert_bit);
+>>>  	value = (control->flags & ASSERT_SET) ? mask : 0x0;
+>>>  
+>>> -	return regmap_update_bits(data->regmap, control->assert_offset, mask, value);
+>>> +	if (data->update_force)
+>>> +		return regmap_write_bits(data->regmap, control->assert_offset, mask, value);
+>>> +	else
+>>> +		return regmap_update_bits(data->regmap, control->assert_offset, mask, value);
+>>>  }
+>>>  
+>>>  /**
+>>> @@ -121,7 +125,10 @@ static int ti_syscon_reset_deassert(struct reset_controller_dev *rcdev,
+>>>  	mask = BIT(control->deassert_bit);
+>>>  	value = (control->flags & DEASSERT_SET) ? mask : 0x0;
+>>>  
+>>> -	return regmap_update_bits(data->regmap, control->deassert_offset, mask, value);
+>>> +	if (data->update_force)
+>>> +		return regmap_write_bits(data->regmap, control->deassert_offset, mask, value);
+>>> +	else
+>>> +		return regmap_update_bits(data->regmap, control->deassert_offset, mask, value);
+>>>  }
+>>>  
+>>>  /**
+>>> @@ -223,6 +230,10 @@ static int ti_syscon_reset_probe(struct platform_device *pdev)
+>>>  		data->assert_deassert_together = true;
+>>>  	else
+>>>  		data->assert_deassert_together = false;
+>>> +	if (of_property_read_bool(np, "update-force"))
+>>> +		data->update_force = true;
+>>> +	else
+>>> +		data->update_force = false;
+>>>  
+>>>  	data->rcdev.ops = &ti_syscon_reset_ops;
+>>>  	data->rcdev.owner = THIS_MODULE;
+>>> -- 
+>>> 2.18.0
+> 
 
