@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070E1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A27C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7FED207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E610207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599036934;
-	bh=XSL6G6Qu2uR5HLAFtRocNyj4crqp5skmu2VNvQ7XRR0=;
+	s=default; t=1599036941;
+	bh=KSfDn1rAofDp+IGlsS+1QKVw8oVSBvy/kgB52AVCOfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vLup+w4sEZFqUP3P6AU0m+alY9+sdIN2cjwX9fQ1RvCU+uXKyFfi/dRuSsQtnv1sH
-	 AmAQT85NUgm14RjA1qnCu5iQata6xNNOgOdCwH3NJWp9CrJRWI/fs/0fHpryCE91mj
-	 5IllO4UveWXjKVvQ00/lc7tWuPpcfEJgL6851UCY=
+	b=MuTrDoFLoLyTiU9sWhikvkx8C4EQZEpMaiErq7TIvyMISUmi56sxZNdRVuLMVM8rp
+	 Xvzt03ocxvn6cPZO5SD19Feu7SszEQrFu+iBb01gENqWH1Ssh4YRhkljRvnca/POmS
+	 MZJu+oRpZ0u8Qp+7u3GdV8liuYy1l2Ms4AWinvLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgIBIzc (ORCPT
+        id S1726821AbgIBIzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:55:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35030 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 04:55:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbgIBIza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:55:30 -0400
+        id S1726307AbgIBIzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 04:55:33 -0400
 Received: from localhost (unknown [213.57.247.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B895207EA;
-        Wed,  2 Sep 2020 08:55:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91B422078B;
+        Wed,  2 Sep 2020 08:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599036929;
-        bh=XSL6G6Qu2uR5HLAFtRocNyj4crqp5skmu2VNvQ7XRR0=;
+        s=default; t=1599036933;
+        bh=KSfDn1rAofDp+IGlsS+1QKVw8oVSBvy/kgB52AVCOfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lUOo8gxWvD+LiR0t4vNlt6pHdphs40iKwRlOAPyuFeQKwCB6tpFJHnRZkgkJeeBk9
-         aRljgbYCwf9fyPels69KSbJKoMMNmN5Dmtz9zZujA4B2byKnaDGzDJBeOMn+MIcFrA
-         ubMEIuOP+8X7+xEKP94hnM//nJmVCOo2R/dhda4A=
+        b=tP7I3x75qYFGfPcjUGPHKxG0VFwywevHXRUFfZDfrXdM4G6ADRucJNsc6Y4NgJtB1
+         pBqOJ8J7Bd9dBiPDRE53g+mlQuUusiVISC0BY+AETsIHspdVKPc+dp4ydGT7vR6fQt
+         yAauxh1P7WYbdjPa8hUceQuedAadbsjafGM9gy84=
 From:   Leon Romanovsky <leon@kernel.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>,
         Peter Oberparleiter <oberpar@linux.ibm.com>
 Cc:     Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org,
         Colin Ian King <colin.king@canonical.com>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH rdma-next 4/4] gcov: Don't print out-of-memory print for all failed files
-Date:   Wed,  2 Sep 2020 11:55:13 +0300
-Message-Id: <20200902085513.748149-5-leon@kernel.org>
+Subject: [PATCH rdma-next 2/4] gcov: Use proper duplication routine for const pointer
+Date:   Wed,  2 Sep 2020 11:55:11 +0300
+Message-Id: <20200902085513.748149-3-leon@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200902085513.748149-1-leon@kernel.org>
 References: <20200902085513.748149-1-leon@kernel.org>
@@ -60,36 +60,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Leon Romanovsky <leonro@nvidia.com>
 
-Once GCOV fails to duplicate information, the following error is
-printed:
- gcov: could not save data for '/home/leonro/src/kernel/drivers/infiniband/hw/mlx5/std_types.gcda' (out of memory)
-
-In the event of out-of-memory such prints are seen for almost every kernel
-file, so instead of spamming dmesg, we print the first failure and inform
-the user that future prints are suppressed.
+The filename is a const pointer, so use the proper string duplication
+routine that takes into account const identifier.
 
 Cc: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- kernel/gcov/fs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/gcov/gcc_4_7.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/gcov/fs.c b/kernel/gcov/fs.c
-index 82babf5aa077..b74d426ca99e 100644
---- a/kernel/gcov/fs.c
-+++ b/kernel/gcov/fs.c
-@@ -685,8 +685,9 @@ static void save_info(struct gcov_node *node, struct gcov_info *info)
- 	else {
- 		node->unloaded_info = gcov_info_dup(info);
- 		if (!node->unloaded_info) {
--			pr_warn("could not save data for '%s' "
--				"(out of memory)\n",
-+			pr_warn_once(
-+				"could not save data for first file '%s' "
-+				"(out of memory), other files are suppressed\n",
- 				gcov_info_filename(info));
- 		}
- 	}
+diff --git a/kernel/gcov/gcc_4_7.c b/kernel/gcov/gcc_4_7.c
+index 6d706c5eed5c..318211deb903 100644
+--- a/kernel/gcov/gcc_4_7.c
++++ b/kernel/gcov/gcc_4_7.c
+@@ -283,7 +283,7 @@ struct gcov_info *gcov_info_dup(struct gcov_info *info)
+ 		dup->merge[fi_idx] = info->merge[fi_idx];
+ 	dup->n_functions = info->n_functions;
+
+-	dup->filename = kstrdup(info->filename, GFP_KERNEL);
++	dup->filename = kstrdup_const(info->filename, GFP_KERNEL);
+ 	if (!dup->filename)
+ 		goto err_free;
+
+@@ -359,7 +359,7 @@ void gcov_info_free(struct gcov_info *info)
+
+ free_info:
+ 	kfree(info->functions);
+-	kfree(info->filename);
++	kfree_const(info->filename);
+ 	kfree(info);
+ }
+
 --
 2.26.2
 
