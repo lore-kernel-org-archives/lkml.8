@@ -2,84 +2,117 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E03BC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125C4C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47BCC207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599060854;
-	bh=Fs18BxDh30uCo3ZDwyUeMkatUdMfVW+lfqxSq1sCFLc=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=NUwzD3bV758IFKFy7dktBuJy3Ow7gMNZh3DtS245ljmfS/Jwov1rTe90jEFmibcd/
-	 G25RUOrdIOULF3/EMIfGCl50Rv1HCUlhiksTBukkORdRiDeBx4X2X18PQoC8fybTw6
-	 0tHXsP1la4OM6hTxoZExTZIFNvWJPCYvmUwRn/0s=
+	by mail.kernel.org (Postfix) with ESMTP id D9FF0207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgIBPd7 (ORCPT
+        id S1728520AbgIBPe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:33:59 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35085 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728286AbgIBPcX (ORCPT
+        Wed, 2 Sep 2020 11:34:26 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33210 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727978AbgIBPT5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:32:23 -0400
-Received: by mail-ed1-f67.google.com with SMTP id ba12so5370125edb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 08:32:22 -0700 (PDT)
+        Wed, 2 Sep 2020 11:19:57 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r13so6404531ljm.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 08:19:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3bSjrsWyOdwws/6V1L8nkxgPO+2ogVVxA6Jvka04XvE=;
-        b=DNa3rO7392CsWZfBeclVaMUTqo/0IxRuzPqVYjRg4yzPKijY77vR1pu4+VNlcQyavc
-         18aiFJyTd8b8+jINzh46PqEIH8P7waWHN752Q3Lh33GhlSPw6RmaDBaZr+IhIvBoxfbg
-         i7hjaliHr0tpQYIeJB963Q++GMmK8DoqqfdwNrg80aqVvJe/+d3BFONB8XDXBsD0G7vp
-         x/eGuGNWuUM5mrRYYOFTuWRuyRH+TGnzDFxTt+voK5LC85Jc3gVoA1ZnjevUwVmvxSm3
-         AKIaqlF/FzcHqtaPC1GR/SRV7Zvyj4t7QFax0PzexZ8Z+7QqHi3DdRtELIctq1ykIyJW
-         skYA==
-X-Gm-Message-State: AOAM533d9mBSBt8bQJsr4EKbqJVjxauy+lFwYArD7tjSmdbosL3anJPh
-        7yTaHd83i7m0ybep1+6yEuHi6KhUpsCoEw==
-X-Google-Smtp-Source: ABdhPJxippTb/3lhBVf4jGnlPaco8p2sPtbg+e2Miuxwy2TICwyCT6TxTd2a4oOuvoBNhLsTrIKy0A==
-X-Received: by 2002:aa7:c896:: with SMTP id p22mr616756eds.382.1599060741980;
-        Wed, 02 Sep 2020 08:32:21 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.106])
-        by smtp.googlemail.com with ESMTPSA id rl14sm4869930ejb.109.2020.09.02.08.32.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Sep 2020 08:32:21 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 17:32:19 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Scott Wood <scottwood@freescale.com>,
-        Bharat Bhushan <bharat.bhushan@freescale.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HsbOuaSUjgAzeexavqDg8BNI1kBauuGj+WofnxN6QNY=;
+        b=cc1AGaoj0OcvL/+WPcH7sDlbjvjHWZdYWW1q94LCOk1uxB5ZaU7zbhqsz7hhXLyUhP
+         pvbozpU142DE3/zGjqQJqreV8zgFTE6wW+X4EqIimePc2UL+c9+QGlJb5GoV8e8YVlWK
+         wFtKD0ZOp3a8EK0gbFPtNczcblx3/vk2MoJ7bSJ6RweAlvZQynpQbrNfPumR4jo/ykXN
+         1BMu5zoDRM6EC4IUxo3oBjtPSO3ZWMRA0+WNYeS4G0SFoTlTNql73bcNYkf9oPeNR5hr
+         CPtNWVagDNe9DsjdEoIBNzEot5eda77bdGtd5jVmpnss0HlNrhCYWThVvNl/9Acw63Wb
+         prnQ==
+X-Gm-Message-State: AOAM533BhfnqyxhAKDbs6FOZVTukleSdnLWyZQg6EP8YLZCX3qkPAQlE
+        2FRkxjlfJpoq8gxC/EX+7Jw=
+X-Google-Smtp-Source: ABdhPJzACUXTQXy8Xb64npDMdaJF3tKdaUBc6OWlHTbLKCrBuYLg4OLJRN9ayI7m+UELp0ovEVY3+w==
+X-Received: by 2002:a05:651c:310:: with SMTP id a16mr3378753ljp.250.1599059947599;
+        Wed, 02 Sep 2020 08:19:07 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id n8sm1036690ljj.69.2020.09.02.08.19.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 08:19:06 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] memory: fsl-corenet-cf: Fix handling of
- platform_get_irq() error
-Message-ID: <20200902153219.GA20895@kozik-lap>
-References: <20200827073315.29351-1-krzk@kernel.org>
+Subject: [PATCH] coccinelle: misc: add excluded_middle.cocci script
+Date:   Wed,  2 Sep 2020 18:18:59 +0300
+Message-Id: <20200902151859.403354-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200827073315.29351-1-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 09:33:15AM +0200, Krzysztof Kozlowski wrote:
-> platform_get_irq() returns -ERRNO on error.  In such case comparison
-> to 0 would pass the check.
-> 
-> Fixes: 54afbec0d57f ("memory: Freescale CoreNet Coherency Fabric error reporting driver")
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/memory/fsl-corenet-cf.c | 6 ++----
+Check for "!A || A && B" condition. It's equivalent to
+"!A || B" condition.
 
-Applied.
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ scripts/coccinelle/misc/excluded_middle.cocci | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 scripts/coccinelle/misc/excluded_middle.cocci
 
-Best regards,
-Krzysztof
+diff --git a/scripts/coccinelle/misc/excluded_middle.cocci b/scripts/coccinelle/misc/excluded_middle.cocci
+new file mode 100644
+index 000000000000..1b8c20f13966
+--- /dev/null
++++ b/scripts/coccinelle/misc/excluded_middle.cocci
+@@ -0,0 +1,40 @@
++// SPDX-License-Identifier: GPL-2.0-only
++///
++/// Condition "!A || A && B" is equalent to "!A || B".
++///
++// Confidence: High
++// Copyright: (C) 2020 Denis Efremov ISPRAS
++// Options: --no-includes --include-headers
++
++virtual patch
++virtual context
++virtual org
++virtual report
++
++@r depends on !patch@
++expression A, B;
++position p;
++@@
++
++* !A || (A && B)@p
++
++@depends on patch@
++expression A, B;
++@@
++
++  !A || 
++-      (A &&
++             B
++-      )
++
++@script:python depends on report@
++p << r.p;
++@@
++
++coccilib.report.print_report(p[0], "WARNING condition !A || A && B is equivalent to !A || B")
++
++@script:python depends on org@
++p << r.p;
++@@
++
++coccilib.org.print_todo(p[0], "WARNING condition !A || A && B is equivalent to !A || B")
+-- 
+2.26.2
 
