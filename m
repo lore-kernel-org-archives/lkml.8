@@ -7,74 +7,73 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EB8C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA006C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 522DD20C56
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92DE4207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599068509;
-	bh=Wxy4hl5UGmZhch5TF7Q0vO2FTh9Ukb5URJLRECRLJiQ=;
+	s=default; t=1599068597;
+	bh=L2RLNFBb3pJEFSKqzSJ2lW5q8hFqMs8sMwYcCEmwNmk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ulMpCk+HBZNvQtgO0CQBUry1oS3Rt/FG3N4INueiSSM8Vna1OZPt0CoHKOWBNfcno
-	 rA4qZm+qoqCram8bXLMcFUVdgjHR11Xcg18Xvh1XeZ3hAyl9nrwGZr/M2BV91aoB9Q
-	 E4n/4ZFENPDTKuCIRrF2OnPtGh25rcXZfurMdu3g=
+	b=qB3JJo6QGs5RGJV+NRAFOMMgIy9UrM67fwWKQeUA4F0RZW3kzat/8io10nZLs4i1o
+	 A7fTs/2VSkhB0qhip9baJtybeJEibQJEKFAu1wJVL5O8IDc6j5URc8hVQ9IHyLwtCT
+	 2N3SYuYcDstqsEACo7u6WPIP8yoXhECFlk8jBIc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgIBRlr (ORCPT
+        id S1727035AbgIBRnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 13:41:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42136 "EHLO
+        Wed, 2 Sep 2020 13:43:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgIBRll (ORCPT
+        with ESMTP id S1726397AbgIBRnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:41:41 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ECDEC061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 10:41:40 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id c2so100944ljj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 10:41:40 -0700 (PDT)
+        Wed, 2 Sep 2020 13:43:15 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7321C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 10:43:14 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id z17so238986lfi.12
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 10:43:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=O+3fzIDZD6dB4Dw6aLJ8wyJ60xmGq/K5MrVPSuFfpYg=;
-        b=Dk4d2sKC9aHKI0/Jp4sIy5gZVnevd126YEnMPVUCxfGj2azHnWnaDF8qKQEVfAT+Mg
-         5OkseLzs6rYWX6xbPHAyOXgj2Vcuuo+JWH+rhknFrZgh9CMYO50wFa1JD4fiLIAn/Vob
-         5ZyfVDjLlq8ZFXy3EZlU93BiOqVhXsNyfQTVg=
+        bh=Ax4MLi3AqiY7j/Hjm/smPZihj5xUUH2jvyHqBkLg8ZY=;
+        b=YJefbKeZi/8D+oX79CBi6m6JiUD4YlGAWejKmENbxOrApxhdnjTRlzKpFyhIH2lg2h
+         WKXZLNwQ38a/TCCx4j38kHsKoHJ6hA9fO3L0p73zGKxNaB+7cMgL8tZuu8Rv7N3O41ot
+         oKgmA9cmbOP1gjx/77tJ0qr+VW5W2R4qfc6PI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=O+3fzIDZD6dB4Dw6aLJ8wyJ60xmGq/K5MrVPSuFfpYg=;
-        b=Qa8D0azsooMiUPt4GEQPaNmMffPhI2dFQYSfp35cSOv1jFBBqT4gdgFIiIulG5GA89
-         DzCTtnRDNfM1pV+a+KKhrq8Bt1LsSoIpNggwDcMwCSozR9pN6xI7/kHPley4x3vx6aXD
-         5o7hpkGNfFkzXL3x7uI1Ec51Zy3jsqA4NccbmXXjibuOSLve4FmEKv4g8T9NVTtloDcH
-         daMC1EeZWBbaUmcfSuJzGhX/AJgPpMhKjef+o8/wIwcOZG36kmVjCHaqXi/BkltEizt0
-         nBt0k46d0LwWWYqH+NEif+cBf8slcO2JnODv+VttMBwpl/klreA/tMQ+1u477uLoe4yK
-         XhPA==
-X-Gm-Message-State: AOAM530E85UQqc9yDxH7ZAJQqqYqBFRh6PeltnkkQQlO17fZpvBR1n1A
-        AsXmsVvcBYib5yFK5Evg1eF2UeFGDiO7+g==
-X-Google-Smtp-Source: ABdhPJyDCSipLW2roac2URB8QU9bDY/W0WHQrPv+1T17sNkZfXJh71dob3J2bLtbUJIan8tQb0jRXA==
-X-Received: by 2002:a2e:9607:: with SMTP id v7mr3692724ljh.174.1599068498429;
-        Wed, 02 Sep 2020 10:41:38 -0700 (PDT)
+        bh=Ax4MLi3AqiY7j/Hjm/smPZihj5xUUH2jvyHqBkLg8ZY=;
+        b=Oy0bEZEBoa5d3PX5AscVs9d65Kdp6LVh4e/LCJaESNvamnUi9DT5ojETB596HepGcT
+         q/4lSArEKFu8LQRkdG2oLPRe4nDGtRDwNjl2WtenBB/yanQJJ4GOx1Los4GU7vHIO+Bw
+         wdCnhd0tY+rrXSSBQ3frb2Tp2l/mAUaBZcvnsbnpub80Fex2cdKOvDA+65nzzGtw/jhM
+         +70zjXlyrMSj3FXRAKLibhZsY3Hqp7bISbWwJpXdnAChnznA0WsWxHg3RQiJsL0k5dV5
+         zkCtqEYRr2iQi0lD6B8JEQBl39ntdqTliNRZFZOdDvX5eNF5BT9X2lmbVf5MuNn7+YNs
+         jyew==
+X-Gm-Message-State: AOAM530VzAt9lIGdDfr+esVgpjKTQpKmHq+U+fp8QY41wLWUFHmIPDl5
+        LesLfaqc3ApYMjHjB6Wv7nlh5Tgd6v5QEg==
+X-Google-Smtp-Source: ABdhPJyYARgRErvIPht9nIvWkon/jvzNT4IXJKmc0ooe8MCtzfR88WU6RSR/8rWOzENElKjJilJImA==
+X-Received: by 2002:ac2:592d:: with SMTP id v13mr3013367lfi.124.1599068592723;
+        Wed, 02 Sep 2020 10:43:12 -0700 (PDT)
 Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id b15sm54832lji.140.2020.09.02.10.41.37
+        by smtp.gmail.com with ESMTPSA id h8sm55683ljk.138.2020.09.02.10.43.11
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 10:41:37 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id w14so167430ljj.4
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 10:41:37 -0700 (PDT)
-X-Received: by 2002:a2e:b5a3:: with SMTP id f3mr3579210ljn.70.1599068497154;
- Wed, 02 Sep 2020 10:41:37 -0700 (PDT)
+        Wed, 02 Sep 2020 10:43:12 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id e11so156591ljn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 10:43:11 -0700 (PDT)
+X-Received: by 2002:a05:651c:219:: with SMTP id y25mr3652231ljn.314.1599068591485;
+ Wed, 02 Sep 2020 10:43:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200902085513.748149-1-leon@kernel.org> <20200902085513.748149-4-leon@kernel.org>
-In-Reply-To: <20200902085513.748149-4-leon@kernel.org>
+References: <20200902085513.748149-1-leon@kernel.org>
+In-Reply-To: <20200902085513.748149-1-leon@kernel.org>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 2 Sep 2020 10:41:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiLHGi31Mpc6ObCYD8ho8Yy=0UqGyo6E_Ocv4XaFcEkKA@mail.gmail.com>
-Message-ID: <CAHk-=wiLHGi31Mpc6ObCYD8ho8Yy=0UqGyo6E_Ocv4XaFcEkKA@mail.gmail.com>
-Subject: Re: [PATCH rdma-next 3/4] gcov: Protect from uninitialized number of
- functions provided by GCC 10.2
+Date:   Wed, 2 Sep 2020 10:42:55 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whURzFKdBsoHCVsy4VU-cmAKBQEhkiS8Y8TQ9nRgAbP8g@mail.gmail.com>
+Message-ID: <CAHk-=whURzFKdBsoHCVsy4VU-cmAKBQEhkiS8Y8TQ9nRgAbP8g@mail.gmail.com>
+Subject: Re: [PATCH -rc 0/4] Protect from GCC garbage input in GCOV
 To:     Leon Romanovsky <leon@kernel.org>
 Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
         Leon Romanovsky <leonro@nvidia.com>,
@@ -89,15 +88,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, Sep 2, 2020 at 1:55 AM Leon Romanovsky <leon@kernel.org> wrote:
 >
-> This trace is seen because n_function value provided by GCC through
-> __gcov_init() is ridiculously high, in my case it was 2698213824,
-> which probably means that the field is not initialized.
+> Bottom line, GCOV is broken on GCC 10.2.
 
-This seems to be wrong - since a different (smaller) uninitialized
-value will succeed in the kcalloc, but will then walk some random
-array size when copying and fail later instead.
+The patches don't really make sense to me.
 
-So this doesn't actually seem to _fix_ anything, it just hides one
-special case of bogus values.
+How about we just disable GCOV with the known-broken compiler version
+instead? As mentioned in the replies to individual patches, it looks
+like the "fixes" are random bandaids that don't _really_ fix anything.
 
-              Linus
+                Linus
