@@ -2,129 +2,183 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC27C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690DCC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A33A208B3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:48:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="j/L2keva"
+	by mail.kernel.org (Postfix) with ESMTP id 45484208C7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:48:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599061695;
+	bh=4nBXQMAOX8blqbEXUEK70S72k3vG/C/3WXxmVFWBar4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Xig6LGWK2aNPUGzJKElSGCOhsfQ1zv+GOweoIXhIN0Q4eghodVWmVn6id4GQKE1WP
+	 cj/h1SY6HqVriiEw+ozUhUiJsPn0lJmpL3wpQ7YKPJP0S4zflKIARKchD6YYmIKal3
+	 vNKWEq1fhM30ZLPJzGv3Ny+EWgNp7RrW0zJOW7rY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgIBPsK (ORCPT
+        id S1728649AbgIBPsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:48:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45574 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728571AbgIBPre (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:47:34 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 082FW52j046432;
-        Wed, 2 Sep 2020 11:47:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=B9HMMIYxV7dLKsUViztHWLvJvaoop/tt7LeMtRlkEdg=;
- b=j/L2kevaqTtg0L2RSlXvTdVbe+bR5FpGm3jSl3XkfCeJYMtWlz4wTp6ho1KQ7ifeuYss
- JhzRrfLNCMor+uQiL3FlIUBJ0UtFGbxHPonJa1PJlFPUCo1B/l5mcqCSAdoShdaKiN14
- OI+qbcqPndA51Ome97Nwjj/oOiiMsE4D/6gJgsRMCeKq2amt5Z3C1V7WlrDOkWBcH5It
- zEXxwgkzWsOftYzMqm/qny+zP9gR6LVkAT9kQgJRt/b4e7mj2+75aYFypfh5nWvf2P5Z
- 8RJjuQUKgDS9zDlhCs7RjyWonF3AcReiB2nm12t4AXCs1ZbrdROeyXXH6jXqBZ2sjTka Fw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33ae37rh9x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 11:47:23 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 082FgMtE113019;
-        Wed, 2 Sep 2020 11:47:22 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33ae37rh8u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 11:47:22 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 082FlK8B021110;
-        Wed, 2 Sep 2020 15:47:20 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma01wdc.us.ibm.com with ESMTP id 337en990f3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 15:47:20 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 082FlGsH34472356
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Sep 2020 15:47:16 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5785C78064;
-        Wed,  2 Sep 2020 15:47:19 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA4E67806B;
-        Wed,  2 Sep 2020 15:47:18 +0000 (GMT)
-Received: from [9.211.74.86] (unknown [9.211.74.86])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed,  2 Sep 2020 15:47:18 +0000 (GMT)
-Subject: Re: [PATCH 2/5] input: misc: Add IBM Operation Panel driver
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-i2c@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au,
-        benh@kernel.crashing.org, brendanhiggins@google.com,
-        dmitry.torokhov@gmail.com, robh+dt@kernel.org
-References: <20200820161152.22751-1-eajames@linux.ibm.com>
- <20200820161152.22751-3-eajames@linux.ibm.com>
- <20200901061108.GB1148@ninjato>
-From:   Eddie James <eajames@linux.ibm.com>
-Message-ID: <796de8d4-6771-a8da-ea93-6e7e08aa93b0@linux.ibm.com>
-Date:   Wed, 2 Sep 2020 10:47:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200901061108.GB1148@ninjato>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+        Wed, 2 Sep 2020 11:48:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726821AbgIBNa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:30:27 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEB8F20767;
+        Wed,  2 Sep 2020 13:19:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599052772;
+        bh=4nBXQMAOX8blqbEXUEK70S72k3vG/C/3WXxmVFWBar4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GDugYxKxMVWwExNCyjSt5NxZo2b+BOn20T2fVJ2yxRdYdrN6hepJZtB/s2/MXTW0s
+         r76jarj7gquPqJPY1fqrxk/hfsee9aJEAZWSNXMJklfkYIynP6Pbg0v3ImtCT4yjvt
+         FQV9h3RqWmVwUwCUZXWdYndzN4wtozFTyS1Tos+E=
+Date:   Wed, 2 Sep 2020 22:19:26 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     peterz@infradead.org
+Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
+        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
+        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
+        paulmck@kernel.org
+Subject: Re: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers
+ and make kretprobe lockless
+Message-Id: <20200902221926.f5cae5b4ad00b8d8f9ad99c7@kernel.org>
+In-Reply-To: <20200902093613.GY1362448@hirez.programming.kicks-ass.net>
+References: <159870598914.1229682.15230803449082078353.stgit@devnote2>
+        <20200901190808.GK29142@worktop.programming.kicks-ass.net>
+        <20200902093739.8bd13603380951eaddbcd8a5@kernel.org>
+        <20200902070226.GG2674@hirez.programming.kicks-ass.net>
+        <20200902171755.b126672093a3c5d1b3a62a4f@kernel.org>
+        <20200902093613.GY1362448@hirez.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-02_09:2020-09-02,2020-09-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- spamscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 clxscore=1011
- mlxlogscore=999 malwarescore=0 priorityscore=1501 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009020144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2 Sep 2020 11:36:13 +0200
+peterz@infradead.org wrote:
 
-On 9/1/20 1:11 AM, Wolfram Sang wrote:
->> +	switch (event) {
->> +	case I2C_SLAVE_STOP:
->> +		command_size = panel->idx;
->> +		fallthrough;
->> +	case I2C_SLAVE_WRITE_REQUESTED:
->> +		panel->idx = 0;
->> +		break;
->> +	case I2C_SLAVE_WRITE_RECEIVED:
->> +		if (panel->idx < sizeof(panel->command))
->> +			panel->command[panel->idx++] = *val;
->> +		else
->> +			dev_dbg(&panel->input->dev, "command truncated\n");
-> Just double checking: Do you really want to process truncated commands?
-> Since you detect the state here, you could also choose to reject such
-> commands?
+> On Wed, Sep 02, 2020 at 05:17:55PM +0900, Masami Hiramatsu wrote:
+> 
+> > > Ok, but then lockdep will yell at you if you have that enabled and run
+> > > the unoptimized things.
+> > 
+> > Oh, does it warn for all spinlock things in kprobes if it is unoptimized?
+> > Hmm, it has to be noted in the documentation.
+> 
+> Lockdep will warn about spinlocks used in NMI context that are also used
+> outside NMI context.
+
+OK, but raw_spin_lock_irqsave() will not involve lockdep, correct?
+
+> Now, for the kretprobe that kprobe_busy flag prevents the actual
+> recursion self-deadlock, but lockdep isn't smart enough to see that.
+> 
+> One way around this might be to use SINGLE_DEPTH_NESTING for locks when
+> we use them from INT3 context. That way they'll have a different class
+> and lockdep will not see the recursion.
+
+Hmm, so lockdep warns only when it detects the spinlock in NMI context,
+and int3 is now always NMI, thus all spinlock (except raw_spinlock?)
+in kprobe handlers should get warned, right?
+I have tested this series up to [16/21] with optprobe disabled, but
+I haven't see the lockdep warnings.
+
+> 
+> pre_handler_kretprobe() is always called from INT3, right?
+
+No, not always, it can be called from optprobe (same as original code
+context) or ftrace handler.
+But if you set 0 to /proc/sys/debug/kprobe_optimization, and compile
+the kernel without function tracer, it should always be called from
+INT3.
+
+> 
+> Something like the below might then work...
+
+OK, but I would like to reproduce the lockdep warning on this for
+confirmation.
+
+Thank you,
+
+> 
+> ---
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 287b263c9cb9..b78f4fe08e86 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1255,11 +1255,11 @@ __acquires(hlist_lock)
+>  NOKPROBE_SYMBOL(kretprobe_hash_lock);
+>  
+>  static void kretprobe_table_lock(unsigned long hash,
+> -				 unsigned long *flags)
+> +				 unsigned long *flags, int nesting)
+>  __acquires(hlist_lock)
+>  {
+>  	raw_spinlock_t *hlist_lock = kretprobe_table_lock_ptr(hash);
+> -	raw_spin_lock_irqsave(hlist_lock, *flags);
+> +	raw_spin_lock_irqsave_nested(hlist_lock, *flags, nesting);
+>  }
+>  NOKPROBE_SYMBOL(kretprobe_table_lock);
+>  
+> @@ -1326,7 +1326,7 @@ void kprobe_flush_task(struct task_struct *tk)
+>  	INIT_HLIST_HEAD(&empty_rp);
+>  	hash = hash_ptr(tk, KPROBE_HASH_BITS);
+>  	head = &kretprobe_inst_table[hash];
+> -	kretprobe_table_lock(hash, &flags);
+> +	kretprobe_table_lock(hash, &flags, 0);
+>  	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
+>  		if (ri->task == tk)
+>  			recycle_rp_inst(ri, &empty_rp);
+> @@ -1361,7 +1361,7 @@ static void cleanup_rp_inst(struct kretprobe *rp)
+>  
+>  	/* No race here */
+>  	for (hash = 0; hash < KPROBE_TABLE_SIZE; hash++) {
+> -		kretprobe_table_lock(hash, &flags);
+> +		kretprobe_table_lock(hash, &flags, 0);
+>  		head = &kretprobe_inst_table[hash];
+>  		hlist_for_each_entry_safe(ri, next, head, hlist) {
+>  			if (ri->rp == rp)
+> @@ -1950,7 +1950,7 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+>  
+>  	/* TODO: consider to only swap the RA after the last pre_handler fired */
+>  	hash = hash_ptr(current, KPROBE_HASH_BITS);
+> -	raw_spin_lock_irqsave(&rp->lock, flags);
+> +	raw_spin_lock_irqsave_nested(&rp->lock, flags, SINGLE_DEPTH_NESTING);
+>  	if (!hlist_empty(&rp->free_instances)) {
+>  		ri = hlist_entry(rp->free_instances.first,
+>  				struct kretprobe_instance, hlist);
+> @@ -1961,7 +1961,7 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+>  		ri->task = current;
+>  
+>  		if (rp->entry_handler && rp->entry_handler(ri, regs)) {
+> -			raw_spin_lock_irqsave(&rp->lock, flags);
+> +			raw_spin_lock_irqsave_nested(&rp->lock, flags, SINGLE_DEPTH_NESTING);
+>  			hlist_add_head(&ri->hlist, &rp->free_instances);
+>  			raw_spin_unlock_irqrestore(&rp->lock, flags);
+>  			return 0;
+> @@ -1971,7 +1971,7 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+>  
+>  		/* XXX(hch): why is there no hlist_move_head? */
+>  		INIT_HLIST_NODE(&ri->hlist);
+> -		kretprobe_table_lock(hash, &flags);
+> +		kretprobe_table_lock(hash, &flags, SINGLE_DEPTH_NESTING);
+>  		hlist_add_head(&ri->hlist, &kretprobe_inst_table[hash]);
+>  		kretprobe_table_unlock(hash, &flags);
+>  	} else {
 
 
-Yes I suppose not. It could still be a valid command with extra bytes, 
-but unlikely, so probably better not to handle it.
-
-
-Thanks,
-
-Eddie
-
-
->
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
