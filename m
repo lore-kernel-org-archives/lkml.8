@@ -4,166 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26B7C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A678C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 958F920709
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140A220773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:32:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jy6VilAp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b4g7VLAA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZKW3UwWf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgIBI3E (ORCPT
+        id S1726323AbgIBIc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:29:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41746 "EHLO
+        Wed, 2 Sep 2020 04:32:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgIBI3D (ORCPT
+        with ESMTP id S1726167AbgIBIcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:29:03 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39721C061244;
-        Wed,  2 Sep 2020 01:29:03 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599035341;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pi/cQi80UUB8ig04fsQZMzpFt4TllRwrei28HJurdzY=;
-        b=Jy6VilApm+/5kg1/8qC3/cxjHXxLnMUSLK2ESKKHeoZy1CWmbzPTx3c/L0AOe9hbirGyy/
-        tru25u1yH8wSagSZkI6AxxEbR+PrS4wcuj5KEmoKqAWHO40I+cWyP3ePMrGp63AxwrIJU2
-        PTwDvnon88SCijyTN/jFO/AiEO9IO+z8V9eeO8v4tu476FZicCoOrRZY/MnCO72M3N91iw
-        M1ZF3qAUcFrRBVowVWqHlMsZ++XOpD2Fb/kn68cqK75zaoj3i++QZHeHs5F8OzSass/ytT
-        oUzD1GwYmIOjbfHNVuf4Xs3AVr30BowVtqHCL25SZqE42vmIL/8FqugE4L4zYg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599035341;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pi/cQi80UUB8ig04fsQZMzpFt4TllRwrei28HJurdzY=;
-        b=b4g7VLAAu2ar8HGlrayM8NFrozfoT4EyQk1L4Xiol0A4phjijM1Rgl8jj4g2KzZNm5YdwK
-        M6UgDyiZq1wym/BA==
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: ptrace_syscall_32 is failing
-In-Reply-To: <CALCETrUpjUPPvnPuS9fP4jgid7U_qdU_yTKSq9PjJ=z2w9HvHg@mail.gmail.com>
-References: <CALCETrWXvAMA7tQ3XZdAk2FixKfzQ_0fBmyNVyyPHVAomLvrWQ@mail.gmail.com> <CAMzpN2hmR+0-Yse1csbiVOiqgZ0e+VRkCBBXUKoPSTSMOOOFAQ@mail.gmail.com> <CALCETrXY1x0MReMoTOG2awcZvr4c7gp99JVNthK37vUUk-kyew@mail.gmail.com> <87k0xdjbtt.fsf@nanos.tec.linutronix.de> <CALCETrUpjUPPvnPuS9fP4jgid7U_qdU_yTKSq9PjJ=z2w9HvHg@mail.gmail.com>
-Date:   Wed, 02 Sep 2020 10:29:00 +0200
-Message-ID: <87blioinub.fsf@nanos.tec.linutronix.de>
+        Wed, 2 Sep 2020 04:32:25 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38144C061246
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 01:32:25 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id g11so1316186ual.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 01:32:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V59oKVGgQ2o/hrV2OUnBHec2zNyLXF8phchXBgtNQf4=;
+        b=ZKW3UwWfVmaJ7OUihqUwbWM0KxRjc5z+m5CDEaVftJB8efuWn9X40Ib8Z5tfvwApHa
+         wQYES3HC6ruUfDohVzEUxEHvvX7qlbus/XvNhvEoXGCA/YawKvHGP/ibStZGq7iMcg/y
+         XBvnqJ7w8XicH2VcNqsyivv7cRj2H1j8qXYpEVx89XDKaCiJjKx2otlIro4U9Y7POqu3
+         J/S/Si1auHeHqSdj/0ZGa+1SfPeLiYixs0s8UUhQcYgxj8f80egeQPSduPL5Ih64gENY
+         ISrt0Icc1gjJD55DhRrM7GtojiwI3s4lEWUTrLqlWt3PKznWlM5lxXNKK1f1jtKkxknL
+         6OmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V59oKVGgQ2o/hrV2OUnBHec2zNyLXF8phchXBgtNQf4=;
+        b=nIgtcFm5j5dKN4kcyf9d0ng50AIjGv8bkXjPO4/b803umWrWcRIKxFSPSoF2D5Vi3u
+         NkFjA+6gwMbJLnBeZAoCYRVRZGgjNzoEqBbFamDw67oY8KUf6XVDbpzgJyd8QGihDVhC
+         GsAGAXaqBm7jlz0bE/BlV2y6fC419hyGFIcFnOexd67h45ZP1n5bM/nTSRn2vyXj/7Ov
+         krYOFNNtd6MsG0bhpN4QXDahQGXg4ifppQGArUhGEekvELqWtmOYSh+OkgC4EAqcJgk2
+         NsjTcsEMtJp0xrg2Z3wO5FpOHJQmxRmpg0EroEN8BD8Yf68hkWb0H4DwFX1K5ydddNLM
+         RhUw==
+X-Gm-Message-State: AOAM530FMzLaujJI3n9sDIjn+o0zn0TMyS+yOZlEPS0r0EzQViiNWYN6
+        ObnIgZWrwGW231d70p4nT4jsd7cNXhj251Kth+0YQw==
+X-Google-Smtp-Source: ABdhPJzJlz0hPiPBx35vVZO+9fTCBRG4euIzrUMfRIboxgPwg9dJcuWO9GyJxP8/hgp9b5ll67xVA7G/+FfNxda+yJc=
+X-Received: by 2002:a9f:2431:: with SMTP id 46mr3617265uaq.129.1599035543174;
+ Wed, 02 Sep 2020 01:32:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200901150438.228887-1-ulf.hansson@linaro.org>
+ <20200901150654.GB30034@lst.de> <CAPDyKFqZXdtVokrDQvJAh-NzN0T2ayPD6MepemLEaDt1TRPduw@mail.gmail.com>
+ <20200901154049.GA376@lst.de>
+In-Reply-To: <20200901154049.GA376@lst.de>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 2 Sep 2020 10:31:47 +0200
+Message-ID: <CAPDyKFqDKUG3RC241hv535CLFGEQc4b-vv0e3bexzGkDSY82Jg@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: mmc_spi: Allow the driver to be built when
+ CONFIG_HAS_DMA is unset
+To:     Christoph Hellwig <hch@lst.de>, Rich Felker <dalias@libc.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01 2020 at 17:09, Andy Lutomirski wrote:
-> On Tue, Sep 1, 2020 at 4:50 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> > I think that they almost work for x86, but not quite as
->> > indicated by this bug.  Even if we imagine we can somehow hack around
->> > this bug, I imagine we're going to find other problems with this
->> > model, e.g. the potential upcoming exit problem I noted in my review.
->>
->> What's the upcoming problem?
+On Tue, 1 Sep 2020 at 17:40, Christoph Hellwig <hch@lst.de> wrote:
 >
-> If we ever want to get single-stepping fully correct across syscalls,
-> we might need to inject SIGTRAP on syscall return. This would be more
-> awkward if we can't run instrumentable code after the syscall part of
-> the syscall is done.
-
-We run a lot of instrumentable code after sys_foo() returns. Otherwise
-all the TIF work would not be possible at all.
-
-But you might tell me where exactly you want to inject the SIGTRAP in
-the syscall exit code flow.
-
->> I don't think we want that in general. The current variant is perfectly
->> fine for everything except the 32bit fast syscall nonsense. Also
->> irqentry_entry/exit is not equivalent to the syscall_enter/exit
->> counterparts.
+> On Tue, Sep 01, 2020 at 05:36:17PM +0200, Ulf Hansson wrote:
+> > > I still don't think this makes sense, as the dma_mask should always
+> > > be non-NULL here.
+> >
+> > If that is the case, I wonder how the driver could even have worked without DMA.
+> >
+> > Because in the existing code, host->dma_dev gets assigned to
+> > spi->master->dev.parent->dma_mask - which seems to turn on the DMA
+> > usage in the driver.
+> >
+> > What am I missing?
 >
-> If there are any architectures in which actual work is needed to
-> figure out whether something is a syscall in the first place, they'll
-> want to do the usual kernel entry work before the syscall entry work.
+> Do you know of other non-DMA users?  For SH nommu it probably worked
 
-That's low level entry code which does not require RCU, lockdep, tracing
-or whatever muck we setup before actual work can be done.
+I don't know of other non-DMA users. As I said, I wish someone could
+step in and take better care of mmc_spi - as I know it's being used a
+lot.
 
-arch_asm_entry()
-  ...
-  arch_c_entry(cause) {
-    switch(cause) {
-      case EXCEPTION: arch_c_exception(...);
-      case SYSCALL: arch_c_syscall(...);
-      ...
-    }
+> because SH nommu used to provide a DMA implementation that worked
+> fine for streaming maps, but was completely broken for coherent
+> allocation.  And this driver appears to only use the former.
 
-You really want to differentiate between exception and syscall
-entry/exit.
+Alright, so you are saying the DMA support may potentially never have
+been optional to this driver. In any case, I can remove the check in
+$subject patch, as it shouldn't matter.
 
-The splitting of syscall_enter_from_user_mode() is only necessary for
-that 32bit fast syscall thing on x86 and there is no point to open code
-it with two calls for e.g. do_syscall_64().
+Anyway, let's see what Rich thinks of this. I am curious to see if the
+patch works on his SH boards - as I haven't been able to test it.
 
-> Maybe your patch actually makes this possible -- I haven't digested
-> all the details yet.
->
-> Who advised you to drop the arch parameter?
-
-Kees, IIRC, but I would have to search through the gazillions of mail
-threads to be sure.
-
->> +       syscall_enter_from_user_mode_prepare(regs);
->
-> I'm getting lost in all these "enter" functions...
-
-It's not that hard.
-
-     syscall_enter_from_user_mode_prepare()
-+    syscall_enter_from_user_mode_work()
-=    syscall_enter_from_user_mode()
-
-That's exactly what you suggested just with the difference that it is
-explicit for syscalls and not using irqentry_enter/exit().
-
-If we would do that then instead of having a single call for sane
-syscall pathes:
-
-  arch_c_entry()
-     nr = syscall_enter_from_user_mode();
-
-or for that 32bit fast syscall nonsense the split variant:
-
-  arch_c_entry()
-     syscall_enter_from_user_mode_prepare();
-     do_fast_syscall_muck();
-     nr = syscall_enter_from_user_mode_work();
-
-we'd have:
-
-  arch_c_entry()
-     irqentry_enter();
-     local_irq_enble();
-     nr = syscall_enter_from_user_mode_work();
-     ...
-
-which enforces two calls for sane entries and more code in arch/....
-
-Thanks,
-
-        tglx
+Kind regards
+Uffe
