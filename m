@@ -2,246 +2,186 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1989AC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340BBC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8E3620773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC2F206E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:40:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xtu9LFAQ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DXxDiC6z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgIBXb2 (ORCPT
+        id S1726654AbgIBXko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 19:31:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgIBXbT (ORCPT
+        Wed, 2 Sep 2020 19:40:44 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58268 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgIBXko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 19:31:19 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A04A4C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 16:31:18 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id z22so1079414ejl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 16:31:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T4yXzW6yLaOrjJCWDznrsqD2chk3J8tmvftWN4ofhYI=;
-        b=Xtu9LFAQ1AsuRSYENiMC1JSVEyn/r84YRw+kVkrqLSiwzEk18vBQ5Bw6DIZQQeRd55
-         LwGAzvYyrHms38I0HNnvqPlCsNjOV90RlA80Ze+BfYhdDY0nXTs1o69yz0AgVedqqGFx
-         qXajRu4qWBN9/Y/EfquKUuZx+dOtEt11KYUCc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T4yXzW6yLaOrjJCWDznrsqD2chk3J8tmvftWN4ofhYI=;
-        b=mPbHwG1KJ/I3J5hyjuR7bqD0GC5ctvYLE67Ji0suZbjGGJ/Q0waRhirSYgIGQ/rUkk
-         qBo43Kgj7m4Jf7ZnIoSbykKvT0Fw6agkQrG10tlHNk+6Yla9QN5lQ9HZ408bSdyZ0h9i
-         FEhHkG5DIj8VURDNc4bEcgUuQSM3YUzTPad+XAvv94Yr/lcGKfsNOaFUaHz/DfGX66KH
-         QhsDP6hP1w3q52mBXSSr92b/f9r3Dr/nC1ZKhkpQXUDR9sWySCcJLsVJ72dHQkP2Guv8
-         plrkiRQU3tbGnpzTFcaBVUCBykXzjaZG8xW70/r4VLMSNNh1TD9cd8ZrTjrB4Dj03e6F
-         fJew==
-X-Gm-Message-State: AOAM533xXW4o2z2UeTVm0bk5CU+QDYnEoRfkK+LpYrOjSMSBacQZHbMq
-        JuYfy2WlMPVNcg4wSDDR6VpbOtKhLQPVfQ==
-X-Google-Smtp-Source: ABdhPJyv1o3F4b+GC7jfQpLTSMPcW6CpSeYXgcoGGTs7bM3N50ioUdm4adB4P5Af2y/Ki9y2Fn0LYg==
-X-Received: by 2002:a17:906:6a54:: with SMTP id n20mr500617ejs.401.1599089477025;
-        Wed, 02 Sep 2020 16:31:17 -0700 (PDT)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
-        by smtp.gmail.com with ESMTPSA id g19sm1139947ejz.5.2020.09.02.16.31.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 16:31:16 -0700 (PDT)
-Received: by mail-wr1-f53.google.com with SMTP id w5so1090491wrp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 16:31:15 -0700 (PDT)
-X-Received: by 2002:adf:d0cb:: with SMTP id z11mr495865wrh.192.1599089475406;
- Wed, 02 Sep 2020 16:31:15 -0700 (PDT)
+        Wed, 2 Sep 2020 19:40:44 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082NeUfk061757;
+        Wed, 2 Sep 2020 18:40:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599090030;
+        bh=BFbzFeJpfcaC6ycaf4eZClFigSVdESVAB5glK64fSDw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=DXxDiC6zHHq3/4GkD5eKFXhhia0zcyCk6W9P2W7ahuO56qpqpRtTnwP4Wv3T0Irsi
+         orCV1XB9pxji1b3LegMI8OO9432U5YNH0JeIZnS/7BnOPlSiwIXvRufYKvjg7FQP/A
+         0Po+cNMcrA6g3+Jmh34JsJo+Gf9bdynE17JtAhzM=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082NeUX1040689
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Sep 2020 18:40:30 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
+ 2020 18:40:29 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 2 Sep 2020 18:40:29 -0500
+Received: from [10.250.34.112] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082NeTBX025309;
+        Wed, 2 Sep 2020 18:40:29 -0500
+Subject: Re: [v4,3/4] reset-controller: ti: introduce a new reset handler
+To:     Crystal Guo <crystal.guo@mediatek.com>, <p.zabel@pengutronix.de>,
+        <robh+dt@kernel.org>, <matthias.bgg@gmail.com>
+CC:     <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <seiya.wang@mediatek.com>, <stanley.chu@mediatek.com>,
+        <yingjoe.chen@mediatek.com>, <fan.chen@mediatek.com>,
+        <yong.liang@mediatek.com>
+References: <20200817030324.5690-1-crystal.guo@mediatek.com>
+ <20200817030324.5690-4-crystal.guo@mediatek.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <3a5decee-5f31-e27d-a120-1f835241a87c@ti.com>
+Date:   Wed, 2 Sep 2020 18:40:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200902224813.14283-1-tfiga@chromium.org> <20200902224813.14283-3-tfiga@chromium.org>
-In-Reply-To: <20200902224813.14283-3-tfiga@chromium.org>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Thu, 3 Sep 2020 01:30:55 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5D3+yXv9iwfWwStxqUOrec3g0WjFF6ko-xRA=ejcNmhSQ@mail.gmail.com>
-Message-ID: <CAAFQd5D3+yXv9iwfWwStxqUOrec3g0WjFF6ko-xRA=ejcNmhSQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] media: dt-bindings: media: i2c: Add bindings for GC5035
-To:     Linux Media Mailing List <linux-media@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hao He <hao.he@bitland.com.cn>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Xingyu Wu <wuxy@bitland.com.cn>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Sj Huang <sj.huang@mediatek.com>,
-        darfur_liu <darfur_liu@gcoreinc.com>,
-        "hao.he7" <hao.he7@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200817030324.5690-4-crystal.guo@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Self-review,
+Hi Crystal,
 
-On Thu, Sep 3, 2020 at 12:48 AM Tomasz Figa <tfiga@chromium.org> wrote:
->
-> Add YAML device tree bindings for Galaxycore Inc. GC5035 imaging sensor.
->
-> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+On 8/16/20 10:03 PM, Crystal Guo wrote:
+> Introduce ti_syscon_reset() to integrate assert and deassert together.
+> If some modules need do serialized assert and deassert operations
+> to reset itself, reset_control_reset can be called for convenience.
+
+There are multiple changes in this same patch. I think you should split this
+functionality away from the change for the regmap_update_bits() to
+regmap_write_bits(), similar to what you have done in your v2 Patch 4.
+
+> 
+> Such as reset-qcom-aoss.c, it integrates assert and deassert together
+> by 'reset' method. MTK Socs also need this method to perform reset.
+> 
+> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
 > ---
->  .../devicetree/bindings/media/i2c/gc5035.yaml | 142 ++++++++++++++++++
->  1 file changed, 142 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/gc5035.yaml
->
-> diff --git a/Documentation/devicetree/bindings/media/i2c/gc5035.yaml b/Documentation/devicetree/bindings/media/i2c/gc5035.yaml
-> new file mode 100644
-> index 000000000000..cf8cc3b581cf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/gc5035.yaml
-> @@ -0,0 +1,142 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright (c) 2019 MediaTek Inc.
+>  drivers/reset/reset-ti-syscon.c | 26 ++++++++++++++++++++++++--
+>  1 file changed, 24 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/reset/reset-ti-syscon.c b/drivers/reset/reset-ti-syscon.c
+> index a2635c21db7f..08289342f9af 100644
+> --- a/drivers/reset/reset-ti-syscon.c
+> +++ b/drivers/reset/reset-ti-syscon.c
+> @@ -15,6 +15,7 @@
+>   * GNU General Public License for more details.
+>   */
+>  
+> +#include <linux/delay.h>
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> @@ -56,6 +57,7 @@ struct ti_syscon_reset_data {
+>  	struct regmap *regmap;
+>  	struct ti_syscon_reset_control *controls;
+>  	unsigned int nr_controls;
+> +	unsigned int reset_duration_us;
+>  };
+>  
+>  #define to_ti_syscon_reset_data(rcdev)	\
+> @@ -89,7 +91,7 @@ static int ti_syscon_reset_assert(struct reset_controller_dev *rcdev,
+>  	mask = BIT(control->assert_bit);
+>  	value = (control->flags & ASSERT_SET) ? mask : 0x0;
+>  
+> -	return regmap_update_bits(data->regmap, control->assert_offset, mask, value);
+> +	return regmap_write_bits(data->regmap, control->assert_offset, mask, value);
+>  }
+>  
+>  /**
+> @@ -120,7 +122,7 @@ static int ti_syscon_reset_deassert(struct reset_controller_dev *rcdev,
+>  	mask = BIT(control->deassert_bit);
+>  	value = (control->flags & DEASSERT_SET) ? mask : 0x0;
+>  
+> -	return regmap_update_bits(data->regmap, control->deassert_offset, mask, value);
+> +	return regmap_write_bits(data->regmap, control->deassert_offset, mask, value);
+>  }
+>  
+>  /**
+> @@ -158,9 +160,26 @@ static int ti_syscon_reset_status(struct reset_controller_dev *rcdev,
+>  		!(control->flags & STATUS_SET);
+>  }
+>  
+> +static int ti_syscon_reset(struct reset_controller_dev *rcdev,
+> +				  unsigned long id)
+> +{
+> +	struct ti_syscon_reset_data *data = to_ti_syscon_reset_data(rcdev);
+> +	int ret;
+> +
+> +	ret = ti_syscon_reset_assert(rcdev, id);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (data->reset_duration_us)
+> +		usleep_range(data->reset_duration_us, data->reset_duration_us * 2);
+> +
+> +	return ti_syscon_reset_deassert(rcdev, id);
 
-Copyright 2020 Google LLC.
+I echo Philipp's comments [1] from your original v1 series about this. We don't
+need a property to distinguish this, but you could add a flag using match data
+and Mediatek compatible, and use that within this function, or optionally set
+this ops based on compatible (whatever is preferred by Philipp).
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/gc5035.yaml
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Galaxycore Inc. GC5035 CMOS Sensor Device Tree Bindings
-> +
-> +maintainers:
-> +  - Tomasz Figa <tfiga@chromium.org>
-> +
-> +description: |-
-> +  The Galaxycore Inc. GC5035 is a 5 megapixel, 1/5 inch CMOS 10-bit Bayer image
-> +  sensor that delivers 2592x1944 at 30fps. This chip is programmable through
-> +  an I2C interface. The image output is available via a MIPI CSI-2 interface.
-> +
-> +properties:
-> +  compatible:
-> +    const: galaxycore,gc5035
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    description:
-> +      Input clock for the sensor.
-> +    items:
-> +      - const: inclk
+regards
+Suman
 
-Typo: mclk.
+[1] https://patchwork.kernel.org/comment/23519193/
 
+> +}
 > +
-> +  clock-frequency:
-> +    description:
-> +      Frequency of the inclk clock in Hz.
+>  static const struct reset_control_ops ti_syscon_reset_ops = {
+>  	.assert		= ti_syscon_reset_assert,
+>  	.deassert	= ti_syscon_reset_deassert,
+> +	.reset		= ti_syscon_reset,
+>  	.status		= ti_syscon_reset_status,
+>  };
+>  
+> @@ -204,6 +223,9 @@ static int ti_syscon_reset_probe(struct platform_device *pdev)
+>  		controls[i].flags = be32_to_cpup(list++);
+>  	}
+>  
+> +	of_property_read_u32(pdev->dev.of_node,	"reset-duration-us",
+> +				&data->reset_duration_us);
+> +
+>  	data->rcdev.ops = &ti_syscon_reset_ops;
+>  	data->rcdev.owner = THIS_MODULE;
+>  	data->rcdev.of_node = np;
+> 
 
-mclk
-
-> +
-> +  iovdd-supply:
-> +    description:
-> +      Regulator driving the I/O power rail.
-> +
-> +  avdd28-supply:
-> +    description:
-> +      Regulator driving the analog power rail.
-> +
-> +  dvdd12-supply:
-> +    description:
-> +      Regulator driving the digital power rail.
-> +
-> +  resetb-gpios:
-> +    description:
-> +      The GPIO pin that drives the RESETB signal, controlling sensor reset.
-> +      The RESETB signal must be driven low to activate the reset, so the
-> +      GPIO_ACTIVE_LOW flag should be given by default.
-> +
-> +  pwdn-gpios:
-> +    description:
-> +      The GPIO pin that drives the PWDN signal, controlling sensor power-down
-> +      mode. The PWDN signal must be driven low to activate the power-down
-> +      mode, so the GPIO_ACTIVE_LOW flag should be given by default.
-> +
-> +  port:
-> +    type: object
-> +    additionalProperties: false
-> +    description:
-> +      A node containing an output port node with an endpoint definition
-> +      as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          data-lanes:
-> +            items:
-> +              - const: 1
-> +              - const: 2
-> +
-> +          link-frequencies: true
-> +          remote-endpoint: true
-> +
-> +        required:
-> +          - data-lanes
-> +          - link-frequencies
-> +          - remote-endpoint
-> +
-> +    required:
-> +      - endpoint
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - clock-frequency
-> +  - iovdd-supply
-> +  - avdd28-supply
-> +  - dvdd12-supply
-> +  - resetb-gpios
-> +  - pwdn-gpios
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        gc5035: camera@10 {
-> +            compatible = "galaxycore,gc5035";
-> +            reg = <0x10>;
-> +
-> +            reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
-> +            pwdn-gpios = <&pio 112 GPIO_ACTIVE_LOW>;
-> +            pinctrl-names = "default";
-> +            pinctrl-0 = <&clk_24m_cam>;
-> +
-> +            clocks = <&cam_osc>;
-> +            clock-names = "inclk";
-
-mclk
-
-Best regards,
-Tomasz
