@@ -5,39 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C0DC2BC11
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E7EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57596208B3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC18520829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:58:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UuV7rEAu"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KgNXIWa3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgIBQ6q (ORCPT
+        id S1728500AbgIBQ6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:58:46 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10769 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728418AbgIBQ6j (ORCPT
+        Wed, 2 Sep 2020 12:58:53 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12905 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728419AbgIBQ6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 12:58:39 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4fcebc0000>; Wed, 02 Sep 2020 09:56:28 -0700
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4fcf2e0007>; Wed, 02 Sep 2020 09:58:22 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
   Wed, 02 Sep 2020 09:58:36 -0700
 X-PGP-Universal: processed;
         by hqpgpgate102.nvidia.com on Wed, 02 Sep 2020 09:58:36 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 2 Sep
- 2020 16:58:35 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 2 Sep 2020 16:58:35 +0000
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 2 Sep
+ 2020 16:58:36 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 2 Sep 2020 16:58:36 +0000
 Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4fcf3b0003>; Wed, 02 Sep 2020 09:58:35 -0700
+        id <B5f4fcf3b0008>; Wed, 02 Sep 2020 09:58:35 -0700
 From:   Ralph Campbell <rcampbell@nvidia.com>
 To:     <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
         <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
@@ -50,9 +50,9 @@ CC:     Jerome Glisse <jglisse@redhat.com>,
         Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH v2 1/7] mm/thp: fix __split_huge_pmd_locked() for migration PMD
-Date:   Wed, 2 Sep 2020 09:58:24 -0700
-Message-ID: <20200902165830.5367-2-rcampbell@nvidia.com>
+Subject: [PATCH v2 4/7] mm/thp: add prep_transhuge_device_private_page()
+Date:   Wed, 2 Sep 2020 09:58:27 -0700
+Message-ID: <20200902165830.5367-5-rcampbell@nvidia.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200902165830.5367-1-rcampbell@nvidia.com>
 References: <20200902165830.5367-1-rcampbell@nvidia.com>
@@ -61,106 +61,75 @@ X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599065788; bh=rYznWX/3ek3S83R/7nq7shz57nrdV/4Q+HZHpdHukkI=;
+        t=1599065902; bh=dCUG4bgoirMBpflmLrJ/KTpD+YYMqXcLGdeB9eDElwI=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Transfer-Encoding:Content-Type;
-        b=UuV7rEAutskEk3OCoCdPdBe6gOlmH/ZAhnWtJDfMYT0NTh+pvndsN15Tz3easb3Ns
-         Rw1AZsD/UIX3dsS6tZs9MF8t4KZk4EkyC9a/zfDNF91ULaQYYwgWo+1lyQw6ghegAj
-         7b1+UKbB1rIZUMGwJ393qEydUIxuKq2enGDw3lxEdWnd1NFYlaT6NYd1/LshOIVCre
-         MYHQqUrKh00QlOGM759IN1pT/I9LM68S4Ni6bn2k0IBRGJMzpJNNgg+Xcxhx/hf5+T
-         8sKcmGSNF+FNHsej6fZYSfrR6IaovFTJokeCvDqqWsD5w/zyYIX2JHUAmd9+v+d0hR
-         E76dIGIbzcvMA==
+        b=KgNXIWa3dydD1nLyndFPRgAwTpSS68S4NpUGGnPi7ujNiD91ehwvZsyZD/0jz+4FA
+         iX1NV+ruzovygBPJ79a26Rs2/2C8ZHxtJydBAPRP/dnuu3laLhj82eD/EVPPjiZ5i5
+         YrQdfEi5kigizcy4XEQJGLOtdfkL5HBOIWQqzTkghKpItTrIr99wyWQvkH0gPnTtFJ
+         YXcb42pfLnVkW7K6m4Ax7whpLi3UuWz2kUQywfECGuRu1k4YBBfBbOrXJGIFsZAVXy
+         yO6H+5VJUpRE03ysemZLSBxym/Ix/iz6W7Ja1aLqFI37HWwl3sSHZNzWURfCf3Kefc
+         +jxpQacNGDvaQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A migrating transparent huge page has to already be unmapped. Otherwise,
-the page could be modified while it is being copied to a new page and
-data could be lost. The function __split_huge_pmd() checks for a PMD
-migration entry before calling __split_huge_pmd_locked() leading one to
-think that __split_huge_pmd_locked() can handle splitting a migrating PMD.
-However, the code always increments the page->_mapcount and adjusts the
-memory control group accounting assuming the page is mapped.
-Also, if the PMD entry is a migration PMD entry, the call to
-is_huge_zero_pmd(*pmd) is incorrect because it calls pmd_pfn(pmd) instead
-of migration_entry_to_pfn(pmd_to_swp_entry(pmd)).
-Fix these problems by checking for a PMD migration entry.
+Add a helper function to allow device drivers to create device private
+transparent huge pages. This is intended to help support device private
+THP migrations.
 
 Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
 ---
- mm/huge_memory.c | 42 +++++++++++++++++++++++-------------------
- 1 file changed, 23 insertions(+), 19 deletions(-)
+ include/linux/huge_mm.h | 5 +++++
+ mm/huge_memory.c        | 8 ++++++++
+ 2 files changed, 13 insertions(+)
 
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 87b42c81dedc..126e54da4fee 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -187,6 +187,7 @@ extern unsigned long thp_get_unmapped_area(struct file =
+*filp,
+ 		unsigned long flags);
+=20
+ extern void prep_transhuge_page(struct page *page);
++extern void prep_transhuge_device_private_page(struct page *page);
+ extern void free_transhuge_page(struct page *page);
+ bool is_transparent_hugepage(struct page *page);
+=20
+@@ -382,6 +383,10 @@ static inline bool transhuge_vma_suitable(struct vm_ar=
+ea_struct *vma,
+=20
+ static inline void prep_transhuge_page(struct page *page) {}
+=20
++static inline void prep_transhuge_device_private_page(struct page *page)
++{
++}
++
+ static inline bool is_transparent_hugepage(struct page *page)
+ {
+ 	return false;
 diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 2a468a4acb0a..606d712d9505 100644
+index a8d48994481a..1e848cc0c3dc 100644
 --- a/mm/huge_memory.c
 +++ b/mm/huge_memory.c
-@@ -2023,7 +2023,7 @@ static void __split_huge_pmd_locked(struct vm_area_st=
-ruct *vma, pmd_t *pmd,
- 		put_page(page);
- 		add_mm_counter(mm, mm_counter_file(page), -HPAGE_PMD_NR);
- 		return;
--	} else if (is_huge_zero_pmd(*pmd)) {
-+	} else if (pmd_trans_huge(*pmd) && is_huge_zero_pmd(*pmd)) {
- 		/*
- 		 * FIXME: Do we want to invalidate secondary mmu by calling
- 		 * mmu_notifier_invalidate_range() see comments below inside
-@@ -2117,30 +2117,34 @@ static void __split_huge_pmd_locked(struct vm_area_=
-struct *vma, pmd_t *pmd,
- 		pte =3D pte_offset_map(&_pmd, addr);
- 		BUG_ON(!pte_none(*pte));
- 		set_pte_at(mm, addr, pte, entry);
--		atomic_inc(&page[i]._mapcount);
--		pte_unmap(pte);
--	}
--
--	/*
--	 * Set PG_double_map before dropping compound_mapcount to avoid
--	 * false-negative page_mapped().
--	 */
--	if (compound_mapcount(page) > 1 && !TestSetPageDoubleMap(page)) {
--		for (i =3D 0; i < HPAGE_PMD_NR; i++)
-+		if (!pmd_migration)
- 			atomic_inc(&page[i]._mapcount);
-+		pte_unmap(pte);
- 	}
+@@ -498,6 +498,14 @@ void prep_transhuge_page(struct page *page)
+ 	set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
+ }
 =20
--	lock_page_memcg(page);
--	if (atomic_add_negative(-1, compound_mapcount_ptr(page))) {
--		/* Last compound_mapcount is gone. */
--		__dec_lruvec_page_state(page, NR_ANON_THPS);
--		if (TestClearPageDoubleMap(page)) {
--			/* No need in mapcount reference anymore */
-+	if (!pmd_migration) {
-+		/*
-+		 * Set PG_double_map before dropping compound_mapcount to avoid
-+		 * false-negative page_mapped().
-+		 */
-+		if (compound_mapcount(page) > 1 &&
-+		    !TestSetPageDoubleMap(page)) {
- 			for (i =3D 0; i < HPAGE_PMD_NR; i++)
--				atomic_dec(&page[i]._mapcount);
-+				atomic_inc(&page[i]._mapcount);
-+		}
++void prep_transhuge_device_private_page(struct page *page)
++{
++	prep_compound_page(page, HPAGE_PMD_ORDER);
++	prep_transhuge_page(page);
++	percpu_ref_put_many(page->pgmap->ref, HPAGE_PMD_NR - 1);
++}
++EXPORT_SYMBOL_GPL(prep_transhuge_device_private_page);
 +
-+		lock_page_memcg(page);
-+		if (atomic_add_negative(-1, compound_mapcount_ptr(page))) {
-+			/* Last compound_mapcount is gone. */
-+			__dec_lruvec_page_state(page, NR_ANON_THPS);
-+			if (TestClearPageDoubleMap(page)) {
-+				/* No need in mapcount reference anymore */
-+				for (i =3D 0; i < HPAGE_PMD_NR; i++)
-+					atomic_dec(&page[i]._mapcount);
-+			}
- 		}
-+		unlock_page_memcg(page);
- 	}
--	unlock_page_memcg(page);
-=20
- 	smp_wmb(); /* make pte visible before pmd */
- 	pmd_populate(mm, pmd, pgtable);
+ bool is_transparent_hugepage(struct page *page)
+ {
+ 	if (!PageCompound(page))
 --=20
 2.20.1
 
