@@ -2,118 +2,129 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7CCC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BDFC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E05FA20758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:45:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599075930;
-	bh=+D+HnNz+VrpzF30cgOx0/44g3rIEaRFahWzOaAq0owE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Zpw8iLfQDgMfrY4RXS+3ynGDitoXAcVAInphMgMuktgpM7dEQqAQU3q9XIevF4mof
-	 riFsblQKerWEZiEm+ILW+Uj6RAqvMZhDTmw/ABoI2lHJ27t9BYjV9VzRYXnrqVTAZP
-	 5zO8n3Ck7uBhp6REsckeaqXiCBSDRp9ipgSbipJk=
+	by mail.kernel.org (Postfix) with ESMTP id CFFA720758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bf62Hpk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgIBTp3 (ORCPT
+        id S1726567AbgIBTq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 15:45:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgIBTp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 15:45:27 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C98D20773;
-        Wed,  2 Sep 2020 19:37:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599075435;
-        bh=+D+HnNz+VrpzF30cgOx0/44g3rIEaRFahWzOaAq0owE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=1SQS24JOeFsx1iasRvSrQ65PxPvLq6dmxeYcepsSK8GUZGbyMelZlNIuhySqBfDi1
-         bZnWylzcAirhjbBZDld4bG3srPaamgSu01Z9UN63UVkQ+oyD8xxZqDnIHmEKgpQ6sm
-         zRt4WFNvhEsJP72JojS+Lha8JOjX4CQ66Zr6jp9Y=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-tegra@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 00/11] mmc: Minor cleanups and compile test
-Date:   Wed,  2 Sep 2020 21:36:47 +0200
-Message-Id: <20200902193658.20539-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Wed, 2 Sep 2020 15:46:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37260 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726140AbgIBTqy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 15:46:54 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 082JgPHx042469;
+        Wed, 2 Sep 2020 15:46:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references; s=pp1;
+ bh=3++UIndG1m1KM9xZicSr0DVbIof7t1DVHs7Tsd9oytE=;
+ b=bf62Hpk9JRVtlwLb0KoRpdEItjn6x1+I9PpvwvmPCTrL5SMAM0MK7HHOr7WbGzI5vHWP
+ ObLkDKhqjjkmrClDJsikByG8ysSteRzJmpD6fLCB4ev/jQzBZBec5z/WcvPuBzrMgiAe
+ SFtNOIAWbJzOmACz6UrbuSVafi7dFfvOgxIMNEX6pDAnu+UIH5abObLhbxNYGl6OC8ng
+ sgmknhQMU7Y8TCZ/g6j553PRVpDMkxvYAxjGStMiyRxEGZBPEcV58gcdYOg/oL6lwJaA
+ jQyfdP27iTaWrI48fRuP7+rSkaBJjzduOOPyTI8g6htx5NPnyToaPF7tdURDHzaHxtU7 7g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33ahsfg4kr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 15:46:47 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 082Jklcn056649;
+        Wed, 2 Sep 2020 15:46:47 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33ahsfg4k4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 15:46:47 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 082JgoD1006123;
+        Wed, 2 Sep 2020 19:46:46 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma03wdc.us.ibm.com with ESMTP id 337en9jdq9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 19:46:46 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 082JkjX13212272
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 2 Sep 2020 19:46:45 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BAEE2805A;
+        Wed,  2 Sep 2020 19:46:45 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A0F0828059;
+        Wed,  2 Sep 2020 19:46:43 +0000 (GMT)
+Received: from oc4221205838.ibm.com (unknown [9.163.10.164])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  2 Sep 2020 19:46:43 +0000 (GMT)
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+To:     alex.williamson@redhat.com, bhelgaas@google.com
+Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH v4 1/3] PCI/IOV: Mark VFs as not implementing MSE bit
+Date:   Wed,  2 Sep 2020 15:46:34 -0400
+Message-Id: <1599075996-9826-2-git-send-email-mjrosato@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1599075996-9826-1-git-send-email-mjrosato@linux.ibm.com>
+References: <1599075996-9826-1-git-send-email-mjrosato@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-02_14:2020-09-02,2020-09-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 mlxlogscore=999 clxscore=1011 lowpriorityscore=0
+ spamscore=0 phishscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009020178
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Per the PCIe spec, VFs cannot implement the MSE bit
+AKA PCI_COMMAND_MEMORY, and it must be hard-wired to 0.
+Use a dev_flags bit to signify this requirement.
 
-Set of minor cleanups.  Patches requiring more attention:
- - 6/11: Testing and review would be appreciated,
- - 11/11: I build tested multiple architectures but not all and
-   definitely no all possible configs. This one could sit on the lists
-   for few days so 0-day would try it.
+Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+---
+ drivers/pci/iov.c   | 1 +
+ include/linux/pci.h | 2 ++
+ 2 files changed, 3 insertions(+)
 
-Best regards,
-Krzysztof
-
-Krzysztof Kozlowski (11):
-  mmc: bcm2835: Simplify with dev_err_probe()
-  mmc: davinci: Simplify with dev_err_probe()
-  mmc: dw_mmc-zx: Simplify with dev_err_probe()
-  mmc: jz4740: Simplify with dev_err_probe()
-  mmc: meson: Simplify with dev_err_probe()
-  mmc: sdhci-brcmstb: Simplify with optional clock and dev_err_probe()
-  mmc: sdhci-of-arasan: Simplify with dev_err_probe()
-  mmc: sdhci-tegra: Simplify with dev_err_probe()
-  mmc: dw_mmc: Simplify with dev_err_probe()
-  mmc: sdhci-of-sparx5: Use proper printk format for dma_addr_t
-  mmc: host: Enable compile testing of multiple drivers
-
- drivers/mmc/host/Kconfig           | 42 ++++++++++++++++--------------
- drivers/mmc/host/bcm2835.c         |  4 +--
- drivers/mmc/host/davinci_mmc.c     |  5 ++--
- drivers/mmc/host/dw_mmc-zx.c       | 11 +++-----
- drivers/mmc/host/dw_mmc.c          |  9 +++----
- drivers/mmc/host/jz4740_mmc.c      |  5 ++--
- drivers/mmc/host/meson-gx-mmc.c    | 16 ++++--------
- drivers/mmc/host/sdhci-brcmstb.c   | 12 ++++-----
- drivers/mmc/host/sdhci-of-arasan.c |  7 +++--
- drivers/mmc/host/sdhci-of-sparx5.c |  4 +--
- drivers/mmc/host/sdhci-tegra.c     |  7 ++---
- 11 files changed, 51 insertions(+), 71 deletions(-)
-
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index b37e08c..2bec77c 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -180,6 +180,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+ 	virtfn->device = iov->vf_device;
+ 	virtfn->is_virtfn = 1;
+ 	virtfn->physfn = pci_dev_get(dev);
++	virtfn->dev_flags |= PCI_DEV_FLAGS_FORCE_COMMAND_MEM;
+ 
+ 	if (id == 0)
+ 		pci_read_vf_config_common(virtfn);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 8355306..9316cce 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -227,6 +227,8 @@ enum pci_dev_flags {
+ 	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
+ 	/* Don't use Relaxed Ordering for TLPs directed at this device */
+ 	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
++	/* Device does not implement PCI_COMMAND_MEMORY (e.g. a VF) */
++	PCI_DEV_FLAGS_FORCE_COMMAND_MEM = (__force pci_dev_flags_t) (1 << 12),
+ };
+ 
+ enum pci_irq_reroute_variant {
 -- 
-2.17.1
+1.8.3.1
 
