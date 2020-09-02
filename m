@@ -2,111 +2,185 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75490C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F1DC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5117920767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2359A20767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:41:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ctcDx1r1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgIBUkn (ORCPT
+        id S1726657AbgIBUlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 16:40:43 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:40845 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgIBUkn (ORCPT
+        Wed, 2 Sep 2020 16:41:09 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:25367 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726226AbgIBUlI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 16:40:43 -0400
-Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M5gAG-1kBwjT27Cc-007H15 for <linux-kernel@vger.kernel.org>; Wed, 02 Sep
- 2020 22:40:41 +0200
-Received: by mail-qk1-f169.google.com with SMTP id p25so1082461qkp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 13:40:40 -0700 (PDT)
-X-Gm-Message-State: AOAM533ti2wpuJkJg6+9FH7kQM99tCbVxx6uoWVPr9fmO7Q7BQgzXrIz
-        i5M/pLn8rjyX/+Z6Q48JHScZSiUSQkA6KMGFqkE=
-X-Google-Smtp-Source: ABdhPJzodmejhJAtMKThbQWlJFz80SFiO54mmYtjDdiM3ONaN1YOToVfF3hqMeVTv6Cz4OnXxE/L/LZUnPhskl7a0Ug=
-X-Received: by 2002:ae9:f106:: with SMTP id k6mr8135941qkg.3.1599079239381;
- Wed, 02 Sep 2020 13:40:39 -0700 (PDT)
+        Wed, 2 Sep 2020 16:41:08 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1599079267; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=ItMRyIeX4np4JSQjaT+BlHS0iWdkB//XkRrvXZ7e/40=; b=ctcDx1r10zaM64gNMHuBEA2Tr1kc3+8dn07VAuGWaXPR3ISDTqYO2Q+OFjuHMptzGUhIGUdo
+ ++GPPTwgGrHeR8M0yx4gjHhc3vgcrrhM65Li3Dp5sAvAIxm0cG98CWWVujk2Yf1Qc9KUltSs
+ zaw8S8nlJMljuJQh7XGFYXe1EX0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f500353238e1efa372b6a90 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 02 Sep 2020 20:40:51
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 79A60C433A1; Wed,  2 Sep 2020 20:40:50 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F17FC433CA;
+        Wed,  2 Sep 2020 20:40:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F17FC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Wed, 2 Sep 2020 14:40:45 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] drm/msm/gpu: Add GPU freq_change traces
+Message-ID: <20200902204045.GA22040@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Jonathan Marek <jonathan@marek.ca>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <freedreno@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200901154200.2451899-1-robdclark@gmail.com>
+ <20200901154200.2451899-2-robdclark@gmail.com>
 MIME-Version: 1.0
-References: <b7719680-e451-5687-1fb7-c8c059a880d4@acm.org> <2C755628-1426-4BA4-B2A3-AD059BB0F605@exactcode.com>
- <c7daea00-410d-2073-bf52-2abda9acdf8e@acm.org> <20200827.230128.2175364115734830909.rene@exactcode.com>
-In-Reply-To: <20200827.230128.2175364115734830909.rene@exactcode.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 2 Sep 2020 22:40:23 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0XByLZGCMirzQfwBS_1HLzA9s8h3-JPQM171XGTycohg@mail.gmail.com>
-Message-ID: <CAK8P3a0XByLZGCMirzQfwBS_1HLzA9s8h3-JPQM171XGTycohg@mail.gmail.com>
-Subject: Re: [PATCH] use cpu_to_le{16,32} instead of __constant_cpu_to_
-To:     Rene Rebe <rene@exactcode.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:WFS9Gwp/vvhBs+3BN0hPtw42MfmCggOSKiHUd6r956gkSP1SCAs
- 7Axg5qTjSRPaoeWQH2AmhW45YdrVydYj+lP0lcLWU7hgfUAyiTn5a+rb0Aa/aB1pyxdHX60
- xsWRCfNytoVaQn7iTVWxtDT80fwftT69z5KALt+nOs9rNBvcgOd3yb0m2q/I0fypqdpuHyW
- vF+5FAwWA2qOC3a8804dg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1vtooSoJDT4=:KR/MCF9WUIACsKL7/bGtKK
- CqKtRyI7axyGNC98zcaCxlItjxHdTwEojRdfR+qW1SdTucFoPLtfncc3WO+S+wG5g43KmSi9N
- NY79IfwBPYYOaf+2YXqyAvOIYxok+9HPCmer0vwoKW4cQ49N2Cwdox+4gBOc84IP3Xva7z5Uz
- id25T2SIx9/waFob+sKJuLZDa9o2xmm0dxBubuduGLIPyn32Uh75VtDdGO8EJL+G0Go+MWyP+
- T2aa0F62rmRKAPEceGhpMxnrkgWpf5Z0cYLvzAOQVsPBSsyIq/a/SGUmeHFZqgBu+Gf3KrehV
- g0yWtcr62wbOD32FyIw6X2BgnxwVOENx77QXt63Xa+cVCHyFWtWqoZg7WdeIkqH5kEbiOyTx5
- m1o5VO8/xkTS3/gOLZV99DI+qulw7+JLuHkpn/OYDGH0bFdZYbJFIJA4cqBDoIkVMEwDJW+KI
- x5WvJsw73vEwIgLljnhif0KChK5+bhHXKmYM8RslGMgSXbjUB+vmyB38vXpnF+Ifg6Arhpn06
- D5LODp1WoTSzGUf85ik+my5Dubc5KKxR1O2t7x61ttzNdZmkcRHRQ1EKSXrXurCxqTl5A1dwI
- AVYUskf9gY/wE358dlu92tzPRdsezLPa9JT1d97QDqvP/lTLyv6h8dWLdOBF78iQ2DQ10aRZ2
- bJvtS6amkzaCz0v+wgcrElznJrOVdAAgi/ywBDq/pF5CQ4MqqqGLKMTMePzUqJQjs0kpdicxT
- yFsYJGEoV9jgo+aPKXNOZHJ1GZSXb3dCgFxFZ7aKFoTAYAY1FmAfGAqym73pjzTa3vtPL4Yuu
- 2tkXSOOvA9Y3jKywWB2UY1uoVg+DoniwAWvOuWecmTfVGkT0WaV59sT9BfNJ2J0O+mWMph9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901154200.2451899-2-robdclark@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 11:06 PM Rene Rebe <rene@exactcode.com> wrote:
->
-> diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-> index fbb80a043b4f..3de6bf94ccc0 100644
-> --- a/drivers/scsi/qla2xxx/qla_target.c
-> +++ b/drivers/scsi/qla2xxx/qla_target.c
+On Tue, Sep 01, 2020 at 08:41:54AM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> Technically the GMU specific one is a bit redundant, but it was useful
+> to track down a bug.
 
-The qla2xxx and qla4xxx changes all look good.
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 
-> diff --git a/fs/cifs/smb2status.h b/fs/cifs/smb2status.h
-> index 7505056e9580..3d5ef02f1416 100644
-> --- a/fs/cifs/smb2status.h
-> +++ b/fs/cifs/smb2status.h
-> @@ -29,7 +29,7 @@
->   *  C is set if "customer defined" error, N bit is reserved and MBZ
->   */
->
-> -#define STATUS_SEVERITY_SUCCESS __constant_cpu_to_le32(0x0000)
-> +#define STATUS_SEVERITY_SUCCESS cpu_to_le32(0x0000)
->  #define STATUS_SEVERITY_INFORMATIONAL cpu_to_le32(0x0001)
->  #define STATUS_SEVERITY_WARNING cpu_to_le32(0x0002)
->  #define STATUS_SEVERITY_ERROR cpu_to_le32(0x0003)
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c |  3 +++
+>  drivers/gpu/drm/msm/msm_gpu.c         |  2 ++
+>  drivers/gpu/drm/msm/msm_gpu_trace.h   | 31 +++++++++++++++++++++++++++
+>  3 files changed, 36 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> index 46a29e383bfd..ab1e9eb619e0 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> @@ -11,6 +11,7 @@
+>  #include "a6xx_gpu.h"
+>  #include "a6xx_gmu.xml.h"
+>  #include "msm_gem.h"
+> +#include "msm_gpu_trace.h"
+>  #include "msm_mmu.h"
+>  
+>  static void a6xx_gmu_fault(struct a6xx_gmu *gmu)
+> @@ -124,6 +125,8 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+>  	gmu->current_perf_index = perf_index;
+>  	gmu->freq = gmu->gpu_freqs[perf_index];
+>  
+> +	trace_msm_gmu_freq_change(gmu->freq, perf_index);
+> +
+>  	/*
+>  	 * This can get called from devfreq while the hardware is idle. Don't
+>  	 * bring up the power if it isn't already active
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+> index d5645472b25d..b02866527386 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.c
+> +++ b/drivers/gpu/drm/msm/msm_gpu.c
+> @@ -32,6 +32,8 @@ static int msm_devfreq_target(struct device *dev, unsigned long *freq,
+>  	if (IS_ERR(opp))
+>  		return PTR_ERR(opp);
+>  
+> +	trace_msm_gpu_freq_change(dev_pm_opp_get_freq(opp));
+> +
+>  	if (gpu->funcs->gpu_set_freq)
+>  		gpu->funcs->gpu_set_freq(gpu, opp);
+>  	else
+> diff --git a/drivers/gpu/drm/msm/msm_gpu_trace.h b/drivers/gpu/drm/msm/msm_gpu_trace.h
+> index 122b84789238..07572ab179fa 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu_trace.h
+> +++ b/drivers/gpu/drm/msm/msm_gpu_trace.h
+> @@ -83,6 +83,37 @@ TRACE_EVENT(msm_gpu_submit_retired,
+>  		    __entry->start_ticks, __entry->end_ticks)
+>  );
+>  
+> +
+> +TRACE_EVENT(msm_gpu_freq_change,
+> +		TP_PROTO(u32 freq),
+> +		TP_ARGS(freq),
+> +		TP_STRUCT__entry(
+> +			__field(u32, freq)
+> +			),
+> +		TP_fast_assign(
+> +			/* trace freq in MHz to match intel_gpu_freq_change, to make life easier
+> +			 * for userspace
+> +			 */
+> +			__entry->freq = DIV_ROUND_UP(freq, 1000000);
+> +			),
+> +		TP_printk("new_freq=%u", __entry->freq)
+> +);
+> +
+> +
+> +TRACE_EVENT(msm_gmu_freq_change,
+> +		TP_PROTO(u32 freq, u32 perf_index),
+> +		TP_ARGS(freq, perf_index),
+> +		TP_STRUCT__entry(
+> +			__field(u32, freq)
+> +			__field(u32, perf_index)
+> +			),
+> +		TP_fast_assign(
+> +			__entry->freq = freq;
+> +			__entry->perf_index = perf_index;
+> +			),
+> +		TP_printk("freq=%u, perf_index=%u", __entry->freq, __entry->perf_index)
+> +);
+> +
+>  #endif
+>  
+>  #undef TRACE_INCLUDE_PATH
+> -- 
+> 2.26.2
+> 
 
-This was apparently left over in f5307104e757 ("cifs: don't use
-__constant_cpu_to_le32()").
-
-> diff --git a/fs/jffs2/nodelist.h b/fs/jffs2/nodelist.h
-> index 8ff4d1a1e774..230a5a7fdafa 100644
-> --- a/fs/jffs2/nodelist.h
-> +++ b/fs/jffs2/nodelist.h
-> @@ -59,8 +59,8 @@
->  #define cpu_to_je32(x) ((jint32_t){cpu_to_le32(x)})
->  #define cpu_to_jemode(x) ((jmode_t){cpu_to_le32(os_to_jffs2_mode(x))})
->
-> -#define constant_cpu_to_je16(x) ((jint16_t){__constant_cpu_to_le16(x)})
-> -#define constant_cpu_to_je32(x) ((jint32_t){__constant_cpu_to_le32(x)})
-> +#define constant_cpu_to_je16(x) ((jint16_t){cpu_to_le16(x)})
-> +#define constant_cpu_to_je32(x) ((jint32_t){cpu_to_le32(x)})
-
-This one would break the build, as these have to be constant expressions,
-whereas cpu_to_le32() is a compiler builtin or an inline function on some
-architectures.
-
-       Arnd
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
