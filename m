@@ -2,129 +2,106 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F063C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AB6C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77671208B3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:19:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tBR2n6hv"
+	by mail.kernel.org (Postfix) with ESMTP id 1135C20BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599063609;
+	bh=4ntTsfwJyBJsBW/1yKbNCcQAmv4C8p9X7jLoU6Hnuo8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1ZindvxeVgOvp3x/OiIvsMZv5Y2IW3Xm1lPZjERQFrYudGt3HD60PQTlzpaRIPpRO
+	 N2zRIWJriv3Jt/GO5N68mAzBWoNgoJIjYW/N9wpQ0IAftEApdapdE4Y3rvyX9qTEDu
+	 rgIY3OLsyeim3kpRvETMygy5MFCpPxMKbD6+4iEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgIBQT0 (ORCPT
+        id S1728482AbgIBQUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:19:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgIBQTV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:19:21 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D9CEC061244;
-        Wed,  2 Sep 2020 09:19:21 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id f127so107414lfd.7;
-        Wed, 02 Sep 2020 09:19:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A4Ns4FXyKzBbQIQFhXeIN99gK1TEB4bN7K2rZb3tfqs=;
-        b=tBR2n6hvrbBmXRV3KYYvZLMZe1zksCcBHJSuVij9v/Mfx0mjvXpvKQv+n2NjGjB5+7
-         FUlvE06p5sp9p7lyyIWi2rgXvbZt8LHbpMfb31wmHq2MfE2dN19KZjip4hM9j1mjci7b
-         4ne3Nb7NNiRJSUh+wLALVk4vZsU1Ajv1tiTjTq6NzgX7BjYPwRrhcbzY0D+CobKQFM5v
-         8XGrSnvqb5C7xMnlLSeEs0UBZ29+9TXxGbshDEYoHp3P1wd6/6YZ2fziqnj3SZstZtRE
-         x6ZYyh15XZdwqOUWKRSnXUgcM7FViI71QM9cYJmMkibTmGfYjd+IhDtQgPUPE8dXMjn3
-         7Q8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A4Ns4FXyKzBbQIQFhXeIN99gK1TEB4bN7K2rZb3tfqs=;
-        b=MUgVFGcsjmr0W425VRqQi7lYsvMYVVwTk+Yj3+3b+DBfnXGrqZ66LwYYb1Tqfkmc7j
-         wsTpownH38me6I7YoR1apJZ5AZWuT/rHrEDz/DbokHypcht0GSgMXLsW/TQd+F4iMbSe
-         qPxofvaLCQSgxg8xCaBzuX8mgFz/sfNyJ8lHOOqXK3F7rgD/txrQQL4pnLbBoqQxR0G1
-         woaSlUfevydf5eLuE3odqFVaUSJZ8Fh0cKPgRv2aLC69D+x95ujEDdd7p6urUX5YlWtU
-         Q3t1W5+7B9rmYPPw9Jl1D4+svDwu0MHG3dBq50MeefFNMKqeIGuGQV6n4TxZs3JWblrr
-         oJ7w==
-X-Gm-Message-State: AOAM533ik1s+alzTKp5THuIQ7Nk2WWivCwHlW6OzdGMk316OfJEew5Tb
-        DtCXuISmG/A6H7GNMwVWueDVd5O1JyZYwQ==
-X-Google-Smtp-Source: ABdhPJxorOuMt+fF1q/dzHdE2W3hPAzBwNmMujGF4eljWGZI3dJVEHHttghNXMYbfHt9AmKOTnf+bg==
-X-Received: by 2002:a19:dcb:: with SMTP id 194mr3481675lfn.25.1599063559361;
-        Wed, 02 Sep 2020 09:19:19 -0700 (PDT)
-Received: from wasted.omprussia.ru ([2a00:1fa0:44ba:bd37:6990:9f35:8864:71b0])
-        by smtp.gmail.com with ESMTPSA id d6sm19235ljg.25.2020.09.02.09.19.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 09:19:18 -0700 (PDT)
-Subject: Re: [PATCH 16/19] sd: use bdev_check_media_change
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
+        Wed, 2 Sep 2020 12:20:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726814AbgIBQUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:20:02 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DA8A208B3;
+        Wed,  2 Sep 2020 16:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599063601;
+        bh=4ntTsfwJyBJsBW/1yKbNCcQAmv4C8p9X7jLoU6Hnuo8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BOY8U3iPghuQxwE3y0jQ6b7QlcoRNKN2TpJ9cBHK4BrUoUSrYP/CDg8RhMJT5gesa
+         ZmRulHjspOaleiQY3Y4wg68/vgrreAn4rcw3Le3vq/SmwL4mJjJR8nSAcuLctYpnM/
+         ih8hXsRD8z0UI7DGP1ZdwV1Q3ggq4mS2fDt3o7G4=
+Date:   Wed, 2 Sep 2020 11:26:13 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>
+Cc:     Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200902141218.212614-1-hch@lst.de>
- <20200902141218.212614-17-hch@lst.de>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Message-ID: <1b972d93-e8e3-8f32-86de-76792948e20b@gmail.com>
-Date:   Wed, 2 Sep 2020 19:19:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] xsk: Fix null check on error return path
+Message-ID: <20200902162613.GB31464@embeddedor>
+References: <20200902150750.GA7257@embeddedor>
+ <7b3d5e02-852e-189b-7c0e-9f9827fca730@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200902141218.212614-17-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7b3d5e02-852e-189b-7c0e-9f9827fca730@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 5:12 PM, Christoph Hellwig wrote:
-
-> Switch to use bdev_check_media_change instead of check_disk_change and
-> call cd_revalidate_disk manually.  As sd also calls sd_revalidate_disk
-
-   s/cd/sd/?
-
-> manually during probe and open, , the extra call into ->revalidate_disk
-> from bdev_disk_changed is not required either, so stop wiring up the
-> method.
+On Wed, Sep 02, 2020 at 05:12:51PM +0200, Björn Töpel wrote:
+> On 2020-09-02 17:07, Gustavo A. R. Silva wrote:
+> > Currently, dma_map is being checked, when the right object identifier
+> > to be null-checked is dma_map->dma_pages, instead.
+> > 
+> > Fix this by null-checking dma_map->dma_pages.
+> > 
+> > Addresses-Coverity-ID: 1496811 ("Logically dead code")
+> > Fixes: 921b68692abb ("xsk: Enable sharing of dma mappings")
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/scsi/sd.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> Nice catch!
 > 
-> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-> index 2bec8cd526164d..d020639c28c6ca 100644
-> --- a/drivers/scsi/sd.c
-> +++ b/drivers/scsi/sd.c
-> @@ -1381,8 +1381,10 @@ static int sd_open(struct block_device *bdev, fmode_t mode)
->  	if (!scsi_block_when_processing_errors(sdev))
->  		goto error_out;
->  
-> -	if (sdev->removable || sdkp->write_prot)
-> -		check_disk_change(bdev);
-> +	if (sdev->removable || sdkp->write_prot) {
-> +		if (bdev_check_media_change(bdev))
-> +			sd_revalidate_disk(bdev->bd_disk);
-> +	}
->  
->  	/*
->  	 * If the drive is empty, just let the open fail.
-[...]
+> Acked-by: Björn Töpel <bjorn.topel@intel.com>
+> 
 
-MBR, Sergei
+Thanks, Björn.
+
+--
+Gustavo
+
+> > ---
+> >   net/xdp/xsk_buff_pool.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c
+> > index 795d7c81c0ca..5b00bc5707f2 100644
+> > --- a/net/xdp/xsk_buff_pool.c
+> > +++ b/net/xdp/xsk_buff_pool.c
+> > @@ -287,7 +287,7 @@ static struct xsk_dma_map *xp_create_dma_map(struct device *dev, struct net_devi
+> >   		return NULL;
+> >   	dma_map->dma_pages = kvcalloc(nr_pages, sizeof(*dma_map->dma_pages), GFP_KERNEL);
+> > -	if (!dma_map) {
+> > +	if (!dma_map->dma_pages) {
+> >   		kfree(dma_map);
+> >   		return NULL;
+> >   	}
+> > 
