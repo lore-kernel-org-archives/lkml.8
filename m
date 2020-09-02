@@ -2,113 +2,170 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0FBC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D891C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E79DF2084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC3720665
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:47:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgIBGq1 (ORCPT
+        id S1726771AbgIBGrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 02:46:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58262 "EHLO mx2.suse.de"
+        Wed, 2 Sep 2020 02:47:02 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:4489 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726247AbgIBGq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 02:46:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id B57E4AC1D;
-        Wed,  2 Sep 2020 06:46:26 +0000 (UTC)
-From:   Qu Wenruo <wqu@suse.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     jeyu@suse.de, Lucas De Marchi <lucas.demarchi@intel.com>
-Subject: [PATCH] module: Add more error message for failed kernel module loading
-Date:   Wed,  2 Sep 2020 14:46:19 +0800
-Message-Id: <20200902064619.67343-1-wqu@suse.com>
-X-Mailer: git-send-email 2.28.0
+        id S1726144AbgIBGrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 02:47:01 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BhDxr6VGJz9tybc;
+        Wed,  2 Sep 2020 08:46:56 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id iEERQsHpL4eE; Wed,  2 Sep 2020 08:46:56 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BhDxr5Sfgz9tybb;
+        Wed,  2 Sep 2020 08:46:56 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B9D0E8B788;
+        Wed,  2 Sep 2020 08:46:57 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id cHWP0PZXhRVt; Wed,  2 Sep 2020 08:46:57 +0200 (CEST)
+Received: from po17688vm.idsi0.si.c-s.fr (unknown [10.25.210.31])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 18CA78B784;
+        Wed,  2 Sep 2020 08:46:57 +0200 (CEST)
+Subject: Re: [PATCH 2/2] powerpc/vdso32: link vdso64 with linker
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Kees Cook <keescook@chromium.org>,
+        Fangrui Song <maskray@google.com>
+References: <20200901222523.1941988-1-ndesaulniers@google.com>
+ <20200901222523.1941988-3-ndesaulniers@google.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <b2066ccd-2b81-6032-08e3-41105b400f75@csgroup.eu>
+Date:   Wed, 2 Sep 2020 06:46:45 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200901222523.1941988-3-ndesaulniers@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When kernel module loading failed, user space only get one of the
-following error messages:
 
-- ENOEXEC
-  This is the most confusing one. From corrupted ELF header to bad
-  WRITE|EXEC flags check introduced by in module_enforce_rwx_sections()
-  all returns this error number.
 
-- EPERM
-  This is for blacklisted modules. But mod doesn't do extra explain
-  on this error either.
+On 09/01/2020 10:25 PM, Nick Desaulniers wrote:
+> Rather than invoke the compiler as the driver, use the linker. That way
+> we can check --orphan-handling=warn support correctly, as cc-ldoption
+> was removed in
+> commit 055efab3120b ("kbuild: drop support for cc-ldoption").
+> 
+> Requires dropping the .got section.  I couldn't find how it was used in
+> the vdso32.
 
-- ENOMEM
-  The only error which needs no explain.
+ld crashes:
 
-This means, if a user got "Exec format error" from modprobe, it provides
-no meaningful way for the user to debug, and will take extra time
-communicating to get extra info.
+   LD      arch/powerpc/kernel/vdso32/vdso32.so.dbg
+/bin/sh: line 1: 23780 Segmentation fault      (core dumped) 
+ppc-linux-ld -EB -m elf32ppc -shared -soname linux-vdso32.so.1 
+--eh-frame-hdr --orphan-handling=warn -T 
+arch/powerpc/kernel/vdso32/vdso32.lds 
+arch/powerpc/kernel/vdso32/sigtramp.o 
+arch/powerpc/kernel/vdso32/gettimeofday.o 
+arch/powerpc/kernel/vdso32/datapage.o 
+arch/powerpc/kernel/vdso32/cacheflush.o 
+arch/powerpc/kernel/vdso32/note.o arch/powerpc/kernel/vdso32/getcpu.o -o 
+arch/powerpc/kernel/vdso32/vdso32.so.dbg
+make[4]: *** [arch/powerpc/kernel/vdso32/vdso32.so.dbg] Error 139
 
-So this patch will add extra error messages for -ENOEXEC and -EPERM
-errors, allowing user to do better debugging and reporting.
 
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
----
-Changelog:
-v2:
-- Add extra section description for the error message of
-  module_enforce_rwx_sections()
-- Add Reviewed-by tags.
----
- kernel/module.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+[root@localhost linux-powerpc]# ppc-linux-ld --version
+GNU ld (GNU Binutils) 2.26.20160125
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 1c5cff34d9f2..2c00059ac1c9 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2096,8 +2096,11 @@ static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
- 	int i;
- 
- 	for (i = 0; i < hdr->e_shnum; i++) {
--		if ((sechdrs[i].sh_flags & shf_wx) == shf_wx)
-+		if ((sechdrs[i].sh_flags & shf_wx) == shf_wx) {
-+			pr_err("%s: section %s (index %d) has invalid WRITE|EXEC flags\n",
-+				mod->name, secstrings + sechdrs[i].sh_name, i);
- 			return -ENOEXEC;
-+		}
- 	}
- 
- 	return 0;
-@@ -3825,8 +3828,10 @@ static int load_module(struct load_info *info, const char __user *uargs,
- 	char *after_dashes;
- 
- 	err = elf_header_check(info);
--	if (err)
-+	if (err) {
-+		pr_err("Module has invalid ELF header\n");
- 		goto free_copy;
-+	}
- 
- 	err = setup_load_info(info, flags);
- 	if (err)
-@@ -3834,6 +3839,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
- 
- 	if (blacklisted(info->name)) {
- 		err = -EPERM;
-+		pr_err("Module %s is blacklisted\n", info->name);
- 		goto free_copy;
- 	}
- 
--- 
-2.28.0
 
+Christophe
+
+> 
+> Fixes: commit f2af201002a8 ("powerpc/build: vdso linker warning for orphan sections")
+> Link: https://lore.kernel.org/lkml/CAKwvOdnn3wxYdJomvnveyD_njwRku3fABWT_bS92duihhywLJQ@mail.gmail.com/
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+> Not sure removing .got is a good idea or not.  Otherwise I observe the
+> following link error:
+> powerpc-linux-gnu-ld: warning: orphan section `.got' from `arch/powerpc/kernel/vdso32/sigtramp.o' being placed in section `.got'
+> powerpc-linux-gnu-ld: _GLOBAL_OFFSET_TABLE_ not defined in linker created .got
+> powerpc-linux-gnu-ld: final link failed: bad value
+> 
+> sigtramp.c doesn't mention anything from the GOT AFAICT, and doesn't
+> look like it contains relocations that do, so I'm not sure where
+> references to _GLOBAL_OFFSET_TABLE_ are coming from.
+> 
+>   arch/powerpc/kernel/vdso32/Makefile     | 7 +++++--
+>   arch/powerpc/kernel/vdso32/vdso32.lds.S | 3 ++-
+>   2 files changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
+> index 87ab1152d5ce..611a5951945a 100644
+> --- a/arch/powerpc/kernel/vdso32/Makefile
+> +++ b/arch/powerpc/kernel/vdso32/Makefile
+> @@ -27,6 +27,9 @@ UBSAN_SANITIZE := n
+>   ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
+>   	-Wl,-soname=linux-vdso32.so.1 -Wl,--hash-style=both
+>   asflags-y := -D__VDSO32__ -s
+> +ldflags-y := -shared -soname linux-vdso32.so.1 \
+> +	$(call ld-option, --eh-frame-hdr) \
+> +	$(call ld-option, --orphan-handling=warn) -T
+>   
+>   obj-y += vdso32_wrapper.o
+>   extra-y += vdso32.lds
+> @@ -49,8 +52,8 @@ $(obj-vdso32): %.o: %.S FORCE
+>   	$(call if_changed_dep,vdso32as)
+>   
+>   # actual build commands
+> -quiet_cmd_vdso32ld = VDSO32L $@
+> -      cmd_vdso32ld = $(VDSOCC) $(c_flags) $(CC32FLAGS) -o $@ $(call cc-ldoption, -Wl$(comma)--orphan-handling=warn) -Wl,-T$(filter %.lds,$^) $(filter %.o,$^)
+> +quiet_cmd_vdso32ld = LD      $@
+> +      cmd_vdso32ld = $(cmd_ld)
+>   quiet_cmd_vdso32as = VDSO32A $@
+>         cmd_vdso32as = $(VDSOCC) $(a_flags) $(CC32FLAGS) -c -o $@ $<
+>   
+> diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+> index 4c985467a668..0ccdebad18b8 100644
+> --- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
+> +++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+> @@ -61,7 +61,6 @@ SECTIONS
+>   	.fixup		: { *(.fixup) }
+>   
+>   	.dynamic	: { *(.dynamic) }		:text	:dynamic
+> -	.got		: { *(.got) }			:text
+>   	.plt		: { *(.plt) }
+>   
+>   	_end = .;
+> @@ -108,7 +107,9 @@ SECTIONS
+>   	.debug_varnames  0 : { *(.debug_varnames) }
+>   
+>   	/DISCARD/	: {
+> +		*(.got)
+>   		*(.note.GNU-stack)
+> +		*(.branch_lt)
+>   		*(.data .data.* .gnu.linkonce.d.* .sdata*)
+>   		*(.bss .sbss .dynbss .dynsbss)
+>   		*(.glink .iplt .plt .rela*)
+> 
