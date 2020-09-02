@@ -2,91 +2,104 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE72C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA73C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4A42072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C26FC2087D
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:32:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asYSOntc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgIBH1t (ORCPT
+        id S1726948AbgIBHc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:27:49 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2733 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726528AbgIBH1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:27:43 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 7ACF0C3A901EC844D857;
-        Wed,  2 Sep 2020 08:27:41 +0100 (IST)
-Received: from [127.0.0.1] (10.47.4.206) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 2 Sep 2020
- 08:27:40 +0100
-Subject: Re: [PATCH v6 1/5] perf/jevents: Remove jevents.h file
-To:     kajoljain <kjain@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>
-CC:     <acme@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <pc@us.ibm.com>, <namhyung@kernel.org>, <ak@linux.intel.com>,
-        <yao.jin@linux.intel.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <irogers@google.com>,
-        <maddy@linux.ibm.com>, <ravi.bangoria@linux.ibm.com>
-References: <20200827130958.189146-1-kjain@linux.ibm.com>
- <20200827130958.189146-2-kjain@linux.ibm.com> <20200831084348.GB287892@krava>
- <ca73d0ff-0dfa-8d9e-1cb8-5791a78eb4e2@huawei.com>
- <92f58d69-849a-5df4-6b24-87542138806d@linux.ibm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <6967c008-acda-6df4-799a-a657ec231476@huawei.com>
-Date:   Wed, 2 Sep 2020 08:25:08 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 2 Sep 2020 03:32:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgIBHcv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 03:32:51 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 536C5C061244;
+        Wed,  2 Sep 2020 00:32:51 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z1so4098230wrt.3;
+        Wed, 02 Sep 2020 00:32:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Fu3rhVbErwAPlE8HPpQ0/XopyDhWlhtlly/dcplP9TY=;
+        b=asYSOntcpTHbiaWRo5xy57HdA7Q4MiRosi3KKd0vtdcHs+yGUqusZnzNGmOqfZ8UVf
+         6kXz4tuOY+SGEyqddBhVB4MTxerGCGnYNQ4pbeUgOB4tH8z4AkWrJLXk0X0EN5ZZhVRo
+         4FDBQOgCK53ePYGEpP9fkEcsJgQz09Qhhe0ICcbGr2BTa6+7lkVvbqfSI85YfPloxlPB
+         MnbtLSAaY/14jtW1WzmLFfFA1FC/5T3E3nJX59YQXHQJx5YDx9edz8T/m6e2T1eW9LGJ
+         ESkRcp6s9ttPE3lesTIMVIQhbRD2noNFyNERbpTZjSiMDnGIc6oz8waJE994SiJRS67p
+         LyYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Fu3rhVbErwAPlE8HPpQ0/XopyDhWlhtlly/dcplP9TY=;
+        b=oZEy4LJqdaWDk7JPEzzZ3ZVhPKkucOgaxWcZr5xfNqVi7b60zJO+HElz2Y7dLDGTTl
+         TZ5xF0zuHoDqlMfnhkhvjiBheTWS4I8Q0E6F+9pIZ9B5ZCc3qOSxMYC2MnHWaa4fR0rL
+         jOcBaJdtS1TRSdWingl8cxW4Zux9vqYRkvAqx8BXfv1zLP2ZKT6EUzVRSBrqVMDtvG4w
+         HLO+VoplBlToRcWsgHVi7r4ERfqsd2ikkOguTh5v3xsrdv5fOSG0bynasyztFYibKcfI
+         r+rdR0IFSGJ9MWDvpD+LMh5V3Eicl3B45DDWnMmhUCPZ2MOb0lutb52CYB5/T922sOKu
+         fmeA==
+X-Gm-Message-State: AOAM531bJQJxYaeYI1UYWJfLVWiwrjCX1Om+Bi6f/Rww3KSaT8UTRTKG
+        ERJ1eydHHAb2Rjc+Wx+LVDsg0EkuHEU=
+X-Google-Smtp-Source: ABdhPJyDz94/oQIHXyFLv2/XsyDNLzEbN5UnuHyknZu35SS+jOuC0ccqA4JyJdQA1JXBl/6NlmYMaQ==
+X-Received: by 2002:adf:91c2:: with SMTP id 60mr1633124wri.292.1599031970119;
+        Wed, 02 Sep 2020 00:32:50 -0700 (PDT)
+Received: from [192.168.8.147] ([37.170.201.185])
+        by smtp.gmail.com with ESMTPSA id n124sm5126104wmn.29.2020.09.02.00.32.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Sep 2020 00:32:49 -0700 (PDT)
+Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
+ enqueue op for lockless qdisc
+To:     Yunsheng Lin <linyunsheng@huawei.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linuxarm@huawei.com
+References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
+ <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com>
+ <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com>
+ <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
+ <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <1f7208e6-8667-e542-88dd-bd80a6c59fd2@gmail.com>
+Date:   Wed, 2 Sep 2020 09:32:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <92f58d69-849a-5df4-6b24-87542138806d@linux.ibm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.4.206]
-X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/09/2020 06:56, kajoljain wrote:
->>>> +#define min(x, y) ({                \
->>>> +    typeof(x) _min1 = (x);            \
->>>> +    typeof(y) _min2 = (y);            \
->>>> +    (void)(&_min1 == &_min2);        \
->>>> +    _min1 < _min2 ? _min1 : _min2; })
->>>> +#endif
->> Wondering what is special about this definition of min that it's required? Compiled ok for me without it.
-> Hi John,
->       You are right, for me also in power it compiled without any issues, but not sure if somewhere we have dependency,
-> that's why I didn't remove it.
 
-If it builds for x86, then that's main thing ;) But seriously, Arnaldo 
-has lots of bots to test builds also.
 
-BTW, I got this from your patchset:
+On 9/1/20 11:34 PM, Yunsheng Lin wrote:
 
-pmu-events/jevents.c:98:29: warning: no previous prototype for 
-‘get_cpu_str’ [-Wmissing-prototypes]
-__attribute__((weak)) char *get_cpu_str(void)
-                             ^~~~~~~~~~~
-pmu-events/jevents.c:529:5: warning: no previous prototype for 
-‘json_events’ [-Wmissing-prototypes]
-int json_events(const char *fn,
-     ^~~~~~~~~~~
+> 
+> I am not familiar with TCQ_F_CAN_BYPASS.
+> From my understanding, the problem is that there is no order between
+> qdisc enqueuing and qdisc reset.
 
-But I think that you will remove this.
+Thw qdisc_reset() should be done after rcu grace period, when there is guarantee no enqueue is in progress.
 
-Finally, generated pmu-events.c looks ok for arm64, which I am 
-interested in.
+qdisc_destroy() already has a qdisc_reset() call, I am not sure why qdisc_deactivate() is also calling qdisc_reset()
 
-Thanks,
-John
+
