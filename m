@@ -8,51 +8,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7914C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25179C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9097A208C7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D8D2083B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="d0fu8CF1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="D+VDVEja"
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="XVaqdSTy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pCQuiEYb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgIBSHe (ORCPT
+        id S1728111AbgIBSHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:07:34 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:47311 "EHLO
+        Wed, 2 Sep 2020 14:07:39 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:46339 "EHLO
         out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727951AbgIBSGm (ORCPT
+        by vger.kernel.org with ESMTP id S1727947AbgIBSGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 14:06:42 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id C83AF5C0228;
+        by mailout.nyi.internal (Postfix) with ESMTP id 8D3115C01A5;
         Wed,  2 Sep 2020 14:06:34 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
   by compute4.internal (MEProxy); Wed, 02 Sep 2020 14:06:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
         :to:cc:subject:date:message-id:in-reply-to:references:reply-to
-        :mime-version:content-transfer-encoding; s=fm1; bh=s9cLKQkvqUgXX
-        9qXewNv9AkRjEs8xeCBdkOQExd8Kic=; b=d0fu8CF1/88vb3bsZ//Ho24Y0suIX
-        KQI0dXvhwHw6lSXXK7Ssxhq8nomgdsyFgR63v8tb4xjpetozezYfOHCe3yqAhe9A
-        cYfpbx/ETEuYd/8hWLjP6GD/YHxEggMXs14iCEW1MKR2+To1GaMYxOTSkuxijhwt
-        EJJp9HrWfU/MphR0SME/Wa8eMYuM7b+XasdN83zg6zSNQIv1AopRE2/IR6SLbwve
-        Dmm6+TE1oskLFZAA9AcZyxqwytCQDcV1n12kESu6xGbLch4Tsb4XgQGODsWTsGBs
-        lKVyENQ+EdxAkKBlqzvtbYbq02eBWevmzOuKac+VoIj49z4KpNP7CpIgg==
+        :mime-version:content-transfer-encoding; s=fm1; bh=uOcSd2/dn38W3
+        Qs9ZzkXcxJ7lzZXPjXumgXGRk3+suA=; b=XVaqdSTyUUvwRM3CSZfzfwBaRmW72
+        50JZ5nA6SaruM2KVMvTK5XALc8GyKZmhjIXtgoMvme35mqwxPDZ+l3DGzRED5Klw
+        hI/4FKLazf/c1W/pJy3SH3micGMvaFOYx97Kpf0UmY5TwERH1E3m37Q2sG1YQ05q
+        pz6U6zcqaNjv5sVx88Oc0ey4zxLbFohFJA60Uwt5ehEkstCLEgVOPPpupFxn86DJ
+        U5MBw+/9lCgE+Pd+RFC2bbtHNQARW3d+F4Ia40h8y7OkCd/qMNuzZEuPmnIdJvxu
+        5dqUrBj3Pz0CxYvEvEHoOfQBc53NZtV9VdKFAlNgJ1Ray+X9wivQlBlbg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:reply-to:subject
         :to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=s9cLKQkvqUgXX9qXewNv9AkRjEs8xeCBdkOQExd8Kic=; b=D+VDVEja
-        tEWQh/q4xvCmWQ0PreIazjh+j4MqjMIrUNRr3K2yx0KtC/6EOTtdJm8YrGIlbNj1
-        saYcp8FpDifWHUxM/AKiHxxrUknO7J+MW8WLawZJfMJOaZhvV51jdI0An7xgeBQt
-        UFw+3s4Cy3Owm1e6EhqKu0zzw2oXyVBF2egbD31IiiI/USetF9iUqIlnt/Rw3OaP
-        Vaj8AO01ZnSddKw8xORhiFSA9XeOSRR7G08/UwEhLna0ECpd7pcE6vA+94FgnQ44
-        zzJ3uYxq+poFQ2jBUzjNkTJOH3QkoEKdFQeykpggx2OzbIEVLyZRxrGOf0y1s8cK
-        XO8WYhIsaegQIw==
-X-ME-Sender: <xms:Kt9PX3aKZm7wRTn5bCGLw69udDIL068V5RzQoiCf-2hAigmUxpY7lQ>
-    <xme:Kt9PX2YUzWIhrPae9y_7-ftSRq3hfUujIJ1SPSu0Uzz4MOIoWc3MdeCnw6vO7LC07
-    tsn1g6kKR9c45Jk6g>
+        fm3; bh=uOcSd2/dn38W3Qs9ZzkXcxJ7lzZXPjXumgXGRk3+suA=; b=pCQuiEYb
+        GFhSIDEUlJCq8HAvwoXlbk/J/mROrisfgoalZO1s4ZZ8WjAa57Ax8LP2BiWefrru
+        BDECL6N/1qyHb5My1GiTmtEneGFGC6LdvjkHjOw/jGuuQAPXHLu52GTPjsesTnAi
+        VKcyJIrckGNPQl91h/KI5XDycDMqZD5n4+0jJLD0CJqA2OlWBeDMN4ukfaAd2I3V
+        yrGHxXNDPcWC2AUZGuXhQ+LAI6/+71xH6ZA+XQVsv3EZgPOS1BcSEHEYlQsP9bFw
+        WLxM7ngw8JJ8jszIy094WcNlshGbiKrMMfEZ3FHrMto5skGBi/FqPwQjloj562up
+        XifL5G8cJlst9A==
+X-ME-Sender: <xms:Kt9PX9mwP8srJqX5DP6FCsP_ME8dVxzWQCmznewXD3gVpE4Dbf19RA>
+    <xme:Kt9PX41eA0FK5Rqs-HiCq3fhzhMYN2AdOgWSP27L2Jhb96geOpAAWtGT8_WCQpqBy
+    Td_fogCbExZrqp0KQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledguddvudcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
@@ -61,13 +61,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledguddvudcutefuodetgg
     ffveektdduhfdutdfgtdekkedvhfetuedufedtgffgvdevleehheevjefgtdenucfkphep
     uddvrdegiedruddtiedrudeigeenucevlhhushhtvghrufhiiigvpeduvdenucfrrghrrg
     hmpehmrghilhhfrhhomhepiihirdihrghnsehsvghnthdrtghomh
-X-ME-Proxy: <xmx:Kt9PX5-rDYv0XMe8YnKg7DpfxsNlStX_UZqM1AjJH8DZ_pRFFbCY2Q>
-    <xmx:Kt9PX9pYetpMsmnmnqaO1QDZgAcGp8hpNi7WIJ-ODfbqqZlxW8984A>
-    <xmx:Kt9PXyp1JyPWwDCxVheATg4g3Y1swLkOVgvjeMUQzLT8eWClkikYVQ>
-    <xmx:Kt9PXyKE3CCmvhSRJuEj1jU3Pu60A4Kir4JuAqjjyBDaPSTceRxNbw>
+X-ME-Proxy: <xmx:Kt9PXzpIvhyhxwlhQ035-6Tto2FQENXQJpiV6DAN7vDCs9yJZ5Gn0A>
+    <xmx:Kt9PX9lIRFgExSI48kWl7cmtAVkbLvqvGf-3pSxuB8KbZRwjpjIJRA>
+    <xmx:Kt9PX72-1YBT8ZwBGtAAW59oRgghG8vxYCO3VWW9M7xvEPvm7XFQlA>
+    <xmx:Kt9PXwmm5TKUwt7xNES67Uy4AenDjLXU3BBJrdXadseo5G07WUc2Rw>
 Received: from nvrsysarch6.NVidia.COM (unknown [12.46.106.164])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1633630600A6;
-        Wed,  2 Sep 2020 14:06:34 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id CFCD73060067;
+        Wed,  2 Sep 2020 14:06:33 -0400 (EDT)
 From:   Zi Yan <zi.yan@sent.com>
 To:     linux-mm@kvack.org, Roman Gushchin <guro@fb.com>
 Cc:     Rik van Riel <riel@surriel.com>,
@@ -77,9 +77,9 @@ Cc:     Rik van Riel <riel@surriel.com>,
         Yang Shi <yang.shi@linux.alibaba.com>,
         David Nellans <dnellans@nvidia.com>,
         linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>
-Subject: [RFC PATCH 14/16] mm: page_alloc: >=MAX_ORDER pages allocation an deallocation.
-Date:   Wed,  2 Sep 2020 14:06:26 -0400
-Message-Id: <20200902180628.4052244-15-zi.yan@sent.com>
+Subject: [RFC PATCH 13/16] mm: thp: add a knob to enable/disable 1GB THPs.
+Date:   Wed,  2 Sep 2020 14:06:25 -0400
+Message-Id: <20200902180628.4052244-14-zi.yan@sent.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200902180628.4052244-1-zi.yan@sent.com>
 References: <20200902180628.4052244-1-zi.yan@sent.com>
@@ -93,153 +93,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zi Yan <ziy@nvidia.com>
 
-Use alloc_contig_pages for allocation and destroy_compound_gigantic_page
-for deallocation, so 1GB THP can be created and destroyed without
-changing MAX_ORDER.
+It does not affect existing 1GB THPs. It is similar to the knob for
+2MB THPs.
 
 Signed-off-by: Zi Yan <ziy@nvidia.com>
 ---
- mm/hugetlb.c    | 22 ----------------------
- mm/internal.h   |  2 ++
- mm/mempolicy.c  | 15 ++++++++++++++-
- mm/page_alloc.c | 33 ++++++++++++++++++++++++++++-----
- 4 files changed, 44 insertions(+), 28 deletions(-)
+ include/linux/huge_mm.h | 14 ++++++++++++++
+ mm/huge_memory.c        | 40 ++++++++++++++++++++++++++++++++++++++++
+ mm/memory.c             |  2 +-
+ 3 files changed, 55 insertions(+), 1 deletion(-)
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 4113d7b66fee..d5357778b026 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1211,26 +1211,6 @@ static int hstate_next_node_to_free(struct hstate *h, nodemask_t *nodes_allowed)
- 		nr_nodes--)
- 
- #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
--static void destroy_compound_gigantic_page(struct page *page,
--					unsigned int order)
--{
--	int i;
--	int nr_pages = 1 << order;
--	struct page *p = page + 1;
--
--	atomic_set(compound_mapcount_ptr(page), 0);
--	if (hpage_pincount_available(page))
--		atomic_set(compound_pincount_ptr(page), 0);
--
--	for (i = 1; i < nr_pages; i++, p = mem_map_next(p, page, i)) {
--		clear_compound_head(p);
--		set_page_refcounted(p);
--	}
--
--	set_compound_order(page, 0);
--	__ClearPageHead(page);
--}
--
- static void free_gigantic_page(struct page *page, unsigned int order)
- {
- 	/*
-@@ -1288,8 +1268,6 @@ static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
- 	return NULL;
- }
- static inline void free_gigantic_page(struct page *page, unsigned int order) { }
--static inline void destroy_compound_gigantic_page(struct page *page,
--						unsigned int order) { }
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index c7bc40c4a5e2..3bf8d8a09f08 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -119,6 +119,8 @@ enum transparent_hugepage_flag {
+ #ifdef CONFIG_DEBUG_VM
+ 	TRANSPARENT_HUGEPAGE_DEBUG_COW_FLAG,
  #endif
- 
- static void update_and_free_page(struct hstate *h, struct page *page)
-diff --git a/mm/internal.h b/mm/internal.h
-index 10c677655912..520fd9b5e18a 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -620,4 +620,6 @@ struct migration_target_control {
- 	gfp_t gfp_mask;
++	TRANSPARENT_PUD_HUGEPAGE_FLAG,
++	TRANSPARENT_PUD_HUGEPAGE_REQ_MADV_FLAG,
  };
  
-+void destroy_compound_gigantic_page(struct page *page,
-+					unsigned int order);
- #endif	/* __MM_INTERNAL_H */
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index eddbe4e56c73..4bae089e7a89 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -2138,7 +2138,12 @@ static struct page *alloc_page_interleave(gfp_t gfp, unsigned order,
- {
- 	struct page *page;
- 
--	page = __alloc_pages(gfp, order, nid);
-+	if (order > MAX_ORDER) {
-+		page = alloc_contig_pages(1UL<<order, gfp, nid, NULL);
-+		if (page && (gfp & __GFP_COMP))
-+			prep_compound_page(page, order);
-+	} else
-+		page = __alloc_pages(gfp, order, nid);
- 	/* skip NUMA_INTERLEAVE_HIT counter update if numa stats is disabled */
- 	if (!static_branch_likely(&vm_numa_stat_key))
- 		return page;
-@@ -2212,6 +2217,14 @@ alloc_pages_vma(gfp_t gfp, int order, struct vm_area_struct *vma,
- 		nmask = policy_nodemask(gfp, pol);
- 		if (!nmask || node_isset(hpage_node, *nmask)) {
- 			mpol_cond_put(pol);
-+
-+			if (order > MAX_ORDER) {
-+				page = alloc_contig_pages(1UL<<order, gfp,
-+							  hpage_node, NULL);
-+				if (page && (gfp & __GFP_COMP))
-+					prep_compound_page(page, order);
-+				goto out;
-+			}
- 			/*
- 			 * First, try to allocate THP only on local node, but
- 			 * don't reclaim unnecessarily, just compact.
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 97a4c7e4a579..8a8b241508f7 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1480,6 +1480,24 @@ void __meminit reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
- 	}
+ struct kobject;
+@@ -184,6 +186,18 @@ static inline bool __transparent_hugepage_enabled(struct vm_area_struct *vma)
  }
  
-+void destroy_compound_gigantic_page(struct page *page,
-+					unsigned int order)
+ bool transparent_hugepage_enabled(struct vm_area_struct *vma);
++static inline bool transparent_pud_hugepage_enabled(struct vm_area_struct *vma)
 +{
-+	int i;
-+	int nr_pages = 1 << order;
-+	struct page *p = page + 1;
-+
-+	atomic_set(compound_mapcount_ptr(page), 0);
-+	for (i = 1; i < nr_pages; i++, p = mem_map_next(p, page, i)) {
-+		clear_compound_head(p);
-+		set_page_refcounted(p);
++	if (transparent_hugepage_enabled(vma)) {
++		if (transparent_hugepage_flags & (1 << TRANSPARENT_PUD_HUGEPAGE_FLAG))
++			return true;
++		if (transparent_hugepage_flags &
++					(1 << TRANSPARENT_PUD_HUGEPAGE_REQ_MADV_FLAG))
++			return !!(vma->vm_flags & VM_HUGEPAGE);
 +	}
 +
-+	set_compound_order(page, 0);
-+	__ClearPageHead(page);
-+	set_page_refcounted(page);
++	return false;
++}
+ 
+ #define HPAGE_CACHE_INDEX_MASK (HPAGE_PMD_NR - 1)
+ 
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index e209c2dfc5b7..e1440a13da63 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -49,9 +49,11 @@
+ unsigned long transparent_hugepage_flags __read_mostly =
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE_ALWAYS
+ 	(1<<TRANSPARENT_HUGEPAGE_FLAG)|
++	(1<<TRANSPARENT_PUD_HUGEPAGE_FLAG)|
+ #endif
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE_MADVISE
+ 	(1<<TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG)|
++	(1<<TRANSPARENT_PUD_HUGEPAGE_REQ_MADV_FLAG)|
+ #endif
+ 	(1<<TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG)|
+ 	(1<<TRANSPARENT_HUGEPAGE_DEFRAG_KHUGEPAGED_FLAG)|
+@@ -199,6 +201,43 @@ static ssize_t enabled_store(struct kobject *kobj,
+ static struct kobj_attribute enabled_attr =
+ 	__ATTR(enabled, 0644, enabled_show, enabled_store);
+ 
++static ssize_t enabled_1gb_show(struct kobject *kobj,
++			    struct kobj_attribute *attr, char *buf)
++{
++	if (test_bit(TRANSPARENT_PUD_HUGEPAGE_FLAG, &transparent_hugepage_flags))
++		return sprintf(buf, "[always] madvise never\n");
++	else if (test_bit(TRANSPARENT_PUD_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags))
++		return sprintf(buf, "always [madvise] never\n");
++	else
++		return sprintf(buf, "always madvise [never]\n");
 +}
 +
- static void __free_pages_ok(struct page *page, unsigned int order)
- {
- 	unsigned long flags;
-@@ -1489,11 +1507,16 @@ static void __free_pages_ok(struct page *page, unsigned int order)
- 	if (!free_pages_prepare(page, order, true))
- 		return;
++static ssize_t enabled_1gb_store(struct kobject *kobj,
++			     struct kobj_attribute *attr,
++			     const char *buf, size_t count)
++{
++	ssize_t ret = count;
++
++	if (!memcmp("always", buf,
++		    min(sizeof("always")-1, count))) {
++		clear_bit(TRANSPARENT_PUD_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
++		set_bit(TRANSPARENT_PUD_HUGEPAGE_FLAG, &transparent_hugepage_flags);
++	} else if (!memcmp("madvise", buf,
++			   min(sizeof("madvise")-1, count))) {
++		clear_bit(TRANSPARENT_PUD_HUGEPAGE_FLAG, &transparent_hugepage_flags);
++		set_bit(TRANSPARENT_PUD_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
++	} else if (!memcmp("never", buf,
++			   min(sizeof("never")-1, count))) {
++		clear_bit(TRANSPARENT_PUD_HUGEPAGE_FLAG, &transparent_hugepage_flags);
++		clear_bit(TRANSPARENT_PUD_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
++	} else
++		ret = -EINVAL;
++
++	return ret;
++}
++static struct kobj_attribute enabled_1gb_attr =
++	__ATTR(enabled_1gb, 0644, enabled_1gb_show, enabled_1gb_store);
++
+ ssize_t single_hugepage_flag_show(struct kobject *kobj,
+ 				struct kobj_attribute *attr, char *buf,
+ 				enum transparent_hugepage_flag flag)
+@@ -305,6 +344,7 @@ static struct kobj_attribute hpage_pmd_size_attr =
  
--	migratetype = get_pfnblock_migratetype(page, pfn);
--	local_irq_save(flags);
--	__count_vm_events(PGFREE, 1 << order);
--	free_one_page(page_zone(page), page, pfn, order, migratetype);
--	local_irq_restore(flags);
-+	if (order >= MAX_ORDER) {
-+		destroy_compound_gigantic_page(page, order);
-+		free_contig_range(page_to_pfn(page), 1 << order);
-+	} else {
-+		migratetype = get_pfnblock_migratetype(page, pfn);
-+		local_irq_save(flags);
-+		__count_vm_events(PGFREE, 1 << order);
-+		free_one_page(page_zone(page), page, pfn, order, migratetype);
-+		local_irq_restore(flags);
-+	}
- }
- 
- void __free_pages_core(struct page *page, unsigned int order)
+ static struct attribute *hugepage_attr[] = {
+ 	&enabled_attr.attr,
++	&enabled_1gb_attr.attr,
+ 	&defrag_attr.attr,
+ 	&use_zero_page_attr.attr,
+ 	&hpage_pmd_size_attr.attr,
+diff --git a/mm/memory.c b/mm/memory.c
+index 184d8eb2d060..518f29a5903e 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4305,7 +4305,7 @@ static vm_fault_t __handle_mm_fault(struct vm_area_struct *vma,
+ 	if (!vmf.pud)
+ 		return VM_FAULT_OOM;
+ retry_pud:
+-	if (pud_none(*vmf.pud) && __transparent_hugepage_enabled(vma)) {
++	if (pud_none(*vmf.pud) && transparent_pud_hugepage_enabled(vma)) {
+ 		ret = create_huge_pud(&vmf);
+ 		if (!(ret & VM_FAULT_FALLBACK))
+ 			return ret;
 -- 
 2.28.0
 
