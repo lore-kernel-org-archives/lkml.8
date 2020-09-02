@@ -2,247 +2,572 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F575C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C9CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F234206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 500292075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g1sJW0tD"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eiktJ9AZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgIBF1t (ORCPT
+        id S1726352AbgIBFbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 01:27:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgIBF1p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 01:27:45 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B69CEC061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 22:27:45 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id z2so2751038qtv.12
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 22:27:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=XfN2S4wEu3J30uItKa8ht/kF+Elcvq3r/VGMNW/Xds8=;
-        b=g1sJW0tDpt5NJf6zdMPyOsbWtJTqUQVvaYlg2XRBGUm062xJkXUU5EKdS6Lj38VmMY
-         a4KzzEXivXnEFbZ2k3l3RbM0u0dzejW11knYYs2/XD4Ysyqt4YqZ9bOS8bZAjHjxlYpS
-         acQ+wBtAjQ9S8hIEKlIvVH6k70gcSINY4AJmUhtmhig7GaN5YoiuimXghGdHbJZQ4nL0
-         5cmOSNeEglAIvJssTPekubsg3WHFlnF9OV8/CujbQ5E6iBV2o55wBOPvBSBXglnzYlzR
-         D8wWeElb/tdlDN685wXoMhHkR3EQb6PO23jIyuuy4r6DHJxJ4Ux+yRXOi71z3hccRAI/
-         VkdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=XfN2S4wEu3J30uItKa8ht/kF+Elcvq3r/VGMNW/Xds8=;
-        b=W53jF9ycBgBXV+wXDY5zGbG3LLoOhXQ5Xx84qVCL+cFrhtVCGU+zUmFfAJzJFLKkix
-         yyLHd+8k/37NpGwqkmgxfJdp7A4L2h6n1PZJMbzGAD4XJ0z7KGHYN4S8EkUl/0on3qgh
-         Bd0+jqfrElTrj4PUy/5s2d2Db18gY4KeotptGrp+PqjfVwjaBIJmtzV4DF9i9Hypf4sU
-         xEXouC1JKMNVedhXG6aX12hTLjPP/HTS5E/Htx/gY33wOl3KQwM4J7Nv8yH05QtA/6b4
-         X2bvVeC6QbTGBm0Ip4NPmkjfbh2eTQGZYov3BMTS3CBLcIDAJRJ9Scys6aS23GEioLNT
-         WxXg==
-X-Gm-Message-State: AOAM532i3czEf0nldgnrx/JF7UW90d3erdpLPGsEdPAc9HxnZUCFqG92
-        L4KQM+wNUDHpHCxd+a+oFL4=
-X-Google-Smtp-Source: ABdhPJxKH5DCo6veAfOrPa0oTAGIaKUU+c58s6FPXyK/XyjUw1/jddq2MVhMRBehSmyR6DaQmF2bPA==
-X-Received: by 2002:aed:21da:: with SMTP id m26mr5348675qtc.197.1599024464901;
-        Tue, 01 Sep 2020 22:27:44 -0700 (PDT)
-Received: from LeoBras (179-125-130-62.dynamic.desktop.com.br. [179.125.130.62])
-        by smtp.gmail.com with ESMTPSA id y18sm3962554qkf.93.2020.09.01.22.27.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 22:27:44 -0700 (PDT)
-Message-ID: <893b6cc95a3e415677c98834af5a6febd70717f4.camel@gmail.com>
-Subject: Re: [PATCH v1 08/10] powerpc/pseries/iommu: Add
- ddw_property_create() and refactor enable_ddw()
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Joel Stanley <joel@jms.id.au>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>,
-        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
-        David Dai <zdai@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Wed, 02 Sep 2020 02:27:37 -0300
-In-Reply-To: <1a469384-91ad-81f0-2a42-4c985cbc92da@ozlabs.ru>
-References: <20200817234033.442511-1-leobras.c@gmail.com>
-         <20200817234033.442511-9-leobras.c@gmail.com>
-         <952fb640-01dd-003f-7fcb-bd48446d526c@ozlabs.ru>
-         <06f732abbc3e6d4745428c4fc8cc98baf960a2e0.camel@gmail.com>
-         <1a469384-91ad-81f0-2a42-4c985cbc92da@ozlabs.ru>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 2 Sep 2020 01:31:15 -0400
+Received: from mail-eopbgr70075.outbound.protection.outlook.com ([40.107.7.75]:13065
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725774AbgIBFbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 01:31:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W18XlFZuMCr9N35qapg9rFOOMD/nR1NZ8g+qed4rq+853r2RMxdmJaKwDZ+2wBMn0ok1HwdoCdXz9tG9H1/A5mNHaQwKqSG9zs70v5G3USHCJufK9iKLgyMg20xmrGNGZjCyeUbl33dZbkgHEh23vvDWdhjpv/hzxEbNXWyM+6l3+4bDDiccMg8aA/m9ECd+jad7zLXg03kJwkdKTWvfjjmOZZa4v6J1sfyxFmjPv4Bb3wFJMJLhXJI5UDi6G0MDu2czpHC66cFsumuui8mWtzM+GQnb2v8sBJjZikS1oo2YlCzY9SzVPa2PYyUbHWtROnk8fZZUlQFW+jMB7AGkGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jNgYDr5OM8sXcVMM8AYRtIU0kJ10o5wQzjX/8kZHIpk=;
+ b=W2ymdqwUITyxDz5fwMUDOmKm8wy2tpkiFZHDncDfy67pPvQtVmH0GoA5hrymwskE0gks853RK3mkI+QdbgWa42Qs6AF1iswOjTDV9jiwPhrX/YF2J/kVevgD5PlMKQ5fMA+pb3qEC4oM+hL+WPTFcoS6Q4f7JgpgEp40PXEd44x/yK2oOaC/9g/CkV/qXFSGWzLn15tIuryars9R7S5OICjZYmk1h/sIMYpGWWcWSaO9wCSJn+aiSZL8h+tiFnyeB7mqrYLUrHtkgYmhjS+YMxkPtor5K+iu8W97GEh5nTQVsbkKRLJH1pAa5hW2rTC0rde1ElqqLzK9QhZL+WrfVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jNgYDr5OM8sXcVMM8AYRtIU0kJ10o5wQzjX/8kZHIpk=;
+ b=eiktJ9AZLy2/2+LPzCgQuEN7DoBcGeVTIhlnCvoG/OkrLfMf92H0bZgk9NiJYpUsfQITrJrZ1e8HQMd1Dg/myrvdsp8m3XUGXzIJRab59uwK+RoEPAJtkU1YyUGnnTu5gfE7GEm5gnmC00gXRgW+P7lkJ6nUTzuU0MnOb6h9kBI=
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
+ by AM5PR0401MB2595.eurprd04.prod.outlook.com (2603:10a6:203:2f::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.25; Wed, 2 Sep
+ 2020 05:31:06 +0000
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1023:be8d:40c:efe1]) by AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1023:be8d:40c:efe1%3]) with mapi id 15.20.3348.015; Wed, 2 Sep 2020
+ 05:31:06 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Matthias Kaehlcke <mka@chromium.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [RFC PATCH] USB: misc: Add usb_hub_pwr driver
+Thread-Topic: [RFC PATCH] USB: misc: Add usb_hub_pwr driver
+Thread-Index: AQHWgJ2O9T1DMOMaDk2K+eB9hhc5F6lU0zIA
+Date:   Wed, 2 Sep 2020 05:31:06 +0000
+Message-ID: <20200902053048.GB6837@b29397-desktop>
+References: <20200901132005.RFC.1.I7c9a1f1d6ced41dd8310e8a03da666a32364e790@changeid>
+In-Reply-To: <20200901132005.RFC.1.I7c9a1f1d6ced41dd8310e8a03da666a32364e790@changeid>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: chromium.org; dkim=none (message not signed)
+ header.d=none;chromium.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 16606545-e832-4768-12e3-08d84f0163ea
+x-ms-traffictypediagnostic: AM5PR0401MB2595:
+x-microsoft-antispam-prvs: <AM5PR0401MB2595C36122DB20098C9EE5678B2F0@AM5PR0401MB2595.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +q37tAfE1x9MgfEvWNyT/53Ze/b62FgMk7ExdHqHDjJRsQD435PcjWOEK6Rp5Cv+eRIbxoUF5SZ+uofXSzARriyGAGlwu0Iis5yVuoHsDKjeJt/dTbgcq5LitJxH8uMS6/LfqaFQvgsLFO7yC9y90o3N+HSCmIQZbAAnMxCJsgJuFusZYNfxf7gXXC2j/hYcSkYsttIUK2VuxMolfkuUm95UwH6kWQQPdENFtqzTwdPVaYXX0CmMbTmsgHT4sDVvAtMB5i6ISfAENvNK1WOY0BxLzfUPDBcNeKQOtk1O1fmGN+PYFxEQSFaPNL1OtoI+eGPWlt/cSZU+1ZGXyL1BUft1RHBqQDmtSny5/WxQ96ZQAwZDBhqRlNcxwmQBFPH5r5yiS5Yfbu9v3CKV/MD7Aw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(7916004)(136003)(376002)(346002)(366004)(396003)(39860400002)(6506007)(8676002)(6512007)(76116006)(966005)(71200400001)(1076003)(53546011)(91956017)(66946007)(7416002)(9686003)(6916009)(8936002)(44832011)(186003)(30864003)(54906003)(33656002)(26005)(86362001)(5660300002)(2906002)(33716001)(6486002)(478600001)(66556008)(64756008)(66446008)(316002)(66476007)(4326008)(83380400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: AE8MBWN3NZqYghDP7/oYRQpvwKIZ1YCyrRCOr4lwldM0FNarKUoJYXBXJeRKcliuleQlkNm6OLPG/arRZWe3N72fkx1LQgwIqGSXMgfa3M5b8dN183dyQyBrlT87iApJszxesCo3pSAJFXOaexOYAqIba0pTdHjlVvkrqbuN3iUEUPvHs5ye4JluXkWO2W7F6UFX0jGjV2JYHlfF/f5BSIoYN2Vui4FaPX2dH6lTFwRhEmffIAV1J/fvSU8HZpXe8J77EJn/5G3M9zAwf2As1Bc5CsWsflfVYmBZSSwg+/qFWc+nRODLx3W26RULkFWCJYyzjeQZRIRV6jrFdnRE6ePQXpbPq97v6oXMc23VdMML2dlfun2M05efb6B0BPhrCc2eNtyQNHVnrL9tI0TWZLs5BeyFzSafvlcHcuuHQ6yiWMS60zGyT486S4kV8PW1iW8Da+krWuvXiswhluU6Ej5U4pPH6Klf+wLr58kiAygtFzqd+rH1ZRijuNDs44NlXIhB9zGTxxaS96ptXkr3C9oY3mF83NwJVBGOWDyhEOlGAOKp7asKeBKu75Ms+/Hg4kti/S0H2r5eKkmhHn/oB7skbgKKFP6xxB+X+HyHY65u7k98nfxrfE8eGgskFlyE+karmbhtEQSqJCB4gqb3hA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7CE811B8D5F9B742BD977A705B839100@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 16606545-e832-4768-12e3-08d84f0163ea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 05:31:06.2193
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: F6V7KKDBwoNjFJe+i7wiYawbbl59uwPy7fi/opWmYB73LrQV+yQjg5Ch1zqUUO2S+cBDSO2p7jqEORPcdbRLZg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0401MB2595
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-31 at 14:34 +1000, Alexey Kardashevskiy wrote:
-> 
-> On 29/08/2020 01:25, Leonardo Bras wrote:
-> > On Mon, 2020-08-24 at 15:07 +1000, Alexey Kardashevskiy wrote:
-> > > On 18/08/2020 09:40, Leonardo Bras wrote:
-> > > > Code used to create a ddw property that was previously scattered in
-> > > > enable_ddw() is now gathered in ddw_property_create(), which deals with
-> > > > allocation and filling the property, letting it ready for
-> > > > of_property_add(), which now occurs in sequence.
-> > > > 
-> > > > This created an opportunity to reorganize the second part of enable_ddw():
-> > > > 
-> > > > Without this patch enable_ddw() does, in order:
-> > > > kzalloc() property & members, create_ddw(), fill ddwprop inside property,
-> > > > ddw_list_add(), do tce_setrange_multi_pSeriesLP_walk in all memory,
-> > > > of_add_property().
-> > > > 
-> > > > With this patch enable_ddw() does, in order:
-> > > > create_ddw(), ddw_property_create(), of_add_property(), ddw_list_add(),
-> > > > do tce_setrange_multi_pSeriesLP_walk in all memory.
-> > > > 
-> > > > This change requires of_remove_property() in case anything fails after
-> > > > of_add_property(), but we get to do tce_setrange_multi_pSeriesLP_walk
-> > > > in all memory, which looks the most expensive operation, only if
-> > > > everything else succeeds.
-> > > > 
-> > > > Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
-> > > > ---
-> > > >  arch/powerpc/platforms/pseries/iommu.c | 97 +++++++++++++++-----------
-> > > >  1 file changed, 57 insertions(+), 40 deletions(-)
-> > > > 
-> > > > diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> > > > index 4031127c9537..3a1ef02ad9d5 100644
-> > > > --- a/arch/powerpc/platforms/pseries/iommu.c
-> > > > +++ b/arch/powerpc/platforms/pseries/iommu.c
-> > > > @@ -1123,6 +1123,31 @@ static void reset_dma_window(struct pci_dev *dev, struct device_node *par_dn)
-> > > >  			 ret);
-> > > >  }
-> > > >  
-> > > > +static int ddw_property_create(struct property **ddw_win, const char *propname,
-> > > 
-> > > @propname is always the same, do you really want to pass it every time?
-> > 
-> > I think it reads better, like "create a ddw property with this name".
-> 
-> This reads as "there are at least two ddw properties".
-> 
-> > Also, it makes possible to create ddw properties with other names, in
-> > case we decide to create properties with different names depending on
-> > the window created.
-> 
-> It is one window at any given moment, why call it different names... I
-> get the part that it is not always "direct" anymore but still...
-> 
+On 20-09-01 13:21:43, Matthias Kaehlcke wrote:
+> The driver combo usb_hub_pwr/usb_hub_psupply allows to control
+> the power supply of an onboard USB hub.
+>=20
+> The drivers address two issues:
+>  - a USB hub needs to be powered before it can be discovered
+>  - battery powered devices may want to switch the USB hub off
+>    during suspend to extend battery life
+>=20
+> The regulator of the hub is controlled by the usb_hub_psupply
+> platform driver. The regulator is switched on when the platform
+> device is initialized, which enables discovery of the hub. The
+> driver provides an external interface to enable/disable the
+> power supply which is used by the usb_hub_pwr driver.
+>=20
+> The usb_hub_pwr extends the generic USB hub driver. The device is
+> initialized when the hub is discovered by the USB subsystem. It
+> uses the usb_hub_psupply interface to make its own request to
+> enable the regulator (increasing the use count to 2).
+>=20
+> During system suspend usb_hub_pwr checks if any wakeup capable
+> devices are connected to the hub. If not it 'disables' the hub
+> regulator (decreasing the use count to 1, hence the regulator
+> stays enabled for now). When the usb_hub_psupply device suspends
+> it disables the hub regulator unconditionally (decreasing the use
+> count to 0 or 1, depending on the actions of usb_hub_pwr). This
+> is done to allow the usb_hub_pwr device to control the state of
+> the regulator during system suspend.
+>=20
+> Upon resume usb_hub_psupply enables the regulator again, the
+> usb_hub_pwr device does the same if it disabled the regulator
+> during resume.
 
-It seems the case as one of the options you suggested on patch [09/10]
+Hi Matthias,
 
->> I suspect it breaks kexec (from older kernel to this one) so you
->> either need to check for both DT names or just keep the old one.
+I did similar several years ago [1], but the concept (power sequence)
+doesn't be accepted by power maintainer. Your patch introduce an new
+way to fix this long-term issue, I have an idea to fix it more generally.
 
-> 
-> > Also, it's probably optimized / inlined at this point.
-> > Is it ok doing it like this?
-> > 
-> > > > +			       u32 liobn, u64 dma_addr, u32 page_shift, u32 window_shift)
-> > > > +{
-> > > > +	struct dynamic_dma_window_prop *ddwprop;
-> > > > +	struct property *win64;
-> > > > +
-> > > > +	*ddw_win = win64 = kzalloc(sizeof(*win64), GFP_KERNEL);
-> > > > +	if (!win64)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	win64->name = kstrdup(propname, GFP_KERNEL);
-> > > 
-> > > Not clear why "win64->name = DIRECT64_PROPNAME" would not work here, the
-> > > generic OF code does not try kfree() it but it is probably out of scope
-> > > here.
-> > 
-> > Yeah, I had that question too. 
-> > Previous code was like that, and I as trying not to mess too much on
-> > how it's done.
-> > 
-> > > > +	ddwprop = kzalloc(sizeof(*ddwprop), GFP_KERNEL);
-> > > > +	win64->value = ddwprop;
-> > > > +	win64->length = sizeof(*ddwprop);
-> > > > +	if (!win64->name || !win64->value)
-> > > > +		return -ENOMEM;
-> > > 
-> > > Up to 2 memory leaks here. I see the cleanup at "out_free_prop:" but
-> > > still looks fragile. Instead you could simply return win64 as the only
-> > > error possible here is -ENOMEM and returning NULL is equally good.
-> > 
-> > I agree. It's better if this function have it's own cleaning routine.
-> > It will be fixed for next version.
-> > 
-> > > 
-> > > > +
-> > > > +	ddwprop->liobn = cpu_to_be32(liobn);
-> > > > +	ddwprop->dma_base = cpu_to_be64(dma_addr);
-> > > > +	ddwprop->tce_shift = cpu_to_be32(page_shift);
-> > > > +	ddwprop->window_shift = cpu_to_be32(window_shift);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > >  /*
-> > > >   * If the PE supports dynamic dma windows, and there is space for a table
-> > > >   * that can map all pages in a linear offset, then setup such a table,
-> > > > @@ -1140,12 +1165,11 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
-> > > >  	struct ddw_query_response query;
-> > > >  	struct ddw_create_response create;
-> > > >  	int page_shift;
-> > > > -	u64 max_addr;
-> > > > +	u64 max_addr, win_addr;
-> > > >  	struct device_node *dn;
-> > > >  	u32 ddw_avail[DDW_APPLICABLE_SIZE];
-> > > >  	struct direct_window *window;
-> > > > -	struct property *win64;
-> > > > -	struct dynamic_dma_window_prop *ddwprop;
-> > > > +	struct property *win64 = NULL;
-> > > >  	struct failed_ddw_pdn *fpdn;
-> > > >  	bool default_win_removed = false;
-> > > >  
-> > > > @@ -1244,38 +1268,34 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
-> > > >  		goto out_failed;
-> > > >  	}
-> > > >  	len = order_base_2(max_addr);
-> > > > -	win64 = kzalloc(sizeof(struct property), GFP_KERNEL);
-> > > > -	if (!win64) {
-> > > > -		dev_info(&dev->dev,
-> > > > -			"couldn't allocate property for 64bit dma window\n");
-> > > > +
-> > > > +	ret = create_ddw(dev, ddw_avail, &create, page_shift, len);
-> > > > +	if (ret != 0)
-> > > 
-> > > It is usually just "if (ret)"
-> > 
-> > It was previously like that, and all query_ddw() checks return value
-> > this way.
-> 
-> ah I see.
-> 
-> > Should I update them all or just this one?
-> 
-> Pick one variant and make sure all new lines use just that. In this
-> patch you add both variants. Thanks,
+- Create a table (say usb_pm_table) for USB device which needs to do
+initial power on and power management during suspend suspend/resume based
+on VID and PID, example: usb/core/quirks.c
+- After hub (both roothub and intermediate hub) device is created, search
+the DT node under this hub, and see if the device is in usb_pm_table. If
+it is in it, create a platform device, say usb-power-supply, and the
+related driver is like your usb_hub_psupply.c, the parent of this device
+is controller device.
+- After this usb-power-supply device is probed, do initial power on at
+probe, eg, clock, regulator, reset-gpio.
+- This usb-power-supply device system suspend operation should be called af=
+ter
+onboard device has suspended since it is created before it. No runtime PM o=
+ps
+are needed for it.
+- When the hub is removed, delete this platform device.
 
-Ok, I will do that from now on.
-Thanks!
+What's your opinion?
 
+[1] https://lore.kernel.org/lkml/1498027328-25078-1-git-send-email-peter.ch=
+en@nxp.com/
 
+Peter
+>=20
+> Co-developed-by: Ravi Chandra Sadineni <ravisadineni@chromium.org>
+> Signed-off-by: Ravi Chandra Sadineni <ravisadineni@chromium.org>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> The driver currently only supports a single power supply. This should
+> work for most/many configurations/hubs, support for multiple power
+> supplies can be added later if needed.
+>=20
+> No DT bindings are included since this is just a RFC. Here is a DT
+> example:
+>=20
+> usb_hub_psupply: usb-hub-psupply {
+>     compatible =3D "linux,usb_hub_psupply";
+>     vdd-supply =3D <&pp3300_hub>;
+> };
+>=20
+> &usb_1_dwc3 {
+>     /* 2.0 hub on port 1 */
+>     hub@1 {
+>         compatible =3D "usbbda,5411";
+>         reg =3D <1>;
+>         psupply =3D <&usb_hub_psupply>;
+>     };
+>=20
+>     /* 3.0 hub on port 2 */
+>     hub@2 {
+>         compatible =3D "usbbda,411";
+>         reg =3D <2>;
+>         psupply =3D <&usb_hub_psupply>;
+>     };
+> };
+>=20
+>  drivers/usb/misc/Kconfig           |  14 +++
+>  drivers/usb/misc/Makefile          |   1 +
+>  drivers/usb/misc/usb_hub_psupply.c | 112 ++++++++++++++++++
+>  drivers/usb/misc/usb_hub_psupply.h |   9 ++
+>  drivers/usb/misc/usb_hub_pwr.c     | 177 +++++++++++++++++++++++++++++
+>  5 files changed, 313 insertions(+)
+>  create mode 100644 drivers/usb/misc/usb_hub_psupply.c
+>  create mode 100644 drivers/usb/misc/usb_hub_psupply.h
+>  create mode 100644 drivers/usb/misc/usb_hub_pwr.c
+>=20
+> diff --git a/drivers/usb/misc/Kconfig b/drivers/usb/misc/Kconfig
+> index 6818ea689cd9..79ed50e6a7bf 100644
+> --- a/drivers/usb/misc/Kconfig
+> +++ b/drivers/usb/misc/Kconfig
+> @@ -275,3 +275,17 @@ config USB_CHAOSKEY
+> =20
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called chaoskey.
+> +
+> +config USB_HUB_PWR
+> +	tristate "Control power supply for onboard USB hubs"
+> +	depends on PM
+> +	help
+> +	  Say Y here if you want to control the power supply of an
+> +	  onboard USB hub. The driver switches the power supply of the
+> +	  hub on, to make sure the hub can be discovered. During system
+> +	  suspend the power supply is switched off, unless a wakeup
+> +	  capable device is connected to the hub. This may reduce power
+> +	  consumption on battery powered devices.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called usb_hub_pwr.
+> diff --git a/drivers/usb/misc/Makefile b/drivers/usb/misc/Makefile
+> index da39bddb0604..2bd02388ca62 100644
+> --- a/drivers/usb/misc/Makefile
+> +++ b/drivers/usb/misc/Makefile
+> @@ -31,3 +31,4 @@ obj-$(CONFIG_USB_CHAOSKEY)		+=3D chaoskey.o
+> =20
+>  obj-$(CONFIG_USB_SISUSBVGA)		+=3D sisusbvga/
+>  obj-$(CONFIG_USB_LINK_LAYER_TEST)	+=3D lvstest.o
+> +obj-$(CONFIG_USB_HUB_PWR)		+=3D usb_hub_pwr.o usb_hub_psupply.o
+> diff --git a/drivers/usb/misc/usb_hub_psupply.c b/drivers/usb/misc/usb_hu=
+b_psupply.c
+> new file mode 100644
+> index 000000000000..6a155ae1f831
+> --- /dev/null
+> +++ b/drivers/usb/misc/usb_hub_psupply.c
+> @@ -0,0 +1,112 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2020, Google LLC
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +struct usb_hub_psupply_dev {
+> +	struct regulator *vdd;
+> +};
+> +
+> +int usb_hub_psupply_on(struct device *dev)
+> +{
+> +	struct usb_hub_psupply_dev *usb_hub_psupply =3D dev_get_drvdata(dev);
+> +	int err;
+> +
+> +	err =3D regulator_enable(usb_hub_psupply->vdd);
+> +	if (err) {
+> +		dev_err(dev, "failed to enable regulator: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +
+> +}
+> +EXPORT_SYMBOL_GPL(usb_hub_psupply_on);
+> +
+> +int usb_hub_psupply_off(struct device *dev)
+> +{
+> +	struct usb_hub_psupply_dev *usb_hub_psupply =3D dev_get_drvdata(dev);
+> +	int err;
+> +
+> +	err =3D regulator_disable(usb_hub_psupply->vdd);
+> +	if (err) {
+> +		dev_err(dev, "failed to enable regulator: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(usb_hub_psupply_off);
+> +
+> +static int usb_hub_psupply_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct usb_hub_psupply_dev *usb_hub_psupply;
+> +
+> +	usb_hub_psupply =3D devm_kzalloc(dev, sizeof(*usb_hub_psupply), GFP_KER=
+NEL);
+> +	if (!usb_hub_psupply)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(dev, usb_hub_psupply);
+> +
+> +	usb_hub_psupply->vdd =3D devm_regulator_get(dev, "vdd");
+> +	if (IS_ERR(usb_hub_psupply->vdd))
+> +		return PTR_ERR(usb_hub_psupply->vdd);
+> +
+> +	return usb_hub_psupply_on(dev);
+> +}
+> +
+> +static int usb_hub_psupply_remove(struct platform_device *pdev)
+> +{
+> +	return usb_hub_psupply_off(&pdev->dev);
+> +}
+> +
+> +static int usb_hub_psupply_suspend(struct platform_device *pdev, pm_mess=
+age_t msg)
+> +{
+> +	return usb_hub_psupply_off(&pdev->dev);
+> +}
+> +
+> +static int usb_hub_psupply_resume(struct platform_device *pdev)
+> +{
+> +	return usb_hub_psupply_on(&pdev->dev);
+> +}
+> +
+> +static const struct of_device_id usb_hub_psupply_match[] =3D {
+> +	{ .compatible =3D "linux,usb_hub_psupply" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, usb_hub_psupply_match);
+> +
+> +static struct platform_driver usb_hub_psupply_driver =3D {
+> +	.probe =3D usb_hub_psupply_probe,
+> +	.remove =3D usb_hub_psupply_remove,
+> +	.suspend =3D usb_hub_psupply_suspend,
+> +	.resume =3D usb_hub_psupply_resume,
+> +	.driver =3D {
+> +		.name =3D "usb-hub-psupply",
+> +		.of_match_table =3D usb_hub_psupply_match,
+> +	},
+> +};
+> +
+> +static int __init usb_hub_psupply_init(void)
+> +{
+> +	return platform_driver_register(&usb_hub_psupply_driver);
+> +}
+> +device_initcall(usb_hub_psupply_init);
+> +
+> +static void __exit usb_hub_psupply_exit(void)
+> +{
+> +	platform_driver_unregister(&usb_hub_psupply_driver);
+> +}
+> +module_exit(usb_hub_psupply_exit);
+> +
+> +MODULE_AUTHOR("Matthias Kaehlcke <mka@chromium.org>");
+> +MODULE_DESCRIPTION("USB Hub Power Supply");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/usb/misc/usb_hub_psupply.h b/drivers/usb/misc/usb_hu=
+b_psupply.h
+> new file mode 100644
+> index 000000000000..284e88f45fcf
+> --- /dev/null
+> +++ b/drivers/usb/misc/usb_hub_psupply.h
+> @@ -0,0 +1,9 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
+> +#ifndef _USB_HUB_PSUPPLY_H
+> +#define _USB_HUB_PSUPPLY_H
+> +
+> +int usb_hub_psupply_on(struct device *dev);
+> +int usb_hub_psupply_off(struct device *dev);
+> +
+> +#endif /* _USB_HUB_PSUPPLY_H */
+> diff --git a/drivers/usb/misc/usb_hub_pwr.c b/drivers/usb/misc/usb_hub_pw=
+r.c
+> new file mode 100644
+> index 000000000000..33945ca4a8c0
+> --- /dev/null
+> +++ b/drivers/usb/misc/usb_hub_pwr.c
+> @@ -0,0 +1,177 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * USB hub power control
+> + *
+> + * Copyright (c) 2020, Google LLC
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/power_supply.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
+> +#include <linux/usb.h>
+> +#include <linux/usb/hcd.h>
+> +#include "../core/usb.h"
+> +#include "usb_hub_psupply.h"
+> +
+> +#define VENDOR_ID_REALTEK	0x0bda
+> +
+> +struct usb_hub_pwr_dev {
+> +	struct regulator *vdd;
+> +	struct device *psupply_dev;
+> +	bool powered_off;
+> +};
+> +
+> +static struct device *usb_pwr_find_psupply_dev(struct device *dev)
+> +{
+> +	const phandle *ph;
+> +	struct device_node *np;
+> +	struct platform_device *pdev;
+> +
+> +	ph =3D of_get_property(dev->of_node, "psupply", NULL);
+> +	if (!ph) {
+> +		dev_err(dev, "failed to read 'psupply' property\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	np =3D of_find_node_by_phandle(be32_to_cpu(*ph));
+> +	if (!np) {
+> +		dev_err(dev, "failed find device node for power supply\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	pdev =3D of_find_device_by_node(np);
+> +	of_node_put(np);
+> +	if (!pdev)
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
+> +	return &pdev->dev;
+> +}
+> +
+> +static int usb_hub_pwr_probe(struct usb_device *udev)
+> +{
+> +	struct device *dev =3D &udev->dev;
+> +	struct usb_hub_pwr_dev *uhpw;
+> +	struct device *psupply_dev;
+> +	int err;
+> +
+> +	/* ignore supported hubs without device tree node */
+> +	if (!dev->of_node)
+> +		return -ENODEV;
+> +
+> +	psupply_dev =3D usb_pwr_find_psupply_dev(dev);
+> +	if (IS_ERR(psupply_dev))
+> +		return PTR_ERR(psupply_dev);
+> +
+> +	err =3D usb_generic_driver_probe(udev);
+> +	if (err) {
+> +		put_device(psupply_dev);
+> +		return err;
+> +	}
+> +
+> +	uhpw =3D devm_kzalloc(dev, sizeof(*uhpw), GFP_KERNEL);
+> +	if (!uhpw) {
+> +		put_device(psupply_dev);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	dev_set_drvdata(&udev->dev, uhpw);
+> +
+> +	uhpw->psupply_dev =3D psupply_dev;
+> +
+> +	err =3D usb_hub_psupply_on(psupply_dev);
+> +	if (err) {
+> +		dev_err(dev, "failed to enable regulator: %d\n", err);
+> +		put_device(psupply_dev);
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void usb_hub_pwr_disconnect(struct usb_device *udev)
+> +{
+> +	struct usb_hub_pwr_dev *uhpw =3D dev_get_drvdata(&udev->dev);
+> +
+> +	usb_hub_psupply_off(uhpw->psupply_dev);
+> +	put_device(uhpw->psupply_dev);
+> +}
+> +
+> +static int usb_hub_pwr_suspend(struct usb_device *udev, pm_message_t msg=
+)
+> +{
+> +	struct usb_hub_pwr_dev *uhpw =3D dev_get_drvdata(&udev->dev);
+> +	int err;
+> +
+> +	err =3D usb_generic_driver_suspend(udev, msg);
+> +	if (err)
+> +		return err;
+> +
+> +	if (!usb_wakeup_enabled_descendants(udev)) {
+> +		usb_port_disable(udev);
+> +
+> +		err =3D usb_hub_psupply_off(uhpw->psupply_dev);
+> +		if (err)
+> +			return err;
+> +
+> +		uhpw->powered_off =3D true;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int usb_hub_pwr_resume(struct usb_device *udev, pm_message_t msg)
+> +{
+> +	struct usb_hub_pwr_dev *uhpw =3D dev_get_drvdata(&udev->dev);
+> +	int err;
+> +
+> +	if (uhpw->powered_off) {
+> +		err =3D usb_hub_psupply_on(uhpw->psupply_dev);
+> +		if (err)
+> +			return err;
+> +
+> +		uhpw->powered_off =3D false;
+> +	}
+> +
+> +	return usb_generic_driver_resume(udev, msg);
+> +}
+> +
+> +static const struct usb_device_id hub_id_table[] =3D {
+> +	{ .idVendor =3D VENDOR_ID_REALTEK,
+> +	  .idProduct =3D 0x0411, /* RTS5411 USB 3.0 */
+> +	  .match_flags =3D USB_DEVICE_ID_MATCH_DEVICE },
+> +	{ .idVendor =3D VENDOR_ID_REALTEK,
+> +	  .idProduct =3D 0x5411, /* RTS5411 USB 2.0 */
+> +	  .match_flags =3D USB_DEVICE_ID_MATCH_DEVICE },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(usb, hub_id_table);
+> +
+> +static struct usb_device_driver usb_hub_pwr_driver =3D {
+> +
+> +	.name =3D "usb-hub-pwr",
+> +	.probe =3D usb_hub_pwr_probe,
+> +	.disconnect =3D usb_hub_pwr_disconnect,
+> +	.suspend =3D usb_hub_pwr_suspend,
+> +	.resume =3D usb_hub_pwr_resume,
+> +	.id_table =3D hub_id_table,
+> +};
+> +
+> +static int __init usb_hub_pwr_driver_init(void)
+> +{
+> +	return usb_register_device_driver(&usb_hub_pwr_driver, THIS_MODULE);
+> +}
+> +
+> +static void __exit usb_hub_pwr_driver_exit(void)
+> +{
+> +	usb_deregister_device_driver(&usb_hub_pwr_driver);
+> +}
+> +
+> +module_init(usb_hub_pwr_driver_init);
+> +module_exit(usb_hub_pwr_driver_exit);
+> +
+> +MODULE_AUTHOR("Matthias Kaehlcke <mka@chromium.org>");
+> +MODULE_DESCRIPTION("USB Hub Power Control");
+> +MODULE_LICENSE("GPL v2");
+> --=20
+> 2.28.0.402.g5ffc5be6b7-goog
+>=20
 
+--=20
+
+Thanks,
+Peter Chen=
