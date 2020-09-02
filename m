@@ -2,132 +2,282 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25418C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299BCC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED22920767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:38:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gi2e6zQs"
+	by mail.kernel.org (Postfix) with ESMTP id 0A03E20767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgIBOie (ORCPT
+        id S1728101AbgIBOiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:38:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727800AbgIBOiC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:38:02 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1127DC061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 07:38:00 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id s62so812109vsc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 07:38:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TadnzZ2GBx4yX2HwMOimGbeZb2PcWtu+wm80cNcN0fQ=;
-        b=Gi2e6zQsylDEwMGGD9uEtv0/zSfm3ttGeUD8jtFwieUhWNz0g3Vc3c3/fWdq3Jxcl+
-         wc5w1QXNLwWb/D+NAQUk301/Aa9k7cL/XXJBR3Zfjxg9R0zUvZFColuIyLnXOKEftlar
-         w/s11uKYBxNLykoVFCzrHIFXavzYRCaiEFZt0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TadnzZ2GBx4yX2HwMOimGbeZb2PcWtu+wm80cNcN0fQ=;
-        b=g6Oo3OlZHhpJ5DIVUZE1q78uszZ1Q/y6E1rlI4w5bkzGaqcvk8HWmrj/zP2wi9GOCx
-         Vcw8AE0uAAwYyGH5pjEurPhdLZ/Wl4WQV1gjDDO5EU2on/VNSNpO9zgr2am2esm+/44/
-         nKoZK6xDuhdTHeiTkiJUZSyV/t4HHrzUbE57lUxDZ7BnESXhS3bL3YO9YJahDtWeTOK0
-         7CUlg98nHH90vlA54wAr1TdSze069nJJadaMUF4Hv2aQBFN4UbbWU6q6OJV0mFIDareu
-         Dr5GCJTiL9fQquXNgufxmIH+t1zugVbERbKObcAnZDMBmGkqN05qyRrgF1IN5ApQvl5m
-         hLHw==
-X-Gm-Message-State: AOAM531iSsipPzV7D1qI9TTFo8g/xnUcF7yGNIlY85Xjd6/g2ruMWOOu
-        axXJI8DwMP/LzZmPQL0iM/jqtTNRMToKMg==
-X-Google-Smtp-Source: ABdhPJxdGZL2f7pBWPuPbju0r+syxe3T8o0uwj9ii9MXZUshTouHX9IjCPKB4Hd715LL58/89BtMAw==
-X-Received: by 2002:a67:641:: with SMTP id 62mr5447207vsg.2.1599057479754;
-        Wed, 02 Sep 2020 07:37:59 -0700 (PDT)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id n16sm698707vsr.17.2020.09.02.07.37.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 07:37:58 -0700 (PDT)
-Received: by mail-ua1-f47.google.com with SMTP id u48so1642893uau.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 07:37:58 -0700 (PDT)
-X-Received: by 2002:ab0:37d3:: with SMTP id e19mr5065664uav.64.1599057477726;
- Wed, 02 Sep 2020 07:37:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191218143416.v3.6.Iaf8d698f4e5253d658ae283d2fd07268076a7c27@changeid>
- <20200710011935.GA7056@gentoo.org> <CAD=FV=X3oazamoKR1jHoXm-yCAp9208ahNd8y+NDPt1pU=5xRg@mail.gmail.com>
- <CAD=FV=UWQsGit6XMCzHn5cBRAC9nAaGReDyMzMM2Su02bfiPyQ@mail.gmail.com>
- <dc786abb-4bc2-2416-7ee5-de408aceb8f1@kali.org> <e0702671-3bed-9e3d-c7f4-d050c617eb65@kali.org>
- <bc795659-7dd6-c667-1c93-4331510ecfbc@kali.org> <CAD=FV=VC+RP8WfS-yuc65WRN2KokNbAs-F3UdQtQoZjcMMSNFA@mail.gmail.com>
- <f81f0d22-85d6-66eb-c8d9-345757f53959@kali.org> <CAD=FV=WB_4xLe9UZX3eVemybQ1neXJVZgzrDCW-xUxbAM6hCTA@mail.gmail.com>
- <8e306b6d-246d-aa7f-cb24-923e13afcd04@kali.org> <CAD=FV=XeBLRc4v5K3vj=m9PGMuW8GVUq110ApX6xS2QaiJd=pw@mail.gmail.com>
-In-Reply-To: <CAD=FV=XeBLRc4v5K3vj=m9PGMuW8GVUq110ApX6xS2QaiJd=pw@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 2 Sep 2020 07:37:46 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W60u2Ck6NP_k8+V1oWY7FRXs4G3e49Lp+h7Zii14nVQA@mail.gmail.com>
-Message-ID: <CAD=FV=W60u2Ck6NP_k8+V1oWY7FRXs4G3e49Lp+h7Zii14nVQA@mail.gmail.com>
-Subject: Re: [PATCH v3 6/9] drm/bridge: ti-sn65dsi86: Use 18-bit DP if we can
-To:     Steev Klimaszewski <steev@kali.org>
-Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Steev Klimaszewski <steev@gentoo.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 2 Sep 2020 10:38:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32894 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727800AbgIBOin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 10:38:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 23172B1AE;
+        Wed,  2 Sep 2020 14:38:42 +0000 (UTC)
+Date:   Wed, 02 Sep 2020 16:38:40 +0200
+Message-ID: <s5hd0349rbj.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     himadrispandya@gmail.com, dvyukov@google.com,
+        linux-usb@vger.kernel.org, perex@perex.cz, tiwai@suse.com,
+        stern@rowland.harvard.ed, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, alsa-devel@alsa-project.org,
+        Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH 08/10] sound: line6: move to use usb_control_msg_send() and usb_control_msg_recv()
+In-Reply-To: <20200902110115.1994491-11-gregkh@linuxfoundation.org>
+References: <20200902110115.1994491-1-gregkh@linuxfoundation.org>
+        <20200902110115.1994491-11-gregkh@linuxfoundation.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 02 Sep 2020 13:01:12 +0200,
+Greg Kroah-Hartman wrote:
+> 
+> The usb_control_msg_send() and usb_control_msg_recv() calls can return
+> an error if a "short" write/read happens, and they can handle data off
+> of the stack, so move the driver over to using those calls instead,
+> saving some logic when dynamically allocating memory.
+> 
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: Vasily Khoruzhick <anarsoul@gmail.com>
+> Cc: alsa-devel@alsa-project.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-On Tue, Jul 14, 2020 at 8:31 AM Doug Anderson <dianders@chromium.org> wrote:
->
-> > Hopefully BOE gets back to you soon, and there's no rush, I'm just an
-> > end user who is extremely appreciative of all the work everyone on the
-> > list and the kernel in general put in to make my machines usable.
->
-> Just FYI that I got confirmation that the panel is truly 6 bpp but it
-> will do FRC dithering if given an 8 bpp input.  That means that you
-> should be getting just as good picture quality (and possibly more
-> tunable) by using the dithering in the display pipeline and leaving
-> the panel as 6bpp.  Thus I'm going to assume that's the route we'll go
-> down.  If ever we find someone that wants to use this panel on a
-> display controller that can't do its own dithering then I guess we'll
-> have to figure out what to do then...
->
-> In terms of the more optimal pixel clock for saving power, my proposal
-> is still being analyzed and I'll report back when I hear more.  I'm
-> seeing if BOE can confirm that my proposal will work both for my panel
-> (the -n62 variant) and the one you have (the -n61 variant).
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
 
-To close the loop here: we finally got back an official word that we
-shouldn't use my proposed timings that would have allowed us to move
-down to a 1.62 GHz pixel clock.  Though they work most of the time,
-there are apparently some corner cases where they cause problems /
-flickering.  :(  While you could certainly use the timings on your own
-system if they happen to work for you, I don't think it'd be a good
-idea to switch the default over to them or anything.  I'm told that
-hardware makers will take this type of thing into consideration for
-future hardware.
 
--Doug
+thanks,
+
+Takashi
+
+
+> ---
+>  sound/usb/line6/driver.c   | 69 +++++++++++++++-----------------------
+>  sound/usb/line6/podhd.c    | 17 ++++------
+>  sound/usb/line6/toneport.c |  8 ++---
+>  3 files changed, 37 insertions(+), 57 deletions(-)
+> 
+> diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
+> index 60674ce4879b..601292c51491 100644
+> --- a/sound/usb/line6/driver.c
+> +++ b/sound/usb/line6/driver.c
+> @@ -337,23 +337,18 @@ int line6_read_data(struct usb_line6 *line6, unsigned address, void *data,
+>  {
+>  	struct usb_device *usbdev = line6->usbdev;
+>  	int ret;
+> -	unsigned char *len;
+> +	u8 len;
+>  	unsigned count;
+>  
+>  	if (address > 0xffff || datalen > 0xff)
+>  		return -EINVAL;
+>  
+> -	len = kmalloc(1, GFP_KERNEL);
+> -	if (!len)
+> -		return -ENOMEM;
+> -
+>  	/* query the serial number: */
+> -	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
+> -			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+> -			      (datalen << 8) | 0x21, address,
+> -			      NULL, 0, LINE6_TIMEOUT * HZ);
+> -
+> -	if (ret < 0) {
+> +	ret = usb_control_msg_send(usbdev, 0, 0x67,
+> +				   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+> +				   (datalen << 8) | 0x21, address, NULL, 0,
+> +				   LINE6_TIMEOUT * HZ);
+> +	if (ret) {
+>  		dev_err(line6->ifcdev, "read request failed (error %d)\n", ret);
+>  		goto exit;
+>  	}
+> @@ -362,45 +357,41 @@ int line6_read_data(struct usb_line6 *line6, unsigned address, void *data,
+>  	for (count = 0; count < LINE6_READ_WRITE_MAX_RETRIES; count++) {
+>  		mdelay(LINE6_READ_WRITE_STATUS_DELAY);
+>  
+> -		ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
+> -				      USB_TYPE_VENDOR | USB_RECIP_DEVICE |
+> -				      USB_DIR_IN,
+> -				      0x0012, 0x0000, len, 1,
+> -				      LINE6_TIMEOUT * HZ);
+> -		if (ret < 0) {
+> +		ret = usb_control_msg_recv(usbdev, 0, 0x67,
+> +					   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
+> +					   0x0012, 0x0000, &len, 1,
+> +					   LINE6_TIMEOUT * HZ);
+> +		if (ret) {
+>  			dev_err(line6->ifcdev,
+>  				"receive length failed (error %d)\n", ret);
+>  			goto exit;
+>  		}
+>  
+> -		if (*len != 0xff)
+> +		if (len != 0xff)
+>  			break;
+>  	}
+>  
+>  	ret = -EIO;
+> -	if (*len == 0xff) {
+> +	if (len == 0xff) {
+>  		dev_err(line6->ifcdev, "read failed after %d retries\n",
+>  			count);
+>  		goto exit;
+> -	} else if (*len != datalen) {
+> +	} else if (len != datalen) {
+>  		/* should be equal or something went wrong */
+>  		dev_err(line6->ifcdev,
+>  			"length mismatch (expected %d, got %d)\n",
+> -			(int)datalen, (int)*len);
+> +			(int)datalen, len);
+>  		goto exit;
+>  	}
+>  
+>  	/* receive the result: */
+> -	ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
+> -			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
+> -			      0x0013, 0x0000, data, datalen,
+> -			      LINE6_TIMEOUT * HZ);
+> -
+> -	if (ret < 0)
+> +	ret = usb_control_msg_recv(usbdev, 0, 0x67,
+> +				   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
+> +				   0x0013, 0x0000, data, datalen, LINE6_TIMEOUT * HZ);
+> +	if (ret)
+>  		dev_err(line6->ifcdev, "read failed (error %d)\n", ret);
+>  
+>  exit:
+> -	kfree(len);
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(line6_read_data);
+> @@ -423,12 +414,10 @@ int line6_write_data(struct usb_line6 *line6, unsigned address, void *data,
+>  	if (!status)
+>  		return -ENOMEM;
+>  
+> -	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
+> -			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+> -			      0x0022, address, data, datalen,
+> -			      LINE6_TIMEOUT * HZ);
+> -
+> -	if (ret < 0) {
+> +	ret = usb_control_msg_send(usbdev, 0, 0x67,
+> +				   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+> +				   0x0022, address, data, datalen, LINE6_TIMEOUT * HZ);
+> +	if (ret) {
+>  		dev_err(line6->ifcdev,
+>  			"write request failed (error %d)\n", ret);
+>  		goto exit;
+> @@ -437,14 +426,10 @@ int line6_write_data(struct usb_line6 *line6, unsigned address, void *data,
+>  	for (count = 0; count < LINE6_READ_WRITE_MAX_RETRIES; count++) {
+>  		mdelay(LINE6_READ_WRITE_STATUS_DELAY);
+>  
+> -		ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0),
+> -				      0x67,
+> -				      USB_TYPE_VENDOR | USB_RECIP_DEVICE |
+> -				      USB_DIR_IN,
+> -				      0x0012, 0x0000,
+> -				      status, 1, LINE6_TIMEOUT * HZ);
+> -
+> -		if (ret < 0) {
+> +		ret = usb_control_msg_recv(usbdev, 0, 0x67,
+> +					   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
+> +					   0x0012, 0x0000, status, 1, LINE6_TIMEOUT * HZ);
+> +		if (ret) {
+>  			dev_err(line6->ifcdev,
+>  				"receiving status failed (error %d)\n", ret);
+>  			goto exit;
+> diff --git a/sound/usb/line6/podhd.c b/sound/usb/line6/podhd.c
+> index eef45f7fef0d..a1261f55d62b 100644
+> --- a/sound/usb/line6/podhd.c
+> +++ b/sound/usb/line6/podhd.c
+> @@ -183,29 +183,25 @@ static const struct attribute_group podhd_dev_attr_group = {
+>  static int podhd_dev_start(struct usb_line6_podhd *pod)
+>  {
+>  	int ret;
+> -	u8 *init_bytes;
+> +	u8 init_bytes[8];
+>  	int i;
+>  	struct usb_device *usbdev = pod->line6.usbdev;
+>  
+> -	init_bytes = kmalloc(8, GFP_KERNEL);
+> -	if (!init_bytes)
+> -		return -ENOMEM;
+> -
+> -	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0),
+> +	ret = usb_control_msg_send(usbdev, 0,
+>  					0x67, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+>  					0x11, 0,
+>  					NULL, 0, LINE6_TIMEOUT * HZ);
+> -	if (ret < 0) {
+> +	if (ret) {
+>  		dev_err(pod->line6.ifcdev, "read request failed (error %d)\n", ret);
+>  		goto exit;
+>  	}
+>  
+>  	/* NOTE: looks like some kind of ping message */
+> -	ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
+> +	ret = usb_control_msg_recv(usbdev, 0, 0x67,
+>  					USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
+>  					0x11, 0x0,
+>  					init_bytes, 3, LINE6_TIMEOUT * HZ);
+> -	if (ret < 0) {
+> +	if (ret) {
+>  		dev_err(pod->line6.ifcdev,
+>  			"receive length failed (error %d)\n", ret);
+>  		goto exit;
+> @@ -220,13 +216,12 @@ static int podhd_dev_start(struct usb_line6_podhd *pod)
+>  			goto exit;
+>  	}
+>  
+> -	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0),
+> +	ret = usb_control_msg_send(usbdev, 0,
+>  					USB_REQ_SET_FEATURE,
+>  					USB_TYPE_STANDARD | USB_RECIP_DEVICE | USB_DIR_OUT,
+>  					1, 0,
+>  					NULL, 0, LINE6_TIMEOUT * HZ);
+>  exit:
+> -	kfree(init_bytes);
+>  	return ret;
+>  }
+>  
+> diff --git a/sound/usb/line6/toneport.c b/sound/usb/line6/toneport.c
+> index 94dd5e7ab2e6..a9b56085b76a 100644
+> --- a/sound/usb/line6/toneport.c
+> +++ b/sound/usb/line6/toneport.c
+> @@ -126,11 +126,11 @@ static int toneport_send_cmd(struct usb_device *usbdev, int cmd1, int cmd2)
+>  {
+>  	int ret;
+>  
+> -	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
+> -			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+> -			      cmd1, cmd2, NULL, 0, LINE6_TIMEOUT * HZ);
+> +	ret = usb_control_msg_send(usbdev, 0, 0x67,
+> +				   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+> +				   cmd1, cmd2, NULL, 0, LINE6_TIMEOUT * HZ);
+>  
+> -	if (ret < 0) {
+> +	if (ret) {
+>  		dev_err(&usbdev->dev, "send failed (error %d)\n", ret);
+>  		return ret;
+>  	}
+> -- 
+> 2.28.0
+> 
