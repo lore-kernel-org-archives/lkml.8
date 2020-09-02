@@ -2,106 +2,138 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2E2C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA632C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD482078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A963520826
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:04:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PpDkPIlb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eCbwB5ca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgIBHDf (ORCPT
+        id S1726800AbgIBHES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:03:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56832 "EHLO
+        Wed, 2 Sep 2020 03:04:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgIBHDd (ORCPT
+        with ESMTP id S1726144AbgIBHEO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:03:33 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFDEEC061245
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:03:32 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 31so2061688pgy.13
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 00:03:32 -0700 (PDT)
+        Wed, 2 Sep 2020 03:04:14 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C8F0C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:04:14 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id t189so973165vka.10
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 00:04:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9d3dVKVv3rwmde4FZcFLfrQ3EuricDCMm/xx55xE2gw=;
-        b=PpDkPIlbI3pmSeX+Nukr4RIybsQe9cOsOhnwhF5LDJyHWHPXGd+rcWdCE7PnqnNlF5
-         W07tcwhKJuHPNdwfHafL5RLfRd/QgdzVfY/Wnj+zfAQQH0kjp3vo5rPIku2m+jV6+M13
-         B91XQmD+dEe4ydLr4NHu/OcRPp3UdjNHJ4nJc=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oqyOUgHPVXwuZM1HmllvHicoQC/cT/OXdA6Uv2/+iB4=;
+        b=eCbwB5ca757GasTgZxHRzpZGyB6bd5yVA51xbq1QDoyBOhhSinGhVMYG9jEVunUCWK
+         Ld7ATH27h1nkd5HI5RCeahmEq/NS6t94eb6LQpmx0fIviM8UM6laCTlxPYG/Fzkh9kpN
+         MYYxNaB96nPEXHCaQea8O81073pZE9iqpMELUQn5nYZ+NIYGcHf79ojR8VVdUt8XHP6h
+         QBZNqLC6mTBimGCNM9CFMqqB1gSE0pW94CM4OD2MftHIziqwIYoJnJjynUQSLWSaSA/r
+         wVAQ2CCM/WSy+0ighikTA/BMGQR8XCXUkhiw5YNX0aoV2lK/EVwEJFhTkpOOOR/hbfig
+         xFhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9d3dVKVv3rwmde4FZcFLfrQ3EuricDCMm/xx55xE2gw=;
-        b=VCYrgymcC0oQK5TnHG+ZIe/7xLmkfU1/i0qTLISuVix8jsLGy2KbbdOxjA0MjA1DVF
-         Ath/2zV4Ys5q6q9Tg8Tmsm7OqtGIjhqQ5YGIQZqqn/HdvF4iFsmyppmz+joK2uGuoJ/T
-         LzT8/nkWaN5ps9UcQzv17Vy4jlS+AbjkVarEAaN4cCywmDkzbUaoKMsfyNYOewLI7AKg
-         Ni0noQ/YNLFyv0DDZgx5URog3/iItQzoMF+Xrf26/340t6pDHpeJMksqYZGQXOHrCiiF
-         a4q6wzXw7wUsJtiVf3kTUXvtMJJXNYBF+OsJ71amQg1kRLIdedGCc7XCibzh4J9ZfiWK
-         x80Q==
-X-Gm-Message-State: AOAM53257Vc9ucUFENYGdYauEyd9HTOPcUyYbGKXDuYO3LxAGQgeYT6O
-        Y7EEh14Q6TZIb/QXp2rG25ZOPg==
-X-Google-Smtp-Source: ABdhPJynCCQ9d+vLlAgJ44e3oh8JI6xmdIbGo+8j27KwGUpeuqGpupWGerqTAEwhmi33venFduMCww==
-X-Received: by 2002:a63:c441:: with SMTP id m1mr865573pgg.2.1599030212255;
-        Wed, 02 Sep 2020 00:03:32 -0700 (PDT)
-Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:7220:84ff:fe09:41dc])
-        by smtp.gmail.com with ESMTPSA id g9sm4525543pfo.144.2020.09.02.00.03.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 00:03:31 -0700 (PDT)
-From:   Nicolas Boichat <drinkcat@chromium.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-remoteproc@vger.kernel.org
-Subject: [PATCH] rpmsg: Avoid double-free in mtk_rpmsg_register_device
-Date:   Wed,  2 Sep 2020 15:03:19 +0800
-Message-Id: <20200902150309.1.I56cf27cd59f4013bd074dc622c8b8248b034a4cc@changeid>
-X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oqyOUgHPVXwuZM1HmllvHicoQC/cT/OXdA6Uv2/+iB4=;
+        b=EBr9sXUAnb4kmv77IGAYbmPwUYbGawSjgNJ82df2Yakc8Kq9F3P4840jb/L24knVw8
+         ELSnuN3tWuSSxrtCkdFVm7c4Lo5Wt9AZfAfF+faY6l76ysXAIxuU3Zc9dwTBELyXtrFv
+         oXu7NJKif2KFk7J5RMoSfigpN6p6nf0dXejfDJ5uv2mnDkt5gfCx070lBT6SqCflE5Ru
+         apwrQhfgdRm/mNbN3iqt1lM9T/RlthWbxTVKfcE2IEbhYUnwE/iml3h4uGH8xuEE/c2a
+         5bFaGaNmceUDj6aHgTz4lqXUdyQ5pn2Gi9BFWrygFgNpoWA1t/Brr4xDVBbbIlppYtGr
+         HCcA==
+X-Gm-Message-State: AOAM533V5ynLI68LAlahz3OR9VBZRuIRyrvJ5zOpKzqCyy8TlHQk5lrl
+        B71VEcN0BKAjKzJGDoWrPDewsan0mKG/kYnFp7Cftg==
+X-Google-Smtp-Source: ABdhPJzfSNs6jZeqCuXz5Y44M9LkgRNqp3/czj2HsyCcMxrEGmrTRQgLe8Z9ajKvWLgQg8HUNGhfuUCll6CTEjSaT1o=
+X-Received: by 2002:a1f:141:: with SMTP id 62mr4522158vkb.2.1599030253660;
+ Wed, 02 Sep 2020 00:04:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYuiJwN1ad955Xw4ShamX2=373r+56KsbpeverEs+i_NAg@mail.gmail.com>
+ <20200831194402.GD2855@paulmck-ThinkPad-P72> <CAPDyKFq7KWo=4VmPhgrt7vEEQ_P6NdVgQp+MO_1cg1dtoVR_Fw@mail.gmail.com>
+ <CAPDyKFrTERjpLrPOFtkqLyNsk2T_58Ye2FQ1mPf-0u78aWW=Xw@mail.gmail.com>
+ <20200901104206.GU1362448@hirez.programming.kicks-ass.net>
+ <CAPDyKFo0VkW-cgRSkvPQ0whpuJCo4OKcL1nmH7nz1tDEChOtVg@mail.gmail.com>
+ <CAPDyKFrv+DTF8=twZZk_tenB-sLg6H-CFn9HVDVA5S2kK2=U5Q@mail.gmail.com>
+ <20200901154417.GD20303@codeaurora.org> <20200901155014.GF2674@hirez.programming.kicks-ass.net>
+ <20200901161340.GC29330@paulmck-ThinkPad-P72> <20200901174216.GJ29142@worktop.programming.kicks-ass.net>
+In-Reply-To: <20200901174216.GJ29142@worktop.programming.kicks-ass.net>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 2 Sep 2020 09:03:37 +0200
+Message-ID: <CAPDyKFqPh7bg16AsitGv2QQHgwOPnWx9DiPPCMuD1EGA5TFFdg@mail.gmail.com>
+Subject: Re: WARNING: suspicious RCU usage - sdhci-pltfm: SDHCI platform and
+ OF driver helper
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Saravana Kannan <saravanak@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        madhuparnabhowmik10@gmail.com,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If rpmsg_register_device fails, it will call
-mtk_rpmsg_release_device which already frees mdev.
+On Tue, 1 Sep 2020 at 19:42, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Tue, Sep 01, 2020 at 09:13:40AM -0700, Paul E. McKenney wrote:
+> > On Tue, Sep 01, 2020 at 05:50:14PM +0200, peterz@infradead.org wrote:
+> > > On Tue, Sep 01, 2020 at 09:44:17AM -0600, Lina Iyer wrote:
+> > > > > > > > > I could add RCU_NONIDLE for the calls to pm_runtime_put_sync_suspend()
+> > > > > > > > > and pm_runtime_get_sync() in psci_enter_domain_idle_state(). Perhaps
+> > > > > > > > > that's the easiest approach, at least to start with.
+> > >
+> > > > I think this would be nice. This should also cover the case, where PM domain
+> > > > power off notification callbacks call trace function internally. Right?
+> > >
+> > > That's just more crap for me to clean up later :-(
+> > >
+> > > trace_*_rcuidle() and RCU_NONIDLE() need to die, not proliferate.
+> >
+> > Moving the idle-entry boundary further in is good in any number of ways.
+> > But experience indicates that no matter how far you move it, there will
+> > be something complex further in.  Unless you are pushing it all the way
+> > into all the arch-specific code down as far as it can possibly go?
+>
+> Not all; the simple cpuidle drivers should be good already. The more
+> complicated ones need some help.
+>
+> The patch provided earlier:
+>
+>   https://lkml.kernel.org/r/20200901104206.GU1362448@hirez.programming.kicks-ass.net
+>
+> should allow the complicated drivers to take over and DTRT.
 
-Fixes: 7017996951fde84 ("rpmsg: add rpmsg support for mt8183 SCP.")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
----
+Don't get me wrong, I fully support your approach by moving the
+rcu_idle_enter() down as far as possible, but it seems to require more
+work than just adding a simple flag for the idle states.
 
- drivers/rpmsg/mtk_rpmsg.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Lots of cpuidle drivers are using CPU_PM notifiers (grep for
+cpu_pm_enter and you will see) from their idlestates ->enter()
+callbacks. And for those we are already calling
+rcu_irq_enter_irqson|off() in cpu_pm_notify() when firing them.
 
-diff --git a/drivers/rpmsg/mtk_rpmsg.c b/drivers/rpmsg/mtk_rpmsg.c
-index 83f2b8804ee989d..f43b69c00e8aa44 100644
---- a/drivers/rpmsg/mtk_rpmsg.c
-+++ b/drivers/rpmsg/mtk_rpmsg.c
-@@ -220,10 +220,8 @@ static int mtk_rpmsg_register_device(struct mtk_rpmsg_rproc_subdev *mtk_subdev,
- 	rpdev->dev.release = mtk_rpmsg_release_device;
- 
- 	ret = rpmsg_register_device(rpdev);
--	if (ret) {
--		kfree(mdev);
-+	if (ret)
- 		return ret;
--	}
- 
- 	return 0;
- }
--- 
-2.28.0.402.g5ffc5be6b7-goog
-
+Kind regards
+Uffe
