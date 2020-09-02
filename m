@@ -2,158 +2,291 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B7DC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E4BC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4B2E20829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F4124206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:47:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="n5uCi6Qv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DskKgysL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgIBKrA (ORCPT
+        id S1726726AbgIBKra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 06:47:00 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:41394 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgIBKq5 (ORCPT
+        Wed, 2 Sep 2020 06:47:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbgIBKrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 06:46:57 -0400
-Received: from [192.168.0.20] (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3227C9CC;
-        Wed,  2 Sep 2020 12:46:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1599043613;
-        bh=X2tRxp/cP6y8nsPS8QbANTDygpQjQroMsDNNpO6jKpw=;
-        h=Reply-To:Subject:To:References:From:Date:In-Reply-To:From;
-        b=n5uCi6QvMNj6ksfHU/HoLJUO2pZkv03+VrP7bMqSHK7+aHCsjhX+KvV7w1hLEeLdb
-         wvK8Xcg/ql1Gizrf3F+Wrf2IGzW5lDjC4GPWXobSZ6amJhOjjp5wu8jgc0jjSppCgs
-         w39n3gxvUx2Efg3rPme2ZnSoNdAlrJS9zPIgt/9M=
-Reply-To: kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v3 9/9] media: vimc: Run multiple captures on same thread
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200819180442.11630-1-kgupta@es.iitr.ac.in>
- <20200819180442.11630-10-kgupta@es.iitr.ac.in>
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
- 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
- WZw01QYHU/GUV/zHJSFk
-Organization: Ideas on Board
-Message-ID: <58df4c43-ab07-0001-f725-9098f18a8e6f@ideasonboard.com>
-Date:   Wed, 2 Sep 2020 11:46:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 2 Sep 2020 06:47:20 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2465C061244;
+        Wed,  2 Sep 2020 03:47:20 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id a6so1042843oog.9;
+        Wed, 02 Sep 2020 03:47:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=bu9IKI1HzT2REYs6Q3U+znpU/mvMbsPHK0dzVwsCUw8=;
+        b=DskKgysLveVNjfsr7EPaSVkinpyqhVrGlj3vRCi0f41hWjwvIsKLfmPwLxSg4uKYL7
+         wfHfhyNxh3ioSac8uQ7YjcM5BPD62wK2o1pHuyjxdZb8mliNiMLtIIHx+/mUGbwRU01A
+         3bXKpELs021PT/wzg2581ANNc60J0fb/VQwFSTFNqGoEG/9plt2zLHckmN8m/fh24pbP
+         XqDu5l1pC0ObpAydNqKcaxAUw8d7Wqzg+iv3DxgZgUmz7sONK0AHxqQ/XxfX8BTteWIX
+         5EkZebFTrq5sfaEyxjSGMXk6KvVPYFbXfKA4rOBwDEoCOjLD5RMiLRPa5Crvxwi3NYzT
+         12XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=bu9IKI1HzT2REYs6Q3U+znpU/mvMbsPHK0dzVwsCUw8=;
+        b=tYKXdTNvBYIZdGe6amI2t7g4izYOabKqymfOUhnnXJXXeNJSmWUXJYQzfUYbf1MACb
+         8GmwiPkbaTT45b77PSXYwkE186zikUr5RpHA8GXb4bYJzFaPJZRDn59xSp/IzHC2lEw0
+         Kzo1Ou3FhhMteDWrvACMUV7BarWSU94r/BkqawTnfDVd5QXRMOrEBOft1T2dR8mKc9qG
+         GwIl5+hs39M9d/ZZqFjLjSk4Ce59HzC/SuRIWbLDsXD2M1S4G/QZnaYo3+X/WTD8ZdI4
+         d+jKI0eF41e8rMQOYnleZHcd4WG/WrkG1dSZwGqwW79c5KrObNoPyzJDjA0A1lDD70rJ
+         hhDA==
+X-Gm-Message-State: AOAM530G6//M287IELc7UywNLFP6vhtRGiRSZiIUljhohZMKXsVtTEOb
+        cSy8s7BAyFyDNA22gTg7tonzUyI7MEB72rOYt05sbygss8wtiw==
+X-Google-Smtp-Source: ABdhPJzaNNZddRW7DVfKPe6SXIQaexkoau5kisLU86xSMjSWtoEeFZxtdWtXa//GvGi8QNID3KOGHhSprFOVKc28Lx8=
+X-Received: by 2002:a4a:b2c4:: with SMTP id l4mr4962709ooo.86.1599043638220;
+ Wed, 02 Sep 2020 03:47:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200819180442.11630-10-kgupta@es.iitr.ac.in>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+References: <20200312111345.1057569-1-colin.king@canonical.com>
+ <2440284.4js2fAD822@kreacher> <65817d75-7272-2ef3-33a5-f390b5b0ec30@canonical.com>
+In-Reply-To: <65817d75-7272-2ef3-33a5-f390b5b0ec30@canonical.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 2 Sep 2020 12:47:07 +0200
+Message-ID: <CA+icZUWMmZ7W1WsqsRLqGB-6Wrr=nQwwuofuWYseJue31JyLJQ@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: sysfs: copy ACPI data using io memory copying
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kaaira,
+On Wed, Sep 2, 2020 at 12:30 PM Colin Ian King <colin.king@canonical.com> w=
+rote:
+>
+> On 14/03/2020 10:23, Rafael J. Wysocki wrote:
+> > On Thursday, March 12, 2020 12:13:45 PM CET Colin King wrote:
+> >> From: Colin Ian King <colin.king@canonical.com>
+> >>
+> >> Reading ACPI data on ARM64 at a non-aligned offset from
+> >> /sys/firmware/acpi/tables/data/BERT will cause a splat because
+> >> the data is I/O memory mapped and being read with just a memcpy.
+> >> Fix this by introducing an I/O variant of memory_read_from_buffer
+> >> and using I/O memory mapped copies instead.
+> >>
+> >> Fixes the following splat:
+> >>
+> >> [  439.789355] Unable to handle kernel paging request at virtual addre=
+ss ffff800041ac0007
+> >> [  439.797275] Mem abort info:
+> >> [  439.800078]   ESR =3D 0x96000021
+> >> [  439.803131]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+> >> [  439.808437]   SET =3D 0, FnV =3D 0
+> >> [  439.811486]   EA =3D 0, S1PTW =3D 0
+> >> [  439.814621] Data abort info:
+> >> [  439.817489]   ISV =3D 0, ISS =3D 0x00000021
+> >> [  439.821319]   CM =3D 0, WnR =3D 0
+> >> [  439.824282] swapper pgtable: 4k pages, 48-bit VAs, pgdp=3D000000008=
+17fc000
+> >> [  439.830979] [ffff800041ac0007] pgd=3D000000bffcfff003, pud=3D000000=
+9f27cee003, pmd=3D000000bf4b993003, pte=3D0068000080280703
+> >> [  439.841584] Internal error: Oops: 96000021 [#1] SMP
+> >> [  439.846449] Modules linked in: nls_iso8859_1 dm_multipath scsi_dh_r=
+dac scsi_dh_emc scsi_dh_alua ipmi_ssif input_leds joydev ipmi_devintf ipmi_=
+msghandler thunderx2_pmu sch_fq_codel ip_tables x_tables autofs4 btrfs zstd=
+_compress raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor =
+async_tx xor xor_neon raid6_pq libcrc32c raid1 raid0 multipath linear i2c_s=
+mbus ast i2c_algo_bit crct10dif_ce drm_vram_helper uas ttm ghash_ce drm_kms=
+_helper sha2_ce syscopyarea sha256_arm64 qede sysfillrect mpt3sas sha1_ce s=
+ysimgblt fb_sys_fops raid_class qed drm scsi_transport_sas usb_storage ahci=
+ crc8 gpio_xlp i2c_xlp9xx hid_generic usbhid hid aes_neon_bs aes_neon_blk a=
+es_ce_blk crypto_simd cryptd aes_ce_cipher
+> >> [  439.908474] CPU: 2 PID: 3926 Comm: a.out Not tainted 5.4.0-14-gener=
+ic #17-Ubuntu
+> >> [  439.915855] Hardware name: To be filled by O.E.M. Saber/Saber, BIOS=
+ 0ACKL027 07/01/2019
+> >> [  439.923844] pstate: 80400009 (Nzcv daif +PAN -UAO)
+> >> [  439.928625] pc : __memcpy+0x90/0x180
+> >> [  439.932192] lr : memory_read_from_buffer+0x64/0x88
+> >> [  439.936968] sp : ffff8000350dbc70
+> >> [  439.940270] x29: ffff8000350dbc70 x28: ffff009e9c444b00
+> >> [  439.945568] x27: 0000000000000000 x26: 0000000000000000
+> >> [  439.950866] x25: 0000000056000000 x24: ffff800041ac0000
+> >> [  439.956164] x23: ffff009ea163f980 x22: 0000000000000007
+> >> [  439.961462] x21: ffff8000350dbce8 x20: 000000000000000e
+> >> [  439.966760] x19: 0000000000000007 x18: ffff8000112f64a8
+> >> [  439.972058] x17: 0000000000000000 x16: 0000000000000000
+> >> [  439.977355] x15: 0000000080280000 x14: ffff800041aed000
+> >> [  439.982653] x13: ffff009ee9fa2840 x12: ffff800041ad1000
+> >> [  439.987951] x11: ffff8000115e1360 x10: ffff8000115e1360
+> >> [  439.993248] x9 : 0000000000010000 x8 : ffff800011ad2658
+> >> [  439.998546] x7 : ffff800041ac0000 x6 : ffff009ea163f980
+> >> [  440.003844] x5 : 0140000000000000 x4 : 0000000000010000
+> >> [  440.009141] x3 : ffff800041ac0000 x2 : 0000000000000007
+> >> [  440.014439] x1 : ffff800041ac0007 x0 : ffff009ea163f980
+> >> [  440.019737] Call trace:
+> >> [  440.022173]  __memcpy+0x90/0x180
+> >> [  440.025392]  acpi_data_show+0x54/0x80
+> >> [  440.029044]  sysfs_kf_bin_read+0x6c/0xa8
+> >> [  440.032954]  kernfs_file_direct_read+0x90/0x2d0
+> >> [  440.037470]  kernfs_fop_read+0x68/0x78
+> >> [  440.041210]  __vfs_read+0x48/0x90
+> >> [  440.044511]  vfs_read+0xd0/0x1a0
+> >> [  440.047726]  ksys_read+0x78/0x100
+> >> [  440.051028]  __arm64_sys_read+0x24/0x30
+> >> [  440.054852]  el0_svc_common.constprop.0+0xdc/0x1d8
+> >> [  440.059629]  el0_svc_handler+0x34/0xa0
+> >> [  440.063366]  el0_svc+0x10/0x14
+> >> [  440.066411] Code: 36180062 f8408423 f80084c3 36100062 (b8404423)
+> >> [  440.072492] ---[ end trace 45fb374e8d2d800e ]---
+> >>
+> >> A simple reproducer is as follows:
+> >>
+> >> #include <sys/types.h>
+> >> #include <sys/stat.h>
+> >> #include <fcntl.h>
+> >> #include <unistd.h>
+> >> #include <stdio.h>
+> >> #include <string.h>
+> >>
+> >> int main(void)
+> >> {
+> >>         int fd;
+> >>         char buffer[7];
+> >>         ssize_t n;
+> >>
+> >>         fd =3D open("/sys/firmware/acpi/tables/data/BERT", O_RDONLY);
+> >>         if (fd < 0) {
+> >>                 perror("open failed");
+> >>                 return -1;
+> >>         }
+> >>         do {
+> >>                 n =3D read(fd, buffer, sizeof(buffer));
+> >>         } while (n > 0);
+> >>
+> >>         return 0;
+> >> }
+> >>
+> >> BugLink: https://bugs.launchpad.net/bugs/1866772
+> >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> >> ---
+> >>  drivers/acpi/sysfs.c   |  2 +-
+> >>  fs/libfs.c             | 33 +++++++++++++++++++++++++++++++++
+> >>  include/linux/string.h |  2 ++
+> >>  3 files changed, 36 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+> >> index c60d2c6d31d6..fb9e216cb8c0 100644
+> >> --- a/drivers/acpi/sysfs.c
+> >> +++ b/drivers/acpi/sysfs.c
+> >> @@ -446,7 +446,7 @@ static ssize_t acpi_data_show(struct file *filp, s=
+truct kobject *kobj,
+> >>      base =3D acpi_os_map_memory(data_attr->addr, data_attr->attr.size=
+);
+> >>      if (!base)
+> >>              return -ENOMEM;
+> >> -    rc =3D memory_read_from_buffer(buf, count, &offset, base,
+> >> +    rc =3D memory_read_from_io_buffer(buf, count, &offset, base,
+> >>                                   data_attr->attr.size);
+> >>      acpi_os_unmap_memory(base, data_attr->attr.size);
+> >>
+> >> diff --git a/fs/libfs.c b/fs/libfs.c
+> >> index c686bd9caac6..3e112c51ce7b 100644
+> >> --- a/fs/libfs.c
+> >> +++ b/fs/libfs.c
+> >> @@ -800,6 +800,39 @@ ssize_t memory_read_from_buffer(void *to, size_t =
+count, loff_t *ppos,
+> >>  }
+> >>  EXPORT_SYMBOL(memory_read_from_buffer);
+> >>
+> >> +/**
+> >> + * memory_read_from_io_buffer - copy data from a io memory mapped buf=
+fer
+> >> + * @to: the kernel space buffer to read to
+> >> + * @count: the maximum number of bytes to read
+> >> + * @ppos: the current position in the buffer
+> >> + * @from: the buffer to read from
+> >> + * @available: the size of the buffer
+> >> + *
+> >> + * The memory_read_from_buffer() function reads up to @count bytes fr=
+om the
+> >> + * io memory mappy buffer @from at offset @ppos into the kernel space=
+ address
+> >> + * starting at @to.
+> >> + *
+> >> + * On success, the number of bytes read is returned and the offset @p=
+pos is
+> >> + * advanced by this number, or negative value is returned on error.
+> >> + **/
+> >> +ssize_t memory_read_from_io_buffer(void *to, size_t count, loff_t *pp=
+os,
+> >> +                               const void *from, size_t available)
+> >> +{
+> >> +    loff_t pos =3D *ppos;
+> >> +
+> >> +    if (pos < 0)
+> >> +            return -EINVAL;
+> >> +    if (pos >=3D available)
+> >> +            return 0;
+> >> +    if (count > available - pos)
+> >> +            count =3D available - pos;
+> >> +    memcpy_fromio(to, from + pos, count);
+> >> +    *ppos =3D pos + count;
+> >> +
+> >> +    return count;
+> >> +}
+> >> +EXPORT_SYMBOL(memory_read_from_io_buffer);
+> >> +
+> >>  /*
+> >>   * Transaction based IO.
+> >>   * The file expects a single write which triggers the transaction, an=
+d then
+> >> diff --git a/include/linux/string.h b/include/linux/string.h
+> >> index 6dfbb2efa815..0c6ec2aa3909 100644
+> >> --- a/include/linux/string.h
+> >> +++ b/include/linux/string.h
+> >> @@ -216,6 +216,8 @@ int bprintf(u32 *bin_buf, size_t size, const char =
+*fmt, ...) __printf(3, 4);
+> >>
+> >>  extern ssize_t memory_read_from_buffer(void *to, size_t count, loff_t=
+ *ppos,
+> >>                                     const void *from, size_t available=
+);
+> >> +extern ssize_t memory_read_from_io_buffer(void *to, size_t count, lof=
+f_t *ppos,
+> >> +                                      const void *from, size_t availa=
+ble);
+> >>
+> >>  int ptr_to_hashval(const void *ptr, unsigned long *hashval_out);
+> >>
+> >>
+> >
+> > Applied as 5.7 material, thanks!
+> >
+> >
+> >
+> >
+> Hi, what's the state of this patch, it got applied but I don't see it in
+> 5.7, 5.8 or 5.8-rc3?
+>
 
-On 19/08/2020 19:04, Kaaira Gupta wrote:
-> If multiple captures try to enable stream, start their stream but do not
-> initialise the pipeline again. Also, don't start the thread separately.
-> Starting their streams will update the use count and their frames would
-> be processed by the already running thread.
-> 
-> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-> ---
->  drivers/media/test-drivers/vimc/vimc-streamer.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/drivers/media/test-drivers/vimc/vimc-streamer.c
-> index fade37bee26d..880c31759cc0 100644
-> --- a/drivers/media/test-drivers/vimc/vimc-streamer.c
-> +++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
-> @@ -275,13 +275,14 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
->  		return ret;
->  
->  	if (enable) {
-> -		if (stream->kthread)
-> -			return 0;
->  
->  		ret = vimc_streamer_stream_start(ved);
->  		if (ret)
->  			goto out;
->  
-> +		if (stream->kthread)
-> +			goto out;
-> +
+s/5.8-rc3/5.9-rc3
 
-This goto out makes it look like it's an error path. So that probably
-warrants a comment along the lines of 'don't reinitialise the pipeline
-if it has already started'. ?
-
-I wonder if it's better to handle the pipeline_init during _stream_start
-'only' in the code path where it's the first stream ?
-
-Then similarly, the pipeline_terminate would happen on stream_stop
-'only' when it's the last stream.
-
-Or I guess that is handled by the refcount ... Hrm it would be nice to
-be able to make/keep it symmetrical somehow.
-
-
->  		ret = vimc_streamer_pipeline_init(stream, ved);
->  		if (ret)
->  			goto out;
-> 
-
--- 
-Regards
---
-Kieran
+- Sedat -
