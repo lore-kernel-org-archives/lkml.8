@@ -2,143 +2,132 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EDFC2BBD0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BF8C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACD4A2083B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0490620758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:33:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oB2TnGM1"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="dnZ+SpPg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgIBSca (ORCPT
+        id S1728021AbgIBSdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:32:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgIBScW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:32:22 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A00BC061245
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 11:32:22 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id g10so140898otq.9
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 11:32:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GVlNlS2k5mluzHkbh+REDKZGmZjyzZPFj0vaaSFv3+8=;
-        b=oB2TnGM1k26yck6CO7tZVUPBu1aJgr9CU5aRqsnY5enWd9YByRurbRRuj3xsheWdyH
-         wWzG8GHbn7q/fUwCgV7zsqEpG20sgX4ypFqRsiKt83CyqNAYVhvRLZ1kYvcciOXwmD/M
-         B4q0QSljkTKGTHuIt1hiFwS+8e6ct/8G2rBgxp4Otedd/92I+OtwuYoVh72jgwR5UCpg
-         D46scCPp8a0fYralg4n0BP4tlo77WivvJTkNT1GeDS+spvPwVvOSlHoKSIA2KUVJX2hi
-         7hKezmcn/9Y7YH625YATD4DCfro3YkdDT16V8XW03sPmw370l+lSlqXgjbbIuEOVyvYc
-         X+Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GVlNlS2k5mluzHkbh+REDKZGmZjyzZPFj0vaaSFv3+8=;
-        b=t9NoLPNfn5MR67z44nB0EtjSNx+dSHjwV5KSQcMB29LlchnyfzJKg47RM8ZUfkImXf
-         Pckm4MRwV65X0pAU2dBmVNq4THMxeSIGWUoirxmZ2TkUoqlj8Pgqpo+9Ajza5tNLi75U
-         3DMhVFA/Sh27K49nlPdjtdph6Bx9xvqNk4f5/hKATIqupbJ4jVwXXSxR2qI2wozUuHJf
-         rZthUbxRv4GkfZ5V8CSH21mLmAgVzJqQj0epGxDeToY5sQwb2nPHj6w9qS3Qhfmg3ypM
-         NQVujUSELN8AY7xNoq3QxwqNl1kVJFgTWbFsQM++NS85TcYLiv3uQE2zpN9xdFh05KLZ
-         tEKQ==
-X-Gm-Message-State: AOAM531mCiG23gRI+OCmaQpfilKC18iRPYcF3GBQwi4qnWhauNX4yvaH
-        4wlwHBb9tLBRua5XOzi/eakYMBgSW1uY/Kkl8vcRRw==
-X-Google-Smtp-Source: ABdhPJynpOH5BJSLtoU3ji8j/X/Rq6PhCaNm4YZ3b4i9pTummuZCDJ3bPEZ5AKeGREsQNxxcGaRpbxV1aWdjU9H1/Q0=
-X-Received: by 2002:a05:6830:18ca:: with SMTP id v10mr6508725ote.295.1599071541040;
- Wed, 02 Sep 2020 11:32:21 -0700 (PDT)
+        Wed, 2 Sep 2020 14:33:31 -0400
+Received: from mail-am6eur05on2122.outbound.protection.outlook.com ([40.107.22.122]:49632
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726446AbgIBSda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 14:33:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Aj+THUp2+8t0pervOFdIViarz7JfVG82ieXMCpzaApPg3Sg9KGpSTtvQT4g9gvncgguAcnl0a9OzZlefI7kuW0xtAbE4WG1FWKYcLK8ncFZVg7J82XONu1VSppZmXi4UNpLPFfR4umyZnQRjygx+b4wPyyneft+3w9OS30T60pnOKW85BI0Vd9iElQfm/gvwS1v2y6DzeZvuzz4IJmK9c/RUxwjTIkAEZIFpKyTW9Md5zpNFngzfMoHfH2xcwyn336hIDeC5oBQ4xtbV9K1FsAjRG1u4NtLkF/KX9Bplbt6G76/p0u8zrtxVGFURBOLbzNKj2xIISkFZSLw4DZh/QA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ndJgwq1UfJLyAY4jaB+qX/6O8okRGV3rrp7sxCYzwkM=;
+ b=dR11sjK8vOilYz/exx1KE1Ig5wA+g2bO9fTrWNBq9Ccd+ccTqbqg4Xnp+UJ+3csppvZOcKvkGVj0XoOLU4B85zhms5OQvPv4Hkl5iZYY2/K6Os88R60kCQDgwIhwKWhx4zx9ZImIXOALlnunV+pvfsrleLjJaD7l9k+PJ0sczaHErx0gBLwVRlLpc2mqUOSSDsexvCjFT1P5p9l6+mmbR76IKCCxmzBPc8io2hzm84ZjXab+5BzCaOBPPGdTfUIGC+cLRg5NuGb048B5ITNYP4HUKgtefL9lfJqbeaL8bt6nCc/FXJKNVo1dpAgTT/2hn4d7519vbzktkjlQ/unTuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ndJgwq1UfJLyAY4jaB+qX/6O8okRGV3rrp7sxCYzwkM=;
+ b=dnZ+SpPgghctc+R6r8MN0XaPtJTK9dCoF5tkehf53V166b6NaY2aLhIiCFpt79Utom55VzKwKzxzPmNTQUgS2mTvzXr9TykNI4cNXrQcEcWGo88XIcWYC/cVeB5pRKySTJwOZR1OHgDA1wZqsRiB//8u8uMCoeAzany2CJLgEqs=
+Authentication-Results: st-md-mailman.stormreply.com; dkim=none (message not
+ signed) header.d=none;st-md-mailman.stormreply.com; dmarc=none action=none
+ header.from=axentia.se;
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com (2603:10a6:10:eb::29)
+ by DB6PR0201MB2296.eurprd02.prod.outlook.com (2603:10a6:4:32::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Wed, 2 Sep
+ 2020 18:33:26 +0000
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::3890:7b1:97a6:1e47]) by DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::3890:7b1:97a6:1e47%7]) with mapi id 15.20.3348.015; Wed, 2 Sep 2020
+ 18:33:26 +0000
+Subject: Re: [PATCH 8/9] i2c: mux: gpmux: Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+References: <20200902150643.14839-1-krzk@kernel.org>
+ <20200902150643.14839-8-krzk@kernel.org>
+From:   Peter Rosin <peda@axentia.se>
+Organization: Axentia Technologies AB
+Message-ID: <5e444922-1094-81b4-49f9-9595725d9c7f@axentia.se>
+Date:   Wed, 2 Sep 2020 20:33:19 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+In-Reply-To: <20200902150643.14839-8-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: sv-SE
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HE1PR0202CA0040.eurprd02.prod.outlook.com
+ (2603:10a6:3:e4::26) To DB8PR02MB5482.eurprd02.prod.outlook.com
+ (2603:10a6:10:eb::29)
 MIME-Version: 1.0
-References: <20200828085622.8365-1-chenyi.qiang@intel.com> <20200828085622.8365-4-chenyi.qiang@intel.com>
- <CALMp9eT1makVq46TB-EtTPiz=Z_2DfhudJekrtheSsmwBc4pZA@mail.gmail.com> <20200902181654.GH11695@sjchrist-ice>
-In-Reply-To: <20200902181654.GH11695@sjchrist-ice>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 2 Sep 2020 11:32:09 -0700
-Message-ID: <CALMp9eSv3SrsJigB6KQg+dyS9GmYYCbC5v6QCx3f09951VZidA@mail.gmail.com>
-Subject: Re: [PATCH 3/5] KVM: nVMX: Update VMX controls MSR according to guest
- CPUID after setting VMX MSRs
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Chenyi Qiang <chenyi.qiang@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by HE1PR0202CA0040.eurprd02.prod.outlook.com (2603:10a6:3:e4::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Wed, 2 Sep 2020 18:33:22 +0000
+X-Originating-IP: [85.226.217.78]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4a7dbb3a-b26c-4a2e-ceff-08d84f6eaddc
+X-MS-TrafficTypeDiagnostic: DB6PR0201MB2296:
+X-Microsoft-Antispam-PRVS: <DB6PR0201MB2296F2032EF3176ED587769ABC2F0@DB6PR0201MB2296.eurprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1122;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dqnHW0zlj+2RDJtvXHantJzlC8AdQyutZrs0p6rQ69tJNsVxHOn0EW2DQ7Nr5dDJApZl40v3ePp3mgwPlLd+nGxQ9GZzzhMPX4SwHFMO05xZPR76EASSlFbxrGzdjWdCIqFryDSat1+PR3338zvPgV8uU03/4ITjV1puX1zdszBtzTKRBR0Sso4bGPzPNFVDe6jipVscnXWvA7RYG6KezZuQLK8kYC5jEW9isMycx7sFOZ9zeh7iXX5MzevXAQcFt43WcyfKq8QJsc+9P2QNzZJE0hC1EZgqRCOCyRUHUgBbCXj2VxgLsjK90f71+n7VS71UPxJU3fvXyzL7hxZDQhC2045VHHAlr7pbCd+aS+nhawMxofqrtgq2vK3jnl+kQLcS6EppIB2IMaQauEZTeA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5482.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(136003)(366004)(39830400003)(396003)(346002)(956004)(7416002)(83380400001)(36756003)(31696002)(16576012)(66556008)(478600001)(66946007)(8676002)(316002)(36916002)(52116002)(86362001)(558084003)(66476007)(31686004)(110136005)(186003)(8936002)(53546011)(2906002)(2616005)(26005)(6486002)(5660300002)(6666004)(921003)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: rwJX4IWGu4MLU/Gfz325wUBKjY5xI7KEKqVY/V0HInwV5QZuZ20AZjR9wlHFvQsmPzXBJ/4XDL04XI/N+rBHMI8t3M9tIMX+Gt/kt37mfCp6GbBjfCizj2fzVvx/6Tc7530AKg43h8OxBDN8ZXENc1w3uX4mc9Bvq+9MF/Zav5NyzLK9BcsmffUl2BMidvLsziudBDB68ycuut0XP4R5HE1OqNo6qqzEyRSI0E6J4ErCnJ9Slbt7mGrlbQjSIca0oflnR9PHaNruU35tZc9+jN/ZNqWUYQWaeyXicZOzZK4q8qE64O3AY0usAI+G3CTAoudORLZ7sgUu9EhDbyJwZP6yzHmm1gS9tPQuWtpCBVMFiEgYnkAkDY/vXQEe5+3EdWjPO8/pFkIxAiZl5yM1Rrv+82UHnPSsoRUGBt4OnjN1YBWsq/uLyxTz6SagE71Z0JtMU+tIjAkAGufHwr+bccrBZkJULXAp86v03Fz9b7NPZWXxXYDmEBuJXYvSPFh/DLkxyG7XDYshykASmiAYiAr0QWOQhJp7pYKktkXIqXHUigj/hKJY+xo9CS0fTfmQW7vPiUYAUUrbojTLUd3Dt/7U1sIcoYLUieUqVZdwDxTc3U/bNKrYM8EDRIm9RcS/s6RNjpzAv6vnr2MhhBDZGA==
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a7dbb3a-b26c-4a2e-ceff-08d84f6eaddc
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5482.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2020 18:33:25.7189
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tpmFFW6UZ+eA/aHcg/ZlOLe4on0/0ikaTCKsPdN3P8JCqs4PbXBf2BPY4+DgTYVo
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0201MB2296
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 11:16 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Fri, Aug 28, 2020 at 01:39:39PM -0700, Jim Mattson wrote:
-> > On Fri, Aug 28, 2020 at 1:54 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
-> > >
-> > > Update the fields (i.e. VM_{ENTRY_LOAD, EXIT_CLEAR}_BNDCFGS and
-> > > VM_{ENTRY, EXIT}_LOAD_IA32_PERF_GLOBAL_CTRL) in
-> > > nested MSR_IA32_VMX_TRUE_{ENTRY, EXIT}_CTLS according to guest CPUID
-> > > when user space initializes the features MSRs. Regardless of the order
-> > > of SET_CPUID and SET_MSRS from the user space, do the update to avoid
-> > > MSR values overriding.
-> > >
-> > > Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
-> > > ---
-> > >  arch/x86/kvm/vmx/vmx.c | 6 +++++-
-> > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > > index 819c185adf09..f9664ccc003b 100644
-> > > --- a/arch/x86/kvm/vmx/vmx.c
-> > > +++ b/arch/x86/kvm/vmx/vmx.c
-> > > @@ -345,6 +345,7 @@ static bool guest_state_valid(struct kvm_vcpu *vcpu);
-> > >  static u32 vmx_segment_access_rights(struct kvm_segment *var);
-> > >  static __always_inline void vmx_disable_intercept_for_msr(unsigned long *msr_bitmap,
-> > >                                                           u32 msr, int type);
-> > > +static void nested_vmx_entry_exit_ctls_update(struct kvm_vcpu *vcpu);
-> > >
-> > >  void vmx_vmexit(void);
-> > >
-> > > @@ -2161,7 +2162,10 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> > >                         return 1; /* they are read-only */
-> > >                 if (!nested_vmx_allowed(vcpu))
-> > >                         return 1;
-> > > -               return vmx_set_vmx_msr(vcpu, msr_index, data);
-> > > +               ret = vmx_set_vmx_msr(vcpu, msr_index, data);
-> > > +               nested_vmx_pmu_entry_exit_ctls_update(vcpu);
-> > > +               nested_vmx_entry_exit_ctls_update(vcpu);
-> > > +               break;
-> >
-> > Now I see what you're doing. This commit should probably come before
-> > the previous commit, so that at no point in the series can userspace
-> > set VMX MSR bits that should be cleared based on the guest CPUID.
-> >
-> > There's an ABI change here: userspace may no longer get -EINVAL if it
-> > tries to set an illegal VMX MSR bit. Instead, some illegal bits are
-> > silently cleared. Moreover, these functions will potentially set VMX
-> > MSR bits that userspace has just asked to clear.
->
-> Can we simply remove nested_vmx_entry_exit_ctls_update() and
-> nested_vmx_pmu_entry_exit_ctls_update()?  It's userspace's responsibility
-> to present a valid vCPU model to the guest, I don't see any reason to
-> silently tweak the VMX MSRs unless allowing the bogus config breaks KVM.
-> E.g. there are many more controls that are non-sensical without "native"
-> support for the associated feature.
+On 2020-09-02 17:06, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-We might need a test for kvm_mpx_supported() here:
+Acked-by: Peter Rosin <peda@axentia.se>
 
-/* If not VM_EXIT_CLEAR_BNDCFGS, the L2 value propagates to L1.  */
-if (vmcs12->vm_exit_controls & VM_EXIT_CLEAR_BNDCFGS)
-        vmcs_write64(GUEST_BNDCFGS, 0);
-
-BTW, where does the L2 value propagate to L1 if not VM_EXIT_CLEAR_BNDCFGS?
+Cheers,
+Peter
