@@ -2,99 +2,111 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE61FC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B4EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6BD2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F5C2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:28:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K6vCIo+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgIBJ2K (ORCPT
+        id S1726528AbgIBJ2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 05:28:10 -0400
-Received: from mga03.intel.com ([134.134.136.65]:29045 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgIBJ2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 05:28:10 -0400
-IronPort-SDR: IGaoofaOCszIrAuqNFsQINaqArFCKV958pWyWmAkrk/alYSpUuawG4aNBDwje61pB/+OCd7NDH
- 8onUK8KQDMWw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="157358867"
-X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
-   d="scan'208";a="157358867"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 02:28:04 -0700
-IronPort-SDR: ZjOyCf8L1o3UKofFPyqqcqzz4hgmZuuvLS8kECsM066KHnnFFTKEm2pxywaWzq2OEqdvtrc3Gs
- oZd4kRBuzGuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
-   d="scan'208";a="297617334"
-Received: from slisovsk-lenovo-ideapad-720s-13ikb.fi.intel.com (HELO [10.237.72.190]) ([10.237.72.190])
-  by orsmga003.jf.intel.com with ESMTP; 02 Sep 2020 02:28:03 -0700
-Subject: Re: [PATCH V2] scsi: ufs-pci: Add LTR support for Intel controllers
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>
-References: <20200827072030.24655-1-adrian.hunter@intel.com>
- <yq14kohexka.fsf@ca-mkp.ca.oracle.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <dc615e02-18a3-334d-dbc4-8aba94e4be6b@intel.com>
-Date:   Wed, 2 Sep 2020 12:27:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Wed, 2 Sep 2020 05:28:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgIBJ2W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 05:28:22 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D568AC061244;
+        Wed,  2 Sep 2020 02:28:20 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id l9so2015279plt.8;
+        Wed, 02 Sep 2020 02:28:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BYsI9E74JqXQ9TWSs6VTDxNOzuc+u1whLZyqXwkgTYI=;
+        b=K6vCIo+hnFO3LSA776wB9Bn0pryOQtbIhmVmrzu+RY/eVBpBsvwRZJtL43uXknw0+P
+         NguHCTqYMQO7E2egsRpCaJyi5Lr5fhqqkF6nkffU+lCaihaAZzjE7I9m54FBZGmV4poq
+         t/RtRviqX2E7ELLNVI5KmuVFi+yn6VPBNDZsgDaq3eoFQgbSKmSC8/qCSdBh6ODgDyPK
+         +mihHSb9fRbymsPIBIrXAC31SoMlWAShPvyUE45D7ptN15NT5OeaoJr3nf5VkiWNw5MU
+         kSJo6a+nXv8hmNg/6f4XCLi08PAGQ0Gz3SbmOXuhgMotKFNUmL4UvBI80qHrvmqU6bHa
+         dgDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BYsI9E74JqXQ9TWSs6VTDxNOzuc+u1whLZyqXwkgTYI=;
+        b=AwVBIaYlONhM+Fm6pVuvRZ00c10y7h7ePfYqSs2hJn4xiKl1XOjEJA0q+Q6cHDf45z
+         ronFF2/NGXmHYcT2aEMoDstH3/uaXTYBwYByXk687ax1kXPSouvP7SVc6jVMysjv2wzV
+         OVt56DGsp/LaIR5EeSW5zar72D2zDJr/wf2gcwCt8rzqCXpe/wu+AjZWENfIR8twT/Gx
+         I0C7NnW88dRKnNzJp5BLH7+IfDMJNYcz7JyWTSK1epe1gpk1RYXeAVyO8raN09JEAiXA
+         w/AT1OWtXtxqbLSmi+xYpk4LKpeukefbLsG9tvMa1y1hPzwEBJytTvKc+OCmwvNlKeDf
+         iUNQ==
+X-Gm-Message-State: AOAM531ZaLiu9bG7SEWT7Rg/7Lja4yuoEZlDiEhasucuOsfnXWe20TMR
+        y3+OmHr+VAaSgfR3xcBW4Sc+jq+g7hwAWiyvRJU=
+X-Google-Smtp-Source: ABdhPJzc/H+QnaH7vgTcF+rFn3Hwsg7evMrZ3miHYORCeNF8yzP0pOKxDPAFHwNf6srZ051bfdrfy7dmw/3rR42Vtc0=
+X-Received: by 2002:a17:90a:2c06:: with SMTP id m6mr1519839pjd.129.1599038900228;
+ Wed, 02 Sep 2020 02:28:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <yq14kohexka.fsf@ca-mkp.ca.oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200824054347.3805-1-william.sung@advantech.com.tw>
+ <CAHp75VeZLPR02xB2XRzec5mSBvq93XYZg56OOODxpFTPva6cXw@mail.gmail.com>
+ <CAFv23QmDwcrdxEndH=mKMAomzt9kxG_f1Z6=Fd8iuuvCoY92SA@mail.gmail.com>
+ <CAHp75Vcup9LUk0fgjW9T2FK-K5GD3=3ycPHi74Oykc8rq_tJqA@mail.gmail.com>
+ <BN6PR03MB25968259EBEAD55E040367308E2F0@BN6PR03MB2596.namprd03.prod.outlook.com>
+ <CAHp75VdvnUsEf=fsRQRmyxQO=1m09M5U19GBtSPkjxSGA5cRBA@mail.gmail.com> <BN6PR03MB259650CEEEC9647AB5C9D8338E2F0@BN6PR03MB2596.namprd03.prod.outlook.com>
+In-Reply-To: <BN6PR03MB259650CEEEC9647AB5C9D8338E2F0@BN6PR03MB2596.namprd03.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 2 Sep 2020 12:28:02 +0300
+Message-ID: <CAHp75VcXLyw40JaU42jQ3fSL7mtHPv++xqcka-oTKUbsW4erpg@mail.gmail.com>
+Subject: Re: [PATCH] iio: dac: ad5593r: Dynamically set AD5593R channel modes
+To:     "Hennerich, Michael" <Michael.Hennerich@analog.com>
+Cc:     AceLan Kao <acelan.kao@canonical.com>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        William Sung <william.sung@advantech.com.tw>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Campion Kang <Campion.Kang@advantech.com.tw>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/09/20 5:12 am, Martin K. Petersen wrote:
-> 
-> Adrian,
-> 
->> Intel host controllers support the setting of latency tolerance.
->> Accordingly, implement the PM QoS ->set_latency_tolerance() callback. The
->> raw register values are also exposed via debugfs.
-> 
-> Does not apply to 5.10/scsi-queue. Please rebase. Thanks!
-> 
+On Wed, Sep 2, 2020 at 12:12 PM Hennerich, Michael
+<Michael.Hennerich@analog.com> wrote:
+> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Sent: Mittwoch, 2. September 2020 10:52
+> > On Wed, Sep 2, 2020 at 11:09 AM Hennerich, Michael
+> > <Michael.Hennerich@analog.com> wrote:
 
-Hi
+...
 
-Thanks for processing this.
+> > I see. Can we consider this email as the official answer from AD that this ID is
+> > being allocated for this certain component?
+>
+> To my knowledge only PNP/ACPI vendor IDs need to be registered with the UEFI
+> ACPI working group.
 
-The 5.10/scsi-queue branch seems to be missing the following fix.  If you cherry
-pick that, then it applies.
+Correct.
 
+>  AD part numbers are unique. The ID chosen uses the
+> part number prefixed with the PNP Vendor ID. ADxxxx->ADSxxxx
+> Please consider this as allocated.
 
-                                                                                                                                                                                                                                                                                          
-commit 8da76f71fef7d8a1a72af09d48899573feb60065                                                                                                                                                                                                                                                                                                                                     
-Author: Adrian Hunter <adrian.hunter@intel.com>                                                                                                                                                                                                                                                                                                                                     
-Date:   Mon Aug 10 17:10:24 2020 +0300                                                                                                                                                                                                                                                                                                                                              
-                                                                                                                                                                                                                                                                                                                                                                                    
-    scsi: ufs-pci: Add quirk for broken auto-hibernate for Intel EHL                                                                                                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                                                                                                                                                                    
-    Intel EHL UFS host controller advertises auto-hibernate capability but it
-    does not work correctly. Add a quirk for that.
-    
-    [mkp: checkpatch fix]
-    
-    Link: https://lore.kernel.org/r/20200810141024.28859-1-adrian.hunter@intel.com
-    Fixes: 8c09d7527697 ("scsi: ufshdc-pci: Add Intel PCI IDs for EHL")
-    Acked-by: Stanley Chu <stanley.chu@mediatek.com>
-    Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-    Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Thank you for confirming this!
 
+-- 
+With Best Regards,
+Andy Shevchenko
