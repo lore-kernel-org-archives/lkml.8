@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A970C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2985DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0408220773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D3E2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063078;
-	bh=iMwur6qM3ZZ6P0L7pVxBdHuvvZDLHp1t0SylHttyE2M=;
+	s=default; t=1599063084;
+	bh=0QtwpM2+k4SGeByY3Ftq2AvC2KycTDYtoRM0Sll0Zyo=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=oEoYqBKNNXC182odrrNq/6QYyvw8S2rwiZaTSO1i7wDzhppZc0UFbtiBpueT2+qul
-	 KDebwnBBPiUcktqIafYS/DAWR3ceF21C6ZABuernhxEOn6hKxqAPtcaM049fbO6CLN
-	 rBXhLmqH5q28Q7zX5TzuxwYqBD3qiUrSXlPIprz8=
+	b=BWhAQyk9Y7E3Q5FqQkWzv+0dF5JxDXH9ngwHVQhVkiHjQFGJzBQ1+C9rzSFwFe7O0
+	 fmjGR4wQtpf/WbBUR+g6Ek9hZWOJi/fMsptwmCUYRoNeI3Vi64WPiwIVb6nP2m0Nwg
+	 n0oAMkEmB94GdQF7pQKjsQ/F04+OEl14JeKUccpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgIBQLQ (ORCPT
+        id S1728392AbgIBQLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:11:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53500 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 12:11:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbgIBQKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:10:46 -0400
+        id S1728264AbgIBQKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:10:52 -0400
 Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D596B2072A;
+        by mail.kernel.org (Postfix) with ESMTPSA id E6EAA21534;
         Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599063046;
-        bh=iMwur6qM3ZZ6P0L7pVxBdHuvvZDLHp1t0SylHttyE2M=;
+        bh=0QtwpM2+k4SGeByY3Ftq2AvC2KycTDYtoRM0Sll0Zyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FKIcXRYqTJF0AmXLoClH7H/yXvzpyvcH1uSCsd+ZGN2Tmwb+nCHcZSxsyw7b7zxXn
-         xgM1HqgHX0MmHK6coPjhKYN+E3paH36oxBY0fA6ib2lXONudq/3XVYYGon3/+g1LY4
-         ERBx6hi/mXjQpO5BeNlXb5D70bugk3PiDt0FXq8I=
+        b=O1UuCkxMnSHGR3+e2CxTm1Bscn95rjUO2I/9ujqY8rlD4cy8QWC73JtWyRo8b+V38
+         3vzz9lSPfHDk17cPuPCv7lHJPqy3kFlXOmXNfeFSp0xYEYrV4OxYzPy6N5tpTgGM7a
+         xidpW4EfMziDy0I08qcUd2U6eYtBX/wz/2Pku9p0=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kDVLP-000t9u-PX; Wed, 02 Sep 2020 18:10:43 +0200
+        id 1kDVLP-000tAB-V6; Wed, 02 Sep 2020 18:10:43 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 06/38] media: venus: place extern venus_fw_debug on a header file
-Date:   Wed,  2 Sep 2020 18:10:09 +0200
-Message-Id: <64a99ecb3e7cfae697a16c6b6ca05034f73ad985.1599062230.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 12/38] media: vivid: place dt timings init code on a separate function
+Date:   Wed,  2 Sep 2020 18:10:15 +0200
+Message-Id: <b41823d40e3b862714ee4c4591649b5a89a5649a.1599062230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
 References: <cover.1599062230.git.mchehab+huawei@kernel.org>
@@ -63,49 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse warns about this symbol:
-
-	drivers/media/platform/qcom/venus/hfi_venus.c:133:5:  warning: symbol 'venus_fw_debug' was not declared. Should it be static?
-
-Because hfi_venus.c doesn't include a header file with the
-extern. So, move it to core.h, with is included by both
-hfi_venus.c and dbgfs.c.
-
-This way, if something changes with it, warnings or errors
-will be produced.
+Move those out of the big vivid_create_instance() function.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/media/platform/qcom/venus/core.h  | 2 ++
- drivers/media/platform/qcom/venus/dbgfs.c | 2 --
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/test-drivers/vivid/vivid-core.c | 76 +++++++++++--------
+ 1 file changed, 44 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index 8e75a199f9f7..1a7aee7ee628 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -24,6 +24,8 @@
- #define VIDC_VCODEC_CLKS_NUM_MAX	2
- #define VIDC_PMDOMAINS_NUM_MAX		3
+diff --git a/drivers/media/test-drivers/vivid/vivid-core.c b/drivers/media/test-drivers/vivid/vivid-core.c
+index e3ffc2566623..3340b61e68c0 100644
+--- a/drivers/media/test-drivers/vivid/vivid-core.c
++++ b/drivers/media/test-drivers/vivid/vivid-core.c
+@@ -1177,6 +1177,48 @@ static void vivid_disable_unused_ioctls(struct vivid_dev *dev,
+ 	v4l2_disable_ioctl(&dev->touch_cap_dev, VIDIOC_ENUM_FRAMEINTERVALS);
+ }
  
-+extern int venus_fw_debug;
++static int vivid_init_dv_timings(struct vivid_dev *dev)
++{
++	int i;
 +
- struct freq_tbl {
- 	unsigned int load;
- 	unsigned long freq;
-diff --git a/drivers/media/platform/qcom/venus/dbgfs.c b/drivers/media/platform/qcom/venus/dbgfs.c
-index 782d54ac1b8f..52de47f2ca88 100644
---- a/drivers/media/platform/qcom/venus/dbgfs.c
-+++ b/drivers/media/platform/qcom/venus/dbgfs.c
-@@ -7,8 +7,6 @@
- 
- #include "core.h"
- 
--extern int venus_fw_debug;
--
- void venus_dbgfs_init(struct venus_core *core)
++	while (v4l2_dv_timings_presets[dev->query_dv_timings_size].bt.width)
++		dev->query_dv_timings_size++;
++
++	/*
++	 * Create a char pointer array that points to the names of all the
++	 * preset timings
++	 */
++	dev->query_dv_timings_qmenu = kmalloc_array(dev->query_dv_timings_size,
++						    sizeof(char *), GFP_KERNEL);
++	/*
++	 * Create a string array containing the names of all the preset
++	 * timings. Each name is max 31 chars long (+ terminating 0).
++	 */
++	dev->query_dv_timings_qmenu_strings =
++		kmalloc_array(dev->query_dv_timings_size, 32, GFP_KERNEL);
++
++	if (!dev->query_dv_timings_qmenu ||
++	    !dev->query_dv_timings_qmenu_strings)
++		return -ENOMEM;
++
++	for (i = 0; i < dev->query_dv_timings_size; i++) {
++		const struct v4l2_bt_timings *bt = &v4l2_dv_timings_presets[i].bt;
++		char *p = dev->query_dv_timings_qmenu_strings + i * 32;
++		u32 htot, vtot;
++
++		dev->query_dv_timings_qmenu[i] = p;
++
++		htot = V4L2_DV_BT_FRAME_WIDTH(bt);
++		vtot = V4L2_DV_BT_FRAME_HEIGHT(bt);
++		snprintf(p, 32, "%ux%u%s%u",
++			bt->width, bt->height, bt->interlaced ? "i" : "p",
++			(u32)bt->pixelclock / (htot * vtot));
++	}
++
++	return 0;
++}
++
++
+ static int vivid_create_instance(struct platform_device *pdev, int inst)
  {
- 	core->root = debugfs_create_dir("venus", NULL);
+ 	static const struct v4l2_dv_timings def_dv_timings =
+@@ -1254,40 +1296,10 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
+ 	if (!dev->edid)
+ 		goto free_dev;
+ 
+-	while (v4l2_dv_timings_presets[dev->query_dv_timings_size].bt.width)
+-		dev->query_dv_timings_size++;
+-
+-	/*
+-	 * Create a char pointer array that points to the names of all the
+-	 * preset timings
+-	 */
+-	dev->query_dv_timings_qmenu = kmalloc_array(dev->query_dv_timings_size,
+-						    sizeof(char *), GFP_KERNEL);
+-	/*
+-	 * Create a string array containing the names of all the preset
+-	 * timings. Each name is max 31 chars long (+ terminating 0).
+-	 */
+-	dev->query_dv_timings_qmenu_strings =
+-		kmalloc_array(dev->query_dv_timings_size, 32, GFP_KERNEL);
+-
+-	if (!dev->query_dv_timings_qmenu ||
+-	    !dev->query_dv_timings_qmenu_strings)
++	ret = vivid_init_dv_timings(dev);
++	if (ret < 0)
+ 		goto free_dev;
+ 
+-	for (i = 0; i < dev->query_dv_timings_size; i++) {
+-		const struct v4l2_bt_timings *bt = &v4l2_dv_timings_presets[i].bt;
+-		char *p = dev->query_dv_timings_qmenu_strings + i * 32;
+-		u32 htot, vtot;
+-
+-		dev->query_dv_timings_qmenu[i] = p;
+-
+-		htot = V4L2_DV_BT_FRAME_WIDTH(bt);
+-		vtot = V4L2_DV_BT_FRAME_HEIGHT(bt);
+-		snprintf(p, 32, "%ux%u%s%u",
+-			bt->width, bt->height, bt->interlaced ? "i" : "p",
+-			(u32)bt->pixelclock / (htot * vtot));
+-	}
+-
+ 	vivid_disable_unused_ioctls(dev, has_tuner, has_modulator,
+ 				    in_type_counter, out_type_counter);
+ 
 -- 
 2.26.2
 
