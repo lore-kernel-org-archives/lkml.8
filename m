@@ -2,284 +2,121 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82445C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5139C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 598C62078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:04:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599044664;
-	bh=txJfNlOtWDkA9Ez0nzHnJWQ4h8nWikVeEJ3eWQK5VE0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JPblvuv6azSQvkhDktUXwH/oQ/mdmToEzeZ+era8PrS5sso9rvKoLMNAB8x2boWMk
-	 j8Z1a28X92YUz/FItDq8wl5iAbRvqg3FOkU1IeKC06wbnh3V0h30EsXMtSA5pe5Ipu
-	 JNQ2mZeDuRas/F4VSBAbgbb1F61aX6W0pBuP9YPw=
+	by mail.kernel.org (Postfix) with ESMTP id 987872078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jvktss2w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgIBLEX (ORCPT
+        id S1726140AbgIBLEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 07:04:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbgIBLBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 07:01:03 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 242CA20FC3;
-        Wed,  2 Sep 2020 11:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599044462;
-        bh=txJfNlOtWDkA9Ez0nzHnJWQ4h8nWikVeEJ3eWQK5VE0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=liRKPch7gWVonq0lyt470eai/AK+bcwkg4NKk1jnkvakvaC7ciKdqV0X6byVjBdNH
-         8bwwgP2hleORuwNfQxMmW6C1aAIcC0mUoY3y4DnkjJ8X+5Q7CDKymeBMBWY+ifkYya
-         UtCCR4Fmw5SGNAsP8fa5f69tQ+/3wylt7QD030OM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     himadrispandya@gmail.com, dvyukov@google.com,
-        linux-usb@vger.kernel.org
-Cc:     perex@perex.cz, tiwai@suse.com, stern@rowland.harvard.ed,
-        linux-kernel@vger.kernel.org, marcel@holtmann.org,
-        johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH 08/10] sound: line6: move to use usb_control_msg_send() and usb_control_msg_recv()
-Date:   Wed,  2 Sep 2020 13:01:12 +0200
-Message-Id: <20200902110115.1994491-11-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200902110115.1994491-1-gregkh@linuxfoundation.org>
-References: <20200902110115.1994491-1-gregkh@linuxfoundation.org>
+        Wed, 2 Sep 2020 07:04:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgIBLEl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 07:04:41 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F69C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 04:04:40 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id y15so1429236uan.9
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 04:04:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Hf0PIlZBH2f6tZjqIqPKdTSDxg4ey5IHqqV7o7zs3fA=;
+        b=jvktss2wubUFAj/XGva63/p+i21EmUocT+VKMGriS4nO/cV/LZCl8IS0SS4RAI5I1B
+         PGSRGdX07J/2Y9ObU8kQKYXMoS2CyQ51/SiA8HmfDEN9bG6zj5ZUQSltN4eQYx5vC305
+         jUIYB6t85WIce/eXD6+90KH03m60MDMZHE6SI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Hf0PIlZBH2f6tZjqIqPKdTSDxg4ey5IHqqV7o7zs3fA=;
+        b=G1h2IOcWOqBIIz5+kgTAaHNtKZem2a3VsA4df5ejQAOBFEvQDUWpic/Lo5W7nQif67
+         3dC9qj19zlLKCP02HO0y+r/9UNLXXfBNZkuFLIaGjxStT0XB6r919sgGUYYL6gwk3s+k
+         IFnmv7W2c+WuFY3STPqqsxfHBhyi6hLusuySLFcTbvLGsnWKgZxerl0MJLOYq9TQP6KE
+         vnCfJaY/DMHKK2CegRimTYZlP/8NL0tHOSYmSJHXXCH5aJs69SVNgbNo+UDi2QmnDBoi
+         vgP7zUAfdKojUeqsF9jLEdlIpoeIt88KbvXe/WL3F4soR2n8lB8W+v5sI4b4RAo+o0uY
+         4YAw==
+X-Gm-Message-State: AOAM531LH1ZqBjmEXZy5A8LmwW0s40FeE2ro428bzIx9QGw8MHDdANAi
+        bSAUUFoGeKP83hV3TTjvZo6ITuRtXj0dwUA6h7Ndpg==
+X-Google-Smtp-Source: ABdhPJwTAJmdVSE4G5yw+xOM510eJCrk4CeFZ0EVNnIfqJUjO0bPMVj4+uBwlLwieWiC9A5BtacoHnsFLK6H+cR9mhI=
+X-Received: by 2002:ab0:1e84:: with SMTP id o4mr4725479uak.74.1599044678604;
+ Wed, 02 Sep 2020 04:04:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <9f4fb922-4aa3-0b63-6d81-c83daefd13b9@web.de>
+In-Reply-To: <9f4fb922-4aa3-0b63-6d81-c83daefd13b9@web.de>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 2 Sep 2020 19:04:27 +0800
+Message-ID: <CANMq1KBJTpnYG59B1V=y_emqD3dtMZQAPY9bWJOC8FW2fNRgsA@mail.gmail.com>
+Subject: Re: [PATCH] rpmsg: Avoid double-free in mtk_rpmsg_register_device()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Pi-Hsun Shih <pihsun@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The usb_control_msg_send() and usb_control_msg_recv() calls can return
-an error if a "short" write/read happens, and they can handle data off
-of the stack, so move the driver over to using those calls instead,
-saving some logic when dynamically allocating memory.
+On Wed, Sep 2, 2020 at 5:33 PM Markus Elfring <Markus.Elfring@web.de> wrote=
+:
+>
+> > If rpmsg_register_device fails, it will call
+> > mtk_rpmsg_release_device which already frees mdev.
+>
+> Can another imperative wording become helpful for the change description?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
+ocumentation/process/submitting-patches.rst?id=3D9c7d619be5a002ea29c172df5e=
+3c1227c22cbb41#n151
 
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: alsa-devel@alsa-project.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- sound/usb/line6/driver.c   | 69 +++++++++++++++-----------------------
- sound/usb/line6/podhd.c    | 17 ++++------
- sound/usb/line6/toneport.c |  8 ++---
- 3 files changed, 37 insertions(+), 57 deletions(-)
+Looking at your posting history, I'll leave it up to the maintainer.
 
-diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
-index 60674ce4879b..601292c51491 100644
---- a/sound/usb/line6/driver.c
-+++ b/sound/usb/line6/driver.c
-@@ -337,23 +337,18 @@ int line6_read_data(struct usb_line6 *line6, unsigned address, void *data,
- {
- 	struct usb_device *usbdev = line6->usbdev;
- 	int ret;
--	unsigned char *len;
-+	u8 len;
- 	unsigned count;
- 
- 	if (address > 0xffff || datalen > 0xff)
- 		return -EINVAL;
- 
--	len = kmalloc(1, GFP_KERNEL);
--	if (!len)
--		return -ENOMEM;
--
- 	/* query the serial number: */
--	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
--			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
--			      (datalen << 8) | 0x21, address,
--			      NULL, 0, LINE6_TIMEOUT * HZ);
--
--	if (ret < 0) {
-+	ret = usb_control_msg_send(usbdev, 0, 0x67,
-+				   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
-+				   (datalen << 8) | 0x21, address, NULL, 0,
-+				   LINE6_TIMEOUT * HZ);
-+	if (ret) {
- 		dev_err(line6->ifcdev, "read request failed (error %d)\n", ret);
- 		goto exit;
- 	}
-@@ -362,45 +357,41 @@ int line6_read_data(struct usb_line6 *line6, unsigned address, void *data,
- 	for (count = 0; count < LINE6_READ_WRITE_MAX_RETRIES; count++) {
- 		mdelay(LINE6_READ_WRITE_STATUS_DELAY);
- 
--		ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
--				      USB_TYPE_VENDOR | USB_RECIP_DEVICE |
--				      USB_DIR_IN,
--				      0x0012, 0x0000, len, 1,
--				      LINE6_TIMEOUT * HZ);
--		if (ret < 0) {
-+		ret = usb_control_msg_recv(usbdev, 0, 0x67,
-+					   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
-+					   0x0012, 0x0000, &len, 1,
-+					   LINE6_TIMEOUT * HZ);
-+		if (ret) {
- 			dev_err(line6->ifcdev,
- 				"receive length failed (error %d)\n", ret);
- 			goto exit;
- 		}
- 
--		if (*len != 0xff)
-+		if (len != 0xff)
- 			break;
- 	}
- 
- 	ret = -EIO;
--	if (*len == 0xff) {
-+	if (len == 0xff) {
- 		dev_err(line6->ifcdev, "read failed after %d retries\n",
- 			count);
- 		goto exit;
--	} else if (*len != datalen) {
-+	} else if (len != datalen) {
- 		/* should be equal or something went wrong */
- 		dev_err(line6->ifcdev,
- 			"length mismatch (expected %d, got %d)\n",
--			(int)datalen, (int)*len);
-+			(int)datalen, len);
- 		goto exit;
- 	}
- 
- 	/* receive the result: */
--	ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
--			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
--			      0x0013, 0x0000, data, datalen,
--			      LINE6_TIMEOUT * HZ);
--
--	if (ret < 0)
-+	ret = usb_control_msg_recv(usbdev, 0, 0x67,
-+				   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
-+				   0x0013, 0x0000, data, datalen, LINE6_TIMEOUT * HZ);
-+	if (ret)
- 		dev_err(line6->ifcdev, "read failed (error %d)\n", ret);
- 
- exit:
--	kfree(len);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(line6_read_data);
-@@ -423,12 +414,10 @@ int line6_write_data(struct usb_line6 *line6, unsigned address, void *data,
- 	if (!status)
- 		return -ENOMEM;
- 
--	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
--			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
--			      0x0022, address, data, datalen,
--			      LINE6_TIMEOUT * HZ);
--
--	if (ret < 0) {
-+	ret = usb_control_msg_send(usbdev, 0, 0x67,
-+				   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
-+				   0x0022, address, data, datalen, LINE6_TIMEOUT * HZ);
-+	if (ret) {
- 		dev_err(line6->ifcdev,
- 			"write request failed (error %d)\n", ret);
- 		goto exit;
-@@ -437,14 +426,10 @@ int line6_write_data(struct usb_line6 *line6, unsigned address, void *data,
- 	for (count = 0; count < LINE6_READ_WRITE_MAX_RETRIES; count++) {
- 		mdelay(LINE6_READ_WRITE_STATUS_DELAY);
- 
--		ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0),
--				      0x67,
--				      USB_TYPE_VENDOR | USB_RECIP_DEVICE |
--				      USB_DIR_IN,
--				      0x0012, 0x0000,
--				      status, 1, LINE6_TIMEOUT * HZ);
--
--		if (ret < 0) {
-+		ret = usb_control_msg_recv(usbdev, 0, 0x67,
-+					   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
-+					   0x0012, 0x0000, status, 1, LINE6_TIMEOUT * HZ);
-+		if (ret) {
- 			dev_err(line6->ifcdev,
- 				"receiving status failed (error %d)\n", ret);
- 			goto exit;
-diff --git a/sound/usb/line6/podhd.c b/sound/usb/line6/podhd.c
-index eef45f7fef0d..a1261f55d62b 100644
---- a/sound/usb/line6/podhd.c
-+++ b/sound/usb/line6/podhd.c
-@@ -183,29 +183,25 @@ static const struct attribute_group podhd_dev_attr_group = {
- static int podhd_dev_start(struct usb_line6_podhd *pod)
- {
- 	int ret;
--	u8 *init_bytes;
-+	u8 init_bytes[8];
- 	int i;
- 	struct usb_device *usbdev = pod->line6.usbdev;
- 
--	init_bytes = kmalloc(8, GFP_KERNEL);
--	if (!init_bytes)
--		return -ENOMEM;
--
--	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0),
-+	ret = usb_control_msg_send(usbdev, 0,
- 					0x67, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
- 					0x11, 0,
- 					NULL, 0, LINE6_TIMEOUT * HZ);
--	if (ret < 0) {
-+	if (ret) {
- 		dev_err(pod->line6.ifcdev, "read request failed (error %d)\n", ret);
- 		goto exit;
- 	}
- 
- 	/* NOTE: looks like some kind of ping message */
--	ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
-+	ret = usb_control_msg_recv(usbdev, 0, 0x67,
- 					USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
- 					0x11, 0x0,
- 					init_bytes, 3, LINE6_TIMEOUT * HZ);
--	if (ret < 0) {
-+	if (ret) {
- 		dev_err(pod->line6.ifcdev,
- 			"receive length failed (error %d)\n", ret);
- 		goto exit;
-@@ -220,13 +216,12 @@ static int podhd_dev_start(struct usb_line6_podhd *pod)
- 			goto exit;
- 	}
- 
--	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0),
-+	ret = usb_control_msg_send(usbdev, 0,
- 					USB_REQ_SET_FEATURE,
- 					USB_TYPE_STANDARD | USB_RECIP_DEVICE | USB_DIR_OUT,
- 					1, 0,
- 					NULL, 0, LINE6_TIMEOUT * HZ);
- exit:
--	kfree(init_bytes);
- 	return ret;
- }
- 
-diff --git a/sound/usb/line6/toneport.c b/sound/usb/line6/toneport.c
-index 94dd5e7ab2e6..a9b56085b76a 100644
---- a/sound/usb/line6/toneport.c
-+++ b/sound/usb/line6/toneport.c
-@@ -126,11 +126,11 @@ static int toneport_send_cmd(struct usb_device *usbdev, int cmd1, int cmd2)
- {
- 	int ret;
- 
--	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
--			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
--			      cmd1, cmd2, NULL, 0, LINE6_TIMEOUT * HZ);
-+	ret = usb_control_msg_send(usbdev, 0, 0x67,
-+				   USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
-+				   cmd1, cmd2, NULL, 0, LINE6_TIMEOUT * HZ);
- 
--	if (ret < 0) {
-+	if (ret) {
- 		dev_err(&usbdev->dev, "send failed (error %d)\n", ret);
- 		return ret;
- 	}
--- 
-2.28.0
+> =E2=80=A6
+> > +++ b/drivers/rpmsg/mtk_rpmsg.c
+> > @@ -220,10 +220,8 @@  static int mtk_rpmsg_register_device(struct mtk_r=
+pmsg_rproc_subdev *mtk_subdev,
+> >       rpdev->dev.release =3D mtk_rpmsg_release_device;
+> >
+> >       ret =3D rpmsg_register_device(rpdev);
+> > -     if (ret) {
+> > -             kfree(mdev);
+> > +     if (ret)
+> >               return ret;
+> > -     }
+> >
+> >       return 0;
+> >  }
+>
+>
+> * How do you think about to use the following code variant instead?
+>
+>         return rpmsg_register_device(rpdev);
+>
+> * Would you like to omit the variable =E2=80=9Cret=E2=80=9D for this func=
+tion implementation?
 
+That's a good suggestion, I'll update and send a v2.
+
+>
+> Regards,
+> Markus
