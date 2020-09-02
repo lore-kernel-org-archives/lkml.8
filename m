@@ -2,146 +2,87 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED250C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96BDC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4C7820773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:47:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UGLT4W2a"
+	by mail.kernel.org (Postfix) with ESMTP id 85AEA20758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:48:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgIBTrL (ORCPT
+        id S1726913AbgIBTs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 15:47:11 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10742 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726594AbgIBTq5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 15:46:57 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 082JhIX4136003;
-        Wed, 2 Sep 2020 15:46:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id; s=pp1;
- bh=OwSxU4NAP7jStdtuTC+FUhSDcDea3J45JeuxRMcK9oM=;
- b=UGLT4W2aihJmJS5eEAlBU8lJHcgRkZbJ5A5XQwEn+Jg7YHZBlrQuO2Hh6aNcL806eB+b
- 2Hc17+uHeSFnOTHZfde9MPcyeeQZ5wEPFXZ63w2//jJM4qWDdA4nFji0LQFgmWpbRIit
- 6SziDRAe8KVPqIb4C+Wckx9PLlF+6E5OAkoqC8kloeq7CZzJaqhQONUJX3bVNAi7dhSa
- 8hzLEizZBaxZFQkf0uh6J+nnYzBn07cAj4N840K1Eh8bIVD7T1z+riO+qXK9nwA/+X6T
- s8iPzp0/SnQB4lgN8cwP5Qd7bdlJqjYRmOxWuOkgSKu/SVC48sFVHERlOT6iLWnjomri GA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33ahswg3fr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 15:46:45 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 082Jhe7L136478;
-        Wed, 2 Sep 2020 15:46:44 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33ahswg3fd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 15:46:44 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 082JfMA8012026;
-        Wed, 2 Sep 2020 19:46:43 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma01wdc.us.ibm.com with ESMTP id 337en9aejg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 19:46:43 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 082JkhQn42336556
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Sep 2020 19:46:43 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3E34F2805C;
-        Wed,  2 Sep 2020 19:46:43 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 95BCC2805A;
-        Wed,  2 Sep 2020 19:46:40 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.163.10.164])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  2 Sep 2020 19:46:40 +0000 (GMT)
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-To:     alex.williamson@redhat.com, bhelgaas@google.com
-Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v4 0/3] vfio/pci: Restore MMIO access for s390 detached VFs
-Date:   Wed,  2 Sep 2020 15:46:33 -0400
-Message-Id: <1599075996-9826-1-git-send-email-mjrosato@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-02_14:2020-09-02,2020-09-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0 mlxlogscore=845
- mlxscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2009020178
+        Wed, 2 Sep 2020 15:48:26 -0400
+Received: from mga04.intel.com ([192.55.52.120]:35112 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbgIBTsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 15:48:23 -0400
+IronPort-SDR: 6lG2wBFsSbBz5Afwdm72SDj8NoLjougRo+WktULhobQHfF5coLcOgsPep12g055gz5vqlJyelz
+ 9LLdDuTdEqvg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="154871634"
+X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
+   d="scan'208";a="154871634"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 12:48:21 -0700
+IronPort-SDR: tVkddLVBeA3qWBhyGUc42GmgoU+ag6G++7iuZV21E5H52fVVDP3Vtow3ADwut0XYyTuy6DSASJ
+ 64O/boPgzHAA==
+X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
+   d="scan'208";a="477769014"
+Received: from unknown (HELO dwf-u18040) ([10.232.115.11])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 12:48:20 -0700
+Message-ID: <c19782e36c9b4a8319f2f16102e1823dc6a33d3c.camel@linux.intel.com>
+Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
+From:   David Fugate <david.fugate@linux.intel.com>
+Reply-To: david.fugate@linux.intel.com
+To:     Christoph Hellwig <hch@infradead.org>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, jonathan.derrick@intel.com,
+        Mario.Limonciello@dell.com, Heiner Kallweit <hkallweit1@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Huffman, Amber" <amber.huffman@intel.com>, david.fugate@intel.com
+Date:   Wed, 02 Sep 2020 13:48:19 -0600
+In-Reply-To: <20200825065634.GA2691@infradead.org>
+References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
+         <20200825062320.GA27116@infradead.org>
+         <08080FC7-861B-472A-BD7D-02D33926677F@canonical.com>
+         <20200825065634.GA2691@infradead.org>
+Organization: Intel
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO
-access on disabled memory") VFIO now rejects guest MMIO access when the
-PCI_COMMAND_MEMORY (MSE) bit is OFF.  This is however not the case for
-VFs (fixed in commit ebfa440ce38b ("vfio/pci: Fix SR-IOV VF handling
-with MMIO blocking")).  Furthermore, on s390 where we always run with at
-least a bare-metal hypervisor (LPAR) PCI_COMMAND_MEMORY, unlike Device/
-Vendor IDs and BARs, is not emulated when VFs are passed-through to the
-OS independently.
+On Tue, 2020-08-25 at 07:56 +0100, Christoph Hellwig wrote:
+> while adding absolutely no value.  Basically we have to add a large
+> chunk of kernel code just to undo silicone/firmware Intel added to
+> their
+> platform to make things complicated.  I mean it is their platform and
+> if
+> they want a "make things complicated" option that is fine, but it
+> should
+> not be on by default.
 
-Based upon Bjorn's most recent comment [1], I investigated the notion of
-setting is_virtfn=1 for VFs passed-through to Linux and not linked to a
-parent PF (referred to as a 'detached VF' in my prior post).  However,
-we rapidly run into issues on how to treat an is_virtfn device with no
-linked PF. Further complicating the issue is when you consider the guest
-kernel has a passed-through VF but has CONFIG_PCI_IOV=n as in many 
-locations is_virtfn checking is ifdef'd out altogether and the device is
-assumed to be an independent PCI function.
 
-The decision made by VFIO whether to require or emulate a PCI feature 
-(in this case PCI_COMMAND_MEMORY) is based upon the knowledge it has 
-about the device, including implicit expectations of what/is not
-emulated below VFIO. (ex: is it safe to read vendor/id from config
-space?) -- Our firmware layer attempts similar behavior by emulating
-things such as vendor/id/BAR access - without these an unlinked VF would
-not be usable. But what is or is not emulated by the layer below may be
-different based upon which entity is providing the emulation (vfio,
-LPAR, some other hypervisor)
+Thanks for your feedback.
 
-So, the proposal here aims to fix the immediate issue of s390
-pass-through VFs becoming suddenly unusable by vfio by using a dev_flags
-bit to identify a VF feature that we know is hardwired to 0 for any
-VF (PCI_COMMAND_MEMORY) and de-coupling the need for emulating
-PCI_COMMAND_MEMORY from the is_virtfn flag. The exact scope of is_virtfn
-and physfn for bare-metal vs guest scenarios and identifying what
-features are / are not emulated by the lower-level hypervisors is a much
-bigger discussion independent of this limited proposal.
-
-Changes from v3:
-- Propose a dev_flags model for the MSE bit
-- Set the bit for typical iov linking
-- Also set the bit for s390 VFs (linked and unlinked)
-- Modify vfio-pci to look at the dev_flags bit instead of is_virtfn
-
-[1]: https://marc.info/?l=linux-pci&m=159856041930022&w=2
-
-Matthew Rosato (3):
-  PCI/IOV: Mark VFs as not implementing MSE bit
-  s390/pci: Mark all VFs as not implementing MSE bit
-  vfio/pci: Decouple MSE bit checks from is_virtfn
-
- arch/s390/pci/pci_bus.c            |  5 +++--
- drivers/pci/iov.c                  |  1 +
- drivers/vfio/pci/vfio_pci_config.c | 20 +++++++++++++-------
- include/linux/pci.h                |  2 ++
- 4 files changed, 19 insertions(+), 9 deletions(-)
-
--- 
-1.8.3.1
+Over the years, I've been forwarded numerous emails from VMD customers 
+praising it's ability to prevent Linux kernel panics upon hot-removals
+and inserts of U.2 NVMe drives. Many were migrating from SATA drives,
+which didn't have this issue, and considered it a showstopper to NVMe
+adoption. I hope we can all agree reliable and robust hot-plug support
+adds value.
 
