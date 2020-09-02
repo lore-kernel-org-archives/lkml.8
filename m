@@ -2,105 +2,95 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A59DEC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3246C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE002083B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:38:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599068331;
-	bh=892k+dIylN07Z0BoztCYZcV5Ytx97ziH7oUUHRgPXqo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z5s4UGLM1XPj+sQfl4GQYsAgG1V08qyPuiZfSJkc+BBxkz6XZtpFGjok+aCI2YY4H
-	 sckt5fBvFgFN7A7/Ze20ufMal1NFxmnNVQSvZCtSStPM2MYqloLXNkqeDXol7mgwmO
-	 UEZEWhmEXgRffogaNRm1lf0PhDJvbIs6v0Lx7FLE=
+	by mail.kernel.org (Postfix) with ESMTP id 5D7D1207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:41:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d39r+fQ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgIBRiu (ORCPT
+        id S1726936AbgIBRlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 13:38:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgIBRip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:38:45 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86587207EA;
-        Wed,  2 Sep 2020 17:38:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599068324;
-        bh=892k+dIylN07Z0BoztCYZcV5Ytx97ziH7oUUHRgPXqo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YPzU8gtmGBeTUanqpXk7UJRNk6O69/FSTFV8yQVQKfTwJ3X1RGCVRYfU9wkciD2qF
-         oYtTBnekZnRir41Ch1d5oIwLQ4e46jxgMlQXFwagw7ttAfw2RxYwtsttkENJr5geDp
-         O/e7vzV/ldyN8zGyd0/SMs35pcCpruT4H9gowlpk=
-Date:   Wed, 2 Sep 2020 18:38:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [PATCH v2 0/3] arm64: Convert to ARCH_STACKWALK
-Message-ID: <20200902173803.GE6162@sirena.org.uk>
-References: <20200819124913.37261-1-broonie@kernel.org>
- <20200901160626.GE95447@C02TD0UTHF1T.local>
+        Wed, 2 Sep 2020 13:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgIBRlh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 13:41:37 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0764C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 10:41:36 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id o20so25720pfp.11
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 10:41:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=znhEfk0qTGWBjhVRC5OGNZnEjwpfUwpiOjd2s/MZEpw=;
+        b=d39r+fQ+ZKppU6xr06OXOhgfj4QOu9x/V4/qeLwYIEZowrhfMPnCGYnHc8e2rr5bNg
+         hosNhQIfLCa9gHNfwq9djzCOomM8TSBsmIpLr5aGCorfhi23KtVPw7VuKXDHHC7m64pD
+         9mczWXHGWHWDj7GO254W0OS6GgkG9+dOQ/nCsMp8iS1gQ373tNOGry74xYrh+Dx+4IUC
+         iiTJ8cs40ETrMJOsdGnbPi3rBY1LZzlobMcJn7nSKWvau2Z6kLl5r7uLTisVL9AIOB6x
+         BPUiCO4CwmY0SqXbmR3gOtM2FX13w+TlllYsaf1NYA2afjf2L4DQPLlOqsCHgxXFJBg1
+         c49A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=znhEfk0qTGWBjhVRC5OGNZnEjwpfUwpiOjd2s/MZEpw=;
+        b=pjj+9nLpyHwF8/psf1O181F7c5G/A38u6ATu8JY4+r/C680T3Wri0mPi5cT3c0a0Ca
+         W402GoQAy1lZ+I66sXhVRkGD2WMrUH9ln7+RBxzZQ5lGApqWULpGN2KGG6M790I40RqR
+         AYvd/9Xi7ysXRV98n6NeDMHVKXjvsoeccJ9dzifWjCcfkoQJj38kquI9f3vs1Cl7pCq+
+         fAu73LyQm/wSIAPmxS8dfLffjKqLvYqGREekzPbuYju52DbLfeL0eC2sKz4vpMSgRjCg
+         MJHE3RUulaKO/J4cemFpds0yhs9nDeySMMvJJvgKjveuHWcKcgw38WIey8HuPlwlszau
+         OPIQ==
+X-Gm-Message-State: AOAM532MXn/sJQFMJmGspNVk1bWhvpCLyMMAFcYJvQUaQG9/tfWEVqPB
+        sn+1yT7xXP7wTu7cRNa7/DL8vyy7E5ns+qQEj9WTsw==
+X-Google-Smtp-Source: ABdhPJzC5f9FwVt7oqUVenernnCrhELQIg8r9QLPwTdiiB+Q0kv2dXLebNbp/nRBqFOm3g52zmuOiErLfVTe7yrOsPI=
+X-Received: by 2002:a63:9d09:: with SMTP id i9mr2625820pgd.381.1599068495912;
+ Wed, 02 Sep 2020 10:41:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jTMWTj4UTAEmbWeb"
-Content-Disposition: inline
-In-Reply-To: <20200901160626.GE95447@C02TD0UTHF1T.local>
-X-Cookie: Prices higher in Alaska and Hawaii.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200901222523.1941988-1-ndesaulniers@google.com>
+ <20200901222523.1941988-2-ndesaulniers@google.com> <87blio1ilu.fsf@mpe.ellerman.id.au>
+In-Reply-To: <87blio1ilu.fsf@mpe.ellerman.id.au>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 2 Sep 2020 10:41:24 -0700
+Message-ID: <CAKwvOd=ZeJU+vLUk2P7FpX35haj7AC50B9Yps4pyoGCpd7ueTw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] powerpc/vdso64: link vdso64 with linker
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        Fangrui Song <maskray@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 2, 2020 at 5:14 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>
+> Nick Desaulniers <ndesaulniers@google.com> writes:
+> > Fixes: commit f2af201002a8 ("powerpc/build: vdso linker warning for orphan sections")
+>
+> I think I'll just revert that for v5.9 ?
 
---jTMWTj4UTAEmbWeb
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Sep 01, 2020 at 05:06:26PM +0100, Mark Rutland wrote:
-
-> Just to check, has the skipping logic been tested to work equivalently
-> to what we had before? By inspection I think it should, but since it
-> relies on function call boundaries it always strikes me as fragile.
-
-> If you could confirm that (e.g. with LKDTM perhaps?)=A0that'd be great.
-> Assuming that looks right, for the series:
-
-I've tested this with LKDTM and otherwise and didn't spot any issues
-(and just did a bit of retesting) but it is a pretty manual process so
-it's possible I missed something.
-
---jTMWTj4UTAEmbWeb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9P2HoACgkQJNaLcl1U
-h9BFyAf/WmL+czCJwJk4VCBeI8Qs2/FFr8HfxOjvcihHhHLoo47xrAWoGVeJcoGB
-B0KxiGvi/sgW230Q8vgawFwzN5pte2FFt8RoXRKNste1aMWTVp2d66nHXg4T3Xa+
-1tzhUh1MBWkQCDW2lKroA6RFs4UIX8b0ulYz26VFwpE/is4vcAv77AnCYNIMfqa1
-cC/FbZO4VJfSu5vgdtrMSmt0NAczKRI5OpO056olErHtnSmBxagekOrMyDofUwjz
-TKcOHNMwH/BdiQFL7BjqDZykxwV1MKNcaXSEd/HTsnCurMbMTCfAsakolqbDDDiL
-DG06jT7beQldWH9+cTAb45lPf08ifQ==
-=knFg
------END PGP SIGNATURE-----
-
---jTMWTj4UTAEmbWeb--
+SGTM; you'll probably still want these changes with some modifications
+at some point; vdso32 did have at least one orphaned section, and will
+be important for hermetic builds.  Seeing crashes in supported
+versions of the tools ties our hands at the moment.
+-- 
+Thanks,
+~Nick Desaulniers
