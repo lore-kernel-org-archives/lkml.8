@@ -2,169 +2,103 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F59C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D8DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD22A2068E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:04:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="l8T0YacL"
+	by mail.kernel.org (Postfix) with ESMTP id 06BE820786
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:05:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgIBEEV (ORCPT
+        id S1726386AbgIBEFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 00:04:21 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:29968 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725791AbgIBEEU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 00:04:20 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1599019459; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=D/v2+5o8QeDQqJpVgc8PAhNMYlKjB1Kp896axpESimk=; b=l8T0YacL7LaMvd4qHg8n4EtGT5GPG/T63zcnr4YkgE/jc2Ag3Wt+7yYL6LbU1eVAcX+1sF3q
- lbCzOAr0hrPFXKTRNlTeKWxYlC+PEd8qHrK0FLH7SFB3MgGJdCn0m4pYuCWreF1Pq6MyoQs+
- gBdYBbTTdjzJKfezbfWrxrWySlI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f4f19c3252c522440555896 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 02 Sep 2020 04:04:19
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 31C08C433CA; Wed,  2 Sep 2020 04:04:19 +0000 (UTC)
-Received: from hyd-lnxbld210.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: srivasam)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F24BC433C9;
-        Wed,  2 Sep 2020 04:04:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7F24BC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=srivasam@codeaurora.org
-From:   Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rohitkr@codeaurora.org,
-        srinivas.kandagatla@linaro.org
-Cc:     Ajit Pandey <ajitp@codeaurora.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
-Subject: [PATCH v2] arm64: dts: qcom: sc7180: Add lpass cpu node for I2S driver
-Date:   Wed,  2 Sep 2020 09:34:01 +0530
-Message-Id: <1599019441-29308-1-git-send-email-srivasam@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 2 Sep 2020 00:05:05 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:52274 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726247AbgIBEFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 00:05:05 -0400
+Received: from [10.130.0.80] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT92iGE9fsg8QAA--.593S3;
+        Wed, 02 Sep 2020 11:59:31 +0800 (CST)
+Subject: Re: [PATCH v5 00/14] irqchip: Fix potential resource leaks
+To:     Marc Zyngier <maz@kernel.org>
+References: <1593998365-25910-1-git-send-email-yangtiezhu@loongson.cn>
+ <ab1cd9280c7892a0230945ef5ff0880c@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <02e077df-7c4e-24a7-1640-5f17894bd252@loongson.cn>
+Date:   Wed, 2 Sep 2020 11:59:30 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <ab1cd9280c7892a0230945ef5ff0880c@kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxT92iGE9fsg8QAA--.593S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jry7CFWxJw45JFyDGw4DArb_yoWkJFc_GF
+        Wqvrn7G34UtrnrAan2gFn8XanFgrn2gw1rJryrXa17tr1fZw15WrWqvrWIkw1rtrW0qFZx
+        Gr4jqF47trn2kjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIAYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Cr0_Gr
+        1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487
+        MxkIecxEwVAFwVW8GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
+        026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
+        JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20x
+        vEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280
+        aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyT
+        uYvjxU4fMaUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ajit Pandey <ajitp@codeaurora.org>
+On 07/06/2020 03:30 PM, Marc Zyngier wrote:
+> On 2020-07-06 02:19, Tiezhu Yang wrote:
+>> When I test the irqchip code of Loongson, I read the related code of 
+>> other
+>> chips in drivers/irqchip and I find some potential resource leaks in the
+>> error path, I think it is better to fix them.
+>>
+>> v2:
+>>   - Split the first patch into a new patch series which
+>>     includes small patches and add "Fixes" tag
+>>   - Use "goto" label to handle error path in some patches
+>>
+>> v3:
+>>   - Add missed variable "ret" in the patch #5 and #13
+>>
+>> v4:
+>>   - Modify the commit message of each patch suggested by Markus Elfring
+>>   - Make "irq_domain_remove(root_domain)" under CONFIG_SMP in patch #3
+>>   - Add a return statement before goto label in patch #4
+>>
+>> v5:
+>>   - Modify the commit messages and do some code cleanups
+>
+> Please stop replying to Markus Elfring, and give people who actually
+> care a chance to review this code. Elfring will keep asking you to make
+> absolutely pointless changes until you are blue in the face
 
-Add the I2S controller node to sc7180 dtsi.
-Add pinmux for primary and secondary I2S.
+Hi Marc,
 
-Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-Signed-off-by: Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
----
+Any comments?
+Could you please apply this patch series?
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 69 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+Thanks,
+Tiezhu
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index d46b383..db60ca5 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -676,6 +676,36 @@
- 			};
- 		};
- 
-+		lpass_cpu: lpass@62f00000 {
-+			compatible = "qcom,sc7180-lpass-cpu";
-+
-+			reg = <0 0x62f00000 0 0x29000>;
-+			reg-names = "lpass-lpaif";
-+
-+			iommus = <&apps_smmu 0x1020 0>;
-+
-+			power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
-+
-+			clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_CORE_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
-+				 <&lpasscc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
-+
-+			clock-names = "pcnoc-sway-clk", "audio-core",
-+					"mclk0", "pcnoc-mport-clk",
-+					"mi2s-bit-clk0", "mi2s-bit-clk1";
-+
-+
-+			#sound-dai-cells = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "lpass-irq-lpaif";
-+		};
-+
- 		sdhc_1: sdhci@7c4000 {
- 			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
- 			reg = <0 0x7c4000 0 0x1000>,
-@@ -1721,6 +1751,45 @@
- 				};
- 			};
- 
-+			sec_mi2s_active: sec-mi2s-active {
-+				pinmux {
-+					pins = "gpio49", "gpio50", "gpio51";
-+					function = "mi2s_1";
-+				};
-+
-+				pinconf {
-+					pins = "gpio49", "gpio50", "gpio51";;
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			pri_mi2s_active: pri-mi2s-active {
-+				pinmux {
-+					pins = "gpio53", "gpio54", "gpio55", "gpio56";
-+					function = "mi2s_0";
-+				};
-+
-+				pinconf {
-+					pins = "gpio53", "gpio54", "gpio55", "gpio56";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			pri_mi2s_mclk_active: pri-mi2s-mclk-active {
-+				pinmux {
-+					pins = "gpio57";
-+					function = "lpass_ext";
-+				};
-+
-+				pinconf {
-+					pins = "gpio57";
-+					drive-strength = <8>;
-+					bias-pull-up;
-+				};
-+			};
-+
- 			sdc1_on: sdc1-on {
- 				pinconf-clk {
- 					pins = "sdc1_clk";
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+>
+>
+> Thanks,
+>
+>         M.
 
