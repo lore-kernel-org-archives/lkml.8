@@ -6,60 +6,47 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009A2C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DC9C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA4EC207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F2C208B3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgIBNon (ORCPT
+        id S1726895AbgIBPl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 09:44:43 -0400
-Received: from verein.lst.de ([213.95.11.211]:60096 "EHLO verein.lst.de"
+        Wed, 2 Sep 2020 11:41:26 -0400
+Received: from verein.lst.de ([213.95.11.211]:60153 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgIBNcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:32:39 -0400
+        id S1727872AbgIBNpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:45:00 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 5CF9468B05; Wed,  2 Sep 2020 15:32:31 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 15:32:31 +0200
+        id AEAE168B02; Wed,  2 Sep 2020 15:44:56 +0200 (CEST)
+Date:   Wed, 2 Sep 2020 15:44:56 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH] x86/uaccess: Use pointer masking to limit uaccess
- speculation
-Message-ID: <20200902133231.GA32133@lst.de>
-References: <f12e7d3cecf41b2c29734ea45a393be21d4a8058.1597848273.git.jpoimboe@redhat.com> <20200901140208.GA95447@C02TD0UTHF1T.local> <20200901144641.GA28580@lst.de> <20200901145442.GC95447@C02TD0UTHF1T.local> <20200901150553.GA30034@lst.de> <20200901154629.GA882@lst.de> <20200902114348.GA1002@C02TD0UTHF1T.local>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Sagi Grimberg <sagi@grimberg.me>, Tejun Heo <tj@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH V2 2/2] block: move 'q_usage_counter' into front of
+ 'request_queue'
+Message-ID: <20200902134456.GB32502@lst.de>
+References: <20200902122643.634143-1-ming.lei@redhat.com> <20200902122643.634143-3-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200902114348.GA1002@C02TD0UTHF1T.local>
+In-Reply-To: <20200902122643.634143-3-ming.lei@redhat.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 12:43:48PM +0100, Mark Rutland wrote:
-> I'll see what I can do.
-> 
-> At first glance it looks like we might need to flesh out or refactor the
-> arm64 kernel maccess routines first (since we want the user maccess
-> routines to use LDTR/STTR instructions that can't access kernel memory),
-> but after that I think the rest is largely mechanical.
+On Wed, Sep 02, 2020 at 08:26:43PM +0800, Ming Lei wrote:
+> The field of 'q_usage_counter' is always fetched in fast path of every
+> block driver, and move it into front of 'request_queue', so it can be
+> fetched into 1st cacheline of 'request_queue' instance.
 
-Yes, the first thing is to implement __get_kernel_nofaul and
-__put_kernel_nofault.  I think they should mostly look like the existing
-non-UAO versions of get_user and put_user with a fixed address space
-limit.
+Looks good,
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
