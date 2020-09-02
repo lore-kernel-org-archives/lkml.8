@@ -2,138 +2,138 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876C8C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBA0C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E5A2083B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365A32078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YbggAEx9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbgIBOqk (ORCPT
+        id S1728076AbgIBOqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:46:40 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:41323 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727919AbgIBONH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:13:07 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BhQrb14QDz9txSf;
-        Wed,  2 Sep 2020 16:13:03 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id GuQVU6E922f3; Wed,  2 Sep 2020 16:13:03 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BhQrZ4lmSz9txS9;
-        Wed,  2 Sep 2020 16:13:02 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EA6E38B7EE;
-        Wed,  2 Sep 2020 16:13:03 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 6937B_9zfpgR; Wed,  2 Sep 2020 16:13:03 +0200 (CEST)
-Received: from [10.25.210.31] (po15451.idsi0.si.c-s.fr [10.25.210.31])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0F1C98B7E5;
-        Wed,  2 Sep 2020 16:13:01 +0200 (CEST)
-Subject: Re: [PATCH 10/10] powerpc: remove address space overrides using
- set_fs()
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Christoph Hellwig' <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200827150030.282762-1-hch@lst.de>
- <20200827150030.282762-11-hch@lst.de>
- <8974838a-a0b1-1806-4a3a-e983deda67ca@csgroup.eu>
- <20200902123646.GA31184@lst.de>
- <61b9a880a6424a34b841cf3dddb463ad@AcuMS.aculab.com>
- <8de54fe0-4be9-5624-dd1d-d95d792e933d@csgroup.eu>
- <0c298e0d972a48bd9ee178225e404b12@AcuMS.aculab.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <6e88048a-8b30-400e-11c6-8d91ba77cbb0@csgroup.eu>
-Date:   Wed, 2 Sep 2020 16:12:50 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Wed, 2 Sep 2020 10:46:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727977AbgIBONL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 10:13:11 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F134C06124F;
+        Wed,  2 Sep 2020 07:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=G29JkSXO5mbjv1FoDpuAl//FXROAUm+3biOsauwhg0s=; b=YbggAEx9ze8hczGoKQ8PaAFw67
+        PsEkFNv31FZcKERky+O++zQ9kvVdW7HBx4lvmngVLfdXX8SbwEPkzZvdCK5vFc4az+Sk27+TGhgN9
+        7QFg/4pEu0RYytEvQPP+uO21Tca9pR4QqutZ+Z7gOGBhGqNbhk/Hvowhiix75ZDYUMZnQ7niEHxEY
+        VYjoCyUJ0L/cTR4nH2S2b+skjfHtbx4qpYKK8G4srMxCKSunIMBAaDDQyaYI1RSy4GdQ5SGPgn6TM
+        N7/ixE54Q5ehR/xHZ6a4HfuN6Iu92GWKCuyjF3PguqjYRY61I3HAnYSU4VLCRnkRoEuqhabztoVxg
+        5i4HKTaw==;
+Received: from [2001:4bb8:184:af1:6a63:7fdb:a80e:3b0b] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDTV1-0005ds-SV; Wed, 02 Sep 2020 14:12:32 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 09/19] xsysace: simplify media change handling
+Date:   Wed,  2 Sep 2020 16:12:08 +0200
+Message-Id: <20200902141218.212614-10-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200902141218.212614-1-hch@lst.de>
+References: <20200902141218.212614-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <0c298e0d972a48bd9ee178225e404b12@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Pass a struct ace_device to ace_revalidate_disk, move the media changed
+check into the one caller that needs it, and give the routine a better
+name.
 
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/block/xsysace.c | 26 ++++++++++----------------
+ 1 file changed, 10 insertions(+), 16 deletions(-)
 
-Le 02/09/2020 à 15:51, David Laight a écrit :
-> From: Christophe Leroy
->> Sent: 02 September 2020 14:25
->> Le 02/09/2020 à 15:13, David Laight a écrit :
->>> From: Christoph Hellwig
->>>> Sent: 02 September 2020 13:37
->>>>
->>>> On Wed, Sep 02, 2020 at 08:15:12AM +0200, Christophe Leroy wrote:
->>>>>> -		return 0;
->>>>>> -	return (size == 0 || size - 1 <= seg.seg - addr);
->>>>>> +	if (addr >= TASK_SIZE_MAX)
->>>>>> +		return false;
->>>>>> +	if (size == 0)
->>>>>> +		return false;
->>>>>
->>>>> __access_ok() was returning true when size == 0 up to now. Any reason to
->>>>> return false now ?
->>>>
->>>> No, this is accidental and broken.  Can you re-run your benchmark with
->>>> this fixed?
->>>
->>> Is TASK_SIZE_MASK defined such that you can do:
->>>
->>> 	return (addr | size) < TASK_SIZE_MAX) || !size;
->>
->> TASK_SIZE_MAX will usually be 0xc0000000
->>
->> With:
->> addr = 0x80000000;
->> size = 0x80000000;
->>
->> I expect it to fail ....
->>
->> With the formula you propose it will succeed, won't it ?
-> 
-> Hmmm... Was i getting confused about some comments for 64bit
-> about there being such a big hole between valid user and kernel
-> addresses that it was enough to check that 'size < TASK_SIZE_MAX'.
-> 
-> That would be true for 64bit x86 (and probably ppc (& arm??))
-> if TASK_SIZE_MAX were 0x4 << 60.
-> IIUC the highest user address is (much) less than 0x0 << 60
-> and the lowest kernel address (much) greater than 0xf << 60
-> on all these 64bit platforms.
-> 
-> Actually if doing access_ok() inside get_user() you don't
-> need to check the size at all.
+diff --git a/drivers/block/xsysace.c b/drivers/block/xsysace.c
+index eefe542f2d9fff..8d581c7536fb51 100644
+--- a/drivers/block/xsysace.c
++++ b/drivers/block/xsysace.c
+@@ -888,26 +888,20 @@ static unsigned int ace_check_events(struct gendisk *gd, unsigned int clearing)
+ 	return ace->media_change ? DISK_EVENT_MEDIA_CHANGE : 0;
+ }
+ 
+-static int ace_revalidate_disk(struct gendisk *gd)
++static void ace_media_changed(struct ace_device *ace)
+ {
+-	struct ace_device *ace = gd->private_data;
+ 	unsigned long flags;
+ 
+-	dev_dbg(ace->dev, "ace_revalidate_disk()\n");
+-
+-	if (ace->media_change) {
+-		dev_dbg(ace->dev, "requesting cf id and scheduling tasklet\n");
++	dev_dbg(ace->dev, "requesting cf id and scheduling tasklet\n");
+ 
+-		spin_lock_irqsave(&ace->lock, flags);
+-		ace->id_req_count++;
+-		spin_unlock_irqrestore(&ace->lock, flags);
++	spin_lock_irqsave(&ace->lock, flags);
++	ace->id_req_count++;
++	spin_unlock_irqrestore(&ace->lock, flags);
+ 
+-		tasklet_schedule(&ace->fsm_tasklet);
+-		wait_for_completion(&ace->id_completion);
+-	}
++	tasklet_schedule(&ace->fsm_tasklet);
++	wait_for_completion(&ace->id_completion);
+ 
+ 	dev_dbg(ace->dev, "revalidate complete\n");
+-	return ace->id_result;
+ }
+ 
+ static int ace_open(struct block_device *bdev, fmode_t mode)
+@@ -922,8 +916,8 @@ static int ace_open(struct block_device *bdev, fmode_t mode)
+ 	ace->users++;
+ 	spin_unlock_irqrestore(&ace->lock, flags);
+ 
+-	if (bdev_check_media_change(bdev))
+-		ace_revalidate_disk(bdev->bd_disk);
++	if (bdev_check_media_change(bdev) && ace->media_change)
++		ace_media_changed(ace);
+ 	mutex_unlock(&xsysace_mutex);
+ 
+ 	return 0;
+@@ -1080,7 +1074,7 @@ static int ace_setup(struct ace_device *ace)
+ 		(unsigned long long) ace->physaddr, ace->baseaddr, ace->irq);
+ 
+ 	ace->media_change = 1;
+-	ace_revalidate_disk(ace->gd);
++	ace_media_changed(ace);
+ 
+ 	/* Make the sysace device 'live' */
+ 	add_disk(ace->gd);
+-- 
+2.28.0
 
-You mean on 64 bit or on any platform ?
-
-What about a word write to 0xbffffffe, won't it overwrite 0xc0000000 ?
-
-> You don't even need to in copy_to/from_user() provided
-> it always does a forwards copy.
-
-Do you mean due to the gap ?
-Is it garantied to be a gap ? Even on a 32 bits having TASK_SIZE set to 
-0xc0000000 and PAGE_OFFSET set to the same ?
-
-
-Christophe
