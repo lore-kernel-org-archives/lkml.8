@@ -2,98 +2,105 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F083C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A44C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2373C2068F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:49:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599011358;
-	bh=ACnmUo/q7wikQNAqquuTw1JPZJIlINIYP3A9vIHgDXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dFKFXycW7+o+GRV6KHK9Sc0h1BcSKHNXoN7saIlCf6jPtW2G8J0KLCyYA/f4dl6R9
-	 LxFHfaib+9BQNPE7oqrIbgS5aYQE5YM3tSVN1z3RtUOa/1UGUe4joUUKczOUk8GlG2
-	 ySjHtEVRH1otmv70KdWEfzKnAbrqmJnTuAqz8mh4=
+	by mail.kernel.org (Postfix) with ESMTP id F2D232068F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:49:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="OOsMu7X2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgIBBtP (ORCPT
+        id S1726937AbgIBBtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 21:49:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53532 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726122AbgIBBr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 21:47:57 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6A082068F;
-        Wed,  2 Sep 2020 01:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599011277;
-        bh=ACnmUo/q7wikQNAqquuTw1JPZJIlINIYP3A9vIHgDXw=;
+        Tue, 1 Sep 2020 21:49:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726122AbgIBBtR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 21:49:17 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37355C061244;
+        Tue,  1 Sep 2020 18:49:17 -0700 (PDT)
+Received: by ozlabs.org (Postfix, from userid 1003)
+        id 4Bh6LK5jm1z9sSJ; Wed,  2 Sep 2020 11:49:13 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
+        t=1599011353; bh=hTaXmDx448oQYoyezs5f5Rukwes/5nA+Fn7vM9Nl0n8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k8MK8Bb0dxIQrH34HVR3KRioFlzw+N1SwWNUtWAmeBX6n+8opBmc0BC6I1FFlBEhR
-         BH782NR2rCXX9vt0S8wRrxs7CMih5usB70/pYKsuv/qgwlmy2Y/nNcR6eOqFVizbJP
-         pmzS9vF3SmhyUWJxWmIUwB+YfkpH/M74pPp8lJlQ=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8860440D3D; Tue,  1 Sep 2020 22:47:54 -0300 (-03)
-Date:   Tue, 1 Sep 2020 22:47:54 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Al Grant <al.grant@arm.com>
-Subject: Re: [PATCH 1/2] perf cs-etm: Fix corrupt data after perf inject from
-Message-ID: <20200902014754.GA3444345@kernel.org>
-References: <20200819084751.17686-1-leo.yan@linaro.org>
- <20200827205354.GE22307@xps15>
- <20200831000432.GA4715@leoy-ThinkPad-X240s>
- <20200901145432.GB1422817@kernel.org>
- <20200902003931.GA3306@leoy-ThinkPad-X240s>
+        b=OOsMu7X2nDHa6F7OzcSZVptEYMumaeL2UkBfmg7M3+JbgDG/3FWooN3c4DWto5Sft
+         1Z27emBpzzXKPNtDQLGTVa2AMqqYC9XcDU3K2/tEaYeBQvjjwwNYZDPzEHlKW6O3rE
+         G9cRpY3uUQZyK5xgKIrAHh6LywbCfTti69J8sNigC22VUC7u9fXd1tTF7gyB87KKK/
+         gTnJtCaERj+NMBZgLfcMnGuIxf6gF90RM1xm25AVr3Soy4GuDuKzYd6Ko9tBIvrTql
+         q/VAKEPeI5Dp8lmfixFxXTCo/SYUDSXVyLhJ2zkocUYVOWAVABWF2RiGURS1UCBa+x
+         8fkzom8P1jefw==
+Date:   Wed, 2 Sep 2020 11:49:08 +1000
+From:   Paul Mackerras <paulus@ozlabs.org>
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     mpe@ellerman.id.au, mikey@neuling.org, npiggin@gmail.com,
+        pbonzini@redhat.com, christophe.leroy@c-s.fr, jniethe5@gmail.com,
+        pedromfc@br.ibm.com, rogealve@br.ibm.com, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/7] powerpc/watchpoint/kvm: Rename current DAWR macros
+ and variables
+Message-ID: <20200902014908.GA272502@thinks.paulus.ozlabs.org>
+References: <20200723102058.312282-1-ravi.bangoria@linux.ibm.com>
+ <20200723102058.312282-2-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200902003931.GA3306@leoy-ThinkPad-X240s>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200723102058.312282-2-ravi.bangoria@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Sep 02, 2020 at 08:39:32AM +0800, Leo Yan escreveu:
-> On Tue, Sep 01, 2020 at 11:54:32AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Mon, Aug 31, 2020 at 08:04:32AM +0800, Leo Yan escreveu:
-> > > On Thu, Aug 27, 2020 at 02:53:54PM -0600, Mathieu Poirier wrote:
-> > > > On Wed, Aug 19, 2020 at 04:47:50PM +0800, Leo Yan wrote:
-> > > > I've see this patch before...  I thought it had been merged - what happened?
+On Thu, Jul 23, 2020 at 03:50:52PM +0530, Ravi Bangoria wrote:
+> Power10 is introducing second DAWR. Use real register names (with
+> suffix 0) from ISA for current macros and variables used by kvm.
 
-> > > This patch before has been sent by Al to CoreSight mailing list but has
-> > > not sent to LKML, this is why I resent it to LKML in case it's missed.
+Most of this looks fine, but I think we should not change the existing
+names in arch/powerpc/include/uapi/asm/kvm.h (and therefore also
+Documentation/virt/kvm/api.rst).
 
-> > So, was it Acked on the CoreSight mailing list? Are we missing any
-> > Acked-by or Reviewed-by for this 1/2 patch as we got for 2/2?
- 
-> The CoreSight mailing list has some discussion for this patch set,
-> when respin this patch set, I confirmed we don't miss any 'Acked' or
-> 'Reviewed' tags.
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 426f94582b7a..4dc18fe6a2bf 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -2219,8 +2219,8 @@ registers, find a list below:
+>    PPC     KVM_REG_PPC_BESCR               64
+>    PPC     KVM_REG_PPC_TAR                 64
+>    PPC     KVM_REG_PPC_DPDES               64
+> -  PPC     KVM_REG_PPC_DAWR                64
+> -  PPC     KVM_REG_PPC_DAWRX               64
+> +  PPC     KVM_REG_PPC_DAWR0               64
+> +  PPC     KVM_REG_PPC_DAWRX0              64
+>    PPC     KVM_REG_PPC_CIABR               64
+>    PPC     KVM_REG_PPC_IC                  64
+>    PPC     KVM_REG_PPC_VTB                 64
+...
+> diff --git a/arch/powerpc/include/uapi/asm/kvm.h b/arch/powerpc/include/uapi/asm/kvm.h
+> index 264e266a85bf..38d61b73f5ed 100644
+> --- a/arch/powerpc/include/uapi/asm/kvm.h
+> +++ b/arch/powerpc/include/uapi/asm/kvm.h
+> @@ -608,8 +608,8 @@ struct kvm_ppc_cpu_char {
+>  #define KVM_REG_PPC_BESCR	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xa7)
+>  #define KVM_REG_PPC_TAR		(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xa8)
+>  #define KVM_REG_PPC_DPDES	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xa9)
+> -#define KVM_REG_PPC_DAWR	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xaa)
+> -#define KVM_REG_PPC_DAWRX	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xab)
+> +#define KVM_REG_PPC_DAWR0	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xaa)
+> +#define KVM_REG_PPC_DAWRX0	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xab)
+>  #define KVM_REG_PPC_CIABR	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xac)
+>  #define KVM_REG_PPC_IC		(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xad)
+>  #define KVM_REG_PPC_VTB		(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xae)
 
-So, this patch was included in today's
-perf-tools-fixes-for-v5.9-2020-09-01 signed tag sent to Linus in a pull
-req, please update your perf/urgent branch, and go on from there, I'll
-merge that into my perf/core branch as soon as Linus merges it.
+The existing names are an API, and if you change them you will break
+compilation of existing userspace programs.  I don't see that adding
+the '0' on the end is so important that we need to break userspace.
 
-- Arnaldo
+Paul.
