@@ -2,155 +2,166 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1CBC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADCFC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFA86208B3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277EB2067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:27:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="GYEgzlLR"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="R/H9/zNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgIBQ0s (ORCPT
+        id S1727972AbgIBQ1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:26:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58790 "EHLO
+        Wed, 2 Sep 2020 12:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgIBQ0m (ORCPT
+        with ESMTP id S1728313AbgIBQ0r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:26:42 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69F55C061245
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 09:26:41 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id 12so105279lfb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 09:26:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unikie-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=47YQwNjkGGbbE3i7sa2Kuqbb7Myc36HPrhccYNPndjE=;
-        b=GYEgzlLRF5E9KClXQ6VQiRgCtaXfKiCps7bAj9IPVI/YNpT6Vn//aRZd1/RQxSgEvO
-         I1q5GYysfVrZylmChEVF80N3SfIgI/aEwFdmJpyIsv9hrWYpeEPgr6r4Y6qEGxTAhT/1
-         Qgv5kvnMZ203jNnivOkAcNR68XUH/qf8g0oAPMdel0xQuLLhRgeCOa33Rnr6g9GQm+Vh
-         4mubMIp2bvVbd6kPmcKjKTlFPjxCNOORselo27s1wmts5zZC/XOZkKnIW0/r1cr8oULj
-         8A9MGmY3YXxpBDwhXfxgCQxMxx5Dw0suEBDT0MZKbuaQiu1OeqlmnJ7oTg6oZ/zAS2rm
-         HwEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=47YQwNjkGGbbE3i7sa2Kuqbb7Myc36HPrhccYNPndjE=;
-        b=ovCxOp4HWyVOIWIW1j0m0TvbflXkd/lC4z4+3aNcQ3aIYF9r6ubk9lalwvvEYVvMps
-         vuim4xOhHncqnTqm000yh12dpeyKUngzMnhTIaKzNOWR84kA2gkzlziQEAZYKHr/M7Jp
-         U8mxcw9CwH4Gc/PCy5PpDRQrk24zbPwj/SjiJ5iYoCjTfflKAFnd+zuwri9Zq42t0mZT
-         eyx+O0k0bd8DZxvZcW4WXloqo+RrYfQqXlX/uO1zbxagdPCkWx9tMKUVLI72NRcAdcc3
-         pWajs+gzwbOCa4S/5mQhWo21wfeGqkbIZGiyG317kab1E/k5QYki4MSGqTZKSF8vOi1/
-         Prhg==
-X-Gm-Message-State: AOAM531miiJDkyfgNf8mKPMV9mLtinStUPo78X8LHes1Jxg5nx8X1Dmt
-        i5KCyNfASySkUIyZDSbRjfIWWQ==
-X-Google-Smtp-Source: ABdhPJxIhQZqLm3VDDnqmQv14PZqsN3hQCeJl6ul2i5e9pvdHaq07YSfKCVjqHBO2X03/oZ4bh5/NA==
-X-Received: by 2002:a05:6512:3087:: with SMTP id z7mr3709857lfd.52.1599063999463;
-        Wed, 02 Sep 2020 09:26:39 -0700 (PDT)
-Received: from localhost.localdomain ([109.204.235.119])
-        by smtp.googlemail.com with ESMTPSA id y24sm1191887lfg.75.2020.09.02.09.26.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 09:26:39 -0700 (PDT)
-From:   John Mathew <john.mathew@unikie.com>
-To:     linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, tsbogend@alpha.franken.de,
-        lukas.bulwahn@gmail.com, x86@kernel.org,
-        linux-mips@vger.kernel.org, tglx@linutronix.de,
-        willy@infradead.org, valentin.schneider@arm.com,
-        John Mathew <john.mathew@unikie.com>
-Subject: [RFC PATCH v8 0/3] Add scheduler overview documentation
-Date:   Wed,  2 Sep 2020 19:26:28 +0300
-Message-Id: <20200902162632.10271-1-john.mathew@unikie.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 2 Sep 2020 12:26:47 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F49C061251;
+        Wed,  2 Sep 2020 09:26:47 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 23F6A9CC;
+        Wed,  2 Sep 2020 18:26:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1599063994;
+        bh=dSqMUpaG7AZd72yHZ7rra4x5/rnP+cdxisE4rS3WLF4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R/H9/zNKRLV1P/im2JUQebtvSib8OJGz2Bah5T8TVlj54JF/xpDAlGXs3WREGe3mV
+         Wrjl/89a8N+W/4v6xcGrOiiBV9eSVUGx9cXsj62t70tPPMbI1THtRBLrTZgSMzcreP
+         qoY6zlud8WJmN/H73ANWh0WIV4eK+qhzGf/KdIOY=
+Date:   Wed, 2 Sep 2020 19:26:12 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vandana BN <bnvandana@gmail.com>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/38] media: v4l2-ioctl: avoid memory leaks on some
+ time32 compat functions
+Message-ID: <20200902162612.GB16811@pendragon.ideasonboard.com>
+References: <cover.1599062230.git.mchehab+huawei@kernel.org>
+ <27254f9780e7ec8502761826c2888dbd51a536a8.1599062230.git.mchehab+huawei@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <27254f9780e7ec8502761826c2888dbd51a536a8.1599062230.git.mchehab+huawei@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series updates the scheduler documentation to add more topics
-wrt to scheduler overview. New sections are added to provide a brief
-overview of the kernel structs used by the scheduler, scheduler invocation,
-and context switch. Previous version of the patch was reviewed at:
-https://lore.kernel.org/lkml/20200527084421.4673-1-John.Mathew@unikie.com/
+Hi Mauro,
 
-version 8:
- - Rebase
+Thank you for the patch.
 
-version 7:
- -Fix overview description
- -Removed rst headers
- -Removed kernel-doc for struct rq and meged it as struct
-  member comments
+On Wed, Sep 02, 2020 at 06:10:05PM +0200, Mauro Carvalho Chehab wrote:
+> There are some reports about possible memory leaks:
+> 
+> 	drivers/media/v4l2-core//v4l2-ioctl.c:3203 video_put_user() warn: check that 'ev32' doesn't leak information (struct has a hole after 'type')
+> 	drivers/media/v4l2-core//v4l2-ioctl.c:3230 video_put_user() warn: check that 'vb32' doesn't leak information (struct has a hole after 'memory')
+> 
+> While smatch seems to be reporting a false positive (line 3203),
+> there's indeed a possible leak with reserved2 at vb32.
+> 
+> We might have fixed just that one, but smatch checks won't
+> be able to check leaks at ev32. So, re-work the code in a way
+> that will ensure that the var contents will be zeroed before
+> filling it.
+> 
+> With that, we don't need anymore to touch reserved fields.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  drivers/media/v4l2-core/v4l2-ioctl.c | 48 ++++++++++++++--------------
+>  1 file changed, 24 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> index a556880f225a..6f3fe9c4b64a 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -3189,17 +3189,16 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
+>  #ifdef CONFIG_COMPAT_32BIT_TIME
+>  	case VIDIOC_DQEVENT_TIME32: {
+>  		struct v4l2_event *ev = parg;
+> -		struct v4l2_event_time32 ev32 = {
+> -			.type		= ev->type,
+> -			.pending	= ev->pending,
+> -			.sequence	= ev->sequence,
+> -			.timestamp.tv_sec  = ev->timestamp.tv_sec,
+> -			.timestamp.tv_nsec = ev->timestamp.tv_nsec,
+> -			.id		= ev->id,
+> -		};
+> +		struct v4l2_event_time32 ev32;
+>  
+> +		memset(&ev32, 0, sizeof(ev32));
+> +		ev32.type		= ev->type,
 
-version 6:
- -Fix typos.
+The lines should end with ';', not ','.
 
-version 5:
- -Fix description error on CAS
+With this fixed,
 
-version 4:
- -Added section on Capacity-Aware Scheduling
- -Reworded CFS recently added features.
- -Removed vruntime description from scheduler structs
- -Added description of idle and stopper sched classses
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-version 3:
- -Fix spelling, spacing and typo errors.
-
-version 2:
-- Remove :c:func: directive as it was redundant
-- Limit document width (line symbol count) to 75
-- Replace dot file with ASCII art
-- Describe prepare_task_switch(), ASID use, 
-  kernel/user transtion, MIPS FPU affinity correctly
-- Add missing references to files
-- Removed internal APIs from scheduler API reference
-- Described rq struct member as kernel-doc comments
-- Replaced CFS history with CFS current status
-- Added documentation for sched_class fields
-- Refined explanation of context swtich functionality
-- Replace CFS history with recent changes
-- Added kernel-doc comments for struct rq
-
-John Mathew (3):
-  docs: scheduler: Restructure scheduler documentation.
-  docs: scheduler: Add scheduler overview  documentation
-  docs: scheduler: Add introduction to scheduler context-switch
-
- Documentation/scheduler/arch-specific.rst     |  14 +
- Documentation/scheduler/cfs-overview.rst      |  59 ++++
- Documentation/scheduler/context-switching.rst | 126 ++++++++
- Documentation/scheduler/index.rst             |  34 +-
- .../scheduler/mips-context-switch.rst         |  89 ++++++
- Documentation/scheduler/overview.rst          | 297 ++++++++++++++++++
- .../scheduler/sched-data-structs.rst          | 176 +++++++++++
- Documentation/scheduler/sched-debugging.rst   |  14 +
- Documentation/scheduler/sched-features.rst    |  25 ++
- Documentation/scheduler/scheduler-api.rst     |  24 ++
- .../scheduler/x86-context-switch.rst          |  55 ++++
- kernel/sched/core.c                           |  21 +-
- kernel/sched/sched.h                          |  63 +++-
- 13 files changed, 978 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/scheduler/arch-specific.rst
- create mode 100644 Documentation/scheduler/cfs-overview.rst
- create mode 100644 Documentation/scheduler/context-switching.rst
- create mode 100644 Documentation/scheduler/mips-context-switch.rst
- create mode 100644 Documentation/scheduler/overview.rst
- create mode 100644 Documentation/scheduler/sched-data-structs.rst
- create mode 100644 Documentation/scheduler/sched-debugging.rst
- create mode 100644 Documentation/scheduler/sched-features.rst
- create mode 100644 Documentation/scheduler/scheduler-api.rst
- create mode 100644 Documentation/scheduler/x86-context-switch.rst
+> +		ev32.pending		= ev->pending,
+> +		ev32.sequence		= ev->sequence,
+> +		ev32.timestamp.tv_sec	= ev->timestamp.tv_sec,
+> +		ev32.timestamp.tv_nsec	= ev->timestamp.tv_nsec,
+> +		ev32.id			= ev->id,
+>  		memcpy(&ev32.u, &ev->u, sizeof(ev->u));
+> -		memcpy(&ev32.reserved, &ev->reserved, sizeof(ev->reserved));
+>  
+>  		if (copy_to_user(arg, &ev32, sizeof(ev32)))
+>  			return -EFAULT;
+> @@ -3210,21 +3209,22 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
+>  	case VIDIOC_DQBUF_TIME32:
+>  	case VIDIOC_PREPARE_BUF_TIME32: {
+>  		struct v4l2_buffer *vb = parg;
+> -		struct v4l2_buffer_time32 vb32 = {
+> -			.index		= vb->index,
+> -			.type		= vb->type,
+> -			.bytesused	= vb->bytesused,
+> -			.flags		= vb->flags,
+> -			.field		= vb->field,
+> -			.timestamp.tv_sec	= vb->timestamp.tv_sec,
+> -			.timestamp.tv_usec	= vb->timestamp.tv_usec,
+> -			.timecode	= vb->timecode,
+> -			.sequence	= vb->sequence,
+> -			.memory		= vb->memory,
+> -			.m.userptr	= vb->m.userptr,
+> -			.length		= vb->length,
+> -			.request_fd	= vb->request_fd,
+> -		};
+> +		struct v4l2_buffer_time32 vb32;
+> +
+> +		memset(&vb32, 0, sizeof(vb32));
+> +		vb32.index		= vb->index,
+> +		vb32.type		= vb->type,
+> +		vb32.bytesused		= vb->bytesused,
+> +		vb32.flags		= vb->flags,
+> +		vb32.field		= vb->field,
+> +		vb32.timestamp.tv_sec	= vb->timestamp.tv_sec,
+> +		vb32.timestamp.tv_usec	= vb->timestamp.tv_usec,
+> +		vb32.timecode		= vb->timecode,
+> +		vb32.sequence		= vb->sequence,
+> +		vb32.memory		= vb->memory,
+> +		vb32.length		= vb->length,
+> +		vb32.request_fd		= vb->request_fd,
+> +		memcpy(&vb32.m, &vb->m, sizeof(vb->m));
+>  
+>  		if (copy_to_user(arg, &vb32, sizeof(vb32)))
+>  			return -EFAULT;
 
 -- 
-2.17.1
+Regards,
 
+Laurent Pinchart
