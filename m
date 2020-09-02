@@ -2,135 +2,102 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,TVD_SPACE_RATIO autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C43C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 029DAC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8424E2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:53:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ecnoOnaN";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="lndVtbvU"
+	by mail.kernel.org (Postfix) with ESMTP id B1E3A207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599062057;
+	bh=T9iTGJwk3MutXitltZ85MC5KJh0naTlHQ9Yv1BlJG2A=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=myJWXU7hjKSooCdpU/s31WV5hidjkH/EpK4jiCOpQpQveTk/q/04WpLCU4A+7RGUc
+	 BbOqdNnm37mzjexxMcxtbQnfun1XSxG6GXLGzFk5LMEIVIws+MYdCgW4gCJDvZDXqV
+	 DjFlAHv0WbdTStaMRxKjdXmsdashszbxSVdRcEaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgIBPxz (ORCPT
+        id S1728045AbgIBPyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:53:55 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:27158 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgIBPxs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:53:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1599062028; x=1630598028;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
-  b=ecnoOnaNG6+F6/YVR8jRNnbYb+ix6lr9gPXz2kROInRJ7HiAfNYQFE3f
-   Wf3UycVt6ZZaTkrq2aNgM/CgZRigVHrBixRSANyamhSSFU/5q6SMxfwzT
-   xB/LmaPHFacf7zlJ+0AafJuoWuG91Yn7blfe2xMfEaz6rrSrvGgevWMqO
-   1S5XGNCf211ZJiq0VUOPEVmJicuDdLTziV6H5iK6gSUWhEUNz8MqWxYHw
-   Zq/tPQZtem4fr+7kSaTXnucrLEJWlyQaLF/ffYDc4kQn/XGEJKGvPDQ28
-   uwXczqcjp5MO7QZAD9zDrZnQsxq4k4BGj/tJmE8F7l1IkOQdVSrLOnKHe
-   w==;
-IronPort-SDR: GzHsi6/v1n3VrQk6RT0xqlSckGdocaIigp89tJ8GIDmBPKp6pmPpUvnjItrJKVTjjrbAhF0rfD
- 8a+NsbJ18tYX9XwvriontTCEtvcvQ1Jch439i83TocYKjoKxev3bgwLYk/cIfKVYK1PhegyGBg
- rjPL/oT1goVaCxHTdfLnXHxwIRaKj0FVmlDpNHQHrFqXjYF43MOE3yiVQ2o4kGz+2Vq2YBsE/k
- NP9lSo7Vs29OyfMDZXsAC+ZtrhMxx28EdBhaKGC6TJG81zon4PPrT29GKiO/KBG6EeLDy/1+i4
- odw=
-X-IronPort-AV: E=Sophos;i="5.76,383,1592841600"; 
-   d="scan'208";a="255954033"
-Received: from mail-bn7nam10lp2106.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.106])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Sep 2020 23:53:46 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C1Dgnlsr+YwgVDQ5wFOiB/qNDF4YdAvPFE3eMgppRS2Pm47JFFL/laFed71zzHJY4Dyha56fhn43LXooIJYuc0lO4wmj2VTWI6a07SHf3mJjirOee2Opdka+gckx1W2yexae21EtukTizVO3VC6GO8JvlrwNGf8lnc/9Bw/5H05fcYIHWRWdLtdO5YTnR1dtfKAaDhe+k2VB0UyduDLJeqPne22IbLCVx94JmzsDCwhERMm0qJqETDbSNnG81R0hu8SFlANHu36Oqb/icLPlYazUmx2D/zGtI0kVREjARY0DpD7CAALY2apNP+dx2rQeTEx3x9UwtsOCmJCgiUZ7sQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=YUiQ6E7UXOEbvDD9sMdCFcjsHQZfpR+z1F4c4yRfz1PafyE2t5OPClKRG108mBG1/KPeOyeLYO1djU5KvZmlZz7Vc8ESFBltJpo9yOcNlIkppb5ct+Da3bhIV0I7OWm9ikBV1PU7MRp8Dq0n890kV1GdM4eYHBCHoooiZ3EtXoNxL8RsUrhgo8HmgYRYPkAoyyvVkVY+TCtnL4QbHSoBs7ChAsajJseIo9fheokHQXxlBFX4fIkBkEGdwJVSFu/hNNpk5KrHT1zvSMvPwJiXaCX0MS/PCZ/oLAx6n5n7TXgFrDuHtfm/bVoalN3psbcJn2Gwlr6VJnoXu95bzR/mQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=lndVtbvUl8TE7l0fgq8Mq2uYty7AhyzxK/Gd5hz8Z3ooAXgk7DpBVwlNhxsAhRdXOQPNF4B1u0Bp76lwVNxHcasrILVBm1nNQn6ni307JEkqs72D5KLgK75YHlFMnuPbdqO4qevbksuS+Z1qhFPCkS3sOf0HSluKWHvVrXGh8pg=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN2PR04MB2142.namprd04.prod.outlook.com
- (2603:10b6:804:16::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Wed, 2 Sep
- 2020 15:53:44 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3326.023; Wed, 2 Sep 2020
- 15:53:43 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 18/19] sr: simplify sr_block_revalidate_disk
-Thread-Topic: [PATCH 18/19] sr: simplify sr_block_revalidate_disk
-Thread-Index: AQHWgTTJFIkcfKmUzE+ho0okEObFEw==
-Date:   Wed, 2 Sep 2020 15:53:43 +0000
-Message-ID: <SN4PR0401MB359888A8534B366B13EDD39A9B2F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200902141218.212614-1-hch@lst.de>
- <20200902141218.212614-19-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2001:a62:1590:f101:1584:4722:fd5f:b30e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a0569756-2a97-492c-ea3d-08d84f585ed9
-x-ms-traffictypediagnostic: SN2PR04MB2142:
-x-microsoft-antispam-prvs: <SN2PR04MB21426307C8ECA4256B9320449B2F0@SN2PR04MB2142.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OpEfuGdaeKF1KYzVUfZcIv2NF0ETrQnte9YJ47bU8PqLsXGj+zLv5VoOF2yQMPP/z5d+oJbjpt+OkePcqCcWZoN1BJm8Kb2I9gWUiFkrSHgzN/P4PZPMbevMs5sHqwzFqHuvcAZ9gSKXNYx/CGENnqQXoheb/I52i7gDu62JlkcyZRxnmKchaR3/RNyAdgjmeipEnmIaV4BJH28WgTpFHpL4kPY17xlxGy2NmQzVAumjRsmAAWKPhQsFcIj6kD/EfoE28RwI6vL52sCojXP/o4ESQP4PNQXvGguiMdNeqdMx3eEup03OzIYKvhc7JcR2lnl6vlMi76OJ/jyp8DMStw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39850400004)(376002)(136003)(346002)(396003)(366004)(76116006)(66446008)(186003)(7696005)(91956017)(8676002)(5660300002)(66556008)(7416002)(6506007)(64756008)(52536014)(66946007)(19618925003)(66476007)(8936002)(110136005)(316002)(55016002)(478600001)(558084003)(4326008)(54906003)(4270600006)(9686003)(71200400001)(86362001)(2906002)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: BFfbe94YzCKwfa33HbsoNHHDdx1ZrhkDhaTtG6bLSRaJKV4qXmHAExtt9lhJJeWYyJIRX3REQG+fCDXccRQrdkrI6qqsrSTPDMs3vGjV5KnKzQG2fpMimplILiW9k/dmPYT3lARXrUl4R1Fgijw1DrV8tqPqBTNkMXwOgKi86mqV/pkuwMvbRK8JobO0adakOkCzYZyQnnLT6TDrIl3o+iujnOg2dzJOhq9BPP/Sgs4j6j3FmiqK/OGk/v51qzhGp66K6hHN9mWF5Ter4gH6kdjjm0AaZQZD+F30y5zY5OyB76jOXb1ePUKLXx0UwU7eXLXHBkPiwhhSYzv0RG1rti+BpXeU694GhtJ4h74ekxP9aXYc0tNX8s6kYZB66buw8R9PTIjxCVndRuSthYkcff4T15U52E9+MPsFk7pe4g//OUuvtcPFX9M2DiyX4Cp4xcJdlI16WTg82kdqjuSI4Ojk6kRWyAbG9a7tfuQ4XvCqmC1tZveHTSMrt3LqzBjkI9TXUlpcke12/P1uq4ZWbSsZ9ZOuWwCFsHObEv1oKiYdcVfPrjfRQNF5rf3kfCNxuFmHJtE3FD1eIRpJE5myZ3B57vbz5UCrU/VGe/IvKxuDFmxAr9Odakc2v3vontXAt9dz3r68TxKvsSCS5j40DhnjJoGIFVPGuiHuKNWhMYQ8SVYGL/Om4p7SmiBu4oXnkszPbu0tVhSSfWyh9NeHlg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 2 Sep 2020 11:54:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbgIBPyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:54:11 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF9DC2072A;
+        Wed,  2 Sep 2020 15:54:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599062051;
+        bh=T9iTGJwk3MutXitltZ85MC5KJh0naTlHQ9Yv1BlJG2A=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=QanVEyu0Y8fvXfxzCKQ7+7u25VxbaSQXAFUO6scvERn5gpnqEsKJGv4lwONrQGCu3
+         CZKS4fSd5rDP2lfP5Q0xrEJbGIcWDuMNYGqHjLO3wasWZqLcWZPRGR8cz1phTykO0o
+         fdgmW/YejKomoK4ix6fO/RUO5XzGP/UDUoqFU2kw=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 64F07352157A; Wed,  2 Sep 2020 08:54:10 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 08:54:10 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Question on task_blocks_on_rt_mutex()
+Message-ID: <20200902155410.GH29330@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200831224911.GA13114@paulmck-ThinkPad-P72>
+ <20200831232130.GA28456@paulmck-ThinkPad-P72>
+ <20200901174938.GA8158@paulmck-ThinkPad-P72>
+ <20200901235821.GA8516@paulmck-ThinkPad-P72>
+ <20200902015128.wsulcxhbo7dutcjz@linux-p48b>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0569756-2a97-492c-ea3d-08d84f585ed9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 15:53:43.8302
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2Uc4BT3oHok8xSSAoZWJ9iTmwoza4TTFV0SpfZI6GrZfDd5cffHFlvIT03tNQDD6+FsNQwk4kKVSf6zp6sW+oGQsla+YXg6w+zySs4JUouk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR04MB2142
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902015128.wsulcxhbo7dutcjz@linux-p48b>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+On Tue, Sep 01, 2020 at 06:51:28PM -0700, Davidlohr Bueso wrote:
+> On Tue, 01 Sep 2020, Paul E. McKenney wrote:
+> 
+> > And it appears that a default-niced CPU-bound SCHED_OTHER process is
+> > not preempted by a newly awakened MAX_NICE SCHED_OTHER process.  OK,
+> > OK, I never waited for more than 10 minutes, but on my 2.2GHz that is
+> > close enough to a hang for most people.
+> > 
+> > Which means that the patch below prevents the hangs.  And maybe does
+> > other things as well, firing rcutorture up on it to check.
+> > 
+> > But is this indefinite delay expected behavior?
+> > 
+> > This reproduces for me on current mainline as follows:
+> > 
+> > tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --torture lock --duration 3 --configs LOCK05
+> > 
+> > This hangs within a minute of boot on my setup.  Here "hangs" is defined
+> > as stopping the per-15-second console output of:
+> > 	Writes:  Total: 569906696 Max/Min: 81495031/63736508   Fail: 0
+> 
+> Ok this doesn't seem to be related to lockless wake_qs then. fyi there have
+> been missed wakeups in the past where wake_q_add() fails the cmpxchg because
+> the task is already pending a wakeup leading to the actual wakeup ocurring
+> before its corresponding wake_up_q(). This is why we have wake_q_add_safe().
+> But for rtmutexes, because there is no lock stealing only top-waiter is awoken
+> as well as try_to_take_rt_mutex() is done under the lock->wait_lock I was not
+> seeing an actual race here.
+
+This problem is avoided if stutter_wait() does the occasional sleep.
+I would have expected preemption to take effect, but even setting the
+kthreads in stutter_wait() to MAX_NICE doesn't help.  The current fix
+destroys intended instant-on nature of stutter_wait(), so the eventual
+fix will need to use hrtimer-based sleeps or some such.
+
+							Thanx, Paul
