@@ -2,154 +2,231 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69899C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E81C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 467642078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C07212078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:53:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OFHTYHEq"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZqJJE5M6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgIBOxl (ORCPT
+        id S1727122AbgIBOx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:53:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgIBOx1 (ORCPT
+        Wed, 2 Sep 2020 10:53:26 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:56539 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgIBOxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:53:27 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71FB3C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 07:53:27 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id p13so5228057ils.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 07:53:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EsQpeI7D1H5k/d2ldZ6dL5UBletkvcQ405Mqk41kvtA=;
-        b=OFHTYHEqJUI+FtLrE6PAi2aZwioFNMDfiqJjDZVXi/KHUzL54VOMwMkSZ/Na4d4Ogw
-         OflZqUSOYEI/YWnGu7gZBbi63l+atE12YXmZ0ywQPPRb7gqc6b+FVmj0taaL11erEQnH
-         0mPWDuTQEQy4kc7PVUtsjcTMS4PkoSyJxV4Yo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EsQpeI7D1H5k/d2ldZ6dL5UBletkvcQ405Mqk41kvtA=;
-        b=aFnygjT9tmYM6Zjb50rqXuEGwd53Dfn4IjzhxZwQXP+xL5fk0tvqGI8mgZ5TXCddgJ
-         VKBCESyQI1QR4XkAYZt0sa4G5Wrfn15+4wul6a/9F15weIhAMjyNvAVWrhs8OAc8U15o
-         KcDmrBzqpIUF+8jkhWzFpO78B2azhPc7ptCGNn3ModjdPsi7uc38IHVcIWg+XlcSXULb
-         thMz0YMZ00fasMEXrSgikMTx7b8wIPYEkEB9kV0N1VwkMidnpYQKqKmyrwFJgt4x0E+7
-         M8a/7Y+LmCzIQh2uiB1AIKGNFAVfUgGQYHO3S+0dwawd9iLJ4dAEcqqa7qv11xVTNQ7p
-         4/gw==
-X-Gm-Message-State: AOAM530fNOJ3VD24Zyv3Z0oCvOoA17bSaIhXzI5Od0aVHRhjkq2m5PpB
-        bEv+k4GRbwVh+VZsina+X2p9M65JBZYlPuHUs2ecxw6rG0yhEA==
-X-Google-Smtp-Source: ABdhPJwfWW+4DdbIXIThrd4HJdbvX+osez09zDgESRDix7dRhl57slXevJAI1SafQdAFByT88optw/yw5bUXiIOhQDE=
-X-Received: by 2002:a92:c008:: with SMTP id q8mr4094957ild.106.1599058406623;
- Wed, 02 Sep 2020 07:53:26 -0700 (PDT)
+        Wed, 2 Sep 2020 10:53:10 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200902145308euoutp01d4323f2da9c9222e0ccef6cce1bb67f6~w-yG-mPKK2322523225euoutp01i
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 14:53:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200902145308euoutp01d4323f2da9c9222e0ccef6cce1bb67f6~w-yG-mPKK2322523225euoutp01i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599058388;
+        bh=I8tzZaSHmzQrb3lpLI3gSAOyMtkDQltk2GJ7POEp2LM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=ZqJJE5M6bF46aawvnx5xuBBZNvxQmhSmHJWehYzPVvwDDl8i6y2We43858GPMMKaJ
+         kPtzEHgKFbgzZEkv16wNjQWEmbp2AwXeCrXtDvV5vLrI1HaflF95xOpDVJTWz+SMEu
+         w42Wml1746W0uhNhGnn291b0oB2kroGg9YD+S0RM=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200902145307eucas1p113e39d4d8f70e2f31f28baf90e0564b6~w-yGmtmaE2907529075eucas1p17;
+        Wed,  2 Sep 2020 14:53:07 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 2F.B1.05997.3D1BF4F5; Wed,  2
+        Sep 2020 15:53:07 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200902145307eucas1p197e0c9d8e1d1590928c14147c0411e16~w-yGWCKVo3031130311eucas1p1l;
+        Wed,  2 Sep 2020 14:53:07 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200902145307eusmtrp1fb58dc1f95fa4282d0ed3ef7fa16bf4a~w-yGVcvo33208032080eusmtrp1X;
+        Wed,  2 Sep 2020 14:53:07 +0000 (GMT)
+X-AuditID: cbfec7f4-677ff7000000176d-e8-5f4fb1d3347a
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id D5.6C.06017.3D1BF4F5; Wed,  2
+        Sep 2020 15:53:07 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200902145307eusmtip293d16d9b10b56160db4c07e6e4a71d82~w-yGDJuRo0711207112eusmtip2j;
+        Wed,  2 Sep 2020 14:53:07 +0000 (GMT)
+Subject: Re: [PATCH v1] regmap: Add can_sleep configuration option
+To:     Dmitry Osipenko <digetx@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <8dfcf671-d76a-4833-3fe9-2d0505d1b0d3@samsung.com>
+Date:   Wed, 2 Sep 2020 16:53:07 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20200821041414.1560707-1-hsinyi@chromium.org> <f8c5b7e0-66a2-7ec6-041f-82679a863758@arm.com>
-In-Reply-To: <f8c5b7e0-66a2-7ec6-041f-82679a863758@arm.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Wed, 2 Sep 2020 22:53:00 +0800
-Message-ID: <CAJMQK-huFDrEKGcwPO4XkzZ0Dvc5OF22uDothKczu9NoQxsx3g@mail.gmail.com>
-Subject: Re: [PATCH] media: mtk-vcodec: set dma max segment size
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Irui Wang <irui.wang@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Anand K Mistry <amistry@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200902141843.6591-1-digetx@gmail.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphleLIzCtJLcpLzFFi42LZduznOd3LG/3jDZ491rCY+vAJm8Xqj48Z
+        LS7vmsPmwOyxc9Zddo9NqzrZPD5vkgtgjuKySUnNySxLLdK3S+DK6Pp8g7WgU6Fi4ezrTA2M
+        XyS6GDk5JARMJDbtWsTaxcjFISSwglFi/f57bBDOF0aJ7Wt+MkI4nxklJj3fDZThAGvpW2kG
+        EV/OKLHs6DFmCOc9o8SeluOMIHOFBZwkfpy9wwJiiwi4S3zYfoQJxGYWUJD4dW8TK4jNJmAo
+        0fW2iw3E5hWwkzjWuo4ZxGYRUJFY/H4xWFxUIE7i2KlHLBA1ghInZz4BszkFTCUu9t9hg5gp
+        L7H97RxmCFtc4taT+UwgB0kINLNLvL35nx3iUReJ9Xfes0LYwhKvjm+BistInJ7cwwLVwCjx
+        8Nxadginh1HictMMRogqa4k7536B/c8soCmxfpc+JCgcJc7uT4Mw+SRuvBWEuIFPYtK26cwQ
+        YV6JjjYhiBlqErOOr4PbevDCJeYJjEqzkHw2C8k3s5B8Mwth7QJGllWM4qmlxbnpqcVGeanl
+        esWJucWleel6yfm5mxiBaeT0v+NfdjDu+pN0iFGAg1GJh3dGvF+8EGtiWXFl7iFGCQ5mJRFe
+        p7On44R4UxIrq1KL8uOLSnNSiw8xSnOwKInzGi96GSskkJ5YkpqdmlqQWgSTZeLglGpg1Dz7
+        evX+B/M+PNjy+lKjT7fQ40rRbC9e9oszD60yvu2ozfrni1HewikLli2KdpjyIG2D7kLnl9t4
+        nJ88fM/MfUbiNbPbqoaKNp/tWQ0272PczMo+rPlh3RfB0vveMl7Npdhua1ZR26MpFTfXMM+d
+        t8J/2/OT756+lGD12TxVUYihhMV0rXyTqhJLcUaioRZzUXEiABPzQpcfAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPIsWRmVeSWpSXmKPExsVy+t/xe7qXN/rHGzRuFrWY+vAJm8Xqj48Z
+        LS7vmsPmwOyxc9Zddo9NqzrZPD5vkgtgjtKzKcovLUlVyMgvLrFVija0MNIztLTQMzKx1DM0
+        No+1MjJV0rezSUnNySxLLdK3S9DL6Pp8g7WgU6Fi4ezrTA2MXyS6GDk4JARMJPpWmnUxcnEI
+        CSxllNiwaD1zFyMnUFxG4uS0BlYIW1jiz7UuNoiit4wSy2e+BksICzhJ/Dh7hwXEFhFwl/iw
+        /QgTiM0soCDx694mVoiGDkaJI+8mM4Ik2AQMJbregkzi5OAVsJM41roObBuLgIrE4veLweKi
+        AnESZ3peQNUISpyc+QRsAaeAqcTF/jtsEAvMJOZtfsgMYctLbH87B8oWl7j1ZD7TBEahWUja
+        ZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzECI2fbsZ9bdjB2vQs+xCjA
+        wajEwzsj3i9eiDWxrLgy9xCjBAezkgiv09nTcUK8KYmVValF+fFFpTmpxYcYTYGem8gsJZqc
+        D4zqvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjPyHdjzVfb5X
+        smHpjZDzmWd9l5a6LdpQc4wtgIl7+d4M9bsZNr6tFzo4Kj5drvjP86RD7yVXySQmeZEZMS/v
+        uB6qMgvYlLGgiitJxLbi/KplXlzh86YVZS52fsp1cHqDYYbyqZ/S665ovRBlfbhcwNPlimKp
+        vOqHz28vbEo/K79iyws+lkqJ10osxRmJhlrMRcWJAHJHQ1yyAgAA
+X-CMS-MailID: 20200902145307eucas1p197e0c9d8e1d1590928c14147c0411e16
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200902142057eucas1p245e94459d5adcd9cc4c38617da1abfc8
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200902142057eucas1p245e94459d5adcd9cc4c38617da1abfc8
+References: <CGME20200902142057eucas1p245e94459d5adcd9cc4c38617da1abfc8@eucas1p2.samsung.com>
+        <20200902141843.6591-1-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 10:25 PM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2020-08-21 05:14, Hsin-Yi Wang wrote:
-> > Set dma max segment size for encoder and decoder driver.
-> >
-> > Fix following warning with CONFIG_DMA_API_DEBUG_SG=y
-> >
-> > [   75.147825] ------------[ cut here ]------------
-> > [   75.147844] mtk-vcodec-enc 19002000.vcodec: DMA-API: mapping sg segment longer than device claims to support [len=983040] [max=65536]
-> > [   75.147876] WARNING: CPU: 2 PID: 4069 at kernel/dma/debug.c:1302 debug_dma_map_sg+0x1a8/0x2c4
-> > ...
-> > [   75.148139] Call trace:
-> > [   75.148149]  debug_dma_map_sg+0x1a8/0x2c4
-> > [   75.148165]  vb2_dc_get_userptr+0x228/0x364 [videobuf2_dma_contig]
-> > [   75.148178]  __buf_prepare+0x3ac/0x8c0 [videobuf2_common]
-> > [   75.148188]  vb2_core_qbuf+0xa4/0x58c [videobuf2_common]
-> > [   75.148199]  vb2_qbuf+0x88/0xe4 [videobuf2_v4l2]
-> > [   75.148211]  v4l2_m2m_qbuf+0x80/0xf8 [v4l2_mem2mem]
-> > [   75.148221]  vidioc_venc_qbuf+0x3c/0x70 [mtk_vcodec_enc]
-> > [   75.148234]  v4l_qbuf+0x48/0x58
-> > [   75.148242]  __video_do_ioctl+0x200/0x37c
-> > [   75.148250]  video_usercopy+0x360/0x834
-> > [   75.148259]  video_ioctl2+0x38/0x48
-> > [   75.148267]  v4l2_ioctl+0x6c/0x80
-> > [   75.148276]  do_video_ioctl+0xefc/0x4b70
-> > [   75.148284]  v4l2_compat_ioctl32+0x5c/0xcc
-> > [   75.148294]  __arm64_compat_sys_ioctl+0xf4/0x240
-> > [   75.148304]  el0_svc_common+0xac/0x198
-> > [   75.148312]  el0_svc_compat_handler+0x2c/0x40
-> > [   75.148321]  el0_svc_compat+0x8/0x18
-> > [   75.148328] irq event stamp: 0
-> > [   75.148337] hardirqs last  enabled at (0): [<0000000000000000>]           (null)
-> > [   75.148347] hardirqs last disabled at (0): [<ffffff90080e65c0>] copy_process+0x380/0x115c
-> > [   75.148356] softirqs last  enabled at (0): [<ffffff90080e65d8>] copy_process+0x398/0x115c
-> > [   75.148364] softirqs last disabled at (0): [<0000000000000000>]           (null)
-> > [   75.148372] ---[ end trace 588bf529451e3531 ]---
-> >
-> > Reported-by: Anand K Mistry <amistry@chromium.org>
-> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > ---
-> >   drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c | 8 ++++++++
-> >   drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c | 8 ++++++++
-> >   2 files changed, 16 insertions(+)
-> >
-> > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-> > index 97a1b6664c20..3bbd0bac56d6 100644
-> > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-> > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-> > @@ -242,6 +242,14 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
-> >               mtk_v4l2_err("[VPU] vpu device in not ready");
-> >               return -EPROBE_DEFER;
-> >       }
-> > +     if (!pdev->dev.dma_parms) {
-> > +             pdev->dev.dma_parms = devm_kzalloc(&pdev->dev,
-> > +                                             sizeof(*pdev->dev.dma_parms),
-> > +                                             GFP_KERNEL);
-> > +             if (!pdev->dev.dma_parms)
-> > +                     return -ENOMEM;
-> > +     }
->
-> Since 9495b7e92f71, dma_parms is included in the platform_device itself
-> and always set, so you can drop these allocation paths.
->
-> > +     dma_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
->
-> The segment size is simply a size, not a bitmask, so UINT_MAX would be
-> more semantically appropriate.
->
-> Robin.
->
+Hi Dmitry,
 
-Thanks. since this patch is already in media tree:
-https://git.linuxtv.org/media_tree.git/commit/?id=13483fc2f20f0e2db7ba9c39b095ac7ea46f8de8,
-I'll send a patch to modify this.
+On 02.09.2020 16:18, Dmitry Osipenko wrote:
+> Regmap can't sleep if spinlock is used for the locking protection.
+> This patch fixes regression caused by a previous commit that switched
+> regmap to use fsleep() and this broke Amlogic S922X platform.
+>
+> This patch adds new configuration option for regmap users, allowing to
+> specify whether regmap operations can sleep and assuming that sleep is
+> allowed if mutex is used for the regmap locking protection.
+>
+> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Fixes: 2b32d2f7ce0a ("regmap: Use flexible sleep")
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+
+This fixes the issue I've reported. Thanks!
+
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
+> ---
+>   drivers/base/regmap/internal.h |  3 +++
+>   drivers/base/regmap/regmap.c   | 19 +++++++++++++++----
+>   include/linux/regmap.h         |  3 +++
+>   3 files changed, 21 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/base/regmap/internal.h b/drivers/base/regmap/internal.h
+> index 3d80c4b43f72..8a59359e145f 100644
+> --- a/drivers/base/regmap/internal.h
+> +++ b/drivers/base/regmap/internal.h
+> @@ -161,6 +161,9 @@ struct regmap {
+>   	void *selector_work_buf;	/* Scratch buffer used for selector */
+>   
+>   	struct hwspinlock *hwlock;
+> +
+> +	/* if set, the regmap core can sleep */
+> +	bool can_sleep;
+>   };
+>   
+>   struct regcache_ops {
+> diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+> index a417cb1a11dc..2807e544658e 100644
+> --- a/drivers/base/regmap/regmap.c
+> +++ b/drivers/base/regmap/regmap.c
+> @@ -697,11 +697,13 @@ struct regmap *__regmap_init(struct device *dev,
+>   
+>   	if (config->disable_locking) {
+>   		map->lock = map->unlock = regmap_lock_unlock_none;
+> +		map->can_sleep = config->can_sleep;
+>   		regmap_debugfs_disable(map);
+>   	} else if (config->lock && config->unlock) {
+>   		map->lock = config->lock;
+>   		map->unlock = config->unlock;
+>   		map->lock_arg = config->lock_arg;
+> +		map->can_sleep = config->can_sleep;
+>   	} else if (config->use_hwlock) {
+>   		map->hwlock = hwspin_lock_request_specific(config->hwlock_id);
+>   		if (!map->hwlock) {
+> @@ -737,6 +739,7 @@ struct regmap *__regmap_init(struct device *dev,
+>   			mutex_init(&map->mutex);
+>   			map->lock = regmap_lock_mutex;
+>   			map->unlock = regmap_unlock_mutex;
+> +			map->can_sleep = true;
+>   			lockdep_set_class_and_name(&map->mutex,
+>   						   lock_key, lock_name);
+>   		}
+> @@ -2230,8 +2233,12 @@ static int _regmap_range_multi_paged_reg_write(struct regmap *map,
+>   				if (ret != 0)
+>   					return ret;
+>   
+> -				if (regs[i].delay_us)
+> -					fsleep(regs[i].delay_us);
+> +				if (regs[i].delay_us) {
+> +					if (map->can_sleep)
+> +						fsleep(regs[i].delay_us);
+> +					else
+> +						udelay(regs[i].delay_us);
+> +				}
+>   
+>   				base += n;
+>   				n = 0;
+> @@ -2267,8 +2274,12 @@ static int _regmap_multi_reg_write(struct regmap *map,
+>   			if (ret != 0)
+>   				return ret;
+>   
+> -			if (regs[i].delay_us)
+> -				fsleep(regs[i].delay_us);
+> +			if (regs[i].delay_us) {
+> +				if (map->can_sleep)
+> +					fsleep(regs[i].delay_us);
+> +				else
+> +					udelay(regs[i].delay_us);
+> +			}
+>   		}
+>   		return 0;
+>   	}
+> diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+> index d865d8fea535..0c49d59168b5 100644
+> --- a/include/linux/regmap.h
+> +++ b/include/linux/regmap.h
+> @@ -342,6 +342,7 @@ typedef void (*regmap_unlock)(void *);
+>    * @hwlock_id: Specify the hardware spinlock id.
+>    * @hwlock_mode: The hardware spinlock mode, should be HWLOCK_IRQSTATE,
+>    *		 HWLOCK_IRQ or 0.
+> + * @can_sleep: Optional, specifies whether regmap operations can sleep.
+>    */
+>   struct regmap_config {
+>   	const char *name;
+> @@ -398,6 +399,8 @@ struct regmap_config {
+>   	bool use_hwlock;
+>   	unsigned int hwlock_id;
+>   	unsigned int hwlock_mode;
+> +
+> +	bool can_sleep;
+>   };
+>   
+>   /**
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
