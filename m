@@ -2,108 +2,69 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 146D4C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D7EC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0F9A2078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6142C2083B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:09:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgIBOIN (ORCPT
+        id S1727918AbgIBOJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:08:13 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:54038 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726173AbgIBNvM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:51:12 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-160-I6NBJ2z0PIWY5wEzjjZvMA-1; Wed, 02 Sep 2020 14:51:06 +0100
-X-MC-Unique: I6NBJ2z0PIWY5wEzjjZvMA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 2 Sep 2020 14:51:05 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 2 Sep 2020 14:51:05 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christophe Leroy' <christophe.leroy@csgroup.eu>,
-        'Christoph Hellwig' <hch@lst.de>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 10/10] powerpc: remove address space overrides using
- set_fs()
-Thread-Topic: [PATCH 10/10] powerpc: remove address space overrides using
- set_fs()
-Thread-Index: AQHWgSXGxcHfrrTX9UCmYjSyVg3SwKlVUsKA///zAICAABMqAA==
-Date:   Wed, 2 Sep 2020 13:51:05 +0000
-Message-ID: <0c298e0d972a48bd9ee178225e404b12@AcuMS.aculab.com>
-References: <20200827150030.282762-1-hch@lst.de>
- <20200827150030.282762-11-hch@lst.de>
- <8974838a-a0b1-1806-4a3a-e983deda67ca@csgroup.eu>
- <20200902123646.GA31184@lst.de>
- <61b9a880a6424a34b841cf3dddb463ad@AcuMS.aculab.com>
- <8de54fe0-4be9-5624-dd1d-d95d792e933d@csgroup.eu>
-In-Reply-To: <8de54fe0-4be9-5624-dd1d-d95d792e933d@csgroup.eu>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 2 Sep 2020 10:09:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47348 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727776AbgIBNxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:53:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C90BDB5B9;
+        Wed,  2 Sep 2020 13:38:16 +0000 (UTC)
+Date:   Wed, 2 Sep 2020 15:38:12 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH next v3 7/8] printk: reimplement log_cont using record
+ extension
+Message-ID: <20200902133811.GC15764@alley>
+References: <20200831011058.6286-1-john.ogness@linutronix.de>
+ <20200831011058.6286-8-john.ogness@linutronix.de>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831011058.6286-8-john.ogness@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQ2hyaXN0b3BoZSBMZXJveQ0KPiBTZW50OiAwMiBTZXB0ZW1iZXIgMjAyMCAxNDoyNQ0K
-PiBMZSAwMi8wOS8yMDIwIMOgIDE1OjEzLCBEYXZpZCBMYWlnaHQgYSDDqWNyaXTCoDoNCj4gPiBG
-cm9tOiBDaHJpc3RvcGggSGVsbHdpZw0KPiA+PiBTZW50OiAwMiBTZXB0ZW1iZXIgMjAyMCAxMzoz
-Nw0KPiA+Pg0KPiA+PiBPbiBXZWQsIFNlcCAwMiwgMjAyMCBhdCAwODoxNToxMkFNICswMjAwLCBD
-aHJpc3RvcGhlIExlcm95IHdyb3RlOg0KPiA+Pj4+IC0JCXJldHVybiAwOw0KPiA+Pj4+IC0JcmV0
-dXJuIChzaXplID09IDAgfHwgc2l6ZSAtIDEgPD0gc2VnLnNlZyAtIGFkZHIpOw0KPiA+Pj4+ICsJ
-aWYgKGFkZHIgPj0gVEFTS19TSVpFX01BWCkNCj4gPj4+PiArCQlyZXR1cm4gZmFsc2U7DQo+ID4+
-Pj4gKwlpZiAoc2l6ZSA9PSAwKQ0KPiA+Pj4+ICsJCXJldHVybiBmYWxzZTsNCj4gPj4+DQo+ID4+
-PiBfX2FjY2Vzc19vaygpIHdhcyByZXR1cm5pbmcgdHJ1ZSB3aGVuIHNpemUgPT0gMCB1cCB0byBu
-b3cuIEFueSByZWFzb24gdG8NCj4gPj4+IHJldHVybiBmYWxzZSBub3cgPw0KPiA+Pg0KPiA+PiBO
-bywgdGhpcyBpcyBhY2NpZGVudGFsIGFuZCBicm9rZW4uICBDYW4geW91IHJlLXJ1biB5b3VyIGJl
-bmNobWFyayB3aXRoDQo+ID4+IHRoaXMgZml4ZWQ/DQo+ID4NCj4gPiBJcyBUQVNLX1NJWkVfTUFT
-SyBkZWZpbmVkIHN1Y2ggdGhhdCB5b3UgY2FuIGRvOg0KPiA+DQo+ID4gCXJldHVybiAoYWRkciB8
-IHNpemUpIDwgVEFTS19TSVpFX01BWCkgfHwgIXNpemU7DQo+IA0KPiBUQVNLX1NJWkVfTUFYIHdp
-bGwgdXN1YWxseSBiZSAweGMwMDAwMDAwDQo+IA0KPiBXaXRoOg0KPiBhZGRyID0gMHg4MDAwMDAw
-MDsNCj4gc2l6ZSA9IDB4ODAwMDAwMDA7DQo+IA0KPiBJIGV4cGVjdCBpdCB0byBmYWlsIC4uLi4N
-Cj4gDQo+IFdpdGggdGhlIGZvcm11bGEgeW91IHByb3Bvc2UgaXQgd2lsbCBzdWNjZWVkLCB3b24n
-dCBpdCA/DQoNCkhtbW0uLi4gV2FzIGkgZ2V0dGluZyBjb25mdXNlZCBhYm91dCBzb21lIGNvbW1l
-bnRzIGZvciA2NGJpdA0KYWJvdXQgdGhlcmUgYmVpbmcgc3VjaCBhIGJpZyBob2xlIGJldHdlZW4g
-dmFsaWQgdXNlciBhbmQga2VybmVsDQphZGRyZXNzZXMgdGhhdCBpdCB3YXMgZW5vdWdoIHRvIGNo
-ZWNrIHRoYXQgJ3NpemUgPCBUQVNLX1NJWkVfTUFYJy4NCg0KVGhhdCB3b3VsZCBiZSB0cnVlIGZv
-ciA2NGJpdCB4ODYgKGFuZCBwcm9iYWJseSBwcGMgKCYgYXJtPz8pKQ0KaWYgVEFTS19TSVpFX01B
-WCB3ZXJlIDB4NCA8PCA2MC4NCklJVUMgdGhlIGhpZ2hlc3QgdXNlciBhZGRyZXNzIGlzIChtdWNo
-KSBsZXNzIHRoYW4gMHgwIDw8IDYwDQphbmQgdGhlIGxvd2VzdCBrZXJuZWwgYWRkcmVzcyAobXVj
-aCkgZ3JlYXRlciB0aGFuIDB4ZiA8PCA2MA0Kb24gYWxsIHRoZXNlIDY0Yml0IHBsYXRmb3Jtcy4N
-Cg0KQWN0dWFsbHkgaWYgZG9pbmcgYWNjZXNzX29rKCkgaW5zaWRlIGdldF91c2VyKCkgeW91IGRv
-bid0DQpuZWVkIHRvIGNoZWNrIHRoZSBzaXplIGF0IGFsbC4NCllvdSBkb24ndCBldmVuIG5lZWQg
-dG8gaW4gY29weV90by9mcm9tX3VzZXIoKSBwcm92aWRlZA0KaXQgYWx3YXlzIGRvZXMgYSBmb3J3
-YXJkcyBjb3B5Lg0KKFJhdGhlciB0aGF0IGNvcHlpbmcgdGhlIGxhc3Qgd29yZCBmaXJzdCBmb3Ig
-bWlzYWxpZ25lZCBsZW5ndGhzLikNCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBM
-YWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBU
-LCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+On Mon 2020-08-31 03:16:57, John Ogness wrote:
+> Use the record extending feature of the ringbuffer to implement
+> continuous messages. This preserves the existing continuous message
+> behavior.
+> 
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+> ---
+>  kernel/printk/printk.c | 98 +++++++++---------------------------------
+>  1 file changed, 20 insertions(+), 78 deletions(-)
 
+It looks simple from the printk() side ;-)
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
