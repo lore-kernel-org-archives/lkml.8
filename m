@@ -2,143 +2,108 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DEDC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B31C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF462087D
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482C92087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599034449;
+	bh=5D9PpWt9bWuDNc203FjduFMM/5rtLKQAc3pFFPBSd7s=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=pBBs1jiT/iGznf2StRd7ntWq+ctVXEiTDK5Z0ompCuaYSiOFNypa360kyTd6bYV7z
+	 G9L9s+ZjK72EccKSw78g+vhJjUeCwDv8kTmULhCDKc7+y1AkVjX1UqFy6cj4m7FuvL
+	 Zn/SXFQ9a8GZeJZ97vtUr++PHiLsdB+BLDmCUuNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgIBILe (ORCPT
+        id S1726586AbgIBIOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:11:34 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:11627 "EHLO pegase1.c-s.fr"
+        Wed, 2 Sep 2020 04:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgIBILa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:11:30 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BhGqL3C3xz9vCyG;
-        Wed,  2 Sep 2020 10:11:26 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id E0RZ90cem4bM; Wed,  2 Sep 2020 10:11:26 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BhGqL2Pdyz9vBnC;
-        Wed,  2 Sep 2020 10:11:26 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6958E8B7A3;
-        Wed,  2 Sep 2020 10:11:27 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id LF3wCfD47HqP; Wed,  2 Sep 2020 10:11:27 +0200 (CEST)
-Received: from [10.25.210.31] (unknown [10.25.210.31])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2C76D8B784;
-        Wed,  2 Sep 2020 10:11:27 +0200 (CEST)
-Subject: Re: [PATCH] powerpc: Fix random segfault when freeing hugetlb range
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <f0cb2a5477cd87d1eaadb128042e20aeb2bc2859.1598860677.git.christophe.leroy@csgroup.eu>
- <875z8weua7.fsf@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <96409d24-c8bf-7f3a-0a81-0830174d6bcc@csgroup.eu>
-Date:   Wed, 2 Sep 2020 10:11:23 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1726140AbgIBIOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 04:14:07 -0400
+Received: from [192.168.0.50] (89-70-52-201.dynamic.chello.pl [89.70.52.201])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29E232072A;
+        Wed,  2 Sep 2020 08:14:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599034446;
+        bh=5D9PpWt9bWuDNc203FjduFMM/5rtLKQAc3pFFPBSd7s=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=La76+VbBkCekCKyKhOMiO4ukzogPXQcPXmTsjW7CUn9XuTVaaKXRgbg3u/h5UPNUg
+         QDS9DQeALQK2dw8H2YN/NHsXzgeLwX5h5dOhachsvz6725rDAKReavMhrfX3f08oyk
+         /naVL0/Hw7IwW/K/aFlHGMDNDoaXa0wVYHhIJRQo=
+Subject: Re: [PATCH v2 6/9] spi: spi-s3c64xx: Check return values
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+References: <e7db038c-b8e6-8ddc-edc7-8b69c2019d04@kernel.org>
+ <CGME20200901152113eucas1p2977046b7a5b4c5a519f88870d658698a@eucas1p2.samsung.com>
+ <dleftjd035tteq.fsf%l.stelmach@samsung.com>
+From:   Sylwester Nawrocki <snawrocki@kernel.org>
+Message-ID: <fa403451-5f61-8edf-c696-2d020ec5b920@kernel.org>
+Date:   Wed, 2 Sep 2020 10:14:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <875z8weua7.fsf@linux.ibm.com>
+In-Reply-To: <dleftjd035tteq.fsf%l.stelmach@samsung.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 02/09/2020 à 05:23, Aneesh Kumar K.V a écrit :
-> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+On 9/1/20 17:21, Lukasz Stelmach wrote:
+> It was <2020-08-25 wto 21:06>, when Sylwester Nawrocki wrote:
+>> On 8/21/20 18:13, Łukasz Stelmach wrote:
+>>> Check return values in prepare_dma() and s3c64xx_spi_config() and
+>>> propagate errors upwards.
+>>>
+>>> Signed-off-by: Łukasz Stelmach<l.stelmach@samsung.com>
+>>> ---
+>>>    drivers/spi/spi-s3c64xx.c | 47 ++++++++++++++++++++++++++++++++-------
+>>>    1 file changed, 39 insertions(+), 8 deletions(-)
+>>
+>>> @@ -298,12 +299,24 @@ static void prepare_dma(struct s3c64xx_spi_dma_data *dma,
+>>>      	desc = dmaengine_prep_slave_sg(dma->ch, sgt->sgl, sgt->nents,
+>>>    				       dma->direction, DMA_PREP_INTERRUPT);
+>>> +	if (!desc) {
+>>> +		dev_err(&sdd->pdev->dev, "unable to prepare %s scatterlist",
+>>> +			dma->direction == DMA_DEV_TO_MEM ? "rx" : "tx");
+>>> +		return -ENOMEM;
+>>> +	}
+>>>      	desc->callback = s3c64xx_spi_dmacb;
+>>>    	desc->callback_param = dma;
+>>>      	dma->cookie = dmaengine_submit(desc);
+>>> +	ret = dma_submit_error(dma->cookie);
+>>> +	if (ret) {
+>>> +		dev_err(&sdd->pdev->dev, "DMA submission failed");
+>>> +		return -EIO;
+>>
+>> Just return the error value from dma_submit_error() here?
+>>
 > 
->> The following random segfault is observed from time to time with
->> map_hugetlb selftest:
->>
->> root@localhost:~# ./map_hugetlb 1 19
->> 524288 kB hugepages
->> Mapping 1 Mbytes
->> Segmentation fault
->>
->> [   31.219972] map_hugetlb[365]: segfault (11) at 117 nip 77974f8c lr 779a6834 code 1 in ld-2.23.so[77966000+21000]
->> [   31.220192] map_hugetlb[365]: code: 9421ffc0 480318d1 93410028 90010044 9361002c 93810030 93a10034 93c10038
->> [   31.220307] map_hugetlb[365]: code: 93e1003c 93210024 8123007c 81430038 <80e90004> 814a0004 7f443a14 813a0004
->> [   31.221911] BUG: Bad rss-counter state mm:(ptrval) type:MM_FILEPAGES val:33
->> [   31.229362] BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:5
->>
->> This fault is due to hugetlb_free_pgd_range() freeing page tables
->> that are also used by regular pages.
->>
->> As explain in the comment at the beginning of
->> hugetlb_free_pgd_range(), the verification done in free_pgd_range()
->> on floor and ceiling is not done here, which means
->> hugetlb_free_pte_range() can free outside the expected range.
->>
->> As the verification cannot be done in hugetlb_free_pgd_range(), it
->> must be done in hugetlb_free_pte_range().
->>
+> --8<---------------cut here---------------start------------->8---
+> static inline int dma_submit_error(dma_cookie_t cookie)
+> {
+>          return cookie < 0 ? cookie : 0;
 > 
-> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> }
+> --8<---------------cut here---------------end--------------->8---
 > 
->> Fixes: b250c8c08c79 ("powerpc/8xx: Manage 512k huge pages as standard pages.")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
->> ---
->>   arch/powerpc/mm/hugetlbpage.c | 18 ++++++++++++++++--
->>   1 file changed, 16 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
->> index 26292544630f..e7ae2a2c4545 100644
->> --- a/arch/powerpc/mm/hugetlbpage.c
->> +++ b/arch/powerpc/mm/hugetlbpage.c
->> @@ -330,10 +330,24 @@ static void free_hugepd_range(struct mmu_gather *tlb, hugepd_t *hpdp, int pdshif
->>   				 get_hugepd_cache_index(pdshift - shift));
->>   }
->>   
->> -static void hugetlb_free_pte_range(struct mmu_gather *tlb, pmd_t *pmd, unsigned long addr)
->> +static void hugetlb_free_pte_range(struct mmu_gather *tlb, pmd_t *pmd,
->> +				   unsigned long addr, unsigned long end,
->> +				   unsigned long floor, unsigned long ceiling)
->>   {
->> +	unsigned long start = addr;
->>   	pgtable_t token = pmd_pgtable(*pmd);
->>   
->> +	start &= PMD_MASK;
->> +	if (start < floor)
->> +		return;
->> +	if (ceiling) {
->> +		ceiling &= PMD_MASK;
->> +		if (!ceiling)
->> +			return;
->> +	}
->> +	if (end - 1 > ceiling - 1)
->> +		return;
->> +
-> 
-> We do repeat that for pud/pmd/pte hugetlb_free_range. Can we consolidate
-> that with comment explaining we are checking if the pgtable entry is
-> mapping outside the range?
+> Not quite meaningful IMHO, is it?
 
-I was thinking about refactoring that into a helper and add all the 
-necessary comments to explain what it does.
-
-Will do that in a followup series if you are OK. This patch is a bug fix 
-and also have to go through stable.
-
-Christophe
+dma_submit_error() returns 0 or an error code, I think it makes sense
+to propagate that error code rather than replacing it with -EIO.
