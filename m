@@ -2,96 +2,152 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E36A0C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC46C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B776D204FD
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C24204FD
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:46:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ir0yIXio"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YboYnhBM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgIBPqq (ORCPT
+        id S1728350AbgIBPqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:46:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60972 "EHLO
+        Wed, 2 Sep 2020 11:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbgIBNj3 (ORCPT
+        with ESMTP id S1727792AbgIBNcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:39:29 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A63B4C061260
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 06:38:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Subject:Cc:To:From:Date:Message-ID:
-        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=xzcFqBW66P6Gi8gRIAZhe8QJBU9uv82X621N7CBk6yY=; b=Ir0yIXioOglUfalbvX2p6P0Sw7
-        M0j34LvZNu5hnXnxeC/wk8TSosMJMFVm6DUYqwXC6oczYY18Ny2HSP+OQZiP6GfCDyDTGrbPkfSZA
-        RiFWKGuQ5hQwE4noSGIGnS0vSXuG3e9E6lOwYNT/qvezzsmPWbdPpQziOSIIyfUk0kStZVbEbBVv0
-        anpKUGvKM2S9Iyz6GaUx36acSFeh7g0w5eu6DXJGQTUX/dLYON2ygpxgCQrjPnTrispYFKks0GKzL
-        3YuYuTNWQXNp8ULQ6lcNrH0POISqmhORL43KWEoHLZFzfufFT3MyPIbAHY65aiVcg7qry8U6XkgfK
-        ByF5b/sA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDSxq-0003ZX-Kx; Wed, 02 Sep 2020 13:38:14 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CBBC53056DE;
-        Wed,  2 Sep 2020 15:38:11 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id A873329A82C1D; Wed,  2 Sep 2020 15:38:11 +0200 (CEST)
-Message-ID: <20200902132549.496605622@infradead.org>
-User-Agent: quilt/0.66
-Date:   Wed, 02 Sep 2020 15:25:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Kyle Huey <me@kylehuey.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Robert O'Callahan <rocallahan@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 00/13] x86/debug: Untangle handle_debug()
+        Wed, 2 Sep 2020 09:32:39 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C222C06125C
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 06:21:55 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id w5so5220261wrp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 06:21:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=x9dotQ0xE5MsbgSZ9X32aTQe7eTprrtBJ5XMjCQYNj8=;
+        b=YboYnhBMkhbL/WFTud0SFF7e3j6vv2slL1U3qKUfCbfSWa6wmH+tXlQr48OdB71stC
+         2dCkO3jxwk/a8taij2tPW4sDVLkDZcTN6UGR2r/oe3Qk7AMcoeO+f5yFR3WC/bW0lMHF
+         bvbKBpLloCQZyoZLH3TcDBChowtNMT4a5zYqb0poiVGEi+TIWHVEyl2M/BbCtEsOXteY
+         E1oqreUuy58VA/AGUuEOpqOHOXDfZWev7cYM3ff5e1YtastGM1nHs+sbgP+zUQg4Y9Tq
+         821bSfw07/3y967cm+mN4no8F2ZXTl8GRqyIPLkV8Fdqz9miSYzBrpD5/Qk+i/PoIxuU
+         ENbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=x9dotQ0xE5MsbgSZ9X32aTQe7eTprrtBJ5XMjCQYNj8=;
+        b=uZsmIdBlugtQhV6Zj+UKtz3bXR9aYVFPdLZBboiLBdts2ZUtKJjY19bhfewPVJCqB3
+         /VcohMeTkYIVDjXcg6UWVG736MZBCbg61GPVfthgCCgce6SlJ2SP+SEKWZsvZL5Iein0
+         xBt8oNPaeuJqwUVDi4+N7jV0cid9cOXTJTvJSxzJBj6dEJyKqq4qQwD0Y0GxDB/nz4+z
+         FvuA/45gmOzjzEEEAvswGZ358GUx1rEHyIWBTiXdew67Lrcg/+yhzIzave0ac3ktl1GQ
+         epKBn7CfV3ZhxTwZjv+GyWxbDPiTLd7nUgL3cCHRWKulpohQM09a2iVtmP91yqETxYzh
+         fZXA==
+X-Gm-Message-State: AOAM530LJrScqyd/AtzRb2aaaZqdRa8eEb2fU78yH03oibwjbZldjPZw
+        vAYmQuWqnh9/PX3BDqtobBft1w==
+X-Google-Smtp-Source: ABdhPJx697oUJ83nF7Cd9d2sEP7NkmFkT4q17z2l7fxpvP2GP2N59OiOp7LkGKrv8kh3as20NPiXmg==
+X-Received: by 2002:adf:fc43:: with SMTP id e3mr6887080wrs.28.1599052913650;
+        Wed, 02 Sep 2020 06:21:53 -0700 (PDT)
+Received: from hackbox2.linaro.org ([81.128.185.34])
+        by smtp.gmail.com with ESMTPSA id q4sm2520403wru.65.2020.09.02.06.21.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 06:21:53 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Wei Li <liwei391@huawei.com>,
+        Al Grant <al.grant@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kemeng Shi <shikemeng@huawei.com>,
+        Ian Rogers <irogers@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Stephane Eranian <eranian@google.com>,
+        Nick Gasson <nick.gasson@arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Steve MacLean <Steve.MacLean@Microsoft.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v3 6/6] perf tests tsc: Add checking helper is_supported()
+Date:   Wed,  2 Sep 2020 14:21:31 +0100
+Message-Id: <20200902132131.36304-7-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200902132131.36304-1-leo.yan@linaro.org>
+References: <20200902132131.36304-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+So far tsc is enabled on x86_64, i386 and Arm64 architectures, add
+checking helper to skip this testing for other architectures.
 
-The first two patches probably ought to go in x86/urgent, the rest (!RFC) can
-go into x86/core and wait a bit.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/tests/builtin-test.c     |  1 +
+ tools/perf/tests/perf-time-to-tsc.c | 13 +++++++++++++
+ tools/perf/tests/tests.h            |  1 +
+ 3 files changed, 15 insertions(+)
 
-handle_debug() is a mess, and now that we have separate user and kernel paths,
-try and clean it up a bit.
-
-There's two RFC patches at the end that impact the ptrace_{get,set}_debugreg(6)
-ABI, I've no idea what, if anything, is expected of that or if anybody actually
-cares about that. If I read the code correctly nothing actually consumes the
-value from ptrace_set_debugreg(6).
-
-Kyle, you seem to be pushing all this to the edge with RR, any clues?
-
-Since v2:
-
- - fixed (user) INT1 / icebp detection
- - some further cleanups
- - two additional RFC patches
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 67e6a1c6c793..4b57ea79d3e7 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -344,6 +344,7 @@ static struct test generic_tests[] = {
+ 	{
+ 		.desc = "Convert perf time to TSC",
+ 		.func = test__perf_time_to_tsc,
++		.is_supported = test__tsc_is_supported,
+ 	},
+ 	{
+ 		.func = NULL,
+diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
+index 026d32ed078e..41dadd4cd097 100644
+--- a/tools/perf/tests/perf-time-to-tsc.c
++++ b/tools/perf/tests/perf-time-to-tsc.c
+@@ -171,3 +171,16 @@ int test__perf_time_to_tsc(struct test *test __maybe_unused, int subtest __maybe
+ 	evlist__delete(evlist);
+ 	return err;
+ }
++
++bool test__tsc_is_supported(void)
++{
++	/*
++	 * Except x86_64/i386 and Arm64, other archs don't support TSC in perf.
++	 * Just enable the test for x86_64/i386 and Arm64 archs.
++	 */
++#if defined(__x86_64__) || defined(__i386__) || defined(__aarch64__)
++	return true;
++#else
++	return false;
++#endif
++}
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index 1633f54d6156..86466a518d8e 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -127,6 +127,7 @@ int test__perf_time_to_tsc(struct test *test, int subtest);
+ bool test__bp_signal_is_supported(void);
+ bool test__bp_account_is_supported(void);
+ bool test__wp_is_supported(void);
++bool test__tsc_is_supported(void);
+ 
+ #if defined(__arm__) || defined(__aarch64__)
+ #ifdef HAVE_DWARF_UNWIND_SUPPORT
+-- 
+2.17.1
 
