@@ -2,115 +2,96 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F097C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1ACC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E987A20826
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:26:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mxVwxBdb"
+	by mail.kernel.org (Postfix) with ESMTP id BCB0B20826
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:27:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgIBP0i (ORCPT
+        id S1727949AbgIBP04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:26:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728220AbgIBPZC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:25:02 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85431C061245;
-        Wed,  2 Sep 2020 08:25:02 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id h12so2707574pgm.7;
-        Wed, 02 Sep 2020 08:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=9egEgwHbell+Vp+FzaRF5HQxPX8jduHhbTufKmGyrCM=;
-        b=mxVwxBdbeCaRpCy8dMALx19AWZCNbqDvFiqlOKHGsaWAFlLLVNCLuBJyoOt/Pq4a4B
-         kPrBcUCY1S3D1P1/0v9mtR63ullGPIoZ7ui2JsClIAmwOpZXebJuwzoKld7esZVgwIHd
-         Tz3vUTXvsoSQDGGXLj9VV1hm11tx7pCxRJn+c15Cm0gP4WaLBKJ7OjWyZPxejLY6ti2a
-         qFwsx6f1R2QO0s7IYqexyjIbbxhUjjEoY71vM8HcLVxAF8/hgfW4bOut19EgDQKd54zf
-         a/y++XOFDSFm037j4fqvFuNUP1yPvs7wPsuszb+JYI7vpqaxeTWrQSOMCxrM8eILYHno
-         SWfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9egEgwHbell+Vp+FzaRF5HQxPX8jduHhbTufKmGyrCM=;
-        b=q5SKhLB3iW8D7UosvtRn65UK8csTDZQ9/6jv5m97DQ/N/IK+oYDljTEmjKTOMuMXf2
-         B6yDRj1Ktaei5Cxhxm6pRaiG0kYC4k8xawOqih/vQMEczQwi2TM6Kc3M5iG2JA+noGpE
-         r5rfnbHQ4QjJ1ZDOmZpp10419FWy7kMjtGM89UQCWU4QFRG6Q80TzPr5NS0/uHJBL3TB
-         Udva2s51xxFcdNMACv3gauWctVqdOUxscVE6QlAuHmFPEb8RpD62iY6+GKE/JVCYz+uu
-         N/0IpO4XRJhbpYJuGS9HD2o+hFWzdvGyfmcSMibYOz4TDM4Hvof954IUMrIVTELx9fp/
-         V0Jg==
-X-Gm-Message-State: AOAM5324fkb3UTHaGZ1uny7yxhuYusKmlO+JA5To1lrKZeCkFsCTxCst
-        7kP4n8qaocC+pmM/FoUJ06A=
-X-Google-Smtp-Source: ABdhPJwpzMqqhegc92irnbmZ7DqXPb2X+KXRPw2ICETQlHugEduxoNrNbfoVAN6znE19G8LcmHVMag==
-X-Received: by 2002:aa7:9427:: with SMTP id y7mr3705007pfo.12.1599060301995;
-        Wed, 02 Sep 2020 08:25:01 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id p68sm6147744pfb.40.2020.09.02.08.24.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 08:25:00 -0700 (PDT)
-Subject: Re: [PATCH 3/9] i2c: bcm2835: Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Michal Simek <michal.simek@xilinx.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@kernel.org>,
-        linux-i2c@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-References: <20200902150643.14839-1-krzk@kernel.org>
- <20200902150643.14839-3-krzk@kernel.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <7867b520-950d-aa8e-a7a1-f3590abb98c6@gmail.com>
-Date:   Wed, 2 Sep 2020 08:24:58 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.1.1
+        Wed, 2 Sep 2020 11:26:56 -0400
+Received: from mga04.intel.com ([192.55.52.120]:10435 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726927AbgIBPZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:25:48 -0400
+IronPort-SDR: CmAeaSXKEuI2EX3CGO99S4RiPWEK8rouML4cKz2J2P5WbP12Orp0MPN/3cCSe55zZ2Qr5U6uHo
+ 5PqNXGDO+2DQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="154808921"
+X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
+   d="scan'208";a="154808921"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 08:25:28 -0700
+IronPort-SDR: L67woUpoVuqgVtgy6pkvyyzRjvNctYT8LWivC1LtOEmUFWlgEn3YgaVHpkdyYY9cehcrxZ7c+N
+ uMZlBfRn1XBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
+   d="scan'208";a="325821419"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 02 Sep 2020 08:25:28 -0700
+Received: from abityuts-desk1.ger.corp.intel.com (abityuts-desk1.ger.corp.intel.com [10.237.72.186])
+        by linux.intel.com (Postfix) with ESMTP id 341F158041C;
+        Wed,  2 Sep 2020 08:25:25 -0700 (PDT)
+Message-ID: <b59481655c29d081eea4f34c00166517738000e5.camel@gmail.com>
+Subject: Re: [RFC v4 1/1] selftests/cpuidle: Add support for cpuidle latency
+ measurement
+From:   Artem Bityutskiy <dedekind1@gmail.com>
+Reply-To: dedekind1@gmail.com
+To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>, rjw@rjwysocki.net,
+        daniel.lezcano@linaro.org, srivatsa@csail.mit.edu,
+        shuah@kernel.org, npiggin@gmail.com, ego@linux.vnet.ibm.com,
+        svaidy@linux.ibm.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        pratik.r.sampat@gmail.com
+Date:   Wed, 02 Sep 2020 18:25:24 +0300
+In-Reply-To: <20200902114506.45809-2-psampat@linux.ibm.com>
+References: <20200902114506.45809-1-psampat@linux.ibm.com>
+         <20200902114506.45809-2-psampat@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20200902150643.14839-3-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2020-09-02 at 17:15 +0530, Pratik Rajesh Sampat wrote:
+> Measure cpuidle latencies on wakeup to determine and compare with the
+> advertsied wakeup latencies for each idle state.
 
+It looks like the measurements include more than just C-state wake,
+they also include the overhead of waking up the proces, context switch,
+and potentially any interrupts that happen on that CPU. I am not saying
+this is not interesting data, it surely is, but it is going to be
+larger than you see in cpuidle latency tables. Potentially
+significantly larger.
 
-On 9/2/2020 8:06 AM, Krzysztof Kozlowski wrote:
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and the error value gets printed.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Therefore, I am not sure this program should be advertised as "cpuidle
+measurement". It really measures the "IPI latency" in case of the IPI
+method.
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+> A baseline measurement for each case of IPI and timers is taken at
+> 100 percent CPU usage to quantify for the kernel-userpsace overhead
+> during execution.
+
+At least on Intel platforms, this will mean that the IPI method won't
+cover deep C-states like, say, PC6, because one CPU is busy. Again, not
+saying this is not interesting, just pointing out the limitation.
+
+I was working on a somewhat similar stuff for x86 platforms, and I am
+almost ready to publish that on github. I can notify you when I do so
+if you are interested. But here is a small presentation of the approach
+that I did on Plumbers last year:
+
+https://youtu.be/Opk92aQyvt0?t=8266
+
+(the link points to the start of my talk)
+
