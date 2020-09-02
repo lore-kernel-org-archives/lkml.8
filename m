@@ -5,563 +5,172 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009A2C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65F6C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9410E20665
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F90720665
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:12:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tdRJjGXe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="chrpRBMu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgIBGLN (ORCPT
+        id S1726426AbgIBGMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 02:11:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48798 "EHLO
+        Wed, 2 Sep 2020 02:12:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgIBGLM (ORCPT
+        with ESMTP id S1725774AbgIBGMe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 02:11:12 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27046C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 23:11:12 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id 92so2806801qtb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 23:11:12 -0700 (PDT)
+        Wed, 2 Sep 2020 02:12:34 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A7ACC061244;
+        Tue,  1 Sep 2020 23:12:34 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id u25so3322662otq.6;
+        Tue, 01 Sep 2020 23:12:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=wAJZFIZ9EtA7k7K8YKb/QGkJLO9W7TFfaoE1riavRGo=;
-        b=tdRJjGXeTBa8KH81AzkZrrOX5f2XxocfJqd50+5EGGHo/tyndv1cxO9ywrcyYbU40O
-         jHjZbs5PULcaEwWCsu51xQHQidK4jnUSNvz3jaEDo7BhD3ffJu9pVUh4tU4AO+tYK/Lp
-         X8qORMkUrTqiBztOIaixZRRTEVuZmGlRduUtP5mNQutCtqaVd6BlmfE5IQCXC6VICPzN
-         yCVHePhiHfpOCx5S8w0f6bltr7ubH//W0kUHRT3KtihpYTo22Dxf1ckMP3bMseRCCyYH
-         T5y6ATJPo32qjqp9/8Mx7ig4BfXxh3L6FLgx66s4R9a1XsxuMsQn1y3pekcE5FX/AAXd
-         lJ7Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OH2CSI+RMVDa+o7mr+bFOYCagAiIO2w5E9YocL797D8=;
+        b=chrpRBMuxKqoCGIhmYCwEfg2NCy2inV1ZzirbSc8pizTHLUrWeVR5Ul5SCu5XfmgHD
+         X7GAk2S8xdmSk/ZeSgsO/b6qrwe8gpvpAqJiSLGVchVURFi6CLumbhl5vXneamaCyHpR
+         nlfQ/cwBd71ubhbKgTNhzaEHLiBBEfQDcsLVtFenLx47I5F4clelWrVBVRlAPYivDy/W
+         WGbXn5baLInh+myzw6i46tquBTI7kSyLzpMzWrP5Zw6BIKos/d9O/MAEm8Pqbx9v/tRF
+         fI8OtyuCro+247fWffA/3pTf0lfUdYCwESQouBSdR+5y7NVryn0G3I/+6+rb73XI1KYl
+         477w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=wAJZFIZ9EtA7k7K8YKb/QGkJLO9W7TFfaoE1riavRGo=;
-        b=Qfiz8L3IvcjzwuBdWn+f9xQRWoO32aeVzkZqxWnPRymo7EZt5Xk8vCctnAkh1qIa5h
-         24Le7bYXmYbOvKDHnfKrfp5HX6bhuLqZtojwxDXAi6zp/Y1zWrzNT69F3OXTBbEOVBpI
-         hHtdqsdXfT0UlSNFCiWY4IjW1kHup5qGYIUU7W5B/gbzEy95DaJzqd87UpzCZkQsralj
-         l/BONjd9AIqKo9Zwsnx4C6hpTAiZWp8v8eBT0XyAY/jkMzoheZTBaWON5yoDznAP3HKX
-         jSzZOHHog9ajpWdN7AT2Udu9tIgdbnvs0Bl4RGUORgItBAv/QlsdUuZ0YMIAoKpKO/Bi
-         3kvg==
-X-Gm-Message-State: AOAM531Pp9cfeHrCJ9sLA9c3Hk/yGR7ltRknuqBDsHz51LHmpyJP7DAy
-        MExTi1GDR+HYWmyPymwbXdQ=
-X-Google-Smtp-Source: ABdhPJxucs5i9e50xzO+z+XMGeER4sPK70obC1DpbQFwT1w8KYWygmxQBYQUUB9uz7NVJa+qahwRlg==
-X-Received: by 2002:ac8:b0e:: with SMTP id e14mr5412481qti.14.1599027071056;
-        Tue, 01 Sep 2020 23:11:11 -0700 (PDT)
-Received: from LeoBras (179-125-130-62.dynamic.desktop.com.br. [179.125.130.62])
-        by smtp.gmail.com with ESMTPSA id a52sm4192226qtc.22.2020.09.01.23.11.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 23:11:09 -0700 (PDT)
-Message-ID: <deb7163077326399b3a3170ecb777117f7f6737b.camel@gmail.com>
-Subject: Re: [PATCH v1 09/10] powerpc/pseries/iommu: Make use of DDW even if
- it does not map the partition
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Joel Stanley <joel@jms.id.au>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>,
-        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
-        David Dai <zdai@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Wed, 02 Sep 2020 03:11:03 -0300
-In-Reply-To: <d309c872-c574-4eb5-0e6e-0a36f73e168e@ozlabs.ru>
-References: <20200817234033.442511-1-leobras.c@gmail.com>
-         <20200817234033.442511-10-leobras.c@gmail.com>
-         <d2d98195-982d-c40a-43bc-5853726ed1d6@ozlabs.ru>
-         <f3ccef770985b8dfd8d5cb2b9f7b55f2e734d402.camel@gmail.com>
-         <d309c872-c574-4eb5-0e6e-0a36f73e168e@ozlabs.ru>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OH2CSI+RMVDa+o7mr+bFOYCagAiIO2w5E9YocL797D8=;
+        b=rXNGK7us7ELibXlAp9AiAJbxoKPhZj7jnMkQVRLOwukceUyJnGRKGSxW520wmaySNB
+         FU1rs5FYPo98W2EPzxBZOooxAsahRHO5jx1EmZA4Zwsg4bjY/z1a/RfyklizyfTqTrRK
+         h+A6JVRoP//tyA31IgnhJVLdNqAQ1OE64vAByorV/ilQUzEBU5v+SY8KuQ1SAKH12/AS
+         ihXFBWZA6/9ZBa/Gw4JXkjCU1AjuEFXEmh9exewmSfotdN/WjXXj1No7zLssGJ6n37in
+         SwT7M0wxapBd9lBe5hkDkv3J5Ytok8wVr5ozqLhs9047Zx33ygGDQVi87iT+aLYTbR11
+         uXRA==
+X-Gm-Message-State: AOAM530PB1ZPzxByRcXCYe8seMBAiV8g31Ik4OfeYGYuj93wCx9kaqtg
+        75Bq2DReyT65VBRUvPc4BGEkUaasuMPa3PZmh44nFDpy
+X-Google-Smtp-Source: ABdhPJzW3oF7F8kpT7DmR6bM8ZmVyV0PcZtVvxF5E4tdp0v0Vc/JnExc6NBbLfqj0X7p09Ew41E6IFXpQVsUq+Az/RI=
+X-Received: by 2002:a9d:50a:: with SMTP id 10mr3897594otw.207.1599027153888;
+ Tue, 01 Sep 2020 23:12:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200826063850.47625-1-alexandru.ardelean@analog.com>
+ <20200826120042.200364-1-alexandru.ardelean@analog.com> <CA+U=DsrMDSTQKEc2_3+W8u4bLraAowVB3nB4huKY--v8gnds2Q@mail.gmail.com>
+ <c3a9411e-186d-a3ac-5ad0-bd70ad78f147@st.com> <CA+U=DspjGUhXCY7c8P6zOYZsx17ybcU4Kdr52yujmdYOaa1JSQ@mail.gmail.com>
+ <20200829164613.3be1b2b1@archlinux>
+In-Reply-To: <20200829164613.3be1b2b1@archlinux>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Wed, 2 Sep 2020 09:12:22 +0300
+Message-ID: <CA+U=DsrMFasSO3ka-U_Dkn2BXF4qmfp4ejv=gjf4epo6WxFnUQ@mail.gmail.com>
+Subject: Re: [PATCH v2] iio: stm32-dac: Replace indio_dev->mlock with own
+ device lock
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, alexandre.torgue@st.com,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-31 at 14:35 +1000, Alexey Kardashevskiy wrote:
-> 
-> On 29/08/2020 04:36, Leonardo Bras wrote:
-> > On Mon, 2020-08-24 at 15:17 +1000, Alexey Kardashevskiy wrote:
-> > > On 18/08/2020 09:40, Leonardo Bras wrote:
-> > > > As of today, if the biggest DDW that can be created can't map the whole
-> > > > partition, it's creation is skipped and the default DMA window
-> > > > "ibm,dma-window" is used instead.
-> > > > 
-> > > > DDW is 16x bigger than the default DMA window,
-> > > 
-> > > 16x only under very specific circumstances which are
-> > > 1. phyp
-> > > 2. sriov
-> > > 3. device class in hmc (or what that priority number is in the lpar config).
-> > 
-> > Yeah, missing details.
-> > 
-> > > > having the same amount of
-> > > > pages, but increasing the page size to 64k.
-> > > > Besides larger DMA window,
-> > > 
-> > > "Besides being larger"?
-> > 
-> > You are right there.
-> > 
-> > > > it performs better for allocations over 4k,
-> > > 
-> > > Better how?
-> > 
-> > I was thinking for allocations larger than (512 * 4k), since >2
-> > hypercalls are needed here, and for 64k pages would still be just 1
-> > hypercall up to (512 * 64k). 
-> > But yeah, not the usual case anyway.
-> 
-> Yup.
-> 
-> 
-> > > > so it would be nice to use it instead.
-> > > 
-> > > I'd rather say something like:
-> > > ===
-> > > So far we assumed we can map the guest RAM 1:1 to the bus which worked
-> > > with a small number of devices. SRIOV changes it as the user can
-> > > configure hundreds VFs and since phyp preallocates TCEs and does not
-> > > allow IOMMU pages bigger than 64K, it has to limit the number of TCEs
-> > > per a PE to limit waste of physical pages.
-> > > ===
-> > 
-> > I mixed this in my commit message, it looks like this:
-> > 
-> > ===
-> > powerpc/pseries/iommu: Make use of DDW for indirect mapping
-> > 
-> > So far it's assumed possible to map the guest RAM 1:1 to the bus, which
-> > works with a small number of devices. SRIOV changes it as the user can
-> > configure hundreds VFs and since phyp preallocates TCEs and does not
-> > allow IOMMU pages bigger than 64K, it has to limit the number of TCEs
-> > per a PE to limit waste of physical pages.
-> > 
-> > As of today, if the assumed direct mapping is not possible, DDW
-> > creation is skipped and the default DMA window "ibm,dma-window" is used
-> > instead.
-> > 
-> > The default DMA window uses 4k pages instead of 64k pages, and since
-> > the amount of pages is the same,
-> 
-> Is the amount really the same? I thought you can prioritize some VFs
-> over others (== allocate different number of TCEs). Does it really
-> matter if it is the same?
+On Sat, Aug 29, 2020 at 6:46 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Thu, 27 Aug 2020 13:00:36 +0300
+> Alexandru Ardelean <ardeleanalex@gmail.com> wrote:
+>
+> > On Thu, Aug 27, 2020 at 12:03 PM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+> > >
+> > > On 8/27/20 10:55 AM, Alexandru Ardelean wrote:
+> > > > On Wed, Aug 26, 2020 at 3:03 PM Alexandru Ardelean
+> > > > <alexandru.ardelean@analog.com> wrote:
+> > > >> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> > > >>
+> > > >> As part of the general cleanup of indio_dev->mlock, this change replaces
+> > > >> it with a local lock. The lock protects against potential races when
+> > > >> reading the CR reg and then updating, so that the state of pm_runtime
+> > > >> is consistent between the two operations.
+> > > >>
+> > > >> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> > > >> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > > >> ---
+> > > > Forgot the changelog here.
+> > > > Apologies.
+> > > >
+> > > > Changelog v1 -> v2:
+> > > > * removed whitespace change for 'common' field
+> > > > * updated comment about the lock usage
+> > >
+> > > Hi Alexandru,
+> > >
+> > > Sorry if I missed it... is there an update on the comment :-) ?
+> >
+> > For a moment there, I thought I didn't.
+> > GMail's threading is confusing.
+> >
+> > ----------------------------------------------------------------------------
+> > As part of the general cleanup of indio_dev->mlock, this change replaces
+> > it with a local lock. The lock protects against potential races when
+> > reading the CR reg and then updating, so that the state of pm_runtime
+> > is consistent between the two operations.
+> > ----------------------------------------------------------------------------
+> I think this got confused...
+>
+> see below.
+>
+>
+> >
+> > >
+> > > Best Regards,
+> > > Fabrice
+> > > >
+> > > >>  drivers/iio/dac/stm32-dac.c | 12 ++++++++----
+> > > >>  1 file changed, 8 insertions(+), 4 deletions(-)
+> > > >>
+> > > >> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
+> > > >> index 092c796fa3d9..7a8aed476850 100644
+> > > >> --- a/drivers/iio/dac/stm32-dac.c
+> > > >> +++ b/drivers/iio/dac/stm32-dac.c
+> > > >> @@ -26,9 +26,11 @@
+> > > >>  /**
+> > > >>   * struct stm32_dac - private data of DAC driver
+> > > >>   * @common:            reference to DAC common data
+> > > >> + * @lock:              lock to protect the data buffer during regmap ops
 
-On a conversation with Travis Pizel, he explained how it's supposed to
-work, and I understood this:
+oh, silly me;
+it's about this comment;
+will re-spin
 
-When a VF is created, it will be assigned a capacity, like 4%, 20%, and
-so on. The number of 'TCE entries' that are available to that partition
-are proportional to that capacity. 
-
-If we use the default DMA window, the IOMMU pagesize/entry will be 4k,
-and if we use DDW, we will get 64k pagesize. As the number of entries
-will be the same (for the same capacity), the total space that can be
-addressed by the IOMMU will be 16 times bigger. This sometimes enable
-direct mapping, but sometimes it's still not enough.
-
-On Travis words :
-"A low capacity VF, with less resources available, will certainly have
-less DMA window capability than a high capacity VF. But, an 8GB DMA
-window (with 64k pages) is still 16x larger than an 512MB window (with
-4K pages).
-A high capacity VF - for example, one that Leonardo has in his scenario
-- will go from 8GB (using 4K pages) to 128GB (using 64K pages) - again,
-16x larger - but it's obviously still possible to create a partition
-that exceeds 128GB of memory in size."
-
-> 
-> 
-> > making use of DDW instead of the
-> > default DMA window for indirect mapping will expand in 16x the amount
-> > of memory that can be mapped on DMA.
-> 
-> Stop saying "16x", it is not guaranteed by anything :)
-> 
-> 
-> > The DDW created will be used for direct mapping by default. [...]
-> > ===
-> > 
-> > What do you think?
-> > 
-> > > > The DDW created will be used for direct mapping by default.
-> > > > If it's not available, indirect mapping will be used instead.
-> > > > 
-> > > > For indirect mapping, it's necessary to update the iommu_table so
-> > > > iommu_alloc() can use the DDW created. For this,
-> > > > iommu_table_update_window() is called when everything else succeeds
-> > > > at enable_ddw().
-> > > > 
-> > > > Removing the default DMA window for using DDW with indirect mapping
-> > > > is only allowed if there is no current IOMMU memory allocated in
-> > > > the iommu_table. enable_ddw() is aborted otherwise.
-> > > > 
-> > > > As there will never have both direct and indirect mappings at the same
-> > > > time, the same property name can be used for the created DDW.
-> > > > 
-> > > > So renaming
-> > > > define DIRECT64_PROPNAME "linux,direct64-ddr-window-info"
-> > > > to
-> > > > define DMA64_PROPNAME "linux,dma64-ddr-window-info"
-> > > > looks the right thing to do.
-> > > 
-> > > I know I suggested this but this does not look so good anymore as I
-> > > suspect it breaks kexec (from older kernel to this one) so you either
-> > > need to check for both DT names or just keep the old one. Changing the
-> > > macro name is fine.
-> > > 
-> > 
-> > Yeah, having 'direct' in the name don't really makes sense if it's used
-> > for indirect mapping. I will just add this new define instead of
-> > replacing the old one, and check for both. 
-> > Is that ok?
-> 
-> No, having two of these does not seem right or useful. It is pseries
-> which does not use petitboot (relies on grub instead so until the target
-> kernel is started, there will be no ddw) so realistically we need this
-> property for kexec/kdump which uses the same kernel but different
-> initramdisk so for that purpose we need the same property name.
-> 
-> But I can see myself annoyed when I try petitboot in the hacked pseries
-> qemu and things may crash :) On this basis I'd suggest keeping the name
-> and adding a comment next to it that it is not always "direct" anymore.
-> 
-
-Keeping the same name should bring more problems than solve. 
-If we have indirect mapping and kexec() to an older kernel, it will
-think direct mapping is enabled, and trying to use a DMA address
-without doing H_PUT_* first may cause a crash.
-
-I tested with a new property name, and it doesn't crash.
-As the property is not found, it does try to create a new DDW, which
-fails and it falls back to using the default DMA window.
-The device that need the IOMMU don't work well, but when iommu_map()
-fails, it doesn't try to use the DMA address as valid. 
-
-> 
-> > > > To make sure the property differentiates both cases, a new u32 for flags
-> > > > was added at the end of the property, where BIT(0) set means direct
-> > > > mapping.
-> > > > 
-> > > > Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
-> > > > ---
-> > > >  arch/powerpc/platforms/pseries/iommu.c | 108 +++++++++++++++++++------
-> > > >  1 file changed, 84 insertions(+), 24 deletions(-)
-> > > > 
-> > > > diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> > > > index 3a1ef02ad9d5..9544e3c91ced 100644
-> > > > --- a/arch/powerpc/platforms/pseries/iommu.c
-> > > > +++ b/arch/powerpc/platforms/pseries/iommu.c
-> > > > @@ -350,8 +350,11 @@ struct dynamic_dma_window_prop {
-> > > >  	__be64	dma_base;	/* address hi,lo */
-> > > >  	__be32	tce_shift;	/* ilog2(tce_page_size) */
-> > > >  	__be32	window_shift;	/* ilog2(tce_window_size) */
-> > > > +	__be32	flags;		/* DDW properties, see bellow */
-> > > >  };
-> > > >  
-> > > > +#define DDW_FLAGS_DIRECT	0x01
-> > > 
-> > > This is set if ((1<<window_shift) >= ddw_memory_hotplug_max()), you
-> > > could simply check window_shift and drop the flags.
-> > > 
-> > 
-> > Yeah, it's better this way, I will revert this.
-> > 
-> > > > +
-> > > >  struct direct_window {
-> > > >  	struct device_node *device;
-> > > >  	const struct dynamic_dma_window_prop *prop;
-> > > > @@ -377,7 +380,7 @@ static LIST_HEAD(direct_window_list);
-> > > >  static DEFINE_SPINLOCK(direct_window_list_lock);
-> > > >  /* protects initializing window twice for same device */
-> > > >  static DEFINE_MUTEX(direct_window_init_mutex);
-> > > > -#define DIRECT64_PROPNAME "linux,direct64-ddr-window-info"
-> > > > +#define DMA64_PROPNAME "linux,dma64-ddr-window-info"
-> > > >  
-> > > >  static int tce_clearrange_multi_pSeriesLP(unsigned long start_pfn,
-> > > >  					unsigned long num_pfn, const void *arg)
-> > > > @@ -836,7 +839,7 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
-> > > >  	if (ret)
-> > > >  		return;
-> > > >  
-> > > > -	win = of_find_property(np, DIRECT64_PROPNAME, NULL);
-> > > > +	win = of_find_property(np, DMA64_PROPNAME, NULL);
-> > > >  	if (!win)
-> > > >  		return;
-> > > >  
-> > > > @@ -852,7 +855,7 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
-> > > >  			np, ret);
-> > > >  }
-> > > >  
-> > > > -static bool find_existing_ddw(struct device_node *pdn, u64 *dma_addr)
-> > > > +static bool find_existing_ddw(struct device_node *pdn, u64 *dma_addr, bool *direct_mapping)
-> > > >  {
-> > > >  	struct direct_window *window;
-> > > >  	const struct dynamic_dma_window_prop *direct64;
-> > > > @@ -864,6 +867,7 @@ static bool find_existing_ddw(struct device_node *pdn, u64 *dma_addr)
-> > > >  		if (window->device == pdn) {
-> > > >  			direct64 = window->prop;
-> > > >  			*dma_addr = be64_to_cpu(direct64->dma_base);
-> > > > +			*direct_mapping = be32_to_cpu(direct64->flags) & DDW_FLAGS_DIRECT;
-> > > >  			found = true;
-> > > >  			break;
-> > > >  		}
-> > > > @@ -901,8 +905,8 @@ static int find_existing_ddw_windows(void)
-> > > >  	if (!firmware_has_feature(FW_FEATURE_LPAR))
-> > > >  		return 0;
-> > > >  
-> > > > -	for_each_node_with_property(pdn, DIRECT64_PROPNAME) {
-> > > > -		direct64 = of_get_property(pdn, DIRECT64_PROPNAME, &len);
-> > > > +	for_each_node_with_property(pdn, DMA64_PROPNAME) {
-> > > > +		direct64 = of_get_property(pdn, DMA64_PROPNAME, &len);
-> > > >  		if (!direct64)
-> > > >  			continue;
-> > > >  
-> > > > @@ -1124,7 +1128,8 @@ static void reset_dma_window(struct pci_dev *dev, struct device_node *par_dn)
-> > > >  }
-> > > >  
-> > > >  static int ddw_property_create(struct property **ddw_win, const char *propname,
-> > > > -			       u32 liobn, u64 dma_addr, u32 page_shift, u32 window_shift)
-> > > > +			       u32 liobn, u64 dma_addr, u32 page_shift,
-> > > > +			       u32 window_shift, bool direct_mapping)
-> > > >  {
-> > > >  	struct dynamic_dma_window_prop *ddwprop;
-> > > >  	struct property *win64;
-> > > > @@ -1144,6 +1149,36 @@ static int ddw_property_create(struct property **ddw_win, const char *propname,
-> > > >  	ddwprop->dma_base = cpu_to_be64(dma_addr);
-> > > >  	ddwprop->tce_shift = cpu_to_be32(page_shift);
-> > > >  	ddwprop->window_shift = cpu_to_be32(window_shift);
-> > > > +	if (direct_mapping)
-> > > > +		ddwprop->flags = cpu_to_be32(DDW_FLAGS_DIRECT);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int iommu_table_update_window(struct iommu_table **tbl, int nid, unsigned long liobn,
-> > > > +				     unsigned long win_addr, unsigned long page_shift,
-> > > > +				     unsigned long window_size)
-> > > 
-> > > Rather strange helper imho. I'd extract the most of
-> > > iommu_table_setparms_lpar() into iommu_table_setparms() (except
-> > > of_parse_dma_window) and call new helper from where you call
-> > > iommu_table_update_window; and do
-> > > iommu_pseries_alloc_table/iommu_tce_table_put there.
-> > > 
-> > 
-> > I don't see how to extract iommu_table_setparms_lpar() into
-> > iommu_table_setparms(), they look to be used for different machine
-> > types.
-> > 
-> > Do mean you extracting most of iommu_table_setparms_lpar() (and maybe
-> > iommu_table_setparms() ) into a new helper, which is called in both
-> > functions and use it instead of iommu_table_update_window() ?
-> 
-> Yes, this.
-
-I will do that then, seems better. :)
-
-> 
-> 
-> > > > +{
-> > > > +	struct iommu_table *new_tbl, *old_tbl;
-> > > > +
-> > > > +	new_tbl = iommu_pseries_alloc_table(nid);
-> > > > +	if (!new_tbl)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	old_tbl = *tbl;
-> > > > +	new_tbl->it_index = liobn;
-> > > > +	new_tbl->it_offset = win_addr >> page_shift;
-> > > > +	new_tbl->it_page_shift = page_shift;
-> > > > +	new_tbl->it_size = window_size >> page_shift;
-> > > > +	new_tbl->it_base = old_tbl->it_base;
-> > > 
-> > > Should not be used in pseries.
-> > > 
-> > 
-> > The point here is to migrate the values from the older tbl to the
-> 
-> The actual window/table is new (on the hypervisor side), you are not
-> migrating a single TCE, you deleted one whole window and created another
-> whole window, calling it "migration" is confusing, especially when PAPR
-> actually defines TCE migration.
-
-Ok, I understand it's confusing now. I will avoid using this term from
-now on.
-
-> 
-> 
-> > newer. I Would like to understand why this is bad, if it will still be
-> > 'unused' as the older tbl.
-> 
-> Having explicit values is more readable imho.
-
-Ok, I understand why it should be improved.!
-
-Alexey, thank you for reviewing, and for helping me with my questions!
-
-Best regards,
-
-> 
-> 
-> > > > +	new_tbl->it_busno = old_tbl->it_busno;
-> > > > +	new_tbl->it_blocksize = old_tbl->it_blocksize;
-> > > 
-> > > 16 for pseries and does not change (may be even make it a macro).
-> > > 
-> > > > +	new_tbl->it_type = old_tbl->it_type;
-> > > 
-> > > TCE_PCI.
-> > > 
-> > 
-> > Same as above.
-> > 
-> > > > +	new_tbl->it_ops = old_tbl->it_ops;
-> > > > +
-> > > > +	iommu_init_table(new_tbl, nid, old_tbl->it_reserved_start, old_tbl->it_reserved_end);
-> > > > +	iommu_tce_table_put(old_tbl);
-> > > > +	*tbl = new_tbl;
-> > > >  
-> > > >  	return 0;
-> > > >  }
-> > > > @@ -1171,12 +1206,16 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
-> > > >  	struct direct_window *window;
-> > > >  	struct property *win64 = NULL;
-> > > >  	struct failed_ddw_pdn *fpdn;
-> > > > -	bool default_win_removed = false;
-> > > > +	bool default_win_removed = false, maps_whole_partition = false;
-> > > 
-> > > s/maps_whole_partition/direct_mapping/
-> > > 
-> > 
-> > Sure, I will get it replaced.
-> > 
-> > > > +	struct pci_dn *pci = PCI_DN(pdn);
-> > > > +	struct iommu_table *tbl = pci->table_group->tables[0];
-> > > >  
-> > > >  	mutex_lock(&direct_window_init_mutex);
-> > > >  
-> > > > -	if (find_existing_ddw(pdn, &dev->dev.archdata.dma_offset))
-> > > > -		goto out_unlock;
-> > > > +	if (find_existing_ddw(pdn, &dev->dev.archdata.dma_offset, &maps_whole_partition)) {
-> > > > +		mutex_unlock(&direct_window_init_mutex);
-> > > > +		return maps_whole_partition;
-> > > > +	}
-> > > >  
-> > > >  	/*
-> > > >  	 * If we already went through this for a previous function of
-> > > > @@ -1258,16 +1297,24 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
-> > > >  			  query.page_size);
-> > > >  		goto out_failed;
-> > > >  	}
-> > > > +
-> > > >  	/* verify the window * number of ptes will map the partition */
-> > > > -	/* check largest block * page size > max memory hotplug addr */
-> > > >  	max_addr = ddw_memory_hotplug_max();
-> > > >  	if (query.largest_available_block < (max_addr >> page_shift)) {
-> > > > -		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %llu "
-> > > > -			  "%llu-sized pages\n", max_addr,  query.largest_available_block,
-> > > > -			  1ULL << page_shift);
-> > > > -		goto out_failed;
-> > > > +		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %llu %llu-sized pages\n",
-> > > > +			max_addr, query.largest_available_block,
-> > > > +			1ULL << page_shift);
-> > > > +
-> > > > +		len = order_base_2(query.largest_available_block << page_shift);
-> > > > +	} else {
-> > > > +		maps_whole_partition = true;
-> > > > +		len = order_base_2(max_addr);
-> > > >  	}
-> > > > -	len = order_base_2(max_addr);
-> > > > +
-> > > > +	/* DDW + IOMMU on single window may fail if there is any allocation */
-> > > > +	if (default_win_removed && !maps_whole_partition &&
-> > > > +	    iommu_table_in_use(tbl))
-> > > > +		goto out_failed;
-> > > >  
-> > > >  	ret = create_ddw(dev, ddw_avail, &create, page_shift, len);
-> > > >  	if (ret != 0)
-> > > > @@ -1277,8 +1324,8 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
-> > > >  		create.liobn, dn);
-> > > >  
-> > > >  	win_addr = ((u64)create.addr_hi << 32) | create.addr_lo;
-> > > > -	ret = ddw_property_create(&win64, DIRECT64_PROPNAME, create.liobn, win_addr,
-> > > > -				  page_shift, len);
-> > > > +	ret = ddw_property_create(&win64, DMA64_PROPNAME, create.liobn, win_addr,
-> > > > +				  page_shift, len, maps_whole_partition);
-> > > >  	if (ret) {
-> > > >  		dev_info(&dev->dev,
-> > > >  			 "couldn't allocate property, property name, or value\n");
-> > > > @@ -1297,12 +1344,25 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
-> > > >  	if (!window)
-> > > >  		goto out_prop_del;
-> > > >  
-> > > > -	ret = walk_system_ram_range(0, memblock_end_of_DRAM() >> PAGE_SHIFT,
-> > > > -			win64->value, tce_setrange_multi_pSeriesLP_walk);
-> > > > -	if (ret) {
-> > > > -		dev_info(&dev->dev, "failed to map direct window for %pOF: %d\n",
-> > > > -			 dn, ret);
-> > > > -		goto out_free_window;
-> > > > +	if (maps_whole_partition) {
-> > > > +		/* DDW maps the whole partition, so enable direct DMA mapping */
-> > > > +		ret = walk_system_ram_range(0, memblock_end_of_DRAM() >> PAGE_SHIFT,
-> > > > +					    win64->value, tce_setrange_multi_pSeriesLP_walk);
-> > > > +		if (ret) {
-> > > > +			dev_info(&dev->dev, "failed to map direct window for %pOF: %d\n",
-> > > > +				 dn, ret);
-> > > > +			goto out_free_window;
-> > > > +		}
-> > > > +	} else {
-> > > > +		/* New table for using DDW instead of the default DMA window */
-> > > > +		if (iommu_table_update_window(&tbl, pci->phb->node, create.liobn,
-> > > > +					      win_addr, page_shift, 1UL << len))
-> > > > +			goto out_free_window;
-> > > > +
-> > > > +		set_iommu_table_base(&dev->dev, tbl);
-> > > > +		WARN_ON(dev->dev.archdata.dma_offset >= SZ_4G);
-> > > 
-> > > What is this check for exactly? Why 4G, not >= 0, for example?
-> > 
-> > I am not really sure, you suggested adding it here:
-> > http://patchwork.ozlabs.org/project/linuxppc-dev/patch/20200716071658.467820-6-leobras.c@gmail.com/#2488874
-> 
-> Ah right I did suggest this :) My bad. I think I suggested it before
-> suggesting to keep the reserved area boundaries checked/adjusted to the
-> window boundaries, may as well drop this. Thanks,
-> 
-> 
-> > I can remove it if it's ok.
-> > 
-> > > > +		goto out_unlock;
-> > > > +
-> > > >  	}
-> > > >  
-> > > >  	dev->dev.archdata.dma_offset = win_addr;
-> > > > @@ -1340,7 +1400,7 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
-> > > >  
-> > > >  out_unlock:
-> > > >  	mutex_unlock(&direct_window_init_mutex);
-> > > > -	return win64;
-> > > > +	return win64 && maps_whole_partition;
-> > > >  }
-> > > >  
-> > > >  static void pci_dma_dev_setup_pSeriesLP(struct pci_dev *dev)
-> > > > 
-
+>
+> The original comment was:
+>
+>
+> In this particular case I'm not sure that's what mlock was being used for.
+> I think it's about avoiding races around checking if powered down and
+> actually doing it.
+>
+> And Fabrice's reply:
+>
+> Hi Sergiu,
+>
+> Indeed, purpose is to protect against a race here when reading CR, and
+> updating it via regmap (this also makes the subsequent pm_runtime calls
+> to be balanced based on this).
+> (Side note: there is no data buffer involved for the DAC.)
+> Could you please update the comment ?
+>
+> Thanks,
+> Fabrice
+>
+> > > >>   */
+> > > >>  struct stm32_dac {
+> > > >>         struct stm32_dac_common *common;
+> > > >> +       struct mutex            lock;
+> > > >>  };
+>
