@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505F6C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8B6C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9C62078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 470B42078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599044637;
-	bh=R7mPnEePnjWRqt8MgCneQ6c6MoMy+NKWwiU1AGMwPaA=;
+	s=default; t=1599044643;
+	bh=gjlI9Gga3bx1Zf/LGWOYJ4nihY5+cfkZy7nlCQlaazY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M+OkC3ReoEDX1gIT0s8un2B5I4BFfs2ZABNq6NwC4PqKzGd6MCU4AGlv34H3OdvPY
-	 3dT3Ie2oZEOwUcO/EpUbETakgXAopDwdejXhN0sposWawX1uDtqvRz3Ep6TooMRe2s
-	 wC/nYCNncxjg7JkxQih99cC3sZyMSys/5/HBjhm8=
+	b=VNv/nIJ1qMWe7FCPm7B4fmiYqIuSjPizHrinOV1c2RCSQ/8UkvGngskvAOvAivX8X
+	 0iuFZmMF/2Iwv+iePW5xfDHzuZREnahRwk+W2PLuTqIa/qTmjPkyv6JplQMnF+ahd2
+	 oHqGBCGv2JfULHr/8tEnNoelXb1vRljwO4zXlOLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgIBLDz (ORCPT
+        id S1727903AbgIBLD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 07:03:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45804 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 07:03:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726559AbgIBLBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 07:01:19 -0400
+        id S1726521AbgIBLBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 07:01:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8EB42151B;
-        Wed,  2 Sep 2020 11:01:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A6792137B;
+        Wed,  2 Sep 2020 11:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599044477;
-        bh=R7mPnEePnjWRqt8MgCneQ6c6MoMy+NKWwiU1AGMwPaA=;
+        s=default; t=1599044469;
+        bh=gjlI9Gga3bx1Zf/LGWOYJ4nihY5+cfkZy7nlCQlaazY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W6zrMfQr7VSt32DOTIIjI7UeViL0gaO0UdUdjdVBw7GP7gPp/e+/1HPClTwu7EEiZ
-         6tX2n3wTYGDNhtcowoSJNp7kA3pKfQyTM1ozSsZF4izFgvcS0sa5vy9rpvxJgSXHso
-         DS6tGdWu/9SC9bg+QuXJyvUhCsCTUEjHB5mUw68w=
+        b=2XE3WeRuxlNb6+ZPPAgtZXFp7dVh6G/BByCKuHQz2l8cpuv2S/8ruzkJmq3jnnP8M
+         dZs8N8pEDMx5xKbZRkXlsHM17Hx0ONV/GzfFLcj2skOmQY5LyDNcedLKpquF984ESR
+         FdnTGT2VZ/QXSgfFbdoqd2YHbcPKo1ACwoTBVicw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     himadrispandya@gmail.com, dvyukov@google.com,
         linux-usb@vger.kernel.org
@@ -46,11 +46,10 @@ Cc:     perex@perex.cz, tiwai@suse.com, stern@rowland.harvard.ed,
         linux-kernel@vger.kernel.org, marcel@holtmann.org,
         johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
         alsa-devel@alsa-project.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 04/10] USB: core: hub.c: use usb_control_msg_send() in a few places
-Date:   Wed,  2 Sep 2020 13:01:06 +0200
-Message-Id: <20200902110115.1994491-5-gregkh@linuxfoundation.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 10/10] Bluetooth: ath3k: use usb_control_msg_send() and usb_control_msg_recv()
+Date:   Wed,  2 Sep 2020 13:01:15 +0200
+Message-Id: <20200902110115.1994491-14-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200902110115.1994491-1-gregkh@linuxfoundation.org>
 References: <20200902110115.1994491-1-gregkh@linuxfoundation.org>
@@ -61,252 +60,201 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a few calls to usb_control_msg() that can be converted to use
-usb_control_msg_send() instead, so do that in order to make the error
-checking a bit simpler and the code smaller.
+The usb_control_msg_send() and usb_control_msg_recv() calls can return
+an error if a "short" write/read happens, and they can handle data off
+of the stack, so move the driver over to using those calls instead,
+saving some logic when dynamically allocating memory.
 
-Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Marcel Holtmann <marcel@holtmann.org>
+Cc: Johan Hedberg <johan.hedberg@gmail.com>
+Cc: linux-bluetooth@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/core/hub.c | 128 +++++++++++++++--------------------------
- 1 file changed, 47 insertions(+), 81 deletions(-)
+ drivers/bluetooth/ath3k.c | 90 +++++++++++----------------------------
+ 1 file changed, 26 insertions(+), 64 deletions(-)
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 5b768b80d1ee..b7468517f336 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -410,8 +410,8 @@ static int get_hub_descriptor(struct usb_device *hdev,
-  */
- static int clear_hub_feature(struct usb_device *hdev, int feature)
- {
--	return usb_control_msg(hdev, usb_sndctrlpipe(hdev, 0),
--		USB_REQ_CLEAR_FEATURE, USB_RT_HUB, feature, 0, NULL, 0, 1000);
-+	return usb_control_msg_send(hdev, 0, USB_REQ_CLEAR_FEATURE, USB_RT_HUB,
-+				    feature, 0, NULL, 0, 1000);
- }
+diff --git a/drivers/bluetooth/ath3k.c b/drivers/bluetooth/ath3k.c
+index 4ce270513695..1472cccfd0b3 100644
+--- a/drivers/bluetooth/ath3k.c
++++ b/drivers/bluetooth/ath3k.c
+@@ -212,19 +212,16 @@ static int ath3k_load_firmware(struct usb_device *udev,
  
- /*
-@@ -419,9 +419,8 @@ static int clear_hub_feature(struct usb_device *hdev, int feature)
-  */
- int usb_clear_port_feature(struct usb_device *hdev, int port1, int feature)
- {
--	return usb_control_msg(hdev, usb_sndctrlpipe(hdev, 0),
--		USB_REQ_CLEAR_FEATURE, USB_RT_PORT, feature, port1,
--		NULL, 0, 1000);
-+	return usb_control_msg_send(hdev, 0, USB_REQ_CLEAR_FEATURE, USB_RT_PORT,
-+				    feature, port1, NULL, 0, 1000);
- }
+ 	BT_DBG("udev %p", udev);
  
- /*
-@@ -429,9 +428,8 @@ int usb_clear_port_feature(struct usb_device *hdev, int port1, int feature)
-  */
- static int set_port_feature(struct usb_device *hdev, int port1, int feature)
- {
--	return usb_control_msg(hdev, usb_sndctrlpipe(hdev, 0),
--		USB_REQ_SET_FEATURE, USB_RT_PORT, feature, port1,
--		NULL, 0, 1000);
-+	return usb_control_msg_send(hdev, 0, USB_REQ_SET_FEATURE, USB_RT_PORT,
-+				    feature, port1, NULL, 0, 1000);
- }
- 
- static char *to_led_name(int selector)
-@@ -755,15 +753,14 @@ hub_clear_tt_buffer(struct usb_device *hdev, u16 devinfo, u16 tt)
- 	/* Need to clear both directions for control ep */
- 	if (((devinfo >> 11) & USB_ENDPOINT_XFERTYPE_MASK) ==
- 			USB_ENDPOINT_XFER_CONTROL) {
--		int status = usb_control_msg(hdev, usb_sndctrlpipe(hdev, 0),
--				HUB_CLEAR_TT_BUFFER, USB_RT_PORT,
--				devinfo ^ 0x8000, tt, NULL, 0, 1000);
-+		int status = usb_control_msg_send(hdev, 0, 
-+						  HUB_CLEAR_TT_BUFFER, USB_RT_PORT,
-+						  devinfo ^ 0x8000, tt, NULL, 0, 1000);
- 		if (status)
- 			return status;
+-	pipe = usb_sndctrlpipe(udev, 0);
+-
+ 	send_buf = kmalloc(BULK_SIZE, GFP_KERNEL);
+ 	if (!send_buf) {
+ 		BT_ERR("Can't allocate memory chunk for firmware");
+ 		return -ENOMEM;
  	}
--	return usb_control_msg(hdev, usb_sndctrlpipe(hdev, 0),
--			       HUB_CLEAR_TT_BUFFER, USB_RT_PORT, devinfo,
--			       tt, NULL, 0, 1000);
-+	return usb_control_msg_send(hdev, 0, HUB_CLEAR_TT_BUFFER, USB_RT_PORT,
-+				    devinfo, tt, NULL, 0, 1000);
- }
  
- /*
-@@ -1049,11 +1046,10 @@ static void hub_activate(struct usb_hub *hub, enum hub_activation_type type)
- 	 */
- 	if (type != HUB_RESUME) {
- 		if (hdev->parent && hub_is_superspeed(hdev)) {
--			ret = usb_control_msg(hdev, usb_sndctrlpipe(hdev, 0),
--					HUB_SET_DEPTH, USB_RT_HUB,
--					hdev->level - 1, 0, NULL, 0,
--					USB_CTRL_SET_TIMEOUT);
--			if (ret < 0)
-+			ret = usb_control_msg_send(hdev, 0, HUB_SET_DEPTH, USB_RT_HUB,
-+						   hdev->level - 1, 0, NULL, 0,
-+						   USB_CTRL_SET_TIMEOUT);
-+			if (ret)
- 				dev_err(hub->intfdev,
- 						"set hub depth failed\n");
- 		}
-@@ -2329,13 +2325,10 @@ static int usb_enumerate_device_otg(struct usb_device *udev)
- 		/* enable HNP before suspend, it's simpler */
- 		if (port1 == bus->otg_port) {
- 			bus->b_hnp_enable = 1;
--			err = usb_control_msg(udev,
--				usb_sndctrlpipe(udev, 0),
--				USB_REQ_SET_FEATURE, 0,
--				USB_DEVICE_B_HNP_ENABLE,
--				0, NULL, 0,
--				USB_CTRL_SET_TIMEOUT);
--			if (err < 0) {
-+			err = usb_control_msg_send(udev, 0, USB_REQ_SET_FEATURE, 0,
-+						   USB_DEVICE_B_HNP_ENABLE, 0,
-+						   NULL, 0, USB_CTRL_SET_TIMEOUT);
-+			if (err) {
- 				/*
- 				 * OTG MESSAGE: report errors here,
- 				 * customize to match your product.
-@@ -2347,13 +2340,10 @@ static int usb_enumerate_device_otg(struct usb_device *udev)
- 		} else if (desc->bLength == sizeof
- 				(struct usb_otg_descriptor)) {
- 			/* Set a_alt_hnp_support for legacy otg device */
--			err = usb_control_msg(udev,
--				usb_sndctrlpipe(udev, 0),
--				USB_REQ_SET_FEATURE, 0,
--				USB_DEVICE_A_ALT_HNP_SUPPORT,
--				0, NULL, 0,
--				USB_CTRL_SET_TIMEOUT);
--			if (err < 0)
-+			err = usb_control_msg_send(udev, 0, USB_REQ_SET_FEATURE, 0,
-+						   USB_DEVICE_A_ALT_HNP_SUPPORT, 0,
-+						   NULL, 0, USB_CTRL_SET_TIMEOUT);
-+			if (err)
- 				dev_err(&udev->dev,
- 					"set a_alt_hnp_support failed: %d\n",
- 					err);
-@@ -3121,10 +3111,8 @@ int usb_disable_ltm(struct usb_device *udev)
- 	if (!udev->actconfig)
- 		return 0;
+-	memcpy(send_buf, firmware->data, FW_HDR_SIZE);
+-	err = usb_control_msg(udev, pipe, USB_REQ_DFU_DNLOAD, USB_TYPE_VENDOR,
+-			      0, 0, send_buf, FW_HDR_SIZE,
+-			      USB_CTRL_SET_TIMEOUT);
+-	if (err < 0) {
++	err = usb_control_msg_send(udev, 0, USB_REQ_DFU_DNLOAD, USB_TYPE_VENDOR,
++				   0, 0, firmware->data, FW_HDR_SIZE,
++				   USB_CTRL_SET_TIMEOUT);
++	if (err) {
+ 		BT_ERR("Can't change to loading configuration err");
+ 		goto error;
+ 	}
+@@ -259,44 +256,17 @@ static int ath3k_load_firmware(struct usb_device *udev,
  
--	return usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
--			USB_REQ_CLEAR_FEATURE, USB_RECIP_DEVICE,
--			USB_DEVICE_LTM_ENABLE, 0, NULL, 0,
--			USB_CTRL_SET_TIMEOUT);
-+	return usb_control_msg_send(udev, 0, USB_REQ_CLEAR_FEATURE, USB_RECIP_DEVICE,
-+				    USB_DEVICE_LTM_ENABLE, 0, NULL, 0, USB_CTRL_SET_TIMEOUT);
- }
- EXPORT_SYMBOL_GPL(usb_disable_ltm);
- 
-@@ -3143,10 +3131,8 @@ void usb_enable_ltm(struct usb_device *udev)
- 	if (!udev->actconfig)
- 		return;
- 
--	usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
--			USB_REQ_SET_FEATURE, USB_RECIP_DEVICE,
--			USB_DEVICE_LTM_ENABLE, 0, NULL, 0,
--			USB_CTRL_SET_TIMEOUT);
-+	usb_control_msg_send(udev, 0, USB_REQ_SET_FEATURE, USB_RECIP_DEVICE,
-+			     USB_DEVICE_LTM_ENABLE, 0, NULL, 0, USB_CTRL_SET_TIMEOUT);
- }
- EXPORT_SYMBOL_GPL(usb_enable_ltm);
- 
-@@ -3163,17 +3149,14 @@ EXPORT_SYMBOL_GPL(usb_enable_ltm);
- static int usb_enable_remote_wakeup(struct usb_device *udev)
+ static int ath3k_get_state(struct usb_device *udev, unsigned char *state)
  {
- 	if (udev->speed < USB_SPEED_SUPER)
--		return usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
--				USB_REQ_SET_FEATURE, USB_RECIP_DEVICE,
--				USB_DEVICE_REMOTE_WAKEUP, 0, NULL, 0,
--				USB_CTRL_SET_TIMEOUT);
-+		return usb_control_msg_send(udev, 0, USB_REQ_SET_FEATURE, USB_RECIP_DEVICE,
-+					    USB_DEVICE_REMOTE_WAKEUP, 0,
-+					    NULL, 0, USB_CTRL_SET_TIMEOUT);
- 	else
--		return usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
--				USB_REQ_SET_FEATURE, USB_RECIP_INTERFACE,
--				USB_INTRF_FUNC_SUSPEND,
--				USB_INTRF_FUNC_SUSPEND_RW |
--					USB_INTRF_FUNC_SUSPEND_LP,
--				NULL, 0, USB_CTRL_SET_TIMEOUT);
-+		return usb_control_msg_send(udev, 0, USB_REQ_SET_FEATURE, USB_RECIP_INTERFACE,
-+					    USB_INTRF_FUNC_SUSPEND,
-+					    USB_INTRF_FUNC_SUSPEND_RW | USB_INTRF_FUNC_SUSPEND_LP,
-+					    NULL, 0, USB_CTRL_SET_TIMEOUT);
- }
- 
- /*
-@@ -3189,15 +3172,11 @@ static int usb_enable_remote_wakeup(struct usb_device *udev)
- static int usb_disable_remote_wakeup(struct usb_device *udev)
- {
- 	if (udev->speed < USB_SPEED_SUPER)
--		return usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
--				USB_REQ_CLEAR_FEATURE, USB_RECIP_DEVICE,
--				USB_DEVICE_REMOTE_WAKEUP, 0, NULL, 0,
--				USB_CTRL_SET_TIMEOUT);
-+		return usb_control_msg_send(udev, 0, USB_REQ_CLEAR_FEATURE, USB_RECIP_DEVICE,
-+					    USB_DEVICE_REMOTE_WAKEUP, 0, NULL, 0, USB_CTRL_SET_TIMEOUT);
- 	else
--		return usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
--				USB_REQ_SET_FEATURE, USB_RECIP_INTERFACE,
--				USB_INTRF_FUNC_SUSPEND,	0, NULL, 0,
--				USB_CTRL_SET_TIMEOUT);
-+		return usb_control_msg_send(udev, 0, USB_REQ_SET_FEATURE, USB_RECIP_INTERFACE,
-+					    USB_INTRF_FUNC_SUSPEND, 0, NULL, 0, USB_CTRL_SET_TIMEOUT);
- }
- 
- /* Count of wakeup-enabled devices at or below udev */
-@@ -3844,7 +3823,7 @@ static const char * const usb3_lpm_names[]  = {
-  */
- static int usb_req_set_sel(struct usb_device *udev, enum usb3_link_state state)
- {
--	struct usb_set_sel_req *sel_values;
-+	struct usb_set_sel_req sel_values;
- 	unsigned long long u1_sel;
- 	unsigned long long u1_pel;
- 	unsigned long long u2_sel;
-@@ -3896,27 +3875,14 @@ static int usb_req_set_sel(struct usb_device *udev, enum usb3_link_state state)
- 	if (u2_pel > USB3_LPM_MAX_U2_SEL_PEL)
- 		u2_pel = USB3_LPM_MAX_U2_SEL_PEL;
- 
--	/*
--	 * usb_enable_lpm() can be called as part of a failed device reset,
--	 * which may be initiated by an error path of a mass storage driver.
--	 * Therefore, use GFP_NOIO.
--	 */
--	sel_values = kmalloc(sizeof *(sel_values), GFP_NOIO);
--	if (!sel_values)
+-	int ret, pipe = 0;
+-	char *buf;
+-
+-	buf = kmalloc(sizeof(*buf), GFP_KERNEL);
+-	if (!buf)
 -		return -ENOMEM;
 -
--	sel_values->u1_sel = u1_sel;
--	sel_values->u1_pel = u1_pel;
--	sel_values->u2_sel = cpu_to_le16(u2_sel);
--	sel_values->u2_pel = cpu_to_le16(u2_pel);
-+	sel_values.u1_sel = u1_sel;
-+	sel_values.u1_pel = u1_pel;
-+	sel_values.u2_sel = cpu_to_le16(u2_sel);
-+	sel_values.u2_pel = cpu_to_le16(u2_pel);
- 
--	ret = usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
--			USB_REQ_SET_SEL,
--			USB_RECIP_DEVICE,
--			0, 0,
--			sel_values, sizeof *(sel_values),
--			USB_CTRL_SET_TIMEOUT);
--	kfree(sel_values);
-+	ret = usb_control_msg_send(udev, 0, USB_REQ_SET_SEL, USB_RECIP_DEVICE,
-+				   0, 0, &sel_values, sizeof(sel_values),
-+				   USB_CTRL_SET_TIMEOUT);
- 	return ret;
+-	pipe = usb_rcvctrlpipe(udev, 0);
+-	ret = usb_control_msg(udev, pipe, ATH3K_GETSTATE,
+-			      USB_TYPE_VENDOR | USB_DIR_IN, 0, 0,
+-			      buf, sizeof(*buf), USB_CTRL_SET_TIMEOUT);
+-
+-	*state = *buf;
+-	kfree(buf);
+-
+-	return ret;
++	return usb_control_msg_recv(udev, 0, ATH3K_GETSTATE,
++				    USB_TYPE_VENDOR | USB_DIR_IN, 0, 0,
++				    state, 1, USB_CTRL_SET_TIMEOUT);
  }
  
-@@ -4056,7 +4022,7 @@ static void usb_enable_link_state(struct usb_hcd *hcd, struct usb_device *udev,
- 	 * associated with the link state we're about to enable.
- 	 */
- 	ret = usb_req_set_sel(udev, state);
+ static int ath3k_get_version(struct usb_device *udev,
+ 			struct ath3k_version *version)
+ {
+-	int ret, pipe = 0;
+-	struct ath3k_version *buf;
+-	const int size = sizeof(*buf);
+-
+-	buf = kmalloc(size, GFP_KERNEL);
+-	if (!buf)
+-		return -ENOMEM;
+-
+-	pipe = usb_rcvctrlpipe(udev, 0);
+-	ret = usb_control_msg(udev, pipe, ATH3K_GETVERSION,
+-			      USB_TYPE_VENDOR | USB_DIR_IN, 0, 0,
+-			      buf, size, USB_CTRL_SET_TIMEOUT);
+-
+-	memcpy(version, buf, size);
+-	kfree(buf);
+-
+-	return ret;
++	return usb_control_msg_recv(udev, 0, ATH3K_GETVERSION,
++				    USB_TYPE_VENDOR | USB_DIR_IN, 0, 0,
++				    version, sizeof(*version), USB_CTRL_SET_TIMEOUT);
+ }
+ 
+ static int ath3k_load_fwfile(struct usb_device *udev,
+@@ -316,13 +286,10 @@ static int ath3k_load_fwfile(struct usb_device *udev,
+ 	}
+ 
+ 	size = min_t(uint, count, FW_HDR_SIZE);
+-	memcpy(send_buf, firmware->data, size);
+ 
+-	pipe = usb_sndctrlpipe(udev, 0);
+-	ret = usb_control_msg(udev, pipe, ATH3K_DNLOAD,
+-			USB_TYPE_VENDOR, 0, 0, send_buf,
+-			size, USB_CTRL_SET_TIMEOUT);
+-	if (ret < 0) {
++	ret = usb_control_msg_send(udev, 0, ATH3K_DNLOAD, USB_TYPE_VENDOR, 0, 0,
++				   firmware->data, size, USB_CTRL_SET_TIMEOUT);
++	if (ret) {
+ 		BT_ERR("Can't change to loading configuration err");
+ 		kfree(send_buf);
+ 		return ret;
+@@ -355,23 +322,19 @@ static int ath3k_load_fwfile(struct usb_device *udev,
+ 	return 0;
+ }
+ 
+-static int ath3k_switch_pid(struct usb_device *udev)
++static void ath3k_switch_pid(struct usb_device *udev)
+ {
+-	int pipe = 0;
+-
+-	pipe = usb_sndctrlpipe(udev, 0);
+-	return usb_control_msg(udev, pipe, USB_REG_SWITCH_VID_PID,
+-			USB_TYPE_VENDOR, 0, 0,
+-			NULL, 0, USB_CTRL_SET_TIMEOUT);
++	usb_control_msg_send(udev, 0, USB_REG_SWITCH_VID_PID, USB_TYPE_VENDOR,
++			     0, 0, NULL, 0, USB_CTRL_SET_TIMEOUT);
+ }
+ 
+ static int ath3k_set_normal_mode(struct usb_device *udev)
+ {
+ 	unsigned char fw_state;
+-	int pipe = 0, ret;
++	int ret;
+ 
+ 	ret = ath3k_get_state(udev, &fw_state);
 -	if (ret < 0) {
 +	if (ret) {
- 		dev_warn(&udev->dev, "Set SEL for device-initiated %s failed.\n",
- 				usb3_lpm_names[state]);
- 		return;
+ 		BT_ERR("Can't get state to change to normal mode err");
+ 		return ret;
+ 	}
+@@ -381,10 +344,9 @@ static int ath3k_set_normal_mode(struct usb_device *udev)
+ 		return 0;
+ 	}
+ 
+-	pipe = usb_sndctrlpipe(udev, 0);
+-	return usb_control_msg(udev, pipe, ATH3K_SET_NORMAL_MODE,
+-			USB_TYPE_VENDOR, 0, 0,
+-			NULL, 0, USB_CTRL_SET_TIMEOUT);
++	return usb_control_msg_send(udev, 0, ATH3K_SET_NORMAL_MODE,
++				    USB_TYPE_VENDOR, 0, 0, NULL, 0,
++				    USB_CTRL_SET_TIMEOUT);
+ }
+ 
+ static int ath3k_load_patch(struct usb_device *udev)
+@@ -397,7 +359,7 @@ static int ath3k_load_patch(struct usb_device *udev)
+ 	int ret;
+ 
+ 	ret = ath3k_get_state(udev, &fw_state);
+-	if (ret < 0) {
++	if (ret) {
+ 		BT_ERR("Can't get state to change to load ram patch err");
+ 		return ret;
+ 	}
+@@ -408,7 +370,7 @@ static int ath3k_load_patch(struct usb_device *udev)
+ 	}
+ 
+ 	ret = ath3k_get_version(udev, &fw_version);
+-	if (ret < 0) {
++	if (ret) {
+ 		BT_ERR("Can't get version to change to load ram patch err");
+ 		return ret;
+ 	}
+@@ -449,13 +411,13 @@ static int ath3k_load_syscfg(struct usb_device *udev)
+ 	int clk_value, ret;
+ 
+ 	ret = ath3k_get_state(udev, &fw_state);
+-	if (ret < 0) {
++	if (ret) {
+ 		BT_ERR("Can't get state to change to load configuration err");
+ 		return -EBUSY;
+ 	}
+ 
+ 	ret = ath3k_get_version(udev, &fw_version);
+-	if (ret < 0) {
++	if (ret) {
+ 		BT_ERR("Can't get version to change to load ram patch err");
+ 		return ret;
+ 	}
+@@ -529,7 +491,7 @@ static int ath3k_probe(struct usb_interface *intf,
+ 			return ret;
+ 		}
+ 		ret = ath3k_set_normal_mode(udev);
+-		if (ret < 0) {
++		if (ret) {
+ 			BT_ERR("Set normal mode failed");
+ 			return ret;
+ 		}
 -- 
 2.28.0
 
