@@ -2,159 +2,202 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62190C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC64C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35BD720826
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:55:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUhRbwVR"
+	by mail.kernel.org (Postfix) with ESMTP id 60B9C207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:56:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgIBHzo (ORCPT
+        id S1726895AbgIBH43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:55:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgIBHzi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:55:38 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 802EAC061244;
-        Wed,  2 Sep 2020 00:55:38 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id q3so1906061pls.11;
-        Wed, 02 Sep 2020 00:55:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vv9wafYlcRndezilwjOVw+Uvg14avW3QcJVd3Hrp9X0=;
-        b=dUhRbwVRhGDqCmPDJulA9D1NH7C7y9XHVxD2cCdGOWci+8hb5IympO9z/mRng67H8/
-         EdOTtIbOUtlS0mzLi//6vD4CigO1owTjoWyCjHgRxEoqhFi1zxwgFApN05D3L06ODh+s
-         AVvnjlPrW+HYJTAL/8YojwCSWZA0hmWlOyI4Z0ujWxLb7QaZJHPkmOvkknBkjULMUk8O
-         vZCA+YksoU5lSSMLMuTxe0RWE+SopR/Bz0y9IzEH472wSI8+jrXlqe5BwxCUUpZ/v2qU
-         95IpUaWjKi1whSEN6uAGZZ96PnIq+fl78D9OB6zeF8Yss0rzX0NdmyXMSAg8XGrUO6+9
-         /VDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vv9wafYlcRndezilwjOVw+Uvg14avW3QcJVd3Hrp9X0=;
-        b=IRLT6+5EpSjhCNN2Y+fuqxvT2I7RU50cwxBbtEOS8deSGrJwEGlRdPApKzPES+ZLyO
-         SFnp5iWtdGg8iIFlyjQXPH++EoPKxfbxZv5RGcYNc0oEYbru4GZwC/1QqaogidogrYgh
-         gABgTyJvETFXBA65OhtSvaPW08EmiHELT5adZqNP267l2b6+KAkFfUNQ7bj3YP0JJoVN
-         pXQh0FaX2pI/zblAIl+lz24ALGt6c38x1X9kL7nNmYpanp8pZDEM2bG9dEvD8i0VQtZ6
-         CpZBvw1AObVOEwFuoUxmH7dGSMQo51ZXaFY2WMeSept7X+IBO3t+sg1IftDnDOoziV0T
-         O/ZQ==
-X-Gm-Message-State: AOAM532Gw5cmG/vr2kwCptWuwxHS4t3hqvTTpVUb3dnMSu6fyjGqjIxc
-        RAVGU/Z2oW5Fzh/AIiF60mnxwt+NnnH5bZuPAWkmNH2bPx8=
-X-Google-Smtp-Source: ABdhPJxNZ9O3Sj7OvHiGloTdmPJ7LxTz4zR2Er8HbAv/pmqjuckAEtpUdzJasMFcDiKbP+NTn6IiUaUkABxel3cBWdE=
-X-Received: by 2002:a17:902:b715:: with SMTP id d21mr1104159pls.92.1599033338028;
- Wed, 02 Sep 2020 00:55:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200826034455.28707-1-lszubowi@redhat.com> <20200826034455.28707-3-lszubowi@redhat.com>
-In-Reply-To: <20200826034455.28707-3-lszubowi@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 2 Sep 2020 10:55:21 +0300
-Message-ID: <CAHp75Vec0a3LC7dGY6wacQu0brc+Zjfowt6kGdcZ9sfMzoDR9g@mail.gmail.com>
-Subject: Re: [PATCH 2/3] integrity: Move import of MokListRT certs to a
- separate routine
-To:     Lenny Szubowicz <lszubowi@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
+        Wed, 2 Sep 2020 03:56:29 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:32260 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbgIBH43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 03:56:29 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BhGV10PBXzB09Zc;
+        Wed,  2 Sep 2020 09:56:25 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id X4dnrfZE-x6l; Wed,  2 Sep 2020 09:56:24 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BhGV05Xz7zB09Zb;
+        Wed,  2 Sep 2020 09:56:24 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B79728B7A4;
+        Wed,  2 Sep 2020 09:56:25 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id NtV84Jj5A1jP; Wed,  2 Sep 2020 09:56:25 +0200 (CEST)
+Received: from po17688vm.idsi0.si.c-s.fr (unknown [10.25.210.31])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 42EF18B784;
+        Wed,  2 Sep 2020 09:56:25 +0200 (CEST)
+Subject: Re: [PATCH 2/2] powerpc/vdso32: link vdso64 with linker
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
         Kees Cook <keescook@chromium.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Jones <pjones@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Prarit Bhargava <prarit@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fangrui Song <maskray@google.com>
+References: <20200901222523.1941988-1-ndesaulniers@google.com>
+ <20200901222523.1941988-3-ndesaulniers@google.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <371fd179-7d25-1393-f878-10eeb6ad12cc@csgroup.eu>
+Date:   Wed, 2 Sep 2020 07:56:13 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200901222523.1941988-3-ndesaulniers@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 6:45 AM Lenny Szubowicz <lszubowi@redhat.com> wrote:
->
-> Move the loading of certs from the UEFI MokListRT into a separate
-> routine to facilitate additional MokList functionality.
->
-> There is no visible functional change as a result of this patch.
-> Although the UEFI dbx certs are now loaded before the MokList certs,
-> they are loaded onto different key rings. So the order of the keys
-> on their respective key rings is the same.
 
-...
 
->  /*
-> + * load_moklist_certs() - Load MokList certs
-> + *
-> + * Returns:    Summary error status
-> + *
-> + * Load the certs contained in the UEFI MokListRT database into the
-> + * platform trusted keyring.
-> + */
+On 9/1/20 10:25 PM, Nick Desaulniers wrote:
+> Rather than invoke the compiler as the driver, use the linker. That way
+> we can check --orphan-handling=warn support correctly, as cc-ldoption
+> was removed in
+> commit 055efab3120b ("kbuild: drop support for cc-ldoption").
+> 
+> Requires dropping the .got section.  I couldn't find how it was used in
+> the vdso32.
+> 
+> Fixes: commit f2af201002a8 ("powerpc/build: vdso linker warning for orphan sections")
+> Link: https://lore.kernel.org/lkml/CAKwvOdnn3wxYdJomvnveyD_njwRku3fABWT_bS92duihhywLJQ@mail.gmail.com/
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+> Not sure removing .got is a good idea or not.  Otherwise I observe the
+> following link error:
+> powerpc-linux-gnu-ld: warning: orphan section `.got' from `arch/powerpc/kernel/vdso32/sigtramp.o' being placed in section `.got'
+> powerpc-linux-gnu-ld: _GLOBAL_OFFSET_TABLE_ not defined in linker created .got
+> powerpc-linux-gnu-ld: final link failed: bad value
+> 
+> sigtramp.c doesn't mention anything from the GOT AFAICT, and doesn't
+> look like it contains relocations that do, so I'm not sure where
+> references to _GLOBAL_OFFSET_TABLE_ are coming from.
 
-Hmm... Is it intentionally kept out of kernel doc format?
+I'm getting the same but only when building for PPC64.
+I don't get any reference to sigtramp.o though:
 
-> +static int __init load_moklist_certs(void)
-> +{
-> +       efi_guid_t mok_var = EFI_SHIM_LOCK_GUID;
-> +       void *mok = NULL;
-> +       unsigned long moksize = 0;
-> +       efi_status_t status;
-> +       int rc = 0;
+   CALL    scripts/checksyscalls.sh
+   CALL    scripts/atomic/check-atomics.sh
+   VDSO32A arch/powerpc/kernel/vdso32/sigtramp.o
+   VDSO32A arch/powerpc/kernel/vdso32/gettimeofday.o
+   VDSO32A arch/powerpc/kernel/vdso32/datapage.o
+   VDSO32A arch/powerpc/kernel/vdso32/cacheflush.o
+   VDSO32A arch/powerpc/kernel/vdso32/note.o
+   VDSO32A arch/powerpc/kernel/vdso32/getcpu.o
+   LD      arch/powerpc/kernel/vdso32/vdso32.so.dbg
+powerpc64-linux-ld: _GLOBAL_OFFSET_TABLE_ not defined in linker created .got
+powerpc64-linux-ld: final link failed: Bad value
 
-Redundant assignment (see below).
+(GCC 8.1, Binutils 2.30)
 
-> +       /* Get MokListRT. It might not exist, so it isn't an error
-> +        * if we can't get it.
-> +        */
-> +       mok = get_cert_list(L"MokListRT", &mok_var, &moksize, &status);
+So it seems that the got section is being created by the linker. Don't 
+know why though.
 
-> +       if (!mok) {
 
-Why not positive conditional? Sometimes ! is hard to notice.
+With GCC 10.1, binutils 2.34 I get:
 
-> +               if (status == EFI_NOT_FOUND)
-> +                       pr_debug("MokListRT variable wasn't found\n");
-> +               else
-> +                       pr_info("Couldn't get UEFI MokListRT\n");
-> +       } else {
-> +               rc = parse_efi_signature_list("UEFI:MokListRT",
-> +                                             mok, moksize, get_handler_for_db);
-> +               if (rc)
-> +                       pr_err("Couldn't parse MokListRT signatures: %d\n", rc);
-> +               kfree(mok);
+   LDS     arch/powerpc/kernel/vdso32/vdso32.lds
+   VDSO32A arch/powerpc/kernel/vdso32/sigtramp.o
+   VDSO32A arch/powerpc/kernel/vdso32/gettimeofday.o
+   VDSO32A arch/powerpc/kernel/vdso32/datapage.o
+   VDSO32A arch/powerpc/kernel/vdso32/cacheflush.o
+   VDSO32A arch/powerpc/kernel/vdso32/note.o
+   VDSO32A arch/powerpc/kernel/vdso32/getcpu.o
+   LD      arch/powerpc/kernel/vdso32/vdso32.so.dbg
+powerpc64-linux-ld: warning: orphan section `.branch_lt' from 
+`arch/powerpc/kernel/vdso32/sigtramp.o' being placed in section `.branch_lt'
+powerpc64-linux-ld: _GLOBAL_OFFSET_TABLE_ not defined in linker created .got
+powerpc64-linux-ld: final link failed: bad value
 
- kfree(...)
- if (rc)
-  ...
- return rc;
+I can't see any .branch_lt section when objdumping sigtramp.o or any 
+other .o
 
-And with positive conditional there will be no need to have redundant
-'else' followed by additional level of indentation.
+When I move sigtramp.o at the end of the definition of obj-vdso32 in 
+Makefile, I then get:
 
-> +       }
+powerpc64-linux-ld: warning: orphan section `.branch_lt' from 
+`arch/powerpc/kernel/vdso32/gettimeofday.o' being placed in section 
+`.branch_lt'
+powerpc64-linux-ld: _GLOBAL_OFFSET_TABLE_ not defined in linker created .got
+powerpc64-linux-ld: final link failed: bad value
 
-> +       return rc;
 
-return 0;
+gettimeofday.o now being the first object in obj-vdso32
 
-> +}
 
-P.S. Yes, I see that the above was in the original code, so, consider
-my comments as suggestions to improve the code.
+Christophe
 
--- 
-With Best Regards,
-Andy Shevchenko
+> 
+>   arch/powerpc/kernel/vdso32/Makefile     | 7 +++++--
+>   arch/powerpc/kernel/vdso32/vdso32.lds.S | 3 ++-
+>   2 files changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
+> index 87ab1152d5ce..611a5951945a 100644
+> --- a/arch/powerpc/kernel/vdso32/Makefile
+> +++ b/arch/powerpc/kernel/vdso32/Makefile
+> @@ -27,6 +27,9 @@ UBSAN_SANITIZE := n
+>   ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
+>   	-Wl,-soname=linux-vdso32.so.1 -Wl,--hash-style=both
+>   asflags-y := -D__VDSO32__ -s
+> +ldflags-y := -shared -soname linux-vdso32.so.1 \
+> +	$(call ld-option, --eh-frame-hdr) \
+> +	$(call ld-option, --orphan-handling=warn) -T
+>   
+>   obj-y += vdso32_wrapper.o
+>   extra-y += vdso32.lds
+> @@ -49,8 +52,8 @@ $(obj-vdso32): %.o: %.S FORCE
+>   	$(call if_changed_dep,vdso32as)
+>   
+>   # actual build commands
+> -quiet_cmd_vdso32ld = VDSO32L $@
+> -      cmd_vdso32ld = $(VDSOCC) $(c_flags) $(CC32FLAGS) -o $@ $(call cc-ldoption, -Wl$(comma)--orphan-handling=warn) -Wl,-T$(filter %.lds,$^) $(filter %.o,$^)
+> +quiet_cmd_vdso32ld = LD      $@
+> +      cmd_vdso32ld = $(cmd_ld)
+>   quiet_cmd_vdso32as = VDSO32A $@
+>         cmd_vdso32as = $(VDSOCC) $(a_flags) $(CC32FLAGS) -c -o $@ $<
+>   
+> diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+> index 4c985467a668..0ccdebad18b8 100644
+> --- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
+> +++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+> @@ -61,7 +61,6 @@ SECTIONS
+>   	.fixup		: { *(.fixup) }
+>   
+>   	.dynamic	: { *(.dynamic) }		:text	:dynamic
+> -	.got		: { *(.got) }			:text
+>   	.plt		: { *(.plt) }
+>   
+>   	_end = .;
+> @@ -108,7 +107,9 @@ SECTIONS
+>   	.debug_varnames  0 : { *(.debug_varnames) }
+>   
+>   	/DISCARD/	: {
+> +		*(.got)
+>   		*(.note.GNU-stack)
+> +		*(.branch_lt)
+>   		*(.data .data.* .gnu.linkonce.d.* .sdata*)
+>   		*(.bss .sbss .dynbss .dynsbss)
+>   		*(.glink .iplt .plt .rela*)
+> 
