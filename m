@@ -2,83 +2,120 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5944C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AD8C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5ECE2067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07AE52067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ehr15v6/"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="Katv3Er1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbgIBRBy (ORCPT
+        id S1728805AbgIBRCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 13:01:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728788AbgIBRBt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:01:49 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F0EC061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 10:01:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=iwyKWeurV0U3w6yu8w0BQPdMXUK2mvLQyCEX2rbplBw=; b=Ehr15v6/C4EYcrA3Yt+djMgKo8
-        A1DqcEyrGEWMtvNZyL6swSt91TzsMEdUw2aBY08qV7UOh5/mVHqR6Bxulj4TJrzrxA+NEdAb/fyyG
-        FJKorVdcr9eZTX+/8HZFErOnWr4tjOPSGcyQr0Ek3NKfnD0jJtT+LRl7flnZ4aerXfxfGP/xOVYJK
-        qv90z+tU3nUP3beVLBvdKE2nodw6EHmova1haW/RzSfrJGxt6sJBlUj/xynLJeuzKOlyoRlH9Sk3w
-        90clDH4dckwUyPQgUSOVp6aYt43ZOjD9XszAVoF/QsXDZ6rYGb/O0aGwf1cAjlaoS0VOOQE1wd1Fg
-        oVBGLzQw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDW8k-0004sZ-4Q; Wed, 02 Sep 2020 17:01:42 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 82575307697;
-        Wed,  2 Sep 2020 19:01:40 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6FC732B9E8F06; Wed,  2 Sep 2020 19:01:40 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 19:01:40 +0200
-From:   peterz@infradead.org
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Feng Tang <feng.tang@intel.com>,
+        Wed, 2 Sep 2020 13:02:07 -0400
+Received: from mail-co1nam11on2066.outbound.protection.outlook.com ([40.107.220.66]:11893
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726293AbgIBQ6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:58:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N/1HVMMSb3342qizsJmnDsV220chwTLlE7+M0QHACwL/83nCIErInsxGYwa+9PkjT8QlE+CYvB7LPMRL1QUo/vCE02HremS1H5mUFOyKepz2vDWCRQk6fnE8zCTtvKvoNKIXG6rvc2maEMyJZUIZQF1QhZ2uC+BKBt1fUZgIWdGCURPzeN+b7nAXNEJpSpkQZ/4arnvi1IqItNVKpLWevIrSrJNqusIbFC899JOO2gJZoFMb8DWfUnsNp736B4Uo6igLJeTgJok/J+AN/9ENjU2vVMhre5YrM3Wct0/W78CR9M9BkQGhwdVqwLrr0jwmagKnrEn3kzwJJ4K2LhkTmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zSlXYCsry2CVxm8M1GpGYo7MbziIJcFay8NwyKA0UrU=;
+ b=OdzZw9hoFoOcg198utGHJgWjmRf5HIb7kyo/pXE6BdDkSGCuNqOoAPx90kQhvHd2OOP/+dcs879Bg57JVuvXOt/TtQuNRKGLcgvqmj8NUs4NZG833PHdAdNCbW37HRzhPrYwaHGD8wJLKFF85l5PnGvHgv5nitHDYGXONFvpx+ItkN1iGiBMAbjRyhe38KEZyJsw/njWeSP1dOIbsGu+LMIihsAsGcNDyBwcM561w3rfMvdGN8wBQsBL6tPU/n01EGOMki+yS9pvbK/H9CE4OxNQei7I0Tz8QudEwHC4zlNfSsZhkefxjxJn+dCedUujA9vwivnlH3T/zrFa0a4HYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zSlXYCsry2CVxm8M1GpGYo7MbziIJcFay8NwyKA0UrU=;
+ b=Katv3Er1eb8Of2KlJjsMSe2rhzj3DnwrD2PSK2uPiF5psgwKMlKbxhzIdGpmkcoj46MKuar4fHdOp7JPS6Wv3YDJ1Q4hDAP8iLqw5Tvd4kapDzrFwPqVJ0o5bCn3t6aU40P8RC4cKOOkU1WCgjoaD3JlUpI33YVOKUn2XA45y70=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (2603:10b6:a03:4a::18)
+ by BYAPR05MB4070.namprd05.prod.outlook.com (2603:10b6:a02:88::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.5; Wed, 2 Sep
+ 2020 16:58:16 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::9cef:3341:6ae9:a2c5]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::9cef:3341:6ae9:a2c5%7]) with mapi id 15.20.3348.014; Wed, 2 Sep 2020
+ 16:58:16 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] tools/x86: add kcpuid tool to show raw CPU features
-Message-ID: <20200902170140.GQ1362448@hirez.programming.kicks-ass.net>
-References: <1598514543-90152-1-git-send-email-feng.tang@intel.com>
- <20200902164538.GN1362448@hirez.programming.kicks-ass.net>
- <20200902165501.GC21537@zn.tnic>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86 <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] x86/special_insn: reverse __force_order logic
+Thread-Topic: [PATCH] x86/special_insn: reverse __force_order logic
+Thread-Index: AQHWgSgoL1dmFxhMRECqVhfYnO9uuKlVeiqAgAAXogCAAABjgA==
+Date:   Wed, 2 Sep 2020 16:58:16 +0000
+Message-ID: <1678A071-A4D7-4BE6-A768-0985E3F10444@vmware.com>
+References: <20200901161857.566142-1-namit@vmware.com>
+ <20200902125402.GG1362448@hirez.programming.kicks-ass.net>
+ <1E3FD845-E71A-4518-A0BF-FAD31CBC3E28@vmware.com>
+ <20200902165652.GO1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200902165652.GO1362448@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=vmware.com;
+x-originating-ip: [2601:647:4700:9b2:4945:3524:19f7:23e9]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f1cea981-c015-4d08-e34c-08d84f6162d7
+x-ms-traffictypediagnostic: BYAPR05MB4070:
+x-microsoft-antispam-prvs: <BYAPR05MB407082A07D3BE2E56AA9B532D02F0@BYAPR05MB4070.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uwbClMklO+ofyL1egIfhB9esJfsvrODcm236RFsFRtbb6s8LC7GiKMRGuQ6bCctY2BZbJR421hw3T1yLswXxcL/gw/xOQbDLRTWHA4cXARZQbzZ3JcdPczlxB170Iu8HHwxbBq3G2tFR/nwmt3w/3t/EvxU3deFvnh1j6HATxAiI6Yc+RwgLlmyduZUGNVC/vC2cYCzfFc5tI8NOA+tl2IAjsyCREUVUZxUaagTcNjXOiNcaSBF2EHzhqECFsZ+u1sRiwCv05Q0aGEaaLiJyszh+x+vxHyJjiv/OjNz5lYfS/fR8KxK61yyvSXClLA325pqm1kAGirckwfQabT6ISw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR05MB4776.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(396003)(376002)(39860400002)(366004)(6486002)(83380400001)(76116006)(316002)(2906002)(86362001)(6506007)(66946007)(478600001)(33656002)(66556008)(6512007)(54906003)(36756003)(64756008)(2616005)(6916009)(66476007)(66446008)(186003)(7416002)(4326008)(8936002)(4744005)(5660300002)(71200400001)(8676002)(53546011);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: V+PcX61a3nCIowl0PI0DT61ZQbKO9AUSor+KIxrto/Yf00faLcW2zpTBTfiYgVocGdF4E+rs39fryalTXUvSPgIB4gru8g1DZwd8/ANGmLTHgrrLnj1/xl2J6EyHABrpSViPLs5F5VyCV0P/utz/4YY/jJcBY/xbCzFSslFfNYtggKiQm9dTUI4s3Oe/srBCf7EUkM6MuNrjh3nW+PDKoRiRFaBMi5vpilayJkBhPXi7ItdefvLqHZtqhSAPnYTf7k04rw2CA7Wbgw+yrWE2+HoLxy13Y7fvqSnx7BxFb0rq1JOKFBDfkKkYISeQGivzTIf1B7pYfb1Atx9MZU/9qbyKsgKGap1SVEMZyFYAzH6jjANbvEUMqDB4gVIxRTSL0JLCnfTfFYnW/gu9pvZQJQdU6bwUiXO6B1KxnT/yncSzTb6rH4JLZTV+yUCdV078s2XvpGg1TMGH9zIZqeLaLRhMqP9PB26AT+bIz1XGTBNCdG+JI5TkMz35iXEUv2NngxjTzVFHAw9GdPqB7qJzPvTxjvsgvg5GBY3gtr9m/8aTHK5vXz7eKyuLwsNomYjOKw5wIrHJRDQmz/IXsC4VXAwGtt6PD0sAI86d0/bV3jdDJpxpLavsYLlhndyyP5kRvkrvCXa5Ru83wjLEPMe+5qKXrkMrW4Srhq4sQjrqYma8aRdX+DlVpEpU6hxmFsUiDvB+MCcjBxV66JStjpMNCA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <EDF969D98B8F3147811B860589CA9521@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902165501.GC21537@zn.tnic>
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR05MB4776.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1cea981-c015-4d08-e34c-08d84f6162d7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 16:58:16.0313
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1oUNrkGvpL7mTDDi4mxD6RHyKOQ98gGE/qGByz53QlDbt7LqpJ61tLl0+oEIX40BeoxIv2alM6/HCKRG6XC8Eg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 06:55:01PM +0200, Borislav Petkov wrote:
-> On Wed, Sep 02, 2020 at 06:45:38PM +0200, peterz@infradead.org wrote:
-> > We really should clear the CPUID bits when the kernel explicitly
-> > disables things.
-> 
-> Actually, you want to *disable* the functionality behind it by clearing
-> a bit in CR4 - and yes, not all features have CR4 bits - so that
-> luserspace doesn't "probe" the existence of certain instructions.
-> 
-> Example: you can still try to run RDRAND and succeed even if the
-> corresponding CPUID bit is clear.
+> On Sep 2, 2020, at 9:56 AM, peterz@infradead.org wrote:
+>=20
+> On Wed, Sep 02, 2020 at 03:32:18PM +0000, Nadav Amit wrote:
+>=20
+>> Thanks for pointer. I did not see the discussion, and embarrassingly, I =
+have
+>> also never figured out how to reply on lkml emails without registering t=
+o
+>> lkml.
+>=20
+> The lore.kernel.org thing I pointed you to allows you to download an
+> mbox with the email in (see the very bottom of the page). Use your
+> favorite MUA to open it and reply :-)
 
-Well yes, but as you say, we don't have that :/ Clearing it in CPUID is
-the best we can do.
+Thanks!=
