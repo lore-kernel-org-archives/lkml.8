@@ -2,206 +2,222 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F75C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F944C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCFC1206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05EDE206EB
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:12:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="KyXUVz3o";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Soqx4+uH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G4+KTfIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgIBSHM (ORCPT
+        id S1727892AbgIBSMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:07:12 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:46339 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727929AbgIBSGh (ORCPT
+        Wed, 2 Sep 2020 14:12:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgIBSMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:06:37 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5A0DF5C01B7;
-        Wed,  2 Sep 2020 14:06:33 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 02 Sep 2020 14:06:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references:reply-to
-        :mime-version:content-transfer-encoding; s=fm1; bh=uV0fK8A8kyNXU
-        7VUiy/PxZphd7Odkhk2JVfsAnagHMA=; b=KyXUVz3o8pbUikkX3gIY6OzDUrVdo
-        lJZPkDDssk92G83YzNS6IudfjKbKwektFnszCCSdcOL3QPzd6Ripk0pa+okmTBJS
-        9YutRA/C57/UZyWE2neOW1jmWfWpw/tSUKGGwBCzCrJg3QWaDdtz14BTyIreDlQD
-        Y767g4Tthf9MM5uzf4BCcrZXmM7dB9P/RB8Blil0Z92zfZQf9unYNM1aBhCq+cr4
-        SsZ/oVPyxZUsgurQjkKR3Ei68wjp5+sUXo9eZLn45WIE3c3C6B9tiJLXhFk3sYsS
-        KGHbApaOLdL6qh4SqZVF0suQZkPs9EGla7uypGM7hDmE4SJEbkzW9pLAw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:reply-to:subject
-        :to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=uV0fK8A8kyNXU7VUiy/PxZphd7Odkhk2JVfsAnagHMA=; b=Soqx4+uH
-        CG+o25MOr/QSIRCN3hrUPo6jC71tJuT4TYMcPJcaSW8LPYAU9ZsbE0YaLrGgk6uN
-        WmZDVhqOCQDLFuaEFU6xYjyD9i42lq3EkpAK3uPqYHqSwsGQAl5OgVnsAhlL7AFe
-        eFIz1as9E9UUovorMa8QaFh4ldY2oHqJ69/VmsvljpvRSqd+xieYvVrbGtrLGhe+
-        Q8nCMvNKK25MOjC/WWhgyUAAF66y7zj0AN7CFO3VgNIpj+j6c031TFdJZjWs3cB/
-        3zL7p35gv7gMDaVoqvNcWsonCzI3O51j+cl50SMKZ9RaBEIdzOZ+jU3+26uB6e5p
-        UUcmwjbcSKnQUw==
-X-ME-Sender: <xms:KN9PXy7jZhc--P9FTUpTLozQaOuSCSdNbjSkum1KpulNzXg5qM56zg>
-    <xme:KN9PX74qSAE-1B7lxiB04FlnQTOIqpej-X0Y94F8aWqaaiP0XazksYlkU1ZSeVNwp
-    MKiuta4d_qEJ1KVyQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledguddvudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvffufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpegkihcu
-    jggrnhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrhhnpeduhf
-    ffveektdduhfdutdfgtdekkedvhfetuedufedtgffgvdevleehheevjefgtdenucfkphep
-    uddvrdegiedruddtiedrudeigeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpeiiihdrhigrnhesshgvnhhtrdgtohhm
-X-ME-Proxy: <xmx:KN9PXxc_qYTTzrrKzAgv0mxzoG32xTtguO8zd5dPYMEI6hLBQieJgQ>
-    <xmx:KN9PX_Ly1eo4iOYj4s4r8G1hD6wYEH-JeZ8bwkB21eqw8GNY0IjAKw>
-    <xmx:KN9PX2KhuUT997uB8ARr6GbAKm9HoxGo32dfLuCU4q3bStqvJj5xzw>
-    <xmx:Kd9PX3rgKXQF-owIZywJHHE4Kyh5XyJvlQ1LFrRF_47CvdNR6ReG-A>
-Received: from nvrsysarch6.NVidia.COM (unknown [12.46.106.164])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6C61D30600A9;
-        Wed,  2 Sep 2020 14:06:32 -0400 (EDT)
-From:   Zi Yan <zi.yan@sent.com>
-To:     linux-mm@kvack.org, Roman Gushchin <guro@fb.com>
-Cc:     Rik van Riel <riel@surriel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>
-Subject: [RFC PATCH 07/16] mm: stats: make smap stats understand PUD THPs.
-Date:   Wed,  2 Sep 2020 14:06:19 -0400
-Message-Id: <20200902180628.4052244-8-zi.yan@sent.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200902180628.4052244-1-zi.yan@sent.com>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
-Reply-To: Zi Yan <ziy@nvidia.com>
+        Wed, 2 Sep 2020 14:12:00 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A15BAC061244;
+        Wed,  2 Sep 2020 11:11:58 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id s10so145238plp.1;
+        Wed, 02 Sep 2020 11:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+6TOmOrCZtm2PKElQwKKFVR8K33LhkQtrY60ZBYOlVA=;
+        b=G4+KTfIXvJ9/twpD5m8b8olPRan3z9kLrIzzjpQkpjEY0tZ1wc0D3JlIE9c8bGrfG1
+         Pe+RWtZvCYb3yicE3HgDvzpVhmpjdP1uoUVWKDXwEm5n2BepWyF3w/5y+PzbQrBj/1pm
+         Wg8rnif76+cyALJIPWXr1ZWOd0DONOJg3MBYaspXbRD1p2hWh+UdBOdsthJi2sQd7E2i
+         kmVcIG2qlwR8BlM5g/dMpl+I9d51nVWXw9aISZnpxGiA83Gftm4I7wwLSoWxIczwvaXA
+         8Gv6evpieoOiN5/6nk/4D2hfyb3bTQTH56/T/G5i6j60MTKlYFk1y4EEMd8sHxbXjW4s
+         7uYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+6TOmOrCZtm2PKElQwKKFVR8K33LhkQtrY60ZBYOlVA=;
+        b=V+eRSxyfvMAfc9LXJcCi5yDSiuntqZwJ/+7WAKDs//DTQoSXQ3w1dKV3wPIs0y/+4K
+         ijULJaPl6JY5zDWHRYi2WXMZQ9y+xi4IM6miw8jl8Ymg1Toc2qz+Z0oN1qsf5ZXQ+QY6
+         9fOOS7QdEgVhosBiIXY8fOaqU50vV6ruD/oxxeebaorPLEcvQQWr+oPLbkXGrOc0z+nz
+         TdlIhnADCCeIMld9IubskhddMlBqCu/AXeqXAxiAT2PRGOUqHG28X2srLOL6G8jnAxu9
+         rcGbr7iNlU2LBf127P/aK1W4TdHMWpsi+M6mdFFd80/BDTH4ecqMPeqttw1kuV5dp6yZ
+         ssmQ==
+X-Gm-Message-State: AOAM533lMhiuMDpaItTi5BR9CG3s/R+1MpmNdqSKO+3Aejecy1PwkmaO
+        YMYTUha+dfpCb0Mwy5r8QQ7TVf6b19eAF1NDz+8=
+X-Google-Smtp-Source: ABdhPJxQzwDKfrS7Z5FlDx0PI3CHUn0p30Uj/lSoaiER0LlTopMWMJUUXUx7/zx/l1068yQcJSKm0ZfKESACdNrKLGU=
+X-Received: by 2002:a17:90a:b387:: with SMTP id e7mr3395039pjr.228.1599070317944;
+ Wed, 02 Sep 2020 11:11:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200902145957.13861-1-krzk@kernel.org>
+In-Reply-To: <20200902145957.13861-1-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 2 Sep 2020 21:11:40 +0300
+Message-ID: <CAHp75Vd3sT6Vuovsy8YQg+pdqQd3s4vU8PQNNQvUruKZOiRSAw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] MAINTAINERS: Consolidate Analog Devices IIO
+ entries and remove Beniamin Bia
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zi Yan <ziy@nvidia.com>
+On Wed, Sep 2, 2020 at 6:04 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Emails to Beniamin Bia bounce with no such address so remove him from
+> maintainers.  After this removal, many entries for Analog Devices Inc
+> IIO drivers look exactly the same so consolidate them.
+>
 
-Signed-off-by: Zi Yan <ziy@nvidia.com>
----
- fs/proc/task_mmu.c | 63 ++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 58 insertions(+), 5 deletions(-)
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+But nit-pick below.
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 7fc9b3cc48d3..2ff80a9c8b57 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -430,10 +430,9 @@ static void smaps_page_accumulate(struct mem_size_stats *mss,
- }
- 
- static void smaps_account(struct mem_size_stats *mss, struct page *page,
--		bool compound, bool young, bool dirty, bool locked)
-+		unsigned long size, bool young, bool dirty, bool locked)
- {
--	int i, nr = compound ? compound_nr(page) : 1;
--	unsigned long size = nr * PAGE_SIZE;
-+	int i, nr = size / PAGE_SIZE;
- 
- 	/*
- 	 * First accumulate quantities that depend only on |size| and the type
-@@ -536,7 +535,7 @@ static void smaps_pte_entry(pte_t *pte, unsigned long addr,
- 	if (!page)
- 		return;
- 
--	smaps_account(mss, page, false, pte_young(*pte), pte_dirty(*pte), locked);
-+	smaps_account(mss, page, PAGE_SIZE, pte_young(*pte), pte_dirty(*pte), locked);
- }
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-@@ -567,8 +566,44 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
- 		/* pass */;
- 	else
- 		mss->file_thp += HPAGE_PMD_SIZE;
--	smaps_account(mss, page, true, pmd_young(*pmd), pmd_dirty(*pmd), locked);
-+	smaps_account(mss, page, HPAGE_PMD_SIZE, pmd_young(*pmd),
-+		      pmd_dirty(*pmd), locked);
- }
-+
-+#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-+static void smaps_pud_entry(pud_t *pud, unsigned long addr,
-+		struct mm_walk *walk)
-+{
-+	struct mem_size_stats *mss = walk->private;
-+	struct vm_area_struct *vma = walk->vma;
-+	bool locked = !!(vma->vm_flags & VM_LOCKED);
-+	struct page *page = NULL;
-+
-+	if (pud_present(*pud)) {
-+		/* FOLL_DUMP will return -EFAULT on huge zero page */
-+		page = follow_trans_huge_pud(vma, addr, pud, FOLL_DUMP);
-+	}
-+	if (IS_ERR_OR_NULL(page))
-+		return;
-+	if (PageAnon(page))
-+		mss->anonymous_thp += HPAGE_PUD_SIZE;
-+	else if (PageSwapBacked(page))
-+		mss->shmem_thp += HPAGE_PUD_SIZE;
-+	else if (is_zone_device_page(page))
-+		/* pass */;
-+	else
-+		mss->file_thp += HPAGE_PUD_SIZE;
-+	smaps_account(mss, page, HPAGE_PUD_SIZE, pud_young(*pud),
-+		      pud_dirty(*pud), locked);
-+}
-+#else
-+static void smaps_pud_entry(pud_t *pud, unsigned long addr,
-+		struct mm_walk *walk)
-+{
-+}
-+#endif
-+
-+
- #else
- static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
- 		struct mm_walk *walk)
-@@ -576,6 +611,23 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
- }
- #endif
- 
-+static int smaps_pud_range(pud_t *pud, unsigned long addr, unsigned long end,
-+			   struct mm_walk *walk)
-+{
-+	struct vm_area_struct *vma = walk->vma;
-+	spinlock_t *ptl;
-+
-+	ptl = pud_trans_huge_lock(pud, vma);
-+	if (ptl) {
-+		smaps_pud_entry(pud, addr, walk);
-+		spin_unlock(ptl);
-+		walk->action = ACTION_CONTINUE;
-+	}
-+
-+	cond_resched();
-+	return 0;
-+}
-+
- static int smaps_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
- 			   struct mm_walk *walk)
- {
-@@ -713,6 +765,7 @@ static int smaps_hugetlb_range(pte_t *pte, unsigned long hmask,
- #endif /* HUGETLB_PAGE */
- 
- static const struct mm_walk_ops smaps_walk_ops = {
-+	.pud_entry		= smaps_pud_range,
- 	.pmd_entry		= smaps_pte_range,
- 	.hugetlb_entry		= smaps_hugetlb_range,
- };
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: linux-iio <linux-iio@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> ---
+>
+> Changes since v1:
+> 1. Consolidate IIO entries
+> ---
+>  MAINTAINERS | 56 ++++-------------------------------------------------
+>  1 file changed, 4 insertions(+), 52 deletions(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8107b3d5d6df..facffcf7b1d1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -950,38 +950,6 @@ S: Supported
+>  F:     arch/arm64/boot/dts/amd/amd-seattle-xgbe*.dtsi
+>  F:     drivers/net/ethernet/amd/xgbe/
+>
+> -ANALOG DEVICES INC AD5686 DRIVER
+> -M:     Michael Hennerich <Michael.Hennerich@analog.com>
+> -L:     linux-pm@vger.kernel.org
+> -S:     Supported
+> -W:     http://ez.analog.com/community/linux-device-drivers
+> -F:     drivers/iio/dac/ad5686*
+> -F:     drivers/iio/dac/ad5696*
+> -
+> -ANALOG DEVICES INC AD5758 DRIVER
+> -M:     Michael Hennerich <Michael.Hennerich@analog.com>
+> -L:     linux-iio@vger.kernel.org
+> -S:     Supported
+> -W:     http://ez.analog.com/community/linux-device-drivers
+> -F:     Documentation/devicetree/bindings/iio/dac/ad5758.txt
+> -F:     drivers/iio/dac/ad5758.c
+> -
+> -ANALOG DEVICES INC AD7091R5 DRIVER
+> -M:     Beniamin Bia <beniamin.bia@analog.com>
+> -L:     linux-iio@vger.kernel.org
+> -S:     Supported
+> -W:     http://ez.analog.com/community/linux-device-drivers
+> -F:     Documentation/devicetree/bindings/iio/adc/adi,ad7091r5.yaml
+> -F:     drivers/iio/adc/ad7091r5.c
+> -
+> -ANALOG DEVICES INC AD7124 DRIVER
+> -M:     Michael Hennerich <Michael.Hennerich@analog.com>
+> -L:     linux-iio@vger.kernel.org
+> -S:     Supported
+> -W:     http://ez.analog.com/community/linux-device-drivers
+> -F:     Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+> -F:     drivers/iio/adc/ad7124.c
+> -
+>  ANALOG DEVICES INC AD7192 DRIVER
+>  M:     Alexandru Tachici <alexandru.tachici@analog.com>
+>  L:     linux-iio@vger.kernel.org
+> @@ -998,15 +966,6 @@ W: http://ez.analog.com/community/linux-device-drivers
+>  F:     Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+>  F:     drivers/iio/adc/ad7292.c
+>
+> -ANALOG DEVICES INC AD7606 DRIVER
+> -M:     Michael Hennerich <Michael.Hennerich@analog.com>
+> -M:     Beniamin Bia <beniamin.bia@analog.com>
+> -L:     linux-iio@vger.kernel.org
+> -S:     Supported
+> -W:     http://ez.analog.com/community/linux-device-drivers
+> -F:     Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> -F:     drivers/iio/adc/ad7606.c
+> -
+>  ANALOG DEVICES INC AD7768-1 DRIVER
+>  M:     Michael Hennerich <Michael.Hennerich@analog.com>
+>  L:     linux-iio@vger.kernel.org
+> @@ -1068,7 +1027,6 @@ F:        drivers/iio/imu/adis16475.c
+>  F:     Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+>
+>  ANALOG DEVICES INC ADM1177 DRIVER
+> -M:     Beniamin Bia <beniamin.bia@analog.com>
+>  M:     Michael Hennerich <Michael.Hennerich@analog.com>
+>  L:     linux-hwmon@vger.kernel.org
+>  S:     Supported
+> @@ -1135,15 +1093,6 @@ S:       Supported
+>  W:     http://ez.analog.com/community/linux-device-drivers
+>  F:     drivers/dma/dma-axi-dmac.c
+>
+> -ANALOG DEVICES INC HMC425A DRIVER
+> -M:     Beniamin Bia <beniamin.bia@analog.com>
+> -M:     Michael Hennerich <michael.hennerich@analog.com>
+> -L:     linux-iio@vger.kernel.org
+> -S:     Supported
+> -W:     http://ez.analog.com/community/linux-device-drivers
+> -F:     Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+> -F:     drivers/iio/amplifiers/hmc425a.c
+> -
+>  ANALOG DEVICES INC IIO DRIVERS
+>  M:     Lars-Peter Clausen <lars@metafoo.de>
+>  M:     Michael Hennerich <Michael.Hennerich@analog.com>
+> @@ -1152,8 +1101,12 @@ W:       http://wiki.analog.com/
+>  W:     http://ez.analog.com/community/linux-device-drivers
+>  F:     Documentation/ABI/testing/sysfs-bus-iio-frequency-ad9523
+>  F:     Documentation/ABI/testing/sysfs-bus-iio-frequency-adf4350
+
+> +F:     Documentation/devicetree/bindings/iio/adc/adi*
+> +F:     Documentation/devicetree/bindings/iio/amplifiers/adi*
+
+I would rather see one line like
+F:     Documentation/devicetree/bindings/iio/*/adi,*
+
+Since we know that vendor,part-number is guaranteed by DT binding naming schema.
+
+> +F:     Documentation/devicetree/bindings/iio/dac/ad5758.txt
+>  F:     drivers/iio/*/ad*
+>  F:     drivers/iio/adc/ltc249*
+> +F:     drivers/iio/amplifiers/hmc425a.c
+>  F:     drivers/staging/iio/*/ad*
+>  X:     drivers/iio/*/adjd*
+>
+> @@ -16537,7 +16490,6 @@ F:      drivers/staging/rtl8712/
+>
+>  STAGING - SEPS525 LCD CONTROLLER DRIVERS
+>  M:     Michael Hennerich <michael.hennerich@analog.com>
+> -M:     Beniamin Bia <beniamin.bia@analog.com>
+>  L:     linux-fbdev@vger.kernel.org
+>  S:     Supported
+>  F:     Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> --
+> 2.17.1
+>
+
+
 -- 
-2.28.0
-
+With Best Regards,
+Andy Shevchenko
