@@ -2,86 +2,168 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2486DC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26B7C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E97FC2084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:18:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599034724;
-	bh=7+JEzktISsgTMdUzuapRscBPtX4N6Y3wMNOli4jVPQ4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SPkO9T472a8v6lvueUOjrmM7v/YorzUPt39j6FC4h044BVSyWhVNgxqLukHzGY1p7
-	 2ICVO7EdHTYu/9QD5BpDMqCNA9tls1zyM3Cr0tzzJwyGebozAGmbueugxddF3D32WJ
-	 c9RkROR/TCUFRoROGpGD9gyWdAWvMDJBKgczbYF8=
+	by mail.kernel.org (Postfix) with ESMTP id 958F920709
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:29:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jy6VilAp";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b4g7VLAA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgIBISn (ORCPT
+        id S1726384AbgIBI3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:18:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgIBISl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:18:41 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BADA92084C;
-        Wed,  2 Sep 2020 08:18:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599034720;
-        bh=7+JEzktISsgTMdUzuapRscBPtX4N6Y3wMNOli4jVPQ4=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=AUuruMhNnTWN9d+oIWMoSqWA8+m8sBM+oeWPLsiObVeHFiq7BNSvIvN4IuQjBGrUN
-         k+B+5u9HrYhoRwTH/Os1qWGB1TXIiwzK1gOw6wV1fQkR0xWwE/1B4a4FZP7bKSHIC9
-         PP5dp0UkLkUuQvkHkcTKYHlSgMUgvsrGj9E2u+Z4=
-Date:   Wed, 2 Sep 2020 10:18:35 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-cc:     linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-scsi@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [RFC v2 09/11] HID: hyperv: Make ringbuffer at least take two
- pages
-In-Reply-To: <20200902030107.33380-10-boqun.feng@gmail.com>
-Message-ID: <nycvar.YFH.7.76.2009021018080.4671@cbobk.fhfr.pm>
-References: <20200902030107.33380-1-boqun.feng@gmail.com> <20200902030107.33380-10-boqun.feng@gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 2 Sep 2020 04:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgIBI3D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 04:29:03 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39721C061244;
+        Wed,  2 Sep 2020 01:29:03 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599035341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pi/cQi80UUB8ig04fsQZMzpFt4TllRwrei28HJurdzY=;
+        b=Jy6VilApm+/5kg1/8qC3/cxjHXxLnMUSLK2ESKKHeoZy1CWmbzPTx3c/L0AOe9hbirGyy/
+        tru25u1yH8wSagSZkI6AxxEbR+PrS4wcuj5KEmoKqAWHO40I+cWyP3ePMrGp63AxwrIJU2
+        PTwDvnon88SCijyTN/jFO/AiEO9IO+z8V9eeO8v4tu476FZicCoOrRZY/MnCO72M3N91iw
+        M1ZF3qAUcFrRBVowVWqHlMsZ++XOpD2Fb/kn68cqK75zaoj3i++QZHeHs5F8OzSass/ytT
+        oUzD1GwYmIOjbfHNVuf4Xs3AVr30BowVtqHCL25SZqE42vmIL/8FqugE4L4zYg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599035341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pi/cQi80UUB8ig04fsQZMzpFt4TllRwrei28HJurdzY=;
+        b=b4g7VLAAu2ar8HGlrayM8NFrozfoT4EyQk1L4Xiol0A4phjijM1Rgl8jj4g2KzZNm5YdwK
+        M6UgDyiZq1wym/BA==
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: ptrace_syscall_32 is failing
+In-Reply-To: <CALCETrUpjUPPvnPuS9fP4jgid7U_qdU_yTKSq9PjJ=z2w9HvHg@mail.gmail.com>
+References: <CALCETrWXvAMA7tQ3XZdAk2FixKfzQ_0fBmyNVyyPHVAomLvrWQ@mail.gmail.com> <CAMzpN2hmR+0-Yse1csbiVOiqgZ0e+VRkCBBXUKoPSTSMOOOFAQ@mail.gmail.com> <CALCETrXY1x0MReMoTOG2awcZvr4c7gp99JVNthK37vUUk-kyew@mail.gmail.com> <87k0xdjbtt.fsf@nanos.tec.linutronix.de> <CALCETrUpjUPPvnPuS9fP4jgid7U_qdU_yTKSq9PjJ=z2w9HvHg@mail.gmail.com>
+Date:   Wed, 02 Sep 2020 10:29:00 +0200
+Message-ID: <87blioinub.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Sep 2020, Boqun Feng wrote:
+On Tue, Sep 01 2020 at 17:09, Andy Lutomirski wrote:
+> On Tue, Sep 1, 2020 at 4:50 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> > I think that they almost work for x86, but not quite as
+>> > indicated by this bug.  Even if we imagine we can somehow hack around
+>> > this bug, I imagine we're going to find other problems with this
+>> > model, e.g. the potential upcoming exit problem I noted in my review.
+>>
+>> What's the upcoming problem?
+>
+> If we ever want to get single-stepping fully correct across syscalls,
+> we might need to inject SIGTRAP on syscall return. This would be more
+> awkward if we can't run instrumentable code after the syscall part of
+> the syscall is done.
 
-> When PAGE_SIZE > HV_HYP_PAGE_SIZE, we need the ringbuffer size to be at
-> least 2 * PAGE_SIZE: one page for the header and at least one page of
-> the data part (because of the alignment requirement for double mapping).
-> 
-> So make sure the ringbuffer sizes to be at least 2 * PAGE_SIZE when
-> using vmbus_open() to establish the vmbus connection.
-> 
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+We run a lot of instrumentable code after sys_foo() returns. Otherwise
+all the TIF work would not be possible at all.
 
-Acked-by: Jiri Kosina <jkosina@suse.cz>
+But you might tell me where exactly you want to inject the SIGTRAP in
+the syscall exit code flow.
 
--- 
-Jiri Kosina
-SUSE Labs
+>> I don't think we want that in general. The current variant is perfectly
+>> fine for everything except the 32bit fast syscall nonsense. Also
+>> irqentry_entry/exit is not equivalent to the syscall_enter/exit
+>> counterparts.
+>
+> If there are any architectures in which actual work is needed to
+> figure out whether something is a syscall in the first place, they'll
+> want to do the usual kernel entry work before the syscall entry work.
 
+That's low level entry code which does not require RCU, lockdep, tracing
+or whatever muck we setup before actual work can be done.
+
+arch_asm_entry()
+  ...
+  arch_c_entry(cause) {
+    switch(cause) {
+      case EXCEPTION: arch_c_exception(...);
+      case SYSCALL: arch_c_syscall(...);
+      ...
+    }
+
+You really want to differentiate between exception and syscall
+entry/exit.
+
+The splitting of syscall_enter_from_user_mode() is only necessary for
+that 32bit fast syscall thing on x86 and there is no point to open code
+it with two calls for e.g. do_syscall_64().
+
+> Maybe your patch actually makes this possible -- I haven't digested
+> all the details yet.
+>
+> Who advised you to drop the arch parameter?
+
+Kees, IIRC, but I would have to search through the gazillions of mail
+threads to be sure.
+
+>> +       syscall_enter_from_user_mode_prepare(regs);
+>
+> I'm getting lost in all these "enter" functions...
+
+It's not that hard.
+
+     syscall_enter_from_user_mode_prepare()
++    syscall_enter_from_user_mode_work()
+=    syscall_enter_from_user_mode()
+
+That's exactly what you suggested just with the difference that it is
+explicit for syscalls and not using irqentry_enter/exit().
+
+If we would do that then instead of having a single call for sane
+syscall pathes:
+
+  arch_c_entry()
+     nr = syscall_enter_from_user_mode();
+
+or for that 32bit fast syscall nonsense the split variant:
+
+  arch_c_entry()
+     syscall_enter_from_user_mode_prepare();
+     do_fast_syscall_muck();
+     nr = syscall_enter_from_user_mode_work();
+
+we'd have:
+
+  arch_c_entry()
+     irqentry_enter();
+     local_irq_enble();
+     nr = syscall_enter_from_user_mode_work();
+     ...
+
+which enforces two calls for sane entries and more code in arch/....
+
+Thanks,
+
+        tglx
