@@ -2,88 +2,99 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32528C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BDBC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B50C207D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8A82078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgIBOHo (ORCPT
+        id S1727927AbgIBOGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:07:44 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:21160 "EHLO pegase1.c-s.fr"
+        Wed, 2 Sep 2020 10:06:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43138 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727919AbgIBNvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:51:12 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BhPgP6btKz9txSj;
-        Wed,  2 Sep 2020 15:20:01 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 13JB8Zw2mRHx; Wed,  2 Sep 2020 15:20:01 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BhPgP5Fxbz9txSG;
-        Wed,  2 Sep 2020 15:20:01 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 224D08B7EA;
-        Wed,  2 Sep 2020 15:20:03 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id LzA1l6PiP3U8; Wed,  2 Sep 2020 15:20:03 +0200 (CEST)
-Received: from [10.25.210.31] (po15451.idsi0.si.c-s.fr [10.25.210.31])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E8F728B7E9;
-        Wed,  2 Sep 2020 15:20:02 +0200 (CEST)
-Subject: Re: watchdog start on restart
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <d2343032814705f33cd81f18f45630bf327c0ff8.camel@yadro.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <e04bc12d-4520-89db-699c-ad89fcdbf76e@csgroup.eu>
-Date:   Wed, 2 Sep 2020 15:19:56 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1727892AbgIBNuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:50:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id BB1DFB609;
+        Wed,  2 Sep 2020 13:50:20 +0000 (UTC)
+Date:   Wed, 2 Sep 2020 15:50:18 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     David Hildenbrand <dhildenb@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v2 00/28] The new cgroup slab memory controller
+Message-ID: <20200902135018.GF4617@dhcp22.suse.cz>
+References: <6469324e-afa2-18b4-81fb-9e96466c1bf3@suse.cz>
+ <A8A8D5FE-86C3-40B4-919C-5FF2A134F366@redhat.com>
+ <CA+CK2bAebg4PALh3_-49MXGJ-FNP3hE98wHZd5uEC-q7wG6Vmg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <d2343032814705f33cd81f18f45630bf327c0ff8.camel@yadro.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+CK2bAebg4PALh3_-49MXGJ-FNP3hE98wHZd5uEC-q7wG6Vmg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 02/09/2020 à 15:02, Ivan Mikhaylov a écrit :
-> Hello everyone. Currently, the watchdog interface only has "stop watchdog on
-> restart" but lacks a "start watchdog on restart" one. Is there a way to achieve
-> such functionality?
+On Wed 02-09-20 08:42:13, Pavel Tatashin wrote:
+> > > Am 02.09.2020 um 11:53 schrieb Vlastimil Babka <vbabka@suse.cz>:
+> > >
+> > > ﻿On 8/28/20 6:47 PM, Pavel Tatashin wrote:
+> > >> There appears to be another problem that is related to the
+> > >> cgroup_mutex -> mem_hotplug_lock deadlock described above.
+> > >>
+> > >> In the original deadlock that I described, the workaround is to
+> > >> replace crash dump from piping to Linux traditional save to files
+> > >> method. However, after trying this workaround, I still observed
+> > >> hardware watchdog resets during machine  shutdown.
+> > >>
+> > >> The new problem occurs for the following reason: upon shutdown systemd
+> > >> calls a service that hot-removes memory, and if hot-removing fails for
+> > >
+> > > Why is that hotremove even needed if we're shutting down? Are there any
+> > > (virtualization?) platforms where it makes some difference over plain
+> > > shutdown/restart?
+> >
+> > If all it‘s doing is offlining random memory that sounds unnecessary and dangerous. Any pointers to this service so we can figure out what it‘s doing and why? (Arch? Hypervisor?)
 > 
-> I'd like to know why "stop watchdog on restart" wasn't implemented via ioctl
-> interface? It would be more convenient from user perspective and you can
-> control that behavior whenever you want from application layer.
+> Hi David,
 > 
-> I have some thoughts on this problem that solve the aforementioned
-> issue with "start watchdog on restart" but I don't think that my solution is
-> correct.
-> 
+> This is how we are using it at Microsoft: there is  a very large
+> number of small memory machines (8G each) with low downtime
+> requirements (reboot must be under a second). There is also a large
+> state ~2G of memory that we need to transfer during reboot, otherwise
+> it is very expensive to recreate the state. We have 2G of system
+> memory memory reserved as a pmem in the device tree, and use it to
+> pass information across reboots. Once the information is not needed we
+> hot-add that memory and use it during runtime, before shutdown we
+> hot-remove the 2G, save the program state on it, and do the reboot.
 
-
-I don't understand why a "start watchdog on restart" would be needed. 
-Isn't it the default expected behaviour for a watchdog ?
-
-"stop watchdog on restart" is there to keep things under control during 
-a wanted machine reboot/restart, while still having the watchdog do its 
-job on an unexpected restart.
-
-What would be the advantage of an ioctl() compared to the existing way ?
-
-Christophe
+I still do not get it. So what does guarantee that the memory is
+offlineable in the first place? Also what is the difference between
+offlining and simply shutting the system down so that the memory is not
+used in the first place. In other words what kind of difference
+hotremove makes?
+-- 
+Michal Hocko
+SUSE Labs
