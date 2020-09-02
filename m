@@ -2,41 +2,38 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62050C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2960AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 435DE20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FEAD20767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgIBO3w (ORCPT
+        id S1728202AbgIBO3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 2 Sep 2020 10:29:52 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:47498 "EHLO
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46818 "EHLO
         hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728035AbgIBOYJ (ORCPT
+        by vger.kernel.org with ESMTP id S1728031AbgIBOYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 10:24:09 -0400
 Received: from [88.147.20.154] (port=49114 helo=melee.dev.aim)
         by hostingweb31.netsons.net with esmtpa (Exim 4.93)
         (envelope-from <luca@lucaceresoli.net>)
-        id 1kDTfU-0002rt-0V; Wed, 02 Sep 2020 16:23:20 +0200
+        id 1kDTfP-0002rt-BY; Wed, 02 Sep 2020 16:23:17 +0200
 From:   Luca Ceresoli <luca@lucaceresoli.net>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     Luca Ceresoli <luca@lucaceresoli.net>, Keerthy <j-keerthy@ti.com>,
         Axel Lin <axel.lin@ingics.com>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/3] mfd: lp87565: add LP87524-Q1 variant
-Date:   Wed,  2 Sep 2020 16:22:59 +0200
-Message-Id: <20200902142259.28349-4-luca@lucaceresoli.net>
+Subject: [PATCH v5 0/3] mfd: lp87565: convert DT to yaml and add LP87524-Q1
+Date:   Wed,  2 Sep 2020 16:22:56 +0200
+Message-Id: <20200902142259.28349-1-luca@lucaceresoli.net>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200902142259.28349-1-luca@lucaceresoli.net>
-References: <20200902142259.28349-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -54,56 +51,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the LP87524B/J/P-Q1 Four 4-MHz Buck Converter. This is a
-variant of the LP87565 having 4 single-phase outputs and up to 10 A of
-total output current.
+Hi,
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+the following patches are a fairly straightforward addition of a new chip
+variant along with DT bindings conversion to yaml.
 
----
+v5 adds the description of the "regulators" DT node and has smaller
+improvements to the bindings. No changes to the driver since v2.
 
-Changes in v5: none
+RFC,v1: https://lkml.org/lkml/2020/6/3/908
+v2: https://lkml.org/lkml/2020/6/17/492
+v3: https://lkml.org/lkml/2020/6/22/1139
+v4: https://lkml.org/lkml/2020/8/17/830
 
-Changes in v4: none
+Luca
 
-Changes in v3: none
+Luca Ceresoli (3):
+  dt-bindings: mfd: lp87565: convert to yaml
+  dt-bindings: mfd: add LP87524-Q1
+  mfd: lp87565: add LP87524-Q1 variant
 
-Changes in v2:
- - replace "regulator" -> "mfd" in subject line (Lee Jones)
- - add Acked-for-MFD-by: from Lee Jones
----
- drivers/mfd/lp87565.c       | 4 ++++
- include/linux/mfd/lp87565.h | 1 +
- 2 files changed, 5 insertions(+)
+ .../devicetree/bindings/mfd/lp87565.txt       |  79 ------------
+ .../bindings/mfd/ti,lp87524-q1.yaml           | 112 ++++++++++++++++++
+ .../bindings/mfd/ti,lp87561-q1.yaml           |  83 +++++++++++++
+ .../bindings/mfd/ti,lp87565-q1.yaml           | 101 ++++++++++++++++
+ drivers/mfd/lp87565.c                         |   4 +
+ include/linux/mfd/lp87565.h                   |   1 +
+ 6 files changed, 301 insertions(+), 79 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti,lp87524-q1.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti,lp87561-q1.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti,lp87565-q1.yaml
 
-diff --git a/drivers/mfd/lp87565.c b/drivers/mfd/lp87565.c
-index 2268be9113f1..9c21483d9653 100644
---- a/drivers/mfd/lp87565.c
-+++ b/drivers/mfd/lp87565.c
-@@ -26,6 +26,10 @@ static const struct mfd_cell lp87565_cells[] = {
- 
- static const struct of_device_id of_lp87565_match_table[] = {
- 	{ .compatible = "ti,lp87565", },
-+	{
-+		.compatible = "ti,lp87524-q1",
-+		.data = (void *)LP87565_DEVICE_TYPE_LP87524_Q1,
-+	},
- 	{
- 		.compatible = "ti,lp87565-q1",
- 		.data = (void *)LP87565_DEVICE_TYPE_LP87565_Q1,
-diff --git a/include/linux/mfd/lp87565.h b/include/linux/mfd/lp87565.h
-index 43716aca46fa..d44ddfb6bb63 100644
---- a/include/linux/mfd/lp87565.h
-+++ b/include/linux/mfd/lp87565.h
-@@ -14,6 +14,7 @@
- 
- enum lp87565_device_type {
- 	LP87565_DEVICE_TYPE_UNKNOWN	= 0,
-+	LP87565_DEVICE_TYPE_LP87524_Q1,
- 	LP87565_DEVICE_TYPE_LP87561_Q1,
- 	LP87565_DEVICE_TYPE_LP87565_Q1,
- };
 -- 
 2.28.0
 
