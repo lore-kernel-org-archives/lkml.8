@@ -2,187 +2,80 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C214C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1319DC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16263207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32C5207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:54:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bRuJLPF8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgIBPyY (ORCPT
+        id S1728261AbgIBPyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:54:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:41322 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgIBPyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:54:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B6B6101E;
-        Wed,  2 Sep 2020 08:54:21 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 503B43F66F;
-        Wed,  2 Sep 2020 08:54:19 -0700 (PDT)
-Subject: Re: [PATCH v1 1/6] clk: rockchip: Use clk_hw_register_composite
- instead of clk_register_composite calls
-To:     Elaine Zhang <zhangqing@rock-chips.com>, heiko@sntech.de
-Cc:     huangtao@rock-chips.com, xf@rock-chips.com, sboyd@kernel.org,
-        mturquette@baylibre.com, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, kever.yang@rock-chips.com,
-        linux-rockchip@lists.infradead.org, xxx@rock-chips.com
-References: <20200902064847.18881-1-zhangqing@rock-chips.com>
- <20200902064847.18881-2-zhangqing@rock-chips.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <862531c8-9d10-ae3e-e12a-f1ba0ed66d61@arm.com>
-Date:   Wed, 2 Sep 2020 16:54:18 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Wed, 2 Sep 2020 11:54:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbgIBPy3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:54:29 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6342CC061244;
+        Wed,  2 Sep 2020 08:54:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zMA6zInZMPfkpW5sAnWFlHiBAJv1wx5ytIbHdHXg1sM=; b=bRuJLPF8C4Snr+zFhJCljdfY/w
+        LOwNHY/IurlzCI+frzWr/I2YwTtyvqO1i96uiMOKh0es2J/QKpe/VShj7LMjEG5bc6XWid+C/uifD
+        knh6Hugg+3TQHjn4bih9rzHjKbAAQrpfrbGY8F6lDFAAMZNepVCXOdkttoA9j1y57zIk5Lt7dn7/z
+        NMC0YSGesWGFzxDnigx1NJ7vIhEAZOqKITORYB9PfimxUgTCWj+FVdmUUhimA0dwwSG2ADCJ7ANX2
+        U3/heI4KMqDhkltlOaFXldOjLcK7OyFgVdfXJXQzLRYyh+5jWsRw/Sqz+fdvVf4Ytpttr6/8r95b4
+        U3/z+XNw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDV5e-0004UT-5Y; Wed, 02 Sep 2020 15:54:26 +0000
+Date:   Wed, 2 Sep 2020 16:54:26 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 3/6] mm: Push readahead_control down into
+ force_page_cache_readahead() [ver #2]
+Message-ID: <20200902155426.GY14765@casper.infradead.org>
+References: <159906145700.663183.3678164182141075453.stgit@warthog.procyon.org.uk>
+ <159906147806.663183.767620073654469472.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200902064847.18881-2-zhangqing@rock-chips.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159906147806.663183.767620073654469472.stgit@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-02 07:48, Elaine Zhang wrote:
-> clk_hw_register_composite it's already exported.
-> Preparation for compilation of rK common clock drivers into modules.
-> 
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-> ---
->   drivers/clk/rockchip/clk-half-divider.c | 12 +++++----
->   drivers/clk/rockchip/clk.c              | 35 ++++++++++++++-----------
->   2 files changed, 27 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/clk/rockchip/clk-half-divider.c b/drivers/clk/rockchip/clk-half-divider.c
-> index b333fc28c94b..35db0651ea1d 100644
-> --- a/drivers/clk/rockchip/clk-half-divider.c
-> +++ b/drivers/clk/rockchip/clk-half-divider.c
-> @@ -166,6 +166,7 @@ struct clk *rockchip_clk_register_halfdiv(const char *name,
->   					  unsigned long flags,
->   					  spinlock_t *lock)
->   {
-> +	struct clk_hw *hw;
->   	struct clk *clk;
->   	struct clk_mux *mux = NULL;
->   	struct clk_gate *gate = NULL;
-> @@ -212,12 +213,13 @@ struct clk *rockchip_clk_register_halfdiv(const char *name,
->   		div_ops = &clk_half_divider_ops;
->   	}
->   
-> -	clk = clk_register_composite(NULL, name, parent_names, num_parents,
-> -				     mux ? &mux->hw : NULL, mux_ops,
-> -				     div ? &div->hw : NULL, div_ops,
-> -				     gate ? &gate->hw : NULL, gate_ops,
-> -				     flags);
-> +	hw = clk_hw_register_composite(NULL, name, parent_names, num_parents,
-> +				       mux ? &mux->hw : NULL, mux_ops,
-> +				       div ? &div->hw : NULL, div_ops,
-> +				       gate ? &gate->hw : NULL, gate_ops,
-> +				       flags);
->   
-> +	clk = hw->clk;
->   	return clk;
+On Wed, Sep 02, 2020 at 04:44:38PM +0100, David Howells wrote:
+> +++ b/mm/fadvise.c
+> @@ -104,7 +104,10 @@ int generic_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
+>  		if (!nrpages)
+>  			nrpages = ~0UL;
+>  
+> -		force_page_cache_readahead(mapping, file, start_index, nrpages);
+> +		{
+> +			DEFINE_READAHEAD(rac, file, mapping, start_index);
+> +			force_page_cache_readahead(&rac, nrpages);
+> +		}
+>  		break;
 
-Nit: there's really no point keeping the "clk" variable here, you could 
-simply "return hw->clk" if registration succeeds - note that you also 
-need the rest of the logic from clk_register_composite() to check that 
-"hw" isn't an error value.
+This is kind of awkward.  How about this:
 
->   err_div:
->   	kfree(gate);
-> diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
-> index 546e810c3560..2cfebfb61814 100644
-> --- a/drivers/clk/rockchip/clk.c
-> +++ b/drivers/clk/rockchip/clk.c
-> @@ -43,6 +43,7 @@ static struct clk *rockchip_clk_register_branch(const char *name,
->   		u8 gate_shift, u8 gate_flags, unsigned long flags,
->   		spinlock_t *lock)
->   {
-> +	struct clk_hw *hw;
->   	struct clk *clk;
->   	struct clk_mux *mux = NULL;
->   	struct clk_gate *gate = NULL;
-> @@ -100,12 +101,12 @@ static struct clk *rockchip_clk_register_branch(const char *name,
->   						: &clk_divider_ops;
->   	}
->   
-> -	clk = clk_register_composite(NULL, name, parent_names, num_parents,
-> -				     mux ? &mux->hw : NULL, mux_ops,
-> -				     div ? &div->hw : NULL, div_ops,
-> -				     gate ? &gate->hw : NULL, gate_ops,
-> -				     flags);
-> -
-> +	hw = clk_hw_register_composite(NULL, name, parent_names, num_parents,
-> +				       mux ? &mux->hw : NULL, mux_ops,
-> +				       div ? &div->hw : NULL, div_ops,
-> +				       gate ? &gate->hw : NULL, gate_ops,
-> +				       flags);
-> +	clk = hw->clk;
->   	if (IS_ERR(clk)) {
+static void force_page_cache_readahead(struct address_space *mapping,
+		struct file *file, pgoff_t index, unsigned long nr_to_read)
+{
+	DEFINE_READAHEAD(rac, file, mapping, index);
+	force_page_cache_ra(&rac, nr_to_read);
+}
 
-Similar to above, this is totally broken - you need to rework all the 
-error handling in terms of "hw" rather than "clk" - dereferencing an 
-ERR_PTR value does not yield another ERR_PTR value, it yields a crash ;)
-
-Robin.
-
->   		ret = PTR_ERR(clk);
->   		goto err_composite;
-> @@ -214,6 +215,7 @@ static struct clk *rockchip_clk_register_frac_branch(
->   		unsigned long flags, struct rockchip_clk_branch *child,
->   		spinlock_t *lock)
->   {
-> +	struct clk_hw *hw;
->   	struct rockchip_clk_frac *frac;
->   	struct clk *clk;
->   	struct clk_gate *gate = NULL;
-> @@ -255,11 +257,12 @@ static struct clk *rockchip_clk_register_frac_branch(
->   	div->approximation = rockchip_fractional_approximation;
->   	div_ops = &clk_fractional_divider_ops;
->   
-> -	clk = clk_register_composite(NULL, name, parent_names, num_parents,
-> -				     NULL, NULL,
-> -				     &div->hw, div_ops,
-> -				     gate ? &gate->hw : NULL, gate_ops,
-> -				     flags | CLK_SET_RATE_UNGATE);
-> +	hw = clk_hw_register_composite(NULL, name, parent_names, num_parents,
-> +				       NULL, NULL,
-> +				       &div->hw, div_ops,
-> +				       gate ? &gate->hw : NULL, gate_ops,
-> +				       flags | CLK_SET_RATE_UNGATE);
-> +	clk = hw->clk;
->   	if (IS_ERR(clk)) {
->   		kfree(frac);
->   		return clk;
-> @@ -320,6 +323,7 @@ static struct clk *rockchip_clk_register_factor_branch(const char *name,
->   		int gate_offset, u8 gate_shift, u8 gate_flags,
->   		unsigned long flags, spinlock_t *lock)
->   {
-> +	struct clk_hw *hw;
->   	struct clk *clk;
->   	struct clk_gate *gate = NULL;
->   	struct clk_fixed_factor *fix = NULL;
-> @@ -349,10 +353,11 @@ static struct clk *rockchip_clk_register_factor_branch(const char *name,
->   	fix->mult = mult;
->   	fix->div = div;
->   
-> -	clk = clk_register_composite(NULL, name, parent_names, num_parents,
-> -				     NULL, NULL,
-> -				     &fix->hw, &clk_fixed_factor_ops,
-> -				     &gate->hw, &clk_gate_ops, flags);
-> +	hw = clk_hw_register_composite(NULL, name, parent_names, num_parents,
-> +				       NULL, NULL,
-> +				       &fix->hw, &clk_fixed_factor_ops,
-> +				       &gate->hw, &clk_gate_ops, flags);
-> +	clk = hw->clk;
->   	if (IS_ERR(clk)) {
->   		kfree(fix);
->   		kfree(gate);
-> 
+in mm/internal.h for now (and it can migrate if it needs to be somewhere else)
