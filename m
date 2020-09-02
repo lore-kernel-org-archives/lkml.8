@@ -2,229 +2,143 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E0CC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E008EC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9102A207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5AE20829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i/ve32Wu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eOasIUQu"
+	dkim=pass (2048-bit key) header.d=firemail.cc header.i=@firemail.cc header.b="qgQU60L4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgIBP4G (ORCPT
+        id S1728101AbgIBP4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:56:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48176 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgIBP4B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:56:01 -0400
-Date:   Wed, 2 Sep 2020 17:55:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599062158;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=QbRUtG+xCqrG5ewBG4h2tqjAQOFvW6yIUDtQ1Zk6KEo=;
-        b=i/ve32Wug0QHbc0SmvAHR8yZTjuXKFgKaxvULb0jiUOPuu8EXW3JDmps15BQtJIGqpV5Q9
-        ptEp6MV8wG72LFEwbwvh6ln5K/Y6AE2wyAEnt+FRr/U0dqDqkAhc4+SKa+4Gqdel0JjmLI
-        CFhSeRq96iWl5scdSN4ApHkwjkql8pbYSKUX+duxXNeymHYnc3JJ5GDFRe/ZNQBCHfOnfx
-        7vWgEiYaqZSTASIdZenRjuIMLKFPR2kjj+Qy4tKxenJ1a2uJFBVnHuNDyXljge+r+k1zoS
-        TeBAnRYMKYn/DYiKLz5mwPKMR+7vCPJtDLfBmBm63f/4XEbJrjyJ3k034YgbFg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599062158;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=QbRUtG+xCqrG5ewBG4h2tqjAQOFvW6yIUDtQ1Zk6KEo=;
-        b=eOasIUQuWdBOcJRYzrZwGs9ha/d4h2nTopn9F3q97dkZQnqb0xCH8KGCP/pMqqflB5nBYh
-        9cI/5zei8xgJz5CA==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [ANNOUNCE] v5.9-rc3-rt3
-Message-ID: <20200902155557.h2wl2qpfn2rwsofw@linutronix.de>
+        Wed, 2 Sep 2020 11:56:45 -0400
+Received: from mail.cock.li ([37.120.193.124]:48158 "EHLO mail.cock.li"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726380AbgIBP4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:56:42 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firemail.cc; s=mail;
+        t=1599062199; bh=vflWA/LonQhWee+V4EJyhQMkrQw4PVDpac4i9fXO+OI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qgQU60L4npAdza0je+AwCUdZUzfhGQaq/chomCypTzmc5aQ9FUk3xAOcH/EJJFK6n
+         Qc9FX1Red7pD9rJUj1cgHOugdCvo2Gr6sGaEdHK3UJqkKLPHh80h+W4ZXWLcIC84HP
+         t1w+qZuT+1AkYZz5NFr5wE/FeXdsGHuDUsBbzh8ntZAAHLqwi9mZsRK3c3vCGxb07Y
+         it2stjgWPmbSIavP3FTFPafvAtv4u8y17uKRvHXneYXW0bAICtZVRZCgoR7hdGbrwl
+         hg2nj9PA+j2MDV6bVHzudAy9TZunoBxIvObgQRbklBCyoSMx+h+xKQdRr/K+7rQiu0
+         1C7yuKwsAvXtw==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 02 Sep 2020 15:56:39 +0000
+From:   formermusictribemember@firemail.cc
+To:     linux-kernel@vger.kernel.org
+Cc:     torvalds@osdl.org, pkunert@theregister.com
+Subject: Uli Behringer is a racist and a sexist. Worked at Music Tribe for 30
+ years (it's name has changed repeatedly).
+Message-ID: <6bf9bce7836f81842a327c8bd5e7d1cd@firemail.cc>
+X-Sender: formermusictribemember@firemail.cc
+User-Agent: Roundcube Webmail/1.3.10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear RT folks!
+Uli Behringer is a racist and a sexist. Worked at Music Tribe for 30 
+years (it's name has changed repeatedly)
 
-I'm pleased to announce the v5.9-rc3-rt3 patch set. 
 
-Changes since v5.9-rc3-rt2:
+Cons of working at Music Tribe:
+Uli Behringer, the CEO, is a racist and a sexist. You can tell by the 
+way he presents himself: plastic surgery to uphold his boyish youthful 
+looks; originally natural blonde hair (now dyed since he's 60 and going 
+grey); resplendent blue eyes (these have always been natural). The 
+spitting image of past euro-centric times. He refuses to dye his hair a 
+more world-representative black or dark brown, and refuses to wear black 
+or brown contact lenses. He seems proud of his visage: that of a 
+proto-typical (Swiss)-German. He is also proud of his German surname and 
+emblazons it on everything: as if it was a coat-of-arms of a great 
+House.
 
-  - Correct a compile issue in the i915 driver. Reported by Carsten Emde
-    and Daniel Wagner.
+When I worked for Music Tribe / Music Group / Behringer (the name keeps 
+changing), Uli mostly wanted us to hire Engineers and Programmers. He 
+was happy with the over-representation of white and european males in 
+his companies. He ONLY talked to those (mostly white and european) male 
+programmers and engineers. He ROUTINELY fired WHOLE OFFICES of 
+non-white-non-engineer-non-programmers-non-males like the marketing 
+departments. He always drove the factory workers hard, but was kinder 
+(though demanding) of the white males: he had a sort of 
+engineer-to-engineer camaraderie with them..
 
-  - Mark Marshall reported a crash on PowerPC. The reason for the crash
-    is a race in exec_mmap() vs a context switch and is not limited to
-    PowerPC. This race is present since v5.4.3-rt1 and is addressed in
-    two changes:
+In a time when Responsible Global Companies are choosing to hire more 
+representative candidates and women over white males: Uli Behringer 
+continues to employ white-males in his companies. Additionally Uli 
+Behringer loaths to cover advanced anti-viral treatments that are 
+required by American workers: he believed that simply living a "normal" 
+lifestyle would not-necessitate such treatments. This is why he closed 
+the office in Seattle: he didn't want to pay for "LGBT related 
+treatments that were a waste of money and their own fault anyway". He 
+has a similar view of American women's "ways".
 
-    - commit 38cf307c1f201 ("mm: fix kthread_use_mm() vs TLB invalidate")
-      which is part of v5.9-rc1.
+The CEO: Uli Behringer rejects the modern world; this is in-part why he 
+is recreating the synths of his youth (youth which he tries to keep a 
+grasp of through vainglorious plastic surgery and constant physical 
+workouts). This is also why he has hidden himself away in Asia for the 
+past 30 years, and sheds light on the way his company (and it is HIS 
+company: he runs everything: even though he has the money to hire 
+managers to parcel out tasks). In his early youth America had not yet 
+fully taken control over all of Europe, in terms of enforced morals. 
+Once they did Uli fled to Asia where older male-centric morals abound 
+(simply: Asia allows wealthy business men girls; while America imprisons 
+any male that breaks said American rules protecting women.)
 
-    - patch "mm: fix exec activate_mm vs TLB shootdown and lazy tlb switching race"
-      by Nicholas Piggin which has been posted for review and is not yet
-      merged upstream.
+Uli Behringer does NOT donate ANY money to Girls Not Brides campaign, 
+nor to LGBT groups, nor to women-empowerment groups. He believes that by 
+NOT donating he keeps prices low for his "real" customers.
 
-Known issues
-     - It has been pointed out that due to changes to the printk code the
-       internal buffer representation changed. This is only an issue if tools
-       like `crash' are used to extract the printk buffer from a kernel memory
-       image.
+The fact of the matter is that these "real" customers: the bedroom 
+musicians and synth freaks are mostly, demographically, white males. Uli 
+Behringer prides himself in "not screwing them over". But by doing this, 
+underprivledged groups and causes are not served. What is right and just 
+in this world is for the white males of the opressive group to have to 
+pay recompense to those who were and are opressed. In other companies 
+these donation drives are built into the cost to the consumer. In Uli 
+Behringer's company they are not: since he does not donate millions of 
+dollars to said causes.
 
-The delta patch against v5.9-rc3-rt2 is appended below and can be found here:
- 
-     https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.9/incr/patch-5.9-rc3-rt2-rt3.patch.xz
+By not donating to Girls Not Brides, Uli Behringer shows that he does 
+not mind girls getting married young. By not donating to LGBT charities 
+Uli Behringer shows that he does not particularly care about the plight 
+of the actual good people of this world.
 
-You can get this release via the git tree at:
+In summary: If you support Racism, Sexism, race-to-the-bottom, 
+consumer-price-point driven development, and incel-white-males who buy 
+synthesizers. Then this is the company for you. If not: if you are an 
+actually good person who rejects the sexist religions of old and 
+embraces the new world where good people can prosper: avoid this company 
+and campaign against it: your life may be on the line: if Uli undercuts 
+your company you will be laid off and lose your health insurance and 
+your anti-virals needed to live. It's THAT serious.
 
-    git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v5.9-rc3-rt3
 
-The RT patch against v5.9-rc3 can be found here:
+Pros of working at Music Tribe:
+It's a good place if you are a programmer or an engineer, I guess. I 
+eventually got old, had enough money, and wanted to do nothing so I 
+resigned after 3 decades of a tireless race to the bottom. The name of 
+the game it to screw over the other companies, more than make as much 
+money as possible. Very different from other companies. It's good if you 
+like that sort of thing. There are celebrations when other companies 
+have to lay off their workers due to Uli undercutting them. He has a wry 
+smile when he knows what's about to occur before we do.
 
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.9/older/patch-5.9-rc3-rt3.patch.xz
 
-The split quilt queue is available at:
 
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.9/older/patches-5.9-rc3-rt3.tar.xz
-
-Sebastian
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 222e553f3cf50..5c8e173dc7c2b 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -415,6 +415,13 @@ config MMU_GATHER_NO_GATHER
- 	bool
- 	depends on MMU_GATHER_TABLE_FREE
- 
-+config ARCH_WANT_IRQS_OFF_ACTIVATE_MM
-+	bool
-+	help
-+	  Temporary select until all architectures can be converted to have
-+	  irqs disabled over activate_mm. Architectures that do IPI based TLB
-+	  shootdowns should enable this.
-+
- config ARCH_HAVE_NMI_SAFE_CMPXCHG
- 	bool
- 
-diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers/gpu/drm/i915/display/intel_display_types.h
-index c5700f44422ec..e8f809161c75f 100644
---- a/drivers/gpu/drm/i915/display/intel_display_types.h
-+++ b/drivers/gpu/drm/i915/display/intel_display_types.h
-@@ -29,7 +29,6 @@
- #include <linux/async.h>
- #include <linux/i2c.h>
- #include <linux/sched/clock.h>
--#include <linux/local_lock.h>
- 
- #include <drm/drm_atomic.h>
- #include <drm/drm_crtc.h>
-@@ -1150,7 +1149,6 @@ struct intel_crtc {
- #ifdef CONFIG_DEBUG_FS
- 	struct intel_pipe_crc pipe_crc;
- #endif
--	local_lock_t pipe_update_lock;
- };
- 
- struct intel_plane {
-diff --git a/drivers/gpu/drm/i915/display/intel_sprite.c b/drivers/gpu/drm/i915/display/intel_sprite.c
-index 62b8248d2ee79..1b9d5e690a9f0 100644
---- a/drivers/gpu/drm/i915/display/intel_sprite.c
-+++ b/drivers/gpu/drm/i915/display/intel_sprite.c
-@@ -118,7 +118,8 @@ void intel_pipe_update_start(const struct intel_crtc_state *new_crtc_state)
- 			"PSR idle timed out 0x%x, atomic update may fail\n",
- 			psr_status);
- 
--	local_lock_irq(&crtc->pipe_update_lock);
-+	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-+		local_irq_disable();
- 
- 	crtc->debug.min_vbl = min;
- 	crtc->debug.max_vbl = max;
-@@ -143,11 +144,13 @@ void intel_pipe_update_start(const struct intel_crtc_state *new_crtc_state)
- 			break;
- 		}
- 
--		local_unlock_irq(&crtc->pipe_update_lock);
-+		if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-+			local_irq_enable();
- 
- 		timeout = schedule_timeout(timeout);
- 
--		local_lock_irq(&crtc->pipe_update_lock);
-+		if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-+			local_irq_disable();
- 	}
- 
- 	finish_wait(wq, &wait);
-@@ -180,7 +183,8 @@ void intel_pipe_update_start(const struct intel_crtc_state *new_crtc_state)
- 	return;
- 
- irq_disable:
--	local_lock_irq(&crtc->pipe_update_lock);
-+	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-+		local_irq_disable();
- }
- 
- /**
-@@ -218,7 +222,8 @@ void intel_pipe_update_end(struct intel_crtc_state *new_crtc_state)
- 		new_crtc_state->uapi.event = NULL;
- 	}
- 
--	local_unlock_irq(&crtc->pipe_update_lock);
-+	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-+		local_irq_enable();
- 
- 	if (intel_vgpu_active(dev_priv))
- 		return;
-diff --git a/fs/exec.c b/fs/exec.c
-index a91003e28eaae..d4fb18baf1fb1 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1130,11 +1130,24 @@ static int exec_mmap(struct mm_struct *mm)
- 	}
- 
- 	task_lock(tsk);
--	active_mm = tsk->active_mm;
- 	membarrier_exec_mmap(mm);
--	tsk->mm = mm;
-+
-+	local_irq_disable();
-+	active_mm = tsk->active_mm;
- 	tsk->active_mm = mm;
-+	tsk->mm = mm;
-+	/*
-+	 * This prevents preemption while active_mm is being loaded and
-+	 * it and mm are being updated, which could cause problems for
-+	 * lazy tlb mm refcounting when these are updated by context
-+	 * switches. Not all architectures can handle irqs off over
-+	 * activate_mm yet.
-+	 */
-+	if (!IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
-+		local_irq_enable();
- 	activate_mm(active_mm, mm);
-+	if (IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
-+		local_irq_enable();
- 	tsk->mm->vmacache_seqnum = 0;
- 	vmacache_flush(tsk);
- 	task_unlock(tsk);
-diff --git a/localversion-rt b/localversion-rt
-index c3054d08a1129..1445cd65885cd 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt2
-+-rt3
+Suggestions to Management:
+Convince Uli Behringer to do an IPO: that way he will lose control of 
+his company and can be removed by the Board once he floats another 
+"CorkSniffer" anti-Semitic / racist prank (his fans actually want him to 
+produce that device still).
