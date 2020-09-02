@@ -2,240 +2,238 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93B4C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D472C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81CAE2078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3789820758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:30:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="zs9rHk87"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X66H9nBF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgIBWYx (ORCPT
+        id S1726722AbgIBWaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 18:24:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIBWYv (ORCPT
+        Wed, 2 Sep 2020 18:30:04 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58946 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbgIBWaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 18:24:51 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C704DC061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 15:24:50 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e33so464560pgm.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 15:24:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=gks7VBncJdw+WEYIJpin5b0Vn3cDDCUp/XGRjCJtoEA=;
-        b=zs9rHk875AEsaUsSgG6fSNEXyuD6NuAKMA9lJlRYXXtCqxr4jUqgwH59Ss+E18gNhT
-         nJlNEXvfVjk8YJVsc9CT/KCk2E+spamEr9goOnxdg4hDYF96bEkxuFexkcJ0cUGss6iE
-         wD13GJvauZIDtfmyqLnkX42L9pZRgKY+9qaMPzjlkwb52jCiMqa6pIjjsU8cyGYUd3Fe
-         khEPLkCqf7TvImeFGTr6Qbo51euWmq325t/2yEoCBVQ5Olfnmvi+/mKVgk7iA67ttAgG
-         k9tqFrxTAeFEJRouEyzX++h5CwSksToADhA8Eu+4iO1pqql7HylSa7It+hasj1oWlhUl
-         /H6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=gks7VBncJdw+WEYIJpin5b0Vn3cDDCUp/XGRjCJtoEA=;
-        b=oOoIGtwUTAPD+TdV47ATE1nXTS711vdCjdOkXs81B7sJ838H9wM3pwsRYdubud0qux
-         s7h+3wjxLhobf6xHooF4sBMD0ezJ/0sqSrKFP2bpAjuHCpJmwjWDJ1agqMX5eNhy1E5E
-         j/7p4q4oXs/zRm4v8R7191cX9kVBzye13kxnTs2YpKmDYEtGu4AEMxQ4HEMqOkpk1CQy
-         8yoz0cgn/0l3DOhRgowQtQVpptyuFVtNMssLiCETV12dspQSjfKJh0EcYsx/od5Ybapi
-         ArojYTbNaW9genj2oZwB6dI+LqNb5P5QTM4sOlqXWUbwtD0e2SHDIqGCW2e2iBJyeJgR
-         Xr6g==
-X-Gm-Message-State: AOAM532cv/adFVV7CFMV8yAzvjSnPjcfM1Lc4y7fPEF7OMbo0UI07mRR
-        ttRYJRtUkb0iEVs0taRpYfBZhQ==
-X-Google-Smtp-Source: ABdhPJz5OMYhyxpIsYxNil+eT1ZISABxJxJKYLCweCZ2+ndS76mtmW6s3xt125xdQqqGoUFVTOXTvg==
-X-Received: by 2002:aa7:989e:: with SMTP id r30mr521567pfl.205.1599085490270;
-        Wed, 02 Sep 2020 15:24:50 -0700 (PDT)
-Received: from arch-ashland-svkelley ([2601:1c0:6a00:1804:88d3:6720:250a:6d10])
-        by smtp.gmail.com with ESMTPSA id a26sm545929pfn.93.2020.09.02.15.24.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 15:24:49 -0700 (PDT)
-Message-ID: <680ae97e3424b50454ed773ad2e5e610e6fc5d9c.camel@intel.com>
-Subject: Re: [PATCH v3 07/10] PCI: Add 'rcec' field to pci_dev for
- associated RCiEPs
-From:   Sean V Kelley <sean.v.kelley@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com, qiuxu.zhuo@intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 02 Sep 2020 15:24:08 -0700
-In-Reply-To: <20200902163504.GA254301@bjorn-Precision-5520>
-References: <20200902163504.GA254301@bjorn-Precision-5520>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.4 
+        Wed, 2 Sep 2020 18:30:02 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082MTvF9007569;
+        Wed, 2 Sep 2020 17:29:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599085797;
+        bh=hkfts/EZvy3UmbM0mtjkXTdnHJvL55mRjoLCq+OkuBw=;
+        h=Subject:From:To:References:Date:In-Reply-To;
+        b=X66H9nBFYZ8ehcCrNRRxRJTPVK8JXIMDnOv0mydmq+EZ+MGhq1D12JCdLT0liZW80
+         caVED/t2SZROD4GBycaWgta89E133ooWtPObgqSvIfXPejQNFSdymA2FiaRBGp80ur
+         O4iHbAFYRlMxajBCmB5iGP5z4WOwUU1w5SaQSJqQ=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082MTvrh113062
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Sep 2020 17:29:57 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
+ 2020 17:29:57 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 2 Sep 2020 17:29:57 -0500
+Received: from [10.250.53.226] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082MTuuU105443;
+        Wed, 2 Sep 2020 17:29:56 -0500
+Subject: Re: [PATCH net-next 0/1] Support for VLAN interface over HSR/PRP
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <nsekhar@ti.com>,
+        <grygorii.strashko@ti.com>
+References: <20200901195415.4840-1-m-karicheri2@ti.com>
+ <d93fbc54-1721-ebec-39ca-dc8b45e6e534@ti.com>
+Message-ID: <15bbf7d2-627b-1d52-f130-5bae7b7889de@ti.com>
+Date:   Wed, 2 Sep 2020 18:29:56 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <d93fbc54-1721-ebec-39ca-dc8b45e6e534@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+All,
 
-On Wed, 2020-09-02 at 11:35 -0500, Bjorn Helgaas wrote:
-> On Wed, Aug 12, 2020 at 09:46:56AM -0700, Sean V Kelley wrote:
-> > From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> > 
-> > When attempting error recovery for an RCiEP associated with an RCEC
-> > device,
-> > there needs to be a way to update the Root Error Status, the
-> > Uncorrectable
-> > Error Status and the Uncorrectable Error Severity of the parent
-> > RCEC.
-> > So add the 'rcec' field to the pci_dev structure and provide a hook
-> > for the
-> > Root Port Driver to associate RCiEPs with their respective parent
-> > RCEC.
-> > --- a/drivers/pci/pcie/err.c
-> > +++ b/drivers/pci/pcie/err.c
-> > @@ -202,6 +202,12 @@ pci_ers_result_t pcie_do_recovery(struct
-> > pci_dev *dev,
-> >  		pci_walk_dev_affected(dev, report_frozen_detected,
-> > &status);
-> >  		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
-> >  			status = flr_on_rciep(dev);
-> > +			/*
-> > +			 * The callback only clears the Root Error
-> > Status
-> > +			 * of the RCEC (see aer.c).
-> > +			 */
-> > +			if (dev->rcec)
-> > +				reset_link(dev->rcec);
-> >  			if (status != PCI_ERS_RESULT_RECOVERED) {
-> >  				pci_warn(dev, "function level reset
-> > failed\n");
-> >  				goto failed;
-> > @@ -245,7 +251,11 @@ pci_ers_result_t pcie_do_recovery(struct
-> > pci_dev *dev,
-> >  	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
-> >  		pci_aer_clear_device_status(dev);
-> >  		pci_aer_clear_nonfatal_status(dev);
-> > +	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END && dev-
-> > >rcec) {
-> > +		pci_aer_clear_device_status(dev->rcec);
-> > +		pci_aer_clear_nonfatal_status(dev->rcec);
+On 9/2/20 12:14 PM, Murali Karicheri wrote:
+> All,
 > 
-> Conceptually, I'm not sure why we need the dev->rcec link.  The error
-> was *reported* via the RCEC, so don't we know the RCEC up front,
-> before we even identify the RCiEP?  Can't we just remember that and
-> dispense with dev->rcec?
-
-However, we can also get errors reported by that same RCEC that are not
-related to the associated RCiEPs. Further, an RCiEP in reporting an
-error will trigger logging to the Root Error Command/Status and Error
-Source Identification registers of the associated RCEC. The assumption
-in pcie_do_recovery() here is that I can cover both scenarios.
- 
-In a new revision of this patch series...
-
-        if (type != PCI_EXP_TYPE_RC_END) {
-                if (pcie_aer_is_native(bridge))
-                        pcie_clear_device_status(bridge);
-                pci_aer_clear_nonfatal_status(bridge);
-        }
-
-I've a new revision that makes use of the earlier thread discussing
-'bridge' assignment conditionally and when it makes sense to refer to
-the 'dev'.
-
-.
-
+> On 9/1/20 3:54 PM, Murali Karicheri wrote:
+>> This series add support for creating VLAN interface over HSR or
+>> PRP interface. Typically industrial networks uses VLAN in
+>> deployment and this capability is needed to support these
+>> networks.
+>>
+>> This is tested using two TI AM572x IDK boards connected back
+>> to back over CPSW  ports (eth0 and eth1).
+>>
+>> Following is the setup
+>>
+>>                  Physical Setup
+>>                  ++++++++++++++
+>>   _______________    (CPSW)     _______________
+>>   |              |----eth0-----|               |
+>>   |TI AM572x IDK1|             | TI AM572x IDK2|
+>>   |______________|----eth1-----|_______________|
+>>
+>>
+>>                  Network Topolgy
+>>                  +++++++++++++++
+>>
+>>                         TI AM571x IDK  TI AM572x IDK
+>>
+>> 192.168.100.10                 CPSW ports                 192.168.100.20
+>>               IDK-1                                        IDK-2
+>> hsr0/prp0.100--| 192.168.2.10  |--eth0--| 192.168.2.20 |--hsr0/prp0.100
+>>                 |----hsr0/prp0--|        |---hsr0/prp0--|
+>> hsr0/prp0.101--|               |--eth1--|              |--hsr0/prp0/101
+>>
+>> 192.168.101.10                                            192.168.101.20
+>>
+>> Following tests:-
+>>   - create hsr or prp interface and ping the interface IP address
+>>     and verify ping is successful.
+>>   - Create 2 VLANs over hsr or prp interface on both IDKs (VID 100 and
+>>     101). Ping between the IP address of the VLAN interfaces
+>>   - Do iperf UDP traffic test with server on one IDK and client on the
+>>     other. Do this using 100 and 101 subnet IP addresses
+>>   - Dump /proc/net/vlan/{hsr|prp}0.100 and verify frames are transmitted
+>>     and received at these interfaces.
+>>   - Delete the vlan and hsr/prp interface and verify interfaces are
+>>     removed cleanly.
+>>
+>> Logs for IDK-1 at https://pastebin.ubuntu.com/p/NxF83yZFDX/
+>> Logs for IDK-2 at https://pastebin.ubuntu.com/p/YBXBcsPgVK/
+>>
+>> Murali Karicheri (1):
+>>    net: hsr/prp: add vlan support
+>>
+>>   net/hsr/hsr_device.c  |  4 ----
+>>   net/hsr/hsr_forward.c | 16 +++++++++++++---
+>>   2 files changed, 13 insertions(+), 7 deletions(-)
+>>
+> I am not sure if the packet flow is right for this?
 > 
-> I'm also concerned that if we fail to identify the RCiEP (i.e., we
-> don't have a valid "dev" to use dev->rcec), we will fail to clear the
-> error status bits.  I think it's possible that the RCEC will report
-> an
-> error, but the RCiEP that generated the error message is not
-> responding so we can't find it.
-
-That's the association which is enumerated at boot by BIOS either
-through the bitmap or through the next/last bus range. Are you
-describing a scenario in which during enumeration of the RCECs/RCiEPs
-the relationships are not discovered?
-
-The second bit you describe is where the error is reported and the
-RCiEP is not responding. I wonder if that will eventually trigger an
-error from the RCEC.  But you are right such a scenario could happen so
-you are getting the error but the device is not present or may not even
-have been present from BIOS perspective?
-
-Sean
-
-
+> VLAN over HSR frame format is like this.
 > 
-> >  	}
-> > +
-> >  	pci_info(dev, "device recovery successful\n");
-> >  	return status;
-> >  
-> > diff --git a/drivers/pci/pcie/portdrv_pci.c
-> > b/drivers/pci/pcie/portdrv_pci.c
-> > index d5b109499b10..a64e88b7166b 100644
-> > --- a/drivers/pci/pcie/portdrv_pci.c
-> > +++ b/drivers/pci/pcie/portdrv_pci.c
-> > @@ -90,6 +90,18 @@ static const struct dev_pm_ops
-> > pcie_portdrv_pm_ops = {
-> >  #define PCIE_PORTDRV_PM_OPS	NULL
-> >  #endif /* !PM */
-> >  
-> > +static int pcie_hook_rcec(struct pci_dev *pdev, void *data)
-> > +{
-> > +	struct pci_dev *rcec = (struct pci_dev *)data;
-> > +
-> > +	pdev->rcec = rcec;
-> > +	pci_dbg(rcec, "RCiEP(under an RCEC) %04x:%02x:%02x.%d\n",
-> > +		pci_domain_nr(pdev->bus), pdev->bus->number,
-> > +		PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
+> <Start of Frame><VLAN tag><HSR Tag><IP><CRC>
 > 
-> If we do need dev->rcec, this should use pci_name() for the second
-> device instead of formatting the name manually.  I think I would
-> connect this with the RCiEP instead of the RCEC, e.g.,
+> My ifconfig stats shows both hsr and hsr0.100 interfaces receiving
+> frames.
 > 
->   pci_dbg(pdev, "PME & error events reported via %s\n",
-> pci_name(rcec));
+> So I did a WARN_ON() in HSR driver before frame is forwarded to upper
+> layer.
 > 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  /*
-> >   * pcie_portdrv_probe - Probe PCI-Express port devices
-> >   * @dev: PCI-Express port device being probed
-> > @@ -110,6 +122,9 @@ static int pcie_portdrv_probe(struct pci_dev
-> > *dev,
-> >  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
-> >  		return -ENODEV;
-> >  
-> > +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
-> > +		pcie_walk_rcec(dev, pcie_hook_rcec, dev);
-> > +
-> >  	status = pcie_port_device_register(dev);
-> >  	if (status)
-> >  		return status;
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index c7fc5726872c..ba29816c827b 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -330,6 +330,7 @@ struct pci_dev {
-> >  #ifdef CONFIG_PCIEPORTBUS
-> >  	u16		rcec_cap;	/* RCEC capability offset */
-> >  	struct rcec_ext *rcec_ext;	/* RCEC cached assoc. endpoint
-> > extended capabilities */
-> > +	struct pci_dev	*rcec;		/* Associated RCEC device
-> > */
-> >  #endif
-> >  	u8		pcie_cap;	/* PCIe capability offset */
-> >  	u8		msi_cap;	/* MSI capability offset */
-> > -- 
-> > 2.28.0
-> > 
+> a0868495local@uda0868495:~/Projects/upstream-kernel$ git diff
+> diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
+> index de21df30b0d9..545a3cd8c71b 100644
+> --- a/net/hsr/hsr_forward.c
+> +++ b/net/hsr/hsr_forward.c
+> @@ -415,9 +415,11 @@ static void hsr_forward_do(struct hsr_frame_info 
+> *frame)
+>                  }
+> 
+>                  skb->dev = port->dev;
+> -               if (port->type == HSR_PT_MASTER)
+> +               if (port->type == HSR_PT_MASTER) {
+> +                       if (skb_vlan_tag_present(skb))
+> +                               WARN_ON(1);
+>                          hsr_deliver_master(skb, port->dev, 
+> frame->node_src);
+> -               else
+> +               } else
+>                          hsr_xmit(skb, port, frame);
+>          }
+>   }
+> 
+> And I get the trace shown below.
+> 
+> [  275.125431] WARNING: CPU: 0 PID: 0 at net/hsr/hsr_forward.c:420 
+> hsr_forward_skb+0x460/0x564
+> [  275.133822] Modules linked in: snd_soc_omap_hdmi snd_soc_ti_sdma 
+> snd_soc_core snd_pcm_dmaengine snd_pcm snd_time4
+> [  275.199705] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W 
+> 5.9.0-rc1-00658-g473e463812c2-dirty #8
+> [  275.209573] Hardware name: Generic DRA74X (Flattened Device Tree)
+> [  275.215703] [<c011177c>] (unwind_backtrace) from [<c010b6f0>] 
+> (show_stack+0x10/0x14)
+> [  275.223487] [<c010b6f0>] (show_stack) from [<c055690c>] 
+> (dump_stack+0xc4/0xe4)
+> [  275.230747] [<c055690c>] (dump_stack) from [<c01386ac>] 
+> (__warn+0xc0/0xf4)
+> [  275.237656] [<c01386ac>] (__warn) from [<c0138a3c>] 
+> (warn_slowpath_fmt+0x58/0xb8)
+> [  275.245177] [<c0138a3c>] (warn_slowpath_fmt) from [<c09564bc>] 
+> (hsr_forward_skb+0x460/0x564)
+> [  275.253657] [<c09564bc>] (hsr_forward_skb) from [<c0955534>] 
+> (hsr_handle_frame+0x15c/0x190)
+> [  275.262047] [<c0955534>] (hsr_handle_frame) from [<c07c6704>] 
+> (__netif_receive_skb_core+0x23c/0xc88)
+> [  275.271223] [<c07c6704>] (__netif_receive_skb_core) from [<c07c7180>] 
+> (__netif_receive_skb_one_core+0x30/0x74)
+> [  275.281266] [<c07c7180>] (__netif_receive_skb_one_core) from 
+> [<c07c72a4>] (netif_receive_skb+0x50/0x1c4)
+> [  275.290793] [<c07c72a4>] (netif_receive_skb) from [<c071a55c>] 
+> (cpsw_rx_handler+0x230/0x308)
+> [  275.299272] [<c071a55c>] (cpsw_rx_handler) from [<c0715ee8>] 
+> (__cpdma_chan_process+0xf4/0x188)
+> [  275.307925] [<c0715ee8>] (__cpdma_chan_process) from [<c0717294>] 
+> (cpdma_chan_process+0x3c/0x5c)
+> [  275.316754] [<c0717294>] (cpdma_chan_process) from [<c071dd14>] 
+> (cpsw_rx_mq_poll+0x44/0x98)
+> [  275.325145] [<c071dd14>] (cpsw_rx_mq_poll) from [<c07c8ae0>] 
+> (net_rx_action+0xf0/0x400)
+> [  275.333185] [<c07c8ae0>] (net_rx_action) from [<c0101370>] 
+> (__do_softirq+0xf0/0x3ac)
+> [  275.340965] [<c0101370>] (__do_softirq) from [<c013f5ec>] 
+> (irq_exit+0xa8/0xe4)
+> [  275.348224] [<c013f5ec>] (irq_exit) from [<c0199344>] 
+> (__handle_domain_irq+0x6c/0xe0)
+> [  275.356093] [<c0199344>] (__handle_domain_irq) from [<c056f8fc>] 
+> (gic_handle_irq+0x4c/0xa8)
+> [  275.364481] [<c056f8fc>] (gic_handle_irq) from [<c0100b6c>] 
+> (__irq_svc+0x6c/0x90)
+> [  275.371996] Exception stack(0xc0e01f18 to 0xc0e01f60)
+> 
+> Shouldn't it show vlan_do_receive() ?
+> 
+>      if (skb_vlan_tag_present(skb)) {
+>          if (pt_prev) {
+>              ret = deliver_skb(skb, pt_prev, orig_dev);
+>              pt_prev = NULL;
+>          }
+>          if (vlan_do_receive(&skb))
+>              goto another_round;
+>          else if (unlikely(!skb))
+>              goto out;
+>      }
+> 
+> Thanks
+> 
 
+I did an ftrace today and I find vlan_do_receive() is called for the 
+incoming frames before passing SKB to hsr_handle_frame(). If someone
+can review this, it will help. Thanks.
+
+https://pastebin.ubuntu.com/p/CbRzXjwjR5/
+
+-- 
+Murali Karicheri
+Texas Instruments
