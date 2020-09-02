@@ -2,113 +2,114 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97068C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCB6C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED72207D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2E4520709
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:56:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="HVouhgUe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MVYKoUM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgIBMzO (ORCPT
+        id S1726926AbgIBM4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 08:55:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54120 "EHLO
+        Wed, 2 Sep 2020 08:56:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgIBMy1 (ORCPT
+        with ESMTP id S1726183AbgIBM4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 08:54:27 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA4EC061245
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 05:54:26 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id l63so4797880edl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 05:54:26 -0700 (PDT)
+        Wed, 2 Sep 2020 08:56:31 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CE13C061244;
+        Wed,  2 Sep 2020 05:56:30 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id w11so2768213lfn.2;
+        Wed, 02 Sep 2020 05:56:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Jguf1LcpzdLbnb6m9J0BP0vWI/LKfE1Jts6BiXQTOXA=;
-        b=HVouhgUe0h/dT/d25fmAt8+AdYkGMgTHsNTj5v0ofRuKkDS632pxM+ScRs+0Hy3nLB
-         DQg3t5tY2PHuwD4M3USyJMU5+lCGOBjBvWIRfCYDvR1uXAoRV/weUz2gSAW/YzaPNURa
-         bdfxgPpU+zKvGI07WPyDNuiDG/hb9hQI2afHwcrREBe+XMU2rqLo+5ZmdyRNMNgtNnAq
-         bemfPQgUfLIOfyN9sCqvTNSP6TbOhP7odrcAnsvG82RdBk1oU7lD2QZd7LfgMPMz485Z
-         Vgnwbx9hyLy6RbBIBo2AtdkOVIvPpzojlLk71ifI/7XXL+r1pLdsrmvR7tu76psXNaoT
-         1e8Q==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZT5x+31ffQ1fSGTC6fc7HGVTmxRKwze1JkUzuev76fo=;
+        b=MVYKoUM3Qi3G4CUp4xP5XqgQvWvDo6PsrlPp55IW6273Lw81QISusbtPEsERRcR/3B
+         6Q9V3XlFUJX+GYIBnGeYqwwR874ISHS4jNWHMhiw3Xd9Cbj+/LCRCeKnA3PoLxkiV7/7
+         5Mv8uiLha6QtMHB1bcvZCBV/dmLOudMDK5KPo4gr3+uw85cQhRqjrrrRXXs3v5vfarZi
+         M3XO57ETyI3ba5lFOH2B1nqQ8sa5cAotWHZ3E4SjTQugzfR2BZbwQJXdi7G32HSxhpWZ
+         mxSgzvdo1Bwy2Jq/MPnxHYcDW70oYBulKZ2KTwNLhjhGYttHxAJ7+h9Y2O0+j8aOxN0r
+         EipA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Jguf1LcpzdLbnb6m9J0BP0vWI/LKfE1Jts6BiXQTOXA=;
-        b=rRPg/DDGBMWv6uAWf/PDGAOKw8gw4yx6IOd6/e5+B1aKuI29ZxIRH8tbuPZRP5g4A2
-         /dNXnnP/fjeZ26WV12NZImdTw8TuoxcI4MyD96xaFsCyYrGFL3eHJ9kvAIgvJxEEWcxJ
-         3tZ8pFIYbhpWnHQn9JV2JRPLLbBEB3VwiFeU9lpsV0H3RIKFYfzr3LLxRixio8clXy4F
-         420b/ESTJgYpIGwAXpwaeWm0oSdaUdOs/4fwOC3g2RyJJKYo/XVc9NqBHomA1WyrYJYg
-         XvMqktzTw5CDaNZDJNApf/t2nFKIpfFiVlaqckO1rg9w2x54Zq4l8Y6NzblwrfrOSiVh
-         X8Gw==
-X-Gm-Message-State: AOAM533FQYk9OYStaAN+UHS5UoH0vNRDR9eHy6n/9zRQ8HL+M7x6Nmmz
-        keC6Xn+axw4nlIhTB5MJ8ULV6MrJKQdmlg0NtSsuRA==
-X-Google-Smtp-Source: ABdhPJyaN78gS/ZUa0KTrLX84zGJiMFwqPH7s7EsAhv3YTCXunsjJ0gi6JjMwMbqDGXOC126EP7OpX0Pk8dwY/z8JZ4=
-X-Received: by 2002:a05:6402:1d0f:: with SMTP id dg15mr6629378edb.342.1599051265010;
- Wed, 02 Sep 2020 05:54:25 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZT5x+31ffQ1fSGTC6fc7HGVTmxRKwze1JkUzuev76fo=;
+        b=R+s2Ri2as/Tiz9gkSkzG/ygagfWJLu549zSORD09nwtEFbcdoEGuJoYWnE6AyKvT2O
+         FBXhkZk/KIH9aBtM96ykXypZxra548xW9IthsxlzomOfQlYnjPdqsf2ftRMXqRY4vbp9
+         BIizcQa0Q5neNAgVRv8qtAY7PkZBbgtt99Kq0JMJPdn8cbPprgh0jiMVMC9W5Q+c1OZR
+         cURczM74HWOsAHX5HTOTwOJqc2QbdAPS9gaHs9WjLsytPwUKdzsRQZVaRH14P4onEwfO
+         o/5KCONHK/YR3ISUBNVZRJzgMMb8B34qRUqTrmrAmAQtjmnEWQ9ryPe8jhsmnI0hH+lc
+         xpSQ==
+X-Gm-Message-State: AOAM533DGlnTdOBo1B1QkBYwRsBPgSsTLoCNBlNQ3tWkmCfbZsVRXqah
+        vE7Aov1p15i1F+JEBYgN7VE=
+X-Google-Smtp-Source: ABdhPJxTy7FYR0Pg0Sm71v/FU6NwzEy2QsoacvE/ywzrQ6k+5uGvuu7pKbD5nySOHsJOa5oGFo3R7A==
+X-Received: by 2002:ac2:44b7:: with SMTP id c23mr3315115lfm.128.1599051388556;
+        Wed, 02 Sep 2020 05:56:28 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id b13sm1064037lfa.92.2020.09.02.05.56.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Sep 2020 05:56:27 -0700 (PDT)
+Subject: Re: [PATCH v2 2/6] regmap: Use flexible sleep
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+References: <20200830185356.5365-1-digetx@gmail.com>
+ <20200830185356.5365-3-digetx@gmail.com>
+ <CGME20200902124731eucas1p13716070977dbef39d09147bb71e050f6@eucas1p1.samsung.com>
+ <d936a2fc-8890-eec1-015c-d919e10d1dc5@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b580524a-d476-adbe-59b9-4ae7d62626b1@gmail.com>
+Date:   Wed, 2 Sep 2020 15:56:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200127173453.2089565-1-guro@fb.com> <20200130020626.GA21973@in.ibm.com>
- <20200130024135.GA14994@xps.DHCP.thefacebook.com> <CA+CK2bCQcnTpzq2wGFa3D50PtKwBoWbDBm56S9y8c+j+pD+KSw@mail.gmail.com>
- <20200813000416.GA1592467@carbon.dhcp.thefacebook.com> <CA+CK2bDDToW=Q5RgeWkoN3_rUr3pyWGVb9MraTzM+DM3OZ+tdg@mail.gmail.com>
- <CA+CK2bBEHFuLLg79_h6bv4Vey+B0B2YXyBxTBa=Le12OKbNdwA@mail.gmail.com>
- <6469324e-afa2-18b4-81fb-9e96466c1bf3@suse.cz> <20200902113204.GD4617@dhcp22.suse.cz>
-In-Reply-To: <20200902113204.GD4617@dhcp22.suse.cz>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 2 Sep 2020 08:53:49 -0400
-Message-ID: <CA+CK2bA6EpfSMZD6egysFqdw0tZFuPAxEJc-rQbJTnjf+u2TGA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/28] The new cgroup slab memory controller
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d936a2fc-8890-eec1-015c-d919e10d1dc5@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 7:32 AM Michal Hocko <mhocko@suse.com> wrote:
->
-> On Wed 02-09-20 11:53:00, Vlastimil Babka wrote:
-> > >> > > Thread #2: ccs killer kthread
-> > >> > >    css_killed_work_fn
-> > >> > >      cgroup_mutex  <- Grab this Mutex
-> > >> > >      mem_cgroup_css_offline
-> > >> > >        memcg_offline_kmem.part
-> > >> > >           memcg_deactivate_kmem_caches
-> > >> > >             get_online_mems
-> > >> > >               mem_hotplug_lock <- waits for Thread#1 to get read access
->
-> And one more thing. THis has been brought up several times already.
-> Maybe I have forgoten but why do we take hotplug locks in this path in
-> the first place? Memory hotplug notifier takes slab_mutex so this
-> shouldn't be really needed.
+02.09.2020 15:47, Marek Szyprowski пишет:
+> Hi Dmitry,
+> 
+> On 30.08.2020 20:53, Dmitry Osipenko wrote:
+>> The multi-reg write function uses udelay(), which is a busy-loop based
+>> delaying function that is not suitable for a long delays. Hence let's
+>> replace the udelay() with fsleep(), which is flexible sleep function that
+>> selects best delay function based on the delay-time.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> 
+> This patch landed in today's linux-next (20200902) as commit 
+> 2b32d2f7ce0a. Sadly it breaks booting of ARM 64bit Amlogic S922X based 
+> Odroid N2 board. Here is the log:
 
-Good point, it seems this lock can be completely removed from
-memcg_deactivate_kmem_caches
-
-Pasha
-
-> --
-> Michal Hocko
-> SUSE Labs
+Hello, Marek! Thank you for the feedback! I missed that remap supports
+different types of locking, I'll make a another patch to fix this problem.
