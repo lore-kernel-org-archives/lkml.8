@@ -8,59 +8,58 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86034C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE83C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9A12083B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408A6207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:02:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tb1Hxxf2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZN1D82+s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgIBUB4 (ORCPT
+        id S1726948AbgIBUBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 16:01:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35490 "EHLO
+        Wed, 2 Sep 2020 16:01:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgIBUB3 (ORCPT
+        with ESMTP id S1726678AbgIBUBd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 16:01:29 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D28C061245
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 13:01:29 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id f11so215840qvw.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 13:01:28 -0700 (PDT)
+        Wed, 2 Sep 2020 16:01:33 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2254C061249
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 13:01:32 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id d20so939215qka.5
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 13:01:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=afHET91uD4CXd+Bn3ri+xXpTcWaYwHFCsK+mh3uTl/U=;
-        b=Tb1Hxxf2aPujU9ztVmz/pwmUUPwhVSSi2K0A7S4rknGbIDVoWbrgocQwamg3BMld0T
-         9eoytiOGKhBmnjRHKxVjsQRwYcV+8xX3s2s+/6pp2tFYA56gUgt6q9re5BEnN2ZrtXdl
-         av7aAqKi4odxwp53W92qLQM960HReTt9PtYEHBxxuP8XgSxDgkcCgvhbVlmLFV1BsnOX
-         LxE3zWN37WqMUCondsLQF6EbXY2T3JE6KMDe2LD1JrmTvzrV5jVoXGcB7+Hfny/n0gqb
-         +9Ha4SG+lJxWC7HEHKcsQwUjKs/X87VYMX+Po3yIIZs4EZ6krjNweVgHpJUqKSTOSBm6
-         1SLA==
+         :in-reply-to:references;
+        bh=7pDoBXPlYeWPUtZm+sZHbNINSW/2NZCcI7xwI04WHX0=;
+        b=ZN1D82+sQ4JgKdDSBDMH3VV3v9i6jgSL4Haligr/VKnZnzkg/mFZnfLqHdMgGzXniu
+         Lb6/1JsfMclFv+6GoU4D87MK31TkT/zYWRchGgH+uxkhSP/xNQflm8x2l6dKegk+CMMG
+         sh/ZM4eLtQR4Xe0jkI4ILbwQ5aHa/uQThxUWTuuNrwwAKXdtJc8dvCnqCi4jWjKw9ozj
+         GPWCO0GW+jhnQtV/U1dB3zqvz1r81KgAh+yMbRcp13N9GixLniThDJod9WDozdNaHJv2
+         ksIRKJ7VY6qgRG1mBQHO4+1PhTabAdVdorypXfCyyGuCIAZmiIEsq+FEg7ZTFQp6GjMK
+         icZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=afHET91uD4CXd+Bn3ri+xXpTcWaYwHFCsK+mh3uTl/U=;
-        b=RMcV0kZ+T2CBmjtpqyUhbmD93R9Y/g7nNq869wEdsks2f59Dp3qGipG0wHju8QfULh
-         3NEt6UNs6MLn5XPGX0d6fWUojsc5jjTQgm5rMg2s7W7u7G4rOg1BgASBQwC8J/X637+o
-         PEx5yaHD9VsPuewgq7Fukg2zdGXn9Kq+I+eyn8W9ahkKji4Q7raKPMiCiX/R8JTq442k
-         JqBpF6NA6YJVzQY9/J9k9HUXmi1R8/tZIqhx3Hytzy8gqgQbDdLB/VYMlei9g7NnwLd+
-         yovdPL5A1K3kdD8OTUVS4SdyuA5h8RKLqaD1jP99fbDEfFyTLF7hap2OtO2GgkczNEA2
-         PT5Q==
-X-Gm-Message-State: AOAM532nEwznfSntoOrPodl4tF+01iNQvIRDInpbj8xR9S9lTbxoWBrF
-        7m+FR1ZTOuqD2X485hAo7lk=
-X-Google-Smtp-Source: ABdhPJxHsvaC/b580/1QGKNygov/r1HHcE22ZmAt3zF7SvP/QW4YersIm0uAKH4vDkNO1nq1osUoxw==
-X-Received: by 2002:ad4:430d:: with SMTP id c13mr8446929qvs.49.1599076888212;
-        Wed, 02 Sep 2020 13:01:28 -0700 (PDT)
+         :references:in-reply-to:references;
+        bh=7pDoBXPlYeWPUtZm+sZHbNINSW/2NZCcI7xwI04WHX0=;
+        b=A53nZlQ3mpoI5zGl/j9hIFtGDmnxudXMgnBxrnvWx2eI9HLw1GBzTbpuQ1W1qYCpNM
+         B24+9exb4Qcted2hzHHwzKUjPXFZIq5u42/roi9tLOoe0735kkUS6AbzfveWEuCCqXir
+         dORzlAOSpmvzG8IemVsUXbhGYKHtprIpqw8zcrSuhyCNX+T9XCJUQIFVacJZqsoWexNV
+         QEdZt257XZQiL9JtcE7ryw34Ta/v2s4ANDOOA4ZEFAMnrIJSzTpPbVkcWmnw1WyPxts8
+         jOIbYhdSNCFid+wq3ax5yM6ZBPKHkfA6heOZwESHlktfkN/Q2CYM2w/xJfV0UKMDoK/Z
+         jPaw==
+X-Gm-Message-State: AOAM533RbZAbvDU9T0JDLl4CGnxVR7Y1+5anqXPcAQrlhmG8ByfNNkT0
+        NJoF2vR7e+g5UWg49KOP3X76mZbh8UYS2vxu
+X-Google-Smtp-Source: ABdhPJy/LK0AJ2tVcWREsO/Vbms666qF83apK7H9FHByRjprPgvdHn8Ka3j1EKSPphV25JjWepj9PQ==
+X-Received: by 2002:a05:620a:127b:: with SMTP id b27mr8280131qkl.398.1599076892123;
+        Wed, 02 Sep 2020 13:01:32 -0700 (PDT)
 Received: from ubuntu (69-220-158-6.lightspeed.rlghnc.sbcglobal.net. [69.220.158.6])
-        by smtp.gmail.com with ESMTPSA id c40sm354863qtb.72.2020.09.02.13.01.27
+        by smtp.gmail.com with ESMTPSA id i10sm563915qkh.15.2020.09.02.13.01.31
         (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Wed, 02 Sep 2020 13:01:27 -0700 (PDT)
+        Wed, 02 Sep 2020 13:01:31 -0700 (PDT)
 From:   Nachammai Karuppiah <nachukannan@gmail.com>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -72,305 +71,300 @@ To:     Steven Rostedt <rostedt@goodmis.org>,
         Tony Luck <tony.luck@intel.com>
 Cc:     joel@joelfernandes.org, linux-kernel@vger.kernel.org,
         Nachammai Karuppiah <nachukannan@gmail.com>
-Subject: [RFC PATCH 3/7] pstore: Read and iterate through trace entries in PSTORE
-Date:   Wed,  2 Sep 2020 13:00:18 -0700
-Message-Id: <22eb826589419a5e6dc62a7b6876391a0dd4855c.1599072725.git.nachukannan@gmail.com>
+Subject: [RFC PATCH 6/7] tracing: Use ramtrace alloc and free methods while using persistent RAM
+Date:   Wed,  2 Sep 2020 13:00:21 -0700
+Message-Id: <6fe6de0e7093a61c8b8ff151bf9cef67e5ca7343.1599072725.git.nachukannan@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1599072725.git.nachukannan@gmail.com>
 References: <cover.1599072725.git.nachukannan@gmail.com>
 In-Reply-To: <cover.1599072725.git.nachukannan@gmail.com>
 References: <cover.1599072725.git.nachukannan@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Incase of trace records that are being read from pstore, the numerical
-*pos is not enough to hold state from session to session. A trace
-iterator is better suited for this. So for PSTORE_TYPE_TRACE record
-types, the seq_file->private field holds pointer to trace_iterator and not
-pstore_private. For this reason, PSTORE_TYPE_TRACE requires a different
-file_operations implementation, pstore_trace_file_operations.
-
-The method, ramtrace_read_pages initiates the retrieval of pages from
-pstore.
-The first page in the pstore is the metadata page. Below is the layout
-of the metadata page.
-  +------------------------------------------+
-  | Kernel Version                           |
-  +------------------------------------------+
-  | tracer_name                              |
-  +------------------------------------------+
-  | Number of CPU’s Buffers = N              |
-  +------------------------------------------+
-  | trace_clock_name                         |
-  +------------------------------------------+
-  | Number of bitmap pages per cpu	     |
-  +------------------------------------------+
-The metadata page is then followed by bitmap pages which is a bitmap of
-pages that are allocated per CPU. From the bitmaps, the list of
-pages per cpu is computed and ordered by timestamp.
+If persistent RAM is being used to record trace entries, allocate and
+free pages using ramtrace_alloc_page and ramtrace_free_page.
 
 Signed-off-by: Nachammai Karuppiah <nachukannan@gmail.com>
 ---
- fs/pstore/inode.c    |  46 +++++++++++++++--
- fs/pstore/platform.c |   1 +
- fs/pstore/ramtrace.c | 139 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 181 insertions(+), 5 deletions(-)
+ kernel/trace/ring_buffer.c | 122 +++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 119 insertions(+), 3 deletions(-)
 
-diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index c331efe..173269a 100644
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -147,13 +147,20 @@ static int pstore_file_open(struct inode *inode, struct file *file)
- 	if (ps->record->type == PSTORE_TYPE_FTRACE)
- 		sops = &pstore_ftrace_seq_ops;
- 
-+	if (ps->record->type == PSTORE_TYPE_TRACE)
-+		sops = ps->record->psi->data;
-+
- 	err = seq_open(file, sops);
- 	if (err < 0)
- 		return err;
--
--	sf = file->private_data;
--	sf->private = ps;
--
-+	/* Incase of PSTORE_TYPE_TRACE, the private field in seq_file
-+	 * would be initialized later during seq_read and freed in
-+	 * seq_release.
-+	 */
-+	if (ps->record->type != PSTORE_TYPE_TRACE) {
-+		sf = file->private_data;
-+		sf->private = ps;
-+	}
- 	return 0;
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 34e50c1..c99719e 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -353,6 +353,18 @@ static void free_buffer_page(struct buffer_page *bpage)
+ 	kfree(bpage);
  }
  
-@@ -173,6 +180,30 @@ static const struct file_operations pstore_file_operations = {
- 	.release	= seq_release,
- };
- 
-+static ssize_t pstore_trace_file_read(struct file *file, char __user *userbuf,
-+						size_t count, loff_t *ppos)
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++static void
++free_buffer_page_cpu(struct buffer_page *bpage, int cpu, bool use_pstore)
 +{
-+	return seq_read(file, userbuf, count, ppos);
++	if (use_pstore) {
++		ramtrace_free_page(bpage->page, cpu);
++		kfree(bpage);
++	} else
++		free_buffer_page(bpage);
 +}
-+
-+extern int pstore_tracing_release(void *v);
-+
-+static int pstore_trace_file_release(struct inode *inode, struct file *file)
-+{
-+	struct seq_file *s = file->private_data;
-+	void *v = s->private;
-+
-+	pstore_tracing_release(v);
-+	return seq_release(inode, file);
-+}
-+
-+static const struct file_operations pstore_trace_file_operations = {
-+	.open		= pstore_file_open,
-+	.read		= pstore_trace_file_read,
-+	.llseek		= pstore_file_llseek,
-+	.release	= pstore_trace_file_release,
-+};
++#endif
 +
  /*
-  * When a file is unlinked from our file system we call the
-  * platform driver to erase the record from persistent store.
-@@ -369,7 +400,6 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
- 	if (!inode)
- 		goto fail;
- 	inode->i_mode = S_IFREG | 0444;
--	inode->i_fop = &pstore_file_operations;
- 	scnprintf(name, sizeof(name), "%s-%s-%llu%s",
- 			pstore_type_to_name(record->type),
- 			record->psi->name, record->id,
-@@ -386,6 +416,12 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
- 	private->dentry = dentry;
- 	private->record = record;
- 	inode->i_size = private->total_size = size;
-+
-+	if (record->type == PSTORE_TYPE_TRACE)
-+		inode->i_fop = &pstore_trace_file_operations;
-+	else
-+		inode->i_fop = &pstore_file_operations;
-+
- 	inode->i_private = private;
- 
- 	if (record->time.tv_sec)
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index 36714df..e3d5b43 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -58,6 +58,7 @@ static const char * const pstore_type_names[] = {
- 	"powerpc-common",
- 	"pmsg",
- 	"powerpc-opal",
-+	"trace",
- };
- 
- static int pstore_new_entry;
-diff --git a/fs/pstore/ramtrace.c b/fs/pstore/ramtrace.c
-index 57f59e0..ca48a76 100644
---- a/fs/pstore/ramtrace.c
-+++ b/fs/pstore/ramtrace.c
-@@ -61,6 +61,18 @@ static struct ramtrace_context trace_ctx = {
- 	.read_buffer_status = -1,
- };
- 
-+/*
-+ * pstore_trace_seq_ops: This consists of the callback functions
-+ * required by pstore to iterate through the trace entries
-+ */
-+
-+static struct seq_operations pstore_trace_seq_ops = {
-+	.start	= pstore_trace_start,
-+	.next	= pstore_trace_next,
-+	.stop	= pstore_trace_stop,
-+	.show	= pstore_trace_show,
-+};
-+
- static int ramtrace_pstore_open(struct pstore_info *psi)
- {
- 	/*
-@@ -131,6 +143,133 @@ static int ramtrace_parse_dt(struct platform_device *pdev,
+  * We need to fit the time_stamp delta into 27 bits.
+  */
+@@ -1200,7 +1212,12 @@ static int rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
  	return 0;
  }
  
-+static int ramtrace_read_int(int **buffer)
-+{
-+	int data = **buffer;
-+
-+	(*buffer)++;
-+	return data;
-+}
-+
-+static char *ramtrace_read_string(char **buffer)
-+{
-+	int len = strlen(*buffer) + 1;
-+
-+	if (len > 1) {
-+		char *s = kmalloc(len, GFP_KERNEL);
-+
-+		strncpy(s, *buffer, len);
-+		*buffer = (*buffer) + len;
-+		return s;
-+	}
-+	return NULL;
-+
-+}
-+
-+static struct list_head*
-+ramtrace_read_bitmap_per_cpu(int n_bitmap, unsigned long long *bitmap,
-+			     void *first_page)
-+{
-+	int j, k;
-+	struct list_head *pages = kmalloc(sizeof(struct list_head), GFP_KERNEL);
-+
-+	INIT_LIST_HEAD(pages);
-+	for (k = 0; k <  n_bitmap; k++) {
-+		bitmap = (void *)(bitmap) + PAGE_SIZE * k;
-+		for (j = 0; j < PAGE_SIZE/sizeof(long long); j++) {
-+			struct ramtrace_pagelist *list_page;
-+			unsigned long long k = bitmap[j];
-+			int count = 0;
-+			int nth = j * sizeof(k) * 8;
-+
-+			while (k) {
-+				if (k & 1) {
-+					list_page = kzalloc(sizeof(*list_page),
-+							    GFP_KERNEL);
-+					list_page->page = (first_page +
-+						     (nth + count) * PAGE_SIZE);
-+					list_add_tail(&list_page->list, pages);
-+				}
-+				count++;
-+				k = k >> 1;
-+			}
-+
-+		}
-+	}
-+	if (list_empty(pages))
-+		return NULL;
-+	return pages;
-+}
-+
-+/* ramtrace_read_bitmap: Read bitmap pages.
-+ *
-+ * Read bitmap pages from previous boot and order the
-+ * buffer_data_page as per the timestamp.
-+ */
-+static void
-+ramtrace_read_bitmap(int n_cpu, int n_bitmap, struct list_head **per_cpu)
-+{
-+	int i;
-+	void *first_bitmap = trace_ctx.vaddr + PAGE_SIZE;
-+	void *base_addr = first_bitmap + (n_cpu * n_bitmap * PAGE_SIZE);
-+	struct list_head *per_cpu_list;
-+
-+	for (i = 0; i < n_cpu; i++) {
-+		void *bitmap_addr = first_bitmap + i * n_bitmap * PAGE_SIZE;
-+
-+		per_cpu_list = ramtrace_read_bitmap_per_cpu(n_bitmap,
-+							bitmap_addr, base_addr);
-+		if (per_cpu_list) {
-+			ring_buffer_order_pages(per_cpu_list);
-+			if (list_empty(per_cpu_list))
-+				per_cpu[i] = NULL;
-+			else
-+				per_cpu[i] = per_cpu_list;
-+		} else
-+			per_cpu[i] = NULL;
-+
-+	}
-+
-+}
-+
-+static void ramtrace_read_pages(void)
-+{
-+	void *metapage = trace_ctx.vaddr;
-+	const char current_kernel_version[] = UTS_RELEASE;
-+
-+
-+	int n_cpu = ramtrace_read_int((int **)&metapage);
-+	int trace_clock = ramtrace_read_int((int **)&metapage);
-+	int n_bitmap = ramtrace_read_int((int **)&metapage);
-+	char *kernel_version = ramtrace_read_string((char **)&metapage);
-+	char *tracer = ramtrace_read_string((char **)&metapage);
-+	struct tr_persistent_info *persist = NULL;
-+
-+	if (kernel_version && tracer) {
-+		struct list_head **per_cpu_list;
-+
-+		/* If we have booted with a different version of OS, then
-+		 * do not try to read from persistent store
-+		 */
-+		if (strcmp(kernel_version, current_kernel_version)) {
-+			pr_err("Booted with a different version of OS. "
-+				"The trace in PSTORE pertains to kernel "
-+				"version %s.\n", kernel_version);
-+			goto out;
-+		}
-+		per_cpu_list = kmalloc_array(n_cpu,
-+				sizeof(struct list_head *), GFP_KERNEL);
-+		ramtrace_read_bitmap(n_cpu, n_bitmap, per_cpu_list);
-+		persist = kzalloc(sizeof(*persist), GFP_KERNEL);
-+
-+		persist->tracer_name = tracer;
-+		persist->trace_clock = trace_clock;
-+		persist->nr_cpus = n_cpu;
-+		persist->data_pages = per_cpu_list;
-+	}
-+out:
-+	trace_ctx.persist_info = persist;
-+}
- static int ramtrace_init_mem(struct ramtrace_context *ctx)
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++static int __rb_allocate_pages(long nr_pages, struct list_head *pages, int cpu,
++				bool use_pstore)
++#else
+ static int __rb_allocate_pages(long nr_pages, struct list_head *pages, int cpu)
++#endif
  {
+ 	struct buffer_page *bpage, *tmp;
+ 	bool user_thread = current->mm != NULL;
+@@ -1214,6 +1231,11 @@ static int __rb_allocate_pages(long nr_pages, struct list_head *pages, int cpu)
+ 	 * to prevent doing any allocation when it is obvious that it is
+ 	 * not going to succeed.
+ 	 */
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++	if (use_pstore)
++		i = ramtrace_available_mem();
++	else
++#endif
+ 	i = si_mem_available();
+ 	if (i < nr_pages)
+ 		return -ENOMEM;
+@@ -1246,10 +1268,22 @@ static int __rb_allocate_pages(long nr_pages, struct list_head *pages, int cpu)
  
+ 		list_add(&bpage->list, pages);
+ 
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++		if (use_pstore) {
++			void *address = ramtrace_alloc_page(cpu);
++
++			if (!address)
++				goto free_pages;
++			bpage->page = address;
++		} else {
++#endif
+ 		page = alloc_pages_node(cpu_to_node(cpu), mflags, 0);
+ 		if (!page)
+ 			goto free_pages;
+ 		bpage->page = page_address(page);
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++		}
++#endif
+ 		rb_init_page(bpage->page);
+ 
+ 		if (user_thread && fatal_signal_pending(current))
+@@ -1263,7 +1297,11 @@ static int __rb_allocate_pages(long nr_pages, struct list_head *pages, int cpu)
+ free_pages:
+ 	list_for_each_entry_safe(bpage, tmp, pages, list) {
+ 		list_del_init(&bpage->list);
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++		free_buffer_page_cpu(bpage, cpu, use_pstore);
++#else
+ 		free_buffer_page(bpage);
++#endif
+ 	}
+ 	if (user_thread)
+ 		clear_current_oom_origin();
+@@ -1278,7 +1316,12 @@ static int rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+ 	WARN_ON(!nr_pages);
+ 
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++	if (__rb_allocate_pages(nr_pages, &pages, cpu_buffer->cpu,
++				cpu_buffer->use_pstore))
++#else
+ 	if (__rb_allocate_pages(nr_pages, &pages, cpu_buffer->cpu))
++#endif
+ 		return -ENOMEM;
+ 
+ 	/*
+@@ -1414,10 +1457,23 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 	rb_check_bpage(cpu_buffer, bpage);
+ 
+ 	cpu_buffer->reader_page = bpage;
++
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++	if (cpu_buffer->use_pstore) {
++		void *address = ramtrace_alloc_page(cpu);
++
++		if (!address)
++			goto fail_free_reader;
++		bpage->page = address;
++	} else {
++#endif
+ 	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL, 0);
+ 	if (!page)
+ 		goto fail_free_reader;
+ 	bpage->page = page_address(page);
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++	}
++#endif
+ 	rb_init_page(bpage->page);
+ 
+ 	INIT_LIST_HEAD(&cpu_buffer->reader_page->list);
+@@ -1436,7 +1492,12 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 	return cpu_buffer;
+ 
+  fail_free_reader:
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++	free_buffer_page_cpu(cpu_buffer->reader_page, cpu,
++			     cpu_buffer->use_pstore);
++#else
+ 	free_buffer_page(cpu_buffer->reader_page);
++#endif
+ 
+  fail_free_buffer:
+ 	kfree(cpu_buffer);
+@@ -1447,18 +1508,32 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+ 	struct list_head *head = cpu_buffer->pages;
+ 	struct buffer_page *bpage, *tmp;
+-
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++	free_buffer_page_cpu(cpu_buffer->reader_page, cpu_buffer->cpu,
++			     cpu_buffer->use_pstore);
++#else
+ 	free_buffer_page(cpu_buffer->reader_page);
++#endif
+ 
+ 	rb_head_page_deactivate(cpu_buffer);
+ 
+ 	if (head) {
+ 		list_for_each_entry_safe(bpage, tmp, head, list) {
+ 			list_del_init(&bpage->list);
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++			free_buffer_page_cpu(bpage, cpu_buffer->cpu,
++					     cpu_buffer->use_pstore);
++#else
+ 			free_buffer_page(bpage);
++#endif
+ 		}
+ 		bpage = list_entry(head, struct buffer_page, list);
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++		free_buffer_page_cpu(bpage, cpu_buffer->cpu,
++				     cpu_buffer->use_pstore);
++#else
+ 		free_buffer_page(bpage);
++#endif
+ 	}
+ 
+ 	kfree(cpu_buffer);
+@@ -1832,7 +1907,12 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
+ 		 * We have already removed references to this list item, just
+ 		 * free up the buffer_page and its page
+ 		 */
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++		free_buffer_page_cpu(to_remove_page, cpu_buffer->cpu,
++				     cpu_buffer->use_pstore);
++#else
+ 		free_buffer_page(to_remove_page);
++#endif
+ 		nr_removed--;
+ 
+ 	} while (to_remove_page != last_page);
+@@ -1913,7 +1993,12 @@ rb_insert_pages(struct ring_buffer_per_cpu *cpu_buffer)
+ 		list_for_each_entry_safe(bpage, tmp, &cpu_buffer->new_pages,
+ 					 list) {
+ 			list_del_init(&bpage->list);
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++			free_buffer_page_cpu(bpage, cpu_buffer->cpu,
++					     cpu_buffer->use_pstore);
++#else
+ 			free_buffer_page(bpage);
++#endif
+ 		}
+ 	}
+ 	return success;
+@@ -2252,8 +2337,14 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+ 			 * allocated without receiving ENOMEM
+ 			 */
+ 			INIT_LIST_HEAD(&cpu_buffer->new_pages);
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++			if (__rb_allocate_pages(cpu_buffer->nr_pages_to_update,
++						&cpu_buffer->new_pages, cpu,
++						cpu_buffer->use_pstore)) {
++#else
+ 			if (__rb_allocate_pages(cpu_buffer->nr_pages_to_update,
+ 						&cpu_buffer->new_pages, cpu)) {
++#endif
+ 				/* not enough memory for new pages */
+ 				err = -ENOMEM;
+ 				goto out_err;
+@@ -2319,7 +2410,12 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+ 		INIT_LIST_HEAD(&cpu_buffer->new_pages);
+ 		if (cpu_buffer->nr_pages_to_update > 0 &&
+ 			__rb_allocate_pages(cpu_buffer->nr_pages_to_update,
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++					    &cpu_buffer->new_pages, cpu_id,
++					    cpu_buffer->use_pstore)) {
++#else
+ 					    &cpu_buffer->new_pages, cpu_id)) {
++#endif
+ 			err = -ENOMEM;
+ 			goto out_err;
+ 		}
+@@ -2379,7 +2475,12 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+ 		list_for_each_entry_safe(bpage, tmp, &cpu_buffer->new_pages,
+ 					list) {
+ 			list_del_init(&bpage->list);
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++			free_buffer_page_cpu(bpage, cpu,
++					     cpu_buffer->use_pstore);
++#else
+ 			free_buffer_page(bpage);
++#endif
+ 		}
+ 	}
+  out_err_unlock:
+@@ -5184,13 +5285,22 @@ void *ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
+ 	if (bpage)
+ 		goto out;
+ 
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++	if (cpu_buffer->use_pstore) {
++		bpage = (struct buffer_data_page *)ramtrace_alloc_page(cpu);
++		if (!bpage)
++			return ERR_PTR(-ENOMEM);
++	} else {
++#endif
+ 	page = alloc_pages_node(cpu_to_node(cpu),
+ 				GFP_KERNEL | __GFP_NORETRY, 0);
+ 	if (!page)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	bpage = page_address(page);
+-
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++	}
++#endif
+  out:
+ 	rb_init_page(bpage);
+ 	down_read(&trace_read_sem);
+@@ -5229,7 +5339,13 @@ void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu, void *data
+ 	arch_spin_unlock(&cpu_buffer->lock);
+ 	local_irq_restore(flags);
+ 
+- out:
++out:
++#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
++	if (cpu_buffer->use_pstore) {
++		ramtrace_free_page(bpage, cpu);
++		return;
++	}
++#endif
+ 	free_page((unsigned long)bpage);
+ 	up_read(&trace_read_sem);
+ }
 -- 
 2.7.4
 
