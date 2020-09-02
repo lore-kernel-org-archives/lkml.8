@@ -2,85 +2,62 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA93C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48102C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 325582071B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A30620658
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgIBKG0 (ORCPT
+        id S1726567AbgIBKHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 06:06:26 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:45400 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgIBKGZ (ORCPT
+        Wed, 2 Sep 2020 06:07:23 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:47909 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgIBKHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 06:06:25 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 5A51B1C0B7F; Wed,  2 Sep 2020 12:06:22 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 12:06:21 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/125] 4.19.143-rc1 review
-Message-ID: <20200902100621.GA3765@duo.ucw.cz>
-References: <20200901150934.576210879@linuxfoundation.org>
+        Wed, 2 Sep 2020 06:07:22 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 8249230037B89;
+        Wed,  2 Sep 2020 12:07:21 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 61FB14C769; Wed,  2 Sep 2020 12:07:21 +0200 (CEST)
+Date:   Wed, 2 Sep 2020 12:07:21 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-serial@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] serial: 8250: Simplify with dev_err_probe()
+Message-ID: <20200902100721.GB4277@wunner.de>
+References: <20200901153100.18827-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+In-Reply-To: <20200901153100.18827-1-krzk@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 01, 2020 at 05:30:59PM +0200, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
---fUYQa+Pmc3FrFX/N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> This is the start of the stable review cycle for the 4.19.143 release.
-> There are 125 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Thu, 03 Sep 2020 15:09:01 +0000.
-> Anything received after that time might be too late.
-
-CIP testing did not find any problems (test:x86_siemens failure is
-because those boards are offline).
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/pipelines/1=
-84417281
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---fUYQa+Pmc3FrFX/N
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX09unQAKCRAw5/Bqldv6
-8uwDAJ94+FOoyrW/2r1HEeD/3MO6GLKSGgCfR69oxpgEIHb2nPL4gfsjwJvlFx8=
-=fGY7
------END PGP SIGNATURE-----
-
---fUYQa+Pmc3FrFX/N--
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
