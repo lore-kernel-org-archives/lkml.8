@@ -2,220 +2,134 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5795FC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC5CC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E16F208B3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3A0207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:59:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mfvdRHZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgIBP7P (ORCPT
+        id S1728244AbgIBP7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:59:15 -0400
-Received: from 8bytes.org ([81.169.241.247]:40548 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726966AbgIBP7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:59:10 -0400
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 955AB507;
-        Wed,  2 Sep 2020 17:59:06 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Joerg Roedel <jroedel@suse.de>,
-        linux-kernel@vger.kernel.org,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        stable@vger.kernel.org
-Subject: [PATCH] x86/mm/32: Bring back vmalloc faulting on x86_32
-Date:   Wed,  2 Sep 2020 17:59:04 +0200
-Message-Id: <20200902155904.17544-1-joro@8bytes.org>
-X-Mailer: git-send-email 2.28.0
+        Wed, 2 Sep 2020 11:59:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbgIBP7d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:59:33 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06831C061245
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 08:59:33 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id z46so1731541uac.13
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 08:59:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fSVTGChONR42B9tckVRMTcJUXLI684oSkll8jndZM5g=;
+        b=mfvdRHZOALR5zjzvD5e3TBVZy2DnHr7r9yWpIixO35qNoqAYhvUTt3RZH6kWCJ+E/Z
+         UG4UuICCKIdcrC7GCuXY1pn6T8/oUBlGAxUQlkMG0s7EhK967+j0g6eDKTiaLY/x0WHO
+         NejvBnwPcLn1B60Yl3Cs6PcbByoY3u3eY5GYz7xkA2SLtJEYK67i7hDbQx423+ez5fA1
+         8Fam1zozYHtcmoiVCnhhV+/HkYHVV1zoxNvTzI41vuy7pOV9zKchtaKTDVnz7eUO1ip0
+         p9/wVUlbQNu+4PIJcuJmdOiWWCiGOshC4pigJGdOld2a/8DaRepLrnerBAPf8BtRcGBj
+         8EIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fSVTGChONR42B9tckVRMTcJUXLI684oSkll8jndZM5g=;
+        b=g1WeQQPBkiQjiORnI7nbbLIOP9eSFBlZngC4GWxLP5LffhLkiNBkpi2Dce5gINJRVj
+         vDyUB1AnSmO/Wr0DMiQukj44nj+2roKAqo2m5fhSVEjX3baCAisMM6Lju7wa0LNf1ms3
+         tU2qYbogppC2hFpAT1kqFX+V8tRoGtdBAMkr93ntacAG0s2gteIjZ+Sb79qMm3lbT7W4
+         ZlH39/RUAJ3h4O4Qgg6hgHYMLFP/C+d/nm940rkgL+4vHaW6Ed+OdPdw2YzCtYl8pGVt
+         Zph3TwE7MQKlJkC/Zbkk+bmYRHBT7/qDg46VNGXJO62UWqSFyrrfGbu3gh0Lw0BtqQbf
+         Sdew==
+X-Gm-Message-State: AOAM533InxeAN6jkjHV5bDg+mBq6yTd8BNQ1YC5wWpwXnM6oySZmIgtW
+        2zwYifmBX1bXwOyRJKpVLfvfmPI/b7qED7KR0XiXKw==
+X-Google-Smtp-Source: ABdhPJwqUlTtC+lVo+5XX9eb9FGE+8fkPT51Z05tLTdsd7VJj6u/GOU747Va6WqvAJl+GIm84nJ+dv3rnXOEOFe9+8s=
+X-Received: by 2002:a9f:2722:: with SMTP id a31mr5858584uaa.100.1599062371534;
+ Wed, 02 Sep 2020 08:59:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAPDyKFq7KWo=4VmPhgrt7vEEQ_P6NdVgQp+MO_1cg1dtoVR_Fw@mail.gmail.com>
+ <CAPDyKFrTERjpLrPOFtkqLyNsk2T_58Ye2FQ1mPf-0u78aWW=Xw@mail.gmail.com>
+ <20200901104206.GU1362448@hirez.programming.kicks-ass.net>
+ <CAPDyKFo0VkW-cgRSkvPQ0whpuJCo4OKcL1nmH7nz1tDEChOtVg@mail.gmail.com>
+ <CAPDyKFrv+DTF8=twZZk_tenB-sLg6H-CFn9HVDVA5S2kK2=U5Q@mail.gmail.com>
+ <20200901154417.GD20303@codeaurora.org> <20200901155014.GF2674@hirez.programming.kicks-ass.net>
+ <20200901161340.GC29330@paulmck-ThinkPad-P72> <20200901174216.GJ29142@worktop.programming.kicks-ass.net>
+ <CAPDyKFqPh7bg16AsitGv2QQHgwOPnWx9DiPPCMuD1EGA5TFFdg@mail.gmail.com> <20200902121355.GE1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200902121355.GE1362448@hirez.programming.kicks-ass.net>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 2 Sep 2020 17:58:55 +0200
+Message-ID: <CAPDyKFrGj+8hOXi7sWxWNv2QP0=mx9pFKLG0JM-L5VNKUPDgeA@mail.gmail.com>
+Subject: Re: WARNING: suspicious RCU usage - sdhci-pltfm: SDHCI platform and
+ OF driver helper
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Saravana Kannan <saravanak@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        madhuparnabhowmik10@gmail.com,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Wed, 2 Sep 2020 at 14:14, <peterz@infradead.org> wrote:
+>
+> On Wed, Sep 02, 2020 at 09:03:37AM +0200, Ulf Hansson wrote:
+> > Lots of cpuidle drivers are using CPU_PM notifiers (grep for
+> > cpu_pm_enter and you will see) from their idlestates ->enter()
+> > callbacks. And for those we are already calling
+> > rcu_irq_enter_irqson|off() in cpu_pm_notify() when firing them.
+>
+> Yeah, that particular trainwreck is on my todo list already ... then
+> again, that list is forever overflowing.
+>
+> I'm thinking cpu_pm_unregister_notifier() is not a common thing? The few
+> I looked at seem to suggest 'never' is a good approximation.
 
-One can not simply remove vmalloc faulting on x86-32. Upstream
+The trend is that drivers are turning into regular modules that may
+also need to manage "->remove()", which may mean unregistering the
+notifier. Of course, I don't know for sure whether that becomes a
+problem, but it seems quite limiting.
 
-	commit: 7f0a002b5a21 ("x86/mm: remove vmalloc faulting")
+>
+> It would be fairly trivial to replace the atomic_notifier usage with a
+> raw_notifier a lock and either stop-machine or IPIs. Better still would
+> be if we can get rid of it entirely, but I can't tell in a hurry if that
+> is possible.
 
-removed it on x86 alltogether because previously the
-arch_sync_kernel_mappings() interface was introduced. This interface
-added synchronization of vmalloc/ioremap page-table updates to all
-page-tables in the system at creation time and was thought to make
-vmalloc faulting obsolete.
+Okay, let's see.
 
-But that assumption was incredibly naive.
+In any case, I was thinking that the patch with CPU idle flag, for
+letting CPU idle drivers deal with RCU, that you proposed, seems like
+a good first step.
 
-It turned out that there is a race window between the time the vmalloc
-or ioremap code establishes a mapping and the time it synchronizes
-this change to other page-tables in the system.
+At least it should enable us to solve the problem for runtime PM in
+psci_enter_domain_idle_state(). Let me update the patch and send it
+out, then we can continue the discussion over there.
 
-During this race window another CPU or thread can establish a vmalloc
-mapping which uses the same intermediate page-table entries (e.g. PMD
-or PUD) and does no synchronization in the end, because it found all
-necessary mappings already present in the kernel reference page-table.
-
-But when these intermediate page-table entries are not yet
-synchronized, the other CPU or thread will continue with a vmalloc
-address that is not yet mapped in the page-table it currently uses,
-causing an unhandled page fault and oops like below:
-
-	BUG: unable to handle page fault for address: fe80c000
-	#PF: supervisor write access in kernel mode
-	#PF: error_code(0x0002) - not-present page
-	*pde = 33183067 *pte = a8648163
-	Oops: 0002 [#1] SMP
-	CPU: 1 PID: 13514 Comm: cve-2017-17053 Tainted: G
-	0-next-20200811 #1
-	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-	4/01/2014
-	EIP: memcpy+0xf/0x20
-	Code: 68 d0 7d ee d6 e8 11 1c c7 ff 0f 31 31 c3 59 58 cc cc cc cc cc cc 55 89 e5 57 89 c7 56 89 d6 53 89 cb a5 89 d9 83 e1 03 74 02 f3 a4 5b 5e 5f 5d c3 90 55 89 e5
-	EAX: fe80c000 EBX: 00010000 ECX: 00004000 EDX: fbfbd000
-	ESI: fbfbd000 EDI: fe80c000 EBP: f11f1e2c ESP: f11f1e20
-	DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010216
-	CR0: 80050033 CR2: fe80c000 CR3: 314c0000 CR4: 003506d0
-	DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-	DR6: ffff4ff0 DR7: 00000400
-	Call Trace:
-	 ldt_dup_context+0x66/0x80
-	 dup_mm+0x2b3/0x480
-	 copy_process+0x133b/0x15c0
-	 _do_fork+0x94/0x3e0
-	 __ia32_sys_clone+0x67/0x80
-	 __do_fast_syscall_32+0x3f/0x70
-	 do_fast_syscall_32+0x29/0x60
-	 do_SYSENTER_32+0x15/0x20
-	 entry_SYSENTER_32+0x9f/0xf2
-	EIP: 0xb7eef549
-
-So the arch_sync_kernel_mappings() interface is racy, but removing it
-would mean to re-introduce the vmalloc_sync_all() interface, which is
-even more awful. Keep arch_sync_kernel_mappings() in place and catch
-the race condition in the page-fault handler instead.
-
-Do a partial revert of above commit to get vmalloc faulting on x86-32
-back in place.
-
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Fixes: 7f0a002b5a21 ("x86/mm: remove vmalloc faulting")
-Cc: stable@vger.kernel.org # v5.8+
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/mm/fault.c | 78 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
-
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 35f1498e9832..6e3e8a124903 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -190,6 +190,53 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
- 	return pmd_k;
- }
- 
-+/*
-+ *   Handle a fault on the vmalloc or module mapping area
-+ *
-+ *   This is needed because there is a race condition between the time
-+ *   when the vmalloc mapping code updates the PMD to the point in time
-+ *   where it synchronizes this update with the other page-tables in the
-+ *   system.
-+ *
-+ *   In this race window another thread/CPU can map an area on the same
-+ *   PMD, finds it already present and does not synchronize it with the
-+ *   rest of the system yet. As a result v[mz]alloc might return areas
-+ *   which are not mapped in every page-table in the system, causing an
-+ *   unhandled page-fault when they are accessed.
-+ */
-+static noinline int vmalloc_fault(unsigned long address)
-+{
-+	unsigned long pgd_paddr;
-+	pmd_t *pmd_k;
-+	pte_t *pte_k;
-+
-+	/* Make sure we are in vmalloc area: */
-+	if (!(address >= VMALLOC_START && address < VMALLOC_END))
-+		return -1;
-+
-+	/*
-+	 * Synchronize this task's top level page-table
-+	 * with the 'reference' page table.
-+	 *
-+	 * Do _not_ use "current" here. We might be inside
-+	 * an interrupt in the middle of a task switch..
-+	 */
-+	pgd_paddr = read_cr3_pa();
-+	pmd_k = vmalloc_sync_one(__va(pgd_paddr), address);
-+	if (!pmd_k)
-+		return -1;
-+
-+	if (pmd_large(*pmd_k))
-+		return 0;
-+
-+	pte_k = pte_offset_kernel(pmd_k, address);
-+	if (!pte_present(*pte_k))
-+		return -1;
-+
-+	return 0;
-+}
-+NOKPROBE_SYMBOL(vmalloc_fault);
-+
- void arch_sync_kernel_mappings(unsigned long start, unsigned long end)
- {
- 	unsigned long addr;
-@@ -1110,6 +1157,37 @@ do_kern_addr_fault(struct pt_regs *regs, unsigned long hw_error_code,
- 	 */
- 	WARN_ON_ONCE(hw_error_code & X86_PF_PK);
- 
-+#ifdef CONFIG_X86_32
-+	/*
-+	 * We can fault-in kernel-space virtual memory on-demand. The
-+	 * 'reference' page table is init_mm.pgd.
-+	 *
-+	 * NOTE! We MUST NOT take any locks for this case. We may
-+	 * be in an interrupt or a critical region, and should
-+	 * only copy the information from the master page table,
-+	 * nothing more.
-+	 *
-+	 * Before doing this on-demand faulting, ensure that the
-+	 * fault is not any of the following:
-+	 * 1. A fault on a PTE with a reserved bit set.
-+	 * 2. A fault caused by a user-mode access.  (Do not demand-
-+	 *    fault kernel memory due to user-mode accesses).
-+	 * 3. A fault caused by a page-level protection violation.
-+	 *    (A demand fault would be on a non-present page which
-+	 *     would have X86_PF_PROT==0).
-+	 *
-+	 * This is only needed to close a race condition on x86-32 in
-+	 * the vmalloc mapping/unmapping code. See the comment above
-+	 * vmalloc_fault() for details. On x86-64 the race does not
-+	 * exist as the vmalloc mappings don't need to be synchronized
-+	 * there.
-+	 */
-+	if (!(hw_error_code & (X86_PF_RSVD | X86_PF_USER | X86_PF_PROT))) {
-+		if (vmalloc_fault(address) >= 0)
-+			return;
-+	}
-+#endif
-+
- 	/* Was the fault spurious, caused by lazy TLB invalidation? */
- 	if (spurious_kernel_fault(hw_error_code, address))
- 		return;
--- 
-2.28.0
-
+Kind regards
+Uffe
