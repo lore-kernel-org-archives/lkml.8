@@ -2,123 +2,126 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA34CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DFAC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C61272067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B448E20758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:31:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sLKhXXk3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NFSvDO0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgIBQ3j (ORCPT
+        id S1727895AbgIBQbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:29:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgIBQ3j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:29:39 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE739C061244;
-        Wed,  2 Sep 2020 09:29:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=25QsOL265VHtUBdduJ+zlcY70CKuPcRt2m3aDgcyCWk=; b=sLKhXXk3/7ER8cRlVAmG+XXxqR
-        KHNqfAhW+ZZMezc3X8zfNz+epkDm2HdaUsWngYX7z6+Y48MPNykweecueQSTXYqoeKxAOWhWRF077
-        ELtDplozK0eSATq6vOPLRHLgjuyGeRHjGYNR3yOYCFpx5jaUhNUGfUXH/ENv85yeULk3du2OxnvLD
-        0IBVExgSAzN7+Ig8n6h2QibiQUCXhzplyOajPSA0g3uyZwzZykv282j4Y6H5TaiG1C53f8pKiXT+T
-        ++etcs8zv880XErLxos5q02X09uGkqFwF9oEEM6S5BzX/v/M2hvKSZPOULW3EGhNLhxKAF8J5Qf4h
-        seib7S3g==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDVdf-0007GT-0p; Wed, 02 Sep 2020 16:29:35 +0000
-Subject: Re: [PATCH v2] power: supply: charger-manager: Fix info message in
- check_charging_duration()
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonghwa Lee <jonghwa3.lee@samsung.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Colin Ian King <colin.king@canonical.com>
-References: <20200902162315.GA11384@embeddedor>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f93c0fa0-51a1-291f-feda-fbd8d7397e88@infradead.org>
-Date:   Wed, 2 Sep 2020 09:29:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Wed, 2 Sep 2020 12:31:06 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:60901 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726380AbgIBQbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:31:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1599064264; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=v7KI2IOZSWqzeky+H8zIluMlkBlqx7++lCpZiGls5wk=; b=NFSvDO0rVMaLtNYPXB/hGJvddvRfKu6/SRITZwGcD0jBQp/oZMr2y2Etdo2s4sDK0z6AzvpK
+ z5zTw3mNxbENxBctBDHir1qJ8qLIR96UWwX4SaQDnrMEfcgHTRrW9nCo97LbJuvWMcXj50+N
+ GLaVYGsNmApv+d8sOxUpTSAO+uU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f4fc8b673afa3417ee89ed7 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 02 Sep 2020 16:30:46
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E445AC433C9; Wed,  2 Sep 2020 16:30:45 +0000 (UTC)
+Received: from [192.168.1.38] (unknown [59.99.0.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: deesin)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC518C433C6;
+        Wed,  2 Sep 2020 16:30:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC518C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=deesin@codeaurora.org
+Subject: Re: [PATCH V5 0/4] Signaling api support in glink/rpmsg clients
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     bjorn.andersson@linaro.org, clew@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1593182819-30747-1-git-send-email-deesin@codeaurora.org>
+ <20200706180437.GB614737@xps15>
+From:   Deepak Kumar Singh <deesin@codeaurora.org>
+Message-ID: <5ce032b8-6b26-d0a7-f92d-f8487d810f0c@codeaurora.org>
+Date:   Wed, 2 Sep 2020 22:00:33 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200902162315.GA11384@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200706180437.GB614737@xps15>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 9:23 AM, Gustavo A. R. Silva wrote:
-> A few months ago, commit e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
-> changed the expression in the if statement from "duration > desc->discharging_max_duration_ms"
-> to "duration > desc->charging_max_duration_ms", but the arguments for dev_info() were left unchanged.
-> Apparently, due to a copy-paste error.
-> 
-> Fix this by using the proper arguments for dev_info().
-> 
-> Also, while there, replace "exceed" with "exceeds", for both messages.
-> 
-> Addresses-Coverity-ID: 1496803 ("Copy-paste error")
-> Fixes: e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Changes in v2:
->  -  Replace "exceed" with "exceeds"
-> 
->  drivers/power/supply/charger-manager.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
-> index 07992821e252..a6d5dbd55e37 100644
-> --- a/drivers/power/supply/charger-manager.c
-> +++ b/drivers/power/supply/charger-manager.c
-> @@ -464,7 +464,7 @@ static int check_charging_duration(struct charger_manager *cm)
->  		duration = curr - cm->charging_start_time;
->  
->  		if (duration > desc->charging_max_duration_ms) {
-> -			dev_info(cm->dev, "Charging duration exceed %ums\n",
-> +			dev_info(cm->dev, "Charging duration exceeds %ums\n",
->  				 desc->charging_max_duration_ms);
->  			ret = true;
->  		}
-> @@ -472,8 +472,8 @@ static int check_charging_duration(struct charger_manager *cm)
->  		duration = curr - cm->charging_end_time;
->  
->  		if (duration > desc->charging_max_duration_ms) {
-> -			dev_info(cm->dev, "Discharging duration exceed %ums\n",
-> -				 desc->discharging_max_duration_ms);
-> +			dev_info(cm->dev, "Charging duration exceeds %ums\n",
-> +				 desc->charging_max_duration_ms);
->  			ret = true;
->  		}
->  	}
-> 
 
-Hi,
+On 7/6/2020 11:34 PM, Mathieu Poirier wrote:
+> Hi Deepak,
+>
+> On Fri, Jun 26, 2020 at 08:16:55PM +0530, Deepak Kumar Singh wrote:
+>> Change from version 5
+>> [V5,4/4] rpmsg: char: Add signal callback and POLLPRI support
+>> Updated for sparse warning. Replaced POLLPRI => EPOLLPRI to fix
+>> warning.
+>>
+>> Change from version 4
+>> I am taking over these patches from aneela@codeaurora.org
+>> Fixed all the trivial review comments.
+>>
+>> Signal conversion to and from native signal as done in patch V4,2/4
+>> is intentional.
+>>
+>> Arun Kumar Neelakantam (3):
+>>    rpmsg: glink: Add support to handle signals command
+>>    rpmsg: char: Add TIOCMGET/TIOCMSET ioctl support
+>>    rpmsg: char: Add signal callback and POLLPRI support
+>>
+>> Deepak Kumar Singh (1):
+>>    rpmsg: core: Add signal API support
+> I'm confused here - V5 (or what I think it is) was sent out on June 24th without
+> a cover letter.  This set has a cover letter but it is labeled V5.  So is this
+> the cover letter that should have been sent out on the 24th and the content
+> herein relevent to that set?  Or is it accurate and the label on the cover
+> letter of this set is wrong and should have been V6?
+>
+> I have little confidence in both sets and as such won't be reviewing them.
+> Please send a new revision that is properly labeled.
+>
+> Thanks,
+> Mathieu
+>
+Mistakenly i forgot to update label for cover letter to V6.
 
-It looks to me like the second block (else if) should be about discharging,
-not charging, more like Colin King's patch had it:
+I have uploaded patch set V7 with updated cover letter.
 
-  https://lore.kernel.org/lkml/20200902133117.108025-1-colin.king@canonical.com/
+There is no change in patches.
 
-but I don't know this code.
-
+>>   drivers/rpmsg/qcom_glink_native.c | 125 ++++++++++++++++++++++++++++++++++++++
+>>   drivers/rpmsg/rpmsg_char.c        |  76 ++++++++++++++++++++++-
+>>   drivers/rpmsg/rpmsg_core.c        |  40 ++++++++++++
+>>   drivers/rpmsg/rpmsg_internal.h    |   5 ++
+>>   include/linux/rpmsg.h             |  27 ++++++++
+>>   5 files changed, 270 insertions(+), 3 deletions(-)
+>>
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
 -- 
-~Randy
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
 
