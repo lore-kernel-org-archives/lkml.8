@@ -2,158 +2,93 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC77C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD40C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1822F206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:36:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m5yZH7JL"
+	by mail.kernel.org (Postfix) with ESMTP id 3831F2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgIBJgs (ORCPT
+        id S1726384AbgIBJhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 05:36:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgIBJgr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 05:36:47 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C7FFC061244;
-        Wed,  2 Sep 2020 02:36:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CVKEqJ8VyRUxV18RMo+VlglQJ7cxy86dcBr7cGPxf7Y=; b=m5yZH7JL8dt+/qaFKkqSkHCry4
-        pWPuDkOH4lEEQIGy6PkdEl2zH4iSODB+w69Ktxi/JQdBqbiMOeY97fRfrKqosnwimzLCIQh4e8GkZ
-        luum03hjmwT1uYHLsKB7T4qrNMsbSY3EvnStY4kIvdIwYOv4nOtIBCfNEZyhxwM9mpSsA+d+nIFlY
-        jRHyOq0uUHQX4ZShGk2QAUUAh93kD7zrxmWd8ISYKR0oocjVwR9uJ9UycvNJEha9ODECfEQf9pxVV
-        ChN36dgeYob5bsQ6gZDdVr1VYD06wr917Xro7usDZTiEwSuPd91dz0+Wvjkl8kS/9i0QhOomRDk3g
-        VJZ6bMxw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDPBf-0006nb-Nh; Wed, 02 Sep 2020 09:36:15 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B06F63003E5;
-        Wed,  2 Sep 2020 11:36:13 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 66A1323D3D729; Wed,  2 Sep 2020 11:36:13 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 11:36:13 +0200
-From:   peterz@infradead.org
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
-        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
-        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
-        paulmck@kernel.org
-Subject: Re: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers
- and make kretprobe lockless
-Message-ID: <20200902093613.GY1362448@hirez.programming.kicks-ass.net>
-References: <159870598914.1229682.15230803449082078353.stgit@devnote2>
- <20200901190808.GK29142@worktop.programming.kicks-ass.net>
- <20200902093739.8bd13603380951eaddbcd8a5@kernel.org>
- <20200902070226.GG2674@hirez.programming.kicks-ass.net>
- <20200902171755.b126672093a3c5d1b3a62a4f@kernel.org>
+        Wed, 2 Sep 2020 05:37:07 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:42616 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726124AbgIBJhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 05:37:05 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3702C20DA70D8773C1F1;
+        Wed,  2 Sep 2020 17:37:03 +0800 (CST)
+Received: from [127.0.0.1] (10.74.173.29) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 2 Sep 2020
+ 17:36:56 +0800
+Subject: Re: [PATCH RESEND 00/10] crypto: hisilicon/zip - misc clean up
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+References: <1598238709-58699-1-git-send-email-shenyang39@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
+From:   "shenyang (M)" <shenyang39@huawei.com>
+Message-ID: <a926ab4c-fbe6-a6c5-055d-4a605c075699@huawei.com>
+Date:   Wed, 2 Sep 2020 17:36:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902171755.b126672093a3c5d1b3a62a4f@kernel.org>
+In-Reply-To: <1598238709-58699-1-git-send-email-shenyang39@huawei.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.173.29]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 05:17:55PM +0900, Masami Hiramatsu wrote:
+any comment?
 
-> > Ok, but then lockdep will yell at you if you have that enabled and run
-> > the unoptimized things.
-> 
-> Oh, does it warn for all spinlock things in kprobes if it is unoptimized?
-> Hmm, it has to be noted in the documentation.
+Thanks,
+Yang
 
-Lockdep will warn about spinlocks used in NMI context that are also used
-outside NMI context.
+On 2020/8/24 11:11, Yang Shen wrote:
+> This patchset make some clean up:
+> patch 1:remove useless parameters
+> patch 4:replace 'sprintf' with 'scnprintf'
+> patch 7:fix static check warning
+> and the rest patch fix some coding style
+>
+> Resend this patch series because it depends on
+> https://patchwork.kernel.org/cover/11715927/
+> (crypto: hisilicon/qm - misc fixes).
+> Now the patch series(crypto: hisilicon/qm - misc fixes) has been applied.
+> So this patch series will apply against cryptodev.
+>
+> Shukun Tan (1):
+>    crypto: hisilicon/zip - modify debugfs interface parameters
+>
+> Yang Shen (9):
+>    crypto: hisilicon/zip - remove some useless parameters
+>    crypto: hisilicon/zip - unify naming style for functions and macros
+>    crypto: hisilicon/zip - replace 'sprintf' with 'scnprintf'
+>    crypto: hisilicon/zip - use a enum parameter instead of some macros
+>    crypto: hisilicon/zip - add print for error branch
+>    crypto: hisilicon/zip - fix static check warning
+>    crypto: hisilicon/zip - move some private macros from 'zip.h' to
+>      'zip_crypto.c'
+>    crypto: hisilicon/zip - supplement some comments
+>    crypto: hisilicon/zip - fix some coding styles
+>
+>   drivers/crypto/hisilicon/zip/zip.h        |  15 ----
+>   drivers/crypto/hisilicon/zip/zip_crypto.c | 126 ++++++++++++++++++++---------
+>   drivers/crypto/hisilicon/zip/zip_main.c   | 130 ++++++++++++++----------------
+>   3 files changed, 148 insertions(+), 123 deletions(-)
+>
+> --
+> 2.7.4
+>
+>
+> .
+>
 
-Now, for the kretprobe that kprobe_busy flag prevents the actual
-recursion self-deadlock, but lockdep isn't smart enough to see that.
 
-One way around this might be to use SINGLE_DEPTH_NESTING for locks when
-we use them from INT3 context. That way they'll have a different class
-and lockdep will not see the recursion.
-
-pre_handler_kretprobe() is always called from INT3, right?
-
-Something like the below might then work...
-
----
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 287b263c9cb9..b78f4fe08e86 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1255,11 +1255,11 @@ __acquires(hlist_lock)
- NOKPROBE_SYMBOL(kretprobe_hash_lock);
- 
- static void kretprobe_table_lock(unsigned long hash,
--				 unsigned long *flags)
-+				 unsigned long *flags, int nesting)
- __acquires(hlist_lock)
- {
- 	raw_spinlock_t *hlist_lock = kretprobe_table_lock_ptr(hash);
--	raw_spin_lock_irqsave(hlist_lock, *flags);
-+	raw_spin_lock_irqsave_nested(hlist_lock, *flags, nesting);
- }
- NOKPROBE_SYMBOL(kretprobe_table_lock);
- 
-@@ -1326,7 +1326,7 @@ void kprobe_flush_task(struct task_struct *tk)
- 	INIT_HLIST_HEAD(&empty_rp);
- 	hash = hash_ptr(tk, KPROBE_HASH_BITS);
- 	head = &kretprobe_inst_table[hash];
--	kretprobe_table_lock(hash, &flags);
-+	kretprobe_table_lock(hash, &flags, 0);
- 	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
- 		if (ri->task == tk)
- 			recycle_rp_inst(ri, &empty_rp);
-@@ -1361,7 +1361,7 @@ static void cleanup_rp_inst(struct kretprobe *rp)
- 
- 	/* No race here */
- 	for (hash = 0; hash < KPROBE_TABLE_SIZE; hash++) {
--		kretprobe_table_lock(hash, &flags);
-+		kretprobe_table_lock(hash, &flags, 0);
- 		head = &kretprobe_inst_table[hash];
- 		hlist_for_each_entry_safe(ri, next, head, hlist) {
- 			if (ri->rp == rp)
-@@ -1950,7 +1950,7 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
- 
- 	/* TODO: consider to only swap the RA after the last pre_handler fired */
- 	hash = hash_ptr(current, KPROBE_HASH_BITS);
--	raw_spin_lock_irqsave(&rp->lock, flags);
-+	raw_spin_lock_irqsave_nested(&rp->lock, flags, SINGLE_DEPTH_NESTING);
- 	if (!hlist_empty(&rp->free_instances)) {
- 		ri = hlist_entry(rp->free_instances.first,
- 				struct kretprobe_instance, hlist);
-@@ -1961,7 +1961,7 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
- 		ri->task = current;
- 
- 		if (rp->entry_handler && rp->entry_handler(ri, regs)) {
--			raw_spin_lock_irqsave(&rp->lock, flags);
-+			raw_spin_lock_irqsave_nested(&rp->lock, flags, SINGLE_DEPTH_NESTING);
- 			hlist_add_head(&ri->hlist, &rp->free_instances);
- 			raw_spin_unlock_irqrestore(&rp->lock, flags);
- 			return 0;
-@@ -1971,7 +1971,7 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
- 
- 		/* XXX(hch): why is there no hlist_move_head? */
- 		INIT_HLIST_NODE(&ri->hlist);
--		kretprobe_table_lock(hash, &flags);
-+		kretprobe_table_lock(hash, &flags, SINGLE_DEPTH_NESTING);
- 		hlist_add_head(&ri->hlist, &kretprobe_inst_table[hash]);
- 		kretprobe_table_unlock(hash, &flags);
- 	} else {
