@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8715C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D686EC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2B4220767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A3B207D3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:30:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G+AbJXlh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TWTumlPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgIBOaF (ORCPT
+        id S1728250AbgIBOaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:30:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38206 "EHLO
+        Wed, 2 Sep 2020 10:30:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728001AbgIBONl (ORCPT
+        with ESMTP id S1727955AbgIBONl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 10:13:41 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49B77C061263;
-        Wed,  2 Sep 2020 07:12:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A309CC06123A;
+        Wed,  2 Sep 2020 07:13:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=nQ83Cu9ozqMklDRnkFmyDq+TQLjs94xXUv+UC4IWP5c=; b=G+AbJXlhEoNUEhaJJMqoU5D+/n
-        mCY3DZHbjS+WEqjZrwnBNnG0+sGUP+Fc1k3byExCn/m364AtZmlOc+nnmyWYhyTb5kjveVPEf8WcG
-        qpahI9oNcpABZcfIcvQE5nc9oDjc3+7JZh93qKoCzeGwpcTiYECz0hHUGsqeYHvJXRKRmAAoL2kSr
-        679BHRTVcCTosaKcFvyFAoDRW9XVD14vlroKaBOJUJ7VNcght62kdZH4/3mWU8CwyKc4dzV6bOYBg
-        qK9n+uDdU6xqvLTfuzTn5i1ykA3nW+kEZVfxhPVsQOsTgtek006rNLAAvc+z0/z2lILP5YuIh4Wso
-        veiqYMwA==;
+        bh=W0vMWQBgGgqKGkq/ZVvGLbZ6CKd/5CcgKMoWsNAi6yg=; b=TWTumlPNV4nH9eq9Gh3f9FViES
+        NHZN4Kw0CBEJcMigOFlTCbzR0F3B9cWB7TOXmhqdDxF4ugy73ZhKFiyIEob+QRxXBR0JJkh+kRsw9
+        pQfOYUviYjY8awuiNG60FSvJsm40o9YcRQ1+2gDZoNRQTX7IdbO6aYgBZCVHrJhvOVCmiPm5a6LYA
+        1wilHTzH7Bto1mDL9p3+6WpMuAtjGzmphMtPuAUDMGsLxWneMs6q105TQImWgpz0LkD883tarnxmt
+        Z38EGbo/Ek76sNa+l2Ex5XW7stVNMobUNC+X2bQXeADo0S94487fA58oTziynqUjGfEKnijlA1Ifu
+        8ALFS/kA==;
 Received: from [2001:4bb8:184:af1:6a63:7fdb:a80e:3b0b] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDTV3-0005e2-8l; Wed, 02 Sep 2020 14:12:33 +0000
+        id 1kDTVD-0005gC-Mk; Wed, 02 Sep 2020 14:12:43 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
@@ -53,9 +53,9 @@ Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
         linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
         linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH 10/19] paride/pcd: use bdev_check_media_change
-Date:   Wed,  2 Sep 2020 16:12:09 +0200
-Message-Id: <20200902141218.212614-11-hch@lst.de>
+Subject: [PATCH 17/19] sr: use bdev_check_media_change
+Date:   Wed,  2 Sep 2020 16:12:16 +0200
+Message-Id: <20200902141218.212614-18-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200902141218.212614-1-hch@lst.de>
 References: <20200902141218.212614-1-hch@lst.de>
@@ -67,27 +67,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pcd driver does not have a ->revalidate_disk method, so it can just
-use bdev_check_media_change without any additional changes.
+Switch to use bdev_check_media_change instead of check_disk_change and
+call sr_block_revalidate_disk manually.  Also add an explicit call to
+sr_block_revalidate_disk just before disk_add() to ensure we always
+read check for a ready unit and read the TOC and then stop wiring up
+->revalidate_disk.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/block/paride/pcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/sr.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/paride/pcd.c b/drivers/block/paride/pcd.c
-index 5124eca90e8337..70da8b86ce587d 100644
---- a/drivers/block/paride/pcd.c
-+++ b/drivers/block/paride/pcd.c
-@@ -233,7 +233,7 @@ static int pcd_block_open(struct block_device *bdev, fmode_t mode)
- 	struct pcd_unit *cd = bdev->bd_disk->private_data;
- 	int ret;
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index 3b3a53c6a0de53..34be94b62523fa 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -86,6 +86,7 @@ static int sr_remove(struct device *);
+ static blk_status_t sr_init_command(struct scsi_cmnd *SCpnt);
+ static int sr_done(struct scsi_cmnd *);
+ static int sr_runtime_suspend(struct device *dev);
++static int sr_block_revalidate_disk(struct gendisk *disk);
  
+ static const struct dev_pm_ops sr_pm_ops = {
+ 	.runtime_suspend	= sr_runtime_suspend,
+@@ -529,7 +530,8 @@ static int sr_block_open(struct block_device *bdev, fmode_t mode)
+ 
+ 	sdev = cd->device;
+ 	scsi_autopm_get_device(sdev);
 -	check_disk_change(bdev);
-+	bdev_check_media_change(bdev);
++	if (bdev_check_media_change(bdev))
++		sr_block_revalidate_disk(bdev->bd_disk);
  
- 	mutex_lock(&pcd_mutex);
- 	ret = cdrom_open(&cd->info, bdev, mode);
+ 	mutex_lock(&cd->lock);
+ 	ret = cdrom_open(&cd->cdi, bdev, mode);
+@@ -688,7 +690,6 @@ static const struct block_device_operations sr_bdops =
+ 	.compat_ioctl	= sr_block_compat_ioctl,
+ #endif
+ 	.check_events	= sr_block_check_events,
+-	.revalidate_disk = sr_block_revalidate_disk,
+ };
+ 
+ static int sr_open(struct cdrom_device_info *cdi, int purpose)
+@@ -802,6 +803,7 @@ static int sr_probe(struct device *dev)
+ 
+ 	dev_set_drvdata(dev, cd);
+ 	disk->flags |= GENHD_FL_REMOVABLE;
++	sr_block_revalidate_disk(disk);
+ 	device_add_disk(&sdev->sdev_gendev, disk, NULL);
+ 
+ 	sdev_printk(KERN_DEBUG, sdev,
 -- 
 2.28.0
 
