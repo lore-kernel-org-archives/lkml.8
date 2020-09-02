@@ -2,185 +2,129 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F93C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 391D0C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2BA2087D
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AAE72072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:00:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="oSi7JJH+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J2dRUJAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgIBH70 (ORCPT
+        id S1726926AbgIBIA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:59:26 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:20200 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726674AbgIBH6w (ORCPT
+        Wed, 2 Sep 2020 04:00:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgIBIA0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:58:52 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0827ldTB002930;
-        Wed, 2 Sep 2020 09:57:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=jmfCrpD7iRQhB8zV3oMdul3HfOkcvL9AiInxyBT3bBE=;
- b=oSi7JJH+juyI0L0PAxPJzmo71a5DPIFjaHKMVlZfF5icmR4ubrmwUp2cm6h9izrGySSi
- qlBcZA+TLL7a4Fqkm1iXVknCcmD4Hr+kKXrnoTNWjq/3FgXaNMKx/l5/D9ncHKNVXpw9
- Fobd6jJmE1Ir4wQSflifS8MqF5rM/nroIThhW8gWHDhBwZir5G6MPjyVL02oMo+cPdTD
- Vwn2XXv6EphmkTMjefi2gflpw4KO0w7u46LbFs2ipTr1TRrOKk+3WCKT99SsYsvxQz5c
- Sqp6949VtypCRx1BDzxem44hbQ0RcQ29v3Yj/dEBIxtBEJBtKYxtoGCf618R3ny3bnol gw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 337csvv4tc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 09:57:18 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7BCBF10002A;
-        Wed,  2 Sep 2020 09:57:18 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6AA4D212FB9;
-        Wed,  2 Sep 2020 09:57:18 +0200 (CEST)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 2 Sep 2020 09:57:17
- +0200
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [RESEND PATCH v2 3/6] dt-bindings: usb: Add DT bindings for STUSB160x Type-C controller
-Date:   Wed, 2 Sep 2020 09:57:04 +0200
-Message-ID: <20200902075707.9052-4-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200902075707.9052-1-amelie.delaunay@st.com>
-References: <20200902075707.9052-1-amelie.delaunay@st.com>
+        Wed, 2 Sep 2020 04:00:26 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E312C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 01:00:26 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id s62so240365vsc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 01:00:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K3qiLLTJ163ZezFQOxUyBEfpH7dZSEHY07BrmQjwQ10=;
+        b=J2dRUJAPRKJNZ6kjeClaDcg8FKQISjKTsyV0IqNvkvm8oIXRMKwc6++nEInJ+FAveJ
+         71m9Ez4u84ucU7qpERks04v46tmMbHTLPozpbT0X1FYShE717LQb2XUaJx5pLPymeaDh
+         wZsH/7JEcwOgoVL0+ZrQGK4jckM20x7KUn3D1um4VzuPTLMDV+zyuHBGvre0Q+eaibo+
+         mgHGmsLsHLFV7+9b16jZfSsq4tTpPrYz8G79xrbkelHwwBcVYoibDuMUMFrVQAXFYEW1
+         BWiBE4mX+i++2+ffjaWlxMLNoXSxV19jB3Q+/wNp7nAB+ESwG6ys85d/DVJNrhZkRcnw
+         7XTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K3qiLLTJ163ZezFQOxUyBEfpH7dZSEHY07BrmQjwQ10=;
+        b=hmw/oGCQXAumtkQIajLqOO3GOLq+S/lVLuf47QhsYFH7fgjI6GnzUlhg7dHAQwkYJ/
+         Aolw/d8wknog1bNlSQCTuiDjezs5dlFJt4tJ8swyasGN6jH2E5iU0928LM0E3HtSwzC6
+         Y9b3YuToX7BL6va4e2w/09TRhrL+G6Ray2926+synlghA5L9c9U60rF/PJKIQBaVFOhd
+         c9kh28+/hIXflTX/dMEQBVdKsAcgKCnyAvB//KJLWn6Vj+aPQKK95lkENtJbY44O8hmZ
+         TOtXkAq6Nk0dxSt+CGqqqG920ZCKkZKNl+3Kh4muAAKe9BgihsfL5KL7UXNBdmnkNgrA
+         DYxw==
+X-Gm-Message-State: AOAM530OpRMlj8aR0xvtPMK3wlNyyGgJC1k2pI17XLNQB944bPuEd7lW
+        EYM/gZCZDqISj27RDpjOItof2Kj3ozyhbavJqqqHgg==
+X-Google-Smtp-Source: ABdhPJw4pxYBoyAjPOpy9jjnp1tb5bFMcMQ31LSjfmXEH97ZZKGyzx6vQNEQypQldO3MGSOSxfvwRaddzBysnkXFvP4=
+X-Received: by 2002:a05:6102:3105:: with SMTP id e5mr4594053vsh.87.1599033625321;
+ Wed, 02 Sep 2020 01:00:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-02_03:2020-09-02,2020-09-02 signatures=0
+References: <20200902040623.17509-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200902040623.17509-1-chris.packham@alliedtelesis.co.nz>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 2 Sep 2020 09:59:49 +0200
+Message-ID: <CAPDyKFpbK72utA0O1gTR30NzKzmtGCFbAKL6BJA+rUVdDhOstQ@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-of-esdhc: Don't walk device-tree on every interrupt
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "yinbo.zhu" <yinbo.zhu@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding documentation for the STMicroelectronics STUSB160x Type-C port
-controller.
++ Yinbo Zhu
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
-No changes in v2.
----
- .../devicetree/bindings/usb/st,stusb160x.yaml | 85 +++++++++++++++++++
- 1 file changed, 85 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/st,stusb160x.yaml
+On Wed, 2 Sep 2020 at 06:06, Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
+>
+> Commit b214fe592ab7 ("mmc: sdhci-of-esdhc: add erratum eSDHC7 support")
+> added code to check for a specific compatible string in the device-tree
+> on every esdhc interrupt. We know that if it's present the compatible
+> string will be found on the sdhc host. Instead of walking the
+> device-tree, go directly to the sdhc host's device and use
+> of_device_is_compatible().
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-diff --git a/Documentation/devicetree/bindings/usb/st,stusb160x.yaml b/Documentation/devicetree/bindings/usb/st,stusb160x.yaml
-new file mode 100644
-index 000000000000..12a996cd9405
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/st,stusb160x.yaml
-@@ -0,0 +1,85 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/usb/st,stusb160x.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: STMicroelectronics STUSB160x Type-C controller bindings
-+
-+maintainers:
-+  - Amelie Delaunay <amelie.delaunay@st.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stusb1600
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: main power supply (4.1V-22V)
-+
-+  vsys-supply:
-+    description: low power supply (3.0V-5.5V)
-+
-+  vconn-supply:
-+    description: power supply (2.7V-5.5V) used to supply VConn on CC pin in
-+      source or dual power role
-+
-+  connector:
-+    type: object
-+
-+    allOf:
-+      - $ref: ../connector/usb-connector.yaml
-+
-+    properties:
-+      compatible:
-+        const: usb-c-connector
-+
-+      power-role: true
-+
-+      power-opmode: true
-+
-+    required:
-+      - compatible
-+
-+required:
-+  - compatible
-+  - reg
-+  - connector
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c4 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        typec: stusb1600@28 {
-+            compatible = "st,stusb1600";
-+            reg = <0x28>;
-+            vdd-supply = <&vbus_drd>;
-+            vsys-supply = <&vdd_usb>;
-+            interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
-+            interrupt-parent = <&gpioi>;
-+
-+            typec_con: connector {
-+                compatible = "usb-c-connector";
-+                label = "USB-C";
-+                power-role = "dual";
-+                power-opmode = "default";
-+                data-role = "dual";
-+
-+                port {
-+                    typec_con_ep: endpoint {
-+                        remote-endpoint = <&usbotg_hs_ep>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-+...
--- 
-2.17.1
+Thanks for the patch. Indeed, this isn't the way we should implement quirks.
 
+However, could you perhaps do the OF parsing in esdhc_init() and
+assign a quirk flag that you check in esdhc_irq() instead?
+
+Along the lines of how we do it for "quirk_delay_before_data_reset".
+
+Kind regards
+Uffe
+
+> ---
+>
+> I found this in passing while trying to track down another issue using ftrace.
+> I found it odd that I was seeing a lot of calls to __of_device_is_compatible()
+> coming from esdhc_irq() (the fact that this interrupt is going off on my board
+> is also odd, but that's a different story).
+>
+>  drivers/mmc/host/sdhci-of-esdhc.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+> index 7c73d243dc6c..11c8c522d623 100644
+> --- a/drivers/mmc/host/sdhci-of-esdhc.c
+> +++ b/drivers/mmc/host/sdhci-of-esdhc.c
+> @@ -1177,10 +1177,11 @@ static void esdhc_set_uhs_signaling(struct sdhci_host *host,
+>
+>  static u32 esdhc_irq(struct sdhci_host *host, u32 intmask)
+>  {
+> +       struct device *dev = mmc_dev(host->mmc);
+> +       struct device_node *np = dev->of_node;
+>         u32 command;
+>
+> -       if (of_find_compatible_node(NULL, NULL,
+> -                               "fsl,p2020-esdhc")) {
+> +       if (of_device_is_compatible(np, "fsl,p2020-esdhc")) {
+>                 command = SDHCI_GET_CMD(sdhci_readw(host,
+>                                         SDHCI_COMMAND));
+>                 if (command == MMC_WRITE_MULTIPLE_BLOCK &&
+> --
+> 2.28.0
+>
