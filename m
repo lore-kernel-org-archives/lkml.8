@@ -2,164 +2,102 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3FCC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0535C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9961D20758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:41:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uy0LQ06Y"
+	by mail.kernel.org (Postfix) with ESMTP id D100520758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgIBElO (ORCPT
+        id S1726536AbgIBEle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 00:41:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgIBElN (ORCPT
+        Wed, 2 Sep 2020 00:41:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44255 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgIBEld (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 00:41:13 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA10AC061244;
-        Tue,  1 Sep 2020 21:41:13 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id p13so3861390ils.3;
-        Tue, 01 Sep 2020 21:41:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NoUssg8K6LT6ANgsFFz5OTHDN1mgwkLG8uhxUiPJzAM=;
-        b=uy0LQ06Y1uqJ7i7iq6BXHfEjLJffm1JjMuYaIbUUmnWgY3ST+iXQuMyHjT1ifBe8ws
-         jJFMgdcX+lIoMws9xGe4YJ3y8xd/LzVW3djf/+foTY/yrEV8z4ILAvF/L92p1C3ZApUM
-         AJ7nVA2CemlgGrwyVweXAZtQybOVO6PMlOgKfvKZiRp/7S91ql532i6lt5yyl2YWvUD9
-         xf3CNFd3/genH2+K6Zionh7pgx4I2dXge3l/0V29nMlUTanwK9kuWAK0qccJUk7sj0xB
-         Ex2OdcBtqJWm8mBRPJxmRFXaPCnuqgD6aYdHO7PKAogGZB3JjlLLnmeKX4qJHMvF1Mep
-         DKgg==
+        Wed, 2 Sep 2020 00:41:33 -0400
+Received: by mail-lj1-f195.google.com with SMTP id b19so4211257lji.11
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 21:41:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NoUssg8K6LT6ANgsFFz5OTHDN1mgwkLG8uhxUiPJzAM=;
-        b=sCDq3AqwcdDrQSvQnI5QhF93L7dS1EgVXU5xusn/1udqbUmnc0Z1sb9YLBWLrbeA7A
-         1OLeK0DCejSJz9j2gf3zQVjfcP03OnBlLM/+c/13j+biL+P7eJUFBFU1nL8vX7wFh/cd
-         V41kwGppIAihCHqu+9oK+QLGLNWUWBUDsaZemTPs90Qm44dKWxS2PCfulyKE05h1I7xD
-         4CPljysr9S9DXpaGYZC8O1ewdS6Ey3aAp4I7EIXtMLKIf8s/44e5vEWyMQvtRPtEPusS
-         GjpsEQdA2bQ39Mcw+PsksOpJfLiWdD2wcJK2zKNppW3tlen3uWqgiiO5Czdg+d1Znyl0
-         9Elg==
-X-Gm-Message-State: AOAM5315zKUbQ/QRgYlhU3Vcp/b0vVP9DVBbIlJkzynX3WXSWl5bALIW
-        shO2YBy2AQNfWwoAbikArOTrt+zwy4X+VZ5aWwI=
-X-Google-Smtp-Source: ABdhPJxST+MY6Y9TedWIDBJx3cuSZVDAhg+e0wqaIPk1rEmHxTEDF+qO6JlYOOxOr5BsdRafZw47r4JzDJuZx0gPCHg=
-X-Received: by 2002:a92:9145:: with SMTP id t66mr2181458ild.305.1599021672869;
- Tue, 01 Sep 2020 21:41:12 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CNQ+uOSUaXPsAHOE4jBatrY5v8vedinhiQESkHIW8co=;
+        b=Fycp9tpVRdEbQa1NU6DG7dID5xl2M17PHeeo71svSYTHZ2P85KW7jmPJ8nfQtMB/M0
+         88/LauVaM2zf9Oh1viUnxrLPa5xfsXSOBIIIgxNuHGvVW5eGRhO4enOh+gDThhzWCkwU
+         pBq7USJpVH1hw1DZxxECeA6LalzAzeLz+Nce4ZX4FaRJEK2HGTaxE8jgEXng/Hk7mEy6
+         D/LzO3jUIuR2b+j35H96QF9wohqYw2hDq1LHMIJGY85q7mrsDQMKmAr7ZQ9fGmOiN5f4
+         EiOZdS8bb0NtG3UzR8SyH4wem4RtBMQLuVtwloPEeIgfRTgTypSU6Q6hCJrpn+DTHHDl
+         bW3A==
+X-Gm-Message-State: AOAM5329q/LqT9fdRNWFHqsA3RR7mIYHTL9ufGUc02OWF29DRRiMaC8e
+        pVheY68gT312E1XsSFPvSrY=
+X-Google-Smtp-Source: ABdhPJxfgSnF1CLTWj3u4dHFE+w+eNMO9yzG4J3SAAiH1jhnncu2lyxxvtzRku/oPsswKDk/3fPk9Q==
+X-Received: by 2002:a05:651c:310:: with SMTP id a16mr2180211ljp.250.1599021691194;
+        Tue, 01 Sep 2020 21:41:31 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id i26sm704823ljj.102.2020.09.01.21.41.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 21:41:30 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] coccinelle: ifnullfree: add vfree(), kvfree*() functions
+Date:   Wed,  2 Sep 2020 07:40:59 +0300
+Message-Id: <20200902044059.7133-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
- <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com> <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com>
-In-Reply-To: <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 1 Sep 2020 21:41:01 -0700
-Message-ID: <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
- enqueue op for lockless qdisc
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linuxarm@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 6:42 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->
-> On 2020/9/2 2:24, Cong Wang wrote:
-> > On Mon, Aug 31, 2020 at 5:59 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
-> >>
-> >> Currently there is concurrent reset and enqueue operation for the
-> >> same lockless qdisc when there is no lock to synchronize the
-> >> q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
-> >> qdisc_deactivate() called by dev_deactivate_queue(), which may cause
-> >> out-of-bounds access for priv->ring[] in hns3 driver if user has
-> >> requested a smaller queue num when __dev_xmit_skb() still enqueue a
-> >> skb with a larger queue_mapping after the corresponding qdisc is
-> >> reset, and call hns3_nic_net_xmit() with that skb later.
-> >
-> > Can you be more specific here? Which call path requests a smaller
-> > tx queue num? If you mean netif_set_real_num_tx_queues(), clearly
-> > we already have a synchronize_net() there.
->
-> When the netdevice is in active state, the synchronize_net() seems to
-> do the correct work, as below:
->
-> CPU 0:                                       CPU1:
-> __dev_queue_xmit()                       netif_set_real_num_tx_queues()
-> rcu_read_lock_bh();
-> netdev_core_pick_tx(dev, skb, sb_dev);
->         .
->         .                               dev->real_num_tx_queues = txq;
->         .                                       .
->         .                                       .
->         .                               synchronize_net();
->         .                                       .
-> q->enqueue()                                    .
->         .                                       .
-> rcu_read_unlock_bh()                            .
->                                         qdisc_reset_all_tx_gt
->
->
+Extend the list of free functions with kvfree(), kvfree_sensitive(),
+vfree().
 
-Right.
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ scripts/coccinelle/free/ifnullfree.cocci | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
+diff --git a/scripts/coccinelle/free/ifnullfree.cocci b/scripts/coccinelle/free/ifnullfree.cocci
+index 2045391e36a0..285b92d5c665 100644
+--- a/scripts/coccinelle/free/ifnullfree.cocci
++++ b/scripts/coccinelle/free/ifnullfree.cocci
+@@ -20,8 +20,14 @@ expression E;
+ - if (E != NULL)
+ (
+   kfree(E);
++|
++  kvfree(E);
+ |
+   kfree_sensitive(E);
++|
++  kvfree_sensitive(E, ...);
++|
++  vfree(E);
+ |
+   debugfs_remove(E);
+ |
+@@ -42,9 +48,10 @@ position p;
+ @@
+ 
+ * if (E != NULL)
+-*	\(kfree@p\|kfree_sensitive@p\|debugfs_remove@p\|debugfs_remove_recursive@p\|
++*	\(kfree@p\|kvfree@p\|kfree_sensitive@p\|kvfree_sensitive@p\|vfree@p\|
++*         debugfs_remove@p\|debugfs_remove_recursive@p\|
+ *         usb_free_urb@p\|kmem_cache_destroy@p\|mempool_destroy@p\|
+-*         dma_pool_destroy@p\)(E);
++*         dma_pool_destroy@p\)(E, ...);
+ 
+ @script:python depends on org@
+ p << r.p;
+-- 
+2.26.2
 
-> but dev->real_num_tx_queues is not RCU-protected, maybe that is a problem
-> too.
->
-> The problem we hit is as below:
-> In hns3_set_channels(), hns3_reset_notify(h, HNAE3_DOWN_CLIENT) is called
-> to deactive the netdevice when user requested a smaller queue num, and
-> txq->qdisc is already changed to noop_qdisc when calling
-> netif_set_real_num_tx_queues(), so the synchronize_net() in the function
-> netif_set_real_num_tx_queues() does not help here.
-
-How could qdisc still be running after deactivating the device?
-
-
->
-> >
-> >>
-> >> Avoid the above concurrent op by calling synchronize_rcu_tasks()
-> >> after assigning new qdisc to dev_queue->qdisc and before calling
-> >> qdisc_deactivate() to make sure skb with larger queue_mapping
-> >> enqueued to old qdisc will always be reset when qdisc_deactivate()
-> >> is called.
-> >
-> > Like Eric said, it is not nice to call such a blocking function when
-> > we have a large number of TX queues. Possibly we just need to
-> > add a synchronize_net() as in netif_set_real_num_tx_queues(),
-> > if it is missing.
->
-> As above, the synchronize_net() in netif_set_real_num_tx_queues() seems
-> to work when netdevice is in active state, but does not work when in
-> deactive.
-
-Please explain why deactivated device still has qdisc running?
-
-At least before commit 379349e9bc3b4, we always test deactivate
-bit before enqueueing. Are you complaining about that commit?
-That commit is indeed suspicious, at least it does not precisely revert
-commit ba27b4cdaaa66561aaedb21 as it claims.
-
-
->
-> And we do not want skb left in the old qdisc when netdevice is deactived,
-> right?
-
-Yes, and more importantly, qdisc should not be running after deactivation.
-
-Thanks.
