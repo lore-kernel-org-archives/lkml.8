@@ -2,92 +2,82 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26896C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735A7C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECAD520773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:25:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RORkOG08"
+	by mail.kernel.org (Postfix) with ESMTP id 3D91820773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgIBOZm (ORCPT
+        id S1727895AbgIBO0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:25:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727800AbgIBONl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:13:41 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409BDC06121A;
-        Wed,  2 Sep 2020 07:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=14ox7AoWFV7H5eezSnPosQXA4Ch2lScJ8xsHfnvdcmE=; b=RORkOG08fmVugfbQ99Gx7jozhC
-        eAymlmT88pxoykAk+WjDRqF5npN0B1qcz9hVNqW1x+QP/uJrQ0FIcskDRlASpOifjxwjUuWJX524t
-        j+Z5mDigF96Xx3Ersqs0qYENZ81LgQ2H2DWetvYe5fNOj1Vjw/+lVBYa2+eE/cDtSAfhM+LzChaKs
-        Al6pvkpiZG+U1rhUNSNA+01EvLfyZyemwxnqTZQDhHL8svh0Rip7fErO9Q8RuBMh3ZITHV8T81eXr
-        l1upawrNBJB+PbPic0lHl0e4CSgElro7RlYXf6VpOlFxMqqz5o83yR3RIUrkyZCV4FyYa8e8oSML6
-        +CyElTPA==;
-Received: from [2001:4bb8:184:af1:6a63:7fdb:a80e:3b0b] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDTVA-0005fh-T9; Wed, 02 Sep 2020 14:12:41 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 15/19] md: use bdev_check_media_change
-Date:   Wed,  2 Sep 2020 16:12:14 +0200
-Message-Id: <20200902141218.212614-16-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200902141218.212614-1-hch@lst.de>
-References: <20200902141218.212614-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        Wed, 2 Sep 2020 10:26:01 -0400
+Received: from gate.crashing.org ([63.228.1.57]:33580 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726762AbgIBOQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 10:16:37 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 082EEWYN031070;
+        Wed, 2 Sep 2020 09:14:32 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 082EEVOd031069;
+        Wed, 2 Sep 2020 09:14:31 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Wed, 2 Sep 2020 09:14:31 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Fangrui Song <maskray@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 2/2] powerpc/vdso32: link vdso64 with linker
+Message-ID: <20200902141431.GV28786@gate.crashing.org>
+References: <20200901222523.1941988-1-ndesaulniers@google.com> <20200901222523.1941988-3-ndesaulniers@google.com> <b2066ccd-2b81-6032-08e3-41105b400f75@csgroup.eu>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b2066ccd-2b81-6032-08e3-41105b400f75@csgroup.eu>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pcd driver does not have a ->revalidate_disk method, so it can just
-use bdev_check_media_change without any additional changes.
+Hi!
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/md/md.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Sep 02, 2020 at 06:46:45AM +0000, Christophe Leroy wrote:
+> ld crashes:
+> 
+>   LD      arch/powerpc/kernel/vdso32/vdso32.so.dbg
+> /bin/sh: line 1: 23780 Segmentation fault      (core dumped) 
+> ppc-linux-ld -EB -m elf32ppc -shared -soname linux-vdso32.so.1 
+> --eh-frame-hdr --orphan-handling=warn -T 
+> arch/powerpc/kernel/vdso32/vdso32.lds 
+> arch/powerpc/kernel/vdso32/sigtramp.o 
+> arch/powerpc/kernel/vdso32/gettimeofday.o 
+> arch/powerpc/kernel/vdso32/datapage.o 
+> arch/powerpc/kernel/vdso32/cacheflush.o 
+> arch/powerpc/kernel/vdso32/note.o arch/powerpc/kernel/vdso32/getcpu.o -o 
+> arch/powerpc/kernel/vdso32/vdso32.so.dbg
+> make[4]: *** [arch/powerpc/kernel/vdso32/vdso32.so.dbg] Error 139
+> 
+> 
+> [root@localhost linux-powerpc]# ppc-linux-ld --version
+> GNU ld (GNU Binutils) 2.26.20160125
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 9562ef598ae1f4..27ed61197014ef 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -7848,7 +7848,7 @@ static int md_open(struct block_device *bdev, fmode_t mode)
- 	atomic_inc(&mddev->openers);
- 	mutex_unlock(&mddev->open_mutex);
- 
--	check_disk_change(bdev);
-+	bdev_check_media_change(bdev);
-  out:
- 	if (err)
- 		mddev_put(mddev);
--- 
-2.28.0
+[ Don't build as root :-P ]
 
+Try with a newer ld?  If it still happens with current versions, please
+open a bug report?  https://sourceware.org/bugzilla
+
+
+Segher
