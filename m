@@ -2,604 +2,231 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C01C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0ACC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26DA4206E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:06:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JoY4q+M2"
+	by mail.kernel.org (Postfix) with ESMTP id 3E21320767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgIBNGk (ORCPT
+        id S1727797AbgIBNIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 09:06:40 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:24332 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgIBNAT (ORCPT
+        Wed, 2 Sep 2020 09:08:54 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39947 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727894AbgIBNG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:00:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1599051618; x=1630587618;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2N8u+Uav87ogq3syQGltrwsOFjpVIOuSkUUzaXfoS7A=;
-  b=JoY4q+M2XaWsJDUvVLw1WUft2xzeD5ktUionhMsB8xd8RZZ3HK/oKtg7
-   PkN6BSZL8H4J16qW1RB/6mX0cemhs/bV3M3kZT75H9FPw1b0UfIeDEYNM
-   Nx+pui9tsq6+1b/N9fqaHNWxscb2vU0Y8WHlW8b+pYErc5rQfqYWtDKCy
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.76,383,1592870400"; 
-   d="scan'208";a="51551980"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 02 Sep 2020 13:00:16 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com (Postfix) with ESMTPS id DB7DEA2059;
-        Wed,  2 Sep 2020 13:00:14 +0000 (UTC)
-Received: from EX13D20UWC002.ant.amazon.com (10.43.162.163) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 2 Sep 2020 13:00:14 +0000
-Received: from u79c5a0a55de558.ant.amazon.com (10.43.160.215) by
- EX13D20UWC002.ant.amazon.com (10.43.162.163) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 2 Sep 2020 13:00:11 +0000
-From:   Alexander Graf <graf@amazon.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-CC:     Jonathan Corbet <corbet@lwn.net>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        "Joerg Roedel" <joro@8bytes.org>,
-        KarimAllah Raslan <karahmed@amazon.de>,
-        Aaron Lewis <aaronlewis@google.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 6/7] KVM: x86: Introduce MSR filtering
-Date:   Wed, 2 Sep 2020 14:59:34 +0200
-Message-ID: <20200902125935.20646-7-graf@amazon.com>
-X-Mailer: git-send-email 2.28.0.394.ge197136389
-In-Reply-To: <20200902125935.20646-1-graf@amazon.com>
-References: <20200902125935.20646-1-graf@amazon.com>
+        Wed, 2 Sep 2020 09:06:58 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c142so2805333pfb.7;
+        Wed, 02 Sep 2020 06:06:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZPF6dcQt0YspR4Xib4GiZ0r7jS4hXKfnkGhS0zP4NFk=;
+        b=RQS+GfuiJaGcJAi8vmGc0liMEQX5tqBt2uP6pM7osVFOxysxY2RHV0JwvqNMibEBbR
+         znrdO0AEEsS6AzjJUpjj12XE4qUFjtfTlbZ8Zt3ZLPfZRiwADGKOdX3ZZZl0Yl75Ijfn
+         9K1pRIp/Dr0yX7QzvlE00ESZXiZxBdN6MNe589NYVlTSTrvkDV7q78O3ZAxGoCUSYKW9
+         LFiWvQSUZI7BeTsVr6JcrEy/DUWl9mRmZ39yurbJe9SFUjrSBMmIEgJeOaqQAOz18V+h
+         dHWnBBaE3PZCsMrqsEsnJy7SKGMlmyfCwMF32mSbBkLBnF/1ps4OUgI443tHT8/o+XsG
+         +L3Q==
+X-Gm-Message-State: AOAM531511Pxhdwsm3uF2tSy0wzodOSGRaBB3TZeddPrT54BR67twgQ8
+        O9OMssB/LaYUSSi3ID8vV7k=
+X-Google-Smtp-Source: ABdhPJwPmrf398xnMvtfm/dKvd1BlAwctzmXR1VlzXIw7uKq1ba2wEmv4f31KHoU7evDmRJvIbM47Q==
+X-Received: by 2002:a63:e645:: with SMTP id p5mr1823225pgj.276.1599051960056;
+        Wed, 02 Sep 2020 06:06:00 -0700 (PDT)
+Received: from localhost.localdomain ([49.236.93.204])
+        by smtp.gmail.com with ESMTPSA id t11sm5565946pfe.165.2020.09.02.06.05.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 06:05:59 -0700 (PDT)
+From:   Leesoo Ahn <dev@ooseel.net>
+To:     dev@ooseel.net
+Cc:     Stanislaw Gruszka <stf_xl@wp.pl>,
+        Helmut Schaa <helmut.schaa@googlemail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] rt2x00: Use fallthrough pseudo-keyword macro
+Date:   Wed,  2 Sep 2020 22:05:06 +0900
+Message-Id: <20200902130507.227611-1-dev@ooseel.net>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-X-Originating-IP: [10.43.160.215]
-X-ClientProxiedBy: EX13D05UWC004.ant.amazon.com (10.43.162.223) To
- EX13D20UWC002.ant.amazon.com (10.43.162.163)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's not desireable to have all MSRs always handled by KVM kernel space. Some
-MSRs would be useful to handle in user space to either emulate behavior (like
-uCode updates) or differentiate whether they are valid based on the CPU model.
+Replace all '/* fall through */' comments with the macro[1].
 
-To allow user space to specify which MSRs it wants to see handled by KVM,
-this patch introduces a new ioctl to push filter rules with bitmaps into
-KVM. Based on these bitmaps, KVM can then decide whether to reject MSR access.
-With the addition of KVM_CAP_X86_USER_SPACE_MSR it can also deflect the
-denied MSR events to user space to operate on.
+[1]: https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-If no filter is populated, MSR handling stays identical to before.
-
-Signed-off-by: Alexander Graf <graf@amazon.com>
-
+Signed-off-by: Leesoo Ahn <dev@ooseel.net>
 ---
+ .../net/wireless/ralink/rt2x00/rt2400pci.c    |  3 ++-
+ .../net/wireless/ralink/rt2x00/rt2500pci.c    |  3 ++-
+ .../net/wireless/ralink/rt2x00/rt2800lib.c    | 27 ++++++++++---------
+ drivers/net/wireless/ralink/rt2x00/rt61pci.c  |  3 ++-
+ 4 files changed, 20 insertions(+), 16 deletions(-)
 
-v2 -> v3:
-
-  - document flags for KVM_X86_ADD_MSR_ALLOWLIST
-  - generalize exit path, always unlock when returning
-  - s/KVM_CAP_ADD_MSR_ALLOWLIST/KVM_CAP_X86_MSR_ALLOWLIST/g
-  - Add KVM_X86_CLEAR_MSR_ALLOWLIST
-
-v3 -> v4:
-  - lock allow check and clearing
-  - free bitmaps on clear
-
-v4 -> v5:
-
-  - use srcu
-
-v5 -> v6:
-
-  - send filter change notification
-  - change to atomic set_msr_filter ioctl with fallback flag
-  - use EPERM for filter blocks
-  - add bit for MSR user space deflection
-  - check for overflow of BITS_TO_LONGS (thanks Dan Carpenter!)
-  - s/int i;/u32 i;/
-  - remove overlap check
----
- Documentation/virt/kvm/api.rst  | 103 +++++++++++++++++++++++
- arch/x86/include/asm/kvm_host.h |  14 +++
- arch/x86/include/uapi/asm/kvm.h |  21 ++++-
- arch/x86/kvm/svm/svm.c          |   4 +-
- arch/x86/kvm/x86.c              | 145 +++++++++++++++++++++++++++++++-
- include/uapi/linux/kvm.h        |   5 ++
- 6 files changed, 287 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 1aab18e8c0c3..cb2f60415639 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -4697,6 +4697,94 @@ KVM_PV_VM_VERIFY
-   Verify the integrity of the unpacked image. Only if this succeeds,
-   KVM is allowed to start protected VCPUs.
- 
-+4.126 KVM_X86_SET_MSR_FILTER
-+----------------------------
-+
-+:Capability: KVM_X86_SET_MSR_FILTER
-+:Architectures: x86
-+:Type: vm ioctl
-+:Parameters: struct kvm_msr_filter
-+:Returns: 0 on success, < 0 on error
-+
-+::
-+
-+  struct kvm_msr_filter_range {
-+  #define KVM_MSR_FILTER_READ  (1 << 0)
-+  #define KVM_MSR_FILTER_WRITE (1 << 1)
-+	__u32 flags;
-+	__u32 nmsrs; /* number of msrs in bitmap */
-+	__u32 base;  /* MSR index the bitmap starts at */
-+	__u8 *bitmap; /* a 1 bit allows the operations in flags, 0 denies */
-+  };
-+  
-+  struct kvm_msr_filter {
-+  #define KVM_MSR_FILTER_DEFAULT_ALLOW (0 << 0)
-+  #define KVM_MSR_FILTER_DEFAULT_DENY  (1 << 0)
-+	__u32 flags;
-+	struct kvm_msr_filter_range ranges[16];
-+  };
-+
-+flags values:
-+
-+KVM_MSR_FILTER_READ
-+
-+  Filter read accesses to MSRs using the given bitmap. A 0 in the bitmap
-+  indicates that a read should immediately fail, while a 1 indicates that
-+  a read should be handled like without the filter.
-+
-+KVM_MSR_FILTER_WRITE
-+
-+  Filter write accesses to MSRs using the given bitmap. A 0 in the bitmap
-+  indicates that a write should immediately fail, while a 1 indicates that
-+  a write should be handled like without the filter.
-+
-+KVM_MSR_FILTER_READ | KVM_MSR_FILTER_WRITE
-+
-+  Filter booth read and write accesses to MSRs using the given bitmap. A 0
-+  in the bitmap indicates that both reads and writes should immediately fail,
-+  while a 1 indicates that reads and writes should be handled like without
-+  the filter.
-+
-+KVM_MSR_FILTER_DEFAULT_ALLOW
-+
-+  If no filter range matches an MSR index that is getting accessed, KVM will
-+  fall back to allowing access to the MSR.
-+
-+KVM_MSR_FILTER_DEFAULT_DENY
-+
-+  If no filter range matches an MSR index that is getting accessed, KVM will
-+  fall back to rejecting access to the MSR. In this mode, all MSRs that should
-+  be processed by KVM need to explicitly be marked as allowed in the bitmaps.
-+
-+This ioctl allows user space to define a up to 16 bitmaps of MSR ranges to
-+specify whether a certain MSR access should be explicitly rejected or not.
-+
-+If this ioctl has never been invoked, MSR accesses are not guarded and the
-+old KVM in-kernel emulation behavior is fully preserved.
-+
-+As soon as the filtering is in place, every MSR access is precessed through
-+the filtering. If a bit is within one of the defined ranges, read and write
-+accesses are guarded by the bitmap's value for the MSR index. If it is not
-+defined in any range, whether MSR access is rejected is determined by the flags
-+field of in the kvm_msr_filter struct: KVM_MSR_FILTER_DEFAULT_ALLOW and
-+KVM_MSR_FILTER_DEFAULT_DENY.
-+
-+Calling this ioctl with an empty set of ranges (all nmsrs == 0) disables MSR
-+filtering. In that mode, KVM_MSR_FILTER_DEFAULT_DENY no longer has any effect.
-+
-+Each bitmap range specifies a range of MSRs to potentially allow access on.
-+The range goes from MSR index [base .. base+nmsrs]. The flags field
-+indicates whether reads, writes or both reads and writes are filtered
-+by setting a 1 bit in the bitmap for the corresponding MSR index.
-+
-+If an MSR access is not permitted through the filtering, it generates a
-+#GP inside the guest. When combined with KVM_CAP_X86_USER_SPACE_MSR, that
-+allows user space to deflect and potentially handle various MSR accesses
-+into user space.
-+
-+If a vCPU is in running state while this ioctl is invoked, the vCPU may
-+experience inconsistent filtering behavior on MSR accesses.
-+
- 
- 5. The kvm_run structure
- ========================
-@@ -5176,6 +5264,7 @@ receive MSR exit traps when a particular reason was requested during through
- ENABLE_CAP. Currently valid exit reasons are:
- 
- 	KVM_MSR_EXIT_REASON_INVAL - access to invalid MSRs or reserved bits
-+	KVM_MSR_EXIT_REASON_FILTER - access blocked by KVM_X86_SET_MSR_FILTER
- 
- For KVM_EXIT_X86_RDMSR, the "index" field tells user space which MSR the guest
- wants to read. To respond to this request with a successful read, user space
-@@ -6220,3 +6309,17 @@ writes to user space. It can be enabled on a VM level. If enabled, MSR
- accesses that would usually trigger a #GP by KVM into the guest will
- instead get bounced to user space through the KVM_EXIT_X86_RDMSR and
- KVM_EXIT_X86_WRMSR exit notifications.
-+
-+8.25 KVM_X86_SET_MSR_FILTER
-+---------------------------
-+
-+:Architectures: x86
-+
-+This capability indicates that KVM supports that accesses to user defined MSRs
-+may be rejected. With this capability exposed, KVM exports new VM ioctl
-+KVM_X86_SET_MSR_FILTER which user space can call to specify bitmaps of MSR
-+ranges that KVM should reject access to.
-+
-+In combination with KVM_CAP_X86_USER_SPACE_MSR, this allows user space to
-+trap and emulate MSRs that are outside of the scope of KVM as well as
-+limit the attack surface on KVM's MSR emulation code.
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index a9e3cc13bca6..64184469b0f8 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -87,6 +87,7 @@
- #define KVM_REQ_HV_TLB_FLUSH \
- 	KVM_ARCH_REQ_FLAGS(27, KVM_REQUEST_NO_WAKEUP)
- #define KVM_REQ_APF_READY		KVM_ARCH_REQ(28)
-+#define KVM_REQ_MSR_FILTER_CHANGED	KVM_ARCH_REQ(29)
- 
- #define CR0_RESERVED_BITS                                               \
- 	(~(unsigned long)(X86_CR0_PE | X86_CR0_MP | X86_CR0_EM | X86_CR0_TS \
-@@ -901,6 +902,13 @@ struct kvm_hv {
- 	struct kvm_hv_syndbg hv_syndbg;
- };
- 
-+struct msr_bitmap_range {
-+	u32 flags;
-+	u32 nmsrs;
-+	u32 base;
-+	unsigned long *bitmap;
-+};
-+
- enum kvm_irqchip_mode {
- 	KVM_IRQCHIP_NONE,
- 	KVM_IRQCHIP_KERNEL,       /* created with KVM_CREATE_IRQCHIP */
-@@ -1005,6 +1013,12 @@ struct kvm_arch {
- 	/* Deflect RDMSR and WRMSR to user space when they trigger a #GP */
- 	u32 user_space_msr_mask;
- 
-+	struct {
-+		u8 count;
-+		bool default_allow:1;
-+		struct msr_bitmap_range ranges[16];
-+	} msr_filter;
-+
- 	struct kvm_pmu_event_filter *pmu_event_filter;
- 	struct task_struct *nx_lpage_recovery_thread;
- };
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 50650cfd235a..66bba91e1bb8 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -192,8 +192,25 @@ struct kvm_msr_list {
- 	__u32 indices[0];
- };
- 
--#define KVM_MSR_ALLOW_READ  (1 << 0)
--#define KVM_MSR_ALLOW_WRITE (1 << 1)
-+/* Maximum size of any access bitmap in bytes */
-+#define KVM_MSR_FILTER_MAX_BITMAP_SIZE 0x600
-+
-+/* for KVM_X86_SET_MSR_FILTER */
-+struct kvm_msr_filter_range {
-+#define KVM_MSR_FILTER_READ  (1 << 0)
-+#define KVM_MSR_FILTER_WRITE (1 << 1)
-+	__u32 flags;
-+	__u32 nmsrs; /* number of msrs in bitmap */
-+	__u32 base;  /* MSR index the bitmap starts at */
-+	__u8 *bitmap; /* a 1 bit allows the operations in flags, 0 denies */
-+};
-+
-+struct kvm_msr_filter {
-+#define KVM_MSR_FILTER_DEFAULT_ALLOW (0 << 0)
-+#define KVM_MSR_FILTER_DEFAULT_DENY  (1 << 0)
-+	__u32 flags;
-+	struct kvm_msr_filter_range ranges[16];
-+};
- 
- struct kvm_cpuid_entry {
- 	__u32 function;
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 6a3f4017dd98..41e1eb77c3c0 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -624,10 +624,10 @@ static void set_msr_interception_nosync(struct kvm_vcpu *vcpu, u32 msr,
- 	WARN_ON(!valid_msr_intercept(msr));
- 
- 	/* Enforce non allowed MSRs to trap */
--	if (read && !kvm_msr_allowed(vcpu, msr, KVM_MSR_ALLOW_READ))
-+	if (read && !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ))
- 		read = 0;
- 
--	if (write && !kvm_msr_allowed(vcpu, msr, KVM_MSR_ALLOW_WRITE))
-+	if (write && !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE))
- 		write = 0;
- 
- 	offset    = svm_msrpm_offset(msr);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 6024d1cdea5a..f9bacf5656f9 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1474,7 +1474,35 @@ EXPORT_SYMBOL_GPL(kvm_enable_efer_bits);
- 
- bool kvm_msr_allowed(struct kvm_vcpu *vcpu, u32 index, u32 type)
- {
--	return true;
-+	struct kvm *kvm = vcpu->kvm;
-+	struct msr_bitmap_range *ranges = kvm->arch.msr_filter.ranges;
-+	u32 count = kvm->arch.msr_filter.count;
-+	u32 i;
-+	bool r = kvm->arch.msr_filter.default_allow;
-+	int idx;
-+
-+	/* MSR filtering not set up, allow everything */
-+	if (!count)
-+		return true;
-+
-+	/* Prevent collision with set_msr_filter */
-+	idx = srcu_read_lock(&kvm->srcu);
-+
-+	for (i = 0; i < count; i++) {
-+		u32 start = ranges[i].base;
-+		u32 end = start + ranges[i].nmsrs;
-+		u32 flags = ranges[i].flags;
-+		unsigned long *bitmap = ranges[i].bitmap;
-+
-+		if ((index >= start) && (index < end) && (flags & type)) {
-+			r = !!test_bit(index - start, bitmap);
-+			break;
-+		}
-+	}
-+
-+	srcu_read_unlock(&kvm->srcu, idx);
-+
-+	return r;
- }
- EXPORT_SYMBOL_GPL(kvm_msr_allowed);
- 
-@@ -1489,6 +1517,9 @@ static int __kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data,
- {
- 	struct msr_data msr;
- 
-+	if (!host_initiated && !kvm_msr_allowed(vcpu, index, KVM_MSR_FILTER_WRITE))
-+		return -EPERM;
-+
- 	switch (index) {
- 	case MSR_FS_BASE:
- 	case MSR_GS_BASE:
-@@ -1534,6 +1565,9 @@ int __kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data,
- 	struct msr_data msr;
- 	int ret;
- 
-+	if (!host_initiated && !kvm_msr_allowed(vcpu, index, KVM_MSR_FILTER_READ))
-+		return -EPERM;
-+
- 	msr.index = index;
- 	msr.host_initiated = host_initiated;
- 
-@@ -1580,6 +1614,8 @@ static int complete_emulated_wrmsr(struct kvm_vcpu *vcpu)
- static u64 kvm_msr_reason(int r)
- {
- 	switch (r) {
-+	case -EPERM:
-+		return KVM_MSR_EXIT_REASON_FILTER;
- 	default:
- 		return KVM_MSR_EXIT_REASON_INVAL;
- 	}
-@@ -3569,6 +3605,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_EXCEPTION_PAYLOAD:
- 	case KVM_CAP_SET_GUEST_DEBUG:
- 	case KVM_CAP_X86_USER_SPACE_MSR:
-+	case KVM_CAP_X86_MSR_FILTER:
- 		r = 1;
+diff --git a/drivers/net/wireless/ralink/rt2x00/rt2400pci.c b/drivers/net/wireless/ralink/rt2x00/rt2400pci.c
+index c1ac933349d1..2eb06ffd20cd 100644
+--- a/drivers/net/wireless/ralink/rt2x00/rt2400pci.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2400pci.c
+@@ -1291,7 +1291,8 @@ static void rt2400pci_txdone(struct rt2x00_dev *rt2x00dev,
+ 			break;
+ 		case 2: /* Failure, excessive retries */
+ 			__set_bit(TXDONE_EXCESSIVE_RETRY, &txdesc.flags);
+-			/* Fall through - this is a failed frame! */
++			/* this is a failed frame! */
++			fallthrough;
+ 		default: /* Failure */
+ 			__set_bit(TXDONE_FAILURE, &txdesc.flags);
+ 		}
+diff --git a/drivers/net/wireless/ralink/rt2x00/rt2500pci.c b/drivers/net/wireless/ralink/rt2x00/rt2500pci.c
+index 0859adebd860..44c489a8891b 100644
+--- a/drivers/net/wireless/ralink/rt2x00/rt2500pci.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2500pci.c
+@@ -1419,7 +1419,8 @@ static void rt2500pci_txdone(struct rt2x00_dev *rt2x00dev,
+ 			break;
+ 		case 2: /* Failure, excessive retries */
+ 			__set_bit(TXDONE_EXCESSIVE_RETRY, &txdesc.flags);
+-			/* Fall through - this is a failed frame! */
++			/* this is a failed frame! */
++			fallthrough;
+ 		default: /* Failure */
+ 			__set_bit(TXDONE_FAILURE, &txdesc.flags);
+ 		}
+diff --git a/drivers/net/wireless/ralink/rt2x00/rt2800lib.c b/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
+index a779fe771a55..cbba7b3a0e1a 100644
+--- a/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
+@@ -928,7 +928,7 @@ static void rt2800_rate_from_status(struct skb_frame_desc *skbdesc,
+ 	switch (rt2x00_get_field32(status, TX_STA_FIFO_PHYMODE)) {
+ 	case RATE_MODE_HT_GREENFIELD:
+ 		flags |= IEEE80211_TX_RC_GREEN_FIELD;
+-		/* fall through */
++		fallthrough;
+ 	case RATE_MODE_HT_MIX:
+ 		flags |= IEEE80211_TX_RC_MCS;
  		break;
- 	case KVM_CAP_SYNC_REGS:
-@@ -5094,6 +5131,103 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 	return r;
- }
- 
-+static void kvm_clear_msr_filter(struct kvm *kvm)
-+{
-+	u32 i;
-+	u32 count = kvm->arch.msr_filter.count;
-+	struct msr_bitmap_range ranges[16];
-+
-+	mutex_lock(&kvm->lock);
-+	kvm->arch.msr_filter.count = 0;
-+	memcpy(ranges, kvm->arch.msr_filter.ranges, count * sizeof(ranges[0]));
-+	mutex_unlock(&kvm->lock);
-+	synchronize_srcu(&kvm->srcu);
-+
-+	for (i = 0; i < count; i++)
-+		kfree(ranges[i].bitmap);
-+}
-+
-+static int kvm_add_msr_filter(struct kvm *kvm, struct kvm_msr_filter_range *user_range)
-+{
-+	struct msr_bitmap_range *ranges = kvm->arch.msr_filter.ranges;
-+	struct msr_bitmap_range range;
-+	unsigned long *bitmap = NULL;
-+	size_t bitmap_size;
-+	int r;
-+
-+	if (!user_range->nmsrs)
-+		return 0;
-+
-+	bitmap_size = BITS_TO_LONGS(user_range->nmsrs) * sizeof(long);
-+	if (!bitmap_size || bitmap_size > KVM_MSR_FILTER_MAX_BITMAP_SIZE)
-+		return -EINVAL;
-+
-+	bitmap = memdup_user((__user u8*)user_range->bitmap, bitmap_size);
-+	if (IS_ERR(bitmap))
-+		return PTR_ERR(bitmap);
-+
-+	range = (struct msr_bitmap_range) {
-+		.flags = user_range->flags,
-+		.base = user_range->base,
-+		.nmsrs = user_range->nmsrs,
-+		.bitmap = bitmap,
-+	};
-+
-+	if (range.flags & ~(KVM_MSR_FILTER_READ | KVM_MSR_FILTER_WRITE)) {
-+		r = -EINVAL;
-+		goto err;
-+	}
-+
-+	if (!range.flags) {
-+		r = -EINVAL;
-+		goto err;
-+	}
-+
-+	/* Everything ok, add this range identifier to our global pool */
-+	ranges[kvm->arch.msr_filter.count] = range;
-+	/* Make sure we filled the array before we tell anyone to walk it */
-+	smp_wmb();
-+	kvm->arch.msr_filter.count++;
-+
-+	return 0;
-+err:
-+	kfree(bitmap);
-+	return r;
-+}
-+
-+static int kvm_vm_ioctl_set_msr_filter(struct kvm *kvm, void __user *argp)
-+{
-+	struct kvm_msr_filter __user *user_msr_filter = argp;
-+	struct kvm_msr_filter filter;
-+	bool default_allow;
-+	int r = 0;
-+	u32 i;
-+
-+	if (copy_from_user(&filter, user_msr_filter, sizeof(filter)))
-+		return -EFAULT;
-+
-+	kvm_clear_msr_filter(kvm);
-+
-+	default_allow = !(filter.flags & KVM_MSR_FILTER_DEFAULT_DENY);
-+	kvm->arch.msr_filter.default_allow = default_allow;
-+
-+	/*
-+	 * Protect from concurrent calls to this function that could trigger
-+	 * a TOCTOU violation on kvm->arch.msr_filter.count.
-+	 */
-+	mutex_lock(&kvm->lock);
-+	for (i = 0; i < ARRAY_SIZE(filter.ranges); i++) {
-+		r = kvm_add_msr_filter(kvm, &filter.ranges[i]);
-+		if (r)
-+			break;
-+	}
-+
-+	kvm_make_all_cpus_request(kvm, KVM_REQ_MSR_FILTER_CHANGED);
-+	mutex_unlock(&kvm->lock);
-+
-+	return r;
-+}
-+
- long kvm_arch_vm_ioctl(struct file *filp,
- 		       unsigned int ioctl, unsigned long arg)
- {
-@@ -5400,6 +5534,9 @@ long kvm_arch_vm_ioctl(struct file *filp,
- 	case KVM_SET_PMU_EVENT_FILTER:
- 		r = kvm_vm_ioctl_set_pmu_event_filter(kvm, argp);
- 		break;
-+	case KVM_X86_SET_MSR_FILTER:
-+		r = kvm_vm_ioctl_set_msr_filter(kvm, argp);
-+		break;
- 	default:
- 		r = -ENOTTY;
- 	}
-@@ -8547,6 +8684,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 			kvm_vcpu_update_apicv(vcpu);
- 		if (kvm_check_request(KVM_REQ_APF_READY, vcpu))
- 			kvm_check_async_pf_completion(vcpu);
-+		if (kvm_check_request(KVM_REQ_MSR_FILTER_CHANGED, vcpu))
-+			kvm_x86_ops.msr_filter_changed(vcpu);
- 	}
- 
- 	if (kvm_check_request(KVM_REQ_EVENT, vcpu) || req_int_win) {
-@@ -10105,6 +10244,8 @@ void kvm_arch_pre_destroy_vm(struct kvm *kvm)
- 
- void kvm_arch_destroy_vm(struct kvm *kvm)
- {
-+	u32 i;
-+
- 	if (current->mm == kvm->mm) {
+@@ -2037,6 +2037,7 @@ static void rt2800_config_ht_opmode(struct rt2x00_dev *rt2x00dev,
+ 		 * We decide to protect everything
+ 		 * -> fall through to mixed mode.
+ 		 */
++		fallthrough;
+ 	case IEEE80211_HT_OP_MODE_PROTECTION_NONHT_MIXED:
  		/*
- 		 * Free memory regions allocated on behalf of userspace,
-@@ -10121,6 +10262,8 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
- 	}
- 	if (kvm_x86_ops.vm_destroy)
- 		kvm_x86_ops.vm_destroy(kvm);
-+	for (i = 0; i < kvm->arch.msr_filter.count; i++)
-+		kfree(kvm->arch.msr_filter.ranges[i].bitmap);
- 	kvm_pic_destroy(kvm);
- 	kvm_ioapic_destroy(kvm);
- 	kvm_free_vcpus(kvm);
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index a42841141cae..677d48f531f1 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -419,6 +419,7 @@ struct kvm_run {
- 			__u8 error; /* user -> kernel */
- 			__u8 pad[3];
- #define KVM_MSR_EXIT_REASON_INVAL	(1 << 0)
-+#define KVM_MSR_EXIT_REASON_FILTER	(1 << 1)
- 			__u32 reason; /* kernel -> user */
- 			__u32 index; /* kernel -> user */
- 			__u64 data; /* kernel <-> user */
-@@ -1043,6 +1044,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_HALT_POLL 182
- #define KVM_CAP_ASYNC_PF_INT 183
- #define KVM_CAP_X86_USER_SPACE_MSR 184
-+#define KVM_CAP_X86_MSR_FILTER 185
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-@@ -1544,6 +1546,9 @@ struct kvm_pv_cmd {
- /* Available with KVM_CAP_S390_PROTECTED */
- #define KVM_S390_PV_COMMAND		_IOWR(KVMIO, 0xc5, struct kvm_pv_cmd)
- 
-+/* Available with KVM_CAP_X86_MSR_FILTER */
-+#define KVM_X86_SET_MSR_FILTER	_IOW(KVMIO,  0xc6, struct kvm_msr_filter)
-+
- /* Secure Encrypted Virtualization command */
- enum sev_cmd_id {
- 	/* Guest initialization commands */
+ 		 * Legacy STAs are present
+@@ -2567,7 +2568,7 @@ static void rt2800_config_channel_rf3052(struct rt2x00_dev *rt2x00dev,
+ 		switch (rt2x00dev->default_ant.tx_chain_num) {
+ 		case 1:
+ 			rt2x00_set_field8(&rfcsr, RFCSR1_TX1_PD, 1);
+-			/* fall through */
++			fallthrough;
+ 		case 2:
+ 			rt2x00_set_field8(&rfcsr, RFCSR1_TX2_PD, 1);
+ 			break;
+@@ -2576,7 +2577,7 @@ static void rt2800_config_channel_rf3052(struct rt2x00_dev *rt2x00dev,
+ 		switch (rt2x00dev->default_ant.rx_chain_num) {
+ 		case 1:
+ 			rt2x00_set_field8(&rfcsr, RFCSR1_RX1_PD, 1);
+-			/* fall through */
++			fallthrough;
+ 		case 2:
+ 			rt2x00_set_field8(&rfcsr, RFCSR1_RX2_PD, 1);
+ 			break;
+@@ -4216,14 +4217,14 @@ static void rt2800_config_channel(struct rt2x00_dev *rt2x00dev,
+ 				   rf->channel > 14);
+ 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_G2_EN,
+ 				   rf->channel <= 14);
+-		/* fall-through */
++		fallthrough;
+ 	case 2:
+ 		/* Turn on secondary PAs */
+ 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_A1_EN,
+ 				   rf->channel > 14);
+ 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_G1_EN,
+ 				   rf->channel <= 14);
+-		/* fall-through */
++		fallthrough;
+ 	case 1:
+ 		/* Turn on primary PAs */
+ 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_A0_EN,
+@@ -4241,12 +4242,12 @@ static void rt2800_config_channel(struct rt2x00_dev *rt2x00dev,
+ 		/* Turn on tertiary LNAs */
+ 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_LNA_PE_A2_EN, 1);
+ 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_LNA_PE_G2_EN, 1);
+-		/* fall-through */
++		fallthrough;
+ 	case 2:
+ 		/* Turn on secondary LNAs */
+ 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_LNA_PE_A1_EN, 1);
+ 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_LNA_PE_G1_EN, 1);
+-		/* fall-through */
++		fallthrough;
+ 	case 1:
+ 		/* Turn on primary LNAs */
+ 		rt2x00_set_field32(&tx_pin, TX_PIN_CFG_LNA_PE_A0_EN, 1);
+@@ -5438,10 +5439,10 @@ void rt2800_vco_calibration(struct rt2x00_dev *rt2x00dev)
+ 		switch (rt2x00dev->default_ant.tx_chain_num) {
+ 		case 3:
+ 			rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_G2_EN, 1);
+-			/* fall through */
++			fallthrough;
+ 		case 2:
+ 			rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_G1_EN, 1);
+-			/* fall through */
++			fallthrough;
+ 		case 1:
+ 		default:
+ 			rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_G0_EN, 1);
+@@ -5451,10 +5452,10 @@ void rt2800_vco_calibration(struct rt2x00_dev *rt2x00dev)
+ 		switch (rt2x00dev->default_ant.tx_chain_num) {
+ 		case 3:
+ 			rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_A2_EN, 1);
+-			/* fall through */
++			fallthrough;
+ 		case 2:
+ 			rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_A1_EN, 1);
+-			/* fall through */
++			fallthrough;
+ 		case 1:
+ 		default:
+ 			rt2x00_set_field32(&tx_pin, TX_PIN_CFG_PA_PE_A0_EN, 1);
+@@ -10100,10 +10101,10 @@ static int rt2800_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
+ 	switch (rx_chains) {
+ 	case 3:
+ 		spec->ht.mcs.rx_mask[2] = 0xff;
+-		/* fall through */
++		fallthrough;
+ 	case 2:
+ 		spec->ht.mcs.rx_mask[1] = 0xff;
+-		/* fall through */
++		fallthrough;
+ 	case 1:
+ 		spec->ht.mcs.rx_mask[0] = 0xff;
+ 		spec->ht.mcs.rx_mask[4] = 0x1; /* MCS32 */
+diff --git a/drivers/net/wireless/ralink/rt2x00/rt61pci.c b/drivers/net/wireless/ralink/rt2x00/rt61pci.c
+index eefce76fc99b..16ec523375e2 100644
+--- a/drivers/net/wireless/ralink/rt2x00/rt61pci.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt61pci.c
+@@ -2130,7 +2130,8 @@ static void rt61pci_txdone(struct rt2x00_dev *rt2x00dev)
+ 			break;
+ 		case 6: /* Failure, excessive retries */
+ 			__set_bit(TXDONE_EXCESSIVE_RETRY, &txdesc.flags);
+-			/* Fall through - this is a failed frame! */
++			/* this is a failed frame! */
++			fallthrough;
+ 		default: /* Failure */
+ 			__set_bit(TXDONE_FAILURE, &txdesc.flags);
+ 		}
 -- 
-2.17.1
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+2.25.4
 
