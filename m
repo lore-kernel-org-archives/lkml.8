@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437B0C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9040C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB4720773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9E520773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063221;
-	bh=LlBArSVcBx9G5L28K5dHd7dtdCPvZewej8Keh2JV11E=;
+	s=default; t=1599063234;
+	bh=CS2SHY+dbcTlueJOlO3filVCadd3G4vfWcrT58KY7cQ=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=xPOfHdTemY73353fMGtLXGKvv40aK63h0YWpgD1D3lfAXXVLZ9YTkTjXzTathAd89
-	 mOWb7s0+grJm/HBUv98h3FL54RHiolqzFtrTReTOxN9Uj+/B1+yceYIYg8MgoHCAIb
-	 Fwi2mrakNgwAzwpgG3AWDuOlFjhI6NSGAvhDBxJA=
+	b=qnxXMctvn3HSP6xfDBGBynXaVakxlOKTkcZdM36vl1PhbhTEUQvQHnrhLdPkg8I3p
+	 0ZUvECyxm0s2lsuJ7ervCctHKVczEFbybI+8dH6mMpeh0qmhy826ucf39As+XQ/WYh
+	 UFAFycwo4IZtqCCaXt6krYK2832zEMZqUqm1CHNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgIBQNY (ORCPT
+        id S1728743AbgIBQNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:13:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54038 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 12:13:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbgIBQK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:10:58 -0400
+        id S1728333AbgIBQK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:10:57 -0400
 Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4358321974;
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C8C721D92;
         Wed,  2 Sep 2020 16:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599063046;
-        bh=LlBArSVcBx9G5L28K5dHd7dtdCPvZewej8Keh2JV11E=;
+        bh=CS2SHY+dbcTlueJOlO3filVCadd3G4vfWcrT58KY7cQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fj3GG+YyUYZUAvmRRSzFXmBxQFhwKXloFpI2nvQpJX0wGSAHK/AbSsv7M/M2U1kqP
-         sjEB+4Xg+/hzjBt1wtvXGgEguXdAuWT/OWINZapqwRgi06OmnyrE/p7/P5iNMKs+pB
-         OLkvCQKo+HwSg/ANSY/MI/d7FykG+r+YcRVSHy9Y=
+        b=jHGC0erCkaJGvX12SWypynDoBZOLIMbuVWaaScNFhFHMv48SY5hkqjCqX0zhCtIxg
+         c1gZijHBzZt0PgYI+G6pleRLU5sttlfilhnGfZHCpasPmqk7UxHAoAVQ+F+TgAHUdP
+         XxZalMJxnQPIAd15tldkjWhtZC3hSU2KQhspaAuU=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kDVLQ-000tAw-DX; Wed, 02 Sep 2020 18:10:44 +0200
+        id 1kDVLQ-000tB5-JX; Wed, 02 Sep 2020 18:10:44 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 26/38] media: atomisp: cleanup ifdefs from ia_css_debug.c
-Date:   Wed,  2 Sep 2020 18:10:29 +0200
-Message-Id: <f418c7b19a4b307ff9005e236d751a23f372cd49.1599062230.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH 29/38] media: atomisp: get rid of ibuf_ctrl abstraction
+Date:   Wed,  2 Sep 2020 18:10:32 +0200
+Message-Id: <d10ebdd12ff59bdd70652e8dc4fc8bdfe0ce9bf5.1599062230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
 References: <cover.1599062230.git.mchehab+huawei@kernel.org>
@@ -62,476 +62,729 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are lots of code dependency there. Get rid of most of
-them.
-
-We can't remove everything, as there are some structs that
-are conditionally built if ISP2401. So, keep ifdefs only
-on such cases.
+Just move the stuff there to the places where this header is
+included.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../runtime/debug/interface/ia_css_debug.h    |   6 -
- .../pci/runtime/debug/src/ia_css_debug.c      | 187 ++++--------------
- 2 files changed, 42 insertions(+), 151 deletions(-)
+ .../css_2401_system/host/ibuf_ctrl_local.h    |   1 +
+ .../css_2401_system/host/ibuf_ctrl_private.h  | 268 ------------------
+ .../host/ibuf_ctrl_public.h                   |  94 ------
+ .../pci/hive_isp_css_include/ibuf_ctrl.h      |  47 ---
+ .../atomisp/pci/isp2401_input_system_global.h |   2 +-
+ .../atomisp/pci/isp2401_input_system_local.h  |   1 -
+ .../pci/isp2401_input_system_private.h        | 224 ++++++++++++++-
+ 7 files changed, 220 insertions(+), 417 deletions(-)
+ delete mode 100644 drivers/staging/media/atomisp/pci/css_2401_system/host/ibuf_ctrl_private.h
+ delete mode 100644 drivers/staging/media/atomisp/pci/hive_isp_css_include/host/ibuf_ctrl_public.h
+ delete mode 100644 drivers/staging/media/atomisp/pci/hive_isp_css_include/ibuf_ctrl.h
 
-diff --git a/drivers/staging/media/atomisp/pci/runtime/debug/interface/ia_css_debug.h b/drivers/staging/media/atomisp/pci/runtime/debug/interface/ia_css_debug.h
-index e04d2485ea75..0f9b7eb17647 100644
---- a/drivers/staging/media/atomisp/pci/runtime/debug/interface/ia_css_debug.h
-+++ b/drivers/staging/media/atomisp/pci/runtime/debug/interface/ia_css_debug.h
-@@ -158,12 +158,6 @@ void ia_css_debug_set_dtrace_level(
-  */
- unsigned int ia_css_debug_get_dtrace_level(void);
+diff --git a/drivers/staging/media/atomisp/pci/css_2401_system/host/ibuf_ctrl_local.h b/drivers/staging/media/atomisp/pci/css_2401_system/host/ibuf_ctrl_local.h
+index 4952b42d8191..f71841195ac1 100644
+--- a/drivers/staging/media/atomisp/pci/css_2401_system/host/ibuf_ctrl_local.h
++++ b/drivers/staging/media/atomisp/pci/css_2401_system/host/ibuf_ctrl_local.h
+@@ -17,6 +17,7 @@
+ #define __IBUF_CTRL_LOCAL_H_INCLUDED__
  
--/*! @brief Dump input formatter state.
-- * Dumps the input formatter state to tracing output.
-- * @return	None
-- */
--void ia_css_debug_dump_if_state(void);
--
- /*! @brief Dump isp hardware state.
-  * Dumps the isp hardware state to tracing output.
-  * @return	None
-diff --git a/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c b/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c
-index 56d5d90634fa..ec598a1697b1 100644
---- a/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c
-+++ b/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c
-@@ -52,9 +52,7 @@
+ #include "ibuf_ctrl_global.h"
++#include "ibuf_ctrl_local.h"
  
- #include "fifo_monitor.h"
- 
--#if !defined(HAS_NO_INPUT_FORMATTER)
- #include "input_formatter.h"
--#endif
- #include "dma.h"
- #include "irq.h"
- #include "gp_device.h"
-@@ -63,9 +61,7 @@
- #include "type_support.h"
- #include "math_support.h" /* CEIL_DIV */
- #include "input_system.h"	/* input_formatter_reg_load */
--#if defined(USE_INPUT_SYSTEM_VERSION_2) || defined(USE_INPUT_SYSTEM_VERSION_2401)
- #include "ia_css_tagger_common.h"
--#endif
- 
- #include "sh_css_internal.h"
- #include "ia_css_isys.h"
-@@ -105,17 +101,6 @@
- 
- #define ENABLE_LINE_MAX_LENGTH (25)
- 
--#ifdef ISP2401
--#define DBG_EXT_CMD_TRACE_PNTS_DUMP BIT(8)
--#define DBG_EXT_CMD_PUB_CFG_DUMP BIT(9)
--#define DBG_EXT_CMD_GAC_REG_DUMP BIT(10)
--#define DBG_EXT_CMD_GAC_ACB_REG_DUMP BIT(11)
--#define DBG_EXT_CMD_FIFO_DUMP BIT(12)
--#define DBG_EXT_CMD_QUEUE_DUMP BIT(13)
--#define DBG_EXT_CMD_DMA_DUMP BIT(14)
--#define DBG_EXT_CMD_MASK 0xAB0000CD
--
--#endif
- /*
-  * TODO:SH_CSS_MAX_SP_THREADS is not the max number of sp threads
-  * future rework should fix this and remove the define MAX_THREAD_NUM
-@@ -449,23 +434,21 @@ void ia_css_debug_dump_isp_state(void)
- 	debug_print_isp_state(&state, "ISP");
- 
- 	if (state.is_stalling) {
--#if !defined(HAS_NO_INPUT_FORMATTER)
--		ia_css_debug_dtrace(2, "\t%-32s: %d\n",
--				    "[0] if_prim_a_FIFO stalled", stall.fifo0);
--		ia_css_debug_dtrace(2, "\t%-32s: %d\n",
--				    "[1] if_prim_b_FIFO stalled", stall.fifo1);
--#endif
-+		if (!IS_ISP2401) {
-+			ia_css_debug_dtrace(2, "\t%-32s: %d\n",
-+					    "[0] if_prim_a_FIFO stalled", stall.fifo0);
-+			ia_css_debug_dtrace(2, "\t%-32s: %d\n",
-+					    "[1] if_prim_b_FIFO stalled", stall.fifo1);
-+		}
- 		ia_css_debug_dtrace(2, "\t%-32s: %d\n", "[2] dma_FIFO stalled",
- 				    stall.fifo2);
- 
- 		ia_css_debug_dtrace(2, "\t%-32s: %d\n", "[3] gdc0_FIFO stalled",
- 				    stall.fifo3);
--#if !defined(IS_ISP_2500_SYSTEM)
- 		ia_css_debug_dtrace(2, "\t%-32s: %d\n", "[4] gdc1_FIFO stalled",
- 				    stall.fifo4);
- 		ia_css_debug_dtrace(2, "\t%-32s: %d\n", "[5] gpio_FIFO stalled",
- 				    stall.fifo5);
--#endif
- 		ia_css_debug_dtrace(2, "\t%-32s: %d\n", "[6] sp_FIFO stalled",
- 				    stall.fifo6);
- 		ia_css_debug_dtrace(2, "\t%-32s: %d\n",
-@@ -505,24 +488,21 @@ void ia_css_debug_dump_sp_state(void)
- 				    "str_to_mem_FIFO stalled", stall.fifo2);
- 		ia_css_debug_dtrace(2, "\t%-32s: %d\n", "dma_FIFO stalled",
- 				    stall.fifo3);
--#if !defined(HAS_NO_INPUT_FORMATTER)
--		ia_css_debug_dtrace(2, "\t%-32s: %d\n",
--				    "if_prim_a_FIFO stalled", stall.fifo4);
--#endif
-+		if (!IS_ISP2401)
-+			ia_css_debug_dtrace(2, "\t%-32s: %d\n",
-+					    "if_prim_a_FIFO stalled", stall.fifo4);
-+
- 		ia_css_debug_dtrace(2, "\t%-32s: %d\n", "isp_FIFO stalled",
- 				    stall.fifo5);
- 		ia_css_debug_dtrace(2, "\t%-32s: %d\n", "gp_FIFO stalled",
- 				    stall.fifo6);
--#if !defined(HAS_NO_INPUT_FORMATTER)
--		ia_css_debug_dtrace(2, "\t%-32s: %d\n",
--				    "if_prim_b_FIFO stalled", stall.fifo7);
--#endif
-+		if (!IS_ISP2401)
-+			ia_css_debug_dtrace(2, "\t%-32s: %d\n",
-+					    "if_prim_b_FIFO stalled", stall.fifo7);
- 		ia_css_debug_dtrace(2, "\t%-32s: %d\n", "gdc0_FIFO stalled",
- 				    stall.fifo8);
--#if !defined(IS_ISP_2500_SYSTEM)
- 		ia_css_debug_dtrace(2, "\t%-32s: %d\n", "gdc1_FIFO stalled",
- 				    stall.fifo9);
--#endif
- 		ia_css_debug_dtrace(2, "\t%-32s: %d\n", "irq FIFO stalled",
- 				    stall.fifoa);
- 		ia_css_debug_dtrace(2, "\t%-32s: %d\n", "dmem stalled",
-@@ -556,7 +536,6 @@ static void debug_print_fifo_channel_state(const fifo_channel_state_t *state,
- 	return;
- }
- 
--#if !defined(HAS_NO_INPUT_FORMATTER) && defined(USE_INPUT_SYSTEM_VERSION_2)
- void ia_css_debug_dump_pif_a_isp_fifo_state(void)
- {
- 	fifo_channel_state_t pif_to_isp, isp_to_pif;
-@@ -593,13 +572,11 @@ void ia_css_debug_dump_str2mem_sp_fifo_state(void)
- 	debug_print_fifo_channel_state(&sp_to_s2m, "SP to stream-to-memory");
- }
- 
-+#ifndef ISP2401
- static void debug_print_if_state(input_formatter_state_t *state, const char *id)
- {
- 	unsigned int val;
- 
--#if defined(HAS_INPUT_FORMATTER_VERSION_1)
--	const char *st_reset = (state->reset ? "Active" : "Not active");
--#endif
- 	const char *st_vsync_active_low =
- 	    (state->vsync_active_low ? "low" : "high");
- 	const char *st_hsync_active_low =
-@@ -631,9 +608,6 @@ static void debug_print_if_state(input_formatter_state_t *state, const char *id)
- 
- 	ia_css_debug_dtrace(2, "\tConfiguration:\n");
- 
--#if defined(HAS_INPUT_FORMATTER_VERSION_1)
--	ia_css_debug_dtrace(2, "\t\t%-32s: %s\n", "Software reset", st_reset);
--#endif
- 	ia_css_debug_dtrace(2, "\t\t%-32s: %d\n", "Start line", st_stline);
- 	ia_css_debug_dtrace(2, "\t\t%-32s: %d\n", "Start column", st_stcol);
- 	ia_css_debug_dtrace(2, "\t\t%-32s: %d\n", "Cropped height", st_crpht);
-@@ -860,7 +834,6 @@ static void debug_print_if_state(input_formatter_state_t *state, const char *id)
- 			    state->vector_support);
- 	ia_css_debug_dtrace(2, "\t\t%-32s: %d\n", "Fifo sensor data lost",
- 			    state->sensor_data_lost);
--	return;
- }
- 
- static void debug_print_if_bin_state(input_formatter_bin_state_t *state)
-@@ -883,7 +856,7 @@ static void debug_print_if_bin_state(input_formatter_bin_state_t *state)
- 			    state->en_status_update);
- }
- 
--void ia_css_debug_dump_if_state(void)
-+static void ia_css_debug_dump_if_state(void)
- {
- 	input_formatter_state_t if_state;
- 	input_formatter_bin_state_t if_bin_state;
-@@ -1612,19 +1585,11 @@ void ia_css_debug_print_sp_debug_state(const struct sh_css_sp_debug_state
- 		"frame_buffer.sp.c"
- 	};
- 
--#if 1
- 	/* Example SH_CSS_SP_DBG_NR_OF_TRACES==1 */
- 	/* Adjust this to your trace case */
- 	static char const *trace_name[SH_CSS_SP_DBG_NR_OF_TRACES] = {
- 		"default"
- 	};
--#else
--	/* Example SH_CSS_SP_DBG_NR_OF_TRACES==4 */
--	/* Adjust this to your trace case */
--	static char const *trace_name[SH_CSS_SP_DBG_NR_OF_TRACES] = {
--		"copy", "preview/video", "capture", "acceleration"
--	};
--#endif
- 
- 	/* Remember host_index_last because we only want to print new entries */
- 	static int host_index_last[SH_CSS_SP_DBG_NR_OF_TRACES] = { 0 };
-@@ -1696,7 +1661,7 @@ void ia_css_debug_print_sp_debug_state(const struct sh_css_sp_debug_state
- }
- #endif
- 
--#if !defined(HAS_NO_INPUT_FORMATTER)
-+#if !defined(ISP2401)
- static void debug_print_rx_mipi_port_state(mipi_port_state_t *state)
- {
- 	int i;
-@@ -1893,17 +1858,15 @@ static void debug_print_rx_state(receiver_state_t *state)
- }
- #endif
- 
--#if defined(USE_INPUT_SYSTEM_VERSION_2)
- void ia_css_debug_dump_rx_state(void)
- {
--#if !defined(HAS_NO_INPUT_FORMATTER)
-+#if !defined(ISP2401)
- 	receiver_state_t state;
- 
- 	receiver_get_state(RX0_ID, &state);
- 	debug_print_rx_state(&state);
- #endif
- }
--#endif
- 
- void ia_css_debug_dump_sp_sw_debug_info(void)
- {
-@@ -1918,7 +1881,7 @@ void ia_css_debug_dump_sp_sw_debug_info(void)
- 	return;
- }
- 
--#if defined(USE_INPUT_SYSTEM_VERSION_2)
-+#if !defined(ISP2401)
- static void debug_print_isys_capture_unit_state(capture_unit_state_t *state)
- {
- 	assert(state);
-@@ -2155,31 +2118,20 @@ static void debug_print_isys_state(input_system_state_t *state)
- 	}
- 	/* end of control unit state */
- }
--
--void ia_css_debug_dump_isys_state(void)
--{
--	input_system_state_t state;
--
--	input_system_get_state(INPUT_SYSTEM0_ID, &state);
--	debug_print_isys_state(&state);
--
--	return;
--}
- #endif
--#if defined(USE_INPUT_SYSTEM_VERSION_2401)
-+
- void ia_css_debug_dump_isys_state(void)
- {
--	/* Android compilation fails if made a local variable
--	stack size on android is limited to 2k and this structure
--	is around 3.5K, in place of static malloc can be done but
--	if this call is made too often it will lead to fragment memory
--	versus a fixed allocation */
- 	static input_system_state_t state;
- 
- 	input_system_get_state(INPUT_SYSTEM0_ID, &state);
--	input_system_dump_state(INPUT_SYSTEM0_ID, &state);
--}
-+
-+#ifndef ISP2401
-+		debug_print_isys_state(&state);
-+#else
-+		input_system_dump_state(INPUT_SYSTEM0_ID, &state);
- #endif
-+}
- 
- void ia_css_debug_dump_debug_info(const char *context)
- {
-@@ -2187,10 +2139,10 @@ void ia_css_debug_dump_debug_info(const char *context)
- 		context = "No Context provided";
- 
- 	ia_css_debug_dtrace(2, "CSS Debug Info dump [Context = %s]\n", context);
--#if defined(USE_INPUT_SYSTEM_VERSION_2)
--	ia_css_debug_dump_rx_state();
--#endif
--#if !defined(HAS_NO_INPUT_FORMATTER) && defined(USE_INPUT_SYSTEM_VERSION_2)
-+	if (!IS_ISP2401)
-+		ia_css_debug_dump_rx_state();
-+
-+#ifndef ISP2401
- 	ia_css_debug_dump_if_state();
- #endif
- 	ia_css_debug_dump_isp_state();
-@@ -2207,12 +2159,12 @@ void ia_css_debug_dump_debug_info(const char *context)
- 	ia_css_debug_dump_dma_isp_fifo_state();
- 	ia_css_debug_dump_dma_sp_fifo_state();
- 	ia_css_debug_dump_dma_state();
--#if defined(USE_INPUT_SYSTEM_VERSION_2)
--	ia_css_debug_dump_isys_state();
- 
--	{
-+	if (!IS_ISP2401) {
- 		struct irq_controller_state state;
- 
-+		ia_css_debug_dump_isys_state();
-+
- 		irq_controller_get_state(IRQ2_ID, &state);
- 
- 		ia_css_debug_dtrace(2, "\t%-32s:\n",
-@@ -2233,14 +2185,12 @@ void ia_css_debug_dump_debug_info(const char *context)
- 		ia_css_debug_dtrace(2, "\t\t%-32s: %d\n",
- 				    "irq_level_not_pulse",
- 				    state.irq_level_not_pulse);
-+	} else {
-+		ia_css_debug_dump_isys_state();
- 	}
--#endif
--#if defined(USE_INPUT_SYSTEM_VERSION_2401)
--	ia_css_debug_dump_isys_state();
--#endif
--#if defined(USE_INPUT_SYSTEM_VERSION_2) || defined(USE_INPUT_SYSTEM_VERSION_2401)
-+
- 	ia_css_debug_tagger_state();
--#endif
-+
- 	return;
- }
- 
-@@ -2270,7 +2220,6 @@ void ia_css_debug_wake_up_sp(void)
- 	sp_ctrl_setbit(SP0_ID, SP_SC_REG, SP_START_BIT);
- }
- 
--#if !defined(IS_ISP_2500_SYSTEM)
- #define FIND_DMEM_PARAMS_TYPE(stream, kernel, type) \
- 	(struct HRTCAT(HRTCAT(sh_css_isp_, type), _params) *) \
- 	findf_dmem_params(stream, offsetof(struct ia_css_memory_offsets, dmem.kernel))
-@@ -2302,16 +2251,11 @@ findf_dmem_params(struct ia_css_stream *stream, short idx)
- 	}
- 	return NULL;
- }
--#endif
- 
- void ia_css_debug_dump_isp_params(struct ia_css_stream *stream,
- 				  unsigned int enable)
- {
- 	ia_css_debug_dtrace(IA_CSS_DEBUG_VERBOSE, "ISP PARAMETERS:\n");
--#if defined(IS_ISP_2500_SYSTEM)
--	(void)enable;
--	(void)stream;
--#else
- 
- 	assert(stream);
- 	if ((enable & IA_CSS_DEBUG_DUMP_FPN)
-@@ -2375,7 +2319,6 @@ void ia_css_debug_dump_isp_params(struct ia_css_stream *stream,
- 	    || (enable & IA_CSS_DEBUG_DUMP_ALL)) {
- 		ia_css_ce_dump(FIND_DMEM_PARAMS(stream, ce), IA_CSS_DEBUG_VERBOSE);
- 	}
--#endif
- }
- 
- void sh_css_dump_sp_raw_copy_linecount(bool reduced)
-@@ -2441,12 +2384,14 @@ void ia_css_debug_dump_isp_binary(void)
- 
- void ia_css_debug_dump_perf_counters(void)
- {
--#if defined(USE_INPUT_SYSTEM_VERSION_2)
- 	const struct ia_css_fw_info *fw;
- 	int i;
- 	unsigned int HIVE_ADDR_ia_css_isys_sp_error_cnt;
--	s32 ia_css_sp_input_system_error_cnt[N_MIPI_PORT_ID +
--							    1]; /* 3 Capture Units and 1 Acquire Unit. */
-+	/* N_MIPI_PORT_ID + 1: 3 Capture Units and 1 Acquire Unit. */
-+	s32 ia_css_sp_input_system_error_cnt[N_MIPI_PORT_ID + 1];
-+
-+	if (IS_ISP2401)
-+		return;
- 
- 	ia_css_debug_dtrace(IA_CSS_DEBUG_VERBOSE, "Input System Error Counters:\n");
- 
-@@ -2465,48 +2410,8 @@ void ia_css_debug_dump_perf_counters(void)
- 		ia_css_debug_dtrace(IA_CSS_DEBUG_VERBOSE, "\tport[%d] = %d\n",
- 				    i, ia_css_sp_input_system_error_cnt[i]);
- 	}
--#endif
- }
- 
+ typedef struct ibuf_ctrl_proc_state_s	ibuf_ctrl_proc_state_t;
+ typedef struct ibuf_ctrl_state_s		ibuf_ctrl_state_t;
+diff --git a/drivers/staging/media/atomisp/pci/css_2401_system/host/ibuf_ctrl_private.h b/drivers/staging/media/atomisp/pci/css_2401_system/host/ibuf_ctrl_private.h
+deleted file mode 100644
+index a58e8477da6e..000000000000
+--- a/drivers/staging/media/atomisp/pci/css_2401_system/host/ibuf_ctrl_private.h
++++ /dev/null
+@@ -1,268 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
 -/*
+- * Support for Intel Camera Imaging ISP subsystem.
+- * Copyright (c) 2015, Intel Corporation.
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms and conditions of the GNU General Public License,
+- * version 2, as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope it will be useful, but WITHOUT
+- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+- * more details.
+- */
 -
--void sh_css_init_ddr_debug_queue(void)
+-#ifndef __IBUF_CTRL_PRIVATE_H_INCLUDED__
+-#define __IBUF_CTRL_PRIVATE_H_INCLUDED__
+-
+-#include "ibuf_ctrl_public.h"
+-
+-#include "device_access.h"	/* ia_css_device_load_uint32 */
+-
+-#include "assert_support.h" /* assert */
+-#include "print_support.h" /* print */
+-
+-/*****************************************************
+- *
+- * Native command interface (NCI).
+- *
+- *****************************************************/
+-/**
+- * @brief Get the ibuf-controller state.
+- * Refer to "ibuf_ctrl_public.h" for details.
+- */
+-STORAGE_CLASS_IBUF_CTRL_C void ibuf_ctrl_get_state(
+-    const ibuf_ctrl_ID_t ID,
+-    ibuf_ctrl_state_t *state)
 -{
--	ia_css_ptr ddr_debug_queue_addr =
--			hmm_alloc(sizeof(debug_data_ddr_t), HMM_BO_PRIVATE, 0, NULL, 0);
--	const struct ia_css_fw_info *fw;
--	unsigned int HIVE_ADDR_debug_buffer_ddr_address;
+-	u32 i;
 -
--	fw = &sh_css_sp_fw;
--	HIVE_ADDR_debug_buffer_ddr_address =
--			fw->info.sp.debug_buffer_ddr_address;
+-	state->recalc_words =
+-	    ibuf_ctrl_reg_load(ID, _IBUF_CNTRL_RECALC_WORDS_STATUS);
+-	state->arbiters =
+-	    ibuf_ctrl_reg_load(ID, _IBUF_CNTRL_ARBITERS_STATUS);
 -
--	(void)HIVE_ADDR_debug_buffer_ddr_address;
--
--	debug_buffer_ddr_init(ddr_debug_queue_addr);
--
--	sp_dmem_store_uint32(SP0_ID,
--		(unsigned int)sp_address_of(debug_buffer_ddr_address),
--		(uint32_t)(ddr_debug_queue_addr));
--}
--
--void sh_css_load_ddr_debug_queue(void)
--{
--	debug_synch_queue_ddr();
--}
--
--void ia_css_debug_dump_ddr_debug_queue(void)
--{
--	int i;
--	sh_css_load_ddr_debug_queue();
--	for (i = 0; i < DEBUG_BUF_SIZE; i++) {
--		ia_css_debug_dtrace(IA_CSS_DEBUG_VERBOSE,
--			"ddr_debug_queue[%d] = 0x%x\n",
--			i, debug_data_ptr->buf[i]);
+-	/*
+-	 * Get the values of the register-set per
+-	 * ibuf-controller process.
+-	 */
+-	for (i = 0; i < N_IBUF_CTRL_PROCS[ID]; i++) {
+-		ibuf_ctrl_get_proc_state(
+-		    ID,
+-		    i,
+-		    &state->proc_state[i]);
 -	}
 -}
--*/
 -
- /*
-  * @brief Initialize the debug mode.
-  * Refer to "ia_css_debug.h" for more details.
-@@ -3252,22 +3157,16 @@ ia_css_debug_dump_stream_config(
- 	byte 2-3: data
- */
- #if TRACE_ENABLE_SP0 || TRACE_ENABLE_SP1 || TRACE_ENABLE_ISP
--#ifndef ISP2401
--static void debug_dump_one_trace(TRACE_CORE_ID proc_id)
--#else
- static void debug_dump_one_trace(enum TRACE_CORE_ID proc_id)
--#endif
- {
- #if defined(HAS_TRACER_V2)
- 	u32 start_addr;
- 	u32 start_addr_data;
- 	u32 item_size;
--#ifndef ISP2401
- 	u32 tmp;
--#else
- 	u8 tid_val;
- 	enum TRACE_DUMP_FORMAT dump_format;
--#endif
+-/**
+- * @brief Get the state of the ibuf-controller process.
+- * Refer to "ibuf_ctrl_public.h" for details.
+- */
+-STORAGE_CLASS_IBUF_CTRL_C void ibuf_ctrl_get_proc_state(
+-    const ibuf_ctrl_ID_t ID,
+-    const u32 proc_id,
+-    ibuf_ctrl_proc_state_t	*state)
+-{
+-	hrt_address reg_bank_offset;
+-
+-	reg_bank_offset =
+-	    _IBUF_CNTRL_PROC_REG_ALIGN * (1 + proc_id);
+-
+-	state->num_items =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_NUM_ITEMS_PER_STORE);
+-
+-	state->num_stores =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_NUM_STORES_PER_FRAME);
+-
+-	state->dma_channel =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_DMA_CHANNEL);
+-
+-	state->dma_command =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_DMA_CMD);
+-
+-	state->ibuf_st_addr =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_BUFFER_START_ADDRESS);
+-
+-	state->ibuf_stride =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_BUFFER_STRIDE);
+-
+-	state->ibuf_end_addr =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_BUFFER_END_ADDRESS);
+-
+-	state->dest_st_addr =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_DEST_START_ADDRESS);
+-
+-	state->dest_stride =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_DEST_STRIDE);
+-
+-	state->dest_end_addr =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_DEST_END_ADDRESS);
+-
+-	state->sync_frame =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_SYNC_FRAME);
+-
+-	state->sync_command =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_STR2MMIO_SYNC_CMD);
+-
+-	state->store_command =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_STR2MMIO_STORE_CMD);
+-
+-	state->shift_returned_items =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_SHIFT_ITEMS);
+-
+-	state->elems_ibuf =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_ELEMS_P_WORD_IBUF);
+-
+-	state->elems_dest =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_ELEMS_P_WORD_DEST);
+-
+-	state->cur_stores =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_STORES);
+-
+-	state->cur_acks =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_ACKS);
+-
+-	state->cur_s2m_ibuf_addr =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_S2M_IBUF_ADDR);
+-
+-	state->cur_dma_ibuf_addr =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_DMA_IBUF_ADDR);
+-
+-	state->cur_dma_dest_addr =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_DMA_DEST_ADDR);
+-
+-	state->cur_isp_dest_addr =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_ISP_DEST_ADDR);
+-
+-	state->dma_cmds_send =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_NR_DMA_CMDS_SEND);
+-
+-	state->main_cntrl_state =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_MAIN_CNTRL_STATE);
+-
+-	state->dma_sync_state =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_DMA_SYNC_STATE);
+-
+-	state->isp_sync_state =
+-	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_ISP_SYNC_STATE);
+-}
+-
+-/**
+- * @brief Dump the ibuf-controller state.
+- * Refer to "ibuf_ctrl_public.h" for details.
+- */
+-STORAGE_CLASS_IBUF_CTRL_C void ibuf_ctrl_dump_state(
+-    const ibuf_ctrl_ID_t ID,
+-    ibuf_ctrl_state_t *state)
+-{
+-	u32 i;
+-
+-	ia_css_print("IBUF controller ID %d recalculate words 0x%x\n", ID,
+-		     state->recalc_words);
+-	ia_css_print("IBUF controller ID %d arbiters 0x%x\n", ID, state->arbiters);
+-
+-	/*
+-	 * Dump the values of the register-set per
+-	 * ibuf-controller process.
+-	 */
+-	for (i = 0; i < N_IBUF_CTRL_PROCS[ID]; i++) {
+-		ia_css_print("IBUF controller ID %d Process ID %d num_items 0x%x\n", ID, i,
+-			     state->proc_state[i].num_items);
+-		ia_css_print("IBUF controller ID %d Process ID %d num_stores 0x%x\n", ID, i,
+-			     state->proc_state[i].num_stores);
+-		ia_css_print("IBUF controller ID %d Process ID %d dma_channel 0x%x\n", ID, i,
+-			     state->proc_state[i].dma_channel);
+-		ia_css_print("IBUF controller ID %d Process ID %d dma_command 0x%x\n", ID, i,
+-			     state->proc_state[i].dma_command);
+-		ia_css_print("IBUF controller ID %d Process ID %d ibuf_st_addr 0x%x\n", ID, i,
+-			     state->proc_state[i].ibuf_st_addr);
+-		ia_css_print("IBUF controller ID %d Process ID %d ibuf_stride 0x%x\n", ID, i,
+-			     state->proc_state[i].ibuf_stride);
+-		ia_css_print("IBUF controller ID %d Process ID %d ibuf_end_addr 0x%x\n", ID, i,
+-			     state->proc_state[i].ibuf_end_addr);
+-		ia_css_print("IBUF controller ID %d Process ID %d dest_st_addr 0x%x\n", ID, i,
+-			     state->proc_state[i].dest_st_addr);
+-		ia_css_print("IBUF controller ID %d Process ID %d dest_stride 0x%x\n", ID, i,
+-			     state->proc_state[i].dest_stride);
+-		ia_css_print("IBUF controller ID %d Process ID %d dest_end_addr 0x%x\n", ID, i,
+-			     state->proc_state[i].dest_end_addr);
+-		ia_css_print("IBUF controller ID %d Process ID %d sync_frame 0x%x\n", ID, i,
+-			     state->proc_state[i].sync_frame);
+-		ia_css_print("IBUF controller ID %d Process ID %d sync_command 0x%x\n", ID, i,
+-			     state->proc_state[i].sync_command);
+-		ia_css_print("IBUF controller ID %d Process ID %d store_command 0x%x\n", ID, i,
+-			     state->proc_state[i].store_command);
+-		ia_css_print("IBUF controller ID %d Process ID %d shift_returned_items 0x%x\n",
+-			     ID, i,
+-			     state->proc_state[i].shift_returned_items);
+-		ia_css_print("IBUF controller ID %d Process ID %d elems_ibuf 0x%x\n", ID, i,
+-			     state->proc_state[i].elems_ibuf);
+-		ia_css_print("IBUF controller ID %d Process ID %d elems_dest 0x%x\n", ID, i,
+-			     state->proc_state[i].elems_dest);
+-		ia_css_print("IBUF controller ID %d Process ID %d cur_stores 0x%x\n", ID, i,
+-			     state->proc_state[i].cur_stores);
+-		ia_css_print("IBUF controller ID %d Process ID %d cur_acks 0x%x\n", ID, i,
+-			     state->proc_state[i].cur_acks);
+-		ia_css_print("IBUF controller ID %d Process ID %d cur_s2m_ibuf_addr 0x%x\n", ID,
+-			     i,
+-			     state->proc_state[i].cur_s2m_ibuf_addr);
+-		ia_css_print("IBUF controller ID %d Process ID %d cur_dma_ibuf_addr 0x%x\n", ID,
+-			     i,
+-			     state->proc_state[i].cur_dma_ibuf_addr);
+-		ia_css_print("IBUF controller ID %d Process ID %d cur_dma_dest_addr 0x%x\n", ID,
+-			     i,
+-			     state->proc_state[i].cur_dma_dest_addr);
+-		ia_css_print("IBUF controller ID %d Process ID %d cur_isp_dest_addr 0x%x\n", ID,
+-			     i,
+-			     state->proc_state[i].cur_isp_dest_addr);
+-		ia_css_print("IBUF controller ID %d Process ID %d dma_cmds_send 0x%x\n", ID, i,
+-			     state->proc_state[i].dma_cmds_send);
+-		ia_css_print("IBUF controller ID %d Process ID %d main_cntrl_state 0x%x\n", ID,
+-			     i,
+-			     state->proc_state[i].main_cntrl_state);
+-		ia_css_print("IBUF controller ID %d Process ID %d dma_sync_state 0x%x\n", ID, i,
+-			     state->proc_state[i].dma_sync_state);
+-		ia_css_print("IBUF controller ID %d Process ID %d isp_sync_state 0x%x\n", ID, i,
+-			     state->proc_state[i].isp_sync_state);
+-	}
+-}
+-
+-/* end of NCI */
+-
+-/*****************************************************
+- *
+- * Device level interface (DLI).
+- *
+- *****************************************************/
+-/**
+- * @brief Load the register value.
+- * Refer to "ibuf_ctrl_public.h" for details.
+- */
+-STORAGE_CLASS_IBUF_CTRL_C hrt_data ibuf_ctrl_reg_load(
+-    const ibuf_ctrl_ID_t ID,
+-    const hrt_address reg)
+-{
+-	assert(ID < N_IBUF_CTRL_ID);
+-	assert(IBUF_CTRL_BASE[ID] != (hrt_address)-1);
+-	return ia_css_device_load_uint32(IBUF_CTRL_BASE[ID] + reg * sizeof(hrt_data));
+-}
+-
+-/**
+- * @brief Store a value to the register.
+- * Refer to "ibuf_ctrl_public.h" for details.
+- */
+-STORAGE_CLASS_IBUF_CTRL_C void ibuf_ctrl_reg_store(
+-    const ibuf_ctrl_ID_t ID,
+-    const hrt_address reg,
+-    const hrt_data value)
+-{
+-	assert(ID < N_IBUF_CTRL_ID);
+-	assert(IBUF_CTRL_BASE[ID] != (hrt_address)-1);
+-
+-	ia_css_device_store_uint32(IBUF_CTRL_BASE[ID] + reg * sizeof(hrt_data), value);
+-}
+-
+-/* end of DLI */
+-
+-#endif /* __IBUF_CTRL_PRIVATE_H_INCLUDED__ */
+diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/ibuf_ctrl_public.h b/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/ibuf_ctrl_public.h
+deleted file mode 100644
+index 54982b15d9a9..000000000000
+--- a/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/ibuf_ctrl_public.h
++++ /dev/null
+@@ -1,94 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Support for Intel Camera Imaging ISP subsystem.
+- * Copyright (c) 2015, Intel Corporation.
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms and conditions of the GNU General Public License,
+- * version 2, as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope it will be useful, but WITHOUT
+- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+- * more details.
+- */
+-
+-#ifndef __IBUF_CTRL_PUBLIC_H_INCLUDED__
+-#define __IBUF_CTRL_PUBLIC_H_INCLUDED__
+-
+-#ifdef ISP2401
+-/*****************************************************
+- *
+- * Native command interface (NCI).
+- *
+- *****************************************************/
+-/**
+- * @brief Get the ibuf-controller state.
+- * Get the state of the ibuf-controller regiester-set.
+- *
+- * @param[in]	id		The global unique ID of the input-buffer controller.
+- * @param[out]	state	Point to the register-state.
+- */
+-STORAGE_CLASS_IBUF_CTRL_H void ibuf_ctrl_get_state(
+-    const ibuf_ctrl_ID_t ID,
+-    ibuf_ctrl_state_t *state);
+-
+-/**
+- * @brief Get the state of the ibuf-controller process.
+- * Get the state of the register set per buf-controller process.
+- *
+- * @param[in]	id			The global unique ID of the input-buffer controller.
+- * @param[in]	proc_id		The process ID.
+- * @param[out]	state		Point to the process state.
+- */
+-STORAGE_CLASS_IBUF_CTRL_H void ibuf_ctrl_get_proc_state(
+-    const ibuf_ctrl_ID_t ID,
+-    const u32 proc_id,
+-    ibuf_ctrl_proc_state_t *state);
+-/**
+- * @brief Dump the ibuf-controller state.
+- * Dump the state of the ibuf-controller regiester-set.
+- *
+- * @param[in]	id		The global unique ID of the input-buffer controller.
+- * @param[in]	state		Pointer to the register-state.
+- */
+-STORAGE_CLASS_IBUF_CTRL_H void ibuf_ctrl_dump_state(
+-    const ibuf_ctrl_ID_t ID,
+-    ibuf_ctrl_state_t *state);
+-/* end of NCI */
+-
+-/*****************************************************
+- *
+- * Device level interface (DLI).
+- *
+- *****************************************************/
+-/**
+- * @brief Load the register value.
+- * Load the value of the register of the ibuf-controller.
+- *
+- * @param[in]	ID	The global unique ID for the ibuf-controller instance.
+- * @param[in]	reg	The offset address of the register.
+- *
+- * @return the value of the register.
+- */
+-STORAGE_CLASS_IBUF_CTRL_H hrt_data ibuf_ctrl_reg_load(
+-    const ibuf_ctrl_ID_t ID,
+-    const hrt_address reg);
+-
+-/**
+- * @brief Store a value to the register.
+- * Store a value to the registe of the ibuf-controller.
+- *
+- * @param[in]	ID		The global unique ID for the ibuf-controller instance.
+- * @param[in]	reg		The offset address of the register.
+- * @param[in]	value	The value to be stored.
+- *
+- */
+-STORAGE_CLASS_IBUF_CTRL_H void ibuf_ctrl_reg_store(
+-    const ibuf_ctrl_ID_t ID,
+-    const hrt_address reg,
+-    const hrt_data value);
+-/* end of DLI */
+-
+-#endif /* ISP2401 */
+-#endif /* __IBUF_CTRL_PUBLIC_H_INCLUDED__ */
+diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_include/ibuf_ctrl.h b/drivers/staging/media/atomisp/pci/hive_isp_css_include/ibuf_ctrl.h
+deleted file mode 100644
+index 218341041811..000000000000
+--- a/drivers/staging/media/atomisp/pci/hive_isp_css_include/ibuf_ctrl.h
++++ /dev/null
+@@ -1,47 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Support for Intel Camera Imaging ISP subsystem.
+- * Copyright (c) 2015, Intel Corporation.
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms and conditions of the GNU General Public License,
+- * version 2, as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope it will be useful, but WITHOUT
+- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+- * more details.
+- */
+-
+-#ifndef __IBUF_CTRL_H_INCLUDED__
+-#define __IBUF_CTRL_H_INCLUDED__
+-
+-/*
+- * This file is included on every cell {SP,ISP,host} and on every system
+- * that uses the input system device(s). It defines the API to DLI bridge
+- *
+- * System and cell specific interfaces and inline code are included
+- * conditionally through Makefile path settings.
+- *
+- * - system and cell agnostic interfaces, constants and identifiers
+- * - public:  system agnostic, cell specific interfaces
+- * - private: system dependent, cell specific interfaces &
+- *   inline implementations
+- * - global:  system specific constants and identifiers
+- * - local:   system and cell specific constants and identifiers
+- */
+-
+-#include "system_local.h"
+-#include "ibuf_ctrl_local.h"
+-
+-#ifndef __INLINE_IBUF_CTRL__
+-#define STORAGE_CLASS_IBUF_CTRL_H extern
+-#define STORAGE_CLASS_IBUF_CTRL_C
+-#include "ibuf_ctrl_public.h"
+-#else  /* __INLINE_IBUF_CTRL__ */
+-#define STORAGE_CLASS_IBUF_CTRL_H static inline
+-#define STORAGE_CLASS_IBUF_CTRL_C static inline
+-#include "ibuf_ctrl_private.h"
+-#endif /* __INLINE_IBUF_CTRL__ */
+-
+-#endif /* __IBUF_CTRL_H_INCLUDED__ */
+diff --git a/drivers/staging/media/atomisp/pci/isp2401_input_system_global.h b/drivers/staging/media/atomisp/pci/isp2401_input_system_global.h
+index 6407be9331ae..362644856a6c 100644
+--- a/drivers/staging/media/atomisp/pci/isp2401_input_system_global.h
++++ b/drivers/staging/media/atomisp/pci/isp2401_input_system_global.h
+@@ -26,7 +26,7 @@
+ 				 *	isys2401_dma_cfg_t
+ 				 */
+ 
+-#include "ibuf_ctrl.h"		/*	ibuf_cfg_t,
++#include "ibuf_ctrl_local.h"	/*	ibuf_cfg_t,
+ 				 *	ibuf_ctrl_cfg_t
+ 				 */
+ 
+diff --git a/drivers/staging/media/atomisp/pci/isp2401_input_system_local.h b/drivers/staging/media/atomisp/pci/isp2401_input_system_local.h
+index f52a8ca5f86b..c33b0341ce16 100644
+--- a/drivers/staging/media/atomisp/pci/isp2401_input_system_local.h
++++ b/drivers/staging/media/atomisp/pci/isp2401_input_system_local.h
+@@ -19,7 +19,6 @@
+ #include "type_support.h"
+ #include "input_system_global.h"
+ 
+-#include "ibuf_ctrl.h"
+ #include "csi_rx.h"
+ #include "pixelgen.h"
+ #include "isys_stream2mmio.h"
+diff --git a/drivers/staging/media/atomisp/pci/isp2401_input_system_private.h b/drivers/staging/media/atomisp/pci/isp2401_input_system_private.h
+index f3ca5d1bcb01..e4c76428f6dd 100644
+--- a/drivers/staging/media/atomisp/pci/isp2401_input_system_private.h
++++ b/drivers/staging/media/atomisp/pci/isp2401_input_system_private.h
+@@ -18,9 +18,222 @@
+ 
+ #include "input_system_public.h"
+ 
+-STORAGE_CLASS_INPUT_SYSTEM_C input_system_err_t input_system_get_state(
+-    const input_system_ID_t	ID,
+-    input_system_state_t *state)
++#include "device_access.h"	/* ia_css_device_load_uint32 */
 +
- 	int i, j, max_trace_points, point_num, limit = -1;
- 	/* using a static buffer here as the driver has issues allocating memory */
- 	static u32 trace_read_buf[TRACE_BUFF_SIZE] = {0};
-@@ -3471,7 +3370,6 @@ void ia_css_debug_dump_trace(void)
- #endif
++#include "assert_support.h" /* assert */
++#include "print_support.h" /* print */
++
++/* Load the register value */
++static inline hrt_data ibuf_ctrl_reg_load(const ibuf_ctrl_ID_t ID,
++					  const hrt_address reg)
++{
++	assert(ID < N_IBUF_CTRL_ID);
++	assert(IBUF_CTRL_BASE[ID] != (hrt_address)-1);
++	return ia_css_device_load_uint32(IBUF_CTRL_BASE[ID] + reg * sizeof(hrt_data));
++}
++
++/* Store a value to the register */
++static inline void ibuf_ctrl_reg_store(const ibuf_ctrl_ID_t ID,
++				       const hrt_address reg,
++				       const hrt_data value)
++{
++	assert(ID < N_IBUF_CTRL_ID);
++	assert(IBUF_CTRL_BASE[ID] != (hrt_address)-1);
++
++	ia_css_device_store_uint32(IBUF_CTRL_BASE[ID] + reg * sizeof(hrt_data), value);
++}
++
++/* Get the state of the ibuf-controller process */
++static inline void ibuf_ctrl_get_proc_state(const ibuf_ctrl_ID_t ID,
++					    const u32 proc_id,
++					    ibuf_ctrl_proc_state_t *state)
++{
++	hrt_address reg_bank_offset;
++
++	reg_bank_offset =
++	    _IBUF_CNTRL_PROC_REG_ALIGN * (1 + proc_id);
++
++	state->num_items =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_NUM_ITEMS_PER_STORE);
++
++	state->num_stores =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_NUM_STORES_PER_FRAME);
++
++	state->dma_channel =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_DMA_CHANNEL);
++
++	state->dma_command =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_DMA_CMD);
++
++	state->ibuf_st_addr =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_BUFFER_START_ADDRESS);
++
++	state->ibuf_stride =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_BUFFER_STRIDE);
++
++	state->ibuf_end_addr =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_BUFFER_END_ADDRESS);
++
++	state->dest_st_addr =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_DEST_START_ADDRESS);
++
++	state->dest_stride =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_DEST_STRIDE);
++
++	state->dest_end_addr =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_DEST_END_ADDRESS);
++
++	state->sync_frame =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_SYNC_FRAME);
++
++	state->sync_command =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_STR2MMIO_SYNC_CMD);
++
++	state->store_command =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_STR2MMIO_STORE_CMD);
++
++	state->shift_returned_items =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_SHIFT_ITEMS);
++
++	state->elems_ibuf =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_ELEMS_P_WORD_IBUF);
++
++	state->elems_dest =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_ELEMS_P_WORD_DEST);
++
++	state->cur_stores =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_STORES);
++
++	state->cur_acks =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_ACKS);
++
++	state->cur_s2m_ibuf_addr =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_S2M_IBUF_ADDR);
++
++	state->cur_dma_ibuf_addr =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_DMA_IBUF_ADDR);
++
++	state->cur_dma_dest_addr =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_DMA_DEST_ADDR);
++
++	state->cur_isp_dest_addr =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_ISP_DEST_ADDR);
++
++	state->dma_cmds_send =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_CUR_NR_DMA_CMDS_SEND);
++
++	state->main_cntrl_state =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_MAIN_CNTRL_STATE);
++
++	state->dma_sync_state =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_DMA_SYNC_STATE);
++
++	state->isp_sync_state =
++	    ibuf_ctrl_reg_load(ID, reg_bank_offset + _IBUF_CNTRL_ISP_SYNC_STATE);
++}
++
++/* Get the ibuf-controller state. */
++static inline void ibuf_ctrl_get_state(const ibuf_ctrl_ID_t ID,
++				       ibuf_ctrl_state_t *state)
++{
++	u32 i;
++
++	state->recalc_words =
++	    ibuf_ctrl_reg_load(ID, _IBUF_CNTRL_RECALC_WORDS_STATUS);
++	state->arbiters =
++	    ibuf_ctrl_reg_load(ID, _IBUF_CNTRL_ARBITERS_STATUS);
++
++	/*
++	 * Get the values of the register-set per
++	 * ibuf-controller process.
++	 */
++	for (i = 0; i < N_IBUF_CTRL_PROCS[ID]; i++) {
++		ibuf_ctrl_get_proc_state(
++		    ID,
++		    i,
++		    &state->proc_state[i]);
++	}
++}
++
++/* Dump the ibuf-controller state */
++static inline void ibuf_ctrl_dump_state(const ibuf_ctrl_ID_t ID,
++					ibuf_ctrl_state_t *state)
++{
++	u32 i;
++
++	ia_css_print("IBUF controller ID %d recalculate words 0x%x\n", ID,
++		     state->recalc_words);
++	ia_css_print("IBUF controller ID %d arbiters 0x%x\n", ID, state->arbiters);
++
++	/*
++	 * Dump the values of the register-set per
++	 * ibuf-controller process.
++	 */
++	for (i = 0; i < N_IBUF_CTRL_PROCS[ID]; i++) {
++		ia_css_print("IBUF controller ID %d Process ID %d num_items 0x%x\n", ID, i,
++			     state->proc_state[i].num_items);
++		ia_css_print("IBUF controller ID %d Process ID %d num_stores 0x%x\n", ID, i,
++			     state->proc_state[i].num_stores);
++		ia_css_print("IBUF controller ID %d Process ID %d dma_channel 0x%x\n", ID, i,
++			     state->proc_state[i].dma_channel);
++		ia_css_print("IBUF controller ID %d Process ID %d dma_command 0x%x\n", ID, i,
++			     state->proc_state[i].dma_command);
++		ia_css_print("IBUF controller ID %d Process ID %d ibuf_st_addr 0x%x\n", ID, i,
++			     state->proc_state[i].ibuf_st_addr);
++		ia_css_print("IBUF controller ID %d Process ID %d ibuf_stride 0x%x\n", ID, i,
++			     state->proc_state[i].ibuf_stride);
++		ia_css_print("IBUF controller ID %d Process ID %d ibuf_end_addr 0x%x\n", ID, i,
++			     state->proc_state[i].ibuf_end_addr);
++		ia_css_print("IBUF controller ID %d Process ID %d dest_st_addr 0x%x\n", ID, i,
++			     state->proc_state[i].dest_st_addr);
++		ia_css_print("IBUF controller ID %d Process ID %d dest_stride 0x%x\n", ID, i,
++			     state->proc_state[i].dest_stride);
++		ia_css_print("IBUF controller ID %d Process ID %d dest_end_addr 0x%x\n", ID, i,
++			     state->proc_state[i].dest_end_addr);
++		ia_css_print("IBUF controller ID %d Process ID %d sync_frame 0x%x\n", ID, i,
++			     state->proc_state[i].sync_frame);
++		ia_css_print("IBUF controller ID %d Process ID %d sync_command 0x%x\n", ID, i,
++			     state->proc_state[i].sync_command);
++		ia_css_print("IBUF controller ID %d Process ID %d store_command 0x%x\n", ID, i,
++			     state->proc_state[i].store_command);
++		ia_css_print("IBUF controller ID %d Process ID %d shift_returned_items 0x%x\n",
++			     ID, i,
++			     state->proc_state[i].shift_returned_items);
++		ia_css_print("IBUF controller ID %d Process ID %d elems_ibuf 0x%x\n", ID, i,
++			     state->proc_state[i].elems_ibuf);
++		ia_css_print("IBUF controller ID %d Process ID %d elems_dest 0x%x\n", ID, i,
++			     state->proc_state[i].elems_dest);
++		ia_css_print("IBUF controller ID %d Process ID %d cur_stores 0x%x\n", ID, i,
++			     state->proc_state[i].cur_stores);
++		ia_css_print("IBUF controller ID %d Process ID %d cur_acks 0x%x\n", ID, i,
++			     state->proc_state[i].cur_acks);
++		ia_css_print("IBUF controller ID %d Process ID %d cur_s2m_ibuf_addr 0x%x\n", ID,
++			     i,
++			     state->proc_state[i].cur_s2m_ibuf_addr);
++		ia_css_print("IBUF controller ID %d Process ID %d cur_dma_ibuf_addr 0x%x\n", ID,
++			     i,
++			     state->proc_state[i].cur_dma_ibuf_addr);
++		ia_css_print("IBUF controller ID %d Process ID %d cur_dma_dest_addr 0x%x\n", ID,
++			     i,
++			     state->proc_state[i].cur_dma_dest_addr);
++		ia_css_print("IBUF controller ID %d Process ID %d cur_isp_dest_addr 0x%x\n", ID,
++			     i,
++			     state->proc_state[i].cur_isp_dest_addr);
++		ia_css_print("IBUF controller ID %d Process ID %d dma_cmds_send 0x%x\n", ID, i,
++			     state->proc_state[i].dma_cmds_send);
++		ia_css_print("IBUF controller ID %d Process ID %d main_cntrl_state 0x%x\n", ID,
++			     i,
++			     state->proc_state[i].main_cntrl_state);
++		ia_css_print("IBUF controller ID %d Process ID %d dma_sync_state 0x%x\n", ID, i,
++			     state->proc_state[i].dma_sync_state);
++		ia_css_print("IBUF controller ID %d Process ID %d isp_sync_state 0x%x\n", ID, i,
++			     state->proc_state[i].isp_sync_state);
++	}
++}
++
++static inline input_system_err_t
++input_system_get_state(const input_system_ID_t ID,
++		       input_system_state_t *state)
+ {
+ 	u32 i;
+ 
+@@ -73,9 +286,8 @@ STORAGE_CLASS_INPUT_SYSTEM_C input_system_err_t input_system_get_state(
+ 	return INPUT_SYSTEM_ERR_NO_ERROR;
  }
  
--#if defined(USE_INPUT_SYSTEM_VERSION_2) || defined(USE_INPUT_SYSTEM_VERSION_2401)
- /* Tagger state dump function. The tagger is only available when the CSS
-  * contains an input system (2400 or 2401). */
- void ia_css_debug_tagger_state(void)
-@@ -3497,7 +3395,6 @@ void ia_css_debug_tagger_state(void)
- 				    i, tbuf_frames[i].exp_id, tbuf_frames[i].mark, tbuf_frames[i].lock);
- 	}
- }
--#endif /* defined(USE_INPUT_SYSTEM_VERSION_2) || defined(USE_INPUT_SYSTEM_VERSION_2401) */
+-STORAGE_CLASS_INPUT_SYSTEM_C void input_system_dump_state(
+-    const input_system_ID_t	ID,
+-    input_system_state_t *state)
++static inline void input_system_dump_state(const input_system_ID_t ID,
++					   input_system_state_t *state)
+ {
+ 	u32 i;
  
- /* ISP2401 */
- void ia_css_debug_pc_dump(sp_ID_t id, unsigned int num_of_dumps)
 -- 
 2.26.2
 
