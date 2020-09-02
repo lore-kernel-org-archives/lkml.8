@@ -2,76 +2,97 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E3BC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA686C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C473820829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881FE20767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:45:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fsDekpw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgIBQnC (ORCPT
+        id S1726966AbgIBQpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:43:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbgIBQm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:42:59 -0400
-Received: from gaia (unknown [46.69.195.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A10420684;
-        Wed,  2 Sep 2020 16:42:54 +0000 (UTC)
-Date:   Wed, 2 Sep 2020 17:42:52 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     chenzhou <chenzhou10@huawei.com>
-Cc:     Dave Young <dyoung@redhat.com>, will@kernel.org,
-        james.morse@arm.com, tglx@linutronix.de, mingo@redhat.com,
-        bhe@redhat.com, corbet@lwn.net, John.P.donnelly@oracle.com,
-        prabhakar.pkin@gmail.com, bhsharma@redhat.com, horms@verge.net.au,
-        robh+dt@kernel.org, arnd@arndb.de, nsaenzjulienne@suse.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-        guohanjun@huawei.com, xiexiuqi@huawei.com, huawei.libin@huawei.com,
-        wangkefeng.wang@huawei.com
-Subject: Re: [PATCH v11 5/5] kdump: update Documentation about crashkernel
-Message-ID: <20200902164251.GA16673@gaia>
-References: <20200801130856.86625-1-chenzhou10@huawei.com>
- <20200801130856.86625-6-chenzhou10@huawei.com>
- <20200808100239.GB60590@dhcp-128-65.nay.redhat.com>
- <96d0da23-d484-7f66-1680-07b4b5984831@huawei.com>
- <20200810060355.GB6988@dhcp-128-65.nay.redhat.com>
- <2e6aebf9-3765-5d8c-933c-698442db1d52@huawei.com>
+        Wed, 2 Sep 2020 12:45:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgIBQpe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:45:34 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCD82C061244;
+        Wed,  2 Sep 2020 09:45:33 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 17so3143427pfw.9;
+        Wed, 02 Sep 2020 09:45:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0UDEVAHajfbqypCXRgF4PLGaRT1iGfKnGyOygyMVhqM=;
+        b=fsDekpw2L0HR4O9D/tVKWBfauK6eluZbwDEz2NV3HYEqF9LuO2A7Hr8zkpeAGuHo9r
+         B+5tKNzWA1DxG6kNkJK49gugayN36/x7CJhHMDEX0yVL9uLGimQekXDfMeyUe9lSKs3o
+         s77H6y03yQm+vl6X5pbM5AyVXAdxMoQ/9Qa8AftUZEwut92SGrH8t082Gadrlx1bobx3
+         0faeDzckb9hO29v+qcZZis4PYBu6b9KNSAkfxFpLcggyAIPS49AcQWn5fuUMmk39eGVP
+         ipegYhPzIEVmz9ejvu2tGMrSkUeOxDkeJ0Trai0VJDI6TX26ConUdiZcHGb5M4dpLor6
+         SvZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0UDEVAHajfbqypCXRgF4PLGaRT1iGfKnGyOygyMVhqM=;
+        b=kWHXa7oY44fQRDdGSmLHU87+K/4Aq1d423Jy4TJR/GU+nT8ihyHC3anMe8W5pQIjtv
+         FrH92J6zy9lLlU7GUWJRDvOLAByXrj+Agas2cLzZSYGqozZn6ukY2nHtYl01AgpIBBHe
+         r1DbBRqfsJT5K4xshN9rDXpg67yw0qeq/X2whCdsqjEz7q6FTnbagAJzhuKNFLjd39xe
+         N2fzZn4xLwYuV8uc2Nuwzacl0YJRttukKh9vL5pkWf1I3MvNkJNTp0PaETqVq5EBvSZm
+         zqDK/hP2OuyutZBy1ACamLXHJWWdLEGYSlAmSPmPkfi3okBaQzMSnwvKXw/s77UBZwe1
+         4M0Q==
+X-Gm-Message-State: AOAM531kkKjw5y84Jkud/8EFopxlh4r+vaKIqVG+Yh3oT6i+65cY5eTz
+        KEM+yvjy+q+fiGYRGE53FqY=
+X-Google-Smtp-Source: ABdhPJyRGQuWtK05ewIakPQU7ULhLE5j9sbkQvs274KSV8pEY/FQlJOlTYHk0JhuS/ASq4MsFV2wiw==
+X-Received: by 2002:a65:49c7:: with SMTP id t7mr2611449pgs.131.1599065133334;
+        Wed, 02 Sep 2020 09:45:33 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j10sm6014345pff.171.2020.09.02.09.45.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 02 Sep 2020 09:45:32 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 09:45:31 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/61] 4.4.235-rc2 review
+Message-ID: <20200902164531.GA56237@roeck-us.net>
+References: <20200902074814.459749499@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2e6aebf9-3765-5d8c-933c-698442db1d52@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200902074814.459749499@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 03:07:04PM +0800, chenzhou wrote:
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index a8e34d97a894..4df18c7ea438 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -147,7 +147,7 @@ static void __init reserve_crashkernel(void)
->         }
->         memblock_reserve(crash_base, crash_size);
->  
-> -       if (crash_base >= CRASH_ADDR_LOW_MAX) {
-> +       if (memstart_addr < CRASH_ADDR_LOW_MAX && crash_base >= CRASH_ADDR_LOW_MAX) {
->                 const char *rename = "Crash kernel (low)";
+On Wed, Sep 02, 2020 at 09:48:35AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.235 release.
+> There are 61 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 04 Sep 2020 07:47:57 +0000.
+> Anything received after that time might be too late.
+> 
 
-Since CRASH_ADDR_LOW_MAX is defined as arm64_dma32_phys_limit and such
-limit is always greater than memstart_addr, this additional check
-doesn't do anything. See my other reply on how ZONE_DMA32 is created on
-arm64.
+Build results:
+	total: 169 pass: 169 fail: 0
+Qemu test results:
+	total: 332 pass: 332 fail: 0
 
--- 
-Catalin
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+
+Guenter
