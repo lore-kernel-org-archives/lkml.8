@@ -2,144 +2,95 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF187C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365FEC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C482C214F1
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DD62071B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726493AbgIBKEf (ORCPT
+        id S1726312AbgIBKFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 06:04:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:34764 "EHLO foss.arm.com"
+        Wed, 2 Sep 2020 06:05:33 -0400
+Received: from smtp.h3c.com ([60.191.123.56]:62512 "EHLO h3cspam01-ex.h3c.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgIBKEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 06:04:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3FECD6E;
-        Wed,  2 Sep 2020 03:04:31 -0700 (PDT)
-Received: from bogus (unknown [10.57.4.218])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 22F113F66F;
-        Wed,  2 Sep 2020 03:04:30 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 11:04:22 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jeremy Linton <Jeremy.Linton@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>
-Subject: Re: [PATCH] arm64: topology: Stop using MPIDR for topology
- information
-Message-ID: <20200902100422.GA25462@bogus>
-References: <20200829130016.26106-1-valentin.schneider@arm.com>
+        id S1726140AbgIBKFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 06:05:32 -0400
+Received: from h3cspam01-ex.h3c.com (localhost [127.0.0.2] (may be forged))
+        by h3cspam01-ex.h3c.com with ESMTP id 0828ZYeh038511;
+        Wed, 2 Sep 2020 16:35:34 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from DAG2EX01-BASE.srv.huawei-3com.com ([10.8.0.64])
+        by h3cspam01-ex.h3c.com with ESMTPS id 0828Ym6u036647
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Sep 2020 16:34:48 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) by
+ DAG2EX01-BASE.srv.huawei-3com.com (10.8.0.64) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 2 Sep 2020 16:34:50 +0800
+Received: from DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074])
+ by DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074%7]) with
+ mapi id 15.01.1713.004; Wed, 2 Sep 2020 16:34:50 +0800
+From:   Tianxianting <tian.xianting@h3c.com>
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        "uclinux-h8-devel@lists.sourceforge.jp" 
+        <uclinux-h8-devel@lists.sourceforge.jp>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: RE: [PATCH] clocksource: Return negative error code in
+ h8300_8timer_init()
+Thread-Topic: [PATCH] clocksource: Return negative error code in
+ h8300_8timer_init()
+Thread-Index: AQHWgG6WjpLZUStyU0iJLmFjcyZbn6lVBaXQ
+Date:   Wed, 2 Sep 2020 08:34:50 +0000
+Message-ID: <bf571d3088a4419dac147729e4206574@h3c.com>
+References: <7356d489-2320-2a75-0999-0b3f0f8ac373@web.de>
+In-Reply-To: <7356d489-2320-2a75-0999-0b3f0f8ac373@web.de>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.99.141.128]
+x-sender-location: DAG2
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200829130016.26106-1-valentin.schneider@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-DNSRBL: 
+X-MAIL: h3cspam01-ex.h3c.com 0828Ym6u036647
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 02:00:16PM +0100, Valentin Schneider wrote:
-> In the absence of ACPI or DT topology data, we fallback to haphazardly
-> decoding *something* out of MPIDR. Sadly, the contents of that register are
-> mostly unusable due to the implementation leniancy and things like Aff0
-> having to be capped to 15 (despite being encoded on 8 bits).
->
-> Consider a simple system with a single package of 32 cores, all under the
-> same LLC. We ought to be shoving them in the same core_sibling mask, but
-> MPIDR is going to look like:
->
->   | CPU  | 0 | ... | 15 | 16 | ... | 31 |
->   |------+---+-----+----+----+-----+----+
->   | Aff0 | 0 | ... | 15 |  0 | ... | 15 |
->   | Aff1 | 0 | ... |  0 |  1 | ... |  1 |
->   | Aff2 | 0 | ... |  0 |  0 | ... |  0 |
->
-> Which will eventually yield
->
->   core_sibling(0-15)  == 0-15
->   core_sibling(16-31) == 16-31
->
-> NUMA woes
-> =========
->
-> If we try to play games with this and set up NUMA boundaries within those
-> groups of 16 cores via e.g. QEMU:
->
->   # Node0: 0-9; Node1: 10-19
->   $ qemu-system-aarch64 <blah> \
->     -smp 20 -numa node,cpus=0-9,nodeid=0 -numa node,cpus=10-19,nodeid=1
->
-> The scheduler's MC domain (all CPUs with same LLC) is going to be built via
->
->   arch_topology.c::cpu_coregroup_mask()
->
-> In there we try to figure out a sensible mask out of the topology
-> information we have. In short, here we'll pick the smallest of NUMA or
-> core sibling mask.
->
->   node_mask(CPU9)    == 0-9
->   core_sibling(CPU9) == 0-15
->
-> MC mask for CPU9 will thus be 0-9, not a problem.
->
->   node_mask(CPU10)    == 10-19
->   core_sibling(CPU10) == 0-15
->
-> MC mask for CPU10 will thus be 10-19, not a problem.
->
->   node_mask(CPU16)    == 10-19
->   core_sibling(CPU16) == 16-19
->
-> MC mask for CPU16 will thus be 16-19... Uh oh. CPUs 16-19 are in two
-> different unique MC spans, and the scheduler has no idea what to make of
-> that. That triggers the WARN_ON() added by commit
->
->   ccf74128d66c ("sched/topology: Assert non-NUMA topology masks don't (partially) overlap")
->
-> Fixing MPIDR-derived topology
-> =============================
->
-> We could try to come up with some cleverer scheme to figure out which of
-> the available masks to pick, but really if one of those masks resulted from
-> MPIDR then it should be discarded because it's bound to be bogus.
->
-> I was hoping to give MPIDR a chance for SMT, to figure out which threads are
-> in the same core using Aff1-3 as core ID, but Sudeep and Robin pointed out
-> to me that there are systems out there where *all* cores have non-zero
-> values in their higher affinity fields (e.g. RK3288 has "5" in all of its
-> cores' MPIDR.Aff1), which would expose a bogus core ID to userspace.
->
-> Stop using MPIDR for topology information. When no other source of topology
-> information is available, mark each CPU as its own core and its NUMA node
-> as its LLC domain.
->
-
-Looks good to me, so:
-
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-
-However, we need to get it tested on some systems with *weird* MPIDR
-values and don't have topology described in DT cpu-maps and somehow
-(wrongly) relied on below logic. Also though these affect user ABI via
-sysfs topology, I expect systems w/o DT cpu-maps and weird MPIDR are
-broken either way.
-
-Luckily found only one such mpidr in arm64 DTS files:
-arch/arm64/boot/dts/sprd/sc9860.dtsi
-
---
-Regards,
-Sudeep
+SGkgTWFya3VzLA0KVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLg0KTm8gcmVhbCBmaXgsIGFzIG5v
+cm1hbGx5ICwgd2Ugc2hvdWxkIHJldHVybiBhIG5lZ2F0aXZlIGNvZGUsDQpJbiBmdW5jdGlvbiBo
+ODMwMF84dGltZXJfaW5pdCgpLCAgaXQgc2V0ICcgcmV0ID0gLUVJTlZBTCAnLCAnIHJldCA9IEVO
+WElPJyAsIGl0IHNob3VsZCBiZSBhbGlnbiB3aXRoIGEgbmVnYXRpdmUgY29kZQ0KDQpzdGF0aWMg
+aW50IF9faW5pdCBoODMwMF84dGltZXJfaW5pdChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUpDQp7
+DQoNCiAgICAgICAgcmV0ID0gRU5YSU87ICA8PDwNCiAgICAgICAgYmFzZSA9IG9mX2lvbWFwKG5v
+ZGUsIDApOw0KICAgICAgICBpZiAoIWJhc2UpIHsNCiAgICAgICAgICAgICAgICBwcl9lcnIoImZh
+aWxlZCB0byBtYXAgcmVnaXN0ZXJzIGZvciBjbG9ja2V2ZW50XG4iKTsNCiAgICAgICAgICAgICAg
+ICBnb3RvIGZyZWVfY2xrOw0KICAgICAgICB9DQoNCiAgICAgICAgcmV0ID0gLUVJTlZBTDsgIDw8
+PCAgDQogICAgICAgIGlycSA9IGlycV9vZl9wYXJzZV9hbmRfbWFwKG5vZGUsIDApOw0KICAgICAg
+ICBpZiAoIWlycSkgew0KICAgICAgICAgICAgICAgIHByX2VycigiZmFpbGVkIHRvIGdldCBpcnEg
+Zm9yIGNsb2NrZXZlbnRcbiIpOw0KICAgICAgICAgICAgICAgIGdvdG8gdW5tYXBfcmVnOw0KICAg
+ICAgICB9DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBNYXJrdXMgRWxmcmlu
+ZyBbbWFpbHRvOk1hcmt1cy5FbGZyaW5nQHdlYi5kZV0gDQpTZW50OiBUdWVzZGF5LCBTZXB0ZW1i
+ZXIgMDEsIDIwMjAgMTA6NDYgUE0NClRvOiB0aWFueGlhbnRpbmcgKFJEKSA8dGlhbi54aWFudGlu
+Z0BoM2MuY29tPjsgdWNsaW51eC1oOC1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5qcA0KQ2M6IGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGtlcm5lbC1qYW5pdG9yc0B2Z2VyLmtlcm5lbC5v
+cmc7IERhbmllbCBMZXpjYW5vIDxkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnPjsgVGhvbWFzIEds
+ZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+OyBZb3NoaW5vcmkgU2F0byA8eXNhdG9AdXNlcnMu
+c291cmNlZm9yZ2UuanA+DQpTdWJqZWN0OiBSZTogW1BBVENIXSBjbG9ja3NvdXJjZTogUmV0dXJu
+IG5lZ2F0aXZlIGVycm9yIGNvZGUgaW4gaDgzMDBfOHRpbWVyX2luaXQoKQ0KDQo+IEEgbmVnYXRp
+dmUgZXJyb3IgY29kZSBzaG91bGQgYmUgcmV0dXJuZWQNCg0KKiBDYW4gYW4gb3RoZXIgaW1wZXJh
+dGl2ZSB3b3JkaW5nIGJlY29tZSBoZWxwZnVsIGZvciB0aGUgY2hhbmdlIGRlc2NyaXB0aW9uPw0K
+DQoqIFdvdWxkIHlvdSBsaWtlIHRvIGFkZCB0aGUgdGFnIOKAnEZpeGVz4oCdIHRvIHRoZSBjb21t
+aXQgbWVzc2FnZT8NCg0KUmVnYXJkcywNCk1hcmt1cw0K
