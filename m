@@ -8,51 +8,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C62C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9F0C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C50EF2083B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54A0208C7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="W993RT4Z";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JYCdfcFh"
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="er9QpnC9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Rl9EvIJW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgIBSH1 (ORCPT
+        id S1728071AbgIBSHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:07:27 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:60475 "EHLO
+        Wed, 2 Sep 2020 14:07:31 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:44823 "EHLO
         out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727940AbgIBSGk (ORCPT
+        by vger.kernel.org with ESMTP id S1727941AbgIBSGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 14:06:40 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id F26395C021E;
+        by mailout.nyi.internal (Postfix) with ESMTP id C19645C0163;
         Wed,  2 Sep 2020 14:06:33 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
   by compute4.internal (MEProxy); Wed, 02 Sep 2020 14:06:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
         :to:cc:subject:date:message-id:in-reply-to:references:reply-to
-        :mime-version:content-transfer-encoding; s=fm1; bh=x0au+BqqFQ547
-        Y2Nkd3x3yYveCHO8htqJqOYoJY8xgY=; b=W993RT4Z+UfTDB8hiyR98Nncw3Zum
-        Nwo2R/KiaS/dSOvMsrxY2lD6MfMTqZ5uuTobCfqclpiM6V2Rg3D0VraBdyzWhlgI
-        E4C1btPcssm+aEnqm1fNTk7kT3k/WSMZUoetoDZf+7qVOq34zGcttnjQvT5mPcOe
-        BBi3WuXoaa3y5b91zYnCzdN1+aDZmocGL3VD6wYRPGP4hJy+vSqLZAZEI9HiET9M
-        S90/ryHmIX1RENjtB12gYJJfpbTqdrrchEriHYuAl7nXgwdCuRy2b5UuCzGntGmH
-        v2XjOeQpbNZ7wDSBKQ1mKh03kNRiIX4bjAXpy1nQqNo7B0HJNtS4PVqDQ==
+        :mime-version:content-transfer-encoding; s=fm1; bh=b9eSgdBVc6KPh
+        Gvl15otgB0JUvsTDCKSyaNNO5dyWDg=; b=er9QpnC9pzM1R7WWQiY5NxWp9AHDD
+        MaNd48f0CiyA/HkajR0zAjmnLP7JT8fC9Wi6B3SrQH41vdRx8uBGbjf6bymNnVzl
+        GL9JLzRPPcMRxdBHxcnfZGJKlsZV8eBBThqNmYpNY7sl0SbC+bfUcvUOBJff9Tvy
+        H9+50K4VxJ9UKMC5vxHoko3AT1Qm/cFE0il4BQZ2zeLSBWr81iM/5grQ3GiatvUL
+        SBDi03Hwgj3v04PccCt5e37EkkIvQ7MVRFPYK93ClkN+5Rk0BmaFGQqzAOOZljBJ
+        BLRSh0s1UGLqifZiIY+12BepFUkexOWclMpDRa42Ge2azkRxhXxzFp0OQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:reply-to:subject
         :to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=x0au+BqqFQ547Y2Nkd3x3yYveCHO8htqJqOYoJY8xgY=; b=JYCdfcFh
-        kC1U+EmfPS6SePapwBIkljtrpgHC/x7tgGdsQpelqsvYbZn1pgZ+y+iypQvA+jz+
-        QfTvci54nM2T7V90I/ETySUO5Iv6+ThkUhmSuO6sIvSU/VNK72LxozhGdB32TKrs
-        JcEAnHPlI4Pn9bVoG3EXpvhA4MafmZMttJGhmi2947QtkiNXPxdgnFVrK75K9h2f
-        yc1kpnsEgk1KzweTIyt+1m2ph8z5tLDmZoe7Kd1I+5NnXRPrEqPtlBsOi19gEnH+
-        7j1VH0DbrAPTlZVSKQWWrWPYJfvjObRxthL/iZ6lO9evrSCuPnmuqNwmkbbYDpTZ
-        SouX2dHQsi4CXQ==
-X-ME-Sender: <xms:Kd9PX8Y8pT02OsjZ5x0hG8QukN2BBfPm_9T9ORLAAvdcoZNEI_huMg>
-    <xme:Kd9PX3bgcrZbox20795Y7GpKYrSa3MYJDz5xibvYm-ZHVIlAoUwHjul8C4Yq0cShJ
-    PZIgV0_vztLHtvETw>
+        fm3; bh=b9eSgdBVc6KPhGvl15otgB0JUvsTDCKSyaNNO5dyWDg=; b=Rl9EvIJW
+        8nBI4WIKOFKe4Y+iElnDPRJiFX3vCfp3M/nlpT3zG9LUhR3S6ylBE8/iNTHimfT3
+        tUtt1X/4/Z13K1MCYsGOGhAy+K0l30GVolETvOB9e3F/JZCmH7uzbiuEDFs2ZhzH
+        pymZK7ArXPIkWTifRNwCjSG7BMj4Ehy1qO+uKHVE5+ydxY6AgiWgfHfg6b7bOuXI
+        K7s0vc84PWZxA8j6fHLAr+6J8UFF7PVnnvJNMZS1CWY9CYRz3FKpgWD0M0CcnAdF
+        POX5rsH0cNPHsLXkpgeEyS/ebjZw1YbosxaPiTjoFmv40LdEmAB8oygNsNaXmzZ7
+        vfixVQmNaJ72EA==
+X-ME-Sender: <xms:Kd9PXxIb5H14dL1diV4WFZjIX_hH6FS5BcL0RgPl8U6kcPZayDH1Ig>
+    <xme:Kd9PX9LO_2JIwN9xqtnWHbvPMYca5h4dQlH9ykhHDUo2eXIOwtMeiutyDyLhXyhFO
+    S4JneUm906GF0lxHA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledguddvudcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
@@ -61,13 +61,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledguddvudcutefuodetgg
     ffveektdduhfdutdfgtdekkedvhfetuedufedtgffgvdevleehheevjefgtdenucfkphep
     uddvrdegiedruddtiedrudeigeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
     epmhgrihhlfhhrohhmpeiiihdrhigrnhesshgvnhhtrdgtohhm
-X-ME-Proxy: <xmx:Kd9PX2_uuxwnHlDFx8fd0NQ3B8EZqWLNL2vMxrwWlH--Ba-T3vDW7Q>
-    <xmx:Kd9PX2qrc2mnZZPpnfqrdJeKYp7VGqiqLbrs12ooW3pN5oxoWTQOwA>
-    <xmx:Kd9PX3r8PAABIYVJdIBJ3DhBTeoR4U4oNHsQKJ3fCo7OvWGXGXYR3Q>
-    <xmx:Kd9PXzJ0zSCx0BRBnBmNHvE5UOxjDFJdpOU9Cht4OLzvMbzp7t6Glw>
+X-ME-Proxy: <xmx:Kd9PX5sTtLdKPX495-N2bLzzmytAfjAS4gu1NW_undV0HAPkdXpq7g>
+    <xmx:Kd9PXyYHEcPD9RI2W6MVYpsWgFsPi_aylVANJXOow4mfQPvuLTYMOA>
+    <xmx:Kd9PX4bz9yH6ReKYKVJ1CgDZcqlqXXDEsL1ZIc8S-St8vlaMXBx9tw>
+    <xmx:Kd9PX46xIoyNH1CbnqzWkB3BbFXu-gftIK-f92dcfm1l_mriOBAB0Q>
 Received: from nvrsysarch6.NVidia.COM (unknown [12.46.106.164])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 23F1430600B4;
-        Wed,  2 Sep 2020 14:06:33 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id DEA5D30600A6;
+        Wed,  2 Sep 2020 14:06:32 -0400 (EDT)
 From:   Zi Yan <zi.yan@sent.com>
 To:     linux-mm@kvack.org, Roman Gushchin <guro@fb.com>
 Cc:     Rik van Riel <riel@surriel.com>,
@@ -77,9 +77,9 @@ Cc:     Rik van Riel <riel@surriel.com>,
         Yang Shi <yang.shi@linux.alibaba.com>,
         David Nellans <dnellans@nvidia.com>,
         linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>
-Subject: [RFC PATCH 10/16] mm: thp: split 1GB THPs at page reclaim.
-Date:   Wed,  2 Sep 2020 14:06:22 -0400
-Message-Id: <20200902180628.4052244-11-zi.yan@sent.com>
+Subject: [RFC PATCH 09/16] mm: thp: 1GB THP support in try_to_unmap().
+Date:   Wed,  2 Sep 2020 14:06:21 -0400
+Message-Id: <20200902180628.4052244-10-zi.yan@sent.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200902180628.4052244-1-zi.yan@sent.com>
 References: <20200902180628.4052244-1-zi.yan@sent.com>
@@ -93,116 +93,293 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zi Yan <ziy@nvidia.com>
 
-We cannot swap 1GB THPs, so split them before swap them out.
+Unmap different subpages in different sized THPs properly in the
+try_to_unmap() function.
 
 Signed-off-by: Zi Yan <ziy@nvidia.com>
 ---
- mm/swap_slots.c |  2 ++
- mm/vmscan.c     | 58 +++++++++++++++++++++++++++++++++++++------------
- 2 files changed, 46 insertions(+), 14 deletions(-)
+ mm/migrate.c |   2 +-
+ mm/rmap.c    | 159 +++++++++++++++++++++++++++++++++++++--------------
+ 2 files changed, 116 insertions(+), 45 deletions(-)
 
-diff --git a/mm/swap_slots.c b/mm/swap_slots.c
-index 3e6453573a89..65b8742a0446 100644
---- a/mm/swap_slots.c
-+++ b/mm/swap_slots.c
-@@ -312,6 +312,8 @@ swp_entry_t get_swap_page(struct page *page)
- 	entry.val = 0;
+diff --git a/mm/migrate.c b/mm/migrate.c
+index be0e80b32686..df069a55722e 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -225,7 +225,7 @@ static bool remove_migration_pte(struct page *page, struct vm_area_struct *vma,
  
- 	if (PageTransHuge(page)) {
-+		if (compound_order(page) == HPAGE_PUD_ORDER)
-+			return entry;
- 		if (IS_ENABLED(CONFIG_THP_SWAP))
- 			get_swap_pages(1, &entry, HPAGE_PMD_NR);
- 		goto out;
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 99e1796eb833..617d15a041f8 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1240,23 +1240,49 @@ static unsigned int shrink_page_list(struct list_head *page_list,
- 				if (!(sc->gfp_mask & __GFP_IO))
- 					goto keep_locked;
- 				if (PageTransHuge(page)) {
--					/* cannot split THP, skip it */
--					if (!can_split_huge_page(page, NULL))
--						goto activate_locked;
--					/*
--					 * Split pages without a PMD map right
--					 * away. Chances are some or all of the
--					 * tail pages can be freed without IO.
--					 */
--					if (!compound_mapcount(page) &&
--					    split_huge_page_to_list(page,
--								    page_list))
-+					if (compound_order(page) == HPAGE_PUD_ORDER) {
-+						/* cannot split THP, skip it */
-+						if (!can_split_huge_pud_page(page, NULL))
-+							goto activate_locked;
-+						/*
-+						 * Split pages without a PUD map right
-+						 * away. Chances are some or all of the
-+						 * tail pages can be freed without IO.
-+						 */
-+						if (!compound_mapcount(page) &&
-+							split_huge_pud_page_to_list(page,
-+										page_list))
-+							goto activate_locked;
-+					}
-+					if (compound_order(page) == HPAGE_PMD_ORDER) {
-+						/* cannot split THP, skip it */
-+						if (!can_split_huge_page(page, NULL))
-+							goto activate_locked;
-+						/*
-+						 * Split pages without a PMD map right
-+						 * away. Chances are some or all of the
-+						 * tail pages can be freed without IO.
-+						 */
-+						if (!compound_mapcount(page) &&
-+							split_huge_page_to_list(page,
-+										page_list))
-+							goto activate_locked;
-+					}
-+				}
-+				/* Split PUD THPs before swapping */
-+				if (compound_order(page) == HPAGE_PUD_ORDER) {
-+					if (split_huge_pud_page_to_list(page, page_list))
- 						goto activate_locked;
-+					else {
-+						sc->nr_scanned -= (nr_pages - HPAGE_PMD_NR);
-+						nr_pages = HPAGE_PMD_NR;
-+					}
- 				}
- 				if (!add_to_swap(page)) {
- 					if (!PageTransHuge(page))
- 						goto activate_locked_split;
- 					/* Fallback to swap normal pages */
-+					VM_BUG_ON_PAGE(compound_order(page) != HPAGE_PMD_ORDER, page);
- 					if (split_huge_page_to_list(page,
- 								    page_list))
- 						goto activate_locked;
-@@ -1273,6 +1299,7 @@ static unsigned int shrink_page_list(struct list_head *page_list,
- 				mapping = page_mapping(page);
+ #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
+ 		/* PMD-mapped THP migration entry */
+-		if (!pvmw.pte) {
++		if (!pvmw.pte && pvmw.pmd) {
+ 			VM_BUG_ON_PAGE(PageHuge(page) || !PageTransCompound(page), page);
+ 			remove_migration_pmd(&pvmw, new);
+ 			continue;
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 0bbaaa891b3c..6c788abdb0b9 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1123,6 +1123,7 @@ void do_page_add_anon_rmap(struct page *page,
+ {
+ 	bool compound = flags & RMAP_COMPOUND;
+ 	bool first;
++	struct page *head = compound_head(page);
+ 
+ 	if (unlikely(PageKsm(page)))
+ 		lock_page_memcg(page);
+@@ -1132,8 +1133,8 @@ void do_page_add_anon_rmap(struct page *page,
+ 	if (compound) {
+ 		atomic_t *mapcount = NULL;
+ 		VM_BUG_ON_PAGE(!PageLocked(page), page);
+-		VM_BUG_ON_PAGE(!PageTransHuge(page), page);
+-		if (compound_order(page) == HPAGE_PUD_ORDER) {
++		VM_BUG_ON_PAGE(!PMDPageInPUD(page) && !PageTransHuge(page), page);
++		if (compound_order(head) == HPAGE_PUD_ORDER) {
+ 			if (order == HPAGE_PUD_ORDER) {
+ 				mapcount = compound_mapcount_ptr(page);
+ 			} else if (order == HPAGE_PMD_ORDER) {
+@@ -1141,7 +1142,7 @@ void do_page_add_anon_rmap(struct page *page,
+ 				mapcount = sub_compound_mapcount_ptr(page, 1);
+ 			} else
+ 				VM_BUG_ON(1);
+-		} else if (compound_order(page) == HPAGE_PMD_ORDER) {
++		} else if (compound_order(head) == HPAGE_PMD_ORDER) {
+ 			mapcount = compound_mapcount_ptr(page);
+ 		} else
+ 			VM_BUG_ON(1);
+@@ -1151,7 +1152,8 @@ void do_page_add_anon_rmap(struct page *page,
+ 	}
+ 
+ 	if (first) {
+-		int nr = compound ? thp_nr_pages(page) : 1;
++		/* int nr = compound ? thp_nr_pages(page) : 1; */
++		int nr = 1<<order;
+ 		/*
+ 		 * We use the irq-unsafe __{inc|mod}_zone_page_stat because
+ 		 * these counters are not modified in interrupt context, and
+@@ -1460,10 +1462,13 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 		.address = address,
+ 	};
+ 	pte_t pteval;
+-	struct page *subpage;
++	pmd_t pmdval;
++	pud_t pudval;
++	struct page *subpage = NULL;
+ 	bool ret = true;
+ 	struct mmu_notifier_range range;
+ 	enum ttu_flags flags = (enum ttu_flags)(long)arg;
++	int order = 0;
+ 
+ 	/* munlock has nothing to gain from examining un-locked vmas */
+ 	if ((flags & TTU_MUNLOCK) && !(vma->vm_flags & VM_LOCKED))
+@@ -1473,6 +1478,11 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 	    is_zone_device_page(page) && !is_device_private_page(page))
+ 		return true;
+ 
++	if (flags & TTU_SPLIT_HUGE_PUD) {
++		split_huge_pud_address(vma, address,
++				flags & TTU_SPLIT_FREEZE, page);
++	}
++
+ 	if (flags & TTU_SPLIT_HUGE_PMD) {
+ 		split_huge_pmd_address(vma, address,
+ 				flags & TTU_SPLIT_FREEZE, page);
+@@ -1505,7 +1515,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 	while (page_vma_mapped_walk(&pvmw)) {
+ #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
+ 		/* PMD-mapped THP migration entry */
+-		if (!pvmw.pte && (flags & TTU_MIGRATION)) {
++		if (!pvmw.pte && pvmw.pmd && (flags & TTU_MIGRATION)) {
+ 			VM_BUG_ON_PAGE(PageHuge(page) || !PageTransCompound(page), page);
+ 
+ 			set_pmd_migration_entry(&pvmw, page);
+@@ -1537,9 +1547,18 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 		}
+ 
+ 		/* Unexpected PMD-mapped THP? */
+-		VM_BUG_ON_PAGE(!pvmw.pte, page);
+ 
+-		subpage = page - page_to_pfn(page) + pte_pfn(*pvmw.pte);
++		if (pvmw.pte) {
++			subpage = page - page_to_pfn(page) + pte_pfn(*pvmw.pte);
++			order = 0;
++		} else if (!pvmw.pte && pvmw.pmd) {
++			subpage = page - page_to_pfn(page) + pmd_pfn(*pvmw.pmd);
++			order = HPAGE_PMD_ORDER;
++		} else if (!pvmw.pte && !pvmw.pmd && pvmw.pud) {
++			subpage = page - page_to_pfn(page) + pud_pfn(*pvmw.pud);
++			order = HPAGE_PUD_ORDER;
++		}
++		VM_BUG_ON(!subpage);
+ 		address = pvmw.address;
+ 
+ 		if (PageHuge(page)) {
+@@ -1617,16 +1636,26 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 		}
+ 
+ 		if (!(flags & TTU_IGNORE_ACCESS)) {
+-			if (ptep_clear_flush_young_notify(vma, address,
+-						pvmw.pte)) {
+-				ret = false;
+-				page_vma_mapped_walk_done(&pvmw);
+-				break;
++			if ((pvmw.pte &&
++				 ptep_clear_flush_young_notify(vma, address, pvmw.pte)) ||
++				((!pvmw.pte && pvmw.pmd) &&
++				 pmdp_clear_flush_young_notify(vma, address, pvmw.pmd)) ||
++				((!pvmw.pte && !pvmw.pmd && pvmw.pud) &&
++				 pudp_clear_flush_young_notify(vma, address, pvmw.pud))
++				) {
++					ret = false;
++					page_vma_mapped_walk_done(&pvmw);
++					break;
  			}
- 		} else if (unlikely(PageTransHuge(page))) {
-+			VM_BUG_ON_PAGE(compound_order(page) != HPAGE_PMD_ORDER, page);
- 			/* Split file THP */
- 			if (split_huge_page_to_list(page, page_list))
- 				goto keep_locked;
-@@ -1298,9 +1325,12 @@ static unsigned int shrink_page_list(struct list_head *page_list,
- 			enum ttu_flags flags = ttu_flags | TTU_BATCH_FLUSH;
- 			bool was_swapbacked = PageSwapBacked(page);
+ 		}
  
--			if (unlikely(PageTransHuge(page)))
--				flags |= TTU_SPLIT_HUGE_PMD;
--
-+			if (unlikely(PageTransHuge(page))) {
-+				if (compound_order(page) == HPAGE_PMD_ORDER)
-+					flags |= TTU_SPLIT_HUGE_PMD;
-+				else if (compound_order(page) == HPAGE_PUD_ORDER)
-+					flags |= TTU_SPLIT_HUGE_PUD;
+ 		/* Nuke the page table entry. */
+-		flush_cache_page(vma, address, pte_pfn(*pvmw.pte));
++		if (pvmw.pte)
++			flush_cache_page(vma, address, pte_pfn(*pvmw.pte));
++		else if (!pvmw.pte && pvmw.pmd)
++			flush_cache_page(vma, address, pmd_pfn(*pvmw.pmd));
++		else if (!pvmw.pte && !pvmw.pmd && pvmw.pud)
++			flush_cache_page(vma, address, pud_pfn(*pvmw.pud));
+ 		if (should_defer_flush(mm, flags)) {
+ 			/*
+ 			 * We clear the PTE but do not flush so potentially
+@@ -1636,16 +1665,34 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 			 * transition on a cached TLB entry is written through
+ 			 * and traps if the PTE is unmapped.
+ 			 */
+-			pteval = ptep_get_and_clear(mm, address, pvmw.pte);
++			if (pvmw.pte) {
++				pteval = ptep_get_and_clear(mm, address, pvmw.pte);
++
++				set_tlb_ubc_flush_pending(mm, pte_dirty(pteval));
++			} else if (!pvmw.pte && pvmw.pmd) {
++				pmdval = pmdp_huge_get_and_clear(mm, address, pvmw.pmd);
+ 
+-			set_tlb_ubc_flush_pending(mm, pte_dirty(pteval));
++				set_tlb_ubc_flush_pending(mm, pmd_dirty(pmdval));
++			} else if (!pvmw.pte && !pvmw.pmd && pvmw.pud) {
++				pudval = pudp_huge_get_and_clear(mm, address, pvmw.pud);
++
++				set_tlb_ubc_flush_pending(mm, pud_dirty(pudval));
 +			}
- 			if (!try_to_unmap(page, flags)) {
- 				stat->nr_unmap_fail += nr_pages;
- 				if (!was_swapbacked && PageSwapBacked(page))
+ 		} else {
+-			pteval = ptep_clear_flush(vma, address, pvmw.pte);
++			if (pvmw.pte)
++				pteval = ptep_clear_flush(vma, address, pvmw.pte);
++			else if (!pvmw.pte && pvmw.pmd)
++				pmdval = pmdp_huge_clear_flush(vma, address, pvmw.pmd);
++			else if (!pvmw.pte && !pvmw.pmd && pvmw.pud)
++				pudval = pudp_huge_clear_flush(vma, address, pvmw.pud);
+ 		}
+ 
+ 		/* Move the dirty bit to the page. Now the pte is gone. */
+-		if (pte_dirty(pteval))
+-			set_page_dirty(page);
++			if ((pvmw.pte && pte_dirty(pteval)) ||
++				((!pvmw.pte && pvmw.pmd) && pmd_dirty(pmdval)) ||
++				((!pvmw.pte && !pvmw.pmd && pvmw.pud) && pud_dirty(pudval))
++				)
++				set_page_dirty(page);
+ 
+ 		/* Update high watermark before we lower rss */
+ 		update_hiwater_rss(mm);
+@@ -1680,35 +1727,59 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 		} else if (IS_ENABLED(CONFIG_MIGRATION) &&
+ 				(flags & (TTU_MIGRATION|TTU_SPLIT_FREEZE))) {
+ 			swp_entry_t entry;
+-			pte_t swp_pte;
+ 
+-			if (arch_unmap_one(mm, vma, address, pteval) < 0) {
+-				set_pte_at(mm, address, pvmw.pte, pteval);
+-				ret = false;
+-				page_vma_mapped_walk_done(&pvmw);
+-				break;
+-			}
++			if (pvmw.pte) {
++				pte_t swp_pte;
+ 
+-			/*
+-			 * Store the pfn of the page in a special migration
+-			 * pte. do_swap_page() will wait until the migration
+-			 * pte is removed and then restart fault handling.
+-			 */
+-			entry = make_migration_entry(subpage,
+-					pte_write(pteval));
+-			swp_pte = swp_entry_to_pte(entry);
+-			if (pte_soft_dirty(pteval))
+-				swp_pte = pte_swp_mksoft_dirty(swp_pte);
+-			if (pte_uffd_wp(pteval))
+-				swp_pte = pte_swp_mkuffd_wp(swp_pte);
+-			set_pte_at(mm, address, pvmw.pte, swp_pte);
+-			/*
+-			 * No need to invalidate here it will synchronize on
+-			 * against the special swap migration pte.
+-			 */
++				if (arch_unmap_one(mm, vma, address, pteval) < 0) {
++					set_pte_at(mm, address, pvmw.pte, pteval);
++					ret = false;
++					page_vma_mapped_walk_done(&pvmw);
++					break;
++				}
++
++				/*
++				 * Store the pfn of the page in a special migration
++				 * pte. do_swap_page() will wait until the migration
++				 * pte is removed and then restart fault handling.
++				 */
++				entry = make_migration_entry(subpage,
++						pte_write(pteval));
++				swp_pte = swp_entry_to_pte(entry);
++				if (pte_soft_dirty(pteval))
++					swp_pte = pte_swp_mksoft_dirty(swp_pte);
++				if (pte_uffd_wp(pteval))
++					swp_pte = pte_swp_mkuffd_wp(swp_pte);
++				set_pte_at(mm, address, pvmw.pte, swp_pte);
++				/*
++				 * No need to invalidate here it will synchronize on
++				 * against the special swap migration pte.
++				 */
++			} else if (!pvmw.pte && pvmw.pmd) {
++				pmd_t swp_pmd;
++				/*
++				 * Store the pfn of the page in a special migration
++				 * pte. do_swap_page() will wait until the migration
++				 * pte is removed and then restart fault handling.
++				 */
++				entry = make_migration_entry(subpage,
++						pmd_write(pmdval));
++				swp_pmd = swp_entry_to_pmd(entry);
++				if (pmd_soft_dirty(pmdval))
++					swp_pmd = pmd_swp_mksoft_dirty(swp_pmd);
++				set_pmd_at(mm, address, pvmw.pmd, swp_pmd);
++				/*
++				 * No need to invalidate here it will synchronize on
++				 * against the special swap migration pte.
++				 */
++			} else if (!pvmw.pte && !pvmw.pmd && pvmw.pud) {
++				VM_BUG_ON(1);
++			}
+ 		} else if (PageAnon(page)) {
+ 			swp_entry_t entry = { .val = page_private(subpage) };
+ 			pte_t swp_pte;
++
++			VM_BUG_ON(!pvmw.pte);
+ 			/*
+ 			 * Store the swap location in the pte.
+ 			 * See handle_pte_fault() ...
+@@ -1794,7 +1865,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 		 *
+ 		 * See Documentation/vm/mmu_notifier.rst
+ 		 */
+-		page_remove_rmap(subpage, PageHuge(page), 0);
++		page_remove_rmap(subpage, PageHuge(page) || order >= HPAGE_PMD_ORDER, order);
+ 		put_page(page);
+ 	}
+ 
 -- 
 2.28.0
 
