@@ -2,81 +2,93 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4403C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6A8C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2B4020829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16C5020829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgIBOzg (ORCPT
+        id S1727095AbgIBO5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:55:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44142 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726247AbgIBOzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:55:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 992D6AF3B;
-        Wed,  2 Sep 2020 14:55:06 +0000 (UTC)
-Subject: Re: [PATCH] mm/memory_hotplug: drain per-cpu pages again during
- memory offline
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Michal Hocko <mhocko@suse.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>
-References: <20200901124615.137200-1-pasha.tatashin@soleen.com>
- <20200902140851.GJ4617@dhcp22.suse.cz>
- <CA+CK2bBZdN56fmsC2jyY_ju8rQfG2-9hForf1CEdcUVL1+wrrA@mail.gmail.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <74f2341a-7834-3e37-0346-7fbc48d74df3@suse.cz>
-Date:   Wed, 2 Sep 2020 16:55:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 2 Sep 2020 10:57:17 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:60707 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726406AbgIBO5C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 10:57:02 -0400
+Received: (qmail 624961 invoked by uid 1000); 2 Sep 2020 10:57:01 -0400
+Date:   Wed, 2 Sep 2020 10:57:01 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     himadrispandya@gmail.com, dvyukov@google.com,
+        linux-usb@vger.kernel.org, perex@perex.cz, tiwai@suse.com,
+        stern@rowland.harvard.ed, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 04/10] USB: core: hub.c: use usb_control_msg_send() in a
+ few places
+Message-ID: <20200902145701.GA624583@rowland.harvard.edu>
+References: <20200902110115.1994491-1-gregkh@linuxfoundation.org>
+ <20200902110115.1994491-5-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <CA+CK2bBZdN56fmsC2jyY_ju8rQfG2-9hForf1CEdcUVL1+wrrA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902110115.1994491-5-gregkh@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 4:26 PM, Pavel Tatashin wrote:
-> On Wed, Sep 2, 2020 at 10:08 AM Michal Hocko <mhocko@suse.com> wrote:
->>
->> >
->> > Thread#1 - continue
->> >          free_unref_page_commit
->> >            migratetype = get_pcppage_migratetype(page);
->> >               // get old migration type
->> >            list_add(&page->lru, &pcp->lists[migratetype]);
->> >               // add new page to already drained pcp list
->> >
->> > Thread#2
->> > Never drains pcp again, and therefore gets stuck in the loop.
->> >
->> > The fix is to try to drain per-cpu lists again after
->> > check_pages_isolated_cb() fails.
->>
->> But this means that the page is not isolated and so it could be reused
->> for something else. No?
+On Wed, Sep 02, 2020 at 01:01:06PM +0200, Greg Kroah-Hartman wrote:
+> There are a few calls to usb_control_msg() that can be converted to use
+> usb_control_msg_send() instead, so do that in order to make the error
+> checking a bit simpler and the code smaller.
 > 
-> The page is in a movable zone, has zero references, and the section is
-> isolated (i.e. set_pageblock_migratetype(page, MIGRATE_ISOLATE);) is
-> set. The page should be offlinable, but it is lost in a pcp list as
-> that list is never drained again after the first failure to migrate
-> all pages in the range.
+> Cc: Alan Stern <stern@rowland.harvard.edu>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Yeah. To answer Michal's "it could be reused for something else" - yes, somebody
-could allocate it from the pcplist before we do the extra drain. But then it
-becomes "visible again" and the loop in __offline_pages() should catch it by
-scan_movable_pages() - do_migrate_range(). And this time the pageblock is
-already marked as isolated, so the page (freed by migration) won't end up on the
-pcplist again.
+One problem in this patch...
+
+> @@ -3896,27 +3875,14 @@ static int usb_req_set_sel(struct usb_device *udev, enum usb3_link_state state)
+>  	if (u2_pel > USB3_LPM_MAX_U2_SEL_PEL)
+>  		u2_pel = USB3_LPM_MAX_U2_SEL_PEL;
+>  
+> -	/*
+> -	 * usb_enable_lpm() can be called as part of a failed device reset,
+> -	 * which may be initiated by an error path of a mass storage driver.
+> -	 * Therefore, use GFP_NOIO.
+> -	 */
+> -	sel_values = kmalloc(sizeof *(sel_values), GFP_NOIO);
+> -	if (!sel_values)
+> -		return -ENOMEM;
+> -
+> -	sel_values->u1_sel = u1_sel;
+> -	sel_values->u1_pel = u1_pel;
+> -	sel_values->u2_sel = cpu_to_le16(u2_sel);
+> -	sel_values->u2_pel = cpu_to_le16(u2_pel);
+> +	sel_values.u1_sel = u1_sel;
+> +	sel_values.u1_pel = u1_pel;
+> +	sel_values.u2_sel = cpu_to_le16(u2_sel);
+> +	sel_values.u2_pel = cpu_to_le16(u2_pel);
+>  
+> -	ret = usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
+> -			USB_REQ_SET_SEL,
+> -			USB_RECIP_DEVICE,
+> -			0, 0,
+> -			sel_values, sizeof *(sel_values),
+> -			USB_CTRL_SET_TIMEOUT);
+> -	kfree(sel_values);
+> +	ret = usb_control_msg_send(udev, 0, USB_REQ_SET_SEL, USB_RECIP_DEVICE,
+> +				   0, 0, &sel_values, sizeof(sel_values),
+> +				   USB_CTRL_SET_TIMEOUT);
+
+This effectively changes GFP_NOIO to GFP_KERNEL.  Probably you should
+leave this particular call alone.
+
+Alan Stern
