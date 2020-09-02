@@ -2,95 +2,116 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71ABBC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB97C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4180220758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D322120758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599026683;
-	bh=g/2VIEsAnNCGwuFSRBmMfPgFPQ8GBcaaWeh2wrNOjTw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FJHZt8lw/vgXKR7NLPysDUEA86XVoRaj5+k8pcesvWQgiPh0+0JK9EKoiKlc6Y5vp
-	 RenhFyfpt6fH36703M1Kk3hM5RSTXzbU9Fad/R9Po1p4BatTMUGnyFTHT0b6C0faE5
-	 JJ9s+30QGJOAkvroz+7kaAmOyqu5y0he+hwCNXgk=
+	s=default; t=1599026830;
+	bh=5+KmkwCh74/cntArpz/UMLM/pddG8ulQKVSpeB3X+RY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XtcARuvNMKqPPGgSAeTKs4Rl9Cf3ukJp2J25bdftD7Ep/bW5gM4VR0i4jimlcdY60
+	 65m6e7UJvLT0nREmGykwPCVv0m5QjdQ+AwbKOnXa/w5fyGZCh3zh72scY1X1jSC7x9
+	 r3rUVFyMSgJCkJxsAOoa+ghmh7TIySpK8M0ncwKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgIBGEl (ORCPT
+        id S1726567AbgIBGHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 02:04:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32994 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 02:07:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgIBGEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 02:04:39 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725774AbgIBGHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 02:07:07 -0400
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 262D020758;
-        Wed,  2 Sep 2020 06:04:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6830220758;
+        Wed,  2 Sep 2020 06:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599026678;
-        bh=g/2VIEsAnNCGwuFSRBmMfPgFPQ8GBcaaWeh2wrNOjTw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j9iBVWGuPfp5nJ4T0mZuvjpw1blz/pYyRcNz1vV99SC0yk1Vdp2UP7C18515KjpTW
-         tOrbuJCV4ZC8WznMoC04LCvNouLaYPX6sQBpBtgE1yK93CdwzTSzYbbu3k+BcokMcE
-         6xF0r1OwfcmyqYsYVBbcxs/4tjj7/9e6DI+flOpk=
-Date:   Wed, 2 Sep 2020 08:04:35 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Paras Sharma <parashar@codeaurora.org>
-Cc:     Jiri Slaby <jslaby@suse.com>, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        akashast@codeaurora.org
-Subject: Re: [PATCH] serial: qcom_geni_serial: To correct QUP Version
- detection logic
-Message-ID: <20200902060435.GA141898@kroah.com>
-References: <1599026211-12800-1-git-send-email-parashar@codeaurora.org>
+        s=default; t=1599026826;
+        bh=5+KmkwCh74/cntArpz/UMLM/pddG8ulQKVSpeB3X+RY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cTkF1377EKFMiKH243aPvnk5sDiPB+mAJ8UbjY3H3CxHW3ub6AhJm8zB6sjCeyjos
+         0Zb34r3LG95586+asqAax7/k2wV4jNsfLjOB7nVyJnDD7czJn3t7iganE4hOlIZPud
+         bwrsx4majAT2w7kFdtUeFxc30f6s6TlOONSSdwLw=
+Received: by mail-lj1-f181.google.com with SMTP id a15so4432606ljk.2;
+        Tue, 01 Sep 2020 23:07:06 -0700 (PDT)
+X-Gm-Message-State: AOAM531wo4BTlz2HG9icZPboh263vixMIECn1BCzuBJqVPF+HveKr8CU
+        +IkexbLSoJ7mbsIoPypTK4b3saCDZC/Xafb8sVQ=
+X-Google-Smtp-Source: ABdhPJyE5jGOrYyZE6ORaRQIp51/fhLfZD64Ax0jpOVcS4L2G+U2YIU+6jbqUjHlXVyGhP2izG2P3ekqYZd5wXuophY=
+X-Received: by 2002:a2e:81c2:: with SMTP id s2mr2472465ljg.10.1599026824658;
+ Tue, 01 Sep 2020 23:07:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1599026211-12800-1-git-send-email-parashar@codeaurora.org>
+References: <20200901155748.2884-1-hch@lst.de> <20200901155748.2884-5-hch@lst.de>
+In-Reply-To: <20200901155748.2884-5-hch@lst.de>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 1 Sep 2020 23:06:52 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5-nfKQK_178R-Y+ps6KLNMrwvWe0Rh5=M1-xvcKHYTgg@mail.gmail.com>
+Message-ID: <CAPhsuW5-nfKQK_178R-Y+ps6KLNMrwvWe0Rh5=M1-xvcKHYTgg@mail.gmail.com>
+Subject: Re: [PATCH 4/9] block: add a new revalidate_disk_size helper
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>,
+        Dan Williams <dan.j.williams@intel.com>, dm-devel@redhat.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, nbd@other.debian.org,
+        ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
+        linux-scsi@vger.kernel.org,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 11:26:51AM +0530, Paras Sharma wrote:
-> The current implementation reduces the sampling rate by half
-> if qup HW version is  greater is than 2.5 by checking if the
-> geni SE major version is greater than 2 and geni SE minor version
-> is greater than 5.
-> 
-> This implementation fails when the version is 3 or greater.
-> 
-> Hence new implementation checks if version is greater than or equal
-> to 0x20050000 which would work for any future version.
-> 
-> Signed-off-by: Paras Sharma <parashar@codeaurora.org>
-> ---
->  drivers/tty/serial/qcom_geni_serial.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Sep 1, 2020 at 9:00 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+[...]
 
-Is this a v2 patch?  What changed from the first one?
+>  drivers/md/md-cluster.c       |  6 ++---
+>  drivers/md/md-linear.c        |  2 +-
+>  drivers/md/md.c               | 10 ++++-----
 
-> 
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index f0b1b47..e18b431 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -1000,7 +1000,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
->  	sampling_rate = UART_OVERSAMPLING;
->  	/* Sampling rate is halved for IP versions >= 2.5 */
->  	ver = geni_se_get_qup_hw_version(&port->se);
-> -	if (GENI_SE_VERSION_MAJOR(ver) >= 2 && GENI_SE_VERSION_MINOR(ver) >= 5)
-> +	if (ver >= 0x20050000)
+For md bits:
+Acked-by: Song Liu <song@kernel.org>
 
-That's an odd "magic value", can't you use the existing macros to define
-this somehow so it makes sense?
+[...]
+>
+> +/**
+> + * revalidate_disk_size - checks for disk size change and adjusts bdev size.
+> + * @disk: struct gendisk to check
+> + * @verbose: if %true log a message about a size change if there is any
+> + *
+> + * This routine checks to see if the bdev size does not match the disk size
+> + * and adjusts it if it differs. When shrinking the bdev size, its all caches
+> + * are freed.
+> + */
+> +void revalidate_disk_size(struct gendisk *disk, bool verbose)
+> +{
+> +       struct block_device *bdev;
+> +
+> +       /*
+> +        * Hidden disks don't have associated bdev so there's no point in
+> +        * revalidating them.
+> +        */
+> +       if (disk->flags & GENHD_FL_HIDDEN)
+> +               return;
+> +
+> +       bdev = bdget_disk(disk, 0);
+> +       if (bdev) {
+> +               check_disk_size_change(disk, bdev, verbose);
+> +               bdput(bdev);
+> +       }
+> +}
+> +EXPORT_SYMBOL(revalidate_disk_size);
 
-thanks,
+Shall we use EXPORT_SYMBOL_GPL() here?
 
-greg k-h
+[...]
