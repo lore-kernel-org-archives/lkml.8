@@ -2,109 +2,99 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C32C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E18CC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B99B020767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14DEC20767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5HWNcO3"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Y2GqRyjf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgIBQv4 (ORCPT
+        id S1728130AbgIBQwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:51:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgIBQvy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:51:54 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F23C061244;
-        Wed,  2 Sep 2020 09:51:53 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id w186so2824266pgb.8;
-        Wed, 02 Sep 2020 09:51:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MDQ6zE/6jTTf94dZqMVJJO0yNqdkkuqD2ZIum9z6agY=;
-        b=D5HWNcO3fqSJb2fbmO436H6p2IureVMKox8lMGdkpsJhCIMWALwgteR47zQ1PL3OED
-         Bpfsbk08mMDQOTjkhJuz9QB3VeBDJIp/nxBTfxyK1tW/R4JXw8LSoyigApMMxm86XSul
-         6ZcIlk1BD124Jr1n4VhtpEw6k3aNgpEl0c4lGTlhdmiXiXxqkMd9qCN5R8qwzJzStnbs
-         YyNv/rgNhoi98eXPOuhel175ds+TbLZkyUZt/rmjN7eAmcLBgUXDsaGCaJyWWP8OFvvJ
-         XYhfM9jWPa/tvpa4vyrpBac7u5u7dMhPhHXqqioay6s92XxVCqvl+NR/eEN1CwPWyW8K
-         ofDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MDQ6zE/6jTTf94dZqMVJJO0yNqdkkuqD2ZIum9z6agY=;
-        b=A9vVVJ+9s1Pm4JZIskIrmf2AIHjhKADPP08f5E6yFhSHozF118gMz80hK9ZXfnIVn5
-         9xweXw/AWe0ZPzJbghXd0pCeo3QI/dLm6hPZ7hSiYUjxyq7WKVVxwstF9En0z5O3D4ll
-         AnYH1NHrBbZGZPlC9oAdfj9HOdfjHCwvHRMKIJzRK7RXaCQ7EO/qhao0Jmysr3gBsfmY
-         lo2h/n8J5R1YS8wzhA7OteTnqlh/BbC9pP7idS6dKD5/MBO3OfLwrLpy32TzFa5vSQzN
-         3rShTflbYH3NxT/tk4KPes6u0XZhZsiwZAwtoRgE9Z8KK0DsDNQHjauELxZsEglwXd41
-         ujPQ==
-X-Gm-Message-State: AOAM531X7JOsmg6h6D+sJvql1kjiucn3F8nAZjm3GsFrhT/ft52FHQ7Q
-        /1v0HPPUGLJ+C7w0FKG89bI=
-X-Google-Smtp-Source: ABdhPJxXmqTQh+bXXErTrtCeqxkYMajb6H/4VNuRUQ6RN0T/bivgtsl8lU1x28vNKFgT7k4c/QI+9g==
-X-Received: by 2002:a63:fe06:: with SMTP id p6mr2544230pgh.337.1599065513033;
-        Wed, 02 Sep 2020 09:51:53 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m188sm26713pfd.56.2020.09.02.09.51.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Sep 2020 09:51:52 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 09:51:51 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.8 000/253] 5.8.6-rc2 review
-Message-ID: <20200902165151.GF56237@roeck-us.net>
-References: <20200902074837.329205434@linuxfoundation.org>
+        Wed, 2 Sep 2020 12:52:22 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:32828 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726467AbgIBQwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:52:21 -0400
+Received: from zn.tnic (p200300ec2f0d7a00acdede37bac547d6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:7a00:acde:de37:bac5:47d6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5DACA1EC0493;
+        Wed,  2 Sep 2020 18:52:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1599065540;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=agIwxdotGavgVufm8ANMtee53aatZqrnYawgSob6eFk=;
+        b=Y2GqRyjfLNTXQuTlPTxaGp+ZwJv27pxB4vLUxlBX8N4T0WRughh3gBbwJTXeWM+qMAZtIM
+        T9Ni8FYGCoDo42PsL1/2CZBDEoowB7Aaq+jeFsUgZysm9kxiuUWO8zkLwtYJN8Jzep6lt0
+        Ke/TsD4kT81Atku75LkW91oqTZQ03wo=
+Date:   Wed, 2 Sep 2020 18:52:16 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Feng Tang <feng.tang@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] tools/x86: add kcpuid tool to show raw CPU features
+Message-ID: <20200902165216.GB21537@zn.tnic>
+References: <1598514543-90152-1-git-send-email-feng.tang@intel.com>
+ <20200902154018.GA21537@zn.tnic>
+ <5ef17179-7557-b609-2e72-20caa1369d46@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200902074837.329205434@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5ef17179-7557-b609-2e72-20caa1369d46@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 09:49:11AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.8.6 release.
-> There are 253 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 04 Sep 2020 07:47:48 +0000.
-> Anything received after that time might be too late.
-> 
+On Wed, Sep 02, 2020 at 09:25:17AM -0700, Dave Hansen wrote:
+> Ugh.  I hate text parsers.  But, I do see what you're getting at.
 
-Build results:
-	total: 154 pass: 153 fail: 1
-Failed builds:
-	powerpc:allmodconfig
-Qemu test results:
-	total: 430 pass: 430 fail: 0
+That's why it'll be a simple one. Nothing fancy. I'm hoping the final
+version would be somewhat readable to humans too.
 
-The build failure is:
+> If we do this, I bet having each value on its own line, I bet this would
+> be a bit less painful to parse.  It'll be a _bit_ harder to read, but
+> not really.  Maybe:
+>
+> LEAF[07],SUBLEAF[00],EAX[31:0],max_value,	Max input value for supported
+> subleafs
+> LEAF[07],SUBLEAF[00],EBX[   0],FSGSBASE,
+> RDFSBASE/RDGSBASE/WRFSBASE/WRGSBASE if 1.
+> LEAF[07],SUBLEAF[00],EBX[   1],TSC_ADJUST,	IA32_TSC_ADJUST MSR is
+> supported if 1.
+> LEAF[07],SUBLEAF[00],EBX[   2],SGX,		Supports Intel® Software Guard
+> Extensions (Intel® SGX Extensions) if 1.
 
-Inconsistent kallsyms data
-Try make KALLSYMS_EXTRA_PASS=1 as a workaround
+Yeah, this was just a stupid example to start the conversation.
 
-The suggested workaround doesn't help. I see the problem in mainline
-and in -next as well, and it is elusive (meaning it is not easy to
-reproduce). Given that, it is not an immediate concern.
+> I was *really* hoping that we could eventually feed kcpuid and the
+> X86_FEATURE_* bits from the same source.
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+But X86_FEATURE_* won't be all bits in all CPUID leafs - only the ones the
+kernel has enabled/use for/needs/...
 
-Guenter
+Also you have CPUID fields which are multi-bit and which cannot be
+X86_FEATURE_* things.
+
+So you need a place which has the whole CPUID space and X86_FEATURE_*
+simply cannot represent it all.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
