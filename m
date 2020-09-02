@@ -2,176 +2,121 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AC9C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3681C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 223D2207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A490620767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:31:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IAoO8HB+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AREmYMKy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgIBUaM (ORCPT
+        id S1726657AbgIBUbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 16:30:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIBUaL (ORCPT
+        Wed, 2 Sep 2020 16:31:37 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:36403 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726226AbgIBUbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 16:30:11 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4664AC061244;
-        Wed,  2 Sep 2020 13:30:10 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id e23so573306eja.3;
-        Wed, 02 Sep 2020 13:30:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3zH/GO18AuMjI+jK60xohkdSw2ATSnXJ1BTZdunQxr8=;
-        b=IAoO8HB+G4Gyxmg6TnoHZXWP6md6wpAtsLFdpd3vUebwvRvqcoVRuBCDnz/KwTghTi
-         FMiWdDJHnmdrDXvNpHBztg0GN7b8bTiFnsayrcfnI5gVZh6gHQL9mBRnYmP7nP+EZ9lZ
-         TX97o8nHu5w0HGswgD+AbbJl4hU4O1TNzhIPFumoWsQFXQX8UWHdmpLFtVm1F5lO93sd
-         4wxacqz8aXRzM2jY6iIRrO9fDA8ROkic5StX2H+QWptrC3xT6ASA8y/hnreHlV01VAQQ
-         LvKvikYQuQseVGP2U3g1JwLzFdOhSLOMqVSUxAzm8qa3Olc6wd79QZJlwZFNTXIQ/dSx
-         oz3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3zH/GO18AuMjI+jK60xohkdSw2ATSnXJ1BTZdunQxr8=;
-        b=k/65fwrewiikprofofflsd+Laf/VacLprJM7SUtRd/617XDhwaLno8t/1pGknI6oJ2
-         1cfsX5F684U6uzcwXUKYWJiAehwLeFuSWcInB+3MYGCJ+W3h91IGum0f7FPBIRUuUoZw
-         yaRpcy5PzcofvKQwdZkMRz6WYWsntQGFJ5hBysy/Ja6nYgUZK+a+mHjwOcDRY7CflKSw
-         tqezygQ7KwWOIve5WwxfQQEbFLkpr+pqqmI5Jic8fJNpR2UQKMXdBUnvI/XzHCpRC0z/
-         Ihv7JBR9XXmetamcMKqHBFcSSNLjc2l/Jd0btHBZLHu9pkOw+WYImsK1Gnxpg/LgzVtr
-         34dg==
-X-Gm-Message-State: AOAM530/+WbXEPTy2LoVBBwaRSIV/MWO8CCj/Jdh8r8vVcPAkTMKZ8H4
-        aMo6L9Ay2vO4h+PRiC1mfooczR3ozw6eAqhTA2Y=
-X-Google-Smtp-Source: ABdhPJyzZFQeDPZketWOBEluKgnVpcrzxpuAdbHhXq4uZ8DSciz92IF8wEci8O8j7o4XyYup4i+USOLVMflTEi0tKuM=
-X-Received: by 2002:a17:906:3a85:: with SMTP id y5mr1758578ejd.507.1599078608948;
- Wed, 02 Sep 2020 13:30:08 -0700 (PDT)
+        Wed, 2 Sep 2020 16:31:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1599078696; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=M3HCSgrFIcERdT6PLNPpnWvnlnIy20ha7vSbY2UY8kw=; b=AREmYMKyBC74c1YQEDrkJNTdaJSI6Elnq5Cg5wpivC0cb4U3X0mQ/pSW9EBKqyVe6Zqi48Fm
+ s1bu6mj93Al7YUczMVEHplhcE4X7UoyipCW8MKc3Jb8YrVZHJv+gtJ1N6LL0J9onLhc4eEky
+ f4k+BLsxrs9Hd1hTuhVw/GRpLts=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5f500127252c522440fe6324 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 02 Sep 2020 20:31:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 92B25C433CA; Wed,  2 Sep 2020 20:31:35 +0000 (UTC)
+Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CAA0FC433C9;
+        Wed,  2 Sep 2020 20:31:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CAA0FC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+Subject: Re: [PATCH v5 0/4] user space client interface driver
+To:     gregkh@linuxfoundation.org, manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org
+References: <1596696063-17802-1-git-send-email-hemantk@codeaurora.org>
+From:   Hemant Kumar <hemantk@codeaurora.org>
+Message-ID: <81cdf27e-b962-3b0b-3f78-dfd95e2cf9bc@codeaurora.org>
+Date:   Wed, 2 Sep 2020 13:31:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20200902165830.5367-1-rcampbell@nvidia.com> <20200902165830.5367-2-rcampbell@nvidia.com>
-In-Reply-To: <20200902165830.5367-2-rcampbell@nvidia.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Wed, 2 Sep 2020 13:29:56 -0700
-Message-ID: <CAHbLzkqAHfVq4upkJBvWQ9XtXFfFx5=qUO4+i5XjFeNwS9XVHg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/7] mm/thp: fix __split_huge_pmd_locked() for
- migration PMD
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Linux MM <linux-mm@kvack.org>, nouveau@lists.freedesktop.org,
-        linux-kselftest@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1596696063-17802-1-git-send-email-hemantk@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 9:58 AM Ralph Campbell <rcampbell@nvidia.com> wrote:
->
-> A migrating transparent huge page has to already be unmapped. Otherwise,
-> the page could be modified while it is being copied to a new page and
-> data could be lost. The function __split_huge_pmd() checks for a PMD
-> migration entry before calling __split_huge_pmd_locked() leading one to
-> think that __split_huge_pmd_locked() can handle splitting a migrating PMD.
-> However, the code always increments the page->_mapcount and adjusts the
-> memory control group accounting assuming the page is mapped.
-> Also, if the PMD entry is a migration PMD entry, the call to
-> is_huge_zero_pmd(*pmd) is incorrect because it calls pmd_pfn(pmd) instead
-> of migration_entry_to_pfn(pmd_to_swp_entry(pmd)).
-> Fix these problems by checking for a PMD migration entry.
+Hi Jeff and Mani,
+On 8/5/20 11:40 PM, Hemant Kumar wrote:
+> V5:
+> - Removed mhi_uci_drv structure.
+> - Used idr instead of creating global list of uci devices.
+> - Used kref instead of local ref counting for uci device and
+>    open count.
+> - Removed unlikely macro.
+> 
+> V4:
+> - Fix locking to protect proper struct members.
+> - Updated documentation describing uci client driver use cases.
+> - Fixed uci ref counting in mhi_uci_open for error case.
+> - Addressed style related review comments.
+> 
+> V3: Added documentation for MHI UCI driver.
+> 
+> V2: Added mutex lock to prevent multiple readers to access same
+> mhi buffer which can result into use after free.
+> 
+> Hemant Kumar (4):
+>    bus: mhi: core: Add helper API to return number of free TREs
+>    bus: mhi: core: Move MHI_MAX_MTU to external header file
+>    docs: Add documentation for userspace client interface
+>    bus: mhi: clients: Add userspace client interface driver
+> 
+>   Documentation/mhi/index.rst      |   1 +
+>   Documentation/mhi/uci.rst        |  39 +++
+>   drivers/bus/mhi/Kconfig          |   6 +
+>   drivers/bus/mhi/Makefile         |   1 +
+>   drivers/bus/mhi/clients/Kconfig  |  15 +
+>   drivers/bus/mhi/clients/Makefile |   3 +
+>   drivers/bus/mhi/clients/uci.c    | 662 +++++++++++++++++++++++++++++++++++++++
+>   drivers/bus/mhi/core/internal.h  |   1 -
+>   drivers/bus/mhi/core/main.c      |  12 +
+>   include/linux/mhi.h              |  12 +
+>   10 files changed, 751 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/mhi/uci.rst
+>   create mode 100644 drivers/bus/mhi/clients/Kconfig
+>   create mode 100644 drivers/bus/mhi/clients/Makefile
+>   create mode 100644 drivers/bus/mhi/clients/uci.c
+> 
 
-Thanks for catching this. The fix looks good to me. Reviewed-by: Yang
-Shi <shy828301@gmail.com>
+Could you please review my changes on V5? I tried addressing Greg's 
+comment and would need help getting it reviewed from other contributors 
+to MHI driver as well.
 
-I think this fix can go separately with the series.
->
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> ---
->  mm/huge_memory.c | 42 +++++++++++++++++++++++-------------------
->  1 file changed, 23 insertions(+), 19 deletions(-)
->
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 2a468a4acb0a..606d712d9505 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -2023,7 +2023,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
->                 put_page(page);
->                 add_mm_counter(mm, mm_counter_file(page), -HPAGE_PMD_NR);
->                 return;
-> -       } else if (is_huge_zero_pmd(*pmd)) {
-> +       } else if (pmd_trans_huge(*pmd) && is_huge_zero_pmd(*pmd)) {
->                 /*
->                  * FIXME: Do we want to invalidate secondary mmu by calling
->                  * mmu_notifier_invalidate_range() see comments below inside
-> @@ -2117,30 +2117,34 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
->                 pte = pte_offset_map(&_pmd, addr);
->                 BUG_ON(!pte_none(*pte));
->                 set_pte_at(mm, addr, pte, entry);
-> -               atomic_inc(&page[i]._mapcount);
-> -               pte_unmap(pte);
-> -       }
-> -
-> -       /*
-> -        * Set PG_double_map before dropping compound_mapcount to avoid
-> -        * false-negative page_mapped().
-> -        */
-> -       if (compound_mapcount(page) > 1 && !TestSetPageDoubleMap(page)) {
-> -               for (i = 0; i < HPAGE_PMD_NR; i++)
-> +               if (!pmd_migration)
->                         atomic_inc(&page[i]._mapcount);
-> +               pte_unmap(pte);
->         }
->
-> -       lock_page_memcg(page);
-> -       if (atomic_add_negative(-1, compound_mapcount_ptr(page))) {
-> -               /* Last compound_mapcount is gone. */
-> -               __dec_lruvec_page_state(page, NR_ANON_THPS);
-> -               if (TestClearPageDoubleMap(page)) {
-> -                       /* No need in mapcount reference anymore */
-> +       if (!pmd_migration) {
-> +               /*
-> +                * Set PG_double_map before dropping compound_mapcount to avoid
-> +                * false-negative page_mapped().
-> +                */
-> +               if (compound_mapcount(page) > 1 &&
-> +                   !TestSetPageDoubleMap(page)) {
->                         for (i = 0; i < HPAGE_PMD_NR; i++)
-> -                               atomic_dec(&page[i]._mapcount);
-> +                               atomic_inc(&page[i]._mapcount);
-> +               }
-> +
-> +               lock_page_memcg(page);
-> +               if (atomic_add_negative(-1, compound_mapcount_ptr(page))) {
-> +                       /* Last compound_mapcount is gone. */
-> +                       __dec_lruvec_page_state(page, NR_ANON_THPS);
-> +                       if (TestClearPageDoubleMap(page)) {
-> +                               /* No need in mapcount reference anymore */
-> +                               for (i = 0; i < HPAGE_PMD_NR; i++)
-> +                                       atomic_dec(&page[i]._mapcount);
-> +                       }
->                 }
-> +               unlock_page_memcg(page);
->         }
-> -       unlock_page_memcg(page);
->
->         smp_wmb(); /* make pte visible before pmd */
->         pmd_populate(mm, pmd, pgtable);
-> --
-> 2.20.1
->
->
+Thanks,
+Hemant
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
