@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA892C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32805C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9231520829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0829320829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063244;
-	bh=KwVlb9jXQVsTVDCwEJ3VRaXpsjBUKtkFKKDHPsqYn9A=;
+	s=default; t=1599063250;
+	bh=EERb3EiHYgV+kjoeUIa1qghfUpQCDCfNMYKTD1gr61w=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=Sup/dz9skTRgORzW1YIW2A/qB7mDtjLwd/oXAzhzVXXlitugSCHZqbIfv/Kl+Jc1H
-	 DYMvoDWkmqtIQGDI9r8iTj1/6gjUwu5C1BbsW80Mc2TAunEivZo8ZOS8RqBZ/jMtMg
-	 Bit4eRyPR9wyR9QmiJtzEbNzj004lcuBoGShCXKY=
+	b=ugEaNT9ZIsP4U3UpHl2F72Jay3eMSPcttkM5/7RNWBZ43j8pk/X1djU21PlAlM49j
+	 Y98T46zBBskF31oNAeT8/ogFHyF4eytPI4b0nHk8wkXd+3yN0CaZwExF0ZPwi88lWV
+	 Qn5RMRpP1ipujhyQxwo1UH7Hmu3iMCn0y5zJ1O/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728771AbgIBQOD (ORCPT
+        id S1728776AbgIBQOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:14:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53894 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 12:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728303AbgIBQK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:10:57 -0400
+        id S1728308AbgIBQK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:10:56 -0400
 Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D97D520C56;
-        Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6927C21D90;
+        Wed,  2 Sep 2020 16:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599063046;
-        bh=KwVlb9jXQVsTVDCwEJ3VRaXpsjBUKtkFKKDHPsqYn9A=;
+        bh=EERb3EiHYgV+kjoeUIa1qghfUpQCDCfNMYKTD1gr61w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xc6+jjJ2YLvdP1dZKe9voVuwNa3SZMEK+MYtdrM0i1d811hrTGS8hqZkPL7Gck0vR
-         dMA69pT/bT6/laJG7498EgOgPYiG4nRkgvItEkNRtgd42y1wZRKn6YdM9GUWuSyWK7
-         6TgCyQ7rvjxqATyI8R3hLhX2+GZjL8dwryUUjIQA=
+        b=Kww1qjzBj12rxsBQlAPH4J1DJfhRyBctOFqrkl+9DzFmV9keKOc3OvN9WVnd3WESM
+         IQtIIkG8m5YjLySb0Akn8UoDYJCw8H4sGHVH97rUgRMO2Kkk7DUgcFwFKzuvAMD0NE
+         8Bq7gKZEvc6qXTp2QFbtGeKM/HDh+7UEkm0vEy1Q=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kDVLQ-000tAH-0b; Wed, 02 Sep 2020 18:10:44 +0200
+        id 1kDVLQ-000tB1-IN; Wed, 02 Sep 2020 18:10:44 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 14/38] media: vivid: move the devnode creation logic to a separate function
-Date:   Wed,  2 Sep 2020 18:10:17 +0200
-Message-Id: <b3660cd8e25735280461fe21d438b87e33ec4395.1599062230.git.mchehab+huawei@kernel.org>
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH 28/38] media: atomisp: get rid of isys_dma.h and isys_dma_local.h
+Date:   Wed,  2 Sep 2020 18:10:31 +0200
+Message-Id: <5904ab04523f4d6e863e615b2a56f9734aa8a5ee.1599062230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
 References: <cover.1599062230.git.mchehab+huawei@kernel.org>
@@ -60,720 +62,202 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to reduce even further the size of the big
-vivid_create_instance() function, let's place the part of the
-logic which creates the device nodes into a separate function.
-
-    With this and the past patches, those warnings finally
-    vanishes:
-
-            drivers/media/test-drivers/vivid/vivid-core.c: drivers/media/test-drivers/vivid/vivid-core.c:1189 vivid_create_instance() parse error: turning off implications after 60 seconds
-            drivers/media/test-drivers/vivid/vivid-core.c: drivers/media/test-drivers/vivid/vivid-core.c:1257 vivid_create_instance() parse error: __split_smt: function too hairy.  Giving up after 303 seconds
-
-The init code also seems more organized after breaking the long
-function into a smaller set.
+There aren't much on this abstraction. Just move the defines
+to isys_dma_private.h and isys_dma_public.h, cleaning up
+the includes.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/media/test-drivers/vivid/vivid-core.c | 670 +++++++++---------
- 1 file changed, 344 insertions(+), 326 deletions(-)
+ .../pci/css_2401_system/host/isys_dma.c       | 10 +---
+ .../pci/css_2401_system/host/isys_dma_local.h | 21 ---------
+ .../css_2401_system/host/isys_dma_private.h   | 12 ++---
+ .../host/isys_dma_public.h                    |  4 +-
+ .../pci/hive_isp_css_include/isys_dma.h       | 47 -------------------
+ .../atomisp/pci/isp2401_input_system_global.h |  3 +-
+ .../atomisp/pci/runtime/isys/src/isys_init.c  |  2 +-
+ 7 files changed, 12 insertions(+), 87 deletions(-)
+ delete mode 100644 drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_local.h
+ delete mode 100644 drivers/staging/media/atomisp/pci/hive_isp_css_include/isys_dma.h
 
-diff --git a/drivers/media/test-drivers/vivid/vivid-core.c b/drivers/media/test-drivers/vivid/vivid-core.c
-index 69cc8456a323..54df7e0c13fc 100644
---- a/drivers/media/test-drivers/vivid/vivid-core.c
-+++ b/drivers/media/test-drivers/vivid/vivid-core.c
-@@ -1306,6 +1306,346 @@ static int vivid_create_queues(struct vivid_dev *dev)
- 	return 0;
+diff --git a/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma.c b/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma.c
+index 5809dbb6e5aa..2a5159945a44 100644
+--- a/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma.c
++++ b/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma.c
+@@ -13,16 +13,10 @@
+  * more details.
+  */
+ 
+-#include "isys_dma.h"
++#include "system_local.h"
++#include "isys_dma_global.h"
+ #include "assert_support.h"
+-
+-#ifndef __INLINE_ISYS2401_DMA__
+-/*
+- * Include definitions for isys dma register access functions. isys_dma.h
+- * includes declarations of these functions by including isys_dma_public.h.
+- */
+ #include "isys_dma_private.h"
+-#endif
+ 
+ const isys2401_dma_channel N_ISYS2401_DMA_CHANNEL_PROCS[N_ISYS2401_DMA_ID] = {
+ 	N_ISYS2401_DMA_CHANNEL
+diff --git a/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_local.h b/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_local.h
+deleted file mode 100644
+index 878933261a43..000000000000
+--- a/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_local.h
++++ /dev/null
+@@ -1,21 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Support for Intel Camera Imaging ISP subsystem.
+- * Copyright (c) 2015, Intel Corporation.
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms and conditions of the GNU General Public License,
+- * version 2, as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope it will be useful, but WITHOUT
+- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+- * more details.
+- */
+-
+-#ifndef __ISYS_DMA_LOCAL_H_INCLUDED__
+-#define __ISYS_DMA_LOCAL_H_INCLUDED__
+-
+-#include "isys_dma_global.h"
+-
+-#endif /* __ISYS_DMA_LOCAL_H_INCLUDED__ */
+diff --git a/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_private.h b/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_private.h
+index eb35b7bcead4..a313e1dc7c71 100644
+--- a/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_private.h
++++ b/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_private.h
+@@ -23,10 +23,9 @@
+ #include "dma_v2_defs.h"
+ #include "print_support.h"
+ 
+-STORAGE_CLASS_ISYS2401_DMA_C void isys2401_dma_reg_store(
+-    const isys2401_dma_ID_t	dma_id,
+-    const unsigned int	reg,
+-    const hrt_data		value)
++void isys2401_dma_reg_store(const isys2401_dma_ID_t	dma_id,
++			    const unsigned int		reg,
++			    const hrt_data		value)
+ {
+ 	unsigned int reg_loc;
+ 
+@@ -40,9 +39,8 @@ STORAGE_CLASS_ISYS2401_DMA_C void isys2401_dma_reg_store(
+ 	ia_css_device_store_uint32(reg_loc, value);
  }
  
-+static int vivid_create_devnodes(struct platform_device *pdev,
-+				 struct vivid_dev *dev, int inst,
-+				 unsigned int cec_tx_bus_cnt,
-+				 v4l2_std_id tvnorms_cap,
-+				 v4l2_std_id tvnorms_out,
-+				 unsigned in_type_counter[4],
-+				 unsigned out_type_counter[4])
-+{
-+	struct video_device *vfd;
-+	int ret, i;
-+
-+	if (dev->has_vid_cap) {
-+		vfd = &dev->vid_cap_dev;
-+		snprintf(vfd->name, sizeof(vfd->name),
-+			 "vivid-%03d-vid-cap", inst);
-+		vfd->fops = &vivid_fops;
-+		vfd->ioctl_ops = &vivid_ioctl_ops;
-+		vfd->device_caps = dev->vid_cap_caps;
-+		vfd->release = video_device_release_empty;
-+		vfd->v4l2_dev = &dev->v4l2_dev;
-+		vfd->queue = &dev->vb_vid_cap_q;
-+		vfd->tvnorms = tvnorms_cap;
-+
-+		/*
-+		 * Provide a mutex to v4l2 core. It will be used to protect
-+		 * all fops and v4l2 ioctls.
-+		 */
-+		vfd->lock = &dev->mutex;
-+		video_set_drvdata(vfd, dev);
-+
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+		dev->vid_cap_pad.flags = MEDIA_PAD_FL_SINK;
-+		ret = media_entity_pads_init(&vfd->entity, 1, &dev->vid_cap_pad);
-+		if (ret)
-+			return ret;
-+#endif
-+
-+#ifdef CONFIG_VIDEO_VIVID_CEC
-+		if (in_type_counter[HDMI]) {
-+			ret = cec_register_adapter(dev->cec_rx_adap, &pdev->dev);
-+			if (ret < 0) {
-+				cec_delete_adapter(dev->cec_rx_adap);
-+				dev->cec_rx_adap = NULL;
-+				return ret;
-+			}
-+			cec_s_phys_addr(dev->cec_rx_adap, 0, false);
-+			v4l2_info(&dev->v4l2_dev, "CEC adapter %s registered for HDMI input 0\n",
-+				  dev_name(&dev->cec_rx_adap->devnode.dev));
-+		}
-+#endif
-+
-+		ret = video_register_device(vfd, VFL_TYPE_VIDEO, vid_cap_nr[inst]);
-+		if (ret < 0)
-+			return ret;
-+		v4l2_info(&dev->v4l2_dev, "V4L2 capture device registered as %s\n",
-+					  video_device_node_name(vfd));
-+	}
-+
-+	if (dev->has_vid_out) {
-+		vfd = &dev->vid_out_dev;
-+		snprintf(vfd->name, sizeof(vfd->name),
-+			 "vivid-%03d-vid-out", inst);
-+		vfd->vfl_dir = VFL_DIR_TX;
-+		vfd->fops = &vivid_fops;
-+		vfd->ioctl_ops = &vivid_ioctl_ops;
-+		vfd->device_caps = dev->vid_out_caps;
-+		vfd->release = video_device_release_empty;
-+		vfd->v4l2_dev = &dev->v4l2_dev;
-+		vfd->queue = &dev->vb_vid_out_q;
-+		vfd->tvnorms = tvnorms_out;
-+
-+		/*
-+		 * Provide a mutex to v4l2 core. It will be used to protect
-+		 * all fops and v4l2 ioctls.
-+		 */
-+		vfd->lock = &dev->mutex;
-+		video_set_drvdata(vfd, dev);
-+
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+		dev->vid_out_pad.flags = MEDIA_PAD_FL_SOURCE;
-+		ret = media_entity_pads_init(&vfd->entity, 1, &dev->vid_out_pad);
-+		if (ret)
-+			return ret;
-+#endif
-+
-+#ifdef CONFIG_VIDEO_VIVID_CEC
-+		for (i = 0; i < cec_tx_bus_cnt; i++) {
-+			ret = cec_register_adapter(dev->cec_tx_adap[i], &pdev->dev);
-+			if (ret < 0) {
-+				for (; i < cec_tx_bus_cnt; i++) {
-+					cec_delete_adapter(dev->cec_tx_adap[i]);
-+					dev->cec_tx_adap[i] = NULL;
-+				}
-+				return ret;
-+			}
-+			v4l2_info(&dev->v4l2_dev, "CEC adapter %s registered for HDMI output %d\n",
-+				  dev_name(&dev->cec_tx_adap[i]->devnode.dev), i);
-+			if (i < out_type_counter[HDMI])
-+				cec_s_phys_addr(dev->cec_tx_adap[i], (i + 1) << 12, false);
-+			else
-+				cec_s_phys_addr(dev->cec_tx_adap[i], 0x1000, false);
-+		}
-+#endif
-+
-+		ret = video_register_device(vfd, VFL_TYPE_VIDEO, vid_out_nr[inst]);
-+		if (ret < 0)
-+			return ret;
-+		v4l2_info(&dev->v4l2_dev, "V4L2 output device registered as %s\n",
-+					  video_device_node_name(vfd));
-+	}
-+
-+	if (dev->has_vbi_cap) {
-+		vfd = &dev->vbi_cap_dev;
-+		snprintf(vfd->name, sizeof(vfd->name),
-+			 "vivid-%03d-vbi-cap", inst);
-+		vfd->fops = &vivid_fops;
-+		vfd->ioctl_ops = &vivid_ioctl_ops;
-+		vfd->device_caps = dev->vbi_cap_caps;
-+		vfd->release = video_device_release_empty;
-+		vfd->v4l2_dev = &dev->v4l2_dev;
-+		vfd->queue = &dev->vb_vbi_cap_q;
-+		vfd->lock = &dev->mutex;
-+		vfd->tvnorms = tvnorms_cap;
-+		video_set_drvdata(vfd, dev);
-+
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+		dev->vbi_cap_pad.flags = MEDIA_PAD_FL_SINK;
-+		ret = media_entity_pads_init(&vfd->entity, 1, &dev->vbi_cap_pad);
-+		if (ret)
-+			return ret;
-+#endif
-+
-+		ret = video_register_device(vfd, VFL_TYPE_VBI, vbi_cap_nr[inst]);
-+		if (ret < 0)
-+			return ret;
-+		v4l2_info(&dev->v4l2_dev, "V4L2 capture device registered as %s, supports %s VBI\n",
-+					  video_device_node_name(vfd),
-+					  (dev->has_raw_vbi_cap && dev->has_sliced_vbi_cap) ?
-+					  "raw and sliced" :
-+					  (dev->has_raw_vbi_cap ? "raw" : "sliced"));
-+	}
-+
-+	if (dev->has_vbi_out) {
-+		vfd = &dev->vbi_out_dev;
-+		snprintf(vfd->name, sizeof(vfd->name),
-+			 "vivid-%03d-vbi-out", inst);
-+		vfd->vfl_dir = VFL_DIR_TX;
-+		vfd->fops = &vivid_fops;
-+		vfd->ioctl_ops = &vivid_ioctl_ops;
-+		vfd->device_caps = dev->vbi_out_caps;
-+		vfd->release = video_device_release_empty;
-+		vfd->v4l2_dev = &dev->v4l2_dev;
-+		vfd->queue = &dev->vb_vbi_out_q;
-+		vfd->lock = &dev->mutex;
-+		vfd->tvnorms = tvnorms_out;
-+		video_set_drvdata(vfd, dev);
-+
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+		dev->vbi_out_pad.flags = MEDIA_PAD_FL_SOURCE;
-+		ret = media_entity_pads_init(&vfd->entity, 1, &dev->vbi_out_pad);
-+		if (ret)
-+			return ret;
-+#endif
-+
-+		ret = video_register_device(vfd, VFL_TYPE_VBI, vbi_out_nr[inst]);
-+		if (ret < 0)
-+			return ret;
-+		v4l2_info(&dev->v4l2_dev, "V4L2 output device registered as %s, supports %s VBI\n",
-+					  video_device_node_name(vfd),
-+					  (dev->has_raw_vbi_out && dev->has_sliced_vbi_out) ?
-+					  "raw and sliced" :
-+					  (dev->has_raw_vbi_out ? "raw" : "sliced"));
-+	}
-+
-+	if (dev->has_sdr_cap) {
-+		vfd = &dev->sdr_cap_dev;
-+		snprintf(vfd->name, sizeof(vfd->name),
-+			 "vivid-%03d-sdr-cap", inst);
-+		vfd->fops = &vivid_fops;
-+		vfd->ioctl_ops = &vivid_ioctl_ops;
-+		vfd->device_caps = dev->sdr_cap_caps;
-+		vfd->release = video_device_release_empty;
-+		vfd->v4l2_dev = &dev->v4l2_dev;
-+		vfd->queue = &dev->vb_sdr_cap_q;
-+		vfd->lock = &dev->mutex;
-+		video_set_drvdata(vfd, dev);
-+
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+		dev->sdr_cap_pad.flags = MEDIA_PAD_FL_SINK;
-+		ret = media_entity_pads_init(&vfd->entity, 1, &dev->sdr_cap_pad);
-+		if (ret)
-+			return ret;
-+#endif
-+
-+		ret = video_register_device(vfd, VFL_TYPE_SDR, sdr_cap_nr[inst]);
-+		if (ret < 0)
-+			return ret;
-+		v4l2_info(&dev->v4l2_dev, "V4L2 capture device registered as %s\n",
-+					  video_device_node_name(vfd));
-+	}
-+
-+	if (dev->has_radio_rx) {
-+		vfd = &dev->radio_rx_dev;
-+		snprintf(vfd->name, sizeof(vfd->name),
-+			 "vivid-%03d-rad-rx", inst);
-+		vfd->fops = &vivid_radio_fops;
-+		vfd->ioctl_ops = &vivid_ioctl_ops;
-+		vfd->device_caps = dev->radio_rx_caps;
-+		vfd->release = video_device_release_empty;
-+		vfd->v4l2_dev = &dev->v4l2_dev;
-+		vfd->lock = &dev->mutex;
-+		video_set_drvdata(vfd, dev);
-+
-+		ret = video_register_device(vfd, VFL_TYPE_RADIO, radio_rx_nr[inst]);
-+		if (ret < 0)
-+			return ret;
-+		v4l2_info(&dev->v4l2_dev, "V4L2 receiver device registered as %s\n",
-+					  video_device_node_name(vfd));
-+	}
-+
-+	if (dev->has_radio_tx) {
-+		vfd = &dev->radio_tx_dev;
-+		snprintf(vfd->name, sizeof(vfd->name),
-+			 "vivid-%03d-rad-tx", inst);
-+		vfd->vfl_dir = VFL_DIR_TX;
-+		vfd->fops = &vivid_radio_fops;
-+		vfd->ioctl_ops = &vivid_ioctl_ops;
-+		vfd->device_caps = dev->radio_tx_caps;
-+		vfd->release = video_device_release_empty;
-+		vfd->v4l2_dev = &dev->v4l2_dev;
-+		vfd->lock = &dev->mutex;
-+		video_set_drvdata(vfd, dev);
-+
-+		ret = video_register_device(vfd, VFL_TYPE_RADIO, radio_tx_nr[inst]);
-+		if (ret < 0)
-+			return ret;
-+		v4l2_info(&dev->v4l2_dev, "V4L2 transmitter device registered as %s\n",
-+					  video_device_node_name(vfd));
-+	}
-+
-+	if (dev->has_meta_cap) {
-+		vfd = &dev->meta_cap_dev;
-+		snprintf(vfd->name, sizeof(vfd->name),
-+			 "vivid-%03d-meta-cap", inst);
-+		vfd->fops = &vivid_fops;
-+		vfd->ioctl_ops = &vivid_ioctl_ops;
-+		vfd->device_caps = dev->meta_cap_caps;
-+		vfd->release = video_device_release_empty;
-+		vfd->v4l2_dev = &dev->v4l2_dev;
-+		vfd->queue = &dev->vb_meta_cap_q;
-+		vfd->lock = &dev->mutex;
-+		vfd->tvnorms = tvnorms_cap;
-+		video_set_drvdata(vfd, dev);
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+		dev->meta_cap_pad.flags = MEDIA_PAD_FL_SINK;
-+		ret = media_entity_pads_init(&vfd->entity, 1,
-+					     &dev->meta_cap_pad);
-+		if (ret)
-+			return ret;
-+#endif
-+		ret = video_register_device(vfd, VFL_TYPE_VIDEO,
-+					    meta_cap_nr[inst]);
-+		if (ret < 0)
-+			return ret;
-+		v4l2_info(&dev->v4l2_dev,
-+			  "V4L2 metadata capture device registered as %s\n",
-+			  video_device_node_name(vfd));
-+	}
-+
-+	if (dev->has_meta_out) {
-+		vfd = &dev->meta_out_dev;
-+		snprintf(vfd->name, sizeof(vfd->name),
-+			 "vivid-%03d-meta-out", inst);
-+		vfd->vfl_dir = VFL_DIR_TX;
-+		vfd->fops = &vivid_fops;
-+		vfd->ioctl_ops = &vivid_ioctl_ops;
-+		vfd->device_caps = dev->meta_out_caps;
-+		vfd->release = video_device_release_empty;
-+		vfd->v4l2_dev = &dev->v4l2_dev;
-+		vfd->queue = &dev->vb_meta_out_q;
-+		vfd->lock = &dev->mutex;
-+		vfd->tvnorms = tvnorms_out;
-+		video_set_drvdata(vfd, dev);
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+		dev->meta_out_pad.flags = MEDIA_PAD_FL_SOURCE;
-+		ret = media_entity_pads_init(&vfd->entity, 1,
-+					     &dev->meta_out_pad);
-+		if (ret)
-+			return ret;
-+#endif
-+		ret = video_register_device(vfd, VFL_TYPE_VIDEO,
-+					    meta_out_nr[inst]);
-+		if (ret < 0)
-+			return ret;
-+		v4l2_info(&dev->v4l2_dev,
-+			  "V4L2 metadata output device registered as %s\n",
-+			  video_device_node_name(vfd));
-+	}
-+
-+	if (dev->has_touch_cap) {
-+		vfd = &dev->touch_cap_dev;
-+		snprintf(vfd->name, sizeof(vfd->name),
-+			 "vivid-%03d-touch-cap", inst);
-+		vfd->fops = &vivid_fops;
-+		vfd->ioctl_ops = &vivid_ioctl_ops;
-+		vfd->device_caps = dev->touch_cap_caps;
-+		vfd->release = video_device_release_empty;
-+		vfd->v4l2_dev = &dev->v4l2_dev;
-+		vfd->queue = &dev->vb_touch_cap_q;
-+		vfd->tvnorms = tvnorms_cap;
-+		vfd->lock = &dev->mutex;
-+		video_set_drvdata(vfd, dev);
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+		dev->touch_cap_pad.flags = MEDIA_PAD_FL_SINK;
-+		ret = media_entity_pads_init(&vfd->entity, 1,
-+					     &dev->touch_cap_pad);
-+		if (ret)
-+			return ret;
-+#endif
-+		ret = video_register_device(vfd, VFL_TYPE_TOUCH,
-+					    touch_cap_nr[inst]);
-+		if (ret < 0)
-+			return ret;
-+		v4l2_info(&dev->v4l2_dev,
-+			  "V4L2 touch capture device registered as %s\n",
-+			  video_device_node_name(vfd));
-+	}
-+
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	/* Register the media device */
-+	ret = media_device_register(&dev->mdev);
-+	if (ret) {
-+		dev_err(dev->mdev.dev,
-+			"media device register failed (err=%d)\n", ret);
-+		return ret;
-+	}
-+#endif
-+	return 0;
-+}
-+
- static int vivid_create_instance(struct platform_device *pdev, int inst)
+-STORAGE_CLASS_ISYS2401_DMA_C hrt_data isys2401_dma_reg_load(
+-    const isys2401_dma_ID_t	dma_id,
+-    const unsigned int	reg)
++hrt_data isys2401_dma_reg_load(const isys2401_dma_ID_t	dma_id,
++			       const unsigned int	reg)
  {
- 	static const struct v4l2_dv_timings def_dv_timings =
-@@ -1317,7 +1657,6 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
- 	bool has_tuner;
- 	bool has_modulator;
- 	struct vivid_dev *dev;
--	struct video_device *vfd;
- 	unsigned node_type = node_types[inst];
- 	v4l2_std_id tvnorms_cap = 0, tvnorms_out = 0;
- 	int ret;
-@@ -1545,332 +1884,11 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
- 	v4l2_ctrl_handler_setup(&dev->ctrl_hdl_touch_cap);
+ 	unsigned int reg_loc;
+ 	hrt_data value;
+diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/isys_dma_public.h b/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/isys_dma_public.h
+index 88ac78f69e7b..d9b6af898c06 100644
+--- a/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/isys_dma_public.h
++++ b/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/isys_dma_public.h
+@@ -21,12 +21,12 @@
+ #include "system_local.h"
+ #include "type_support.h"
  
- 	/* finally start creating the device nodes */
--	if (dev->has_vid_cap) {
--		vfd = &dev->vid_cap_dev;
--		snprintf(vfd->name, sizeof(vfd->name),
--			 "vivid-%03d-vid-cap", inst);
--		vfd->fops = &vivid_fops;
--		vfd->ioctl_ops = &vivid_ioctl_ops;
--		vfd->device_caps = dev->vid_cap_caps;
--		vfd->release = video_device_release_empty;
--		vfd->v4l2_dev = &dev->v4l2_dev;
--		vfd->queue = &dev->vb_vid_cap_q;
--		vfd->tvnorms = tvnorms_cap;
--
--		/*
--		 * Provide a mutex to v4l2 core. It will be used to protect
--		 * all fops and v4l2 ioctls.
--		 */
--		vfd->lock = &dev->mutex;
--		video_set_drvdata(vfd, dev);
--
--#ifdef CONFIG_MEDIA_CONTROLLER
--		dev->vid_cap_pad.flags = MEDIA_PAD_FL_SINK;
--		ret = media_entity_pads_init(&vfd->entity, 1, &dev->vid_cap_pad);
--		if (ret)
--			goto unreg_dev;
--#endif
--
--#ifdef CONFIG_VIDEO_VIVID_CEC
--		if (in_type_counter[HDMI]) {
--			ret = cec_register_adapter(dev->cec_rx_adap, &pdev->dev);
--			if (ret < 0) {
--				cec_delete_adapter(dev->cec_rx_adap);
--				dev->cec_rx_adap = NULL;
--				goto unreg_dev;
--			}
--			cec_s_phys_addr(dev->cec_rx_adap, 0, false);
--			v4l2_info(&dev->v4l2_dev, "CEC adapter %s registered for HDMI input 0\n",
--				  dev_name(&dev->cec_rx_adap->devnode.dev));
--		}
--#endif
--
--		ret = video_register_device(vfd, VFL_TYPE_VIDEO, vid_cap_nr[inst]);
--		if (ret < 0)
--			goto unreg_dev;
--		v4l2_info(&dev->v4l2_dev, "V4L2 capture device registered as %s\n",
--					  video_device_node_name(vfd));
--	}
--
--	if (dev->has_vid_out) {
--		vfd = &dev->vid_out_dev;
--		snprintf(vfd->name, sizeof(vfd->name),
--			 "vivid-%03d-vid-out", inst);
--		vfd->vfl_dir = VFL_DIR_TX;
--		vfd->fops = &vivid_fops;
--		vfd->ioctl_ops = &vivid_ioctl_ops;
--		vfd->device_caps = dev->vid_out_caps;
--		vfd->release = video_device_release_empty;
--		vfd->v4l2_dev = &dev->v4l2_dev;
--		vfd->queue = &dev->vb_vid_out_q;
--		vfd->tvnorms = tvnorms_out;
--
--		/*
--		 * Provide a mutex to v4l2 core. It will be used to protect
--		 * all fops and v4l2 ioctls.
--		 */
--		vfd->lock = &dev->mutex;
--		video_set_drvdata(vfd, dev);
--
--#ifdef CONFIG_MEDIA_CONTROLLER
--		dev->vid_out_pad.flags = MEDIA_PAD_FL_SOURCE;
--		ret = media_entity_pads_init(&vfd->entity, 1, &dev->vid_out_pad);
--		if (ret)
--			goto unreg_dev;
--#endif
--
--#ifdef CONFIG_VIDEO_VIVID_CEC
--		for (i = 0; i < cec_tx_bus_cnt; i++) {
--			ret = cec_register_adapter(dev->cec_tx_adap[i], &pdev->dev);
--			if (ret < 0) {
--				for (; i < cec_tx_bus_cnt; i++) {
--					cec_delete_adapter(dev->cec_tx_adap[i]);
--					dev->cec_tx_adap[i] = NULL;
--				}
--				goto unreg_dev;
--			}
--			v4l2_info(&dev->v4l2_dev, "CEC adapter %s registered for HDMI output %d\n",
--				  dev_name(&dev->cec_tx_adap[i]->devnode.dev), i);
--			if (i < out_type_counter[HDMI])
--				cec_s_phys_addr(dev->cec_tx_adap[i], (i + 1) << 12, false);
--			else
--				cec_s_phys_addr(dev->cec_tx_adap[i], 0x1000, false);
--		}
--#endif
--
--		ret = video_register_device(vfd, VFL_TYPE_VIDEO, vid_out_nr[inst]);
--		if (ret < 0)
--			goto unreg_dev;
--		v4l2_info(&dev->v4l2_dev, "V4L2 output device registered as %s\n",
--					  video_device_node_name(vfd));
--	}
--
--	if (dev->has_vbi_cap) {
--		vfd = &dev->vbi_cap_dev;
--		snprintf(vfd->name, sizeof(vfd->name),
--			 "vivid-%03d-vbi-cap", inst);
--		vfd->fops = &vivid_fops;
--		vfd->ioctl_ops = &vivid_ioctl_ops;
--		vfd->device_caps = dev->vbi_cap_caps;
--		vfd->release = video_device_release_empty;
--		vfd->v4l2_dev = &dev->v4l2_dev;
--		vfd->queue = &dev->vb_vbi_cap_q;
--		vfd->lock = &dev->mutex;
--		vfd->tvnorms = tvnorms_cap;
--		video_set_drvdata(vfd, dev);
--
--#ifdef CONFIG_MEDIA_CONTROLLER
--		dev->vbi_cap_pad.flags = MEDIA_PAD_FL_SINK;
--		ret = media_entity_pads_init(&vfd->entity, 1, &dev->vbi_cap_pad);
--		if (ret)
--			goto unreg_dev;
--#endif
--
--		ret = video_register_device(vfd, VFL_TYPE_VBI, vbi_cap_nr[inst]);
--		if (ret < 0)
--			goto unreg_dev;
--		v4l2_info(&dev->v4l2_dev, "V4L2 capture device registered as %s, supports %s VBI\n",
--					  video_device_node_name(vfd),
--					  (dev->has_raw_vbi_cap && dev->has_sliced_vbi_cap) ?
--					  "raw and sliced" :
--					  (dev->has_raw_vbi_cap ? "raw" : "sliced"));
--	}
--
--	if (dev->has_vbi_out) {
--		vfd = &dev->vbi_out_dev;
--		snprintf(vfd->name, sizeof(vfd->name),
--			 "vivid-%03d-vbi-out", inst);
--		vfd->vfl_dir = VFL_DIR_TX;
--		vfd->fops = &vivid_fops;
--		vfd->ioctl_ops = &vivid_ioctl_ops;
--		vfd->device_caps = dev->vbi_out_caps;
--		vfd->release = video_device_release_empty;
--		vfd->v4l2_dev = &dev->v4l2_dev;
--		vfd->queue = &dev->vb_vbi_out_q;
--		vfd->lock = &dev->mutex;
--		vfd->tvnorms = tvnorms_out;
--		video_set_drvdata(vfd, dev);
--
--#ifdef CONFIG_MEDIA_CONTROLLER
--		dev->vbi_out_pad.flags = MEDIA_PAD_FL_SOURCE;
--		ret = media_entity_pads_init(&vfd->entity, 1, &dev->vbi_out_pad);
--		if (ret)
--			goto unreg_dev;
--#endif
--
--		ret = video_register_device(vfd, VFL_TYPE_VBI, vbi_out_nr[inst]);
--		if (ret < 0)
--			goto unreg_dev;
--		v4l2_info(&dev->v4l2_dev, "V4L2 output device registered as %s, supports %s VBI\n",
--					  video_device_node_name(vfd),
--					  (dev->has_raw_vbi_out && dev->has_sliced_vbi_out) ?
--					  "raw and sliced" :
--					  (dev->has_raw_vbi_out ? "raw" : "sliced"));
--	}
--
--	if (dev->has_sdr_cap) {
--		vfd = &dev->sdr_cap_dev;
--		snprintf(vfd->name, sizeof(vfd->name),
--			 "vivid-%03d-sdr-cap", inst);
--		vfd->fops = &vivid_fops;
--		vfd->ioctl_ops = &vivid_ioctl_ops;
--		vfd->device_caps = dev->sdr_cap_caps;
--		vfd->release = video_device_release_empty;
--		vfd->v4l2_dev = &dev->v4l2_dev;
--		vfd->queue = &dev->vb_sdr_cap_q;
--		vfd->lock = &dev->mutex;
--		video_set_drvdata(vfd, dev);
--
--#ifdef CONFIG_MEDIA_CONTROLLER
--		dev->sdr_cap_pad.flags = MEDIA_PAD_FL_SINK;
--		ret = media_entity_pads_init(&vfd->entity, 1, &dev->sdr_cap_pad);
--		if (ret)
--			goto unreg_dev;
--#endif
--
--		ret = video_register_device(vfd, VFL_TYPE_SDR, sdr_cap_nr[inst]);
--		if (ret < 0)
--			goto unreg_dev;
--		v4l2_info(&dev->v4l2_dev, "V4L2 capture device registered as %s\n",
--					  video_device_node_name(vfd));
--	}
--
--	if (dev->has_radio_rx) {
--		vfd = &dev->radio_rx_dev;
--		snprintf(vfd->name, sizeof(vfd->name),
--			 "vivid-%03d-rad-rx", inst);
--		vfd->fops = &vivid_radio_fops;
--		vfd->ioctl_ops = &vivid_ioctl_ops;
--		vfd->device_caps = dev->radio_rx_caps;
--		vfd->release = video_device_release_empty;
--		vfd->v4l2_dev = &dev->v4l2_dev;
--		vfd->lock = &dev->mutex;
--		video_set_drvdata(vfd, dev);
--
--		ret = video_register_device(vfd, VFL_TYPE_RADIO, radio_rx_nr[inst]);
--		if (ret < 0)
--			goto unreg_dev;
--		v4l2_info(&dev->v4l2_dev, "V4L2 receiver device registered as %s\n",
--					  video_device_node_name(vfd));
--	}
--
--	if (dev->has_radio_tx) {
--		vfd = &dev->radio_tx_dev;
--		snprintf(vfd->name, sizeof(vfd->name),
--			 "vivid-%03d-rad-tx", inst);
--		vfd->vfl_dir = VFL_DIR_TX;
--		vfd->fops = &vivid_radio_fops;
--		vfd->ioctl_ops = &vivid_ioctl_ops;
--		vfd->device_caps = dev->radio_tx_caps;
--		vfd->release = video_device_release_empty;
--		vfd->v4l2_dev = &dev->v4l2_dev;
--		vfd->lock = &dev->mutex;
--		video_set_drvdata(vfd, dev);
--
--		ret = video_register_device(vfd, VFL_TYPE_RADIO, radio_tx_nr[inst]);
--		if (ret < 0)
--			goto unreg_dev;
--		v4l2_info(&dev->v4l2_dev, "V4L2 transmitter device registered as %s\n",
--					  video_device_node_name(vfd));
--	}
--
--	if (dev->has_meta_cap) {
--		vfd = &dev->meta_cap_dev;
--		snprintf(vfd->name, sizeof(vfd->name),
--			 "vivid-%03d-meta-cap", inst);
--		vfd->fops = &vivid_fops;
--		vfd->ioctl_ops = &vivid_ioctl_ops;
--		vfd->device_caps = dev->meta_cap_caps;
--		vfd->release = video_device_release_empty;
--		vfd->v4l2_dev = &dev->v4l2_dev;
--		vfd->queue = &dev->vb_meta_cap_q;
--		vfd->lock = &dev->mutex;
--		vfd->tvnorms = tvnorms_cap;
--		video_set_drvdata(vfd, dev);
--#ifdef CONFIG_MEDIA_CONTROLLER
--		dev->meta_cap_pad.flags = MEDIA_PAD_FL_SINK;
--		ret = media_entity_pads_init(&vfd->entity, 1,
--					     &dev->meta_cap_pad);
--		if (ret)
--			goto unreg_dev;
--#endif
--		ret = video_register_device(vfd, VFL_TYPE_VIDEO,
--					    meta_cap_nr[inst]);
--		if (ret < 0)
--			goto unreg_dev;
--		v4l2_info(&dev->v4l2_dev,
--			  "V4L2 metadata capture device registered as %s\n",
--			  video_device_node_name(vfd));
--	}
--
--	if (dev->has_meta_out) {
--		vfd = &dev->meta_out_dev;
--		snprintf(vfd->name, sizeof(vfd->name),
--			 "vivid-%03d-meta-out", inst);
--		vfd->vfl_dir = VFL_DIR_TX;
--		vfd->fops = &vivid_fops;
--		vfd->ioctl_ops = &vivid_ioctl_ops;
--		vfd->device_caps = dev->meta_out_caps;
--		vfd->release = video_device_release_empty;
--		vfd->v4l2_dev = &dev->v4l2_dev;
--		vfd->queue = &dev->vb_meta_out_q;
--		vfd->lock = &dev->mutex;
--		vfd->tvnorms = tvnorms_out;
--		video_set_drvdata(vfd, dev);
--#ifdef CONFIG_MEDIA_CONTROLLER
--		dev->meta_out_pad.flags = MEDIA_PAD_FL_SOURCE;
--		ret = media_entity_pads_init(&vfd->entity, 1,
--					     &dev->meta_out_pad);
--		if (ret)
--			goto unreg_dev;
--#endif
--		ret = video_register_device(vfd, VFL_TYPE_VIDEO,
--					    meta_out_nr[inst]);
--		if (ret < 0)
--			goto unreg_dev;
--		v4l2_info(&dev->v4l2_dev,
--			  "V4L2 metadata output device registered as %s\n",
--			  video_device_node_name(vfd));
--	}
--
--	if (dev->has_touch_cap) {
--		vfd = &dev->touch_cap_dev;
--		snprintf(vfd->name, sizeof(vfd->name),
--			 "vivid-%03d-touch-cap", inst);
--		vfd->fops = &vivid_fops;
--		vfd->ioctl_ops = &vivid_ioctl_ops;
--		vfd->device_caps = dev->touch_cap_caps;
--		vfd->release = video_device_release_empty;
--		vfd->v4l2_dev = &dev->v4l2_dev;
--		vfd->queue = &dev->vb_touch_cap_q;
--		vfd->tvnorms = tvnorms_cap;
--		vfd->lock = &dev->mutex;
--		video_set_drvdata(vfd, dev);
--#ifdef CONFIG_MEDIA_CONTROLLER
--		dev->touch_cap_pad.flags = MEDIA_PAD_FL_SINK;
--		ret = media_entity_pads_init(&vfd->entity, 1,
--					     &dev->touch_cap_pad);
--		if (ret)
--			goto unreg_dev;
--#endif
--		ret = video_register_device(vfd, VFL_TYPE_TOUCH,
--					    touch_cap_nr[inst]);
--		if (ret < 0)
--			goto unreg_dev;
--		v4l2_info(&dev->v4l2_dev,
--			  "V4L2 touch capture device registered as %s\n",
--			  video_device_node_name(vfd));
--	}
--
--#ifdef CONFIG_MEDIA_CONTROLLER
--	/* Register the media device */
--	ret = media_device_register(&dev->mdev);
--	if (ret) {
--		dev_err(dev->mdev.dev,
--			"media device register failed (err=%d)\n", ret);
-+	ret = vivid_create_devnodes(pdev, dev, inst, cec_tx_bus_cnt,
-+				    tvnorms_cap, tvnorms_out,
-+				    in_type_counter, out_type_counter);
-+	if (ret)
- 		goto unreg_dev;
--	}
--#endif
+-STORAGE_CLASS_ISYS2401_DMA_H void isys2401_dma_reg_store(
++extern void isys2401_dma_reg_store(
+     const isys2401_dma_ID_t dma_id,
+     const unsigned int	reg,
+     const hrt_data		value);
  
- 	/* Now that everything is fine, let's add it to device list */
- 	vivid_devs[inst] = dev;
+-STORAGE_CLASS_ISYS2401_DMA_H hrt_data isys2401_dma_reg_load(
++extern hrt_data isys2401_dma_reg_load(
+     const isys2401_dma_ID_t dma_id,
+     const unsigned int	reg);
+ 
+diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_include/isys_dma.h b/drivers/staging/media/atomisp/pci/hive_isp_css_include/isys_dma.h
+deleted file mode 100644
+index 6a759142eda8..000000000000
+--- a/drivers/staging/media/atomisp/pci/hive_isp_css_include/isys_dma.h
++++ /dev/null
+@@ -1,47 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Support for Intel Camera Imaging ISP subsystem.
+- * Copyright (c) 2015, Intel Corporation.
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms and conditions of the GNU General Public License,
+- * version 2, as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope it will be useful, but WITHOUT
+- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+- * more details.
+- */
+-
+-#ifndef __ISYS_DMA_H_INCLUDED__
+-#define __ISYS_DMA_H_INCLUDED__
+-
+-/*
+- * This file is included on every cell {SP,ISP,host} and on every system
+- * that uses the input system device(s). It defines the API to DLI bridge
+- *
+- * System and cell specific interfaces and inline code are included
+- * conditionally through Makefile path settings.
+- *
+- * - system and cell agnostic interfaces, constants and identifiers
+- * - public:  system agnostic, cell specific interfaces
+- * - private: system dependent, cell specific interfaces &
+- *   inline implementations
+- * - global:  system specific constants and identifiers
+- * - local:   system and cell specific constants and identifiers
+- */
+-
+-#include "system_local.h"
+-#include "isys_dma_local.h"
+-
+-#ifndef __INLINE_ISYS2401_DMA__
+-#define STORAGE_CLASS_ISYS2401_DMA_H extern
+-#define STORAGE_CLASS_ISYS2401_DMA_C
+-#include "isys_dma_public.h"
+-#else  /* __INLINE_ISYS2401_DMA__ */
+-#define STORAGE_CLASS_ISYS2401_DMA_H static inline
+-#define STORAGE_CLASS_ISYS2401_DMA_C static inline
+-#include "isys_dma_private.h"
+-#endif /* __INLINE_ISYS2401_DMA__ */
+-
+-#endif /* __ISYS_DMA_H_INCLUDED__ */
+diff --git a/drivers/staging/media/atomisp/pci/isp2401_input_system_global.h b/drivers/staging/media/atomisp/pci/isp2401_input_system_global.h
+index 5070e651f7c4..6407be9331ae 100644
+--- a/drivers/staging/media/atomisp/pci/isp2401_input_system_global.h
++++ b/drivers/staging/media/atomisp/pci/isp2401_input_system_global.h
+@@ -21,7 +21,8 @@
+ /* CSI reveiver has 3 ports. */
+ #define		N_CSI_PORTS (3)
+ 
+-#include "isys_dma.h"		/*	isys2401_dma_channel,
++#include "system_local.h"
++#include "isys_dma_global.h"	/*	isys2401_dma_channel,
+ 				 *	isys2401_dma_cfg_t
+ 				 */
+ 
+diff --git a/drivers/staging/media/atomisp/pci/runtime/isys/src/isys_init.c b/drivers/staging/media/atomisp/pci/runtime/isys/src/isys_init.c
+index c88b14ce69a5..484c5967ad1c 100644
+--- a/drivers/staging/media/atomisp/pci/runtime/isys/src/isys_init.c
++++ b/drivers/staging/media/atomisp/pci/runtime/isys/src/isys_init.c
+@@ -19,7 +19,7 @@
+ #include "platform_support.h"
+ 
+ #ifdef ISP2401
+-#include "isys_dma.h"		/* isys2401_dma_set_max_burst_size() */
++#include "isys_dma_public.h"	/* isys2401_dma_set_max_burst_size() */
+ #include "isys_irq.h"
+ #endif
+ 
 -- 
 2.26.2
 
