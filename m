@@ -2,103 +2,89 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675BCC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C83DAC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40E04204FD
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599066040;
-	bh=5TBnPOJmm+0HmBQ0PdJBZ3arGLJewAGOBH/ZEfVwIUo=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=jmtb9KRemyFr/H2EgfkUg/o2d0Ji7pFzuSseAho4hnJkv9soRE6hD0rCF0Zk6aGXf
-	 jrhKW7qyDgtraJJvu73tjoCJTwHDbxMQgxwXzmi5xbvnM27xsY4jU4Chdc2WzUmv/I
-	 QFk2wZptsBC0kbeUbApbN2yQFYxMKLpRDaYhqu5k=
+	by mail.kernel.org (Postfix) with ESMTP id AF997204FD
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:00:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgIBRAj (ORCPT
+        id S1728308AbgIBRAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 13:00:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56962 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 13:00:49 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:38522 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbgIBRAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:00:20 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BCE5208B3;
-        Wed,  2 Sep 2020 17:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599066020;
-        bh=5TBnPOJmm+0HmBQ0PdJBZ3arGLJewAGOBH/ZEfVwIUo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=e6Co5i4digpWyRfPQH8LhZkzjhwpQdGRjBJ8U4/uB+OburtVXSoIbrheLw6LqVwLZ
-         BBtwG19Ln+tnpPlE93pCGqt6gsFIuq67+2oD0WdXeWmOCkiAT8O7IE8Jwrj1AgjamX
-         rzOY0UyunhREWOJ5fC6XTLgjQ4QngUz/Qpx08fSY=
-Date:   Wed, 2 Sep 2020 10:00:19 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: small fixes for 5.9
-Message-ID: <20200902170019.GO6096@magnolia>
+        id S1728512AbgIBRAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 13:00:23 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kDW7G-00Cuv8-BK; Wed, 02 Sep 2020 19:00:10 +0200
+Date:   Wed, 2 Sep 2020 19:00:10 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] phy: marvell: comphy: Convert internal SMCC firmware
+ return codes to errno
+Message-ID: <20200902170010.GF3050651@lunn.ch>
+References: <20200902144344.16684-1-pali@kernel.org>
+ <20200902144344.16684-2-pali@kernel.org>
+ <20200902161328.GE3050651@lunn.ch>
+ <20200902165652.cvb74kgxx5uejpta@pali>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200902165652.cvb74kgxx5uejpta@pali>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+> > > +	switch (ret) {
+> > > +	case SMCCC_RET_SUCCESS:
+> > > +		return 0;
+> > > +	case SMCCC_RET_NOT_SUPPORTED:
+> > > +		return -EOPNOTSUPP;
+> > > +	default:
+> > > +		return -EINVAL;
+> > > +	}
+> > >  }
+> > 
+> > Hi Pali
+> > 
+> > Maybe this should be a global helper translating SMCCC_RET_* into a
+> > standard errno value?
+> > 
+> > 	 Andrew
+> 
+> Hello Andrew!
+> 
+> Well, I'm not sure if some standard global helper is the correct way for
+> marvell comphy handler. It returns 0 for success and -1 on error when
+> handler is not supported.
 
-Please pull these various corruption fixes that have come in during the
-past month.  The branch merges cleanly with upstream as of a few minutes
-ago, so please let me know if anything strange happens.
+No, i was meaning just 
 
+switch (ret) {
+case SMCCC_RET_SUCCESS:
+	return 0;
+case SMCCC_RET_NOT_SUPPORTED:
+	return -EOPNOTSUPP;
+default:
+	return -EINVAL;
+}
 
---D
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+There is nothing Marvell specific here.
 
-  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.9-fixes-1
-
-for you to fetch changes up to 125eac243806e021f33a1fdea3687eccbb9f7636:
-
-  xfs: initialize the shortform attr header padding entry (2020-08-27 08:01:31 -0700)
-
-----------------------------------------------------------------
-Fixes for 5.9:
-- Avoid a log recovery failure for an insert range operation by rolling
-deferred ops incrementally instead of at the end.
-- Fix an off-by-one error when calculating log space reservations for
-anything involving an inode allocation or free.
-- Fix a broken shortform xattr verifier.
-- Ensure that the shortform xattr header padding is always initialized
-to zero.
-
-----------------------------------------------------------------
-Brian Foster (2):
-      xfs: finish dfops on every insert range shift iteration
-      xfs: fix off-by-one in inode alloc block reservation calculation
-
-Darrick J. Wong (1):
-      xfs: initialize the shortform attr header padding entry
-
-Eric Sandeen (1):
-      xfs: fix boundary test in xfs_attr_shortform_verify
-
- fs/xfs/libxfs/xfs_attr_leaf.c   | 8 +++++---
- fs/xfs/libxfs/xfs_ialloc.c      | 4 ++--
- fs/xfs/libxfs/xfs_trans_space.h | 2 +-
- fs/xfs/xfs_bmap_util.c          | 2 +-
- 4 files changed, 9 insertions(+), 7 deletions(-)
+      Andrew
