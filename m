@@ -2,96 +2,93 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8944C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8996BC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA30220758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A9A205CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgIBLPA (ORCPT
+        id S1726657AbgIBLTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 07:15:00 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:31780 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726657AbgIBLNn (ORCPT
+        Wed, 2 Sep 2020 07:19:18 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46032 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgIBLTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 07:13:43 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-264-vYAVe1aDPQ2U4EAg7n6GQg-1; Wed, 02 Sep 2020 12:13:39 +0100
-X-MC-Unique: vYAVe1aDPQ2U4EAg7n6GQg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 2 Sep 2020 12:13:38 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 2 Sep 2020 12:13:38 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Colin Ian King' <colin.king@canonical.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC:     Len Brown <lenb@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: RE: [PATCH] ACPI: sysfs: copy ACPI data using io memory copying
-Thread-Topic: [PATCH] ACPI: sysfs: copy ACPI data using io memory copying
-Thread-Index: AQHWgROr7agM3y/cj06L4ZPs9JoiwalVMaYA
-Date:   Wed, 2 Sep 2020 11:13:38 +0000
-Message-ID: <e94b289c3dfb4ac0b05a7134f9ae8bb3@AcuMS.aculab.com>
-References: <20200312111345.1057569-1-colin.king@canonical.com>
- <2440284.4js2fAD822@kreacher>
- <65817d75-7272-2ef3-33a5-f390b5b0ec30@canonical.com>
-In-Reply-To: <65817d75-7272-2ef3-33a5-f390b5b0ec30@canonical.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 2 Sep 2020 07:19:13 -0400
+Received: by mail-lj1-f196.google.com with SMTP id c2so5373430ljj.12;
+        Wed, 02 Sep 2020 04:19:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sIqApshDOtTxlo5FK8DhBC+GEPu//rVe7EZe6AlqDB0=;
+        b=mXfRi7nPl2saIhJRyJ0d888xpn6ibcJVbojEc+k2Ap9MyLEnY0oFxzknNNB0i2LaIx
+         NdXrnFRTi3PpMaJcnEMiilmrp+QxTNyj3fQI6JUWxT5SrBe0oGKpLPR4w4bJ1ClBA86T
+         wrSgBt4CDoLxt1StCZbf2Uv/fProBV+ZKuADX5RR6H1w/muUNZZ7B4QTVJFIywTbhIGH
+         PyL7LRmiGWGMSSTZZ/+MS0lT+Eyee7bjfzD81FybkKt52IWjKqSd5Hs5Z0BQUUMf/hmi
+         ckEL15CsbfOnp+QfC2JH2/jbN79hQCi0aOEVQrpUr3hBR0o0AIe97/6ZX05+QfRUp3cP
+         tDTg==
+X-Gm-Message-State: AOAM532PaR0nsDLf7JDMlqlqCI8icuaV89x2XhYLwx4za64+QTLQpVCs
+        kFvRpqTo7C3DPw6Mj7asBK8anv6NExM=
+X-Google-Smtp-Source: ABdhPJxxkPw6jkHz1bBom1/zQNxuNhpGQd3XWzcNVPjJ0/ap1nFPYYKYWNKtXDnbixx9Dbl5Af7dFA==
+X-Received: by 2002:a2e:91d2:: with SMTP id u18mr3039908ljg.436.1599045550650;
+        Wed, 02 Sep 2020 04:19:10 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id n62sm465066lfa.82.2020.09.02.04.19.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 04:19:09 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Doug Berger <opendmb@gmail.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH] net: bcmgenet: fix mask check in bcmgenet_validate_flow()
+Date:   Wed,  2 Sep 2020 14:18:45 +0300
+Message-Id: <20200902111845.9915-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.002
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQ29saW4gSWFuIEtpbmcNCj4gU2VudDogMDIgU2VwdGVtYmVyIDIwMjAgMTE6MjcNCj4g
-DQo+IE9uIDE0LzAzLzIwMjAgMTA6MjMsIFJhZmFlbCBKLiBXeXNvY2tpIHdyb3RlOg0KPiA+IE9u
-IFRodXJzZGF5LCBNYXJjaCAxMiwgMjAyMCAxMjoxMzo0NSBQTSBDRVQgQ29saW4gS2luZyB3cm90
-ZToNCj4gPj4gRnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4N
-Cj4gPj4NCj4gPj4gUmVhZGluZyBBQ1BJIGRhdGEgb24gQVJNNjQgYXQgYSBub24tYWxpZ25lZCBv
-ZmZzZXQgZnJvbQ0KPiA+PiAvc3lzL2Zpcm13YXJlL2FjcGkvdGFibGVzL2RhdGEvQkVSVCB3aWxs
-IGNhdXNlIGEgc3BsYXQgYmVjYXVzZQ0KPiA+PiB0aGUgZGF0YSBpcyBJL08gbWVtb3J5IG1hcHBl
-ZCBhbmQgYmVpbmcgcmVhZCB3aXRoIGp1c3QgYSBtZW1jcHkuDQo+ID4+IEZpeCB0aGlzIGJ5IGlu
-dHJvZHVjaW5nIGFuIEkvTyB2YXJpYW50IG9mIG1lbW9yeV9yZWFkX2Zyb21fYnVmZmVyDQo+ID4+
-IGFuZCB1c2luZyBJL08gbWVtb3J5IG1hcHBlZCBjb3BpZXMgaW5zdGVhZC4NCi4uDQo+ID4+ICsv
-KioNCj4gPj4gKyAqIG1lbW9yeV9yZWFkX2Zyb21faW9fYnVmZmVyIC0gY29weSBkYXRhIGZyb20g
-YSBpbyBtZW1vcnkgbWFwcGVkIGJ1ZmZlcg0KPiA+PiArICogQHRvOiB0aGUga2VybmVsIHNwYWNl
-IGJ1ZmZlciB0byByZWFkIHRvDQo+ID4+ICsgKiBAY291bnQ6IHRoZSBtYXhpbXVtIG51bWJlciBv
-ZiBieXRlcyB0byByZWFkDQo+ID4+ICsgKiBAcHBvczogdGhlIGN1cnJlbnQgcG9zaXRpb24gaW4g
-dGhlIGJ1ZmZlcg0KPiA+PiArICogQGZyb206IHRoZSBidWZmZXIgdG8gcmVhZCBmcm9tDQo+ID4+
-ICsgKiBAYXZhaWxhYmxlOiB0aGUgc2l6ZSBvZiB0aGUgYnVmZmVyDQo+ID4+ICsgKg0KPiA+PiAr
-ICogVGhlIG1lbW9yeV9yZWFkX2Zyb21fYnVmZmVyKCkgZnVuY3Rpb24gcmVhZHMgdXAgdG8gQGNv
-dW50IGJ5dGVzIGZyb20gdGhlDQo+ID4+ICsgKiBpbyBtZW1vcnkgbWFwcHkgYnVmZmVyIEBmcm9t
-IGF0IG9mZnNldCBAcHBvcyBpbnRvIHRoZSBrZXJuZWwgc3BhY2UgYWRkcmVzcw0KPiA+PiArICog
-c3RhcnRpbmcgYXQgQHRvLg0KPiA+PiArICoNCj4gPj4gKyAqIE9uIHN1Y2Nlc3MsIHRoZSBudW1i
-ZXIgb2YgYnl0ZXMgcmVhZCBpcyByZXR1cm5lZCBhbmQgdGhlIG9mZnNldCBAcHBvcyBpcw0KPiA+
-PiArICogYWR2YW5jZWQgYnkgdGhpcyBudW1iZXIsIG9yIG5lZ2F0aXZlIHZhbHVlIGlzIHJldHVy
-bmVkIG9uIGVycm9yLg0KPiA+PiArICoqLw0KDQpBcGFydCBmcm9tIHRoZSByZXR1cm4gdmFsdWUg
-aG93IGlzIHRoaXMgZGlmZmVyZW50IGZyb20gdGhlIGdlbmVyaWMNCm1lbWNweV9mcm9tX2lvKCkg
-Pw0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJv
-YWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24g
-Tm86IDEzOTczODYgKFdhbGVzKQ0K
+VALIDATE_MASK(eth_mask->h_source) is checked twice in a row in
+bcmgenet_validate_flow(). Add VALIDATE_MASK(eth_mask->h_dest)
+instead.
+
+Fixes: 3e370952287c ("net: bcmgenet: add support for ethtool rxnfc flows")
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+I'm not sure that h_dest check is required here, it's only my guess.
+Compile tested only.
+
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index 0ca8436d2e9d..be85dad2e3bc 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -1364,7 +1364,7 @@ static int bcmgenet_validate_flow(struct net_device *dev,
+ 	case ETHER_FLOW:
+ 		eth_mask = &cmd->fs.m_u.ether_spec;
+ 		/* don't allow mask which isn't valid */
+-		if (VALIDATE_MASK(eth_mask->h_source) ||
++		if (VALIDATE_MASK(eth_mask->h_dest) ||
+ 		    VALIDATE_MASK(eth_mask->h_source) ||
+ 		    VALIDATE_MASK(eth_mask->h_proto)) {
+ 			netdev_err(dev, "rxnfc: Unsupported mask\n");
+-- 
+2.26.2
 
