@@ -2,104 +2,121 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FAFC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB009C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F21A020639
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80C520639
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599063374;
+	bh=TyB5qk7Sh1O8/duNBsCmd6m1J0cmxULTBPs5i10qCv4=;
+	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
+	b=O296wvQSsjEPPbfAuu7clSyMgmh0okz/knpo7svU2PTQ5KxVjPirkPG3ppCNUSiUY
+	 yn1GURvufQEuf7tquH+tKE7XUBoruM5yp65xr04G6X4Hnc67NSqwh0FnaCND7gnSvF
+	 PSmn1D1fP+4KYpwOBCgxAGEXHIGg0ujdj55EVnIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgIBQQA (ORCPT
+        id S1727807AbgIBQQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:16:00 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:38396 "EHLO vps0.lunn.ch"
+        Wed, 2 Sep 2020 12:16:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727943AbgIBQNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:13:40 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1kDVO4-00Cud1-AA; Wed, 02 Sep 2020 18:13:28 +0200
-Date:   Wed, 2 Sep 2020 18:13:28 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] phy: marvell: comphy: Convert internal SMCC firmware
- return codes to errno
-Message-ID: <20200902161328.GE3050651@lunn.ch>
-References: <20200902144344.16684-1-pali@kernel.org>
- <20200902144344.16684-2-pali@kernel.org>
+        id S1728283AbgIBQK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:10:56 -0400
+Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2CCB2158C;
+        Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599063046;
+        bh=TyB5qk7Sh1O8/duNBsCmd6m1J0cmxULTBPs5i10qCv4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=X8hl2OM2sVEtfrkk2thA9m4OvAG754Js57hqXJuQYYiDQRMEp/L5O536GhFLyEuAG
+         wyCt/12joTSh/IBm7vFAom7koT/laCTuUl3snPaaqWVoVZCBGdQA8wcSDbIcQK1I+V
+         kQzB5Vm/BZvEO9kbiyYfPjkeH2rPum7INZiNN498=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kDVLQ-000tAU-4J; Wed, 02 Sep 2020 18:10:44 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Takashi Iwai <tiwai@suse.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Forest Crossman <cyrozap@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 18/38] media: cx23885-alsa: number of pages should be unsigned long
+Date:   Wed,  2 Sep 2020 18:10:21 +0200
+Message-Id: <1ca468a8b0b6b0e6a1843a9eed04568902833b68.1599062230.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
+References: <cover.1599062230.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200902144344.16684-2-pali@kernel.org>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 04:43:43PM +0200, Pali Rohár wrote:
-> Driver ->power_on and ->power_off callbacks leaks internal SMCC firmware
-> return codes to phy caller. This patch converts SMCC error codes to
-> standard linux errno codes. Include file linux/arm-smccc.h already provides
-> defines for SMCC error codes, so use them instead of custom driver defines.
-> Note that return value is signed 32bit, but stored in unsigned long type
-> with zero padding.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> ---
->  drivers/phy/marvell/phy-mvebu-a3700-comphy.c | 14 +++++++++++---
->  drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 14 +++++++++++---
->  2 files changed, 22 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c b/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-> index 1a138be8bd6a..810f25a47632 100644
-> --- a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-> +++ b/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-> @@ -26,7 +26,6 @@
->  #define COMPHY_SIP_POWER_ON			0x82000001
->  #define COMPHY_SIP_POWER_OFF			0x82000002
->  #define COMPHY_SIP_PLL_LOCK			0x82000003
-> -#define COMPHY_FW_NOT_SUPPORTED			(-1)
->  
->  #define COMPHY_FW_MODE_SATA			0x1
->  #define COMPHY_FW_MODE_SGMII			0x2
-> @@ -112,10 +111,19 @@ static int mvebu_a3700_comphy_smc(unsigned long function, unsigned long lane,
->  				  unsigned long mode)
->  {
->  	struct arm_smccc_res res;
-> +	s32 ret;
->  
->  	arm_smccc_smc(function, lane, mode, 0, 0, 0, 0, 0, &res);
-> +	ret = res.a0;
->  
-> -	return res.a0;
+As reported by smatch:
 
-> +	switch (ret) {
-> +	case SMCCC_RET_SUCCESS:
-> +		return 0;
-> +	case SMCCC_RET_NOT_SUPPORTED:
-> +		return -EOPNOTSUPP;
-> +	default:
-> +		return -EINVAL;
-> +	}
->  }
+	drivers/media//pci/cx23885/cx23885-alsa.c:83 cx23885_alsa_dma_init() warn: should 'nr_pages << 12' be a 64 bit type?
 
-Hi Pali
+the number of patches should be unsigned long.
 
-Maybe this should be a global helper translating SMCCC_RET_* into a
-standard errno value?
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ drivers/media/pci/cx23885/cx23885-alsa.c | 7 ++++---
+ drivers/media/pci/cx23885/cx23885.h      | 4 ++--
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-	 Andrew
+diff --git a/drivers/media/pci/cx23885/cx23885-alsa.c b/drivers/media/pci/cx23885/cx23885-alsa.c
+index df44ed7393a0..141852f02236 100644
+--- a/drivers/media/pci/cx23885/cx23885-alsa.c
++++ b/drivers/media/pci/cx23885/cx23885-alsa.c
+@@ -68,7 +68,8 @@ MODULE_PARM_DESC(audio_debug, "enable debug messages [analog audio]");
+ #define AUD_INT_MCHG_IRQ        (1 << 21)
+ #define GP_COUNT_CONTROL_RESET	0x3
+ 
+-static int cx23885_alsa_dma_init(struct cx23885_audio_dev *chip, int nr_pages)
++static int cx23885_alsa_dma_init(struct cx23885_audio_dev *chip,
++				 unsigned long nr_pages)
+ {
+ 	struct cx23885_audio_buffer *buf = chip->buf;
+ 	struct page *pg;
+@@ -76,11 +77,11 @@ static int cx23885_alsa_dma_init(struct cx23885_audio_dev *chip, int nr_pages)
+ 
+ 	buf->vaddr = vmalloc_32(nr_pages << PAGE_SHIFT);
+ 	if (NULL == buf->vaddr) {
+-		dprintk(1, "vmalloc_32(%d pages) failed\n", nr_pages);
++		dprintk(1, "vmalloc_32(%lu pages) failed\n", nr_pages);
+ 		return -ENOMEM;
+ 	}
+ 
+-	dprintk(1, "vmalloc is at addr %p, size=%d\n",
++	dprintk(1, "vmalloc is at addr %p, size=%lu\n",
+ 		buf->vaddr, nr_pages << PAGE_SHIFT);
+ 
+ 	memset(buf->vaddr, 0, nr_pages << PAGE_SHIFT);
+diff --git a/drivers/media/pci/cx23885/cx23885.h b/drivers/media/pci/cx23885/cx23885.h
+index c472498e57c4..349462ee2c48 100644
+--- a/drivers/media/pci/cx23885/cx23885.h
++++ b/drivers/media/pci/cx23885/cx23885.h
+@@ -325,8 +325,8 @@ struct cx23885_audio_buffer {
+ 	struct cx23885_riscmem	risc;
+ 	void			*vaddr;
+ 	struct scatterlist	*sglist;
+-	int                     sglen;
+-	int                     nr_pages;
++	int			sglen;
++	unsigned long		nr_pages;
+ };
+ 
+ struct cx23885_audio_dev {
+-- 
+2.26.2
+
