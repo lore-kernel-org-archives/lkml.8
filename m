@@ -2,225 +2,70 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7D3C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4FEC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3C1A2071B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:06:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="cand0aT1"
+	by mail.kernel.org (Postfix) with ESMTP id 9BC57207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599077291;
+	bh=n3axoKh6/pUGmjmZRHjq3qC/NB8zWjAq+HQe74tViAI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=LMRMir2X0XZ5wJsEAL3AoZIZH3IHkyPi3GyDl5M1dzTqbLpBVf6xEwJsimxjkmE5G
+	 n4EOh9gUuBD09y6aIbLHe6W6DV4hR3LdWbevU49uTWeQC4BTf9l4/tu4MJvvAzVfbC
+	 kw4dkZSU4oQvDOoZmJJw0h05YNHMbtxBuv+kRGF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgIBUGW (ORCPT
+        id S1726714AbgIBUIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 16:06:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIBUGV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 16:06:21 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFFE9C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 13:06:20 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id z16so577072qtq.16
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 13:06:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=C2MUlVnA+LVqAkJnXitROtSiNFHvVgE4LBLUnXa2XhM=;
-        b=cand0aT17ALCvtQnhRN2pjZ0CG+1g3q4aWCQqD1n2SaTe9NgSjIuQvViJxrkMLbjpk
-         Tcto/vLlomxBI5Ra9DdIxhoUt4VK4j1/qY1pPsg1Gwn1S/gz9s0P/V+TszI9lFzZWsJo
-         q1NFM/xl6R3oDaAuXyHgEs0hYnj2AvfVhV+CgvyFAU9VRlPGDrYd5UTK0HXHrxkOUB/q
-         KnQpCw4XFkXT9KI8jUNmTkERDkIt9k2+Hhwii53589LcLrhryhz10fAmhM884uv9Wnfj
-         2nekPsVFSiBR6BPjgQ2sJYoV1j+9Lf2MxuR9vHup5T8syut4bhrbmJUOfuCie+TY3J/n
-         wE4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=C2MUlVnA+LVqAkJnXitROtSiNFHvVgE4LBLUnXa2XhM=;
-        b=JBr0kt/JrVPPPIx7llFR4SIkGWNC5RWzqg1vhSIA6biGzU7d30kqxBp1z+FkWGGpzX
-         0xuxOAESCE0E0V5YN2KUBu73htHCZvAHhEdmUD8GB2E9x4CjegDKm/KCXYZET8JjZBa0
-         mFo/uu6fzLgb2r1xR5emeAUF17HS5iSvF7l51d9EJwyaufpwUw8l0u1eYQ1vXOecb73J
-         CQloOc4WUJpewJ0lsraiz7pyv/56661A36Apr2o6zEf89viw6BTN6pP+MQndQphCV47j
-         X0VETPdLxobeJpdKRPQ1g6eGCzensxsfLLXwrFzMcgb9R/hWTD7ybuYTJ0bWh2tjhFmL
-         s2oQ==
-X-Gm-Message-State: AOAM531ebOf7H8uOwpD/8zUQwyZsws5RQlopjXYg3kHYASKqHeGv8TL5
-        8AHV7lrP4+zeMsFyqqpxifw3aKv4ghY=
-X-Google-Smtp-Source: ABdhPJw8Q3Tv04qhTOmsDMGAnsb0dpy6HmzAOgvmw+fBmSV4SbIMCLj7epgmHDj4Zt0scYDQ25R1MkEnGpw=
-X-Received: from christoph.c.googlers.com ([fda3:e722:ac3:10:14:4d90:c0a8:1fe1])
- (user=agoode job=sendgmr) by 2002:a0c:b2d4:: with SMTP id d20mr154696qvf.1.1599077179933;
- Wed, 02 Sep 2020 13:06:19 -0700 (PDT)
-Date:   Wed,  2 Sep 2020 16:06:17 -0400
-In-Reply-To: <20200828032752.3229698-1-agoode@google.com>
-Message-Id: <20200902200617.1720599-1-agoode@google.com>
-Mime-Version: 1.0
-References: <20200828032752.3229698-1-agoode@google.com>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH v3] media: uvcvideo: Convey full colorspace information to V4L2
-From:   Adam Goode <agoode@google.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Adam Goode <agoode@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 2 Sep 2020 16:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35136 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726247AbgIBUIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 16:08:10 -0400
+Subject: Re: [GIT PULL] xfs: small fixes for 5.9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599077288;
+        bh=n3axoKh6/pUGmjmZRHjq3qC/NB8zWjAq+HQe74tViAI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=DvPnqkyphcisB+f2t1hDjR0zvHCfDaAltWA4+wcYi8x98KiYH4jgrWIuxaMJCXtoq
+         WZmekutpuHjOU7jpf3cHWm4mIJwj5DPdL+vI24lCORIAOOOIX/qepd42Cp3rjT0aoB
+         ECn8x1hzOZM5KMXtfuTYZwYz18UqUW7kU3NJxvd0=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200902170019.GO6096@magnolia>
+References: <20200902170019.GO6096@magnolia>
+X-PR-Tracked-List-Id: <linux-xfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200902170019.GO6096@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.9-fixes-1
+X-PR-Tracked-Commit-Id: 125eac243806e021f33a1fdea3687eccbb9f7636
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e1d0126ca3a66c284a02b083a42e2b39558002cd
+Message-Id: <159907728850.15646.6826562872672961490.pr-tracker-bot@kernel.org>
+Date:   Wed, 02 Sep 2020 20:08:08 +0000
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Color Matching Descriptor has been present in USB cameras since
-the original version of UVC, but it has never been fully exposed
-in Linux.
+The pull request you sent on Wed, 2 Sep 2020 10:00:19 -0700:
 
-This change informs V4L2 of all of the UVC colorspace parameters:
-color primaries, transfer characteristics, and YCbCr encoding.
-videodev2.h doesn't have values for all the possible UVC color settings,
-so it is mapped as closely as possible.
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.9-fixes-1
 
-Signed-off-by: Adam Goode <agoode@google.com>
----
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e1d0126ca3a66c284a02b083a42e2b39558002cd
 
-Changes in v3:
- - Remove quantization changes completely.
+Thank you!
 
- drivers/media/usb/uvc/uvc_driver.c | 64 ++++++++++++++++++++++++++++--
- drivers/media/usb/uvc/uvc_v4l2.c   |  4 ++
- drivers/media/usb/uvc/uvcvideo.h   |  4 +-
- 3 files changed, 67 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index 431d86e1c94b..8682c7ad6949 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -248,10 +248,10 @@ static struct uvc_format_desc *uvc_format_by_guid(const u8 guid[16])
- 	return NULL;
- }
- 
--static u32 uvc_colorspace(const u8 primaries)
-+static enum v4l2_colorspace uvc_colorspace(const u8 primaries)
- {
--	static const u8 colorprimaries[] = {
--		0,
-+	static const enum v4l2_colorspace colorprimaries[] = {
-+		V4L2_COLORSPACE_DEFAULT,  /* Unspecified */
- 		V4L2_COLORSPACE_SRGB,
- 		V4L2_COLORSPACE_470_SYSTEM_M,
- 		V4L2_COLORSPACE_470_SYSTEM_BG,
-@@ -262,7 +262,61 @@ static u32 uvc_colorspace(const u8 primaries)
- 	if (primaries < ARRAY_SIZE(colorprimaries))
- 		return colorprimaries[primaries];
- 
--	return 0;
-+	return V4L2_COLORSPACE_DEFAULT;  /* Reserved */
-+}
-+
-+static enum v4l2_xfer_func uvc_xfer_func(const u8 transfer_characteristics)
-+{
-+	/* V4L2 currently does not currently have definitions for all
-+	 * possible values of UVC transfer characteristics. If
-+	 * v4l2_xfer_func is extended with new values, the mapping
-+	 * below should be updated.
-+	 *
-+	 * Substitutions are taken from the mapping given for
-+	 * V4L2_XFER_FUNC_DEFAULT documented in videodev2.h.
-+	 */
-+	static const enum v4l2_xfer_func xfer_funcs[] = {
-+		V4L2_XFER_FUNC_DEFAULT,    /* Unspecified */
-+		V4L2_XFER_FUNC_709,
-+		V4L2_XFER_FUNC_709,        /* Substitution for BT.470-2 M */
-+		V4L2_XFER_FUNC_709,        /* Substitution for BT.470-2 B, G */
-+		V4L2_XFER_FUNC_709,        /* Substitution for SMPTE 170M */
-+		V4L2_XFER_FUNC_SMPTE240M,
-+		V4L2_XFER_FUNC_NONE,
-+		V4L2_XFER_FUNC_SRGB,
-+	};
-+
-+	if (transfer_characteristics < ARRAY_SIZE(xfer_funcs))
-+		return xfer_funcs[transfer_characteristics];
-+
-+	return V4L2_XFER_FUNC_DEFAULT;  /* Reserved */
-+}
-+
-+static enum v4l2_ycbcr_encoding uvc_ycbcr_enc(const u8 matrix_coefficients)
-+{
-+	/* V4L2 currently does not currently have definitions for all
-+	 * possible values of UVC matrix coefficients. If
-+	 * v4l2_ycbcr_encoding is extended with new values, the
-+	 * mapping below should be updated.
-+	 *
-+	 * Substitutions are taken from the mapping given for
-+	 * V4L2_YCBCR_ENC_DEFAULT documented in videodev2.h.
-+	 *
-+	 * FCC is assumed to be close enough to 601.
-+	 */
-+	static const enum v4l2_ycbcr_encoding ycbcr_encs[] = {
-+		V4L2_YCBCR_ENC_DEFAULT,  /* Unspecified */
-+		V4L2_YCBCR_ENC_709,
-+		V4L2_YCBCR_ENC_601,      /* Substitution for FCC */
-+		V4L2_YCBCR_ENC_601,      /* Substitution for BT.470-2 B, G */
-+		V4L2_YCBCR_ENC_601,
-+		V4L2_YCBCR_ENC_SMPTE240M,
-+	};
-+
-+	if (matrix_coefficients < ARRAY_SIZE(ycbcr_encs))
-+		return ycbcr_encs[matrix_coefficients];
-+
-+	return V4L2_YCBCR_ENC_DEFAULT;  /* Reserved */
- }
- 
- /* Simplify a fraction using a simple continued fraction decomposition. The
-@@ -704,6 +758,8 @@ static int uvc_parse_format(struct uvc_device *dev,
- 		}
- 
- 		format->colorspace = uvc_colorspace(buffer[3]);
-+		format->xfer_func = uvc_xfer_func(buffer[4]);
-+		format->ycbcr_enc = uvc_ycbcr_enc(buffer[5]);
- 
- 		buflen -= buffer[0];
- 		buffer += buffer[0];
-diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-index 0335e69b70ab..dee65e89d6c2 100644
---- a/drivers/media/usb/uvc/uvc_v4l2.c
-+++ b/drivers/media/usb/uvc/uvc_v4l2.c
-@@ -253,6 +253,8 @@ static int uvc_v4l2_try_format(struct uvc_streaming *stream,
- 	fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(format, frame);
- 	fmt->fmt.pix.sizeimage = probe->dwMaxVideoFrameSize;
- 	fmt->fmt.pix.colorspace = format->colorspace;
-+	fmt->fmt.pix.xfer_func = format->xfer_func;
-+	fmt->fmt.pix.ycbcr_enc = format->ycbcr_enc;
- 
- 	if (uvc_format != NULL)
- 		*uvc_format = format;
-@@ -289,6 +291,8 @@ static int uvc_v4l2_get_format(struct uvc_streaming *stream,
- 	fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(format, frame);
- 	fmt->fmt.pix.sizeimage = stream->ctrl.dwMaxVideoFrameSize;
- 	fmt->fmt.pix.colorspace = format->colorspace;
-+	fmt->fmt.pix.xfer_func = format->xfer_func;
-+	fmt->fmt.pix.ycbcr_enc = format->ycbcr_enc;
- 
- done:
- 	mutex_unlock(&stream->mutex);
-diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-index 6ab972c643e3..eb5f3ffc0222 100644
---- a/drivers/media/usb/uvc/uvcvideo.h
-+++ b/drivers/media/usb/uvc/uvcvideo.h
-@@ -370,7 +370,9 @@ struct uvc_format {
- 	u8 type;
- 	u8 index;
- 	u8 bpp;
--	u8 colorspace;
-+	enum v4l2_colorspace colorspace;
-+	enum v4l2_xfer_func xfer_func;
-+	enum v4l2_ycbcr_encoding ycbcr_enc;
- 	u32 fcc;
- 	u32 flags;
- 
 -- 
-2.26.2
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
