@@ -2,125 +2,103 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AEEC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE038C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A621220767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:50:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X6G591Mx"
+	by mail.kernel.org (Postfix) with ESMTP id 9BC152078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgIBNuV (ORCPT
+        id S1727905AbgIBNuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 09:50:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727794AbgIBNnX (ORCPT
+        Wed, 2 Sep 2020 09:50:54 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:46468 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726984AbgIBNnV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:43:23 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75FA0C06125C;
-        Wed,  2 Sep 2020 06:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=N5weILa9p2I3E5pwg6IDJSdAHD9ouxJHQ24m98aMNso=; b=X6G591MxEwqrhHW8xjSjoQhjy5
-        w+QWnbZEPjQ1vJoOYSWtRE5564LUaXhU27JMzP0i6ZkpKdAWDCAAa83yF8fRhHmvCFBW5MCXfe2Qw
-        TYyhTyfI8IvfXbhjPT7Ni+p8obeZ0+24ec14n/7TTb7Og5aT8C/ognpPJy8sKXPVBPRFPrkCyufrH
-        v16lnl1WBS5QSgB6UBCiSKh1+a4U0ALBbfQkn13P0yCgJ9uz4IH9Eh8DVtEE37J6uex8ivP4sWtC+
-        VL7AeN2+x28P1UHDPs5N3trC031XZq8VJuS2wPoqzAI4FNfHyO9jrB/mZ83fttcAU23pyoLFwKjzk
-        gw978Cwg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDT2M-0003E1-Bh; Wed, 02 Sep 2020 13:42:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1030A3003E5;
-        Wed,  2 Sep 2020 15:42:52 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BD77029A82C1F; Wed,  2 Sep 2020 15:42:52 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 15:42:52 +0200
-From:   peterz@infradead.org
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
-        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
-        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
-        paulmck@kernel.org
-Subject: Re: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers
- and make kretprobe lockless
-Message-ID: <20200902134252.GH1362448@hirez.programming.kicks-ass.net>
-References: <159870598914.1229682.15230803449082078353.stgit@devnote2>
- <20200901190808.GK29142@worktop.programming.kicks-ass.net>
- <20200902093739.8bd13603380951eaddbcd8a5@kernel.org>
- <20200902070226.GG2674@hirez.programming.kicks-ass.net>
- <20200902171755.b126672093a3c5d1b3a62a4f@kernel.org>
- <20200902093613.GY1362448@hirez.programming.kicks-ass.net>
- <20200902221926.f5cae5b4ad00b8d8f9ad99c7@kernel.org>
+        Wed, 2 Sep 2020 09:43:21 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 082DdL0r011878;
+        Wed, 2 Sep 2020 09:42:30 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 337gv6mg3u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 09:42:30 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 082DgTrT063816
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 2 Sep 2020 09:42:29 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 2 Sep 2020 09:42:28 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 2 Sep 2020 09:42:28 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 2 Sep 2020 09:42:27 -0400
+Received: from mircea-Precision-5530-2-in-1.ad.analog.com ([10.48.65.139])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 082DgPck014095;
+        Wed, 2 Sep 2020 09:42:25 -0400
+From:   Mircea Caprioru <mircea.caprioru@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <alexandru.ardelean@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH] iio: adc: ad7124: Fix typo in device name
+Date:   Wed, 2 Sep 2020 16:42:22 +0300
+Message-ID: <20200902134222.28357-1-mircea.caprioru@analog.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902221926.f5cae5b4ad00b8d8f9ad99c7@kernel.org>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-02_09:2020-09-02,2020-09-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ bulkscore=0 phishscore=0 impostorscore=0 suspectscore=1 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 clxscore=1011 mlxlogscore=730 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009020130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 10:19:26PM +0900, Masami Hiramatsu wrote:
-> On Wed, 2 Sep 2020 11:36:13 +0200
-> peterz@infradead.org wrote:
-> 
-> > On Wed, Sep 02, 2020 at 05:17:55PM +0900, Masami Hiramatsu wrote:
-> > 
-> > > > Ok, but then lockdep will yell at you if you have that enabled and run
-> > > > the unoptimized things.
-> > > 
-> > > Oh, does it warn for all spinlock things in kprobes if it is unoptimized?
-> > > Hmm, it has to be noted in the documentation.
-> > 
-> > Lockdep will warn about spinlocks used in NMI context that are also used
-> > outside NMI context.
-> 
-> OK, but raw_spin_lock_irqsave() will not involve lockdep, correct?
+This patch fixes the device name typo.
 
-It will. The distinction between spin_lock and raw_spin_lock is only
-that raw_spin_lock stays a spinlock on PREEMPT_RT, while spin_lock will
-turn into a (PI) mutex in that case.
+Fixes: 951ad4700313 ("iio: adc: ad7124: move chip ID & name on the chip_info table")
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+---
+ drivers/iio/adc/ad7124.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-But both will call into lockdep. Unlike local_irq_disable() and
-raw_local_irq_disable(), where the latter will not. Yes your prefixes
-are a mess :/
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index 8dce06e9e69c..766c73333604 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -177,12 +177,12 @@ static const struct iio_chan_spec ad7124_channel_template = {
+ 
+ static struct ad7124_chip_info ad7124_chip_info_tbl[] = {
+ 	[ID_AD7124_4] = {
+-		.name = "ad7127-4",
++		.name = "ad7124-4",
+ 		.chip_id = CHIPID_AD7124_4,
+ 		.num_inputs = 8,
+ 	},
+ 	[ID_AD7124_8] = {
+-		.name = "ad7127-8",
++		.name = "ad7124-8",
+ 		.chip_id = CHIPID_AD7124_8,
+ 		.num_inputs = 16,
+ 	},
+-- 
+2.25.1
 
-> > Now, for the kretprobe that kprobe_busy flag prevents the actual
-> > recursion self-deadlock, but lockdep isn't smart enough to see that.
-> > 
-> > One way around this might be to use SINGLE_DEPTH_NESTING for locks when
-> > we use them from INT3 context. That way they'll have a different class
-> > and lockdep will not see the recursion.
-> 
-> Hmm, so lockdep warns only when it detects the spinlock in NMI context,
-> and int3 is now always NMI, thus all spinlock (except raw_spinlock?)
-> in kprobe handlers should get warned, right?
-> I have tested this series up to [16/21] with optprobe disabled, but
-> I haven't see the lockdep warnings.
-
-There's a bug, that might make it miss it. I have a patch. I'll send it
-shortly.
-
-> > pre_handler_kretprobe() is always called from INT3, right?
-> 
-> No, not always, it can be called from optprobe (same as original code
-> context) or ftrace handler.
-> But if you set 0 to /proc/sys/debug/kprobe_optimization, and compile
-> the kernel without function tracer, it should always be called from
-> INT3.
-
-D'oh, ofcourse! Arguably I should make the optprobe context NMI like
-too.. but that's for another day.
