@@ -2,136 +2,94 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4645C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE38C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98817206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:14:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OkuySKQM"
+	by mail.kernel.org (Postfix) with ESMTP id A787E2078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:15:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgIBKO0 (ORCPT
+        id S1726586AbgIBKP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 06:14:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgIBKOX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 06:14:23 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 347EEC061244;
-        Wed,  2 Sep 2020 03:14:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Hep1LSpouBu/k92H0XCqJqwft0oDi9qnzCpccwysDdk=; b=OkuySKQMXiZ/t5tRBDPlK0aqlA
-        /bozFDv5g8PAVjwIw9G7DbVGV6BxoI+C5XOZq9tpMfdYSeJjjTy4KoE65k16p1nj0ly9G4s165gyq
-        mP9DYVY1l8mamqpBqjwRTE+IVx1zr/Ve8saW53Z7KwqMfO2yJNQ8lTdWKSlZkdFrcHvqUUP+CutoP
-        tqTmY72+ChbZ+T19PncEL+w6LBYTbhdiskLTB+bSgwWui0soxsjny2mViiXw1BBJ+iFrjxwBrEA/S
-        hc2Vvkocsefi8pSnV7jY+mufry9r4xsxqiDBTQ0doov+Tut8249VfDjlyaH7VctKm8kZ0idx9hVH6
-        1m2OIlIg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDPmS-0005F0-2f; Wed, 02 Sep 2020 10:14:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EEB123012DF;
-        Wed,  2 Sep 2020 12:14:12 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D7A5223D3D749; Wed,  2 Sep 2020 12:14:12 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 12:14:12 +0200
-From:   peterz@infradead.org
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     paulmck@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr, akiyks@gmail.com
-Subject: Re: [PATCH kcsan 6/9] tools/memory-model: Expand the cheatsheet.txt
- notion of relaxed
-Message-ID: <20200902101412.GC1362448@hirez.programming.kicks-ass.net>
-References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
- <20200831182037.2034-6-paulmck@kernel.org>
- <20200902035448.GC49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+        Wed, 2 Sep 2020 06:15:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56542 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726285AbgIBKP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 06:15:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D97A3AC61;
+        Wed,  2 Sep 2020 10:15:26 +0000 (UTC)
+Subject: Re: [PATCH v1 4/5] xen/balloon: try to merge system ram resources
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
+        Julien Grall <julien@xen.org>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>
+References: <20200821103431.13481-1-david@redhat.com>
+ <20200821103431.13481-5-david@redhat.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <226413fc-ef25-59bd-772f-79012fda0ee3@suse.com>
+Date:   Wed, 2 Sep 2020 12:15:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902035448.GC49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+In-Reply-To: <20200821103431.13481-5-david@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 11:54:48AM +0800, Boqun Feng wrote:
-> On Mon, Aug 31, 2020 at 11:20:34AM -0700, paulmck@kernel.org wrote:
-> > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > 
-> > This commit adds a key entry enumerating the various types of relaxed
-> > operations.
-> > 
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > ---
-> >  tools/memory-model/Documentation/cheatsheet.txt | 27 ++++++++++++++-----------
-> >  1 file changed, 15 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/tools/memory-model/Documentation/cheatsheet.txt b/tools/memory-model/Documentation/cheatsheet.txt
-> > index 33ba98d..31b814d 100644
-> > --- a/tools/memory-model/Documentation/cheatsheet.txt
-> > +++ b/tools/memory-model/Documentation/cheatsheet.txt
-> > @@ -5,7 +5,7 @@
-> >  
-> >  Store, e.g., WRITE_ONCE()            Y                                       Y
-> >  Load, e.g., READ_ONCE()              Y                          Y   Y        Y
-> > -Unsuccessful RMW operation           Y                          Y   Y        Y
-> > +Relaxed operation                    Y                          Y   Y        Y
-> >  rcu_dereference()                    Y                          Y   Y        Y
-> >  Successful *_acquire()               R                   Y  Y   Y   Y    Y   Y
-> >  Successful *_release()         C        Y  Y    Y     W                      Y
-> > @@ -17,14 +17,17 @@ smp_mb__before_atomic()       CP        Y  Y    Y        a  a   a   a    Y
-> >  smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
-> >  
-> >  
-> > -Key:	C:	Ordering is cumulative
-> > -	P:	Ordering propagates
-> > -	R:	Read, for example, READ_ONCE(), or read portion of RMW
-> > -	W:	Write, for example, WRITE_ONCE(), or write portion of RMW
-> > -	Y:	Provides ordering
-> > -	a:	Provides ordering given intervening RMW atomic operation
-> > -	DR:	Dependent read (address dependency)
-> > -	DW:	Dependent write (address, data, or control dependency)
-> > -	RMW:	Atomic read-modify-write operation
-> > -	SELF:	Orders self, as opposed to accesses before and/or after
-> > -	SV:	Orders later accesses to the same variable
-> > +Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
-> > +		  operation, an unsuccessful RMW operation, or one of
-> > +		  the atomic_read() and atomic_set() family of operations.
+On 21.08.20 12:34, David Hildenbrand wrote:
+> Let's reuse the new mechanism to merge system ram resources below the
+> root. We are the only one hotplugging system ram (e.g., DIMMs don't apply),
+> so this is safe to be used.
 > 
-> To be accurate, atomic_set() doesn't return any value, so it cannot be
-> ordered against DR and DW ;-)
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Stefano Stabellini <sstabellini@kernel.org>
+> Cc: Roger Pau Monné <roger.pau@citrix.com>
+> Cc: Julien Grall <julien@xen.org>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richardw.yang@linux.intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>   drivers/xen/balloon.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+> index 37ffccda8bb87..5ec73f752b8a7 100644
+> --- a/drivers/xen/balloon.c
+> +++ b/drivers/xen/balloon.c
+> @@ -338,6 +338,10 @@ static enum bp_state reserve_additional_memory(void)
+>   	if (rc) {
+>   		pr_warn("Cannot add additional memory (%i)\n", rc);
+>   		goto err;
+> +	} else {
+> +		resource = NULL;
+> +		/* Try to reduce the number of system ram resources. */
+> +		merge_system_ram_resources(&iomem_resource);
+>   	}
 
-Surely DW is valid for any store.
+I don't see the need for setting resource to NULL and to use an "else"
+clause here.
 
-> I think we can split the Relaxed family into two groups:
-> 
-> void Relaxed: atomic_set() or atomic RMW operations that don't return
->               any value (e.g atomic_inc())
-> 
-> non-void Relaxed: a *_relaxed() RMW operation, an unsuccessful RMW
->                   operation, or atomic_read().
-> 
-> And "void Relaxed" is similar to WRITE_ONCE(), only has "Self" and "SV"
-> equal "Y", while "non-void Relaxed" plays the same rule as "Relaxed"
-> in this patch.
-> 
-> Thoughts?
 
-I get confused by the mention of all this atomic_read() atomic_set()
-crud in the first place, why are they called out specifically from any
-other regular load/store ?
+Juergen
