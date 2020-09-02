@@ -2,147 +2,112 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F455C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F213C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEB21208C7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7752D207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O6mYoz1i"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Qc90Wo+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgIBSRJ (ORCPT
+        id S1728081AbgIBSS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:17:09 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:37162 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727993AbgIBSRD (ORCPT
+        Wed, 2 Sep 2020 14:18:28 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57214 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbgIBSSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:17:03 -0400
+        Wed, 2 Sep 2020 14:18:24 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082IGkGg057123;
-        Wed, 2 Sep 2020 13:16:46 -0500
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082IIK1M072928;
+        Wed, 2 Sep 2020 13:18:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599070606;
-        bh=GfTVZ0wvy7CzbpqFgIs3qOYOtsxaXlu82wrtrD6QGjU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=O6mYoz1iW7ZFMC/+d5x5KA8sHJCv81ZPGS8lO/RBoXcXQ8xcdu6Q6niRSoKaRBeAn
-         IGel7Vx5hXuW0Bu+PZ7yE07vhYsYG349R/7BKWoU1WBqSnBMugosiveCwf0Hqwb89t
-         58VfdP9n8pZDRCnXPZioc0iQjYyZZOfXAb2+++3g=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082IGk9R005318
+        s=ti-com-17Q1; t=1599070700;
+        bh=7OPmsbCXRtEPuYhTxLo0fWEgyxg39eQfloSk03tiLhQ=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=Qc90Wo+gMi6zuQKXv1EUquQEjbP9AsttUcWv5xZmiH8TFx/uCBOTjR6HcdVYa3KJ5
+         Hqp+uhFj9McJWd7a4eZ29uQgunCroQPoTz5MJgTTDdAT6FB6iX/Zh/MRqO44YXOzfV
+         n564SXcZPpkemuyU/84yBjSDs2twnhOCj9Cb5TqY=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082IIKp6007964
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 2 Sep 2020 13:16:46 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 2 Sep 2020 13:18:20 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
- 2020 13:16:46 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 13:18:20 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 2 Sep 2020 13:16:46 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082IGjjn105163;
-        Wed, 2 Sep 2020 13:16:45 -0500
-Subject: Re: [PATCH net-next] net: dp83869: Add ability to advertise Fiber
- connection
-To:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200902132556.10285-1-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <33e15b70-fc43-ca15-75b3-79916a1b78ca@ti.com>
-Date:   Wed, 2 Sep 2020 13:16:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Frontend Transport; Wed, 2 Sep 2020 13:18:20 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082IIKIp111197;
+        Wed, 2 Sep 2020 13:18:20 -0500
+Date:   Wed, 2 Sep 2020 13:18:20 -0500
+From:   Nishanth Menon <nm@ti.com>
+To:     Suman Anna <s-anna@ti.com>, <vigneshr@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <lokeshvutla@ti.com>,
+        <grygorii.strashko@ti.com>, <nsekhar@ti.com>
+Subject: Re: [PATCH 6/7] arm64: dts: ti: k3-*: Use generic adc for node names
+Message-ID: <20200902181820.nlvl3pfzeh4agzzi@akan>
+References: <20200901223059.14801-1-nm@ti.com>
+ <20200901223059.14801-7-nm@ti.com>
+ <60e6b790-360a-6eaf-03a3-5bb256adf215@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200902132556.10285-1-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <60e6b790-360a-6eaf-03a3-5bb256adf215@ti.com>
+User-Agent: NeoMutt/20171215
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11:51-20200902, Suman Anna wrote:
+> On 9/1/20 5:30 PM, Nishanth Menon wrote:
+> > Use adc@ naming for nodes following standard conventions of device
+> > tree (section 2.2.2 Generic Names recommendation in [1]).
+> > 
+> > [1] https://github.com/devicetree-org/devicetree-specification/tree/v0.3
+> > 
+> > Suggested-by: Suman Anna <s-anna@ti.com>
+> > Signed-off-by: Nishanth Menon <nm@ti.com>
+> > ---
+> >  arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi         | 4 ++--
+> >  arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 4 ++--
+> >  2 files changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+> > index 51ca4b4d4c21..6dfec68ac865 100644
+> > --- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+> > +++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+> > @@ -80,7 +80,7 @@
+> >  		#size-cells = <0>;
+> >  	};
+> >  
+> > -	tscadc0: tscadc@40200000 {
+> > +	tscadc0: adc@40200000 {
+> 
+> OK with these changes, since these seem to be only have the adc child nodes.
+> This node is essentially a parent node for touchscreen and adc child nodes. The
+> driver is currently looking for "tsc" on touchscreen child nodes, but none of
+> the K3 SoCs have them atm.
+> 
 
-On 9/2/20 8:25 AM, Dan Murphy wrote:
-> Add the ability to advertise the Fiber connection if the strap or the
-> op-mode is configured for 100Base-FX.
->
-> Auto negotiation is not supported on this PHY when in fiber mode.
->
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   drivers/net/phy/dp83869.c | 35 +++++++++++++++++++++++++++++++++++
->   1 file changed, 35 insertions(+)
->
-> diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
-> index 58103152c601..1acf498832f1 100644
-> --- a/drivers/net/phy/dp83869.c
-> +++ b/drivers/net/phy/dp83869.c
-> @@ -52,6 +52,11 @@
->   					 BMCR_FULLDPLX | \
->   					 BMCR_SPEED1000)
->   
-> +#define MII_DP83869_FIBER_ADVERTISE    (ADVERTISED_TP | ADVERTISED_MII | \
-> +					ADVERTISED_FIBRE | ADVERTISED_BNC |  \
-> +					ADVERTISED_Pause | ADVERTISED_Asym_Pause | \
-> +					ADVERTISED_100baseT_Full)
-> +
->   /* This is the same bit mask as the BMCR so re-use the BMCR default */
->   #define DP83869_FX_CTRL_DEFAULT	MII_DP83869_BMCR_DEFAULT
->   
-> @@ -300,6 +305,7 @@ static int dp83869_configure_mode(struct phy_device *phydev,
->   {
->   	int phy_ctrl_val;
->   	int ret;
-> +	int bmcr;
->   
->   	if (dp83869->mode < DP83869_RGMII_COPPER_ETHERNET ||
->   	    dp83869->mode > DP83869_SGMII_COPPER_ETHERNET)
-> @@ -383,7 +389,36 @@ static int dp83869_configure_mode(struct phy_device *phydev,
->   
->   		break;
->   	case DP83869_RGMII_1000_BASE:
-> +		break;
->   	case DP83869_RGMII_100_BASE:
-> +		/* Only allow advertising what this PHY supports */
-> +		linkmode_and(phydev->advertising, phydev->advertising,
-> +			     phydev->supported);
-> +
-> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
-> +				 phydev->supported);
-> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
-> +				 phydev->advertising);
-> +
-> +		/* Auto neg is not supported in fiber mode */
-> +		bmcr = phy_read(phydev, MII_BMCR);
-> +		if (bmcr < 0)
-> +			return bmcr;
-> +
-> +		phydev->autoneg = AUTONEG_DISABLE;
-> +		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-> +				   phydev->supported);
-> +		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-> +				   phydev->advertising);
-> +
-> +		if (bmcr & BMCR_ANENABLE) {
-> +			ret =  phy_modify(phydev, MII_BMCR, BMCR_ANENABLE, 0);
-> +			if (ret < 0)
-> +				return ret;
-> +		}
-> +		ret = phy_modify_changed(phydev, MII_ADVERTISE,
-> +					 MII_DP83869_FIBER_ADVERTISE,
-> +					 MII_DP83869_FIBER_ADVERTISE);
 
-This is not correct after some testing find that this fails to init 
-since ret will be non-zero on success
+Vignesh: are you ok with this, care to comment?
 
-Dan
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
