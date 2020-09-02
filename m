@@ -6,95 +6,104 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BDBC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146D4C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8A82078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F9A2078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgIBOGI (ORCPT
+        id S1726384AbgIBOIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:06:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43138 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727892AbgIBNuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:50:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BB1DFB609;
-        Wed,  2 Sep 2020 13:50:20 +0000 (UTC)
-Date:   Wed, 2 Sep 2020 15:50:18 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     David Hildenbrand <dhildenb@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v2 00/28] The new cgroup slab memory controller
-Message-ID: <20200902135018.GF4617@dhcp22.suse.cz>
-References: <6469324e-afa2-18b4-81fb-9e96466c1bf3@suse.cz>
- <A8A8D5FE-86C3-40B4-919C-5FF2A134F366@redhat.com>
- <CA+CK2bAebg4PALh3_-49MXGJ-FNP3hE98wHZd5uEC-q7wG6Vmg@mail.gmail.com>
+        Wed, 2 Sep 2020 10:08:13 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:54038 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726173AbgIBNvM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:51:12 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-160-I6NBJ2z0PIWY5wEzjjZvMA-1; Wed, 02 Sep 2020 14:51:06 +0100
+X-MC-Unique: I6NBJ2z0PIWY5wEzjjZvMA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 2 Sep 2020 14:51:05 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 2 Sep 2020 14:51:05 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christophe Leroy' <christophe.leroy@csgroup.eu>,
+        'Christoph Hellwig' <hch@lst.de>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 10/10] powerpc: remove address space overrides using
+ set_fs()
+Thread-Topic: [PATCH 10/10] powerpc: remove address space overrides using
+ set_fs()
+Thread-Index: AQHWgSXGxcHfrrTX9UCmYjSyVg3SwKlVUsKA///zAICAABMqAA==
+Date:   Wed, 2 Sep 2020 13:51:05 +0000
+Message-ID: <0c298e0d972a48bd9ee178225e404b12@AcuMS.aculab.com>
+References: <20200827150030.282762-1-hch@lst.de>
+ <20200827150030.282762-11-hch@lst.de>
+ <8974838a-a0b1-1806-4a3a-e983deda67ca@csgroup.eu>
+ <20200902123646.GA31184@lst.de>
+ <61b9a880a6424a34b841cf3dddb463ad@AcuMS.aculab.com>
+ <8de54fe0-4be9-5624-dd1d-d95d792e933d@csgroup.eu>
+In-Reply-To: <8de54fe0-4be9-5624-dd1d-d95d792e933d@csgroup.eu>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+CK2bAebg4PALh3_-49MXGJ-FNP3hE98wHZd5uEC-q7wG6Vmg@mail.gmail.com>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 02-09-20 08:42:13, Pavel Tatashin wrote:
-> > > Am 02.09.2020 um 11:53 schrieb Vlastimil Babka <vbabka@suse.cz>:
-> > >
-> > > ﻿On 8/28/20 6:47 PM, Pavel Tatashin wrote:
-> > >> There appears to be another problem that is related to the
-> > >> cgroup_mutex -> mem_hotplug_lock deadlock described above.
-> > >>
-> > >> In the original deadlock that I described, the workaround is to
-> > >> replace crash dump from piping to Linux traditional save to files
-> > >> method. However, after trying this workaround, I still observed
-> > >> hardware watchdog resets during machine  shutdown.
-> > >>
-> > >> The new problem occurs for the following reason: upon shutdown systemd
-> > >> calls a service that hot-removes memory, and if hot-removing fails for
-> > >
-> > > Why is that hotremove even needed if we're shutting down? Are there any
-> > > (virtualization?) platforms where it makes some difference over plain
-> > > shutdown/restart?
-> >
-> > If all it‘s doing is offlining random memory that sounds unnecessary and dangerous. Any pointers to this service so we can figure out what it‘s doing and why? (Arch? Hypervisor?)
-> 
-> Hi David,
-> 
-> This is how we are using it at Microsoft: there is  a very large
-> number of small memory machines (8G each) with low downtime
-> requirements (reboot must be under a second). There is also a large
-> state ~2G of memory that we need to transfer during reboot, otherwise
-> it is very expensive to recreate the state. We have 2G of system
-> memory memory reserved as a pmem in the device tree, and use it to
-> pass information across reboots. Once the information is not needed we
-> hot-add that memory and use it during runtime, before shutdown we
-> hot-remove the 2G, save the program state on it, and do the reboot.
+RnJvbTogQ2hyaXN0b3BoZSBMZXJveQ0KPiBTZW50OiAwMiBTZXB0ZW1iZXIgMjAyMCAxNDoyNQ0K
+PiBMZSAwMi8wOS8yMDIwIMOgIDE1OjEzLCBEYXZpZCBMYWlnaHQgYSDDqWNyaXTCoDoNCj4gPiBG
+cm9tOiBDaHJpc3RvcGggSGVsbHdpZw0KPiA+PiBTZW50OiAwMiBTZXB0ZW1iZXIgMjAyMCAxMzoz
+Nw0KPiA+Pg0KPiA+PiBPbiBXZWQsIFNlcCAwMiwgMjAyMCBhdCAwODoxNToxMkFNICswMjAwLCBD
+aHJpc3RvcGhlIExlcm95IHdyb3RlOg0KPiA+Pj4+IC0JCXJldHVybiAwOw0KPiA+Pj4+IC0JcmV0
+dXJuIChzaXplID09IDAgfHwgc2l6ZSAtIDEgPD0gc2VnLnNlZyAtIGFkZHIpOw0KPiA+Pj4+ICsJ
+aWYgKGFkZHIgPj0gVEFTS19TSVpFX01BWCkNCj4gPj4+PiArCQlyZXR1cm4gZmFsc2U7DQo+ID4+
+Pj4gKwlpZiAoc2l6ZSA9PSAwKQ0KPiA+Pj4+ICsJCXJldHVybiBmYWxzZTsNCj4gPj4+DQo+ID4+
+PiBfX2FjY2Vzc19vaygpIHdhcyByZXR1cm5pbmcgdHJ1ZSB3aGVuIHNpemUgPT0gMCB1cCB0byBu
+b3cuIEFueSByZWFzb24gdG8NCj4gPj4+IHJldHVybiBmYWxzZSBub3cgPw0KPiA+Pg0KPiA+PiBO
+bywgdGhpcyBpcyBhY2NpZGVudGFsIGFuZCBicm9rZW4uICBDYW4geW91IHJlLXJ1biB5b3VyIGJl
+bmNobWFyayB3aXRoDQo+ID4+IHRoaXMgZml4ZWQ/DQo+ID4NCj4gPiBJcyBUQVNLX1NJWkVfTUFT
+SyBkZWZpbmVkIHN1Y2ggdGhhdCB5b3UgY2FuIGRvOg0KPiA+DQo+ID4gCXJldHVybiAoYWRkciB8
+IHNpemUpIDwgVEFTS19TSVpFX01BWCkgfHwgIXNpemU7DQo+IA0KPiBUQVNLX1NJWkVfTUFYIHdp
+bGwgdXN1YWxseSBiZSAweGMwMDAwMDAwDQo+IA0KPiBXaXRoOg0KPiBhZGRyID0gMHg4MDAwMDAw
+MDsNCj4gc2l6ZSA9IDB4ODAwMDAwMDA7DQo+IA0KPiBJIGV4cGVjdCBpdCB0byBmYWlsIC4uLi4N
+Cj4gDQo+IFdpdGggdGhlIGZvcm11bGEgeW91IHByb3Bvc2UgaXQgd2lsbCBzdWNjZWVkLCB3b24n
+dCBpdCA/DQoNCkhtbW0uLi4gV2FzIGkgZ2V0dGluZyBjb25mdXNlZCBhYm91dCBzb21lIGNvbW1l
+bnRzIGZvciA2NGJpdA0KYWJvdXQgdGhlcmUgYmVpbmcgc3VjaCBhIGJpZyBob2xlIGJldHdlZW4g
+dmFsaWQgdXNlciBhbmQga2VybmVsDQphZGRyZXNzZXMgdGhhdCBpdCB3YXMgZW5vdWdoIHRvIGNo
+ZWNrIHRoYXQgJ3NpemUgPCBUQVNLX1NJWkVfTUFYJy4NCg0KVGhhdCB3b3VsZCBiZSB0cnVlIGZv
+ciA2NGJpdCB4ODYgKGFuZCBwcm9iYWJseSBwcGMgKCYgYXJtPz8pKQ0KaWYgVEFTS19TSVpFX01B
+WCB3ZXJlIDB4NCA8PCA2MC4NCklJVUMgdGhlIGhpZ2hlc3QgdXNlciBhZGRyZXNzIGlzIChtdWNo
+KSBsZXNzIHRoYW4gMHgwIDw8IDYwDQphbmQgdGhlIGxvd2VzdCBrZXJuZWwgYWRkcmVzcyAobXVj
+aCkgZ3JlYXRlciB0aGFuIDB4ZiA8PCA2MA0Kb24gYWxsIHRoZXNlIDY0Yml0IHBsYXRmb3Jtcy4N
+Cg0KQWN0dWFsbHkgaWYgZG9pbmcgYWNjZXNzX29rKCkgaW5zaWRlIGdldF91c2VyKCkgeW91IGRv
+bid0DQpuZWVkIHRvIGNoZWNrIHRoZSBzaXplIGF0IGFsbC4NCllvdSBkb24ndCBldmVuIG5lZWQg
+dG8gaW4gY29weV90by9mcm9tX3VzZXIoKSBwcm92aWRlZA0KaXQgYWx3YXlzIGRvZXMgYSBmb3J3
+YXJkcyBjb3B5Lg0KKFJhdGhlciB0aGF0IGNvcHlpbmcgdGhlIGxhc3Qgd29yZCBmaXJzdCBmb3Ig
+bWlzYWxpZ25lZCBsZW5ndGhzLikNCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBM
+YWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBU
+LCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
-I still do not get it. So what does guarantee that the memory is
-offlineable in the first place? Also what is the difference between
-offlining and simply shutting the system down so that the memory is not
-used in the first place. In other words what kind of difference
-hotremove makes?
--- 
-Michal Hocko
-SUSE Labs
