@@ -2,52 +2,53 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E554C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C85C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B72F20639
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1AB20829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063489;
-	bh=BhKTMtLT8tEvJO4Z3S48DHTiFHHjF37Jb/BKMjkgGYk=;
+	s=default; t=1599063491;
+	bh=TNOI/VLtApvB6yPQmCUZBBC5lN9M1DLUltQ/CvohjAk=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=ChSUY3hSLN+q6eUnBleJAjGy1Gpzcm4NYrL9gDYuNJtnQMxWtCSOaoMM/vohnT0Hj
-	 /iqJnpzQenjiliW3oKMG0e3XDtnV/j3l7bXHRujOk4aFmBFMy4EssfWYMI++TrYju0
-	 YryPF2lR5DKrRg8mbBh3WrALShtH2MRK2IxotRWA=
+	b=bbcj0v9yFHi4CwqXgz5/VT6l55SkL/SpgrP5ZIVlkgF7UuZewc0TFaS0TphA9GmdO
+	 EjCY0dJXxjbq5WpSjPVdF7tynibJkAgOs79u+Ypsipx/qL6zbm3cgrRwimOpTuEAQe
+	 l8UnGv0eXG5F1AfUZqZoW2ykcGXOeRp5eRH5icDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgIBQSH (ORCPT
+        id S1728792AbgIBQSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:18:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53874 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 12:18:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727997AbgIBQKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727963AbgIBQKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 12:10:48 -0400
 Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0CDE2151B;
+        by mail.kernel.org (Postfix) with ESMTPSA id D59CD20773;
         Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599063046;
-        bh=BhKTMtLT8tEvJO4Z3S48DHTiFHHjF37Jb/BKMjkgGYk=;
+        bh=TNOI/VLtApvB6yPQmCUZBBC5lN9M1DLUltQ/CvohjAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ji1MZZS0aC7lXUeQvKnjJ55ugpcvz6eLJUMbd4J3HALMK1mOqDKjY75gIxevxzgEF
-         u5IlznikXopH6gq8xyVvB8HfMvCa72zZn2VNR/F3+JNTjx1QrO5ahDk0QvM1skmIOR
-         z/fvinToCQMx04klOMY3dbDTXZU+LNYb7aYOjcX8=
+        b=ulejFWlemy/ELe8wIxriEGQ+0t4Le5mwgc8X6SsTuH5DSfSTZx3GZS4LpUjSuPjE+
+         QsPQDUtQyPNDEl72XFYmGWVeEyv9GhUXQdZWYEbv5ic4bpyEgd8hUBGpw0wcViIbaW
+         UiDvY4++Z2Qjmkk9O8RhG/BYzZmxqwbaN+5Gf4uA=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kDVLP-000t9j-LB; Wed, 02 Sep 2020 18:10:43 +0200
+        id 1kDVLP-000tA4-T2; Wed, 02 Sep 2020 18:10:43 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 01/38] media: tda10086: cleanup symbol_rate setting logic
-Date:   Wed,  2 Sep 2020 18:10:04 +0200
-Message-Id: <ef0740845ec5ec9890d6e332662166f5e642c66a.1599062230.git.mchehab+huawei@kernel.org>
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 10/38] media: vivid: place the logic which disables ioctl on a separate function
+Date:   Wed,  2 Sep 2020 18:10:13 +0200
+Message-Id: <04bdd5013c20f0a623039d0bb65eb722bfd7f497.1599062230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
 References: <cover.1599062230.git.mchehab+huawei@kernel.org>
@@ -59,89 +60,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The original logic had an integer to unsigned integer
-conversion, plus a float-point math. While gcc should be
-able to do the match at compile time, other compilers might
-not do the same. Also, those produce the following warnings
-with static code analyzers:
-
-	drivers/media/dvb-frontends/tda10086.c:300 tda10086_set_symbol_rate() warn: unsigned 'symbol_rate' is never less than zero.
-	drivers/media/dvb-frontends/tda10086.c:303 tda10086_set_symbol_rate() warn: unsigned 'symbol_rate' is never less than zero.
-	drivers/media/dvb-frontends/tda10086.c:306 tda10086_set_symbol_rate() warn: unsigned 'symbol_rate' is never less than zero.
-	drivers/media/dvb-frontends/tda10086.c:309 tda10086_set_symbol_rate() warn: unsigned 'symbol_rate' is never less than zero.
-	drivers/media/dvb-frontends/tda10086.c:312 tda10086_set_symbol_rate() warn: unsigned 'symbol_rate' is never less than zero.
-	drivers/media/dvb-frontends/tda10086.c:315 tda10086_set_symbol_rate() warn: unsigned 'symbol_rate' is never less than zero.
-	drivers/media/dvb-frontends/tda10086.c:318 tda10086_set_symbol_rate() warn: unsigned 'symbol_rate' is never less than zero.
-	drivers/media/dvb-frontends/tda10086.c:321 tda10086_set_symbol_rate() warn: unsigned 'symbol_rate' is never less than zero.
-	drivers/media/dvb-frontends/tda10086.c:324 tda10086_set_symbol_rate() warn: unsigned 'symbol_rate' is never less than zero.
-	drivers/media/dvb-frontends/tda10086.c:327 tda10086_set_symbol_rate() warn: unsigned 'symbol_rate' is never less than zero.
-
-Change the logic to declare the reference constant as unsigned
-and to not use float point math.
+Move this code out of the long vivid_create_instance() function.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/media/dvb-frontends/tda10086.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/media/test-drivers/vivid/vivid-core.c | 182 +++++++++---------
+ 1 file changed, 96 insertions(+), 86 deletions(-)
 
-diff --git a/drivers/media/dvb-frontends/tda10086.c b/drivers/media/dvb-frontends/tda10086.c
-index be6b40138f6e..cdcf97664bba 100644
---- a/drivers/media/dvb-frontends/tda10086.c
-+++ b/drivers/media/dvb-frontends/tda10086.c
-@@ -17,7 +17,7 @@
- #include <media/dvb_frontend.h>
- #include "tda10086.h"
+diff --git a/drivers/media/test-drivers/vivid/vivid-core.c b/drivers/media/test-drivers/vivid/vivid-core.c
+index d4785da440d9..f8cb4133e1ce 100644
+--- a/drivers/media/test-drivers/vivid/vivid-core.c
++++ b/drivers/media/test-drivers/vivid/vivid-core.c
+@@ -1001,6 +1001,100 @@ static int vivid_detect_feature_set(struct vivid_dev *dev, int inst,
+ 	return 0;
+ }
  
--#define SACLK 96000000
-+#define SACLK 96000000U
++static void vivid_disable_unused_ioctls(struct vivid_dev *dev,
++					bool has_tuner,
++					bool has_modulator,
++					unsigned in_type_counter[4],
++					unsigned out_type_counter[4])
++{
++	/* disable invalid ioctls based on the feature set */
++	if (!dev->has_audio_inputs) {
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_AUDIO);
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_G_AUDIO);
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_ENUMAUDIO);
++		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_S_AUDIO);
++		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_G_AUDIO);
++		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_ENUMAUDIO);
++		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_S_AUDIO);
++		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_G_AUDIO);
++		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_ENUMAUDIO);
++	}
++	if (!dev->has_audio_outputs) {
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_S_AUDOUT);
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_G_AUDOUT);
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_ENUMAUDOUT);
++		v4l2_disable_ioctl(&dev->vbi_out_dev, VIDIOC_S_AUDOUT);
++		v4l2_disable_ioctl(&dev->vbi_out_dev, VIDIOC_G_AUDOUT);
++		v4l2_disable_ioctl(&dev->vbi_out_dev, VIDIOC_ENUMAUDOUT);
++		v4l2_disable_ioctl(&dev->meta_out_dev, VIDIOC_S_AUDOUT);
++		v4l2_disable_ioctl(&dev->meta_out_dev, VIDIOC_G_AUDOUT);
++		v4l2_disable_ioctl(&dev->meta_out_dev, VIDIOC_ENUMAUDOUT);
++	}
++	if (!in_type_counter[TV] && !in_type_counter[SVID]) {
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_STD);
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_G_STD);
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_ENUMSTD);
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_QUERYSTD);
++	}
++	if (!out_type_counter[SVID]) {
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_S_STD);
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_G_STD);
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_ENUMSTD);
++	}
++	if (!has_tuner && !has_modulator) {
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_FREQUENCY);
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_G_FREQUENCY);
++		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_S_FREQUENCY);
++		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_G_FREQUENCY);
++		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_S_FREQUENCY);
++		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_G_FREQUENCY);
++	}
++	if (!has_tuner) {
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_TUNER);
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_G_TUNER);
++		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_S_TUNER);
++		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_G_TUNER);
++		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_S_TUNER);
++		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_G_TUNER);
++	}
++	if (in_type_counter[HDMI] == 0) {
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_EDID);
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_G_EDID);
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_DV_TIMINGS_CAP);
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_G_DV_TIMINGS);
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_DV_TIMINGS);
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_ENUM_DV_TIMINGS);
++		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_QUERY_DV_TIMINGS);
++	}
++	if (out_type_counter[HDMI] == 0) {
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_G_EDID);
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_DV_TIMINGS_CAP);
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_G_DV_TIMINGS);
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_S_DV_TIMINGS);
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_ENUM_DV_TIMINGS);
++	}
++	if (!dev->has_fb) {
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_G_FBUF);
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_S_FBUF);
++		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_OVERLAY);
++	}
++	v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_HW_FREQ_SEEK);
++	v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_S_HW_FREQ_SEEK);
++	v4l2_disable_ioctl(&dev->sdr_cap_dev, VIDIOC_S_HW_FREQ_SEEK);
++	v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_S_HW_FREQ_SEEK);
++	v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_S_FREQUENCY);
++	v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_G_FREQUENCY);
++	v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_ENUM_FRAMESIZES);
++	v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_ENUM_FRAMEINTERVALS);
++	v4l2_disable_ioctl(&dev->vbi_out_dev, VIDIOC_S_FREQUENCY);
++	v4l2_disable_ioctl(&dev->vbi_out_dev, VIDIOC_G_FREQUENCY);
++	v4l2_disable_ioctl(&dev->meta_out_dev, VIDIOC_S_FREQUENCY);
++	v4l2_disable_ioctl(&dev->meta_out_dev, VIDIOC_G_FREQUENCY);
++	v4l2_disable_ioctl(&dev->touch_cap_dev, VIDIOC_S_PARM);
++	v4l2_disable_ioctl(&dev->touch_cap_dev, VIDIOC_ENUM_FRAMESIZES);
++	v4l2_disable_ioctl(&dev->touch_cap_dev, VIDIOC_ENUM_FRAMEINTERVALS);
++}
++
+ static int vivid_create_instance(struct platform_device *pdev, int inst)
+ {
+ 	static const struct v4l2_dv_timings def_dv_timings =
+@@ -1189,92 +1283,8 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
+ 			(u32)bt->pixelclock / (htot * vtot));
+ 	}
  
- struct tda10086_state {
- 	struct i2c_adapter* i2c;
-@@ -297,34 +297,34 @@ static int tda10086_set_symbol_rate(struct tda10086_state *state,
- 	dprintk ("%s %i\n", __func__, symbol_rate);
+-	/* disable invalid ioctls based on the feature set */
+-	if (!dev->has_audio_inputs) {
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_AUDIO);
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_G_AUDIO);
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_ENUMAUDIO);
+-		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_S_AUDIO);
+-		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_G_AUDIO);
+-		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_ENUMAUDIO);
+-		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_S_AUDIO);
+-		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_G_AUDIO);
+-		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_ENUMAUDIO);
+-	}
+-	if (!dev->has_audio_outputs) {
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_S_AUDOUT);
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_G_AUDOUT);
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_ENUMAUDOUT);
+-		v4l2_disable_ioctl(&dev->vbi_out_dev, VIDIOC_S_AUDOUT);
+-		v4l2_disable_ioctl(&dev->vbi_out_dev, VIDIOC_G_AUDOUT);
+-		v4l2_disable_ioctl(&dev->vbi_out_dev, VIDIOC_ENUMAUDOUT);
+-		v4l2_disable_ioctl(&dev->meta_out_dev, VIDIOC_S_AUDOUT);
+-		v4l2_disable_ioctl(&dev->meta_out_dev, VIDIOC_G_AUDOUT);
+-		v4l2_disable_ioctl(&dev->meta_out_dev, VIDIOC_ENUMAUDOUT);
+-	}
+-	if (!in_type_counter[TV] && !in_type_counter[SVID]) {
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_STD);
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_G_STD);
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_ENUMSTD);
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_QUERYSTD);
+-	}
+-	if (!out_type_counter[SVID]) {
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_S_STD);
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_G_STD);
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_ENUMSTD);
+-	}
+-	if (!has_tuner && !has_modulator) {
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_FREQUENCY);
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_G_FREQUENCY);
+-		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_S_FREQUENCY);
+-		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_G_FREQUENCY);
+-		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_S_FREQUENCY);
+-		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_G_FREQUENCY);
+-	}
+-	if (!has_tuner) {
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_TUNER);
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_G_TUNER);
+-		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_S_TUNER);
+-		v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_G_TUNER);
+-		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_S_TUNER);
+-		v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_G_TUNER);
+-	}
+-	if (in_type_counter[HDMI] == 0) {
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_EDID);
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_G_EDID);
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_DV_TIMINGS_CAP);
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_G_DV_TIMINGS);
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_DV_TIMINGS);
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_ENUM_DV_TIMINGS);
+-		v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_QUERY_DV_TIMINGS);
+-	}
+-	if (out_type_counter[HDMI] == 0) {
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_G_EDID);
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_DV_TIMINGS_CAP);
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_G_DV_TIMINGS);
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_S_DV_TIMINGS);
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_ENUM_DV_TIMINGS);
+-	}
+-	if (!dev->has_fb) {
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_G_FBUF);
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_S_FBUF);
+-		v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_OVERLAY);
+-	}
+-	v4l2_disable_ioctl(&dev->vid_cap_dev, VIDIOC_S_HW_FREQ_SEEK);
+-	v4l2_disable_ioctl(&dev->vbi_cap_dev, VIDIOC_S_HW_FREQ_SEEK);
+-	v4l2_disable_ioctl(&dev->sdr_cap_dev, VIDIOC_S_HW_FREQ_SEEK);
+-	v4l2_disable_ioctl(&dev->meta_cap_dev, VIDIOC_S_HW_FREQ_SEEK);
+-	v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_S_FREQUENCY);
+-	v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_G_FREQUENCY);
+-	v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_ENUM_FRAMESIZES);
+-	v4l2_disable_ioctl(&dev->vid_out_dev, VIDIOC_ENUM_FRAMEINTERVALS);
+-	v4l2_disable_ioctl(&dev->vbi_out_dev, VIDIOC_S_FREQUENCY);
+-	v4l2_disable_ioctl(&dev->vbi_out_dev, VIDIOC_G_FREQUENCY);
+-	v4l2_disable_ioctl(&dev->meta_out_dev, VIDIOC_S_FREQUENCY);
+-	v4l2_disable_ioctl(&dev->meta_out_dev, VIDIOC_G_FREQUENCY);
+-	v4l2_disable_ioctl(&dev->touch_cap_dev, VIDIOC_S_PARM);
+-	v4l2_disable_ioctl(&dev->touch_cap_dev, VIDIOC_ENUM_FRAMESIZES);
+-	v4l2_disable_ioctl(&dev->touch_cap_dev, VIDIOC_ENUM_FRAMEINTERVALS);
++	vivid_disable_unused_ioctls(dev, has_tuner, has_modulator,
++				    in_type_counter, out_type_counter);
  
- 	/* setup the decimation and anti-aliasing filters.. */
--	if (symbol_rate < (u32) (SACLK * 0.0137)) {
-+	if (symbol_rate < SACLK / 10000 * 137) {
- 		dfn=4;
- 		afs=1;
--	} else if (symbol_rate < (u32) (SACLK * 0.0208)) {
-+	} else if (symbol_rate < SACLK / 10000 * 208) {
- 		dfn=4;
- 		afs=0;
--	} else if (symbol_rate < (u32) (SACLK * 0.0270)) {
-+	} else if (symbol_rate < SACLK / 10000 * 270) {
- 		dfn=3;
- 		afs=1;
--	} else if (symbol_rate < (u32) (SACLK * 0.0416)) {
-+	} else if (symbol_rate < SACLK / 10000 * 416) {
- 		dfn=3;
- 		afs=0;
--	} else if (symbol_rate < (u32) (SACLK * 0.0550)) {
-+	} else if (symbol_rate < SACLK / 10000 * 550) {
- 		dfn=2;
- 		afs=1;
--	} else if (symbol_rate < (u32) (SACLK * 0.0833)) {
-+	} else if (symbol_rate < SACLK / 10000 * 833) {
- 		dfn=2;
- 		afs=0;
--	} else if (symbol_rate < (u32) (SACLK * 0.1100)) {
-+	} else if (symbol_rate < SACLK / 10000 * 1100) {
- 		dfn=1;
- 		afs=1;
--	} else if (symbol_rate < (u32) (SACLK * 0.1666)) {
-+	} else if (symbol_rate < SACLK / 10000 * 1666) {
- 		dfn=1;
- 		afs=0;
--	} else if (symbol_rate < (u32) (SACLK * 0.2200)) {
-+	} else if (symbol_rate < SACLK / 10000 * 2200) {
- 		dfn=0;
- 		afs=1;
--	} else if (symbol_rate < (u32) (SACLK * 0.3333)) {
-+	} else if (symbol_rate < SACLK / 10000 * 3333) {
- 		dfn=0;
- 		afs=0;
- 	} else {
+ 	/* configure internal data */
+ 	dev->fmt_cap = &vivid_formats[0];
 -- 
 2.26.2
 
