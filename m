@@ -2,135 +2,111 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E97C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A64C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 295982072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968672072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:25:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="jcMPqePs";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="iyPaOVGQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E0/BSbuS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgIBHYj (ORCPT
+        id S1727095AbgIBHZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:24:39 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:33840 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgIBHYf (ORCPT
+        Wed, 2 Sep 2020 03:25:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgIBHY7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:24:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1599031475; x=1630567475;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
-  b=jcMPqePsqFywPxqGwbexg78RKYFYgoEg3HY/S0kRKg9YeiJUZFB4SgdD
-   cQkzIv1pCyR02NgOwPoRfMwBp8EeBg8h9C72xod9X//47yGHQ8alsEviW
-   XXdopUD+mhWZ0g0sSMe8zErmDreLRJxiETCC6h+T0CqXCP7DsRVDuFvTu
-   lOXNSUdRXO2ONxP0dqZEfG3ozpnbvYJbmYMfMh5Nq473beMaYPSmxApzz
-   lUhuuWV+LDH2l9qZI5H1k1MkUuVYNoUGEMR8K7qxgC+Ghne6/R8uZ/bQk
-   m/BDajcFJi0RD0AN0Kc+hSovftwPS9542Xe5ejhbmpiBHpnddsIk/T1kQ
-   Q==;
-IronPort-SDR: e+2NK0Rm0H8+t7/xXqCbp5NIzKL7O1JPSAZ+enQuzI638BywQZI80hoAZ37K8Jgai+smuvel3+
- YC6Y10oS3T8y4O5HylgnrSXPHMpL5+k4hZrWa7NBgW99lMBZJW3gkIbB0zDZMVY3/sN0+0fLYF
- mSMT0CX5c2gc45MtBkOaFzt2B89kdet5mrVSr8/oV47Or52EAu1q30qEDHam0adgIPFGvxwzyY
- 314f2pKMiljuQdiComLJqG7D8THr+VbWjHfDR1hLn4LjwLNK9kXY6heVb+TF263V/Y9iCN4IHH
- qpo=
-X-IronPort-AV: E=Sophos;i="5.76,381,1592841600"; 
-   d="scan'208";a="150728245"
-Received: from mail-mw2nam10lp2103.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.103])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Sep 2020 15:24:33 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HqPhMKNs3dQTZin6FULjMOXpyYQyT1wYJbdIb0qekPcD42I5nNM6N45/COA2nJHqjpE2laANdEIykB+zMqGmcNntjsdkFNpDaUBa98xsEDq0p4SEj9mmwFZFSIl9jmea5K4+wVj7NUFmj03r7yKcW1DQY24RnK2pQl0E6gapXeFuO6FjpSva5bGXn+zOvTLIDFAq0Nrfe6QUhH3B/vo9ztu/YvgYDEtmqIvBEzkHQqRyW36d3SFKIVBJ2cV9rAPLfcsoMBLPe5vpPqeij5RhyFY0nhS9tSGBKdmwjkpoucx/Bq93iCgvFt8wpHFNSrIvBchRjA3fTeYYYh+ImqU7Tg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=XSWcGXdxawjgKRiW0S0B+3gfWZgqrtiCw8SQGmNA1o8e8ZS7rjpAb0Y916lYbdLyrASgoGtG8wWFOKbQR0C7JbRK4oZcMF4n9Tj1V1NOT2kJs9zJpQDB0UwTaFCSOLMNR+M3EFRDjcmylHWjNAu6RJG4CGpjDs8n4LMnYXK6dpiIxk1aWqO1iKFJhufPvcDdIeZd32GPBOTbclXntkt9eBIffEPJ3g8GEftWegP2qhk99l1OxBxuv/1vtjWG51ggwtDAFq6JIo3yN9qiuAvcVmg5rkMwrvN/0cARHOoWbKwjBETj4xHmbHEYou30OTCqPs7tSBzCBX7TKZEc1My0gQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Wed, 2 Sep 2020 03:24:59 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8E8BC061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:24:58 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id n3so1803645pjq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 00:24:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=iyPaOVGQQEHDkSC5loJyypyAazcLmXECdlt11aPNkgkt0Be7vJOcibCTSEx5iXJ0CFQJYnX6lJuahvLGNt+uKTf7oJTVvafLiwwLSMDWBdTvWmn2fUP/5Ssd6iyYuKQuKAyPI206OrZ7dTcMNdqngvFcsMhpEC+SMqCCfcrl/8Y=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB4238.namprd04.prod.outlook.com
- (2603:10b6:805:2c::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Wed, 2 Sep
- 2020 07:24:30 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3326.023; Wed, 2 Sep 2020
- 07:24:30 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Josef Bacik <josef@toxicpanda.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "nbd@other.debian.org" <nbd@other.debian.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 7/9] sd: open code revalidate_disk
-Thread-Topic: [PATCH 7/9] sd: open code revalidate_disk
-Thread-Index: AQHWgHi9+D0vRxf7MUaqbL81EAOZ+A==
-Date:   Wed, 2 Sep 2020 07:24:30 +0000
-Message-ID: <SN4PR0401MB3598270C537F0E7A3ED538049B2F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200901155748.2884-1-hch@lst.de>
- <20200901155748.2884-8-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2001:a62:1590:f101:bd07:d1f9:7e6b:2014]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f12e4383-fcd1-41a8-ec18-08d84f113b95
-x-ms-traffictypediagnostic: SN6PR04MB4238:
-x-microsoft-antispam-prvs: <SN6PR04MB4238C6E35A3E8051FB5A3C5A9B2F0@SN6PR04MB4238.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bMjGwrvH49VG+SFumlAzF3c4O31aq6r0kIkCIOkw6SFfhFSnzrDt01M2WOR+Ek/f1JURBf5dlcJBqUxLuovzqS3Uc+BonFqSC094i2UpFonDCFaWi+TvgIqvc8VpM5wrtra5xWM1vzdGMkFLcPpzHCfkKK0BlyWblj4peSxPyVMc7gZtv3r+jum4RM5z4pIr95h1zNGlACxlZ5AG67OyGNbd4ADWi+vefuqz0qnVCKGk/grP4GvcdJ5fHVoRjDo3EIlOEBIIJG1JJinxgalfMzHs55RsYenkduPUoAVhBps5YE456bMOzcoH2uyLYnv8WkZJoo8p15iFkLWBufd0lQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(396003)(136003)(366004)(346002)(7416002)(2906002)(19618925003)(76116006)(8936002)(5660300002)(558084003)(66946007)(33656002)(91956017)(86362001)(66556008)(7696005)(64756008)(66446008)(66476007)(316002)(52536014)(8676002)(9686003)(71200400001)(186003)(6506007)(54906003)(478600001)(4270600006)(4326008)(55016002)(110136005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: ngkVHmW3/Bt+G5u+vylrG+VmQWBrwJdyMKVQ6lc7NsWLaz34Wky7qCz4D+3YBInqlWVwEtDiPb3fLXIwkFzvrPAa9j+N5y1BrwHvK5XeCSzCi0KeaaIOcIu5fbWTvPLfN/eHsaw7soQCL2pxUA/+YmuKFgbiT671ff+2SlQptf7Sa2/PschaqWGElfPuCYYz9iucV1V6ZiM6IEYAUU4fdjQnldVWApVOyoSQORvnAXdXS7mm48wFeBSR+w2qPZAnZ2OtZVBtFCGP82AySy06LCtAXSrdP18fiTq7UKG5ZWfj7tA5snniLmp/GKlvkn7GJGgSp6gFmna5clwcbRXAvO2RQdFHZhAdhkU3KseXOW6PKXl4zCMpO3QGTb64BD6kidLAWkWdX5VRAJYidQGqI1btlc8aiR6aeKh+DLHlEjPd8ekISZe1FySLjN025nhVn+v+NkR61SyDx4k7utXDrMlugXPpGPNavOomIX+noV8/mJw0f1DhkW2jpnd2fCBflToEO6PrRWTEstzYoqrGOxPOo109IeSopbemWPZ0AhuDrNLzzUzFRcoAy4cInX8JDP8VolFu1gHdRu78grWtjqoqDGMP42F7aSvE+8f6HRyoJw/cWSTBckfWokesve6Jshvi3Lt52g4KCAwwI8p3AoO58aHzH7Xo/rjjwAGGfIx21owcdNyx2LW94gEZCbPz97U5gbswioOcZ7G4BhrtlQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jzMZYoVKwDdmao+58sFzZ/CXFeupmKrayPkTlA4XixE=;
+        b=E0/BSbuSPpbXLYOMMXyaUHNxnQ3tUzUVqYOpieWEbT2qOzkNODpjg9XY/ClTXLllz/
+         gmqTDGD1TqF4jmX/0icaIde6OBrsCAEJJWvktUPkgIQ3Abw7EY5nmYS2M8XXQwC+Vc1o
+         kn83b7CBn/U7TapHGOgNskPmpoKC6RRYQjlxvJUpu8RjxCJlRe4T7lCJRXMV/g6N0IQP
+         7Hf4f6atIEUA9x06GnjmMfiVHz92M+w6iVP6+7ExTr6p9TqWmnaCATwADBfp5Ho0J3Au
+         XXMdDsW9X+2X17BQlN5wS4w0ISNN+HfhyPLTDTMgdSzQPtTb2qhfH2UWRvVr4OtnyC6l
+         5fCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jzMZYoVKwDdmao+58sFzZ/CXFeupmKrayPkTlA4XixE=;
+        b=Fn9ryMdJ2MssqJ49mtIHpfwxDvQ4MPLKM/HVTEnBepk4VrAhtuwB4Q0f17lTyazGEX
+         hxtwg1NPRRBHXx/rYfhmPd+MAuG7pSZNFWyIsux7if5iAiK8NJNp5JyrR4h908yWGkAY
+         GDHvon2xfW++oYcD+wNZz9/OrXrdyxrXoKiy+cRkqn81B8koH1kSVBROCZlrx9hFk+nM
+         ioq8GmoqA9Q+9GdMNVpUpKJ12xA7YS1NIpniOxKCx8ie1L1O3CIcrLkeDEscgWEgeFBq
+         mXTUIwoHQbhNZouyuu/f9JPTf5MZxtpLjz+84fSm4gqtYcJmNgzlyc9CFVbeD2eStyWv
+         tSBA==
+X-Gm-Message-State: AOAM531YYVBCvEyuuw0Eahf8eMO1jPodTv2K3A3ygqqRIJcDokGIvKNL
+        v6ZWyV08PWR++kijjWIBhcd1yw==
+X-Google-Smtp-Source: ABdhPJxcrLNX45rZJ9+2vEO70afE8r94mzy9Wa+nZEObcHVhSiGQnzZBwiaBcE7S3cl7jVwMFiqh+w==
+X-Received: by 2002:a17:902:ed14:: with SMTP id b20mr1030492pld.310.1599031498295;
+        Wed, 02 Sep 2020 00:24:58 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id e2sm4272366pgl.38.2020.09.02.00.24.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Sep 2020 00:24:57 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Ben Segall <bsegall@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-pm@vger.kernel.org, Lukasz Luba <lukasz.luba@arm.com>,
+        cristian.marussi@arm.com, sudeep.holla@arm.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] cpufreq: Record stats with fast-switching
+Date:   Wed,  2 Sep 2020 12:54:40 +0530
+Message-Id: <cover.1599031227.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f12e4383-fcd1-41a8-ec18-08d84f113b95
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 07:24:30.4715
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Hod2R3pvj6h3UjZbl9iEN/uDfqHDePJ6WU4fywwecOvUVJ9vFBEPV7QuGvYcjiZFqcxIf3o1RrzCzjPbkOVIU+3/vIZ9wRscUvOVOwlMoRg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4238
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+Hi,
+
+We disabled recording cpufreq stats when fast switching was introduced
+to the cpufreq core as the cpufreq stats required to take a spinlock and
+that can't be allowed (for performance reasons) on scheduler's hot path.
+
+Here is an attempt to get rid of the lock and bring back the support.
+
+--
+Viresh
+
+Viresh Kumar (4):
+  cpufreq: stats: Defer stats update to
+    cpufreq_stats_record_transition()
+  cpufreq: stats: Remove locking
+  cpufreq: stats: Enable stats for fast-switch as well
+  cpufreq: Move traces and update to policy->cur to cpufreq core
+
+ drivers/cpufreq/cpufreq.c        | 16 +++++-
+ drivers/cpufreq/cpufreq_stats.c  | 87 ++++++++++++++++++++------------
+ kernel/sched/cpufreq_schedutil.c | 12 +----
+ 3 files changed, 72 insertions(+), 43 deletions(-)
+
+-- 
+2.25.0.rc1.19.g042ed3e048af
+
