@@ -2,247 +2,111 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7985AC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75490C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5671220767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:35:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dXcBaLK0"
+	by mail.kernel.org (Postfix) with ESMTP id 5117920767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgIBUfY (ORCPT
+        id S1726526AbgIBUkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 16:35:24 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45580 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgIBUfU (ORCPT
+        Wed, 2 Sep 2020 16:40:43 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:40845 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgIBUkn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 16:35:20 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082KZ0Vh108364;
-        Wed, 2 Sep 2020 15:35:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599078900;
-        bh=pQ193KVAaE0ZacOrnJLgxUbHpFmanxf9WxzyXcsxib0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=dXcBaLK0MKkU1w6hS8svE0+vSx7UGf3+Shoefa6FA8r8RMdk4MFGblAeltc3ehPeV
-         eDPuoj7tdg3zJsaQ+KpzRpgx5Mw1VgDV0aibWEOUIh1dZt+z1OuDiytF3X+onCtBPk
-         Lv2rvl/fK7QDEN5AGtVBWu7d9NSNx+NFee9MgFY0=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082KZ0Op112982;
-        Wed, 2 Sep 2020 15:35:00 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
- 2020 15:35:00 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 2 Sep 2020 15:35:00 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082KZ0tv092311;
-        Wed, 2 Sep 2020 15:35:00 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v2 2/3] net: phy: dp83869: support Wake on LAN
-Date:   Wed, 2 Sep 2020 15:34:43 -0500
-Message-ID: <20200902203444.29167-3-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200902203444.29167-1-dmurphy@ti.com>
-References: <20200902203444.29167-1-dmurphy@ti.com>
+        Wed, 2 Sep 2020 16:40:43 -0400
+Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M5gAG-1kBwjT27Cc-007H15 for <linux-kernel@vger.kernel.org>; Wed, 02 Sep
+ 2020 22:40:41 +0200
+Received: by mail-qk1-f169.google.com with SMTP id p25so1082461qkp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 13:40:40 -0700 (PDT)
+X-Gm-Message-State: AOAM533ti2wpuJkJg6+9FH7kQM99tCbVxx6uoWVPr9fmO7Q7BQgzXrIz
+        i5M/pLn8rjyX/+Z6Q48JHScZSiUSQkA6KMGFqkE=
+X-Google-Smtp-Source: ABdhPJzodmejhJAtMKThbQWlJFz80SFiO54mmYtjDdiM3ONaN1YOToVfF3hqMeVTv6Cz4OnXxE/L/LZUnPhskl7a0Ug=
+X-Received: by 2002:ae9:f106:: with SMTP id k6mr8135941qkg.3.1599079239381;
+ Wed, 02 Sep 2020 13:40:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <b7719680-e451-5687-1fb7-c8c059a880d4@acm.org> <2C755628-1426-4BA4-B2A3-AD059BB0F605@exactcode.com>
+ <c7daea00-410d-2073-bf52-2abda9acdf8e@acm.org> <20200827.230128.2175364115734830909.rene@exactcode.com>
+In-Reply-To: <20200827.230128.2175364115734830909.rene@exactcode.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 2 Sep 2020 22:40:23 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0XByLZGCMirzQfwBS_1HLzA9s8h3-JPQM171XGTycohg@mail.gmail.com>
+Message-ID: <CAK8P3a0XByLZGCMirzQfwBS_1HLzA9s8h3-JPQM171XGTycohg@mail.gmail.com>
+Subject: Re: [PATCH] use cpu_to_le{16,32} instead of __constant_cpu_to_
+To:     Rene Rebe <rene@exactcode.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:WFS9Gwp/vvhBs+3BN0hPtw42MfmCggOSKiHUd6r956gkSP1SCAs
+ 7Axg5qTjSRPaoeWQH2AmhW45YdrVydYj+lP0lcLWU7hgfUAyiTn5a+rb0Aa/aB1pyxdHX60
+ xsWRCfNytoVaQn7iTVWxtDT80fwftT69z5KALt+nOs9rNBvcgOd3yb0m2q/I0fypqdpuHyW
+ vF+5FAwWA2qOC3a8804dg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1vtooSoJDT4=:KR/MCF9WUIACsKL7/bGtKK
+ CqKtRyI7axyGNC98zcaCxlItjxHdTwEojRdfR+qW1SdTucFoPLtfncc3WO+S+wG5g43KmSi9N
+ NY79IfwBPYYOaf+2YXqyAvOIYxok+9HPCmer0vwoKW4cQ49N2Cwdox+4gBOc84IP3Xva7z5Uz
+ id25T2SIx9/waFob+sKJuLZDa9o2xmm0dxBubuduGLIPyn32Uh75VtDdGO8EJL+G0Go+MWyP+
+ T2aa0F62rmRKAPEceGhpMxnrkgWpf5Z0cYLvzAOQVsPBSsyIq/a/SGUmeHFZqgBu+Gf3KrehV
+ g0yWtcr62wbOD32FyIw6X2BgnxwVOENx77QXt63Xa+cVCHyFWtWqoZg7WdeIkqH5kEbiOyTx5
+ m1o5VO8/xkTS3/gOLZV99DI+qulw7+JLuHkpn/OYDGH0bFdZYbJFIJA4cqBDoIkVMEwDJW+KI
+ x5WvJsw73vEwIgLljnhif0KChK5+bhHXKmYM8RslGMgSXbjUB+vmyB38vXpnF+Ifg6Arhpn06
+ D5LODp1WoTSzGUf85ik+my5Dubc5KKxR1O2t7x61ttzNdZmkcRHRQ1EKSXrXurCxqTl5A1dwI
+ AVYUskf9gY/wE358dlu92tzPRdsezLPa9JT1d97QDqvP/lTLyv6h8dWLdOBF78iQ2DQ10aRZ2
+ bJvtS6amkzaCz0v+wgcrElznJrOVdAAgi/ywBDq/pF5CQ4MqqqGLKMTMePzUqJQjs0kpdicxT
+ yFsYJGEoV9jgo+aPKXNOZHJ1GZSXb3dCgFxFZ7aKFoTAYAY1FmAfGAqym73pjzTa3vtPL4Yuu
+ 2tkXSOOvA9Y3jKywWB2UY1uoVg+DoniwAWvOuWecmTfVGkT0WaV59sT9BfNJ2J0O+mWMph9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds WoL support on TI DP83869 for magic, magic secure, unicast and
-broadcast.
+On Thu, Aug 27, 2020 at 11:06 PM Rene Rebe <rene@exactcode.com> wrote:
+>
+> diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+> index fbb80a043b4f..3de6bf94ccc0 100644
+> --- a/drivers/scsi/qla2xxx/qla_target.c
+> +++ b/drivers/scsi/qla2xxx/qla_target.c
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/net/phy/dp83869.c | 128 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 128 insertions(+)
+The qla2xxx and qla4xxx changes all look good.
 
-diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
-index 48a68474f89c..5045df9515a5 100644
---- a/drivers/net/phy/dp83869.c
-+++ b/drivers/net/phy/dp83869.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <linux/ethtool.h>
-+#include <linux/etherdevice.h>
- #include <linux/kernel.h>
- #include <linux/mii.h>
- #include <linux/module.h>
-@@ -27,6 +28,13 @@
- #define DP83869_RGMIICTL	0x0032
- #define DP83869_STRAP_STS1	0x006e
- #define DP83869_RGMIIDCTL	0x0086
-+#define DP83869_RXFCFG		0x0134
-+#define DP83869_RXFPMD1		0x0136
-+#define DP83869_RXFPMD2		0x0137
-+#define DP83869_RXFPMD3		0x0138
-+#define DP83869_RXFSOP1		0x0139
-+#define DP83869_RXFSOP2		0x013A
-+#define DP83869_RXFSOP3		0x013B
- #define DP83869_IO_MUX_CFG	0x0170
- #define DP83869_OP_MODE		0x01df
- #define DP83869_FX_CTRL		0x0c00
-@@ -105,6 +113,14 @@
- #define DP83869_OP_MODE_MII			BIT(5)
- #define DP83869_SGMII_RGMII_BRIDGE		BIT(6)
- 
-+/* RXFCFG bits*/
-+#define DP83869_WOL_MAGIC_EN		BIT(0)
-+#define DP83869_WOL_PATTERN_EN		BIT(1)
-+#define DP83869_WOL_BCAST_EN		BIT(2)
-+#define DP83869_WOL_UCAST_EN		BIT(4)
-+#define DP83869_WOL_SEC_EN		BIT(5)
-+#define DP83869_WOL_ENH_MAC		BIT(7)
-+
- enum {
- 	DP83869_PORT_MIRRORING_KEEP,
- 	DP83869_PORT_MIRRORING_EN,
-@@ -156,6 +172,115 @@ static int dp83869_config_intr(struct phy_device *phydev)
- 	return phy_write(phydev, MII_DP83869_MICR, micr_status);
- }
- 
-+static int dp83869_set_wol(struct phy_device *phydev,
-+			   struct ethtool_wolinfo *wol)
-+{
-+	struct net_device *ndev = phydev->attached_dev;
-+	u16 val_rxcfg, val_micr;
-+	u8 *mac;
-+
-+	val_rxcfg = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_RXFCFG);
-+	val_micr = phy_read(phydev, MII_DP83869_MICR);
-+
-+	if (wol->wolopts & (WAKE_MAGIC | WAKE_MAGICSECURE | WAKE_UCAST |
-+			    WAKE_BCAST)) {
-+		val_rxcfg |= DP83869_WOL_ENH_MAC;
-+		val_micr |= MII_DP83869_MICR_WOL_INT_EN;
-+
-+		if (wol->wolopts & WAKE_MAGIC) {
-+			mac = (u8 *)ndev->dev_addr;
-+
-+			if (!is_valid_ether_addr(mac))
-+				return -EINVAL;
-+
-+			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFPMD1,
-+				      (mac[1] << 8 | mac[0]));
-+			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFPMD2,
-+				      (mac[3] << 8 | mac[2]));
-+			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFPMD3,
-+				      (mac[5] << 8 | mac[4]));
-+
-+			val_rxcfg |= DP83869_WOL_MAGIC_EN;
-+		} else {
-+			val_rxcfg &= ~DP83869_WOL_MAGIC_EN;
-+		}
-+
-+		if (wol->wolopts & WAKE_MAGICSECURE) {
-+			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFSOP1,
-+				      (wol->sopass[1] << 8) | wol->sopass[0]);
-+			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFSOP2,
-+				      (wol->sopass[3] << 8) | wol->sopass[2]);
-+			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFSOP3,
-+				      (wol->sopass[5] << 8) | wol->sopass[4]);
-+
-+			val_rxcfg |= DP83869_WOL_SEC_EN;
-+		} else {
-+			val_rxcfg &= ~DP83869_WOL_SEC_EN;
-+		}
-+
-+		if (wol->wolopts & WAKE_UCAST)
-+			val_rxcfg |= DP83869_WOL_UCAST_EN;
-+		else
-+			val_rxcfg &= ~DP83869_WOL_UCAST_EN;
-+
-+		if (wol->wolopts & WAKE_BCAST)
-+			val_rxcfg |= DP83869_WOL_BCAST_EN;
-+		else
-+			val_rxcfg &= ~DP83869_WOL_BCAST_EN;
-+	} else {
-+		val_rxcfg &= ~DP83869_WOL_ENH_MAC;
-+		val_micr &= ~MII_DP83869_MICR_WOL_INT_EN;
-+	}
-+
-+	phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFCFG, val_rxcfg);
-+	phy_write(phydev, MII_DP83869_MICR, val_micr);
-+
-+	return 0;
-+}
-+
-+static void dp83869_get_wol(struct phy_device *phydev,
-+			    struct ethtool_wolinfo *wol)
-+{
-+	u16 value, sopass_val;
-+
-+	wol->supported = (WAKE_UCAST | WAKE_BCAST | WAKE_MAGIC |
-+			WAKE_MAGICSECURE);
-+	wol->wolopts = 0;
-+
-+	value = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_RXFCFG);
-+
-+	if (value & DP83869_WOL_UCAST_EN)
-+		wol->wolopts |= WAKE_UCAST;
-+
-+	if (value & DP83869_WOL_BCAST_EN)
-+		wol->wolopts |= WAKE_BCAST;
-+
-+	if (value & DP83869_WOL_MAGIC_EN)
-+		wol->wolopts |= WAKE_MAGIC;
-+
-+	if (value & DP83869_WOL_SEC_EN) {
-+		sopass_val = phy_read_mmd(phydev, DP83869_DEVADDR,
-+					  DP83869_RXFSOP1);
-+		wol->sopass[0] = (sopass_val & 0xff);
-+		wol->sopass[1] = (sopass_val >> 8);
-+
-+		sopass_val = phy_read_mmd(phydev, DP83869_DEVADDR,
-+					  DP83869_RXFSOP2);
-+		wol->sopass[2] = (sopass_val & 0xff);
-+		wol->sopass[3] = (sopass_val >> 8);
-+
-+		sopass_val = phy_read_mmd(phydev, DP83869_DEVADDR,
-+					  DP83869_RXFSOP3);
-+		wol->sopass[4] = (sopass_val & 0xff);
-+		wol->sopass[5] = (sopass_val >> 8);
-+
-+		wol->wolopts |= WAKE_MAGICSECURE;
-+	}
-+
-+	if (!(value & DP83869_WOL_ENH_MAC))
-+		wol->wolopts = 0;
-+}
-+
- static int dp83869_config_port_mirroring(struct phy_device *phydev)
- {
- 	struct dp83869_private *dp83869 = phydev->priv;
-@@ -531,6 +656,9 @@ static struct phy_driver dp83869_driver[] = {
- 		.ack_interrupt	= dp83869_ack_interrupt,
- 		.config_intr	= dp83869_config_intr,
- 
-+		.get_wol	= dp83869_get_wol,
-+		.set_wol	= dp83869_set_wol,
-+
- 		.suspend	= genphy_suspend,
- 		.resume		= genphy_resume,
- 	},
--- 
-2.28.0
+> diff --git a/fs/cifs/smb2status.h b/fs/cifs/smb2status.h
+> index 7505056e9580..3d5ef02f1416 100644
+> --- a/fs/cifs/smb2status.h
+> +++ b/fs/cifs/smb2status.h
+> @@ -29,7 +29,7 @@
+>   *  C is set if "customer defined" error, N bit is reserved and MBZ
+>   */
+>
+> -#define STATUS_SEVERITY_SUCCESS __constant_cpu_to_le32(0x0000)
+> +#define STATUS_SEVERITY_SUCCESS cpu_to_le32(0x0000)
+>  #define STATUS_SEVERITY_INFORMATIONAL cpu_to_le32(0x0001)
+>  #define STATUS_SEVERITY_WARNING cpu_to_le32(0x0002)
+>  #define STATUS_SEVERITY_ERROR cpu_to_le32(0x0003)
 
+This was apparently left over in f5307104e757 ("cifs: don't use
+__constant_cpu_to_le32()").
+
+> diff --git a/fs/jffs2/nodelist.h b/fs/jffs2/nodelist.h
+> index 8ff4d1a1e774..230a5a7fdafa 100644
+> --- a/fs/jffs2/nodelist.h
+> +++ b/fs/jffs2/nodelist.h
+> @@ -59,8 +59,8 @@
+>  #define cpu_to_je32(x) ((jint32_t){cpu_to_le32(x)})
+>  #define cpu_to_jemode(x) ((jmode_t){cpu_to_le32(os_to_jffs2_mode(x))})
+>
+> -#define constant_cpu_to_je16(x) ((jint16_t){__constant_cpu_to_le16(x)})
+> -#define constant_cpu_to_je32(x) ((jint32_t){__constant_cpu_to_le32(x)})
+> +#define constant_cpu_to_je16(x) ((jint16_t){cpu_to_le16(x)})
+> +#define constant_cpu_to_je32(x) ((jint32_t){cpu_to_le32(x)})
+
+This one would break the build, as these have to be constant expressions,
+whereas cpu_to_le32() is a compiler builtin or an inline function on some
+architectures.
+
+       Arnd
