@@ -2,104 +2,89 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA73C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026B2C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C26FC2087D
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:32:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asYSOntc"
+	by mail.kernel.org (Postfix) with ESMTP id CDFF820826
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599032218;
+	bh=UDYaPWY1oS3KWoU/8ARko6bgUSNf6ai7JxlKBzaoMlA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dTJQ31Mpp5HHnyqvcaOSDyh6to/sHWcpm1AU+LDWFTkAhHs7XCR4+KxwXHKHfHfGa
+	 8kvFq4khSbT+fHQ4ZgEQZZiL2rc59cZEO00RB3Nmw0i4Wgd902fC9Crsr5zim6YS92
+	 cnocua4OKNhd/h9E9qvGXm4REZdyMdSZ46yx+xmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgIBHc7 (ORCPT
+        id S1726686AbgIBHg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:32:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgIBHcv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:32:51 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 536C5C061244;
-        Wed,  2 Sep 2020 00:32:51 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z1so4098230wrt.3;
-        Wed, 02 Sep 2020 00:32:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Fu3rhVbErwAPlE8HPpQ0/XopyDhWlhtlly/dcplP9TY=;
-        b=asYSOntcpTHbiaWRo5xy57HdA7Q4MiRosi3KKd0vtdcHs+yGUqusZnzNGmOqfZ8UVf
-         6kXz4tuOY+SGEyqddBhVB4MTxerGCGnYNQ4pbeUgOB4tH8z4AkWrJLXk0X0EN5ZZhVRo
-         4FDBQOgCK53ePYGEpP9fkEcsJgQz09Qhhe0ICcbGr2BTa6+7lkVvbqfSI85YfPloxlPB
-         MnbtLSAaY/14jtW1WzmLFfFA1FC/5T3E3nJX59YQXHQJx5YDx9edz8T/m6e2T1eW9LGJ
-         ESkRcp6s9ttPE3lesTIMVIQhbRD2noNFyNERbpTZjSiMDnGIc6oz8waJE994SiJRS67p
-         LyYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Fu3rhVbErwAPlE8HPpQ0/XopyDhWlhtlly/dcplP9TY=;
-        b=oZEy4LJqdaWDk7JPEzzZ3ZVhPKkucOgaxWcZr5xfNqVi7b60zJO+HElz2Y7dLDGTTl
-         TZ5xF0zuHoDqlMfnhkhvjiBheTWS4I8Q0E6F+9pIZ9B5ZCc3qOSxMYC2MnHWaa4fR0rL
-         jOcBaJdtS1TRSdWingl8cxW4Zux9vqYRkvAqx8BXfv1zLP2ZKT6EUzVRSBrqVMDtvG4w
-         HLO+VoplBlToRcWsgHVi7r4ERfqsd2ikkOguTh5v3xsrdv5fOSG0bynasyztFYibKcfI
-         r+rdR0IFSGJ9MWDvpD+LMh5V3Eicl3B45DDWnMmhUCPZ2MOb0lutb52CYB5/T922sOKu
-         fmeA==
-X-Gm-Message-State: AOAM531bJQJxYaeYI1UYWJfLVWiwrjCX1Om+Bi6f/Rww3KSaT8UTRTKG
-        ERJ1eydHHAb2Rjc+Wx+LVDsg0EkuHEU=
-X-Google-Smtp-Source: ABdhPJyDz94/oQIHXyFLv2/XsyDNLzEbN5UnuHyknZu35SS+jOuC0ccqA4JyJdQA1JXBl/6NlmYMaQ==
-X-Received: by 2002:adf:91c2:: with SMTP id 60mr1633124wri.292.1599031970119;
-        Wed, 02 Sep 2020 00:32:50 -0700 (PDT)
-Received: from [192.168.8.147] ([37.170.201.185])
-        by smtp.gmail.com with ESMTPSA id n124sm5126104wmn.29.2020.09.02.00.32.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 00:32:49 -0700 (PDT)
-Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
- enqueue op for lockless qdisc
-To:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linuxarm@huawei.com
-References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
- <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com>
- <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com>
- <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
- <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <1f7208e6-8667-e542-88dd-bd80a6c59fd2@gmail.com>
-Date:   Wed, 2 Sep 2020 09:32:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 2 Sep 2020 03:36:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgIBHg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 03:36:57 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DDF3207EA;
+        Wed,  2 Sep 2020 07:36:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599032216;
+        bh=UDYaPWY1oS3KWoU/8ARko6bgUSNf6ai7JxlKBzaoMlA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L5R/Ho1E6MREUe5fjYWmIoFjRcgGtDcdecaBREcVjCqXcBsJ1lLHkzAYcNutGZ4SD
+         dTls0LY/Tne61QllzoY5Or+ugKESsyQzi7WtbtQbwW5jNN3AEIiQRbKg/Tq0R6gaiB
+         jut2t1ndFZISC8r7+oQi+BUpTyfW1XhkLJzWpEOY=
+Date:   Wed, 2 Sep 2020 09:37:22 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/62] 4.4.235-rc1 review
+Message-ID: <20200902073722.GD1610179@kroah.com>
+References: <20200901150920.697676718@linuxfoundation.org>
+ <76622586-3742-692a-c9de-994ac21c5257@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <76622586-3742-692a-c9de-994ac21c5257@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/1/20 11:34 PM, Yunsheng Lin wrote:
-
+On Tue, Sep 01, 2020 at 11:58:21AM -0700, Guenter Roeck wrote:
+> On 9/1/20 8:09 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.4.235 release.
+> > There are 62 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 03 Sep 2020 15:09:01 +0000.
+> > Anything received after that time might be too late.
+> > 
 > 
-> I am not familiar with TCQ_F_CAN_BYPASS.
-> From my understanding, the problem is that there is no order between
-> qdisc enqueuing and qdisc reset.
+> Building powerpc:defconfig ... failed
+> --------------
+> Error log:
+> arch/powerpc/perf/core-book3s.c: In function ‘record_and_restart’:
+> arch/powerpc/perf/core-book3s.c:2045:7: error: implicit declaration of function ‘perf_event_account_interrupt’; did you mean ‘perf_event_interrupt’? [-Werror=implicit-function-declaration]
+>    if (perf_event_account_interrupt(event))
+> 
+> Caused by commit 91d6f90ac6d5 ("powerpc/perf: Fix soft lockups due
+> to missed interrupt accounting"). perf_event_account_interrupt()
+> does not exist in v4.4.y.
 
-Thw qdisc_reset() should be done after rcu grace period, when there is guarantee no enqueue is in progress.
+Ah, good catch.  Sasha, I thought your builder would have got this one?
 
-qdisc_destroy() already has a qdisc_reset() call, I am not sure why qdisc_deactivate() is also calling qdisc_reset()
+Anyway, now dropped, I'll push out a -rc2 for this as well soon.
 
+thanks,
 
+greg k-h
