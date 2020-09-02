@@ -2,103 +2,132 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BCFC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C44A7C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31ECB2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:26:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XqtKCU8l"
+	by mail.kernel.org (Postfix) with ESMTP id ACFBC2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:27:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgIBH0o (ORCPT
+        id S1726942AbgIBH1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:26:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbgIBH0m (ORCPT
+        Wed, 2 Sep 2020 03:27:30 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:44196 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbgIBH1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:26:42 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB3E2C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:26:41 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id m8so2359647pfh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 00:26:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sK/FM/QqHW73s3zW3v2JjJSuecpEd7zSzI7DvlhgvtQ=;
-        b=XqtKCU8lMX15QFQGjsxyjexwZtP40XT3gg9pHdjWkBLYqpOqAUiqyaoTAA/4b/UiYA
-         hqUUsfjkjxpJrPkI/LDSoFIOynR2ThCRlObFMDYSNq/dDCpP8AzvWQRbbEpP3ffA787F
-         0xR5/pdIJD/6H8GsEiMts4Z4bqsubw4rFzV5kQmGEm0q9YoIPmady1TKXYPFi54ikjRb
-         pdbbAl0EnhBeo0WN+HRZgIrzEIwdbv0MqGB5EJB+MkNGZxmtZhKiHXK1XaO5xyrmsucY
-         rYFCTvtJuduPYWfJrIHm84Ou9znEOkSQ7HGUgMz1XN1c4WOhGPKJrC+w/mdH5PO0QESD
-         B4zQ==
+        Wed, 2 Sep 2020 03:27:24 -0400
+Received: by mail-io1-f72.google.com with SMTP id l8so2687070ioa.11
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 00:27:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sK/FM/QqHW73s3zW3v2JjJSuecpEd7zSzI7DvlhgvtQ=;
-        b=E6xQPXp0DlicKzIDlAgC8OVvDOB1yWHXIWWxloPHOZ2Xk4YbjZyoNGBVJCjPr5ovIA
-         hF5K5L1Hpb0e4J833QMKZDffjw7SBgKbg4KtEN8lHmo+QB32s/K9lXjf8mdGdB9o2Eds
-         VJiCsZeFDagrsUvbtkQMK1VgfX+YJ2p9gLNtdPKTsMn0drKX7IamiaLGV7Enf2uFnUhS
-         /HGHJEXFKdGvGjuuASM6GnJwOipwPf4TJ41rp2AjkgIa2m+BiV7Dqppnt0+Gp7EVEcz6
-         yvU+va7a6/c7Dt9aISmDKaB/h7dudI+LV+g28Y5BcSnQtjbm/FbdBXJT1Y+xVD6uZgS+
-         zdBA==
-X-Gm-Message-State: AOAM532oZMRqrm7NUce4+WXQ6l6FSextH/sFXx0xvGgSDnSP95eh7oUL
-        LYdUWnIxrnZkeLKD+YjX9pPRSg==
-X-Google-Smtp-Source: ABdhPJyVyMe5GyvJB6vhb2TIoerfQydgDh9IXBXNBhHQurkhmi11WCku0J1xI1XV3iAgoQsk7MwdKg==
-X-Received: by 2002:a05:6a00:16c2:: with SMTP id l2mr2067448pfc.112.1599031601377;
-        Wed, 02 Sep 2020 00:26:41 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id ih11sm3543286pjb.51.2020.09.02.00.26.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Sep 2020 00:26:40 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 12:56:38 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        cristian.marussi@arm.com, rjw@rjwysocki.net
-Subject: Re: [PATCH 0/4] CPUFreq statistics retrieved by drivers
-Message-ID: <20200902072638.zc352inj236ydgz7@vireshk-i7>
-References: <20200729151208.27737-1-lukasz.luba@arm.com>
- <20200730085333.qubrsv7ufqninihd@vireshk-mac-ubuntu>
- <20200730091014.GA13158@bogus>
- <3b3a56e9-29ec-958f-fb3b-c689a9389d2f@arm.com>
- <20200804053502.35d3x3vnb3mggtqs@vireshk-mac-ubuntu>
- <f784bf30-83a6-55ff-8fa6-f7bd2d4399b9@arm.com>
- <20200804103857.mxgkmt6qmmzejuzb@vireshk-mac-ubuntu>
- <1f978078-b2df-a2e5-6af8-e73f65044ba7@arm.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=bPjCsLvf4YWVwJoyZQaDFqOqvUJtCilRH+5fagQZGJY=;
+        b=o2/jLMAQ2MUWmcwDJtrDbZ9bD1fqnbAOjgipKU90tIpOmxBKgyID0vNM2fHKAKvdJS
+         xvDkh6AZjL93W8MqUYVrQ0+/moWliAtJ7mVJHK1V5fIWNikPPVBieBFgviRDyWeom3dG
+         iFpBJxV+V+o8SAeI/zLF/1xZeTKSp0ef8PyvVlkdSnMP5GAwOwl8Z8mS4p6wmcLXyj+8
+         nglFdBcRF1LGtxp2f+1eimgxExXyk5o0v9xMn7Izb06Y3EeBb1lkVCDmQnFGetQQm7aR
+         EGnWFMA7RHpT7atIUa9APPEgn5m0wmwcmYo23G4k70SSaPB7KFte5oacp6M1kZENhaiC
+         o12g==
+X-Gm-Message-State: AOAM530pg4A5XQkE/GjFJWXLzb8fRzZPKf9lITfRL/QZYelBIl8NeTX+
+        IsHIxonD8unH085j3WQiL0SwDBJ92pI4yacW8fvmXT9Z82ci
+X-Google-Smtp-Source: ABdhPJx37j4oJkY7TNtoUOZeZICr35Z980EynEXxxYD5l4AiZWddQ/Uom0YH8so35oz8eZD0QABynd4WvzL4LfUymdDa2i2O8SSa
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1f978078-b2df-a2e5-6af8-e73f65044ba7@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+X-Received: by 2002:a92:dcc3:: with SMTP id b3mr162292ilr.285.1599031642741;
+ Wed, 02 Sep 2020 00:27:22 -0700 (PDT)
+Date:   Wed, 02 Sep 2020 00:27:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000cdfec05ae4f91da@google.com>
+Subject: general protection fault in xsk_is_setup_for_bpf_map
+From:   syzbot <syzbot+febe51d44243fbc564ee@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bjorn.topel@intel.com,
+        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        hawk@kernel.org, john.fastabend@gmail.com,
+        jonathan.lemon@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        magnus.karlsson@intel.com, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-08-20, 11:44, Lukasz Luba wrote:
-> On 8/4/20 11:38 AM, Viresh Kumar wrote:
-> > I don't think doing it with help of firmware is the right thing to do
-> > here then. For another platform we may not have a firmware which can
-> > help us, we need something in the opp core itself for that. Lemme see
-> > if I can do something about it.
-> 
-> OK, great, I will wait then with this patch series v2 which would change
-> into debugfs scmi only. Could you please add me on CC, I am very
-> interested in.
+Hello,
 
-Here is an attempt.
+syzbot found the following issue on:
 
-http://lore.kernel.org/lkml/cover.1599031227.git.viresh.kumar@linaro.org
+HEAD commit:    dc1a9bf2 octeontx2-pf: Add UDP segmentation offload support
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1442d38e900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b6856d16f78d8fa9
+dashboard link: https://syzkaller.appspot.com/bug?extid=febe51d44243fbc564ee
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1019da25900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15988279900000
 
--- 
-viresh
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+febe51d44243fbc564ee@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xdffffc0000000020: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000100-0x0000000000000107]
+CPU: 1 PID: 8180 Comm: syz-executor241 Not tainted 5.9.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:xsk_is_setup_for_bpf_map+0xbd/0x140 net/xdp/xsk.c:39
+Code: 80 3c 02 00 0f 85 8b 00 00 00 4c 8b a3 e8 04 00 00 48 b8 00 00 00 00 00 fc ff df 49 8d bc 24 00 01 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75 6f 49 83 bc 24 00 01 00 00 00 74 12 41 bc 01 00 00
+RSP: 0018:ffffc90005787c30 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff88808880f000 RCX: ffffffff87effd24
+RDX: 0000000000000020 RSI: ffffffff87efc58b RDI: 0000000000000100
+RBP: 0000000000000000 R08: 0000000000000001 R09: ffff888094f6ea00
+R10: 000000000000002c R11: 0000000000000000 R12: 0000000000000000
+R13: ffff888082808a80 R14: ffff88808880f000 R15: 000000000000002c
+FS:  0000000000767940(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000077fffb CR3: 00000000a939a000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ xsk_map_update_elem+0x1bc/0x9d0 net/xdp/xskmap.c:188
+ bpf_map_update_value.isra.0+0x715/0x900 kernel/bpf/syscall.c:200
+ map_update_elem kernel/bpf/syscall.c:1120 [inline]
+ __do_sys_bpf+0x320b/0x4b30 kernel/bpf/syscall.c:4186
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x44c4f9
+Code: e8 1c e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 3b 04 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc6d766ac8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000044c4f9
+RDX: 000000000000002c RSI: 0000000020003000 RDI: 0000000000000002
+RBP: 0000000000000000 R08: fffffffffffffff5 R09: fffffffffffffff5
+R10: fffffffffffffff5 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 6b3dd16ce201e2fa ]---
+RIP: 0010:xsk_is_setup_for_bpf_map+0xbd/0x140 net/xdp/xsk.c:39
+Code: 80 3c 02 00 0f 85 8b 00 00 00 4c 8b a3 e8 04 00 00 48 b8 00 00 00 00 00 fc ff df 49 8d bc 24 00 01 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75 6f 49 83 bc 24 00 01 00 00 00 74 12 41 bc 01 00 00
+RSP: 0018:ffffc90005787c30 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff88808880f000 RCX: ffffffff87effd24
+RDX: 0000000000000020 RSI: ffffffff87efc58b RDI: 0000000000000100
+RBP: 0000000000000000 R08: 0000000000000001 R09: ffff888094f6ea00
+R10: 000000000000002c R11: 0000000000000000 R12: 0000000000000000
+R13: ffff888082808a80 R14: ffff88808880f000 R15: 000000000000002c
+FS:  0000000000767940(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000077fffb CR3: 00000000a939a000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
