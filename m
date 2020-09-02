@@ -2,35 +2,36 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE74CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA55C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 902B220767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF0920767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgIBPcr (ORCPT
+        id S1728397AbgIBPcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:32:47 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:52307 "EHLO
+        Wed, 2 Sep 2020 11:32:50 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:52308 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728381AbgIBPcg (ORCPT
+        with ESMTP id S1728375AbgIBPci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:32:36 -0400
+        Wed, 2 Sep 2020 11:32:38 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from ayal@mellanox.com)
-        with SMTP; 2 Sep 2020 18:32:28 +0300
+        with SMTP; 2 Sep 2020 18:32:29 +0300
 Received: from dev-l-vrt-210.mtl.labs.mlnx (dev-l-vrt-210.mtl.labs.mlnx [10.234.210.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 082FWSaN014692;
-        Wed, 2 Sep 2020 18:32:28 +0300
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 082FWTlq014707;
+        Wed, 2 Sep 2020 18:32:29 +0300
 Received: from dev-l-vrt-210.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Debian-8ubuntu1) with ESMTP id 082FWSrs026687;
-        Wed, 2 Sep 2020 18:32:28 +0300
+        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Debian-8ubuntu1) with ESMTP id 082FWTDo026695;
+        Wed, 2 Sep 2020 18:32:29 +0300
 Received: (from ayal@localhost)
-        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 082FWPW4026686;
-        Wed, 2 Sep 2020 18:32:25 +0300
+        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 082FWTjE026694;
+        Wed, 2 Sep 2020 18:32:29 +0300
 From:   Aya Levin <ayal@mellanox.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -39,54 +40,227 @@ Cc:     Moshe Shemesh <moshe@mellanox.com>,
         Eran Ben Elisha <eranbe@mellanox.com>,
         Ido Schimmel <idosch@mellanox.com>,
         linux-kernel@vger.kernel.org, Aya Levin <ayal@mellanox.com>
-Subject: [PATCH net-next RFC v1 0/4] Add devlink traps in devlink port context
-Date:   Wed,  2 Sep 2020 18:32:10 +0300
-Message-Id: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
+Subject: [PATCH net-next RFC v1 4/4] net/mlx5e: Add devlink trap to catch oversize packets
+Date:   Wed,  2 Sep 2020 18:32:14 +0300
+Message-Id: <1599060734-26617-5-git-send-email-ayal@mellanox.com>
 X-Mailer: git-send-email 1.8.4.3
+In-Reply-To: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
+References: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement support for devlink traps on per-port basis.
-Dropped packets in the RX flow are related to the Ethernet port and
-thus should be in port context. Traps per device should trap global
-configuration which can cause drops. On top of that, enabling a trap
-on a device level should trigger this trap on its siblings ports.
-In addition, when devlink traps is enabled, it may cause a degradation
-in performance. Hence devlink traps should be regard as a debug mode.
-Considering that, it is preferred to encapsulate the debug mode as
-much as possible and not to effect all the device.
+Register MTU error trap to allow visibility of oversize packets. Display
+a naive use of devlink trap in devlink port context.
 
-Patchset:
-Patch 1: Refactors devlink trap for easier code re-use in the coming
-patches
-Patch 2: Adds devlink traps under devlink port context
-Patch 3: Adds a relation between traps in device context and traps in
-ports context. In a nutshell it allows enable/disable of a trap on
-all related ports which registered this trap.
-Patch 4: Display a use in devlink traps in port context in mlx5
-ethernet driver.
-
-Aya Levin (4):
-  devlink: Wrap trap related lists and ops in trap_mngr
-  devlink: Add devlink traps under devlink_ports context
-  devlink: Add hiererchy between traps in device level and port level
-  net/mlx5e: Add devlink trap to catch oversize packets
-
- drivers/net/ethernet/mellanox/mlx5/core/Makefile   |   2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en.h       |   2 +
- drivers/net/ethernet/mellanox/mlx5/core/en/traps.c |  32 ++
- drivers/net/ethernet/mellanox/mlx5/core/en/traps.h |  13 +
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |  41 ++
- drivers/net/ethernet/mellanox/mlx5/core/en_rx.c    |  11 +-
- drivers/net/ethernet/mellanox/mlxsw/core.c         |   5 +
- include/net/devlink.h                              |  84 ++-
- net/core/devlink.c                                 | 616 +++++++++++++++++----
- 9 files changed, 665 insertions(+), 141 deletions(-)
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/Makefile   |  2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en.h       |  2 ++
+ drivers/net/ethernet/mellanox/mlx5/core/en/traps.c | 32 +++++++++++++++++
+ drivers/net/ethernet/mellanox/mlx5/core/en/traps.h | 13 +++++++
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c  | 41 ++++++++++++++++++++++
+ drivers/net/ethernet/mellanox/mlx5/core/en_rx.c    | 11 ++++--
+ 6 files changed, 98 insertions(+), 3 deletions(-)
  create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/traps.c
  create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/traps.h
 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
+index 94268a697e1c..78e2e9107986 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
++++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
+@@ -25,7 +25,7 @@ mlx5_core-$(CONFIG_MLX5_CORE_EN) += en_main.o en_common.o en_fs.o en_ethtool.o \
+ 		en_tx.o en_rx.o en_dim.o en_txrx.o en/xdp.o en_stats.o \
+ 		en_selftest.o en/port.o en/monitor_stats.o en/health.o \
+ 		en/reporter_tx.o en/reporter_rx.o en/params.o en/xsk/umem.o \
+-		en/xsk/setup.o en/xsk/rx.o en/xsk/tx.o en/devlink.o
++		en/xsk/setup.o en/xsk/rx.o en/xsk/tx.o en/devlink.o en/traps.o
+ 
+ #
+ # Netdev extra
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index 0cc2080fd847..7e5581ed9311 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -814,6 +814,8 @@ struct mlx5e_priv {
+ 	struct mlx5e_hv_vhca_stats_agent stats_agent;
+ #endif
+ 	struct mlx5e_scratchpad    scratchpad;
++	void *trap_mtu;
++	bool trap_oversize;
+ };
+ 
+ struct mlx5e_rx_handlers {
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/traps.c b/drivers/net/ethernet/mellanox/mlx5/core/en/traps.c
+new file mode 100644
+index 000000000000..e365e8dbd6ff
+--- /dev/null
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/traps.c
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2020 Mellanox Technologies.
++#include "en.h"
++#include "traps.h"
++#include <linux/kernel.h>
++#include <uapi/linux/devlink.h>
++
++#define MLX5E_TRAP(_id, _group_id)                                      \
++	DEVLINK_TRAP_GENERIC(DROP, DROP, _id,                           \
++			     DEVLINK_TRAP_GROUP_GENERIC_ID_##_group_id, \
++			     DEVLINK_TRAP_METADATA_TYPE_F_IN_PORT)
++static struct devlink_trap mlx5e_traps_arr[] = {
++	MLX5E_TRAP(MTU_ERROR, L2_DROPS),
++};
++
++int mlx5e_devlink_traps_create(struct mlx5e_priv *priv)
++{
++	struct devlink_port *dl_port = &priv->dl_port;
++
++	return devlink_port_traps_register(dl_port, mlx5e_traps_arr,
++					   ARRAY_SIZE(mlx5e_traps_arr),
++					   priv);
++}
++
++void mlx5e_devlink_traps_destroy(struct mlx5e_priv *priv)
++{
++	struct devlink_port *dl_port = &priv->dl_port;
++
++	devlink_port_traps_unregister(dl_port, mlx5e_traps_arr,
++				      ARRAY_SIZE(mlx5e_traps_arr));
++}
++
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/traps.h b/drivers/net/ethernet/mellanox/mlx5/core/en/traps.h
+new file mode 100644
+index 000000000000..14a32b6968ee
+--- /dev/null
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/traps.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (c) 2020 Mellanox Technologies.*/
++
++#ifndef __MLX5E_EN_TRAPS_H
++#define __MLX5E_EN_TRAPS_H
++
++#include "en.h"
++
++int mlx5e_devlink_traps_create(struct mlx5e_priv *priv);
++void mlx5e_devlink_traps_destroy(struct mlx5e_priv *priv);
++
++#endif
++
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index aebcf73f8546..056f34326b3d 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -64,6 +64,7 @@
+ #include "en/hv_vhca_stats.h"
+ #include "en/devlink.h"
+ #include "lib/mlx5.h"
++#include "en/traps.h"
+ 
+ bool mlx5e_check_fragmented_striding_rq_cap(struct mlx5_core_dev *mdev)
+ {
+@@ -4976,6 +4977,43 @@ void mlx5e_destroy_q_counters(struct mlx5e_priv *priv)
+ 	}
+ }
+ 
++static int mlx5e_devlink_trap_init(struct devlink *devlink,
++				   const struct devlink_trap *trap,
++				   void *trap_ctx)
++{
++	struct mlx5e_priv *priv = (struct mlx5e_priv *)devlink_trap_ctx_priv(trap_ctx);
++
++	priv->trap_mtu = trap_ctx;
++	return 0;
++}
++
++static void mlx5e_devlink_trap_fini(struct devlink *devlink,
++				    const struct devlink_trap *trap,
++				    void *trap_ctx)
++{
++	struct mlx5e_priv *priv = (struct mlx5e_priv *)devlink_trap_ctx_priv(trap_ctx);
++
++	priv->trap_mtu = NULL;
++}
++
++static int mlx5e_devlink_trap_action_set(struct devlink *devlink,
++					 const struct devlink_trap *trap,
++					 enum devlink_trap_action action,
++					 void *trap_ctx,
++					 struct netlink_ext_ack *extack)
++{
++	struct mlx5e_priv *priv = (struct mlx5e_priv *)devlink_trap_ctx_priv(trap_ctx);
++
++	priv->trap_oversize = !!action;
++	return 0;
++}
++
++static const struct devlink_trap_ops mlx5e_devlink_traps_ops = {
++	.trap_init		= mlx5e_devlink_trap_init,
++	.trap_fini		= mlx5e_devlink_trap_fini,
++	.trap_action_set	= mlx5e_devlink_trap_action_set,
++};
++
+ static int mlx5e_nic_init(struct mlx5_core_dev *mdev,
+ 			  struct net_device *netdev,
+ 			  const struct mlx5e_profile *profile,
+@@ -5005,12 +5043,15 @@ static int mlx5e_nic_init(struct mlx5_core_dev *mdev,
+ 	if (err)
+ 		mlx5_core_err(mdev, "mlx5e_devlink_port_register failed, %d\n", err);
+ 	mlx5e_health_create_reporters(priv);
++	devlink_port_traps_ops(&priv->dl_port, &mlx5e_devlink_traps_ops);
++	mlx5e_devlink_traps_create(priv);
+ 
+ 	return 0;
+ }
+ 
+ static void mlx5e_nic_cleanup(struct mlx5e_priv *priv)
+ {
++	mlx5e_devlink_traps_destroy(priv);
+ 	mlx5e_health_destroy_reporters(priv);
+ 	mlx5e_devlink_port_unregister(priv);
+ 	mlx5e_tls_cleanup(priv);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+index 1e42e27eae26..4fe20a6e6d6d 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+@@ -1437,6 +1437,7 @@ mlx5e_skb_from_cqe_mpwrq_linear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *wi,
+ 				u16 cqe_bcnt, u32 head_offset, u32 page_idx)
+ {
+ 	struct mlx5e_dma_info *di = &wi->umr.dma_info[page_idx];
++	struct mlx5e_priv *priv = rq->channel->priv;
+ 	u16 rx_headroom = rq->buff.headroom;
+ 	u32 cqe_bcnt32 = cqe_bcnt;
+ 	struct xdp_buff xdp;
+@@ -1444,11 +1445,14 @@ mlx5e_skb_from_cqe_mpwrq_linear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *wi,
+ 	void *va, *data;
+ 	u32 frag_size;
+ 	bool consumed;
++	bool trap;
+ 
+ 	/* Check packet size. Note LRO doesn't use linear SKB */
+ 	if (unlikely(cqe_bcnt > rq->hw_mtu)) {
+ 		rq->stats->oversize_pkts_sw_drop++;
+-		return NULL;
++		if (!priv->trap_oversize)
++			return NULL;
++		trap = true;
+ 	}
+ 
+ 	va             = page_address(di->page) + head_offset;
+@@ -1475,7 +1479,10 @@ mlx5e_skb_from_cqe_mpwrq_linear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *wi,
+ 	skb = mlx5e_build_linear_skb(rq, va, frag_size, rx_headroom, cqe_bcnt32);
+ 	if (unlikely(!skb))
+ 		return NULL;
+-
++	if (trap) {
++		devlink_port_trap_report(&priv->dl_port, skb, priv->trap_mtu, NULL);
++		return NULL;
++	}
+ 	/* queue up for recycling/reuse */
+ 	page_ref_inc(di->page);
+ 
 -- 
 2.14.1
 
