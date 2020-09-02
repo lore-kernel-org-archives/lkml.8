@@ -6,78 +6,79 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70B0C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F60C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1CA207D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 199432078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:04:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgIBODT (ORCPT
+        id S1726678AbgIBOEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:03:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbgIBNrr (ORCPT
+        Wed, 2 Sep 2020 10:04:09 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:48914 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727838AbgIBNtk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:47:47 -0400
-Received: from caffeine.csclub.uwaterloo.ca (caffeine.csclub.uwaterloo.ca [IPv6:2620:101:f000:4901:c5c:0:caff:e12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AFF7C061245;
-        Wed,  2 Sep 2020 06:47:42 -0700 (PDT)
-Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
-        id E12B2460FF9; Wed,  2 Sep 2020 09:47:34 -0400 (EDT)
-Date:   Wed, 2 Sep 2020 09:47:34 -0400
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org
-Subject: Re: [Intel-wired-lan] VRRP not working on i40e X722 S2600WFT
-Message-ID: <20200902134734.fvtyn5tbhpyssrbq@csclub.uwaterloo.ca>
-References: <20200827183039.hrfnb63cxq3pmv4z@csclub.uwaterloo.ca>
- <20200828155616.3sd2ivrml2gpcvod@csclub.uwaterloo.ca>
- <20200831103512.00001fab@intel.com>
- <20200901013519.rfmavd4763gdzw4r@csclub.uwaterloo.ca>
+        Wed, 2 Sep 2020 09:49:40 -0400
+Date:   Wed, 2 Sep 2020 09:34:07 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] mmc: mmc_spi: Allow the driver to be built when
+ CONFIG_HAS_DMA is unset
+Message-ID: <20200902133400.GQ3265@brightrain.aerifal.cx>
+References: <20200901150438.228887-1-ulf.hansson@linaro.org>
+ <20200901150654.GB30034@lst.de>
+ <CAPDyKFqZXdtVokrDQvJAh-NzN0T2ayPD6MepemLEaDt1TRPduw@mail.gmail.com>
+ <20200901154049.GA376@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200901013519.rfmavd4763gdzw4r@csclub.uwaterloo.ca>
-User-Agent: NeoMutt/20170113 (1.7.2)
-From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
+In-Reply-To: <20200901154049.GA376@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 09:35:19PM -0400,  wrote:
-> On Mon, Aug 31, 2020 at 10:35:12AM -0700, Jesse Brandeburg wrote:
-> > Thanks for the report Lennart, I understand your frustration, as this
-> > should probably work without user configuration.
+On Tue, Sep 01, 2020 at 05:40:49PM +0200, Christoph Hellwig wrote:
+> On Tue, Sep 01, 2020 at 05:36:17PM +0200, Ulf Hansson wrote:
+> > > I still don't think this makes sense, as the dma_mask should always
+> > > be non-NULL here.
 > > 
-> > However, please give this command a try:
-> > ethtool --set-priv-flags ethX disable-source-pruning on
+> > If that is the case, I wonder how the driver could even have worked without DMA.
+> > 
+> > Because in the existing code, host->dma_dev gets assigned to
+> > spi->master->dev.parent->dma_mask - which seems to turn on the DMA
+> > usage in the driver.
+> > 
+> > What am I missing?
 > 
-> Hmm, our 4.9 kernel is just a touch too old to support that.  And yes
-> that really should not require a flag to be set, given the card has no
-> reason to ever do that pruning.  There is no justification you could
-> have for doing it in the first place.
+> Do you know of other non-DMA users?  For SH nommu it probably worked
+> because SH nommu used to provide a DMA implementation that worked
+> fine for streaming maps, but was completely broken for coherent
+> allocation.  And this driver appears to only use the former.
 
-So backporting the patch that enabled that flag does allow it to work.
-Of course there isn't a particularly good place to put an ethtool command
-in the boot up to make sure it runs before vrrp is started.  This has to
-be the default. I know I wasted about a week trying things to get this to
-work, and clearly lots of other people have wasted a ton of time on this
-"feature" too (calling it a feature is clearly wrong, it is a bug).
+On the system we're using it on, there's no DMA whatsoever. It just
+used to allow memory allocations suitable for DMA (which any
+allocation vacuuously is when there's no DMA) but now it doesn't, due
+to your change.
 
-By default the NIC should work as expected.  Any weird questionable
-optimizations have to be turned on by the user explicitly when they
-understand the consequences.  I can't find any use case documented
-anywhere for this bug, I can only find things it has broken (like
-apparently arp monitoring on bonding, and vrrp).
+Just below the if block in question in this thread is:
 
-So who should make the patch to change this to be the default?  Clearly
-the current behaviour is harming and confusing more people than could
-possibly be impacted by changing the current default setting for the flag
-(in fact I would just about be willing to bet there are no people that
-want the current behaviour.  After all no other NIC does this, so clearly
-there is no need for it to be done).
+	host->readback.is_dma_mapped = (host->dma_dev != NULL);
 
--- 
-Len Sorensen
+and similar conditions appear elsewhere all over the file in the form
+of if (host->dma_dev). Of course doing DMA requires a link to a DMA
+controller device, and plenty SPI devices (most obviously bit-banged
+ones) lack DMA.
+
+The right condition for the block in question here is probably just
+checking dma_dev instead of dma_mask or CONFIG_HAS_DMA, but it seems
+useful to optimize out the code if CONFIG_HAS_DMA is false, anyway.
+
+Rich
