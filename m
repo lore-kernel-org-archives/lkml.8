@@ -2,109 +2,69 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A59A4C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02783C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB3F20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:52:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="hdXDtFwY"
+	by mail.kernel.org (Postfix) with ESMTP id CD1FB20767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:53:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgIBTwP (ORCPT
+        id S1726742AbgIBTw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 15:52:15 -0400
-Received: from pmg01-out1.zxcs.nl ([185.104.30.240]:42747 "EHLO
-        pmg01-out1.zxcs.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIBTwO (ORCPT
+        Wed, 2 Sep 2020 15:52:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgIBTw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 15:52:14 -0400
-X-Greylist: delayed 563 seconds by postgrey-1.27 at vger.kernel.org; Wed, 02 Sep 2020 15:52:14 EDT
-Received: from pmg01.zxcs.nl (localhost.localdomain [127.0.0.1])
-        by pmg01.zxcs.nl (ZXCS) with ESMTP id E9240103D74;
-        Wed,  2 Sep 2020 21:42:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=pascalroeleven.nl; s=x; h=Content-Transfer-Encoding:Content-Type:Message-ID
-        :References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=KNenMuIKDW/cG/OCNrUxLUJ9j1/2p1rYL+aDVLwuqv4=; b=hdXDtFwYQb1ag7/bFm3Zz3rLW7
-        1qF0TdHjx1k4Ord2Ywa+wPX7L+PSAxxUoxQL+7chtN5gqrIbIgfHxIjcaltzzS1/1j9FbGnIwpJ70
-        8pm/DOcJvEIk/cAwXgIVsPH3/uSpbw/2fYteubtA3mH2fWsx13CaMF42E4U6/dHRFg9Om4DlNZ/t+
-        ZalA0iOA/yAIGX63hb/Rjc/jmwa9swMYwGKRM321jwUQA0KnJUVaP5JnkOUrex1txUV4ZdP0mGe7g
-        1GbI6h3lTq+/kvPA83ovp/d3GsoiN9cksY7bEOH/vtmDmCQzotBFnm8U3Tr0IllzamX/18GQMn5XO
-        6crHMZqg==;
-MIME-Version: 1.0
-Date:   Wed, 02 Sep 2020 21:42:49 +0200
-From:   Pascal Roeleven <dev@pascalroeleven.nl>
-To:     Andrey Lebedev <andrey@lebedev.lt>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Emil Lenngren <emil.lenngren@gmail.com>
-Subject: Re: pwm-sun4i: PWM backlight is not turned off on shutdown
-In-Reply-To: <913a5324-a7d2-f1d5-701e-1c28359286f2@lebedev.lt>
-References: <ae58976c-a8d7-0d00-fe72-d21579b37240@lebedev.lt>
- <20200902095402.pombrirqqjdew34b@holly.lan>
- <913a5324-a7d2-f1d5-701e-1c28359286f2@lebedev.lt>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <5302741318a28e39239db08a1f05ecb7@pascalroeleven.nl>
-X-Sender: dev@pascalroeleven.nl
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        Wed, 2 Sep 2020 15:52:58 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF2CC061244;
+        Wed,  2 Sep 2020 12:52:58 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5DCE715633C18;
+        Wed,  2 Sep 2020 12:36:11 -0700 (PDT)
+Date:   Wed, 02 Sep 2020 12:52:57 -0700 (PDT)
+Message-Id: <20200902.125257.1961904187228004830.davem@davemloft.net>
+To:     luobin9@huawei.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        luoxianjun@huawei.com, yin.yinshi@huawei.com,
+        cloud.wangxiaoyun@huawei.com, chiqijun@huawei.com
+Subject: Re: [PATCH net 3/3] hinic: fix bug of send pkts while setting
+ channels
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200902094145.12216-4-luobin9@huawei.com>
+References: <20200902094145.12216-1-luobin9@huawei.com>
+        <20200902094145.12216-4-luobin9@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-AuthUser: 
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Wed, 02 Sep 2020 12:36:11 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for adding me. Emil (also added now) and I spent a while on 
-trying to figure out how to solve this. The Allwinner PWM controller has 
-some quirks.
+From: Luo bin <luobin9@huawei.com>
+Date: Wed, 2 Sep 2020 17:41:45 +0800
 
-Unfortunately I never got around to perform some more tests and fix it 
-indefinitely. It's still on my todo list..
+> @@ -531,6 +531,11 @@ netdev_tx_t hinic_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
+>  	struct hinic_txq *txq;
+>  	struct hinic_qp *qp;
+>  
+> +	if (unlikely(!netif_carrier_ok(netdev))) {
+> +		dev_kfree_skb_any(skb);
+> +		return NETDEV_TX_OK;
+> +	}
 
-> On 9/2/20 12:54 PM, Daniel Thompson wrote:
->> There's some rather odd logic in sun4i_pwm_apply() that results in the
->> PWM being disabled twice... once when it applies the initial config
->> and again after waiting for a duty_cycle.
+As Eric said, these kinds of tests should not be placed in the fast path
+of the driver.
 
-That's true. To properly turn off the controller you have to turn the 
-controller off first and keep the gate on for at least two full clock 
-cycles. Then the gate must be turned off. Otherwise it might get stuck. 
-That's probably what is trying to be done here.
-
-On 2020-09-02 21:05, Andrey Lebedev wrote:
-> Indeed, this fixes the issue for me. The display goes dark reliably on
-> writing 4 to "/sys/.../bl_power" as well as when system is halted. I 
-> did
-> not notice any negative side effects so far.
-
-Problems start to arise when combining bl_power and brightness setting 
-in a particular order or at the same time (with for example a backlight 
-driver which sets both bl_power and brightness). I can't recall exactly 
-what caused problems and when, but one thing I was sure of is that 
-timing was of the essence. Once I added some delays here and there it 
-started to work.
-
-If this patch works for you then that's great, but unfortunately it 
-isn't a complete solution.
-
-Regards,
-Pascal
-
+If you invoke close and the core networking still sends packets to the
+driver, that's a bug that needs to be fixed in the core networking.
