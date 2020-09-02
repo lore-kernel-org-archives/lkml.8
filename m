@@ -2,475 +2,165 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FDDC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89AAC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD22920786
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0092207DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:21:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoA4IxJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgIBFUD (ORCPT
+        id S1726448AbgIBFV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 01:20:03 -0400
-Received: from mga01.intel.com ([192.55.52.88]:17575 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbgIBFUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 01:20:03 -0400
-IronPort-SDR: l5Z39QhmJJHUZxylshg5QEL4tAglIjs7i5TN3mhGzRUiReZ9vdlgQzAUbXu1ChNTjwN7k56T6B
- lDghGrFrYESg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="175371225"
-X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
-   d="scan'208";a="175371225"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 22:19:56 -0700
-IronPort-SDR: vEM3CCDxAUYxHyCrs13LVV4EILqqZ08BwsHVgiseJ9kprF6MSEDWXAHvFt6tKQuR2XKRRNhYnr
- oEO5tt5hvong==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
-   d="scan'208";a="331303871"
-Received: from cqiang-mobl.ccr.corp.intel.com (HELO [10.238.2.93]) ([10.238.2.93])
-  by orsmga008.jf.intel.com with ESMTP; 01 Sep 2020 22:19:54 -0700
-Subject: Re: [RFC v2 2/2] KVM: VMX: Enable bus lock VM exit
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200817014459.28782-1-chenyi.qiang@intel.com>
- <20200817014459.28782-3-chenyi.qiang@intel.com>
- <87sgc1x4yn.fsf@vitty.brq.redhat.com>
-From:   Chenyi Qiang <chenyi.qiang@intel.com>
-Message-ID: <e856ddd4-fac6-c24a-f0d9-60887e42d27b@intel.com>
-Date:   Wed, 2 Sep 2020 13:19:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Wed, 2 Sep 2020 01:21:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgIBFV0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 01:21:26 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70407C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 22:21:26 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id b14so3294928qkn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 22:21:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pUaYX9zKEjE3UC87tIgYQTtj9y801Ydigt+bunW6HZ0=;
+        b=CoA4IxJ6ah2GKpke3J8wgjl3AqhJAtr5OAZo3b0AeRdtZbNM8OI6vkKf8k3cFvkUHU
+         DLEzwLmnFhOBIOuYL2DvY/ZIwhGoccBCDS/Q3Sj2t/oY4SujxKfv/CeJgWid/pylr/wa
+         YbPbmPqxrL5GZu/gmN71BUgIIuNR+1+8Mwreekz3HyH61PQxNBqiLwlIYoBmMH7FFK+8
+         xhy9xNcfFVxk9yJT4gmfpVTCaxIVv1YahHKWeR5Cb0w80G+AvCdTKKVJqjMyLymHnW/r
+         b79288BW5J5ScjhDLEIKwr9iiuVV4zUBpK5TKiYDTGSxShQaQqHKdYVVsCh+ccb5O7uN
+         j1vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pUaYX9zKEjE3UC87tIgYQTtj9y801Ydigt+bunW6HZ0=;
+        b=ogd6w4tY0gE1RQuHUe4zXUXgb247cTFO4WfKrnzvIhYCAOZJu9gjoRE9W/Hv/tizSt
+         eaCjLFjgAhAsSYlisP3K20c3OTEyNmEC7C7F8A9wKKiLU5IibZYw5SORpXzV5ioW39N3
+         6n5zTbvu13XSJTPA+rJQUDslNP7KqqpvcXCXrb3Ga+P7J/6szFJqTxL+z0zo0TStgBzz
+         auVvW9CrAkaugf+su083t/Txo9AIFQgxJWVrQZXqKBZmRB6ciZwxibJx5Ktkofxc2FCc
+         /i8wTGV4U0af9LBAjXuJKnosAcDnJMPYs5bGYK2yJc4J81ooQKggiVBKx7MPJw5nbmIp
+         UOIA==
+X-Gm-Message-State: AOAM5302M2ukSsA2ALah5JyH8X5azTZ8iwwr6l5XB4/RGN1+yPH0HWOG
+        xKNSL8Nj6YVRku5Y/5hQOgA=
+X-Google-Smtp-Source: ABdhPJxMs/gCZgP754nd0TdIGrbNuQQ+VnPVejCRLYJ3xskqjAMOrIDdIzUXGUj4cBIZThgEV1rWJQ==
+X-Received: by 2002:a05:620a:a1d:: with SMTP id i29mr1185377qka.76.1599024085579;
+        Tue, 01 Sep 2020 22:21:25 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id e23sm3697017qkl.67.2020.09.01.22.21.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 22:21:24 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 22:21:23 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Kees Cook <keescook@chromium.org>,
+        Fangrui Song <maskray@google.com>
+Subject: Re: [PATCH 0/2] link vdso with linker
+Message-ID: <20200902052123.GA2687902@ubuntu-n2-xlarge-x86>
+References: <20200901222523.1941988-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-In-Reply-To: <87sgc1x4yn.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901222523.1941988-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/1/2020 4:43 PM, Vitaly Kuznetsov wrote:
-> Chenyi Qiang <chenyi.qiang@intel.com> writes:
+On Tue, Sep 01, 2020 at 03:25:21PM -0700, Nick Desaulniers wrote:
+> Kees Cook is working on series that adds --orphan-section=warn to arm,
+> arm64, and x86.  I noticed that ppc vdso were still using cc-ldoption
+> for these which I removed.  It seems this results in that flag being
+> silently dropped.
 > 
->> Virtual Machine can exploit bus locks to degrade the performance of
->> system. Bus lock can be caused by split locked access to writeback(WB)
->> memory or by using locks on uncacheable(UC) memory. The bus lock is
->> typically >1000 cycles slower than an atomic operation within a cache
->> line. It also disrupts performance on other cores (which must wait for
->> the bus lock to be released before their memory operations can
->> complete).
->>
->> To address the threat, bus lock VM exit is introduced to notify the VMM
->> when a bus lock was acquired, allowing it to enforce throttling or other
->> policy based mitigations.
->>
->> A VMM can enable VM exit due to bus locks by setting a new "Bus Lock
->> Detection" VM-execution control(bit 30 of Secondary Processor-based VM
->> execution controls). If delivery of this VM exit was preempted by a
->> higher priority VM exit (e.g. EPT misconfiguration, EPT violation, APIC
->> access VM exit, APIC write VM exit, exception bitmap exiting), bit 26 of
->> exit reason in vmcs field is set to 1.
->>
->> In current implementation, the KVM exposes this capability through
->> KVM_CAP_X86_BLD. The user can set it to enable the bus lock VM exit
->> (disabled by default). If bus locks in guest are detected by KVM, exit
->> to user space even when current exit reason is handled by KVM
->> internally. Set a new field KVM_RUN_BUS_LOCK in vcpu->run->flags to
->> inform the user space that there is a bus lock in guest and it is
->> preempted by a higher priority VM exit.
->>
->> Every bus lock acquired in non-root mode will be recorded in
->> vcpu->stat.bus_locks and exposed through debugfs when the bus lock
->> VM exit is enabled.
->>
->> Document for Bus Lock VM exit is now available at the latest "Intel
->> Architecture Instruction Set Extensions Programming Reference".
->>
->> Document Link:
->> https://software.intel.com/content/www/us/en/develop/download/intel-architecture-instruction-set-extensions-programming-reference.html
->>
->> Co-developed-by: Xiaoyao Li <xiaoyao.li@intel.com>
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
->> ---
->>   arch/x86/include/asm/kvm_host.h    |  9 ++++++++
->>   arch/x86/include/asm/vmx.h         |  1 +
->>   arch/x86/include/asm/vmxfeatures.h |  1 +
->>   arch/x86/include/uapi/asm/kvm.h    |  1 +
->>   arch/x86/include/uapi/asm/vmx.h    |  4 +++-
->>   arch/x86/kvm/vmx/capabilities.h    |  6 +++++
->>   arch/x86/kvm/vmx/vmx.c             | 33 ++++++++++++++++++++++++++-
->>   arch/x86/kvm/vmx/vmx.h             |  2 +-
->>   arch/x86/kvm/x86.c                 | 36 +++++++++++++++++++++++++++++-
->>   arch/x86/kvm/x86.h                 |  5 +++++
->>   include/uapi/linux/kvm.h           |  2 ++
->>   11 files changed, 96 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
->> index be5363b21540..bfabe2f15b30 100644
->> --- a/arch/x86/include/asm/kvm_host.h
->> +++ b/arch/x86/include/asm/kvm_host.h
->> @@ -829,6 +829,9 @@ struct kvm_vcpu_arch {
->>   
->>   	/* AMD MSRC001_0015 Hardware Configuration */
->>   	u64 msr_hwcr;
->> +
->> +	/* Set when bus lock VM exit is preempted by a higher priority VM exit */
->> +	bool bus_lock_detected;
->>   };
->>   
->>   struct kvm_lpage_info {
->> @@ -1002,6 +1005,9 @@ struct kvm_arch {
->>   	bool guest_can_read_msr_platform_info;
->>   	bool exception_payload_enabled;
->>   
->> +	/* Set when bus lock vm exit is enabled by user */
->> +	bool bus_lock_exit;
->> +
->>   	struct kvm_pmu_event_filter *pmu_event_filter;
->>   	struct task_struct *nx_lpage_recovery_thread;
->>   };
->> @@ -1051,6 +1057,7 @@ struct kvm_vcpu_stat {
->>   	u64 req_event;
->>   	u64 halt_poll_success_ns;
->>   	u64 halt_poll_fail_ns;
->> +	u64 bus_locks;
->>   };
->>   
->>   struct x86_instruction_info;
->> @@ -1388,6 +1395,8 @@ extern u8   kvm_tsc_scaling_ratio_frac_bits;
->>   extern u64  kvm_max_tsc_scaling_ratio;
->>   /* 1ull << kvm_tsc_scaling_ratio_frac_bits */
->>   extern u64  kvm_default_tsc_scaling_ratio;
->> +/* bus lock detection supported */
->> +extern bool kvm_has_bus_lock_exit;
->>   
->>   extern u64 kvm_mce_cap_supported;
->>   
->> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
->> index cd7de4b401fe..93a880bc31a7 100644
->> --- a/arch/x86/include/asm/vmx.h
->> +++ b/arch/x86/include/asm/vmx.h
->> @@ -73,6 +73,7 @@
->>   #define SECONDARY_EXEC_PT_USE_GPA		VMCS_CONTROL_BIT(PT_USE_GPA)
->>   #define SECONDARY_EXEC_TSC_SCALING              VMCS_CONTROL_BIT(TSC_SCALING)
->>   #define SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE	VMCS_CONTROL_BIT(USR_WAIT_PAUSE)
->> +#define SECONDARY_EXEC_BUS_LOCK_DETECTION	VMCS_CONTROL_BIT(BUS_LOCK_DETECTION)
->>   
->>   #define PIN_BASED_EXT_INTR_MASK                 VMCS_CONTROL_BIT(INTR_EXITING)
->>   #define PIN_BASED_NMI_EXITING                   VMCS_CONTROL_BIT(NMI_EXITING)
->> diff --git a/arch/x86/include/asm/vmxfeatures.h b/arch/x86/include/asm/vmxfeatures.h
->> index 9915990fd8cf..e80523346274 100644
->> --- a/arch/x86/include/asm/vmxfeatures.h
->> +++ b/arch/x86/include/asm/vmxfeatures.h
->> @@ -83,5 +83,6 @@
->>   #define VMX_FEATURE_TSC_SCALING		( 2*32+ 25) /* Scale hardware TSC when read in guest */
->>   #define VMX_FEATURE_USR_WAIT_PAUSE	( 2*32+ 26) /* Enable TPAUSE, UMONITOR, UMWAIT in guest */
->>   #define VMX_FEATURE_ENCLV_EXITING	( 2*32+ 28) /* "" VM-Exit on ENCLV (leaf dependent) */
->> +#define VMX_FEATURE_BUS_LOCK_DETECTION	( 2*32+ 30) /* VM-Exit when bus lock caused */
->>   
->>   #endif /* _ASM_X86_VMXFEATURES_H */
->> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
->> index 0780f97c1850..a1471c05f7f9 100644
->> --- a/arch/x86/include/uapi/asm/kvm.h
->> +++ b/arch/x86/include/uapi/asm/kvm.h
->> @@ -111,6 +111,7 @@ struct kvm_ioapic_state {
->>   #define KVM_NR_IRQCHIPS          3
->>   
->>   #define KVM_RUN_X86_SMM		 (1 << 0)
->> +#define KVM_RUN_BUS_LOCK         (1 << 1)
->>   
->>   /* for KVM_GET_REGS and KVM_SET_REGS */
->>   struct kvm_regs {
->> diff --git a/arch/x86/include/uapi/asm/vmx.h b/arch/x86/include/uapi/asm/vmx.h
->> index b8ff9e8ac0d5..14c177c4afd5 100644
->> --- a/arch/x86/include/uapi/asm/vmx.h
->> +++ b/arch/x86/include/uapi/asm/vmx.h
->> @@ -88,6 +88,7 @@
->>   #define EXIT_REASON_XRSTORS             64
->>   #define EXIT_REASON_UMWAIT              67
->>   #define EXIT_REASON_TPAUSE              68
->> +#define EXIT_REASON_BUS_LOCK            74
->>   
->>   #define VMX_EXIT_REASONS \
->>   	{ EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
->> @@ -148,7 +149,8 @@
->>   	{ EXIT_REASON_XSAVES,                "XSAVES" }, \
->>   	{ EXIT_REASON_XRSTORS,               "XRSTORS" }, \
->>   	{ EXIT_REASON_UMWAIT,                "UMWAIT" }, \
->> -	{ EXIT_REASON_TPAUSE,                "TPAUSE" }
->> +	{ EXIT_REASON_TPAUSE,                "TPAUSE" }, \
->> +	{ EXIT_REASON_BUS_LOCK,              "BUS_LOCK" }
->>   
->>   #define VMX_EXIT_REASON_FLAGS \
->>   	{ VMX_EXIT_REASONS_FAILED_VMENTRY,	"FAILED_VMENTRY" }
->> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
->> index 4bbd8b448d22..aa94535e6705 100644
->> --- a/arch/x86/kvm/vmx/capabilities.h
->> +++ b/arch/x86/kvm/vmx/capabilities.h
->> @@ -262,6 +262,12 @@ static inline bool cpu_has_vmx_tsc_scaling(void)
->>   		SECONDARY_EXEC_TSC_SCALING;
->>   }
->>   
->> +static inline bool cpu_has_vmx_bus_lock_detection(void)
->> +{
->> +	return vmcs_config.cpu_based_2nd_exec_ctrl &
->> +	    SECONDARY_EXEC_BUS_LOCK_DETECTION;
->> +}
->> +
->>   static inline bool cpu_has_vmx_apicv(void)
->>   {
->>   	return cpu_has_vmx_apic_register_virt() &&
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index 89c131eaedf2..1560e51d2d8e 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -2460,7 +2460,8 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->>   			SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE |
->>   			SECONDARY_EXEC_PT_USE_GPA |
->>   			SECONDARY_EXEC_PT_CONCEAL_VMX |
->> -			SECONDARY_EXEC_ENABLE_VMFUNC;
->> +			SECONDARY_EXEC_ENABLE_VMFUNC |
->> +			SECONDARY_EXEC_BUS_LOCK_DETECTION;
->>   		if (cpu_has_sgx())
->>   			opt2 |= SECONDARY_EXEC_ENCLS_EXITING;
->>   		if (adjust_vmx_controls(min2, opt2,
->> @@ -4247,6 +4248,9 @@ static void vmx_compute_secondary_exec_control(struct vcpu_vmx *vmx)
->>   		}
->>   	}
->>   
->> +	if (!kvm_bus_lock_exit_enabled(vmx->vcpu.kvm))
->> +		exec_control &= ~SECONDARY_EXEC_BUS_LOCK_DETECTION;
->> +
->>   	vmx->secondary_exec_control = exec_control;
->>   }
->>   
->> @@ -5661,6 +5665,16 @@ static int handle_encls(struct kvm_vcpu *vcpu)
->>   	return 1;
->>   }
->>   
->> +static int handle_bus_lock(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm_run *kvm_run = vcpu->run;
->> +
->> +	vcpu->stat.bus_locks++;
->> +
->> +	kvm_run->exit_reason = KVM_EXIT_BUS_LOCK;
->> +	return 0;
->> +}
->> +
->>   /*
->>    * The exit handlers return 1 if the exit was handled fully and guest execution
->>    * may resume.  Otherwise they set the kvm_run parameter to indicate what needs
->> @@ -5717,6 +5731,7 @@ static int (*kvm_vmx_exit_handlers[])(struct kvm_vcpu *vcpu) = {
->>   	[EXIT_REASON_VMFUNC]		      = handle_vmx_instruction,
->>   	[EXIT_REASON_PREEMPTION_TIMER]	      = handle_preemption_timer,
->>   	[EXIT_REASON_ENCLS]		      = handle_encls,
->> +	[EXIT_REASON_BUS_LOCK]                = handle_bus_lock,
->>   };
->>   
->>   static const int kvm_vmx_max_exit_handlers =
->> @@ -6809,6 +6824,19 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
->>   	if (unlikely(vmx->exit_reason.failed_vmentry))
->>   		return EXIT_FASTPATH_NONE;
->>   
->> +	/*
->> +	 * check the exit_reason to see if there is a bus lock
->> +	 * happened in guest.
->> +	 */
->> +	if (kvm_bus_lock_exit_enabled(vmx->vcpu.kvm)) {
->> +		if (vmx->exit_reason.bus_lock_detected) {
->> +			vcpu->stat.bus_locks++;
->> +			vcpu->arch.bus_lock_detected = true;
->> +		} else {
->> +			vcpu->arch.bus_lock_detected = false;
+> I'm very confident with the first patch, but the second needs closer
+> review around the error mentioned below the fold related to the .got
+> section.
 > 
-> This is a fast path so I'm wondering if we can move bus_lock_detected
-> clearing somewhere else.
+> Nick Desaulniers (2):
+>   powerpc/vdso64: link vdso64 with linker
+>   powerpc/vdso32: link vdso64 with linker
 > 
->> +		}
->> +	}
->> +
->>   	vmx->loaded_vmcs->launched = 1;
->>   	vmx->idt_vectoring_info = vmcs_read32(IDT_VECTORING_INFO_FIELD);
->>   
->> @@ -8060,6 +8088,9 @@ static __init int hardware_setup(void)
->>   		kvm_tsc_scaling_ratio_frac_bits = 48;
->>   	}
->>   
->> +	if (cpu_has_vmx_bus_lock_detection())
->> +		kvm_has_bus_lock_exit = true;
->> +
->>   	set_bit(0, vmx_vpid_bitmap); /* 0 is reserved for host */
->>   
->>   	if (enable_ept)
->> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
->> index 06a91b224ef3..7e6d63a8589a 100644
->> --- a/arch/x86/kvm/vmx/vmx.h
->> +++ b/arch/x86/kvm/vmx/vmx.h
->> @@ -104,7 +104,7 @@ union vmx_exit_reason {
->>   		u32	reserved23		: 1;
->>   		u32	reserved24		: 1;
->>   		u32	reserved25		: 1;
->> -		u32	reserved26		: 1;
->> +		u32	bus_lock_detected	: 1;
->>   		u32	enclave_mode		: 1;
->>   		u32	smi_pending_mtf		: 1;
->>   		u32	smi_from_vmx_root	: 1;
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index 88c593f83b28..00a54d0cd7da 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -133,6 +133,8 @@ u64  __read_mostly kvm_max_tsc_scaling_ratio;
->>   EXPORT_SYMBOL_GPL(kvm_max_tsc_scaling_ratio);
->>   u64 __read_mostly kvm_default_tsc_scaling_ratio;
->>   EXPORT_SYMBOL_GPL(kvm_default_tsc_scaling_ratio);
->> +bool __read_mostly kvm_has_bus_lock_exit;
->> +EXPORT_SYMBOL_GPL(kvm_has_bus_lock_exit);
->>   
->>   /* tsc tolerance in parts per million - default to 1/2 of the NTP threshold */
->>   static u32 __read_mostly tsc_tolerance_ppm = 250;
->> @@ -220,6 +222,7 @@ struct kvm_stats_debugfs_item debugfs_entries[] = {
->>   	VCPU_STAT("l1d_flush", l1d_flush),
->>   	VCPU_STAT("halt_poll_success_ns", halt_poll_success_ns),
->>   	VCPU_STAT("halt_poll_fail_ns", halt_poll_fail_ns),
->> +	VCPU_STAT("bus_locks", bus_locks),
->>   	VM_STAT("mmu_shadow_zapped", mmu_shadow_zapped),
->>   	VM_STAT("mmu_pte_write", mmu_pte_write),
->>   	VM_STAT("mmu_pte_updated", mmu_pte_updated),
->> @@ -3538,6 +3541,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->>   	case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
->>   		r = kvm_x86_ops.nested_ops->enable_evmcs != NULL;
->>   		break;
->> +	case KVM_CAP_X86_BUS_LOCK_EXIT:
->> +		r = kvm_has_bus_lock_exit;
->> +		break;
+>  arch/powerpc/include/asm/vdso.h         | 17 ++---------------
+>  arch/powerpc/kernel/vdso32/Makefile     |  7 +++++--
+>  arch/powerpc/kernel/vdso32/vdso32.lds.S |  3 ++-
+>  arch/powerpc/kernel/vdso64/Makefile     |  8 ++++++--
+>  arch/powerpc/kernel/vdso64/vdso64.lds.S |  1 -
+>  5 files changed, 15 insertions(+), 21 deletions(-)
 > 
-> I think we can always report KVM_CAP_X86_BUS_LOCK_EXIT as supported
-> (meaning KVM itself supports it) ...
-> 
->>   	default:
->>   		break;
->>   	}
->> @@ -4990,6 +4996,12 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->>   		kvm->arch.exception_payload_enabled = cap->args[0];
->>   		r = 0;
->>   		break;
->> +	case KVM_CAP_X86_BUS_LOCK_EXIT:
->> +		if (!kvm_has_bus_lock_exit)
->> +			return -EINVAL;
-> 
-> ... because userspace can check for -EINVAL when enabling the cap. Or we
-> can return e.g. -EOPNOTSUPP here. I don't have a strong opinion on the matter..
+> -- 
+> 2.28.0.402.g5ffc5be6b7-goog
 > 
 
-Yea, this change is ok to me.
+ppc44x_defconfig and powernv_defconfig start failing with this series
+when LD=ld.lld is used.
 
->> +		kvm->arch.bus_lock_exit = cap->args[0];
->> +		r = 0;
->> +		break;
->>   	default:
->>   		r = -EINVAL;
->>   		break;
->> @@ -7732,12 +7744,23 @@ static void post_kvm_run_save(struct kvm_vcpu *vcpu)
->>   	struct kvm_run *kvm_run = vcpu->run;
->>   
->>   	kvm_run->if_flag = (kvm_get_rflags(vcpu) & X86_EFLAGS_IF) != 0;
->> -	kvm_run->flags = is_smm(vcpu) ? KVM_RUN_X86_SMM : 0;
->>   	kvm_run->cr8 = kvm_get_cr8(vcpu);
->>   	kvm_run->apic_base = kvm_get_apic_base(vcpu);
->>   	kvm_run->ready_for_interrupt_injection =
->>   		pic_in_kernel(vcpu->kvm) ||
->>   		kvm_vcpu_ready_for_interrupt_injection(vcpu);
->> +
->> +	if (is_smm(vcpu))
->> +		kvm_run->flags |= KVM_RUN_X86_SMM;
->> +	else
->> +		kvm_run->flags &= ~KVM_RUN_X86_SMM;
->> +
->> +	if (vcpu->arch.bus_lock_detected &&
->> +	    kvm_run->exit_reason != KVM_EXIT_BUS_LOCK)
->> +		kvm_run->flags |= KVM_RUN_BUS_LOCK;
->> +	else
->> +		kvm_run->flags &= ~KVM_RUN_BUS_LOCK;
->> +
->>   }
->>   
->>   static void update_cr8_intercept(struct kvm_vcpu *vcpu)
->> @@ -8597,6 +8620,17 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->>   		kvm_lapic_sync_from_vapic(vcpu);
->>   
->>   	r = kvm_x86_ops.handle_exit(vcpu, exit_fastpath);
->> +
->> +	/*
->> +	 * Even when current exit reason is handled by KVM
->> +	 * internally, we still needs to exit to user space
->> +	 * when bus lock detected to inform that there is a
->> +	 * bus lock in guest.
->> +	 */
->> +	if (r > 0 && vcpu->arch.bus_lock_detected) {
->> +		vcpu->run->exit_reason = KVM_EXIT_BUS_LOCK;
->> +		r = 0;
-> 
-> Can we maybe reset bus_lock_detected here?
-> 
 
-I think we should place the reset work in post_kvm_run_save() which will 
-set the kvm_run->flags based on it.
+$ make -skj"$(nproc)" ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu- LLVM=1 O=out/ppc32 distclean ppc44x_defconfig uImage
+ld.lld: error: relocation R_PPC_REL16_LO cannot be used against symbol __kernel_datapage_offset; recompile with -fPIC
+>>> defined in arch/powerpc/kernel/vdso32/datapage.o
+>>> referenced by arch/powerpc/kernel/vdso32/gettimeofday.o:(__kernel_gettimeofday)
 
->> +	}
->>   	return r;
->>   
->>   cancel_injection:
->> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
->> index 6eb62e97e59f..d3b1095cc8fb 100644
->> --- a/arch/x86/kvm/x86.h
->> +++ b/arch/x86/kvm/x86.h
->> @@ -334,6 +334,11 @@ static inline bool kvm_cstate_in_guest(struct kvm *kvm)
->>   	return kvm->arch.cstate_in_guest;
->>   }
->>   
->> +static inline bool kvm_bus_lock_exit_enabled(struct kvm *kvm)
->> +{
->> +	return kvm->arch.bus_lock_exit;
->> +}
->> +
->>   DECLARE_PER_CPU(struct kvm_vcpu *, current_vcpu);
->>   
->>   static inline void kvm_before_interrupt(struct kvm_vcpu *vcpu)
->> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
->> index 4fdf30316582..e66aa4bdaf24 100644
->> --- a/include/uapi/linux/kvm.h
->> +++ b/include/uapi/linux/kvm.h
->> @@ -248,6 +248,7 @@ struct kvm_hyperv_exit {
->>   #define KVM_EXIT_IOAPIC_EOI       26
->>   #define KVM_EXIT_HYPERV           27
->>   #define KVM_EXIT_ARM_NISV         28
->> +#define KVM_EXIT_BUS_LOCK         29
->>   
->>   /* For KVM_EXIT_INTERNAL_ERROR */
->>   /* Emulate instruction failed. */
->> @@ -1031,6 +1032,7 @@ struct kvm_ppc_resize_hpt {
->>   #define KVM_CAP_PPC_SECURE_GUEST 181
->>   #define KVM_CAP_HALT_POLL 182
->>   #define KVM_CAP_ASYNC_PF_INT 183
->> +#define KVM_CAP_X86_BUS_LOCK_EXIT 184
->>   
->>   #ifdef KVM_CAP_IRQ_ROUTING
-> 
+ld.lld: error: relocation R_PPC_REL16_LO cannot be used against symbol __kernel_datapage_offset; recompile with -fPIC
+>>> defined in arch/powerpc/kernel/vdso32/datapage.o
+>>> referenced by arch/powerpc/kernel/vdso32/gettimeofday.o:(__kernel_clock_gettime)
+
+ld.lld: error: relocation R_PPC_REL16_LO cannot be used against symbol __kernel_datapage_offset; recompile with -fPIC
+>>> defined in arch/powerpc/kernel/vdso32/datapage.o
+>>> referenced by arch/powerpc/kernel/vdso32/gettimeofday.o:(__kernel_clock_getres)
+
+ld.lld: error: relocation R_PPC_REL16_LO cannot be used against symbol __kernel_datapage_offset; recompile with -fPIC
+>>> defined in arch/powerpc/kernel/vdso32/datapage.o
+>>> referenced by arch/powerpc/kernel/vdso32/gettimeofday.o:(__kernel_time)
+...
+
+
+$ make -skj"$(nproc)" ARCH=powerpc CROSS_COMPILE=powerpc64le-linux-gnu- LLVM=1 O=out/ppc64le distclean powernv_defconfig zImage.epapr
+ld.lld: error: relocation R_PPC64_REL16_LO cannot be used against symbol __kernel_datapage_offset; recompile with -fPIC
+>>> defined in arch/powerpc/kernel/vdso64/datapage.o
+>>> referenced by arch/powerpc/kernel/vdso64/gettimeofday.o:(__kernel_gettimeofday)
+
+ld.lld: error: relocation R_PPC64_REL16_LO cannot be used against symbol __kernel_datapage_offset; recompile with -fPIC
+>>> defined in arch/powerpc/kernel/vdso64/datapage.o
+>>> referenced by arch/powerpc/kernel/vdso64/gettimeofday.o:(__kernel_clock_gettime)
+
+ld.lld: error: relocation R_PPC64_REL16_LO cannot be used against symbol __kernel_datapage_offset; recompile with -fPIC
+>>> defined in arch/powerpc/kernel/vdso64/datapage.o
+>>> referenced by arch/powerpc/kernel/vdso64/gettimeofday.o:(__kernel_clock_getres)
+
+ld.lld: error: relocation R_PPC64_REL16_LO cannot be used against symbol __kernel_datapage_offset; recompile with -fPIC
+>>> defined in arch/powerpc/kernel/vdso64/datapage.o
+>>> referenced by arch/powerpc/kernel/vdso64/gettimeofday.o:(__kernel_time)
+
+ld.lld: error: relocation R_PPC64_REL16_LO cannot be used against symbol __kernel_datapage_offset; recompile with -fPIC
+>>> defined in arch/powerpc/kernel/vdso64/datapage.o
+>>> referenced by arch/powerpc/kernel/vdso64/cacheflush.o:(__kernel_sync_dicache)
+...
+
+
+We need Fangrui's patch to fix ppc44x_defconfig:
+
+https://lore.kernel.org/lkml/20200205005054.k72fuikf6rwrgfe4@google.com/
+
+That exact same fix is needed in arch/powerpc/kernel/vdso64/datapage.S
+to fix powernv_defconfig.
+
+Cheers,
+Nathan
