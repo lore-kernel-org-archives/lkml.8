@@ -2,164 +2,94 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ED2C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8564EC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59D6020773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:13:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="VOUVSifY"
+	by mail.kernel.org (Postfix) with ESMTP id 5DD8820773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgIBPNE (ORCPT
+        id S1727780AbgIBPNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:13:04 -0400
-Received: from mail-eopbgr50103.outbound.protection.outlook.com ([40.107.5.103]:57523
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726984AbgIBPHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:07:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d61yNW/Cp/RXIfSBMc3J5FCo8lPgwgXWiYj+pqByuptxr/3LCak6HlG0wGYwphMWUz1nYZt02cX0l9LMAYDgBuv+SvXK8HJsNVXXqyxhguMjmbgaKVI1PRXy+Z5fblyt6eT3AkNcYHyz0k6mJFzuNQkc9SvWOk+lmu/Is7YJZFDJnsDO+O5bZ8MFKE7ueBXDfUS/m/xLDXQT/i5qZDvWEdQRCv6MRHW1K6z4slyHQVKoG/OZIdKy5rd22QqNVuu+KR6H+iHm89UKdJJhro3Xu3MqAqmvFfFSI/58Zz+jSEGIvxRWQjT9pATnjzwkcO8zZ5MFHQ9z0govq3P/Yc+9kw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OUm1aS9UUuseD4nWcf7QHncYBRxQA+2Hm6PztoMAtIA=;
- b=mfLDYNistCmWo333IDH7dkg8wpwP1l+xDM8Jbww0YMPb8vlRNU8mROxGThGLYfteWIy56B41fe5TZpeSEaeb8n/cBVQPYiePFy79CZBIJ0ojMEor97QEYaVtAicmb1NteaopxcaPTavnzunOvzcAGk4kaGlzJqdRY5QkcNscW7mB9RTyLBlVL+YF2uWI6fbfkiWGau0F8+LwFupNKQuN4JWoviq8/ZWbtKswxLnUSUol904POjzqiNm5Z+F1D+ynEm9A7z2C/vSvMT2DKZ5T2gUR+XnA8yirrVC4mtwMdQaaX0chnO+CXpb5WlFc8LkScsFw4sV5ImtS6nJaFYQYyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OUm1aS9UUuseD4nWcf7QHncYBRxQA+2Hm6PztoMAtIA=;
- b=VOUVSifYGzYGTXDA/qBOKJe/uk67J+7e/lKIC7ldAzYnUltQtA9IgV5Oj7dq/B0b/WIkjeMnxBh9c8fRUjvC89XQ1glAJuWY/ip7/ZCRqbFPkIs6lbFwtpJIKuNLE3rBoZ8bWdKK12OWD0wHjG4qh5hq89CJ54mgzXWEtNt9/+o=
-Authentication-Results: davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=none action=none header.from=plvision.eu;
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
- HE1P190MB0058.EURP190.PROD.OUTLOOK.COM (2603:10a6:3:ca::22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3348.15; Wed, 2 Sep 2020 15:05:12 +0000
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::b1a4:e5e3:a12b:1305]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::b1a4:e5e3:a12b:1305%6]) with mapi id 15.20.3326.025; Wed, 2 Sep 2020
- 15:05:12 +0000
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mickey Rachamim <mickeyr@marvell.com>,
-        Vadym Kochan <vadym.kochan@plvision.eu>
-Subject: [PATCH net v6 6/6] dt-bindings: marvell,prestera: Add description for device-tree bindings
-Date:   Wed,  2 Sep 2020 18:04:42 +0300
-Message-Id: <20200902150442.2779-7-vadym.kochan@plvision.eu>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200902150442.2779-1-vadym.kochan@plvision.eu>
-References: <20200902150442.2779-1-vadym.kochan@plvision.eu>
-Content-Type: text/plain
-X-ClientProxiedBy: AM6P193CA0110.EURP193.PROD.OUTLOOK.COM
- (2603:10a6:209:85::15) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:7:56::28)
+        Wed, 2 Sep 2020 11:13:52 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:42217 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727961AbgIBPMk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:12:40 -0400
+Received: (qmail 626110 invoked by uid 1000); 2 Sep 2020 11:12:33 -0400
+Date:   Wed, 2 Sep 2020 11:12:33 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
+Subject: Re: [PATCH 4.19 108/125] USB: yurex: Fix bad gfp argument
+Message-ID: <20200902151233.GC624583@rowland.harvard.edu>
+References: <20200901150934.576210879@linuxfoundation.org>
+ <20200901150939.905188730@linuxfoundation.org>
+ <20200902125827.GA8817@duo.ucw.cz>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc60716vkochan.x.ow.s (217.20.186.93) by AM6P193CA0110.EURP193.PROD.OUTLOOK.COM (2603:10a6:209:85::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Wed, 2 Sep 2020 15:05:10 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: eaf4028c-557d-4517-1cff-08d84f519726
-X-MS-TrafficTypeDiagnostic: HE1P190MB0058:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <HE1P190MB0058633C3B84CEF7AC1D28FD952F0@HE1P190MB0058.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aqcUTNU97lHGcdbr1h296UXk1ZwcaZOIcutcx4anw0T+KZ7hynoUiX3x0GkVgPU4LJwzqn0zghwnsDUyS27DTF7tBL8vdENJiwwyedWeg5VyjZ2N6nyaJ5hZz0JuzrdUphAli6xc4MOgPvn/bVM5pOCrSBwmozFiFNw6/AP2o4FLFg7O/6gMYfPK9OAF5ReSmNfYEDRddKVthwtwDuSMfpVqlp9flPjWaqU/4apX+gWFqzBseQvD6xJ5TE5A2nlm/XO2dbwrfNmJA9nMKWtTIdtPkBdjyYvIKt7S9BVw1aPLRSmgqWECoLL4P6Nwcuep+msMQHO6Y8XaCpoCXqACj6QzO3fMA+NWee7gg2Uqm5zDO4DnSPLU66LjUM7n21oyNWW3gW0fXXqKwM0pIY1sGw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(376002)(136003)(39830400003)(396003)(346002)(366004)(107886003)(83380400001)(316002)(44832011)(478600001)(54906003)(6512007)(6486002)(6666004)(110136005)(186003)(66476007)(8936002)(4326008)(26005)(36756003)(86362001)(66556008)(2616005)(2906002)(5660300002)(1076003)(16526019)(66946007)(6506007)(956004)(52116002)(8676002)(921003)(142933001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: tyJta28nMsznEmPiv2yTGz+Hr0pKeUcowkTYCLjxYM7PTJzlgqdvVoPb5wZrpx3uR8+83p7FEAnnIbt+zmAg3bPcLscoFC0eER24BImtU+odek5eEycoJcyzsbryCo11pOCuvzjrESi5U988/CUSFP9qwDM+jqDTWAovLMqMa7u86OOt2Zc23x9IDtOmtXibjfPPrEgh25Vvln41t4xbmRg6yKvXugA+Zozrja3ltbrwA26h+RhtIHHB3GlAencNn2i5PKJtcUy9nPfEyZC9OQPHWn5SSC7VIrFqb6jBwqq9akY9+s15uJR4CGOLdGkdu01s9pLwBJiSwt4n+ojLTx167zMowoLhUYEIoPo62E/P+EghOl2AluMjGuAuTGclqeETEbZOCbMha5GP68yX7LOalRK7jo8NMSVosWvCB4TbL/qXRpbxS6rztV6BfMGqkGw4oQXU44ugEM2A33pWG+NWLlsufQ8S85P1kGVV4pKihDKcpO+T6LfgnXJyxEYT5RClc69m40dTqlPGCM0IbxgxCDpAtqIOd4AY7ebxmNsT7XPNta1M8LKF3hJCPRBo7lIH3TfIPPuUnfVkpd6bhxrdtHQlMNo1FfafdvQ9IW/BgqormkUUvRp4pG7rphThA3jO9wDXP5n/sPMvns9WiA==
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: eaf4028c-557d-4517-1cff-08d84f519726
-X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2020 15:05:12.1117
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Y/X9CjtWhPvVC388Hk/2eYycvsGzJ3mzhRG/Z906uU95Q0G42yXeLx/Qp+5uvxUIF6sJYW80bCnQ+QMxG6Alr0zmRWtJ+PB+4GwqjLYoDI8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0058
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902125827.GA8817@duo.ucw.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add brief description how to configure base mac address binding in
-device-tree.
+On Wed, Sep 02, 2020 at 02:58:27PM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > The syzbot fuzzer identified a bug in the yurex driver: It passes
+> > GFP_KERNEL as a memory-allocation flag to usb_submit_urb() at a time
+> > when its state is TASK_INTERRUPTIBLE, not TASK_RUNNING:
+> 
+> Yeah, and instead of fixing the bug, patch papers over it, reducing
+> reliability of the driver in the process.
+> 
+> > This patch changes the call to use GFP_ATOMIC instead of GFP_KERNEL.
+> 
+> Fixing it properly should be as simple as moving prepare_to_wait down,
+> no?
 
-Describe requirement for the PCI port which is connected to the ASIC, to
-allow access to the firmware related registers.
+Sigh.  That never occurred to me, but of course it is right.
 
-Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
----
- .../bindings/net/marvell,prestera.txt         | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
-diff --git a/Documentation/devicetree/bindings/net/marvell,prestera.txt b/Documentation/devicetree/bindings/net/marvell,prestera.txt
-index 83370ebf5b89..e28938ddfdf5 100644
---- a/Documentation/devicetree/bindings/net/marvell,prestera.txt
-+++ b/Documentation/devicetree/bindings/net/marvell,prestera.txt
-@@ -45,3 +45,37 @@ dfx-server {
- 	ranges = <0 MBUS_ID(0x08, 0x00) 0 0x100000>;
- 	reg = <MBUS_ID(0x08, 0x00) 0 0x100000>;
- };
-+
-+Marvell Prestera SwitchDev bindings
-+-----------------------------------
-+Optional properties:
-+- compatible: must be "marvell,prestera"
-+- base-mac-provider: describes handle to node which provides base mac address,
-+	might be a static base mac address or nvme cell provider.
-+
-+Example:
-+
-+eeprom_mac_addr: eeprom-mac-addr {
-+       compatible = "eeprom,mac-addr-cell";
-+       status = "okay";
-+
-+       nvmem = <&eeprom_at24>;
-+};
-+
-+prestera {
-+       compatible = "marvell,prestera";
-+       status = "okay";
-+
-+       base-mac-provider = <&eeprom_mac_addr>;
-+};
-+
-+The current implementation of Prestera Switchdev PCI interface driver requires
-+that BAR2 is assigned to 0xf6000000 as base address from the PCI IO range:
-+
-+&cp0_pcie0 {
-+	ranges = <0x81000000 0x0 0xfb000000 0x0 0xfb000000 0x0 0xf0000
-+		0x82000000 0x0 0xf6000000 0x0 0xf6000000 0x0 0x2000000
-+		0x82000000 0x0 0xf9000000 0x0 0xf9000000 0x0 0x100000>;
-+	phys = <&cp0_comphy0 0>;
-+	status = "okay";
-+};
--- 
-2.17.1
+Alan Stern
+
+> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+> 
+> diff --git a/drivers/usb/misc/yurex.c b/drivers/usb/misc/yurex.c
+> index 785080f79073..5fbbb57e6e95 100644
+> --- a/drivers/usb/misc/yurex.c
+> +++ b/drivers/usb/misc/yurex.c
+> @@ -489,10 +489,10 @@ static ssize_t yurex_write(struct file *file, const char __user *user_buffer,
+>  	}
+>  
+>  	/* send the data as the control msg */
+> -	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
+>  	dev_dbg(&dev->interface->dev, "%s - submit %c\n", __func__,
+>  		dev->cntl_buffer[0]);
+> -	retval = usb_submit_urb(dev->cntl_urb, GFP_ATOMIC);
+> +	retval = usb_submit_urb(dev->cntl_urb, GFP_KERNEL);
+> +	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
+>  	if (retval >= 0)
+>  		timeout = schedule_timeout(YUREX_WRITE_TIMEOUT);
+>  	finish_wait(&dev->waitq, &wait);
+> 
+> 
+> Best regards,
+> 									Pavel
+> 
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
 
