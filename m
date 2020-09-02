@@ -2,167 +2,98 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119F4C2BBD0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6DAC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBC13206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 222672078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:59:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="is7KTIIg"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="k1y0rDoD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgIBXui (ORCPT
+        id S1726942AbgIBX7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 19:50:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42448 "EHLO
+        Wed, 2 Sep 2020 19:59:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgIBXuh (ORCPT
+        with ESMTP id S1726586AbgIBX7M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 19:50:37 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B444AC061246
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 16:50:36 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id o20so673516pfp.11
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 16:50:36 -0700 (PDT)
+        Wed, 2 Sep 2020 19:59:12 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55855C061246
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 16:59:12 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id n18so655371qtw.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 16:59:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=52j/Kh79WBTwfCoci6XyBRUD0B5MrM8lpRUZ53T6r6c=;
-        b=is7KTIIg8tnyCVnXfRHW1zqu9WguvoK7VRQR0tcUVAhWNNnMt0afpmuqoSXKKDOqQ2
-         lOAO+TSk5rH+E7grKoBSNXbOHUuujEINvuG0qGnZKYpTmhU6vdxg5CRkRTu1rYsU8etp
-         18pwy0I0t8kxPw8tKuAkCYqCzyVFtBHogFDkbnP3g71YES9KWo4Llyc8PmixfyY9wyTq
-         771YhdsEiYuR47KHutTFgf8C9HN9WcWKl23JavtyLkVdK2crr9obWC7v51eS1llbQ2Wv
-         ZuPHC6zfpgTgxSwa+hRNbyOb+chRDJPOp8Co0swB/PVLeYptrdTFdIwobjnPq+6zfp9Z
-         QJQQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=k+XXCDXSF8k3/5oiJ0DY2qz0pJ0OQTKQmzd5Mr1hMp0=;
+        b=k1y0rDoDsr248x1CrTdDnmq7vHyf3zqzV66lGF84OfqFM/30fnlspewvTtRvX7gidt
+         gKLDfuKNurlYK+R6LwvZ+qHdC4de+pqaJZSVppacYj9aI9LUH0L5tc0Uoh+Z/aj8M9ZJ
+         R6FWg8miU37wLvY2KcR7jd2EIPJ1daC+4PIKYb7D8dOi77gNhJnXrhYPMOqh32KuvPP8
+         XejcAUn4CvHG80LA/gFKzjQRuuelnO2jhZWs/wY/tECnRxVgNr/JnyNRnkRY/TttdGB/
+         gU7CLgfyrHQVWJMKNbMqWZLm+o2LV+mlHDUmQZV7kjB8cqzryAmBAJ5nZ9CcRCfBnsZS
+         7rVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=52j/Kh79WBTwfCoci6XyBRUD0B5MrM8lpRUZ53T6r6c=;
-        b=Cd3GTM4cxh1+sY9Kbhf7wh+gcD3k2VQ3f+z+kJ9kLBtwRDHBlNvGUxwlWp3BoR02Iv
-         MCQpzD0ZdhggMuIWr73XjnL7osPPe7uIVuQ1I+uCcc/aJ/rarQ2od6k0mhZ30CnSf/ng
-         6p9pLRPmqAaaZn78tXZQksWaJQo9KJnOvWqMEutthzPsAg5VYLX8j/Nv2wEgYMy2Xe0W
-         xL1CVGofvbU0kT3HmMV5r3h3aJGi+tBVvGeF3k1+0RfwA+akehS7oavPs3S6SPpCDJok
-         Q+7Orpn1FbZttgyQpaEJHWvpFC+b22GAjxO/tX/cIPnQQ8VYmLb1vCyEmBZfHpAwmKtk
-         qZNg==
-X-Gm-Message-State: AOAM533ZLbJ2rFcvBvthrqaNNSd9N85qgYQEndikSBudhSbeAzFCAoWO
-        62asofz/QAvjPCcvRXjVmmKl5Q==
-X-Google-Smtp-Source: ABdhPJzcvbgMHad+9bJRLvEwY0z3UAPXv89W/kGnXTDgXpqQW7lWsFy98cFptbURQTTLl+POUxJDqw==
-X-Received: by 2002:aa7:9f50:: with SMTP id h16mr849195pfr.178.1599090635689;
-        Wed, 02 Sep 2020 16:50:35 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:2197:2a30:2ff8:e80a? ([2601:646:c200:1ef2:2197:2a30:2ff8:e80a])
-        by smtp.gmail.com with ESMTPSA id o15sm427033pgi.74.2020.09.02.16.50.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 16:50:34 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v11 6/9] x86/cet: Add PTRACE interface for CET
-Date:   Wed, 2 Sep 2020 16:50:32 -0700
-Message-Id: <A7775E11-8837-4727-921A-C88566FA01AF@amacapital.net>
-References: <9be5356c-ec51-4541-89e5-05a1727a09a8@intel.com>
-Cc:     Jann Horn <jannh@google.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-In-Reply-To: <9be5356c-ec51-4541-89e5-05a1727a09a8@intel.com>
-To:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-X-Mailer: iPhone Mail (17G80)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=k+XXCDXSF8k3/5oiJ0DY2qz0pJ0OQTKQmzd5Mr1hMp0=;
+        b=GdJbdaRKNSYclqBzK7qDX6hicmxl/X0xekH8K42Hi8psK2FJkM1pAW46pjyTQeA9ds
+         MnDXHsMIOO3gRpTWV7/TFgK5S+YUwphQ2KjbDMs0aepN3JVfGHuNd+0cbORsZ7eVFg7W
+         xwQMPwUUEhRosliiPBdT8HTpnEo5zGXkYZITnImbEoohfzdPvuh3kJ6YYbqILzQF66WU
+         Vz2s7vrgrW09Tb0wpXE8EK5aUUlnep2fJr75qqPm5XLNxmwlTCWJM/BSgtRgDDr61b4A
+         2VASXJJ5csKHPqZW2SSLsqEiBkztvHrkkU6yuMaf5VCEuLTTr94hxQo+1tiGigvoEo3x
+         HhkQ==
+X-Gm-Message-State: AOAM530wjwJXRpvIsgqtVtszrOcX9+9xsax17ktJhuh+bevR3e/MYCyw
+        byU6dsES656AXQaqGXx8pRoAYg==
+X-Google-Smtp-Source: ABdhPJxPEvQzdmtHRU/dLJO3dr0rZQWH3nG+MoxQFCjUTeleYWtCUHQZIyapPQIwS1V6Ay7IjUZ3Og==
+X-Received: by 2002:ac8:60d9:: with SMTP id i25mr716212qtm.209.1599091151435;
+        Wed, 02 Sep 2020 16:59:11 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id b43sm762647qtk.84.2020.09.02.16.59.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 16:59:10 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kDcek-006Cfl-01; Wed, 02 Sep 2020 20:59:10 -0300
+Date:   Wed, 2 Sep 2020 20:59:09 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] RDMA/ucma: fix memory leak of mc on an xa_alloc
+ failure
+Message-ID: <20200902235909.GK24045@ziepe.ca>
+References: <20200902162805.200436-1-colin.king@canonical.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902162805.200436-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 02, 2020 at 05:28:05PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently when an xa_alloc failure occurs the error exit path leaks
+> the allocated object mc.  Fix this by adding an error return path
+> that frees mc and rename error exit paths err3 to err4 and err2 to err3.
+> 
+> Fixes: 95fe51096b7a ("RDMA/ucma: Remove mc_list and rely on xarray")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/infiniband/core/ucma.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 
+Alex beat you too it, so I will use his patch, thanks
 
-> On Sep 2, 2020, at 3:13 PM, Yu, Yu-cheng <yu-cheng.yu@intel.com> wrote:
->=20
-> =EF=BB=BFOn 9/2/2020 1:03 PM, Jann Horn wrote:
->>> On Tue, Aug 25, 2020 at 2:30 AM Yu-cheng Yu <yu-cheng.yu@intel.com> wrot=
-e:
->>> Add REGSET_CET64/REGSET_CET32 to get/set CET MSRs:
->>>=20
->>>     IA32_U_CET (user-mode CET settings) and
->>>     IA32_PL3_SSP (user-mode Shadow Stack)
->> [...]
->>> diff --git a/arch/x86/kernel/fpu/regset.c b/arch/x86/kernel/fpu/regset.c=
-
->> [...]
->>> +int cetregs_get(struct task_struct *target, const struct user_regset *r=
-egset,
->>> +               struct membuf to)
->>> +{
->>> +       struct fpu *fpu =3D &target->thread.fpu;
->>> +       struct cet_user_state *cetregs;
->>> +
->>> +       if (!boot_cpu_has(X86_FEATURE_SHSTK))
->>> +               return -ENODEV;
->>> +
->>> +       fpu__prepare_read(fpu);
->>> +       cetregs =3D get_xsave_addr(&fpu->state.xsave, XFEATURE_CET_USER)=
-;
->>> +       if (!cetregs)
->>> +               return -EFAULT;
->> Can this branch ever be hit without a kernel bug? If yes, I think
->> -EFAULT is probably a weird error code to choose here. If no, this
->> should probably use WARN_ON(). Same thing in cetregs_set().
->=20
-> When a thread is not CET-enabled, its CET state does not exist.  I looked a=
-t EFAULT, and it means "Bad address".  Maybe this can be ENODEV, which means=
- "No such device"?
->=20
-> [...]
->=20
->>> @@ -1284,6 +1293,13 @@ static struct user_regset x86_32_regsets[] __ro_a=
-fter_init =3D {
->> [...]
->>> +       [REGSET_CET32] =3D {
->>> +               .core_note_type =3D NT_X86_CET,
->>> +               .n =3D sizeof(struct cet_user_state) / sizeof(u64),
->>> +               .size =3D sizeof(u64), .align =3D sizeof(u64),
->>> +               .active =3D cetregs_active, .regset_get =3D cetregs_get,=
-
->>> +               .set =3D cetregs_set
->>> +       },
->>>  };
->> Why are there different identifiers for 32-bit CET and 64-bit CET when
->> they operate on the same structs and have the same handlers? If
->> there's a good reason for that, the commit message should probably
->> point that out.
->=20
-> Yes, the reason for two regsets is that fill_note_info() does not expect a=
-ny holes in a regsets.  I will put this in the commit log.
->=20
->=20
-
-Perhaps we could fix that instead?=
+Jason
