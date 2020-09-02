@@ -2,137 +2,121 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FA2C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF64C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B482B206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:03:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599069783;
-	bh=voMJAvRL1c5oNtmzU5yq20USAerg6WNefZWnMoeYmlw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SYJLsB+EHYLUfmAj2mqX9xr0R7SPN0ppyWFKgXzMku6oZNn8icwnlK+P0AuTbH6iO
-	 bN5NVyF1EXhubkrSwZhHyFTNRr1pQJ24p/o5RwgKzeodOFVP+Lm4k7NOvNbfYC8CNA
-	 mVcyCqauSvRgS4wiAnos6zn8ae6NXlX69uO8GSmM=
+	by mail.kernel.org (Postfix) with ESMTP id 33C9B20BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:06:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeBdJHLH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgIBSDB (ORCPT
+        id S1727877AbgIBSGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:03:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45408 "EHLO
+        Wed, 2 Sep 2020 14:06:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbgIBSCs (ORCPT
+        with ESMTP id S1726446AbgIBSGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:02:48 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CDF9C061246
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 11:02:45 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id c2so178688ljj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 11:02:44 -0700 (PDT)
+        Wed, 2 Sep 2020 14:06:14 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D421C061244;
+        Wed,  2 Sep 2020 11:06:14 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 17so67699pfw.9;
+        Wed, 02 Sep 2020 11:06:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0Bg5CH27blnlQEY7ZbxyRfRPKR4l4nMrtwYSLut004w=;
-        b=e/XkK5a4GY2Tn3MbbkgTERsousdPaUdiykBfWX/XJUbDL2HXb1RusFjSc4NyV3OXh2
-         wUI1X7pU3VNBI/2kfCnv8Y0VVuJ6ZzYVOMPrfytgciQOG+JtztPD9+Ld3/lP8gGs2rXX
-         TPmC3FG6W1QBLPFZmovrW+3ivTUJBX+tEcPl4=
+        bh=LX2OMZai9flsOsfe5+rGnzhjkRdBhsRLDuzWXJdfp/E=;
+        b=TeBdJHLHyOZ71K4CnkGNgZQW/2hBuEGl2rAqWycRk4Ffh3Wa8zlyiKHx5yZvVoU66X
+         PVR6XebZS/lZu7GN9h3w9Dhj8UiCs3YklPhM+8R18rh1FDPGroYDT2R82xoMrWLOPkYR
+         wLPrS2Vh808yt0nZ6PC2x+QV9qdwPB+sDWhDWChPudbq63FkVsyuOJ2qycFpdaT0B7fM
+         ilA6UnAeavcBGEd91S9n3d8M7w8hWBtavAXK1Y+G18fDZx/Y+dJWWD3vk68DXcZHAb5z
+         SERYqzfWT7BBk50uIsxNFeqZt7Pt3R2uJIpHhR3vd/eEC/qPSyUCyD1yKavz+DfZk/dx
+         WZrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0Bg5CH27blnlQEY7ZbxyRfRPKR4l4nMrtwYSLut004w=;
-        b=Xn279rb8PahcEvvEkgCNlGuQcQSPF98O5iKub0ni61TUfnAFGdGiJPG1ST5qs89Dxf
-         SM480x4ZQHrDJNxSjxS4jdeONRw/Hfb8QZMaPnnBzGa6SiriFkwDcFuT3DqNKIqGWHTV
-         fEut8LjfkasEfP3wQYGewdrwYFDyFGAGwJi2p8nzkxEu2TqluttSUyl5WlL2NOEMp+cu
-         Lt++aDyTbC9w8YNL6JgJTFU7kC+V2fuHw+5ARaKpIk2YFRVMUyYrFCns59q9a+DckBey
-         kcre5kNbcaYFJK7C2ysPgkMaCrTjvU4GiLfHQO8G6p02XClqSblZdQA+Eg1D9aBNjhVI
-         /5LA==
-X-Gm-Message-State: AOAM533xDZES4MR8/eYpuG9a8IRMAzYcwyDftC7/gzKHE4Crul9XJxTN
-        dpVUdOdiFg+7n5PUwur8wfROpzr2Va4NSw==
-X-Google-Smtp-Source: ABdhPJxkTDh51tzdE4L37+phu5ah3OGRarQAoI6WszKQcpYvZlnh0s0PBPL55A8sh3GRNSqG+0SUGw==
-X-Received: by 2002:a2e:89d9:: with SMTP id c25mr3889330ljk.46.1599069762540;
-        Wed, 02 Sep 2020 11:02:42 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id p7sm9010lfh.49.2020.09.02.11.02.39
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 11:02:39 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id c2so178373ljj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 11:02:39 -0700 (PDT)
-X-Received: by 2002:a2e:2e04:: with SMTP id u4mr3727925lju.102.1599069758523;
- Wed, 02 Sep 2020 11:02:38 -0700 (PDT)
+        bh=LX2OMZai9flsOsfe5+rGnzhjkRdBhsRLDuzWXJdfp/E=;
+        b=DenEvLSYy1O+EWjTMe6NEZDO8JStAEodTxFBVSrUvEjd0PUnBZLmYkGJ7z+x4QCNkE
+         uiJVbR8un35aTUJKUqEmFO+VookAKq0DyfyW8HjkqZT9nZmgSQ47F+unwEMnRSzSmQqZ
+         k2+rVqadIPf2XRlggyYta73YTzJvOSqFTcs2NVoLhTCqa+qUcTlnfnMHN4Tb9hVLoNA7
+         kFj/TDD67dgS3vaHvzKdEbdkWUQowBVL44krZTv2YA0jhWusQMNrGV66/Y3X6fOKSH9a
+         8lE4P301M13UfhJ9o8FP/mXqpgCnwSaFFLrtyQ6vDWP+vAGRAXxblu7+aQaKHgqTRQgT
+         EVWA==
+X-Gm-Message-State: AOAM533RJcu1P8PN+NG6AI/3z/dWJkAZmGFu27h0BVc3tNX9X/DEeuFQ
+        d/6vKbKzGw3ihqaNw/V6sL3O87GOyUFhdPpnmn8=
+X-Google-Smtp-Source: ABdhPJxls+o/6SWSy3/4c1vyQrVA5ehqrtaxB362IX2RwBfNuNMRPAypmn3oUkxqpisRFjrY69wh0sILHpwkUtJR0mo=
+X-Received: by 2002:aa7:9a4c:: with SMTP id x12mr4122167pfj.307.1599069973447;
+ Wed, 02 Sep 2020 11:06:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827150030.282762-1-hch@lst.de> <20200827150030.282762-11-hch@lst.de>
- <8974838a-a0b1-1806-4a3a-e983deda67ca@csgroup.eu> <20200902123646.GA31184@lst.de>
- <d78cb4be-48a9-a7c5-d9d1-d04d2a02b4c6@csgroup.eu>
-In-Reply-To: <d78cb4be-48a9-a7c5-d9d1-d04d2a02b4c6@csgroup.eu>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 2 Sep 2020 11:02:22 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiDCcxuHgENo3UtdFi2QW9B7yXvNpG5CtF=A6bc6PTTgA@mail.gmail.com>
-Message-ID: <CAHk-=wiDCcxuHgENo3UtdFi2QW9B7yXvNpG5CtF=A6bc6PTTgA@mail.gmail.com>
-Subject: Re: [PATCH 10/10] powerpc: remove address space overrides using set_fs()
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200902134222.28357-1-mircea.caprioru@analog.com>
+In-Reply-To: <20200902134222.28357-1-mircea.caprioru@analog.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 2 Sep 2020 21:05:56 +0300
+Message-ID: <CAHp75VcYVsFtiHYfy4pzsZdDWOEToU1mf2KmQ2BaEtrVbPy8kA@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: ad7124: Fix typo in device name
+To:     Mircea Caprioru <mircea.caprioru@analog.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 8:17 AM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
+On Wed, Sep 2, 2020 at 4:45 PM Mircea Caprioru
+<mircea.caprioru@analog.com> wrote:
 >
+> This patch fixes the device name typo.
 >
-> With this fix, I get
+
+Luckily it's part of v5.9-rcX, so if Jonathan sends this within v5.9
+time frame, we are good.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+
+> Fixes: 951ad4700313 ("iio: adc: ad7124: move chip ID & name on the chip_info table")
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> ---
+>  drivers/iio/adc/ad7124.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> root@vgoippro:~# time dd if=/dev/zero of=/dev/null count=1M
-> 536870912 bytes (512.0MB) copied, 6.776327 seconds, 75.6MB/s
+> diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+> index 8dce06e9e69c..766c73333604 100644
+> --- a/drivers/iio/adc/ad7124.c
+> +++ b/drivers/iio/adc/ad7124.c
+> @@ -177,12 +177,12 @@ static const struct iio_chan_spec ad7124_channel_template = {
 >
-> That's still far from the 91.7MB/s I get with 5.9-rc2, but better than
-> the 65.8MB/s I got yesterday with your series. Still some way to go thought.
+>  static struct ad7124_chip_info ad7124_chip_info_tbl[] = {
+>         [ID_AD7124_4] = {
+> -               .name = "ad7127-4",
+> +               .name = "ad7124-4",
+>                 .chip_id = CHIPID_AD7124_4,
+>                 .num_inputs = 8,
+>         },
+>         [ID_AD7124_8] = {
+> -               .name = "ad7127-8",
+> +               .name = "ad7124-8",
+>                 .chip_id = CHIPID_AD7124_8,
+>                 .num_inputs = 16,
+>         },
+> --
+> 2.25.1
+>
 
-I don't see why this change would make any difference.
 
-And btw, why do the 32-bit and 64-bit checks even differ? It's not
-like the extra (single) instruction should even matter. I think the
-main reason is that the simpler 64-bit case could stay as a macro
-(because it only uses "addr" and "size" once), but honestly, that
-"simplification" doesn't help when you then need to have that #ifdef
-for the 32-bit case and an inline function anyway.
-
-So why isn't it just
-
-  static inline int __access_ok(unsigned long addr, unsigned long size)
-  { return addr <= TASK_SIZE_MAX && size <= TASK_SIZE_MAX-addr; }
-
-for both and be done with it?
-
-The "size=0" check is only relevant for the "addr == TASK_SIZE_MAX"
-case, and existed in the old code because it had that "-1" thing
-becasue "seg.seg" was actually TASK_SIZE-1.
-
-Now that we don't have any TASK_SIZE-1, zero isn't special any more.
-
-However, I suspect a bigger reason for the actual performance
-degradation would be the patch that makes things use "write_iter()"
-for writing, even when a simpler "write()" exists.
-
-For writing to /dev/null, the cost of setting up iterators and all the
-pointless indirection is all kinds of stupid.
-
-So I think "write()" should just go back to default to using
-"->write()" rather than "->write_iter()" if the simpler case exists.
-
-                   Linus
+-- 
+With Best Regards,
+Andy Shevchenko
