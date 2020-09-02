@@ -2,83 +2,157 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206FBC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A086C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EED742072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1105620773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:53:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nO/4CuY3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgIBSuo (ORCPT
+        id S1728047AbgIBSxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:50:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:44750 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbgIBSul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:50:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BB1CD6E;
-        Wed,  2 Sep 2020 11:50:41 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.4.242])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89A6F3F71F;
-        Wed,  2 Sep 2020 11:50:37 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 19:50:27 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Miroslav Benes <mbenes@suse.cz>, Mark Brown <broonie@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] arm64: stacktrace: Convert to ARCH_STACKWALK
-Message-ID: <20200902184935.GA5875@C02TD0UTHF1T.local>
-References: <20200819124913.37261-1-broonie@kernel.org>
- <20200819124913.37261-4-broonie@kernel.org>
- <alpine.LSU.2.21.2009021128500.23200@pobox.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2009021128500.23200@pobox.suse.cz>
+        Wed, 2 Sep 2020 14:53:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10394 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726124AbgIBSxo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 14:53:44 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 082IWCL2121893;
+        Wed, 2 Sep 2020 14:53:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=D8h2MQ2BFxQFN1LZrIEeY+TR98t0M6uXFJff0XnwfCo=;
+ b=nO/4CuY3MHL193LgWq2pWOz32bp8Wps5HPZ1D15dg+xwybGLqQGGr+ewLMi6AJ7TE+U4
+ V9chqW9Lh2zqOMH5EA3kTBjhqnUHroMrkPvUJSC1bsey12HRVPiJKXPMN8chFF+HeSBG
+ DgtR7K6nZQMqwV6e0/AwFuWyk1Ej/Cp11y7Ul/jN6VceIOyBVP4PEeqpRW4Yq+r12yxW
+ JLS2CsBgPFt4VU1v2kv0TZejCZXUngVgA/PJ/0q4+H0R3ohiDY6zSBylP9oi0+bdBXYe
+ OqSYZ2kKyFMsutfd+hfmCAgo7NQXcNyKrgjMtIna8lCrpWJo/PtdMUVfL3j4LoWOVBHT IQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33agp70p4s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 14:53:25 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 082IWHbV122282;
+        Wed, 2 Sep 2020 14:53:25 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33agp70p42-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 14:53:25 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 082Ir06n023126;
+        Wed, 2 Sep 2020 18:53:23 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04fra.de.ibm.com with ESMTP id 339ap7sd77-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 18:53:23 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 082IrLMC25166286
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 2 Sep 2020 18:53:21 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 53F3211C04C;
+        Wed,  2 Sep 2020 18:53:21 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A81211C04A;
+        Wed,  2 Sep 2020 18:53:18 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.121.98])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  2 Sep 2020 18:53:18 +0000 (GMT)
+Message-ID: <5331e60b5a1afb55e2bc778db1b95998466b687d.camel@linux.ibm.com>
+Subject: Re: [RFC PATCH 00/30] ima: Introduce IMA namespace
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+Cc:     "stefanb@linux.vnet.ibm.com" <stefanb@linux.vnet.ibm.com>,
+        "sunyuqiong1988@gmail.com" <sunyuqiong1988@gmail.com>,
+        "mkayaalp@cs.binghamton.edu" <mkayaalp@cs.binghamton.edu>,
+        "dmitry.kasatkin@gmail.com" <dmitry.kasatkin@gmail.com>,
+        "serge@hallyn.com" <serge@hallyn.com>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        "christian@brauner.io" <christian@brauner.io>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Date:   Wed, 02 Sep 2020 14:53:17 -0400
+In-Reply-To: <401a2f36149f450291d1742aeb6c2260@huawei.com>
+References: <N> <20200818152037.11869-1-krzysztof.struczynski@huawei.com>
+         <1597767571.3898.15.camel@HansenPartnership.com>
+         <401a2f36149f450291d1742aeb6c2260@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-02_12:2020-09-02,2020-09-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 spamscore=0 malwarescore=0 adultscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 impostorscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2009020170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 11:32:13AM +0200, Miroslav Benes wrote:
-> Hi,
+On Fri, 2020-08-21 at 15:13 +0000, Krzysztof Struczynski wrote:
+> > From: James Bottomley [mailto:James.Bottomley@HansenPartnership.com]
+> > On Tue, 2020-08-18 at 17:20 +0200, krzysztof.struczynski@huawei.com
+> > wrote:
+> > > The measurement list remains global, with the assumption that there
+> > > is only one TPM in the system. Each IMA namespace has a unique ID,
+> > > that allows to track measurements per IMA namespace. Processes in one
+> > > namespace, have access only to the measurements from that namespace.
+> > > The exception is made for the initial IMA namespace, whose processes
+> > > have access to all entries.
+> > 
+> > So I think this can work in the use case where the system owner is
+> > responsible for doing the logging and attestation and the tenants just
+> > trust the owner without requiring an attestation.  However, in a multi-
+> > tenant system you need a way for the attestation to be per-container
+> > (because the combined list of who executed what would be a security
+> > leak between tenants).  Since we can't virtualise the PCRs without
+> > introducing a vtpm this is going to require a vtpm infrastructure like
+> > that used for virtual machines and then we can do IMA logging per
+> > container.
 > 
-> it could be a silly question, but better to ask...
+> I agree and wonder if we should decouple the attestation trust model,
+> which depends on the specific use case (e.g. multi/single tenant,
+> public/private cloud), from the IMA logic of linking the measurements to
+> the container. Indeed, attestation from within the container might require
+> anchoring to a vTPM/vPCR and the current measurement tagging mechanism can
+> support several ways of anchoring them to a (virtual) root of trust.
 > 
-> > +	if (regs)
-> > +		start_backtrace(&frame, regs->regs[29], regs->pc);
-> > +	else
-> > +		start_backtrace(&frame, thread_saved_fp(task),
-> > +				thread_saved_pc(task));
+> > I don't think the above has to be in your first patch set, we just have
+> > to have an idea of how it could be done to show that nothing in this
+> > patch set precludes a follow on from doing this.
 > 
-> Would this also work for task == current? Given that the original code had
-> 
-> > -		start_backtrace(&frame,
-> > -				(unsigned long)__builtin_frame_address(0),
-> > -				(unsigned long)__save_stack_trace);
+> Given that virtualizing trust anchors seems like a separate problem in
+> which industry consensus is not easy to reach for all use cases, an
+> anchoring mechanism should probably be a separate IMA feature.
 
-Oh whoops; I'm annoyed I didn't spot that.
+Other trust anchors for "trusted keys" has been discussed, but I wasn't
+aware of any discussion about other trust anchors for the IMA
+measurement list.  The IMA measurement list is very much tied to a TPM.
 
-With that gone this cannot work for (task == current && regs == NULL), as
-we'll erroneously use stale values from the task struct.
+Including container measurements in the host measurement list, will
+unnecessarily cause the host measurement list to grow.  The decision of
+what should and shouldn't be included in the host measurement list
+shouldn't be defined by the container.
 
-It looks like the LKDTM tests only trigger cases with non-NULL regs, but
-IIUC this should show up with show_stack(NULL, NULL, KERN_INFO), as
-drivers/tty/sysrq.c does for other cpus.
+Mimi
 
-Thanks,
-Mark.
+
+
