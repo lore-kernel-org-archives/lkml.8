@@ -2,188 +2,220 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC915C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88074C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC2A207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5544C207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k6QA/AMr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g+QmL6DK"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="QHmKlJmo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgIBHxi (ORCPT
+        id S1726853AbgIBHzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36314 "EHLO
+        Wed, 2 Sep 2020 03:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgIBHxd (ORCPT
+        with ESMTP id S1726167AbgIBHzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:53:33 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E60BC061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:53:33 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599033210;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z372Am4vPf/CJeTK/KgLAMIsy+dYVzx7F+QrRDb1NWY=;
-        b=k6QA/AMri08ntNzWG5DZ34oPWTzkVMVU9cX1fpU2kKkp4WuTIXyaL4LZwdeGzgx+1uPIR8
-        w8ahD0IaKPdCWb+wiBlPlBA2JFfqbO6bqRgAvUurgK6NBPPTPKM4p2yPYyTZXxPBP2Hb7X
-        V7UgudsS63GBjwr2svzc41UIJwyQTPp8TSYWhpcpEBa8OcIxzFKzwwLI1Zg2uGghN0B5JC
-        5WKtnZv/SUuRTnXqWEQQH4Ow5noIGFUkhRnUUV6DFeQD6Uh6V7dqfW3TUBugfqwyXZxJ1C
-        6NlsTqT+sXe0HorNPQ2PuEZA65esaBURJ00fxyNy9MZipoyGX2HSezM/1difyg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599033210;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z372Am4vPf/CJeTK/KgLAMIsy+dYVzx7F+QrRDb1NWY=;
-        b=g+QmL6DKAniWx8SzkcsI5yZ2l7xKvemaFaDH8G+0diqAhrwoxmO9BnLjTXz9D6pKFTho3A
-        pOJvkToQwn0BqQAg==
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Dhaval Giani <dhaval.giani@oracle.com>,
-        Chris Hyser <chris.hyser@oracle.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        mingo@kernel.org, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, fweisbec@gmail.com,
-        keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, vineeth@bitbyteword.org,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Agata Gruza <agata.gruza@intel.com>,
-        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
-        graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
-        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Tim Chen <tim.c.chen@intel.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [RFC PATCH v7 17/23] kernel/entry: Add support for core-wide protection of kernel-mode
-In-Reply-To: <20200902012905.GB1703315@google.com>
-References: <cover.1598643276.git.jdesfossez@digitalocean.com> <2a4398b55fe258ea53fb1fbc727063298f7eea8f.1598643276.git.jdesfossez@digitalocean.com> <87y2lth4qa.fsf@nanos.tec.linutronix.de> <20200901165052.GA1662854@google.com> <875z8xl0zh.fsf@nanos.tec.linutronix.de> <20200902012905.GB1703315@google.com>
-Date:   Wed, 02 Sep 2020 09:53:29 +0200
-Message-ID: <87h7sgk41y.fsf@nanos.tec.linutronix.de>
+        Wed, 2 Sep 2020 03:55:35 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D38C061245
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:55:35 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id g4so3665433wrs.5
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 00:55:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=faX/RRq17Z93RCYcR/iHAPench8MRWplt4raEZZtM1Q=;
+        b=QHmKlJmo13sJp2ks272+vwy3vsaPj0fmH5AbaLAfxlRRWwjC/auGHbilYIMIRYAjlQ
+         nOrMknhFFq7pe5Bn2VRIWDAmyTAHURgrxl2adLYHw3RszdlIRHXjuiAhFJ4DkltDSzLB
+         XUiuS7QRPClEdBae2uSmApbMbyfRYGy2JwLzHJZw6fIrt5VD5tIMbI+5LWpeN3PamGYt
+         UAv514ThiiKg7oo+WI7yqK76DKxNP3pSAsHuZaUR5ZoRfIPKMurgkiTzQsoOpkwnYb/D
+         VPm6D/Dw42ErRTB/8GMr26pOwLO2xITwK6M0Dc0ULGLliEOKY+8ODS2oDcPWp2/mk+rx
+         hxxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=faX/RRq17Z93RCYcR/iHAPench8MRWplt4raEZZtM1Q=;
+        b=aaohgq4+OaO6hFzp+Vq9PHcrvk1lOvhaq6aJcTWH4yPKDUaIvZb5VMK2MnInd7eF7h
+         VtROpaOXYMU6Q4h90aSri5Py5KETXZqzITy+qjnXJ6WDweOBKeNvuDFFz9ItV5Oyf6S2
+         8wXlZBQFp3ZaM+XgU8as41JTbikm7BswGbqcDfs0GxvtThvODO3QVE2hFcIfLiMbMA7B
+         l/I1bHdIrwVN2Ang2G4Pm+038AWZghP69JKL8v6b3kXm0GwPR8Se1oFusmMqfPk5eCo/
+         hubu3EcG7JSrjwuFFXTUg0h+63vLZIuse3d4BmC33/Nil/Qrt1HDeK4NKTPQps3NJ+Yx
+         wzNA==
+X-Gm-Message-State: AOAM531TXI7zgQ3dGW2rUnThUpnzFhE4JuQpKEbbuJwwtA2IEf9hBa74
+        +u1Utcqy/hcZuC0WztgRuR8byQ==
+X-Google-Smtp-Source: ABdhPJzLNQ0H42IjS7iYpFJGmlyly9hQhjAGOv9RjPW/VhbgX/had+l5pzAHODow4zLXJolPRUdckg==
+X-Received: by 2002:adf:e6cf:: with SMTP id y15mr5825642wrm.346.1599033330443;
+        Wed, 02 Sep 2020 00:55:30 -0700 (PDT)
+Received: from localhost ([86.61.181.4])
+        by smtp.gmail.com with ESMTPSA id p22sm4984344wmc.38.2020.09.02.00.55.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 00:55:29 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 09:55:28 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Moshe Shemesh <moshe@nvidia.com>
+Cc:     Moshe Shemesh <moshe@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next RFC v3 00/14] Add devlink reload action option
+Message-ID: <20200902075528.GG3794@nanopsycho.orion>
+References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
+ <20200831104956.GC3794@nanopsycho.orion>
+ <36e30108-26e3-44ae-e133-48d412f7efe6@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <36e30108-26e3-44ae-e133-48d412f7efe6@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joel,
-
-On Tue, Sep 01 2020 at 21:29, Joel Fernandes wrote:
-> On Tue, Sep 01, 2020 at 10:02:10PM +0200, Thomas Gleixner wrote:
->> The generated code for the CONFIG_PRETENT_HT_SECURE=n case is the same
+Tue, Sep 01, 2020 at 09:16:17PM CEST, moshe@nvidia.com wrote:
 >
-> When you say 'pretend', did you mean 'make' ? The point of this patch is to
-> protect the kernel from the other hyperthread thus making HT secure for the
-> kernel contexts and not merely pretending.
-
-I'm paranoid and don't trust HT at all. There is too much shared state.
-
->> --- /dev/null
->> +++ b/include/linux/pretend_ht_secure.h
->> @@ -0,0 +1,21 @@
->> +#ifndef _LINUX_PRETEND_HT_SECURE_H
->> +#define _LINUX_PRETEND_HT_SECURE_H
->> +
->> +#ifdef CONFIG_PRETEND_HT_SECURE
->> +static inline void enter_from_user_ht_sucks(void)
->> +{
->> +	if (static_branch_unlikely(&pretend_ht_secure_key))
->> +		enter_from_user_pretend_ht_is_secure();
->> +}
->> +
->> +static inline void exit_to_user_ht_sucks(void)
->> +{
->> +	if (static_branch_unlikely(&pretend_ht_secure_key))
->> +		exit_to_user_pretend_ht_is_secure();
+>On 8/31/2020 1:49 PM, Jiri Pirko wrote:
+>> Sun, Aug 30, 2020 at 05:27:20PM CEST, moshe@mellanox.com wrote:
+>> > Introduce new option on devlink reload API to enable the user to select the
+>> > reload action required. Complete support for all actions in mlx5.
+>> > The following reload actions are supported:
+>> >   driver_reinit: driver entities re-initialization, applying devlink-param
+>> >                  and devlink-resource values.
+>> >   fw_activate: firmware activate.
+>> >   fw_activate_no_reset: Activate new firmware image without any reset.
+>> >                         (also known as: firmware live patching).
+>> > 
+>> > Each driver which support this command should expose the reload actions
+>> > supported.
+>> > The uAPI is backward compatible, if the reload action option is omitted
+>> >from the reload command, the driver reinit action will be used.
+>> > Note that when required to do firmware activation some drivers may need
+>> > to reload the driver. On the other hand some drivers may need to reset
+>> > the firmware to reinitialize the driver entities. Therefore, the devlink
+>> > reload command returns the actions which were actually done.
+>> > 
+>> > Add reload actions counters to hold the history per reload action type.
+>> > For example, the number of times fw_activate has been done on this
+>> > device since the driver module was added or if the firmware activation
+>> > was done with or without reset.
+>> > 
+>> > Patch 1 adds the new API reload action option to devlink.
+>> > Patch 2 adds reload actions counters.
+>> > Patch 3 exposes the reload actions counters on devlink dev get.
+>> > Patches 4-9 add support on mlx5 for devlink reload action fw_activate
+>> >             and handle the firmware reset events.
+>> > Patches 10-11 add devlink enable remote dev reset parameter and use it
+>> >              in mlx5.
+>> > Patches 12-13 mlx5 add devlink reload action fw_activate_no_reset support
+>> >               and event handling.
+>> > Patch 14 adds documentation file devlink-reload.rst
+>> > 
+>> > command examples:
+>> > $devlink dev reload pci/0000:82:00.0 action driver_reinit
+>> > reload_actions_done:
+>> >   driver_reinit
+>> > 
+>> > $devlink dev reload pci/0000:82:00.0 action fw_activate
+>> > reload_actions_done:
+>> >   driver_reinit fw_activate
+>> > 
+>> > $ devlink dev reload pci/0000:82:00.0 action fw_activate no_reset
+>> You are missing "_".
 >
-> We already have similar config and static keys for the core-scheduling
-> feature itself. Can we just make it depend on that?
-
-Of course. This was just for illustration. :)
-
-> Or, are you saying users may want 'core scheduling' enabled but may want to
-> leave out the kernel protection?
-
-Core scheduling per se without all the protection muck, i.e. a relaxed
-version which tries to gang schedule threads of a process on a core if
-feasible has advantages to some workloads.
-
->> @@ -111,6 +113,12 @@ static __always_inline void exit_to_user
->>  /* Workaround to allow gradual conversion of architecture code */
->>  void __weak arch_do_signal(struct pt_regs *regs) { }
->>  
->> +static inline unsigned long exit_to_user_get_work(void)
->> +{
->> +	exit_to_user_ht_sucks();
+> I meant that no_reset is an option here, so the uAPI is :
 >
-> Ok, one issue with your patch is it does not take care of the waiting logic.
-> sched_core_unsafe_exit_wait() needs to be called *after* all of the
-> exit_to_user_mode_work is processed. This is because
-> sched_core_unsafe_exit_wait() also checks for any new exit-to-usermode-work
-> that popped up while it is spinning and breaks out of its spin-till-safe loop
-> early. This is key to solving the stop-machine issue. If the stopper needs to
-> run, then the need-resched flag will be set and we break out of the spin and
-> redo the whole exit_to_user_mode_loop() as it should.
+>$ devlink dev reload DEV [ netns { PID | NAME | ID } ] [ action {
+>driver_reinit | fw_activate [no_reset] } ]
 
-And where is the problem?
+In the uapi enum, it's a different value. It is desirable to follow the
+uapi for things like this. I don't see why not.
 
-syscall_entry()
-  ...
-    sys_foo()
-      ....
-      return 0;
+>
+> Should have been as "--no_reset" or "-no_reset" but it seemed that all
+>options in devlink are global, not specific to command
+>
+>Do you see a better way, please advise
 
-  local_irq_disable();
-  exit_to_user_mode_prepare()
-    ti_work = exit_to_user_get_work()
-       {
-        if (ht_muck)
-          syscall_exit_ht_muck() {
-            ....
-            while (wait) {
-            	local_irq_enable();
-                while (wait) cpu_relax();
-                local_irq_disable();
-            }
-          }
-        return READ_ONCE(current_thread_info()->flags);
-       }
+if you want to do it this way, you need a separate netlink attr. But I
+don't think it is necessary. I provided suggestion in the other email.
 
-    if (unlikely(ti_work & WORK))
-    	ti_work = exit_loop(ti_work)
 
-        while (ti_work & MASK) {
-          local_irq_enable();
-          .....
-          local_irq_disable();
-          ti_work = exit_to_user_get_work()
-            {
-              See above
-            }
-       }
-
-It covers both the 'no work' and the 'do work' exit path. If that's not
-sufficient, then something is fundamentally wrong with your design.
-
-Thanks,
-
-        tglx
+>
+>> 
+>> > reload_actions_done:
+>> No need to have "reload" word here. And maybe "performed" would be
+>> better than "done". Idk:
+>> "actions_performed"
+>> ?
+>
+>
+>Yes, that's better, I will fix.
+>
+>> 
+>> >   fw_activate_no_reset
+>> > 
+>> > v2 -> v3:
+>> > - Replace fw_live_patch action by fw_activate_no_reset
+>> > - Devlink reload returns the actions done over netlink reply
+>> > - Add reload actions counters
+>> > 
+>> > v1 -> v2:
+>> > - Instead of reload levels driver,fw_reset,fw_live_patch have reload
+>> >   actions driver_reinit,fw_activate,fw_live_patch
+>> > - Remove driver default level, the action driver_reinit is the default
+>> >   action for all drivers
+>> > 
+>> > Moshe Shemesh (14):
+>> >   devlink: Add reload action option to devlink reload command
+>> >   devlink: Add reload actions counters
+>> >   devlink: Add reload actions counters to dev get
+>> >   net/mlx5: Add functions to set/query MFRL register
+>> >   net/mlx5: Set cap for pci sync for fw update event
+>> >   net/mlx5: Handle sync reset request event
+>> >   net/mlx5: Handle sync reset now event
+>> >   net/mlx5: Handle sync reset abort event
+>> >   net/mlx5: Add support for devlink reload action fw activate
+>> >   devlink: Add enable_remote_dev_reset generic parameter
+>> >   net/mlx5: Add devlink param enable_remote_dev_reset support
+>> >   net/mlx5: Add support for fw live patch event
+>> >   net/mlx5: Add support for devlink reload action fw activate no reset
+>> >   devlink: Add Documentation/networking/devlink/devlink-reload.rst
+>> > 
+>> > .../networking/devlink/devlink-params.rst     |   6 +
+>> > .../networking/devlink/devlink-reload.rst     |  68 +++
+>> > Documentation/networking/devlink/index.rst    |   1 +
+>> > drivers/net/ethernet/mellanox/mlx4/main.c     |  14 +-
+>> > .../net/ethernet/mellanox/mlx5/core/Makefile  |   2 +-
+>> > .../net/ethernet/mellanox/mlx5/core/devlink.c | 117 ++++-
+>> > .../mellanox/mlx5/core/diag/fw_tracer.c       |  31 ++
+>> > .../mellanox/mlx5/core/diag/fw_tracer.h       |   1 +
+>> > .../ethernet/mellanox/mlx5/core/fw_reset.c    | 453 ++++++++++++++++++
+>> > .../ethernet/mellanox/mlx5/core/fw_reset.h    |  19 +
+>> > .../net/ethernet/mellanox/mlx5/core/health.c  |  35 +-
+>> > .../net/ethernet/mellanox/mlx5/core/main.c    |  13 +
+>> > .../ethernet/mellanox/mlx5/core/mlx5_core.h   |   2 +
+>> > drivers/net/ethernet/mellanox/mlxsw/core.c    |  24 +-
+>> > drivers/net/netdevsim/dev.c                   |  16 +-
+>> > include/linux/mlx5/device.h                   |   1 +
+>> > include/linux/mlx5/driver.h                   |   4 +
+>> > include/net/devlink.h                         |  13 +-
+>> > include/uapi/linux/devlink.h                  |  24 +
+>> > net/core/devlink.c                            | 174 ++++++-
+>> > 20 files changed, 967 insertions(+), 51 deletions(-)
+>> > create mode 100644 Documentation/networking/devlink/devlink-reload.rst
+>> > create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+>> > create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
+>> > 
+>> > -- 
+>> > 2.17.1
+>> > 
