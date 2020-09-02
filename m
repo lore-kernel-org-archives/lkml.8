@@ -2,144 +2,151 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3613CC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8011C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2BF20773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C04B020773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:36:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RA9h04Gf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbgIBIe0 (ORCPT
+        id S1726448AbgIBIg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:34:26 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10792 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726140AbgIBIe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:34:26 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0DAF42C11693830390BC;
-        Wed,  2 Sep 2020 16:34:24 +0800 (CST)
-Received: from [127.0.0.1] (10.174.176.211) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 2 Sep 2020
- 16:34:18 +0800
-Subject: Re: [PATCH v3] PCI: Add pci_iounmap
-To:     George Cherian <gcherian@marvell.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "mst@redhat.com" <mst@redhat.com>
-References: <BYAPR18MB2679AAA983C2AF3CD399ABD8C52E0@BYAPR18MB2679.namprd18.prod.outlook.com>
-From:   Yang Yingliang <yangyingliang@huawei.com>
-Message-ID: <5aff44b1-a293-3ab1-a102-9e1ad8229431@huawei.com>
-Date:   Wed, 2 Sep 2020 16:34:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 2 Sep 2020 04:36:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51336 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726140AbgIBIgZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 04:36:25 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0828VZFQ160336;
+        Wed, 2 Sep 2020 04:36:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : reply-to : references : mime-version : content-type
+ : in-reply-to; s=pp1; bh=G92Hnl95YGBFYaXfwRX/u5OBkMFB+BAE9YB8vdXBHZ8=;
+ b=RA9h04GfqI9EWNcAyotn22fDX6A9FMRDHjAfoAocoiXi/b8U5HuxCPmwMgv8yblS3f2e
+ ouADjAfIpySmbm4ZTMX+jb1nJ3/3PSJOJuta07UZjSuQiXIeXsq2m82ctQhEU9JeqPHO
+ 6pi7I798W7JLRSlmJSnyKxqw76gSCnurm8jpWobd4b1zcE5Hq/IYYHTABZVAOkctnJ+g
+ I9kJWVneYIU3V+lBKqSUW1XvR37aZZXULhU+KslWremtubgV6kpA2NrTTOJ+RLPfmxKK
+ o7E1/3u8xoUiR14mv/aueVcMLKXSWGR64G7nENJbMgHdwhNLEKAyfPQHkUSiBsgIa1/d UQ== 
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33a6je2rm1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 04:36:15 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0828XEp5000387;
+        Wed, 2 Sep 2020 08:36:13 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma04wdc.us.ibm.com with ESMTP id 337en9eeey-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 08:36:13 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0828aDIV52036084
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 2 Sep 2020 08:36:13 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 261D3124058;
+        Wed,  2 Sep 2020 08:36:13 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B62D4124052;
+        Wed,  2 Sep 2020 08:36:11 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.79.220.196])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  2 Sep 2020 08:36:11 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 000A72E3027; Wed,  2 Sep 2020 14:05:32 +0530 (IST)
+Date:   Wed, 2 Sep 2020 14:05:32 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH] cpuidle-pseries: Fix CEDE latency conversion from tb to
+ us
+Message-ID: <20200902083532.GA14369@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <1598969293-29228-1-git-send-email-ego@linux.vnet.ibm.com>
+ <CACPK8XfZdnKusEuu8i=-aH=Wfr6X6sMrvX=btFq9PtnXJ2w-SQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <BYAPR18MB2679AAA983C2AF3CD399ABD8C52E0@BYAPR18MB2679.namprd18.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.174.176.211]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACPK8XfZdnKusEuu8i=-aH=Wfr6X6sMrvX=btFq9PtnXJ2w-SQ@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-02_03:2020-09-02,2020-09-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
+ clxscore=1011 impostorscore=0 malwarescore=0 spamscore=0 bulkscore=0
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009020074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello Joel,
 
-On 2020/9/2 2:05, George Cherian wrote:
-> Hi Yang,
+On Wed, Sep 02, 2020 at 01:08:35AM +0000, Joel Stanley wrote:
+> On Tue, 1 Sep 2020 at 14:09, Gautham R. Shenoy <ego@linux.vnet.ibm.com> wrote:
+> >
+> > From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> >
+> > commit d947fb4c965c ("cpuidle: pseries: Fixup exit latency for
+> > CEDE(0)") sets the exit latency of CEDE(0) based on the latency values
+> > of the Extended CEDE states advertised by the platform. The values
+> > advertised by the platform are in timebase ticks. However the cpuidle
+> > framework requires the latency values in microseconds.
+> >
+> > If the tb-ticks value advertised by the platform correspond to a value
+> > smaller than 1us, during the conversion from tb-ticks to microseconds,
+> > in the current code, the result becomes zero. This is incorrect as it
+> > puts a CEDE state on par with the snooze state.
+> >
+> > This patch fixes this by rounding up the result obtained while
+> > converting the latency value from tb-ticks to microseconds.
+> >
+> > Fixes: commit d947fb4c965c ("cpuidle: pseries: Fixup exit latency for
+> > CEDE(0)")
+> >
+> > Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+> 
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
 >
->> -----Original Message-----
->> From: Yang Yingliang <yangyingliang@huawei.com>
->> Sent: Tuesday, September 1, 2020 6:59 PM
->> To: George Cherian <gcherian@marvell.com>; linux-kernel@vger.kernel.org;
->> linux-arch@vger.kernel.org; linux-pci@vger.kernel.org
->> Cc: kbuild-all@lists.01.org; bhelgaas@google.com; arnd@arndb.de;
->> mst@redhat.com
->> Subject: Re: [PATCH v3] PCI: Add pci_iounmap
->>
->>
->>
->>
->> On 2020/8/25 9:25, kernel test robot wrote:
->>> Hi George,
->>>
->>> I love your patch! Yet something to improve:
->>>
->>> [auto build test ERROR on pci/next]
->>> [also build test ERROR on linux/master linus/master asm-generic/master
->>> v5.9-rc2 next-20200824] [If your patch is applied to the wrong git tree,
->> kindly drop us a note.
->>> And when submitting patch, we suggest to use '--base' as documented in
->>> https://urldefense.proofpoint.com/v2/url?u=https-3A__git-
->> 2Dscm.com_doc
->>> s_git-2Dformat-2Dpatch&d=DwIC-
->> g&c=nKjWec2b6R0mOyPaz7xtfQ&r=TjMsEFPc7di
->> rkF6u2D3eSIS0cA8FeYpzRkkMzr4aCbk&m=dvtRkwC273FmalEZE_KonLRWrIV
->> WLSWfG61
->>> NWTWG5LI&s=ycW6SZOVRuKAm3YwdhyAuSh22oPuengSMVuv-
->> EwaUew&e= ]
->>> url:    https://urldefense.proofpoint.com/v2/url?u=https-
->> 3A__github.com_0day-2Dci_linux_commits_George-2DCherian_PCI-2DAdd-
->> 2Dpci-5Fiounmap_20200824-2D212149&d=DwIC-
->> g&c=nKjWec2b6R0mOyPaz7xtfQ&r=TjMsEFPc7dirkF6u2D3eSIS0cA8FeYpzRkk
->> Mzr4aCbk&m=dvtRkwC273FmalEZE_KonLRWrIVWLSWfG61NWTWG5LI&s=6c
->> UOYHeDOBZ0HaFc2z-vaDgDmbIK4LCBRt9kNkn1sto&e=
->>> base:   https://urldefense.proofpoint.com/v2/url?u=https-
->> 3A__git.kernel.org_pub_scm_linux_kernel_git_helgaas_pci.git&d=DwIC-
->> g&c=nKjWec2b6R0mOyPaz7xtfQ&r=TjMsEFPc7dirkF6u2D3eSIS0cA8FeYpzRkk
->> Mzr4aCbk&m=dvtRkwC273FmalEZE_KonLRWrIVWLSWfG61NWTWG5LI&s=h-
->> TMyLlEdAwew-u52q4dgWBUMgm0ys-xKzvOO86e1Lw&e=  next
->>> config: powerpc-allyesconfig (attached as .config)
->>> compiler: powerpc64-linux-gcc (GCC) 9.3.0 reproduce (this is a W=1
->>> build):
->>>           wget https://urldefense.proofpoint.com/v2/url?u=https-
->> 3A__raw.githubusercontent.com_intel_lkp-
->> 2Dtests_master_sbin_make.cross&d=DwIC-
->> g&c=nKjWec2b6R0mOyPaz7xtfQ&r=TjMsEFPc7dirkF6u2D3eSIS0cA8FeYpzRkk
->> Mzr4aCbk&m=dvtRkwC273FmalEZE_KonLRWrIVWLSWfG61NWTWG5LI&s=az
->> QcL0MQmPpr9UfvyBSSdQiu1UbjJgFrzNJOtcZ_--E&e=  -O ~/bin/make.cross
->>>           chmod +x ~/bin/make.cross
->>>           # save the attached .config to linux build tree
->>>           COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0
->>> make.cross ARCH=powerpc
->>>
->>> If you fix the issue, kindly add following tag as appropriate
->>> Reported-by: kernel test robot <lkp@intel.com>
->>>
->>> All errors (new ones prefixed by >>):
->>>
->>>      powerpc64-linux-ld: lib/pci_iomap.o: in function `__crc_pci_iounmap':
->>>>> (.rodata+0x10): multiple definition of `__crc_pci_iounmap';
->>>>> lib/iomap.o:(.rodata+0x68): first defined here
->> EXPORT_SYMBOL(pci_iounmap) in lib/iomap.c need be removed.
-> I really don't think that is the way to fix this. I have also seen your other patch
-> in which iomap being moved out of lib/iomap.c to header file.
->
-> There was a reason for moving iomap and its variants to a lib since most of
-> the arch's implementation of map was similar. Whereas the unmap had multiple
-> implementation per arch's. So, the lib/iomap never implemented the generic unmap.
->
-> I see either of the following solution.
-> a. Have an arm64 specific implementation for the unmap function.
-> Or
-> b. something on the lines of v2[1], which accommodates all the arch's but has the #ifdef
-> for which Bjorn raised his concerns.
-I think 'a' may be better, and I have already make a patch, I can send 
-it after testing.
->
-> Bjorn, any comments?
->
-> Regards
-> -George
->
-> [1] - https://lkml.org/lkml/2020/8/20/28
 
+Thanks for reviewing the fix.
+
+> Should you check for the zero case and print a warning?
+
+Yes, that would be better. I will post a v2 with that.
+
+> 
+> > ---
+> >  drivers/cpuidle/cpuidle-pseries.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/cpuidle/cpuidle-pseries.c b/drivers/cpuidle/cpuidle-pseries.c
+> > index ff6d99e..9043358 100644
+> > --- a/drivers/cpuidle/cpuidle-pseries.c
+> > +++ b/drivers/cpuidle/cpuidle-pseries.c
+> > @@ -361,7 +361,7 @@ static void __init fixup_cede0_latency(void)
+> >         for (i = 0; i < nr_xcede_records; i++) {
+> >                 struct xcede_latency_record *record = &payload->records[i];
+> >                 u64 latency_tb = be64_to_cpu(record->latency_ticks);
+> > -               u64 latency_us = tb_to_ns(latency_tb) / NSEC_PER_USEC;
+> > +               u64 latency_us = DIV_ROUND_UP_ULL(tb_to_ns(latency_tb), NSEC_PER_USEC);
+> >
+> >                 if (latency_us < min_latency_us)
+> >                         min_latency_us = latency_us;
+> > --
+> > 1.9.4
+> >
