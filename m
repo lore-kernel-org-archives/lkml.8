@@ -2,90 +2,114 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF26C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C54C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5630E2078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A4E2078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:46:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UuUvb1ZQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EWDvdMIv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgIBOqA (ORCPT
+        id S1728104AbgIBOqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:46:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43134 "EHLO
+        Wed, 2 Sep 2020 10:46:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbgIBOpi (ORCPT
+        with ESMTP id S1727972AbgIBONL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:45:38 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D9CC061246
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 07:45:38 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id o21so4858491wmc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 07:45:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:date:from:to:cc:message-id;
-        bh=trC+40amJNG14lv80NaTqEGrWJguvBTuJIKnt0HFTWo=;
-        b=UuUvb1ZQJouxwRU/HXqW9dHiS30iASaxqJjgk+w1tpi4HyUUIX2fNzwPMnWJHzalpe
-         J7WcK1U5ItiNENw048BbwT7TDVzFVxU9jfX9UYaTBNAjSKerOPx7XzSCm1Q068p4G76F
-         9mCHwzsBwdiPTwdh2EvzG65kFQNAb1gwG36hIA9i8xJI4joIJcS8TqF+VZAzQgF4u5m8
-         XdnJSd8bfwZgCDfiDJ8DEq52ELnLljPVUTuG36yrTRmiqI1uNZfAC0ID/IL/D2BnlQy8
-         FJG337atTlQ7NVITyreqN840FO9EsYfXk4XE91gFALELbWgGpUwtZRRDgz3PYK/BPrMo
-         G1UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:from:to:cc:message-id;
-        bh=trC+40amJNG14lv80NaTqEGrWJguvBTuJIKnt0HFTWo=;
-        b=Knqk4mGtTHl/v73DH2FlkO5OVYZzrNTTsTqy+aZaffvHhVusANi+53G7/ft4m6VEjV
-         3MVYcbA33v3cBk8iCaJaalkM11hB4h48/2+PL1osJVrz2MH+gM32Pc/2AqMipMbI2Z7E
-         S2bi70rYpBc79GNcE7FbwoRB/X+cEAnUG4149d29pUrOJWjh/xAHmZ5JqsZRtYR+x5MS
-         T7XZ4gy8XeaO5q2/kJiQDu7a0x3vmMwt5JwwbpsRxBYWsXhxc5HocaSIIzrSqPsbPj/1
-         ELuFWICA+QFuHatv9e1wTC0RK/tDJtdPpoJ3Om9/RrrgvdODIMUkyLVezkhPcOC2csiD
-         557w==
-X-Gm-Message-State: AOAM532j2ebVgPLAuBaw4oMBeBPKfrZVC6oucs70qgAwFc5M7YlK2N2e
-        GBCJyYakZzJkx1kgEdo34NM=
-X-Google-Smtp-Source: ABdhPJx94O6MeIlkVwYmIRsWeilEwSrrQgV4ldM0qKrQu3yGGZ99pQxkt6aNAwHqm43x5VuFtGtPVw==
-X-Received: by 2002:a7b:c011:: with SMTP id c17mr988200wmb.63.1599057936242;
-        Wed, 02 Sep 2020 07:45:36 -0700 (PDT)
-Received: from gmail.com (254.68.10.185.ro.ovo.sc. [185.10.68.254])
-        by smtp.gmail.com with ESMTPSA id v6sm7740106wrt.90.2020.09.02.07.45.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 07:45:35 -0700 (PDT)
-Subject: [PATCH] trivial: docs: Section number should be "8.2"
-Date:   Wed, 2 Sep 2020 14:45:00 -0000
-From:   Michael Witten <mfwitten@gmail.com>
-To:     Jiri Kosina <trivial@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Message-ID: <19f80e640076482fac86f57b41211faa@gmail.com>
+        Wed, 2 Sep 2020 10:13:11 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7343C061251;
+        Wed,  2 Sep 2020 07:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=/5SAWZk6icJ/MBm6T7B/yGzjpfvARn7uvD55NqOY+BE=; b=EWDvdMIvlQWYwV73Cx9dI0xu7i
+        sWu2vGTiz7z10ZM+OfMHq7tF7ljG9yCO3BgQgp251yW7D6Jo7iM/6uv4WyMQGc6dKe985svnO6mlj
+        yqykq1p+7ju22/KtWrLP/3AGX8cA9Fv2n0pVym7W7+uIuWxjz9eICjqdkJ+YCGTJBl/bZfTs9wpVC
+        yuAWuJnKNHtwuErm9tMSuSi4jcO98Y92Ql0Ck+/nHfS3VrwrGN0Z3+Lmz6G4LrCbDl2jdEv/bfmmt
+        vJ4QrEuk3yfDtfx3be/GtJ6gNOM2oesokgEE1uOYM7Y+Rcl7L6oVZ6k6SBnLqJlOPDHOMUgr6eQZB
+        W/q/PVxA==;
+Received: from [2001:4bb8:184:af1:6a63:7fdb:a80e:3b0b] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDTUu-0005cr-4h; Wed, 02 Sep 2020 14:12:24 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 03/19] ataflop: use bdev_check_media_change
+Date:   Wed,  2 Sep 2020 16:12:02 +0200
+Message-Id: <20200902141218.212614-4-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200902141218.212614-1-hch@lst.de>
+References: <20200902141218.212614-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Michael Witten <mfwitten@gmail.com>
----
- Documentation/kbuild/makefiles.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Switch to use bdev_check_media_change instead of check_disk_change and
+call floppy_revalidate manually.  Given that floppy_revalidate only
+deals with media change events, the extra call into ->revalidate_disk
+from bdev_disk_changed is not required either, so stop wiring up the
+method.
 
-diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-index b81b8913a5a3..da6a708164c4 100644
---- a/Documentation/kbuild/makefiles.rst
-+++ b/Documentation/kbuild/makefiles.rst
-@@ -1411,7 +1411,7 @@ When kbuild executes, the following steps are followed (roughly):
- 	that may be shared between individual architectures.
- 	The recommended approach how to use a generic header file is
- 	to list the file in the Kbuild file.
--	See "7.2 generic-y" for further info on syntax etc.
-+	See "8.2 generic-y" for further info on syntax etc.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/block/ataflop.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/block/ataflop.c b/drivers/block/ataflop.c
+index a50e13af030526..3e881fdb06e0ad 100644
+--- a/drivers/block/ataflop.c
++++ b/drivers/block/ataflop.c
+@@ -1732,7 +1732,8 @@ static int fd_locked_ioctl(struct block_device *bdev, fmode_t mode,
+ 		/* invalidate the buffer track to force a reread */
+ 		BufferDrive = -1;
+ 		set_bit(drive, &fake_change);
+-		check_disk_change(bdev);
++		if (bdev_check_media_change(bdev))
++			floppy_revalidate(bdev->bd_disk);
+ 		return 0;
+ 	default:
+ 		return -EINVAL;
+@@ -1909,7 +1910,8 @@ static int floppy_open(struct block_device *bdev, fmode_t mode)
+ 		return 0;
  
- 7.11 Post-link pass
- -------------------
+ 	if (mode & (FMODE_READ|FMODE_WRITE)) {
+-		check_disk_change(bdev);
++		if (bdev_check_media_change(bdev))
++			floppy_revalidate(bdev->bd_disk);
+ 		if (mode & FMODE_WRITE) {
+ 			if (p->wpstat) {
+ 				if (p->ref < 0)
+@@ -1953,7 +1955,6 @@ static const struct block_device_operations floppy_fops = {
+ 	.release	= floppy_release,
+ 	.ioctl		= fd_ioctl,
+ 	.check_events	= floppy_check_events,
+-	.revalidate_disk= floppy_revalidate,
+ };
+ 
+ static const struct blk_mq_ops ataflop_mq_ops = {
 -- 
-2.22.0
+2.28.0
 
