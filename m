@@ -2,191 +2,375 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22763C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78E1C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E452920829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB832072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:58:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgIBKwy (ORCPT
+        id S1726269AbgIBK6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 06:52:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52170 "EHLO mx2.suse.de"
+        Wed, 2 Sep 2020 06:58:17 -0400
+Received: from mga11.intel.com ([192.55.52.93]:9161 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbgIBKwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 06:52:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CCCFAAD7B;
-        Wed,  2 Sep 2020 10:52:52 +0000 (UTC)
-Date:   Wed, 2 Sep 2020 12:52:50 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        id S1726124AbgIBK6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 06:58:03 -0400
+IronPort-SDR: wtHtCh9qlf6czIN0ABOJnc8KW23/jzsNoSOaO48cJniu78Ci+s9JDZEPN0krD+Jz2LACUn5c4R
+ Lwyq0hhOFaFg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="154868672"
+X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
+   d="scan'208";a="154868672"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 03:57:30 -0700
+IronPort-SDR: EcdZmV2TomvCRVVZJWoHZQ/Biw9nlhCwm2T4W7/pD/yMuIiME9Y4tb6r6/7tt2CHea1YNunqQO
+ ktSlewFTiImw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
+   d="scan'208";a="282275221"
+Received: from slisovsk-lenovo-ideapad-720s-13ikb.fi.intel.com (HELO ahunter-Desktop.fi.intel.com) ([10.237.72.190])
+  by fmsmga007.fm.intel.com with ESMTP; 02 Sep 2020 03:57:28 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: state names: vas: Re: [PATCH next v3 6/8] printk: ringbuffer: add
- finalization/extension support
-Message-ID: <20200902105250.GA15764@alley>
-References: <20200831011058.6286-1-john.ogness@linutronix.de>
- <20200831011058.6286-7-john.ogness@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831011058.6286-7-john.ogness@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Subject: [PATCH V3 4/6] perf tools: Add FIFO file names as alternative options to --control
+Date:   Wed,  2 Sep 2020 13:57:07 +0300
+Message-Id: <20200902105707.11491-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200901200655.GC470123@krava>
+References: <20200901200655.GC470123@krava>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2020-08-31 03:16:56, John Ogness wrote:
-> Add support for extending the newest data block. For this, introduce
-> a new finalization state flag (DESC_FINAL_MASK) that denotes when a
-> descriptor may not be extended, i.e. is finalized.
+Enable the --control option to accept file names as an alternative to
+file descriptors.
+
+Example:
+
+ $ mkfifo perf.control
+ $ mkfifo perf.ack
+ $ cat perf.ack &
+ [1] 6808
+ $ perf record --control fifo:perf.control,perf.ack -- sleep 300 &
+ [2] 6810
+ $ echo disable > perf.control
+ $ Events disabled
+ ack
+
+ $ echo enable > perf.control
+ $ Events enabled
+ ack
+
+ $ echo disable > perf.control
+ $ Events disabled
+ ack
+
+ $ kill %2
+ [ perf record: Woken up 4 times to write data ]
+ $ [ perf record: Captured and wrote 0.018 MB perf.data (7 samples) ]
+
+ [1]-  Done                    cat perf.ack
+ [2]+  Terminated              perf record --control fifo:perf.control,perf.ack -- sleep 300
+ $
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+---
+
+
+Changes in V3:
+
+	Rename evlist__parse_control_names to evlist__parse_control_fifo
+	Explicitly initialize *ctl_fd_close = false
+
+
+ tools/perf/Documentation/perf-record.txt |  2 +
+ tools/perf/Documentation/perf-stat.txt   |  2 +
+ tools/perf/builtin-record.c              | 34 +++++++++++----
+ tools/perf/builtin-stat.c                | 18 ++++++--
+ tools/perf/util/evlist.c                 | 55 +++++++++++++++++++++++-
+ tools/perf/util/evlist.h                 |  2 +-
+ tools/perf/util/record.h                 |  1 +
+ tools/perf/util/stat.h                   |  1 +
+ 8 files changed, 101 insertions(+), 14 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 07c4734f1c7a..2ffc1196d2b8 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -627,7 +627,9 @@ option. The -e option and this one can be mixed and matched.  Events
+ can be grouped using the {} notation.
+ endif::HAVE_LIBPFM[]
  
-> --- a/kernel/printk/printk_ringbuffer.c
-> +++ b/kernel/printk/printk_ringbuffer.c
-> @@ -49,14 +49,16 @@
->   * Descriptors have three states:
->   *
->   *   reserved
-> - *     A writer is modifying the record.
-> + *     A writer is modifying the record. Internally represented as either "0"
-> + *     or "DESC_COMMIT_MASK".
++--control=fifo:ctl-fifo[,ack-fifo]::
+ --control=fd:ctl-fd[,ack-fd]::
++ctl-fifo / ack-fifo are opened and used as ctl-fd / ack-fd as follows.
+ Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
+ 'disable': disable events). Measurements can be started with events disabled using
+ --delay=-1 option. Optionally send control command completion ('ack\n') to ack-fd descriptor
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 7fb7368cc2d9..d33ffd11bb85 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -176,7 +176,9 @@ with it.  --append may be used here.  Examples:
+      3>results  perf stat --log-fd 3          -- $cmd
+      3>>results perf stat --log-fd 3 --append -- $cmd
+ 
++--control=fifo:ctl-fifo[,ack-fifo]::
+ --control=fd:ctl-fd[,ack-fd]::
++ctl-fifo / ack-fifo are opened and used as ctl-fd / ack-fd as follows.
+ Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
+ 'disable': disable events). Measurements can be started with events disabled using
+ --delay=-1 option. Optionally send control command completion ('ack\n') to ack-fd descriptor
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index f2ab5bd7e2ba..117dd180f780 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2236,7 +2236,17 @@ static int parse_control_option(const struct option *opt,
+ {
+ 	struct record_opts *opts = opt->value;
+ 
+-	return evlist__parse_control(str, &opts->ctl_fd, &opts->ctl_fd_ack);
++	return evlist__parse_control(str, &opts->ctl_fd, &opts->ctl_fd_ack, &opts->ctl_fd_close);
++}
++
++static void close_control_option(struct record_opts *opts)
++{
++	if (opts->ctl_fd_close) {
++		opts->ctl_fd_close = false;
++		close(opts->ctl_fd);
++		if (opts->ctl_fd_ack >= 0)
++			close(opts->ctl_fd_ack);
++	}
+ }
+ 
+ static void switch_output_size_warn(struct record *rec)
+@@ -2578,9 +2588,10 @@ static struct option __record_options[] = {
+ 		"libpfm4 event selector. use 'perf list' to list available events",
+ 		parse_libpfm_events_option),
+ #endif
+-	OPT_CALLBACK(0, "control", &record.opts, "fd:ctl-fd[,ack-fd]",
++	OPT_CALLBACK(0, "control", &record.opts, "fd:ctl-fd[,ack-fd] or fifo:ctl-fifo[,ack-fifo]",
+ 		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
+-		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.",
++		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.\n"
++		     "\t\t\t  Alternatively, ctl-fifo / ack-fifo will be opened and used as ctl-fd / ack-fd.",
+ 		      parse_control_option),
+ 	OPT_END()
+ };
+@@ -2653,12 +2664,14 @@ int cmd_record(int argc, const char **argv)
+ 	    !perf_can_record_switch_events()) {
+ 		ui__error("kernel does not support recording context switch events\n");
+ 		parse_options_usage(record_usage, record_options, "switch-events", 0);
+-		return -EINVAL;
++		err = -EINVAL;
++		goto out_opts;
+ 	}
+ 
+ 	if (switch_output_setup(rec)) {
+ 		parse_options_usage(record_usage, record_options, "switch-output", 0);
+-		return -EINVAL;
++		err = -EINVAL;
++		goto out_opts;
+ 	}
+ 
+ 	if (rec->switch_output.time) {
+@@ -2669,8 +2682,10 @@ int cmd_record(int argc, const char **argv)
+ 	if (rec->switch_output.num_files) {
+ 		rec->switch_output.filenames = calloc(sizeof(char *),
+ 						      rec->switch_output.num_files);
+-		if (!rec->switch_output.filenames)
+-			return -EINVAL;
++		if (!rec->switch_output.filenames) {
++			err = -EINVAL;
++			goto out_opts;
++		}
+ 	}
+ 
+ 	/*
+@@ -2686,7 +2701,8 @@ int cmd_record(int argc, const char **argv)
+ 		rec->affinity_mask.bits = bitmap_alloc(rec->affinity_mask.nbits);
+ 		if (!rec->affinity_mask.bits) {
+ 			pr_err("Failed to allocate thread mask for %zd cpus\n", rec->affinity_mask.nbits);
+-			return -ENOMEM;
++			err = -ENOMEM;
++			goto out_opts;
+ 		}
+ 		pr_debug2("thread mask[%zd]: empty\n", rec->affinity_mask.nbits);
+ 	}
+@@ -2817,6 +2833,8 @@ int cmd_record(int argc, const char **argv)
+ 	evlist__delete(rec->evlist);
+ 	symbol__exit();
+ 	auxtrace_record__free(rec->itr);
++out_opts:
++	close_control_option(&rec->opts);
+ 	return err;
+ }
+ 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 12ce5cf2b10e..6170226d44f9 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1047,7 +1047,17 @@ static int parse_control_option(const struct option *opt,
+ {
+ 	struct perf_stat_config *config = opt->value;
+ 
+-	return evlist__parse_control(str, &config->ctl_fd, &config->ctl_fd_ack);
++	return evlist__parse_control(str, &config->ctl_fd, &config->ctl_fd_ack, &config->ctl_fd_close);
++}
++
++static void close_control_option(struct perf_stat_config *config)
++{
++	if (config->ctl_fd_close) {
++		config->ctl_fd_close = false;
++		close(config->ctl_fd);
++		if (config->ctl_fd_ack >= 0)
++			close(config->ctl_fd_ack);
++	}
+ }
+ 
+ static struct option stat_options[] = {
+@@ -1151,9 +1161,10 @@ static struct option stat_options[] = {
+ 		"libpfm4 event selector. use 'perf list' to list available events",
+ 		parse_libpfm_events_option),
+ #endif
+-	OPT_CALLBACK(0, "control", &stat_config, "fd:ctl-fd[,ack-fd]",
++	OPT_CALLBACK(0, "control", &stat_config, "fd:ctl-fd[,ack-fd] or fifo:ctl-fifo[,ack-fifo]",
+ 		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
+-		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.",
++		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.\n"
++		     "\t\t\t  Alternatively, ctl-fifo / ack-fifo will be opened and used as ctl-fd / ack-fd.",
+ 		      parse_control_option),
+ 	OPT_END()
+ };
+@@ -2396,6 +2407,7 @@ int cmd_stat(int argc, const char **argv)
+ 
+ 	metricgroup__rblist_exit(&stat_config.metric_events);
+ 	runtime_stat_delete(&stat_config);
++	close_control_option(&stat_config);
+ 
+ 	return status;
+ }
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 47d1045a19af..00593e5f2a9d 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1727,12 +1727,63 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
+ 	return leader;
+ }
+ 
+-int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack)
++static int evlist__parse_control_fifo(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close)
++{
++	char *s, *p;
++	int ret = 0, fd;
++
++	if (strncmp(str, "fifo:", 5))
++		return -EINVAL;
++
++	str += 5;
++	if (!*str || *str == ',')
++		return -EINVAL;
++
++	s = strdup(str);
++	if (!s)
++		return -ENOMEM;
++
++	p = strchr(s, ',');
++	if (p)
++		*p = '\0';
++
++	/*
++	 * O_RDWR avoids POLLHUPs which is necessary to allow the other
++	 * end of a FIFO to be repeatedly opened and closed.
++	 */
++	fd = open(s, O_RDWR | O_NONBLOCK | O_CLOEXEC);
++	if (fd < 0) {
++		pr_err("Failed to open '%s'\n", s);
++		ret = -errno;
++		goto out_free;
++	}
++	*ctl_fd = fd;
++	*ctl_fd_close = true;
++
++	if (p && *++p) {
++		/* O_RDWR | O_NONBLOCK means the other end need not be open */
++		fd = open(p, O_RDWR | O_NONBLOCK | O_CLOEXEC);
++		if (fd < 0) {
++			pr_err("Failed to open '%s'\n", p);
++			ret = -errno;
++			goto out_free;
++		}
++		*ctl_fd_ack = fd;
++	}
++
++out_free:
++	free(s);
++	return ret;
++}
++
++int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close)
+ {
+ 	char *comma = NULL, *endptr = NULL;
+ 
++	*ctl_fd_close = false;
++
+ 	if (strncmp(str, "fd:", 3))
+-		return -EINVAL;
++		return evlist__parse_control_fifo(str, ctl_fd, ctl_fd_ack, ctl_fd_close);
+ 
+ 	*ctl_fd = strtoul(&str[3], &endptr, 0);
+ 	if (endptr == &str[3])
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index a5a5a07d5c55..a5678eb5ee60 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -373,7 +373,7 @@ enum evlist_ctl_cmd {
+ 	EVLIST_CTL_CMD_ACK
+ };
+ 
+-int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack);
++int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close);
+ int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
+ int evlist__finalize_ctlfd(struct evlist *evlist);
+ bool evlist__ctlfd_initialized(struct evlist *evlist);
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 03678ff25539..266760ac9143 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -73,6 +73,7 @@ struct record_opts {
+ 	unsigned int  nr_threads_synthesize;
+ 	int	      ctl_fd;
+ 	int	      ctl_fd_ack;
++	bool	      ctl_fd_close;
+ };
+ 
+ extern const char * const *record_usage;
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index f8778cffd941..65402e13b704 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -135,6 +135,7 @@ struct perf_stat_config {
+ 	struct rblist		 metric_events;
+ 	int			 ctl_fd;
+ 	int			 ctl_fd_ack;
++	bool			 ctl_fd_close;
+ };
+ 
+ void perf_stat__set_big_num(int set);
+-- 
+2.17.1
 
-We should explain the difference between the two values. It might be
-enough to add something like:
-
-    See "Descriptor Finalization" section for more details."
-
-> @@ -79,6 +81,25 @@
->   * committed or reusable queried state. This makes it possible that a valid
->   * sequence number of the tail is always available.
->   *
-> + * Descriptor Finalization
-> + * ~~~~~~~~~~~~~~~~~~~~~~~
-> + * When a writer calls the commit function prb_commit(), the record may still
-> + * continue to be in the reserved queried state. In order for that record to
-> + * enter into the committed queried state, that record also must be finalized.
-> + * A record can be finalized by three different scenarios:
-> + *
-> + *   1) A writer can finalize its record immediately by calling
-> + *      prb_final_commit() instead of prb_commit().
-> + *
-> + *   2) When a new record is reserved and the previous record has been
-> + *      committed via prb_commit(), that previous record is finalized.
-> + *
-> + *   3) When a record is committed via prb_commit() and a newer record
-> + *      already exists, the record being committed is finalized.
-> + *
-> + * Until a record is finalized (represented by "DESC_FINAL_MASK"), a writer
-> + * may "reopen" that record and extend it with more data.
-> + *
->   * Data Rings
->   * ~~~~~~~~~~
->   * The two data rings (text and dictionary) function identically. They exist
-
-[...]
-
-> +/*
-> + * Attempt to remove the commit flag so that the record can be modified by a
-> + * writer again. This is only possible if the descriptor is not yet finalized.
-> + *
-> + * Note that on success, the queried state did not change. A non-finalized
-> + * record (even with the commit flag set) is in the reserved queried state.
-> + */
-> +static struct prb_desc *desc_reopen_last(struct prb_desc_ring *desc_ring,
-> +					 u32 caller_id, unsigned long *id_out)
-> +{
-> +	unsigned long prev_state_val;
-> +	enum desc_state d_state;
-> +	struct prb_desc desc;
-> +	struct prb_desc *d;
-> +	unsigned long id;
-> +
-> +	id = atomic_long_read(&desc_ring->head_id);
-> +
-> +	/*
-> +	 * To minimize unnecessarily reopening a descriptor, first check the
-> +	 * descriptor is in the correct state and has a matching caller ID.
-> +	 */
-> +	d_state = desc_read(desc_ring, id, &desc);
-> +	if (d_state != desc_reserved ||
-> +	    !(atomic_long_read(&desc.state_var) & DESC_COMMIT_MASK) ||
-
-This looks like a hack. And similar extra check of the bit is needed
-also in desc_read(), see
-https://lore.kernel.org/r/878sdvq8kd.fsf@jogness.linutronix.de
-
-I has been actually getting less and less happy with the inconsistency
-between names of the bits and states.
-
-Sigh, you will hate me because this would mean a bigger change.
-IMHO, it would be much cleaner and help with long-term maintainability
-when we do the following two changes:
-
-First, define 5 desc_states, something like:
-
-enum desc_state {
-	desc_miss = -1,		/* ID mismatch */
-	desc_modified =	 0x0,	/* reserved, being modified by writer */
-	desc_committed = 0x1,	/* committed by writer, could get reopened */
-	desc_finalized = 0x2,	/* committed, could not longer get modified */
-	desc_reusable =	 0x3,	/* free, not yet used by any writer */
-};
-
-Second, only 4 variants of the 3 state bits are currently used.
-It means that two bits are enough and they might use exactly
-the above names:
-
-I mean to do something like:
-
-#define DESC_SV_BITS		(sizeof(unsigned long) * 8)
-#define DESC_SV(desc_state)	((unsigned long)desc_state << (DESC_SV_BITS - 2))
-#define DESC_ST(state_val)	((unsigned long)state_val >> (DESC_SV_BITS - 2))
-
-
-Then we could have:
-
-static enum desc_state get_desc_state(unsigned long id,
-				      unsigned long state_val)
-{
-	if (id != DESC_ID(state_val))
-		return desc_miss;
-
-	return DESC_ST(state_val);
-}
-
-and use in the code:
-
-unsigned long val_committed = id | DESC_SV(desc_committed);
-
-
-or do
-
-#define DESC_SV(id, desc_state)	(id | (unsigned long)desc_state << (DESC_SV_BITS - 2))
-
-and then use DESC_SV(id, DESC_COMMITTED).
-
-
-I am sorry that I did not came up with this earlier. I know how
-painful it is to rework bigger patchsets. But it affects format
-of the ring buffer, so we should do it early.
-
-Best Regards,
-Petr
-
-PS: I am still middle of review. It looks good so far. I wanted to
-send this early and separately because it is a bigger change.
