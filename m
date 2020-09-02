@@ -2,57 +2,74 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E8DC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A134C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B749C206EF
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B1652068F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgIBBpy (ORCPT
+        id S1726726AbgIBBpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 21:45:54 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:47927 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726131AbgIBBow (ORCPT
+        Tue, 1 Sep 2020 21:45:53 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:41467 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726167AbgIBBpg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 21:44:52 -0400
-Received: (qmail 608512 invoked by uid 1000); 1 Sep 2020 21:44:51 -0400
-Date:   Tue, 1 Sep 2020 21:44:51 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     gregkh@linuxfoundation.org, erkka.talvitie@vincit.fi,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC RESEND PATCH 0/1] USB EHCI: repeated resets on full and low
- speed devices
-Message-ID: <20200902014451.GA608383@rowland.harvard.edu>
-References: <cover.1598887346.git.khalid@gonehiking.org>
- <20200901023117.GD571008@rowland.harvard.edu>
- <608418fa-b0ce-c2a4-ad79-fe505c842587@oracle.com>
- <20200901163602.GG587030@rowland.harvard.edu>
- <4d1ab90a-ec55-85e8-d646-cfa58f08d449@oracle.com>
- <20200901195159.GA599114@rowland.harvard.edu>
- <68228cc9-5d1a-6872-0956-a7006fe3b943@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68228cc9-5d1a-6872-0956-a7006fe3b943@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 1 Sep 2020 21:45:36 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U7fvce._1599011133;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U7fvce._1599011133)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 02 Sep 2020 09:45:33 +0800
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+To:     axboe@kernel.dk
+Cc:     ming.lei@redhat.com, hch@lst.de, baolin.wang@linux.alibaba.com,
+        baolin.wang7@gmail.com, dan.carpenter@oracle.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] block: Remove a duplicative condition
+Date:   Wed,  2 Sep 2020 09:45:25 +0800
+Message-Id: <24364e6dfe7905d4f823ab932f927e2d30858c5c.1599010968.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 04:54:48PM -0600, Khalid Aziz wrote:
-> I have managed to find a hardware combination that seems to work, so for
-> now at least my machine is usable. I will figure out how to interpret
-> usbmon output and run more experiments. There seems to be a real problem
-> in the driver somewhere and should be solved.
+Remove a duplicative condition to remove below cppcheck warnings:
 
-Correction: You're using two different drivers.  Although it's not 
-impossible, it seems very unlikely that they both contain the same bug.
+"warning: Redundant condition: sched_allow_merge. '!A || (A && B)' is
+equivalent to '!A || B' [redundantCondition]"
 
-Alan Stern
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+---
+ block/blk-merge.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 80c9744..6ed7158 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -996,13 +996,11 @@ static enum bio_merge_status blk_attempt_bio_merge(struct request_queue *q,
+ 
+ 	switch (blk_try_merge(rq, bio)) {
+ 	case ELEVATOR_BACK_MERGE:
+-		if (!sched_allow_merge ||
+-		    (sched_allow_merge && blk_mq_sched_allow_merge(q, rq, bio)))
++		if (!sched_allow_merge || blk_mq_sched_allow_merge(q, rq, bio))
+ 			return bio_attempt_back_merge(rq, bio, nr_segs);
+ 		break;
+ 	case ELEVATOR_FRONT_MERGE:
+-		if (!sched_allow_merge ||
+-		    (sched_allow_merge && blk_mq_sched_allow_merge(q, rq, bio)))
++		if (!sched_allow_merge || blk_mq_sched_allow_merge(q, rq, bio))
+ 			return bio_attempt_front_merge(rq, bio, nr_segs);
+ 		break;
+ 	case ELEVATOR_DISCARD_MERGE:
+-- 
+1.8.3.1
+
