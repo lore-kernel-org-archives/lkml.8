@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FDDC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EA5C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C525320639
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7611420639
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063532;
-	bh=mAfBaiRJRkp25BV0rN9ichUjyzowk2QtFfeZRpXBqio=;
+	s=default; t=1599063540;
+	bh=o6Sh4lf9iPZGm59TmPs0E72ml8wcW0c1F943Y0tZ+fU=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=b8/DBYqkFIfYmChO62nSnza/tZgT+ZTfgrd8eYLZFTF9nmjnproRzZ+mkc5BKlgOR
-	 z0osDYOZBqwpfx8R/sbiGNCOvjyx0qmDAOsexWaI+H6RdD+7daL5LWdOyPvZ4Jn3ZU
-	 qe3qlC7ZFVp3/oZO+O6TTZETrQbLD2+dA2C1aR6U=
+	b=KhswHev/hWTMlFNoyBKBLcay+ETGhaOvzBb2wxDnn1VqUG9O25lQyG1NxANvR/1kS
+	 /u74a2nI4mqyrKca8vFYcQ7Tg/DClU6/BXEW5zBA81Z74JMe9mlnkKZHm/M3tcZw3W
+	 9S0TMogOfpr+/E5T+1EsOLloQ7dyhHJrwtbSTC8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgIBQSu (ORCPT
+        id S1728752AbgIBQS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:18:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53496 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 12:18:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgIBQKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:10:47 -0400
+        id S1726771AbgIBQKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:10:46 -0400
 Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5AAF207EA;
+        by mail.kernel.org (Postfix) with ESMTPSA id D6DCE208CA;
         Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599063046;
-        bh=mAfBaiRJRkp25BV0rN9ichUjyzowk2QtFfeZRpXBqio=;
+        bh=o6Sh4lf9iPZGm59TmPs0E72ml8wcW0c1F943Y0tZ+fU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YrSjrgBqjLvEimNjiscWYcFi/Z9/Adwx0IFgc2usu33c7Pup8nyXZmXKAtw5NML4T
-         Li0vbFaztxpJNQ1Dlti/ZM2IuMf8bs3pQv2HJVEt8APXbCegWINupstRUEiZMdEKnv
-         DO0pCwH8Xi9IJn++lnqNg0RiPUoZ+Gs8qBl9N0tI=
+        b=q8vRkqBaakRSn5pZdvB0Iz/Uk04wuGVZ5NGOLRHAVU1NKm+g04R+Ic2PSCEAIHje0
+         XTyYzYr7Tn968sW59wVoqt0U1E+4veme24+9Cfjaad0K0aSje46uYK48TBUTjpsj4r
+         b/HxNImuKoH0l07N/riDO2pNYtn/WAPRFoXwtl5U=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kDVLP-000tA7-U8; Wed, 02 Sep 2020 18:10:43 +0200
+        id 1kDVLP-000t9l-M7; Wed, 02 Sep 2020 18:10:43 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 11/38] media: vivid: move set_capabilities logic to a separate function
-Date:   Wed,  2 Sep 2020 18:10:14 +0200
-Message-Id: <38814ad757c215a94c964c85b67b99fb327ad7f4.1599062230.git.mchehab+huawei@kernel.org>
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vandana BN <bnvandana@gmail.com>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 02/38] media: v4l2-ioctl: avoid memory leaks on some time32 compat functions
+Date:   Wed,  2 Sep 2020 18:10:05 +0200
+Message-Id: <27254f9780e7ec8502761826c2888dbd51a536a8.1599062230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
 References: <cover.1599062230.git.mchehab+huawei@kernel.org>
@@ -60,196 +66,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move such logic from vivid_create_instance(), as otherwise
-smatch takes forever.
+There are some reports about possible memory leaks:
 
-The vivid_create_instance() is still a too big for my taste.
-So, further cleanups are still needed.
+	drivers/media/v4l2-core//v4l2-ioctl.c:3203 video_put_user() warn: check that 'ev32' doesn't leak information (struct has a hole after 'type')
+	drivers/media/v4l2-core//v4l2-ioctl.c:3230 video_put_user() warn: check that 'vb32' doesn't leak information (struct has a hole after 'memory')
+
+While smatch seems to be reporting a false positive (line 3203),
+there's indeed a possible leak with reserved2 at vb32.
+
+We might have fixed just that one, but smatch checks won't
+be able to check leaks at ev32. So, re-work the code in a way
+that will ensure that the var contents will be zeroed before
+filling it.
+
+With that, we don't need anymore to touch reserved fields.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/media/test-drivers/vivid/vivid-core.c | 161 +++++++++---------
- 1 file changed, 83 insertions(+), 78 deletions(-)
+ drivers/media/v4l2-core/v4l2-ioctl.c | 48 ++++++++++++++--------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/media/test-drivers/vivid/vivid-core.c b/drivers/media/test-drivers/vivid/vivid-core.c
-index f8cb4133e1ce..e3ffc2566623 100644
---- a/drivers/media/test-drivers/vivid/vivid-core.c
-+++ b/drivers/media/test-drivers/vivid/vivid-core.c
-@@ -1001,6 +1001,88 @@ static int vivid_detect_feature_set(struct vivid_dev *dev, int inst,
- 	return 0;
- }
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index a556880f225a..6f3fe9c4b64a 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -3189,17 +3189,16 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
+ #ifdef CONFIG_COMPAT_32BIT_TIME
+ 	case VIDIOC_DQEVENT_TIME32: {
+ 		struct v4l2_event *ev = parg;
+-		struct v4l2_event_time32 ev32 = {
+-			.type		= ev->type,
+-			.pending	= ev->pending,
+-			.sequence	= ev->sequence,
+-			.timestamp.tv_sec  = ev->timestamp.tv_sec,
+-			.timestamp.tv_nsec = ev->timestamp.tv_nsec,
+-			.id		= ev->id,
+-		};
++		struct v4l2_event_time32 ev32;
  
-+static void vivid_set_capabilities(struct vivid_dev *dev)
-+{
-+	if (dev->has_vid_cap) {
-+		/* set up the capabilities of the video capture device */
-+		dev->vid_cap_caps = dev->multiplanar ?
-+			V4L2_CAP_VIDEO_CAPTURE_MPLANE :
-+			V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_VIDEO_OVERLAY;
-+		dev->vid_cap_caps |= V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
-+		if (dev->has_audio_inputs)
-+			dev->vid_cap_caps |= V4L2_CAP_AUDIO;
-+		if (dev->has_tv_tuner)
-+			dev->vid_cap_caps |= V4L2_CAP_TUNER;
-+	}
-+	if (dev->has_vid_out) {
-+		/* set up the capabilities of the video output device */
-+		dev->vid_out_caps = dev->multiplanar ?
-+			V4L2_CAP_VIDEO_OUTPUT_MPLANE :
-+			V4L2_CAP_VIDEO_OUTPUT;
-+		if (dev->has_fb)
-+			dev->vid_out_caps |= V4L2_CAP_VIDEO_OUTPUT_OVERLAY;
-+		dev->vid_out_caps |= V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
-+		if (dev->has_audio_outputs)
-+			dev->vid_out_caps |= V4L2_CAP_AUDIO;
-+	}
-+	if (dev->has_vbi_cap) {
-+		/* set up the capabilities of the vbi capture device */
-+		dev->vbi_cap_caps = (dev->has_raw_vbi_cap ? V4L2_CAP_VBI_CAPTURE : 0) |
-+				    (dev->has_sliced_vbi_cap ? V4L2_CAP_SLICED_VBI_CAPTURE : 0);
-+		dev->vbi_cap_caps |= V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
-+		if (dev->has_audio_inputs)
-+			dev->vbi_cap_caps |= V4L2_CAP_AUDIO;
-+		if (dev->has_tv_tuner)
-+			dev->vbi_cap_caps |= V4L2_CAP_TUNER;
-+	}
-+	if (dev->has_vbi_out) {
-+		/* set up the capabilities of the vbi output device */
-+		dev->vbi_out_caps = (dev->has_raw_vbi_out ? V4L2_CAP_VBI_OUTPUT : 0) |
-+				    (dev->has_sliced_vbi_out ? V4L2_CAP_SLICED_VBI_OUTPUT : 0);
-+		dev->vbi_out_caps |= V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
-+		if (dev->has_audio_outputs)
-+			dev->vbi_out_caps |= V4L2_CAP_AUDIO;
-+	}
-+	if (dev->has_sdr_cap) {
-+		/* set up the capabilities of the sdr capture device */
-+		dev->sdr_cap_caps = V4L2_CAP_SDR_CAPTURE | V4L2_CAP_TUNER;
-+		dev->sdr_cap_caps |= V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
-+	}
-+	/* set up the capabilities of the radio receiver device */
-+	if (dev->has_radio_rx)
-+		dev->radio_rx_caps = V4L2_CAP_RADIO | V4L2_CAP_RDS_CAPTURE |
-+				     V4L2_CAP_HW_FREQ_SEEK | V4L2_CAP_TUNER |
-+				     V4L2_CAP_READWRITE;
-+	/* set up the capabilities of the radio transmitter device */
-+	if (dev->has_radio_tx)
-+		dev->radio_tx_caps = V4L2_CAP_RDS_OUTPUT | V4L2_CAP_MODULATOR |
-+				     V4L2_CAP_READWRITE;
++		memset(&ev32, 0, sizeof(ev32));
++		ev32.type		= ev->type,
++		ev32.pending		= ev->pending,
++		ev32.sequence		= ev->sequence,
++		ev32.timestamp.tv_sec	= ev->timestamp.tv_sec,
++		ev32.timestamp.tv_nsec	= ev->timestamp.tv_nsec,
++		ev32.id			= ev->id,
+ 		memcpy(&ev32.u, &ev->u, sizeof(ev->u));
+-		memcpy(&ev32.reserved, &ev->reserved, sizeof(ev->reserved));
+ 
+ 		if (copy_to_user(arg, &ev32, sizeof(ev32)))
+ 			return -EFAULT;
+@@ -3210,21 +3209,22 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
+ 	case VIDIOC_DQBUF_TIME32:
+ 	case VIDIOC_PREPARE_BUF_TIME32: {
+ 		struct v4l2_buffer *vb = parg;
+-		struct v4l2_buffer_time32 vb32 = {
+-			.index		= vb->index,
+-			.type		= vb->type,
+-			.bytesused	= vb->bytesused,
+-			.flags		= vb->flags,
+-			.field		= vb->field,
+-			.timestamp.tv_sec	= vb->timestamp.tv_sec,
+-			.timestamp.tv_usec	= vb->timestamp.tv_usec,
+-			.timecode	= vb->timecode,
+-			.sequence	= vb->sequence,
+-			.memory		= vb->memory,
+-			.m.userptr	= vb->m.userptr,
+-			.length		= vb->length,
+-			.request_fd	= vb->request_fd,
+-		};
++		struct v4l2_buffer_time32 vb32;
 +
-+	/* set up the capabilities of meta capture device */
-+	if (dev->has_meta_cap) {
-+		dev->meta_cap_caps = V4L2_CAP_META_CAPTURE |
-+				     V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
-+		if (dev->has_audio_inputs)
-+			dev->meta_cap_caps |= V4L2_CAP_AUDIO;
-+		if (dev->has_tv_tuner)
-+			dev->meta_cap_caps |= V4L2_CAP_TUNER;
-+	}
-+	/* set up the capabilities of meta output device */
-+	if (dev->has_meta_out) {
-+		dev->meta_out_caps = V4L2_CAP_META_OUTPUT |
-+				     V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
-+		if (dev->has_audio_outputs)
-+			dev->meta_out_caps |= V4L2_CAP_AUDIO;
-+	}
-+	/* set up the capabilities of the touch capture device */
-+	if (dev->has_touch_cap) {
-+		dev->touch_cap_caps = V4L2_CAP_TOUCH | V4L2_CAP_STREAMING |
-+				      V4L2_CAP_READWRITE;
-+		dev->touch_cap_caps |= dev->multiplanar ?
-+			V4L2_CAP_VIDEO_CAPTURE_MPLANE : V4L2_CAP_VIDEO_CAPTURE;
-+	}
-+}
-+
- static void vivid_disable_unused_ioctls(struct vivid_dev *dev,
- 					bool has_tuner,
- 					bool has_modulator,
-@@ -1153,84 +1235,7 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
- 		return ret;
- 	}
++		memset(&vb32, 0, sizeof(vb32));
++		vb32.index		= vb->index,
++		vb32.type		= vb->type,
++		vb32.bytesused		= vb->bytesused,
++		vb32.flags		= vb->flags,
++		vb32.field		= vb->field,
++		vb32.timestamp.tv_sec	= vb->timestamp.tv_sec,
++		vb32.timestamp.tv_usec	= vb->timestamp.tv_usec,
++		vb32.timecode		= vb->timecode,
++		vb32.sequence		= vb->sequence,
++		vb32.memory		= vb->memory,
++		vb32.length		= vb->length,
++		vb32.request_fd		= vb->request_fd,
++		memcpy(&vb32.m, &vb->m, sizeof(vb->m));
  
--	if (dev->has_vid_cap) {
--		/* set up the capabilities of the video capture device */
--		dev->vid_cap_caps = dev->multiplanar ?
--			V4L2_CAP_VIDEO_CAPTURE_MPLANE :
--			V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_VIDEO_OVERLAY;
--		dev->vid_cap_caps |= V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
--		if (dev->has_audio_inputs)
--			dev->vid_cap_caps |= V4L2_CAP_AUDIO;
--		if (dev->has_tv_tuner)
--			dev->vid_cap_caps |= V4L2_CAP_TUNER;
--	}
--	if (dev->has_vid_out) {
--		/* set up the capabilities of the video output device */
--		dev->vid_out_caps = dev->multiplanar ?
--			V4L2_CAP_VIDEO_OUTPUT_MPLANE :
--			V4L2_CAP_VIDEO_OUTPUT;
--		if (dev->has_fb)
--			dev->vid_out_caps |= V4L2_CAP_VIDEO_OUTPUT_OVERLAY;
--		dev->vid_out_caps |= V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
--		if (dev->has_audio_outputs)
--			dev->vid_out_caps |= V4L2_CAP_AUDIO;
--	}
--	if (dev->has_vbi_cap) {
--		/* set up the capabilities of the vbi capture device */
--		dev->vbi_cap_caps = (dev->has_raw_vbi_cap ? V4L2_CAP_VBI_CAPTURE : 0) |
--				    (dev->has_sliced_vbi_cap ? V4L2_CAP_SLICED_VBI_CAPTURE : 0);
--		dev->vbi_cap_caps |= V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
--		if (dev->has_audio_inputs)
--			dev->vbi_cap_caps |= V4L2_CAP_AUDIO;
--		if (dev->has_tv_tuner)
--			dev->vbi_cap_caps |= V4L2_CAP_TUNER;
--	}
--	if (dev->has_vbi_out) {
--		/* set up the capabilities of the vbi output device */
--		dev->vbi_out_caps = (dev->has_raw_vbi_out ? V4L2_CAP_VBI_OUTPUT : 0) |
--				    (dev->has_sliced_vbi_out ? V4L2_CAP_SLICED_VBI_OUTPUT : 0);
--		dev->vbi_out_caps |= V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
--		if (dev->has_audio_outputs)
--			dev->vbi_out_caps |= V4L2_CAP_AUDIO;
--	}
--	if (dev->has_sdr_cap) {
--		/* set up the capabilities of the sdr capture device */
--		dev->sdr_cap_caps = V4L2_CAP_SDR_CAPTURE | V4L2_CAP_TUNER;
--		dev->sdr_cap_caps |= V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
--	}
--	/* set up the capabilities of the radio receiver device */
--	if (dev->has_radio_rx)
--		dev->radio_rx_caps = V4L2_CAP_RADIO | V4L2_CAP_RDS_CAPTURE |
--				     V4L2_CAP_HW_FREQ_SEEK | V4L2_CAP_TUNER |
--				     V4L2_CAP_READWRITE;
--	/* set up the capabilities of the radio transmitter device */
--	if (dev->has_radio_tx)
--		dev->radio_tx_caps = V4L2_CAP_RDS_OUTPUT | V4L2_CAP_MODULATOR |
--				     V4L2_CAP_READWRITE;
--
--	/* set up the capabilities of meta capture device */
--	if (dev->has_meta_cap) {
--		dev->meta_cap_caps = V4L2_CAP_META_CAPTURE |
--				     V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
--		if (dev->has_audio_inputs)
--			dev->meta_cap_caps |= V4L2_CAP_AUDIO;
--		if (dev->has_tv_tuner)
--			dev->meta_cap_caps |= V4L2_CAP_TUNER;
--	}
--	/* set up the capabilities of meta output device */
--	if (dev->has_meta_out) {
--		dev->meta_out_caps = V4L2_CAP_META_OUTPUT |
--				     V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
--		if (dev->has_audio_outputs)
--			dev->meta_out_caps |= V4L2_CAP_AUDIO;
--	}
--	/* set up the capabilities of the touch capture device */
--	if (dev->has_touch_cap) {
--		dev->touch_cap_caps = V4L2_CAP_TOUCH | V4L2_CAP_STREAMING |
--				      V4L2_CAP_READWRITE;
--		dev->touch_cap_caps |= dev->multiplanar ?
--			V4L2_CAP_VIDEO_CAPTURE_MPLANE : V4L2_CAP_VIDEO_CAPTURE;
--	}
-+	vivid_set_capabilities(dev);
- 
- 	ret = -ENOMEM;
- 	/* initialize the test pattern generator */
+ 		if (copy_to_user(arg, &vb32, sizeof(vb32)))
+ 			return -EFAULT;
 -- 
 2.26.2
 
