@@ -2,140 +2,212 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DB5C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D483C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24E542067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:01:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="B77jHf3y"
+	by mail.kernel.org (Postfix) with ESMTP id 1416120829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbgIBRBN (ORCPT
+        id S1728771AbgIBRBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 13:01:13 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12897 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727895AbgIBQ6j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:58:39 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4fcf2e0003>; Wed, 02 Sep 2020 09:58:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 02 Sep 2020 09:58:36 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 02 Sep 2020 09:58:36 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 2 Sep
- 2020 16:58:35 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 2 Sep 2020 16:58:35 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4fcf3b0005>; Wed, 02 Sep 2020 09:58:35 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH v2 2/7] mm/migrate: move migrate_vma_collect_skip()
-Date:   Wed, 2 Sep 2020 09:58:25 -0700
-Message-ID: <20200902165830.5367-3-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200902165830.5367-1-rcampbell@nvidia.com>
-References: <20200902165830.5367-1-rcampbell@nvidia.com>
+        Wed, 2 Sep 2020 13:01:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:42792 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728428AbgIBRA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 13:00:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 003021045;
+        Wed,  2 Sep 2020 10:00:57 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4BFD3F66F;
+        Wed,  2 Sep 2020 10:00:55 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 18:00:53 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Boyan Karatotev <boyan.karatotev@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>, boian4o1@gmail.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        amit.kachhap@arm.com, vincenzo.frascino@arm.com,
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH 3/4] kselftests/arm64: add PAuth test for whether exec()
+ changes keys
+Message-ID: <20200902170052.GJ6642@arm.com>
+References: <20200828131606.7946-1-boyan.karatotev@arm.com>
+ <20200828131606.7946-4-boyan.karatotev@arm.com>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599065902; bh=oATABFM4AEF4PG+JY10uewS8j4geL66qhQa5ZF2kPD8=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=B77jHf3y79/2XEe/LYHBFYAuS7tNokE/fPkCaOiD2Zzy/OfnFzHxs8qES48AKO200
-         AFdxhEIGisWoadUewWILipVMHr8CChvUPlE7/bE3g908d1bNfESUMYGblvJsKruIOZ
-         E8DH3bdqqhleXqqcRXIajrrf5dfd3+jeSzTtO55EtCP2ja+Ptjyb8uE62VWXaeWxY/
-         YifNhlvTBxLDaoCskQThXbxSKHv9rlNuTU4whUznLptJsH+NL0w0tnR7XjF1wbtdFt
-         +jStmy9f267ONZ/jgCJlXupvNqXFuDsKMEOHnHvYdpdnAUPiRtG+8nwipElzH+T27t
-         NTP5Yp3jPxpjQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828131606.7946-4-boyan.karatotev@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the definition of migrate_vma_collect_skip() to make it callable
-by migrate_vma_collect_hole(). This helps make the next patch easier
-to read.
+On Fri, Aug 28, 2020 at 02:16:05PM +0100, Boyan Karatotev wrote:
+> Kernel documentation states that it will change PAuth keys on exec() calls.
+> 
+> Verify that all keys are correctly switched to new ones.
+> 
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Signed-off-by: Boyan Karatotev <boyan.karatotev@arm.com>
+> ---
+>  tools/testing/selftests/arm64/pauth/Makefile  |   4 +
+>  .../selftests/arm64/pauth/exec_target.c       |  35 +++++
+>  tools/testing/selftests/arm64/pauth/helper.h  |  10 ++
+>  tools/testing/selftests/arm64/pauth/pac.c     | 148 ++++++++++++++++++
+>  4 files changed, 197 insertions(+)
+>  create mode 100644 tools/testing/selftests/arm64/pauth/exec_target.c
+> 
+> diff --git a/tools/testing/selftests/arm64/pauth/Makefile b/tools/testing/selftests/arm64/pauth/Makefile
+> index a017d1c8dd58..2e237b21ccf6 100644
+> --- a/tools/testing/selftests/arm64/pauth/Makefile
+> +++ b/tools/testing/selftests/arm64/pauth/Makefile
+> @@ -5,6 +5,7 @@ CFLAGS += -mbranch-protection=pac-ret
+>  
+>  TEST_GEN_PROGS := pac
+>  TEST_GEN_FILES := pac_corruptor.o helper.o
+> +TEST_GEN_PROGS_EXTENDED := exec_target
+>  
+>  include ../../lib.mk
+>  
+> @@ -20,6 +21,9 @@ $(OUTPUT)/helper.o: helper.c
+>  # greater, gcc emits pac* instructions which are not in HINT NOP space,
+>  # preventing the tests from occurring at all. Compile for ARMv8.2 so tests can
+>  # run on earlier targets and print a meaningful error messages
+> +$(OUTPUT)/exec_target: exec_target.c $(OUTPUT)/helper.o
+> +	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
+> +
+>  $(OUTPUT)/pac: pac.c $(OUTPUT)/pac_corruptor.o $(OUTPUT)/helper.o
+>  	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
+>  
+> diff --git a/tools/testing/selftests/arm64/pauth/exec_target.c b/tools/testing/selftests/arm64/pauth/exec_target.c
+> new file mode 100644
+> index 000000000000..07addef5a1d7
+> --- /dev/null
+> +++ b/tools/testing/selftests/arm64/pauth/exec_target.c
+> @@ -0,0 +1,35 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2020 ARM Limited
+> +
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <sys/auxv.h>
+> +
+> +#include "helper.h"
+> +
+> +
+> +int main(void)
+> +{
+> +	struct signatures signed_vals;
+> +	unsigned long hwcaps;
+> +	size_t val;
+> +
+> +	fread(&val, sizeof(size_t), 1, stdin);
+> +
+> +	/* don't try to execute illegal (unimplemented) instructions) caller
+> +	 * should have checked this and keep worker simple
+> +	 */
+> +	hwcaps = getauxval(AT_HWCAP);
+> +
+> +	if (hwcaps & HWCAP_PACA) {
+> +		signed_vals.keyia = keyia_sign(val);
+> +		signed_vals.keyib = keyib_sign(val);
+> +		signed_vals.keyda = keyda_sign(val);
+> +		signed_vals.keydb = keydb_sign(val);
+> +	}
+> +	signed_vals.keyg = (hwcaps & HWCAP_PACG) ?  keyg_sign(val) : 0;
+> +
+> +	fwrite(&signed_vals, sizeof(struct signatures), 1, stdout);
+> +
+> +	return 0;
+> +}
+> diff --git a/tools/testing/selftests/arm64/pauth/helper.h b/tools/testing/selftests/arm64/pauth/helper.h
+> index b3cf709e249d..fceaa1e4824a 100644
+> --- a/tools/testing/selftests/arm64/pauth/helper.h
+> +++ b/tools/testing/selftests/arm64/pauth/helper.h
+> @@ -6,6 +6,16 @@
+>  
+>  #include <stdlib.h>
+>  
+> +#define NKEYS 5
+> +
+> +
+> +struct signatures {
+> +	size_t keyia;
+> +	size_t keyib;
+> +	size_t keyda;
+> +	size_t keydb;
+> +	size_t keyg;
+> +};
+>  
+>  void pac_corruptor(void);
+>  
+> diff --git a/tools/testing/selftests/arm64/pauth/pac.c b/tools/testing/selftests/arm64/pauth/pac.c
+> index cdbffa8bf61e..16dea47b11c7 100644
+> --- a/tools/testing/selftests/arm64/pauth/pac.c
+> +++ b/tools/testing/selftests/arm64/pauth/pac.c
+> @@ -2,6 +2,8 @@
+>  // Copyright (C) 2020 ARM Limited
+>  
+>  #include <sys/auxv.h>
+> +#include <sys/types.h>
+> +#include <sys/wait.h>
+>  #include <signal.h>
+>  
+>  #include "../../kselftest_harness.h"
+> @@ -33,6 +35,117 @@ do { \
+>  } while (0)
+>  
+>  
+> +void sign_specific(struct signatures *sign, size_t val)
+> +{
+> +	sign->keyia = keyia_sign(val);
+> +	sign->keyib = keyib_sign(val);
+> +	sign->keyda = keyda_sign(val);
+> +	sign->keydb = keydb_sign(val);
+> +}
+> +
+> +void sign_all(struct signatures *sign, size_t val)
+> +{
+> +	sign->keyia = keyia_sign(val);
+> +	sign->keyib = keyib_sign(val);
+> +	sign->keyda = keyda_sign(val);
+> +	sign->keydb = keydb_sign(val);
+> +	sign->keyg  = keyg_sign(val);
+> +}
+> +
+> +int are_same(struct signatures *old, struct signatures *new, int nkeys)
+> +{
+> +	int res = 0;
+> +
+> +	res |= old->keyia == new->keyia;
+> +	res |= old->keyib == new->keyib;
+> +	res |= old->keyda == new->keyda;
+> +	res |= old->keydb == new->keydb;
+> +	if (nkeys == NKEYS)
+> +		res |= old->keyg  == new->keyg;
+> +
+> +	return res;
+> +}
+> +
+> +int exec_sign_all(struct signatures *signed_vals, size_t val)
+> +{
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
----
- mm/migrate.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+Could popen(3) be used here?
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 4f89360d9e77..ce16ed3deab6 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2254,6 +2254,21 @@ int migrate_misplaced_transhuge_page(struct mm_struc=
-t *mm,
- #endif /* CONFIG_NUMA */
-=20
- #ifdef CONFIG_DEVICE_PRIVATE
-+static int migrate_vma_collect_skip(unsigned long start,
-+				    unsigned long end,
-+				    struct mm_walk *walk)
-+{
-+	struct migrate_vma *migrate =3D walk->private;
-+	unsigned long addr;
-+
-+	for (addr =3D start; addr < end; addr +=3D PAGE_SIZE) {
-+		migrate->dst[migrate->npages] =3D 0;
-+		migrate->src[migrate->npages++] =3D 0;
-+	}
-+
-+	return 0;
-+}
-+
- static int migrate_vma_collect_hole(unsigned long start,
- 				    unsigned long end,
- 				    __always_unused int depth,
-@@ -2282,21 +2297,6 @@ static int migrate_vma_collect_hole(unsigned long st=
-art,
- 	return 0;
- }
-=20
--static int migrate_vma_collect_skip(unsigned long start,
--				    unsigned long end,
--				    struct mm_walk *walk)
--{
--	struct migrate_vma *migrate =3D walk->private;
--	unsigned long addr;
--
--	for (addr =3D start; addr < end; addr +=3D PAGE_SIZE) {
--		migrate->dst[migrate->npages] =3D 0;
--		migrate->src[migrate->npages++] =3D 0;
--	}
--
--	return 0;
--}
--
- static int migrate_vma_collect_pmd(pmd_t *pmdp,
- 				   unsigned long start,
- 				   unsigned long end,
---=20
-2.20.1
+Fork-and-exec is notoriously fiddly, so it's preferable to use a library
+function to do it where applicable.
 
+[...]
+
+Cheers
+---Dave
