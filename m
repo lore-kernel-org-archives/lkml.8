@@ -2,104 +2,69 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1401C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01C4C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 883EA20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C16F20767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgIBLmg convert rfc822-to-8bit (ORCPT
+        id S1726489AbgIBLnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 07:42:36 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2734 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726183AbgIBLmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 07:42:25 -0400
-Received: from lhreml704-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id B8F9D176BA1B83CC7429;
-        Wed,  2 Sep 2020 12:42:20 +0100 (IST)
-Received: from fraeml705-chm.china.huawei.com (10.206.15.54) by
- lhreml704-chm.china.huawei.com (10.201.108.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Wed, 2 Sep 2020 12:42:20 +0100
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Wed, 2 Sep 2020 13:42:19 +0200
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
- Wed, 2 Sep 2020 13:42:19 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "mjg59@google.com" <mjg59@google.com>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [PATCH 01/11] evm: Execute evm_inode_init_security() only when
- the HMAC key is loaded
-Thread-Topic: [PATCH 01/11] evm: Execute evm_inode_init_security() only when
- the HMAC key is loaded
-Thread-Index: AQHWRYobDbVZBK0ooUeUmv97U2KzFqlDJY2AgASqawCADd9g0A==
-Date:   Wed, 2 Sep 2020 11:42:19 +0000
-Message-ID: <5404e618f79b4914b45c1d19791f470b@huawei.com>
-References: <20200618160133.937-1-roberto.sassu@huawei.com>
-         <2b204e31d21e93c0167d154c2397cd5d11be6e7f.camel@linux.ibm.com>
- <d4c9d5333256b17acdbe41729dd680f534266130.camel@linux.ibm.com>
-In-Reply-To: <d4c9d5333256b17acdbe41729dd680f534266130.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.48.203.41]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 2 Sep 2020 07:43:53 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:33321 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgIBLno (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 07:43:44 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M4JeB-1kDA3o2CrB-000MTH; Wed, 02 Sep 2020 13:43:41 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] asm-generic/sembuf: Update architecture related information in comment
+Date:   Wed,  2 Sep 2020 13:43:27 +0200
+Message-Id: <159904687265.1152288.2415881924142426407.b4-ty@arndb.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <64efe033394b6f0dfef043a63fd8897a81ba6d16.1589970173.git.viresh.kumar@linaro.org>
+References: <64efe033394b6f0dfef043a63fd8897a81ba6d16.1589970173.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:FZeoeRyAbMueqVlNawJoUXu768pTJnwXm5Mv/M+hNLPd/qnc9VV
+ a6WqPPypF75yC+dzGf5eVOnIgmetXUSJcz+EU0PEHvxMvP1RPBXTq39Xc1V3XW0QqCGADyX
+ a/VC8JfSEs9lgAsiT71zkyO5Yr+9D8FGHJcw/7w5WoJASF3eC612QtbybW6m6zkr1XBj35F
+ 9gJDfbuQAVFaAUCZ/UR1A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pPalDEHl1nA=:5pDtjDyZcFqV6WGQK93Vuu
+ bNiNSpyRFLqqS5eG06gNwVfTmb6qmqd7ae9VGFTz8rva8e9RCc2bvaOpKD+xeQxNNRAlQIVwp
+ pXMDViVvo8tvKfizX6t4uXQWAe2gWoRVSZ35xTYc5Za5KwZoB5Udotz92c32jnEdIx0WB0R0u
+ UROVj0J64V7NfW8SGjjDdxAlS3KYBAXCJfPjBZXjfOfMcwU7gtWZVo01vIAWi/Yg89LUPWgn0
+ Dp0HC4jTB9vVxpcrz2d9/V4l8Sr+xIp/J3sfP52AvK5eTqOvfsjOrx5AMWTOcQwab2sDgh1Gg
+ Hk5Q19W2E8ZoAYjsLU3rwsFKmjfwCOQ9z6Yh64ZJ+JNrOFN6PcRAlu7DQ5wLAqueMD9uIuEx5
+ 13sL+3fMyLvgPR3/oQq4NSKTZV7mE178jDPJliUSw13MTGu8Fy7U7MPXt9bd/FQyMObOFd7bi
+ 59KdCBVddT/Hb45Gx04qZ9QcuanVSlY8GgHuImgfiA4Ybs5xzWnKrVZqAuvyt5N4iCjwo5EvK
+ Y05MVFCuDXEG8djKLQMg4apitcKPso98zTywuLD1AQjFNTVN9vHOzlND795W8pQ3haUEPEXRA
+ 6Wp3A8478cIbDuLrznGhtpEgHNWjZdgpac1MlPwR6CkgrLG4Iqz24E0rO+mhopPXjpYaSwLsA
+ W6x+CJi7MAEfqggMO+h0mmwp+fZEvAWXSBHTeGCtyYRWSdkceAYujhBTBRIxRD72TzUw8wHhk
+ 2lZrGGFoPPoLxOj0/NyALU+bG8Z3yGKqDspPF02CBFV3iB0JQ/ZJEKQtLp8ImvCFe1klyMhB7
+ ZEBFP1D6q5kFB+5r8JJoOgXX3QQ0uA1BpknJsGtZmRsMJd3s5L8prxb+DJepFYbegCVEBlM
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Mimi Zohar [mailto:zohar@linux.ibm.com]
-> Sent: Monday, August 24, 2020 7:45 PM
-> Hi Roberto,
-> 
-> On Fri, 2020-08-21 at 14:30 -0400, Mimi Zohar wrote:
-> > Sorry for the delay in reviewing these patches.   Missing from this
-> > patch set is a cover letter with an explanation for grouping these
-> > patches into a patch set, other than for convenience.  In this case, it
-> > would be along the lines that the original use case for EVM portable
-> > and immutable keys support was for a few critical files, not combined
-> > with an EVM encrypted key type.   This patch set more fully integrates
-> > the initial EVM portable and immutable signature support.
-> 
-> Thank you for more fully integrating the EVM portable signatures into
-> IMA.
-> 
-> " [PATCH 08/11] ima: Allow imasig requirement to be satisfied by EVM
-> portable signatures" equates an IMA signature to having a portable and
-> immutable EVM signature.  That is true in terms of signature
-> verification, but from an attestation perspective the "ima-sig"
-> template will not contain a signature.  If not the EVM signature, then
-> at least some other indication should be included in the measurement
-> list.
+On Wed, 20 May 2020 15:53:08 +0530, Viresh Kumar wrote:
+> The structure came originally from x86_32 but is used by most of the
+> architectures now. Update the comment which says it is for x86 only.
 
-Would it be ok to print the EVM portable signature in the sig field if the IMA
-signature is not found? Later we can introduce the new template evm-sig
-to include all metadata necessary to verify the EVM portable signature.
+Applied to asm-generic, thanks!
 
-> Are you planning on posting the associated IMA/EVM regression tests?
+[1/1] asm-generic/sembuf: Update architecture related information in comment
+      (no commit info)
 
-I didn't have a look yet at the code. I will try to write some later.
-
-Roberto
-
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Li Peng, Li Jian, Shi Yanli
+	Arnd
