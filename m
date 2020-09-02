@@ -2,104 +2,63 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169DCC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55142C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE4122084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:57:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="buaX8HQO"
+	by mail.kernel.org (Postfix) with ESMTP id 3499B20829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:02:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgIBJ5w (ORCPT
+        id S1726298AbgIBKC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 05:57:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgIBJ5u (ORCPT
+        Wed, 2 Sep 2020 06:02:57 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:55533 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgIBKCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 05:57:50 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD9ADC061244;
-        Wed,  2 Sep 2020 02:57:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=QopoTG7wtXLeC7KjTt10YG/DVw3YVlXK9bp77v9rQoQ=; b=buaX8HQOWJP087/zDnJxqpsCQU
-        Hy9Y5Ues/yc0B9I9sJ5Nqx915VdWxpW9T7rKAMN+p+73fxd9gwnm2Qux4aH4F5nQRKQKJIhuH94/e
-        BIJF8DQDV2whFPuM3d79gB79e4amL/gVm9lJMyGy0L3tuLN4pPhTnkyyD4UmVycpVnqQTS7W7NAAQ
-        9/47gNGn9uaPMV9iLcvHT71yTVmknhxxw6g4Kf3LYGBIIzOy73j27ju7I1ye9357iDniu0ieuEVXy
-        uv1Z2vVZjpVVLSZF+bHT4LDR1A7VssCSUkwyybHMXjAdIGlTOwvBjoQEg34NgPa7nxRdMefc8wXLG
-        Pu9KYWbg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDPWJ-0003Hv-Jk; Wed, 02 Sep 2020 09:57:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 2 Sep 2020 06:02:54 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D99E53012DF;
-        Wed,  2 Sep 2020 11:57:30 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C00BC235DB8C1; Wed,  2 Sep 2020 11:57:30 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 11:57:30 +0200
-From:   peterz@infradead.org
-To:     ebiederm@xmission.com (Eric W. Biederman)
-Cc:     syzbot <syzbot+db9cdf3dd1f64252c6ef@syzkaller.appspotmail.com>,
-        adobriyan@gmail.com, akpm@linux-foundation.org, avagin@gmail.com,
-        christian@brauner.io, gladkov.alexey@gmail.com,
-        keescook@chromium.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        walken@google.com, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>, jannh@google.com
-Subject: Re: possible deadlock in proc_pid_syscall (2)
-Message-ID: <20200902095730.GB1362448@hirez.programming.kicks-ass.net>
-References: <00000000000063640c05ade8e3de@google.com>
- <87mu2fj7xu.fsf@x220.int.ebiederm.org>
- <20200828123720.GZ1362448@hirez.programming.kicks-ass.net>
- <87v9h0gvro.fsf@x220.int.ebiederm.org>
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 07EB230037B67;
+        Wed,  2 Sep 2020 12:02:48 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id DD1AD10F5B6; Wed,  2 Sep 2020 12:02:47 +0200 (CEST)
+Date:   Wed, 2 Sep 2020 12:02:47 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-serial@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] serial: core: Simplify with dev_err_probe()
+Message-ID: <20200902100247.GA4277@wunner.de>
+References: <20200901153100.18827-1-krzk@kernel.org>
+ <20200901153100.18827-2-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87v9h0gvro.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20200901153100.18827-2-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 07:31:39AM -0500, Eric W. Biederman wrote:
-> peterz@infradead.org writes:
-
-> > Could we check privs twice instead?
-> >
-> > Something like the completely untested below..
+On Tue, Sep 01, 2020 at 05:31:00PM +0200, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
 > 
-> That might work.
-> 
-> I am thinking that for cases where we want to do significant work it
-> might be better to ask the process to pause at someplace safe (probably
-> get_signal) and then do all of the work when we know nothing is changing
-> in the process.
-> 
-> I don't really like the idea of checking and then checking again.  We
-> might have to do it but it feels like the model is wrong somewhere.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Another possible aproach might be to grab a copy of the cred pointer and
-have the final install check that. It means we need to allow
-perf_install_in_context() to fail though. That might be a little more
-work.
-
-> I had not realized before this how much setting up tracing in
-> perf_even_open looks like attaching a debugger in ptrace_attach.
-
-Same problem; once you've attached a perf event you can observe much of
-what the task does.
-
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
