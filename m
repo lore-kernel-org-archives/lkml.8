@@ -2,124 +2,138 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B736FC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4D8C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D93B20829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E9B2078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599058716;
-	bh=mlVSzvECMBL4DuwaHxiiBTcwnXHH869ZUNFNn5ZDfIE=;
+	s=default; t=1599058729;
+	bh=gBVOTaKneMMxgCAgGNfhmmESJjJgjZ9QwPp7zryvhx8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=r1gAT1byFa4wIz1m4tg/s6vbbKTIzZp219FWVbeOUH9GyYUeLPUxUvUijc2NID4EP
-	 9limZswkRdhF3Z+yHG3+60FKzGb8H7Ft6bRN8qrmPyINnqoDwX0hfqaynLOyjXYsJN
-	 5EOCg201m5ZRQKM/nL0LHp5CSmvvJyQYF60nsuMM=
+	b=13hrmGVIwReumx69ybuU0+d087beRsP7FGtXi0AAAkDKjZbgQZDCEAi+InXNH6+YX
+	 Rp7Y5spSxAo1MurnCs2iT1ltOLek+XW7hSE+aZPQxXQRMYE68Fs5ZP4Hrv07OcEwcR
+	 t8m2AknY1i1wvIpzWVEK05cZh4Kig4Wk/uWR7/F8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgIBNxX (ORCPT
+        id S1727978AbgIBO6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 09:53:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37120 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 10:58:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726722AbgIBNp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:45:28 -0400
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+        id S1726895AbgIBO60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 10:58:26 -0400
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F16C72083B;
-        Wed,  2 Sep 2020 13:35:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AACE20BED
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 14:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599053758;
-        bh=mlVSzvECMBL4DuwaHxiiBTcwnXHH869ZUNFNn5ZDfIE=;
+        s=default; t=1599058705;
+        bh=gBVOTaKneMMxgCAgGNfhmmESJjJgjZ9QwPp7zryvhx8=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DwzP+62VAkbSZJH8gW+nur/seLAwcNH8Ot1zw2vohP9iERCpl+JdNyWK+dAjlIBnm
-         FggnPXJH4LDrWLkgYmIpCe4olylTBdsvVLMkwhMcsq63oBMMBJ+AEUHGzVgkisBFIy
-         MavokkFPF7CcXwUWfrLhL5UlGLpKzoT3KeMfLI4M=
-Received: by mail-ed1-f51.google.com with SMTP id ba12so4951029edb.2;
-        Wed, 02 Sep 2020 06:35:57 -0700 (PDT)
-X-Gm-Message-State: AOAM533GsUM+0dZ3Pl1SDkzZ3skkYTgjfzm73wAeMX1PuCPbE5GA7KKL
-        N+Yswd37JpLFXR5M4TpkHAev9vI591tqPdDUl3U=
-X-Google-Smtp-Source: ABdhPJz83yuoWiKxgnivqzO50jIviESHbD2DdRL9JF0O0+pfD5vS2zg0SRBJnAffD9VLx1ZV5W17UvR9A9KJ7ydvdaM=
-X-Received: by 2002:a05:6402:ca7:: with SMTP id cn7mr70494edb.143.1599053756468;
- Wed, 02 Sep 2020 06:35:56 -0700 (PDT)
+        b=Vvv9VrQO6bAgn8luFm9R9vLPl4jT3Er12xrknUnKuH7s0mLDQU2npW7WpfS3lp9fT
+         d4sqZlLyfPThi4M21T8Mknx+giVMK0V51cautJcqGVba+1gB1kezmgapcdeaLP+crj
+         1IKtYbNzd2j7sKL0PTIIGPxoHh9JGIq6q3e3rk2g=
+Received: by mail-ed1-f48.google.com with SMTP id q21so5252394edv.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 07:58:25 -0700 (PDT)
+X-Gm-Message-State: AOAM533Suz58SEWMAdEoKA9gt0yFYfOows0e3Toeyjde6sOVlI9UTNfE
+        p5lAASLtOIaSTMPGoMNuTKGhQYSKN5YuDAuOXg==
+X-Google-Smtp-Source: ABdhPJxiUKeT463CKXMbKNOTTXvuh8ChtIWwveqT19sIFc5GWW6eJtVKFAP6EJWl77VhTt3QaOUa/DVGqW+rN6PfNI0=
+X-Received: by 2002:a50:ef15:: with SMTP id m21mr474435eds.300.1599058704159;
+ Wed, 02 Sep 2020 07:58:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827201707.27075-1-krzk@kernel.org> <CAHp75VcnV8_SRQuiTnzzaWxfA1m37gVXfxgPkH51tbMT+-T2RA@mail.gmail.com>
- <20200829155410.6d34a8b9@archlinux> <CAJKOXPd78m-3jMsFRa7ySREDdx+GMZ_YHMG3AcqCHTABLBwqVA@mail.gmail.com>
- <DM6PR03MB441122FDB3323690166C21A0F92F0@DM6PR03MB4411.namprd03.prod.outlook.com>
- <CAHp75VeOQpR00AZhaw=Dy3sEArhSQAPHXb7mhJGB80uyrSZ3Qg@mail.gmail.com> <20200902142656.00007ad1@Huawei.com>
-In-Reply-To: <20200902142656.00007ad1@Huawei.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 2 Sep 2020 15:35:45 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcSctHLWGWwSPCyCR-U4QsB=WYBX3JMRqE7U9RHVKhNHA@mail.gmail.com>
-Message-ID: <CAJKOXPcSctHLWGWwSPCyCR-U4QsB=WYBX3JMRqE7U9RHVKhNHA@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Remove bouncing email of Beniamin Bia
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        linux-iio <linux-iio@vger.kernel.org>
+References: <20200823014830.15962-1-chunkuang.hu@kernel.org>
+In-Reply-To: <20200823014830.15962-1-chunkuang.hu@kernel.org>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Wed, 2 Sep 2020 22:58:12 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9ELMBK7zPeeBQ39QjJ9g4PsOhpHXsTBHgcq=kNk8bRxA@mail.gmail.com>
+Message-ID: <CAAOTY_9ELMBK7zPeeBQ39QjJ9g4PsOhpHXsTBHgcq=kNk8bRxA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] Move Mediatek HDMI PHY driver from DRM folder to
+ PHY folder
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Sep 2020 at 15:28, Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+Chun-Kuang Hu <chunkuang.hu@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8823=
+=E6=97=A5 =E9=80=B1=E6=97=A5 =E4=B8=8A=E5=8D=889:48=E5=AF=AB=E9=81=93=EF=BC=
+=9A
 >
-> On Wed, 2 Sep 2020 10:49:04 +0300
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->
-> > On Wed, Sep 2, 2020 at 8:56 AM Ardelean, Alexandru
-> > <alexandru.Ardelean@analog.com> wrote:
-> > >
-> > > [yes, I know, bad-email format, but I wanted this to come from my work email]
-> > >
-> > > Apologies also for the delay here. Things pile-up on my side and I defer things a bit.
-> > >
-> > > Talked to Michael Hennerich about this [since he's the more senior contact at Analog].
-> > > We can replace the email from Beniamin Bia with Michael's.
-> > > Or, we can remove the "Orphan" blocks and just have the catch-all "drivers/iio/*/ad*" cover this driver and others that were upstreamed by Beniamin.
-> > >
-> > > Either option is fine from us.
-> >
-> > As a participant of activity to put MAINTAINERS in some order, I
-> > prefer to have similar blocks be squashed.
-> > If there will be a dedicated maintainer for a certain driver in the
-> > future, we can always split into separate sections.
-> >
-> > So, something like
-> > ANALOG DEVICES ADC (I guess it makes sense to have some grouping still)
-> > ...
-> > F: .../ad1234
-> > F: .../ad2345
-> >
-> > In one section (no need to have wildcards right now).
-> >
->
-> ANALOG DEVICES INC IIO DRIVERS
-> M:      Lars-Peter Clausen <lars@metafoo.de>
-> M:      Michael Hennerich <Michael.Hennerich@analog.com>
-> S:      Supported
-> W:      http://wiki.analog.com/
-> W:      http://ez.analog.com/community/linux-device-drivers
-> F:      Documentation/ABI/testing/sysfs-bus-iio-frequency-ad9523
-> F:      Documentation/ABI/testing/sysfs-bus-iio-frequency-adf4350
-> F:      drivers/iio/*/ad*
-> F:      drivers/iio/adc/ltc249*
-> F:      drivers/staging/iio/*/ad*
-> X:      drivers/iio/*/adjd*
->
-> Already exists.  We could potentially clean that up.
->
-> For the block that started this thread, we can just drop it.
+> mtk_hdmi_phy is currently placed inside mediatek drm driver, but it's
+> more suitable to place a phy driver into phy driver folder, so move
+> mtk_hdmi_phy driver into phy driver folder.
 
-I can send a follow up to merge/remove the entries.
+For this series, applied to mediatek-drm-next [1].
 
-Best regards,
-Krzysztof
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
+log/?h=3Dmediatek-drm-next
+
+Regards,
+Chun-Kuang.
+
+>
+> Changes in v5:
+> - Fixup indent in Kconfig.
+> - Refine config help message.
+> - Refine Makefile.
+>
+> Changes in v4:
+> - Rebase onto 5.9-rc1
+> - Remove mtk_hdmi_conf_mt8173.
+>
+> Changes in v3:
+> - Modify [PATCH v2 3/4] prefix.
+>
+> Changes in v2:
+> - include module.h in mtk_hdmi.c
+>
+> CK Hu (3):
+>   drm/mediatek: Move tz_disabled from mtk_hdmi_phy to mtk_hdmi driver
+>   drm/mediatek: Separate mtk_hdmi_phy to an independent module
+>   phy: mediatek: Move mtk_hdmi_phy driver into drivers/phy/mediatek
+>     folder
+>
+> Chun-Kuang Hu (1):
+>   MAINTAINERS: add files for Mediatek DRM drivers
+>
+>  MAINTAINERS                                   |  1 +
+>  drivers/gpu/drm/mediatek/Kconfig              |  2 +-
+>  drivers/gpu/drm/mediatek/Makefile             |  5 +----
+>  drivers/gpu/drm/mediatek/mtk_hdmi.c           | 21 +++++++++++++++----
+>  drivers/gpu/drm/mediatek/mtk_hdmi.h           |  1 -
+>  drivers/phy/mediatek/Kconfig                  |  7 +++++++
+>  drivers/phy/mediatek/Makefile                 |  5 +++++
+>  .../mediatek/phy-mtk-hdmi-mt2701.c}           |  3 +--
+>  .../mediatek/phy-mtk-hdmi-mt8173.c}           |  2 +-
+>  .../mediatek/phy-mtk-hdmi.c}                  |  3 ++-
+>  .../mediatek/phy-mtk-hdmi.h}                  |  2 --
+>  11 files changed, 36 insertions(+), 16 deletions(-)
+>  rename drivers/{gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c =3D> phy/mediatek=
+/phy-mtk-hdmi-mt2701.c} (99%)
+>  rename drivers/{gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c =3D> phy/mediatek=
+/phy-mtk-hdmi-mt8173.c} (99%)
+>  rename drivers/{gpu/drm/mediatek/mtk_hdmi_phy.c =3D> phy/mediatek/phy-mt=
+k-hdmi.c} (98%)
+>  rename drivers/{gpu/drm/mediatek/mtk_hdmi_phy.h =3D> phy/mediatek/phy-mt=
+k-hdmi.h} (95%)
+>
+> --
+> 2.17.1
+>
