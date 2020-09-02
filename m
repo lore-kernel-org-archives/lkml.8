@@ -2,125 +2,132 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC156C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FBEC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B08C620709
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6207320758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="px5rCbOH"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ppTEVRVl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgIBFNz (ORCPT
+        id S1726380AbgIBFPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 01:13:55 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20044 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726386AbgIBFNx (ORCPT
+        Wed, 2 Sep 2020 01:15:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgIBFPs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 01:13:53 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0824Wo1Q129282;
-        Wed, 2 Sep 2020 01:13:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=bcFjTM9prI7H/cWTGkaxNjaQRb2P7oXYF4edeXsqgw0=;
- b=px5rCbOH6Y3t3FkN6B+xOpxyoMI1sMjzEda43gR0g2PQfP8qDg8IIwv+GGLco5Ix+wD7
- sJdjSd/35XRC1E7AY03EF6mvtdecgaiVBSLkkl99oM7jqtzZStFk/x+UzFLlS5MYj3TU
- lrC54lY9MkhFCPDx3yxGkkHWBnwNq+D9z5Voil5lJAwUZVlwbyUZXlWrq7eShLkwfsyt
- JY7i/wh/Y8LJtWjL+GX0ri2y1tpS/LxWHgJgNrMGZFPflE33iM8AO8N0wQPahKh4zyUs
- dRh1WF+NnBQ10H+doBUwwJnpF6A0CeXZ+bB6ejTtUAMQgKupRDpPjBwrWujGT2g9NbGO Ng== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33a462h7va-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 01:13:44 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 082514j8045612;
-        Wed, 2 Sep 2020 01:13:44 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33a462h7uj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 01:13:43 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0825DG0p014118;
-        Wed, 2 Sep 2020 05:13:41 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 337e9gva6m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 05:13:41 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0825Dbie30867902
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Sep 2020 05:13:37 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7A16DA405F;
-        Wed,  2 Sep 2020 05:13:37 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C056A4054;
-        Wed,  2 Sep 2020 05:13:34 +0000 (GMT)
-Received: from [9.199.37.120] (unknown [9.199.37.120])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  2 Sep 2020 05:13:33 +0000 (GMT)
-Subject: Re: [PATCH 0/7] powerpc/watchpoint: 2nd DAWR kvm enablement +
- selftests
-To:     Paul Mackerras <paulus@ozlabs.org>
-Cc:     mpe@ellerman.id.au, mikey@neuling.org, npiggin@gmail.com,
-        pbonzini@redhat.com, christophe.leroy@c-s.fr, jniethe5@gmail.com,
-        pedromfc@br.ibm.com, rogealve@br.ibm.com, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200723102058.312282-1-ravi.bangoria@linux.ibm.com>
- <20200902023259.GC272502@thinks.paulus.ozlabs.org>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Message-ID: <38177cfb-3abf-2629-174a-cdd958286be2@linux.ibm.com>
-Date:   Wed, 2 Sep 2020 10:43:33 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 2 Sep 2020 01:15:48 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE8CC061244;
+        Tue,  1 Sep 2020 22:15:48 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BhBwd6z5Kz9sTv;
+        Wed,  2 Sep 2020 15:15:45 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599023746;
+        bh=VCHVCIaiXznLeBXDorIqIyNQG7Ibsd7URED0Hz4D3I0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ppTEVRVlsBUNOzViTlEwTSBumTUpZi6rTy/QTWhfDGzCGnY3fDbrFvghd8ZPQ8Wbe
+         t9VZIx8cZRxBYNMFWSoBWHj7rxNUllbwym+7RGoi+iNwH0WXJZ89fL876/NSmgC7SC
+         Cs5amT7JvvQhpJR/75RcFiA3AW6cu9rrUu2HX7ongqFEt7DbyGfjWmHs5JxpoOVsLS
+         nuoRB3NIVcLZuMSsXSoHc9PLnZ64oltgmPbu3k2/hfLTeXpdgSfh1Dx853IdO/0pqM
+         oruWjqSyvEsM8NX/mkP3z2BSX5Pw3NLqRIPzUGD8ZeQwNo00viQfRo5cCyaPUNzz7V
+         0kJJT8AfDH1+g==
+Date:   Wed, 2 Sep 2020 15:15:45 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Kiwoong Kim <kwmad.kim@samsung.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the scsi-mkp tree with Linus' tree
+Message-ID: <20200902151545.191f0146@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200902023259.GC272502@thinks.paulus.ozlabs.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-02_02:2020-09-01,2020-09-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- suspectscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- malwarescore=0 mlxlogscore=999 impostorscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2009020042
+Content-Type: multipart/signed; boundary="Sig_/CE=S=B1ILfSoykyPwYnnpA3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+--Sig_/CE=S=B1ILfSoykyPwYnnpA3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 9/2/20 8:02 AM, Paul Mackerras wrote:
-> On Thu, Jul 23, 2020 at 03:50:51PM +0530, Ravi Bangoria wrote:
->> Patch #1, #2 and #3 enables p10 2nd DAWR feature for Book3S kvm guest. DAWR
->> is a hypervisor resource and thus H_SET_MODE hcall is used to set/unset it.
->> A new case H_SET_MODE_RESOURCE_SET_DAWR1 is introduced in H_SET_MODE hcall
->> for setting/unsetting 2nd DAWR. Also, new capability KVM_CAP_PPC_DAWR1 has
->> been added to query 2nd DAWR support via kvm ioctl.
->>
->> This feature also needs to be enabled in Qemu to really use it. I'll reply
->> link to qemu patches once I post them in qemu-devel mailing list.
->>
->> Patch #4, #5, #6 and #7 adds selftests to test 2nd DAWR.
-> 
-> If/when you resubmit these patches, please split the KVM patches into
-> a separate series, since the KVM patches would go via my tree whereas
-> I expect the selftests/powerpc patches would go through Michael
-> Ellerman's tree.
+Hi all,
 
-Sure. Will split it.
+Today's linux-next merge of the scsi-mkp tree got a conflict in:
 
-Thanks,
-Ravi
+  drivers/scsi/ufs/ufshcd.h
+
+between commit:
+
+  8da76f71fef7 ("scsi: ufs-pci: Add quirk for broken auto-hibernate for Int=
+el EHL")
+
+from Linus' tree and commit:
+
+  5df6f2def50c ("scsi: ufs: Introduce skipping manual flush for Write Boost=
+er")
+
+from the scsi-mkp tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/scsi/ufs/ufshcd.h
+index b5b2761456fb,a88dfac7c9e9..000000000000
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@@ -531,11 -531,10 +531,16 @@@ enum ufshcd_quirks=20
+  	 */
+  	UFSHCD_QUIRK_BROKEN_OCS_FATAL_ERROR		=3D 1 << 10,
+ =20
+ +	/*
+ +	 * This quirk needs to be enabled if the host controller has
+ +	 * auto-hibernate capability but it doesn't work.
+ +	 */
+ +	UFSHCD_QUIRK_BROKEN_AUTO_HIBERN8		=3D 1 << 11,
+++
++ 	/*
++ 	 * This quirk needs to disable manual flush for write booster
++ 	 */
+ -	UFSHCI_QUIRK_SKIP_MANUAL_WB_FLUSH_CTRL		=3D 1 << 11,
+++	UFSHCI_QUIRK_SKIP_MANUAL_WB_FLUSH_CTRL		=3D 1 << 12,
+  };
+ =20
+  enum ufshcd_caps {
+
+--Sig_/CE=S=B1ILfSoykyPwYnnpA3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9PKoEACgkQAVBC80lX
+0GxS6Qf6A0FWIww64fEJK8QUd6YGya69Gz5+f9eA/ip0eineTkfeJ0Yp8VbP5kqn
+n5q+5TrKAqG60KC+i5YkqJLxtXUOOVTnS53BeVameMUzaMYb0Wt3jOEAYe7iW9MN
+6FLu/sZcXigEAndi+6b6eS0q1kW/FQitf/1ED8heY0mw04SN28gb80ZbJwWX8oyv
+MqO3e25VqFgWT6lDz7oLaiRyn+LpFCjXLvyJMkfOBg/Y/3waaectlqwA9K/g9Zyv
++kiQlBYiwdYadXfEN2skZ/PuqCM6gB5YHJlVo2rnJmUmPduFCGxl9eC+f5AmGPQ7
+J+jQiCpVTydHBq2qofXNQ27AJIYJhA==
+=F2x7
+-----END PGP SIGNATURE-----
+
+--Sig_/CE=S=B1ILfSoykyPwYnnpA3--
