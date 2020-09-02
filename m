@@ -2,99 +2,128 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE4DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9ECC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 023B92087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B19A2078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:48:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="wb2E8CE0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgIBIsH (ORCPT
+        id S1726586AbgIBIsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:48:07 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46598 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgIBIsH (ORCPT
+        Wed, 2 Sep 2020 04:48:21 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:34634 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726140AbgIBIsT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:48:07 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1kDOQk-0007IA-27; Wed, 02 Sep 2020 08:47:46 +0000
-Date:   Wed, 2 Sep 2020 10:47:45 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "madhuparnabhowmik10@gmail.com" <madhuparnabhowmik10@gmail.com>,
-        "gustavoars@kernel.org" <gustavoars@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] signal: clean up codestyle
-Message-ID: <20200902084745.zhwqo56ch6imc6cy@wittgenstein>
-References: <e436dd19f0e740ebb93133ae3c625af4@huawei.com>
+        Wed, 2 Sep 2020 04:48:19 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0828m6vd027505;
+        Wed, 2 Sep 2020 10:48:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=o17UNbxPJi74AdiW/0RqZLQ/kxpo/02/yQhPBM1sn7Y=;
+ b=wb2E8CE0+IFwVo2U/D0RgMaxiigN600rAxBDdnt440BcU1u4hFFBnIVNghMz/JB7auPa
+ CT5WqLfbbiINxUFi4P2pGz9jCTAevKf1ajmme1rKZ9qT8V7gJBXFThokuKFkqZy/Ra/q
+ piA3LPCSpyxZSVvkEv29u97QXnnbTDOR+sQT2cmOvGxpTVJtd9UwEu0QAa6D4WsG31gR
+ CRTIhkGL247GgnfBlDDuLKvo1G3wDNzVjj2lKD9gjccrcIwarqEnapwbD9lodx4ZzcJn
+ t9OzWHd+yLzsUa0LnA24C+VTW5/eSHRECpCdKFkkFJCbQNfYqYN1Ha2VUuvZVubBaL+p Pg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 337dwhcabg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 10:48:07 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 28A90100034;
+        Wed,  2 Sep 2020 10:48:02 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 078832A4D66;
+        Wed,  2 Sep 2020 10:48:02 +0200 (CEST)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 2 Sep 2020 10:48:01
+ +0200
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [RESEND PATCH v5 0/3] Add USB role switch support to DWC2
+Date:   Wed, 2 Sep 2020 10:47:57 +0200
+Message-ID: <20200902084800.12105-1-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e436dd19f0e740ebb93133ae3c625af4@huawei.com>
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-02_03:2020-09-02,2020-09-02 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 01:34:59AM +0000, linmiaohe wrote:
-> Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> >On Tue, Sep 01, 2020 at 06:39:05PM +0200, Oleg Nesterov wrote:
-> >> On 09/01, Christian Brauner wrote:
-> >> >
-> >> > On Tue, Sep 01, 2020 at 07:58:00AM -0400, Miaohe Lin wrote:
-> >> > > No functional change intended.
-> >> >
-> >> > Hey Miaohe,
-> >> >
-> >> > Thank you for the patch.
-> >> > I'm sure this is well-intended but afaict the whole file has more or 
-> >> > less a consistent style already where e.g. sig-1 without spaces 
-> >> > seems to be preferred. The same for the casts where most places use 
-> >> > a single space.
-> >> >
-> >> > Now, I know CodingStyle.rst is on your side at least when it comes 
-> >> > to the first point:
-> >> >
-> >> > Use one space around (on each side of) most binary and ternary 
-> >> > operators, such as any of these::
-> >> >
-> >> > 	=  +  -  <  >  *  /  %  |  &  ^  <=  >=  ==  !=  ?  :
-> >> >
-> >> > but then you'd need to change each place in kernel/signal.c where 
-> >> > that is currently not the case.
-> >> 
-> >> Or simply leave this code alone ;)
-> >
-> >I was trying to imply that by pointing out that this would be file-global change. I was likely too subtle. ;)
-> >
-> >Christian
-> 
-> Sorry for I did not get the imply.
+When using usb-c connector (but it can also be the case with a micro-b
+connector), iddig, avalid, bvalid, vbusvalid input signals may not be
+connected to the DWC2 OTG controller.
+DWC2 OTG controller features an overriding control of the PHY voltage valid
+and ID input signals.
+So, missing signals can be forced using usb role from usb role switch and
+this override feature.
 
-No need to apologize. That's my bad. 
+This series adds support for usb role switch to dwc2, by using overriding
+control of the PHY voltage valid and ID input signals.
 
-Maybe some context is useful.
-One of the reasons why we tend to sometimes not take changes such as
-this even though they would be covered by our officially documented
-coding style is to keep the churn minimal.
-Whenever functional change happens in codepaths such as this the risk of
-regressions is quite high. That's partially because we could use more
-tests to catch them (And if you're interested in stuff like this then
-writing selftests is always great. We can always use more of them.) but
-also simply because the code is complex. Having a lot of non-functional
-commits that don't really improve the legibility of the code
-significantly can become an issue for maintainers. Personally, I tend to
-be less worried about this but this is a collaborative endeavour. :)
+It has been tested on stm32mp157c-dk2 [1], which has a Type-C connector
+managed by a Type-C port controller, and connected to USB OTG controller.
 
-Thanks!
-Christian
+[1] https://www.st.com/en/evaluation-tools/stm32mp157c-dk2.html
+
+Amelie Delaunay (3):
+  dt-bindings: usb: dwc2: add optional usb-role-switch property
+  usb: dwc2: override PHY input signals with usb role switch support
+  usb: dwc2: don't use ID/Vbus detection if usb-role-switch on STM32MP15
+    SoCs
+---
+Changes in v5:
+- Use device_property_read_bool instead of of_read_property_bool in params.c
+Changes in v4:
+- Simplify call to dwc2_force_mode in drd.c
+- Add error_drd label in probe error path in platform.c
+Changes in v3:
+- Fix build issue reported by kernel test robot in drd.c
+Changes in v2:
+- Previous DT patch already in stm32-next branch so removed from v2 patchset
+  "ARM: dts: stm32: enable usb-role-switch on USB OTG on stm32mp15xx-dkx"
+- DWC2 DT bindings update added
+- Build issue reported by kernel test robot fixed
+- Martin's comments taken into account
+---
+ .../devicetree/bindings/usb/dwc2.yaml         |   4 +
+ drivers/usb/dwc2/Kconfig                      |   1 +
+ drivers/usb/dwc2/Makefile                     |   2 +-
+ drivers/usb/dwc2/core.h                       |   9 +
+ drivers/usb/dwc2/drd.c                        | 180 ++++++++++++++++++
+ drivers/usb/dwc2/gadget.c                     |   2 +-
+ drivers/usb/dwc2/params.c                     |   2 +-
+ drivers/usb/dwc2/platform.c                   |  20 +-
+ 8 files changed, 215 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/usb/dwc2/drd.c
+
+-- 
+2.17.1
+
