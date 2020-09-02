@@ -2,80 +2,137 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349B6C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E3FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB01F20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599087293;
-	bh=1hW5kK/Njw86oLEnRxfrgC0dQ6uHQ5uW+j2YeKTOfco=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sY/BlI5A8cteVJTLscJ4+CxdUDrvK1HROT2K7P9mNakHZX5mnbp2DnaNY7mHGCeMw
-	 iwWLnzLYR9vCdux9uLPaSk75R4ydZFg0Avbw/FuoaRwdvwKumx1nBuolxbcTgoRwk6
-	 mXtuPChMU1CR7CG0JdLGw2sV85/TOrL/Foz+ubw0=
+	by mail.kernel.org (Postfix) with ESMTP id 50FD020767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:58:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EFn8sagT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgIBWyu (ORCPT
+        id S1726877AbgIBW6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 18:54:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60018 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbgIBWyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 18:54:50 -0400
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [129.253.182.57])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3AD02078E;
-        Wed,  2 Sep 2020 22:54:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599087288;
-        bh=1hW5kK/Njw86oLEnRxfrgC0dQ6uHQ5uW+j2YeKTOfco=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ggliH6W8V3O+VQRG6Wbx2htraCrN+um/4joPY1T1lhD92f4ORXXvwbpLqURZ/ma4c
-         vHKpruHPmtZcN4Y2THfRfn5hrIIlRezEgl922fvOGb6JTr4ZMu8Cv6k0N8pCF5RtM8
-         YLKkIFUo8wnIwplAgCuOQfSXeiXnujIePzXXkGBA=
-Date:   Thu, 3 Sep 2020 07:54:39 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     David Fugate <david.fugate@linux.intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        jonathan.derrick@intel.com, Mario.Limonciello@dell.com,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Huffman, Amber" <amber.huffman@intel.com>, david.fugate@intel.com
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Message-ID: <20200902225439.GA24219@redsun51.ssa.fujisawa.hgst.com>
-References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
- <20200825062320.GA27116@infradead.org>
- <08080FC7-861B-472A-BD7D-02D33926677F@canonical.com>
- <20200825065634.GA2691@infradead.org>
- <c19782e36c9b4a8319f2f16102e1823dc6a33d3c.camel@linux.intel.com>
+        Wed, 2 Sep 2020 18:58:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbgIBW6C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 18:58:02 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77119C061244;
+        Wed,  2 Sep 2020 15:58:00 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ds1so519258pjb.1;
+        Wed, 02 Sep 2020 15:58:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XZfw6QbTtE+ig8bz903vOGLjPWd35/ECsGMavmJuypY=;
+        b=EFn8sagTMorsR5/jkl/wUofpzJmbCPIma0wCVK84yaTwpnJ0l8C3ts/7jqq3C2xlEF
+         Mpen5Hj9djCLDx2DsJFshyL850GLlzwEW7n980XuQxPnOevT5XUhqm6y3Mxe3HOhB4IW
+         7/z9HA+7wxuB8DpHWsFDtsuXt+6RWXSQxekf3ylJLDEmH10J/5SBpkEPBo1HEguiG+uu
+         4EBV/aFxXe7Dtq/qr5s7s06yPVQ0McfqyyC0WT0cGe6/DNB/5PhyOhOHwZgYVvMEbmdF
+         0gCrIRyDbf+WFHAHC9pXCp5wu+6kk3x1cYKi/RCLHz7ZNPvBfvYevy6c1MxGDmv3I3+3
+         A+bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XZfw6QbTtE+ig8bz903vOGLjPWd35/ECsGMavmJuypY=;
+        b=o3HTeoQJtlHEdT+I+wb5Op6otuXQcD1kPGuBNSckTcpipezG8Gze1cLwIX/efnR4lb
+         Ntu4aZCwo7v9QM9dvWZrpcXo8T2y0AbtegpCime6d4GNbBiEXDBCTYuKh1rzlKCuPD2S
+         TaVkSbFITLe8571jiKEStZpTzRLxAbrShc9TJjvWYJCkMYgyEJRlIIQnECiY6XO+w/L7
+         UWXPCL07VUbxYs6t2al/wU7+V1WJ34vrn3ur1ZndDDiqi5EehGcD7UaVda6w2cI1np2j
+         b978qSOnHdJHJb2nQi1m9c+fuI4VDLWZdwpiB98z6F6vZZMTZIrv3Ih4fi1Z3Dyhcks4
+         /rQg==
+X-Gm-Message-State: AOAM532Iz0OjyHRQx2i6u8vICVflEU4Vv2SrOcrSKXN/o3YVDI1mFRr5
+        rna3HpK+WO9Nnm1b0TtfMCNsdGwliL0wrQ==
+X-Google-Smtp-Source: ABdhPJxJ5NCMU7pH1XkDZ7sFHsPUW3bZZckDyxeLpb3i6oVBoc5ezbFSE4vP8Iz4R0KyUAqxXWSf4Q==
+X-Received: by 2002:a17:90a:4486:: with SMTP id t6mr27512pjg.230.1599087479949;
+        Wed, 02 Sep 2020 15:57:59 -0700 (PDT)
+Received: from thinkpad.teksavvy.com (104.36.148.139.aurocloud.com. [104.36.148.139])
+        by smtp.gmail.com with ESMTPSA id q25sm579175pfn.181.2020.09.02.15.56.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 15:57:05 -0700 (PDT)
+From:   Rustam Kovhaev <rkovhaev@gmail.com>
+To:     pbonzini@redhat.com, vkuznets@redhat.com, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        Rustam Kovhaev <rkovhaev@gmail.com>
+Subject: [PATCH v2] KVM: fix memory leak in kvm_io_bus_unregister_dev()
+Date:   Wed,  2 Sep 2020 15:57:18 -0700
+Message-Id: <20200902225718.675314-1-rkovhaev@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c19782e36c9b4a8319f2f16102e1823dc6a33d3c.camel@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 01:48:19PM -0600, David Fugate wrote:
-> Over the years, I've been forwarded numerous emails from VMD customers 
-> praising it's ability to prevent Linux kernel panics upon hot-removals
-> and inserts of U.2 NVMe drives.
+when kmalloc() fails in kvm_io_bus_unregister_dev(), before removing
+the bus, we should iterate over all other devices linked to it and call
+kvm_iodevice_destructor() for them
 
-The same nvme and pcie hotplug drivers are used with or without VMD
-enabled. Where are the bug reports for linux kernel panics? We have a
-very real interest in fixing such issues.
+Reported-and-tested-by: syzbot+f196caa45793d6374707@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=f196caa45793d6374707
+Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+v2:
+- remove redundant whitespace
+- remove goto statement and use if/else
+---
+ virt/kvm/kvm_main.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
+
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 67cd0b88a6b6..cf88233b819a 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4332,7 +4332,7 @@ int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
+ void kvm_io_bus_unregister_dev(struct kvm *kvm, enum kvm_bus bus_idx,
+ 			       struct kvm_io_device *dev)
+ {
+-	int i;
++	int i, j;
+ 	struct kvm_io_bus *new_bus, *bus;
+ 
+ 	bus = kvm_get_bus(kvm, bus_idx);
+@@ -4349,17 +4349,20 @@ void kvm_io_bus_unregister_dev(struct kvm *kvm, enum kvm_bus bus_idx,
+ 
+ 	new_bus = kmalloc(struct_size(bus, range, bus->dev_count - 1),
+ 			  GFP_KERNEL_ACCOUNT);
+-	if (!new_bus)  {
++	if (new_bus) {
++		memcpy(new_bus, bus, sizeof(*bus) + i * sizeof(struct kvm_io_range));
++		new_bus->dev_count--;
++		memcpy(new_bus->range + i, bus->range + i + 1,
++		       (new_bus->dev_count - i) * sizeof(struct kvm_io_range));
++	} else {
+ 		pr_err("kvm: failed to shrink bus, removing it completely\n");
+-		goto broken;
++		for (j = 0; j < bus->dev_count; j++) {
++			if (j == i)
++				continue;
++			kvm_iodevice_destructor(bus->range[j].dev);
++		}
+ 	}
+ 
+-	memcpy(new_bus, bus, sizeof(*bus) + i * sizeof(struct kvm_io_range));
+-	new_bus->dev_count--;
+-	memcpy(new_bus->range + i, bus->range + i + 1,
+-	       (new_bus->dev_count - i) * sizeof(struct kvm_io_range));
+-
+-broken:
+ 	rcu_assign_pointer(kvm->buses[bus_idx], new_bus);
+ 	synchronize_srcu_expedited(&kvm->srcu);
+ 	kfree(bus);
+-- 
+2.28.0
+
