@@ -4,70 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9AEC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C39DAC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 960082071B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FAC120709
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:04:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N0KHXRDt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WQ+kQwXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgIBJEO (ORCPT
+        id S1727019AbgIBJE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 05:04:14 -0400
+        Wed, 2 Sep 2020 05:04:27 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbgIBJEE (ORCPT
+        with ESMTP id S1726770AbgIBJDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 05:04:04 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7180FC061245
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 02:04:04 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id o184so2186020vsc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 02:04:04 -0700 (PDT)
+        Wed, 2 Sep 2020 05:03:54 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4E7C061245
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 02:03:53 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id v20so1341416ual.4
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 02:03:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hFnfq76GlnsUYLxeV0fKqnYc2qmykFYSJOcJXdU/GGk=;
-        b=N0KHXRDtwYgxVI4n0o099cYfeLkcI4F7PipVrxLx0iYnKFfBhKor9MYqScRo5TyAbK
-         rV4KCiPzj2lt4a3gg2qucLoNE57VSPmACia+ffSBqz7/DGBHgfRbcclvWl09zsAHllDq
-         GO7AGWM5jyTOwqUP4gUF5qtUPvXUCHp4434AYzgEQdZCLPbRtImYmg13LihPzeC+/1br
-         PwZzDfr/O+ubvpD/LEWEoKocxSm9drxEQM+tB7XVHS/ytNH26cuRFe4URiXue8deNKdq
-         cahqc04wc7/PAnFAbgEm5vcUtOUAyYyQAqN2c7MAloeaIGTkACYLdKz/KHv39nDDo45E
-         yXBw==
+        bh=HJzUeSF+5rfhIEqW5Y3fudwXDrc2+BNzuQkwiBNzFL4=;
+        b=WQ+kQwXpmiMbmM++3SGStKdu8DfotRMOpqrwA5q4bHtdJy9QMoEuJc5j/DKPN9esfh
+         TQnNtWcPdvtjlOGXk6lMbGAWO97Q/B3oTIbShRS2KU7mN9bF8pwNxjqtEEOpNgKeeSoF
+         5vPV4E1GH8dyf6dZN4nLeM4NYT2aVDd9zvoKiIUgsLohC+8JbQ22SJbx9wnjSbkj7xL8
+         JsM/O3Q//97AjUOmNmXAzlIbuCSjbi/qQVWHYr3mood8wfSt8Zo60+0PYH3nWBUC9yct
+         FTmh/ZE20RiJD40hlQlzblmlJbQWUdiyrAwwuV/0mkrVPnqhO7ph2zS10dQORe/iAwGQ
+         yyxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hFnfq76GlnsUYLxeV0fKqnYc2qmykFYSJOcJXdU/GGk=;
-        b=IPHSx8Opjy/nxD9xldGRIivTMINAtMiY4weHJsoED951Cjs+gAIO9qbpLytcX4vFwJ
-         6rF8eyFrzAhsF+u/PNnlA7VyEGlHhVYslcCum9j9kMVflCqG8DZ8vfCS071CQvBLU3cB
-         5iLNpS/QSbFD5JHjMasBjb24/Luf2SEYsrl+ZjjQPIcGPPDhej8p7bmr4Zlu29HDcxWM
-         66GhmSgDIPFJMRAZR9PLNw0tUMFaGNxBDIbGbQfFpT/lvFZ8AijsXvA0poDDmdbN6nHm
-         mA0wJicQgbQjDW5XIaAd3A1cmXQ9GVMMsKuEi5wGoOLfvuZm6k5bcSvl9AnAk6XXLeuO
-         nD1w==
-X-Gm-Message-State: AOAM531uBkHvPEv6aw7KUJISZoBZWnsxwjnqJNGBZ6tUu1ifCJAEB+9F
-        cFYlzlvpYEtabnZ2duTaGAmgGNlfW4hxVbBeld+54Q==
-X-Google-Smtp-Source: ABdhPJxvNkCHqkXeW6+ncgi9B+yO4U+7Pipy1zHbUW8fR1FyXHaqe/R4OuugY6ftNvPRbMGxAdOqpJOUH7HNDNC0i9M=
-X-Received: by 2002:a67:b44a:: with SMTP id c10mr4492088vsm.35.1599037443576;
- Wed, 02 Sep 2020 02:04:03 -0700 (PDT)
+        bh=HJzUeSF+5rfhIEqW5Y3fudwXDrc2+BNzuQkwiBNzFL4=;
+        b=F4AILCrBSYqLgWj/asO21z0WUzCpTKMOTQBOLKEW1tgVK+B9JSWia9Vz0xvIfHCiqi
+         XAARtX9seO4ziZ5/kq0CFDhM7A1p6OAp1/l5ugwKHsuYsbPNEYV2D/cq7lh02DC1z6/L
+         kAgktFaDIsrFwU4PYwnondh+M1tptFe0P0cXpSyyX4oYkxh5RIm5GydqMpbYRYIUdWyi
+         U+ycFdP9aMjp7ZRM+B/bP2CehCJN994goXUXsuaYLPMmLr7xNe6Ro6FqockyGI5+iIid
+         jSU4jJ1mhTAFfakXRN9B9aIpmv5kVwHk115l2nd0Fz2/xSgF0EPsoiYbXhHW6bnePBY/
+         uMqw==
+X-Gm-Message-State: AOAM5309p/Fzk6v7DXhfBqrupHnb0zUKuORAP9yAq61GwF80Dm6xzqbh
+        Gr2r0mDIVnnnt0Fb4+LQtQd1FnHLl+XLNdcYKHvMZsbQi6RjiA==
+X-Google-Smtp-Source: ABdhPJyhJYTVm/R+GBYtGPEgC6V5+EOBdX93qBkeA616egxMMvQgh3s57gjKKHh0bsOtxZckjPPEU7gVSF32drfco5E=
+X-Received: by 2002:ab0:2848:: with SMTP id c8mr4291207uaq.15.1599037433179;
+ Wed, 02 Sep 2020 02:03:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200901085004.2512-1-matthias.schiffer@ew.tq-group.com> <20200901085004.2512-2-matthias.schiffer@ew.tq-group.com>
-In-Reply-To: <20200901085004.2512-2-matthias.schiffer@ew.tq-group.com>
+References: <20200831102324.12566-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20200831102324.12566-1-wsa+renesas@sang-engineering.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 2 Sep 2020 11:03:27 +0200
-Message-ID: <CAPDyKFoMcxxm5=tNmn8b9xU+xRYUchz5pXOMZQUed8gR9G-Hrw@mail.gmail.com>
-Subject: Re: [PATCH mmc-next v4 2/2] mmc: allow setting slot index via device
- tree alias
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
+Date:   Wed, 2 Sep 2020 11:03:16 +0200
+Message-ID: <CAPDyKFpmfjuGcLTxCDdCvp5j_yaJzySENBEcgC_w1tvkK1Gz4g@mail.gmail.com>
+Subject: Re: [PATCH] mmc: meson-gx: use wrapper to avoid accessing internal vars
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,47 +77,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Sep 2020 at 10:50, Matthias Schiffer
-<matthias.schiffer@ew.tq-group.com> wrote:
+On Mon, 31 Aug 2020 at 12:23, Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
 >
-> As with GPIO, UART and others, allow specifying the device index via the
-> aliases node in the device tree.
->
-> On embedded devices, there is often a combination of removable (e.g.
-> SD card) and non-removable MMC devices (e.g. eMMC).
-> Therefore the index might change depending on
->
-> * host of removable device
-> * removable card present or not
->
-> This makes it difficult to hardcode the root device, if it is on the
-> non-removable device. E.g. if SD card is present eMMC will be mmcblk1,
-> if SD card is not present at boot, eMMC will be mmcblk0.
->
-> Alternative solutions like PARTUUIDs do not cover the case where multiple
-> mmcblk devices contain the same image. This is a common issue on devices
-> that can boot both from eMMC (for regular boot) and SD cards (as a
-> temporary boot medium for development). When a firmware image is
-> installed to eMMC after a test boot via SD card, there will be no
-> reliable way to refer to a specific device using (PART)UUIDs oder
-> LABELs.
->
-> The demand for this feature has led to multiple attempts to implement
-> it, dating back at least to 2012 (see
-> https://www.spinics.net/lists/linux-mmc/msg26586.html for a previous
-> discussion from 2014).
->
-> All indices defined in the aliases node will be reserved for use by the
-> respective MMC device, moving the indices of devices that don't have an
-> alias up into the non-reserved range. If the aliases node is not found,
-> the driver will act as before.
->
-> This is a rebased and cleaned up version of
-> https://www.spinics.net/lists/linux-mmc/msg26588.html .
->
-> Based-on-patch-by: Sascha Hauer <s.hauer@pengutronix.de>
-> Link: https://lkml.org/lkml/2020/8/5/194
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 Applied for next, thanks!
 
@@ -125,73 +90,24 @@ Uffe
 
 > ---
 >
-> v4:
-> - minor adjustments to commit message
+> Only buildtested. Found while analyzing retune-handling in the core.
 >
-> v3:
-> - remove unneeded mmcblock changes
-> - remove most helper functions to simplify code
-> - extended commit message
+>  drivers/mmc/host/meson-gx-mmc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> v2:
-> - fix missing symbols for modular mmcblock
+> diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
+> index 08a3b1c05acb..a1db8685e30e 100644
+> --- a/drivers/mmc/host/meson-gx-mmc.c
+> +++ b/drivers/mmc/host/meson-gx-mmc.c
+> @@ -521,7 +521,7 @@ static int meson_mmc_resampling_tuning(struct mmc_host *mmc, u32 opcode)
+>         val |= ADJUST_ADJ_EN;
+>         writel(val, host->regs + host->data->adjust);
 >
->
->
->  drivers/mmc/core/host.c | 26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-> index c8fae6611b73..96b2ca1f1b06 100644
-> --- a/drivers/mmc/core/host.c
-> +++ b/drivers/mmc/core/host.c
-> @@ -376,6 +376,20 @@ int mmc_of_parse_voltage(struct device_node *np, u32 *mask)
->  }
->  EXPORT_SYMBOL(mmc_of_parse_voltage);
->
-> +/**
-> + * mmc_first_nonreserved_index() - get the first index that is not reserved
-> + */
-> +static int mmc_first_nonreserved_index(void)
-> +{
-> +       int max;
-> +
-> +       max = of_alias_get_highest_id("mmc");
-> +       if (max < 0)
-> +               return 0;
-> +
-> +       return max + 1;
-> +}
-> +
->  /**
->   *     mmc_alloc_host - initialise the per-host structure.
->   *     @extra: sizeof private data structure
-> @@ -387,6 +401,7 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
->  {
->         int err;
->         struct mmc_host *host;
-> +       int alias_id, min_idx, max_idx;
->
->         host = kzalloc(sizeof(struct mmc_host) + extra, GFP_KERNEL);
->         if (!host)
-> @@ -395,7 +410,16 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
->         /* scanning will be enabled when we're ready */
->         host->rescan_disable = 1;
->
-> -       err = ida_simple_get(&mmc_host_ida, 0, 0, GFP_KERNEL);
-> +       alias_id = of_alias_get_id(dev->of_node, "mmc");
-> +       if (alias_id >= 0) {
-> +               min_idx = alias_id;
-> +               max_idx = alias_id + 1;
-> +       } else {
-> +               min_idx = mmc_first_nonreserved_index();
-> +               max_idx = 0;
-> +       }
-> +
-> +       err = ida_simple_get(&mmc_host_ida, min_idx, max_idx, GFP_KERNEL);
->         if (err < 0) {
->                 kfree(host);
->                 return NULL;
+> -       if (mmc->doing_retune)
+> +       if (mmc_doing_retune(mmc))
+>                 dly = FIELD_GET(ADJUST_ADJ_DELAY_MASK, val) + 1;
+>         else
+>                 dly = 0;
 > --
-> 2.17.1
+> 2.20.1
 >
