@@ -2,423 +2,78 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D52C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F6AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D122320767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0EF820767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:55:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PEYeuScs"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="nk1iqBJ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgIBQyO (ORCPT
+        id S1728110AbgIBQzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:54:14 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54562 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgIBQyK (ORCPT
+        Wed, 2 Sep 2020 12:55:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbgIBQzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:54:10 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082Gs61g034067;
-        Wed, 2 Sep 2020 11:54:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599065646;
-        bh=3+kvWoX2zueh8ydq//SEq809w9v+V6DO2zilRewNSEg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=PEYeuScsxgxkLDqs32ye/6/JaPOqVAzAV5mrreNyOokie1MRL3Dg9ipipbc+0MxHL
-         MEvDpkvdAYXB1fjIxzVOMDbmd1j3i/qoFbq+tF9aRQ3Ems3uMoUna4HYHNO67qJrDe
-         AaymjB5N+MaY8+7h+xTiTQg1oo140tUFcSje+xa0=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082Gs6a0013929
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 2 Sep 2020 11:54:06 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
- 2020 11:54:06 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 2 Sep 2020 11:54:06 -0500
-Received: from [10.250.34.112] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082Gs5jG052821;
-        Wed, 2 Sep 2020 11:54:05 -0500
-Subject: Re: [PATCH 7/7] arm64: dts: ti: k3-*: Fix up node_name_chars_strict
- errors
-To:     Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <lokeshvutla@ti.com>,
-        <grygorii.strashko@ti.com>, <nsekhar@ti.com>
-References: <20200901223059.14801-1-nm@ti.com>
- <20200901223059.14801-8-nm@ti.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <7fbf0ee5-0c7e-ae18-fa8a-bbdc6e9da926@ti.com>
-Date:   Wed, 2 Sep 2020 11:54:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 2 Sep 2020 12:55:05 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B6A1C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 09:55:04 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0d7a00acdede37bac547d6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:7a00:acde:de37:bac5:47d6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 923721EC0493;
+        Wed,  2 Sep 2020 18:54:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1599065699;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=PVvZberZXPtknBWe89EYmhC7Z/aQIBONE/vTyia2nyg=;
+        b=nk1iqBJ/q9QQ51noWdo/XTN/vMlH1uAzMFA+037bfhPmpqOrgKlm8N93AE0SXxao5Eq+K0
+        8muK8rVr+FdHAOKGSk+YzsrYnO66B1HB9dzX3zjad67Pc1gEmKpqFgRj90kFX6rwrKY5hU
+        3gV8M42oy+RnLLVB1kA8bvrvFps7Ov4=
+Date:   Wed, 2 Sep 2020 18:55:01 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     peterz@infradead.org
+Cc:     Feng Tang <feng.tang@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] tools/x86: add kcpuid tool to show raw CPU features
+Message-ID: <20200902165501.GC21537@zn.tnic>
+References: <1598514543-90152-1-git-send-email-feng.tang@intel.com>
+ <20200902164538.GN1362448@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200901223059.14801-8-nm@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200902164538.GN1362448@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 5:30 PM, Nishanth Menon wrote:
-> Building with W=2 throws up a bunch of easy to fixup errors..
-> node_name_chars_strict is one of them.. Knock those out.
-> 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi       |  6 +++---
->  arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi        |  4 ++--
->  arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 16 ++++++++--------
->  .../dts/ti/k3-am654-industrial-thermal.dtsi    | 12 ++++++------
->  .../boot/dts/ti/k3-j721e-common-proc-board.dts | 18 +++++++++---------
->  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi      |  6 +++---
->  .../arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi |  2 +-
->  arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi    |  2 +-
->  8 files changed, 33 insertions(+), 33 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> index 9c96e3f58c86..ff3e38408dbc 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> @@ -305,7 +305,7 @@
->  		no-1-8-v;
->  	};
->  
-> -	scm_conf: scm_conf@100000 {
-> +	scm_conf: scm-conf@100000 {
->  		compatible = "syscon", "simple-mfd";
->  		reg = <0 0x00100000 0 0x1c000>;
->  		#address-cells = <1>;
-> @@ -344,7 +344,7 @@
->  					<0x4090 0x3>; /* SERDES1 lane select */
->  		};
->  
-> -		dss_oldi_io_ctrl: dss_oldi_io_ctrl@41E0 {
-> +		dss_oldi_io_ctrl: dss-oldi-io-ctrl@41E0 {
->  			compatible = "syscon";
->  			reg = <0x0000041E0 0x14>;
+On Wed, Sep 02, 2020 at 06:45:38PM +0200, peterz@infradead.org wrote:
+> We really should clear the CPUID bits when the kernel explicitly
+> disables things.
 
-We should %s/41E0/41e0/, but that change is not directly associated with the
-patch subject line. Perhaps, an additional patch? Remember seeing similar
-warning on some downstream crypto nodes, but strangely I am not seeing on these
-upstream nodes.
+Actually, you want to *disable* the functionality behind it by clearing
+a bit in CR4 - and yes, not all features have CR4 bits - so that
+luserspace doesn't "probe" the existence of certain instructions.
 
-Otherwise,
-Reviewed-by: Suman Anna <s-anna@ti.com>
+Example: you can still try to run RDRAND and succeed even if the
+corresponding CPUID bit is clear.
 
-regards
-Suman
+-- 
+Regards/Gruss,
+    Boris.
 
->  		};
-> @@ -445,7 +445,7 @@
->  		ti,interrupt-ranges = <0 392 32>;
->  	};
->  
-> -	main_navss {
-> +	main-navss {
->  		compatible = "simple-mfd";
->  		#address-cells = <2>;
->  		#size-cells = <2>;
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-> index 6dfec68ac865..435e51019287 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-> @@ -6,7 +6,7 @@
->   */
->  
->  &cbass_mcu {
-> -	mcu_conf: scm_conf@40f00000 {
-> +	mcu_conf: scm-conf@40f00000 {
->  		compatible = "syscon", "simple-mfd";
->  		reg = <0x0 0x40f00000 0x0 0x20000>;
->  		#address-cells = <1>;
-> @@ -116,7 +116,7 @@
->  		};
->  	};
->  
-> -	mcu_navss {
-> +	mcu-navss {
->  		compatible = "simple-mfd";
->  		#address-cells = <2>;
->  		#size-cells = <2>;
-> diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-> index 86c9074cb070..d12dd89f3405 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-> @@ -29,7 +29,7 @@
->  		#address-cells = <2>;
->  		#size-cells = <2>;
->  		ranges;
-> -		secure_ddr: secure_ddr@9e800000 {
-> +		secure_ddr: secure-ddr@9e800000 {
->  			reg = <0 0x9e800000 0 0x01800000>; /* for OP-TEE */
->  			alignment = <0x1000>;
->  			no-map;
-> @@ -70,14 +70,14 @@
->  		>;
->  	};
->  
-> -	push_button_pins_default: push_button__pins_default {
-> +	push_button_pins_default: push-button-pins-default {
->  		pinctrl-single,pins = <
->  			AM65X_WKUP_IOPAD(0x0030, PIN_INPUT, 7) /* (R5) WKUP_GPIO0_24 */
->  			AM65X_WKUP_IOPAD(0x003c, PIN_INPUT, 7) /* (P2) WKUP_GPIO0_27 */
->  		>;
->  	};
->  
-> -	mcu_fss0_ospi0_pins_default: mcu-fss0-ospi0-pins_default {
-> +	mcu_fss0_ospi0_pins_default: mcu-fss0-ospi0-pins-default {
->  		pinctrl-single,pins = <
->  			AM65X_WKUP_IOPAD(0x0000, PIN_OUTPUT, 0) /* (V1) MCU_OSPI0_CLK */
->  			AM65X_WKUP_IOPAD(0x0008, PIN_INPUT, 0)	 /* (U2) MCU_OSPI0_DQS */
-> @@ -93,13 +93,13 @@
->  		>;
->  	};
->  
-> -	wkup_pca554_default: wkup_pca554_default {
-> +	wkup_pca554_default: wkup-pca554-default {
->  		pinctrl-single,pins = <
->  			AM65X_WKUP_IOPAD(0x0034, PIN_INPUT, 7) /* (T1) MCU_OSPI1_CLK.WKUP_GPIO0_25 */
->  		>;
->  	};
->  
-> -	mcu_cpsw_pins_default: mcu_cpsw_pins_default {
-> +	mcu_cpsw_pins_default: mcu-cpsw-pins-default {
->  		pinctrl-single,pins = <
->  			AM65X_WKUP_IOPAD(0x0058, PIN_OUTPUT, 0) /* (N4) MCU_RGMII1_TX_CTL */
->  			AM65X_WKUP_IOPAD(0x005c, PIN_INPUT, 0) /* (N5) MCU_RGMII1_RX_CTL */
-> @@ -116,7 +116,7 @@
->  		>;
->  	};
->  
-> -	mcu_mdio_pins_default: mcu_mdio1_pins_default {
-> +	mcu_mdio_pins_default: mcu-mdio1-pins-default {
->  		pinctrl-single,pins = <
->  			AM65X_WKUP_IOPAD(0x008c, PIN_OUTPUT, 0) /* (L1) MCU_MDIO0_MDC */
->  			AM65X_WKUP_IOPAD(0x0088, PIN_INPUT, 0) /* (L4) MCU_MDIO0_MDIO */
-> @@ -167,7 +167,7 @@
->  		>;
->  	};
->  
-> -	main_mmc1_pins_default: main_mmc1_pins_default {
-> +	main_mmc1_pins_default: main-mmc1-pins-default {
->  		pinctrl-single,pins = <
->  			AM65X_IOPAD(0x02d4, PIN_INPUT_PULLDOWN, 0) /* (C27) MMC1_CLK */
->  			AM65X_IOPAD(0x02d8, PIN_INPUT_PULLUP, 0) /* (C28) MMC1_CMD */
-> @@ -180,7 +180,7 @@
->  		>;
->  	};
->  
-> -	usb1_pins_default: usb1_pins_default {
-> +	usb1_pins_default: usb1-pins-default {
->  		pinctrl-single,pins = <
->  			AM65X_IOPAD(0x02c0, PIN_OUTPUT, 0) /* (AC8) USB1_DRVVBUS */
->  		>;
-> diff --git a/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi b/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
-> index cdc3d40c3f60..9021c738056b 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
-> @@ -2,13 +2,13 @@
->  
->  #include <dt-bindings/thermal/thermal.h>
->  
-> -mpu0_thermal: mpu0_thermal {
-> +mpu0_thermal: mpu0-thermal {
->  	polling-delay-passive = <250>; /* milliseconds */
->  	polling-delay = <500>; /* milliseconds */
->  	thermal-sensors = <&wkup_vtm0 0>;
->  
->  	trips {
-> -		mpu0_crit: mpu0_crit {
-> +		mpu0_crit: mpu0-crit {
->  			temperature = <125000>; /* milliCelsius */
->  			hysteresis = <2000>; /* milliCelsius */
->  			type = "critical";
-> @@ -16,13 +16,13 @@ mpu0_thermal: mpu0_thermal {
->  	};
->  };
->  
-> -mpu1_thermal: mpu1_thermal {
-> +mpu1_thermal: mpu1-thermal {
->  	polling-delay-passive = <250>; /* milliseconds */
->  	polling-delay = <500>; /* milliseconds */
->  	thermal-sensors = <&wkup_vtm0 1>;
->  
->  	trips {
-> -		mpu1_crit: mpu1_crit {
-> +		mpu1_crit: mpu1-crit {
->  			temperature = <125000>; /* milliCelsius */
->  			hysteresis = <2000>; /* milliCelsius */
->  			type = "critical";
-> @@ -30,13 +30,13 @@ mpu1_thermal: mpu1_thermal {
->  	};
->  };
->  
-> -mcu_thermal: mcu_thermal {
-> +mcu_thermal: mcu-thermal {
->  	polling-delay-passive = <250>; /* milliseconds */
->  	polling-delay = <500>; /* milliseconds */
->  	thermal-sensors = <&wkup_vtm0 2>;
->  
->  	trips {
-> -		mcu_crit: mcu_crit {
-> +		mcu_crit: mcu-crit {
->  			temperature = <125000>; /* milliCelsius */
->  			hysteresis = <2000>; /* milliCelsius */
->  			type = "critical";
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-> index c355692796a9..648267284582 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-> @@ -86,13 +86,13 @@
->  };
->  
->  &main_pmx0 {
-> -	sw10_button_pins_default: sw10_button_pins_default {
-> +	sw10_button_pins_default: sw10-button-pins-default {
->  		pinctrl-single,pins = <
->  			J721E_IOPAD(0x0, PIN_INPUT, 7) /* (AC18) EXTINTn.GPIO0_0 */
->  		>;
->  	};
->  
-> -	main_mmc1_pins_default: main_mmc1_pins_default {
-> +	main_mmc1_pins_default: main-mmc1-pins-default {
->  		pinctrl-single,pins = <
->  			J721E_IOPAD(0x254, PIN_INPUT, 0) /* (R29) MMC1_CMD */
->  			J721E_IOPAD(0x250, PIN_INPUT, 0) /* (P25) MMC1_CLK */
-> @@ -106,14 +106,14 @@
->  		>;
->  	};
->  
-> -	main_usbss0_pins_default: main_usbss0_pins_default {
-> +	main_usbss0_pins_default: main-usbss0-pins-default {
->  		pinctrl-single,pins = <
->  			J721E_IOPAD(0x290, PIN_OUTPUT, 0) /* (U6) USB0_DRVVBUS */
->  			J721E_IOPAD(0x210, PIN_INPUT, 7) /* (W3) MCAN1_RX.GPIO1_3 */
->  		>;
->  	};
->  
-> -	main_usbss1_pins_default: main_usbss1_pins_default {
-> +	main_usbss1_pins_default: main-usbss1-pins-default {
->  		pinctrl-single,pins = <
->  			J721E_IOPAD(0x214, PIN_OUTPUT, 4) /* (V4) MCAN1_TX.USB1_DRVVBUS */
->  		>;
-> @@ -153,7 +153,7 @@
->  		>;
->  	};
->  
-> -	mcasp10_pins_default: mcasp10_pins_default {
-> +	mcasp10_pins_default: mcasp10-pins-default {
->  		pinctrl-single,pins = <
->  			J721E_IOPAD(0x158, PIN_OUTPUT_PULLDOWN, 12) /* (U23) RGMII5_TX_CTL.MCASP10_ACLKX */
->  			J721E_IOPAD(0x15c, PIN_OUTPUT_PULLDOWN, 12) /* (U26) RGMII5_RX_CTL.MCASP10_AFSX */
-> @@ -167,7 +167,7 @@
->  		>;
->  	};
->  
-> -	audi_ext_refclk2_pins_default: audi_ext_refclk2_pins_default {
-> +	audi_ext_refclk2_pins_default: audi-ext-refclk2-pins-default {
->  		pinctrl-single,pins = <
->  			J721E_IOPAD(0x1a4, PIN_OUTPUT, 3) /* (W26) RGMII6_RXC.AUDIO_EXT_REFCLK2 */
->  		>;
-> @@ -175,7 +175,7 @@
->  };
->  
->  &wkup_pmx0 {
-> -	sw11_button_pins_default: sw11_button_pins_default {
-> +	sw11_button_pins_default: sw11-button-pins-default {
->  		pinctrl-single,pins = <
->  			J721E_WKUP_IOPAD(0xcc, PIN_INPUT, 7) /* (G28) WKUP_GPIO0_7 */
->  		>;
-> @@ -194,7 +194,7 @@
->  		>;
->  	};
->  
-> -	mcu_cpsw_pins_default: mcu_cpsw_pins_default {
-> +	mcu_cpsw_pins_default: mcu-cpsw-pins-default {
->  		pinctrl-single,pins = <
->  			J721E_WKUP_IOPAD(0x0058, PIN_OUTPUT, 0) /* MCU_RGMII1_TX_CTL */
->  			J721E_WKUP_IOPAD(0x005c, PIN_INPUT, 0) /* MCU_RGMII1_RX_CTL */
-> @@ -211,7 +211,7 @@
->  		>;
->  	};
->  
-> -	mcu_mdio_pins_default: mcu_mdio1_pins_default {
-> +	mcu_mdio_pins_default: mcu-mdio1-pins-default {
->  		pinctrl-single,pins = <
->  			J721E_WKUP_IOPAD(0x008c, PIN_OUTPUT, 0) /* MCU_MDIO0_MDC */
->  			J721E_WKUP_IOPAD(0x0088, PIN_INPUT, 0) /* MCU_MDIO0_MDIO */
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-> index 1d2a7c05b6f3..ea57d07777ba 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-> @@ -86,7 +86,7 @@
->  		ti,interrupt-ranges = <8 392 56>;
->  	};
->  
-> -	main_navss {
-> +	main-navss {
->  		compatible = "simple-mfd";
->  		#address-cells = <2>;
->  		#size-cells = <2>;
-> @@ -888,7 +888,7 @@
->  		no-1-8-v;
->  	};
->  
-> -	usbss0: cdns_usb@4104000 {
-> +	usbss0: cdns-usb@4104000 {
->  		compatible = "ti,j721e-usb";
->  		reg = <0x00 0x4104000 0x00 0x100>;
->  		dma-coherent;
-> @@ -918,7 +918,7 @@
->  		};
->  	};
->  
-> -	usbss1: cdns_usb@4114000 {
-> +	usbss1: cdns-usb@4114000 {
->  		compatible = "ti,j721e-usb";
->  		reg = <0x00 0x4114000 0x00 0x100>;
->  		dma-coherent;
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-> index 81801f519a61..03fa69c0a038 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-> @@ -249,7 +249,7 @@
->  		};
->  	};
->  
-> -	mcu_navss {
-> +	mcu-navss {
->  		compatible = "simple-mfd";
->  		#address-cells = <2>;
->  		#size-cells = <2>;
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
-> index d69d90c8b5e3..5dc3ba739131 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
-> @@ -71,7 +71,7 @@
->  };
->  
->  &wkup_pmx0 {
-> -	wkup_i2c0_pins_default: wkup_i2c0_pins_default {
-> +	wkup_i2c0_pins_default: wkup-i2c0-pins-default {
->  		pinctrl-single,pins = <
->  			J721E_WKUP_IOPAD(0xf8, PIN_INPUT_PULLUP, 0) /* (J25) WKUP_I2C0_SCL */
->  			J721E_WKUP_IOPAD(0xfc, PIN_INPUT_PULLUP, 0) /* (H24) WKUP_I2C0_SDA */
-> 
-
+https://people.kernel.org/tglx/notes-about-netiquette
