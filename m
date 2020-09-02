@@ -2,119 +2,95 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB24C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71ABBC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 923D02137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4180220758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599026488;
-	bh=79RQWc+rAjR/zPT+t2YrwQwDfZcXIS1a2cC0FjA+zm0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=V3ZJBId1UIiD9uj7n0Yx4hYtCFvoPWlVZ78GvSk+xnkkRCWCkuhiinoXg5uUQBS8O
-	 PoAgPRowj7IuCV+DwiGMbGGUhnrQ08V7kWs02uMMOFKuZ3Q3llkEJ/OaQVf1b7Vwx2
-	 TVL2Rai7QYoI+/lp/fkRPS8lwYh3+EEorRnYaEws=
+	s=default; t=1599026683;
+	bh=g/2VIEsAnNCGwuFSRBmMfPgFPQ8GBcaaWeh2wrNOjTw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FJHZt8lw/vgXKR7NLPysDUEA86XVoRaj5+k8pcesvWQgiPh0+0JK9EKoiKlc6Y5vp
+	 RenhFyfpt6fH36703M1Kk3hM5RSTXzbU9Fad/R9Po1p4BatTMUGnyFTHT0b6C0faE5
+	 JJ9s+30QGJOAkvroz+7kaAmOyqu5y0he+hwCNXgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgIBGBZ (ORCPT
+        id S1726384AbgIBGEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 02:01:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59788 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 02:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgIBGBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 02:01:24 -0400
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725774AbgIBGEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 02:04:39 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC3B120826
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 06:01:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 262D020758;
+        Wed,  2 Sep 2020 06:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599026483;
-        bh=79RQWc+rAjR/zPT+t2YrwQwDfZcXIS1a2cC0FjA+zm0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0mJewO06FLLu6tz+5iMkyWavvof5GE9lwceqazC0c2Re6E5rjbGy0Q54X3pB0+hVu
-         8vkttidRc/1caq/h5lK8ddHANwVVYyVJ0IC6IN3qrHsGluqFMBipK1LMuCYSQiQnql
-         nei3urpn7N6UuDpL/SGJncIYfBUif3QSy7+LOxbk=
-Received: by mail-ot1-f42.google.com with SMTP id a2so2442834otr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 23:01:23 -0700 (PDT)
-X-Gm-Message-State: AOAM533f0fcmQ5goeX4PigAfdVvhIGliUY4VU+mSMf3z4fxbRJ3q6IHw
-        i5gcZpyv27ovPv/MuD/gMePjZ2fo0k9rcYiQhac=
-X-Google-Smtp-Source: ABdhPJxI7NzITXZbau4MEOMnupCV16YsuYj2tomemgemDpXbs30lar6hFgxrTWHYBWFR15q7KVRJUN9cSpok8RYdcW8=
-X-Received: by 2002:a9d:69c9:: with SMTP id v9mr3915641oto.90.1599026483179;
- Tue, 01 Sep 2020 23:01:23 -0700 (PDT)
+        s=default; t=1599026678;
+        bh=g/2VIEsAnNCGwuFSRBmMfPgFPQ8GBcaaWeh2wrNOjTw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j9iBVWGuPfp5nJ4T0mZuvjpw1blz/pYyRcNz1vV99SC0yk1Vdp2UP7C18515KjpTW
+         tOrbuJCV4ZC8WznMoC04LCvNouLaYPX6sQBpBtgE1yK93CdwzTSzYbbu3k+BcokMcE
+         6xF0r1OwfcmyqYsYVBbcxs/4tjj7/9e6DI+flOpk=
+Date:   Wed, 2 Sep 2020 08:04:35 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Paras Sharma <parashar@codeaurora.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        akashast@codeaurora.org
+Subject: Re: [PATCH] serial: qcom_geni_serial: To correct QUP Version
+ detection logic
+Message-ID: <20200902060435.GA141898@kroah.com>
+References: <1599026211-12800-1-git-send-email-parashar@codeaurora.org>
 MIME-Version: 1.0
-References: <20200901160016.3646-1-jeyu@kernel.org>
-In-Reply-To: <20200901160016.3646-1-jeyu@kernel.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 2 Sep 2020 09:01:12 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXHUNqqXp8mdgR9r6phsmGbcxOjTRwjH2ua6yHU_KANB7g@mail.gmail.com>
-Message-ID: <CAMj1kXHUNqqXp8mdgR9r6phsmGbcxOjTRwjH2ua6yHU_KANB7g@mail.gmail.com>
-Subject: Re: [PATCH] arm64/module: set trampoline section flags regardless of CONFIG_DYNAMIC_FTRACE
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1599026211-12800-1-git-send-email-parashar@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Sep 2020 at 19:00, Jessica Yu <jeyu@kernel.org> wrote:
->
-> In the arm64 module linker script, the section .text.ftrace_trampoline
-> is specified unconditionally regardless of whether CONFIG_DYNAMIC_FTRACE
-> is enabled (this is simply due to the limitation that module linker
-> scripts are not preprocessed like the vmlinux one).
->
-> Normally, for .plt and .text.ftrace_trampoline, the section flags
-> present in the module binary wouldn't matter since module_frob_arch_sections()
-> would assign them manually anyway. However, the arm64 module loader only
-> sets the section flags for .text.ftrace_trampoline when CONFIG_DYNAMIC_FTRACE=y.
-> That's only become problematic recently due to a recent change in
-> binutils-2.35, where the .text.ftrace_trampoline section (along with the
-> .plt section) is now marked writable and executable (WAX).
->
-> We no longer allow writable and executable sections to be loaded due to
-> commit 5c3a7db0c7ec ("module: Harden STRICT_MODULE_RWX"), so this is
-> causing all modules linked with binutils-2.35 to be rejected under arm64.
-> Drop the IS_ENABLED(CONFIG_DYNAMIC_FTRACE) check in module_frob_arch_sections()
-> so that the section flags for .text.ftrace_trampoline get properly set to
-> SHF_EXECINSTR|SHF_ALLOC, without SHF_WRITE.
->
-> Link: http://lore.kernel.org/r/20200831094651.GA16385@linux-8ccs
-> Acked-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Jessica Yu <jeyu@kernel.org>
-
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-
+On Wed, Sep 02, 2020 at 11:26:51AM +0530, Paras Sharma wrote:
+> The current implementation reduces the sampling rate by half
+> if qup HW version is  greater is than 2.5 by checking if the
+> geni SE major version is greater than 2 and geni SE minor version
+> is greater than 5.
+> 
+> This implementation fails when the version is 3 or greater.
+> 
+> Hence new implementation checks if version is greater than or equal
+> to 0x20050000 which would work for any future version.
+> 
+> Signed-off-by: Paras Sharma <parashar@codeaurora.org>
 > ---
->  arch/arm64/kernel/module-plts.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/kernel/module-plts.c b/arch/arm64/kernel/module-plts.c
-> index 0ce3a28e3347..2e224435c024 100644
-> --- a/arch/arm64/kernel/module-plts.c
-> +++ b/arch/arm64/kernel/module-plts.c
-> @@ -305,8 +305,7 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->                         mod->arch.core.plt_shndx = i;
->                 else if (!strcmp(secstrings + sechdrs[i].sh_name, ".init.plt"))
->                         mod->arch.init.plt_shndx = i;
-> -               else if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE) &&
-> -                        !strcmp(secstrings + sechdrs[i].sh_name,
-> +               else if (!strcmp(secstrings + sechdrs[i].sh_name,
->                                  ".text.ftrace_trampoline"))
->                         tramp = sechdrs + i;
->                 else if (sechdrs[i].sh_type == SHT_SYMTAB)
-> --
-> 2.16.4
->
+>  drivers/tty/serial/qcom_geni_serial.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Is this a v2 patch?  What changed from the first one?
+
+> 
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+> index f0b1b47..e18b431 100644
+> --- a/drivers/tty/serial/qcom_geni_serial.c
+> +++ b/drivers/tty/serial/qcom_geni_serial.c
+> @@ -1000,7 +1000,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>  	sampling_rate = UART_OVERSAMPLING;
+>  	/* Sampling rate is halved for IP versions >= 2.5 */
+>  	ver = geni_se_get_qup_hw_version(&port->se);
+> -	if (GENI_SE_VERSION_MAJOR(ver) >= 2 && GENI_SE_VERSION_MINOR(ver) >= 5)
+> +	if (ver >= 0x20050000)
+
+That's an odd "magic value", can't you use the existing macros to define
+this somehow so it makes sense?
+
+thanks,
+
+greg k-h
