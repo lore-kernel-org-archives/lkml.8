@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322C7C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26CBC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1475A208C7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 992522083B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599075484;
-	bh=ysxU/OkPk0mx2jmOsOpW9mYF9nZJUrqNoDbkIh/24jA=;
+	s=default; t=1599075496;
+	bh=SQl/6OS4NtkfhoHM6x57EjikQWPjJp6R4j4puLXRYOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SUkgpWgJtdAk3cwgSkxqi2g4G0Pc4orY96pD7uDr8zo6/uFDD1C3nz60VESLCMJwp
-	 zEg2XpNW3RswxCNd9tf0YevAU0FsKT3UI+RVkPQpeZyJOhOVh8zaufI3IHb0mDWNSd
-	 lwy/vohHI36SvU2TOTOXQqH+T9n+3+0LKu9crVtM=
+	b=W3KH2raBagS6xoPP3avAR+8ME4Var+4ywbrIwegIlHn7wRI/AnpTiP/NFlDQYrk85
+	 9ZgS295UeLndjK4LJsaapZ3hjwv9wiZJ9RCKWzTaatIJgSfniip1KgebmXrnk/xCmF
+	 eyfbEbeDpo0ucaX6hIBM1gLdXN3Y5v5lUwOz69hA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbgIBTiC (ORCPT
+        id S1728103AbgIBTiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 15:38:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43588 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 15:38:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726762AbgIBTiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 15:38:01 -0400
+        id S1727112AbgIBTiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 15:38:08 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAFBC20E65;
-        Wed,  2 Sep 2020 19:37:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F4B720C56;
+        Wed,  2 Sep 2020 19:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599075480;
-        bh=ysxU/OkPk0mx2jmOsOpW9mYF9nZJUrqNoDbkIh/24jA=;
+        s=default; t=1599075488;
+        bh=SQl/6OS4NtkfhoHM6x57EjikQWPjJp6R4j4puLXRYOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vpFu8350AnZO/VZulHS3cosgdptpwzKBP54kcGKYYm+c84d7OK0hpajGsgvwtOFKS
-         kmJCuXW8VdBTDiKusxw3hbdgYxmp3Agznd240GsJTGXakAFEVej8jF2rXA0RVL33Bn
-         QWutahXiiNH/ft4IpIIAIUlTNFX4B8Oe+FxhtXwM=
+        b=tnPu8F1exJo+uPphLfUjycPSojRrb5lbYJCxy0OkbDJoBIbtJlppeGGRantb0xIHK
+         wZTnr9qAwMjHtzjSypym5MrBxUODR9ojVsLzCCi9AExiyKzJmWJ+LpoGJ9xmkVXtgX
+         ZyNbL60PgIqbyR0miZYsDgn1IJnK+/B8f+ssAeeE=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -66,9 +66,9 @@ To:     Ulf Hansson <ulf.hansson@linaro.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-tegra@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFT 06/11] mmc: sdhci-brcmstb: Simplify with optional clock and dev_err_probe()
-Date:   Wed,  2 Sep 2020 21:36:53 +0200
-Message-Id: <20200902193658.20539-7-krzk@kernel.org>
+Subject: [PATCH 07/11] mmc: sdhci-of-arasan: Simplify with dev_err_probe()
+Date:   Wed,  2 Sep 2020 21:36:54 +0200
+Message-Id: <20200902193658.20539-8-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200902193658.20539-1-krzk@kernel.org>
 References: <20200902193658.20539-1-krzk@kernel.org>
@@ -77,45 +77,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only -ENOENT from devm_clk_get() means that clock is not present in
-device tree.  Other errors have their own meaning and should not be
-ignored.
-
-Simplify getting the clock which is in fact optional and also use
-dev_err_probe() for handling deferred.
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and the error value gets printed.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
 ---
+ drivers/mmc/host/sdhci-of-arasan.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Not tested on HW.
----
- drivers/mmc/host/sdhci-brcmstb.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
-index ad01f6451a95..876668827580 100644
---- a/drivers/mmc/host/sdhci-brcmstb.c
-+++ b/drivers/mmc/host/sdhci-brcmstb.c
-@@ -235,13 +235,11 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
+diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+index f186fbd016b1..3aea46db2ea7 100644
+--- a/drivers/mmc/host/sdhci-of-arasan.c
++++ b/drivers/mmc/host/sdhci-of-arasan.c
+@@ -1543,10 +1543,9 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+ 		of_node_put(node);
  
- 	dev_dbg(&pdev->dev, "Probe found match for %s\n",  match->compatible);
- 
--	clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(clk)) {
--		if (PTR_ERR(clk) == -EPROBE_DEFER)
--			return -EPROBE_DEFER;
--		dev_err(&pdev->dev, "Clock not found in Device Tree\n");
--		clk = NULL;
--	}
-+	clk = devm_clk_get_optional(&pdev->dev, NULL);
-+	if (IS_ERR(clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(clk),
-+				     "Failed to get clock from Device Tree\n");
-+
- 	res = clk_prepare_enable(clk);
- 	if (res)
- 		return res;
+ 		if (IS_ERR(sdhci_arasan->soc_ctl_base)) {
+-			ret = PTR_ERR(sdhci_arasan->soc_ctl_base);
+-			if (ret != -EPROBE_DEFER)
+-				dev_err(&pdev->dev, "Can't get syscon: %d\n",
+-					ret);
++			ret = dev_err_probe(&pdev->dev,
++					    PTR_ERR(sdhci_arasan->soc_ctl_base),
++					    "Can't get syscon\n");
+ 			goto err_pltfm_free;
+ 		}
+ 	}
 -- 
 2.17.1
 
