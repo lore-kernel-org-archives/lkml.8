@@ -2,96 +2,103 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1ACC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B4BC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCB0B20826
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE7720767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:27:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fm3L9CGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbgIBP04 (ORCPT
+        id S1728282AbgIBP1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:26:56 -0400
-Received: from mga04.intel.com ([192.55.52.120]:10435 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726927AbgIBPZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:25:48 -0400
-IronPort-SDR: CmAeaSXKEuI2EX3CGO99S4RiPWEK8rouML4cKz2J2P5WbP12Orp0MPN/3cCSe55zZ2Qr5U6uHo
- 5PqNXGDO+2DQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="154808921"
-X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
-   d="scan'208";a="154808921"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 08:25:28 -0700
-IronPort-SDR: L67woUpoVuqgVtgy6pkvyyzRjvNctYT8LWivC1LtOEmUFWlgEn3YgaVHpkdyYY9cehcrxZ7c+N
- uMZlBfRn1XBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
-   d="scan'208";a="325821419"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 02 Sep 2020 08:25:28 -0700
-Received: from abityuts-desk1.ger.corp.intel.com (abityuts-desk1.ger.corp.intel.com [10.237.72.186])
-        by linux.intel.com (Postfix) with ESMTP id 341F158041C;
-        Wed,  2 Sep 2020 08:25:25 -0700 (PDT)
-Message-ID: <b59481655c29d081eea4f34c00166517738000e5.camel@gmail.com>
-Subject: Re: [RFC v4 1/1] selftests/cpuidle: Add support for cpuidle latency
- measurement
-From:   Artem Bityutskiy <dedekind1@gmail.com>
-Reply-To: dedekind1@gmail.com
-To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>, rjw@rjwysocki.net,
-        daniel.lezcano@linaro.org, srivatsa@csail.mit.edu,
-        shuah@kernel.org, npiggin@gmail.com, ego@linux.vnet.ibm.com,
-        svaidy@linux.ibm.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        pratik.r.sampat@gmail.com
-Date:   Wed, 02 Sep 2020 18:25:24 +0300
-In-Reply-To: <20200902114506.45809-2-psampat@linux.ibm.com>
-References: <20200902114506.45809-1-psampat@linux.ibm.com>
-         <20200902114506.45809-2-psampat@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Wed, 2 Sep 2020 11:27:34 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:53764 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbgIBP06 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:26:58 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 082FDdqp181299;
+        Wed, 2 Sep 2020 15:26:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=L+79zCjMk1iGPCCMBqtUC7B8MQuLqWdDq02UmUaPKcw=;
+ b=fm3L9CGqKQD8oekjSlqCLx6b5O8FyB71rYNI8k1aLbnDOX/xBiGThbtotU1tbbR9GObh
+ JuCPwqxDse9q8tasQFlcEpH5IQK4BrM2OG2q8fdhCkUrR6UPnSOOqxFTt8ReELzqN7Dh
+ U42haAbqaavWM6dX/gcbKwh8BkY4E+i/Zp8XckpZsMUmVw1GzbCsPKIa1rADlKVQEr+J
+ +yeLlNxImmmNp/AMnhf1b+7NGmwBCD/dLQDypnZnotrBzQVnRml2aIwDpcNRIIjeM9Mk
+ ts3XmyysJgJI7vsIrxiFnaI4k2E2steNQWrFMzDKStvQM8ohaI/sRNyplO4Tx7jnDTE/ qA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 339dmn1qv6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 02 Sep 2020 15:26:42 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 082FPJwx143766;
+        Wed, 2 Sep 2020 15:26:42 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 3380su4s2x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Sep 2020 15:26:42 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 082FQe7G012961;
+        Wed, 2 Sep 2020 15:26:40 GMT
+Received: from [10.175.214.7] (/10.175.214.7)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 02 Sep 2020 08:26:40 -0700
+Subject: Re: [PATCH 1/2] iommu: amd: Restore IRTE.RemapEn bit after
+ programming IRTE
+To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        joro@8bytes.org, sean.m.osborne@oracle.com,
+        james.puthukattukaran@oracle.com, boris.ostrovsky@oracle.com,
+        jon.grimm@amd.com
+References: <20200902045110.4679-1-suravee.suthikulpanit@amd.com>
+ <20200902045110.4679-2-suravee.suthikulpanit@amd.com>
+From:   Joao Martins <joao.m.martins@oracle.com>
+Message-ID: <f38b77db-fbb2-bcab-56ef-9d23a368533b@oracle.com>
+Date:   Wed, 2 Sep 2020 16:26:36 +0100
 MIME-Version: 1.0
+In-Reply-To: <20200902045110.4679-2-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=881 adultscore=0
+ phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009020147
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
+ mlxlogscore=878 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=1
+ spamscore=0 clxscore=1011 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009020146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-09-02 at 17:15 +0530, Pratik Rajesh Sampat wrote:
-> Measure cpuidle latencies on wakeup to determine and compare with the
-> advertsied wakeup latencies for each idle state.
+On 9/2/20 5:51 AM, Suravee Suthikulpanit wrote:
+> Currently, the RemapEn (valid) bit is accidentally cleared when
+> programming IRTE w/ guestMode=0. It should be restored to
+> the prior state.
+> 
+Probably requires:
 
-It looks like the measurements include more than just C-state wake,
-they also include the overhead of waking up the proces, context switch,
-and potentially any interrupts that happen on that CPU. I am not saying
-this is not interesting data, it surely is, but it is going to be
-larger than you see in cpuidle latency tables. Potentially
-significantly larger.
+ Fixes: b9fc6b56f478 ("iommu/amd: Implements irq_set_vcpu_affinity() hook to setup vapic
+mode for pass-through devices")
 
-Therefore, I am not sure this program should be advertised as "cpuidle
-measurement". It really measures the "IPI latency" in case of the IPI
-method.
+?
 
-> A baseline measurement for each case of IPI and timers is taken at
-> 100 percent CPU usage to quantify for the kernel-userpsace overhead
-> during execution.
+> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-At least on Intel platforms, this will mean that the IPI method won't
-cover deep C-states like, say, PC6, because one CPU is busy. Again, not
-saying this is not interesting, just pointing out the limitation.
+FWIW,
 
-I was working on a somewhat similar stuff for x86 platforms, and I am
-almost ready to publish that on github. I can notify you when I do so
-if you are interested. But here is a small presentation of the approach
-that I did on Plumbers last year:
-
-https://youtu.be/Opk92aQyvt0?t=8266
-
-(the link points to the start of my talk)
-
+ Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
