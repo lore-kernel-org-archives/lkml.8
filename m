@@ -2,93 +2,110 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD40C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE641C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3831F2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93FD52072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:37:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dw0jTfLp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgIBJhH (ORCPT
+        id S1726493AbgIBJhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 05:37:07 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42616 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726124AbgIBJhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 05:37:05 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3702C20DA70D8773C1F1;
-        Wed,  2 Sep 2020 17:37:03 +0800 (CST)
-Received: from [127.0.0.1] (10.74.173.29) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 2 Sep 2020
- 17:36:56 +0800
-Subject: Re: [PATCH RESEND 00/10] crypto: hisilicon/zip - misc clean up
-To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
-References: <1598238709-58699-1-git-send-email-shenyang39@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
-From:   "shenyang (M)" <shenyang39@huawei.com>
-Message-ID: <a926ab4c-fbe6-a6c5-055d-4a605c075699@huawei.com>
-Date:   Wed, 2 Sep 2020 17:36:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Wed, 2 Sep 2020 05:37:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbgIBJhm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 05:37:42 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27DFC061244;
+        Wed,  2 Sep 2020 02:37:41 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id o20so2519945pfp.11;
+        Wed, 02 Sep 2020 02:37:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0bVg9bCv4MMqdAgJJZZqyeP02ZTQZh4PQHFt6NK2cFo=;
+        b=dw0jTfLpMqKgEABRn8le5x5Nq26lpw0U4w0VCzrtJxhOjKDCp+gW1o9TBLy8JwWtOz
+         MTmYovopDK/QmRrnq5UL6+X4RJomKTaoiC131bTYztiKY7jieJ5g34eV9fpTZsxz5X5k
+         jFTBizkGgspf2O6T/jszfQ26M/01ncuxrWcE+hCZ5cMmQ512ONwC4q++aHySiW4zN4II
+         0vjN63urMV5y2wXk9r5YNwuFDGMNfU6o87FyZilbAlvj4w9v1jRg4qD71qmrvOJFgS/b
+         z+h37d5CmzWnuDfG8ri4n09n0q4pHgUOhd072cBUZFufgucMF2iLY9iyQ4lbz9BfCNiy
+         CfkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0bVg9bCv4MMqdAgJJZZqyeP02ZTQZh4PQHFt6NK2cFo=;
+        b=jYv50nQeVqIxzFmJV4ABQsbagvTBcpLPCG0UwvpZnVyyNz50jnjSx0DRSEfsdjgO/H
+         q9/TSnMCZMJv56QPO28INOmUMQLpPkSL4g9t6ZvaSgl4T1BSZk0GE4rc2MfXWt1huGFB
+         1JaFqDMyVUPa3ASI9ExF38LPkuETYPezITrwRcNATKQYhSyiOQVhYYbSWJ2GtfB6qNpO
+         7qOb8kPIsM0OKF2fT+gAMDFP9S6bO4w4ieuwl2snGLOfSh8M4BseRKu94dH0U3dkUTAi
+         fGaa1/ZKDIAddVP1C7g5WN6Mzq8bybwWzWHw8t5PkJnDOM3yME341zr/uZvpl4XrA4Fn
+         tIVg==
+X-Gm-Message-State: AOAM530lwOH1ErqxAm9EjjNS1KOQZGBw6+Q3hXzbtOSMxQrn73sGpb4n
+        htvSUVUYKF6Yehv8abxbCox1U8grmtAYIQnjubU=
+X-Google-Smtp-Source: ABdhPJwJeP6Bk7+OxUaaNfM8igZ7nEc1pe+JJdoFRGgO9VLMNjvhAmFN/OKi+kRqHWdTyRkai3chz48VBOSSzzEMmYg=
+X-Received: by 2002:a63:5656:: with SMTP id g22mr805184pgm.44.1599039461544;
+ Wed, 02 Sep 2020 02:37:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1598238709-58699-1-git-send-email-shenyang39@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.173.29]
-X-CFilter-Loop: Reflected
+References: <20200901221141.GB1464000@kernel.org>
+In-Reply-To: <20200901221141.GB1464000@kernel.org>
+From:   Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Date:   Wed, 2 Sep 2020 12:37:30 +0300
+Message-ID: <CAPpZLN6+tyGMfOL0iqC03KwWLP_qTcR9N1ii1u5vvUfiHm_+hg@mail.gmail.com>
+Subject: Re: libtracevent: Build warning on 32-bit arches
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-any comment?
-
-Thanks,
-Yang
-
-On 2020/8/24 11:11, Yang Shen wrote:
-> This patchset make some clean up:
-> patch 1:remove useless parameters
-> patch 4:replace 'sprintf' with 'scnprintf'
-> patch 7:fix static check warning
-> and the rest patch fix some coding style
+On Wed, Sep 2, 2020 at 1:11 AM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
 >
-> Resend this patch series because it depends on
-> https://patchwork.kernel.org/cover/11715927/
-> (crypto: hisilicon/qm - misc fixes).
-> Now the patch series(crypto: hisilicon/qm - misc fixes) has been applied.
-> So this patch series will apply against cryptodev.
+> Hi Tzvetomir,
 >
-> Shukun Tan (1):
->    crypto: hisilicon/zip - modify debugfs interface parameters
+>         I noticed this:
 >
-> Yang Shen (9):
->    crypto: hisilicon/zip - remove some useless parameters
->    crypto: hisilicon/zip - unify naming style for functions and macros
->    crypto: hisilicon/zip - replace 'sprintf' with 'scnprintf'
->    crypto: hisilicon/zip - use a enum parameter instead of some macros
->    crypto: hisilicon/zip - add print for error branch
->    crypto: hisilicon/zip - fix static check warning
->    crypto: hisilicon/zip - move some private macros from 'zip.h' to
->      'zip_crypto.c'
->    crypto: hisilicon/zip - supplement some comments
->    crypto: hisilicon/zip - fix some coding styles
+>   27 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 8.3.0-19) 8.3.0
+>   29 debian:experimental-x-mipsel  : Ok   mipsel-linux-gnu-gcc (Debian 9.2.1-8) 9.2.1 20190909
+>   64 ubuntu:16.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+>   69 ubuntu:18.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0
+>   71 ubuntu:18.04-x-m68k           : Ok   m68k-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+>   77 ubuntu:18.04-x-sh4            : Ok   sh4-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
 >
->   drivers/crypto/hisilicon/zip/zip.h        |  15 ----
->   drivers/crypto/hisilicon/zip/zip_crypto.c | 126 ++++++++++++++++++++---------
->   drivers/crypto/hisilicon/zip/zip_main.c   | 130 ++++++++++++++----------------
->   3 files changed, 148 insertions(+), 123 deletions(-)
+>     event-parse.c: In function 'print_arg_pointer':
+>     event-parse.c:5262:29: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+>        trace_seq_printf(s, "%p", (void *)val);
+>                                  ^
+> The cset is:
 >
-> --
-> 2.7.4
->
->
-> .
+>   487ae1f4a17c197a ("tools lib traceevent: Add support for more printk format specifiers")
 >
 
+Thanks, Arnaldo
+I'll submit a patch.
 
+> Best regards,
+>
+> - Arnaldo
+
+
+
+-- 
+Tzvetomir (Ceco) Stoyanov
+VMware Open Source Technology Center
