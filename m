@@ -2,99 +2,166 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9486CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72976C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D07F20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516212078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:46:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ffa/h1Ag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgIBLoP (ORCPT
+        id S1726733AbgIBLqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 07:44:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:36326 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgIBLoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 07:44:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EA18D6E;
-        Wed,  2 Sep 2020 04:44:01 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.4.242])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81B383F66F;
-        Wed,  2 Sep 2020 04:43:58 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 12:43:48 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH] x86/uaccess: Use pointer masking to limit uaccess
- speculation
-Message-ID: <20200902114348.GA1002@C02TD0UTHF1T.local>
-References: <f12e7d3cecf41b2c29734ea45a393be21d4a8058.1597848273.git.jpoimboe@redhat.com>
- <20200901140208.GA95447@C02TD0UTHF1T.local>
- <20200901144641.GA28580@lst.de>
- <20200901145442.GC95447@C02TD0UTHF1T.local>
- <20200901150553.GA30034@lst.de>
- <20200901154629.GA882@lst.de>
+        Wed, 2 Sep 2020 07:46:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8964 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726268AbgIBLpX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 07:45:23 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 082BfPPb054953;
+        Wed, 2 Sep 2020 07:45:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : subject :
+ date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=T6fpH/Ru1BzDNdcKAGM7+hLUwS8hQAfx6nhqQ2wxrVY=;
+ b=ffa/h1AgLMC8JrAIDWuwbfM+9X+NHLkSPSglZb4A7ezU4Tw79UZ+I1C/UWnTeTKvlhYo
+ fuj430gezH2eHWnVSxKOXw0oiwgKX8i/eZYytQxkHr3pTc/6l7zmOxxhm8aF0dV5gDIM
+ 9uAVX/6v6HaOuffcglHh68wu7EXXNRM6fMlfsuCuLmGEfmyXZIqGC1AiN36dY/SSp5LY
+ 29ReB09NGt5saQDQolMGRJ953Wolm43uobczD4/IEk7RtX8rlDQYRURe3UZSOdnDp6Bn
+ y5BM7bvKOLkuFvYxpZKFLbc5sVsLkZVfbPIpuomiskS4fL9Z3uBrtNya8Gd3wXyr0gsV Cg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33aar302yk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 07:45:14 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 082BgGmE056911;
+        Wed, 2 Sep 2020 07:45:14 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33aar302xs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 07:45:14 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 082Bh8bh016372;
+        Wed, 2 Sep 2020 11:45:12 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04fra.de.ibm.com with ESMTP id 339ap7s6b9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 11:45:12 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 082Bj98u61604268
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 2 Sep 2020 11:45:09 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 79B89AE058;
+        Wed,  2 Sep 2020 11:45:09 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EAEF0AE055;
+        Wed,  2 Sep 2020 11:45:06 +0000 (GMT)
+Received: from pratiks-thinkpad.ibmuc.com (unknown [9.77.200.65])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  2 Sep 2020 11:45:06 +0000 (GMT)
+From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
+To:     rjw@rjwysocki.net, daniel.lezcano@linaro.org,
+        srivatsa@csail.mit.edu, shuah@kernel.org, npiggin@gmail.com,
+        ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, pratik.r.sampat@gmail.com,
+        psampat@linux.ibm.com
+Subject: [RFC v4 0/1] Selftest for cpuidle latency measurement
+Date:   Wed,  2 Sep 2020 17:15:05 +0530
+Message-Id: <20200902114506.45809-1-psampat@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901154629.GA882@lst.de>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-02_03:2020-09-02,2020-09-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
+ mlxscore=0 adultscore=0 suspectscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 bulkscore=0 mlxlogscore=913
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009020105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 05:46:29PM +0200, Christoph Hellwig wrote:
-> On Tue, Sep 01, 2020 at 05:05:53PM +0200, Christoph Hellwig wrote:
-> > > Is there anything in particular that's tricky, or do you just want
-> > > someone to look generally? From a quick grep arch/arm64/* looks clean, but
-> > > I suspect that's misleading.
-> > 
-> > Yes, it should be mostly trivial.  I just bet the maintainers are
-> > better at optimizing the low-level assembly code with the variable
-> > address limit gone than I am.  (See Linus comments on the x86 version
-> > for example).  And I don't have a physical arm64 to test with so I'd
-> > have to rely on qemu for any testing.
+Changelog v3-->v4:
+1. Overhaul in implementation from kernel module to a userspace selftest 
+---
 
-Makes sense.
+The patch series introduces a mechanism to measure wakeup latency for
+IPI and timer based interrupts
+The motivation behind this series is to find significant deviations
+behind advertised latency and residency values
 
-I'll take a look if Will doesn't beat me to it, and I'm happy to test
-the result regardless.
+To achieve this in the userspace, IPI latencies are calculated by
+sending information through pipes and inducing a wakeup, similarly
+alarm events are setup for calculate timer based wakeup latencies.
 
-> So I looked at the arm64 code and I don't think it is entirely trivial,
-> due to the orig_addr_limit saving in the syscall entry path, and due
-> to all the UAO stuff.  On the plus side it looks to me like
-> CONFIG_ARM64_UAO and all the code relate to it can go away entirely
-> if set_fs() is gone.
+To account for delays from kernel-userspace interactions baseline
+observations are taken on a 100% busy CPU and subsequent obervations
+must be considered relative to that.
 
-I *think* removing that should be largely mechanical for someone
-for someone familiar with it, and it'd be nice to see it go.
+In theory, wakeups induced by IPI and Timers should have similar
+wakeup latencies, however in practice there may be deviations which may
+need to be captured.
 
-> So if I can trick you guys into submiting a patch on top of:
-> 
->    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/set_fs-removal
-> 
-> that would make my life a lot simpler.
+One downside of the userspace approach in contrast to the kernel
+implementation is that the run to run variance can turn out to be high
+in the order of ms; which is the scope of the experiments at times.
 
-I'll see what I can do.
+Another downside of the userspace approach is that it takes much longer
+to run and hence a command-line option quick and full are added to make
+sure quick 1 CPU tests can be carried out when needed and otherwise it
+can carry out a full system comprehensive test.
 
-At first glance it looks like we might need to flesh out or refactor the
-arm64 kernel maccess routines first (since we want the user maccess
-routines to use LDTR/STTR instructions that can't access kernel memory),
-but after that I think the rest is largely mechanical.
+Usage
+---
+./cpuidle --mode <full / quick / num_cpus> --output <output location> 
+full: runs on all CPUS
+quick: run on a random CPU
+num_cpus: Limit the number of CPUS to run on
 
-Mark.
+Sample output snippet
+---------------------
+--IPI Latency Test---
+SRC_CPU   DEST_CPU IPI_Latency(ns)
+...
+  0          5       256178
+  0          6       478161
+  0          7       285445
+  0          8       273553
+Expected IPI latency(ns): 100000
+Observed Average IPI latency(ns): 248334
+
+--Timeout Latency Test--
+--Baseline Timeout Latency measurement: CPU Busy--
+Wakeup_src Baseline_delay(ns)
+...
+ 32          972405
+ 33         1004287
+ 34          986663
+ 35          994022
+Expected timeout(ns): 10000000
+Observed Average timeout diff(ns): 991844
+
+Pratik Rajesh Sampat (1):
+  selftests/cpuidle: Add support for cpuidle latency measurement
+
+ tools/testing/selftests/Makefile          |   1 +
+ tools/testing/selftests/cpuidle/Makefile  |   7 +
+ tools/testing/selftests/cpuidle/cpuidle.c | 616 ++++++++++++++++++++++
+ tools/testing/selftests/cpuidle/settings  |   1 +
+ 4 files changed, 625 insertions(+)
+ create mode 100644 tools/testing/selftests/cpuidle/Makefile
+ create mode 100644 tools/testing/selftests/cpuidle/cpuidle.c
+ create mode 100644 tools/testing/selftests/cpuidle/settings
+
+-- 
+2.26.2
+
