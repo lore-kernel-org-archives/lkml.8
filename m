@@ -2,114 +2,181 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34A8C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9251AC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 955F22083B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660CB207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:29:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oxn45NiK"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="g7fOCMAG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgIBT2X (ORCPT
+        id S1728324AbgIBT3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 15:28:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgIBT2V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 15:28:21 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D054C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 12:28:21 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id h12so168214pgm.7
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 12:28:21 -0700 (PDT)
+        Wed, 2 Sep 2020 15:29:35 -0400
+Received: from mail-dm6nam11on2068.outbound.protection.outlook.com ([40.107.223.68]:48448
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726140AbgIBT3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 15:29:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FM3dFzZYw9CdnujdazSYQ3hMf7vXsrBtrUa1lXPLUnys/C5wTw4cK1nBFV9fELDEPPac2rlOgIslywgorzH560P1GeEjbTrNkP+P4ILqeMl2WzLG6+1EiEn+k5BxkOIbhjMB0WG555QRJBEqBV9vbB3r0KkrCLGdHUSxai5J7KOjSueJp6zRAfqiCTY1hXpzLRBDsjIhTweabzdyXvLGjCJwElIxauHCODez8pXd51OIZtXNpKuQr0+N4BnlivXmDB1HHRvo9wtp3+604rulqGwlNzfoXXQcPrU3vSJVi5EVGlBH8HVugCMRlriF5ExsAXem2rJ+1LyV3Y6+4EUaOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0NGe9071dH2fGGayYbJedj9F1gjaLZ2rymGzxIujeKA=;
+ b=bHg0K6h6L9T5lMOFiQ6tIkwzsijzLuPx/D/mn6j2fQBExgvaCPG7h6B0O9s8vk6i2gW5Lcjcw3ZtCZQ7lxt7VsT+fMHEs2euVLheqpJSU+9sHiRXQ/9UY/cKNO7YoXCHMyg9TtoAjMTgFg4ucHGnDY+r2tsgGJekN1d9MulsILZiNFWP2hb4OmaV/XE9orgq+003O8qTE16DB5ep/Tz6HRpIYK4dlTKpR81ZikA3qw7JTVVHuD+LP9onundDm5H6094uLRRC9U6ZaFa6qsT5EL1oA8LMp5ZhewDeCL/SIv8rUG+ZrBEma6LQjda6PRqGiSUtVeQ1q78qo7k9Y37Lug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+ow1ubksHg2fW7r+dLInAj3bLacIWDt2iKSFX/lPoWI=;
-        b=oxn45NiKqloVSGS5JH3/3SwkVezuia8rHntWvKPtBaPV0aW7ZfIid4c8lVPK7H2Jx4
-         DHdaYxSQNxnuGN14cpSVzkz3QJPeJJkPfF8LiGHpez+tvIcEPUd7BfCxn1Fd6kYcgSpe
-         fHXGHbQWhypou1gH4oghjCMIeOeYx9VImDf7skvfmkgK9Ygs3CY3Vzi06X+A2kGopGJ4
-         Y0vHpXsBCV6CWPX2X0vsWFmCjwKmO0a3kEEqEXaemdctuu2qpqOlL7WjS8mwayxBvLd9
-         URKkmtAk+HgQiA/GrNqJwemHTwPNo7kkUbiIAJsxBFkbon4HmXS2j9J4s1tQ3/BjaLgV
-         TVGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+ow1ubksHg2fW7r+dLInAj3bLacIWDt2iKSFX/lPoWI=;
-        b=rKK91CFZG/xdJd+yd1wFCQre9niG+S/urRdln6s6glcyLOkeeHhFdFWxd53TPNlAxy
-         WmMJcF+FKP68/nkn3ys2y3YDv1F570oCKJGFU+HU5DcwB7JYZrvdmTB+OkDJRqOd7jgI
-         txlmNad+1XVJyWF2lkUQe8yQAFadnZ9/S/xVH/Rol+1sBtJvV2fs1Vamkevjtnt2TPF6
-         C6pN178EtdEF/c59HdA7Ag5p2RJlLbZ0/ncAAr7S4nyD59Yt0xOJTxCU9OzPdOgxU5Is
-         xBpnVq51e/DjwUWz5glayptHGxdM7+lVrCv8f3nUClnp+OJBxKidWuHm8aN6MO3I+Tut
-         +ixg==
-X-Gm-Message-State: AOAM531Ee/dFKnrZPeUGkCO1cVDzf1I65NkpvMWEzMaul8ogdrluZncz
-        XlThBMDcLSV7BDptJYVKVW/92exx5mF/RCpFKdlG9Q==
-X-Google-Smtp-Source: ABdhPJy0tlS63y55UqhNg1LfoDiFRWnEGQsCGw75DnDFSLSpXLAsR0Piyb1fMk30LM15kxbAmkzq/sOq188SsHHg/H4=
-X-Received: by 2002:a63:9d09:: with SMTP id i9mr2941158pgd.381.1599074900374;
- Wed, 02 Sep 2020 12:28:20 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0NGe9071dH2fGGayYbJedj9F1gjaLZ2rymGzxIujeKA=;
+ b=g7fOCMAGjFFwWLofyWd38W6fpnoh7PZH/8nAtz+p/2LzozMMRWVvwn4dTW3XPSZjZWnRMOModCUOGAj5yeBSNgalfyv5O4zRwh81UZhBymmRxVDYRqa+nQTcV0HPS2JPltfwYyNPYSMD+ZRtYOjwG8l8iIpO/yu1ceFe0TkToDE=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2685.namprd12.prod.outlook.com (2603:10b6:805:67::33)
+ by SN6PR12MB2766.namprd12.prod.outlook.com (2603:10b6:805:78::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.24; Wed, 2 Sep
+ 2020 19:29:30 +0000
+Received: from SN6PR12MB2685.namprd12.prod.outlook.com
+ ([fe80::48e9:c9c:7cd7:de86]) by SN6PR12MB2685.namprd12.prod.outlook.com
+ ([fe80::48e9:c9c:7cd7:de86%5]) with mapi id 15.20.3348.015; Wed, 2 Sep 2020
+ 19:29:30 +0000
+Subject: Re: [PATCH v2 1/2] cper, apei, mce: Pass x86 CPER through the MCA
+ handling chain
+To:     Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-acpi@vger.kernel.org,
+        devel@acpica.org, Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Yazen Ghannam <yazen.ghannam@amd.com>
+References: <20200828203332.11129-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20200828203332.11129-2-Smita.KoralahalliChannabasappa@amd.com>
+ <878sdvv20h.fsf@kokedama.swc.toshiba.co.jp>
+From:   Smita Koralahalli Channabasappa <skoralah@amd.com>
+Message-ID: <102d0c75-d642-8f8b-68c7-792499c2a62a@amd.com>
+Date:   Wed, 2 Sep 2020 14:29:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.2.1
+In-Reply-To: <878sdvv20h.fsf@kokedama.swc.toshiba.co.jp>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: SN6PR08CA0029.namprd08.prod.outlook.com
+ (2603:10b6:805:66::42) To SN6PR12MB2685.namprd12.prod.outlook.com
+ (2603:10b6:805:67::33)
 MIME-Version: 1.0
-References: <20200901002326.1137289-1-ndesaulniers@google.com> <202009011255.5BBF4F31F1@keescook>
-In-Reply-To: <202009011255.5BBF4F31F1@keescook>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 2 Sep 2020 12:28:09 -0700
-Message-ID: <CAKwvOdmq7d4PhKH28HhbiNDhk4qoAT1n0TobQiNe+7_PapVTYA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] set clang minimum version to 10.0.1
-To:     Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by SN6PR08CA0029.namprd08.prod.outlook.com (2603:10b6:805:66::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Wed, 2 Sep 2020 19:29:29 +0000
+X-Originating-IP: [2605:6000:101a:88d8:7cc2:c97e:51db:6288]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 9bf4d514-830c-4c3a-cead-08d84f76836c
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2766:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB276677306DB92136916E69E2902F0@SN6PR12MB2766.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dY8CXfcKp2x1VouSW9EVGfVRd72MVnY36AFpPTdNhGxO65py64t6wx3cNb1ccc4E9pRWC69NLAEkLVkWobCDUTUJ1YFk4Y6DFdKasHUFXtxxUkArdCPBH5dZEXRyP7jrdi/ReVGCS8nPrOJR5q8wwStherKggF7lYaDLQ0Ub9ZkFrW+opvXsUfoGqDOTiulijjEnQZecNBpXussmZJR2La8H21FJ/nYylDJRAzebRK8Xjid8jpXXvJaTrbR1CDijKjuzMRWOH2n5yrCSn2cNT7niEaysEicIlbsA2YadReneQaaO3i5rONlunhWOt2pyiDGw0H0sjuPzsPlknWQTFoVk7QekCWHXc6LNvHb5Kdq6NYcw1NbT8RyGz+oD4R2A
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(39860400002)(366004)(396003)(136003)(52116002)(7416002)(53546011)(8676002)(66946007)(66556008)(66476007)(186003)(4326008)(31696002)(31686004)(2906002)(6486002)(54906003)(6916009)(478600001)(316002)(5660300002)(16576012)(8936002)(956004)(36756003)(2616005)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: bUp6CPAoh18BzfZ3ptygou6uiHGtwa3q+SJtqvFU5W87X61vj9xk+jcCQLEkMMityfPtk7HEZGEO17iHgcPU4cRDIoj9Rv4qEepch6xbKHeJtqR2xO0Jx9wOFJ/+RgkimsxprZWApN7yeAYQwO+4sRbltU6c0T6FkWlUKceM94/0nk9gMZRoVva7PabNCtUDDsJRuGvVW31bPxUdo+zPmeGapYLrnufti8ihV1O35XJ/ZD6r8+rpab2Bs3K/OgbPljhKMOuTUWecsOl8KoR9E21fGpljAQHr8YhlO6WGqThWo6RzShntNn+vKLxbhowugq9o9CYGS0hHsD8p3WqUdoPf9t/+UwK3dEopc7/A+MWMHwpN8Q6n2NLbqNmCYJWV3iVH2qLjmrkkgw3XUMEPYU6kRyrE8SNql6FxBGJsIjpCCFqSCZkBNmOhUTN+XkhzjQZxalDld9tCRMmTqeLIDPdF+HV0W7LZ5cwaHbZUhRz1io3joONJkR4WHoVjSBE9O8Z+TR7MrurkEk9KU1UW4WizTnbAQWcA0wPBP6CtqZ+8hOhTjN9DRQr8R+vvyqqkimKI3obpcP4b7P+YJB1pAyIr8Xi3Zn1QOBuE4I1+JJxTAaPqjCR6AHsKMVTBxbodE83A+qtOxwhlG79VeDuPSvFyj5Zv/mZ/3E6PjA7KzDE2Y6Ne3W/SwI82IBKAtuUd/6bGY25I2aRxfnNk6swgVg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9bf4d514-830c-4c3a-cead-08d84f76836c
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2020 19:29:30.4895
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H/FA9DIIxzL7Yz4TfkYI5QWufjBkMl4ZhIGsrIXeIBJwzGX6W9hdf1Ks3v+ajq/KtFNV26aR8A3iYQVuKHPaIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2766
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 1:01 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Aug 31, 2020 at 05:23:19PM -0700, Nick Desaulniers wrote:
-> > Adds a compile time #error to compiler-clang.h setting the effective
-> > minimum supported version to clang 10.0.1. A separate patch has already
-> > been picked up into the Documentation/ tree also confirming the version.
-> >
-> > Next are a series of reverts. One for 32b arm is a partial revert.
-> >
-> > Then Marco suggested fixes to KASAN docs.
-> >
-> > Finally, improve the warning for GCC too as per Kees.
-> > [...]
-> >  8 files changed, 16 insertions(+), 27 deletions(-)
->
-> A nice simplification!
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> (I do note that for Ubuntu 20.04, they're going to need to do an LLVM
-> 10.0.0 -> 10.0.1 bump to do kernel builds for their latest LTS...)
->
-> --
-> Kees Cook
+On 8/31/20 12:05 AM, Punit Agrawal wrote:
 
-I'll collect relevant tags and fixup feedback and send akpm a v3,
-maybe this afternoon.  Thanks everyone for the reviews+feedback.
+> Hi Smita,
+>
+> A couple of comments below -
+>
+> Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> writes:
+>
+> [...]
+>
+>
+>> diff --git a/drivers/firmware/efi/cper-x86.c b/drivers/firmware/efi/cper-x86.c
+>> index 2531de49f56c..374b8e18552a 100644
+>> --- a/drivers/firmware/efi/cper-x86.c
+>> +++ b/drivers/firmware/efi/cper-x86.c
+>> @@ -1,7 +1,7 @@
+>>   // SPDX-License-Identifier: GPL-2.0
+>>   // Copyright (C) 2018, Advanced Micro Devices, Inc.
+>>   
+>> -#include <linux/cper.h>
+> Why is the include dropped? AFAICT, the definitions from there are still
+> being used after this patch.
 
---
+Dropped because <acpi/apei.h> already includes <linux/cper.h>
+
+>> +#include <acpi/apei.h>
+
+[...]
+
+>> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
+>> index 680f80960c3d..44d4d08acce0 100644
+>> --- a/include/acpi/apei.h
+>> +++ b/include/acpi/apei.h
+>> @@ -33,8 +33,15 @@ extern bool ghes_disable;
+>>   
+>>   #ifdef CONFIG_ACPI_APEI
+>>   void __init acpi_hest_init(void);
+>> +int arch_apei_report_x86_error(struct cper_ia_proc_ctx *ctx_info,
+>> +			       u64 lapic_id);
+>>   #else
+>>   static inline void acpi_hest_init(void) { return; }
+>> +static inline int arch_apei_report_x86_error(struct cper_ia_proc_ctx *ctx_info,
+>> +					     u64 lapic_id)
+>> +{
+>> +	return -EINVAL;
+>> +}
+>>   #endif
+> Adding the declaration to this include violates the separation of
+> generic and architecture specific code.
+>
+> Can this be moved to the appropriate architecture specific header?
+> Perhaps arch/x86/include/asm/apei.h.
+
+Yes, I have fixed this and moved into arch/x86/include/asm/acpi.h.
+
+>>   typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void *data);
+>> @@ -51,6 +58,8 @@ int erst_clear(u64 record_id);
+>>   
+>>   int arch_apei_enable_cmcff(struct acpi_hest_header *hest_hdr, void *data);
+>>   void arch_apei_report_mem_error(int sev, struct cper_sec_mem_err *mem_err);
+>> +int arch_apei_report_x86_error(struct cper_ia_proc_ctx *ctx_info,
+>> +			       u64 lapic_id);
+>
+> Why is the additional declaration needed?
+
+Will fix in the next revision.
+
 Thanks,
-~Nick Desaulniers
+Smita
+
+[...]
+
