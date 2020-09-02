@@ -2,76 +2,121 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F071AC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2D9C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDC6A20829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A1C20829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:14:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgIBOO0 (ORCPT
+        id S1728019AbgIBONv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:14:26 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10799 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726521AbgIBOGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:06:48 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 73C3263CD800FB392089;
-        Wed,  2 Sep 2020 22:06:45 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Wed, 2 Sep 2020
- 22:06:35 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <ohad@wizery.com>, <bjorn.andersson@linaro.org>, <s-anna@ti.com>,
-        <mathieu.poirier@linaro.org>
-CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] remoteproc: k3-dsp: Fix return value check in k3_dsp_rproc_of_get_memories()
-Date:   Wed, 2 Sep 2020 22:06:14 +0800
-Message-ID: <20200902140614.28636-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 2 Sep 2020 10:13:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53814 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727801AbgIBOBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 10:01:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 75600AEFA;
+        Wed,  2 Sep 2020 14:01:18 +0000 (UTC)
+Date:   Wed, 2 Sep 2020 16:01:16 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@suse.de>
+Subject: Re: [PATCH] mm/memory_hotplug: drain per-cpu pages again during
+ memory offline
+Message-ID: <20200902140116.GI4617@dhcp22.suse.cz>
+References: <20200901124615.137200-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901124615.137200-1-pasha.tatashin@soleen.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of error, the function devm_ioremap_wc() returns NULL pointer
-not ERR_PTR(). The IS_ERR() test in the return value check should be
-replaced with NULL test.
+[Cc Mel and Vlastimil - I am still rummaging]
 
-Fixes: 87218f96c21a ("remoteproc: k3-dsp: Add support for C71x DSPs")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/remoteproc/ti_k3_dsp_remoteproc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue 01-09-20 08:46:15, Pavel Tatashin wrote:
+> There is a race during page offline that can lead to infinite loop:
+> a page never ends up on a buddy list and __offline_pages() keeps
+> retrying infinitely or until a termination signal is received.
+> 
+> Thread#1 - a new process:
+> 
+> load_elf_binary
+>  begin_new_exec
+>   exec_mmap
+>    mmput
+>     exit_mmap
+>      tlb_finish_mmu
+>       tlb_flush_mmu
+>        release_pages
+>         free_unref_page_list
+>          free_unref_page_prepare
+>           set_pcppage_migratetype(page, migratetype);
+>              // Set page->index migration type below  MIGRATE_PCPTYPES
+> 
+> Thread#2 - hot-removes memory
+> __offline_pages
+>   start_isolate_page_range
+>     set_migratetype_isolate
+>       set_pageblock_migratetype(page, MIGRATE_ISOLATE);
+>         Set migration type to MIGRATE_ISOLATE-> set
+>         drain_all_pages(zone);
+>              // drain per-cpu page lists to buddy allocator.
+> 
+> Thread#1 - continue
+>          free_unref_page_commit
+>            migratetype = get_pcppage_migratetype(page);
+>               // get old migration type
+>            list_add(&page->lru, &pcp->lists[migratetype]);
+>               // add new page to already drained pcp list
+> 
+> Thread#2
+> Never drains pcp again, and therefore gets stuck in the loop.
+> 
+> The fix is to try to drain per-cpu lists again after
+> check_pages_isolated_cb() fails.
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  mm/memory_hotplug.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index e9d5ab5d3ca0..d6d54922bfce 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1575,6 +1575,15 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  		/* check again */
+>  		ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
+>  					    NULL, check_pages_isolated_cb);
+> +		/*
+> +		 * per-cpu pages are drained in start_isolate_page_range, but if
+> +		 * there are still pages that are not free, make sure that we
+> +		 * drain again, because when we isolated range we might
+> +		 * have raced with another thread that was adding pages to
+> +		 * pcp list.
+> +		 */
+> +		if (ret)
+> +			drain_all_pages(zone);
+>  	} while (ret);
+>  
+>  	/* Ok, all of our target is isolated.
+> -- 
+> 2.25.1
+> 
 
-diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-index 9011e477290c..f373df35d7d0 100644
---- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-+++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-@@ -445,10 +445,10 @@ static int k3_dsp_rproc_of_get_memories(struct platform_device *pdev,
- 
- 		kproc->mem[i].cpu_addr = devm_ioremap_wc(dev, res->start,
- 							 resource_size(res));
--		if (IS_ERR(kproc->mem[i].cpu_addr)) {
-+		if (!kproc->mem[i].cpu_addr) {
- 			dev_err(dev, "failed to map %s memory\n",
- 				data->mems[i].name);
--			return PTR_ERR(kproc->mem[i].cpu_addr);
-+			return -EBUSY;
- 		}
- 		kproc->mem[i].bus_addr = res->start;
- 		kproc->mem[i].dev_addr = data->mems[i].dev_addr;
 -- 
-2.17.1
-
-
+Michal Hocko
+SUSE Labs
