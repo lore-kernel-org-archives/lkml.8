@@ -2,209 +2,120 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DE0C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F7AC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E09820829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9D3B2065E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgIBKYK (ORCPT
+        id S1726771AbgIBKZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 06:24:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49502 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgIBKXX (ORCPT
+        Wed, 2 Sep 2020 06:25:25 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:47058 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbgIBKZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 06:23:23 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1kDPvE-00069F-Af; Wed, 02 Sep 2020 10:23:20 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Christian Brauner <christian@brauner.io>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-kselftest@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-api@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Shuah Khan <shuah@kernel.org>
-Subject: [PATCH v2 4/4] tests: add waitid() tests for non-blocking pidfds
-Date:   Wed,  2 Sep 2020 12:21:30 +0200
-Message-Id: <20200902102130.147672-5-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200902102130.147672-1-christian.brauner@ubuntu.com>
-References: <20200902102130.147672-1-christian.brauner@ubuntu.com>
+        Wed, 2 Sep 2020 06:25:25 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 4090B1C0B7F; Wed,  2 Sep 2020 12:25:23 +0200 (CEST)
+Date:   Wed, 2 Sep 2020 12:25:21 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 053/125] media: gpio-ir-tx: improve precision of
+ transmitted signal due to scheduling
+Message-ID: <20200902102521.GC3765@duo.ucw.cz>
+References: <20200901150934.576210879@linuxfoundation.org>
+ <20200901150937.150292200@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="t0UkRYy7tHLRMCai"
+Content-Disposition: inline
+In-Reply-To: <20200901150937.150292200@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Verify that the PIDFD_NONBLOCK flag works with pidfd_open() and that
-waitid() with a non-blocking pidfd returns EAGAIN:
 
-	TAP version 13
-	1..3
-	# Starting 3 tests from 1 test cases.
-	#  RUN           global.wait_simple ...
-	#            OK  global.wait_simple
-	ok 1 global.wait_simple
-	#  RUN           global.wait_states ...
-	#            OK  global.wait_states
-	ok 2 global.wait_states
-	#  RUN           global.wait_nonblock ...
-	#            OK  global.wait_nonblock
-	ok 3 global.wait_nonblock
-	# PASSED: 3 / 3 tests passed.
-	# Totals: pass:3 fail:0 xfail:0 xpass:0 skip:0 error:0
+--t0UkRYy7tHLRMCai
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v2 */
-unchanged
----
- tools/testing/selftests/pidfd/pidfd.h      |  4 ++
- tools/testing/selftests/pidfd/pidfd_wait.c | 83 +++++++++++++++++++++-
- 2 files changed, 86 insertions(+), 1 deletion(-)
+Hi!
+>=20
+> [ Upstream commit ea8912b788f8144e7d32ee61e5ccba45424bef83 ]
+>=20
+> usleep_range() may take longer than the max argument due to scheduling,
+> especially under load. This is causing random errors in the transmitted
+> IR. Remove the usleep_range() in favour of busy-looping with udelay().
+>=20
+> Signed-off-by: Sean Young <sean@mess.org>
 
-diff --git a/tools/testing/selftests/pidfd/pidfd.h b/tools/testing/selftests/pidfd/pidfd.h
-index a2c80914e3dc..01f8d3c0cf2c 100644
---- a/tools/testing/selftests/pidfd/pidfd.h
-+++ b/tools/testing/selftests/pidfd/pidfd.h
-@@ -46,6 +46,10 @@
- #define __NR_pidfd_getfd -1
- #endif
- 
-+#ifndef PIDFD_NONBLOCK
-+#define PIDFD_NONBLOCK O_NONBLOCK
-+#endif
-+
- /*
-  * The kernel reserves 300 pids via RESERVED_PIDS in kernel/pid.c
-  * That means, when it wraps around any pid < 300 will be skipped.
-diff --git a/tools/testing/selftests/pidfd/pidfd_wait.c b/tools/testing/selftests/pidfd/pidfd_wait.c
-index 075c716f6fb8..cefce4d3d2f6 100644
---- a/tools/testing/selftests/pidfd/pidfd_wait.c
-+++ b/tools/testing/selftests/pidfd/pidfd_wait.c
-@@ -21,6 +21,11 @@
- 
- #define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
- 
-+/* Attempt to de-conflict with the selftests tree. */
-+#ifndef SKIP
-+#define SKIP(s, ...)	XFAIL(s, ##__VA_ARGS__)
-+#endif
-+
- static pid_t sys_clone3(struct clone_args *args)
- {
- 	return syscall(__NR_clone3, args, sizeof(struct clone_args));
-@@ -65,7 +70,7 @@ TEST(wait_simple)
- 	pidfd = -1;
- 
- 	pid = sys_clone3(&args);
--	ASSERT_GE(pid, 1);
-+	ASSERT_GE(pid, 0);
- 
- 	if (pid == 0)
- 		exit(EXIT_SUCCESS);
-@@ -133,4 +138,80 @@ TEST(wait_states)
- 	EXPECT_EQ(close(pidfd), 0);
- }
- 
-+TEST(wait_nonblock)
-+{
-+	int pidfd, status = 0;
-+	unsigned int flags = 0;
-+	pid_t parent_tid = -1;
-+	struct clone_args args = {
-+		.parent_tid = ptr_to_u64(&parent_tid),
-+		.flags = CLONE_PARENT_SETTID,
-+		.exit_signal = SIGCHLD,
-+	};
-+	int ret;
-+	pid_t pid;
-+	siginfo_t info = {
-+		.si_signo = 0,
-+	};
-+
-+	/*
-+	 * Callers need to see ECHILD with non-blocking pidfds when no child
-+	 * processes exists.
-+	 */
-+	pidfd = sys_pidfd_open(getpid(), PIDFD_NONBLOCK);
-+	EXPECT_GE(pidfd, 0) {
-+		/* pidfd_open() doesn't support PIDFD_NONBLOCK. */
-+		ASSERT_EQ(errno, EINVAL);
-+		SKIP(return, "Skipping PIDFD_NONBLOCK test");
-+	}
-+
-+	pid = sys_waitid(P_PIDFD, pidfd, &info, WEXITED, NULL);
-+	ASSERT_LT(pid, 0);
-+	ASSERT_EQ(errno, ECHILD);
-+	EXPECT_EQ(close(pidfd), 0);
-+
-+	pid = sys_clone3(&args);
-+	ASSERT_GE(pid, 0);
-+
-+	if (pid == 0) {
-+		kill(getpid(), SIGSTOP);
-+		exit(EXIT_SUCCESS);
-+	}
-+
-+	pidfd = sys_pidfd_open(pid, PIDFD_NONBLOCK);
-+	EXPECT_GE(pidfd, 0) {
-+		/* pidfd_open() doesn't support PIDFD_NONBLOCK. */
-+		ASSERT_EQ(errno, EINVAL);
-+		SKIP(return, "Skipping PIDFD_NONBLOCK test");
-+	}
-+
-+	flags = fcntl(pidfd, F_GETFL, 0);
-+	ASSERT_GT(flags, 0);
-+	ASSERT_GT((flags & O_NONBLOCK), 0);
-+
-+	/*
-+	 * Callers need to see EAGAIN/EWOULDBLOCK with non-blocking pidfd when
-+	 * child processes exist but none have exited.
-+	 */
-+	pid = sys_waitid(P_PIDFD, pidfd, &info, WEXITED, NULL);
-+	ASSERT_LT(pid, 0);
-+	ASSERT_EQ(errno, EAGAIN);
-+
-+	ASSERT_EQ(sys_waitid(P_PIDFD, pidfd, &info, WSTOPPED, NULL), 0);
-+	ASSERT_EQ(info.si_signo, SIGCHLD);
-+	ASSERT_EQ(info.si_code, CLD_STOPPED);
-+	ASSERT_EQ(info.si_pid, parent_tid);
-+
-+	ASSERT_EQ(sys_pidfd_send_signal(pidfd, SIGCONT, NULL, 0), 0);
-+
-+	ASSERT_EQ(fcntl(pidfd, F_SETFL, (flags & ~O_NONBLOCK)), 0);
-+
-+	ASSERT_EQ(sys_waitid(P_PIDFD, pidfd, &info, WEXITED, NULL), 0);
-+	ASSERT_EQ(info.si_signo, SIGCHLD);
-+	ASSERT_EQ(info.si_code, CLD_EXITED);
-+	ASSERT_EQ(info.si_pid, parent_tid);
-+
-+	EXPECT_EQ(close(pidfd), 0);
-+}
-+
- TEST_HARNESS_MAIN
--- 
-2.28.0
+I don't believe this should be in stable.
 
+Yes, it probably fixes someone's remote control.
+
+It also introduces > half a second (!) with interrupts disabled
+(according to the code comments), which will break other devices on
+the system.
+
+Less intrusive solutions should be explored, first. Like.. if that
+part is time-critical, perhaps it should set itself at realtime
+priority, so that scheduler has motivation to schedule it at the right
+times?
+
+Perhaps usleep_range should be delta, delta+1?
+
+Perhaps udelay makes sense to use for more than 10usec?
+
+Best regards,
+										Pavel
+
+> @@ -87,13 +87,8 @@ static int gpio_ir_tx(struct rc_dev *dev, unsigned int=
+ *txbuf,
+>  			// space
+>  			edge =3D ktime_add_us(edge, txbuf[i]);
+>  			delta =3D ktime_us_delta(edge, ktime_get());
+> -			if (delta > 10) {
+> -				spin_unlock_irqrestore(&gpio_ir->lock, flags);
+> -				usleep_range(delta, delta + 10);
+> -				spin_lock_irqsave(&gpio_ir->lock, flags);
+> -			} else if (delta > 0) {
+> +			if (delta > 0)
+>  				udelay(delta);
+> -			}
+>  		} else {
+>  			// pulse
+>  			ktime_t last =3D ktime_add_us(edge, txbuf[i]);
+> --=20
+> 2.25.1
+>=20
+>=20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--t0UkRYy7tHLRMCai
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX09zEQAKCRAw5/Bqldv6
+8gtmAJ4whLb6KgxDaQ4G9FMHnFplfwvEUwCgo8yL6i1TXMs6lZakoDrMzLqk9mI=
+=/W/6
+-----END PGP SIGNATURE-----
+
+--t0UkRYy7tHLRMCai--
