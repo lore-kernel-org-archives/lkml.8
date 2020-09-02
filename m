@@ -2,82 +2,216 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE87C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 21:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F9AC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 21:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC7512098B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 21:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D2F20758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 21:47:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Sxs0HfRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgIBVlJ (ORCPT
+        id S1726678AbgIBVrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 17:41:09 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:45401 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgIBVlH (ORCPT
+        Wed, 2 Sep 2020 17:47:17 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4103 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726226AbgIBVrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 17:41:07 -0400
-Received: by mail-il1-f199.google.com with SMTP id m80so770300ilb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 14:41:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=zYHP8UduVrprHqF64bsSb84lGj8UCXHH3vw/WRSp4Lk=;
-        b=ThJw0veWB7Gbb2hfPAV08pHM7k7z83NA3388XNQ3fDTZKspXztEw6KpMm76/8c4h4F
-         MWteqjpK269owcmL7rS/9yH0g/ICZVIYKIVC2d8UWr/Suu0W5EAPkM2OoShskZJFfNMc
-         8xfSTw8cxHU155qedC+WFBW9rltkPNsyr79B6RNKczfRyZDdEzEN63exbvWBi1CaSHAt
-         4kcCSK/7qU4a9cKPopzxsf8P+/EUfUkjv4t/E4cHdN0Dnxh8umCY/lVVo15T6p9prl/Q
-         aHQ3V6TIRAhjc8CmE6fu++HaMtzjn4MEYf6580f5rjSYN+5BAJwirmrjv4usdC6909oL
-         Y1Yw==
-X-Gm-Message-State: AOAM532vGM0JJpEIOGhg7QiPPgHyg3CguP4kfgWRbeEQWU8rK4b7Fcwr
-        iIbuDS6F0VrGNYB2rjRP3r8znSAmXHs5+VFYIcYKvrVAo4d+
-X-Google-Smtp-Source: ABdhPJzwb18iZGt0VuWOjCyns2qo393k1g5sM41Eny5nqT6RjGgPAom0iTU28KrEcsdItQWpIqHZ8Qp11pXPX90RStQlQhVETdRf
+        Wed, 2 Sep 2020 17:47:15 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f5012630000>; Wed, 02 Sep 2020 14:45:07 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 02 Sep 2020 14:47:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 02 Sep 2020 14:47:15 -0700
+Received: from [10.2.161.253] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 2 Sep
+ 2020 21:47:13 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Jerome Glisse" <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Alistair Popple" <apopple@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <stable@vger.kernel.org>
+Subject: Re: [PATCH v2 1/7] mm/thp: fix __split_huge_pmd_locked() for
+ migration PMD
+Date:   Wed, 2 Sep 2020 17:47:10 -0400
+X-Mailer: MailMate (1.13.1r5705)
+Message-ID: <78B69571-13C6-4BF5-8478-6AAA4AB2C287@nvidia.com>
+In-Reply-To: <20200902165830.5367-2-rcampbell@nvidia.com>
+References: <20200902165830.5367-1-rcampbell@nvidia.com>
+ <20200902165830.5367-2-rcampbell@nvidia.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:ca3:: with SMTP id 3mr215750ilg.227.1599082866022;
- Wed, 02 Sep 2020 14:41:06 -0700 (PDT)
-Date:   Wed, 02 Sep 2020 14:41:06 -0700
-In-Reply-To: <0000000000002c6fbf05a8954afe@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000032273905ae5b7ee1@google.com>
-Subject: Re: BUG: sleeping function called from invalid context in do_user_addr_fault
-From:   syzbot <syzbot+7748c5375dc20dfdb92f@syzkaller.appspotmail.com>
-To:     bp@alien8.de, daniel.vetter@ffwll.ch, ebiggers@kernel.org,
-        gregkh@linuxfoundation.org, hpa@zytor.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        luto@kernel.org, mingo@redhat.com,
-        penguin-kernel@I-love.SAKURA.ne.jp,
-        penguin-kernel@i-love.sakura.ne.jp,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_73631622-91D5-4F7B-9B08-2022739FCA8C_=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599083107; bh=SZek1ZYQANXJT4VXlmp7MHjIQWueJPTMM8g01GnOGfQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=Sxs0HfRXu2g3r8QL5KmEF7wT2mHFg/ypmWRuBkArGct5jJkkS5WzYJrumWzk7nc4c
+         b55YSPGbQhBBwE/77G9wVGG7YNr8dGfe6PdFMrcDIyb4yK7o/TZ2Xlc93rXbKFhg9r
+         EQRO9BhOZgZCtMaf5rXnzP2C2j6gOJeElK4waNbd19aGTpfRLgSAOHSUhJJ/EitGZ5
+         LZVRadQNUj6VLmDXM1g5DCHaeMgTEYFjq9Wm1PaDeGB42HfvH3goVfzlyFOQHmf6JQ
+         28ncSFI/lCOE/B47LXbsfq//gd4rP0Hs3PZUkmofJhtMJ0cBOF72amG6cZUYwQ4l0l
+         Mb1+X4w/lDC5Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this issue was fixed by commit:
+--=_MailMate_73631622-91D5-4F7B-9B08-2022739FCA8C_=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-commit 033724d6864245a11f8e04c066002e6ad22b3fd0
-Author: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Date:   Wed Jul 15 01:51:02 2020 +0000
+On 2 Sep 2020, at 12:58, Ralph Campbell wrote:
 
-    fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
+> A migrating transparent huge page has to already be unmapped. Otherwise=
+,
+> the page could be modified while it is being copied to a new page and
+> data could be lost. The function __split_huge_pmd() checks for a PMD
+> migration entry before calling __split_huge_pmd_locked() leading one to=
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=156ad38e900000
-start commit:   7cc2a8ea Merge tag 'block-5.8-2020-07-01' of git://git.ker..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=183dd243398ba7ec
-dashboard link: https://syzkaller.appspot.com/bug?extid=7748c5375dc20dfdb92f
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1469d28f100000
+> think that __split_huge_pmd_locked() can handle splitting a migrating P=
+MD.
+> However, the code always increments the page->_mapcount and adjusts the=
 
-If the result looks correct, please mark the issue as fixed by replying with:
+> memory control group accounting assuming the page is mapped.
+> Also, if the PMD entry is a migration PMD entry, the call to
+> is_huge_zero_pmd(*pmd) is incorrect because it calls pmd_pfn(pmd) inste=
+ad
+> of migration_entry_to_pfn(pmd_to_swp_entry(pmd)).
+> Fix these problems by checking for a PMD migration entry.
+>
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
 
-#syz fix: fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
+Thanks for the fix. You can add Reviewed-by: Zi Yan <ziy@nvidia.com>
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+I think you also want to add the Fixes tag and cc stable.
+
+Fixes 84c3fc4e9c56 (=E2=80=9Cmm: thp: check pmd migration entry in common=
+ path=E2=80=9D)
+cc: stable@vger.kernel.org # 4.14+
+
+> ---
+>  mm/huge_memory.c | 42 +++++++++++++++++++++++-------------------
+>  1 file changed, 23 insertions(+), 19 deletions(-)
+>
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 2a468a4acb0a..606d712d9505 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -2023,7 +2023,7 @@ static void __split_huge_pmd_locked(struct vm_are=
+a_struct *vma, pmd_t *pmd,
+>  		put_page(page);
+>  		add_mm_counter(mm, mm_counter_file(page), -HPAGE_PMD_NR);
+>  		return;
+> -	} else if (is_huge_zero_pmd(*pmd)) {
+> +	} else if (pmd_trans_huge(*pmd) && is_huge_zero_pmd(*pmd)) {
+>  		/*
+>  		 * FIXME: Do we want to invalidate secondary mmu by calling
+>  		 * mmu_notifier_invalidate_range() see comments below inside
+> @@ -2117,30 +2117,34 @@ static void __split_huge_pmd_locked(struct vm_a=
+rea_struct *vma, pmd_t *pmd,
+>  		pte =3D pte_offset_map(&_pmd, addr);
+>  		BUG_ON(!pte_none(*pte));
+>  		set_pte_at(mm, addr, pte, entry);
+> -		atomic_inc(&page[i]._mapcount);
+> -		pte_unmap(pte);
+> -	}
+> -
+> -	/*
+> -	 * Set PG_double_map before dropping compound_mapcount to avoid
+> -	 * false-negative page_mapped().
+> -	 */
+> -	if (compound_mapcount(page) > 1 && !TestSetPageDoubleMap(page)) {
+> -		for (i =3D 0; i < HPAGE_PMD_NR; i++)
+> +		if (!pmd_migration)
+>  			atomic_inc(&page[i]._mapcount);
+> +		pte_unmap(pte);
+>  	}
+>
+> -	lock_page_memcg(page);
+> -	if (atomic_add_negative(-1, compound_mapcount_ptr(page))) {
+> -		/* Last compound_mapcount is gone. */
+> -		__dec_lruvec_page_state(page, NR_ANON_THPS);
+> -		if (TestClearPageDoubleMap(page)) {
+> -			/* No need in mapcount reference anymore */
+> +	if (!pmd_migration) {
+> +		/*
+> +		 * Set PG_double_map before dropping compound_mapcount to avoid
+> +		 * false-negative page_mapped().
+> +		 */
+> +		if (compound_mapcount(page) > 1 &&
+> +		    !TestSetPageDoubleMap(page)) {
+>  			for (i =3D 0; i < HPAGE_PMD_NR; i++)
+> -				atomic_dec(&page[i]._mapcount);
+> +				atomic_inc(&page[i]._mapcount);
+> +		}
+> +
+> +		lock_page_memcg(page);
+> +		if (atomic_add_negative(-1, compound_mapcount_ptr(page))) {
+> +			/* Last compound_mapcount is gone. */
+> +			__dec_lruvec_page_state(page, NR_ANON_THPS);
+> +			if (TestClearPageDoubleMap(page)) {
+> +				/* No need in mapcount reference anymore */
+> +				for (i =3D 0; i < HPAGE_PMD_NR; i++)
+> +					atomic_dec(&page[i]._mapcount);
+> +			}
+>  		}
+> +		unlock_page_memcg(page);
+>  	}
+> -	unlock_page_memcg(page);
+>
+>  	smp_wmb(); /* make pte visible before pmd */
+>  	pmd_populate(mm, pmd, pgtable);
+> -- =
+
+> 2.20.1
+
+
+=E2=80=94
+Best Regards,
+Yan Zi
+
+--=_MailMate_73631622-91D5-4F7B-9B08-2022739FCA8C_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl9QEt4PHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqK2RAP/jZpNOlzIVAWu/HetcUk0JekLJU2qVRUKD7w
++vSoB3QfAzbbHrEr44ZKzWHGYIADV2eun8GOlaY4U9I+V9d8VTJ7X6rPF4/P3Mj9
+quvN3yVi9/GJnqYpBDD15L+p90SylE5lGwe+4zje5AYbq6BIj5l3fB6m3rNR0D9G
+0Wx9BdnmPs6cMPkCz4Aj9nXX6LOVu7zlKb3FJPBO2NUoZnkQpda3wRzpd/0DVrj8
+rGVNw+QtnjAcKZtH2St005dB/qb0Z1ng83dgmN3KNJRZWYRYetN3lF79vUU59iGn
+Kwcc+T4vDX8ZkzldCILIYi4qsWH7oqqTkoOT8oqHFzj4u3ZXttnvdeiE+cavZrUr
+QbgubSF9I7Sm4zheJ+LJEC53Wn8up8jbfdsbyzPXEFJbfozmTr8hK4gODmtAUNz9
+KevDlttqqrf/BBGHoV94RnLt2wMMt9RyUwlpu6t1ETzRhO+vPKknji0h4DyX3o2v
+T7n3dbRN8uPNOEBabzrXeGDwlsqXbnzYdVEZTojuD5Umer3+36832TAOndjj4Zep
+pJEM3YCeoG4INtDDv0HlzNugZ9bwEaz1Hm4zicAlxqeiw7g19auPlNBvt3bsBALE
+LwW82R2jQGTNn7OtuMz5d7WVNAjtCnmGndupISnL1VI1lPcS+g933m4KRGGgDytN
+zdwgbnGP
+=A3iO
+-----END PGP SIGNATURE-----
+
+--=_MailMate_73631622-91D5-4F7B-9B08-2022739FCA8C_=--
