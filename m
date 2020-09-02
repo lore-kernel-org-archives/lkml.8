@@ -2,108 +2,188 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CE7C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC915C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A573020826
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC2A207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:53:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k6QA/AMr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g+QmL6DK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgIBHx3 (ORCPT
+        id S1726814AbgIBHxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:53:29 -0400
-Received: from mga09.intel.com ([134.134.136.24]:6168 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgIBHxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:53:24 -0400
-IronPort-SDR: UY2ILCo1TO2A+D3cUmLKMhcIoyyFB7JvCkhmO245T/1LcZqaB5XFUhZPebdVfxGNT5b7nxd741
- MW4Y1VjlgI+Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="158338536"
-X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
-   d="scan'208";a="158338536"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 00:53:22 -0700
-IronPort-SDR: 85agHi/zZwdSU7fkFbZoQx29XPaqbBiirB+Fo+FsB6N69zyl/N1FTJ2LUwSGqslJhs+OnjLv/C
- XvZbmzxC8nBQ==
-X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
-   d="scan'208";a="477536794"
-Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.249.175.78]) ([10.249.175.78])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 00:53:16 -0700
-Subject: Re: [kthread] 2e7d8748eb: last_state.is_incomplete_run
-To:     qianli zhao <zhaoqianligood@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, axboe@kernel.dk,
-        akpm@linux-foundation.org, Felix.Kuehling@amd.com,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, ben.dooks@codethink.co.uk,
-        bfields@redhat.com, cl@rock-chips.com,
-        linux-kernel@vger.kernel.org, Qianli Zhao <zhaoqianli@xiaomi.com>,
-        0day robot <lkp@intel.com>, lkp@lists.01.org
-References: <311159bc826dcca2848344fc277c0069cff0a164.1597207603.git.zhaoqianli@xiaomi.com>
- <20200820062533.GK18179@shao2-debian>
- <CAPx_LQGBY-QzXnYMB4zZ=Q5yyRGFF9W68NgB8gqqXchRjUD2WQ@mail.gmail.com>
-From:   "Chen, Rong A" <rong.a.chen@intel.com>
-Message-ID: <dbe28d52-1879-66b7-a490-29fe5e14a703@intel.com>
-Date:   Wed, 2 Sep 2020 15:53:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 2 Sep 2020 03:53:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgIBHxd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 03:53:33 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E60BC061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:53:33 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599033210;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=z372Am4vPf/CJeTK/KgLAMIsy+dYVzx7F+QrRDb1NWY=;
+        b=k6QA/AMri08ntNzWG5DZ34oPWTzkVMVU9cX1fpU2kKkp4WuTIXyaL4LZwdeGzgx+1uPIR8
+        w8ahD0IaKPdCWb+wiBlPlBA2JFfqbO6bqRgAvUurgK6NBPPTPKM4p2yPYyTZXxPBP2Hb7X
+        V7UgudsS63GBjwr2svzc41UIJwyQTPp8TSYWhpcpEBa8OcIxzFKzwwLI1Zg2uGghN0B5JC
+        5WKtnZv/SUuRTnXqWEQQH4Ow5noIGFUkhRnUUV6DFeQD6Uh6V7dqfW3TUBugfqwyXZxJ1C
+        6NlsTqT+sXe0HorNPQ2PuEZA65esaBURJ00fxyNy9MZipoyGX2HSezM/1difyg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599033210;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=z372Am4vPf/CJeTK/KgLAMIsy+dYVzx7F+QrRDb1NWY=;
+        b=g+QmL6DKAniWx8SzkcsI5yZ2l7xKvemaFaDH8G+0diqAhrwoxmO9BnLjTXz9D6pKFTho3A
+        pOJvkToQwn0BqQAg==
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Dhaval Giani <dhaval.giani@oracle.com>,
+        Chris Hyser <chris.hyser@oracle.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        mingo@kernel.org, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, fweisbec@gmail.com,
+        keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, vineeth@bitbyteword.org,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Agata Gruza <agata.gruza@intel.com>,
+        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
+        graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
+        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com,
+        Aubrey Li <aubrey.li@linux.intel.com>,
+        Tim Chen <tim.c.chen@intel.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [RFC PATCH v7 17/23] kernel/entry: Add support for core-wide protection of kernel-mode
+In-Reply-To: <20200902012905.GB1703315@google.com>
+References: <cover.1598643276.git.jdesfossez@digitalocean.com> <2a4398b55fe258ea53fb1fbc727063298f7eea8f.1598643276.git.jdesfossez@digitalocean.com> <87y2lth4qa.fsf@nanos.tec.linutronix.de> <20200901165052.GA1662854@google.com> <875z8xl0zh.fsf@nanos.tec.linutronix.de> <20200902012905.GB1703315@google.com>
+Date:   Wed, 02 Sep 2020 09:53:29 +0200
+Message-ID: <87h7sgk41y.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAPx_LQGBY-QzXnYMB4zZ=Q5yyRGFF9W68NgB8gqqXchRjUD2WQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the input, we do detect this on this commit but not its parent.
-It may be merged into a wrong base branch or something else that
-we are not aware of. And it's kind difficulty now for us to provide a
-reproduction step for kexec issue, we will consider this further.
+Joel,
 
-Best Regards,
-Rong Chen
-
-
-On 8/27/2020 11:49 AM, qianli zhao wrote:
-> I did not see any exceptions related to my changes,the corresponding
-> macro CONFIG_DEBUG_OBJECTS_KTHREAD is not enabled,so i think the issue
-> has nothing to do with my changes
+On Tue, Sep 01 2020 at 21:29, Joel Fernandes wrote:
+> On Tue, Sep 01, 2020 at 10:02:10PM +0200, Thomas Gleixner wrote:
+>> The generated code for the CONFIG_PRETENT_HT_SECURE=n case is the same
 >
-> Thanks
->
-> On Thu, 20 Aug 2020 at 14:26, kernel test robot <rong.a.chen@intel.com> wrote:
->> Greeting,
->>
->> FYI, we noticed the following commit (built with gcc-9):
->>
->> commit: 2e7d8748eba7e32150cbd4f57129ea77d1255892 ("[RFC V2] kthread: add object debug support")
->> url: https://github.com/0day-ci/linux/commits/Qianli-Zhao/kthread-add-object-debug-support/20200812-131719
->> base: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git fb893de323e2d39f7a1f6df425703a2edbdf56ea
->>
->> in testcase: boot
->>
->> on test machine: 8 threads Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz with 16G memory
->>
->> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
->>
->>
->>
->> kernel boot failed by kexec:
->>
->> user  :notice:  [32m[  +0.371313]  [0m [33mLKP [0m: kexec loading...
->> user  :notice:  [32m[  +0.007118]  [0mkexec --noefi -l /opt/rootfs/tmp/pkg/linux/x86_64-rhel-8.3/gcc-9/2e7d8748eba7e32150cbd4f57129ea77d1255892/vmlinuz-5.8.0-12610-g2e7d8748eba7e --initrd=/opt/rootfs/tmp/initrd-concatenated
->>
->>
->>
->>
->> Thanks,
->> Rong Chen
->>
+> When you say 'pretend', did you mean 'make' ? The point of this patch is to
+> protect the kernel from the other hyperthread thus making HT secure for the
+> kernel contexts and not merely pretending.
 
+I'm paranoid and don't trust HT at all. There is too much shared state.
+
+>> --- /dev/null
+>> +++ b/include/linux/pretend_ht_secure.h
+>> @@ -0,0 +1,21 @@
+>> +#ifndef _LINUX_PRETEND_HT_SECURE_H
+>> +#define _LINUX_PRETEND_HT_SECURE_H
+>> +
+>> +#ifdef CONFIG_PRETEND_HT_SECURE
+>> +static inline void enter_from_user_ht_sucks(void)
+>> +{
+>> +	if (static_branch_unlikely(&pretend_ht_secure_key))
+>> +		enter_from_user_pretend_ht_is_secure();
+>> +}
+>> +
+>> +static inline void exit_to_user_ht_sucks(void)
+>> +{
+>> +	if (static_branch_unlikely(&pretend_ht_secure_key))
+>> +		exit_to_user_pretend_ht_is_secure();
+>
+> We already have similar config and static keys for the core-scheduling
+> feature itself. Can we just make it depend on that?
+
+Of course. This was just for illustration. :)
+
+> Or, are you saying users may want 'core scheduling' enabled but may want to
+> leave out the kernel protection?
+
+Core scheduling per se without all the protection muck, i.e. a relaxed
+version which tries to gang schedule threads of a process on a core if
+feasible has advantages to some workloads.
+
+>> @@ -111,6 +113,12 @@ static __always_inline void exit_to_user
+>>  /* Workaround to allow gradual conversion of architecture code */
+>>  void __weak arch_do_signal(struct pt_regs *regs) { }
+>>  
+>> +static inline unsigned long exit_to_user_get_work(void)
+>> +{
+>> +	exit_to_user_ht_sucks();
+>
+> Ok, one issue with your patch is it does not take care of the waiting logic.
+> sched_core_unsafe_exit_wait() needs to be called *after* all of the
+> exit_to_user_mode_work is processed. This is because
+> sched_core_unsafe_exit_wait() also checks for any new exit-to-usermode-work
+> that popped up while it is spinning and breaks out of its spin-till-safe loop
+> early. This is key to solving the stop-machine issue. If the stopper needs to
+> run, then the need-resched flag will be set and we break out of the spin and
+> redo the whole exit_to_user_mode_loop() as it should.
+
+And where is the problem?
+
+syscall_entry()
+  ...
+    sys_foo()
+      ....
+      return 0;
+
+  local_irq_disable();
+  exit_to_user_mode_prepare()
+    ti_work = exit_to_user_get_work()
+       {
+        if (ht_muck)
+          syscall_exit_ht_muck() {
+            ....
+            while (wait) {
+            	local_irq_enable();
+                while (wait) cpu_relax();
+                local_irq_disable();
+            }
+          }
+        return READ_ONCE(current_thread_info()->flags);
+       }
+
+    if (unlikely(ti_work & WORK))
+    	ti_work = exit_loop(ti_work)
+
+        while (ti_work & MASK) {
+          local_irq_enable();
+          .....
+          local_irq_disable();
+          ti_work = exit_to_user_get_work()
+            {
+              See above
+            }
+       }
+
+It covers both the 'no work' and the 'do work' exit path. If that's not
+sufficient, then something is fundamentally wrong with your design.
+
+Thanks,
+
+        tglx
