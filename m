@@ -2,135 +2,581 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34780C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AB6C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC84D20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:33:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="DoXrzKyJ";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="WDFg8wNv"
+	by mail.kernel.org (Postfix) with ESMTP id 9A24820767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:33:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgIBPdi (ORCPT
+        id S1728459AbgIBPdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:33:38 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:18543 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728379AbgIBPdW (ORCPT
+        Wed, 2 Sep 2020 11:33:46 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:52309 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728372AbgIBPdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:33:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1599060803; x=1630596803;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=6Qftzrl0VPw56qZqskhW8istca3MlMJ1x9GrYWocgfg=;
-  b=DoXrzKyJEU8SU3yzgGI5DOiDcIylKnHeY8WNZaA2XHYM9xp3owGktSFw
-   hnTNoCAhM9Pq08mfN+/mwhwWbTb/bo3my3VEy4wLLMvAumAJzWCJYLWQR
-   VCxT3mnTVTtn7uU/JXrS06DEUpOYZon3PfmgT03V3IgfDOb1rGTXaTVfQ
-   Ur1+qpzt7H7D+BYJt/bS1KAR3leIXwlSTWpOOS4MG53wA0GNxUwbhBtm4
-   oIXy0mIUo5ksd8nELxrvKANFRa+5LIxNSGR/2cjCvf1jiVckuyVJMh11T
-   OxtRTvnCfPHi0H5N9uk7QWL84jN/AZGHBom+aRRj1ZuQbZ4ie6QQez60n
-   A==;
-IronPort-SDR: KJhOtYNZKdrxb9b7I4pQl2bSmRui31Em0SxQ6CsOWkg2kdM4YhdlftUQ0b8vsK9tptfMIPqMex
- YqOgi0mR1l1U0TNfwPRsDCOZNVgpQmENUpDuMa5U/OuNGwoBWT0U+aDv67kZ/KLppa6ixEDDHT
- 0SCFDlpGA6RenN4Jl+vE7tXBLG2jGdYg5O+A05HS7U0uorTMNUb2WJJ/7TYYMgEpC0Qu+zPS/o
- UHyy6sOfPB6+7YQgluscn5xCh2UjddzvtmG+vBSjphhXmmRmGncIiI7F0IEK8cI9NkXBcLGRL1
- P/Y=
-X-IronPort-AV: E=Sophos;i="5.76,383,1592841600"; 
-   d="scan'208";a="249682091"
-Received: from mail-bn7nam10lp2109.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.109])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Sep 2020 23:33:19 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DA6ga4JEk5HvwfdpaOgL/jJ1PEfqkQm70/omqTofxa6efxFQ39czthtW6zZLxbZ7fs4lzfsS9wck6omDRw3FHw/ZBhWsLdh/VWey94l51fz3k0/mWhFb5r6+3+Sy6t5ArYZbVbep9dEdWDOWUPCn6N/JRz26y1ysnKEgAwrWq3P58Q43QxMRqHB6gy+9FvzwMggL8zZU9vPTRswfweowzJm3DJgsA+J0J9CNXF9t8IocZcHBHs0rZLUu5CYEYX3gpsMvelT0Xl8+VLLXcZ1F/LRviKYPDJHPhqoGE/ZOQ6y1dSBWVIlh/bGMRXuqtffuDI6xMQNG6Lws41UzFvFauQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Qftzrl0VPw56qZqskhW8istca3MlMJ1x9GrYWocgfg=;
- b=Dh7xTb5dNZYgF/f6IOcJMGnSc+92g4W+g5L8TfhoYln3o4NNN0oqXdBNCxu2S9Q83lTZxj/eeKuJCDGAJMGRzNbaFr8f8Bi9USUuvVXf8MeXUhilqqJmkbL82vdIWNjZ4kMq+O8w0zckm0dYJQ3wVz/PpDeurucC6L8UKB0qQeLxDadDHeGaAlKaIOkJ18HNOmTiZg7vyiKD3sYbtJLjEB5fZUYYbQL7kiPwGOHYcYrkvh4/pJTpE4BscZKBPU7AGh7IHh4pfnOmLtUYpKc9Hg5k3BetJzX1pdn0oRHHDM/GMAwHNHaFCA6TW7o7OsOin2DJeFdd8kIadtgYebqwCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Qftzrl0VPw56qZqskhW8istca3MlMJ1x9GrYWocgfg=;
- b=WDFg8wNvhWP3XFYhAbQJMoVcuCslwwrJVrew9ER7vUJkjaFaAgUBQZVOuDTjDpx9EcBNyNQ+m9Fnz1Cst0Otl3b2jbUEt9msBIyw0LOX3G2lIkv8gkqY+6fyfYs4TFZIPxh6qo9u03Olm1bUkL76UEbCt8FqNU7l6N+h646KMl8=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB4542.namprd04.prod.outlook.com
- (2603:10b6:805:ae::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.24; Wed, 2 Sep
- 2020 15:33:16 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3326.023; Wed, 2 Sep 2020
- 15:33:16 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 06/19] swim: simplify media change handling
-Thread-Topic: [PATCH 06/19] swim: simplify media change handling
-Thread-Index: AQHWgTgbhkHKD00fr0avvZS9oQWYVQ==
-Date:   Wed, 2 Sep 2020 15:33:16 +0000
-Message-ID: <SN4PR0401MB35984A7C3154CF8BD0CFFC3E9B2F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200902141218.212614-1-hch@lst.de>
- <20200902141218.212614-7-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2001:a62:1590:f101:1584:4722:fd5f:b30e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 149e8721-7124-4e6c-1b52-08d84f558301
-x-ms-traffictypediagnostic: SN6PR04MB4542:
-x-microsoft-antispam-prvs: <SN6PR04MB45420C647F87531F891E4B2C9B2F0@SN6PR04MB4542.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5ULllPZU1Y6PL8rAXfHCiYuXBgpGC5KqV8MOOo94Mxnunn7ctjvVKJPw29lc5UXq5O28r1N2rsiylaFmXhNIOHlOag7nbPhYneUCTcp0Mhq0rjrJ7JWoo1d2wBST4NDIFTH5tgXmHaPNaDN24ZftnocobVX2m12kVROamSb8uMqtDK4zhYhZTa/pOj9EXlmP777XdlGIHbg+Ww15NXEwUciIXGruP1fQRp6/3spcN0WZCGRg0cCwnaiux4Z/6TVQ9u7pVQbSZ8cOzc8wuAOzZsbXabAmmu3rS0NDUeE/U5cHCcUhIidGM7Z4qsv80/5Voa/JxK6yuHWNxrbQWLw5Vw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(396003)(346002)(376002)(39850400004)(9686003)(86362001)(54906003)(316002)(186003)(4326008)(2906002)(71200400001)(478600001)(110136005)(52536014)(5660300002)(66556008)(33656002)(4270600006)(66476007)(55016002)(64756008)(76116006)(8936002)(66446008)(91956017)(558084003)(8676002)(6506007)(7416002)(66946007)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Wh/LQi/W+XIBOAS/0dUoccaf7zlPqSEcap624k0kJYWsEUydUd5a7mnrvTz0RpaoGP6AgmABK3RKaqME5UR59eIE9X1CHICNAQVYFZ7/hOTb4x+u7TMr+/DYOsz8+zcdwaP8VJby2JesHGJzXhJ48GwrGurQVGgmHRTL9dwUXBmzWTahW4USekX2ZnXvPhxR5txRhp7PKPhh6+rSzc2uKUXbDgOi2qgHIhqoxKoiNQZ9BU0oNWzYuzOTACCIDD9jBJu32D+j43qhbhue7KG2JJvl5AG1uzJsP+a4cX6NfeooTrxjbmCrqCrqOKewI2Dt2MNf0epWNIe/BtYX+VydT9ma1o6fZHX+zEJ0J2VZ77KhvRJ2nTUnRFI4CA3y1mNf4bG92HkuzFBPdo10F0jf4O6CnbolfL2LZYEpa4OAkrkwz/qBLqQe0HWm/PblWCJXrBE43GnLDBIJRiUYgrSsZBYmNh1Jz8wr29kdBPkAOE7WyTD3wLhwcYzestj4/3WhH6OW4DjZLGgVY6+e4USaCuhIcrecAZLAJ+w8rA3/tiQo/VbB5ZbWcjgTMCvsw92wT4nhSAE75NONf6c3hLzWKBOC7lUseny2WTFlFd8syKNykRCKZv32GCzN6XGCmzoPN29MsSX5SXHNDIuZo6fB8558uHnSq4tFgvUoCbwsYqtqZ2LSsx7esA6w90WpJ9/tjwpMM68J6m8NBicgNvViYA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 149e8721-7124-4e6c-1b52-08d84f558301
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 15:33:16.0518
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: quxTftNwprJkztVIDXHxQLpAEjWie3PTl+s5FQF26b7taCEvhXLz3TAmVXGB4kJnRRV+/bxK/rAl3V6gRNxR9so9YspLiHKGMDwjKTbf5yk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4542
+        Wed, 2 Sep 2020 11:33:09 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from ayal@mellanox.com)
+        with SMTP; 2 Sep 2020 18:32:29 +0300
+Received: from dev-l-vrt-210.mtl.labs.mlnx (dev-l-vrt-210.mtl.labs.mlnx [10.234.210.1])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 082FWTnA014699;
+        Wed, 2 Sep 2020 18:32:29 +0300
+Received: from dev-l-vrt-210.mtl.labs.mlnx (localhost [127.0.0.1])
+        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Debian-8ubuntu1) with ESMTP id 082FWTLs026691;
+        Wed, 2 Sep 2020 18:32:29 +0300
+Received: (from ayal@localhost)
+        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 082FWTxr026690;
+        Wed, 2 Sep 2020 18:32:29 +0300
+From:   Aya Levin <ayal@mellanox.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org
+Cc:     Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        linux-kernel@vger.kernel.org, Aya Levin <ayal@mellanox.com>
+Subject: [PATCH net-next RFC v1 2/4] devlink: Add devlink traps under devlink_ports context
+Date:   Wed,  2 Sep 2020 18:32:12 +0300
+Message-Id: <1599060734-26617-3-git-send-email-ayal@mellanox.com>
+X-Mailer: git-send-email 1.8.4.3
+In-Reply-To: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
+References: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And down by one,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+There are some cases where we would like to trap dropped packets only
+for a single port on a device without affecting the others. For that
+purpose trap_mngr was added to devlink_port and corresponding Trap API
+with devlink_port were added too.
+
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+---
+ drivers/net/ethernet/mellanox/mlxsw/core.c |   1 +
+ include/net/devlink.h                      |  25 +++
+ net/core/devlink.c                         | 332 ++++++++++++++++++++++++++++-
+ 3 files changed, 353 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
+index 97460f47e537..cb9567a6a90d 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -1178,6 +1178,7 @@ static void mlxsw_devlink_trap_fini(struct devlink *devlink,
+ static int mlxsw_devlink_trap_action_set(struct devlink *devlink,
+ 					 const struct devlink_trap *trap,
+ 					 enum devlink_trap_action action,
++					 void *trap_ctx,
+ 					 struct netlink_ext_ack *extack)
+ {
+ 	struct mlxsw_core *mlxsw_core = devlink_priv(devlink);
+diff --git a/include/net/devlink.h b/include/net/devlink.h
+index d387ea5518c3..b4897ee38209 100644
+--- a/include/net/devlink.h
++++ b/include/net/devlink.h
+@@ -110,6 +110,7 @@ struct devlink_port {
+ 	struct delayed_work type_warn_dw;
+ 	struct list_head reporter_list;
+ 	struct mutex reporters_lock; /* Protects reporter_list */
++	struct devlink_trap_mngr trap_mngr;
+ };
+ 
+ struct devlink_sb_pool_info {
+@@ -1108,6 +1109,7 @@ struct devlink_trap_ops {
+ 	int (*trap_action_set)(struct devlink *devlink,
+ 			       const struct devlink_trap *trap,
+ 			       enum devlink_trap_action action,
++			       void *trap_ctx,
+ 			       struct netlink_ext_ack *extack);
+ 	/**
+ 	 * @trap_group_init: Trap group initialization function.
+@@ -1414,6 +1416,29 @@ devlink_trap_policers_unregister(struct devlink *devlink,
+ 				 const struct devlink_trap_policer *policers,
+ 				 size_t policers_count);
+ 
++void devlink_port_traps_ops(struct devlink_port *devlink_port,
++			    const struct devlink_trap_ops *ops);
++int devlink_port_traps_register(struct devlink_port *devlink_port,
++				const struct devlink_trap *traps,
++				size_t traps_count, void *priv);
++void devlink_port_traps_unregister(struct devlink_port *devlink_port,
++				   const struct devlink_trap *traps,
++				   size_t traps_count);
++void devlink_port_trap_report(struct devlink_port *devlink_port, struct sk_buff *skb,
++			      void *trap_ctx, const struct flow_action_cookie *fa_cookie);
++int devlink_port_trap_groups_register(struct devlink_port *devlink_port,
++				      const struct devlink_trap_group *groups,
++				      size_t groups_count);
++void devlink_port_trap_groups_unregister(struct devlink_port *devlink_port,
++					 const struct devlink_trap_group *groups,
++					 size_t groups_count);
++int devlink_port_trap_policers_register(struct devlink_port *devlink_port,
++					const struct devlink_trap_policer *policers,
++					size_t policers_count);
++void devlink_port_trap_policers_unregister(struct devlink_port *devlink_port,
++					   const struct devlink_trap_policer *policers,
++					   size_t policers_count);
++
+ #if IS_ENABLED(CONFIG_NET_DEVLINK)
+ 
+ void devlink_compat_running_version(struct net_device *dev,
+diff --git a/net/core/devlink.c b/net/core/devlink.c
+index a30b5444289b..b13e1b40bf1c 100644
+--- a/net/core/devlink.c
++++ b/net/core/devlink.c
+@@ -6155,7 +6155,13 @@ struct devlink_trap_item {
+ static struct devlink_trap_mngr *
+ devlink_trap_get_trap_mngr_from_info(struct devlink *devlink, struct genl_info *info)
+ {
+-		return &devlink->trap_mngr;
++	struct devlink_port *devlink_port;
++
++	devlink_port = devlink_port_get_from_attrs(devlink, info->attrs);
++	if (IS_ERR(devlink_port))
++		return  &devlink->trap_mngr;
++	else
++		return &devlink_port->trap_mngr;
+ }
+ 
+ static struct devlink_trap_policer_item *
+@@ -6382,6 +6388,7 @@ static int devlink_nl_cmd_trap_get_dumpit(struct sk_buff *msg,
+ {
+ 	struct devlink_trap_mngr *trap_mngr;
+ 	struct devlink_trap_item *trap_item;
++	struct devlink_port *port;
+ 	struct devlink *devlink;
+ 	int start = cb->args[0];
+ 	int idx = 0;
+@@ -6411,6 +6418,30 @@ static int devlink_nl_cmd_trap_get_dumpit(struct sk_buff *msg,
+ 		}
+ 		mutex_unlock(&devlink->lock);
+ 	}
++	list_for_each_entry(devlink, &devlink_list, list) {
++		if (!net_eq(devlink_net(devlink), sock_net(msg->sk)))
++			continue;
++		list_for_each_entry(port, &devlink->port_list, list) {
++			trap_mngr = &port->trap_mngr;
++			mutex_lock(&devlink->lock);
++			list_for_each_entry(trap_item, &trap_mngr->trap_list, list) {
++				if (idx < start) {
++					idx++;
++					continue;
++				}
++				err = devlink_nl_trap_fill(msg, devlink, trap_item,
++							   DEVLINK_CMD_TRAP_NEW,
++							   NETLINK_CB(cb->skb).portid,
++							   cb->nlh->nlmsg_seq,
++							   NLM_F_MULTI);
++				if (err)
++					goto out;
++				idx++;
++			}
++			mutex_unlock(&devlink->lock);
++		}
++	}
++
+ out:
+ 	mutex_unlock(&devlink_mutex);
+ 
+@@ -6433,7 +6464,7 @@ static int __devlink_trap_action_set(struct devlink *devlink,
+ 	}
+ 
+ 	err = trap_mngr->trap_ops->trap_action_set(devlink, trap_item->trap,
+-						   trap_action, extack);
++						   trap_action, trap_item, extack);
+ 	if (err)
+ 		return err;
+ 
+@@ -6481,6 +6512,7 @@ static int devlink_nl_cmd_trap_set_doit(struct sk_buff *skb,
+ 		NL_SET_ERR_MSG_MOD(extack, "Device did not register this trap");
+ 		return -ENOENT;
+ 	}
++	return devlink_trap_action_set(devlink, trap_mngr, trap_item, info);
+ 
+ 	err = devlink_trap_action_set(devlink, trap_mngr, trap_item, info);
+ 	if (err)
+@@ -6614,6 +6646,7 @@ static int devlink_nl_cmd_trap_group_get_dumpit(struct sk_buff *msg,
+ 	struct devlink_trap_group_item *group_item;
+ 	u32 portid = NETLINK_CB(cb->skb).portid;
+ 	struct devlink_trap_mngr *trap_mngr;
++	struct devlink_port *port;
+ 	struct devlink *devlink;
+ 	int start = cb->args[0];
+ 	int idx = 0;
+@@ -6644,6 +6677,30 @@ static int devlink_nl_cmd_trap_group_get_dumpit(struct sk_buff *msg,
+ 		}
+ 		mutex_unlock(&devlink->lock);
+ 	}
++	list_for_each_entry(devlink, &devlink_list, list) {
++		if (!net_eq(devlink_net(devlink), sock_net(msg->sk)))
++			continue;
++		list_for_each_entry(port, &devlink->port_list, list) {
++			trap_mngr = &port->trap_mngr;
++			mutex_lock(&devlink->lock);
++			list_for_each_entry(group_item, &trap_mngr->trap_group_list, list) {
++				if (idx < start) {
++					idx++;
++					continue;
++				}
++				err = devlink_nl_trap_group_fill(msg, devlink,
++								 group_item, cmd,
++								 portid,
++								 cb->nlh->nlmsg_seq,
++								 NLM_F_MULTI);
++				if (err)
++					goto out;
++				idx++;
++			}
++			mutex_unlock(&devlink->lock);
++		}
++	}
++
+ out:
+ 	mutex_unlock(&devlink_mutex);
+ 
+@@ -6912,6 +6969,7 @@ static int devlink_nl_cmd_trap_policer_get_dumpit(struct sk_buff *msg,
+ 	struct devlink_trap_policer_item *policer_item;
+ 	u32 portid = NETLINK_CB(cb->skb).portid;
+ 	struct devlink_trap_mngr *trap_mngr;
++	struct devlink_port *port;
+ 	struct devlink *devlink;
+ 	int start = cb->args[0];
+ 	int idx = 0;
+@@ -6943,6 +7001,32 @@ static int devlink_nl_cmd_trap_policer_get_dumpit(struct sk_buff *msg,
+ 		}
+ 		mutex_unlock(&devlink->lock);
+ 	}
++	list_for_each_entry(devlink, &devlink_list, list) {
++		if (!net_eq(devlink_net(devlink), sock_net(msg->sk)))
++			continue;
++		list_for_each_entry(port, &devlink->port_list, list) {
++			trap_mngr = &port->trap_mngr;
++			mutex_lock(&devlink->lock);
++			list_for_each_entry(policer_item, &trap_mngr->trap_policer_list,
++					    list) {
++				if (idx < start) {
++					idx++;
++					continue;
++				}
++				err = devlink_nl_trap_policer_fill(msg, devlink,
++								   policer_item, cmd,
++								   portid,
++								   cb->nlh->nlmsg_seq,
++								   trap_mngr,
++								   NLM_F_MULTI);
++				if (err)
++					goto out;
++				idx++;
++			}
++			mutex_unlock(&devlink->lock);
++		}
++	}
++
+ out:
+ 	mutex_unlock(&devlink_mutex);
+ 
+@@ -7348,34 +7432,40 @@ static const struct genl_ops devlink_nl_ops[] = {
+ 		.cmd = DEVLINK_CMD_TRAP_GET,
+ 		.doit = devlink_nl_cmd_trap_get_doit,
+ 		.dumpit = devlink_nl_cmd_trap_get_dumpit,
++		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT,
+ 		/* can be retrieved by unprivileged users */
+ 	},
+ 	{
+ 		.cmd = DEVLINK_CMD_TRAP_SET,
+ 		.doit = devlink_nl_cmd_trap_set_doit,
+ 		.flags = GENL_ADMIN_PERM,
++		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT,
+ 	},
+ 	{
+ 		.cmd = DEVLINK_CMD_TRAP_GROUP_GET,
+ 		.doit = devlink_nl_cmd_trap_group_get_doit,
+ 		.dumpit = devlink_nl_cmd_trap_group_get_dumpit,
++		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT,
+ 		/* can be retrieved by unprivileged users */
+ 	},
+ 	{
+ 		.cmd = DEVLINK_CMD_TRAP_GROUP_SET,
+ 		.doit = devlink_nl_cmd_trap_group_set_doit,
+ 		.flags = GENL_ADMIN_PERM,
++		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT,
+ 	},
+ 	{
+ 		.cmd = DEVLINK_CMD_TRAP_POLICER_GET,
+ 		.doit = devlink_nl_cmd_trap_policer_get_doit,
+ 		.dumpit = devlink_nl_cmd_trap_policer_get_dumpit,
+ 		/* can be retrieved by unprivileged users */
++		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT,
+ 	},
+ 	{
+ 		.cmd = DEVLINK_CMD_TRAP_POLICER_SET,
+ 		.doit = devlink_nl_cmd_trap_policer_set_doit,
+ 		.flags = GENL_ADMIN_PERM,
++		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT,
+ 	},
+ };
+ 
+@@ -7593,6 +7683,10 @@ int devlink_port_register(struct devlink *devlink,
+ 	INIT_DELAYED_WORK(&devlink_port->type_warn_dw, &devlink_port_type_warn);
+ 	devlink_port_type_warn_schedule(devlink_port);
+ 	devlink_port_notify(devlink_port, DEVLINK_CMD_PORT_NEW);
++	INIT_LIST_HEAD(&devlink_port->trap_mngr.trap_list);
++	INIT_LIST_HEAD(&devlink_port->trap_mngr.trap_group_list);
++	INIT_LIST_HEAD(&devlink_port->trap_mngr.trap_policer_list);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(devlink_port_register);
+
+@@ -9084,7 +9178,8 @@ static void devlink_trap_disable(struct devlink *devlink,
+ 	if (WARN_ON_ONCE(!trap_item))
+ 		return;
+ 
+-	trap_mngr->trap_ops->trap_action_set(devlink, trap, DEVLINK_TRAP_ACTION_DROP, NULL);
++	trap_mngr->trap_ops->trap_action_set(devlink, trap, DEVLINK_TRAP_ACTION_DROP,
++					     trap_item, NULL);
+ 	trap_item->action = DEVLINK_TRAP_ACTION_DROP;
+ }
+ 
+@@ -9532,6 +9627,233 @@ devlink_trap_policers_unregister(struct devlink *devlink,
+ }
+ EXPORT_SYMBOL_GPL(devlink_trap_policers_unregister);
+ 
++/**
++ * devlink_port_traps_ops - Register trap callbacks
++ * @devlink_port: devlink_port.
++ * @ops: trap ops
++ */
++void devlink_port_traps_ops(struct devlink_port *devlink_port,
++			    const struct devlink_trap_ops *ops)
++{
++	devlink_port->trap_mngr.trap_ops = ops;
++}
++EXPORT_SYMBOL_GPL(devlink_port_traps_ops);
++
++/**
++ * devlink_port_traps_register - Register packet traps with devlink
++ * port.
++ * @devlink_port: devlink_port.
++ * @traps: Packet traps.
++ * @traps_count: Count of provided packet traps.
++ * @priv: Driver private information.
++ *
++ * Return: Non-zero value on failure.
++ */
++int devlink_port_traps_register(struct devlink_port *devlink_port,
++				const struct devlink_trap *traps,
++				size_t traps_count, void *priv)
++{
++	struct devlink_trap_mngr *trap_mngr = &devlink_port->trap_mngr;
++	struct devlink *devlink = devlink_port->devlink;
++	int i, err;
++
++	if (!trap_mngr->trap_ops->trap_init || !trap_mngr->trap_ops->trap_action_set)
++		return -EINVAL;
++
++	mutex_lock(&devlink->lock);
++	for (i = 0; i < traps_count; i++) {
++		const struct devlink_trap *trap = &traps[i];
++
++		err = devlink_trap_verify(trap);
++		if (err)
++			goto err_trap_verify;
++
++		err = devlink_trap_register(devlink, trap_mngr, trap, priv);
++		if (err)
++			goto err_trap_register;
++	}
++	mutex_unlock(&devlink->lock);
++
++	return 0;
++
++err_trap_register:
++err_trap_verify:
++	for (i--; i >= 0; i--)
++		devlink_trap_unregister(devlink, trap_mngr, &traps[i]);
++	mutex_unlock(&devlink->lock);
++	return err;
++}
++EXPORT_SYMBOL_GPL(devlink_port_traps_register);
++
++/**
++ * devlink_port_traps_unregister - Unregister packet traps from devlink_port.
++ * @devlink_port: devlink port.
++ * @traps: Packet traps.
++ * @traps_count: Count of provided packet traps.
++ */
++void devlink_port_traps_unregister(struct devlink_port *devlink_port,
++				   const struct devlink_trap *traps,
++				   size_t traps_count)
++{
++	struct devlink_trap_mngr *trap_mngr = &devlink_port->trap_mngr;
++	struct devlink *devlink = devlink_port->devlink;
++	int i;
++
++	mutex_lock(&devlink->lock);
++	/* Make sure we do not have any packets in-flight while unregistering
++	 * traps by disabling all of them and waiting for a grace period.
++	 */
++	for (i = traps_count - 1; i >= 0; i--)
++		devlink_trap_disable(devlink, trap_mngr, &traps[i]);
++	synchronize_rcu();
++	for (i = traps_count - 1; i >= 0; i--)
++		devlink_trap_unregister(devlink, trap_mngr, &traps[i]);
++	mutex_unlock(&devlink->lock);
++}
++EXPORT_SYMBOL_GPL(devlink_port_traps_unregister);
++
++/**
++ * devlink_port_trap_report - Report trapped packet to drop monitor.
++ * @devlink_port: devlink_port.
++ * @skb: Trapped packet.
++ * @trap_ctx: Trap context.
++ * @fa_cookie: Flow action cookie. Could be NULL.
++ */
++void devlink_port_trap_report(struct devlink_port *devlink_port, struct sk_buff *skb,
++			      void *trap_ctx, const struct flow_action_cookie *fa_cookie)
++{
++	return devlink_trap_report(devlink_port->devlink, skb, trap_ctx, devlink_port,
++				   fa_cookie);
++}
++EXPORT_SYMBOL_GPL(devlink_port_trap_report);
++
++/**
++ * devlink_port_trap_groups_register - Register packet trap groups with devlink port.
++ * @devlink_port: devlink_port.
++ * @groups: Packet trap groups.
++ * @groups_count: Count of provided packet trap groups.
++ *
++ * Return: Non-zero value on failure.
++ */
++int devlink_port_trap_groups_register(struct devlink_port *devlink_port,
++				      const struct devlink_trap_group *groups,
++				      size_t groups_count)
++{
++	struct devlink_trap_mngr *trap_mngr = &devlink_port->trap_mngr;
++	struct devlink *devlink = devlink_port->devlink;
++	int i, err;
++
++	mutex_lock(&devlink->lock);
++	for (i = 0; i < groups_count; i++) {
++		const struct devlink_trap_group *group = &groups[i];
++
++		err = devlink_trap_group_verify(group);
++		if (err)
++			goto err_trap_group_verify;
++
++		err = devlink_trap_group_register(devlink, trap_mngr, group);
++		if (err)
++			goto err_trap_group_register;
++	}
++	mutex_unlock(&devlink->lock);
++
++	return 0;
++
++err_trap_group_register:
++err_trap_group_verify:
++	for (i--; i >= 0; i--)
++		devlink_trap_group_unregister(devlink, trap_mngr, &groups[i]);
++	mutex_unlock(&devlink->lock);
++	return err;
++}
++EXPORT_SYMBOL_GPL(devlink_port_trap_groups_register);
++
++/**
++ * devlink_port_trap_groups_unregister - Unregister packet trap groups from devlink port.
++ * @devlink_port: devlink_port.
++ * @groups: Packet trap groups.
++ * @groups_count: Count of provided packet trap groups.
++ */
++void devlink_port_trap_groups_unregister(struct devlink_port *devlink_port,
++					 const struct devlink_trap_group *groups,
++					 size_t groups_count)
++{
++	struct devlink_trap_mngr *trap_mngr = &devlink_port->trap_mngr;
++	struct devlink *devlink = devlink_port->devlink;
++	int i;
++
++	mutex_lock(&devlink->lock);
++	for (i = groups_count - 1; i >= 0; i--)
++		devlink_trap_group_unregister(devlink, trap_mngr, &groups[i]);
++	mutex_unlock(&devlink->lock);
++}
++EXPORT_SYMBOL_GPL(devlink_port_trap_groups_unregister);
++
++/**
++ * devlink_port_trap_policers_register - Register packet trap policers with devlink port.
++ * @devlink_port: devlink_port.
++ * @policers: Packet trap policers.
++ * @policers_count: Count of provided packet trap policers.
++ *
++ * Return: Non-zero value on failure.
++ */
++int devlink_port_trap_policers_register(struct devlink_port *devlink_port,
++					const struct devlink_trap_policer *policers,
++					size_t policers_count)
++{
++	struct devlink_trap_mngr *trap_mngr = &devlink_port->devlink->trap_mngr;
++	struct devlink *devlink = devlink_port->devlink;
++	int i, err;
++
++	mutex_lock(&devlink->lock);
++	for (i = 0; i < policers_count; i++) {
++		const struct devlink_trap_policer *policer = &policers[i];
++
++		if (WARN_ON(policer->id == 0 ||
++			    policer->max_rate < policer->min_rate ||
++			    policer->max_burst < policer->min_burst)) {
++			err = -EINVAL;
++			goto err_trap_policer_verify;
++		}
++
++		err = devlink_trap_policer_register(devlink, trap_mngr, policer);
++		if (err)
++			goto err_trap_policer_register;
++	}
++	mutex_unlock(&devlink->lock);
++
++	return 0;
++
++err_trap_policer_register:
++err_trap_policer_verify:
++	for (i--; i >= 0; i--)
++		devlink_trap_policer_unregister(devlink, trap_mngr, &policers[i]);
++	mutex_unlock(&devlink->lock);
++	return err;
++}
++EXPORT_SYMBOL_GPL(devlink_port_trap_policers_register);
++
++/**
++ * devlink_port_trap_policers_unregister - Unregister packet trap policers from devlink_port
++ * @devlink_port: devlink_port.
++ * @policers: Packet trap policers.
++ * @policers_count: Count of provided packet trap policers.
++ */
++void devlink_port_trap_policers_unregister(struct devlink_port *devlink_port,
++					   const struct devlink_trap_policer *policers,
++					   size_t policers_count)
++{
++	struct devlink_trap_mngr *trap_mngr = &devlink_port->devlink->trap_mngr;
++	struct devlink *devlink = devlink_port->devlink;
++	int i;
++
++	mutex_lock(&devlink->lock);
++	for (i = policers_count - 1; i >= 0; i--)
++		devlink_trap_policer_unregister(devlink, trap_mngr, &policers[i]);
++	mutex_unlock(&devlink->lock);
++}
++EXPORT_SYMBOL_GPL(devlink_port_trap_policers_unregister);
++
+ static void __devlink_compat_running_version(struct devlink *devlink,
+ 					     char *buf, size_t len)
+ {
+-- 
+2.14.1
+
