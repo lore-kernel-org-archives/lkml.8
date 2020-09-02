@@ -2,128 +2,132 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DC5C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F40D5C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26BB3206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D35BF206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:54:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pIMqb6bV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3IliV7T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgIBMw4 (ORCPT
+        id S1727771AbgIBMyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 08:52:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53818 "EHLO
+        Wed, 2 Sep 2020 08:54:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgIBMwb (ORCPT
+        with ESMTP id S1726686AbgIBMx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 08:52:31 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16741C061246
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 05:52:31 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id x12so3406928qtp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 05:52:31 -0700 (PDT)
+        Wed, 2 Sep 2020 08:53:59 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6829C061244;
+        Wed,  2 Sep 2020 05:53:58 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id gf14so2260023pjb.5;
+        Wed, 02 Sep 2020 05:53:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Pvl3SWJ9e5sce/rNKaSduyhhxTz1BgiMnI37NgwAhUY=;
-        b=pIMqb6bVqWYzxtZFWJSmWNZTz/EKtlBYMVpJ1K3XEhvzHRG+pUoB71bDqhI9uFBunZ
-         0ELFd1MpKzQV7R7HqrjpoygMTptfUS3x9DM9irg13KRTLIwpsXzY08GHwgEhIHcK+JG3
-         5dF9VrfpoF6k+pqSgyuqE7WXB8lmuNVHJfO1SyLKglUoE1+u1A2KVu8DI+woV91/Rq5l
-         VvS69IgnUJmomuB85Tj2Tovhgf+DLbtjQ6aPDI1VO+d6Igxe+o1Z6Yx9cNfB6EtRMf3w
-         hvPdpp04eEOxT9aVpqI4jjroa4TIBvpK7unQsS+nvWg3hdKGrgCHZndy7EMCrad54QkP
-         OtlQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GPYnsVkem3+rGz/hx35DWNwrA6gRvemoFnUQJ0NxbXk=;
+        b=O3IliV7T1Fi5FVyDT80cvvfFZipGaOhG7IHj5wmk+aM5nRA+7s6hAcCzbQlG8BwdxX
+         54f/Gvy8uAPninfvMtb5FsMDiz3OvpvPWVhF3Q5dML5syZvJF0mgurliqkv009WVDxkV
+         DKCIKjfCcCJSb6alglsLEty0+b2/OGbCF7y2MQ8e1IkBpiwfNMd957e6nCfIELviTgwg
+         86+eVzUqh36SZuRlLGOkd6BZntCZx7OAJGgYl+4yp86c/EJ/5M4W9JhiDd3rMAq6bFtZ
+         A9k+04RosFknwjeAGWeIMUC5Eeb/AU1BIeIHS9R7CkFXuyhhS2qN/YRAsCVrJ0xyGgBZ
+         h0gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Pvl3SWJ9e5sce/rNKaSduyhhxTz1BgiMnI37NgwAhUY=;
-        b=AsgI+Kt9TdndwWeJ9RNd59d8m2l6NRbdsj54wHDHFtrvE67A1TspM9THRQI7qyESVx
-         DkXLGCWpXhB/Z1jUJOsEo/DL1puekeJ3AB7J0THC+6PyIa/hBaTvzi7Yidh9PVckmP+c
-         OzFc5NG+J/m2DOZvjZsWf7oM24maIMqrTSGTctR82L27vkMBgo6FQUAdxIQC+f/l5Lw1
-         Gzv0KWmk/BYf1rTY0mgVfVeZNdz/1PhKdgd8Xq+0aVDMFc2iOnbOussgAUQvXhKGpQNW
-         6wh2ADYsWz5RkLiVbRm1rs6MQ/G712L7+NmSZO8knD96GW8ImWvvdcwXPxmgWiIck0v1
-         pcbw==
-X-Gm-Message-State: AOAM533jyYZG0g5LDsniA1NEY+kimy0QKX+JC/qU5k8FqAboUXqg0a27
-        G+35aocoeaKamU+UdusjSDDd7A==
-X-Google-Smtp-Source: ABdhPJzbj9HoMDTrZSIHvhNE2C9Cwm3ZM61DpTVhFH/mNvlJbuBbLY7DbYz1/PBcCkRU6zj6OTP/9Q==
-X-Received: by 2002:aed:27dd:: with SMTP id m29mr6853784qtg.165.1599051150238;
-        Wed, 02 Sep 2020 05:52:30 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 184sm4731438qkl.104.2020.09.02.05.52.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 05:52:29 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 08:52:24 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Uriel Guajardo <urielguajardojr@gmail.com>
-Cc:     brendanhiggins@google.com, urielguajardo@google.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org
-Subject: Re: [PATCH 2/2] kunit: ubsan integration
-Message-ID: <20200902125223.GA5676@lca.pw>
-References: <20200806174326.3577537-1-urielguajardojr@gmail.com>
- <20200806174326.3577537-2-urielguajardojr@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GPYnsVkem3+rGz/hx35DWNwrA6gRvemoFnUQJ0NxbXk=;
+        b=rgxVA5l7ZuF2BTUsNVpRp45PBl87Spxe8jfEu75REIHAcYDHOlrTMgCOmSB0rMZYvU
+         BjMpZqDGdEA9EHzyWuJ07hUPq2excrQtYtrbWdGTUVXrvsWA2yQLbig0FtGJpKEpDJHj
+         M7txCiCysKf6TOWtaGjZUka87U/QLvTmRSX12WLbqPDpLw5ld0aXdTzpX0j5sTNiwyXO
+         VqdeDtmZsLWC+OIOza/kpKFlW4971VRX2wpibwBET0LfOdOHtIEPFO+ZPru34p8e/Cza
+         y0CmXg9TItwILDG/zuWGNyNJL9m8l6wY6Au+GnIFGKaz8OECnVCHATnlLVD58CnrIa9n
+         h21w==
+X-Gm-Message-State: AOAM532isjszWnsACXVykOToUA1/36o9a2o36bIN+33/mEpNcvhya6hF
+        Rm2evoGHdApGDKZQqidHPbw5IKsIiUDKpg==
+X-Google-Smtp-Source: ABdhPJzAP+Z5tZoU/7BeymZD+T3FE/yPFfem59xGZ5yk9RLyR0EfRMQ/J022r+Y1ZzSejAs4fCiUPA==
+X-Received: by 2002:a17:90a:e2cc:: with SMTP id fr12mr2143502pjb.125.1599051238181;
+        Wed, 02 Sep 2020 05:53:58 -0700 (PDT)
+Received: from localhost ([121.0.29.56])
+        by smtp.gmail.com with ESMTPSA id np4sm4243201pjb.4.2020.09.02.05.53.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Sep 2020 05:53:57 -0700 (PDT)
+From:   Lai Jiangshan <jiangshanlai@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        kvm@vger.kernel.org
+Subject: [PATCH V2] kvm x86/mmu: use KVM_REQ_MMU_SYNC to sync when needed
+Date:   Wed,  2 Sep 2020 21:54:21 +0800
+Message-Id: <20200902135421.31158-1-jiangshanlai@gmail.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
+In-Reply-To: <87y2ltx6gl.fsf@vitty.brq.redhat.com>
+References: <87y2ltx6gl.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200806174326.3577537-2-urielguajardojr@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 05:43:26PM +0000, Uriel Guajardo wrote:
-> Integrates UBSAN into the KUnit testing framework. It fails KUnit tests
-> whenever it reports undefined behavior.
-> 
-> Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
+From: Lai Jiangshan <laijs@linux.alibaba.com>
 
-It looks like this patch had been merged into linux-next but the "[PATCH 1/2]
-kunit: support failure from dynamic analysis tools" did not. Hence, it caused a
-compiling failure.
+When kvm_mmu_get_page() gets a page with unsynced children, the spt
+pagetable is unsynchronized with the guest pagetable. But the
+guest might not issue a "flush" operation on it when the pagetable
+entry is changed from zero or other cases. The hypervisor has the 
+responsibility to synchronize the pagetables.
 
-lib/ubsan.c: In function ‘ubsan_prologue’:
-lib/ubsan.c:141:2: error: implicit declaration of function ‘kunit_fail_current_test’; did you mean ‘kunit_init_test’? [-Werror=implicit-function-declaration]
-  kunit_fail_current_test();
-  ^~~~~~~~~~~~~~~~~~~~~~~
-  kunit_init_test
-cc1: some warnings being treated as errors
+The linux kernel behaves as above for many years, But
+8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
+inadvertently included a line of code to change it without giving any
+reason in the changelog. It is clear that the commit's intention was to
+change KVM_REQ_TLB_FLUSH -> KVM_REQ_TLB_FLUSH_CURRENT, so we don't
+unneedlesly flush other contexts but one of the hunks changed
+nearby KVM_REQ_MMU_SYNC instead.
 
-> ---
->  lib/ubsan.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/lib/ubsan.c b/lib/ubsan.c
-> index cb9af3f6b77e..1460e2c828c8 100644
-> --- a/lib/ubsan.c
-> +++ b/lib/ubsan.c
-> @@ -14,6 +14,7 @@
->  #include <linux/types.h>
->  #include <linux/sched.h>
->  #include <linux/uaccess.h>
-> +#include <kunit/test.h>
->  
->  #include "ubsan.h"
->  
-> @@ -137,6 +138,7 @@ static void ubsan_prologue(struct source_location *loc, const char *reason)
->  {
->  	current->in_ubsan++;
->  
-> +	kunit_fail_current_test();
->  	pr_err("========================================"
->  		"========================================\n");
->  	pr_err("UBSAN: %s in %s:%d:%d\n", reason, loc->file_name,
-> -- 
-> 2.28.0.163.g6104cc2f0b6-goog
-> 
+The this patch changes it back.
+
+Link: https://lore.kernel.org/lkml/20200320212833.3507-26-sean.j.christopherson@intel.com/
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+---
+Changed from v1:
+	update patch description
+
+ arch/x86/kvm/mmu/mmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 4e03841f053d..9a93de921f2b 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -2468,7 +2468,7 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
+ 		}
+ 
+ 		if (sp->unsync_children)
+-			kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
++			kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
+ 
+ 		__clear_sp_write_flooding_count(sp);
+ 
+-- 
+2.19.1.6.gb485710b
+
