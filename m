@@ -2,224 +2,90 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485F7C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B03C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 096442087D
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3577208B3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:08:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oQvoiIoa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xjDLtop+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbgIBHH4 (ORCPT
+        id S1726674AbgIBHIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:07:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57502 "EHLO
+        Wed, 2 Sep 2020 03:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgIBHHy (ORCPT
+        with ESMTP id S1726140AbgIBHIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:07:54 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F24C061244;
-        Wed,  2 Sep 2020 00:07:54 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id f18so2327750pfa.10;
-        Wed, 02 Sep 2020 00:07:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eKRJosbo+g0I7bg9/O9Hx0UMRK5lfTb++YcTo9JR86A=;
-        b=oQvoiIoaNZtVdcV3BUNju/hHwr8IkpTukwJHrEQrbFvG1ZZCbepiDvsOO1d5sp9Sz9
-         3ykvIAnjopyPlGnufaTi1sqxBMTWwvko4YOgHvWMBhDQTWD7GHOJYcpfqQCMhC+nsIgV
-         f2y/JG4mc946t0hBaiqt29AjVb/F9bHxpqgyrLRX+qK1pQHeVkVHrUjbMR+Kvt71M2Ts
-         51barXwGbP6c7E1/2v89Iucj3+ot+KeIgJBWsJDpmWOUDNvhW1XrgSY8OG7NC9hlTgW0
-         y8JhCs//ORgjrWLDw/UDCgllg3t+S30kCvOPjGrIyvgpjuKqb+/vNFFkAuKScwSpSIy3
-         qhBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eKRJosbo+g0I7bg9/O9Hx0UMRK5lfTb++YcTo9JR86A=;
-        b=RaJUA9XVjY4xBSP1PCPcAemnXfQ3iOKVTU2Xh4fmRcwp08uTPTB/DnLL3pxDIYpVbO
-         ec9ZOoEDxk04vOZglFMcIxfY+vQHGbHZhA45xdcc0caIL+j5IiTY1Ln7AVbEYaFQBcjk
-         ZEMRexOXjFcuoi8oZ/o865fI8w6l49Fc1bYDoPdtRW418UKRkDnz2AS94EVPhDAR0ye2
-         C5lnYescMIWw7sdLyctWeMiTFVP9jlA6WBaNOS2vKW6dMtLaQRX/o87NgNd6NntRXOgM
-         AMcjzO5V6y+PnzuENuTJWq4353en7rj8maQCO4tjytgA54qyRUo5qQ97L3Do92caTuN6
-         eFpA==
-X-Gm-Message-State: AOAM532vOnk3YvXlv1EpA83Ra1NY7BLbnNd4p8qLLNoCT2gyo0BhUWcX
-        P/kSwhH//XrGg6pSKFt1oRh62zyv8pD81+ksra0=
-X-Google-Smtp-Source: ABdhPJy2kvUDCWgLIqvGJ3sJmktN0ty3zmr6o+oVzLHFrn570b7aIv7a07S3SdnFmBreFphnkiuXBRcR3Wk5S2kK314=
-X-Received: by 2002:a63:29c7:: with SMTP id p190mr913126pgp.292.1599030473531;
- Wed, 02 Sep 2020 00:07:53 -0700 (PDT)
+        Wed, 2 Sep 2020 03:08:37 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B966DC061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:08:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qSleb5yTfUSbFgVSq70m08ah+KEBG2zQiz3hpXr3Dys=; b=xjDLtop+ezWUw1yQi7d2GwgHEJ
+        iAuovHBN2V2q/2RxbqTIBWym9NtRL4GbVmKroQZBOVUdgWsJhrXVIjmhAF4oP7Nkbz18b2AMazxPc
+        ArKORw8XEUI8ja3UAtIGKiZ3kyaypLeJ+MvJPdiByvJ86H78p+dQKUJuC5WuGrAH+dPvog55m4zRW
+        TXo15E4fGt9jVt6QFCRwijUbORjVCizF7eNnE1YPoFLRXJU9k3sTs1s+eUpBMb+TBAFcrg7S9P0l1
+        0sxQMMZ8r1hL+RXWfHTGTJpfek9UJJzC0h8tT1V397phtOk1j/LEUabeUCZgoS7kt/HrgzvmCrPbg
+        2TdgDXqw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDMsG-00064E-0n; Wed, 02 Sep 2020 07:08:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 889F43056DE;
+        Wed,  2 Sep 2020 09:08:00 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5B27E2B774668; Wed,  2 Sep 2020 09:08:00 +0200 (CEST)
+Date:   Wed, 2 Sep 2020 09:08:00 +0200
+From:   peterz@infradead.org
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org,
+        npiggin@gmail.com, elver@google.com, jgross@suse.com,
+        paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
+        svens@linux.ibm.com, tglx@linutronix.de,
+        mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v2 03/11] sched,idle,rcu: Push rcu_idle deeper into the
+ idle path
+Message-ID: <20200902070800.GH2674@hirez.programming.kicks-ass.net>
+References: <20200821084738.508092956@infradead.org>
+ <20200821085348.310943801@infradead.org>
+ <20200827011826.GA1942571@google.com>
+ <20200827012419.GB1942571@google.com>
+ <20200827074748.GY2674@hirez.programming.kicks-ass.net>
+ <20200827223001.GA3821640@google.com>
 MIME-Version: 1.0
-References: <000000000000bcdbb005ae4f25ce@google.com> <7795503d-e112-cc26-81d8-c7a9692675b0@iogearbox.net>
-In-Reply-To: <7795503d-e112-cc26-81d8-c7a9692675b0@iogearbox.net>
-From:   Magnus Karlsson <magnus.karlsson@gmail.com>
-Date:   Wed, 2 Sep 2020 09:07:42 +0200
-Message-ID: <CAJ8uoz29gZzGGiWZesFTu32RnsmpknxRBOnDq5v3N3wztScu2w@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Write in xp_put_pool
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     syzbot <syzbot+5334f62e4d22804e646a@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        bpf <bpf@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>, kpsingh@chromium.org,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>, mingo@kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        paulmck@kernel.org, peterz@infradead.org,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827223001.GA3821640@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 9:06 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
->
-> On 9/2/20 8:57 AM, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following issue on:
->
-> Magnus/Bjorn, ptal, thanks!
+On Thu, Aug 27, 2020 at 06:30:01PM -0400, Joel Fernandes wrote:
+> On Thu, Aug 27, 2020 at 09:47:48AM +0200, peterz@infradead.org wrote:
 
-On it as we speak.
+> > All trace_*_rcuidle() and RCU_NONIDLE() usage is a bug IMO.
+> > 
+> > Ideally RCU-trace goes away too.
+> 
+> I was thinking that unless the rcu_idle_enter/exit calls coincide with points
+> in the kernel where instrumentation is not allowed, there is always a chance
+> somebody wants to use tracepoints after rcu_idle_enter or before exit. In
+> this case, trace_*_rcuidle() is unavoidable unless you can move the
+> rcu_idle_enter/exit calls deeper as you are doing.
+> 
+> Maybe objtool can help with that?
 
-> > HEAD commit:    dc1a9bf2 octeontx2-pf: Add UDP segmentation offload support
-> > git tree:       net-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=16ff67de900000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=b6856d16f78d8fa9
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=5334f62e4d22804e646a
-> > compiler:       gcc (GCC) 10.1.0-syz 20200507
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e9f279900000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=125f3e1e900000
-> >
-> > The issue was bisected to:
-> >
-> > commit a1132430c2c55af62d13e9fca752d46f14d548b3
-> > Author: Magnus Karlsson <magnus.karlsson@intel.com>
-> > Date:   Fri Aug 28 08:26:26 2020 +0000
-> >
-> >      xsk: Add shared umem support between devices
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10a373de900000
-> > final oops:     https://syzkaller.appspot.com/x/report.txt?x=12a373de900000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=14a373de900000
-> >
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+5334f62e4d22804e646a@syzkaller.appspotmail.com
-> > Fixes: a1132430c2c5 ("xsk: Add shared umem support between devices")
-> >
-> > ==================================================================
-> > BUG: KASAN: use-after-free in instrument_atomic_write include/linux/instrumented.h:71 [inline]
-> > BUG: KASAN: use-after-free in atomic_fetch_sub_release include/asm-generic/atomic-instrumented.h:220 [inline]
-> > BUG: KASAN: use-after-free in refcount_sub_and_test include/linux/refcount.h:266 [inline]
-> > BUG: KASAN: use-after-free in refcount_dec_and_test include/linux/refcount.h:294 [inline]
-> > BUG: KASAN: use-after-free in xp_put_pool+0x2c/0x1e0 net/xdp/xsk_buff_pool.c:262
-> > Write of size 4 at addr ffff8880a6a4d860 by task ksoftirqd/0/9
-> >
-> > CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.9.0-rc1-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0x18f/0x20d lib/dump_stack.c:118
-> >   print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
-> >   __kasan_report mm/kasan/report.c:513 [inline]
-> >   kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
-> >   check_memory_region_inline mm/kasan/generic.c:186 [inline]
-> >   check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
-> >   instrument_atomic_write include/linux/instrumented.h:71 [inline]
-> >   atomic_fetch_sub_release include/asm-generic/atomic-instrumented.h:220 [inline]
-> >   refcount_sub_and_test include/linux/refcount.h:266 [inline]
-> >   refcount_dec_and_test include/linux/refcount.h:294 [inline]
-> >   xp_put_pool+0x2c/0x1e0 net/xdp/xsk_buff_pool.c:262
-> >   xsk_destruct+0x7d/0xa0 net/xdp/xsk.c:1138
-> >   __sk_destruct+0x4b/0x860 net/core/sock.c:1764
-> >   rcu_do_batch kernel/rcu/tree.c:2428 [inline]
-> >   rcu_core+0x5c7/0x1190 kernel/rcu/tree.c:2656
-> >   __do_softirq+0x2de/0xa24 kernel/softirq.c:298
-> >   run_ksoftirqd kernel/softirq.c:652 [inline]
-> >   run_ksoftirqd+0x89/0x100 kernel/softirq.c:644
-> >   smpboot_thread_fn+0x655/0x9e0 kernel/smpboot.c:165
-> >   kthread+0x3b5/0x4a0 kernel/kthread.c:292
-> >   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-> >
-> > Allocated by task 6854:
-> >   kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
-> >   kasan_set_track mm/kasan/common.c:56 [inline]
-> >   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
-> >   kmalloc_node include/linux/slab.h:577 [inline]
-> >   kvmalloc_node+0x61/0xf0 mm/util.c:574
-> >   kvmalloc include/linux/mm.h:750 [inline]
-> >   kvzalloc include/linux/mm.h:758 [inline]
-> >   xp_create_and_assign_umem+0x58/0x8d0 net/xdp/xsk_buff_pool.c:54
-> >   xsk_bind+0x9a0/0xed0 net/xdp/xsk.c:709
-> >   __sys_bind+0x1e9/0x250 net/socket.c:1656
-> >   __do_sys_bind net/socket.c:1667 [inline]
-> >   __se_sys_bind net/socket.c:1665 [inline]
-> >   __x64_sys_bind+0x6f/0xb0 net/socket.c:1665
-> >   do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-> >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > Freed by task 6854:
-> >   kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
-> >   kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
-> >   kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
-> >   __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
-> >   __cache_free mm/slab.c:3418 [inline]
-> >   kfree+0x103/0x2c0 mm/slab.c:3756
-> >   kvfree+0x42/0x50 mm/util.c:603
-> >   xp_destroy net/xdp/xsk_buff_pool.c:44 [inline]
-> >   xp_destroy+0x45/0x60 net/xdp/xsk_buff_pool.c:38
-> >   xsk_bind+0xbdd/0xed0 net/xdp/xsk.c:719
-> >   __sys_bind+0x1e9/0x250 net/socket.c:1656
-> >   __do_sys_bind net/socket.c:1667 [inline]
-> >   __se_sys_bind net/socket.c:1665 [inline]
-> >   __x64_sys_bind+0x6f/0xb0 net/socket.c:1665
-> >   do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-> >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > The buggy address belongs to the object at ffff8880a6a4d800
-> >   which belongs to the cache kmalloc-1k of size 1024
-> > The buggy address is located 96 bytes inside of
-> >   1024-byte region [ffff8880a6a4d800, ffff8880a6a4dc00)
-> > The buggy address belongs to the page:
-> > page:00000000dd5fc18f refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xa6a4d
-> > flags: 0xfffe0000000200(slab)
-> > raw: 00fffe0000000200 ffffea00029cce48 ffffea00025f2148 ffff8880aa040700
-> > raw: 0000000000000000 ffff8880a6a4d000 0000000100000002 0000000000000000
-> > page dumped because: kasan: bad access detected
-> >
-> > Memory state around the buggy address:
-> >   ffff8880a6a4d700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> >   ffff8880a6a4d780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> >> ffff8880a6a4d800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >                                                         ^
-> >   ffff8880a6a4d880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >   ffff8880a6a4d900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > ==================================================================
-> >
-> >
-> > ---
-> > This report is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this issue. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> > syzbot can test patches for this issue, for details see:
-> > https://goo.gl/tpsmEJ#testing-patches
-> >
->
+The eventual goal is to mark idle code noinstr too. There's more work
+before we can do that.
+
