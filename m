@@ -2,147 +2,176 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A72C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AC9C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71FB8207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223D2207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:30:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UlBR3FG5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IAoO8HB+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgIBU3w (ORCPT
+        id S1726858AbgIBUaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 16:29:52 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2822 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIBU3v (ORCPT
+        Wed, 2 Sep 2020 16:30:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726226AbgIBUaL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 16:29:51 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f5000b00000>; Wed, 02 Sep 2020 13:29:36 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 02 Sep 2020 13:29:50 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 02 Sep 2020 13:29:50 -0700
-Received: from [10.2.161.253] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 2 Sep
- 2020 20:29:47 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-CC:     <linux-mm@kvack.org>, Roman Gushchin <guro@fb.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
-Date:   Wed, 2 Sep 2020 16:29:46 -0400
-X-Mailer: MailMate (1.13.1r5705)
-Message-ID: <C12C60A2-43EA-4AD3-9077-FFB61CCC964C@nvidia.com>
-In-Reply-To: <20200902195739.GI24045@ziepe.ca>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200902184053.GF24045@ziepe.ca>
- <E78A0F18-223C-44A8-BCBA-73CF7AF6F8A5@nvidia.com>
- <20200902184852.GH24045@ziepe.ca>
- <C5EFA1CC-311C-47D5-9506-D087D9AE58D1@nvidia.com>
- <20200902195739.GI24045@ziepe.ca>
+        Wed, 2 Sep 2020 16:30:11 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4664AC061244;
+        Wed,  2 Sep 2020 13:30:10 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id e23so573306eja.3;
+        Wed, 02 Sep 2020 13:30:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3zH/GO18AuMjI+jK60xohkdSw2ATSnXJ1BTZdunQxr8=;
+        b=IAoO8HB+G4Gyxmg6TnoHZXWP6md6wpAtsLFdpd3vUebwvRvqcoVRuBCDnz/KwTghTi
+         FMiWdDJHnmdrDXvNpHBztg0GN7b8bTiFnsayrcfnI5gVZh6gHQL9mBRnYmP7nP+EZ9lZ
+         TX97o8nHu5w0HGswgD+AbbJl4hU4O1TNzhIPFumoWsQFXQX8UWHdmpLFtVm1F5lO93sd
+         4wxacqz8aXRzM2jY6iIRrO9fDA8ROkic5StX2H+QWptrC3xT6ASA8y/hnreHlV01VAQQ
+         LvKvikYQuQseVGP2U3g1JwLzFdOhSLOMqVSUxAzm8qa3Olc6wd79QZJlwZFNTXIQ/dSx
+         oz3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3zH/GO18AuMjI+jK60xohkdSw2ATSnXJ1BTZdunQxr8=;
+        b=k/65fwrewiikprofofflsd+Laf/VacLprJM7SUtRd/617XDhwaLno8t/1pGknI6oJ2
+         1cfsX5F684U6uzcwXUKYWJiAehwLeFuSWcInB+3MYGCJ+W3h91IGum0f7FPBIRUuUoZw
+         yaRpcy5PzcofvKQwdZkMRz6WYWsntQGFJ5hBysy/Ja6nYgUZK+a+mHjwOcDRY7CflKSw
+         tqezygQ7KwWOIve5WwxfQQEbFLkpr+pqqmI5Jic8fJNpR2UQKMXdBUnvI/XzHCpRC0z/
+         Ihv7JBR9XXmetamcMKqHBFcSSNLjc2l/Jd0btHBZLHu9pkOw+WYImsK1Gnxpg/LgzVtr
+         34dg==
+X-Gm-Message-State: AOAM530/+WbXEPTy2LoVBBwaRSIV/MWO8CCj/Jdh8r8vVcPAkTMKZ8H4
+        aMo6L9Ay2vO4h+PRiC1mfooczR3ozw6eAqhTA2Y=
+X-Google-Smtp-Source: ABdhPJyzZFQeDPZketWOBEluKgnVpcrzxpuAdbHhXq4uZ8DSciz92IF8wEci8O8j7o4XyYup4i+USOLVMflTEi0tKuM=
+X-Received: by 2002:a17:906:3a85:: with SMTP id y5mr1758578ejd.507.1599078608948;
+ Wed, 02 Sep 2020 13:30:08 -0700 (PDT)
 MIME-Version: 1.0
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_0F9721AF-59A2-4F1F-84D6-26E9CBFFF0C7_=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599078576; bh=GpHPYB1gS6qMjgfjjB2zkmvO3GismXrLdGUFN1+sYQ4=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=UlBR3FG5VVB+m7Kh0n22MMWoBCvylenwxI8qKQy4FZjdzSPPpj6tpT5wB5oOE60SH
-         JWD27ogvztYveglSv8ssSUUHgBdNR6hWUtmdzD0nQTGughEN0rVuCavuZ4nFfWQW5/
-         Ayu7+BS58BWDUEuCylfWvXHhvjaJ3Fut0MO8xfRY7AuaWomQxXKfMKr22Qp8079dOk
-         y4D/P0ncpld3kwbH2oMzGjiyrzW08UnhlgBbrbiyKP7Mt6yy8+7k6OGVlA31BunVSU
-         ITEGUZ2CGoSItN2ongkRE+o4UWziBIC0s2QuAy7NtaemYzRhP6TZRzyDQ0mxY2LC0Z
-         DWEfiQ1MbX7JA==
+References: <20200902165830.5367-1-rcampbell@nvidia.com> <20200902165830.5367-2-rcampbell@nvidia.com>
+In-Reply-To: <20200902165830.5367-2-rcampbell@nvidia.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Wed, 2 Sep 2020 13:29:56 -0700
+Message-ID: <CAHbLzkqAHfVq4upkJBvWQ9XtXFfFx5=qUO4+i5XjFeNwS9XVHg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] mm/thp: fix __split_huge_pmd_locked() for
+ migration PMD
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     Linux MM <linux-mm@kvack.org>, nouveau@lists.freedesktop.org,
+        linux-kselftest@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_0F9721AF-59A2-4F1F-84D6-26E9CBFFF0C7_=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On 2 Sep 2020, at 15:57, Jason Gunthorpe wrote:
-
-> On Wed, Sep 02, 2020 at 03:05:39PM -0400, Zi Yan wrote:
->> On 2 Sep 2020, at 14:48, Jason Gunthorpe wrote:
->>
->>> On Wed, Sep 02, 2020 at 02:45:37PM -0400, Zi Yan wrote:
->>>
->>>>> Surprised this doesn't touch mm/pagewalk.c ?
->>>>
->>>> 1GB PUD page support is present for DAX purpose, so the code is ther=
-e
->>>> in mm/pagewalk.c already. I only needed to supply ops->pud_entry whe=
-n using
->>>> the functions in mm/pagewalk.c. :)
->>>
->>> Yes, but doesn't this change what is possible under the mmap_sem
->>> without the page table locks?
->>>
->>> ie I would expect some thing like pmd_trans_unstable() to be required=
-
->>> as well for lockless walkers. (and I don't think the pmd code is 100%=
-
->>> right either)
->>>
->>
->> Right. I missed that. Thanks for pointing it out.
->> The code like this, right?
+On Wed, Sep 2, 2020 at 9:58 AM Ralph Campbell <rcampbell@nvidia.com> wrote:
 >
-> Technically all those *pud's are racy too, the design here with the
-> _unstable function call always seemed weird. I strongly suspect it
-> should mirror how get_user_pages_fast works for lockless walking
+> A migrating transparent huge page has to already be unmapped. Otherwise,
+> the page could be modified while it is being copied to a new page and
+> data could be lost. The function __split_huge_pmd() checks for a PMD
+> migration entry before calling __split_huge_pmd_locked() leading one to
+> think that __split_huge_pmd_locked() can handle splitting a migrating PMD.
+> However, the code always increments the page->_mapcount and adjusts the
+> memory control group accounting assuming the page is mapped.
+> Also, if the PMD entry is a migration PMD entry, the call to
+> is_huge_zero_pmd(*pmd) is incorrect because it calls pmd_pfn(pmd) instead
+> of migration_entry_to_pfn(pmd_to_swp_entry(pmd)).
+> Fix these problems by checking for a PMD migration entry.
 
-You mean READ_ONCE on page table entry pointer first, then use the value
-for the rest of the loop? I am not quite familiar with this racy check
-part of the code and happy to hear more about it.
+Thanks for catching this. The fix looks good to me. Reviewed-by: Yang
+Shi <shy828301@gmail.com>
 
-
-=E2=80=94
-Best Regards,
-Yan Zi
-
---=_MailMate_0F9721AF-59A2-4F1F-84D6-26E9CBFFF0C7_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl9QALoPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKMoUP/0YDqdUWR4QJQvyNiGEdl6Cf9Rs2/agY2YwP
-ZnErHG6+CxMWciGGm4F8UY0tlEwdSVpMGsTK7vDt267uqOpdplXIqM6+MXoTS1Bc
-PnAyv6Pkmb4MDyOl93qw+b3vkFUc8rYemRfygoTiAjHq/HXMBsW6of6JuGaS5F36
-LyiC7wxlnZ25ZO1oquTStn56LSLmhoka/Pz4HCF+oNm/1oSZaXWv6UQFgwd5RfJt
-FqwkxorMiI34z08M85oJQL5BX8f0FufmTjYgSkKy2oJs3Hd8lERjv5RCKptpMXaY
-c46GsjF31xVaAU160N2wvrBlzGiqXZOi68J2M7inI02AHkO7J+SC8GV2ssR+kKrB
-aXrfX1FIwmGJLRnubYyJWtn0gOAXV9f1rQRsmjb1r+OT29CR8JCTjxpuOugqeei3
-1jl4j4sppck37tjXdm8XE9kfHBAEULxYXxbupkZXqc8Aqu8kRbQDdYrD8nammB6h
-Msk7SRsV7UbOmwIHPYVvOS5U83RYxbVaLaYseLZWiWvGoikWCpU4JYBCQ0FW4xNL
-8Y1rovrBYB7vQUjGkbaGXKuxOF5VUeLVHIq8S2uVEqn48NW1R/GEznZgabtf1wjM
-6I+PI3GQ7IunfjDj80T/a2FPQQ1BFTjYOQaCP/F8vylb1yjnKgmJTRRCVbqs8Bs7
-Yf09muCw
-=A7I9
------END PGP SIGNATURE-----
-
---=_MailMate_0F9721AF-59A2-4F1F-84D6-26E9CBFFF0C7_=--
+I think this fix can go separately with the series.
+>
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> ---
+>  mm/huge_memory.c | 42 +++++++++++++++++++++++-------------------
+>  1 file changed, 23 insertions(+), 19 deletions(-)
+>
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 2a468a4acb0a..606d712d9505 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -2023,7 +2023,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
+>                 put_page(page);
+>                 add_mm_counter(mm, mm_counter_file(page), -HPAGE_PMD_NR);
+>                 return;
+> -       } else if (is_huge_zero_pmd(*pmd)) {
+> +       } else if (pmd_trans_huge(*pmd) && is_huge_zero_pmd(*pmd)) {
+>                 /*
+>                  * FIXME: Do we want to invalidate secondary mmu by calling
+>                  * mmu_notifier_invalidate_range() see comments below inside
+> @@ -2117,30 +2117,34 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
+>                 pte = pte_offset_map(&_pmd, addr);
+>                 BUG_ON(!pte_none(*pte));
+>                 set_pte_at(mm, addr, pte, entry);
+> -               atomic_inc(&page[i]._mapcount);
+> -               pte_unmap(pte);
+> -       }
+> -
+> -       /*
+> -        * Set PG_double_map before dropping compound_mapcount to avoid
+> -        * false-negative page_mapped().
+> -        */
+> -       if (compound_mapcount(page) > 1 && !TestSetPageDoubleMap(page)) {
+> -               for (i = 0; i < HPAGE_PMD_NR; i++)
+> +               if (!pmd_migration)
+>                         atomic_inc(&page[i]._mapcount);
+> +               pte_unmap(pte);
+>         }
+>
+> -       lock_page_memcg(page);
+> -       if (atomic_add_negative(-1, compound_mapcount_ptr(page))) {
+> -               /* Last compound_mapcount is gone. */
+> -               __dec_lruvec_page_state(page, NR_ANON_THPS);
+> -               if (TestClearPageDoubleMap(page)) {
+> -                       /* No need in mapcount reference anymore */
+> +       if (!pmd_migration) {
+> +               /*
+> +                * Set PG_double_map before dropping compound_mapcount to avoid
+> +                * false-negative page_mapped().
+> +                */
+> +               if (compound_mapcount(page) > 1 &&
+> +                   !TestSetPageDoubleMap(page)) {
+>                         for (i = 0; i < HPAGE_PMD_NR; i++)
+> -                               atomic_dec(&page[i]._mapcount);
+> +                               atomic_inc(&page[i]._mapcount);
+> +               }
+> +
+> +               lock_page_memcg(page);
+> +               if (atomic_add_negative(-1, compound_mapcount_ptr(page))) {
+> +                       /* Last compound_mapcount is gone. */
+> +                       __dec_lruvec_page_state(page, NR_ANON_THPS);
+> +                       if (TestClearPageDoubleMap(page)) {
+> +                               /* No need in mapcount reference anymore */
+> +                               for (i = 0; i < HPAGE_PMD_NR; i++)
+> +                                       atomic_dec(&page[i]._mapcount);
+> +                       }
+>                 }
+> +               unlock_page_memcg(page);
+>         }
+> -       unlock_page_memcg(page);
+>
+>         smp_wmb(); /* make pte visible before pmd */
+>         pmd_populate(mm, pmd, pgtable);
+> --
+> 2.20.1
+>
+>
