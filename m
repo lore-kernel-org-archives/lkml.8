@@ -2,129 +2,149 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391D0C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8CFC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AAE72072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B933F2087D
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:01:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J2dRUJAP"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uCptm6F4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgIBIA2 (ORCPT
+        id S1726637AbgIBIBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:00:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgIBIA0 (ORCPT
+        Wed, 2 Sep 2020 04:01:19 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:39896 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgIBIBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:00:26 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E312C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 01:00:26 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id s62so240365vsc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 01:00:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K3qiLLTJ163ZezFQOxUyBEfpH7dZSEHY07BrmQjwQ10=;
-        b=J2dRUJAPRKJNZ6kjeClaDcg8FKQISjKTsyV0IqNvkvm8oIXRMKwc6++nEInJ+FAveJ
-         71m9Ez4u84ucU7qpERks04v46tmMbHTLPozpbT0X1FYShE717LQb2XUaJx5pLPymeaDh
-         wZsH/7JEcwOgoVL0+ZrQGK4jckM20x7KUn3D1um4VzuPTLMDV+zyuHBGvre0Q+eaibo+
-         mgHGmsLsHLFV7+9b16jZfSsq4tTpPrYz8G79xrbkelHwwBcVYoibDuMUMFrVQAXFYEW1
-         BWiBE4mX+i++2+ffjaWlxMLNoXSxV19jB3Q+/wNp7nAB+ESwG6ys85d/DVJNrhZkRcnw
-         7XTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K3qiLLTJ163ZezFQOxUyBEfpH7dZSEHY07BrmQjwQ10=;
-        b=hmw/oGCQXAumtkQIajLqOO3GOLq+S/lVLuf47QhsYFH7fgjI6GnzUlhg7dHAQwkYJ/
-         Aolw/d8wknog1bNlSQCTuiDjezs5dlFJt4tJ8swyasGN6jH2E5iU0928LM0E3HtSwzC6
-         Y9b3YuToX7BL6va4e2w/09TRhrL+G6Ray2926+synlghA5L9c9U60rF/PJKIQBaVFOhd
-         c9kh28+/hIXflTX/dMEQBVdKsAcgKCnyAvB//KJLWn6Vj+aPQKK95lkENtJbY44O8hmZ
-         TOtXkAq6Nk0dxSt+CGqqqG920ZCKkZKNl+3Kh4muAAKe9BgihsfL5KL7UXNBdmnkNgrA
-         DYxw==
-X-Gm-Message-State: AOAM530OpRMlj8aR0xvtPMK3wlNyyGgJC1k2pI17XLNQB944bPuEd7lW
-        EYM/gZCZDqISj27RDpjOItof2Kj3ozyhbavJqqqHgg==
-X-Google-Smtp-Source: ABdhPJw4pxYBoyAjPOpy9jjnp1tb5bFMcMQ31LSjfmXEH97ZZKGyzx6vQNEQypQldO3MGSOSxfvwRaddzBysnkXFvP4=
-X-Received: by 2002:a05:6102:3105:: with SMTP id e5mr4594053vsh.87.1599033625321;
- Wed, 02 Sep 2020 01:00:25 -0700 (PDT)
+        Wed, 2 Sep 2020 04:01:17 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08280pA7094762;
+        Wed, 2 Sep 2020 03:00:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599033651;
+        bh=1bOhg2Pozz6rcMj1+uMvlXBX35wWMkgjDScBHdgjrGA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=uCptm6F4IhHx1+0CT2rnCmC7OxX+/Xm05UrEQJBqEw8tEOO0a9Z3QZHXHM/N4/wdh
+         GWSpcQdbbxmEnnfKvTmTB2/ylM3AvQKsmTc4oMmLfpmi0juS7j1s8G8y8OO3bwH+FJ
+         nOoQOPwT33Ba4fTsS1SdhZFBfOpEFTOu/BScnvwo=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08280p0X077629
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Sep 2020 03:00:51 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
+ 2020 03:00:51 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 2 Sep 2020 03:00:51 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08280mFG008004;
+        Wed, 2 Sep 2020 03:00:48 -0500
+Subject: Re: [PATCH v9 14/32] drm: omapdrm: fix common struct sg_table related
+ issues
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <iommu@lists.linux-foundation.org>,
+        <linaro-mm-sig@lists.linaro.org>, <linux-kernel@vger.kernel.org>
+CC:     Christoph Hellwig <hch@lst.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+References: <20200826063316.23486-1-m.szyprowski@samsung.com>
+ <CGME20200826063536eucas1p2e29d2b061b8b74c06c9ea61ad6737ba2@eucas1p2.samsung.com>
+ <20200826063316.23486-15-m.szyprowski@samsung.com>
+ <7298cc55-c550-0b41-3f3c-8eebed845848@arm.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <e3f8d1d2-9c33-78be-56e6-ad214c7fb84c@ti.com>
+Date:   Wed, 2 Sep 2020 11:00:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200902040623.17509-1-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20200902040623.17509-1-chris.packham@alliedtelesis.co.nz>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 2 Sep 2020 09:59:49 +0200
-Message-ID: <CAPDyKFpbK72utA0O1gTR30NzKzmtGCFbAKL6BJA+rUVdDhOstQ@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-of-esdhc: Don't walk device-tree on every interrupt
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "yinbo.zhu" <yinbo.zhu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7298cc55-c550-0b41-3f3c-8eebed845848@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Yinbo Zhu
+On 01/09/2020 22:33, Robin Murphy wrote:
+> On 2020-08-26 07:32, Marek Szyprowski wrote:
+>> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+>> returns the number of the created entries in the DMA address space.
+>> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+>> dma_unmap_sg must be called with the original number of the entries
+>> passed to the dma_map_sg().
+>>
+>> struct sg_table is a common structure used for describing a non-contiguous
+>> memory buffer, used commonly in the DRM and graphics subsystems. It
+>> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+>> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+>> and DMA mapped pages (nents entry).
+>>
+>> It turned out that it was a common mistake to misuse nents and orig_nents
+>> entries, calling DMA-mapping functions with a wrong number of entries or
+>> ignoring the number of mapped entries returned by the dma_map_sg()
+>> function.
+>>
+>> Fix the code to refer to proper nents or orig_nents entries. This driver
+>> checks for a buffer contiguity in DMA address space, so it should test
+>> sg_table->nents entry.
+>>
+>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> ---
+>>   drivers/gpu/drm/omapdrm/omap_gem.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/omapdrm/omap_gem.c b/drivers/gpu/drm/omapdrm/omap_gem.c
+>> index ff0c4b0c3fd0..a7a9a0afe2b6 100644
+>> --- a/drivers/gpu/drm/omapdrm/omap_gem.c
+>> +++ b/drivers/gpu/drm/omapdrm/omap_gem.c
+>> @@ -48,7 +48,7 @@ struct omap_gem_object {
+>>        *   OMAP_BO_MEM_DMA_API flag set)
+>>        *
+>>        * - buffers imported from dmabuf (with the OMAP_BO_MEM_DMABUF flag set)
+>> -     *   if they are physically contiguous (when sgt->orig_nents == 1)
+>> +     *   if they are physically contiguous (when sgt->nents == 1)
+> 
+> Hmm, if this really does mean *physically* contiguous - i.e. if buffers might be shared between
+> DMA-translatable and non-DMA-translatable devices - then these changes might not be appropriate. If
+> not and it only actually means DMA-contiguous, then it would be good to clarify the comments to that
+> effect.
+> 
+> Can anyone familiar with omapdrm clarify what exactly the case is here? I know that IOMMUs might be
+> involved to some degree, and I've skimmed the interconnect chapters of enough OMAP TRMs to be scared
+> by the reference to the tiler aperture in the context below :)
 
-On Wed, 2 Sep 2020 at 06:06, Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
->
-> Commit b214fe592ab7 ("mmc: sdhci-of-esdhc: add erratum eSDHC7 support")
-> added code to check for a specific compatible string in the device-tree
-> on every esdhc interrupt. We know that if it's present the compatible
-> string will be found on the sdhc host. Instead of walking the
-> device-tree, go directly to the sdhc host's device and use
-> of_device_is_compatible().
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+DSS (like many other IPs in OMAP) does not have any MMU/PAT, and can only use contiguous buffers
+(contiguous in the RAM).
 
-Thanks for the patch. Indeed, this isn't the way we should implement quirks.
+There's a special case with TILER (which is not part of DSS but of the memory subsystem, but it's
+still handled internally by the omapdrm driver), which has a PAT. PAT can create a contiguous view
+of scattered pages, and DSS can then use this contiguous view ("tiler aperture", which to DSS looks
+just like normal contiguous memory).
 
-However, could you perhaps do the OF parsing in esdhc_init() and
-assign a quirk flag that you check in esdhc_irq() instead?
+Note that omapdrm does not use dma_map_sg() & co. mentioned in the patch description.
 
-Along the lines of how we do it for "quirk_delay_before_data_reset".
+If there's no MMU/PAT, is orig_nents always the same as nents? Or can we have multiple physically
+contiguous pages listed separately in the sgt (so orig_nents > 1) but as the pages form one big
+contiguous area, nents == 1?
 
-Kind regards
-Uffe
+ Tomi
 
-> ---
->
-> I found this in passing while trying to track down another issue using ftrace.
-> I found it odd that I was seeing a lot of calls to __of_device_is_compatible()
-> coming from esdhc_irq() (the fact that this interrupt is going off on my board
-> is also odd, but that's a different story).
->
->  drivers/mmc/host/sdhci-of-esdhc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-> index 7c73d243dc6c..11c8c522d623 100644
-> --- a/drivers/mmc/host/sdhci-of-esdhc.c
-> +++ b/drivers/mmc/host/sdhci-of-esdhc.c
-> @@ -1177,10 +1177,11 @@ static void esdhc_set_uhs_signaling(struct sdhci_host *host,
->
->  static u32 esdhc_irq(struct sdhci_host *host, u32 intmask)
->  {
-> +       struct device *dev = mmc_dev(host->mmc);
-> +       struct device_node *np = dev->of_node;
->         u32 command;
->
-> -       if (of_find_compatible_node(NULL, NULL,
-> -                               "fsl,p2020-esdhc")) {
-> +       if (of_device_is_compatible(np, "fsl,p2020-esdhc")) {
->                 command = SDHCI_GET_CMD(sdhci_readw(host,
->                                         SDHCI_COMMAND));
->                 if (command == MMC_WRITE_MULTIPLE_BLOCK &&
-> --
-> 2.28.0
->
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
