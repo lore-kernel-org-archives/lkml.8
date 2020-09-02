@@ -2,111 +2,118 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C404AC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDE7C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC9620767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1787820767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:50:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MfWWEdwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgIBNuG (ORCPT
+        id S1727866AbgIBNtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 09:50:06 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2739 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727119AbgIBNnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:43:21 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 999C6AA511B62DBBBB06;
-        Wed,  2 Sep 2020 14:25:06 +0100 (IST)
-Received: from localhost (10.52.121.91) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 2 Sep 2020
- 14:25:06 +0100
-Date:   Wed, 2 Sep 2020 14:23:33 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        William Sung <william.sung@advantech.com.tw>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Campion Kang <Campion.Kang@advantech.com.tw>
-Subject: Re: [PATCH] iio: dac: ad5593r: Dynamically set AD5593R channel
- modes
-Message-ID: <20200902142333.00005b71@Huawei.com>
-In-Reply-To: <CAHp75VcXLyw40JaU42jQ3fSL7mtHPv++xqcka-oTKUbsW4erpg@mail.gmail.com>
-References: <20200824054347.3805-1-william.sung@advantech.com.tw>
-        <CAHp75VeZLPR02xB2XRzec5mSBvq93XYZg56OOODxpFTPva6cXw@mail.gmail.com>
-        <CAFv23QmDwcrdxEndH=mKMAomzt9kxG_f1Z6=Fd8iuuvCoY92SA@mail.gmail.com>
-        <CAHp75Vcup9LUk0fgjW9T2FK-K5GD3=3ycPHi74Oykc8rq_tJqA@mail.gmail.com>
-        <BN6PR03MB25968259EBEAD55E040367308E2F0@BN6PR03MB2596.namprd03.prod.outlook.com>
-        <CAHp75VdvnUsEf=fsRQRmyxQO=1m09M5U19GBtSPkjxSGA5cRBA@mail.gmail.com>
-        <BN6PR03MB259650CEEEC9647AB5C9D8338E2F0@BN6PR03MB2596.namprd03.prod.outlook.com>
-        <CAHp75VcXLyw40JaU42jQ3fSL7mtHPv++xqcka-oTKUbsW4erpg@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Wed, 2 Sep 2020 09:49:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbgIBNlC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:41:02 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1789BC06123B
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 06:38:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=HLJQCZHx6poAziNUgEdGRzGFUk3q15Hg/3SXsnWe/Zo=; b=MfWWEdwYq0knADT+MsiPZXiJub
+        7eVu6bk577u/zpj5cOmG3zltjwUbJO183eW3qS0VHaAH5HkC0vDxFLnUisfgBBCpmN1lRZjCgkylB
+        0NHToSfJNVc+ma2vGWtSQG8BErKFtRC2HeV6kUMl9oc4VXB/zhM2Ufg45Uv2vmheufbXj2olW0cev
+        KVBkNHsNFvhNMLaUXmTR1reyY2UxvP7zScZ9MpYB9D4gmu6szvwkv5rmynLp5j5CBCdXY/nS1JD6R
+        qIDals+GBf7qhGWVxp8BsQioPeFrF8of8qoMsVDU3HYrphlnqSOMUhxvVkxNI0ezXXesXwAsiZbf8
+        4bTn5PVA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDSxr-0002dd-EB; Wed, 02 Sep 2020 13:38:15 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D3D203062BA;
+        Wed,  2 Sep 2020 15:38:11 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id AE88020104617; Wed,  2 Sep 2020 15:38:11 +0200 (CEST)
+Message-ID: <20200902133200.666781610@infradead.org>
+User-Agent: quilt/0.66
+Date:   Wed, 02 Sep 2020 15:25:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Kyle Huey <me@kylehuey.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Cooper <Andrew.Cooper3@citrix.com>
+Subject: [PATCH 01/13] x86/entry: Fix AC assertion
+References: <20200902132549.496605622@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.91]
-X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Sep 2020 12:28:02 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+From: Peter Zijlstra <peterz@infradead.org>
 
-> On Wed, Sep 2, 2020 at 12:12 PM Hennerich, Michael
-> <Michael.Hennerich@analog.com> wrote:
-> > > From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > Sent: Mittwoch, 2. September 2020 10:52
-> > > On Wed, Sep 2, 2020 at 11:09 AM Hennerich, Michael
-> > > <Michael.Hennerich@analog.com> wrote:  
-> 
-> ...
-> 
-> > > I see. Can we consider this email as the official answer from AD that this ID is
-> > > being allocated for this certain component?  
-> >
-> > To my knowledge only PNP/ACPI vendor IDs need to be registered with the UEFI
-> > ACPI working group.  
-> 
-> Correct.
-> 
-> >  AD part numbers are unique. The ID chosen uses the
-> > part number prefixed with the PNP Vendor ID. ADxxxx->ADSxxxx
-> > Please consider this as allocated.  
-> 
-> Thank you for confirming this!
-> 
+The WARN added in commit 3c73b81a9164 ("x86/entry, selftests: Further
+improve user entry sanity checks") unconditionally triggers on my IVB
+machine because it does not support SMAP.
 
-Great to clear this particular one up.
+For !SMAP hardware we patch out CLAC/STAC instructions and thus if
+userspace sets AC, we'll still have it set after entry.
 
-One side note on this for anyone who might find this email thread.
-If we do have an ACPI ID that doesn't use an official
-PNP or ACPI ID, but there are boards shipping with it, then we can't
-drop the ID.   We can however add a note to the driver making the
-point that it is not an official ID and so we may remove it if
-all known boards that used it are now considered obsolete.
-Even better to list a product it does occur in so we avoid
-having the conversation again!
+Fixes: 3c73b81a9164 ("x86/entry, selftests: Further improve user entry sanity checks")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+---
+ arch/x86/include/asm/entry-common.h |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-A lot of these got through my reviews due to lack of knowledge of how
-ACPI IDs worked until a few years ago.  Still like all ABI we are
-stuck with it until we can remove it without anyone noticing :(
+--- a/arch/x86/include/asm/entry-common.h
++++ b/arch/x86/include/asm/entry-common.h
+@@ -18,8 +18,16 @@ static __always_inline void arch_check_u
+ 		 * state, not the interrupt state as imagined by Xen.
+ 		 */
+ 		unsigned long flags = native_save_fl();
+-		WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
+-				      X86_EFLAGS_NT));
++		unsigned long mask = X86_EFLAGS_DF | X86_EFLAGS_NT;
++
++		/*
++		 * For !SMAP hardware we patch out CLAC on entry.
++		 */
++		if (boot_cpu_has(X86_FEATURE_SMAP) ||
++		    (IS_ENABLED(CONFIG_64_BIT) && boot_cpu_has(X86_FEATURE_XENPV)))
++			mask |= X86_EFLAGS_AC;
++
++		WARN_ON_ONCE(flags & mask);
+ 
+ 		/* We think we came from user mode. Make sure pt_regs agrees. */
+ 		WARN_ON_ONCE(!user_mode(regs));
 
-Jonathan
 
