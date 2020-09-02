@@ -2,265 +2,149 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA55C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5046C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF0920767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E79620767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="apW9O2U7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgIBPcu (ORCPT
+        id S1728417AbgIBPc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:32:50 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:52308 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728375AbgIBPci (ORCPT
+        Wed, 2 Sep 2020 11:32:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbgIBPcl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:32:38 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from ayal@mellanox.com)
-        with SMTP; 2 Sep 2020 18:32:29 +0300
-Received: from dev-l-vrt-210.mtl.labs.mlnx (dev-l-vrt-210.mtl.labs.mlnx [10.234.210.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 082FWTlq014707;
-        Wed, 2 Sep 2020 18:32:29 +0300
-Received: from dev-l-vrt-210.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Debian-8ubuntu1) with ESMTP id 082FWTDo026695;
-        Wed, 2 Sep 2020 18:32:29 +0300
-Received: (from ayal@localhost)
-        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 082FWTjE026694;
-        Wed, 2 Sep 2020 18:32:29 +0300
-From:   Aya Levin <ayal@mellanox.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org
-Cc:     Moshe Shemesh <moshe@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        linux-kernel@vger.kernel.org, Aya Levin <ayal@mellanox.com>
-Subject: [PATCH net-next RFC v1 4/4] net/mlx5e: Add devlink trap to catch oversize packets
-Date:   Wed,  2 Sep 2020 18:32:14 +0300
-Message-Id: <1599060734-26617-5-git-send-email-ayal@mellanox.com>
-X-Mailer: git-send-email 1.8.4.3
-In-Reply-To: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
-References: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
+        Wed, 2 Sep 2020 11:32:41 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98477C061246
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 08:32:41 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id c25so20002vkm.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 08:32:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CaZwArJVDsGm3BuqCJoaQAv1/h87JxXOYIV/nwkJsOI=;
+        b=apW9O2U7VXpHx2cVUs09CAp1uF3w9aOpWk4Vb8yGApJGh1qjt3XA6PXXFw13jrgzgR
+         tI4O/e8yuhAbTWTBy6q9Jl+S7v3R9/w5G9705tGiktUvp3rpntBNYZwBkxXKqpXfoU6x
+         lULIGWY9qLRpCNLvcGgymqDpj+A/tHo4j3Ca4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CaZwArJVDsGm3BuqCJoaQAv1/h87JxXOYIV/nwkJsOI=;
+        b=LwnU6NafraDwahL091SQYoYTghFYnZMKXyZ7WGnyKbddElnQ9EI5tJtYAwO8TSIBoV
+         BvzRCOxlj0vUawuZynSZeG06shY44PfKvBzkQY/+PL3+LPMmTzw7qgeDY1ceRkf9XgXv
+         2UW1ldHhc0JEzSK7C1D0D0FHcFwETTIUThU2vLRGZIAPmrBTwx0s0x4M7IIxb5tQfPK8
+         yOPFh+RsQy2qfY2dojsOeHUK7CYwiGqcazy2EGqXRURu8IkkiacU6XufKF7ha2RdP7kS
+         SJFfQuYXYn/dzr3Qb7dDh3D5skm2uWOqhpi52sEaDm7/veUXbNnYid6zbiu04+Jt267w
+         0rTw==
+X-Gm-Message-State: AOAM532HG4LziM0b6oL0TpQhO5CwurWkrMGcEToFQRnLA7kCTLFNq1DM
+        2J3CPZtd1wPVKrxOy1HTrrGGsdrVIraFzw==
+X-Google-Smtp-Source: ABdhPJwtV4tnDIHO3VjKT5zn6XCAE4kUgidJR96x8eXzrqVfFPPwuD8xfR3193kRIboh3Sg655PvLw==
+X-Received: by 2002:a1f:1f0d:: with SMTP id f13mr3226644vkf.1.1599060760613;
+        Wed, 02 Sep 2020 08:32:40 -0700 (PDT)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id k12sm8700vke.4.2020.09.02.08.32.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Sep 2020 08:32:40 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id s29so1708852uae.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 08:32:38 -0700 (PDT)
+X-Received: by 2002:ab0:623:: with SMTP id f32mr5391415uaf.121.1599060757775;
+ Wed, 02 Sep 2020 08:32:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200813113030.1.I89c33c4119eaffb986b1e8c1bc6f0e30267089cd@changeid>
+ <20200901170745.GA3419728@google.com> <CAD=FV=Xv0FLtWWcQcRy7p2LPNdDtSjdarsvNHRHaLkWwABnwJw@mail.gmail.com>
+ <8ad0589e-102d-7523-899f-0ebe85b7d2b8@codeaurora.org>
+In-Reply-To: <8ad0589e-102d-7523-899f-0ebe85b7d2b8@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 2 Sep 2020 08:32:26 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XKUEQP3gyE8E2UOE12qKYwzgMp0eNeYjCp0DxPDACSMQ@mail.gmail.com>
+Message-ID: <CAD=FV=XKUEQP3gyE8E2UOE12qKYwzgMp0eNeYjCp0DxPDACSMQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add 'sustainable_power' for CPU
+ thermal zones
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register MTU error trap to allow visibility of oversize packets. Display
-a naive use of devlink trap in devlink port context.
+Hi,
 
-Signed-off-by: Aya Levin <ayal@mellanox.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/Makefile   |  2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en.h       |  2 ++
- drivers/net/ethernet/mellanox/mlx5/core/en/traps.c | 32 +++++++++++++++++
- drivers/net/ethernet/mellanox/mlx5/core/en/traps.h | 13 +++++++
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c  | 41 ++++++++++++++++++++++
- drivers/net/ethernet/mellanox/mlx5/core/en_rx.c    | 11 ++++--
- 6 files changed, 98 insertions(+), 3 deletions(-)
- create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/traps.c
- create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/traps.h
+On Tue, Sep 1, 2020 at 10:36 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>
+>
+> > * In terms of the numbers here, I believe that you're claiming that we
+> > can dissipate 768 mW * 6 + 1202 mW * 2 = ~7 Watts of power.  My memory
+> > of how much power we could dissipate in previous laptops I worked on
+> > is a little fuzzy, but that doesn't seem insane for a passively-cooled
+> > laptop.  However, I think someone could conceivably put this chip in a
+> > smaller form factor.  In such a case, it seems like we'd want these
+> > things to sum up to ~2000 (if it would ever make sense for someone to
+> > put this chip in a phone) or ~4000 (if it would ever make sense for
+> > someone to put this chip in a small tablet).  It seems possible that,
+> > to achieve this, we might have to tweak the
+> > "dynamic-power-coefficient".
+>
+> DPC values are calculated (at a SoC) by actually measuring max power at various
+> frequency/voltage combinations by running things like dhrystone.
+> How would the max power a SoC can generate depend on form factors?
+> How much it can dissipate sure is, but then I am not super familiar how
+> thermal frameworks end up using DPC for calculating power dissipated,
+> I am guessing they don't.
+>
+> > I don't know how much thought was put
+> > into those numbers, but the fact that the little cores have a super
+> > round 100 for their dynamic-power-coefficient makes me feel like they
+> > might have been more schwags than anything.  Rajendra maybe knows?
+>
+> FWIK, the values are always scaled and normalized to 100 for silver and
+> then used to derive the relative DPC number for gold. If you see the DPC
+> for silver cores even on sdm845 is a 100.
+> Again these are not estimations but based on actual power measurements.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-index 94268a697e1c..78e2e9107986 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-@@ -25,7 +25,7 @@ mlx5_core-$(CONFIG_MLX5_CORE_EN) += en_main.o en_common.o en_fs.o en_ethtool.o \
- 		en_tx.o en_rx.o en_dim.o en_txrx.o en/xdp.o en_stats.o \
- 		en_selftest.o en/port.o en/monitor_stats.o en/health.o \
- 		en/reporter_tx.o en/reporter_rx.o en/params.o en/xsk/umem.o \
--		en/xsk/setup.o en/xsk/rx.o en/xsk/tx.o en/devlink.o
-+		en/xsk/setup.o en/xsk/rx.o en/xsk/tx.o en/devlink.o en/traps.o
- 
- #
- # Netdev extra
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-index 0cc2080fd847..7e5581ed9311 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -814,6 +814,8 @@ struct mlx5e_priv {
- 	struct mlx5e_hv_vhca_stats_agent stats_agent;
- #endif
- 	struct mlx5e_scratchpad    scratchpad;
-+	void *trap_mtu;
-+	bool trap_oversize;
- };
- 
- struct mlx5e_rx_handlers {
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/traps.c b/drivers/net/ethernet/mellanox/mlx5/core/en/traps.c
-new file mode 100644
-index 000000000000..e365e8dbd6ff
---- /dev/null
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/traps.c
-@@ -0,0 +1,32 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2020 Mellanox Technologies.
-+#include "en.h"
-+#include "traps.h"
-+#include <linux/kernel.h>
-+#include <uapi/linux/devlink.h>
-+
-+#define MLX5E_TRAP(_id, _group_id)                                      \
-+	DEVLINK_TRAP_GENERIC(DROP, DROP, _id,                           \
-+			     DEVLINK_TRAP_GROUP_GENERIC_ID_##_group_id, \
-+			     DEVLINK_TRAP_METADATA_TYPE_F_IN_PORT)
-+static struct devlink_trap mlx5e_traps_arr[] = {
-+	MLX5E_TRAP(MTU_ERROR, L2_DROPS),
-+};
-+
-+int mlx5e_devlink_traps_create(struct mlx5e_priv *priv)
-+{
-+	struct devlink_port *dl_port = &priv->dl_port;
-+
-+	return devlink_port_traps_register(dl_port, mlx5e_traps_arr,
-+					   ARRAY_SIZE(mlx5e_traps_arr),
-+					   priv);
-+}
-+
-+void mlx5e_devlink_traps_destroy(struct mlx5e_priv *priv)
-+{
-+	struct devlink_port *dl_port = &priv->dl_port;
-+
-+	devlink_port_traps_unregister(dl_port, mlx5e_traps_arr,
-+				      ARRAY_SIZE(mlx5e_traps_arr));
-+}
-+
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/traps.h b/drivers/net/ethernet/mellanox/mlx5/core/en/traps.h
-new file mode 100644
-index 000000000000..14a32b6968ee
---- /dev/null
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/traps.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2020 Mellanox Technologies.*/
-+
-+#ifndef __MLX5E_EN_TRAPS_H
-+#define __MLX5E_EN_TRAPS_H
-+
-+#include "en.h"
-+
-+int mlx5e_devlink_traps_create(struct mlx5e_priv *priv);
-+void mlx5e_devlink_traps_destroy(struct mlx5e_priv *priv);
-+
-+#endif
-+
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index aebcf73f8546..056f34326b3d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -64,6 +64,7 @@
- #include "en/hv_vhca_stats.h"
- #include "en/devlink.h"
- #include "lib/mlx5.h"
-+#include "en/traps.h"
- 
- bool mlx5e_check_fragmented_striding_rq_cap(struct mlx5_core_dev *mdev)
- {
-@@ -4976,6 +4977,43 @@ void mlx5e_destroy_q_counters(struct mlx5e_priv *priv)
- 	}
- }
- 
-+static int mlx5e_devlink_trap_init(struct devlink *devlink,
-+				   const struct devlink_trap *trap,
-+				   void *trap_ctx)
-+{
-+	struct mlx5e_priv *priv = (struct mlx5e_priv *)devlink_trap_ctx_priv(trap_ctx);
-+
-+	priv->trap_mtu = trap_ctx;
-+	return 0;
-+}
-+
-+static void mlx5e_devlink_trap_fini(struct devlink *devlink,
-+				    const struct devlink_trap *trap,
-+				    void *trap_ctx)
-+{
-+	struct mlx5e_priv *priv = (struct mlx5e_priv *)devlink_trap_ctx_priv(trap_ctx);
-+
-+	priv->trap_mtu = NULL;
-+}
-+
-+static int mlx5e_devlink_trap_action_set(struct devlink *devlink,
-+					 const struct devlink_trap *trap,
-+					 enum devlink_trap_action action,
-+					 void *trap_ctx,
-+					 struct netlink_ext_ack *extack)
-+{
-+	struct mlx5e_priv *priv = (struct mlx5e_priv *)devlink_trap_ctx_priv(trap_ctx);
-+
-+	priv->trap_oversize = !!action;
-+	return 0;
-+}
-+
-+static const struct devlink_trap_ops mlx5e_devlink_traps_ops = {
-+	.trap_init		= mlx5e_devlink_trap_init,
-+	.trap_fini		= mlx5e_devlink_trap_fini,
-+	.trap_action_set	= mlx5e_devlink_trap_action_set,
-+};
-+
- static int mlx5e_nic_init(struct mlx5_core_dev *mdev,
- 			  struct net_device *netdev,
- 			  const struct mlx5e_profile *profile,
-@@ -5005,12 +5043,15 @@ static int mlx5e_nic_init(struct mlx5_core_dev *mdev,
- 	if (err)
- 		mlx5_core_err(mdev, "mlx5e_devlink_port_register failed, %d\n", err);
- 	mlx5e_health_create_reporters(priv);
-+	devlink_port_traps_ops(&priv->dl_port, &mlx5e_devlink_traps_ops);
-+	mlx5e_devlink_traps_create(priv);
- 
- 	return 0;
- }
- 
- static void mlx5e_nic_cleanup(struct mlx5e_priv *priv)
- {
-+	mlx5e_devlink_traps_destroy(priv);
- 	mlx5e_health_destroy_reporters(priv);
- 	mlx5e_devlink_port_unregister(priv);
- 	mlx5e_tls_cleanup(priv);
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-index 1e42e27eae26..4fe20a6e6d6d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-@@ -1437,6 +1437,7 @@ mlx5e_skb_from_cqe_mpwrq_linear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *wi,
- 				u16 cqe_bcnt, u32 head_offset, u32 page_idx)
- {
- 	struct mlx5e_dma_info *di = &wi->umr.dma_info[page_idx];
-+	struct mlx5e_priv *priv = rq->channel->priv;
- 	u16 rx_headroom = rq->buff.headroom;
- 	u32 cqe_bcnt32 = cqe_bcnt;
- 	struct xdp_buff xdp;
-@@ -1444,11 +1445,14 @@ mlx5e_skb_from_cqe_mpwrq_linear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *wi,
- 	void *va, *data;
- 	u32 frag_size;
- 	bool consumed;
-+	bool trap;
- 
- 	/* Check packet size. Note LRO doesn't use linear SKB */
- 	if (unlikely(cqe_bcnt > rq->hw_mtu)) {
- 		rq->stats->oversize_pkts_sw_drop++;
--		return NULL;
-+		if (!priv->trap_oversize)
-+			return NULL;
-+		trap = true;
- 	}
- 
- 	va             = page_address(di->page) + head_offset;
-@@ -1475,7 +1479,10 @@ mlx5e_skb_from_cqe_mpwrq_linear(struct mlx5e_rq *rq, struct mlx5e_mpw_info *wi,
- 	skb = mlx5e_build_linear_skb(rq, va, frag_size, rx_headroom, cqe_bcnt32);
- 	if (unlikely(!skb))
- 		return NULL;
--
-+	if (trap) {
-+		devlink_port_trap_report(&priv->dl_port, skb, priv->trap_mtu, NULL);
-+		return NULL;
-+	}
- 	/* queue up for recycling/reuse */
- 	page_ref_inc(di->page);
- 
--- 
-2.14.1
+The scaling to 100 doesn't seem to match how the thermal framework is
+using them.  Take a look at of_cpufreq_cooling_register().  It takes
+the "dynamic-power-coefficient" and passes it as "capacitance" into
+__cpufreq_cooling_register().  That's eventually used to compute
+power, which is documented in the code to be in mW.
 
+power = (u64)capacitance * freq_mhz * voltage_mv * voltage_mv;
+do_div(power, 1000000000);
+
+/* power is stored in mW */
+freq_table[i].power = power;
+
+That's used together with "sustainable-power", which is the attribute
+that Matthias is trying to set.  That value is documented to be in mW
+as well.
+
+...so if the silver cores are always scaled to 100 regardless of how
+much power they actually draw then it'll be impossible to actually
+think about "sustainable-power" as a mW value.  Presumably we either
+need to accept that fact (and ideally document it) or we need to
+change the values for silver / gold cores (we could still keep the
+relative values the same and just scale them).
+
+-Doug
