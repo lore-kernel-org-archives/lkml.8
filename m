@@ -2,194 +2,162 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC571C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CE7C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5B820758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077F7207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599064487;
-	bh=Wdac2cRvZH5y2dW0355Zpgb/WVMDUB6NtjKwSB2GnDM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ApL2dto/AbuNaQrlEPfbNYU2on0l5zgB08RLcQ5wJ2AfUUNkynsLf8XMYDYYOkuB4
-	 GIF6USvTqgjdQxY3bU/maTtAMYy/tcRZtmBfz2cofaa4QIHlmKT5iqwHlGw1zGbJPn
-	 wwfhoPfNtoEyD5ACgCChmGLFIibBCMZHlZwmMJxA=
+	s=default; t=1599064510;
+	bh=KxFin5A9dCw9jPCu/DGxlbI3xeSp5sIBjTaaSCNQ57Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=PX4VZ2adFrgzfCn6GRzE2A554hSYPbVAUKJpLe9NyIeAAk0AlW0f1SCR8yWaZk4GC
+	 3rbKUb2gnqh5MuxT8+LMwgNw2pp2TSd3Afp7gT/s5NtKk0YO6lHD3V1Yx5Gc6ANpF6
+	 vl97iHUUdcxlcsWTgGc6/Hz8MHKP242my3gnahGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgIBQeq convert rfc822-to-8bit (ORCPT
+        id S1727992AbgIBQfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:34:46 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34516 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbgIBQen (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:34:43 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k20so4841933otr.1;
-        Wed, 02 Sep 2020 09:34:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=k6sQ8NK5KtPThkaGEr90OvdrGo/rolJeRwG3Mehbjj4=;
-        b=moXRdCI/ACkF5yQ9r6YJ75vFvXlmVadUUpeK7rzjfDVrXhfmM63HLIgz5I1fk878LG
-         Ut7jS8T8weRbKiB42JLNYUxdLf8o2hnqI6TedTBb0KXO6DfDWqxG7eMqsncHhMkij9j6
-         J9K3x27DXz90n4Jr8nVEa91yJTiA0KjDEQB9EeP6w9+z0TpGaaN12fuFc4BAY6aU5wOP
-         uzWxLgxrnUj3vWFcRTJBK4baEh18ancyHcz7XdQVCgS56U0rSgG1aFtyETNa+3JhzeGO
-         qkcrOSSFdsoOir+nubNNUNm0hbsE6ylK9/Ts6PkHhNXeHrFVZcLSYr2mAllBhoc0/J4C
-         XOEA==
-X-Gm-Message-State: AOAM532PYFM5ym7URGPPcBi+aDC0g+4z3OP3GX9Bheicc4+WvFLrbdRK
-        A5pXegk5T93abKhQcSt5GHtRnbPStsyYi/Juwmc=
-X-Google-Smtp-Source: ABdhPJxO817L5DuFtEmWzwSJ2CVzvkCcRa8d0G0kMpIOh0RLaIuBkb1BV6tUs952F8VswttZF3Ufrsqg3LJUJV2veSs=
-X-Received: by 2002:a9d:5c06:: with SMTP id o6mr5832095otk.262.1599064481624;
- Wed, 02 Sep 2020 09:34:41 -0700 (PDT)
+        Wed, 2 Sep 2020 12:35:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41202 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726426AbgIBQfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:35:06 -0400
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E5920758;
+        Wed,  2 Sep 2020 16:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599064506;
+        bh=KxFin5A9dCw9jPCu/DGxlbI3xeSp5sIBjTaaSCNQ57Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=DTDMutwtpLJppf/wm3p39RnFJwoSm9LTWg6yzoW9TaLw/2ae9hpmvRFfqKeMjVcAJ
+         w631tXHhcbrL7xPHlvlKXn5IkLsmk7FNkwhVMDIMLUdMj1NZ5YEXE+dZKt946/QSep
+         zoj+PuansiTu2KQgZxZg5f5XaNA45N7dgaAKpaJU=
+Date:   Wed, 2 Sep 2020 11:35:04 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, qiuxu.zhuo@intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 07/10] PCI: Add 'rcec' field to pci_dev for associated
+ RCiEPs
+Message-ID: <20200902163504.GA254301@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200901210333.8462-1-sakari.ailus@linux.intel.com>
- <20200901210333.8462-7-sakari.ailus@linux.intel.com> <CAJZ5v0jFceTFRTD55cz3ZHRZpuNRK_z9=_DxWexc8ArsGU3cog@mail.gmail.com>
- <20200902163121.GE32646@paasikivi.fi.intel.com>
-In-Reply-To: <20200902163121.GE32646@paasikivi.fi.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 2 Sep 2020 18:34:30 +0200
-Message-ID: <CAJZ5v0jmetD2N0-ZrNh8C8oOCFwdwwH9s6FqHOQApMdFa_AZ1A@mail.gmail.com>
-Subject: Re: [PATCH v7 6/6] Documentation: ACPI: Document allow-low-power-probe
- _DSD property
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812164659.1118946-8-sean.v.kelley@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 6:31 PM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Hi Rafael,
->
-> Thank you for the review.
->
-> On Wed, Sep 02, 2020 at 05:57:01PM +0200, Rafael J. Wysocki wrote:
-> > On Tue, Sep 1, 2020 at 11:03 PM Sakari Ailus
-> > <sakari.ailus@linux.intel.com> wrote:
-> > >
-> > > Document the probe-low-power _DSD property and how it is used with I²C
-> > > drivers.
-> >
-> > I would reorder the series to make this go right after the [1/6] or
-> > maybe even fold it into that patch.
-> >
-> > The point is that the changes in [1/6] clearly depend on the property
-> > defined here.
->
-> Ack.
->
-> >
-> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > ---
-> > >  .../acpi/dsd/allow-low-power-probe.rst        | 28 +++++++++++++++++++
-> > >  Documentation/firmware-guide/acpi/index.rst   |  1 +
-> > >  2 files changed, 29 insertions(+)
-> > >  create mode 100644 Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst
-> > >
-> > > diff --git a/Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst b/Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst
-> > > new file mode 100644
-> > > index 0000000000000..6fcc89162b898
-> > > --- /dev/null
-> > > +++ b/Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst
-> > > @@ -0,0 +1,28 @@
-> > > +.. SPDX-License-Identifier: GPL-2.0
-> > > +
-> > > +======================================
-> > > +Probing I²C devices in low power state
-> > > +======================================
-> > > +
-> > > +Introduction
-> > > +============
-> > > +
-> > > +In some cases it may be preferred to leave certain devices powered off for the
-> > > +entire system bootup if powering on these devices has adverse side effects,
-> > > +beyond just powering on the said device. Linux recognizes the _DSD property
-> > > +"allow-low-power-probe" that can be used for this purpose.
-> >
-> > It would be good to refer to the document defining the generic _DSD
-> > properties mechanism and the GUID used for that from here.
->
-> I'll add a reference to the device properties UUID for _DSD spec.
->
-> >
-> > The meaning of  "_DSD property" may not be entirely clear to the
-> > reader as it stands.
-> >
-> > And maybe call the property "i2c-allow-low-power-probe" or similar, to
-> > indicate that it is specific to i2c.
->
-> The bus determines that already, and it's only defined for I²C here. Should
-> we need this in the future for e.g. I3C, there would be no need to think of
-> renaming it, just changing the documentation and implementation.
->
-> I don't have a strong opinion on that though.
+On Wed, Aug 12, 2020 at 09:46:56AM -0700, Sean V Kelley wrote:
+> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> 
+> When attempting error recovery for an RCiEP associated with an RCEC device,
+> there needs to be a way to update the Root Error Status, the Uncorrectable
+> Error Status and the Uncorrectable Error Severity of the parent RCEC.
+> So add the 'rcec' field to the pci_dev structure and provide a hook for the
+> Root Port Driver to associate RCiEPs with their respective parent RCEC.
 
-The point is that the property is not going to be recognized beyond i2c.
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -202,6 +202,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  		pci_walk_dev_affected(dev, report_frozen_detected, &status);
+>  		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
+>  			status = flr_on_rciep(dev);
+> +			/*
+> +			 * The callback only clears the Root Error Status
+> +			 * of the RCEC (see aer.c).
+> +			 */
+> +			if (dev->rcec)
+> +				reset_link(dev->rcec);
+>  			if (status != PCI_ERS_RESULT_RECOVERED) {
+>  				pci_warn(dev, "function level reset failed\n");
+>  				goto failed;
+> @@ -245,7 +251,11 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
+>  		pci_aer_clear_device_status(dev);
+>  		pci_aer_clear_nonfatal_status(dev);
+> +	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END && dev->rcec) {
+> +		pci_aer_clear_device_status(dev->rcec);
+> +		pci_aer_clear_nonfatal_status(dev->rcec);
 
-> > > +
-> > > +How it works
-> > > +============
-> > > +
-> > > +The property "allow-low-power-probe" boolean property may be used to tell Linux
-> >
-> > "boolean device property" ?
->
-> Oops. The other "property" was supposed to be removed by now. But yes, I
-> agree with the suggestion.
->
-> >
-> > > +that the I²C framework should instruct the kernel ACPI framework to leave the
-> > > +device in the low power state. If the driver indicates its support for this by
-> > > +setting the I2C_DRV_FL_ALLOW_LOW_POWER_PROBE flag in struct i2c_driver.flags
-> > > +field and the "allow-low-power-probe" property is present, the device will not
-> > > +be powered on for probe.
-> > > +
-> > > +The downside is that as the device is not powered on, even if there's a problem
-> > > +with the device, the driver likely probes just fine but the first user will
-> > > +find out the device doesn't work, instead of a failure at probe time. This
-> > > +feature should thus be used sparingly.
-> >
-> > It would be good to give an ASL example with this property provided.
->
-> I'll add that for v8.
->
-> >
-> > > diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-> > > index ad3b5afdae77e..0070fcde9e669 100644
-> > > --- a/Documentation/firmware-guide/acpi/index.rst
-> > > +++ b/Documentation/firmware-guide/acpi/index.rst
-> > > @@ -11,6 +11,7 @@ ACPI Support
-> > >     dsd/graph
-> > >     dsd/data-node-references
-> > >     dsd/leds
-> > > +   dsd/allow-low-power-probe
-> > >     enumeration
-> > >     osi
-> > >     method-customizing
-> > > --
->
-> --
-> Kind regards,
->
-> Sakari Ailus
+Conceptually, I'm not sure why we need the dev->rcec link.  The error
+was *reported* via the RCEC, so don't we know the RCEC up front,
+before we even identify the RCiEP?  Can't we just remember that and
+dispense with dev->rcec?
+
+I'm also concerned that if we fail to identify the RCiEP (i.e., we
+don't have a valid "dev" to use dev->rcec), we will fail to clear the
+error status bits.  I think it's possible that the RCEC will report an
+error, but the RCiEP that generated the error message is not
+responding so we can't find it.
+
+>  	}
+> +
+>  	pci_info(dev, "device recovery successful\n");
+>  	return status;
+>  
+> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+> index d5b109499b10..a64e88b7166b 100644
+> --- a/drivers/pci/pcie/portdrv_pci.c
+> +++ b/drivers/pci/pcie/portdrv_pci.c
+> @@ -90,6 +90,18 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
+>  #define PCIE_PORTDRV_PM_OPS	NULL
+>  #endif /* !PM */
+>  
+> +static int pcie_hook_rcec(struct pci_dev *pdev, void *data)
+> +{
+> +	struct pci_dev *rcec = (struct pci_dev *)data;
+> +
+> +	pdev->rcec = rcec;
+> +	pci_dbg(rcec, "RCiEP(under an RCEC) %04x:%02x:%02x.%d\n",
+> +		pci_domain_nr(pdev->bus), pdev->bus->number,
+> +		PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
+
+If we do need dev->rcec, this should use pci_name() for the second
+device instead of formatting the name manually.  I think I would
+connect this with the RCiEP instead of the RCEC, e.g.,
+
+  pci_dbg(pdev, "PME & error events reported via %s\n", pci_name(rcec));
+
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * pcie_portdrv_probe - Probe PCI-Express port devices
+>   * @dev: PCI-Express port device being probed
+> @@ -110,6 +122,9 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+>  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
+>  		return -ENODEV;
+>  
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
+> +		pcie_walk_rcec(dev, pcie_hook_rcec, dev);
+> +
+>  	status = pcie_port_device_register(dev);
+>  	if (status)
+>  		return status;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index c7fc5726872c..ba29816c827b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -330,6 +330,7 @@ struct pci_dev {
+>  #ifdef CONFIG_PCIEPORTBUS
+>  	u16		rcec_cap;	/* RCEC capability offset */
+>  	struct rcec_ext *rcec_ext;	/* RCEC cached assoc. endpoint extended capabilities */
+> +	struct pci_dev	*rcec;		/* Associated RCEC device */
+>  #endif
+>  	u8		pcie_cap;	/* PCIe capability offset */
+>  	u8		msi_cap;	/* MSI capability offset */
+> -- 
+> 2.28.0
+> 
