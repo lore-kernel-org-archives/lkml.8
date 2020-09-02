@@ -2,139 +2,131 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A032C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A1CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB6CC207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE0F207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iRP4fz5N"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="AJKZvdUd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nYV+dqD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgIBTEr (ORCPT
+        id S1728222AbgIBTE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 15:04:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727949AbgIBTEp (ORCPT
+        Wed, 2 Sep 2020 15:04:59 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:37033 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727894AbgIBTE5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 15:04:45 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A4D7C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 12:04:45 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id g29so153565pgl.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 12:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mbvYxT8uYxty8dNjUEj6f2xpfkVHdqq7oce2X4nNcd0=;
-        b=iRP4fz5N8zXBPyKNAgNfPmXCcxrmonkm0Os8not5I3SkTH+uCEvtntcSzwpjmUH5Ew
-         fJ53jdwnD1OmSm2/LLlE9h3yEA3384P9xBIx1fM5B8WvPo8eT5i8XW74TzOZSJCiVhIQ
-         t8yPjErzTguaK5SK/lPFV6JrgE+zApxHY7n4T9h0IFgeVDfPSLH9i4Igh1E1y1VUrZdk
-         Qg7e+ShQRcDa4r6b5/n24liH+AW0DosuNG55yaEmh6cl88S64ZokJ0z50525m3rjaIIP
-         mYAZj935dcrmRet9hObLhGeVLVc7w/6Lgr7OBukbh6zJ3YwQfJx6ajWrb4RHKGYufli4
-         4/3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mbvYxT8uYxty8dNjUEj6f2xpfkVHdqq7oce2X4nNcd0=;
-        b=ZVdnMCJfHxLi/7LzU/cF4B3nGXZ3CbAKfhoTplpu3WtGpb7pCeGWwPnzHIhiiyGGbv
-         kqQ9mfOlRttiL/PuH5M/GFf+etithDfk7L04p4FKNF0IT2IeTXLUAwqdS0TMXELN4lho
-         7GQ3O85+50FmBnpgZLDgPAZa/QmrBQgMXcoPz55V51wlfBCqac28wwscEXuo20+v5G04
-         2mVmnzJ6mNdvq0f1I+7IucMS3qQRtuxn1U2lE7rNvsVM0esnes1BbIuvDLm7EHXGLDks
-         6vrx6+DjQGC3Nv7e+VOTLfT1jeJndh0scnrXKuuwDf3mLWiSwAyy/5M+poRTt+kL9w7F
-         W2BQ==
-X-Gm-Message-State: AOAM5317j8f9UHJDK4ViSBU/dDSHruvZldOvnrqiI0XWGbsv93uqa+5S
-        Sd4V6DbBuYgWN5AXXgR2grht7DBDxPH/K1PIKvmbyQ==
-X-Google-Smtp-Source: ABdhPJwtTfyrpkBmwDaLJ+GfXiTisNqMpq2rz/OkurrFhQR8CPZaebvC/gVhdDeDVHmXMpt9IxQQan8xa319O8Ek0ZQ=
-X-Received: by 2002:a62:1896:: with SMTP id 144mr3540419pfy.143.1599073484594;
- Wed, 02 Sep 2020 12:04:44 -0700 (PDT)
+        Wed, 2 Sep 2020 15:04:57 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 4E724FCA;
+        Wed,  2 Sep 2020 15:04:54 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 02 Sep 2020 15:04:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=UIxnX4c3cvkVCih8WXAhZh++fhZ
+        H2lstxce/AgcyQoQ=; b=AJKZvdUd2hz7jzsHrNCLB8F9hPKLifeW8Ovg5/yFd2t
+        XpN21E5ZqYufX6n8KZ0kv5KMMyz4hSmAGFtAglJUp7rK9mG18PAnhTpJniG9Q+w7
+        yS+fMtG09pybMflubjIvk0ttfxOZ25TMtdhQGuD9NKA47eutv9AV/2d1F8VTTQer
+        VFmjOF5OlugqlHyElkJrA4LYXZiEI10zQp0mh8HVPeQurKwv/avQaYCuC1ohMR3z
+        9LE0+W3KJFALG3IcOPkJSyZR0vf9cx7nbipyIqyVGvvFssXsEguRlsDl7/1XN91H
+        RN0P1wtMijIjMaDhPefcFUAEU1A0ikQlkbPFXmYqThw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=UIxnX4
+        c3cvkVCih8WXAhZh++fhZH2lstxce/AgcyQoQ=; b=nYV+dqD/xqacR59c0aEIVX
+        w21OygFMPvsHZ+wSSwyjfBirfUiycS2DkJ3spPXp5nYrtBXJqdPwiE7TEjHcCQil
+        EbImxL8Zv4F5VsTRuzveasbzzp+AxTMeVyGTjb/d2waBjUJXvKXaSRoo2iI8YvG0
+        sR+4cuAgLW8oJ96cd40QcDWPpF6M5iHKKheE0R9kjKJszZDkSeAK9hhlOsuV0sXw
+        tLa3lHvY/sJzXYwXQhxRPgE+dxc2x65xMzkucVMhKC8TTw8HAugm06UIFxGrfu4s
+        BfCSTVi5Ud96BxPKZdko4QS1gM5r80I3g/lQWmd0WOICHUMmOXf1HXNfijDdXxTQ
+        ==
+X-ME-Sender: <xms:0-xPX81_2pmSYCwjPMBPQbp6-bpPubcFntWpzHUK2Eu0vyb0HIVSdw>
+    <xme:0-xPX3G0zK_pHMTCBs19YydbT96GjrjRkoW3bCtimhgfVLkBQsROJRAzqGaRB4f1Z
+    O1K8OVA1d1Mmj6v3Io>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledgudeffecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheei
+    heegudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:0-xPX06y0hG23LP7_LMq8pEjF4P4SARltqMy1mQ52XqicUfHZXK96A>
+    <xmx:0-xPX11rsyv1zoMPKj5RWPjcA0KoCItSlmWAGmyF1FPUsHr2bap5CA>
+    <xmx:0-xPX_EI2qk5p6WephGhjAyuB5gZF5IaTDhUKpP9Upks5H_HnqhuTw>
+    <xmx:1exPX5EZ_sCdMNtmrFMDAa6dpLeRkCn7YBKIE3Xn5FYbHnue5VLc7POaFVA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 329EF328005E;
+        Wed,  2 Sep 2020 15:04:51 -0400 (EDT)
+Date:   Wed, 2 Sep 2020 21:04:49 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     sboyd@kernel.org, mturquette@baylibre.com
+Cc:     Hoegeun Kwon <hoegeun.kwon@samsung.com>, nsaenzjulienne@suse.de,
+        eric@anholt.net, stefan.wahren@i2se.com,
+        dave.stevenson@raspberrypi.com, devicetree@vger.kernel.org,
+        tim.gover@raspberrypi.com, kdasu.kdev@gmail.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, robh+dt@kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, phil@raspberrypi.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/4] clk: bcm: rpi: Add register to control pixel bvb
+ clk
+Message-ID: <20200902190449.qoao72lc4hdgv6m2@gilmour.lan>
+References: <20200901040759.29992-1-hoegeun.kwon@samsung.com>
+ <CGME20200901040851epcas1p28f443c0e819bea756ebf9296491b32da@epcas1p2.samsung.com>
+ <20200901040759.29992-2-hoegeun.kwon@samsung.com>
 MIME-Version: 1.0
-References: <20200902025347.2504702-1-keescook@chromium.org>
-In-Reply-To: <20200902025347.2504702-1-keescook@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 2 Sep 2020 12:04:33 -0700
-Message-ID: <CAKwvOd=r8X1UeBRgYMcjUoQX_nbOEbXCQYGX6n7kMnJhGXis=Q@mail.gmail.com>
-Subject: Re: [PATCH v7 0/5] Warn on orphan section placement
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="r53kpuqz3egnnm7b"
+Content-Disposition: inline
+In-Reply-To: <20200901040759.29992-2-hoegeun.kwon@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 7:53 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Hi Ingo,
->
-> The ever-shortening series. ;) Here is "v7", which is just the remaining
-> Makefile changes to enable orphan section warnings, now updated to
-> include ld-option calls.
->
-> Thanks for getting this all into -tip!
 
-For the series,
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+--r53kpuqz3egnnm7b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As the recent ppc vdso boogaloo exposed, what about the vdsos?
-* arch/x86/entry/vdso/Makefile
-* arch/arm/vdso/Makefile
-* arch/arm64/kernel/vdso/Makefile
-* arch/arm64/kernel/vdso32/Makefile
+Hi Stephen, Mike,
 
->
-> -Kees
->
-> v6: https://lore.kernel.org/lkml/20200821194310.3089815-1-keescook@chromium.org/
-> v5: https://lore.kernel.org/lkml/20200731230820.1742553-1-keescook@chromium.org/
-> v4: https://lore.kernel.org/lkml/20200629061840.4065483-1-keescook@chromium.org/
-> v3: https://lore.kernel.org/lkml/20200624014940.1204448-1-keescook@chromium.org/
-> v2: https://lore.kernel.org/lkml/20200622205815.2988115-1-keescook@chromium.org/
-> v1: https://lore.kernel.org/lkml/20200228002244.15240-1-keescook@chromium.org/
->
-> Kees Cook (5):
->   arm64/build: Warn on orphan section placement
->   arm/build: Warn on orphan section placement
->   arm/boot: Warn on orphan section placement
->   x86/build: Warn on orphan section placement
->   x86/boot/compressed: Warn on orphan section placement
->
->  arch/arm/Makefile                 | 4 ++++
->  arch/arm/boot/compressed/Makefile | 2 ++
->  arch/arm64/Makefile               | 4 ++++
->  arch/x86/Makefile                 | 4 ++++
->  arch/x86/boot/compressed/Makefile | 1 +
->  5 files changed, 15 insertions(+)
->
-> --
-> 2.25.1
->
+On Tue, Sep 01, 2020 at 01:07:56PM +0900, Hoegeun Kwon wrote:
+> To use QHD or higher, we need to modify the pixel_bvb_clk value. So
+> add register to control this clock.
+>=20
+> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
 
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
--- 
-Thanks,
-~Nick Desaulniers
+Can you merge this patch through the clk tree?
+
+The rest will go through drm
+
+Thanks!
+Maxime
+
+--r53kpuqz3egnnm7b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0/s0QAKCRDj7w1vZxhR
+xSj5AQCqraZ624rX3+422hwzvHAjXebcXXo/k5QtfouULAH9uAEA2hUPPx3QnSzt
+d+sIaCmCMaBIBO9JCuo1qwf1JJ6mAQA=
+=K0vZ
+-----END PGP SIGNATURE-----
+
+--r53kpuqz3egnnm7b--
