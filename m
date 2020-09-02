@@ -2,115 +2,147 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645D4C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F455C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4399F207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB21208C7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:17:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O6mYoz1i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgIBSQ5 (ORCPT
+        id S1728069AbgIBSRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:16:57 -0400
-Received: from mga02.intel.com ([134.134.136.20]:65383 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726247AbgIBSQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:16:56 -0400
-IronPort-SDR: hZGOky0LlUBQ0fZeNqF751FpRfsoyPLUYgeS8XM3xYMYeXVxttnZpRUkwtPBdxciTgPOhKysng
- +c6CEGRUiQMw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="145195649"
-X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
-   d="scan'208";a="145195649"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 11:16:55 -0700
-IronPort-SDR: xbfRcJGUKUdWeZJRSSgZeskvNFte+Y8dH0W3yx3f8sJLpDxJRdgePMgu/lNju4cG/agZMEQpHt
- TZkrLyLr2PNg==
-X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
-   d="scan'208";a="477744209"
-Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 11:16:55 -0700
-Date:   Wed, 2 Sep 2020 11:16:54 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Chenyi Qiang <chenyi.qiang@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/5] KVM: nVMX: Update VMX controls MSR according to
- guest CPUID after setting VMX MSRs
-Message-ID: <20200902181654.GH11695@sjchrist-ice>
-References: <20200828085622.8365-1-chenyi.qiang@intel.com>
- <20200828085622.8365-4-chenyi.qiang@intel.com>
- <CALMp9eT1makVq46TB-EtTPiz=Z_2DfhudJekrtheSsmwBc4pZA@mail.gmail.com>
+        Wed, 2 Sep 2020 14:17:09 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37162 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727993AbgIBSRD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 14:17:03 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082IGkGg057123;
+        Wed, 2 Sep 2020 13:16:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599070606;
+        bh=GfTVZ0wvy7CzbpqFgIs3qOYOtsxaXlu82wrtrD6QGjU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=O6mYoz1iW7ZFMC/+d5x5KA8sHJCv81ZPGS8lO/RBoXcXQ8xcdu6Q6niRSoKaRBeAn
+         IGel7Vx5hXuW0Bu+PZ7yE07vhYsYG349R/7BKWoU1WBqSnBMugosiveCwf0Hqwb89t
+         58VfdP9n8pZDRCnXPZioc0iQjYyZZOfXAb2+++3g=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082IGk9R005318
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Sep 2020 13:16:46 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
+ 2020 13:16:46 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 2 Sep 2020 13:16:46 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082IGjjn105163;
+        Wed, 2 Sep 2020 13:16:45 -0500
+Subject: Re: [PATCH net-next] net: dp83869: Add ability to advertise Fiber
+ connection
+To:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <hkallweit1@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200902132556.10285-1-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <33e15b70-fc43-ca15-75b3-79916a1b78ca@ti.com>
+Date:   Wed, 2 Sep 2020 13:16:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eT1makVq46TB-EtTPiz=Z_2DfhudJekrtheSsmwBc4pZA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200902132556.10285-1-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 01:39:39PM -0700, Jim Mattson wrote:
-> On Fri, Aug 28, 2020 at 1:54 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
-> >
-> > Update the fields (i.e. VM_{ENTRY_LOAD, EXIT_CLEAR}_BNDCFGS and
-> > VM_{ENTRY, EXIT}_LOAD_IA32_PERF_GLOBAL_CTRL) in
-> > nested MSR_IA32_VMX_TRUE_{ENTRY, EXIT}_CTLS according to guest CPUID
-> > when user space initializes the features MSRs. Regardless of the order
-> > of SET_CPUID and SET_MSRS from the user space, do the update to avoid
-> > MSR values overriding.
-> >
-> > Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
-> > ---
-> >  arch/x86/kvm/vmx/vmx.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 819c185adf09..f9664ccc003b 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -345,6 +345,7 @@ static bool guest_state_valid(struct kvm_vcpu *vcpu);
-> >  static u32 vmx_segment_access_rights(struct kvm_segment *var);
-> >  static __always_inline void vmx_disable_intercept_for_msr(unsigned long *msr_bitmap,
-> >                                                           u32 msr, int type);
-> > +static void nested_vmx_entry_exit_ctls_update(struct kvm_vcpu *vcpu);
-> >
-> >  void vmx_vmexit(void);
-> >
-> > @@ -2161,7 +2162,10 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> >                         return 1; /* they are read-only */
-> >                 if (!nested_vmx_allowed(vcpu))
-> >                         return 1;
-> > -               return vmx_set_vmx_msr(vcpu, msr_index, data);
-> > +               ret = vmx_set_vmx_msr(vcpu, msr_index, data);
-> > +               nested_vmx_pmu_entry_exit_ctls_update(vcpu);
-> > +               nested_vmx_entry_exit_ctls_update(vcpu);
-> > +               break;
-> 
-> Now I see what you're doing. This commit should probably come before
-> the previous commit, so that at no point in the series can userspace
-> set VMX MSR bits that should be cleared based on the guest CPUID.
-> 
-> There's an ABI change here: userspace may no longer get -EINVAL if it
-> tries to set an illegal VMX MSR bit. Instead, some illegal bits are
-> silently cleared. Moreover, these functions will potentially set VMX
-> MSR bits that userspace has just asked to clear.
 
-Can we simply remove nested_vmx_entry_exit_ctls_update() and
-nested_vmx_pmu_entry_exit_ctls_update()?  It's userspace's responsibility
-to present a valid vCPU model to the guest, I don't see any reason to
-silently tweak the VMX MSRs unless allowing the bogus config breaks KVM.
-E.g. there are many more controls that are non-sensical without "native"
-support for the associated feature.
+On 9/2/20 8:25 AM, Dan Murphy wrote:
+> Add the ability to advertise the Fiber connection if the strap or the
+> op-mode is configured for 100Base-FX.
+>
+> Auto negotiation is not supported on this PHY when in fiber mode.
+>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>   drivers/net/phy/dp83869.c | 35 +++++++++++++++++++++++++++++++++++
+>   1 file changed, 35 insertions(+)
+>
+> diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+> index 58103152c601..1acf498832f1 100644
+> --- a/drivers/net/phy/dp83869.c
+> +++ b/drivers/net/phy/dp83869.c
+> @@ -52,6 +52,11 @@
+>   					 BMCR_FULLDPLX | \
+>   					 BMCR_SPEED1000)
+>   
+> +#define MII_DP83869_FIBER_ADVERTISE    (ADVERTISED_TP | ADVERTISED_MII | \
+> +					ADVERTISED_FIBRE | ADVERTISED_BNC |  \
+> +					ADVERTISED_Pause | ADVERTISED_Asym_Pause | \
+> +					ADVERTISED_100baseT_Full)
+> +
+>   /* This is the same bit mask as the BMCR so re-use the BMCR default */
+>   #define DP83869_FX_CTRL_DEFAULT	MII_DP83869_BMCR_DEFAULT
+>   
+> @@ -300,6 +305,7 @@ static int dp83869_configure_mode(struct phy_device *phydev,
+>   {
+>   	int phy_ctrl_val;
+>   	int ret;
+> +	int bmcr;
+>   
+>   	if (dp83869->mode < DP83869_RGMII_COPPER_ETHERNET ||
+>   	    dp83869->mode > DP83869_SGMII_COPPER_ETHERNET)
+> @@ -383,7 +389,36 @@ static int dp83869_configure_mode(struct phy_device *phydev,
+>   
+>   		break;
+>   	case DP83869_RGMII_1000_BASE:
+> +		break;
+>   	case DP83869_RGMII_100_BASE:
+> +		/* Only allow advertising what this PHY supports */
+> +		linkmode_and(phydev->advertising, phydev->advertising,
+> +			     phydev->supported);
+> +
+> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
+> +				 phydev->supported);
+> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
+> +				 phydev->advertising);
+> +
+> +		/* Auto neg is not supported in fiber mode */
+> +		bmcr = phy_read(phydev, MII_BMCR);
+> +		if (bmcr < 0)
+> +			return bmcr;
+> +
+> +		phydev->autoneg = AUTONEG_DISABLE;
+> +		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
+> +				   phydev->supported);
+> +		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
+> +				   phydev->advertising);
+> +
+> +		if (bmcr & BMCR_ANENABLE) {
+> +			ret =  phy_modify(phydev, MII_BMCR, BMCR_ANENABLE, 0);
+> +			if (ret < 0)
+> +				return ret;
+> +		}
+> +		ret = phy_modify_changed(phydev, MII_ADVERTISE,
+> +					 MII_DP83869_FIBER_ADVERTISE,
+> +					 MII_DP83869_FIBER_ADVERTISE);
+
+This is not correct after some testing find that this fails to init 
+since ret will be non-zero on success
+
+Dan
