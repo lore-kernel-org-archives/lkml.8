@@ -2,149 +2,239 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A21C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B731C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DECA20709
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:08:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CV+8cHsp"
+	by mail.kernel.org (Postfix) with ESMTP id 6776020709
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:09:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgIBRIM (ORCPT
+        id S1728220AbgIBRI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 13:08:12 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:35844 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbgIBRIL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:08:11 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 082H4FSb145311;
-        Wed, 2 Sep 2020 17:08:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2020-01-29; bh=OwoqzT+xZqntsl1tMm1voSTpLuS3ETzRtHPm7Fje0T8=;
- b=CV+8cHspsEBhVy54xWeBBvXQUICGL5x6UZMbteqzRboYCF5IIIi44F+zdnzf+Db58RjD
- tInRnlq3VnBSNgi2dR8p1jYGFH9eMWyQzp9cHu09J9nhv68iJFzxU8KGzIiOpxELPEvA
- BwHC9C7E1BKnxdRJmPCdsRh94U1Hmey1/WpJCc4qEbPYy0L7wbyQDKFQzlSlZs1FKH/i
- 7R9jTyHuY4M2vS6u1caNcgraONeLQoHXOUA0ouWg4Wa5rMliBxTBJz1eZ6ic2E1yxXMo
- t5HYRItMMDvKB3smPD0lTM7sxHx1kf29vsfPVQn/bVZvLWHOZJvviYH9+eiTfVsbNIGU eQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 337eymbwu2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 02 Sep 2020 17:08:03 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 082H55th131744;
-        Wed, 2 Sep 2020 17:08:02 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 3380sub3t3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 02 Sep 2020 17:08:02 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 082H80E8027580;
-        Wed, 2 Sep 2020 17:08:01 GMT
-Received: from localhost.localdomain (/98.229.125.203)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 02 Sep 2020 10:08:00 -0700
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: [PATCH] padata: fix possible padata_works_lock deadlock
-Date:   Wed,  2 Sep 2020 13:07:56 -0400
-Message-Id: <20200902170756.332491-1-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.28.0
+        Wed, 2 Sep 2020 13:08:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:43028 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726285AbgIBRI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 13:08:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D1BE1045;
+        Wed,  2 Sep 2020 10:08:58 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0CDB3F66F;
+        Wed,  2 Sep 2020 10:08:56 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 18:08:54 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Boyan Karatotev <boyan.karatotev@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>, boian4o1@gmail.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        amit.kachhap@arm.com, vincenzo.frascino@arm.com,
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v2 3/4] kselftests/arm64: add PAuth test for whether
+ exec() changes keys
+Message-ID: <20200902170854.GK6642@arm.com>
+References: <20200831110450.30188-1-boyan.karatotev@arm.com>
+ <20200831110450.30188-4-boyan.karatotev@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009020163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
- priorityscore=1501 phishscore=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 clxscore=1015 spamscore=0 bulkscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009020163
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831110450.30188-4-boyan.karatotev@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot reports,
+On Mon, Aug 31, 2020 at 12:04:49PM +0100, Boyan Karatotev wrote:
+> Kernel documentation states that it will change PAuth keys on exec() calls.
+> 
+> Verify that all keys are correctly switched to new ones.
+> 
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Reviewed-by: Vincenzo Frascino <Vincenzo.Frascino@arm.com>
+> Reviewed-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+> Signed-off-by: Boyan Karatotev <boyan.karatotev@arm.com>
+> ---
+>  tools/testing/selftests/arm64/pauth/Makefile  |   4 +
+>  .../selftests/arm64/pauth/exec_target.c       |  35 +++++
+>  tools/testing/selftests/arm64/pauth/helper.h  |  10 ++
+>  tools/testing/selftests/arm64/pauth/pac.c     | 148 ++++++++++++++++++
+>  4 files changed, 197 insertions(+)
+>  create mode 100644 tools/testing/selftests/arm64/pauth/exec_target.c
+> 
+> diff --git a/tools/testing/selftests/arm64/pauth/Makefile b/tools/testing/selftests/arm64/pauth/Makefile
+> index 5c0dd129562f..72e290b0b10c 100644
+> --- a/tools/testing/selftests/arm64/pauth/Makefile
+> +++ b/tools/testing/selftests/arm64/pauth/Makefile
+> @@ -13,6 +13,7 @@ pauth_cc_support := $(shell if ($(CC) $(CFLAGS) -march=armv8.3-a -E -x c /dev/nu
+>  ifeq ($(pauth_cc_support),1)
+>  TEST_GEN_PROGS := pac
+>  TEST_GEN_FILES := pac_corruptor.o helper.o
+> +TEST_GEN_PROGS_EXTENDED := exec_target
+>  endif
+>  
+>  include ../../lib.mk
+> @@ -30,6 +31,9 @@ $(OUTPUT)/helper.o: helper.c
+>  # greater, gcc emits pac* instructions which are not in HINT NOP space,
+>  # preventing the tests from occurring at all. Compile for ARMv8.2 so tests can
+>  # run on earlier targets and print a meaningful error messages
+> +$(OUTPUT)/exec_target: exec_target.c $(OUTPUT)/helper.o
+> +	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
+> +
+>  $(OUTPUT)/pac: pac.c $(OUTPUT)/pac_corruptor.o $(OUTPUT)/helper.o
+>  	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
+>  endif
+> diff --git a/tools/testing/selftests/arm64/pauth/exec_target.c b/tools/testing/selftests/arm64/pauth/exec_target.c
+> new file mode 100644
+> index 000000000000..07addef5a1d7
+> --- /dev/null
+> +++ b/tools/testing/selftests/arm64/pauth/exec_target.c
+> @@ -0,0 +1,35 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2020 ARM Limited
+> +
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <sys/auxv.h>
+> +
+> +#include "helper.h"
+> +
+> +
+> +int main(void)
+> +{
+> +	struct signatures signed_vals;
+> +	unsigned long hwcaps;
+> +	size_t val;
+> +
+> +	fread(&val, sizeof(size_t), 1, stdin);
+> +
+> +	/* don't try to execute illegal (unimplemented) instructions) caller
+> +	 * should have checked this and keep worker simple
+> +	 */
+> +	hwcaps = getauxval(AT_HWCAP);
+> +
+> +	if (hwcaps & HWCAP_PACA) {
+> +		signed_vals.keyia = keyia_sign(val);
+> +		signed_vals.keyib = keyib_sign(val);
+> +		signed_vals.keyda = keyda_sign(val);
+> +		signed_vals.keydb = keydb_sign(val);
+> +	}
+> +	signed_vals.keyg = (hwcaps & HWCAP_PACG) ?  keyg_sign(val) : 0;
+> +
+> +	fwrite(&signed_vals, sizeof(struct signatures), 1, stdout);
+> +
+> +	return 0;
+> +}
+> diff --git a/tools/testing/selftests/arm64/pauth/helper.h b/tools/testing/selftests/arm64/pauth/helper.h
+> index e2ed910c9863..da6457177727 100644
+> --- a/tools/testing/selftests/arm64/pauth/helper.h
+> +++ b/tools/testing/selftests/arm64/pauth/helper.h
+> @@ -6,6 +6,16 @@
+>  
+>  #include <stdlib.h>
+>  
+> +#define NKEYS 5
+> +
+> +
+> +struct signatures {
+> +	size_t keyia;
+> +	size_t keyib;
+> +	size_t keyda;
+> +	size_t keydb;
+> +	size_t keyg;
+> +};
+>  
+>  void pac_corruptor(void);
+>  
+> diff --git a/tools/testing/selftests/arm64/pauth/pac.c b/tools/testing/selftests/arm64/pauth/pac.c
+> index 035fdd6aae9b..1b9e3acfeb61 100644
+> --- a/tools/testing/selftests/arm64/pauth/pac.c
+> +++ b/tools/testing/selftests/arm64/pauth/pac.c
+> @@ -2,6 +2,8 @@
+>  // Copyright (C) 2020 ARM Limited
+>  
+>  #include <sys/auxv.h>
+> +#include <sys/types.h>
+> +#include <sys/wait.h>
+>  #include <signal.h>
+>  
+>  #include "../../kselftest_harness.h"
+> @@ -33,6 +35,117 @@ do { \
+>  } while (0)
+>  
+>  
+> +void sign_specific(struct signatures *sign, size_t val)
+> +{
+> +	sign->keyia = keyia_sign(val);
+> +	sign->keyib = keyib_sign(val);
+> +	sign->keyda = keyda_sign(val);
+> +	sign->keydb = keydb_sign(val);
+> +}
+> +
+> +void sign_all(struct signatures *sign, size_t val)
+> +{
+> +	sign->keyia = keyia_sign(val);
+> +	sign->keyib = keyib_sign(val);
+> +	sign->keyda = keyda_sign(val);
+> +	sign->keydb = keydb_sign(val);
+> +	sign->keyg  = keyg_sign(val);
+> +}
+> +
+> +int are_same(struct signatures *old, struct signatures *new, int nkeys)
+> +{
+> +	int res = 0;
+> +
+> +	res |= old->keyia == new->keyia;
+> +	res |= old->keyib == new->keyib;
+> +	res |= old->keyda == new->keyda;
+> +	res |= old->keydb == new->keydb;
+> +	if (nkeys == NKEYS)
+> +		res |= old->keyg  == new->keyg;
+> +
+> +	return res;
+> +}
+> +
+> +int exec_sign_all(struct signatures *signed_vals, size_t val)
+> +{
+> +	int new_stdin[2];
+> +	int new_stdout[2];
+> +	int status;
+> +	ssize_t ret;
+> +	pid_t pid;
 
-  WARNING: inconsistent lock state
-  5.9.0-rc2-syzkaller #0 Not tainted
-  --------------------------------
-  inconsistent {IN-SOFTIRQ-W} -> {SOFTIRQ-ON-W} usage.
-  syz-executor.0/26715 takes:
-  (padata_works_lock){+.?.}-{2:2}, at: padata_do_parallel kernel/padata.c:220
-  {IN-SOFTIRQ-W} state was registered at:
-    spin_lock include/linux/spinlock.h:354 [inline]
-    padata_do_parallel kernel/padata.c:220
-    ...
-    __do_softirq kernel/softirq.c:298
-    ...
-    sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1091
-    asm_sysvec_apic_timer_interrupt arch/x86/include/asm/idtentry.h:581
+Can we simplify this with popen(3)?  Fork-and-exec is notoriously
+fiddly...
 
-   Possible unsafe locking scenario:
+[...]
 
-         CPU0
-         ----
-    lock(padata_works_lock);
-    <Interrupt>
-      lock(padata_works_lock);
+> +/*
+> + * fork() does not change keys. Only exec() does so call a worker program.
+> + * Its only job is to sign a value and report back the resutls
+> + */
+> +TEST(exec_unique_keys)
+> +{
 
-padata_do_parallel() takes padata_works_lock with softirqs enabled, so a
-deadlock is possible if, on the same CPU, the lock is acquired in
-process context and then softirq handling done in an interrupt leads to
-the same path.
+The kernel doesn't guarantee that keys are unique.
 
-Fix by leaving softirqs disabled while do_parallel holds
-padata_works_lock.
+Can we present all the "unique keys" wording differently, say
 
-Reported-by: syzbot+f4b9f49e38e25eb4ef52@syzkaller.appspotmail.com
-Fixes: 4611ce2246889 ("padata: allocate work structures for parallel jobs from a pool")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- kernel/padata.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+	exec_key_collision_likely()
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 16cb894dc272..d4d3ba6e1728 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -215,12 +215,13 @@ int padata_do_parallel(struct padata_shell *ps,
- 	padata->pd = pd;
- 	padata->cb_cpu = *cb_cpu;
- 
--	rcu_read_unlock_bh();
--
- 	spin_lock(&padata_works_lock);
- 	padata->seq_nr = ++pd->seq_nr;
- 	pw = padata_work_alloc();
- 	spin_unlock(&padata_works_lock);
-+
-+	rcu_read_unlock_bh();
-+
- 	if (pw) {
- 		padata_work_init(pw, padata_parallel_worker, padata, 0);
- 		queue_work(pinst->parallel_wq, &pw->pw_work);
+Otherwise people might infer from this test code that the keys are
+supposed to be truly unique and start reporting bugs on the kernel.
 
-base-commit: 9c7d619be5a002ea29c172df5e3c1227c22cbb41
--- 
-2.28.0
+I can't see an obvious security argument for unique keys (rather, the
+keys just need to be "unique enough".  That's the job of
+get_random_bytes().)
 
+[...]
+
+Cheers
+---Dave
