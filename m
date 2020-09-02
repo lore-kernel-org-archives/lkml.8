@@ -2,184 +2,151 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C848FC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19CDC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1E920773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8717F20773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:00:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yn9lc2uw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R88tGuDv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgIBPAg (ORCPT
+        id S1727895AbgIBPAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:00:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34120 "EHLO
+        Wed, 2 Sep 2020 11:00:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgIBNr2 (ORCPT
+        with ESMTP id S1726900AbgIBNr0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:47:28 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1B64C06121A
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 06:38:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=GGXP0Z1hCwRfr4rgeIowl4ybef3PBebTvLF8FOk4lEA=; b=Yn9lc2uwGfsN/+w+OdLy7Fk5Wv
-        oZSx405qMf+wWO6psdiW/rwbkBI7tOiGzsrxFIdRfWqjORMIaJpq2/WfOHqKUqIZpdqQXs6ReaoXu
-        lXWovqDTE2BxfADYkG4zJHOCK0C/NYiX1E/72aR4sqn7KDcJMcrglDwFCXY69xCmq/hWrhHHsrmHp
-        jqwsG3j4CqBtOIBIv9BlWd1MIxyPoO0rB+PtDnMO8avLHX7im25iJ5HzutVSfNZdEctjnmIQOjAUP
-        +NIMwHHfP4x5tm4dTYAuiId5ECH5LKj4R0vZSxU5DHSh6vK/mRRTZw7/oy3VS74r+BeW3ed8ZwdPC
-        tsT2Ffvw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDSxr-0002df-Ki; Wed, 02 Sep 2020 13:38:15 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A04FE307590;
-        Wed,  2 Sep 2020 15:38:12 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id CC6E029A82C24; Wed,  2 Sep 2020 15:38:11 +0200 (CEST)
-Message-ID: <20200902133201.031099736@infradead.org>
-User-Agent: quilt/0.66
-Date:   Wed, 02 Sep 2020 15:25:56 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Kyle Huey <me@kylehuey.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Robert O'Callahan <rocallahan@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 07/13] x86/debug: Move historical SYSENTER junk into exc_debug_kernel()
-References: <20200902132549.496605622@infradead.org>
+        Wed, 2 Sep 2020 09:47:26 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1169FC061247;
+        Wed,  2 Sep 2020 06:36:51 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id w186so2545901pgb.8;
+        Wed, 02 Sep 2020 06:36:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RebqManfmRh4k1my0fORF4PpG+ZBOiH+ffG4v0sIRf8=;
+        b=R88tGuDvxyhnCYg/yozfOUBVR7EWDhJPDNlwLc3DzZkwA5eGOSQfuybBa6Kd+wldLh
+         ZlrWg0oVr8Deb5oJZLs4YPHm6UdKlQxnwSLFBSCYYv7w3CQMkM/VQG/YsnldnwANAyEj
+         eo6MXkXe+cVUn+wr4Mvb6/SQcxYVNtCj49Hshs/b/ocN9eK1u9+KKJjlNECyYPkbNjrx
+         uVmdqvbKaF3ItU1vATzte+5oigkfd46IL2AwMmJu5VbheeZyhHwSxbLSICruBMv7FcZF
+         B5UgZAn9T0zC4cBvhysqaqXOv1J5TDZooiY0jbLQHMwJJbpQSsu8QT5nKtTOXDQ/CBQM
+         PFaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=RebqManfmRh4k1my0fORF4PpG+ZBOiH+ffG4v0sIRf8=;
+        b=NqLaTKnSzt9MOw8LxDgitqpSoalhykaEtIpOrx5KvLyhsNJ6idR8s2o56DRTv1DTIE
+         6kQGMELywHz8jVOiBOov+TqXSWu50rz2pKLuwPwPGyWFTaETgYkeD3frAfZFMJZIh4xt
+         BAUjkic4SNzP5pkYSFQpNoLs0TuREBQejEXlgQS6DxS9Dcx96I3KZEZfJFziWzeaAAwj
+         9eYXZR2B0ryZCU5w17DNw680EOoQLEmZsf4PefJZ5KInUy+88R7Vpt5cXIDpKotkv8mT
+         KlREwTfFC0afh3JhYnXrpHnR8uEzLyOpJkD20SljEJDM6xf/WrFhKLz1QwG0ACkle43H
+         LZcQ==
+X-Gm-Message-State: AOAM532Knz0gd1gW3BnIlkzy/PM27G0ghjqGwACl4fWqSl+fnUbnp3BT
+        bnvd3ZSoAyesS7JEOX3W98aLmNpPIQQ=
+X-Google-Smtp-Source: ABdhPJxvoLHy4xwnsQB4ReeZa22a4Bjitew5g3qrRf1bg85kMJYMqLhtCeAJ8MLXjMHZd4ofjTO6hA==
+X-Received: by 2002:a65:4984:: with SMTP id r4mr1882201pgs.261.1599053790744;
+        Wed, 02 Sep 2020 06:36:30 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y9sm1521888pfr.38.2020.09.02.06.36.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Sep 2020 06:36:30 -0700 (PDT)
+Subject: Re: watchdog start on restart
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <d2343032814705f33cd81f18f45630bf327c0ff8.camel@yadro.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <1721f170-95df-2451-e3af-6369e830afad@roeck-us.net>
+Date:   Wed, 2 Sep 2020 06:36:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <d2343032814705f33cd81f18f45630bf327c0ff8.camel@yadro.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The historical SYSENTER junk is explicitly for from-kernel, so move it
-to the #DB-from-kernel handler.
+On 9/2/20 6:02 AM, Ivan Mikhaylov wrote:
+> Hello everyone. Currently, the watchdog interface only has "stop watchdog on
+> restart" but lacks a "start watchdog on restart" one. Is there a way to achieve
+> such functionality?
+> 
+> I'd like to know why "stop watchdog on restart" wasn't implemented via ioctl
+> interface? It would be more convenient from user perspective and you can
+> control that behavior whenever you want from application layer.
+> 
 
-It is ordered after the notifier, this is important for KGDB which
-uses TF single-step and needs to consume the event before we get here.
+Because it is and always was a driver level decision. The function was added
+to replace lots of driver level code implementing this functionality.
+Overriding it from userspace doesn't make sense because the driver is supposed
+to have a reason for disabling it on reboot (for example due to clock issues
+or power issues or becasue it has a short hardware timeout).
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/kernel/traps.c |   49 ++++++++++++++++++++++++------------------------
- 1 file changed, 25 insertions(+), 24 deletions(-)
+> I have some thoughts on this problem that solve the aforementioned
+> issue with "start watchdog on restart" but I don't think that my solution is
+> correct.
+> 
+That functionality doesn't make much sense. It can be accomplished by not
+stopping the watchdog on reboot in the first place. And if the watchdog
+wasn't running before, it can be started from userspace just before the
+reboot.
 
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -783,7 +783,7 @@ static __always_inline unsigned long deb
-  *
-  * May run on IST stack.
-  */
--static void handle_debug(struct pt_regs *regs, unsigned long dr6)
-+static bool handle_debug(struct pt_regs *regs, unsigned long *dr6)
- {
- 	struct task_struct *tsk = current;
- 	bool icebp;
-@@ -793,15 +793,13 @@ static void handle_debug(struct pt_regs
- 	 * then it's very likely the result of an icebp/int01 trap.
- 	 * User wants a sigtrap for that.
- 	 */
--	icebp = !dr6;
-+	icebp = !*dr6;
- 
- 	/* Store the virtualized DR6 value */
--	tsk->thread.debugreg6 = dr6;
-+	tsk->thread.debugreg6 = *dr6;
- 
--	if (notify_die(DIE_DEBUG, "debug", regs, (long)&dr6, 0,
--		       SIGTRAP) == NOTIFY_STOP) {
--		return;
--	}
-+	if (notify_die(DIE_DEBUG, "debug", regs, (long)dr6, 0, SIGTRAP) == NOTIFY_STOP)
-+		return true;
- 
- 	/* It's safe to allow irq's after DR6 has been saved */
- 	cond_local_irq_enable(regs);
-@@ -815,25 +813,15 @@ static void handle_debug(struct pt_regs
- 	/*
- 	 * Reload dr6, the notifier might have changed it.
- 	 */
--	dr6 = tsk->thread.debugreg6;
-+	*dr6 = tsk->thread.debugreg6;
- 
--	if (WARN_ON_ONCE((dr6 & DR_STEP) && !user_mode(regs))) {
--		/*
--		 * Historical junk that used to handle SYSENTER single-stepping.
--		 * This should be unreachable now.  If we survive for a while
--		 * without anyone hitting this warning, we'll turn this into
--		 * an oops.
--		 */
--		tsk->thread.debugreg6 &= ~DR_STEP;
--		set_tsk_thread_flag(tsk, TIF_SINGLESTEP);
--		regs->flags &= ~X86_EFLAGS_TF;
--	}
--
--	if (dr6 & (DR_STEP | DR_TRAP_BITS) || icebp)
--		send_sigtrap(regs, 0, get_si_code(dr6));
-+	if (*dr6 & (DR_STEP | DR_TRAP_BITS) || icebp)
-+		send_sigtrap(regs, 0, get_si_code(*dr6));
- 
- out:
- 	cond_local_irq_disable(regs);
-+
-+	return false;
- }
- 
- static __always_inline void exc_debug_kernel(struct pt_regs *regs,
-@@ -876,7 +864,20 @@ static __always_inline void exc_debug_ke
- 	if (!dr6)
- 		goto out;
- 
--	handle_debug(regs, dr6);
-+	if (handle_debug(regs, &dr6))
-+		goto out;
-+
-+	if (WARN_ON_ONCE(dr6 & DR_STEP)) {
-+		/*
-+		 * Historical junk that used to handle SYSENTER single-stepping.
-+		 * This should be unreachable now.  If we survive for a while
-+		 * without anyone hitting this warning, we'll turn this into
-+		 * an oops.
-+		 */
-+		dr6 &= ~DR_STEP;
-+		set_thread_flag(TIF_SINGLESTEP);
-+		regs->flags &= ~X86_EFLAGS_TF;
-+	}
- 
- out:
- 	instrumentation_end();
-@@ -906,7 +907,7 @@ static __always_inline void exc_debug_us
- 	irqentry_enter_from_user_mode(regs);
- 	instrumentation_begin();
- 
--	handle_debug(regs, dr6);
-+	handle_debug(regs, &dr6);
- 
- 	instrumentation_end();
- 	irqentry_exit_to_user_mode(regs);
-
-
+Guenter
