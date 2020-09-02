@@ -2,103 +2,124 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300A1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B52FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1B762083B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:27:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JDZL5yv9"
+	by mail.kernel.org (Postfix) with ESMTP id 132C320829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:29:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599049749;
+	bh=/5zITwQgLMel5YXHYupTFIKYxnlLuiBxHFfhEAM0zfA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=eg/CiRgZXw8lMOb2Hcust7WKf/LToYHbWZDpGIOKP9bxvo+qAvVqseyXZblt301zw
+	 4aFRB2JZy0eNofVSdr6wyWeeOj/x5ebSe4F7Fmz0RHFhDu8oqxIZHbKYliZuWVp8Sm
+	 UxS5/XRCJtBviq2EYinn9n14n0W6KuLgcFT6E9rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgIBM1X (ORCPT
+        id S1726928AbgIBM3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 08:27:23 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43959 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726377AbgIBM1N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 08:27:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599049632;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hhuWg5yaRSbWZ9+qCdO6TohhfR79PQ775qn+13Xd+ag=;
-        b=JDZL5yv9RGxtNrdYP5+9ghfdzCXMI6nqjxot3eNUzMZdNKVJZho8ILoOSIQ9+VFvI/4EG6
-        rEYiZiHw4LaZWizhkxU0uTcKsJs5Tlo6aUVMCQwelLWqQB8Rk/0RNfX8l128bWLZFgbKWn
-        swOdSa8M3F4MkUkPHk+8hFipnRecLrQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-475-z-lzd0VTO9SonTWpGtHcew-1; Wed, 02 Sep 2020 08:27:09 -0400
-X-MC-Unique: z-lzd0VTO9SonTWpGtHcew-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 2 Sep 2020 08:29:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbgIBM3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 08:29:03 -0400
+Received: from localhost (47.sub-72-107-117.myvzw.com [72.107.117.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7DF361005504;
-        Wed,  2 Sep 2020 12:27:07 +0000 (UTC)
-Received: from localhost (ovpn-12-189.pek2.redhat.com [10.72.12.189])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C5E1E78B3C;
-        Wed,  2 Sep 2020 12:27:03 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>, Sagi Grimberg <sagi@grimberg.me>,
-        Tejun Heo <tj@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH V2 2/2] block: move 'q_usage_counter' into front of 'request_queue'
-Date:   Wed,  2 Sep 2020 20:26:43 +0800
-Message-Id: <20200902122643.634143-3-ming.lei@redhat.com>
-In-Reply-To: <20200902122643.634143-1-ming.lei@redhat.com>
-References: <20200902122643.634143-1-ming.lei@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id A87F62083B;
+        Wed,  2 Sep 2020 12:29:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599049743;
+        bh=/5zITwQgLMel5YXHYupTFIKYxnlLuiBxHFfhEAM0zfA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=BbTPZSuwNhYPSzyKeYXdR2ks3rMVlCPg6Y1GA8H9h86rRYg1Vih7Csu9U/nxJ/lYC
+         TENC8nhd0UiDYOX5RrIeDcOjt57ddMQ+FYTxqkf2fUW99aQdEFMgwbJVe0J9blyW14
+         V7HlRBi6yEcXCoiDy/37tUpos8rsamYLRKdgQMyQ=
+Date:   Wed, 2 Sep 2020 07:29:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>
+Cc:     "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rui_feng@realsil.com.cn" <rui_feng@realsil.com.cn>,
+        "vailbhavgupta40@gamail.com" <vailbhavgupta40@gamail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "puranjay12@gmail.com" <puranjay12@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] misc: rtsx: add power saving function and bios guide
+ options
+Message-ID: <20200902122901.GA241240@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c64d07b5269a4830932d639baec6eab4@realtek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The field of 'q_usage_counter' is always fetched in fast path of every
-block driver, and move it into front of 'request_queue', so it can be
-fetched into 1st cacheline of 'request_queue' instance.
+> > > From: Ricky Wu <ricky_wu@realtek.com>
+> > >
+> > > Added rts5227 rts5249 rts5260 rts5228 power saving functions,
+> > > added BIOS guide MMC funciton and U_d3_en register support and
+> > > fixed rts5260 driving parameter
+> > 
+> > This should be split into small logical pieces.  I can't really tell
+> > what those would be, but just based on the commit message, it could
+> > be:
+> > 
+> >   1) Add rts5227 rts5249 rts5260 rts5228 power saving functions
+> > 
+> >   2) Add BIOS guide MMC function and U_d3_en register support
+> > 
+> >   3) Fix rts5260 driving parameter
+> > 
+> > s/funciton/function/
+> > 
+> > It looks like 1) *might* be just this:
+> > 
+> >   rts*_force_power_down()
+> >   {
+> >     ...
+> >     rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3, D3_DELINK_MODE_EN,
+> > 			    D3_DELINK_MODE_EN);
+> > 
+> > That should be a single patch by itself so it's obvious that it's
+> > doing the same thing to several drivers.
+> 
+> Ok, I will have a extra patch for all xx_force_power_down()
 
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- include/linux/blkdev.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Great, thanks!
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index d0d61bc81615..7575fa0aae6e 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -397,6 +397,8 @@ struct request_queue {
- 	struct request		*last_merge;
- 	struct elevator_queue	*elevator;
- 
-+	struct percpu_ref	q_usage_counter;
-+
- 	struct blk_queue_stats	*stats;
- 	struct rq_qos		*rq_qos;
- 
-@@ -567,7 +569,6 @@ struct request_queue {
- 	 * percpu_ref_kill() and percpu_ref_reinit().
- 	 */
- 	struct mutex		mq_freeze_lock;
--	struct percpu_ref	q_usage_counter;
- 
- 	struct blk_mq_tag_set	*tag_set;
- 	struct list_head	tag_set_list;
--- 
-2.25.2
+> > Explain what "BIOS guide MMC function" means.  Mention the name of the
+> > function this adds so we can connect the patch with the commit log.
+> > 
+> 
+> "BIOS guide MMC function" means, via BIOS setting to know MMC card
+> support or not 
 
+It will be helpful if this is in a patch by itself.
+
+As far as I know, there's no actual BIOS *call* here, so you must be
+looking at some setting in the *device* itself, on the assumption that
+it was done by the BIOS?
+
+That sounds like it could become a problem if the device is ever reset
+or put in a low-power state.  For resets, and possibly even a
+low-power state, BIOS won't be involved, so the setting will be lost,
+and the device may work differently after the reset than it did
+before.  That sounds undesirable.
+
+> > Explain what "U_d3_en" is; that doesn't even appear in the patch.
+> 
+> I am going to remove U_d3_en from patch description, this mean
+> D3_DELINK_MODE_EN register 
+
+OK.  Given the size of the patch, I think the commit log is too short
+to describe what's going on.  More details would be helpful.
+
+Bjorn
