@@ -2,132 +2,81 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40D5C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE56C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D35BF206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22B020829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:54:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3IliV7T"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CJFTE95K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgIBMyO (ORCPT
+        id S1726285AbgIBMyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 08:54:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54042 "EHLO
+        Wed, 2 Sep 2020 08:54:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbgIBMx7 (ORCPT
+        with ESMTP id S1727028AbgIBMyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 08:53:59 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6829C061244;
-        Wed,  2 Sep 2020 05:53:58 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id gf14so2260023pjb.5;
-        Wed, 02 Sep 2020 05:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GPYnsVkem3+rGz/hx35DWNwrA6gRvemoFnUQJ0NxbXk=;
-        b=O3IliV7T1Fi5FVyDT80cvvfFZipGaOhG7IHj5wmk+aM5nRA+7s6hAcCzbQlG8BwdxX
-         54f/Gvy8uAPninfvMtb5FsMDiz3OvpvPWVhF3Q5dML5syZvJF0mgurliqkv009WVDxkV
-         DKCIKjfCcCJSb6alglsLEty0+b2/OGbCF7y2MQ8e1IkBpiwfNMd957e6nCfIELviTgwg
-         86+eVzUqh36SZuRlLGOkd6BZntCZx7OAJGgYl+4yp86c/EJ/5M4W9JhiDd3rMAq6bFtZ
-         A9k+04RosFknwjeAGWeIMUC5Eeb/AU1BIeIHS9R7CkFXuyhhS2qN/YRAsCVrJ0xyGgBZ
-         h0gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GPYnsVkem3+rGz/hx35DWNwrA6gRvemoFnUQJ0NxbXk=;
-        b=rgxVA5l7ZuF2BTUsNVpRp45PBl87Spxe8jfEu75REIHAcYDHOlrTMgCOmSB0rMZYvU
-         BjMpZqDGdEA9EHzyWuJ07hUPq2excrQtYtrbWdGTUVXrvsWA2yQLbig0FtGJpKEpDJHj
-         M7txCiCysKf6TOWtaGjZUka87U/QLvTmRSX12WLbqPDpLw5ld0aXdTzpX0j5sTNiwyXO
-         VqdeDtmZsLWC+OIOza/kpKFlW4971VRX2wpibwBET0LfOdOHtIEPFO+ZPru34p8e/Cza
-         y0CmXg9TItwILDG/zuWGNyNJL9m8l6wY6Au+GnIFGKaz8OECnVCHATnlLVD58CnrIa9n
-         h21w==
-X-Gm-Message-State: AOAM532isjszWnsACXVykOToUA1/36o9a2o36bIN+33/mEpNcvhya6hF
-        Rm2evoGHdApGDKZQqidHPbw5IKsIiUDKpg==
-X-Google-Smtp-Source: ABdhPJzAP+Z5tZoU/7BeymZD+T3FE/yPFfem59xGZ5yk9RLyR0EfRMQ/J022r+Y1ZzSejAs4fCiUPA==
-X-Received: by 2002:a17:90a:e2cc:: with SMTP id fr12mr2143502pjb.125.1599051238181;
-        Wed, 02 Sep 2020 05:53:58 -0700 (PDT)
-Received: from localhost ([121.0.29.56])
-        by smtp.gmail.com with ESMTPSA id np4sm4243201pjb.4.2020.09.02.05.53.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Sep 2020 05:53:57 -0700 (PDT)
-From:   Lai Jiangshan <jiangshanlai@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        kvm@vger.kernel.org
-Subject: [PATCH V2] kvm x86/mmu: use KVM_REQ_MMU_SYNC to sync when needed
-Date:   Wed,  2 Sep 2020 21:54:21 +0800
-Message-Id: <20200902135421.31158-1-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <87y2ltx6gl.fsf@vitty.brq.redhat.com>
-References: <87y2ltx6gl.fsf@vitty.brq.redhat.com>
+        Wed, 2 Sep 2020 08:54:12 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BD2C061245;
+        Wed,  2 Sep 2020 05:54:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=isrzndUDYiz7AVFuWayAZA6ecBCJ63M610eK0GJhjus=; b=CJFTE95KS0gBy1UFDjdzh0P6Zl
+        vDTCAlAnnxWW+J6nr0RwUn6VRG66ylaYFPPlvlH8rhBCX30JAYid8uFSWuD69AtxC76S30Nr9yXsl
+        H9eSsb8jb691xbcuFWqBvs8VP94SA83/8/9kYBol3nd+u6Kw5IwsV0Hk7tHlS+sSfBM/nIW8oe1Ld
+        NuJu5EM1RRyv7zitERugqVYenzVQi7IoEjJFh8U4MGebZbpucb8EHJA9shCLT3QeAcitanIwf1GXL
+        hStgfJKmdVxowB0QR8dps2hyFpcFWoP2BEp4/AhKrNEmBmnuKbo2ZTE+mBMXLgyJG+bQq8WDwt5/L
+        6ggoxK7Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDSH5-00015w-UD; Wed, 02 Sep 2020 12:54:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F0D3E3011C6;
+        Wed,  2 Sep 2020 14:54:02 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DE4C423D3D75E; Wed,  2 Sep 2020 14:54:02 +0200 (CEST)
+Date:   Wed, 2 Sep 2020 14:54:02 +0200
+From:   peterz@infradead.org
+To:     Nadav Amit <nadav.amit@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Nadav Amit <namit@vmware.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] x86/special_insn: reverse __force_order logic
+Message-ID: <20200902125402.GG1362448@hirez.programming.kicks-ass.net>
+References: <20200901161857.566142-1-namit@vmware.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901161857.566142-1-namit@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lai Jiangshan <laijs@linux.alibaba.com>
+On Tue, Sep 01, 2020 at 09:18:57AM -0700, Nadav Amit wrote:
 
-When kvm_mmu_get_page() gets a page with unsynced children, the spt
-pagetable is unsynchronized with the guest pagetable. But the
-guest might not issue a "flush" operation on it when the pagetable
-entry is changed from zero or other cases. The hypervisor has the 
-responsibility to synchronize the pagetables.
+> Unless I misunderstand the logic, __force_order should also be used by
+> rdpkru() and wrpkru() which do not have dependency on __force_order. I
+> also did not understand why native_write_cr0() has R/W dependency on
+> __force_order, and why native_write_cr4() no longer has any dependency
+> on __force_order.
 
-The linux kernel behaves as above for many years, But
-8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
-inadvertently included a line of code to change it without giving any
-reason in the changelog. It is clear that the commit's intention was to
-change KVM_REQ_TLB_FLUSH -> KVM_REQ_TLB_FLUSH_CURRENT, so we don't
-unneedlesly flush other contexts but one of the hunks changed
-nearby KVM_REQ_MMU_SYNC instead.
+There was a fairly large thread about this thing here:
 
-The this patch changes it back.
+  https://lkml.kernel.org/r/20200527135329.1172644-1-arnd@arndb.de
 
-Link: https://lore.kernel.org/lkml/20200320212833.3507-26-sean.j.christopherson@intel.com/
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
----
-Changed from v1:
-	update patch description
-
- arch/x86/kvm/mmu/mmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 4e03841f053d..9a93de921f2b 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -2468,7 +2468,7 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
- 		}
- 
- 		if (sp->unsync_children)
--			kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-+			kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
- 
- 		__clear_sp_write_flooding_count(sp);
- 
--- 
-2.19.1.6.gb485710b
-
+I didn't keep up, but I think the general concensus was that it's
+indeed a bit naf.
