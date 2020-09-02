@@ -2,237 +2,143 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6401EC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B1EC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B1520767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:49:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599065373;
-	bh=XR0ioxTHhgnmW+APV6MJ8653PvIb+IbdXMJ/L262yIQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=o3yGz+IigstY/UZbxs0UYQpLuf9NHWNTIWzbUzJwOUuoJJB24Sair57eIz803vR1E
-	 fnO+a619KRhEu2SXYjVPv24iR/FwKdyX8lUy2PnoxDJYPPN5XCUUJLO1to9rmtRFgh
-	 P34XnnD9DR7rB3ND+RVAzifxymqDX8xwswZWb6mw=
+	by mail.kernel.org (Postfix) with ESMTP id 07CDD20767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:51:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MbZXF4kH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgIBQtb (ORCPT
+        id S1727970AbgIBQvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:49:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbgIBQt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:49:28 -0400
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A3F0214D8
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 16:49:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599065365;
-        bh=XR0ioxTHhgnmW+APV6MJ8653PvIb+IbdXMJ/L262yIQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yCKm0wrVB74qj3jw82cs0MgZUIlwGzPQXQFP6ZuO40pNawuw4cIufN3xECk17Q68D
-         +XJK88TBkbspRcpkaD+qfTrn1Yj8kN01YzDEIW+cTtdjW9IQd/vWVAcNf2HS+YpAQw
-         Qub36Ra1vc8yn5M1Qyepr+GdktruN1W9YMf13gzM=
-Received: by mail-wr1-f46.google.com with SMTP id e16so158202wrm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 09:49:25 -0700 (PDT)
-X-Gm-Message-State: AOAM5334kjAcKw8vwuEEAhFalvA7h7eROJ/wpssVGHhIp+or6YLGiAVZ
-        nz13E7oOjR94el9xQTnt/ON1ZwdD7ysb/1Nssi/DUA==
-X-Google-Smtp-Source: ABdhPJzuKT0sfcowI/nWvlApJfMvKhzeXclG1LZhrt0Xb8lws/Eopixjlgz5qHcNlR7RUw8PQzrZUHdg4O8Gmb7W1mQ=
-X-Received: by 2002:adf:ce8e:: with SMTP id r14mr7992214wrn.257.1599065364055;
- Wed, 02 Sep 2020 09:49:24 -0700 (PDT)
+        Wed, 2 Sep 2020 12:51:12 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54248 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgIBQvK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:51:10 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082Gp5Pi033319;
+        Wed, 2 Sep 2020 11:51:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599065465;
+        bh=dDTC0gpdXie8DL9+hkg/Fiz8VsxEy70PtTPaF9NGk88=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=MbZXF4kHAWsQrSOmCIKVq4M7gPmwVSHjYUy0LvUa0K1wiYX8R+md9/hnxngJrx/im
+         q5371/6H3GfnClaIE2TUPU5Zl8O10v6Mc7NcxK9UxW9DjlEd3Rxwn0MkxZ3pYwnltx
+         VO2LyhJUciRtsGOWOtSKDP2PKL2/9s1z7C4igTAE=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082Gp4eq095150
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Sep 2020 11:51:05 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
+ 2020 11:51:04 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 2 Sep 2020 11:51:04 -0500
+Received: from [10.250.34.112] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082Gp4rc046690;
+        Wed, 2 Sep 2020 11:51:04 -0500
+Subject: Re: [PATCH 6/7] arm64: dts: ti: k3-*: Use generic adc for node names
+To:     Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <lokeshvutla@ti.com>,
+        <grygorii.strashko@ti.com>, <nsekhar@ti.com>
+References: <20200901223059.14801-1-nm@ti.com>
+ <20200901223059.14801-7-nm@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <60e6b790-360a-6eaf-03a3-5bb256adf215@ti.com>
+Date:   Wed, 2 Sep 2020 11:51:03 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <CALCETrWXvAMA7tQ3XZdAk2FixKfzQ_0fBmyNVyyPHVAomLvrWQ@mail.gmail.com>
- <CAMzpN2hmR+0-Yse1csbiVOiqgZ0e+VRkCBBXUKoPSTSMOOOFAQ@mail.gmail.com>
- <CALCETrXY1x0MReMoTOG2awcZvr4c7gp99JVNthK37vUUk-kyew@mail.gmail.com>
- <87k0xdjbtt.fsf@nanos.tec.linutronix.de> <CALCETrUpjUPPvnPuS9fP4jgid7U_qdU_yTKSq9PjJ=z2w9HvHg@mail.gmail.com>
- <87blioinub.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87blioinub.fsf@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 2 Sep 2020 09:49:12 -0700
-X-Gmail-Original-Message-ID: <CALCETrUuyXpG0Vhrb-9m-G8J94+2bGqdrJkKfz+-5z7dsGLK8Q@mail.gmail.com>
-Message-ID: <CALCETrUuyXpG0Vhrb-9m-G8J94+2bGqdrJkKfz+-5z7dsGLK8Q@mail.gmail.com>
-Subject: Re: ptrace_syscall_32 is failing
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200901223059.14801-7-nm@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 1:29 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Tue, Sep 01 2020 at 17:09, Andy Lutomirski wrote:
-> > On Tue, Sep 1, 2020 at 4:50 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> > I think that they almost work for x86, but not quite as
-> >> > indicated by this bug.  Even if we imagine we can somehow hack around
-> >> > this bug, I imagine we're going to find other problems with this
-> >> > model, e.g. the potential upcoming exit problem I noted in my review.
-> >>
-> >> What's the upcoming problem?
-> >
-> > If we ever want to get single-stepping fully correct across syscalls,
-> > we might need to inject SIGTRAP on syscall return. This would be more
-> > awkward if we can't run instrumentable code after the syscall part of
-> > the syscall is done.
->
-> We run a lot of instrumentable code after sys_foo() returns. Otherwise
-> all the TIF work would not be possible at all.
->
-> But you might tell me where exactly you want to inject the SIGTRAP in
-> the syscall exit code flow.
+On 9/1/20 5:30 PM, Nishanth Menon wrote:
+> Use adc@ naming for nodes following standard conventions of device
+> tree (section 2.2.2 Generic Names recommendation in [1]).
+> 
+> [1] https://github.com/devicetree-org/devicetree-specification/tree/v0.3
+> 
+> Suggested-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> ---
+>  arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi         | 4 ++--
+>  arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+> index 51ca4b4d4c21..6dfec68ac865 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+> @@ -80,7 +80,7 @@
+>  		#size-cells = <0>;
+>  	};
+>  
+> -	tscadc0: tscadc@40200000 {
+> +	tscadc0: adc@40200000 {
 
-It would be a bit complicated.  Definitely after any signals from the
-syscall are delivered.  Right now, I think that we don't deliver a
-SIGTRAP on the instruction boundary after SYSCALL while
-single-stepping.  (I think we used to, but only sometimes, and now we
-are at least consistent.)  This is because IRET will not trap if it
-starts with TF clear and ends up setting it.  (I asked Intel to
-document this, and I think they finally did, although I haven't gotten
-around to reading the new docs.  Certainly the old docs as of a year
-or two ago had no description whatsoever of how TF changes worked.)
+OK with these changes, since these seem to be only have the adc child nodes.
+This node is essentially a parent node for touchscreen and adc child nodes. The
+driver is currently looking for "tsc" on touchscreen child nodes, but none of
+the K3 SoCs have them atm.
 
-Deciding exactly *when* a trap should occur would be nontrivial -- we
-can't trap on sigreturn() from a SIGTRAP, for example.
+regards
+Suman
 
-So this isn't fully worked out.
+>  		compatible = "ti,am654-tscadc", "ti,am3359-tscadc";
+>  		reg = <0x0 0x40200000 0x0 0x1000>;
+>  		interrupts = <GIC_SPI 580 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -98,7 +98,7 @@
+>  		};
+>  	};
+>  
+> -	tscadc1: tscadc@40210000 {
+> +	tscadc1: adc@40210000 {
+>  		compatible = "ti,am654-tscadc", "ti,am3359-tscadc";
+>  		reg = <0x0 0x40210000 0x0 0x1000>;
+>  		interrupts = <GIC_SPI 581 IRQ_TYPE_LEVEL_HIGH>;
+> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+> index 9ad0266598ad..81801f519a61 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+> @@ -211,7 +211,7 @@
+>  		};
+>  	};
+>  
+> -	tscadc0: tscadc@40200000 {
+> +	tscadc0: adc@40200000 {
+>  		compatible = "ti,am3359-tscadc";
+>  		reg = <0x0 0x40200000 0x0 0x1000>;
+>  		interrupts = <GIC_SPI 860 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -230,7 +230,7 @@
+>  		};
+>  	};
+>  
+> -	tscadc1: tscadc@40210000 {
+> +	tscadc1: adc@40210000 {
+>  		compatible = "ti,am3359-tscadc";
+>  		reg = <0x0 0x40210000 0x0 0x1000>;
+>  		interrupts = <GIC_SPI 861 IRQ_TYPE_LEVEL_HIGH>;
+> 
 
->
-> >> I don't think we want that in general. The current variant is perfectly
-> >> fine for everything except the 32bit fast syscall nonsense. Also
-> >> irqentry_entry/exit is not equivalent to the syscall_enter/exit
-> >> counterparts.
-> >
-> > If there are any architectures in which actual work is needed to
-> > figure out whether something is a syscall in the first place, they'll
-> > want to do the usual kernel entry work before the syscall entry work.
->
-> That's low level entry code which does not require RCU, lockdep, tracing
-> or whatever muck we setup before actual work can be done.
->
-> arch_asm_entry()
->   ...
->   arch_c_entry(cause) {
->     switch(cause) {
->       case EXCEPTION: arch_c_exception(...);
->       case SYSCALL: arch_c_syscall(...);
->       ...
->     }
-
-You're assuming that figuring out the cause doesn't need the kernel
-entry code to run first.  In the case of the 32-bit vDSO fast
-syscalls, we arguably don't know whether an entry is a syscall until
-we have done a user memory access.  Logically, we're doing:
-
-if (get_user() < 0) {
-  /* Not a syscall.  This is actually a silly operation that sets AX =
--EFAULT and returns.  Do not audit or invoke ptrace. */
-} else {
-  /* This actually is a syscall. */
-}
-
-So we really do want to stick arch code between the
-enter_from_user_mode() and the audit check.  We *can't* audit because
-we don't know the syscall args.  Now maybe we could invent new
-semantics for this in which a fault here is still somehow a syscall,
-but I think that would be a real ABI change and would want very
-careful thought.  And it would be weird -- syscalls are supposed to
-actually call the syscall handler, aren't they?  (Arguably we should
-go back in time and make this a SIGSEGV.  We have the infrastructure
-to do this cleanly, but when I wrote the code I just copied the ABI
-from code that was before my time.  Even so, it would be an exception,
-not a syscall.)
-
->
-> You really want to differentiate between exception and syscall
-> entry/exit.
->
-
-Why do we want to distinguish between exception and syscall
-entry/exit?  For the enter part, AFAICS the exception case boils down
-to enter_from_user_mode() and the syscall case is:
-
-        enter_from_user_mode(regs);
-        instrumentation_begin();
-
-        local_irq_enable();
-        ti_work = READ_ONCE(current_thread_info()->flags);
-        if (ti_work & SYSCALL_ENTER_WORK)
-                syscall = syscall_trace_enter(regs, syscall, ti_work);
-        instrumentation_end();
-
-Which would decompose quite nicely as a regular (non-syscall) entry
-plus the syscall part later.
-
-> The splitting of syscall_enter_from_user_mode() is only necessary for
-> that 32bit fast syscall thing on x86 and there is no point to open code
-> it with two calls for e.g. do_syscall_64().
->
-> > Maybe your patch actually makes this possible -- I haven't digested
-> > all the details yet.
-> >
-> > Who advised you to drop the arch parameter?
->
-> Kees, IIRC, but I would have to search through the gazillions of mail
-> threads to be sure.
->
-> >> +       syscall_enter_from_user_mode_prepare(regs);
-> >
-> > I'm getting lost in all these "enter" functions...
->
-> It's not that hard.
->
->      syscall_enter_from_user_mode_prepare()
-> +    syscall_enter_from_user_mode_work()
-> =    syscall_enter_from_user_mode()
->
-> That's exactly what you suggested just with the difference that it is
-> explicit for syscalls and not using irqentry_enter/exit().
->
-> If we would do that then instead of having a single call for sane
-> syscall pathes:
->
->   arch_c_entry()
->      nr = syscall_enter_from_user_mode();
->
-> or for that 32bit fast syscall nonsense the split variant:
->
->   arch_c_entry()
->      syscall_enter_from_user_mode_prepare();
->      do_fast_syscall_muck();
->      nr = syscall_enter_from_user_mode_work();
->
-> we'd have:
->
->   arch_c_entry()
->      irqentry_enter();
->      local_irq_enble();
->      nr = syscall_enter_from_user_mode_work();
->      ...
->
-> which enforces two calls for sane entries and more code in arch/....
-
-This is why I still like my:
-
-arch_c_entry()
-  irqentry_enter_from_user_mode();
-  generic_syscall();
-  exit...
-}
