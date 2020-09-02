@@ -2,145 +2,115 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9399C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F097C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B602F20826
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E987A20826
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:26:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B27NRa3E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mxVwxBdb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgIBP0i (ORCPT
+        id S1728266AbgIBP0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 2 Sep 2020 11:26:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49070 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728104AbgIBPYD (ORCPT
+        with ESMTP id S1728220AbgIBPZC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:24:03 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3B0FC061245
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 08:24:00 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id t23so6422965ljc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 08:24:00 -0700 (PDT)
+        Wed, 2 Sep 2020 11:25:02 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85431C061245;
+        Wed,  2 Sep 2020 08:25:02 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id h12so2707574pgm.7;
+        Wed, 02 Sep 2020 08:25:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bJN9g6XHl5Af9t91iN2fWoTn9p9DZy7KzM/HvdtvOCA=;
-        b=B27NRa3Emoa6Of1Zl798T2u8PZyV4PzMDRi1aFFxgH3bJL8gVNZ0eKQU4Q+bsO2jhu
-         Pyk8CrEucMA1dyaw6rbtbcNuL72qx+9D2e+2SyY7gZEwjpSGbTPS4rhlBSUgAZFxes6v
-         VuolUOvPo13s+AwoIjD/vQ/I5onYCFlkWg/m4QekMnYAq8qbxGgTEa/hiDouKd+PpOmH
-         bpa5Qdb8oHX/+kRuVVoLTRY37rY5oHBgJqBDomy0hyUIl4cx6/ph1N/AZYmVSoKohi6b
-         cps/kELm0dQ4OOJa68LXEQnNzUeOZ2xDxWQtSY+OSqNwWNkUAQvhqp7kiR1oFlRCZUut
-         AhCA==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=9egEgwHbell+Vp+FzaRF5HQxPX8jduHhbTufKmGyrCM=;
+        b=mxVwxBdbeCaRpCy8dMALx19AWZCNbqDvFiqlOKHGsaWAFlLLVNCLuBJyoOt/Pq4a4B
+         kPrBcUCY1S3D1P1/0v9mtR63ullGPIoZ7ui2JsClIAmwOpZXebJuwzoKld7esZVgwIHd
+         Tz3vUTXvsoSQDGGXLj9VV1hm11tx7pCxRJn+c15Cm0gP4WaLBKJ7OjWyZPxejLY6ti2a
+         qFwsx6f1R2QO0s7IYqexyjIbbxhUjjEoY71vM8HcLVxAF8/hgfW4bOut19EgDQKd54zf
+         a/y++XOFDSFm037j4fqvFuNUP1yPvs7wPsuszb+JYI7vpqaxeTWrQSOMCxrM8eILYHno
+         SWfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bJN9g6XHl5Af9t91iN2fWoTn9p9DZy7KzM/HvdtvOCA=;
-        b=kipJcGK+rWahvIktv/RyFEpZbShZsYvSJp069odVNP6ALbqcD0CxlDz93/LqXPQBtD
-         koQYahfC1DDbPjELlxO8EU8m1we1jT93x5SSRYdUta13yOuFVPcIoJ9dhC4rUKGms52Z
-         3mFXe7UL/e4YYvc8xONFKmBiN5whPWp75NFSIpPXgc2BieQ2uEzpkYbid1oyz+7KAogQ
-         NWEzjgDxV/qPXJAg02zeivFtiwpCGv+RjBqkhQU7d6YZHAdrttJlpapxgagxXDAO5DNH
-         37sh9FDY/7jgiMxn8eOLtfYcCTbYG/HuDJlL4AjOp8IXtI7jcKfyWwd3YvmAawSvKYJi
-         16CA==
-X-Gm-Message-State: AOAM532srKXc74Vo8BEJLepOGu8Av95c4SviFYF17ylxF19vJFkP8eTq
-        1qonqzos1smZcEA5pvmojQqgVaJ+65q56BFOcEQ=
-X-Google-Smtp-Source: ABdhPJznxOwyVo+IaOPagU1IMiceEoVK9/Q2lz2grZrBudqtOPUJsvHNLofThyHfOAhXPIvpRP2DTvRVNfvp+dRTaeQ=
-X-Received: by 2002:a2e:8844:: with SMTP id z4mr3407333ljj.124.1599060238830;
- Wed, 02 Sep 2020 08:23:58 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9egEgwHbell+Vp+FzaRF5HQxPX8jduHhbTufKmGyrCM=;
+        b=q5SKhLB3iW8D7UosvtRn65UK8csTDZQ9/6jv5m97DQ/N/IK+oYDljTEmjKTOMuMXf2
+         B6yDRj1Ktaei5Cxhxm6pRaiG0kYC4k8xawOqih/vQMEczQwi2TM6Kc3M5iG2JA+noGpE
+         r5rfnbHQ4QjJ1ZDOmZpp10419FWy7kMjtGM89UQCWU4QFRG6Q80TzPr5NS0/uHJBL3TB
+         Udva2s51xxFcdNMACv3gauWctVqdOUxscVE6QlAuHmFPEb8RpD62iY6+GKE/JVCYz+uu
+         N/0IpO4XRJhbpYJuGS9HD2o+hFWzdvGyfmcSMibYOz4TDM4Hvof954IUMrIVTELx9fp/
+         V0Jg==
+X-Gm-Message-State: AOAM5324fkb3UTHaGZ1uny7yxhuYusKmlO+JA5To1lrKZeCkFsCTxCst
+        7kP4n8qaocC+pmM/FoUJ06A=
+X-Google-Smtp-Source: ABdhPJwpzMqqhegc92irnbmZ7DqXPb2X+KXRPw2ICETQlHugEduxoNrNbfoVAN6znE19G8LcmHVMag==
+X-Received: by 2002:aa7:9427:: with SMTP id y7mr3705007pfo.12.1599060301995;
+        Wed, 02 Sep 2020 08:25:01 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id p68sm6147744pfb.40.2020.09.02.08.24.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Sep 2020 08:25:00 -0700 (PDT)
+Subject: Re: [PATCH 3/9] i2c: bcm2835: Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@kernel.org>,
+        linux-i2c@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+References: <20200902150643.14839-1-krzk@kernel.org>
+ <20200902150643.14839-3-krzk@kernel.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <7867b520-950d-aa8e-a7a1-f3590abb98c6@gmail.com>
+Date:   Wed, 2 Sep 2020 08:24:58 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.1.1
 MIME-Version: 1.0
-References: <20200902151859.403354-1-efremov@linux.com>
-In-Reply-To: <20200902151859.403354-1-efremov@linux.com>
-From:   Jim Davis <jim.epost@gmail.com>
-Date:   Wed, 2 Sep 2020 08:23:47 -0700
-Message-ID: <CA+r1ZhiNx+3n_u+TR==fM8jwJHNr1JdH8ijayo5hW9wvam1zJg@mail.gmail.com>
-Subject: Re: [Cocci] [PATCH] coccinelle: misc: add excluded_middle.cocci script
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Julia Lawall <julia.lawall@inria.fr>, cocci@systeme.lip6.fr,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200902150643.14839-3-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 8:19 AM Denis Efremov <efremov@linux.com> wrote:
->
-> Check for "!A || A && B" condition. It's equivalent to
-> "!A || B" condition.
->
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  scripts/coccinelle/misc/excluded_middle.cocci | 40 +++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 scripts/coccinelle/misc/excluded_middle.cocci
->
-> diff --git a/scripts/coccinelle/misc/excluded_middle.cocci b/scripts/coccinelle/misc/excluded_middle.cocci
-> new file mode 100644
-> index 000000000000..1b8c20f13966
-> --- /dev/null
-> +++ b/scripts/coccinelle/misc/excluded_middle.cocci
-> @@ -0,0 +1,40 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +///
-> +/// Condition "!A || A && B" is equalent to "!A || B".
-
-s/equalent/equivalent/
-
-> +///
-> +// Confidence: High
-> +// Copyright: (C) 2020 Denis Efremov ISPRAS
-> +// Options: --no-includes --include-headers
-> +
-> +virtual patch
-> +virtual context
-> +virtual org
-> +virtual report
-> +
-> +@r depends on !patch@
-> +expression A, B;
-> +position p;
-> +@@
-> +
-> +* !A || (A && B)@p
-> +
-> +@depends on patch@
-> +expression A, B;
-> +@@
-> +
-> +  !A ||
-> +-      (A &&
-> +             B
-> +-      )
-> +
-> +@script:python depends on report@
-> +p << r.p;
-> +@@
-> +
-> +coccilib.report.print_report(p[0], "WARNING condition !A || A && B is equivalent to !A || B")
-> +
-> +@script:python depends on org@
-> +p << r.p;
-> +@@
-> +
-> +coccilib.org.print_todo(p[0], "WARNING condition !A || A && B is equivalent to !A || B")
-> --
-> 2.26.2
->
-> _______________________________________________
-> Cocci mailing list
-> Cocci@systeme.lip6.fr
-> https://systeme.lip6.fr/mailman/listinfo/cocci
 
 
+On 9/2/2020 8:06 AM, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Jim
+Florian
