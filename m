@@ -2,54 +2,57 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95822C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B47C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7539D2075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741742075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgIBG5c (ORCPT
+        id S1726882AbgIBG5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 02:57:32 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:51281 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgIBG5X (ORCPT
+        Wed, 2 Sep 2020 02:57:37 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:52446 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgIBG5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 02:57:23 -0400
-Received: by mail-il1-f200.google.com with SMTP id f22so2777104ill.18
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 23:57:23 -0700 (PDT)
+Received: by mail-il1-f199.google.com with SMTP id m1so2787096iln.19
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 23:57:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=vVhH60e9fj5cgVGa44bdaFJhul6+UjTv5zPn3UCBUNI=;
-        b=RopNqiVYE436zzfrPpaukNgOnYEBUtEEGYNTcIYlgTjo9Srz0LqP7pkxStfuICxWha
-         gVI+rll/SfgC8mn7wqxSXlBEfq8gyiWym7IYGGwC+Jsgc7aFARiMs40sMhRotopwM9ky
-         RHzVm7VXxUoXR6lyHRCARfji6SbtYX1UfYFhHgwvsRfYI60Wlsz0oplHPBwldRSor/F+
-         0N6dLOlNN29SqmLleww1rnU11PVlZKvW10f0Z5N3l67e+R8AFY0ij4qLFkuHu+Je8FHt
-         MCRqU/ooOJ33vEyeoGIx3DOc4IAQVpe/9VNvN7+ggfPqHOvjSaRo7lNGEFYc89fxMELp
-         5ukA==
-X-Gm-Message-State: AOAM533ePKzrkHkb6v0a0huEmSjScfW7Rn/0KRXIWeoa5Zo/82h2kGtq
-        ZSn1KwUe+AJptVZ52O5pHuteBLn4+npykyvvxA3vE6yrVZUx
-X-Google-Smtp-Source: ABdhPJwqEXqxJvgARrBXodvsncu4+BWSCzjCpyIGvhljnIadgWY5b8Sy4JKFyVHF+q3XHzMj7eicgnlID252zECoEMpHsin4Bopq
+        bh=J090Xhj2QFFP5iiya7SAqMTgWN34xrGLfdTW8Za8joI=;
+        b=VkVcJ/BtahpctRO7BmwNgKF/XilQ14e1FoifyYOVfwMIgfsOUX/i9TEzz2yYVsMw/m
+         zozTZqAwp6HXscQvzIPVxQ+IH5mLIgXdVAoZWWMqhG5KrHJghZtO/I64zIjE04Ug0nPS
+         D5yORZLa6s45Fbx61bytqKHjEcT/OiFXeOQtege1MlAop05IqdWDpG7LVzgTDOSfDRiY
+         +shR8dou75yuXa7W2IixoAUUfwTybbuorwT3vpeJcGzrnwLVt0OTV3Wydovo6NzbSf17
+         8nHJ76WGZL5ToLP6sP78qwadGWvTHUERCwF8nMN47iyYAo01hubCcg4sBWQhqX1+DLm7
+         LN2A==
+X-Gm-Message-State: AOAM530RLbqVBZ8LtbzmJ23inStI/m23tMxQpTCpI5viLXGKNh+AWLjF
+        Evm47ESPKJzCohlQxiHHq/S3yUEAnuxCcyRHy+urVveIN+Lc
+X-Google-Smtp-Source: ABdhPJzHFXABjsvgSZH9qFDV0aR70RYCKsXSHmXGasDhGDoDj0p0KeoH4InPxS0+QG/yM332tk/sQ97pdcZ2zTDbidHannYd7UqQ
 MIME-Version: 1.0
-X-Received: by 2002:a92:2605:: with SMTP id n5mr2494721ile.275.1599029842630;
+X-Received: by 2002:a92:5e49:: with SMTP id s70mr2733493ilb.108.1599029842334;
  Tue, 01 Sep 2020 23:57:22 -0700 (PDT)
 Date:   Tue, 01 Sep 2020 23:57:22 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c15ee205ae4f2531@google.com>
-Subject: general protection fault in snd_ctl_release
-From:   syzbot <syzbot+dd94e1d44f61c258d538@syzkaller.appspotmail.com>
-To:     alsa-devel@alsa-project.org, dan.carpenter@oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maz@kernel.org, o-takashi@sakamocchi.jp, perex@perex.cz,
-        syzkaller-bugs@googlegroups.com, tiwai@suse.com,
-        viro@zeniv.linux.org.uk
+Message-ID: <000000000000bcdbb005ae4f25ce@google.com>
+Subject: KASAN: use-after-free Write in xp_put_pool
+From:   syzbot <syzbot+5334f62e4d22804e646a@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, andriin@fb.com, ast@kernel.org,
+        bjorn.topel@intel.com, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
+        jonathan.lemon@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        magnus.karlsson@intel.com, mingo@kernel.org,
+        netdev@vger.kernel.org, paulmck@kernel.org, peterz@infradead.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, yhs@fb.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,78 +63,119 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    b51594df Merge tag 'docs-5.9-3' of git://git.lwn.net/linux
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=172fea15900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3c5f6ce8d5b68299
-dashboard link: https://syzkaller.appspot.com/bug?extid=dd94e1d44f61c258d538
+HEAD commit:    dc1a9bf2 octeontx2-pf: Add UDP segmentation offload support
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=16ff67de900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b6856d16f78d8fa9
+dashboard link: https://syzkaller.appspot.com/bug?extid=5334f62e4d22804e646a
 compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=179811c1900000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e9f279900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=125f3e1e900000
 
 The issue was bisected to:
 
-commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682
-Author: Marc Zyngier <maz@kernel.org>
-Date:   Wed Aug 19 16:12:17 2020 +0000
+commit a1132430c2c55af62d13e9fca752d46f14d548b3
+Author: Magnus Karlsson <magnus.karlsson@intel.com>
+Date:   Fri Aug 28 08:26:26 2020 +0000
 
-    epoll: Keep a reference on files added to the check list
+    xsk: Add shared umem support between devices
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14406199900000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=16406199900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12406199900000
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10a373de900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=12a373de900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14a373de900000
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+dd94e1d44f61c258d538@syzkaller.appspotmail.com
-Fixes: a9ed4a6560b8 ("epoll: Keep a reference on files added to the check list")
+Reported-by: syzbot+5334f62e4d22804e646a@syzkaller.appspotmail.com
+Fixes: a1132430c2c5 ("xsk: Add shared umem support between devices")
 
-general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
-CPU: 0 PID: 7429 Comm: syz-executor.0 Not tainted 5.9.0-rc3-syzkaller #0
+==================================================================
+BUG: KASAN: use-after-free in instrument_atomic_write include/linux/instrumented.h:71 [inline]
+BUG: KASAN: use-after-free in atomic_fetch_sub_release include/asm-generic/atomic-instrumented.h:220 [inline]
+BUG: KASAN: use-after-free in refcount_sub_and_test include/linux/refcount.h:266 [inline]
+BUG: KASAN: use-after-free in refcount_dec_and_test include/linux/refcount.h:294 [inline]
+BUG: KASAN: use-after-free in xp_put_pool+0x2c/0x1e0 net/xdp/xsk_buff_pool.c:262
+Write of size 4 at addr ffff8880a6a4d860 by task ksoftirqd/0/9
+
+CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.9.0-rc1-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:snd_ctl_release+0x69/0x3e0 sound/core/control.c:114
-Code: 44 24 10 4c 8b b0 b0 01 00 00 48 c7 80 b0 01 00 00 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 49 8d 7e 10 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 f7 02 00 00 49 8b 46 10 4d 8d 6e 08 4c 8d a0 48
-RSP: 0018:ffffc900073bfe10 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff8880a2a9fcc0 RCX: 1ffffffff11eb3f0
-RDX: 0000000000000002 RSI: ffffffff860cbd2b RDI: 0000000000000010
-RBP: ffff8880a2a9fcc0 R08: 0000000000000001 R09: ffffffff89cc5567
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880a2a9fd44
-R13: ffff8880a2a9fce8 R14: 0000000000000000 R15: ffff8880a4bc1468
-FS:  00007f30f5cd0700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 0000000096ced000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- __fput+0x285/0x920 fs/file_table.c:281
- task_work_run+0xdd/0x190 kernel/task_work.c:141
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
- exit_to_user_mode_prepare+0x1e1/0x200 kernel/entry/common.c:167
- syscall_exit_to_user_mode+0x7e/0x2e0 kernel/entry/common.c:242
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:186 [inline]
+ check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
+ instrument_atomic_write include/linux/instrumented.h:71 [inline]
+ atomic_fetch_sub_release include/asm-generic/atomic-instrumented.h:220 [inline]
+ refcount_sub_and_test include/linux/refcount.h:266 [inline]
+ refcount_dec_and_test include/linux/refcount.h:294 [inline]
+ xp_put_pool+0x2c/0x1e0 net/xdp/xsk_buff_pool.c:262
+ xsk_destruct+0x7d/0xa0 net/xdp/xsk.c:1138
+ __sk_destruct+0x4b/0x860 net/core/sock.c:1764
+ rcu_do_batch kernel/rcu/tree.c:2428 [inline]
+ rcu_core+0x5c7/0x1190 kernel/rcu/tree.c:2656
+ __do_softirq+0x2de/0xa24 kernel/softirq.c:298
+ run_ksoftirqd kernel/softirq.c:652 [inline]
+ run_ksoftirqd+0x89/0x100 kernel/softirq.c:644
+ smpboot_thread_fn+0x655/0x9e0 kernel/smpboot.c:165
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+Allocated by task 6854:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+ kmalloc_node include/linux/slab.h:577 [inline]
+ kvmalloc_node+0x61/0xf0 mm/util.c:574
+ kvmalloc include/linux/mm.h:750 [inline]
+ kvzalloc include/linux/mm.h:758 [inline]
+ xp_create_and_assign_umem+0x58/0x8d0 net/xdp/xsk_buff_pool.c:54
+ xsk_bind+0x9a0/0xed0 net/xdp/xsk.c:709
+ __sys_bind+0x1e9/0x250 net/socket.c:1656
+ __do_sys_bind net/socket.c:1667 [inline]
+ __se_sys_bind net/socket.c:1665 [inline]
+ __x64_sys_bind+0x6f/0xb0 net/socket.c:1665
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d5b9
-Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f30f5ccfc78 EFLAGS: 00000246 ORIG_RAX: 00000000000000e9
-RAX: 0000000000000000 RBX: 0000000000002ac0 RCX: 000000000045d5b9
-RDX: 0000000000000004 RSI: 0000000000000001 RDI: 0000000000000006
-RBP: 000000000118cf88 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000020000180 R11: 0000000000000246 R12: 000000000118cf4c
-R13: 000000000169fb6f R14: 00007f30f5cd09c0 R15: 000000000118cf4c
-Modules linked in:
----[ end trace d1d5678dff9246de ]---
-RIP: 0010:snd_ctl_release+0x69/0x3e0 sound/core/control.c:114
-Code: 44 24 10 4c 8b b0 b0 01 00 00 48 c7 80 b0 01 00 00 00 00 00 00 48 b8 00 00 00 00 00 fc ff df 49 8d 7e 10 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 f7 02 00 00 49 8b 46 10 4d 8d 6e 08 4c 8d a0 48
-RSP: 0018:ffffc900073bfe10 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff8880a2a9fcc0 RCX: 1ffffffff11eb3f0
-RDX: 0000000000000002 RSI: ffffffff860cbd2b RDI: 0000000000000010
-RBP: ffff8880a2a9fcc0 R08: 0000000000000001 R09: ffffffff89cc5567
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880a2a9fd44
-R13: ffff8880a2a9fce8 R14: 0000000000000000 R15: ffff8880a4bc1468
-FS:  00007f30f5cd0700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 0000000096ced000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+Freed by task 6854:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
+ kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
+ __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
+ __cache_free mm/slab.c:3418 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3756
+ kvfree+0x42/0x50 mm/util.c:603
+ xp_destroy net/xdp/xsk_buff_pool.c:44 [inline]
+ xp_destroy+0x45/0x60 net/xdp/xsk_buff_pool.c:38
+ xsk_bind+0xbdd/0xed0 net/xdp/xsk.c:719
+ __sys_bind+0x1e9/0x250 net/socket.c:1656
+ __do_sys_bind net/socket.c:1667 [inline]
+ __se_sys_bind net/socket.c:1665 [inline]
+ __x64_sys_bind+0x6f/0xb0 net/socket.c:1665
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff8880a6a4d800
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 96 bytes inside of
+ 1024-byte region [ffff8880a6a4d800, ffff8880a6a4dc00)
+The buggy address belongs to the page:
+page:00000000dd5fc18f refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xa6a4d
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00029cce48 ffffea00025f2148 ffff8880aa040700
+raw: 0000000000000000 ffff8880a6a4d000 0000000100000002 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880a6a4d700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880a6a4d780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8880a6a4d800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                       ^
+ ffff8880a6a4d880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880a6a4d900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
 ---
