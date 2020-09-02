@@ -2,79 +2,80 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D24C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88589C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C10EF207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B21C207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599071116;
-	bh=hoTEA9IclXXw81ojMq1jInQ0uhRGmJXYd7BI8K5Jevs=;
+	s=default; t=1599071257;
+	bh=DETywkfZCVtkkUUM6ap6SVctxaJtbjfC7H7SCPWvdxo=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DO3cqKUYoPH8BK9yRC1D2bBtXXjdczYmoIOWF09nMzC8dgPpFOtBxHLrOzRMlGOOp
-	 SWsmbq65XDrZQYsOTIUtH3G14IxyfuwC7+fZe8FY11nI8yAxHZv6pjVvX2+wM1CVSz
-	 Z+tD8mbBcMEKDpWfrWXFlmShwDK4E0nsN46Gspbg=
+	b=YfCRymv2IMpGL9sxUBWOyoHT7EDQNo0SLkAFkYWHvuXnbPkAj1/p+Z2+jmbHpGypM
+	 4xbumYV/EF4A192jQMuOhy8IbTSFBcQiWjmwpnqvWW2BMvqvsLf8HE/yULLlQxsKjx
+	 wqUlYlUQQsi3Qs30rRA2TqPxAuls5SPhSrvB0JMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgIBSZP (ORCPT
+        id S1727990AbgIBS1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:25:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48886 "EHLO
+        Wed, 2 Sep 2020 14:27:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgIBSZN (ORCPT
+        with ESMTP id S1726124AbgIBS1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:25:13 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AD06C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 11:25:13 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id q8so334380lfb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 11:25:13 -0700 (PDT)
+        Wed, 2 Sep 2020 14:27:34 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6640C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 11:27:33 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id a15so355159ljk.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 11:27:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Qq6lOJXdTNHbCKD63q8flb9FOe7Odau0iyUw+8m0/WI=;
-        b=B8XHNw1QbnNShaAQJLHQ3mIa0IDWpUwtg/9wQwKuwPcP06AzprNWwQXffHET33lCHA
-         VqCUSSdK/RlJSLWMdVl4XjO3Pbk8zPEARffsxmr5O5ExjjkLBvOMy8WdcVj95gigBeCL
-         CPEN1axLQt5qNCoNJPJgwZR486FuluLhWtfIs=
+        bh=Z6I0gofzLwArpC9CQ8lKOD/LoW6ktlk0OSBFVSWMzlc=;
+        b=b9rO7lav1hRdO25h2/k4WJpIcdR3s9JWnsi6rlPcBqQmfi+M/FzSgBmM4WmT600bsX
+         Aml+MhPOC+qa86ChFvFjU2nPWdJjTZB/wuEmwXaqFLDuuCabexXfXjqvQoQhYZkjrp4s
+         TmVObtmfAsUs3TvRokytqepl/DdT2H54lzc0A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Qq6lOJXdTNHbCKD63q8flb9FOe7Odau0iyUw+8m0/WI=;
-        b=YyxonSOh0MmlSFoiWnrv6iTV+a45SOMzE3KO+rkzaVaEAcEt/6lJRSam7r5kzQD+nQ
-         kFZFnulqTw3aCTY6Knpf4DR8wru007LMxhKHEZ+j4M34J0GAumHn3oBfTawqmqvSeAgo
-         x3NL3kusG1+TcamPE2wYuiWJdbBbSF24VxaFXqk+yEHa/LwtC+kZlf4yRsq9zn37I5Kn
-         bxR1H2vLAX3EcxOTf07rb3BatHXlKpkckxtJ0K5kayz2vRJcsmwbnjreRlCUy6m2Bu0F
-         /CCv4d8ctpToJoDiPP109BYcXgHpI0aSLBDRjY0AvTwPBFSOoSVoxDGc2NlSMuIvBPqo
-         7hpw==
-X-Gm-Message-State: AOAM533KaVyVAcUymwhQ5h7uyffQfVE0hFmntaTVPOtHbS2Erlpf0DQG
-        VXvO7WXPNERx2K6dv+neSK77pceqDrMiww==
-X-Google-Smtp-Source: ABdhPJw8TEsrm23jk17zp5eZEV0NfsjEzS5ou/IvrEjPSVlu89meKTLQLuCU0JOK3HBXlWOCTD+grg==
-X-Received: by 2002:a19:614b:: with SMTP id m11mr3905207lfk.6.1599071111297;
-        Wed, 02 Sep 2020 11:25:11 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id w6sm79320ljj.121.2020.09.02.11.25.06
+        bh=Z6I0gofzLwArpC9CQ8lKOD/LoW6ktlk0OSBFVSWMzlc=;
+        b=fXv/NTD76VUOoJDfhaHvEqZchY2QelLyXXKxCyI+b4pmPOqus+VeXG4vGU36f7t2BG
+         WfMPrdTNk8Agr8cH9zvPDTjE5haW3NMN67sQie8edgp1RejfIa5ZQIwGFAsdvLPOUh3t
+         ybCAB7udhZC5372j4T+VJJzraYa6BgRo3RF90uAdjdxzl9fBXHEcPip/m3yjaUJR+8xA
+         KDZPRE8Ur80Kq//D3xCG+XRQRYtWBNNrDXjLBzx9f0Y2qzT6Pgh75K80GsrNIv51jfzB
+         GmUT1FO01fWhdw8ODIMAZ2A14AUyMVOdPu9Cg8e9gfHUBf3jnr5OW+OYYMI0lqxBsd6o
+         T+kg==
+X-Gm-Message-State: AOAM533jbOF4bFyemvTBOH6Fs8FnD4Qt+fBNkS73qUDJ5IifCUxq3sMz
+        hNxiow1eo8oL13nzAzJt2jn8s8buCUJTuA==
+X-Google-Smtp-Source: ABdhPJyN3SbF2Ey1czKJrGKxd3V8oifcvAY50y3SDzIITU4ld4xicU4kagf/pvAmntXnLFmFhG5JDQ==
+X-Received: by 2002:a05:651c:124e:: with SMTP id h14mr3725396ljh.384.1599071251526;
+        Wed, 02 Sep 2020 11:27:31 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id w26sm87003ljm.30.2020.09.02.11.27.30
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 11:25:07 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id 12so313049lfb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 11:25:06 -0700 (PDT)
-X-Received: by 2002:a19:c8c6:: with SMTP id y189mr3951504lff.125.1599071106406;
- Wed, 02 Sep 2020 11:25:06 -0700 (PDT)
+        Wed, 02 Sep 2020 11:27:30 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id k25so292693ljg.9
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 11:27:30 -0700 (PDT)
+X-Received: by 2002:a05:651c:104c:: with SMTP id x12mr184552ljm.285.1599071250062;
+ Wed, 02 Sep 2020 11:27:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200902085513.748149-1-leon@kernel.org> <CAHk-=whURzFKdBsoHCVsy4VU-cmAKBQEhkiS8Y8TQ9nRgAbP8g@mail.gmail.com>
- <20200902175241.GL59010@unreal>
-In-Reply-To: <20200902175241.GL59010@unreal>
+References: <20200902085513.748149-1-leon@kernel.org> <20200902085513.748149-2-leon@kernel.org>
+ <CAHk-=wiOJ4H=YFO8+EumOcrciQgeKXY1Z92jdqY8OQdprPXkbg@mail.gmail.com> <20200902174600.GK59010@unreal>
+In-Reply-To: <20200902174600.GK59010@unreal>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 2 Sep 2020 11:24:50 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj6Wi7MTAMDWqcnp+cpDWvT-+o5-MEbuxJjzBkFKpfpPg@mail.gmail.com>
-Message-ID: <CAHk-=wj6Wi7MTAMDWqcnp+cpDWvT-+o5-MEbuxJjzBkFKpfpPg@mail.gmail.com>
-Subject: Re: [PATCH -rc 0/4] Protect from GCC garbage input in GCOV
+Date:   Wed, 2 Sep 2020 11:27:14 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whG7MPx0_6S8ATd4yRPtwKTThDNtbKQDQARHbaPp2H1Wg@mail.gmail.com>
+Message-ID: <CAHk-=whG7MPx0_6S8ATd4yRPtwKTThDNtbKQDQARHbaPp2H1Wg@mail.gmail.com>
+Subject: Re: [PATCH rdma-next 1/4] gcov: Open-code kmemdup() to work correctly
+ with kernel and user space pointers
 To:     Leon Romanovsky <leon@kernel.org>
 Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -86,25 +87,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 10:52 AM Leon Romanovsky <leon@kernel.org> wrote:
+On Wed, Sep 2, 2020 at 10:46 AM Leon Romanovsky <leon@kernel.org> wrote:
 >
-> Are you suggesting something like this?
->
-> diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-> index 3110c77230c7..bc0e355f64aa 100644
-> --- a/kernel/gcov/Kconfig
-> +++ b/kernel/gcov/Kconfig
-> @@ -3,7 +3,7 @@ menu "GCOV-based kernel profiling"
->
->  config GCOV_KERNEL
->         bool "Enable gcov-based kernel profiling"
-> -       depends on DEBUG_FS
-> +       depends on DEBUG_FS && (GCC_VERSION >= XXX && GCC_VERSION < YYY)
->         select CONSTRUCTORS if !UML
->         default n
->         help
+> Definitely my explanation is wrong, but it was my interpretation of
+> "BUG: KASAN: global-out-of-bounds in kmemdup+0x43/0x70" line. I saw
+> that the failure was in memcpy() inside of kmemdup(), so I changed
+> from memcpy to be copy_from_user() and it solved the KASAN warning.
 
-Yes. Except please don't mix it up with DEBUG_FS. Just add a new
-"depends on" line. They are separate issues.
+But the actual patch attached to that explanation *doesn't* use
+copy_from_user().
 
-              Linus
+So your "changed from memcpy to be copy_from_user() solved the KASAN
+warning" explanation makes even less sense. Because that's not at all
+what the patch does.
+
+             Linus
