@@ -2,144 +2,135 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD72C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53613C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1122820767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243E820767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:31:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="KH2bphu9";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="iMLSBu9e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n3thLXKY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgIBPbY (ORCPT
+        id S1728261AbgIBPbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:31:24 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:59350 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728045AbgIBPaT (ORCPT
+        Wed, 2 Sep 2020 11:31:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728324AbgIBPbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:30:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1599060619; x=1630596619;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=Tt9BLtkysFXPF66nNHl7neFrmawdQIbAbjpVhEBGRKs=;
-  b=KH2bphu9PkEFvncTXEZdlzon9K6bpMORo9Z98/C8q4GFFTbZE48QiGEl
-   teJMn+2oPMBHhWH5LujTyaRwx8DszajM3Y/CoGegBmhYaQzAXWKK2mM6a
-   FjuHNCwgg/gVAuHGQWAZpRl4WCt3p0xCRLEAoN6iSfyezudHS/0RfIVb4
-   qPzrK5CWZyM82LmCzSBwUPKp+Y8OGUZF8xvSpPUYqeS9Zg0o9Ncrh6lLf
-   Mu/tYH8rRGLYNWKmia8m5+rsXPHfl2PtvQZ1EJ5zV3yg1HgWXtzQbh+qQ
-   6D6ZLvfnv7vWxI/VxPkvqJioo2WNK0IPxx8VSCyxhu7lYt7r4npwH7pN0
-   Q==;
-IronPort-SDR: ul+8WGaS9Q6UHdbADKmLUuKNblUloYfhycMSdyP1lItExoM/yiZVyTWahevYXZOksdHkGE1w4L
- NqPXXNg624Nsn1grxNzby/sBzbMFLNkkjPozsN30ZPdARRVHlBRGqotPAfWdYi9eu6IlK8t50t
- GAuN1WPPfmB+A15nr7NnFqfh56dt1GOPdyY6ks2bhD0LOBfSKGuXg4+K5i12tEllj69Q/Sowca
- Z7d7f5caUQsM9Sb27BGlh6lCNpQBJVY6O3xcPT23+teM5E/CbqREs5Y7qR2paTDKXH+q9JAczk
- C74=
-X-IronPort-AV: E=Sophos;i="5.76,383,1592841600"; 
-   d="scan'208";a="147641356"
-Received: from mail-bn8nam12lp2173.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.173])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Sep 2020 23:30:17 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aLJ7rU1S6O9c+bzrMp7GS//8uwKW8JKFRzfMV9421yTD82HbiZwpq4TQJ8PSSHUpywC98utC68u1mPK9sgsBYKwFXpXxFgR7YqPsIKSoRYogTyp6PZ2xCmzZeFCJ6zq2B+ZgvpyuRYSr5ohHmcae4JEAkHbYXO+DBYIgmNvmQfY+N+yUnP7xTcsibG21D/NG/2D/sMc5V+PA35xEmiYndJ73f2U6GSOIzarHqrpnWJMgr+1J7y488v80LhmBGa9PZTFvRNyYI0fyrVOmHadr/AnXLuhMGbWXGwa7E2y4S6UsFKqtNPgH80wmFE96ZFsapWbRqDxoK2CVUgfB5xTWHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tt9BLtkysFXPF66nNHl7neFrmawdQIbAbjpVhEBGRKs=;
- b=nYhzrBorooVEz+j63pmlZpLmvSYBRwdifSHd0uBZxxaoEr9/4EtbBqUDb5ogTNeShNFzB1+IueeHgBSCdTeCYQz4Wj4SRaN/lm20Qvzg5wnjdJMa4/CRFIciNl4lxpQdCxn8vDIl951p6BRH+L3jNz6g41lxS5UjFjQ1E++HX84xK5X+McHo1zBjO8+lZcxVTYPbRYobG7YMSPJiCuPmXaOM3sR5QXFgLVdvTaM/xuEciniYHmuhd0RCPZAuN11sm+XnPkMjGPhmqk6ZaJIp9OOa3OBk8YiwVLQg0nVywtdkGbDqv/AFde26B8RpDQdiqFpPC12fgWES6tQ5s93gtA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Wed, 2 Sep 2020 11:31:19 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3ECFC061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 08:31:17 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id a9so5013853wmm.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 08:31:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tt9BLtkysFXPF66nNHl7neFrmawdQIbAbjpVhEBGRKs=;
- b=iMLSBu9eAFjAKj0MieInIskmoReipjbMuYsc6JquX5wnfTBDeihIGW4GkgzwV2p+TqiKOvNkuQShHFOiyy+Hcqvyhv7W0v/dQ0pdx6DzKSStkztqmzZ9oPCUt1bemE+W6O2XpYwHl7KvWdCYtrXe5b+LjiQBKOHij/OIwkpUsyA=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN4PR0401MB3600.namprd04.prod.outlook.com
- (2603:10b6:803:46::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Wed, 2 Sep
- 2020 15:30:15 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3326.023; Wed, 2 Sep 2020
- 15:30:15 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MRzTXOeTGeZAyaIQ1e/ex4zUgkS94k274JL7swyOwLU=;
+        b=n3thLXKYL8UCpmS6P7xcRU/DJXJUDnk8aYygxAO8urgHvALVBB7anUMPuOdfx6L6FL
+         DFWTY6fdgsiThCKCKQ9BZhYT7je3gARNBiJl8e16I2zxO4YBTBqJwaW2Dpfd1PVlYlZ2
+         4gMUf2BVVo9Hq1PcccnAaoDzNhroAexNnhslqEnjnzMwXtYbtpzSXb7HjeM55GvzZlyB
+         eiBKxf4vyYsliXxqPikXFOUpc5Nz88zpnUN3nH9di9BxBEP/9vrFY9ehkHQHhTFRLSlB
+         iCwllHPuNAxqIWRZGLbsVg94r+4I8ywcyZbZLnpZdVgC3pCtFBmEETr9TgrIqog9K/AR
+         LB3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MRzTXOeTGeZAyaIQ1e/ex4zUgkS94k274JL7swyOwLU=;
+        b=knUDTGMpZ97Oz/lLAyFnMa9ZFFZETRSjVwNdnXC6t3ytRJtts2c7TcFaeUQYCrYwvi
+         QtncsgOZ0errmFjs8L1k+aq5Ul2kG+KZG6wW2xYlPy4oUiNwG7E4ubxaApUvGWUdV4W8
+         A6L0PLTFKoI/LYl5Mko+7ejMUaVtCOR11XF/xrgwuuKjevcIBsv5wY8a/cnuuISdB6Z6
+         TzlNTBXx77L+bzkWPDk+K47/tokyhvC8ClO06WTyiS3Y5uWVCp753NxMnCk628p73MOb
+         dQVs4pIk0R3YCzwrdTdUDxCBcKJKsBuQliN/hPM8rBokEuVVIC6U/6haNoBtjvRIAFSq
+         WWQw==
+X-Gm-Message-State: AOAM5336V/ozOyFLptw8aCBMHTA/7uPijIpKbTpudu6/8ClgdB9otKvz
+        sy5wgJoP5F0p5W0Ck7uCGis=
+X-Google-Smtp-Source: ABdhPJygBY0ZfZMgSZivvz2qHn0ore0KK2NLR2pC9rvy2RL8UM3CGtVZXaIYKNHJe8xi9caJogXndQ==
+X-Received: by 2002:a1c:b60b:: with SMTP id g11mr1271474wmf.48.1599060676417;
+        Wed, 02 Sep 2020 08:31:16 -0700 (PDT)
+Received: from medion (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id z9sm74349wma.4.2020.09.02.08.31.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 08:31:15 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
+Date:   Wed, 2 Sep 2020 16:31:13 +0100
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 05/19] swim: use bdev_check_media_change
-Thread-Topic: [PATCH 05/19] swim: use bdev_check_media_change
-Thread-Index: AQHWgTcWjjeF2Hw+gkWVVA7OvkInPg==
-Date:   Wed, 2 Sep 2020 15:30:14 +0000
-Message-ID: <SN4PR0401MB359876A023673111737EB7BE9B2F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200902141218.212614-1-hch@lst.de>
- <20200902141218.212614-6-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2001:a62:1590:f101:1584:4722:fd5f:b30e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ba315de2-1f2b-4556-573d-08d84f55170a
-x-ms-traffictypediagnostic: SN4PR0401MB3600:
-x-microsoft-antispam-prvs: <SN4PR0401MB36006DAEEA65F49A41B03D829B2F0@SN4PR0401MB3600.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8t7GXuMIYkT7GcBpwgM5y7hMDmFkm/RSrpiB9Ocu29400Q/r+eRESqpXWjRoax7MPqz1AaCrV4feXZ/I2iiz5DHxrILPY8AMPijcqgV/OT9KOtRH8Q/r+T3x+D71pD65DA7ZkXQCwlq48n1qi6/d5Aibuzl8/C35X4vNNBAPpXFpuqH9IkWaX7dj6IguI+erw6dVwaRuWD/qWeL0I6nlRM2XYsQrH2zqfXKK4wFcNOB2elsLzWF1uZ6oJP9GOIYQY6tJZlJlGqs0jlvWZ7ckErcnwV2PlSBaHJVYlWcOw2Xac1hf6bfHCY4NqmftPXTViegqrOcSNxMZNHkUe8lQbA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(39850400004)(366004)(396003)(52536014)(9686003)(8676002)(66946007)(86362001)(7416002)(54906003)(33656002)(316002)(64756008)(66446008)(8936002)(478600001)(66476007)(66556008)(186003)(110136005)(55016002)(6506007)(83380400001)(2906002)(7696005)(91956017)(71200400001)(5660300002)(558084003)(76116006)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 7UFA+LdLILSaTgerBOMq8m+G+HusU/ssY38AT0dHFGX2W16kXcBQEtsVPxyE+j7uVn2nvr1+1Yi+x8wc1hqqyLoiOD9wT/5lWg+Q3hLTwoc6sMxTePe7UAoz3V65KRukzQsePJnBLCqYnlMDxQ4oycJYGut3sUrxS0kOkpb1ktwZPdh/ME5TiSxVmzlFpM+ST8exjkf4t1tJkqqILc/oqCG3yt6+jmU0Sc+xkedIfwPbjFt9626K6PFWbCyOWZeRp18k+kKZyjv2fLPcYrSO9HIqS5KOmEt4274zUztaI0Cm7ySTzIiucW38gFIhpdOeUFPkh5EVHu4FupDIe4n6O8cyFw3TveiXy75zrCqALKUbn6EU5TqO/rXjjGTn1ZHnpyohVLH94kfXPYH5ycbzP+FZrixcZvLFR8Z/GFvf8IBvNPznNWP8UjovnVxo0GVi7VccR8pxduoxPwicaTVjzFys/nvxD32/dL/srYzphSvv4DHzFGR8FHciys3hoLHd0y/y7Op0sDQafLbKuC47YSl1x1vNefaZaNF5Xp9MMTWFGLBeN7o6y4pmr5VlTAop+r1OzDM/Xy9WGX5Y9T2YXBWgOmZhB9cU5abM9/tdV12VvDEPJ6n80ucjBgl/afvx2evDZRB1eysfdsO7/2jBHmGIgYkmHq7lh77fPXBHANN0ebH0gcQE/8B69ynHNc9rZSdoaXM74JT+plij+92Bag==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Nayna Jain <nayna@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 2/2] sysfs: add helper macro for showing simple
+ integer values
+Message-ID: <20200902153113.qxqkpm2o6a6pgoka@medion>
+References: <20200829233720.42640-1-alex.dewar90@gmail.com>
+ <20200829233720.42640-3-alex.dewar90@gmail.com>
+ <20200830091353.GA119062@kroah.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba315de2-1f2b-4556-573d-08d84f55170a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 15:30:14.8564
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5rXXUbdKq87JO/eqXQDDd8T8BG9Fyih/KpOIQ7ccfrO0JaL1e+G1ik1YKe/yJq5vtxH8bWg/QsJNrusysImI9m8slOLy+RqAp9AGAScRBgs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3600
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200830091353.GA119062@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
-=0A=
-> +static int floppy_revalidate(struct gendisk *disk);=0A=
-=0A=
-Completely unrelated to this series but, this is the 3rd floppy =0A=
-driver in the series defining it's own floppy_revalidate() and =0A=
-naming it floppy_revalidate().=0A=
-=0A=
-This makes grepping and reviewing a pain.=0A=
-=0A=
+On Sun, Aug 30, 2020 at 11:13:53AM +0200, Greg Kroah-Hartman wrote:
+> On Sun, Aug 30, 2020 at 12:37:17AM +0100, Alex Dewar wrote:
+> > sysfs attributes are supposed to be only single values, which are
+> > printed into a buffer of PAGE_SIZE. Accordingly, for many simple
+> > attributes, sprintf() can be used like so:
+> > 	static ssize_t my_show(..., char *buf)
+> > 	{
+> > 		...
+> > 		return sprintf("%d\n", my_integer);
+> > 	}
+> > 
+> > The problem is that whilst this use of sprintf() is memory safe, other
+> > cases where e.g. a possibly unterminated string is passed as input, are
+> > not and so use of sprintf() here might make it more difficult to
+> > identify these problematic cases.
+> > 
+> > Define a macro, sysfs_sprinti(), which outputs the value of a single
+> > integer to a buffer (with terminating "\n\0") and returns the size written.
+> > This way, we can convert over the some of the trivially correct users of
+> > sprintf() and decrease its usage in the kernel source tree.
+> > 
+> > Another advantage of this approach is that we can now statically check
+> > the type of the integer so that e.g. an unsigned long long will be
+> > formatted as %llu. This will fix cases where the wrong format string has
+> > been passed to sprintf().
+> > 
+> > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> > ---
+> >  include/linux/sysfs.h | 31 +++++++++++++++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> 
+> Did you try this out?  Don't you need to return the number of bytes
+> written?
+
+I tried it out, but maybe not thoroughly enough ;-)
+
+> 
+> I like Joe's patches better, this feels like more work...
+
+Fair enough. As Joe's pointed out, even for single numbers the
+formatting is sometimes more complicated, so his approach does seem
+best. Thanks for looking though :-)
+
+> 
+> thanks,
+> 
+> greg k-h
