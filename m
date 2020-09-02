@@ -2,162 +2,97 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CE7C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55833C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 077F7207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:35:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599064510;
-	bh=KxFin5A9dCw9jPCu/DGxlbI3xeSp5sIBjTaaSCNQ57Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=PX4VZ2adFrgzfCn6GRzE2A554hSYPbVAUKJpLe9NyIeAAk0AlW0f1SCR8yWaZk4GC
-	 3rbKUb2gnqh5MuxT8+LMwgNw2pp2TSd3Afp7gT/s5NtKk0YO6lHD3V1Yx5Gc6ANpF6
-	 vl97iHUUdcxlcsWTgGc6/Hz8MHKP242my3gnahGQ=
+	by mail.kernel.org (Postfix) with ESMTP id 32E9D206E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:36:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgIBQfI (ORCPT
+        id S1727897AbgIBQgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:35:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbgIBQfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:35:06 -0400
-Received: from localhost (odyssey.drury.edu [64.22.249.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4E5920758;
-        Wed,  2 Sep 2020 16:35:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599064506;
-        bh=KxFin5A9dCw9jPCu/DGxlbI3xeSp5sIBjTaaSCNQ57Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DTDMutwtpLJppf/wm3p39RnFJwoSm9LTWg6yzoW9TaLw/2ae9hpmvRFfqKeMjVcAJ
-         w631tXHhcbrL7xPHlvlKXn5IkLsmk7FNkwhVMDIMLUdMj1NZ5YEXE+dZKt946/QSep
-         zoj+PuansiTu2KQgZxZg5f5XaNA45N7dgaAKpaJU=
-Date:   Wed, 2 Sep 2020 11:35:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com, qiuxu.zhuo@intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 07/10] PCI: Add 'rcec' field to pci_dev for associated
- RCiEPs
-Message-ID: <20200902163504.GA254301@bjorn-Precision-5520>
+        Wed, 2 Sep 2020 12:36:06 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:35899 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbgIBQgF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:36:05 -0400
+X-Originating-IP: 90.66.108.79
+Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id C04D9C0003;
+        Wed,  2 Sep 2020 16:35:58 +0000 (UTC)
+Date:   Wed, 2 Sep 2020 18:35:58 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        David Lechner <david@lechnology.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 01/10] clk: at91: Drop unused at91sam9g45_pcr_layout
+Message-ID: <20200902163558.GA4137028@piout.net>
+References: <20200902150348.14465-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200812164659.1118946-8-sean.v.kelley@intel.com>
+In-Reply-To: <20200902150348.14465-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 09:46:56AM -0700, Sean V Kelley wrote:
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+On 02/09/2020 17:03:39+0200, Krzysztof Kozlowski wrote:
+> The at91sam9g45_pcr_layout is not used so drop it to fix build warning:
 > 
-> When attempting error recovery for an RCiEP associated with an RCEC device,
-> there needs to be a way to update the Root Error Status, the Uncorrectable
-> Error Status and the Uncorrectable Error Severity of the parent RCEC.
-> So add the 'rcec' field to the pci_dev structure and provide a hook for the
-> Root Port Driver to associate RCiEPs with their respective parent RCEC.
+>   drivers/clk/at91/at91sam9g45.c:49:36: warning:
+>     'at91sam9g45_pcr_layout' defined but not used [-Wunused-const-variable=]
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -202,6 +202,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  		pci_walk_dev_affected(dev, report_frozen_detected, &status);
->  		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
->  			status = flr_on_rciep(dev);
-> +			/*
-> +			 * The callback only clears the Root Error Status
-> +			 * of the RCEC (see aer.c).
-> +			 */
-> +			if (dev->rcec)
-> +				reset_link(dev->rcec);
->  			if (status != PCI_ERS_RESULT_RECOVERED) {
->  				pci_warn(dev, "function level reset failed\n");
->  				goto failed;
-> @@ -245,7 +251,11 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
->  		pci_aer_clear_device_status(dev);
->  		pci_aer_clear_nonfatal_status(dev);
-> +	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END && dev->rcec) {
-> +		pci_aer_clear_device_status(dev->rcec);
-> +		pci_aer_clear_nonfatal_status(dev->rcec);
-
-Conceptually, I'm not sure why we need the dev->rcec link.  The error
-was *reported* via the RCEC, so don't we know the RCEC up front,
-before we even identify the RCiEP?  Can't we just remember that and
-dispense with dev->rcec?
-
-I'm also concerned that if we fail to identify the RCiEP (i.e., we
-don't have a valid "dev" to use dev->rcec), we will fail to clear the
-error status bits.  I think it's possible that the RCEC will report an
-error, but the RCiEP that generated the error message is not
-responding so we can't find it.
-
->  	}
-> +
->  	pci_info(dev, "device recovery successful\n");
->  	return status;
+> ---
+>  drivers/clk/at91/at91sam9g45.c | 7 -------
+>  1 file changed, 7 deletions(-)
+> 
+> diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
+> index c88ee20bee31..cb4a406ed15d 100644
+> --- a/drivers/clk/at91/at91sam9g45.c
+> +++ b/drivers/clk/at91/at91sam9g45.c
+> @@ -46,13 +46,6 @@ static const struct {
+>  	{ .n = "pck1",  .p = "prog1",    .id = 9 },
+>  };
 >  
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index d5b109499b10..a64e88b7166b 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -90,6 +90,18 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
->  #define PCIE_PORTDRV_PM_OPS	NULL
->  #endif /* !PM */
->  
-> +static int pcie_hook_rcec(struct pci_dev *pdev, void *data)
-> +{
-> +	struct pci_dev *rcec = (struct pci_dev *)data;
-> +
-> +	pdev->rcec = rcec;
-> +	pci_dbg(rcec, "RCiEP(under an RCEC) %04x:%02x:%02x.%d\n",
-> +		pci_domain_nr(pdev->bus), pdev->bus->number,
-> +		PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
-
-If we do need dev->rcec, this should use pci_name() for the second
-device instead of formatting the name manually.  I think I would
-connect this with the RCiEP instead of the RCEC, e.g.,
-
-  pci_dbg(pdev, "PME & error events reported via %s\n", pci_name(rcec));
-
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * pcie_portdrv_probe - Probe PCI-Express port devices
->   * @dev: PCI-Express port device being probed
-> @@ -110,6 +122,9 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
->  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
->  		return -ENODEV;
->  
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
-> +		pcie_walk_rcec(dev, pcie_hook_rcec, dev);
-> +
->  	status = pcie_port_device_register(dev);
->  	if (status)
->  		return status;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index c7fc5726872c..ba29816c827b 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -330,6 +330,7 @@ struct pci_dev {
->  #ifdef CONFIG_PCIEPORTBUS
->  	u16		rcec_cap;	/* RCEC capability offset */
->  	struct rcec_ext *rcec_ext;	/* RCEC cached assoc. endpoint extended capabilities */
-> +	struct pci_dev	*rcec;		/* Associated RCEC device */
->  #endif
->  	u8		pcie_cap;	/* PCIe capability offset */
->  	u8		msi_cap;	/* MSI capability offset */
+> -static const struct clk_pcr_layout at91sam9g45_pcr_layout = {
+> -	.offset = 0x10c,
+> -	.cmd = BIT(12),
+> -	.pid_mask = GENMASK(5, 0),
+> -	.div_mask = GENMASK(17, 16),
+> -};
+> -
+>  struct pck {
+>  	char *n;
+>  	u8 id;
 > -- 
-> 2.28.0
+> 2.17.1
 > 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
