@@ -2,115 +2,117 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6DDC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AB5C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF0F2208C7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52758207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:19:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0L8enuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgIBSS0 (ORCPT
+        id S1728083AbgIBSTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:18:26 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:40583 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgIBSSW (ORCPT
+        Wed, 2 Sep 2020 14:19:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbgIBSTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:18:22 -0400
-Received: by mail-io1-f70.google.com with SMTP id f8so327040iow.7
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 11:18:21 -0700 (PDT)
+        Wed, 2 Sep 2020 14:19:40 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B36EC061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 11:19:38 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y11so331893lfl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 11:19:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4UOQrf/1Zuzh+bE0/siV6+xA8AEKujMA/kbnLKMMbYE=;
+        b=S0L8enuhf0rblLouu8TzfTWlxrEfFtsBaukqEHzPXCMsnPPkHfqx2B5lhfOBH4Y1dp
+         OS6eKvRVq7pHrnJg2iDw+kFEyA0yMb2GYevHYR6eLRg6yW5pWyPEd1qqvaX38pLOGrkx
+         oBEFq14DIcUd9FTycvG7PD8HTSJVm2Fz8Uh/fYKNL1IxIoGjKvEQo4QHJoC0w12yw1Du
+         2r72o2ZSp/cepht/QKjhKEp30RORtY5gkWn2mh38SRUsqpBdd2HWMIuqWDnhnKk2vuVw
+         0COx77sts5iz0dkm9PTir7u+yKcV9n7kk3nOdRCjU70Pnybq28GcyX5wnPaUTNJjfLWb
+         Du5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=cK3CWKmoLTK8XtOV6ppK2kthnvGS5AXhqjGaJqo+KkA=;
-        b=eZouro58NSwt92Rg66kQ+hJIGm4zw352qNNIqUNvmhhu1lASWD3Rge+JWvd1Vr4+W5
-         F5VN/eZEsMJ3bW1jKc/Jgh0+U5ZihOZT6CIRhxb6nYG9Lm+NlgV4saiHJKqcbDCnDQSN
-         36B4vs3o/mWo/WynsRuVVklVq794/1s3rpTd3Dje7LyQinzuJe0m3UdMz3/IichoYssE
-         xJ6zDkNgzD6zPSoohvuPxa3MLKcWxgjRZ6pJLoNaeJ59v+1JZELUCE94b3wVc5t0O1no
-         CzWVHVAzAy1B+wmCorrI7B8MKF+I+SW75YlRWMiR8u6H4pkV8YlmrZm3UB2WncZsjA/B
-         FL7A==
-X-Gm-Message-State: AOAM531np3z7vv55nWTE6wNMKq49YIW3Tg4pJKVpWydFLrJrdKQfJWfG
-        xAu+8x5hlobYUrloQd/wcGhIv/nlplHBLE9g28usDuFrV2t3
-X-Google-Smtp-Source: ABdhPJwRj3WGWI0ggBxZa82Ttr2hrMkMffTNT5rFzBnzuRcK3elghESc34kdHqR433BDavBXprWMY/7saEkS7GDUqZW6HdjGPR8q
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4UOQrf/1Zuzh+bE0/siV6+xA8AEKujMA/kbnLKMMbYE=;
+        b=r9LPgmxlsaLHcVphGF3VWAMsxkbt1InJ+oTMqloN0GV+hviwXJYe90aSW2/aBOhyy7
+         kgK+A/EVKn+MkaX+RuOLHh5yHV8rSLKqIm/44oP1qtzN2k985M5uz/rRUvXUO5nWYMPe
+         H/aEarO0fkXynKw8DcOn3W+p02x9WQGpB19NlNJsq0tMcsj9pe/F/1NMxdh5+ZvKTInE
+         kYed46pbwPHfSBlsDxg/SSZXB57lLgP9mwzs9WZZyc8iEE4hzqQtIGj0EyMl2AAsb0xL
+         I5TfKaeZKtzadjDU7YTEj0GyjChCU32CYXNfjsDgEQQZoooxcI0yPwbXubfPHo8Syvf6
+         /Tmg==
+X-Gm-Message-State: AOAM530F7h0tQKmcxdub8tVh0T6yzwgyHO7GYUtAyXA9jrl8+gGE1XcS
+        OdYMzrD0K/blmC3wPex2+1UfluOXJxfeLXtt0LQ=
+X-Google-Smtp-Source: ABdhPJwSHno7OsbhLnJ+OIt8i5OEtU8zgNQDmD01hPbOslBRByfSKa4JsB4q6UQKOFYAn7hpjEq2qR7VtOklr00Q344=
+X-Received: by 2002:a19:7e02:: with SMTP id z2mr3938053lfc.130.1599070776561;
+ Wed, 02 Sep 2020 11:19:36 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9d5a:: with SMTP id k26mr4349958iok.207.1599070701107;
- Wed, 02 Sep 2020 11:18:21 -0700 (PDT)
-Date:   Wed, 02 Sep 2020 11:18:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001c3dac05ae58a990@google.com>
-Subject: WARNING: ODEBUG bug in process_one_work (2)
-From:   syzbot <syzbot+91923aae0b157bd6c0c5@syzkaller.appspotmail.com>
-To:     elver@google.com, linux-kernel@vger.kernel.org,
-        miaoqinglang@huawei.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
+References: <20200823212550.3377591-1-nivedita@alum.mit.edu> <20200902153346.3296117-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200902153346.3296117-1-nivedita@alum.mit.edu>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Wed, 2 Sep 2020 20:19:25 +0200
+Message-ID: <CANiq72=jwj0xocJ7iAkntbnHDQphL79XcPREz1qpW0yqrMsz4g@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/asm: Replace __force_order with memory clobber
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Will Deacon <will@kernel.org>, nadav.amit@gmail.com,
+        Nathan Chancellor <natechancellor@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Sep 2, 2020 at 5:33 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> + * The compiler should not reorder volatile asm, however older versions of GCC
+> + * had a bug (which was fixed in 8.1, 7.3 and 6.5) where they could sometimes
+> + * reorder volatile asm. The write functions are not a problem since they have
+> + * memory clobbers preventing reordering. To prevent reads from being reordered
+> + * with respect to writes, use a dummy memory operand.
 
-syzbot found the following issue on:
+I see you added the information to the commit message, but I'd still
+reword this to something like:
 
-HEAD commit:    4d41ead6 Merge tag 'block-5.9-2020-08-28' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1196ce61900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
-dashboard link: https://syzkaller.appspot.com/bug?extid=91923aae0b157bd6c0c5
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11b1cbb6900000
+"The compiler should not reorder volatile asm, however GCC 4.9.x and
+5.x have a bug where they could sometimes reorder volatile asm. The
+bug was fixed in 8.1, 7.3 and 6.5. The write functions are not a
+problem since they have memory clobbers preventing reordering. To
+prevent reads from being reordered with respect to writes, use a dummy
+memory operand."
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+91923aae0b157bd6c0c5@syzkaller.appspotmail.com
+The important point is that 4.9.x and 5.x *have* the bug and that is
+the reason for having the hack. In the old wording it seems like the
+bug is no more. Then one wonders why the hack is still there (i.e.
+perhaps because we don't trust it, perhaps to support the rest of the
+minor versions which are newer, perhaps to avoid regressions, perhaps
+only the comment was updated, etc.).
 
-------------[ cut here ]------------
-ODEBUG: free active (active state 0) object type: timer_list hint: xprt_init_autodisconnect+0x0/0x150 include/linux/refcount.h:274
-WARNING: CPU: 1 PID: 8854 at lib/debugobjects.c:485 debug_print_object+0x160/0x250 lib/debugobjects.c:485
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 8854 Comm: kworker/1:10 Not tainted 5.9.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events kfree_rcu_work
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x4a kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
- exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:485
-Code: dd a0 26 94 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48 8b 14 dd a0 26 94 88 48 c7 c7 00 1c 94 88 e8 52 38 a6 fd <0f> 0b 83 05 53 4f 13 07 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
-RSP: 0018:ffffc9000b68fb28 EFLAGS: 00010082
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: ffff8880a216c300 RSI: ffffffff815dafc7 RDI: fffff520016d1f57
-RBP: 0000000000000001 R08: 0000000000000001 R09: ffff8880ae720f8b
-R10: 0000000000000000 R11: 0000000035383854 R12: ffffffff89be2ea0
-R13: ffffffff81638450 R14: dead000000000100 R15: dffffc0000000000
- __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
- debug_check_no_obj_freed+0x301/0x41c lib/debugobjects.c:998
- kmem_cache_free_bulk+0x9e/0x190 mm/slab.c:3718
- kfree_bulk include/linux/slab.h:411 [inline]
- kfree_rcu_work+0x506/0x8c0 kernel/rcu/tree.c:3150
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Cheers,
+Miguel
