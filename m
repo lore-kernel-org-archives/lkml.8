@@ -2,137 +2,254 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AA5C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 952D4C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76C15207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AAA5207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:53:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPJIJize"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgIBHwd (ORCPT
+        id S1726559AbgIBHxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:52:33 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:54928 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgIBHwc (ORCPT
+        Wed, 2 Sep 2020 03:53:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgIBHxQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:52:32 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 39712200FC89
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 15:52:31 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id AyR2w_x0saJr for <linux-kernel@vger.kernel.org>;
-        Wed,  2 Sep 2020 15:52:31 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 1AA67200FDFF
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 15:52:31 +0800 (HKT)
-Received: from [10.128.3.2] (061244237146.static.ctinets.com [61.244.237.146])
-        by s01.gtsys.com.hk (Postfix) with ESMTPSA id 0877CC01B69
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 15:52:31 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Subject: Re: v4.9.234, WARNING: CPU: 1 PID: 166 at
- kernel/locking/lockdep.c:3326
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <325dc67c-308d-d66f-23ee-a9857d82bb64@gtsys.com.hk>
-Message-ID: <32e4df66-5410-f7ac-0330-0ad34803d563@gtsys.com.hk>
-Date:   Wed, 2 Sep 2020 15:52:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Wed, 2 Sep 2020 03:53:16 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 217BBC061244;
+        Wed,  2 Sep 2020 00:53:16 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id f18so2387305pfa.10;
+        Wed, 02 Sep 2020 00:53:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LyVGVFWeGnGW5oXJW/+2ofmfwIGF+YTe8JQqIo5wBKU=;
+        b=lPJIJizehy2dCypNCUmL0krf9h4oqtpEYgnmT6xaA3bvSGxADn7U5C+pOdMCfYNiwz
+         xL/c7/Xfvs47EBCHtCirMrqdBzUkDWDcJ/gPz9Ng+xAvE0YToIatNVIHyCi6FeEXDCiH
+         gU2KyFXaepUfkaFuGsHQbhYm6NVqj5w2xTYevFp7UO/h2E5a3+Hi8642I7hROiehaOJ+
+         shapiS03WxupoRp/1/JPfGonzdN6KlD7dOFE9bMYNN43TL1iv9qaawRbH3+wWid2lUeM
+         7K+yU1gyuPnFtO0FnEhru8p+FJpaquE+qfhgROYkXowCUwn9CZiD0VAPzHkX5Ziel2O0
+         tlMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LyVGVFWeGnGW5oXJW/+2ofmfwIGF+YTe8JQqIo5wBKU=;
+        b=arHUY1SzXnXzA1ibl+JGSdJ/c8f2BSOpFGQjDR6F6stxGsiXCWwEtYcX8P5r5e9FzV
+         7q8JdrMNnoHa5eHTwSdzt9nSMvXzENn0qQirMXAFelEWdLRlYSeejQWDl9ZUat+C57Hs
+         buycn4Km66RkUtA/FHyGBsADfZ1W2oD1kXZVko2CHmFSpUb2+O/sKd85SdFyvyBg3wcg
+         rc+1pDi5zgifavJjIODC/cCgFkYp290wAYcW77VuSaOLWSs8ZoJ5eO9jsd59Iw1QRlxl
+         W73PtQ8mxXz8KwRoq4FvP1iXQvqqOigg6tRc8PFEws64BAwseWpcaOXt4/qalNqfRbtr
+         Jv9w==
+X-Gm-Message-State: AOAM530prCcss/FJ1IbFw7raTyBrq5jybXemUh9trFcHjF+FP8j5aCbm
+        IfuQGoNooHwoXg751XvhTqI=
+X-Google-Smtp-Source: ABdhPJzPNahkvNiSzoHbJgJRCZaQf5SeE5mE8X3hFOQB/JO1kHhsSN94D/JIm4GiynMq6Wn0s3LQHQ==
+X-Received: by 2002:a63:d409:: with SMTP id a9mr994667pgh.312.1599033195510;
+        Wed, 02 Sep 2020 00:53:15 -0700 (PDT)
+Received: from dc803.localdomain (flh2-125-196-131-224.osk.mesh.ad.jp. [125.196.131.224])
+        by smtp.gmail.com with ESMTPSA id j2sm4613593pga.12.2020.09.02.00.53.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 00:53:15 -0700 (PDT)
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+To:     kohada.t2@gmail.com
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] exfat: eliminate dead code in exfat_find()
+Date:   Wed,  2 Sep 2020 16:53:06 +0900
+Message-Id: <20200902075306.8439-1-kohada.t2@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <325dc67c-308d-d66f-23ee-a9857d82bb64@gtsys.com.hk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The exfat_find_dir_entry() called by exfat_find() doesn't return -EEXIST.
+Therefore, the root-dir information setting is never executed.
 
-after investigate, the eMMC of the board is damaged and triggers all 
-kind of funny exceptions.
+Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+---
+ fs/exfat/dir.c   |   1 -
+ fs/exfat/namei.c | 120 +++++++++++++++++++----------------------------
+ 2 files changed, 47 insertions(+), 74 deletions(-)
 
-If you not see any urgent bug, you might want to ignore this oops.
-
-Chris
-
-On 2/9/2020 1:39 pm, Chris Ruehl wrote:
-> Hi,
->
-> have a reproachable kernel crash oops after update to 4.9.234
-> IMX6DL boot process.
->
-> Regards
-> Chris
->
-> [  OK  ] Started Various fixups to make systemd work better on Debian.
-> [    3.635568] ------------[ cut here ]------------
-> [    3.640597] WARNING: CPU: 1 PID: 166 at 
-> kernel/locking/lockdep.c:3326 __lock_acquire+0x58c/0x1cf0
-> [    3.649480] DEBUG_LOCKS_WARN_ON(class_idx > MAX_LOCKDEP_KEYS)[ 
-> 3.655058] Modules linked in:
-> [    3.658131] CPU: 1 PID: 166 Comm: systemd-cgroups Not tainted 
-> 4.9.234 #57
-> [    3.664927] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-> [    3.671458] Backtrace:
-> [    3.673949] [<c010b1c8>] (dump_backtrace) from [<c010b478>] 
-> (show_stack+0x18/0x1c)
-> [    3.681526]  r6:60000093 r5:00000000 r4:c0d1d434 r3:00000000
-> [    3.687202] [<c010b460>] (show_stack) from [<c03ab94c>] 
-> (dump_stack+0xf0/0x11c)
-> [    3.694528] [<c03ab85c>] (dump_stack) from [<c01246ac>] 
-> (__warn+0xec/0x104)
-> [    3.701498]  r8:00000cfe r7:00000009 r6:c0aebbc0 r5:00000000 
-> r4:ec86fd38 r3:00000001
-> [    3.709249] [<c01245c0>] (__warn) from [<c0124704>] 
-> (warn_slowpath_fmt+0x40/0x48)
-> [    3.716739]  r9:ee1c6560 r8:00000002 r7:ee1c6000 r6:c0d1d508 
-> r5:c14dc0ac r4:c0ae8f88
-> [    3.724492] [<c01246c8>] (warn_slowpath_fmt) from [<c0173080>] 
-> (__lock_acquire+0x58c/0x1cf0)
-> [    3.732933]  r3:c0aecb48 r2:c0ae8f88
-> [    3.736511]  r4:c3c3c50c
-> [    3.739052] [<c0172af4>] (__lock_acquire) from [<c0174c0c>] 
-> (lock_acquire+0x78/0x98)
-> [    3.746801]  r10:b6fa9000 r9:ee7a0480 r8:c0d51598 r7:00000001 
-> r6:00000080 r5:60000093
-> [    3.754632]  r4:00000000
-> [    3.757180] [<c0174b94>] (lock_acquire) from [<c080b2b8>] 
-> (_raw_spin_lock_irq+0x5c/0x6c)
-> [    3.765275]  r7:b6fa9000 r6:ed9fe118 r5:c01fbc08 r4:ed9fe118
-> [    3.770946] [<c080b25c>] (_raw_spin_lock_irq) from [<c01fbc08>] 
-> (__vma_link_file+0x80/0x98)
-> [    3.779299]  r5:ec9009f8 r4:ed9fe10c
-> [    3.782882] [<c01fbb88>] (__vma_link_file) from [<c01fc528>] 
-> (__vma_adjust+0xc4/0x664)
-> [    3.790803]  r6:ec900840 r5:ec900c08 r4:ec900c44 r3:ec9009f8
-> [    3.796471] [<c01fc464>] (__vma_adjust) from [<c01fcbe4>] 
-> (__split_vma+0x11c/0x1b8)
-> [    3.804133]  r10:b6fa9000 r9:00000000 r8:c0d51598 r7:b6fa9000 
-> r6:00000000 r5:ec900c08
-> [    3.811964]  r4:ec9009f8
-> [    3.814507] [<c01fcac8>] (__split_vma) from [<c01fd6ac>] 
-> (split_vma+0x28/0x34)
-> [    3.821736]  r9:00100073 r8:ee7a0480 r7:b6fa8000 r6:00000000 
-> r5:00000000 r4:ec900c08
-> [    3.829487] [<c01fd684>] (split_vma) from [<c0200114>] 
-> (mprotect_fixup+0x244/0x274)
-> [    3.837151] [<c01ffed0>] (mprotect_fixup) from [<c0200298>] 
-> (do_mprotect_pkey+0x154/0x20c)
-> [    3.845420]  r10:0000007d r9:b6fa9000 r8:00000005 r7:00000001 
-> r6:00000000 r5:00000001
-> [    3.853252]  r4:b6fa9000
-> [    3.855794] [<c0200144>] (do_mprotect_pkey) from [<c0200364>] 
-> (SyS_mprotect+0x14/0x18)
-> [    3.863717]  r9:ec86e000 r8:c0107c44 r7:0000007d r6:b6f8a250 
-> r5:b6fd3d98 r4:b6fd2c50
-> [    3.871469] [<c0200350>] (SyS_mprotect) from [<c0107a60>] 
-> (ret_fast_syscall+0x0/0x1c)
-> [    3.879306] ---[ end trace 890e4e38c95446ca ]---
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index 573659bfbc55..a9b13ae3f325 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -911,7 +911,6 @@ enum {
+ /*
+  * return values:
+  *   >= 0	: return dir entiry position with the name in dir
+- *   -EEXIST	: (root dir, ".") it is the root dir itself
+  *   -ENOENT	: entry with the name does not exist
+  *   -EIO	: I/O error
+  */
+diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
+index 0b12033e1577..b966b9120c9c 100644
+--- a/fs/exfat/namei.c
++++ b/fs/exfat/namei.c
+@@ -604,6 +604,8 @@ static int exfat_find(struct inode *dir, struct qstr *qname,
+ 	struct super_block *sb = dir->i_sb;
+ 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+ 	struct exfat_inode_info *ei = EXFAT_I(dir);
++	struct exfat_dentry *ep, *ep2;
++	struct exfat_entry_set_cache *es;
+ 
+ 	if (qname->len == 0)
+ 		return -ENOENT;
+@@ -629,91 +631,63 @@ static int exfat_find(struct inode *dir, struct qstr *qname,
+ 	dentry = exfat_find_dir_entry(sb, ei, &cdir, &uni_name,
+ 			num_entries, TYPE_ALL);
+ 
+-	if ((dentry < 0) && (dentry != -EEXIST))
++	if (dentry < 0)
+ 		return dentry; /* -error value */
+ 
+ 	memcpy(&info->dir, &cdir.dir, sizeof(struct exfat_chain));
+ 	info->entry = dentry;
+ 	info->num_subdirs = 0;
+ 
+-	/* root directory itself */
+-	if (unlikely(dentry == -EEXIST)) {
+-		int num_clu = 0;
++	es = exfat_get_dentry_set(sb, &cdir, dentry, ES_2_ENTRIES);
++	if (!es)
++		return -EIO;
++	ep = exfat_get_dentry_cached(es, 0);
++	ep2 = exfat_get_dentry_cached(es, 1);
++
++	info->type = exfat_get_entry_type(ep);
++	info->attr = le16_to_cpu(ep->dentry.file.attr);
++	info->size = le64_to_cpu(ep2->dentry.stream.valid_size);
++	if ((info->type == TYPE_FILE) && (info->size == 0)) {
++		info->flags = ALLOC_NO_FAT_CHAIN;
++		info->start_clu = EXFAT_EOF_CLUSTER;
++	} else {
++		info->flags = ep2->dentry.stream.flags;
++		info->start_clu =
++			le32_to_cpu(ep2->dentry.stream.start_clu);
++	}
+ 
+-		info->type = TYPE_DIR;
+-		info->attr = ATTR_SUBDIR;
+-		info->flags = ALLOC_FAT_CHAIN;
+-		info->start_clu = sbi->root_dir;
+-		memset(&info->crtime, 0, sizeof(info->crtime));
+-		memset(&info->mtime, 0, sizeof(info->mtime));
+-		memset(&info->atime, 0, sizeof(info->atime));
+-
+-		exfat_chain_set(&cdir, sbi->root_dir, 0, ALLOC_FAT_CHAIN);
+-		if (exfat_count_num_clusters(sb, &cdir, &num_clu))
+-			return -EIO;
+-		info->size = num_clu << sbi->cluster_size_bits;
++	exfat_get_entry_time(sbi, &info->crtime,
++			     ep->dentry.file.create_tz,
++			     ep->dentry.file.create_time,
++			     ep->dentry.file.create_date,
++			     ep->dentry.file.create_time_cs);
++	exfat_get_entry_time(sbi, &info->mtime,
++			     ep->dentry.file.modify_tz,
++			     ep->dentry.file.modify_time,
++			     ep->dentry.file.modify_date,
++			     ep->dentry.file.modify_time_cs);
++	exfat_get_entry_time(sbi, &info->atime,
++			     ep->dentry.file.access_tz,
++			     ep->dentry.file.access_time,
++			     ep->dentry.file.access_date,
++			     0);
++	exfat_free_dentry_set(es, false);
++
++	if (ei->start_clu == EXFAT_FREE_CLUSTER) {
++		exfat_fs_error(sb,
++			       "non-zero size file starts with zero cluster (size : %llu, p_dir : %u, entry : 0x%08x)",
++			       i_size_read(dir), ei->dir.dir, ei->entry);
++		return -EIO;
++	}
+ 
++	if (info->type == TYPE_DIR) {
++		exfat_chain_set(&cdir, info->start_clu,
++				EXFAT_B_TO_CLU(info->size, sbi), info->flags);
+ 		count = exfat_count_dir_entries(sb, &cdir);
+ 		if (count < 0)
+ 			return -EIO;
+ 
+-		info->num_subdirs = count;
+-	} else {
+-		struct exfat_dentry *ep, *ep2;
+-		struct exfat_entry_set_cache *es;
+-
+-		es = exfat_get_dentry_set(sb, &cdir, dentry, ES_2_ENTRIES);
+-		if (!es)
+-			return -EIO;
+-		ep = exfat_get_dentry_cached(es, 0);
+-		ep2 = exfat_get_dentry_cached(es, 1);
+-
+-		info->type = exfat_get_entry_type(ep);
+-		info->attr = le16_to_cpu(ep->dentry.file.attr);
+-		info->size = le64_to_cpu(ep2->dentry.stream.valid_size);
+-		if ((info->type == TYPE_FILE) && (info->size == 0)) {
+-			info->flags = ALLOC_NO_FAT_CHAIN;
+-			info->start_clu = EXFAT_EOF_CLUSTER;
+-		} else {
+-			info->flags = ep2->dentry.stream.flags;
+-			info->start_clu =
+-				le32_to_cpu(ep2->dentry.stream.start_clu);
+-		}
+-
+-		if (ei->start_clu == EXFAT_FREE_CLUSTER) {
+-			exfat_fs_error(sb,
+-				"non-zero size file starts with zero cluster (size : %llu, p_dir : %u, entry : 0x%08x)",
+-				i_size_read(dir), ei->dir.dir, ei->entry);
+-			exfat_free_dentry_set(es, false);
+-			return -EIO;
+-		}
+-
+-		exfat_get_entry_time(sbi, &info->crtime,
+-				ep->dentry.file.create_tz,
+-				ep->dentry.file.create_time,
+-				ep->dentry.file.create_date,
+-				ep->dentry.file.create_time_cs);
+-		exfat_get_entry_time(sbi, &info->mtime,
+-				ep->dentry.file.modify_tz,
+-				ep->dentry.file.modify_time,
+-				ep->dentry.file.modify_date,
+-				ep->dentry.file.modify_time_cs);
+-		exfat_get_entry_time(sbi, &info->atime,
+-				ep->dentry.file.access_tz,
+-				ep->dentry.file.access_time,
+-				ep->dentry.file.access_date,
+-				0);
+-		exfat_free_dentry_set(es, false);
+-
+-		if (info->type == TYPE_DIR) {
+-			exfat_chain_set(&cdir, info->start_clu,
+-				EXFAT_B_TO_CLU(info->size, sbi), info->flags);
+-			count = exfat_count_dir_entries(sb, &cdir);
+-			if (count < 0)
+-				return -EIO;
+-
+-			info->num_subdirs = count + EXFAT_MIN_SUBDIR;
+-		}
++		info->num_subdirs = count + EXFAT_MIN_SUBDIR;
+ 	}
+ 	return 0;
+ }
+-- 
+2.25.1
 
