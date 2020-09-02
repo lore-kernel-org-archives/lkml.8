@@ -2,236 +2,205 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC50C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 00:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CAFC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 00:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB04206EF
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 00:06:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AGx0FkZw"
+	by mail.kernel.org (Postfix) with ESMTP id EF31720C56
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 00:09:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599005395;
+	bh=ue8KFmWAURt4lhvOfblC/6hWxuPhGkaF5B0T2fLxa7I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=x4b5hd1NW7+QOwPg+JpMK9KWpaVGghJz9WpJLuL9UKVNVvI5sfVMQndTarkrR4bVJ
+	 XqjQ7F2xyQQZQoSnlZSFcurHHFluKGDsbMLe53mzBLnwCMAKuMIWRAKqc2QsoLNbRX
+	 tL+HhPzSJmtNgkkq8d0XQbi2sC4WKnSZSqogzBGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgIBAGd (ORCPT
+        id S1726559AbgIBAJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 20:06:33 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23091 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726173AbgIBAGa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 20:06:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599005188;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kPbgN8C2hSf8lczuc3BmoRLj5BPs9jBaa0Zgqfz+x2U=;
-        b=AGx0FkZwy8VNvbq0WMJES+UoZIkCCG/lSHD8vjj5zXuVFbMmsNALiX5oHosBAq4CA7eF3z
-        bgfeR1MTRqMRqY62yCPKVHfH/tvuk80XSZCxTVpW4P7HCYs7g6kqbULRUSuwGZT0fgaDGB
-        rF6CmeegmQGaQ1ClI8eOphTxcQP4ZvM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-185-xhEN1IAZNGWigmaVXOmS1w-1; Tue, 01 Sep 2020 20:06:26 -0400
-X-MC-Unique: xhEN1IAZNGWigmaVXOmS1w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 1 Sep 2020 20:09:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbgIBAJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 20:09:50 -0400
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 688631DDF6;
-        Wed,  2 Sep 2020 00:06:25 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E0D5C60BE2;
-        Wed,  2 Sep 2020 00:06:24 +0000 (UTC)
-Subject: Re: [PATCH] module: Add more error message for failed kernel module
- loading
-To:     Lucas De Marchi <lucas.de.marchi@gmail.com>
-Cc:     Qu Wenruo <wqu@suse.com>, lkml <linux-kernel@vger.kernel.org>,
-        linux-modules <linux-modules@vger.kernel.org>,
-        Rusty Russell <rusty@rustcorp.com.au>
-References: <20200829111437.96334-1-wqu@suse.com>
- <CAKi4VAJ_nZ9DT1Tm=uufbJPGgZJu+4j+DVVA9otv6oGXuD3jxg@mail.gmail.com>
- <df13d885-6f9d-dc8a-b850-8aa6ae6993eb@redhat.com>
- <CAKi4VAK4818=-FfSwG7jt-+CwY-3qEYrHfzZ45dTY948smOZ8g@mail.gmail.com>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <554c3764-526d-721b-69da-616ae22fdb70@redhat.com>
-Date:   Tue, 1 Sep 2020 20:06:24 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AD2020C56
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:09:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599005388;
+        bh=ue8KFmWAURt4lhvOfblC/6hWxuPhGkaF5B0T2fLxa7I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TMu2S3IzHfz+o6ohiqDLBmmcmE/E3rINy8vvAXGieza4ImIhAEf776UnghnDuHvzd
+         5RUSUwl4gq1gDaK4mi1DBXXH+ZDeKELWu02LXQKCNxeqTYN929b+1mZTWtyLPaPna1
+         +yVVQs19uJk+DPC0V7/4RRNdHi/w9iCHs5rjuS/c=
+Received: by mail-wm1-f42.google.com with SMTP id v4so2767089wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 17:09:48 -0700 (PDT)
+X-Gm-Message-State: AOAM531Y70Z0hh4+kK4oisbmPW8Qd713xH/Gp3RACpGDUL0lLifqSRJe
+        pR1i6+9BKzOD9v3PIZtVpeikTzDoSM7lDR6HJ+OqRA==
+X-Google-Smtp-Source: ABdhPJyyfibJgmTm5WYzNGqNFdu9nOVgGk+6VQWbLUP3cCSoL53YNiq4XcCEUyla/kGQQVBTYc7jpCQ/5AYmCiDL+Ho=
+X-Received: by 2002:a1c:7e02:: with SMTP id z2mr4078821wmc.138.1599005386776;
+ Tue, 01 Sep 2020 17:09:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKi4VAK4818=-FfSwG7jt-+CwY-3qEYrHfzZ45dTY948smOZ8g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <CALCETrWXvAMA7tQ3XZdAk2FixKfzQ_0fBmyNVyyPHVAomLvrWQ@mail.gmail.com>
+ <CAMzpN2hmR+0-Yse1csbiVOiqgZ0e+VRkCBBXUKoPSTSMOOOFAQ@mail.gmail.com>
+ <CALCETrXY1x0MReMoTOG2awcZvr4c7gp99JVNthK37vUUk-kyew@mail.gmail.com> <87k0xdjbtt.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87k0xdjbtt.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 1 Sep 2020 17:09:35 -0700
+X-Gmail-Original-Message-ID: <CALCETrUpjUPPvnPuS9fP4jgid7U_qdU_yTKSq9PjJ=z2w9HvHg@mail.gmail.com>
+Message-ID: <CALCETrUpjUPPvnPuS9fP4jgid7U_qdU_yTKSq9PjJ=z2w9HvHg@mail.gmail.com>
+Subject: Re: ptrace_syscall_32 is failing
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/1/20 4:17 PM, Lucas De Marchi wrote:
-> On Tue, Sep 1, 2020 at 12:56 PM Prarit Bhargava <prarit@redhat.com> wrote:
->>
->>
->>
->> On 9/1/20 2:50 PM, Lucas De Marchi wrote:
->>> On Sat, Aug 29, 2020 at 4:15 AM Qu Wenruo <wqu@suse.com> wrote:
->>>>
->>>> When kernel module loading failed, user space only get one of the
->>>> following error messages:
->>>> - -ENOEXEC
->>>>   This is the most confusing one. From corrupted ELF header to bad
->>>>   WRITE|EXEC flags check introduced by in module_enforce_rwx_sections()
->>>>   all returns this error number.
->>>>
->>>> - -EPERM
->>>>   This is for blacklisted modules. But mod doesn't do extra explain
->>>>   on this error either.
->>>>
->>>> - -ENOMEM
->>>>   The only error which needs no explain.
->>>>
->>>> This means, if a user got "Exec format error" from modprobe, it provides
->>>> no meaningful way for the user to debug, and will take extra time
->>>> communicating to get extra info.
->>>>
->>>> So this patch will add extra error messages for -ENOEXEC and -EPERM
->>>> errors, allowing user to do better debugging and reporting.
->>>>
->>>> Signed-off-by: Qu Wenruo <wqu@suse.com>
->>>> ---
->>>>  kernel/module.c | 11 +++++++++--
->>>>  1 file changed, 9 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/kernel/module.c b/kernel/module.c
->>>> index 1c5cff34d9f2..9f748c6eeb48 100644
->>>> --- a/kernel/module.c
->>>> +++ b/kernel/module.c
->>>> @@ -2096,8 +2096,12 @@ static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
->>>>         int i;
->>>>
->>>>         for (i = 0; i < hdr->e_shnum; i++) {
->>>> -               if ((sechdrs[i].sh_flags & shf_wx) == shf_wx)
->>>> +               if ((sechdrs[i].sh_flags & shf_wx) == shf_wx) {
->>>> +                       pr_err(
->>>> +                       "Module %s section %d has invalid WRITE|EXEC flags\n",
->>>> +                               mod->name, i);
->>>>                         return -ENOEXEC;
->>>> +               }
->>>>         }
->>>>
->>>>         return 0;
->>>> @@ -3825,8 +3829,10 @@ static int load_module(struct load_info *info, const char __user *uargs,
->>>>         char *after_dashes;
->>>>
->>>>         err = elf_header_check(info);
->>>> -       if (err)
->>>> +       if (err) {
->>>> +               pr_err("Module has invalid ELF header\n");
->>>>                 goto free_copy;
->>>> +       }
->>>>
->>>>         err = setup_load_info(info, flags);
->>>>         if (err)
->>>> @@ -3834,6 +3840,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
->>>>
->>>>         if (blacklisted(info->name)) {
->>>>                 err = -EPERM;
->>>> +               pr_err("Module %s is blacklisted\n", info->name);
->>>
->>> I wonder why would anyone actually add the blacklist to the command
->>> line like this and have no
->>> way to revert that back. This was introduced in
->>
->> Debug.  Debug.  Debug. ;)  The parameter was added to debug broken installations
->> and kernel boots.
->>
->>> be7de5f91fdc modules: Add kernel parameter to blacklist modules
->>> as a way to overcome broken initrd generation afaics.
->>
->> Not the generation of the initramfs, but blocking a module loaded during the
->> boot.  The installation may have failed and there's no easy way to then debug
->> what module was responsible for the failure.
-> 
-> if you are using initrd, then *inside* the initrd you should have the
-> /etc/modprobe.d/* file
-> you want. I said "broken initrd generation" because the tool should
-> put the file there, and
-> apparently for you it isn't.
-> 
-> Even if you don't have the file, you could use modprobe.blacklist= and
-> let the blacklist happen
-> in the userspace library rather than in the kernel. Module loading is
-> not like firmware loading
-> that happens without help from userspace.
-> 
->>
->>  Either kernel
->>> command line (using modprobe.blacklist)
->>> or /etc/modprobe.d options are honoured by libkmod and allow a
->>> sufficiently privileged user to bypass it.
->>>
->>
->> Both of those options only work if the filesystem is mounted IIRC.  It could be
->> the case that modprobe.blacklist now works earlier in the boot, however, I've
->> never used it because module_blacklist is the biggest and best hammer that I can
->> use to get through a broken installation or boot.
->>
->> In any case you're incorrectly assuming that the system has a filesystem on it.
->> That's not necessarily the case as I'll explain below.
->>
->>> +Rusty, +Prarit: is there anything this module parameter is covering
->>> that I'm missing?
->>
->> This is the situation I have repeatedly come across :  A system at a remote site
->> will not boot any flavor of Linux.  Since the system would not install the only
->> way to debug was to provide install images to workaround a module load failure.
->> As you can imagine that is a time consuming process as well as a bad end user
->> experience.
->>
->> I got so sick of it that I wrote the code above (well similar to it anyway --
->> thanks for the review Randy ;)) to add the module_blacklist parameter to make
->> debugging an uninstallable "bricked" system easier.
->>
->> It's come in handy in some unexpected ways.  We've had situations where modules
->> have loaded and corrupted memory and blacklisting them revealed that the modules
->> were responsible for the memory corruption.
-> 
-> ok... but this seems a reimplementation of modprobe.blacklist= option
-> in the kernel command line,
-> but in kernel space, with no way to remove it after the kernel is booted.
+On Tue, Sep 1, 2020 at 4:50 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
+> On Sun, Aug 30 2020 at 08:52, Andy Lutomirski wrote:
+> >> > [RUN]    SYSCALL
+> >> > [FAIL]    Initial args are wrong (nr=29, args=0 0 0 0 0 4289172732)
+> >> > [RUN]    SYSCALL
+> >> > [OK]    Args after SIGUSR1 are correct (ax = -514)
+> >> > [OK]    Child got SIGUSR1
+> >> > [RUN]    Step again
+> >> > [OK]    pause(2) restarted correctly
+> >>
+> >> Bisected to commit 0b085e68f407 ("x86/entry: Consolidate 32/64 bit
+> >> syscall entry").
+> >> It looks like it is because syscall_enter_from_user_mode() is called
+> >> before reading the 6th argument from the user stack.
+>
+> Bah.I don't know how I managed to miss that part and interestingly
+> enough that none of the robots caught that either
+>
+> > Thomas, can we revert the syscall_enter() and syscall_exit() part of
+> > the series?
+>
+> Hrm.
+>
+> > I think that they almost work for x86, but not quite as
+> > indicated by this bug.  Even if we imagine we can somehow hack around
+> > this bug, I imagine we're going to find other problems with this
+> > model, e.g. the potential upcoming exit problem I noted in my review.
+>
+> What's the upcoming problem?
 
-That's *EXACTLY* what I want.  I do not want modprobe (because of some
-misconfiguration) to load the module I've explicitly blacklisted.
+If we ever want to get single-stepping fully correct across syscalls,
+we might need to inject SIGTRAP on syscall return. This would be more
+awkward if we can't run instrumentable code after the syscall part of
+the syscall is done.
 
-P.
+>
+> > I really think the model should be:
+> >
+> > void do_syscall_whatever(...)
+> > {
+> >   irqentry_enter(...);
+> >   instrumentation_begin();
+> >
+> >   /* Do whatever arch ABI oddities are needed on entry. */
+> >
+> >   Then either:
+> >   syscall_begin(arch, nr, regs);
+> >   dispatch the syscall;
+> >   syscall_end(arch, nr, regs);
+> >
+> >   Or just:
+> >   generic_do_syscall(arch, nr, regs);
+> >
+> >   /* Do whatever arch ABI oddities are needed on exit from the syscall. */
+> >
+> >   instrumentation_end();
+> >   irqentry_exit(...);
+> > }
+>
+> I don't think we want that in general. The current variant is perfectly
+> fine for everything except the 32bit fast syscall nonsense. Also
+> irqentry_entry/exit is not equivalent to the syscall_enter/exit
+> counterparts.
 
-> Lucas De Marchi
-> 
->>
->> P.
->>
->>>
->>> For the changes here,
->>>
->>> Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
->>>
->>> thanks
->>> Lucas De Marchi
->>>
->>>>                 goto free_copy;
->>>>         }
->>>>
->>>> --
->>>> 2.27.0
->>>>
->>>
->>
-> 
+If there are any architectures in which actual work is needed to
+figure out whether something is a syscall in the first place, they'll
+want to do the usual kernel entry work before the syscall entry work.
+Maybe your patch actually makes this possible -- I haven't digested
+all the details yet.
 
+Who advised you to drop the arch parameter?
+
+> ---
+>  arch/x86/entry/common.c      |   29 ++++++++++++++++--------
+>  include/linux/entry-common.h |   51 +++++++++++++++++++++++++++++++++++--------
+>  kernel/entry/common.c        |   35 ++++++++++++++++++++++++-----
+>  3 files changed, 91 insertions(+), 24 deletions(-)
+>
+> --- a/arch/x86/entry/common.c
+> +++ b/arch/x86/entry/common.c
+> @@ -60,16 +60,10 @@
+>  #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
+>  static __always_inline unsigned int syscall_32_enter(struct pt_regs *regs)
+>  {
+> -       unsigned int nr = (unsigned int)regs->orig_ax;
+> -
+>         if (IS_ENABLED(CONFIG_IA32_EMULATION))
+>                 current_thread_info()->status |= TS_COMPAT;
+> -       /*
+> -        * Subtlety here: if ptrace pokes something larger than 2^32-1 into
+> -        * orig_ax, the unsigned int return value truncates it.  This may
+> -        * or may not be necessary, but it matches the old asm behavior.
+> -        */
+> -       return (unsigned int)syscall_enter_from_user_mode(regs, nr);
+> +
+> +       return (unsigned int)regs->orig_ax;
+>  }
+>
+>  /*
+> @@ -91,15 +85,29 @@ static __always_inline void do_syscall_3
+>  {
+>         unsigned int nr = syscall_32_enter(regs);
+>
+> +       /*
+> +        * Subtlety here: if ptrace pokes something larger than 2^32-1 into
+> +        * orig_ax, the unsigned int return value truncates it.  This may
+> +        * or may not be necessary, but it matches the old asm behavior.
+> +        */
+> +       nr = (unsigned int)syscall_enter_from_user_mode(regs, nr);
+> +
+>         do_syscall_32_irqs_on(regs, nr);
+>         syscall_exit_to_user_mode(regs);
+>  }
+>
+>  static noinstr bool __do_fast_syscall_32(struct pt_regs *regs)
+>  {
+> -       unsigned int nr = syscall_32_enter(regs);
+> +       unsigned int nr = syscall_32_enter(regs);
+>         int res;
+>
+> +       /*
+> +        * This cannot use syscall_enter_from_user_mode() as it has to
+> +        * fetch EBP before invoking any of the syscall entry work
+> +        * functions.
+> +        */
+> +       syscall_enter_from_user_mode_prepare(regs);
+
+I'm getting lost in all these "enter" functions...
