@@ -2,138 +2,117 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509DFC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EB9C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1102C2083B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:45:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599068711;
-	bh=RQZtL4W3u8ZFDrsxWq4Ue3tBbr4nUr6JJ8sRx70VO9A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GoBuo4T2PVOgiutJtHYoZ37O0CnzvsL9HHJpcEM5TVmkewEmqb7Z6nM/vMnxzVgTd
-	 AWgMuuKKgkNUQ675BwL33ll7jJsCy8+JoTRvhe8jCqMocd1RKHNVyYijfr1JnODfYj
-	 vUlTPNGXZ/WBFjgP2rcEe7oh8Pf4qtfzsF3i4y1E=
+	by mail.kernel.org (Postfix) with ESMTP id 371A02071B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Gf1h3sAq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgIBRpJ (ORCPT
+        id S1727801AbgIBRpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 13:45:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726355AbgIBRpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:45:08 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 039052071B;
-        Wed,  2 Sep 2020 17:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599068708;
-        bh=RQZtL4W3u8ZFDrsxWq4Ue3tBbr4nUr6JJ8sRx70VO9A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pUZDNf+XmtjX9At928xAss9mWj/SKPVKJ8s/EDlXREeZfdTuuDQC88Qrq2T+TyQPt
-         6KvnFE0zjihu+FhC1xswiwTyHlszEYw2GugQQ9vwa60vm8/O+UOpARv++nCP26z9NW
-         hmsSGfsFrAdE8w0SA7Do6ce2fCf1fk9HW3rxm49c=
-Received: by pali.im (Postfix)
-        id 02C807BF; Wed,  2 Sep 2020 19:45:05 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 19:45:05 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] phy: marvell: comphy: Convert internal SMCC firmware
- return codes to errno
-Message-ID: <20200902174505.wuflkak6dv57jxw6@pali>
-References: <20200902144344.16684-1-pali@kernel.org>
- <20200902144344.16684-2-pali@kernel.org>
- <20200902161328.GE3050651@lunn.ch>
- <20200902165652.cvb74kgxx5uejpta@pali>
- <20200902170010.GF3050651@lunn.ch>
- <20200902170525.ksovu7ah3wbotkim@pali>
- <20200902172029.GG3050651@lunn.ch>
+        Wed, 2 Sep 2020 13:45:17 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52892 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbgIBRpQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 13:45:16 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082HjBPq063683;
+        Wed, 2 Sep 2020 12:45:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599068711;
+        bh=YR8+4Y2NaPDsev1k+nCcCTn0vlAW0kNUzsYCCQAXhlk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Gf1h3sAqJ2PWr5aP2bT/dg/9TPdh8SmlBpL9XD03XXW+WctBoW12ftNorVeIkZbpq
+         RVTZSqGi+rEyuqpPRjmBpn33Sevocx2X+dA4eNp4gOeENOGc12YDOUBQBzLd6v2C7o
+         uxjlzUh9f2zP4CLmBMGWmL0IoRo8ZPhjxhGbFGM0=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082HjBxW005373;
+        Wed, 2 Sep 2020 12:45:11 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
+ 2020 12:45:11 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 2 Sep 2020 12:45:11 -0500
+Received: from [10.250.34.112] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082HjACV020018;
+        Wed, 2 Sep 2020 12:45:11 -0500
+Subject: Re: [PATCH 2/7] arm64: dts: ti: k3-am65*: Use generic clock for
+ serdes clock name
+To:     Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <lokeshvutla@ti.com>,
+        <grygorii.strashko@ti.com>, <nsekhar@ti.com>
+References: <20200901223059.14801-1-nm@ti.com>
+ <20200901223059.14801-3-nm@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <762671ff-d78a-95aa-2817-62d3ebed104e@ti.com>
+Date:   Wed, 2 Sep 2020 12:45:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200902172029.GG3050651@lunn.ch>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200901223059.14801-3-nm@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 02 September 2020 19:20:29 Andrew Lunn wrote:
-> On Wed, Sep 02, 2020 at 07:05:25PM +0200, Pali Rohár wrote:
-> > On Wednesday 02 September 2020 19:00:10 Andrew Lunn wrote:
-> > > > > > +	switch (ret) {
-> > > > > > +	case SMCCC_RET_SUCCESS:
-> > > > > > +		return 0;
-> > > > > > +	case SMCCC_RET_NOT_SUPPORTED:
-> > > > > > +		return -EOPNOTSUPP;
-> > > > > > +	default:
-> > > > > > +		return -EINVAL;
-> > > > > > +	}
-> > > > > >  }
-> > > > > 
-> > > > > Hi Pali
-> > > > > 
-> > > > > Maybe this should be a global helper translating SMCCC_RET_* into a
-> > > > > standard errno value?
-> > > > > 
-> > > > > 	 Andrew
-> > > > 
-> > > > Hello Andrew!
-> > > > 
-> > > > Well, I'm not sure if some standard global helper is the correct way for
-> > > > marvell comphy handler. It returns 0 for success and -1 on error when
-> > > > handler is not supported.
-> > > 
-> > > No, i was meaning just 
-> > > 
-> > > switch (ret) {
-> > > case SMCCC_RET_SUCCESS:
-> > > 	return 0;
-> > > case SMCCC_RET_NOT_SUPPORTED:
-> > > 	return -EOPNOTSUPP;
-> > > default:
-> > > 	return -EINVAL;
-> > > }
-> > 
-> > But this is not a complete generic helper. There are more generic SMCC
-> > return codes and generic helper should define and translate all of them.
+On 9/1/20 5:30 PM, Nishanth Menon wrote:
+> Use clock@ naming for nodes following standard conventions of device
+> tree (section 2.2.2 Generic Names recommendation in [1]).
 > 
-> /*
->  * Return codes defined in ARM DEN 0070A
->  * ARM DEN 0070A is now merged/consolidated into ARM DEN 0028 C
->  */
-> #define SMCCC_RET_SUCCESS			0
-> #define SMCCC_RET_NOT_SUPPORTED			-1
-> #define SMCCC_RET_NOT_REQUIRED			-2
-> #define SMCCC_RET_INVALID_PARAMETER		-3
+> [1] https://github.com/devicetree-org/devicetree-specification/tree/v0.3
+> 
+> Suggested-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Nishanth Menon <nm@ti.com>
 
-Routines can use also other custom return codes. These are IIRC just
-standard defined.
+Acked-by: Suman Anna <s-anna@ti.com>
 
-> I only see problems with SMCCC_RET_NOT_REQUIRED and what value to use
-> for it. Do you have any idea what is actually means? A parameter was
-> passed which was not required? Or that the call itself is not
-> required? Looking at the uses of it currently in the kernel, it does
-> not seem to be an actual error. So maybe just return 0?
+> ---
+>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> index 336d09d6fec7..03e28fc256de 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> @@ -327,12 +327,12 @@
+>  			reg = <0x00000210 0x4>;
+>  		};
+>  
+> -		serdes0_clk: serdes_clk@4080 {
+> +		serdes0_clk: clock@4080 {
+>  			compatible = "syscon";
+>  			reg = <0x00004080 0x4>;
+>  		};
+>  
+> -		serdes1_clk: serdes_clk@4090 {
+> +		serdes1_clk: clock@4090 {
+>  			compatible = "syscon";
+>  			reg = <0x00004090 0x4>;
+>  		};
+> 
 
-I'm not sure. That is why I wrote that larger discussion about generic
-helper is needed. There are for sure people who understand SMC better
-and have deep insight.
+Btw, there is also ehrpwm_tbclk alongside these nodes which is currently defined
+as a syscon, but is actually a clock.
 
-For Marvell comphy we cannot use return code -2 as success like 0.
+regards
+Suman
+
