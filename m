@@ -2,171 +2,94 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1255C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD47C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83F22208B3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67813208B3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:47:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599061671;
+	bh=KiXG3vPSX3QQONiOmnVN3l5DWGomJL+un/AUZiudI40=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YzPRqOq+rrUqfj4n11OfC4dL2jY1nZoE2bKv0zjhoy2IXxspObj8XySdqBIO+vs4Y
+	 3/ex7+DJ5w3BxIN14fFyTuWokrAJ7p/9+GcKnNVcsHib+Diyp0r5Z6FWPBG3IwgvnH
+	 AiwPG8PKM0uUb8TMse9cynSEzADnBFd2nkKfWVUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgIBPrr (ORCPT
+        id S1728601AbgIBPrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:47:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:38082 "EHLO foss.arm.com"
+        Wed, 2 Sep 2020 11:47:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbgIBNav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727065AbgIBNav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 09:30:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 510EE11B3;
-        Wed,  2 Sep 2020 06:30:36 -0700 (PDT)
-Received: from bogus (unknown [10.57.4.218])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD3AC3F68F;
-        Wed,  2 Sep 2020 06:30:34 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 14:30:32 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        dietmar.eggemann@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        valentin.schneider@arm.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/5] cpufreq: move invariance setter calls in cpufreq
- core
-Message-ID: <20200902133032.GG25462@bogus>
-References: <20200901205549.30096-1-ionela.voinescu@arm.com>
- <20200901205549.30096-3-ionela.voinescu@arm.com>
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4CF820709;
+        Wed,  2 Sep 2020 13:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599053437;
+        bh=KiXG3vPSX3QQONiOmnVN3l5DWGomJL+un/AUZiudI40=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=awKCJrmYIm5cDtXSBdmG87lZohTxj1yU2UyDGarMm5xwy6EL8HmJ2uIGOLNeW97yC
+         KMtXqMRsyxFqGsSG9523gOfAQUgRA5Cj7J412u9FAF8YsoxnygtxOV0ESBHeaN4X/L
+         iKfjVTcVCnXsGTU4DEACxGX0GUVuUd8PcggUm7aY=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E60CE40D3D; Wed,  2 Sep 2020 10:30:34 -0300 (-03)
+Date:   Wed, 2 Sep 2020 10:30:34 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Al Grant <al.grant@arm.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        David Ahern <dsahern@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Like Xu <like.xu@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Wei Li <liwei391@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf tools fixes for v5.9
+Message-ID: <20200902133034.GB3444345@kernel.org>
+References: <20200901224154.3436175-1-acme@kernel.org>
+ <CAHk-=wifL-04oOF3RAbX9Odyfgz4zc4dE=pq-QL+2C-aTxUmqw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200901205549.30096-3-ionela.voinescu@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAHk-=wifL-04oOF3RAbX9Odyfgz4zc4dE=pq-QL+2C-aTxUmqw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 09:55:46PM +0100, Ionela Voinescu wrote:
-> To properly scale its per-entity load-tracking signals, the task scheduler
-> needs to be given a frequency scale factor, i.e. some image of the current
-> frequency the CPU is running at. Currently, this scale can be computed
-> either by using counters (APERF/MPERF on x86, AMU on arm64), or by
-> piggy-backing on the frequency selection done by cpufreq.
+Em Tue, Sep 01, 2020 at 07:43:33PM -0700, Linus Torvalds escreveu:
+> On Tue, Sep 1, 2020 at 3:42 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > - The SNOOPX and REMOTE offsets in the data_src bitmask in perf records were
+> >   were both 37, SNOOPX is 38, fix it.
 > 
-> For the latter, drivers have to explicitly set the scale factor
-> themselves, despite it being purely boiler-plate code: the required
-> information depends entirely on the kind of frequency switch callback
-> implemented by the driver, i.e. either of: target_index(), target(),
-> fast_switch() and setpolicy().
+> The kernel uapi side thinks it's 37. What's up?
 > 
-> The fitness of those callbacks with regard to driving the Frequency
-> Invariance Engine (FIE) is studied below:
+>   $ git grep PERF_MEM_SNOOPX_SHIFT
 > 
-> target_index()
-> ==============
-> Documentation states that the chosen frequency "must be determined by
-> freq_table[index].frequency". It isn't clear if it *has* to be that
-> frequency, or if it can use that frequency value to do some computation
-> that ultimately leads to a different frequency selection. All drivers
-> go for the former, while the vexpress-spc-cpufreq has an atypical
-> implementation which is handled separately.
+> results in
 > 
-> Therefore, the hook works on the assumption the core can use
-> freq_table[index].frequency.
-> 
-> target()
-> =======
-> This has been flagged as deprecated since:
-> 
->   commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
-> 
-> It also doesn't have that many users:
-> 
->   gx-suspmod.c:439:       .target = cpufreq_gx_target,
->   s3c24xx-cpufreq.c:428:  .target = s3c_cpufreq_target,
->   intel_pstate.c:2528:    .target = intel_cpufreq_target,
->   cppc_cpufreq.c:401:     .target = cppc_cpufreq_set_target,
->   cpufreq-nforce2.c:371:  .target = nforce2_target,
->   sh-cpufreq.c:163:       .target = sh_cpufreq_target,
->   pcc-cpufreq.c:573:      .target = pcc_cpufreq_target,
-> 
-> Similarly to the path taken for target_index() calls in the cpufreq core
-> during a frequency change, all of the drivers above will mark the end of a
-> frequency change by a call to cpufreq_freq_transition_end().
-> 
-> Therefore, cpufreq_freq_transition_end() can be used as the location for
-> the arch_set_freq_scale() call to potentially inform the scheduler of the
-> frequency change.
-> 
-> This change maintains the previous functionality for the drivers that
-> implement the target_index() callback, while also adding support for the
-> few drivers that implement the deprecated target() callback.
-> 
-> fast_switch()
-> =============
-> This callback *has* to return the frequency that was selected.
-> 
-> setpolicy()
-> ===========
-> This callback does not have any designated way of informing what was the
-> end choice. But there are only two drivers using setpolicy(), and none
-> of them have current FIE support:
-> 
->   drivers/cpufreq/longrun.c:281:	.setpolicy	= longrun_set_policy,
->   drivers/cpufreq/intel_pstate.c:2215:	.setpolicy	= intel_pstate_set_policy,
-> 
-> The intel_pstate is known to use counter-driven frequency invariance.
-> 
-> Conclusion
-> ==========
-> 
-> Given that the significant majority of current FIE enabled drivers use
-> callbacks that lend themselves to triggering the setting of the FIE scale
-> factor in a generic way, move the invariance setter calls to cpufreq core.
-> 
-> As a result of setting the frequency scale factor in cpufreq core, after
-> callbacks that lend themselves to trigger it, remove this functionality
-> from the driver side.
-> 
-> To be noted that despite marking a successful frequency change, many
-> cpufreq drivers will consider the new frequency as the requested
-> frequency, although this is might not be the one granted by the hardware.
-> 
-> Therefore, the call to arch_set_freq_scale() is a "best effort" one, and
-> it is up to the architecture if the new frequency is used in the new
-> frequency scale factor setting (determined by the implementation of
-> arch_set_freq_scale()) or eventually used by the scheduler (determined
-> by the implementation of arch_scale_freq_capacity()). The architecture
-> is in a better position to decide if it has better methods to obtain
-> more accurate information regarding the current frequency and use that
-> information instead (for example, the use of counters).
-> 
-> Also, the implementation to arch_set_freq_scale() will now have to handle
-> error conditions (current frequency == 0) in order to prevent the
-> overhead in cpufreq core when the default arch_set_freq_scale()
-> implementation is used.
-> 
-> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> Suggested-by: Valentin Schneider <valentin.schneider@arm.com>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/cpufreq-dt.c           | 10 +---------
->  drivers/cpufreq/cpufreq.c              | 12 +++++++++++-
->  drivers/cpufreq/qcom-cpufreq-hw.c      |  9 +--------
-[...]
+>   include/uapi/linux/perf_event.h:#define PERF_MEM_SNOOPX_SHIFT   37
+>   tools/include/uapi/linux/perf_event.h:#define PERF_MEM_SNOOPX_SHIFT     38
 
->  drivers/cpufreq/scmi-cpufreq.c         | 12 ++----------
->  drivers/cpufreq/scpi-cpufreq.c         |  6 +-----
->  drivers/cpufreq/vexpress-spc-cpufreq.c | 12 ++----------
+Its going in a separate patch, via PeterZ/Ingo,
 
-For above 3 files:
-
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-
--- 
-Regards,
-Sudeep
+- Arnaldo
