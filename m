@@ -2,127 +2,110 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 079A8C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA6AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DACE520684
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A1A20684
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgIBRSl (ORCPT
+        id S1726937AbgIBRUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 13:18:41 -0400
-Received: from mga09.intel.com ([134.134.136.24]:56326 "EHLO mga09.intel.com"
+        Wed, 2 Sep 2020 13:20:43 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:38596 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgIBRSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:18:39 -0400
-IronPort-SDR: gLKFtaL182QBwxE+YYFI2uu5U6CcKz3xjE+MLLcBWoDf+c+VeRDpKaFuXISytDhIuo5XuzElSJ
- uBHTiqciCvxQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="158430543"
-X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
-   d="scan'208";a="158430543"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 10:18:38 -0700
-IronPort-SDR: YDPFSSbOya9rBg9hV15zra8Va0D5v9/mKLrAGTb11lGWhCb9FT28lTIbV8258lXq3NL/zo3ggm
- s+mqJc+eBcrg==
-X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
-   d="scan'208";a="301914303"
-Received: from smutinda-mobl.amr.corp.intel.com (HELO [10.209.22.190]) ([10.209.22.190])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 10:18:38 -0700
-Subject: Re: [RFC PATCH] tools/x86: add kcpuid tool to show raw CPU features
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1598514543-90152-1-git-send-email-feng.tang@intel.com>
- <20200902154018.GA21537@zn.tnic>
- <5ef17179-7557-b609-2e72-20caa1369d46@intel.com>
- <20200902165216.GB21537@zn.tnic>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <98adc930-00e2-67c8-4ba3-fcb1af3aafd2@intel.com>
-Date:   Wed, 2 Sep 2020 10:18:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726140AbgIBRUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 13:20:42 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kDWQv-00Cv40-OY; Wed, 02 Sep 2020 19:20:29 +0200
+Date:   Wed, 2 Sep 2020 19:20:29 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] phy: marvell: comphy: Convert internal SMCC firmware
+ return codes to errno
+Message-ID: <20200902172029.GG3050651@lunn.ch>
+References: <20200902144344.16684-1-pali@kernel.org>
+ <20200902144344.16684-2-pali@kernel.org>
+ <20200902161328.GE3050651@lunn.ch>
+ <20200902165652.cvb74kgxx5uejpta@pali>
+ <20200902170010.GF3050651@lunn.ch>
+ <20200902170525.ksovu7ah3wbotkim@pali>
 MIME-Version: 1.0
-In-Reply-To: <20200902165216.GB21537@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200902170525.ksovu7ah3wbotkim@pali>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 9:52 AM, Borislav Petkov wrote:
->> I was *really* hoping that we could eventually feed kcpuid and the
->> X86_FEATURE_* bits from the same source.
-> But X86_FEATURE_* won't be all bits in all CPUID leafs - only the ones the
-> kernel has enabled/use for/needs/...
+On Wed, Sep 02, 2020 at 07:05:25PM +0200, Pali Rohár wrote:
+> On Wednesday 02 September 2020 19:00:10 Andrew Lunn wrote:
+> > > > > +	switch (ret) {
+> > > > > +	case SMCCC_RET_SUCCESS:
+> > > > > +		return 0;
+> > > > > +	case SMCCC_RET_NOT_SUPPORTED:
+> > > > > +		return -EOPNOTSUPP;
+> > > > > +	default:
+> > > > > +		return -EINVAL;
+> > > > > +	}
+> > > > >  }
+> > > > 
+> > > > Hi Pali
+> > > > 
+> > > > Maybe this should be a global helper translating SMCCC_RET_* into a
+> > > > standard errno value?
+> > > > 
+> > > > 	 Andrew
+> > > 
+> > > Hello Andrew!
+> > > 
+> > > Well, I'm not sure if some standard global helper is the correct way for
+> > > marvell comphy handler. It returns 0 for success and -1 on error when
+> > > handler is not supported.
+> > 
+> > No, i was meaning just 
+> > 
+> > switch (ret) {
+> > case SMCCC_RET_SUCCESS:
+> > 	return 0;
+> > case SMCCC_RET_NOT_SUPPORTED:
+> > 	return -EOPNOTSUPP;
+> > default:
+> > 	return -EINVAL;
+> > }
 > 
-> Also you have CPUID fields which are multi-bit and which cannot be
-> X86_FEATURE_* things.
-> 
-> So you need a place which has the whole CPUID space and X86_FEATURE_*
-> simply cannot represent it all.
+> But this is not a complete generic helper. There are more generic SMCC
+> return codes and generic helper should define and translate all of them.
 
-All good points.
+/*
+ * Return codes defined in ARM DEN 0070A
+ * ARM DEN 0070A is now merged/consolidated into ARM DEN 0028 C
+ */
+#define SMCCC_RET_SUCCESS			0
+#define SMCCC_RET_NOT_SUPPORTED			-1
+#define SMCCC_RET_NOT_REQUIRED			-2
+#define SMCCC_RET_INVALID_PARAMETER		-3
 
-Personally, I think I'd be OK if kcpuid _focused_ on single-bit values
-only.  Those are the vast majority of the things that we need from such
-a tool.  I don't think there's nearly as much demand for the topology
-enumeration or TLB structure leaf parsing.
+I only see problems with SMCCC_RET_NOT_REQUIRED and what value to use
+for it. Do you have any idea what is actually means? A parameter was
+passed which was not required? Or that the call itself is not
+required? Looking at the uses of it currently in the kernel, it does
+not seem to be an actual error. So maybe just return 0?
 
-I also kinda doubt we can come up with a file format off the top of our
-heads that can represent all the ways data is represented in the CPUID
-space.  Single bits, sure.
+	Andrew
