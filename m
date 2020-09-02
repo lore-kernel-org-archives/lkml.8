@@ -2,166 +2,94 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F97C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1A9C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0860020639
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:45:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OZCfuR5h"
+	by mail.kernel.org (Postfix) with ESMTP id 28D8F204FD
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:45:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599061532;
+	bh=ijBnkVVdcjhZXwue0wkoqqh2MPDtx6F6WJZtVrmduIE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hbeFt4hbZVbTMECesXLImwne+l9TN3w6iKdFY4uw2Vh3iAR0jBwGekmQb783qKR4j
+	 VkO1Bj7TP2dehdey66rT8+2Dd2CM2RtiGObzG1MRVDP+8P9QrqMaRheQJpUuzfQsYZ
+	 DEG/PWz3/VFji7YkaWc9ZuD4d5RtB01yh1TmmDf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgIBPo7 (ORCPT
+        id S1726858AbgIBPpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:44:59 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50429 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728400AbgIBPoo (ORCPT
+        Wed, 2 Sep 2020 11:45:30 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:45321 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728479AbgIBPpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:44:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599061482;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IeD2eb+VWg5M7oUOKQXGVzViS6gT7J8CCXVfRF+579k=;
-        b=OZCfuR5hHwjKjvYOu918RLihhqkIHLU+PkGkZWUs5Vn98MAue51UxWDdWhdWMZBwd/y3iI
-        l1ZVgkJtWxlcowJIMz91Lagowg9tHyirtAxK/+19bjPN0M3Cv7D/0V7CguZVeEAp7ORpaT
-        0BMqmGtlCcIyfXiQTcCzJif7TZs8ysM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-460-gjU1a_hpMMef0Lw4gx0kRQ-1; Wed, 02 Sep 2020 11:44:41 -0400
-X-MC-Unique: gjU1a_hpMMef0Lw4gx0kRQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ED54610ABDB1;
-        Wed,  2 Sep 2020 15:44:39 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-6.rdu2.redhat.com [10.10.113.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D77025D9CC;
-        Wed,  2 Sep 2020 15:44:38 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 3/6] mm: Push readahead_control down into
- force_page_cache_readahead() [ver #2]
-From:   David Howells <dhowells@redhat.com>
-To:     willy@infradead.org
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Date:   Wed, 02 Sep 2020 16:44:38 +0100
-Message-ID: <159906147806.663183.767620073654469472.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159906145700.663183.3678164182141075453.stgit@warthog.procyon.org.uk>
-References: <159906145700.663183.3678164182141075453.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        Wed, 2 Sep 2020 11:45:20 -0400
+Received: by mail-ej1-f68.google.com with SMTP id i26so7289020ejb.12;
+        Wed, 02 Sep 2020 08:45:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CbjBKHsNFYbmhkSKiXfeqKeTOD9op4yW4EQUpwppWSE=;
+        b=QnYSLrjJY9sFpJ+dixZx5uad8EIIplx8kvVmC/kz41Bls/j8v8YYwwwtbPu6JPUqkL
+         eGgmpDZMShpK/7/ncnj5c3qIYkapyAWeabF0FC4uoakUpuErBR18Mul9esXML6eoJoh+
+         cWhe2TAn/MYy37XsCZRDZCKN2hl6BmjPdhP/LiOArMiCxLVq+/k8CMJIL614HksVgOcD
+         oKAjZM1GDwii9sqEKYdFwNVH7wHBlkLrpZuD4amUY+ntaS/sfczCiUlDaANwLpMKsuju
+         Z4ss+ewNPQFnvcYeWKqyJ/stMSNsf24IrGFkyEfvYg1dE88ahKrWA0THPA4gWUAsUb4K
+         C7bQ==
+X-Gm-Message-State: AOAM531yeXwkqUfNrVyXfDEkYtWY+D3oyh8P2bRo01bVtvJ1sHVqCKTk
+        bJ+WVj4jx/wWNJdwCUcYFek=
+X-Google-Smtp-Source: ABdhPJxbrSCvE1jscskVpGAgJwHs/4bDMu2P/ON+hkWK12T/tM8tjNPSmxTEbAY2t2HS35m9Q9iDnA==
+X-Received: by 2002:a17:906:a242:: with SMTP id bi2mr639084ejb.122.1599061506936;
+        Wed, 02 Sep 2020 08:45:06 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.106])
+        by smtp.googlemail.com with ESMTPSA id l10sm4551399edr.12.2020.09.02.08.45.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 02 Sep 2020 08:45:06 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 17:45:03 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Denis GNUtoo Carikli <GNUtoo@cyberdimension.org>,
+        Simon Shields <simon@lineageos.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>
+Subject: Re: [PATCH 22/33] ARM: dts: exynos: Align MHL GPIO pin configuration
+ with dtschema on Galaxy I9100
+Message-ID: <20200902154503.GD21503@kozik-lap>
+References: <20200830135200.24304-1-krzk@kernel.org>
+ <20200830135200.24304-22-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200830135200.24304-22-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Push readahead_control down into force_page_cache_readahead() from its
-callers in preparation for making do_sync_mmap_readahead() pass down an RAC
-struct.
+On Sun, Aug 30, 2020 at 03:51:49PM +0200, Krzysztof Kozlowski wrote:
+> Align the name of mag-mhl-gpio node to avoid dtschema confusion and
+> dtbs_check warning:
+> 
+>   arch/arm/boot/dts/exynos4210-i9100.dt.yaml: pinctrl@11000000: mag-mhl-gpio:
+>     {'samsung,pins': ['gpd0-2'], 'samsung,pin-function': [[3]], 'samsung,pin-pud': [[0]]} is not of type 'array'
+>     From schema: dtschema/schemas/gpio/gpio-consumer.yaml
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/exynos4210-i9100.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+Applied 13-22.
 
- mm/fadvise.c   |    5 ++++-
- mm/internal.h  |    3 +--
- mm/readahead.c |   19 +++++++++++--------
- 3 files changed, 16 insertions(+), 11 deletions(-)
-
-diff --git a/mm/fadvise.c b/mm/fadvise.c
-index 0e66f2aaeea3..997f7c16690a 100644
---- a/mm/fadvise.c
-+++ b/mm/fadvise.c
-@@ -104,7 +104,10 @@ int generic_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
- 		if (!nrpages)
- 			nrpages = ~0UL;
- 
--		force_page_cache_readahead(mapping, file, start_index, nrpages);
-+		{
-+			DEFINE_READAHEAD(rac, file, mapping, start_index);
-+			force_page_cache_readahead(&rac, nrpages);
-+		}
- 		break;
- 	case POSIX_FADV_NOREUSE:
- 		break;
-diff --git a/mm/internal.h b/mm/internal.h
-index bf2bee6c42a1..c8ccf208f524 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -49,8 +49,7 @@ void unmap_page_range(struct mmu_gather *tlb,
- 			     unsigned long addr, unsigned long end,
- 			     struct zap_details *details);
- 
--void force_page_cache_readahead(struct address_space *, struct file *,
--		pgoff_t index, unsigned long nr_to_read);
-+void force_page_cache_readahead(struct readahead_control *, unsigned long);
- void __do_page_cache_readahead(struct readahead_control *,
- 		unsigned long nr_to_read, unsigned long lookahead_size);
- 
-diff --git a/mm/readahead.c b/mm/readahead.c
-index e3e3419dfe3d..366357e6e845 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -271,13 +271,13 @@ void __do_page_cache_readahead(struct readahead_control *rac,
-  * Chunk the readahead into 2 megabyte units, so that we don't pin too much
-  * memory at once.
-  */
--void force_page_cache_readahead(struct address_space *mapping,
--		struct file *file, pgoff_t index, unsigned long nr_to_read)
-+void force_page_cache_readahead(struct readahead_control *rac,
-+		unsigned long nr_to_read)
- {
--	DEFINE_READAHEAD(rac, file, mapping, index);
-+	struct address_space *mapping = rac->mapping;
- 	struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
--	struct file_ra_state *ra = &file->f_ra;
--	unsigned long max_pages;
-+	struct file_ra_state *ra = &rac->file->f_ra;
-+	unsigned long max_pages, index;
- 
- 	if (unlikely(!mapping->a_ops->readpage && !mapping->a_ops->readpages &&
- 			!mapping->a_ops->readahead))
-@@ -287,14 +287,17 @@ void force_page_cache_readahead(struct address_space *mapping,
- 	 * If the request exceeds the readahead window, allow the read to
- 	 * be up to the optimal hardware IO size
- 	 */
-+	index = readahead_index(rac);
- 	max_pages = max_t(unsigned long, bdi->io_pages, ra->ra_pages);
--	nr_to_read = min(nr_to_read, max_pages);
-+	nr_to_read = min_t(unsigned long, nr_to_read, max_pages);
- 	while (nr_to_read) {
- 		unsigned long this_chunk = (2 * 1024 * 1024) / PAGE_SIZE;
- 
- 		if (this_chunk > nr_to_read)
- 			this_chunk = nr_to_read;
--		__do_page_cache_readahead(&rac, this_chunk, 0);
-+
-+		rac->_index = index;
-+		__do_page_cache_readahead(rac, this_chunk, 0);
- 
- 		index += this_chunk;
- 		nr_to_read -= this_chunk;
-@@ -656,7 +659,7 @@ void page_cache_sync_readahead(struct address_space *mapping,
- 
- 	/* be dumb */
- 	if (filp && (filp->f_mode & FMODE_RANDOM)) {
--		force_page_cache_readahead(mapping, filp, index, req_count);
-+		force_page_cache_readahead(&rac, req_count);
- 		return;
- 	}
- 
-
+Best regards,
+Krzysztof
 
