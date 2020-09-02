@@ -2,195 +2,131 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75337C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F16BC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 534F820826
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5959420826
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:06:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="QD2RkVw0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgIBHF6 (ORCPT
+        id S1726821AbgIBHGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:05:58 -0400
-Received: from www62.your-server.de ([213.133.104.62]:49792 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgIBHFy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:05:54 -0400
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1kDMpt-00068Z-2o; Wed, 02 Sep 2020 09:05:37 +0200
-Received: from [178.196.57.75] (helo=pc-9.home)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1kDMps-0004LC-LM; Wed, 02 Sep 2020 09:05:36 +0200
-Subject: Re: KASAN: use-after-free Write in xp_put_pool
-To:     syzbot <syzbot+5334f62e4d22804e646a@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, andriin@fb.com, ast@kernel.org,
-        bjorn.topel@intel.com, bpf@vger.kernel.org, davem@davemloft.net,
-        hawk@kernel.org, john.fastabend@gmail.com,
-        jonathan.lemon@gmail.com, kafai@fb.com, kpsingh@chromium.org,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        magnus.karlsson@intel.com, mingo@kernel.org,
-        netdev@vger.kernel.org, paulmck@kernel.org, peterz@infradead.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, yhs@fb.com
-References: <000000000000bcdbb005ae4f25ce@google.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <7795503d-e112-cc26-81d8-c7a9692675b0@iogearbox.net>
-Date:   Wed, 2 Sep 2020 09:05:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 2 Sep 2020 03:06:13 -0400
+Received: from mail-mw2nam10on2074.outbound.protection.outlook.com ([40.107.94.74]:59041
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726310AbgIBHGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 03:06:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bs1hr1MRIIOUaXRUGYTKnMYQ1Elqx5GXS7Ni28Db7qokeFL0vpQKmJfkp2jLWjku1AdmbVPkyivd65HYTrEDVm3AbXX93frLmk3OutSkgr4DqGiEDZbajLoXpKN84Vm4jZQsVJ7MKzyUuYOQzyTXZPMS42s+aySrdr/B+BYcF6LrgZd7Tp1lP1fPrFNDVaju/jJ1GE3eqhOAh+jM15hhFu08VrJjFEdkGPLcZFj6etv1oU3BRSSEL21grlghzirCiUMfJFClce8efvdZkR3AS9BP+fKhLCHebx+beR7gZntwpATfbHRaJ2oljFtJiKKApXU/TkNSUuV8zrLvK5FVfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3+pKfQ6Bw8b1c02d89GwZAgSlUe3x4w8rGFSDPE0R3Q=;
+ b=F/fvTxEP8hivVkNlFgJyy4s/ETE6L98erRQZcSH7eEgz8Vpv6oDuZvl1HJCFjPQw9Ric/pFpOfHQAarzzw+jz6yrxmh7xW9O8vmQbndC0wH5fDw0ASKnNo+1xlPgCyPC7tAzNGHlaZrSS2z0/DWhEupitidzOhEEY5FyByXvSwgmsaeI5jNmO1PzdjjItWE3tP4y0VRnCyhP33Req8b9jMYKOyxWrFEWVU3GKQ6gFNgv6wKUysEkhcosf9KkqYSDNcYbD2PujrvIwws2zJesRwftduog4Ag0HRNwh5BORIWGMB2KbjM5BPppJCqyc2PYYmXxSgK1C1bwyhA1oiwBPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3+pKfQ6Bw8b1c02d89GwZAgSlUe3x4w8rGFSDPE0R3Q=;
+ b=QD2RkVw0Ba7K8j5UGqrk1zR5YUWL9e+5kQn8uN9yI5oClzsVzAhpSrgclfF5wP98Gvb/rcvpGRomWdzGH+4bbE/35Oskqb3/Gfgd1J0U+D1rxNAuCTm2n0l5h1kGOCfpYYEYwCqmIbskXQ7AoU0Fxi6z4JRyUr2GgI8ObqQqbAY=
+Received: from CY4PR2201CA0008.namprd22.prod.outlook.com
+ (2603:10b6:910:5f::18) by BN6PR02MB3364.namprd02.prod.outlook.com
+ (2603:10b6:405:63::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.21; Wed, 2 Sep
+ 2020 07:05:58 +0000
+Received: from CY1NAM02FT039.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:910:5f:cafe::9e) by CY4PR2201CA0008.outlook.office365.com
+ (2603:10b6:910:5f::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
+ Transport; Wed, 2 Sep 2020 07:05:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT039.mail.protection.outlook.com (10.152.75.140) with Microsoft SMTP
+ Server id 15.20.3326.19 via Frontend Transport; Wed, 2 Sep 2020 07:05:57
+ +0000
+Received: from [149.199.38.66] (port=38190 helo=smtp.xilinx.com)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <piyush.mehta@xilinx.com>)
+        id 1kDMq9-0005aM-Bs; Wed, 02 Sep 2020 00:05:53 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by smtp.xilinx.com with smtp (Exim 4.63)
+        (envelope-from <piyush.mehta@xilinx.com>)
+        id 1kDMqD-0002GP-Ew; Wed, 02 Sep 2020 00:05:57 -0700
+Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 08275tZk004135;
+        Wed, 2 Sep 2020 00:05:55 -0700
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <piyush.mehta@xilinx.com>)
+        id 1kDMqA-0002Ee-Nd; Wed, 02 Sep 2020 00:05:55 -0700
+From:   Piyush Mehta <piyush.mehta@xilinx.com>
+To:     axboe@kernel.dk, p.zabel@pengutronix.de, robh+dt@kernel.org
+Cc:     linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com, sgoud@xilinx.com,
+        michal.simek@xilinx.com, Piyush Mehta <piyush.mehta@xilinx.com>
+Subject: [PATCH 0/2] ata: ahci: ceva: Update the driver to support xilinx GT phy
+Date:   Wed,  2 Sep 2020 12:35:46 +0530
+Message-Id: <1599030348-3334-1-git-send-email-piyush.mehta@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
-In-Reply-To: <000000000000bcdbb005ae4f25ce@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.4/25917/Tue Sep  1 15:24:01 2020)
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: e564ad56-0b80-4fa8-70e0-08d84f0ea457
+X-MS-TrafficTypeDiagnostic: BN6PR02MB3364:
+X-Microsoft-Antispam-PRVS: <BN6PR02MB336475ACC8734CDDBABBF936D42F0@BN6PR02MB3364.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: g4SuJnW42jhTOLGOcV/gQ8VSlAY1/HNwwGzbNpuRbvXEMMb8RCU4L+7T1SrLGB6d0fXqZz6+NnqsI3iDERIk1VQ4Oa4M8ayA30sybbHnwaV16AT2yPjDgmwPSkqXHdHMOVeWWvhpI0Xgy2Udx4fbadi4WzYzXpUBIj25HLsvN/xmAwZHli+aUf0msM6AMlJHGk/h7Bl2na8VIl04BDS/FIqX6fd//5jfnqJUcNC5iJHJnhwnExWbZxwOyQTc4JnK8Goo0FgUeyPoexH9XIaTOeZJ1Vt5D48AdvXqQsO0kxe3IBUPOsmrXCVqV8DygKYvREfuLNiTPcxCUj7NfMDXH+wXelUseg0ovauoqunab4D65ogRFLcaoZFVfcdWImq48Hynr6x/h8JH9F+PsOEwFQ==
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(136003)(376002)(346002)(39860400002)(396003)(46966005)(336012)(8936002)(186003)(8676002)(70206006)(83380400001)(82310400003)(356005)(82740400003)(478600001)(70586007)(81166007)(4744005)(6666004)(47076004)(5660300002)(9786002)(4326008)(316002)(2906002)(15650500001)(44832011)(107886003)(36756003)(26005)(7696005)(2616005)(426003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2020 07:05:57.8155
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e564ad56-0b80-4fa8-70e0-08d84f0ea457
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT039.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB3364
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 8:57 AM, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
+This patch series updates the ceva driver to add support for Xilinx GT phy.
+This also updates the documentation with the device tree binding required
+for working with Xilinx GT phy.
 
-Magnus/Bjorn, ptal, thanks!
+Piyush Mehta (2):
+  ata: ahci: ceva: Update the driver to support xilinx GT phy
+  dt-bindings: ata: achi: ceva: Update documentation for CEVA Controller
 
-> HEAD commit:    dc1a9bf2 octeontx2-pf: Add UDP segmentation offload support
-> git tree:       net-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16ff67de900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b6856d16f78d8fa9
-> dashboard link: https://syzkaller.appspot.com/bug?extid=5334f62e4d22804e646a
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e9f279900000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=125f3e1e900000
-> 
-> The issue was bisected to:
-> 
-> commit a1132430c2c55af62d13e9fca752d46f14d548b3
-> Author: Magnus Karlsson <magnus.karlsson@intel.com>
-> Date:   Fri Aug 28 08:26:26 2020 +0000
-> 
->      xsk: Add shared umem support between devices
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10a373de900000
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=12a373de900000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14a373de900000
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+5334f62e4d22804e646a@syzkaller.appspotmail.com
-> Fixes: a1132430c2c5 ("xsk: Add shared umem support between devices")
-> 
-> ==================================================================
-> BUG: KASAN: use-after-free in instrument_atomic_write include/linux/instrumented.h:71 [inline]
-> BUG: KASAN: use-after-free in atomic_fetch_sub_release include/asm-generic/atomic-instrumented.h:220 [inline]
-> BUG: KASAN: use-after-free in refcount_sub_and_test include/linux/refcount.h:266 [inline]
-> BUG: KASAN: use-after-free in refcount_dec_and_test include/linux/refcount.h:294 [inline]
-> BUG: KASAN: use-after-free in xp_put_pool+0x2c/0x1e0 net/xdp/xsk_buff_pool.c:262
-> Write of size 4 at addr ffff8880a6a4d860 by task ksoftirqd/0/9
-> 
-> CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.9.0-rc1-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x18f/0x20d lib/dump_stack.c:118
->   print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
->   __kasan_report mm/kasan/report.c:513 [inline]
->   kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
->   check_memory_region_inline mm/kasan/generic.c:186 [inline]
->   check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
->   instrument_atomic_write include/linux/instrumented.h:71 [inline]
->   atomic_fetch_sub_release include/asm-generic/atomic-instrumented.h:220 [inline]
->   refcount_sub_and_test include/linux/refcount.h:266 [inline]
->   refcount_dec_and_test include/linux/refcount.h:294 [inline]
->   xp_put_pool+0x2c/0x1e0 net/xdp/xsk_buff_pool.c:262
->   xsk_destruct+0x7d/0xa0 net/xdp/xsk.c:1138
->   __sk_destruct+0x4b/0x860 net/core/sock.c:1764
->   rcu_do_batch kernel/rcu/tree.c:2428 [inline]
->   rcu_core+0x5c7/0x1190 kernel/rcu/tree.c:2656
->   __do_softirq+0x2de/0xa24 kernel/softirq.c:298
->   run_ksoftirqd kernel/softirq.c:652 [inline]
->   run_ksoftirqd+0x89/0x100 kernel/softirq.c:644
->   smpboot_thread_fn+0x655/0x9e0 kernel/smpboot.c:165
->   kthread+0x3b5/0x4a0 kernel/kthread.c:292
->   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-> 
-> Allocated by task 6854:
->   kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
->   kasan_set_track mm/kasan/common.c:56 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
->   kmalloc_node include/linux/slab.h:577 [inline]
->   kvmalloc_node+0x61/0xf0 mm/util.c:574
->   kvmalloc include/linux/mm.h:750 [inline]
->   kvzalloc include/linux/mm.h:758 [inline]
->   xp_create_and_assign_umem+0x58/0x8d0 net/xdp/xsk_buff_pool.c:54
->   xsk_bind+0x9a0/0xed0 net/xdp/xsk.c:709
->   __sys_bind+0x1e9/0x250 net/socket.c:1656
->   __do_sys_bind net/socket.c:1667 [inline]
->   __se_sys_bind net/socket.c:1665 [inline]
->   __x64_sys_bind+0x6f/0xb0 net/socket.c:1665
->   do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
->   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Freed by task 6854:
->   kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
->   kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
->   kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
->   __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
->   __cache_free mm/slab.c:3418 [inline]
->   kfree+0x103/0x2c0 mm/slab.c:3756
->   kvfree+0x42/0x50 mm/util.c:603
->   xp_destroy net/xdp/xsk_buff_pool.c:44 [inline]
->   xp_destroy+0x45/0x60 net/xdp/xsk_buff_pool.c:38
->   xsk_bind+0xbdd/0xed0 net/xdp/xsk.c:719
->   __sys_bind+0x1e9/0x250 net/socket.c:1656
->   __do_sys_bind net/socket.c:1667 [inline]
->   __se_sys_bind net/socket.c:1665 [inline]
->   __x64_sys_bind+0x6f/0xb0 net/socket.c:1665
->   do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
->   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> The buggy address belongs to the object at ffff8880a6a4d800
->   which belongs to the cache kmalloc-1k of size 1024
-> The buggy address is located 96 bytes inside of
->   1024-byte region [ffff8880a6a4d800, ffff8880a6a4dc00)
-> The buggy address belongs to the page:
-> page:00000000dd5fc18f refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xa6a4d
-> flags: 0xfffe0000000200(slab)
-> raw: 00fffe0000000200 ffffea00029cce48 ffffea00025f2148 ffff8880aa040700
-> raw: 0000000000000000 ffff8880a6a4d000 0000000100000002 0000000000000000
-> page dumped because: kasan: bad access detected
-> 
-> Memory state around the buggy address:
->   ffff8880a6a4d700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->   ffff8880a6a4d780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->> ffff8880a6a4d800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                                                         ^
->   ffff8880a6a4d880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff8880a6a4d900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ==================================================================
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> syzbot can test patches for this issue, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
-> 
+ .../devicetree/bindings/ata/ahci-ceva.txt          |  8 +++++
+ drivers/ata/ahci_ceva.c                            | 34 ++++++++++++++++++++--
+ 2 files changed, 40 insertions(+), 2 deletions(-)
+
+-- 
+2.7.4
 
