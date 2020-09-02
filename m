@@ -2,132 +2,168 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9909CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486FAC2BBD0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8B320829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:17:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vcoeLRaI"
+	by mail.kernel.org (Postfix) with ESMTP id 30B782078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:23:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgIBKRY (ORCPT
+        id S1726490AbgIBKX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 06:17:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgIBKRD (ORCPT
+        Wed, 2 Sep 2020 06:23:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49490 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgIBKXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 06:17:03 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E89AC061244;
-        Wed,  2 Sep 2020 03:17:01 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id e16so4622703wrm.2;
-        Wed, 02 Sep 2020 03:17:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=N/dP84MtQMVHkBazS0DLjtQES8Qh70RraTOATCmW1ig=;
-        b=vcoeLRaIK/PYuCxdeYXDxvNlLAvDzcL147In8qNnoJJK4ijgJLs7w9pwnMpuXIEORj
-         XcDMcM8FKksPhjZW/mJZqyupBZDeEmG1tirF3BTU47BD98e/WksBwOE6AX2cwh1wBdm+
-         44Duw4+TCkj5kG2cPtsjIQvhGt0xgPR+Lm4jn+JIuZSxh6RxUCWyP4W5Wt9mnzi7blCR
-         1mZuoOnmTm6M3SZwuu3rP/tUI3sd5te5OMLIFSrQhQweNVMCUhlIJf3L21MejYhmvT84
-         KgGpWZQFcnz6MY3miz+GLP1Jr+2FbRXQ0MjtVFqZBfDDO5Py+r/GpfZqzizngGAESnUg
-         t2jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=N/dP84MtQMVHkBazS0DLjtQES8Qh70RraTOATCmW1ig=;
-        b=KOLMjbNL65xusg7D6dfFIKk/fNyuELCheSMZyu1+euTJn3XPkGRkcyWQNtI6AyR7eX
-         w1qjQiNmBHkkEqBYvoMffTh/jwdT5az+o340kikIPPhfBAKguvi1twj3x01D4Qr1C2sK
-         yK+QnC917fG8x2fMQ7SE94KSMSdfHGK5ih7PedqY4or9N4IYW5x0ZeOgCURXlnQ1mmbk
-         OPheakb5rzPp6pln1agTxb7mmTQTg45q+osesQt1FPtrs1IHuuS1RkE+LFOa/HzGe6wt
-         w1KVV/qxNVOWRapWDJqH/2BEKrauQJYBy2W/UUExwGgHwGzovmaEXPDLfNVnZ9yhwW2q
-         O99A==
-X-Gm-Message-State: AOAM532BJypNKijxx9fb4p8ne/0EJQYfHDMmA8xChZF7aV4bI+Ko61Bu
-        9hdwtDQGdO5juoH0kPMjuiA=
-X-Google-Smtp-Source: ABdhPJwzvhhH1DstpySiVyyZ44G7ypEFLHyy+WXhMgCzA/0AwPZTBsdnE76N/xw/LFomBwfW1Syq0g==
-X-Received: by 2002:a5d:43cf:: with SMTP id v15mr6468553wrr.269.1599041819804;
-        Wed, 02 Sep 2020 03:16:59 -0700 (PDT)
-Received: from [192.168.8.147] ([37.171.70.17])
-        by smtp.gmail.com with ESMTPSA id f6sm6645502wro.5.2020.09.02.03.16.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 03:16:59 -0700 (PDT)
-Subject: Re: [PATCH net 3/3] hinic: fix bug of send pkts while setting
- channels
-To:     Luo bin <luobin9@huawei.com>, davem@davemloft.net
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        luoxianjun@huawei.com, yin.yinshi@huawei.com,
-        cloud.wangxiaoyun@huawei.com, chiqijun@huawei.com
-References: <20200902094145.12216-1-luobin9@huawei.com>
- <20200902094145.12216-4-luobin9@huawei.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <fa78a6e8-c21e-ca4a-e40b-4109fb8a78d5@gmail.com>
-Date:   Wed, 2 Sep 2020 12:16:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 2 Sep 2020 06:23:20 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1kDPvC-00069F-5z; Wed, 02 Sep 2020 10:23:18 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Christian Brauner <christian@brauner.io>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        linux-kselftest@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-api@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v2 1/4] pidfd: support PIDFD_NONBLOCK in pidfd_open()
+Date:   Wed,  2 Sep 2020 12:21:27 +0200
+Message-Id: <20200902102130.147672-2-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200902102130.147672-1-christian.brauner@ubuntu.com>
+References: <20200902102130.147672-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-In-Reply-To: <20200902094145.12216-4-luobin9@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Introduce PIDFD_NONBLOCK to support non-blocking pidfd file descriptors.
 
+Ever since the introduction of pidfds and more advanced async io various
+programming languages such as Rust have grown support for async event
+libraries. These libraries are created to help build epoll-based event loops
+around file descriptors. A common pattern is to automatically make all file
+descriptors they manage to O_NONBLOCK.
 
-On 9/2/20 2:41 AM, Luo bin wrote:
-> When calling hinic_close in hinic_set_channels, netif_carrier_off
-> and netif_tx_disable are excuted, and TX host resources are freed
-> after that. Core may call hinic_xmit_frame to send pkt after
-> netif_tx_disable within a short time, so we should judge whether
-> carrier is on before sending pkt otherwise the resources that
-> have already been freed in hinic_close may be accessed.
-> 
-> Fixes: 2eed5a8b614b ("hinic: add set_channels ethtool_ops support")
-> Signed-off-by: Luo bin <luobin9@huawei.com>
-> ---
->  drivers/net/ethernet/huawei/hinic/hinic_tx.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-> index a97498ee6914..a0662552a39c 100644
-> --- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-> +++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-> @@ -531,6 +531,11 @@ netdev_tx_t hinic_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
->  	struct hinic_txq *txq;
->  	struct hinic_qp *qp;
->  
-> +	if (unlikely(!netif_carrier_ok(netdev))) {
-> +		dev_kfree_skb_any(skb);
-> +		return NETDEV_TX_OK;
-> +	}
-> +
->  	txq = &nic_dev->txqs[q_id];
->  	qp = container_of(txq->sq, struct hinic_qp, sq);
->  
-> 
+For such libraries the EAGAIN error code is treated specially. When a function
+is called that returns EAGAIN the function isn't called again until the event
+loop indicates the the file descriptor is ready. Supporting EAGAIN when
+waiting on pidfds makes such libraries just work with little effort. In the
+following patch we will extend waitid() internally to support non-blocking
+pidfds.
 
-Adding this kind of tests in fast path seems a big hammer to me.
+This introduces a new flag PIDFD_NONBLOCK that is equivalent to O_NONBLOCK.
+This follows the same patterns we have for other (anon inode) file descriptors
+such as EFD_NONBLOCK, IN_NONBLOCK, SFD_NONBLOCK, TFD_NONBLOCK and the same for
+close-on-exec flags.
 
-See https://marc.info/?l=linux-netdev&m=159903844423389&w=2   for a similar problem.
+Link: https://lore.kernel.org/lkml/20200811181236.GA18763@localhost/
+Link: https://github.com/joshtriplett/async-pidfd
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Sargun Dhillon <sargun@sargun.me>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Suggested-by: Josh Triplett <josh@joshtriplett.org>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - Improve commit message.
+---
+ include/uapi/linux/pidfd.h | 12 ++++++++++++
+ kernel/pid.c               | 12 +++++++-----
+ 2 files changed, 19 insertions(+), 5 deletions(-)
+ create mode 100644 include/uapi/linux/pidfd.h
 
-Normally, after hinic_close() operation, no packet should be sent by core networking stack.
-
-Trying to work around some core networking issue in each driver is a dead end.
-
-
-
-
-
+diff --git a/include/uapi/linux/pidfd.h b/include/uapi/linux/pidfd.h
+new file mode 100644
+index 000000000000..5406fbc13074
+--- /dev/null
++++ b/include/uapi/linux/pidfd.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++
++#ifndef _UAPI_LINUX_PIDFD_H
++#define _UAPI_LINUX_PIDFD_H
++
++#include <linux/types.h>
++#include <linux/fcntl.h>
++
++/* Flags for pidfd_open().  */
++#define PIDFD_NONBLOCK O_NONBLOCK
++
++#endif /* _UAPI_LINUX_PIDFD_H */
+diff --git a/kernel/pid.c b/kernel/pid.c
+index b2562a7ce525..74ddbff1a6ba 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -43,6 +43,7 @@
+ #include <linux/sched/task.h>
+ #include <linux/idr.h>
+ #include <net/sock.h>
++#include <uapi/linux/pidfd.h>
+ 
+ struct pid init_struct_pid = {
+ 	.count		= REFCOUNT_INIT(1),
+@@ -522,7 +523,8 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
+ /**
+  * pidfd_create() - Create a new pid file descriptor.
+  *
+- * @pid:  struct pid that the pidfd will reference
++ * @pid:   struct pid that the pidfd will reference
++ * @flags: flags to pass
+  *
+  * This creates a new pid file descriptor with the O_CLOEXEC flag set.
+  *
+@@ -532,12 +534,12 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
+  * Return: On success, a cloexec pidfd is returned.
+  *         On error, a negative errno number will be returned.
+  */
+-static int pidfd_create(struct pid *pid)
++static int pidfd_create(struct pid *pid, unsigned int flags)
+ {
+ 	int fd;
+ 
+ 	fd = anon_inode_getfd("[pidfd]", &pidfd_fops, get_pid(pid),
+-			      O_RDWR | O_CLOEXEC);
++			      flags | O_RDWR | O_CLOEXEC);
+ 	if (fd < 0)
+ 		put_pid(pid);
+ 
+@@ -565,7 +567,7 @@ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+ 	int fd;
+ 	struct pid *p;
+ 
+-	if (flags)
++	if (flags & ~PIDFD_NONBLOCK)
+ 		return -EINVAL;
+ 
+ 	if (pid <= 0)
+@@ -576,7 +578,7 @@ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+ 		return -ESRCH;
+ 
+ 	if (pid_has_task(p, PIDTYPE_TGID))
+-		fd = pidfd_create(p);
++		fd = pidfd_create(p, flags);
+ 	else
+ 		fd = -EINVAL;
+ 
+-- 
+2.28.0
 
