@@ -2,102 +2,162 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C3FC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C095C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5941B207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F07207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+mAMeEL"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YO7kP1OV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbgIBPkp (ORCPT
+        id S1728160AbgIBPkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:40:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbgIBPBf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:01:35 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68B97C061244;
-        Wed,  2 Sep 2020 08:01:33 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id w16so655041oia.2;
-        Wed, 02 Sep 2020 08:01:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=nJe4bseURKFlSbOPv7F3NIQsZoqm5FYsgLr0QZUs55k=;
-        b=s+mAMeELwz+mjnmSPT3Zj6IVhbRc6v9DjE4m0Xbm+6ZuyynublUKEyZ7uAGImlVD/v
-         hvWGvgfkJV8LYZ30EvV8n1YN14fdkFmrBNoXGJljpY+0YaHsr31K392JhbyNnku5b/tv
-         sU9Tn88lvEMYCuk/+NlLaPtooFhkdwUQAJVMn4+GOkzi5tYPRsZuSS+mPfSj/EwXWKV4
-         pQSUsfw3YeJwbpGID5609rp6rdSmGKszfPM5CjpxZoUuh3JdwZ1wmBHyXvVB5T1FkFzC
-         2qUxvC9ZMKC70/Nc6hBV4y1pm71Fcp50MkEGf8t9e+i25q7t9CCsvRdT+AcbjLtANyLU
-         jX9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=nJe4bseURKFlSbOPv7F3NIQsZoqm5FYsgLr0QZUs55k=;
-        b=mclaPPKu9RulT0vnSine7oTnscct7i0w3bQYuZGsRnTxjtnViecDkWOPtE6+obHy18
-         we37SgRQGGVt/mpBJveCgc/e0S0XJMUq7AVxO8DDuyYxVfX+o/2gSvU8evBLosRDFmYf
-         6TF2lfcdFTD1gjM0Bkl++QWC9xluIdYlv1G/QLGA9iOcCio+J9SsW2EIZPuaNS7xNLGL
-         Y7/7S7oExGEyu6LeHjuU2V16umCmXSZ3ncK6a6Y5s5VsXc3msSJilhlu6xznnNmTWTxs
-         5mJFaBF7rZckVsWXINBBSAz1plM8VsxRA/pG+7XSbtDVcsHM5T1xXbVbBocLp+VAPzws
-         jK9g==
-X-Gm-Message-State: AOAM530kYEMkTXg+hRmYNFIwmnyK1FSWOX3SffYG+rz/pnH4x2xba20M
-        +zv51IAud9PwuFbyI0F1IZV9xuBryhAzGp8UpRw=
-X-Google-Smtp-Source: ABdhPJx/mXwElQ9ceRtlLkNMe4EmP2VKMWxpRmh+9jLPadSxEg/xZ12/Z1JM/YjWMx/YjFp+H/WaIu4DAIHja8b/REQ=
-X-Received: by 2002:a54:4117:: with SMTP id l23mr2346042oic.177.1599058892842;
- Wed, 02 Sep 2020 08:01:32 -0700 (PDT)
+        Wed, 2 Sep 2020 11:40:43 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:43942 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbgIBPkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:40:24 -0400
+Received: from zn.tnic (p200300ec2f0d7a00acdede37bac547d6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:7a00:acde:de37:bac5:47d6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 470581EC0246;
+        Wed,  2 Sep 2020 17:40:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1599061221;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=J2ZtrCLLChAY/AVO02S7bV94bTES+irZ+l2Kh5Mnf50=;
+        b=YO7kP1OV0x0zu4OiuDp2CMuP+xSsyUTCMPKm6cC1+d0SfXMjJQpJMFsHEhkhXjoj3eMbbi
+        AMuf+zQuu1dSOS4828rhouHWMdZ7UVQ/hHGPI7BKMwarA9PvbZSXt2rE4rU/kaPifOELbA
+        IcoHEJbe+CHKazqbLJ8Ghz20rgTeZFI=
+Date:   Wed, 2 Sep 2020 17:40:18 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] tools/x86: add kcpuid tool to show raw CPU features
+Message-ID: <20200902154018.GA21537@zn.tnic>
+References: <1598514543-90152-1-git-send-email-feng.tang@intel.com>
 MIME-Version: 1.0
-References: <159827188271.306468.16962617119460123110.stgit@warthog.procyon.org.uk>
- <159827190508.306468.12755090833140558156.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159827190508.306468.12755090833140558156.stgit@warthog.procyon.org.uk>
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Wed, 2 Sep 2020 17:01:21 +0200
-Message-ID: <CAKgNAkho1WSOsxvCYQOs7vDxpfyeJ9JGdTL-Y0UEZtO3jVfmKw@mail.gmail.com>
-Subject: Re: [PATCH 4/5] Add manpage for fsopen(2) and fsmount(2)
-To:     David Howells <dhowells@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1598514543-90152-1-git-send-email-feng.tang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On Thu, Aug 27, 2020 at 03:49:03PM +0800, Feng Tang wrote:
+> output of the tool
+> ------------------
+> 
+> 	CPUID leafs total: 28
+> 
+> 	cpu family	: 6
+> 	model		: 13
+> 	stepping	: 7
 
-One further thought...
+Yeah, this should dump model etc and those numbers should be in hex and
+additionally in dec if people prefer them.
 
-> +++ b/man2/fsopen.2
-[...]
-> +.BR fsopen ()
-> +creates a blank filesystem configuration context within the kernel for the
-> +filesystem named in the
-> +.I fsname
-> +parameter, puts it into creation mode and attaches it to a file descriptor,
-> +which it then returns.
+> 	CPU features
+> 	------------
+> 	 sse3
+> 	 pclmlqdq
+> 	 dtes64
+> 	 mwait
+> 	 ds_cpl
+> 	 vmx
+> 	 smx
+> 	 eist
+> 	 tm2
+> 	 ssse3
+> 	 cx16
+> 	 pctxid
+> 	 dca
+> 	 sse4_1
+> 	 sse4_2
+> 	 x2apic
+> 	 tsc_deadline_timer
+> 	 aes
+> 	 xsave
+> 	 osxsave
+> 	 avx
+> 	 fpu
+> 	 ...
 
-The term "filesystem configuration context" is introduced, but never
-really explained. I think it would be very helpful to have a sentence
-or three that explains this concept at the start of the page.
+I guess that's good for grepping. With a lot of leafs, leaf output
+should probably be controlled by cmdline opts.
 
-Cheers,
+> [1] http://sr71.net/~dave/intel/stupid-cpuid.c
+> 
+> Originally-by: Borislav Petkov <bp@alien8.de>
+> Suggested-by: Dave Hansen <dave.hansen@intel.com>
+> Signed-off-by: Feng Tang <feng.tang@intel.com>
+> ---
+>  tools/arch/x86/tools/kcpuid/Makefile |  21 ++
+>  tools/arch/x86/tools/kcpuid/kcpuid.c | 422 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 443 insertions(+)
+>  create mode 100644 tools/arch/x86/tools/kcpuid/Makefile
+>  create mode 100644 tools/arch/x86/tools/kcpuid/kcpuid.c
 
-Michael
+Let's drop the second "tools" from the path:
+
+tools/arch/x86/kcpuid/Makefile
+tools/arch/x86/kcpuid/kcpuid.c
+
+> +struct reg_01_a {
+> +	u32 stepping: 4;	/* bit 0 */
+> +	u32 model: 4;
+> +	u32 family: 4;
+> +	u32 type: 2;
+> +	u32 pad1: 2;
+> +	u32 model_ext: 4;	/* bit 16 */
+> +	u32 family_ext: 8;
+> +};
+
+Yeah, instead of defining a separate struct for each leaf I think it
+would be smarter/better to have a text file in a machine parseable
+format which defines your leafs.
+
+When you need to add a new leaf, you simply extend the text file and the
+tool parses it anew and has its all CPUID info uptodate. This way you
+won't even have to recompile it. Adding new CPUID leafs would be adding new
+lines to the file.
+
+For example:
+
+LEAF<num>,SUBLEAF<num>,[EAX,EBX,ECX,EDX]{[width]<Mnemonic>|<Long text>,...}
+
+LEAF07,SUBLEAF00,EAX{[31:0]max_value|Max input value for supported subleafs}
+LEAF07,SUBLEAF00,EBX{[0]FSGSBASE|RDFSBASE/RDGSBASE/WRFSBASE/WRGSBASE if 1.,
+		     [1]TSC_ADJUST|IA32_TSC_ADJUST MSR is supported if 1.,
+		     [2]SGX|Supports Intel® Software Guard Extensions (Intel® SGX Extensions) if 1.,
+		     ...
+}
+LEAF07,SUBLEAF00,ECX{[0]PREFETCHWT1|(Intel® Xeon PhiTM only.),
+		     [1]AVX512_VBMI|,
+		     ...
+
+This is just a dumb attempt but I hope it comes across where I'm getting
+with this.
+
+Thx.
 
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
