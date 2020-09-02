@@ -4,107 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5EEC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC7EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E39BE20709
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B97A20709
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:04:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ccyj7iwV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yBNyr78r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgIBJEF (ORCPT
+        id S1727001AbgIBJEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 05:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47048 "EHLO
+        Wed, 2 Sep 2020 05:04:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbgIBJDj (ORCPT
+        with ESMTP id S1726853AbgIBJEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 05:03:39 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8193EC061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 02:03:39 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id z46so1334546uac.13
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 02:03:39 -0700 (PDT)
+        Wed, 2 Sep 2020 05:04:00 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA1B4C061249
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 02:03:59 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id s62so317974vsc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 02:03:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=upktra/6N5emKh7zvhc7gnHBaffqMLEbCV10tmOPScE=;
-        b=ccyj7iwV1I8JjY1UHxeji0yJ0pPCBmQh8EC8+5I+78EMJ9CJTqGDgzaHKVJGcpJGUL
-         hN/9an7B8iC9RUmg2KYdm3DT1NQjzLHOhZdZzmiOWNfSIO4AtpSo8XFy+Nv81tpUbOgi
-         xtUNNIXTRFi/ir0DDVeTakmrL/ktIE7C9ruWEnSo7RQw9vytDoJIQto9IHkd8NgzSSua
-         HELp1r21BKjxocLn6wedYf4i5s2I7HlGoXQzcuCbbHY2lZtvhg40gFv4d0xC1bBUzeAi
-         Ey+JweUb4u3rDmoX4NS3Y6z864knovorET27+g1K4ysBlA5wfSwI+z1sFEoICVsd55Uz
-         8Deg==
+        bh=itlRbbBGemMZj6RC0w5yK0m6b8wHA0Bm1ChisOFrb20=;
+        b=yBNyr78rhsjgGIM6THzbWs8HNIWZJ3x9mSBKPQCKbhJk3Z50mWkfvV36AeniWzm6Qe
+         aV0O3gIzUSf2TBtCm8WiZfgTVOWDl5LrvDeSwdxS3af72jZ/nJ+ADWDAiInBepByAp1e
+         PL7ZPKwuNQeUZHw8De3+ZvVR+Ey0sVdeRLxMKBdV4K67r0wUlexb75TREUjIyXlGg7is
+         PihY0GAo6MCkNFPdUGtP5slwKjLpJZs9K1Q6/AlqFWGkvARIzhXvAXjseCwYU9TutPp2
+         noJqeDASqYPwPcHT+7ZIoQciA7tsbb9NCIxdulFry0shP9Iscn23Cvo1dpeWNkQmxHu6
+         0eIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=upktra/6N5emKh7zvhc7gnHBaffqMLEbCV10tmOPScE=;
-        b=e5zAK5S7Uxqhvh2PQ2gBwcno3IzJh1GpN9/qWWOGaw0+rWFaa/pPHhP7JNdXHp7kr/
-         NDcVE7aJyB1MuB0eBzPIWByPL4gYw/DVqLWSAK+lF0oUy8nFD+PdhCpGztWCdtPrPT8d
-         Cy3/dMgNWgG4coU14nN59c761cB7JmmN2NaXk1ID9tt7WLiEexV9gxtcQEVHszc0bZlt
-         ySi2MP8aoO/6q+4LfB8oXPBGVEK8+1qqgZE/30HCetAXgK2RzdZqcqQbLKsHf/bHYlW9
-         QSWjBuqciUSsfZD6hYIpYliaS+fS53zhtG4XiVYxqWTK4W0jHdh51//uaJr9OPUk79YH
-         Ic3w==
-X-Gm-Message-State: AOAM530oTsHSC1Hd3wsKrsNB605zTNzwujQbW55ISXbP0bVuwPpEGXWz
-        QASHpfg/GK8YiTPLcaE7j79iJ0HMchWcSWZl7BfN+A==
-X-Google-Smtp-Source: ABdhPJzpbY3N1DOxGoSiFAa5u53PceFM0ve5E9HnO0kFcgXs6+5D1tRc8VeQ0iGX/g4t/gGuGWsUVm/lRGJnL+dPCkw=
-X-Received: by 2002:a9f:2431:: with SMTP id 46mr3660526uaq.129.1599037418663;
- Wed, 02 Sep 2020 02:03:38 -0700 (PDT)
+        bh=itlRbbBGemMZj6RC0w5yK0m6b8wHA0Bm1ChisOFrb20=;
+        b=bWFaRD67qmhychfIGx3v62pe/7I7OYfOYhjqURH8pPhCeaRjC1ME4AVW+N62GjbegL
+         AFQHol9c+vvkQvShHnPRr9rxgr3C/N8LSlUQC8BYX4pdZ1wertCqoj7VkaloF46CbOGa
+         R912s2t3Y1h+Eb8ryxtR6w/FCZRXRHRPN9HtdX4lDkJe6GcsAHt3fKy7oXR6jUr7Sbnq
+         opt2rexW4d3JycbK9gC5VMVIzFGC1xhPfsFFzvA8MIUe5MYlvSuakOX0a/UutiXrX7e+
+         vJ1qcgU0Vwq0lg2UJbAznv6gZZZUELgGL9CBNsSr9v3WL0sR041QFVRjZkXJVuCFy8mc
+         Isog==
+X-Gm-Message-State: AOAM532OTS3vMw9FiZrSp6+zrmUau4P54QBgD6c1PNDFLOo3zjCDFeQJ
+        rcWeb4iRmwRXh5vgtDLweuHZFm5+v+q8MFL2DRzDYw==
+X-Google-Smtp-Source: ABdhPJxjEM29jRCiVuNOJSS+uxtsMkMIs0ZX0+YfZ9Sew8Mzc1PTjMp9+B4YulTDlW5/psJ9L3xHp7zU+/tu3AYfYyg=
+X-Received: by 2002:a67:7c4e:: with SMTP id x75mr4509007vsc.60.1599037439148;
+ Wed, 02 Sep 2020 02:03:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827075809.1.If179abf5ecb67c963494db79c3bc4247d987419b@changeid>
-In-Reply-To: <20200827075809.1.If179abf5ecb67c963494db79c3bc4247d987419b@changeid>
+References: <20200901085004.2512-1-matthias.schiffer@ew.tq-group.com>
+In-Reply-To: <20200901085004.2512-1-matthias.schiffer@ew.tq-group.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 2 Sep 2020 11:03:02 +0200
-Message-ID: <CAPDyKFobQqtjjvTQbZ+MTex2A--5HcTsNT5MGhaLRA52cXuUMg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-msm: Add retries when all tuning phases are
- found valid
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Chris Ball <chris@printf.net>,
-        Georgi Djakov <gdjakov@mm-sol.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Date:   Wed, 2 Sep 2020 11:03:23 +0200
+Message-ID: <CAPDyKFrC62rLOQraHvh=8APWDk84YYo5YEg=uoUsgAeMx19G=Q@mail.gmail.com>
+Subject: Re: [PATCH mmc-next v4 1/2] dt-bindings: mmc: document alias support
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 at 16:59, Douglas Anderson <dianders@chromium.org> wrote:
+On Tue, 1 Sep 2020 at 10:50, Matthias Schiffer
+<matthias.schiffer@ew.tq-group.com> wrote:
 >
-> As the comments in this patch say, if we tune and find all phases are
-> valid it's _almost_ as bad as no phases being found valid.  Probably
-> all phases are not really reliable but we didn't detect where the
-> unreliable place is.  That means we'll essentially be guessing and
-> hoping we get a good phase.
+> As for I2C and SPI, it now is possible to reserve a fixed index for
+> mmc/mmcblk devices.
 >
-> This is not just a problem in theory.  It was causing real problems on
-> a real board.  On that board, most often phase 10 is found as the only
-> invalid phase, though sometimes 10 and 11 are invalid and sometimes
-> just 11.  Some percentage of the time, however, all phases are found
-> to be valid.  When this happens, the current logic will decide to use
-> phase 11.  Since phase 11 is sometimes found to be invalid, this is a
-> bad choice.  Sure enough, when phase 11 is picked we often get mmc
-> errors later in boot.
->
-> I have seen cases where all phases were found to be valid 3 times in a
-> row, so increase the retry count to 10 just to be extra sure.
->
-> Fixes: 415b5a75da43 ("mmc: sdhci-msm: Add platform_execute_tuning implementation")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 
-Applied for fixes and by adding a stable tag, thanks!
+Applied for next, thanks!
 
 Kind regards
 Uffe
@@ -112,45 +90,28 @@ Uffe
 
 > ---
 >
->  drivers/mmc/host/sdhci-msm.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
+> v4: moved alias documentation from example to description
 >
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index b7e47107a31a..1b78106681e0 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -1165,7 +1165,7 @@ static void sdhci_msm_set_cdr(struct sdhci_host *host, bool enable)
->  static int sdhci_msm_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  {
->         struct sdhci_host *host = mmc_priv(mmc);
-> -       int tuning_seq_cnt = 3;
-> +       int tuning_seq_cnt = 10;
->         u8 phase, tuned_phases[16], tuned_phase_cnt = 0;
->         int rc;
->         struct mmc_ios ios = host->mmc->ios;
-> @@ -1221,6 +1221,22 @@ static int sdhci_msm_execute_tuning(struct mmc_host *mmc, u32 opcode)
->         } while (++phase < ARRAY_SIZE(tuned_phases));
+> v3: new patch
 >
->         if (tuned_phase_cnt) {
-> +               if (tuned_phase_cnt == ARRAY_SIZE(tuned_phases)) {
-> +                       /*
-> +                        * All phases valid is _almost_ as bad as no phases
-> +                        * valid.  Probably all phases are not really reliable
-> +                        * but we didn't detect where the unreliable place is.
-> +                        * That means we'll essentially be guessing and hoping
-> +                        * we get a good phase.  Better to try a few times.
-> +                        */
-> +                       dev_dbg(mmc_dev(mmc), "%s: All phases valid; try again\n",
-> +                               mmc_hostname(mmc));
-> +                       if (--tuning_seq_cnt) {
-> +                               tuned_phase_cnt = 0;
-> +                               goto retry;
-> +                       }
-> +               }
+>  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> index b96da0c7f819..f928f66fc59a 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> @@ -14,6 +14,10 @@ description: |
+>    that requires the respective functionality should implement them using
+>    these definitions.
+>
+> +  It is possible to assign a fixed index mmcN to an MMC host controller
+> +  (and the corresponding mmcblkN devices) by defining an alias in the
+> +  /aliases device tree node.
 > +
->                 rc = msm_find_most_appropriate_phase(host, tuned_phases,
->                                                      tuned_phase_cnt);
->                 if (rc < 0)
+>  properties:
+>    $nodename:
+>      pattern: "^mmc(@.*)?$"
 > --
-> 2.28.0.297.g1956fa8f8d-goog
+> 2.17.1
 >
