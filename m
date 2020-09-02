@@ -2,112 +2,138 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5D2C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509DFC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95959207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:43:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a740NAoe"
+	by mail.kernel.org (Postfix) with ESMTP id 1102C2083B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:45:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599068711;
+	bh=RQZtL4W3u8ZFDrsxWq4Ue3tBbr4nUr6JJ8sRx70VO9A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GoBuo4T2PVOgiutJtHYoZ37O0CnzvsL9HHJpcEM5TVmkewEmqb7Z6nM/vMnxzVgTd
+	 AWgMuuKKgkNUQ675BwL33ll7jJsCy8+JoTRvhe8jCqMocd1RKHNVyYijfr1JnODfYj
+	 vUlTPNGXZ/WBFjgP2rcEe7oh8Pf4qtfzsF3i4y1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgIBRnh (ORCPT
+        id S1727115AbgIBRpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 13:43:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgIBRng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:43:36 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED810C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 10:43:35 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id d26so7910622ejr.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 10:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vMtrzgDPO6AmfI9ZPBSjKxXAd2ee14HiYfSbmhtlU0o=;
-        b=a740NAoedXkRok+5UfNBY1sTSlo7bklHmwoPOuittzrLsAFwAioFf57AzFa7yphWkP
-         XJzZYoZyU07EX4V2EGo4ZHIvwbG0/TOxEOJZQPuk6Pwru4va9hmOCKChvUxFLG5ViCa4
-         Avfk07uILC759ju3dAYVr7tND9/cO/OBPsYas1P+tAipN+q4tuy4Rx4ej4E1A2nv/k8B
-         8/Rp/6uW0NoC7F0Q7r6dgE9kO3EK1HhaJbFn1NL4hNh46QA+usJ+I5RFsVYJfNOGw2uu
-         yq/4s5V/YLDpYZ9B98t8Y0Y9fBxiTKUe6w5RxivGgy5sfwN4DGisCnb52N+imfOUkDpn
-         xgng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vMtrzgDPO6AmfI9ZPBSjKxXAd2ee14HiYfSbmhtlU0o=;
-        b=dddQu4EGXYlZ6Fv5rV06jF7xeH0ox4x6dVT59FzQpqF77uCxx8b0HSYDZPIkdGBJ70
-         fLHTqwX+662bP842v/HzAwNnyNnYv05kfSrPs0Bix/3uKkyFKY6aQBUQf3U49QFATL97
-         wUOJuyR8PjagH93Dn41mwtH02kbd+fPUQaJgOMnffS0lVBU53od2jDY7vOf4pf4movFT
-         FCq6mB+AprXKG4WMbHrc2EnVHCFZP5059DZT63Me7xTePK347i66C64FFIQGoez0kzHP
-         WOH167+iywrWdEUJb1/CIM8g0buTDncrWBxUq5X2EM2B0x2PBfyfUOaWjhsU2Ta6nStT
-         Lluw==
-X-Gm-Message-State: AOAM531NoTomSEMn29cq0aXZs+jC5/tQFszksdnSTJbxkxPXBayADAzJ
-        qsYBbRWuVDWXWdrRlRp3S+7MjYq/le1vX/AoNuk=
-X-Google-Smtp-Source: ABdhPJxmIK8odO2VkYlxX0ps8YQ8kne3FIuthQ1TDFr5/VmkZPJAhnVx4eJe+tQVmA/23SIxUM0/JjFsC4NGcSfnzgQ=
-X-Received: by 2002:a17:907:2173:: with SMTP id rl19mr1111153ejb.514.1599068614629;
- Wed, 02 Sep 2020 10:43:34 -0700 (PDT)
+        Wed, 2 Sep 2020 13:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50408 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726355AbgIBRpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 13:45:08 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 039052071B;
+        Wed,  2 Sep 2020 17:45:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599068708;
+        bh=RQZtL4W3u8ZFDrsxWq4Ue3tBbr4nUr6JJ8sRx70VO9A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pUZDNf+XmtjX9At928xAss9mWj/SKPVKJ8s/EDlXREeZfdTuuDQC88Qrq2T+TyQPt
+         6KvnFE0zjihu+FhC1xswiwTyHlszEYw2GugQQ9vwa60vm8/O+UOpARv++nCP26z9NW
+         hmsSGfsFrAdE8w0SA7Do6ce2fCf1fk9HW3rxm49c=
+Received: by pali.im (Postfix)
+        id 02C807BF; Wed,  2 Sep 2020 19:45:05 +0200 (CEST)
+Date:   Wed, 2 Sep 2020 19:45:05 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] phy: marvell: comphy: Convert internal SMCC firmware
+ return codes to errno
+Message-ID: <20200902174505.wuflkak6dv57jxw6@pali>
+References: <20200902144344.16684-1-pali@kernel.org>
+ <20200902144344.16684-2-pali@kernel.org>
+ <20200902161328.GE3050651@lunn.ch>
+ <20200902165652.cvb74kgxx5uejpta@pali>
+ <20200902170010.GF3050651@lunn.ch>
+ <20200902170525.ksovu7ah3wbotkim@pali>
+ <20200902172029.GG3050651@lunn.ch>
 MIME-Version: 1.0
-References: <159905616280.521200.12444250032673650063.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159905616280.521200.12444250032673650063.stgit@warthog.procyon.org.uk>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Wed, 2 Sep 2020 10:43:22 -0700
-Message-ID: <CAHbLzkpL+657FqvvkATq8NiVwioeiovg=972RsktuW5n+3D+pg@mail.gmail.com>
-Subject: Re: [PATCH] Fix khugepaged's request size in collapse_file()
-To:     David Howells <dhowells@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Song Liu <songliubraving@fb.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200902172029.GG3050651@lunn.ch>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 7:16 AM David Howells <dhowells@redhat.com> wrote:
->
-> collapse_file() in khugepaged passes PAGE_SIZE as the number of pages to be
-> read ahead to page_cache_sync_readahead().  It seems this was expressed as a
-> number of bytes rather than a number of pages.
->
-> Fix it to use the number of pages to the end of the window instead.
->
-> Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Acked-by: Song Liu <songliubraving@fb.com>
-> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+On Wednesday 02 September 2020 19:20:29 Andrew Lunn wrote:
+> On Wed, Sep 02, 2020 at 07:05:25PM +0200, Pali Rohár wrote:
+> > On Wednesday 02 September 2020 19:00:10 Andrew Lunn wrote:
+> > > > > > +	switch (ret) {
+> > > > > > +	case SMCCC_RET_SUCCESS:
+> > > > > > +		return 0;
+> > > > > > +	case SMCCC_RET_NOT_SUPPORTED:
+> > > > > > +		return -EOPNOTSUPP;
+> > > > > > +	default:
+> > > > > > +		return -EINVAL;
+> > > > > > +	}
+> > > > > >  }
+> > > > > 
+> > > > > Hi Pali
+> > > > > 
+> > > > > Maybe this should be a global helper translating SMCCC_RET_* into a
+> > > > > standard errno value?
+> > > > > 
+> > > > > 	 Andrew
+> > > > 
+> > > > Hello Andrew!
+> > > > 
+> > > > Well, I'm not sure if some standard global helper is the correct way for
+> > > > marvell comphy handler. It returns 0 for success and -1 on error when
+> > > > handler is not supported.
+> > > 
+> > > No, i was meaning just 
+> > > 
+> > > switch (ret) {
+> > > case SMCCC_RET_SUCCESS:
+> > > 	return 0;
+> > > case SMCCC_RET_NOT_SUPPORTED:
+> > > 	return -EOPNOTSUPP;
+> > > default:
+> > > 	return -EINVAL;
+> > > }
+> > 
+> > But this is not a complete generic helper. There are more generic SMCC
+> > return codes and generic helper should define and translate all of them.
+> 
+> /*
+>  * Return codes defined in ARM DEN 0070A
+>  * ARM DEN 0070A is now merged/consolidated into ARM DEN 0028 C
+>  */
+> #define SMCCC_RET_SUCCESS			0
+> #define SMCCC_RET_NOT_SUPPORTED			-1
+> #define SMCCC_RET_NOT_REQUIRED			-2
+> #define SMCCC_RET_INVALID_PARAMETER		-3
 
-Acked-by: Yang Shi <shy828301@gmail.com>
+Routines can use also other custom return codes. These are IIRC just
+standard defined.
 
-> ---
->
->  mm/khugepaged.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 6d199c353281..f2d243077b74 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -1706,7 +1706,7 @@ static void collapse_file(struct mm_struct *mm,
->                                 xas_unlock_irq(&xas);
->                                 page_cache_sync_readahead(mapping, &file->f_ra,
->                                                           file, index,
-> -                                                         PAGE_SIZE);
-> +                                                         end - index);
->                                 /* drain pagevecs to help isolate_lru_page() */
->                                 lru_add_drain();
->                                 page = find_lock_page(mapping, index);
->
->
->
+> I only see problems with SMCCC_RET_NOT_REQUIRED and what value to use
+> for it. Do you have any idea what is actually means? A parameter was
+> passed which was not required? Or that the call itself is not
+> required? Looking at the uses of it currently in the kernel, it does
+> not seem to be an actual error. So maybe just return 0?
+
+I'm not sure. That is why I wrote that larger discussion about generic
+helper is needed. There are for sure people who understand SMC better
+and have deep insight.
+
+For Marvell comphy we cannot use return code -2 as success like 0.
