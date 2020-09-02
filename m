@@ -2,155 +2,82 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D01C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36272C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDBE2078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:59:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b9l+xXpd"
+	by mail.kernel.org (Postfix) with ESMTP id 1D30B20709
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgIBI7b (ORCPT
+        id S1726301AbgIBJCi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:59:31 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44647 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726400AbgIBI72 (ORCPT
+        Wed, 2 Sep 2020 05:02:38 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:35697 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbgIBJCi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:59:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599037165;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ix8N6RQtX+ddzBGK9BdRX1rdzssF3CmlZhDLO9SMtGM=;
-        b=b9l+xXpd+F65EVf0Z/i3vo6vjpuVw5Ao9e5hHdX6vakZGazxq9C86hzZqeF9WRCrI2Vlp2
-        woRpit85edeueVJCjAtGrTAwcFlIQhYSm2A4M7iIBrdpNMgtk7ECUoraMLz3tDxqalmS9k
-        upxjpjkptnbtFovfXqqFm9H5w23vyeg=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-521-yd_GSq-aMGqXDge_3Szz8Q-1; Wed, 02 Sep 2020 04:59:23 -0400
-X-MC-Unique: yd_GSq-aMGqXDge_3Szz8Q-1
-Received: by mail-ej1-f70.google.com with SMTP id y10so1850172ejd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 01:59:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Ix8N6RQtX+ddzBGK9BdRX1rdzssF3CmlZhDLO9SMtGM=;
-        b=JdCNon9SDl66rcSARcs5L+i+ng2IxLV7JRtqBa53BswsiQvGmhtUB46kt7zyoc+NnA
-         Z2zk5QxanFw2+b0GvtzcdKYIZdQPsQz58jOI2K0MakNx4i2bdV83ZgiXknjUu9Z0Mftx
-         0zLIKB05GdWlHkIM4WUQW7hg+u490qDKbSPug3avUtUN1rOm6pYGx4crcePzYtnZI5o5
-         CPtc5aKKqWx2jE6Pe8v2hAGQIOv3m5UFtuRbo2hDnKik1JaYWghA7KujOayV0Rm90Ofn
-         /4fX2jiuwr+Noj11IJJ8oCF3acefUf5WCl0t7A3pK8tlnOQOtVmIhVWulURuIvGsBw6o
-         o6tQ==
-X-Gm-Message-State: AOAM531+rSBaTyE8ewFuvDEXOvwzr8LE2j8sHEN4HqXUhzcgrw9YbU23
-        tIRkLTVY1OKQHn9TFByOnmBypS+zt10kETO9Y+gOk5H2tjL/52rUqsiHdWmR1prC4r8bgdJ9xqU
-        2Phmuz9j/gnV/5MmaTaIqveA4
-X-Received: by 2002:a17:906:95d1:: with SMTP id n17mr5566898ejy.324.1599037162128;
-        Wed, 02 Sep 2020 01:59:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzZ9uG5VoGFj8piU2aeDijZCJLsDj+NsJcm8DJsdt2rZ7X63rZbNnDbaKrAnU8VY81o7E9eaQ==
-X-Received: by 2002:a17:906:95d1:: with SMTP id n17mr5566871ejy.324.1599037161896;
-        Wed, 02 Sep 2020 01:59:21 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id f13sm3735188ejb.81.2020.09.02.01.59.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 01:59:21 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Tsirkin <mst@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Jones <drjones@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] KVM: x86: KVM_MEM_PCI_HOLE memory
-In-Reply-To: <20200901200021.GB3053@xz-x1>
-References: <20200807141232.402895-1-vkuznets@redhat.com> <20200825212526.GC8235@xz-x1> <87eenlwoaa.fsf@vitty.brq.redhat.com> <20200901200021.GB3053@xz-x1>
-Date:   Wed, 02 Sep 2020 10:59:20 +0200
-Message-ID: <877dtcpn9z.fsf@vitty.brq.redhat.com>
+        Wed, 2 Sep 2020 05:02:38 -0400
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 3EB3224000C;
+        Wed,  2 Sep 2020 09:02:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200827064402.7130-2-efremov@linux.com>
+References: <20200827064402.7130-1-efremov@linux.com> <20200827064402.7130-2-efremov@linux.com>
+Subject: Re: [PATCH v2 1/4] crypto: inside-secure - use kfree_sensitive()
+To:     Denis Efremov <efremov@linux.com>, linux-crypto@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-kernel@vger.kernel.org
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+Message-ID: <159903735372.787733.15894349534421505943@kwain>
+Date:   Wed, 02 Sep 2020 11:02:34 +0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Xu <peterx@redhat.com> writes:
+Hello Denis,
 
-> On Tue, Sep 01, 2020 at 04:43:25PM +0200, Vitaly Kuznetsov wrote:
->> Peter Xu <peterx@redhat.com> writes:
->> 
->> > On Fri, Aug 07, 2020 at 04:12:29PM +0200, Vitaly Kuznetsov wrote:
->> >> When testing Linux kernel boot with QEMU q35 VM and direct kernel boot
->> >> I observed 8193 accesses to PCI hole memory. When such exit is handled
->> >> in KVM without exiting to userspace, it takes roughly 0.000001 sec.
->> >> Handling the same exit in userspace is six times slower (0.000006 sec) so
->> >> the overal; difference is 0.04 sec. This may be significant for 'microvm'
->> >> ideas.
->> >
->> > Sorry to comment so late, but just curious... have you looked at what's those
->> > 8000+ accesses to PCI holes and what they're used for?  What I can think of are
->> > some port IO reads (e.g. upon vendor ID field) during BIOS to scan the devices
->> > attached.  Though those should be far less than 8000+, and those should also be
->> > pio rather than mmio.
->> 
->> And sorry for replying late)
->> 
->> We explicitly want MMIO instead of PIO to speed things up, afaiu PIO
->> requires two exits per device (and we exit all the way to
->> QEMU). Julia/Michael know better about the size of the space.
->> 
->> >
->> > If this is only an overhead for virt (since baremetal mmios should be fast),
->> > I'm also thinking whether we can make it even better to skip those pci hole
->> > reads.  Because we know we're virt, so it also gives us possibility that we may
->> > provide those information in a better way than reading PCI holes in the guest?
->> 
->> This means let's invent a PV interface and if we decide to go down this
->> road, I'd even argue for abandoning PCI completely. E.g. we can do
->> something similar to Hyper-V's Vmbus.
->
-> My whole point was more about trying to understand the problem behind.
-> Providing a fast path for reading pci holes seems to be reasonable as is,
-> however it's just that I'm confused on why there're so many reads on the pci
-> holes after all.  Another important question is I'm wondering how this series
-> will finally help the use case of microvm.  I'm not sure I get the whole point
-> of it, but... if microvm is the major use case of this, it would be good to
-> provide some quick numbers on those if possible.
->
-> For example, IIUC microvm uses qboot (as a better alternative than seabios) for
-> fast boot, and qboot has:
->
-> https://github.com/bonzini/qboot/blob/master/pci.c#L20
->
-> I'm kind of curious whether qboot will still be used when this series is used
-> with microvm VMs?  Since those are still at least PIO based.
+Quoting Denis Efremov (2020-08-27 08:43:59)
+> Use kfree_sensitive() instead of open-coding it.
+> 
+> Signed-off-by: Denis Efremov <efremov@linux.com>
 
-I'm afraid there is no 'grand plan' for everything at this moment :-(
-For traditional VMs 0.04 sec per boot is negligible and definitely not
-worth adding a feature, memory requirements are also very
-different. When it comes to microvm-style usage things change.
+Acked-by: Antoine Tenart <antoine.tenart@bootlin.com>
 
-'8193' PCI hole accesses I mention in the PATCH0 blurb are just from
-Linux as I was doing direct kernel boot, we can't get better than that
-(if PCI is in the game of course). Firmware (qboot, seabios,...) can
-only add more. I *think* the plan is to eventually switch them all to
-MMCFG, at least for KVM guests, by default but we need something to put
-to the advertisement. 
+Thanks!
+Antoine
 
-We can, in theory, short circuit PIO in KVM instead but:
-- We will need a complete different API
-- We will never be able to reach the speed of the exit-less 'single 0xff
-page' solution (see my RFC).
+> ---
+>  drivers/crypto/inside-secure/safexcel_hash.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
+> index 16a467969d8e..5ffdc1cd5847 100644
+> --- a/drivers/crypto/inside-secure/safexcel_hash.c
+> +++ b/drivers/crypto/inside-secure/safexcel_hash.c
+> @@ -1082,8 +1082,7 @@ static int safexcel_hmac_init_pad(struct ahash_request *areq,
+>                 }
+>  
+>                 /* Avoid leaking */
+> -               memzero_explicit(keydup, keylen);
+> -               kfree(keydup);
+> +               kfree_sensitive(keydup);
+>  
+>                 if (ret)
+>                         return ret;
+> -- 
+> 2.26.2
+> 
 
 -- 
-Vitaly
-
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
