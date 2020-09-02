@@ -2,109 +2,189 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4474CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64161C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 212D7206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ADC320826
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599031111;
+	bh=Cvo0zgOycrOABxtZ9j6bV61j8XnfkWhbAJxrKlR5Ios=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=VMSZnZvuUvnStkLCOULcCaptXnJmbMwJC9YQou4Y2TZCJ6OI5Faohl8CMjPxQe5Aw
+	 KEoNTnlpvMas7GIq1NcNEztAlPUk5iZBgG0JOiuLwJP/0qsWHwa0CaF1eH7aAkPCTW
+	 3pbIje8brlNCijUPmjXs6rDCLyhDs3V9EMAWDCSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgIBHQC (ORCPT
+        id S1726536AbgIBHSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:16:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgIBHQB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:16:01 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC41C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:16:01 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kDMzo-0004HT-9F; Wed, 02 Sep 2020 09:15:52 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1kDMzn-00086v-LA; Wed, 02 Sep 2020 09:15:51 +0200
-Date:   Wed, 2 Sep 2020 09:15:51 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 6/6] pwm: sun4i: Simplify with dev_err_probe()
-Message-ID: <20200902071551.vvxohzcymplhiapx@pengutronix.de>
-References: <20200826144747.9436-1-krzk@kernel.org>
- <20200826144747.9436-6-krzk@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jfczrdov2v7v4mp2"
-Content-Disposition: inline
-In-Reply-To: <20200826144747.9436-6-krzk@kernel.org>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Wed, 2 Sep 2020 03:18:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55202 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbgIBHS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 03:18:29 -0400
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85EF82072A;
+        Wed,  2 Sep 2020 07:18:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599031108;
+        bh=Cvo0zgOycrOABxtZ9j6bV61j8XnfkWhbAJxrKlR5Ios=;
+        h=From:To:Subject:Date:From;
+        b=FPK2r/H8m8/1jaAyBTeB3c2P4EQhToTVhAb2cV0W3PYsPms7bNH1U7qqtm70Cw3HP
+         HRrWGUmyWF/x+JTzgdQNREWaGgYEhNQs7wu3uRUPcSD2DFFUiUu16ZGAIPI89A3RGp
+         XgtgrmlC/5N22zTSW0QsHDl+xXeLxIw1y5uq+vmM=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] dt-bindings: media: imx258: Add bindings for IMX258 sensor
+Date:   Wed,  2 Sep 2020 09:18:08 +0200
+Message-Id: <1599031090-21608-1-git-send-email-krzk@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add bindings for the IMX258 camera sensor.  The bindings, just like the
+driver, are quite limited, e.g. do not support regulator supplies.
 
---jfczrdov2v7v4mp2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-On Wed, Aug 26, 2020 at 04:47:47PM +0200, Krzysztof Kozlowski wrote:
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+Changes since v1:
+1. None
+---
+ .../devicetree/bindings/media/i2c/imx258.yaml      | 92 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 93 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/imx258.yaml
 
-Thanks
-Uwe
+diff --git a/Documentation/devicetree/bindings/media/i2c/imx258.yaml b/Documentation/devicetree/bindings/media/i2c/imx258.yaml
+new file mode 100644
+index 000000000000..ef789ad31143
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/imx258.yaml
+@@ -0,0 +1,92 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/imx258.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Sony IMX258 13 Mpixel CMOS Digital Image Sensor
++
++maintainers:
++  - Krzysztof Kozlowski <krzk@kernel.org>
++
++description: |-
++  IMX258 is a diagonal 5.867mm (Type 1/3.06) 13 Mega-pixel CMOS active pixel
++  type stacked image sensor with a square pixel array of size 4208 x 3120. It
++  is programmable through I2C interface.  Image data is sent through MIPI
++  CSI-2.
++
++properties:
++  compatible:
++    const: sony,imx258
++
++  clocks:
++    maxItems: 1
++
++  clock-frequency:
++    description: Frequency of input clock if clock is not provided
++    deprecated: true
++    const: 19200000
++
++  reg:
++    maxItems: 1
++
++  # See ../video-interfaces.txt for more details
++  port:
++    type: object
++    properties:
++      endpoint:
++        type: object
++        properties:
++          data-lanes:
++            items:
++              - const: 1
++              - const: 2
++              - const: 3
++              - const: 4
++
++          link-frequencies:
++            allOf:
++              - $ref: /schemas/types.yaml#/definitions/uint64-array
++            description:
++              Allowed data bus frequencies.
++
++        required:
++          - data-lanes
++          - link-frequencies
++
++required:
++  - compatible
++  - reg
++  - port
++
++
++if:
++  not:
++    required:
++      - clocks
++then:
++  required:
++    - clock-frequency
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        sensor@6c {
++            compatible = "sony,imx258";
++            reg = <0x6c>;
++            clocks = <&imx258_clk>;
++
++            port {
++                imx258_ep: endpoint {
++                    remote-endpoint = <&csi1_ep>;
++                    data-lanes = <1 2 3 4>;
++                    link-frequencies = /bits/ 64 <320000000>;
++                };
++            };
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index dc2aa691b75a..cca13d483d22 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16130,6 +16130,7 @@ M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ T:	git git://linuxtv.org/media_tree.git
++F:	Documentation/devicetree/bindings/media/i2c/imx258.yaml
+ F:	drivers/media/i2c/imx258.c
+ 
+ SONY IMX274 SENSOR DRIVER
+-- 
+2.7.4
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---jfczrdov2v7v4mp2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl9PRqQACgkQwfwUeK3K
-7AlvXwf+IN42e5ZLa5OHoBGAshX6T/xm5Fc6M+qdSKPH7B5ukJJpmx+H6RQtILHj
-pLkF3k0th9q+k1VabVbHugjyowNxFy2JlSZq0wxYSQu6ucVo3foFzjiF27KYtY+U
-SawqHvSds0HXHl5O1/VVM3xKnLUXQNUFeS6cp7+3TjQLYOyQcgIQrci0ra98NnZ5
-fNCP9RKh1zFlOkQfHQIRHXdf4cvMKGNo1gwgs8EzKVbLLmsqXlRY7GWCCZBI3cYT
-gdu1ZcOK5nue2E6lvqpa0D0lcwz0ON/lqf0Eih6RIEhzTLN847qNAB+jS8vFhPfi
-21FO0wijzj3Ysmp5CXqo9UW4/pwrAA==
-=6Weq
------END PGP SIGNATURE-----
-
---jfczrdov2v7v4mp2--
