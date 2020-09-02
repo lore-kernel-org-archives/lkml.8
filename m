@@ -2,66 +2,215 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5496FC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F556C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 152F82075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED8762075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:54:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="DTR+woOO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cSJtUtL1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgIBEv0 (ORCPT
+        id S1726406AbgIBEy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 00:51:26 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52265 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725808AbgIBEvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 00:51:25 -0400
-Received: by ozlabs.org (Postfix, from userid 1003)
-        id 4BhBNW4Sxsz9sV8; Wed,  2 Sep 2020 14:51:23 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
-        t=1599022283; bh=WOfp9otDnweaCa9QqM2OIoG8iDSDoTlcwj+EuEhBVJA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DTR+woOO6qeYDsljobUQVGIbaihDCn3rXPf03LnF7I6kLqQhgbaMpLTeQ07etO+c5
-         xwZ67OX3DnhiFTAEQwIUQdLGKkFbf9xj4HGPbZl6RdlOrL7gpXntDESOju2lESBUdC
-         aGv0ZsYaPG3y1E3dKV47QPQe79W26HvGEhs977pmdWQOfcRXS1yyg0yIQ/qFjATM7d
-         TkXtzQyKya6L3YWtB1VOLoOFaGD8KOED50c1V1ps4UETTC8BooW5uZYnI3wHZrlJ8M
-         QO5+R5GfyNTFzk7NRVkMM94NZdgZoSHl6M0lf8GZ4tJMBtRK4qCPXEI7WtewThoGTz
-         NdJMOilWIYc2A==
-Date:   Wed, 2 Sep 2020 14:51:18 +1000
-From:   Paul Mackerras <paulus@ozlabs.org>
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] powerpc: Convert to DEFINE_SHOW_ATTRIBUTE
-Message-ID: <20200902045118.GD272502@thinks.paulus.ozlabs.org>
-References: <20200716090712.14375-1-miaoqinglang@huawei.com>
+        Wed, 2 Sep 2020 00:54:56 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51534 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbgIBEyz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 00:54:55 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0824sm79014751;
+        Tue, 1 Sep 2020 23:54:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599022488;
+        bh=w2iauvTkD+P1VkcMZ0fYC+zoLEESxxiRJVPTkakJ4qM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=cSJtUtL1C7HwPhLVtKwRsA4LI24Im5sdvLnrZEidzdExFxENdjaLjG9WXWFU310dT
+         vycIdXASeghzE3+i/5nsY2nFvCZ+BBZTVnW9zuG9y8JDbVH1hj43ha43xGVtmgB8Eq
+         0B5VFtZaLuSwCyW9wUUlBHnro1TqyGPeA1N1Lywo=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0824smKo031079
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 1 Sep 2020 23:54:48 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 1 Sep
+ 2020 23:54:48 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 1 Sep 2020 23:54:48 -0500
+Received: from [10.250.232.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0824sgm6036815;
+        Tue, 1 Sep 2020 23:54:43 -0500
+Subject: Re: [RESEND PATCH 1/2] arm64: dts: ti: k3-j721e-main: Add PCIe device
+ tree nodes
+To:     Nishanth Menon <nm@ti.com>
+CC:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200901140628.8800-1-kishon@ti.com>
+ <20200901140628.8800-2-kishon@ti.com> <20200901145204.ayybrzqjcfhiqnfq@akan>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <5f23246a-a9d7-495d-a4ec-d392ad95a450@ti.com>
+Date:   Wed, 2 Sep 2020 10:24:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716090712.14375-1-miaoqinglang@huawei.com>
+In-Reply-To: <20200901145204.ayybrzqjcfhiqnfq@akan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 05:07:12PM +0800, Qinglang Miao wrote:
-> From: Chen Huang <chenhuang5@huawei.com>
+Hi Nishanth,
+
+On 01/09/20 8:22 pm, Nishanth Menon wrote:
+> On 19:36-20200901, Kishon Vijay Abraham I wrote:
+>> Add PCIe device tree node (both RC and EP) for the four
+>> PCIe instances here.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 218 ++++++++++++++++++++++
+>>   arch/arm64/boot/dts/ti/k3-j721e.dtsi      |   5 +-
+>>   2 files changed, 222 insertions(+), 1 deletion(-)
 > 
-> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
 > 
-> Signed-off-by: Chen Huang <chenhuang5@huawei.com>
+> Did you look at the diff of the dtbs_check before and after this
+> series? I see: https://pastebin.ubuntu.com/p/9fyfrTjx9M/
 
-For the arch/powerpc/kvm part:
+I didn't see any errors when I checked for individual bindings
+a0393678@a0393678-ssd:~/repos/linux$ mkconfig64 dtbs_check 
+DT_SCHEMA_FILES="Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml"
+   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+   DTC     arch/arm64/boot/dts/ti/k3-am654-base-board.dt.yaml
+   DTC     arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dt.yaml
+   CHECK   arch/arm64/boot/dts/ti/k3-am654-base-board.dt.yaml
+   CHECK   arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dt.yaml
+a0393678@a0393678-ssd:~/repos/linux$ mkconfig64 dtbs_check 
+DT_SCHEMA_FILES="Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml"
+   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+   DTC     arch/arm64/boot/dts/ti/k3-am654-base-board.dt.yaml
+   DTC     arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dt.yaml
+   CHECK   arch/arm64/boot/dts/ti/k3-am654-base-board.dt.yaml
+   CHECK   arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dt.yaml
+> 
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> index 00a36a14efe7..a36909d8b8c3 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> @@ -28,6 +28,26 @@
+>>   		#size-cells = <1>;
+>>   		ranges = <0x0 0x0 0x00100000 0x1c000>;
+>>   
+>> +		pcie0_ctrl: pcie-ctrl@4070 {
+> https://github.com/devicetree-org/devicetree-specification/releases/download/v0.3/devicetree-specification-v0.3.pdf
+> Section 2.2.2: why not use syscon@4070 and so on?
 
-Acked-by: Paul Mackerras <paulus@ozlabs.org>
+okay, will change to generic name.
+> 
+>> +			compatible = "syscon";
+>> +			reg = <0x00004070 0x4>;
+>> +		};
+>> +
+>> +		pcie1_ctrl: pcie-ctrl@4074 {
+>> +			compatible = "syscon";
+>> +			reg = <0x00004074 0x4>;
+>> +		};
+>> +
+>> +		pcie2_ctrl: pcie-ctrl@4078 {
+>> +			compatible = "syscon";
+>> +			reg = <0x00004078 0x4>;
+>> +		};
+>> +
+>> +		pcie3_ctrl: pcie-ctrl@407c {
+>> +			compatible = "syscon";
+>> +			reg = <0x0000407c 0x4>;
+>> +		};
+>> +
+>>   		serdes_ln_ctrl: serdes-ln-ctrl@4080 {
+>>   			compatible = "mmio-mux";
+>>   			reg = <0x00004080 0x50>;
+>> @@ -576,6 +596,204 @@
+>>   		};
+>>   	};
+>>   
+>> +	pcie0_rc: pcie@2900000 {
+>> +		compatible = "ti,j721e-pcie-host";
+>> +		reg = <0x00 0x02900000 0x00 0x1000>,
+>> +		      <0x00 0x02907000 0x00 0x400>,
+>> +		      <0x00 0x0d000000 0x00 0x00800000>,
+>> +		      <0x00 0x10000000 0x00 0x00001000>;
+>> +		reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
+>> +		interrupt-names = "link_state";
+>> +		interrupts = <GIC_SPI 318 IRQ_TYPE_EDGE_RISING>;
+>> +		device_type = "pci";
+>> +		ti,syscon-pcie-ctrl = <&pcie0_ctrl>;
+>> +		max-link-speed = <3>;
+>> +		num-lanes = <2>;
+>> +		power-domains = <&k3_pds 239 TI_SCI_PD_EXCLUSIVE>;
+>> +		clocks = <&k3_clks 239 1>;
+>> +		clock-names = "fck";
+>> +		#address-cells = <3>;
+>> +		#size-cells = <2>;
+>> +		bus-range = <0x0 0xf>;
+>> +		vendor-id = <0x104c>;
+>> +		device-id = <0xb00d>;
+>> +		msi-map = <0x0 &gic_its 0x0 0x10000>;
+>> +		dma-coherent;
+>> +		ranges = <0x01000000 0x0 0x10001000 0x0 0x10001000 0x0 0x0010000>,
+>> +			 <0x02000000 0x0 0x10011000 0x0 0x10011000 0x0 0x7fef000>;
+>> +		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
+>> +	};
+>> +
+>> +	pcie0_ep: pcie-ep@2900000 {
+> Not related to this patch, but just a suggestion: pcie-ep -> do we
+> need to add that to the Generic names in DT spec?
+> 
+> [...]
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e.dtsi b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
+>> index f787aa73aaae..eeb02115b966 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j721e.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
+>> @@ -132,9 +132,12 @@
+>>   			 <0x00 0x06400000 0x00 0x06400000 0x00 0x00400000>, /* USBSS1 */
+>>   			 <0x00 0x01000000 0x00 0x01000000 0x00 0x0af02400>, /* Most peripherals */
+>>   			 <0x00 0x30000000 0x00 0x30000000 0x00 0x0c400000>, /* MAIN NAVSS */
+>> -			 <0x00 0x0d000000 0x00 0x0d000000 0x00 0x01000000>, /* PCIe Core*/
+>> +			 <0x00 0x0d000000 0x00 0x0d000000 0x00 0x01800000>, /* PCIe Core*/
+>> +			 <0x00 0x0e000000 0x00 0x0e000000 0x00 0x01800000>, /* PCIe Core*/
+>>   			 <0x00 0x10000000 0x00 0x10000000 0x00 0x10000000>, /* PCIe DAT */
+> 										^^
+> 									should be PCIe1?
+> Just because you are introducing PCIe2,3 in this patch, the net result
+> does'nt look consistent? Also might want to cover this change in the
+> $commit_message.
 
-I expect Michael Ellerman will take the patch through his tree.
+yeah, we could have a separate patch for this change.
 
-Paul.
+Thanks
+Kishon
+
+> [...]
+>>   			 <0x00 0x64800000 0x00 0x64800000 0x00 0x00800000>, /* C71 */
+>> +			 <0x44 0x00000000 0x44 0x00000000 0x00 0x08000000>, /* PCIe2 DAT */
+>> +			 <0x44 0x10000000 0x44 0x10000000 0x00 0x08000000>, /* PCIe3 DAT */
+>>   			 <0x4d 0x80800000 0x4d 0x80800000 0x00 0x00800000>, /* C66_0 */
+>>   			 <0x4d 0x81800000 0x4d 0x81800000 0x00 0x00800000>, /* C66_1 */
+>>   			 <0x4e 0x20000000 0x4e 0x20000000 0x00 0x00080000>, /* GPU */
+>> -- 
+>> 2.17.1
+>>
+> 
