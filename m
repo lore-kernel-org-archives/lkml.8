@@ -2,84 +2,124 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC8DC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E109BC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5795220826
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00BD2078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rYA9GFWe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cvZ2lRWS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgIBG7F (ORCPT
+        id S1726380AbgIBHBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 02:59:05 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:13744 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726130AbgIBG7E (ORCPT
+        Wed, 2 Sep 2020 03:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgIBHBc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 02:59:04 -0400
-X-UUID: 119f0345a88c4236a3efd4bbda9cf244-20200902
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=hTLcyNYyBPWJYX2Mc3Z8w8kIsOdBU9WJXUAKmauSMIk=;
-        b=rYA9GFWeBpUrANWsPKg5hciadlHGfWgnVuiexqjjlFIJxgDFMiwrr41/YSNdasHZMKacInal3/WJTPKDYoHDN+w3IQcHKAAhSoyYrsgbfxC4ubXdkF6+lLOPdVAmvI6J5Wc9SahuE9LDTcxkZr4ITG9M7mUU27xuQ5vklgXQk3M=;
-X-UUID: 119f0345a88c4236a3efd4bbda9cf244-20200902
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <mark-pk.tsai@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1716032037; Wed, 02 Sep 2020 14:59:02 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 2 Sep 2020 14:59:00 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 2 Sep 2020 14:59:00 +0800
-From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-To:     <maz@kernel.org>, Daniel Palmer <daniel@0x0f.com>
-CC:     <alix.wu@mediatek.com>, <devicetree@vger.kernel.org>,
-        <jason@lakedaemon.net>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <mark-pk.tsai@mediatek.com>,
-        <matthias.bgg@gmail.com>, <robh+dt@kernel.org>,
-        <tglx@linutronix.de>, <yj.chiang@mediatek.com>
-Subject: Re: [PATCH v2 1/2] irqchip: irq-mst: Add MStar interrupt controller support
-Date:   Wed, 2 Sep 2020 14:59:00 +0800
-Message-ID: <20200902065900.2804-1-mark-pk.tsai@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <ec3dd6b7664d647b2dc27926539eadda@kernel.org>
-References: <ec3dd6b7664d647b2dc27926539eadda@kernel.org>
+        Wed, 2 Sep 2020 03:01:32 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FFEC061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:01:28 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d22so2321232pfn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 00:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2VBp7Lpbc9ICyEZOh+PAo/PTYbf1ofIuaPW1FlGuW60=;
+        b=cvZ2lRWS/K1mePpg+qzSYqqi1cRElv6vuYDkCfonKlKHO89DzNH/KqMbGv6t1Hcl3b
+         jBMiROk7dmO+zLsKzXhUOkPUR365CPCEEpd72j5fNU0xy8A36MxcyFaIcQUVuKEi185R
+         XmMbv6KrZolva+sbow2V5bbf4wy3d9fFgMias3gaOGFMdinYTLyeOMR1+7DLTgNKsKnY
+         cfkUdths5gFvqpjj2jPdq+76IE0Q0JfQ7hth2oSC4LYICEJe7SMmqbNgHxCg/B4Gw5sX
+         k52zJui/62CWfQSlT4Sx5vW2t+bubaowOMzduS+xyJNgrNtalz79ebkKMku7z4RxnBeS
+         G9fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2VBp7Lpbc9ICyEZOh+PAo/PTYbf1ofIuaPW1FlGuW60=;
+        b=MsU9U/npq/1858SaylRwnJ+DlY5rrjZfWsB+QtIALqa3rpgQCTAMVlDTRvaCBiKp72
+         UP0WdBT2QM1vFL1Wll8KLP5UE8a798hY9pXJL8wcimSenRlEZERQkPczbNTn8dTJNSz0
+         KbYByRVZ9tA89nu3EmkwKmlyJ1HCqGEO8vBZcvdqDbDjUvkGMa6xINog532eJJYFyzN9
+         RTtDXwrJbNv/l15qUXuh5GCZuIaBtpA1cvFU6dFdCUiAh6UAT9XDSrVwQqkelSCAJcWL
+         VX2NKQszeV4uFuaErRpynYHwexdLHEd/dA//ESDuj+4OoH34KcAS5Sq/hlFy9npro+RN
+         KMfg==
+X-Gm-Message-State: AOAM533Yvd7YOOSfBrYuEG8FWj+nJzWKLCq4LTnh/yfqaVRB9z8ArZ9D
+        zwBx4cMslQxfzrHZvuYbrDNDw9gaQ2gdC5+fpIA=
+X-Google-Smtp-Source: ABdhPJzyLrQWUInqU1HwkAEDX0M48D0ehobZk/DCp1+yTXFpbVCgHzovoVjqrhhEXk+moMSbkqf3tWhOekSGKTIyNQ0=
+X-Received: by 2002:a63:1402:: with SMTP id u2mr823991pgl.400.1599030088244;
+ Wed, 02 Sep 2020 00:01:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200901220305.6809-1-jernej.skrabec@siol.net>
+In-Reply-To: <20200901220305.6809-1-jernej.skrabec@siol.net>
+From:   Roman Stratiienko <r.stratiienko@gmail.com>
+Date:   Wed, 2 Sep 2020 10:01:17 +0300
+Message-ID: <CAGphcdnT4U8AztL_B_B2HYskQSAYKRgCQcnO3Q8Qj+UFO082hQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/sun4i: Fix DE2 YVU handling
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     mripard@kernel.org, wens@csie.org, irlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTWFyYyBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz4NCg0KPk9uIDIwMjAtMDgtMjAgMTM6
-MzYsIERhbmllbCBQYWxtZXIgd3JvdGU6DQo+PiBIaSBNYXJrLVBLLCBNYXJjDQo+PiANCj4+IEkn
-bSBub3Qgc3VyZSB0aGlzIHdpbGwgYmUgdGhlIGZpbmFsIHZlcnNpb24gYnV0IEknbSBnb2luZyB0
-byB0cnkgdG8NCj4+IGludGVncmF0ZSB0aGlzIHdpdGggbXkgY3VycmVudCBNU3Rhci9TaWdtYVN0
-YXIgdHJlZSBvdmVyIHRoZSB3ZWVrZW5kDQo+PiBhbmQgdGhlbiBJIGd1ZXNzIEkgY2FuIGdpdmUg
-dGhpcyBhIHRlc3RlZC1ieT8NCj4NCj5UaGF0J2QgYmUgZ29vZC4NCj4NCj4+IEFzc3VtaW5nIHRo
-aXMgdmVyc2lvbiBvciB0aGUgbmV4dCBpcyBhY2NlcHRhYmxlIGNhbiBJIGp1c3QgZm9sbG93IHVw
-DQo+PiB3aXRoIGEgc21hbGwgcGF0Y2ggdG8gYWRkIHRoZSBpbnN0YW5jZXMgSSBuZWVkIGluIG15
-IGR0c2kgb3Igc2hvdWxkIEkNCj4+IHdhaXQgdW50aWwgaXQncyBtZXJnZWQgYmVmb3JlIGRvaW5n
-IHRoYXQ/DQo+DQo+Tm8gbmVlZCB0byB3YWl0LCBhbHRob3VnaCB0aGUgcGxhdGZvcm0tc3BlY2lm
-aWMgZGV0YWlscyBzaG91bGQgZ28NCj52aWEgdGhlIGFybS1zb2MgdHJlZS4NCj4NCj5JJ20gbm90
-IGdvaW5nIHRvIHJldmlldyB0aGUgbmV3IHZlcnNpb24gYmVmb3JlIG5leHQgd2VlayBhbnl3YXkN
-Cj4oSSdtIG1ha2luZyBhIHBvaW50IGluIHJldmlld2luZyBhbnkgZ2l2ZW4gc2VyaWVzIGF0IG1v
-c3Qgb25jZQ0KPmEgd2VlaykuDQo+DQo+ICAgICAgICAgTS4NCj4tLSANCj5KYXp6IGlzIG5vdCBk
-ZWFkLiBJdCBqdXN0IHNtZWxscyBmdW5ueS4uLg0KDQpJJ3ZlIHBvc3QgdGhlIHBhdGNoIHYzWzFd
-IGFuZCB0aGUgZHJpdmVyIGlzIHNhbWUgYXMgdjIuDQpUaGUgZGlmZmVyZW5jZSBpcyB0aGF0IEkg
-YWRkIHRoZSB0ZXN0LWJ5IGxhYmVsIGJ5IERhbmllbCBhbmQgYWRkDQphbiBlbnRyeSBpbiBNQUlO
-VEFJTkVSUyBmb3IgbXN0LWludGMuDQoNClBsZWFzZSByZXZpZXcgaXQgYW5kIGxldCBtZSBrbm93
-IGlmIHlvdSBoYXZlIGFueSBzdWdnZXN0aW9ucy4NClRoYW5rcy4NCg0KWzFdIGh0dHBzOi8vbG9y
-ZS5rZXJuZWwub3JnL2xrbWwvMjAyMDA5MDIwNjMzNDQuMTg1Mi0yLW1hcmstcGsudHNhaUBtZWRp
-YXRlay5jb20v
+=D1=81=D1=80, 2 =D1=81=D0=B5=D0=BD=D1=82. 2020 =D0=B3. =D0=B2 00:58, Jernej=
+ Skrabec <jernej.skrabec@siol.net>:
+>
+> Function sun8i_vi_layer_get_csc_mode() is supposed to return CSC mode
+> but due to inproper return type (bool instead of u32) it returns just 0
+> or 1. Colors are wrong for YVU formats because of that.
+>
+> Fixes: daab3d0e8e2b ("drm/sun4i: de2: csc_mode in de2 format struct is mo=
+stly redundant")
+> Reported-by: Roman Stratiienko <r.stratiienko@gmail.com>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c b/drivers/gpu/drm/sun=
+4i/sun8i_vi_layer.c
+> index 22c8c5375d0d..c0147af6a840 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+> @@ -211,7 +211,7 @@ static int sun8i_vi_layer_update_coord(struct sun8i_m=
+ixer *mixer, int channel,
+>         return 0;
+>  }
+>
+> -static bool sun8i_vi_layer_get_csc_mode(const struct drm_format_info *fo=
+rmat)
+> +static u32 sun8i_vi_layer_get_csc_mode(const struct drm_format_info *for=
+mat)
+>  {
+>         if (!format->is_yuv)
+>                 return SUN8I_CSC_MODE_OFF;
+> --
+> 2.28.0
+>
 
+Hi Jernej,
+
+Thank you for the fix.
+I can confirm this patch fixes the issue with wrong colors.
+
+Let me share my thoughts:
+I've looked into csc code, and it seems to me reordering U, V offsets
+should be a much simpler solution than applying
+color transformation matrices.It should also simplify adding more
+color encodings in the future.
+
+Regards,
+Roman
