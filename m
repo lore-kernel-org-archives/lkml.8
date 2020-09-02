@@ -2,131 +2,166 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BF7C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DA0C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94B3C20773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:42:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="hchu6LZ4"
+	by mail.kernel.org (Postfix) with ESMTP id D86FF20773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgIBImq (ORCPT
+        id S1726323AbgIBIoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:42:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgIBImp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:42:45 -0400
-Received: from forward501p.mail.yandex.net (forward501p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E27D0C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 01:42:44 -0700 (PDT)
-Received: from mxback3o.mail.yandex.net (mxback3o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::1d])
-        by forward501p.mail.yandex.net (Yandex) with ESMTP id CDFE63500850;
-        Wed,  2 Sep 2020 11:42:34 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback3o.mail.yandex.net (mxback/Yandex) with ESMTP id tfaQAmOB7l-gX7uZfml;
-        Wed, 02 Sep 2020 11:42:34 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1599036154;
-        bh=ieL5eBZSKw/yFnrrPl/MqoxzrUjdZ7Hy9Kkk8GjSLdc=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=hchu6LZ4iqmfYa3Xt2FP/q1hd8hoSTICzDNiwd1rHFphhQKGChGcM4HftcZ+vTL7S
-         wXhPdK0lyLNrWyDeHq0A1IVzKKe0yYjTk2xl92dgwdmTCKRdqu1mj8dShXy/aOKfb0
-         o3DFUJsdmExtBVa5eZREKydFxnihxTd/mvQBPQQo=
-Authentication-Results: mxback3o.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by sas1-ffdbcd5f1d77.qloud-c.yandex.net with HTTP;
-        Wed, 02 Sep 2020 11:42:33 +0300
-From:   Evgeny Novikov <novikov@ispras.ru>
-Envelope-From: eugenenovikov@yandex.ru
-To:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-In-Reply-To: <20200901183912.GA5295@duo.ucw.cz>
-References: <20200901150934.576210879@linuxfoundation.org>
-         <20200901150936.857115610@linuxfoundation.org> <20200901183912.GA5295@duo.ucw.cz>
-Subject: Re: [PATCH 4.19 047/125] media: davinci: vpif_capture: fix potential double free
+        Wed, 2 Sep 2020 04:44:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:33398 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbgIBIoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 04:44:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9A2731B;
+        Wed,  2 Sep 2020 01:44:37 -0700 (PDT)
+Received: from ubuntu.arm.com (unknown [10.57.6.106])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 525FD3F68F;
+        Wed,  2 Sep 2020 01:44:36 -0700 (PDT)
+From:   Nicola Mazzucato <nicola.mazzucato@arm.com>
+To:     linux-kernel@vger.kernel.org, sudeep.holla@arm.com,
+        robh@kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc:     morten.rasmussen@arm.com
+Subject: [PATCH] dt-bindings: arm: Add devicetree binding for cpu-performance-dependencies
+Date:   Wed,  2 Sep 2020 09:45:16 +0100
+Message-Id: <20200902084516.26584-1-nicola.mazzucato@arm.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Wed, 02 Sep 2020 11:42:33 +0300
-Message-Id: <1304121599035106@mail.yandex.ru>
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+Currently, there is an assumption that the performance domains as provided
+by the SCMI protocol should be mirroring the exact implementation in
+hardware, for example, the clock domains, which are a typical type of
+performance domains.
 
-Maybe I miss something, but it seems that in 4.19 vpif_probe() ignores
-error codes from vpif_probe_complete() and returns 0 even if it fails.
-That was fixed by commit 64f883cd98c6, but it was not backported to 4.19.
-In addition, this commit contains a fix of one more bug.
+By design, an SCMI performance domain defines the granularity of
+performance controls, it does not describe any underlying hardware
+dependencies (although they may match in many cases).
 
-Regarding your second note. I investigated other drivers that use the same
-mechanism and did not find out any driver that performs clean up in the
-complete handler. In particular, this is the case for very similar driver
-vpif_display.c. I am not an expert in this subsystem, so, I can not reason
-why this is so.
+As a consequence, in platforms where hardware may have the ability to
+control cpu performance at different granularity and choose to describe
+fine-grained performance control through SCMI performance domains, there
+is currently no way for OSPM to discover the actual cpu hardware
+dependencies. Inevitably, software components that rely on this missing
+description will cease to work.
 
--- 
-Best regards,
-Evgeny Novikov
+Thus, there is a need for a new description of hardware dependencies where
+the performance level is coordinated by hardware (or firmware) since these
+dependency domains might be larger than the SCMI performance domains.
 
+This new optional binding will provide visibility to OSPM on any hardware
+or firmware coordination of performance requests and enable more
+accurate assumptions about performance and performance side-effects of
+requesting performance level changers. This is essential information for
+OSPM thermal and energy management frameworks.
 
+There are two main reasons to support this new addition:
 
-01.09.2020, 21:43, "Pavel Machek" <pavel@denx.de>:
-> Hi!
->
->>  [ Upstream commit 602649eadaa0c977e362e641f51ec306bc1d365d ]
->>
->>  In case of errors vpif_probe_complete() releases memory for vpif_obj.sd
->>  and unregisters the V4L2 device. But then this is done again by
->>  vpif_probe() itself. The patch removes the cleaning from
->>  vpif_probe_complete().
->
->>  Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
->>  Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
->>  Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
->>  Signed-off-by: Sasha Levin <sashal@kernel.org>
->>  ---
->>   drivers/media/platform/davinci/vpif_capture.c | 2 --
->>   1 file changed, 2 deletions(-)
->>
->>  diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
->>  index a96f53ce80886..cf1d11e6dd8c4 100644
->>  --- a/drivers/media/platform/davinci/vpif_capture.c
->>  +++ b/drivers/media/platform/davinci/vpif_capture.c
->>  @@ -1489,8 +1489,6 @@ probe_out:
->>                   /* Unregister video device */
->>                   video_unregister_device(&ch->video_dev);
->>           }
->>  - kfree(vpif_obj.sd);
->>  - v4l2_device_unregister(&vpif_obj.v4l2_dev);
->>
->>           return err;
->>   }
->
-> This one is wrong. Unlike mainline, 4.19 does check return value of
-> vpif_probe_complete(), and thus it will lead to memory leak in 4.19.
->
-> Furthermore, I believe mainline still has a problems after this
-> patch. There is sync and async path where vpif_probe_complete(), and
-> while this fixes the sync path in mainline, I believe it will cause
-> memory leak on the async path.
->
-> Best regards,
->                                                                         Pavel
->
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1) Per-cpu control & SCMI performance domains
+
+Same as explained above. Some platforms would like to make aggregation
+decisions in firmware and want to describe themselves as having per-cpu
+control. In order to continue to make sane decisions in the OSPM layer,
+we need to know about the underlying connections.
+
+With this optional binding, we provide performance dependencies
+information to OSPM for sets of CPUs while the h/w coordinates the
+performance level for each cpu.
+
+2) ACPI
+
+With respect to performance, ACPI describes two main types of coordination
+that may take place in system when logical processors are required to
+transition to a different power/performance state. These two types are
+software coordination (SW) and hardware coordination (HW). In the first
+one, OSPM is in charge of handling such transitions while preserving the
+integrity of the entire system. In the latter case, the h/w is responsible
+for ensuring correct operations.
+
+In the HW coordination, OSPM can control each processor as if they were all
+independent each other. However, platforms can use ACPI defined interfaces
+to group CPUs to create so called "dependency domain". Such interface is
+the _PSD method. Users in kernel that need to know dependencies among
+cores, can retrieve such information via _PSD [1].
+
+If the same system needs to work with dt + SCMI, we will have all the
+controls, but we are missing the information performance level coordination
+in hardware/firmware.
+This new dt binding provides the missing bits.
+
+[1]ACPI Specification, version 6.3 - 8.3 Power, Performance, and Throttling
+State Dependencies
+
+Signed-off-by: Nicola Mazzucato <nicola.mazzucato@arm.com>
+---
+ .../bindings/arm/cpu-perf-dependencies.yaml   | 45 +++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-perf-dependencies.yaml
+
+diff --git a/Documentation/devicetree/bindings/arm/cpu-perf-dependencies.yaml b/Documentation/devicetree/bindings/arm/cpu-perf-dependencies.yaml
+new file mode 100644
+index 000000000000..3b8cf7e29982
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-perf-dependencies.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/cpu-perf-dependencies.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: CPU Performance Dependencies
++
++maintainers:
++  - Nicola Mazzucato <nicola.mazzucato@arm.com>
++
++description: |+
++  This optional node provides information to OSPM of cpu performance
++  dependencies.
++  Each list represents a set of CPUs which have performance level
++  dependencies and can assumed to be roughly at the same performance
++  level coordinated by hardware and/or firmware.
++  Example: Describing CPUs in the same clock domain.
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - arm,cpu-perf-dependencies
++
++  cpu-perf-affinity:
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++    description: |
++      Specifies a list of phandles to CPU nodes corresponding to a set of CPUs
++      which have performance affinity.
++
++examples:
++  - |
++    cpu-performance-dependencies {
++        compatible = "arm,cpu-perf-dependencies";
++        cpu-perf-domain0 {
++            cpu-perf-affinity = <&CPU0>, <&CPU1>, <&CPU2>, <&CPU3>;
++        }
++        cpu-perf-domain1 {
++            cpu-perf-affinity = <&CPU4>, <&CPU5>, <&CPU6>;
++        }
++        cpu-perf-domain2 {
++            cpu-perf-affinity = <&CPU7>;
++        }
++    };
+-- 
+2.27.0
+
