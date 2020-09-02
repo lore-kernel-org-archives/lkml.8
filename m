@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC8CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC630C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23DC32065E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77D72065E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:22:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ugTzqlrK"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="qyvR/wSd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgIBDWl (ORCPT
+        id S1726567AbgIBDWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 23:22:41 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:39633 "EHLO
+        Tue, 1 Sep 2020 23:22:40 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:39634 "EHLO
         gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgIBDWj (ORCPT
+        with ESMTP id S1726244AbgIBDWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 23:22:39 -0400
 Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 471B984487;
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4F13784488;
         Wed,  2 Sep 2020 15:22:35 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
         s=mail181024; t=1599016955;
-        bh=Qsnp+Uwy/PPWqKBD20EdDvSCjEBEWSRlM/tVJS9qc1w=;
+        bh=TIK2ZarG+pHpksoKlt2pxfkQdePFZ8pjCPM1KihJnMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=ugTzqlrKE3yf9DY3ACtN9QxxjokVvy6oWjyM2z8jbazIvOMbMoiMsd2MK7v5zUIYn
-         aIeA4z7yV6Ewli38tbRd7n5nBw0OKR/FKyBrbvDUujpiJexObOPoqv3whOAfsFLyKD
-         pLTFaX2TQNmdGC5UHocsCwe4a7EscuW3edRwdetBpkB4V/VQNf8gncrS6CYqw1xOh0
-         6fzLfofOdmguezlJHUsJNt7K2CcoXuDFt1k+jLp9rS2ioRJiSzVK84YEjz9uwwGivQ
-         og13D3IOqAKi+VHFvMhdnlHy892LBj+krx4G2aG0NMSAKd6YD/6noC26OQsV1b3o15
-         /pVDIRbQ+rXRA==
+        b=qyvR/wSdo8LWAQMGmpnlfiNbDldawPLWtd0IEJBOGroynF+yZcWBCexz9KaR38YCL
+         QzE8dcSsnFqaYvgH0tifChRqjWy2GOgDrvEsjtJQ7fRtBIOvHrOe/2eDXCsJzoUBZa
+         w3uHzzuu/IHR3XvYrz2KwZrTvXM0OQC61ZdZagJDUqm04qZnvexb+3LYwD0honjLXT
+         chWYM2HIphnKYjaxjQ2+zaDXXqjviQ0BU0a1dpx6AJS8dsRbIcRYF4Q4iP7bIRxlVI
+         J7LWOf6J1LCSrZlH7otflhdFXYW/7O0yKS+eAHDnfZNR9XiblcByjvX5aDSjM52L+a
+         TR4v/GgYPiORw==
 Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f4f0ffb0002>; Wed, 02 Sep 2020 15:22:35 +1200
+        id <B5f4f0ffb0001>; Wed, 02 Sep 2020 15:22:35 +1200
 Received: from pauld-dl.ws.atlnz.lc (pauld-dl.ws.atlnz.lc [10.33.23.16])
-        by smtp (Postfix) with ESMTP id C81C013EEBA;
+        by smtp (Postfix) with ESMTP id C448713EED0;
         Wed,  2 Sep 2020 15:22:34 +1200 (NZST)
 Received: by pauld-dl.ws.atlnz.lc (Postfix, from userid 1684)
-        id 1BB051E05CC; Wed,  2 Sep 2020 15:22:35 +1200 (NZST)
+        id 17BBC1E0574; Wed,  2 Sep 2020 15:22:35 +1200 (NZST)
 From:   Paul Davey <paul.davey@alliedtelesis.co.nz>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Paul Davey <paul.davey@alliedtelesis.co.nz>
-Subject: [PATCH net-next 2/2] ipmr: Use full VIF ID in netlink cache reports
-Date:   Wed,  2 Sep 2020 15:22:22 +1200
-Message-Id: <20200902032222.25109-3-paul.davey@alliedtelesis.co.nz>
+Subject: [PATCH net-next 1/2] ipmr: Add route table ID to netlink cache reports
+Date:   Wed,  2 Sep 2020 15:22:21 +1200
+Message-Id: <20200902032222.25109-2-paul.davey@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200902032222.25109-1-paul.davey@alliedtelesis.co.nz>
 References: <20200902032222.25109-1-paul.davey@alliedtelesis.co.nz>
@@ -63,66 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Insert the full 16 bit VIF ID into ipmr Netlink cache reports.
+Insert the multicast route table ID as a Netlink attribute to Netlink
+cache report notifications.
 
-If using more than 255 multicast interfaces it is necessary to have
-access to a VIF ID for cache reports that is wider than 8 bits, the
-VIF ID present in the igmpmsg reports sent to mroute_sk are only 8
-bits wide in the igmpmsg header.  The VIF_ID attribute has 32 bits of
-space however so can store the full VIF ID.
+When multiple route tables are in use it is necessary to have a way to
+determine which route table a given cache report belongs to when
+receiving the cache report.
 
 Signed-off-by: Paul Davey <paul.davey@alliedtelesis.co.nz>
 ---
- net/ipv4/ipmr.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/uapi/linux/mroute.h | 1 +
+ net/ipv4/ipmr.c             | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/include/uapi/linux/mroute.h b/include/uapi/linux/mroute.h
+index 11c8c1fc1124..918f1ef32ffe 100644
+--- a/include/uapi/linux/mroute.h
++++ b/include/uapi/linux/mroute.h
+@@ -169,6 +169,7 @@ enum {
+ 	IPMRA_CREPORT_SRC_ADDR,
+ 	IPMRA_CREPORT_DST_ADDR,
+ 	IPMRA_CREPORT_PKT,
++	IPMRA_CREPORT_TABLE,
+ 	__IPMRA_CREPORT_MAX
+ };
+ #define IPMRA_CREPORT_MAX (__IPMRA_CREPORT_MAX - 1)
 diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
-index 19b2f586319b..26cd4ec450f4 100644
+index 876fd6ff1ff9..19b2f586319b 100644
 --- a/net/ipv4/ipmr.c
 +++ b/net/ipv4/ipmr.c
-@@ -104,7 +104,7 @@ static int ipmr_cache_report(struct mr_table *mrt,
- 			     struct sk_buff *pkt, vifi_t vifi, int assert);
- static void mroute_netlink_event(struct mr_table *mrt, struct mfc_cache =
-*mfc,
- 				 int cmd);
--static void igmpmsg_netlink_event(struct mr_table *mrt, struct sk_buff *=
-pkt);
-+static void igmpmsg_netlink_event(struct mr_table *mrt, struct sk_buff *=
-pkt, vifi_t vifi);
- static void mroute_clean_tables(struct mr_table *mrt, int flags);
- static void ipmr_expire_process(struct timer_list *t);
-=20
-@@ -1072,7 +1072,7 @@ static int ipmr_cache_report(struct mr_table *mrt,
- 		return -EINVAL;
- 	}
-=20
--	igmpmsg_netlink_event(mrt, skb);
-+	igmpmsg_netlink_event(mrt, skb, vifi);
-=20
- 	/* Deliver to mrouted */
- 	ret =3D sock_queue_rcv_skb(mroute_sk, skb);
-@@ -2404,7 +2404,7 @@ static size_t igmpmsg_netlink_msgsize(size_t payloa=
+@@ -2396,6 +2396,7 @@ static size_t igmpmsg_netlink_msgsize(size_t payloa=
 dlen)
- 	return len;
- }
-=20
--static void igmpmsg_netlink_event(struct mr_table *mrt, struct sk_buff *=
-pkt)
-+static void igmpmsg_netlink_event(struct mr_table *mrt, struct sk_buff *=
-pkt, vifi_t vifi)
- {
- 	struct net *net =3D read_pnet(&mrt->net);
- 	struct nlmsghdr *nlh;
-@@ -2428,7 +2428,7 @@ static void igmpmsg_netlink_event(struct mr_table *=
+ 		+ nla_total_size(4)	/* IPMRA_CREPORT_VIF_ID */
+ 		+ nla_total_size(4)	/* IPMRA_CREPORT_SRC_ADDR */
+ 		+ nla_total_size(4)	/* IPMRA_CREPORT_DST_ADDR */
++		+ nla_total_size(4)	/* IPMRA_CREPORT_TABLE */
+ 					/* IPMRA_CREPORT_PKT */
+ 		+ nla_total_size(payloadlen)
+ 		;
+@@ -2431,7 +2432,8 @@ static void igmpmsg_netlink_event(struct mr_table *=
 mrt, struct sk_buff *pkt)
- 	rtgenm =3D nlmsg_data(nlh);
- 	rtgenm->rtgen_family =3D RTNL_FAMILY_IPMR;
- 	if (nla_put_u8(skb, IPMRA_CREPORT_MSGTYPE, msg->im_msgtype) ||
--	    nla_put_u32(skb, IPMRA_CREPORT_VIF_ID, msg->im_vif) ||
-+	    nla_put_u32(skb, IPMRA_CREPORT_VIF_ID, vifi) ||
  	    nla_put_in_addr(skb, IPMRA_CREPORT_SRC_ADDR,
  			    msg->im_src.s_addr) ||
  	    nla_put_in_addr(skb, IPMRA_CREPORT_DST_ADDR,
+-			    msg->im_dst.s_addr))
++			    msg->im_dst.s_addr) ||
++	    nla_put_u32(skb, IPMRA_CREPORT_TABLE, mrt->id))
+ 		goto nla_put_failure;
+=20
+ 	nla =3D nla_reserve(skb, IPMRA_CREPORT_PKT, payloadlen);
 --=20
 2.28.0
 
