@@ -2,138 +2,120 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A693FC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D62C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E0820773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E94C2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599063063;
+	bh=1OCEDwU9HDg1YRkwjzMBn5RpJKhK/uC509VN2U3vg0c=;
+	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
+	b=F+PFNOaC5OO0nYgL7awIScbc6+kp1UcLKtru2WXd97EWoQiH69Tb7mLt1OxRvLGj3
+	 aBmHBh5RqvnethUI1eW2UKih4GrO+lMO3uxWZTZteSZ2tJAk8Q4E4byROuqaMib8pu
+	 DK7vmnZDIWXLjjMovBsczSPmWrQKaot7EXMmuipI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgIBQKU (ORCPT
+        id S1728355AbgIBQLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:10:20 -0400
-Received: from mga12.intel.com ([192.55.52.136]:54567 "EHLO mga12.intel.com"
+        Wed, 2 Sep 2020 12:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgIBQKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:10:15 -0400
-IronPort-SDR: pTlYTrPte78yWv7EsbcamGLtbomhEQ2xXyX5iiWnQIWxxhMOdGy/FMWOfD/0dIAWwOGio6rBqp
- udCDY098iAeA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="136936699"
-X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
-   d="scan'208";a="136936699"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 09:10:14 -0700
-IronPort-SDR: z7oVRryQh/ClvKbs+i9o24T4ivjV7OmRQjFOvPMU7sRVdfGLKDdgp/Ru5lhwJWC/pV1wW0GNPE
- p6CXSVkxosHg==
-X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
-   d="scan'208";a="446576484"
-Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 09:10:14 -0700
-Date:   Wed, 2 Sep 2020 09:10:12 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Haitao Huang <haitao.huang@linux.intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, josh@joshtriplett.org,
-        kai.huang@intel.com, kai.svahn@intel.com, kmoy@google.com,
-        ludloff@google.com, luto@kernel.org, nhorman@redhat.com,
-        puiterwijk@redhat.com, rientjes@google.com, tglx@linutronix.de,
-        yaozhangx@google.com
-Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
-Message-ID: <20200902161012.GD11695@sjchrist-ice>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
- <20200702035902.GC1819@linux.intel.com>
- <20200704033025.GA144756@linux.intel.com>
- <op.0qaqw6rvwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
+        id S1726323AbgIBQKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:10:46 -0400
+Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5B0320829;
+        Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599063046;
+        bh=1OCEDwU9HDg1YRkwjzMBn5RpJKhK/uC509VN2U3vg0c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ifhvhUuYT6pd0LE2qsDDFfRrMs8OdIaCz9X7BIOgxoGIjS6nbjFk3zb/jSh37oh2k
+         nF6OongzJKq2WaCYU3KSWPiKn5o9cVjdXfv0Jh96z4VXkZpBNguFTgU0YhvGGBUa+O
+         Ypt7/TzZzQ1xyDr+AhnWN65zCsVHK6mfMlG7CzEI=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kDVLP-000t9r-Oh; Wed, 02 Sep 2020 18:10:43 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 05/38] media: wl128x: get rid of a potential spectre issue
+Date:   Wed,  2 Sep 2020 18:10:08 +0200
+Message-Id: <17a07bd5f4a690a388ba03daf8d01b30bd9cd8d9.1599062230.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
+References: <cover.1599062230.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <op.0qaqw6rvwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 10:06:32PM -0500, Haitao Huang wrote:
-> On Fri, 03 Jul 2020 22:31:10 -0500, Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> 
-> > On Wed, Jul 01, 2020 at 08:59:02PM -0700, Sean Christopherson wrote:
-> > > On Thu, Jun 18, 2020 at 01:08:33AM +0300, Jarkko Sakkinen wrote:
-> > > > +static int sgx_validate_secs(const struct sgx_secs *secs,
-> > > > +			     unsigned long ssaframesize)
-> > > > +{
-> > > > +	if (secs->size < (2 * PAGE_SIZE) || !is_power_of_2(secs->size))
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	if (secs->base & (secs->size - 1))
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	if (secs->miscselect & sgx_misc_reserved_mask ||
-> > > > +	    secs->attributes & sgx_attributes_reserved_mask ||
-> > > > +	    secs->xfrm & sgx_xfrm_reserved_mask)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	if (secs->attributes & SGX_ATTR_MODE64BIT) {
-> > > > +		if (secs->size > sgx_encl_size_max_64)
-> > > > +			return -EINVAL;
-> > > > +	} else if (secs->size > sgx_encl_size_max_32)
-> > > > +		return -EINVAL;
-> > > 
-> > > These should be >=, not >, the SDM uses one of those fancy ≥ ligatures.
-> > > 
-> > > Internal versions use more obvious pseudocode, e.g.:
-> > > 
-> > >     if ((DS:TMP_SECS.ATTRIBUTES.MODE64BIT = 1) AND
-> > >         (DS:TMP_SECS.SIZE AND (~((1 << CPUID.18.0:EDX[15:8]) – 1)))
-> > >     {
-> > >         #GP(0);
-> > 
-> > Updated as:
-> > 
-> > static int sgx_validate_secs(const struct sgx_secs *secs)
-> > {
-> > 	u64 max_size = (secs->attributes & SGX_ATTR_MODE64BIT) ?
-> > 		       sgx_encl_size_max_64 : sgx_encl_size_max_32;
-> > 
-> > 	if (secs->size < (2 * PAGE_SIZE) || !is_power_of_2(secs->size))
-> > 		return -EINVAL;
-> > 
-> > 	if (secs->base & (secs->size - 1))
-> > 		return -EINVAL;
-> > 
-> > 	if (secs->miscselect & sgx_misc_reserved_mask ||
-> > 	    secs->attributes & sgx_attributes_reserved_mask ||
-> > 	    secs->xfrm & sgx_xfrm_reserved_mask)
-> > 		return -EINVAL;
-> > 
-> > 	if (secs->size >= max_size)
-> > 		return -EINVAL;
-> > 
-> 
-> This should be > not >=. Issue raised and fixed by Fábio Silva for ported
-> patches for OOT SGX support:
-> https://github.com/intel/SGXDataCenterAttestationPrimitives/pull/123
-> 
-> I tested and verified with Intel arch, the comparison indeed should be >.
+As reported by smatch:
+	drivers/media/radio/wl128x/fmdrv_common.c:736 fm_irq_handle_rdsdata_getcmd_resp() warn: potential spectre issue 'rds_fmt.data.groupdatabuff.buff>
 
-And this is a confirmed SDM bug, correct?
+Address it by using array_index_nospec().
+
+While here, reorder the linux/ includes.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ drivers/media/radio/wl128x/fmdrv_common.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/media/radio/wl128x/fmdrv_common.c b/drivers/media/radio/wl128x/fmdrv_common.c
+index 5c395da74e17..9abc8e0283c1 100644
+--- a/drivers/media/radio/wl128x/fmdrv_common.c
++++ b/drivers/media/radio/wl128x/fmdrv_common.c
+@@ -19,9 +19,11 @@
+  *  Author: Manjunatha Halli <manjunatha_halli@ti.com>
+  */
+ 
+-#include <linux/module.h>
+-#include <linux/firmware.h>
+ #include <linux/delay.h>
++#include <linux/firmware.h>
++#include <linux/module.h>
++#include <linux/nospec.h>
++
+ #include "fmdrv.h"
+ #include "fmdrv_v4l2.h"
+ #include "fmdrv_common.h"
+@@ -700,7 +702,7 @@ static void fm_irq_handle_rdsdata_getcmd_resp(struct fmdev *fmdev)
+ 	struct fm_rds *rds = &fmdev->rx.rds;
+ 	unsigned long group_idx, flags;
+ 	u8 *rds_data, meta_data, tmpbuf[FM_RDS_BLK_SIZE];
+-	u8 type, blk_idx;
++	u8 type, blk_idx, idx;
+ 	u16 cur_picode;
+ 	u32 rds_len;
+ 
+@@ -733,9 +735,11 @@ static void fm_irq_handle_rdsdata_getcmd_resp(struct fmdev *fmdev)
+ 		}
+ 
+ 		/* Skip checkword (control) byte and copy only data byte */
+-		memcpy(&rds_fmt.data.groupdatabuff.
+-				buff[blk_idx * (FM_RDS_BLK_SIZE - 1)],
+-				rds_data, (FM_RDS_BLK_SIZE - 1));
++		idx = array_index_nospec(blk_idx * (FM_RDS_BLK_SIZE - 1),
++				         FM_RX_RDS_INFO_FIELD_MAX - (FM_RDS_BLK_SIZE - 1));
++
++		memcpy(&rds_fmt.data.groupdatabuff.buff[idx], rds_data,
++		       FM_RDS_BLK_SIZE - 1);
+ 
+ 		rds->last_blk_idx = blk_idx;
+ 
+-- 
+2.26.2
+
