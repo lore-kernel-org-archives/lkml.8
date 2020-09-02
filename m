@@ -2,202 +2,118 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 828E4C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7CCC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42390208C7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E05FA20758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599075825;
-	bh=LV44U5Bug3fmrofspGne+fm9i9nDhwK6TWX3gfFZUbc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ooml3x1Yo6dICZfxs0IbvBnC3h/SJAvT/hLv+SDsZrTRBFqjG1t+7qB0Re/s40REz
-	 7+rkwYNq7M9MF1NWqPz/m04rXiKcyNFdnO+8c1+vz7wAvg1sCW4udBrnqFXHpxyQjS
-	 3DM1rvRXMejXplHa/q2dfz9rEw7MM7Z4nPjVErkA=
+	s=default; t=1599075930;
+	bh=+D+HnNz+VrpzF30cgOx0/44g3rIEaRFahWzOaAq0owE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Zpw8iLfQDgMfrY4RXS+3ynGDitoXAcVAInphMgMuktgpM7dEQqAQU3q9XIevF4mof
+	 riFsblQKerWEZiEm+ILW+Uj6RAqvMZhDTmw/ABoI2lHJ27t9BYjV9VzRYXnrqVTAZP
+	 5zO8n3Ck7uBhp6REsckeaqXiCBSDRp9ipgSbipJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgIBTnn (ORCPT
+        id S1726523AbgIBTp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 15:43:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52208 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 15:45:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgIBTnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 15:43:42 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726140AbgIBTp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 15:45:27 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 202692083B;
-        Wed,  2 Sep 2020 19:43:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C98D20773;
+        Wed,  2 Sep 2020 19:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599075822;
-        bh=LV44U5Bug3fmrofspGne+fm9i9nDhwK6TWX3gfFZUbc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=ql3kuNFy3qZ5w7RYXya2aGz/L0paD5+UUDjH8JG9QDmbOOT+IWhE1r76pQafbQ9EI
-         hke+ltK5+2/UH3yKDTIT50b7MIXvGsqQ4i3uJBdZnt1bSUzBVyw94Q/AxW5sZK/LIS
-         RZ/s7/0IUWihhb+kOsCsbT1iijLEEk0rXKA6UQMA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E88B5352260D; Wed,  2 Sep 2020 12:43:41 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 12:43:41 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     peterz@infradead.org
-Cc:     mingo@kernel.org, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>, frederic@kernel.org,
-        joel@joelfernandes.org
-Subject: Re: [PATCH] lockdep: Fix "USED" <- "IN-NMI" inversions
-Message-ID: <20200902194341.GK29330@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200902160323.GK1362448@hirez.programming.kicks-ass.net>
+        s=default; t=1599075435;
+        bh=+D+HnNz+VrpzF30cgOx0/44g3rIEaRFahWzOaAq0owE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1SQS24JOeFsx1iasRvSrQ65PxPvLq6dmxeYcepsSK8GUZGbyMelZlNIuhySqBfDi1
+         bZnWylzcAirhjbBZDld4bG3srPaamgSu01Z9UN63UVkQ+oyD8xxZqDnIHmEKgpQ6sm
+         zRt4WFNvhEsJP72JojS+Lha8JOjX4CQ66Zr6jp9Y=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-tegra@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 00/11] mmc: Minor cleanups and compile test
+Date:   Wed,  2 Sep 2020 21:36:47 +0200
+Message-Id: <20200902193658.20539-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902160323.GK1362448@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 06:03:23PM +0200, peterz@infradead.org wrote:
-> 
-> During the LPC RCU BoF Paul asked how come the "USED" <- "IN-NMI"
-> detector doesn't trip over rcu_read_lock()'s lockdep annotation.
-> 
-> Looking into this I found a very embarrasing typo in
-> verify_lock_unused():
-> 
-> -	if (!(class->usage_mask & LOCK_USED))
-> +	if (!(class->usage_mask & LOCKF_USED))
-> 
-> fixing that will indeed cause rcu_read_lock() to insta-splat :/
-> 
-> The above typo means that instead of testing for: 0x100 (1 <<
-> LOCK_USED), we test for 8 (LOCK_USED), which corresponds to (1 <<
-> LOCK_ENABLED_HARDIRQ).
-> 
-> So instead of testing for _any_ used lock, it will only match any lock
-> used with interrupts enabled.
-> 
-> The rcu_read_lock() annotation uses .check=0, which means it will not
-> set any of the interrupt bits and will thus never match.
-> 
-> In order to properly fix the situation and allow rcu_read_lock() to
-> correctly work, split LOCK_USED into LOCK_USED and LOCK_USED_READ and by
-> having .read users set USED_READ and test USED, pure read-recursive
-> locks are permitted.
-> 
-> Fixes: f6f48e180404 ("lockdep: Teach lockdep about "USED" <- "IN-NMI" inversions")
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Hi,
 
-Thank you for looking into this!
+Set of minor cleanups.  Patches requiring more attention:
+ - 6/11: Testing and review would be appreciated,
+ - 11/11: I build tested multiple architectures but not all and
+   definitely no all possible configs. This one could sit on the lists
+   for few days so 0-day would try it.
 
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
+Best regards,
+Krzysztof
 
-> ---
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index cccf4bc759c6..454355c033d2 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -4324,13 +4324,18 @@ static int separate_irq_context(struct task_struct *curr,
->  static int mark_lock(struct task_struct *curr, struct held_lock *this,
->  			     enum lock_usage_bit new_bit)
->  {
-> -	unsigned int new_mask = 1 << new_bit, ret = 1;
-> +	unsigned int old_mask, new_mask, ret = 1;
->  
->  	if (new_bit >= LOCK_USAGE_STATES) {
->  		DEBUG_LOCKS_WARN_ON(1);
->  		return 0;
->  	}
->  
-> +	if (new_bit == LOCK_USED && this->read)
-> +		new_bit = LOCK_USED_READ;
-> +
-> +	new_mask = 1 << new_bit;
-> +
->  	/*
->  	 * If already set then do not dirty the cacheline,
->  	 * nor do any checks:
-> @@ -4343,13 +4348,22 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
->  	/*
->  	 * Make sure we didn't race:
->  	 */
-> -	if (unlikely(hlock_class(this)->usage_mask & new_mask)) {
-> -		graph_unlock();
-> -		return 1;
-> -	}
-> +	if (unlikely(hlock_class(this)->usage_mask & new_mask))
-> +		goto unlock;
->  
-> +	old_mask = hlock_class(this)->usage_mask;
->  	hlock_class(this)->usage_mask |= new_mask;
->  
-> +	/*
-> +	 * Save one usage_traces[] entry and map both LOCK_USED and
-> +	 * LOCK_USED_READ onto the same entry.
-> +	 */
-> +	if (new_bit == LOCK_USED || new_bit == LOCK_USED_READ) {
-> +		if (old_mask & (LOCKF_USED | LOCKF_USED_READ))
-> +			goto unlock;
-> +		new_bit = LOCK_USED;
-> +	}
-> +
->  	if (!(hlock_class(this)->usage_traces[new_bit] = save_trace()))
->  		return 0;
->  
-> @@ -4363,6 +4377,7 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
->  			return 0;
->  	}
->  
-> +unlock:
->  	graph_unlock();
->  
->  	/*
-> @@ -5297,12 +5312,20 @@ static void verify_lock_unused(struct lockdep_map *lock, struct held_lock *hlock
->  {
->  #ifdef CONFIG_PROVE_LOCKING
->  	struct lock_class *class = look_up_lock_class(lock, subclass);
-> +	unsigned long mask = LOCKF_USED;
->  
->  	/* if it doesn't have a class (yet), it certainly hasn't been used yet */
->  	if (!class)
->  		return;
->  
-> -	if (!(class->usage_mask & LOCK_USED))
-> +	/*
-> +	 * READ locks only conflict with USED, such that if we only ever use
-> +	 * READ locks, there is no deadlock possible -- RCU.
-> +	 */
-> +	if (!hlock->read)
-> +		mask |= LOCKF_USED_READ;
-> +
-> +	if (!(class->usage_mask & mask))
->  		return;
->  
->  	hlock->class_idx = class - lock_classes;
-> diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-> index baca699b94e9..b0be1560ed17 100644
-> --- a/kernel/locking/lockdep_internals.h
-> +++ b/kernel/locking/lockdep_internals.h
-> @@ -19,6 +19,7 @@ enum lock_usage_bit {
->  #include "lockdep_states.h"
->  #undef LOCKDEP_STATE
->  	LOCK_USED,
-> +	LOCK_USED_READ,
->  	LOCK_USAGE_STATES
->  };
->  
-> @@ -40,6 +41,7 @@ enum {
->  #include "lockdep_states.h"
->  #undef LOCKDEP_STATE
->  	__LOCKF(USED)
-> +	__LOCKF(USED_READ)
->  };
->  
->  #define LOCKDEP_STATE(__STATE)	LOCKF_ENABLED_##__STATE |
+Krzysztof Kozlowski (11):
+  mmc: bcm2835: Simplify with dev_err_probe()
+  mmc: davinci: Simplify with dev_err_probe()
+  mmc: dw_mmc-zx: Simplify with dev_err_probe()
+  mmc: jz4740: Simplify with dev_err_probe()
+  mmc: meson: Simplify with dev_err_probe()
+  mmc: sdhci-brcmstb: Simplify with optional clock and dev_err_probe()
+  mmc: sdhci-of-arasan: Simplify with dev_err_probe()
+  mmc: sdhci-tegra: Simplify with dev_err_probe()
+  mmc: dw_mmc: Simplify with dev_err_probe()
+  mmc: sdhci-of-sparx5: Use proper printk format for dma_addr_t
+  mmc: host: Enable compile testing of multiple drivers
+
+ drivers/mmc/host/Kconfig           | 42 ++++++++++++++++--------------
+ drivers/mmc/host/bcm2835.c         |  4 +--
+ drivers/mmc/host/davinci_mmc.c     |  5 ++--
+ drivers/mmc/host/dw_mmc-zx.c       | 11 +++-----
+ drivers/mmc/host/dw_mmc.c          |  9 +++----
+ drivers/mmc/host/jz4740_mmc.c      |  5 ++--
+ drivers/mmc/host/meson-gx-mmc.c    | 16 ++++--------
+ drivers/mmc/host/sdhci-brcmstb.c   | 12 ++++-----
+ drivers/mmc/host/sdhci-of-arasan.c |  7 +++--
+ drivers/mmc/host/sdhci-of-sparx5.c |  4 +--
+ drivers/mmc/host/sdhci-tegra.c     |  7 ++---
+ 11 files changed, 51 insertions(+), 71 deletions(-)
+
+-- 
+2.17.1
+
