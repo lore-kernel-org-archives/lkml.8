@@ -2,298 +2,144 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD926C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F35C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABA12071B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422B820829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:34:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NASSHG0q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZoITomd6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgIBKbx (ORCPT
+        id S1726377AbgIBKe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 06:31:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgIBKbt (ORCPT
+        Wed, 2 Sep 2020 06:34:27 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52018 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726167AbgIBKeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 06:31:49 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79C33C061244;
-        Wed,  2 Sep 2020 03:31:47 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id bh1so2075530plb.12;
-        Wed, 02 Sep 2020 03:31:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fXyoYPlaGWNehGt1iU1AjjtO78K2/p8F/lqdKmDy5Tc=;
-        b=NASSHG0qFiIcpXyfhW556HWzsnWY/lm44eCucBfMFz5oslRyq2NhrAywO5t1PGpiLu
-         SyWQd45919/qWmQ7hDZhM6tJmniE5gLFql6q0Cf1/5bQHrrQ6nVokv/aN8D7vUCnIJJt
-         I7Gbzhq4Vch5+aoUiUOGCdC4zcJCFhuWuxVHOlfAxLPuGg+/Ik3R42eBHlN/xnTlZzTi
-         6R53o1WUdlb0p/0+iV1zrmFRP4yrNiMwVE3cbKat1Me9CiJSM+vA8VmAt2L9irl9TfGo
-         AAfaiV6JUYdrtL62vnzeZlN4Omx+nEA0HWAmpiY/0IfntHPKrsip35wJfs3odTWfhXfl
-         xESw==
+        Wed, 2 Sep 2020 06:34:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599042856;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6YbE9ocgSEbs212dC/3NaXleeyro7z5HehKfcKWSbBA=;
+        b=ZoITomd6BFf7vWxSJ5VKREoa7gtZvpLMWaTSVET2/NzMbsAaZyKeSVzmVreS14z2pOIWBr
+        32p4Ekep2jhN+yRpYrUOCmzXsEWcPb3QyoeR77uqXDtKhhrgdKvkP82Q6bXBmkpcZyRud+
+        gr1zmeWrLOAawe2+w88x/v4IUODECh0=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-342-dQYtquTOPui_CH1XfYuaIw-1; Wed, 02 Sep 2020 06:34:15 -0400
+X-MC-Unique: dQYtquTOPui_CH1XfYuaIw-1
+Received: by mail-ej1-f71.google.com with SMTP id ml20so433655ejb.23
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 03:34:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fXyoYPlaGWNehGt1iU1AjjtO78K2/p8F/lqdKmDy5Tc=;
-        b=F+OUCrBEoE4q9W1T8W/uUUf051RBkHC3YaDJVb7YoO/Ljp8E7cXxuTW/XhywWybSc2
-         yYux7uSl3R9DlSd/YXCfhFV4/zWkVAhbq/xxLoq383H66sLlSmwXc8i7o7tqpXyIdCgA
-         KPqeE7MxyAcl+PLsrhKyimYj9UpGTPEePaVdf8LSJfYvBimZNV0sEYkhV9VHkUaVB/oK
-         HrdUabIywaxHsCm2ugz/9lNo7kS16Oc/n+dkyenU86EK6RnyEirE97Dq9fVzUylvp6Sa
-         FXLyEtTSkxVcjhaBkG/X0BgGSIdReyo4hoHwGG1FQvZMEaGRM6qtqdNV+QMpDF3HiZ2N
-         gCzA==
-X-Gm-Message-State: AOAM5321wtI7Kfe4RyT98bIMrTh0cpsgJerR5Rcm+JApFgNCPQm9XDSp
-        IZQxdatLDLNHPKVQ92dYmfLWr6LCPPU=
-X-Google-Smtp-Source: ABdhPJwLLN5ku9hCMGjzK9ZtajjPdgrskU/2upsAidBkIrYEIBaojEnyL4KmkG5KyN+vcnHvIdl+fw==
-X-Received: by 2002:a17:90b:4d10:: with SMTP id mw16mr1719994pjb.100.1599042705858;
-        Wed, 02 Sep 2020 03:31:45 -0700 (PDT)
-Received: from ?IPv6:2409:4072:e94:80d0:a526:a3b6:4686:f6fb? ([2409:4072:e94:80d0:a526:a3b6:4686:f6fb])
-        by smtp.gmail.com with ESMTPSA id e12sm4221261pjl.9.2020.09.02.03.31.39
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=6YbE9ocgSEbs212dC/3NaXleeyro7z5HehKfcKWSbBA=;
+        b=q92wHlN+piokyKP9X93QlC11LvvsRNsAiJvkdJbsoWB0TI8m+2hdy1B9yzfZO+fDJl
+         PRh+GGnf9uJsvDnlU2dNNnj5sgwRu0cVr55nmMDbiDEITuKnMxmGHVn3vbTm7iWYgaQ4
+         FXsl3KGsYGP+if+dpJgLrGtRNnyBfFwcNY6cX+tH885QqINiAFlUE5in+8b/Lw262rqV
+         LhAxGcvEhZY5OzcjPsliEKMfayvNssS94jcMEWMfiaG2gZPe8pykeZDEPT8BA+6FFlLL
+         GGvGITVFSvsbtRm5zKsdv6mpE91VMgd6uRJcehdb9x92KoSw96Xyl7apjY5GfRnwM4Bn
+         26YA==
+X-Gm-Message-State: AOAM530e7YVP5J2ucZZocwQeyd0s8qPqUMwBDk7Vg7lE9ZIdr0LL3Fs7
+        BWtbfyqTU8MnxM2nqUy7mmpW/9pfWH/lKNC7zLeJeXhileTXKUDp2qH1fshglj6bFFEpWqMXPpl
+        +T0WsQpK9Y8LL/jN3Q1Xvz5ug
+X-Received: by 2002:a50:8e52:: with SMTP id 18mr5951902edx.28.1599042853984;
+        Wed, 02 Sep 2020 03:34:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxyfvB2OEfbLYHiQ0iuRWX5RnGHRm0NO4ryqac7O6KtUoD1XTteJLc6sk4G2sRZytr3cwXHFA==
+X-Received: by 2002:a50:8e52:: with SMTP id 18mr5951872edx.28.1599042853725;
+        Wed, 02 Sep 2020 03:34:13 -0700 (PDT)
+Received: from ?IPv6:2003:c2:2f12:bb04:81d3:a22d:db7e:2eac? (p200300c22f12bb0481d3a22ddb7e2eac.dip0.t-ipconnect.de. [2003:c2:2f12:bb04:81d3:a22d:db7e:2eac])
+        by smtp.gmail.com with ESMTPSA id x1sm3831470ejc.119.2020.09.02.03.34.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 03:31:44 -0700 (PDT)
-Subject: Re: [PATCH 1/3] iio: gyro: adxrs290: Add triggered buffer support
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
-        darius.berghe@analog.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-References: <20200825124711.11455-1-nish.malpani25@gmail.com>
- <20200825124711.11455-2-nish.malpani25@gmail.com>
- <CAHp75VfHFo41S=Bhs2MB6Te6VAn+yCteys6XcYgciNZu9VppJg@mail.gmail.com>
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-Message-ID: <d103b760-5871-de55-af3a-b6b7e5378666@gmail.com>
-Date:   Wed, 2 Sep 2020 16:01:37 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <CAHp75VfHFo41S=Bhs2MB6Te6VAn+yCteys6XcYgciNZu9VppJg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 02 Sep 2020 03:34:13 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v1 4/5] xen/balloon: try to merge system ram resources
+Date:   Wed, 2 Sep 2020 12:34:12 +0200
+Message-Id: <24371321-8A12-4EBD-864C-A2B50E886BF7@redhat.com>
+References: <226413fc-ef25-59bd-772f-79012fda0ee3@suse.com>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        =?utf-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>,
+        Julien Grall <julien@xen.org>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>
+In-Reply-To: <226413fc-ef25-59bd-772f-79012fda0ee3@suse.com>
+To:     =?utf-8?Q?J=C3=BCrgen_Gro=C3=9F?= <jgross@suse.com>
+X-Mailer: iPhone Mail (17G68)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-Thanks for the review, Andy. Comments inline...
 
-On 26/08/20 9:40 pm, Andy Shevchenko wrote:
-> On Tue, Aug 25, 2020 at 4:11 PM Nishant Malpani
-> <nish.malpani25@gmail.com> wrote:
->>
->> Provide a way for continuous data capture by setting up buffer support. The
->> data ready signal exposed at the SYNC pin of the ADXRS290 is exploited as
->> a hardware interrupt which triggers to fill the buffer.
->>
->> Triggered buffer setup was tested with both hardware trigger (DATA_RDY) and
->> software triggers (sysfs-trig & hrtimer).
-> 
-> ...
-> 
->> +static int adxrs290_set_mode(struct iio_dev *indio_dev, enum adxrs290_mode mode)
->> +{
->> +       struct adxrs290_state *st = iio_priv(indio_dev);
->> +       int val, ret;
->> +
->> +       mutex_lock(&st->lock);
->> +
->> +       if (st->mode == mode) {
-> 
->> +               ret = 0;
-> 
-> Can be done outside of mutex.
-> 
-Yep, makes sense.
->> +               goto done;
->> +       }
->> +
-> 
->> +       val = spi_w8r8(st->spi, ADXRS290_READ_REG(ADXRS290_REG_POWER_CTL));
->> +       if (val < 0) {
->> +               ret = val;
->> +               goto done;
->> +       }
-> 
-> Consider other way around
->   ret = ...
->   ...
->   val = ret;
-> 
-I suppose that does make things consistent; will do so in v2.
+> Am 02.09.2020 um 12:15 schrieb J=C3=BCrgen Gro=C3=9F <jgross@suse.com>:
+>=20
+> =EF=BB=BFOn 21.08.20 12:34, David Hildenbrand wrote:
+>> Let's reuse the new mechanism to merge system ram resources below the
+>> root. We are the only one hotplugging system ram (e.g., DIMMs don't apply=
+),
+>> so this is safe to be used.
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+>> Cc: Juergen Gross <jgross@suse.com>
+>> Cc: Stefano Stabellini <sstabellini@kernel.org>
+>> Cc: Roger Pau Monn=C3=A9 <roger.pau@citrix.com>
+>> Cc: Julien Grall <julien@xen.org>
+>> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+>> Cc: Baoquan He <bhe@redhat.com>
+>> Cc: Wei Yang <richardw.yang@linux.intel.com>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>  drivers/xen/balloon.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>> diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+>> index 37ffccda8bb87..5ec73f752b8a7 100644
+>> --- a/drivers/xen/balloon.c
+>> +++ b/drivers/xen/balloon.c
+>> @@ -338,6 +338,10 @@ static enum bp_state reserve_additional_memory(void)=
 
->> +       switch (mode) {
->> +       case ADXRS290_MODE_STANDBY:
->> +               val &= ~ADXRS290_MEASUREMENT;
->> +               break;
->> +       case ADXRS290_MODE_MEASUREMENT:
->> +               val |= ADXRS290_MEASUREMENT;
->> +               break;
->> +       default:
->> +               ret = -EINVAL;
->> +               goto done;
->> +       }
->> +
->> +       ret = adxrs290_spi_write_reg(st->spi,
->> +                                    ADXRS290_REG_POWER_CTL,
->> +                                    val);
->> +       if (ret < 0) {
->> +               dev_err(&st->spi->dev, "unable to set mode: %d\n", ret);
->> +               goto done;
->> +       }
->> +
->> +       /* update cached mode */
->> +       st->mode = mode;
->> +
->> +done:
->> +       mutex_unlock(&st->lock);
->> +       return ret;
->> +}
-> 
-> ...
-> 
->> +                               goto err_release;
->>
->> -                       return IIO_VAL_INT;
->> +                       ret = IIO_VAL_INT;
->> +                       break;
->>                  default:
->> -                       return -EINVAL;
->> +                       ret = -EINVAL;
->> +                       break;
->>                  }
-> 
->> +err_release:
-> 
-> I didn't get the purpose of this. Wasn't the break statement enough?
-> 
-It is indeed; I just thought the labeling was a preferred way to jump to 
-error handling paths. Will use just the 'break' in v2.
+>>      if (rc) {
+>>          pr_warn("Cannot add additional memory (%i)\n", rc);
+>>          goto err;
+>> +    } else {
+>> +        resource =3D NULL;
+>> +        /* Try to reduce the number of system ram resources. */
+>> +        merge_system_ram_resources(&iomem_resource);
+>>      }
+>=20
+> I don't see the need for setting resource to NULL and to use an "else"
+> clause here.
+>=20
 
->> +               iio_device_release_direct_mode(indio_dev);
->> +               return ret;
->>          case IIO_CHAN_INFO_SCALE:
->>                  switch (chan->type) {
->>                  case IIO_ANGL_VEL:
-> 
-> ...
-> 
->> +                       goto err_release;
-> 
-> Ditto.
-> 
-Got it.
+I set it to NULL because the pointer may be stale after that call - to avoid=
+ future bugs. But I can drop it.
 
->> +               }
->> +
->>                  /* caching the updated state of the high-pass filter */
->>                  st->hpf_3db_freq_idx = hpf_idx;
->>                  /* retrieving the current state of the low-pass filter */
->>                  lpf_idx = st->lpf_3db_freq_idx;
->> -               return adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
->> +               ret = adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
->> +               break;
->> +
->> +       default:
->> +               ret = -EINVAL;
->> +               break;
->>          }
->>
->> -       return -EINVAL;
->> +err_release:
->> +       iio_device_release_direct_mode(indio_dev);
->> +       return ret;
->>   }
-> 
-> ...
-> 
->> +       val = (state ? ADXRS290_SYNC(ADXRS290_DATA_RDY_OUT) : 0);
-> 
-> Purpose of outer parentheses?
-> I personally find that more readable but I think I'm violating the 
-coding style in the kernel; will remove the parentheses in v2.
+Ack to the =E2=80=9Eelse=E2=80=9C case.
 
-> ...
-> 
->> +static int adxrs290_probe_trigger(struct iio_dev *indio_dev)
->> +{
->> +       struct adxrs290_state *st = iio_priv(indio_dev);
->> +       int ret;
->> +
->> +       if (!st->spi->irq) {
->> +               dev_info(&st->spi->dev, "no irq, using polling\n");
->> +               return 0;
->> +       }
->> +
->> +       st->dready_trig = devm_iio_trigger_alloc(&st->spi->dev,
->> +                                                "%s-dev%d",
->> +                                                indio_dev->name,
->> +                                                indio_dev->id);
->> +       if (!st->dready_trig)
->> +               return -ENOMEM;
->> +
->> +       st->dready_trig->dev.parent = &st->spi->dev;
->> +       st->dready_trig->ops = &adxrs290_trigger_ops;
->> +       iio_trigger_set_drvdata(st->dready_trig, indio_dev);
->> +
->> +       ret = devm_request_irq(&st->spi->dev, st->spi->irq,
->> +                              &iio_trigger_generic_data_rdy_poll,
->> +                              IRQF_ONESHOT,
->> +                              "adxrs290_irq", st->dready_trig);
->> +       if (ret < 0) {
-> 
->> +               dev_err(&st->spi->dev, "request irq %d failed\n", st->spi->irq);
->> +               return ret;
-> 
-> return dev_err_probe(...);
-> 
-Nice, wasn't aware of this. Thanks. Will use 'dev_err_probe()' in v2 
-wherever pointed.
+Thanks for having a look!
 
-With regards,
-Nishant Malpani
+>=20
+> Juergen
+>=20
 
->> +       }
->> +
->> +       ret = devm_iio_trigger_register(&st->spi->dev, st->dready_trig);
->> +       if (ret) {
-> 
->> +               dev_err(&st->spi->dev, "iio trigger register failed\n");
->> +               return ret;
-> 
-> return dev_err_probe(...);
-> 
->> +       }
->> +
->> +       indio_dev->trig = iio_trigger_get(st->dready_trig);
->> +
->> +       return 0;
->> +}
-> 
-> ...
-> 
->> +       ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
->> +                                             &iio_pollfunc_store_time,
->> +                                             &adxrs290_trigger_handler, NULL);
->> +       if (ret < 0) {
-> 
->> +               dev_err(&spi->dev, "iio triggered buffer setup failed\n");
->> +               return ret;
-> 
-> return dev_err_probe(...);
-> 
->> +       }
-> 
