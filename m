@@ -2,283 +2,362 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6FAC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 00:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E92C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA0AD206EF
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 00:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B962068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:01:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F+tEijnE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RSQpFEpe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgIBAq6 (ORCPT
+        id S1726770AbgIBBBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 20:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55370 "EHLO
+        Tue, 1 Sep 2020 21:01:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgIBAq4 (ORCPT
+        with ESMTP id S1726310AbgIBBBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 20:46:56 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61F71C061245
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 17:46:54 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id q13so4181407ejo.9
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 17:46:54 -0700 (PDT)
+        Tue, 1 Sep 2020 21:01:14 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29AE0C061245
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 18:01:13 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id o68so1882036pfg.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 18:01:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3RFj3YnGQagsUtiAD7e8C2sZcfN3W2rXzRlDvYIWW7s=;
-        b=F+tEijnEaP6XzWJCoTEnnYfkcnfw9PHhdLwctg0OgJBsJLCwO1q29kG+mKooqkfm9z
-         wOzC8S6Ez7jRmfHjnYU4N+X3IRu9oa/76LjPtTGBhBbwaGeLxAsvvh8XkQtgjTEf3mEB
-         YKRynt7dccB8ewFztug3K7cwOhDsnxd5BibpUa1y1JgF/vGw8LE586JgYCNHrOr2sugi
-         /OvjPKT2oBbxnsRcystaJmpXO4zjXdkMglv7fH/FE9sNpXtdA2GjkWidyWGXOSbpIVzR
-         2WaU/MQmu79XeZs9220HMwjtl/Ya0oBX0Y//04++14V0MfomABlsI+Pc5YAm9zlNIOfd
-         cOcQ==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=UkJgTeg3xfjSFnYzyJfxJmqcdiGNUGU/6zuk7GQcL+w=;
+        b=RSQpFEpeUTFjUHfqOy3hNsGVuRCN1Br+mW98SqxNyQEBGxySCXth9vsXYTA864H8eW
+         HwpCVrmLIa5NlwaOY4X9YrYGG7Pa8v64judysHn7cii8Cz0ZZxSs0HnYuMcMKaHI1gPt
+         iN+DDROXCuDz2ZRtAcjMpsLadDRSrzde6lC0Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3RFj3YnGQagsUtiAD7e8C2sZcfN3W2rXzRlDvYIWW7s=;
-        b=obWu2Ws1SJs7k9zAAsyAYqB7zjt5MhD2kCYqrA22Zc+Wr/7+TNSSq8cI4MzGXydch1
-         2yCCQk9cM/HUUIkd2lAvw+jMKvWJNDryD4tX7yXCCX5N1iXOekVsgIoawcPMup7SK3B7
-         7LCHEqIP8bezjJ+8CvBytCYnkfbEyWbJ3hxCNMWCCso9hn8strjURizLX5Bm9NAmZYF3
-         yJdMHEvJDwQ3c8RtLY8NJVkdDuxAcGmMVCUzVLHpB5P4clbEa58Bs/xurORLJ2wxMJSh
-         BTYWSN1v71X4Gbc7qBRmALoWe0MkfoP/0rZrhz0TQgsW9y3pnPFfYcO+wuvZjQIspbT1
-         yVIg==
-X-Gm-Message-State: AOAM5301cDhTPdX6z15xmQ3Lq7b6JlZxRWwgfD1ZOhAjNbSihY8t/dBD
-        LYA1uePtgk0VWhqo7bcUM7IJnEMQkAzTuD+Ze/kEIw==
-X-Google-Smtp-Source: ABdhPJz0K6j5oT35CiHd914OSml2+PMRWxSoQY2AqvDLmP1gICFZYH8Mj2pg+9u0ndap4hjHog2OrCMhOnuxFavp7yI=
-X-Received: by 2002:a17:907:72d2:: with SMTP id du18mr4212453ejc.359.1599007613121;
- Tue, 01 Sep 2020 17:46:53 -0700 (PDT)
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=UkJgTeg3xfjSFnYzyJfxJmqcdiGNUGU/6zuk7GQcL+w=;
+        b=qZ7SVntXviorWVJmpJOYTk13GmzcHiiWyYyed7uxKv6PufFIrgW4V2kr037kt4evEv
+         nD8E5Pv2m8iYxGssQB2C9m4NSvlV+4CzvcMj7OPTtc9dH8ECNvIIvfhKOd1B3qc7Uugn
+         u3wIhoS2fzED1nGdp872EQZn7zTpxissrRtqbnPyYIspA+OL4jTlREy0ORM7AityoQW7
+         k7G4xzr8G1y0VC86Ka+abGPrhmAbQbD5EvS8K+X+XJ5OCmf2TeiXwJzwvBp3mAvfVRks
+         Hyz+WjYJEJ1mepSwvfzq9iuvbh98eNyaWqrQarw76LG3GtM9WF+bTXAaG6DWNYkJZq5j
+         j5Rw==
+X-Gm-Message-State: AOAM531E1DvHW5u0+EJeM7tDYyDp811NINCAzSOwt7QbFuito7Ijt2Gx
+        U+fYHB1jV//J9nkmU7PkwU5dVf59kbafwQ==
+X-Google-Smtp-Source: ABdhPJy7coz3C3VkEiPsuD+kMVsbJIuPu6/VEEWYIGA0BWBKTOEU3fATCtPBaO5QrFWvADMduuQPJA==
+X-Received: by 2002:a62:1c4c:: with SMTP id c73mr907547pfc.124.1599008473026;
+        Tue, 01 Sep 2020 18:01:13 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id q34sm3328712pgl.28.2020.09.01.18.01.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 18:01:11 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-5-haoluo@google.com>
- <CAEf4BzYhjUwYH_BBgtHz9-Ha-54AQ_8L3_N=cXsuud=kayk5-A@mail.gmail.com>
- <CA+khW7jDYSvQcVvQ2dLHC9JOLFp9wC7fNtt4rzgBkdWOC=AVjQ@mail.gmail.com>
- <CAEf4BzaO_P1LiWDvFcZ3u1f2eaUEpqb+KXg0FqLMGYDLdRNBJQ@mail.gmail.com>
- <CA+khW7jnzZim6h9O+JH2AnXmvtU19-FxJDZBXfHZH9Xniq8zeg@mail.gmail.com> <CAEf4BzZrn44Y-38CPmZnAYFqtGkjEHXE5F8fZS5K8D4+-YpPug@mail.gmail.com>
-In-Reply-To: <CAEf4BzZrn44Y-38CPmZnAYFqtGkjEHXE5F8fZS5K8D4+-YpPug@mail.gmail.com>
-From:   Hao Luo <haoluo@google.com>
-Date:   Tue, 1 Sep 2020 17:46:41 -0700
-Message-ID: <CA+khW7gyw1WMjwP23Gu4uEbucKwvfF1Jargzi_k=a1KbfbJ11g@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 4/8] bpf/libbpf: BTF support for typed ksyms
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <335a0660-40e1-0c1e-3f7d-87f7024de18a@linaro.org>
+References: <20200826024711.220080-1-swboyd@chromium.org> <20200826024711.220080-7-swboyd@chromium.org> <335a0660-40e1-0c1e-3f7d-87f7024de18a@linaro.org>
+Subject: Re: [PATCH v1 6/9] phy: qcom-qmp: Add support for DP in USB3+DP combo phy
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Rob Clark <robdclark@chromium.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>
+Date:   Tue, 01 Sep 2020 18:01:10 -0700
+Message-ID: <159900847014.334488.14041376759905055412@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 4:55 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Tue, Sep 1, 2020 at 1:35 PM Hao Luo <haoluo@google.com> wrote:
-> >
-> > On Tue, Sep 1, 2020 at 11:11 AM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Thu, Aug 27, 2020 at 3:29 PM Hao Luo <haoluo@google.com> wrote:
-> > > >
-> > > > On Fri, Aug 21, 2020 at 3:37 PM Andrii Nakryiko
-> > > > <andrii.nakryiko@gmail.com> wrote:
-> > > > >
-> > > > > On Wed, Aug 19, 2020 at 3:42 PM Hao Luo <haoluo@google.com> wrote:
-> > > > > >
-> > > > > > If a ksym is defined with a type, libbpf will try to find the ksym's btf
-> > > > > > information from kernel btf. If a valid btf entry for the ksym is found,
-> > > > > > libbpf can pass in the found btf id to the verifier, which validates the
-> > > > > > ksym's type and value.
-> > > > > >
-> > > > > > Typeless ksyms (i.e. those defined as 'void') will not have such btf_id,
-> > > > > > but it has the symbol's address (read from kallsyms) and its value is
-> > > > > > treated as a raw pointer.
-> > > > > >
-> > > > > > Signed-off-by: Hao Luo <haoluo@google.com>
-> > > > > > ---
-> > > > > >  tools/lib/bpf/libbpf.c | 130 ++++++++++++++++++++++++++++++++++++-----
-> > > > > >  1 file changed, 114 insertions(+), 16 deletions(-)
-> > > > > >
-> > > > > > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> > > > > > index 4a81c6b2d21b..94eff612c7c2 100644
-> > > > > > --- a/tools/lib/bpf/libbpf.c
-> > > > > > +++ b/tools/lib/bpf/libbpf.c
-> > > > > > @@ -357,7 +357,16 @@ struct extern_desc {
-> > > > > >                         bool is_signed;
-> > > > > >                 } kcfg;
-> > > > > >                 struct {
-> > > > > > -                       unsigned long long addr;
-> > > > > > +                       /*
-> > > > > > +                        *  1. If ksym is typeless, the field 'addr' is valid.
-> > > > > > +                        *  2. If ksym is typed, the field 'vmlinux_btf_id' is
-> > > > > > +                        *     valid.
-> > > > > > +                        */
-> > > > > > +                       bool is_typeless;
-> > > > > > +                       union {
-> > > > > > +                               unsigned long long addr;
-> > > > > > +                               int vmlinux_btf_id;
-> > > > > > +                       };
-> > > > >
-> > > > > ksym is 16 bytes anyways, union doesn't help to save space. I propose
-> > > > > to encode all this with just two fields: vmlinux_btf_id and addr. If
-> > > > > btf_id == 0, then extern is typeless.
-> > > >
-> > > > Ack on expanding the union. But I slightly preferred keeping
-> > > > is_typeless. IIUC, btf_id points a VAR_KIND, we need the following
-> > > > pointer chasing every time
-> > > >
-> > > > t = btf__type_by_id(obj->btf, ext->btf_id);
-> > > > t->type;
-> > > >
-> > > > which I felt is worse than keeping a is_typeless flag.
-> > >
-> > > Sorry, I'm not following. In all places where you would check
-> > > sym->is_typeless, you'd now just do:
-> > >
-> > > if (ext->ksym.vmlinux_btf_id) {
-> > >   /* typed, use ext->ksym.vmlinux_btf_id */
-> > > } else {
-> > >   /* typeless */
-> > > }
-> > >
-> >
-> > My apologies, I should be more specific.
-> >
-> > 'vmlinux_btf_id' gets its value in bpf_object__resolve_ksyms_btf_id().
-> > Before we call this function, there are three places that need to tell
-> > whether a ksym is typed, currently in v1. Specifically,
-> >
-> >  - in bpf_object__collect_externs(), typeless ksyms are rewritten as
-> > 'int', in contrast, typed ones are left untouched (though this may
-> > change in v2).
-> >  - bpf_object__load_vmlinux_btf() now is called before
-> > bpf_object__resolve_ksyms_btf_id(). In v1's design, if there is no
-> > typed ksym, we could skip loading vmlinux_btf potentially.
-> >  - even bpf_object__resolve_ksyms_btf_id() itself is conditionally
-> > called, depending on whether there is any typed ksym.
-> >
-> > At the time when these places are called, vmlinux_btf_id is
-> > unavailable and we can't use it for the purpose of telling whether a
-> > ksym is typed.
-> >
-> > However, rather than vmlinux_btf_id, there may be an alternative. We
-> > can record the ksym extern's type's btf_id and use that as
-> > 'is_typeless' flag. This also solves the problem below.
->
-> Oh, I was thinking that vmlinux_btf_id contains a local BTF ID this
-> whole time (clearly ignoring the "vmlinux_" part).
->
-> >
-> > [...]
-> >
-> > > > > >                 } else {
-> > > > > >                         pr_warn("unrecognized extern section '%s'\n", sec_name);
-> > > > > >                         return -ENOTSUP;
-> > > > > > @@ -2992,9 +3006,9 @@ static int bpf_object__collect_externs(struct bpf_object *obj)
-> > > > > >         /* sort externs by type, for kcfg ones also by (align, size, name) */
-> > > > > >         qsort(obj->externs, obj->nr_extern, sizeof(*ext), cmp_externs);
-> > > > > >
-> > > > > > -       /* for .ksyms section, we need to turn all externs into allocated
-> > > > > > -        * variables in BTF to pass kernel verification; we do this by
-> > > > > > -        * pretending that each extern is a 8-byte variable
-> > > > > > +       /* for .ksyms section, we need to turn all typeless externs into
-> > > > > > +        * allocated variables in BTF to pass kernel verification; we do
-> > > > > > +        * this by pretending that each typeless extern is a 8-byte variable
-> > > > > >          */
-> > > > > >         if (ksym_sec) {
-> > > > > >                 /* find existing 4-byte integer type in BTF to use for fake
-> > > > > > @@ -3012,7 +3026,7 @@ static int bpf_object__collect_externs(struct bpf_object *obj)
-> > > > > >
-> > > > > >                 sec = ksym_sec;
-> > > > > >                 n = btf_vlen(sec);
-> > > > > > -               for (i = 0, off = 0; i < n; i++, off += sizeof(int)) {
-> > > > > > +               for (i = 0, off = 0; i < n; i++) {
-> > > > > >                         struct btf_var_secinfo *vs = btf_var_secinfos(sec) + i;
-> > > > > >                         struct btf_type *vt;
-> > > > > >
-> > > > > > @@ -3025,9 +3039,14 @@ static int bpf_object__collect_externs(struct bpf_object *obj)
-> > > > > >                                 return -ESRCH;
-> > > > > >                         }
-> > > > > >                         btf_var(vt)->linkage = BTF_VAR_GLOBAL_ALLOCATED;
-> > > > > > -                       vt->type = int_btf_id;
-> > > > > > +                       if (ext->ksym.is_typeless) {
-> > > > > > +                               vt->type = int_btf_id;
-> > > > > > +                               vs->size = sizeof(int);
-> > > > > > +                       }
-> > > > > >                         vs->offset = off;
-> > > > > > -                       vs->size = sizeof(int);
-> > > > > > +                       off += vs->size;
-> > > > > > +                       pr_debug("ksym var_secinfo: var '%s', type #%d, size %d, offset %d\n",
-> > > > > > +                                ext->name, vt->type, vs->size, vs->offset);
-> > > > >
-> > > > > It's a bit of a waste that we still allocate memory for those typed
-> > > > > ksym externs, as they don't really need space. But modifying BTF is a
-> > > > > pain right now, so I think we'll have to do it, until we have a better
-> > > > > BTF API. But let's make them integers for now to take a fixed and
-> > > > > small amount of space.
-> > > > >
-> > > >
-> > > > Do you mean making typed ksym externs of type integer? If so, we can't
-> > > > do that, I think. After collect_externs, we later need to compare the
-> > > > declared extern's type against the type defined in kernel. Better not
-> > > > rewrite their types in BTf.
-> > >
-> > > Then maybe we need to make btf_id to point to the actual type of the
-> > > variable, not BTF_KIND_VAR? Or just additionally record type's btf_id,
-> > > not sure which one makes more sense at the moment.
-> > >
-> > > >
-> > > > I am generally against modifying BTF. I initially didn't notice that
-> > > > all the ksym externs' types are modified to 'int' and the type
-> > > > comparison I mentioned above always failed. I dumped the btf in
-> > > > vmlinux and the btf in object file, checked the kernel variable's
-> > > > source code, printed out everything I could. The experience was very
-> > > > bad.
-> > > >
-> > >
-> > > It might be confusing, I agree, but the alternative is just a waste of
-> > > memory just to match the BTF definition of a DATASEC, which describes
-> > > externs. It seems sloppy to allocate a bunch of unused memory just to
-> > > match the kernel's variable size, while in reality we either use 8
-> > > bytes used (for typeless externs, storing ksym address) or none (for
-> > > typed externs).
-> > >
-> > > Another alternative is to not specify BTF ID for .ksyms map, but it's
-> > > not great for typeless externs case, as we are losing all type info
-> > > completely. Trade-offs...
-> > >
-> >
-> > I see. It looks like rewriting all ksym externs' type to integers is
-> > the most straightforward solution here, though I felt a bit hacky.
-> >
-> > I can record the btf_id of the var's type before rewriting, so
-> > bpf_core_type_are_compat() can find the true type for comparison. One
-> > good thing about recording the type's btf_id is that it can be used to
-> > tell whether the ksym extern is typed or not, before vmlinux_btf_id
->
-> that's what I've been getting at, but I missed that vmlinux_btf_id is
-> kernel BTF type ID. So let's record both local and target BTF type IDs
-> and use local_btf_id as an indicator of typed vs typeless?
->
+Quoting Dmitry Baryshkov (2020-09-01 06:36:34)
+> On 26/08/2020 05:47, Stephen Boyd wrote:
+> > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm=
+/phy-qcom-qmp.c
+> > index 76d7a9e80f04..dd77c7dfa310 100644
+> > --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > @@ -947,6 +947,130 @@ static const struct qmp_phy_init_tbl qmp_v3_usb3_=
+tx_tbl[] =3D {
+> >       QMP_PHY_INIT_CFG(QSERDES_V3_TX_RES_CODE_LANE_OFFSET_TX, 0x06),
+> >   };
+> >  =20
+>=20
+> I'd suggest to split common part of the following tables into=20
+> dpphy_cfg->serdes_tbl and add the rest as "addon tables"=20
+> (serdes_tbl_rbr, serdes_rbl_hbr/2/3) into the same dpphy_cfg.
+> It would ease V4 QMP DP PHY support.
 
-Yup, that sounds great!
+Ok. I tried to avoid doing that initially in case something is wrong
+from the copy over from the DP driver. Also it means the sequence of
+writes is different order but I don't think that matters.
 
+>=20
+> > +static const struct qmp_phy_init_tbl qmp_v3_dp_serdes_tbl_rbr[] =3D {
+> > +     QMP_PHY_INIT_CFG(QSERDES_V3_COM_SVS_MODE_CLK_SEL, 0x01),
+> > +     QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_EN_SEL, 0x37),
+> > +     QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYS_CLK_CTRL, 0x02),
+> > +     QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_ENABLE1, 0x0e),
+> > +     QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_BUF_ENABLE, 0x06),
+> > +     QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x30),
+> > +     QMP_PHY_INIT_CFG(QSERDES_V3_COM_CMN_CONFIG, 0x02),
+> > +     QMP_PHY_INIT_CFG(QSERDES_V3_COM_HSCLK_SEL, 0x0c),
 [...]
+> > @@ -2475,6 +2613,329 @@ static void qcom_qmp_phy_configure(void __iomem=
+ *base,
+> >       qcom_qmp_phy_configure_lane(base, regs, tbl, num, 0xff);
+> >   }
+> >  =20
+> > +static int qcom_qmp_phy_serdes_init(struct qmp_phy *qphy)
+> > +{
+> > +     struct qcom_qmp *qmp =3D qphy->qmp;
+> > +     const struct qmp_phy_cfg *cfg =3D qphy->cfg;
+> > +     void __iomem *serdes =3D qphy->serdes;
+> > +     const struct phy_configure_opts_dp *dp_opts =3D &qphy->dp_opts;
+> > +     const struct qmp_phy_init_tbl *serdes_tbl;
+> > +     int serdes_tbl_num;
+> > +     int ret;
+> > +
+> > +     if (cfg->type =3D=3D PHY_TYPE_DP) {
+> > +             switch (dp_opts->link_rate) {
+> > +             case 1620:
+> > +                     serdes_tbl =3D qmp_v3_dp_serdes_tbl_rbr;
+> > +                     serdes_tbl_num =3D ARRAY_SIZE(qmp_v3_dp_serdes_tb=
+l_rbr);
+> > +                     break;
+> > +             case 2700:
+> > +                     serdes_tbl =3D qmp_v3_dp_serdes_tbl_hbr;
+> > +                     serdes_tbl_num =3D ARRAY_SIZE(qmp_v3_dp_serdes_tb=
+l_hbr);
+> > +                     break;
+> > +             case 5400:
+> > +                     serdes_tbl =3D qmp_v3_dp_serdes_tbl_hbr2;
+> > +                     serdes_tbl_num =3D ARRAY_SIZE(qmp_v3_dp_serdes_tb=
+l_hbr2);
+> > +                     break;
+> > +             case 8100:
+> > +                     serdes_tbl =3D qmp_v3_dp_serdes_tbl_hbr3;
+> > +                     serdes_tbl_num =3D ARRAY_SIZE(qmp_v3_dp_serdes_tb=
+l_hbr3);
+> > +                     break;
+> > +             default:
+> > +                     /* Other link rates aren't supported */
+> > +                     return -EINVAL;
+> > +             }
+> > +     } else {
+> > +             serdes_tbl =3D cfg->serdes_tbl;
+> > +             serdes_tbl_num =3D cfg->serdes_tbl_num;
+> > +     }
+> > +     qcom_qmp_phy_configure(serdes, cfg->regs, serdes_tbl, serdes_tbl_=
+num);
+>=20
+> If we split DP serdes tables, it would look lile:
+>         qcom_qmp_phy_configure(serdes, cfg->regs, cfg->serdes_tbl,=20
+> cfg->serdes_tbl_num);
+>         if (cfg->type =3D=3D PHY_TYPE_DP) {
+>                 switch (dp_opts->link_rate) {
+>                 case 1620:
+>                         qcom_qmp_phy_configure(serdes, cfg->regs, cfg->se=
+rdes_tbl_rbr,=20
+> cfg->serdes_tbl_rbr_num);
+>                         break;
+>                 case 2700:
+>                         qcom_qmp_phy_configure(serdes, cfg->regs, cfg->se=
+rdes_tbl_hbr,=20
+> cfg->serdes_tbl_hbr_num);
+>                         break;
+>                 case 5400:
+>                         qcom_qmp_phy_configure(serdes, cfg->regs, cfg->se=
+rdes_tbl_hbr2,=20
+> cfg->serdes_tbl_hbr2_num);
+>                         break;
+>                 case 8100:
+>                         qcom_qmp_phy_configure(serdes, cfg->regs, cfg->se=
+rdes_tbl_hbr3,=20
+> cfg->serdes_tbl_hbr3_num);
+>                         break;
+>                 default:
+>                         /* Other link rates aren't supported */
+>                         return -EINVAL;
+>                 }
+>         }
+
+Ok, sure!
+
+>=20
+>=20
+>  > +    qcom_qmp_phy_configure(serdes, cfg->regs, serdes_tbl, serdes_tbl_=
+num);
+>=20
+>=20
+> > +
+> > +     if (cfg->has_phy_com_ctrl) {
+> > +             void __iomem *status;
+> > +             unsigned int mask, val;
+> > +
+> > +             qphy_clrbits(serdes, cfg->regs[QPHY_COM_SW_RESET], SW_RES=
+ET);
+> > +             qphy_setbits(serdes, cfg->regs[QPHY_COM_START_CONTROL],
+> > +                          SERDES_START | PCS_START);
+> > +
+> > +             status =3D serdes + cfg->regs[QPHY_COM_PCS_READY_STATUS];
+> > +             mask =3D cfg->mask_com_pcs_ready;
+> > +
+> > +             ret =3D readl_poll_timeout(status, val, (val & mask), 10,
+> > +                                      PHY_INIT_COMPLETE_TIMEOUT);
+> > +             if (ret) {
+> > +                     dev_err(qmp->dev,
+> > +                             "phy common block init timed-out\n");
+> > +                     return ret;
+> > +             }
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void qcom_qmp_phy_dp_aux_init(struct qmp_phy *qphy)
+> > +{
+> > +     writel(DP_PHY_PD_CTL_PWRDN | DP_PHY_PD_CTL_AUX_PWRDN |
+> > +            DP_PHY_PD_CTL_PLL_PWRDN | DP_PHY_PD_CTL_DP_CLAMP_EN,
+> > +            qphy->pcs + QSERDES_V3_DP_PHY_PD_CTL);
+> > +
+> > +     /* Turn on BIAS current for PHY/PLL */
+> > +     writel(QSERDES_V3_COM_BIAS_EN | QSERDES_V3_COM_BIAS_EN_MUX |
+> > +            QSERDES_V3_COM_CLKBUF_L_EN | QSERDES_V3_COM_EN_SYSCLK_TX_S=
+EL,
+> > +            qphy->serdes + QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN);
+> > +
+> > +     writel(DP_PHY_PD_CTL_PSR_PWRDN, qphy->pcs + QSERDES_V3_DP_PHY_PD_=
+CTL);
+> > +
+> > +     /* Make sure that hardware is done with  PSR power down */
+> > +     wmb();
+> > +     writel(DP_PHY_PD_CTL_PWRDN | DP_PHY_PD_CTL_AUX_PWRDN |
+> > +            DP_PHY_PD_CTL_LANE_0_1_PWRDN |
+> > +            DP_PHY_PD_CTL_LANE_2_3_PWRDN | DP_PHY_PD_CTL_PLL_PWRDN |
+> > +            DP_PHY_PD_CTL_DP_CLAMP_EN,
+> > +            qphy->pcs + QSERDES_V3_DP_PHY_PD_CTL);
+> > +
+> > +     writel(QSERDES_V3_COM_BIAS_EN |
+> > +            QSERDES_V3_COM_BIAS_EN_MUX | QSERDES_V3_COM_CLKBUF_R_EN |
+> > +            QSERDES_V3_COM_CLKBUF_L_EN | QSERDES_V3_COM_EN_SYSCLK_TX_S=
+EL |
+> > +            QSERDES_V3_COM_CLKBUF_RX_DRIVE_L,
+> > +            qphy->serdes + QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN);
+> > +
+> > +     writel(0x00, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG0);
+> > +     writel(0x13, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG1);
+> > +     writel(0x24, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG2);
+> > +     writel(0x00, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG3);
+> > +     writel(0x0a, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG4);
+> > +     writel(0x26, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG5);
+> > +     writel(0x0a, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG6);
+> > +     writel(0x03, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG7);
+> > +     writel(0xbb, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG8);
+> > +     writel(0x03, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG9);
+> > +     qphy->dp_aux_cfg =3D 0;
+> > +
+> > +     writel(PHY_AUX_STOP_ERR_MASK | PHY_AUX_DEC_ERR_MASK |
+> > +            PHY_AUX_SYNC_ERR_MASK | PHY_AUX_ALIGN_ERR_MASK |
+> > +            PHY_AUX_REQ_ERR_MASK,
+> > +            qphy->pcs + QSERDES_V3_DP_PHY_AUX_INTERRUPT_MASK);
+> > +}
+> > +
+> > +static const u8 vm_pre_emphasis[4][4] =3D {
+>=20
+> Could you please prefix with v3? V4 will use different tables here
+
+Done.
+
+>=20
+> > +     { 0x00, 0x0b, 0x12, 0xff },       /* pe0, 0 db */
+> > +     { 0x00, 0x0a, 0x12, 0xff },       /* pe1, 3.5 db */
+> > +     { 0x00, 0x0c, 0xff, 0xff },       /* pe2, 6.0 db */
+> > +     { 0xff, 0xff, 0xff, 0xff }        /* pe3, 9.5 db */
+> > +};
+> > +
+> > +/* voltage swing, 0.2v and 1.0v are not support */
+> > +static const u8 vm_voltage_swing[4][4] =3D {
+> > +     { 0x07, 0x0f, 0x14, 0xff }, /* sw0, 0.4v  */
+> > +     { 0x11, 0x1d, 0x1f, 0xff }, /* sw1, 0.6 v */
+> > +     { 0x18, 0x1f, 0xff, 0xff }, /* sw1, 0.8 v */
+> > +     { 0xff, 0xff, 0xff, 0xff }  /* sw1, 1.2 v, optional */
+> > +};
+> > +
+> > +static const u8 vm_pre_emphasis_hbr3_hbr2[4][4] =3D {
+> > +     { 0x00, 0x0c, 0x15, 0x1a },
+> > +     { 0x02, 0x0e, 0x16, 0xff },
+> > +     { 0x02, 0x11, 0xff, 0xff },
+> > +     { 0x04, 0xff, 0xff, 0xff }
+> > +};
+> > +
+> > +static const u8 vm_voltage_swing_hbr3_hbr2[4][4] =3D {
+> > +     { 0x02, 0x12, 0x16, 0x1a },
+> > +     { 0x09, 0x19, 0x1f, 0xff },
+> > +     { 0x10, 0x1f, 0xff, 0xff },
+> > +     { 0x1f, 0xff, 0xff, 0xff }
+> > +};
+> > +
+> > +static const u8 vm_pre_emphasis_hbr_rbr[4][4] =3D {
+> > +     { 0x00, 0x0c, 0x14, 0x19 },
+> > +     { 0x00, 0x0b, 0x12, 0xff },
+> > +     { 0x00, 0x0b, 0xff, 0xff },
+> > +     { 0x04, 0xff, 0xff, 0xff }
+> > +};
+> > +
+> > +static const u8 vm_voltage_swing_hbr_rbr[4][4] =3D {
+> > +     { 0x08, 0x0f, 0x16, 0x1f },
+> > +     { 0x11, 0x1e, 0x1f, 0xff },
+> > +     { 0x19, 0x1f, 0xff, 0xff },
+> > +     { 0x1f, 0xff, 0xff, 0xff }
+> > +};
+> > +
+> > +static void qcom_qmp_phy_configure_dp_tx(struct qmp_phy *qphy)
+>=20
+> With these functions I'm struggling between introducing=20
+> PHY_TYPE_DP_V3/V4 and introducing callbacks into qmp_phy_cfg. What would =
+
+> you prefer?
+>=20
+> What about the following struct?
+>=20
+> struct qmp_phy_dp_opts {
+>         void (*dp_aux_init)(struct qmp_phy *qphy);
+>         void (*dp_configure_tx)(struct qmp_phy *qphy);
+>         void (*dp_configure_lanes)(struct qmp_phy *qphy);
+> };
+>=20
+> I'm not sure about dp_calibrate().
+>=20
+
+Is there v4 code somewhere that I can see? Another level of indirection
+is always a solution, so it is probably fine. This driver is currently
+written with many conditionals instead of function tables so I'm not
+sure it fits in with the style of how things are done though. The
+alternative is to use an enum and call different functions?
+
+The calibrate call is there to "turn the crank" on the aux settings.  I
+need to cycle through the different values for that aux register so that
+aux can be tuned properly. The AUX channel really has another phy that
+needs tuning so we're sort of combining the aux and DP link phy together
+here by letting the calibrate call tune the AUX phy and the configure
+call tune the DP phy. I don't see any sort of concept of an AUX phy
+though so this seemed ok. Does v4 need to tune more registers?
