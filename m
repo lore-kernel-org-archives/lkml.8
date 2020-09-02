@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A31C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72532C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33303207D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD7E20773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599059520;
-	bh=azJbbvQpPzlwv+q2q+Vn+EyZtjmZ+jL2xMHIRA0iboE=;
+	s=default; t=1599059530;
+	bh=d/sTQ5yzFwXEJEHgq/56l3IhxWk0SqmDdAYgZ97oGLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MSctiCY5zJAIvYjKExftFAY/dtynXEJPW9fDUU3Id7rOlvZuCbtlSVyyz87cqto/6
-	 XiiaBRSYzxUt5cjMjwcVghYfXRpTveOG+Uj55eaJBxyvL0GAhVb+xpvy7Kq5QN9yiM
-	 xVuDvCB7T9fLXDkC5U0U6xa6AZ/SF6h9eflpULw4=
+	b=u+mxteYdzXcexNSUi8rLmuGc6U3t06EKZ6dmTicDcKvyAwPFbDwdQ7PJhkInh+EF+
+	 TDi5B1gGC3iSOgeiXCEs3BwX9gRjQZ17DiRjIjpuNRA2hPbPPRF/aRcbYogfq19VU7
+	 tDY4gWYkBHRUwkQ973jEn0ifw5HkWhDcCD8qMo0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgIBPLn (ORCPT
+        id S1728078AbgIBPL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:11:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44266 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 11:11:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728224AbgIBPHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:07:24 -0400
+        id S1728149AbgIBPHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:07:07 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAEA62098B;
-        Wed,  2 Sep 2020 15:07:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5904D207D3;
+        Wed,  2 Sep 2020 15:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599059244;
-        bh=azJbbvQpPzlwv+q2q+Vn+EyZtjmZ+jL2xMHIRA0iboE=;
+        s=default; t=1599059226;
+        bh=d/sTQ5yzFwXEJEHgq/56l3IhxWk0SqmDdAYgZ97oGLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BHny/LTO7MaXqopyFxrY7JJce/QAHhTSRkCN0dAYzbwpNcDmd75ECRW7X8d20oECB
-         SS4Jvs4QMfpdSwXf2BoKEbvaYMqnbRfPUFEnv9xOADrTDuJ0NPBRkviz3YyBvY/kSc
-         rWXrKYD0aJsWok3oVHQM3uz07U/I1nqzNPLK3mv4=
+        b=K/zUDBdIP3PPMqY7dOzPHDAvrIyHmr5a94+wMAA+GArrXXeEutxsJgbYxbLyqq5/C
+         E2uOTwHJpDZFD5orZyyIdP/7KY/VvPScasiEZgLWJhPj6XZph3ID7VW5AQpWQN1KXo
+         nVLBNNpMdVGH9BOe6mD+vAdrJJcxgsrNTQ+15lZ8=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -64,9 +64,9 @@ To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         linux-rockchip@lists.infradead.org,
         linux-stm32@st-md-mailman.stormreply.com
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 6/9] i2c: imx: Simplify with dev_err_probe()
-Date:   Wed,  2 Sep 2020 17:06:40 +0200
-Message-Id: <20200902150643.14839-6-krzk@kernel.org>
+Subject: [PATCH 3/9] i2c: bcm2835: Simplify with dev_err_probe()
+Date:   Wed,  2 Sep 2020 17:06:37 +0200
+Message-Id: <20200902150643.14839-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200902150643.14839-1-krzk@kernel.org>
 References: <20200902150643.14839-1-krzk@kernel.org>
@@ -80,28 +80,28 @@ dev_err_probe().  Less code and the error value gets printed.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/i2c/busses/i2c-imx.c | 8 +++-----
+ drivers/i2c/busses/i2c-bcm2835.c | 8 +++-----
  1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index 0ab5381aa012..63f4367c312b 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -1159,11 +1159,9 @@ static int i2c_imx_probe(struct platform_device *pdev)
+diff --git a/drivers/i2c/busses/i2c-bcm2835.c b/drivers/i2c/busses/i2c-bcm2835.c
+index 5dc519516292..37443edbf754 100644
+--- a/drivers/i2c/busses/i2c-bcm2835.c
++++ b/drivers/i2c/busses/i2c-bcm2835.c
+@@ -421,11 +421,9 @@ static int bcm2835_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c_dev->regs);
  
- 	/* Get I2C clock */
- 	i2c_imx->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(i2c_imx->clk)) {
--		if (PTR_ERR(i2c_imx->clk) != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "can't get I2C clock\n");
--		return PTR_ERR(i2c_imx->clk);
+ 	mclk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(mclk)) {
+-		if (PTR_ERR(mclk) != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "Could not get clock\n");
+-		return PTR_ERR(mclk);
 -	}
-+	if (IS_ERR(i2c_imx->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(i2c_imx->clk),
-+				     "can't get I2C clock\n");
++	if (IS_ERR(mclk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(mclk),
++				     "Could not get clock\n");
  
- 	ret = clk_prepare_enable(i2c_imx->clk);
- 	if (ret) {
+ 	i2c_dev->bus_clk = bcm2835_i2c_register_div(&pdev->dev, mclk, i2c_dev);
+ 
 -- 
 2.17.1
 
