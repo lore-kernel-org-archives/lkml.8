@@ -2,113 +2,194 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D38C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC571C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0497220758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:33:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXdH0tcs"
+	by mail.kernel.org (Postfix) with ESMTP id 5D5B820758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:34:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599064487;
+	bh=Wdac2cRvZH5y2dW0355Zpgb/WVMDUB6NtjKwSB2GnDM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ApL2dto/AbuNaQrlEPfbNYU2on0l5zgB08RLcQ5wJ2AfUUNkynsLf8XMYDYYOkuB4
+	 GIF6USvTqgjdQxY3bU/maTtAMYy/tcRZtmBfz2cofaa4QIHlmKT5iqwHlGw1zGbJPn
+	 wwfhoPfNtoEyD5ACgCChmGLFIibBCMZHlZwmMJxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgIBQd3 (ORCPT
+        id S1727943AbgIBQeq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:33:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgIBQd1 (ORCPT
+        Wed, 2 Sep 2020 12:34:46 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34516 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgIBQen (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:33:27 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81355C061244;
-        Wed,  2 Sep 2020 09:33:25 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id w2so38892wmi.1;
-        Wed, 02 Sep 2020 09:33:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/2qvkwmqjjGM0RfjIplcORNd0dXrXenfHRoPeccCbQs=;
-        b=KXdH0tcsr9jfN4LME7Eb84NGipaYEBMx/4+RmQdbyAVwvyGz/ShRyowlf6Rdyr4QnY
-         vVfKBHD5FL98h2XvAsSRJUV5OGLUwMPORVwHuHnKVTMs3X92tIzDMTgILqiZU2thOles
-         4k5n3Dnt08XLYzpEM8UPqnEKMBIKnsAfg5iws8ljUgmu4uW3gMxRXSAEuWnJQeDm4zL/
-         9wYGwdrz1I2yOYuL5wDnhzjEbz4krFN6h7T1mRDD3raE33VIoMDm06b9btfnbDWhMFPu
-         YwqeB0Dmb87GNBAoe5Of5Tt3/IVlz9W7dN943AgfxXxc5J0eyOHvutxymLEGcO1C3I0Y
-         +2WQ==
+        Wed, 2 Sep 2020 12:34:43 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k20so4841933otr.1;
+        Wed, 02 Sep 2020 09:34:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/2qvkwmqjjGM0RfjIplcORNd0dXrXenfHRoPeccCbQs=;
-        b=eE6LzxVexLIXlCadXkkTuuZoaDT3wxup/ia9XGdmMAnw2jGK48cFlFCFhz8WZOmnbJ
-         Mc6wquYN2Ae0+3TcXgC14LfY6bKjInHP9DPdxcoLCWaXrlkuEkEd1ZdH/pFo5mqxhbQm
-         NylwZqG1PmVBB8x7CooRb8PCSpxMH466L1XgZWEtxOkiU0R36FgzpCA0HlH9AT4ArRnE
-         zhs7NhknBDLfMV3QSzYDjAmAMZfYcia1rd5o3oOxhZpd3oBgJZdR9QLZJkUJqH0DPq/K
-         oS8L43AdusOAnA3e8ik4F+nBqUKW82OJWmrR//WBxVgEAH/CSni/A1Mz+y3IvjChhZID
-         ViiA==
-X-Gm-Message-State: AOAM530l0qGXSDbiGUSpg1YX+Ab7qysIhIpx+CFwEt/TBbACwQAG1nvu
-        S8662ymfokQtyV05Spr+wZaQMZ5g4v79wcVt
-X-Google-Smtp-Source: ABdhPJyZP2b3PC6lr0p1xYM3weE5VehC7kVZPjSkxTsr3W781y4DnPLrA2RkZfLDCBDllx+SgK7vwA==
-X-Received: by 2002:a1c:1f42:: with SMTP id f63mr1424093wmf.1.1599064404161;
-        Wed, 02 Sep 2020 09:33:24 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id y6sm237545wrt.80.2020.09.02.09.33.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 09:33:23 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] xsk: Free variable on error path
-Date:   Wed,  2 Sep 2020 17:33:19 +0100
-Message-Id: <20200902163319.345284-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=k6sQ8NK5KtPThkaGEr90OvdrGo/rolJeRwG3Mehbjj4=;
+        b=moXRdCI/ACkF5yQ9r6YJ75vFvXlmVadUUpeK7rzjfDVrXhfmM63HLIgz5I1fk878LG
+         Ut7jS8T8weRbKiB42JLNYUxdLf8o2hnqI6TedTBb0KXO6DfDWqxG7eMqsncHhMkij9j6
+         J9K3x27DXz90n4Jr8nVEa91yJTiA0KjDEQB9EeP6w9+z0TpGaaN12fuFc4BAY6aU5wOP
+         uzWxLgxrnUj3vWFcRTJBK4baEh18ancyHcz7XdQVCgS56U0rSgG1aFtyETNa+3JhzeGO
+         qkcrOSSFdsoOir+nubNNUNm0hbsE6ylK9/Ts6PkHhNXeHrFVZcLSYr2mAllBhoc0/J4C
+         XOEA==
+X-Gm-Message-State: AOAM532PYFM5ym7URGPPcBi+aDC0g+4z3OP3GX9Bheicc4+WvFLrbdRK
+        A5pXegk5T93abKhQcSt5GHtRnbPStsyYi/Juwmc=
+X-Google-Smtp-Source: ABdhPJxO817L5DuFtEmWzwSJ2CVzvkCcRa8d0G0kMpIOh0RLaIuBkb1BV6tUs952F8VswttZF3Ufrsqg3LJUJV2veSs=
+X-Received: by 2002:a9d:5c06:: with SMTP id o6mr5832095otk.262.1599064481624;
+ Wed, 02 Sep 2020 09:34:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200901210333.8462-1-sakari.ailus@linux.intel.com>
+ <20200901210333.8462-7-sakari.ailus@linux.intel.com> <CAJZ5v0jFceTFRTD55cz3ZHRZpuNRK_z9=_DxWexc8ArsGU3cog@mail.gmail.com>
+ <20200902163121.GE32646@paasikivi.fi.intel.com>
+In-Reply-To: <20200902163121.GE32646@paasikivi.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 2 Sep 2020 18:34:30 +0200
+Message-ID: <CAJZ5v0jmetD2N0-ZrNh8C8oOCFwdwwH9s6FqHOQApMdFa_AZ1A@mail.gmail.com>
+Subject: Re: [PATCH v7 6/6] Documentation: ACPI: Document allow-low-power-probe
+ _DSD property
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In xp_create_dma_map(), memory is allocated to dma_map->dma_pages, but
-then dma_map is erroneously compared to NULL, rather than the member.
-Fix this.
+On Wed, Sep 2, 2020 at 6:31 PM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> Hi Rafael,
+>
+> Thank you for the review.
+>
+> On Wed, Sep 02, 2020 at 05:57:01PM +0200, Rafael J. Wysocki wrote:
+> > On Tue, Sep 1, 2020 at 11:03 PM Sakari Ailus
+> > <sakari.ailus@linux.intel.com> wrote:
+> > >
+> > > Document the probe-low-power _DSD property and how it is used with I²C
+> > > drivers.
+> >
+> > I would reorder the series to make this go right after the [1/6] or
+> > maybe even fold it into that patch.
+> >
+> > The point is that the changes in [1/6] clearly depend on the property
+> > defined here.
+>
+> Ack.
+>
+> >
+> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > ---
+> > >  .../acpi/dsd/allow-low-power-probe.rst        | 28 +++++++++++++++++++
+> > >  Documentation/firmware-guide/acpi/index.rst   |  1 +
+> > >  2 files changed, 29 insertions(+)
+> > >  create mode 100644 Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst
+> > >
+> > > diff --git a/Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst b/Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst
+> > > new file mode 100644
+> > > index 0000000000000..6fcc89162b898
+> > > --- /dev/null
+> > > +++ b/Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst
+> > > @@ -0,0 +1,28 @@
+> > > +.. SPDX-License-Identifier: GPL-2.0
+> > > +
+> > > +======================================
+> > > +Probing I²C devices in low power state
+> > > +======================================
+> > > +
+> > > +Introduction
+> > > +============
+> > > +
+> > > +In some cases it may be preferred to leave certain devices powered off for the
+> > > +entire system bootup if powering on these devices has adverse side effects,
+> > > +beyond just powering on the said device. Linux recognizes the _DSD property
+> > > +"allow-low-power-probe" that can be used for this purpose.
+> >
+> > It would be good to refer to the document defining the generic _DSD
+> > properties mechanism and the GUID used for that from here.
+>
+> I'll add a reference to the device properties UUID for _DSD spec.
+>
+> >
+> > The meaning of  "_DSD property" may not be entirely clear to the
+> > reader as it stands.
+> >
+> > And maybe call the property "i2c-allow-low-power-probe" or similar, to
+> > indicate that it is specific to i2c.
+>
+> The bus determines that already, and it's only defined for I²C here. Should
+> we need this in the future for e.g. I3C, there would be no need to think of
+> renaming it, just changing the documentation and implementation.
+>
+> I don't have a strong opinion on that though.
 
-Addresses-Coverity: ("Dead code")
-Fixes: 921b68692abb ("xsk: Enable sharing of dma mappings")
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- net/xdp/xsk_buff_pool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The point is that the property is not going to be recognized beyond i2c.
 
-diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c
-index 795d7c81c0ca..5b00bc5707f2 100644
---- a/net/xdp/xsk_buff_pool.c
-+++ b/net/xdp/xsk_buff_pool.c
-@@ -287,7 +287,7 @@ static struct xsk_dma_map *xp_create_dma_map(struct device *dev, struct net_devi
- 		return NULL;
- 
- 	dma_map->dma_pages = kvcalloc(nr_pages, sizeof(*dma_map->dma_pages), GFP_KERNEL);
--	if (!dma_map) {
-+	if (!dma_map->dma_pages) {
- 		kfree(dma_map);
- 		return NULL;
- 	}
--- 
-2.28.0
-
+> > > +
+> > > +How it works
+> > > +============
+> > > +
+> > > +The property "allow-low-power-probe" boolean property may be used to tell Linux
+> >
+> > "boolean device property" ?
+>
+> Oops. The other "property" was supposed to be removed by now. But yes, I
+> agree with the suggestion.
+>
+> >
+> > > +that the I²C framework should instruct the kernel ACPI framework to leave the
+> > > +device in the low power state. If the driver indicates its support for this by
+> > > +setting the I2C_DRV_FL_ALLOW_LOW_POWER_PROBE flag in struct i2c_driver.flags
+> > > +field and the "allow-low-power-probe" property is present, the device will not
+> > > +be powered on for probe.
+> > > +
+> > > +The downside is that as the device is not powered on, even if there's a problem
+> > > +with the device, the driver likely probes just fine but the first user will
+> > > +find out the device doesn't work, instead of a failure at probe time. This
+> > > +feature should thus be used sparingly.
+> >
+> > It would be good to give an ASL example with this property provided.
+>
+> I'll add that for v8.
+>
+> >
+> > > diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+> > > index ad3b5afdae77e..0070fcde9e669 100644
+> > > --- a/Documentation/firmware-guide/acpi/index.rst
+> > > +++ b/Documentation/firmware-guide/acpi/index.rst
+> > > @@ -11,6 +11,7 @@ ACPI Support
+> > >     dsd/graph
+> > >     dsd/data-node-references
+> > >     dsd/leds
+> > > +   dsd/allow-low-power-probe
+> > >     enumeration
+> > >     osi
+> > >     method-customizing
+> > > --
+>
+> --
+> Kind regards,
+>
+> Sakari Ailus
