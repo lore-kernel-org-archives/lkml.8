@@ -2,100 +2,108 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C652CC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1857C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6D2207D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801ED207D3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgIBNX6 convert rfc822-to-8bit (ORCPT
+        id S1726941AbgIBN3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 09:23:58 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:60329 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726946AbgIBNNu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:13:50 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-164-H07lfWV_NS6c2T74vCbBog-1; Wed, 02 Sep 2020 14:13:23 +0100
-X-MC-Unique: H07lfWV_NS6c2T74vCbBog-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 2 Sep 2020 14:13:22 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 2 Sep 2020 14:13:22 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christoph Hellwig' <hch@lst.de>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 10/10] powerpc: remove address space overrides using
- set_fs()
-Thread-Topic: [PATCH 10/10] powerpc: remove address space overrides using
- set_fs()
-Thread-Index: AQHWgSXGxcHfrrTX9UCmYjSyVg3SwKlVUsKA
-Date:   Wed, 2 Sep 2020 13:13:22 +0000
-Message-ID: <61b9a880a6424a34b841cf3dddb463ad@AcuMS.aculab.com>
-References: <20200827150030.282762-1-hch@lst.de>
- <20200827150030.282762-11-hch@lst.de>
- <8974838a-a0b1-1806-4a3a-e983deda67ca@csgroup.eu>
- <20200902123646.GA31184@lst.de>
-In-Reply-To: <20200902123646.GA31184@lst.de>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 2 Sep 2020 09:29:38 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2737 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726800AbgIBN2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:28:34 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 2EAC270F14B6100C9EDC;
+        Wed,  2 Sep 2020 14:28:29 +0100 (IST)
+Received: from localhost (10.52.121.91) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 2 Sep 2020
+ 14:28:28 +0100
+Date:   Wed, 2 Sep 2020 14:26:56 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "Krzysztof Kozlowski" <krzk@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        linux-iio <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: Remove bouncing email of Beniamin Bia
+Message-ID: <20200902142656.00007ad1@Huawei.com>
+In-Reply-To: <CAHp75VeOQpR00AZhaw=Dy3sEArhSQAPHXb7mhJGB80uyrSZ3Qg@mail.gmail.com>
+References: <20200827201707.27075-1-krzk@kernel.org>
+        <CAHp75VcnV8_SRQuiTnzzaWxfA1m37gVXfxgPkH51tbMT+-T2RA@mail.gmail.com>
+        <20200829155410.6d34a8b9@archlinux>
+        <CAJKOXPd78m-3jMsFRa7ySREDdx+GMZ_YHMG3AcqCHTABLBwqVA@mail.gmail.com>
+        <DM6PR03MB441122FDB3323690166C21A0F92F0@DM6PR03MB4411.namprd03.prod.outlook.com>
+        <CAHp75VeOQpR00AZhaw=Dy3sEArhSQAPHXb7mhJGB80uyrSZ3Qg@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.121.91]
+X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig
-> Sent: 02 September 2020 13:37
-> 
-> On Wed, Sep 02, 2020 at 08:15:12AM +0200, Christophe Leroy wrote:
-> >> -		return 0;
-> >> -	return (size == 0 || size - 1 <= seg.seg - addr);
-> >> +	if (addr >= TASK_SIZE_MAX)
-> >> +		return false;
-> >> +	if (size == 0)
-> >> +		return false;
+On Wed, 2 Sep 2020 10:49:04 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+
+> On Wed, Sep 2, 2020 at 8:56 AM Ardelean, Alexandru
+> <alexandru.Ardelean@analog.com> wrote:
 > >
-> > __access_ok() was returning true when size == 0 up to now. Any reason to
-> > return false now ?
+> > [yes, I know, bad-email format, but I wanted this to come from my work email]
+> >
+> > Apologies also for the delay here. Things pile-up on my side and I defer things a bit.
+> >
+> > Talked to Michael Hennerich about this [since he's the more senior contact at Analog].
+> > We can replace the email from Beniamin Bia with Michael's.
+> > Or, we can remove the "Orphan" blocks and just have the catch-all "drivers/iio/*/ad*" cover this driver and others that were upstreamed by Beniamin.
+> >
+> > Either option is fine from us.  
 > 
-> No, this is accidental and broken.  Can you re-run your benchmark with
-> this fixed?
+> As a participant of activity to put MAINTAINERS in some order, I
+> prefer to have similar blocks be squashed.
+> If there will be a dedicated maintainer for a certain driver in the
+> future, we can always split into separate sections.
+> 
+> So, something like
+> ANALOG DEVICES ADC (I guess it makes sense to have some grouping still)
+> ...
+> F: .../ad1234
+> F: .../ad2345
+> 
+> In one section (no need to have wildcards right now).
+> 
 
-Is TASK_SIZE_MASK defined such that you can do:
+ANALOG DEVICES INC IIO DRIVERS
+M:	Lars-Peter Clausen <lars@metafoo.de>
+M:	Michael Hennerich <Michael.Hennerich@analog.com>
+S:	Supported
+W:	http://wiki.analog.com/
+W:	http://ez.analog.com/community/linux-device-drivers
+F:	Documentation/ABI/testing/sysfs-bus-iio-frequency-ad9523
+F:	Documentation/ABI/testing/sysfs-bus-iio-frequency-adf4350
+F:	drivers/iio/*/ad*
+F:	drivers/iio/adc/ltc249*
+F:	drivers/staging/iio/*/ad*
+X:	drivers/iio/*/adjd*
 
-	return (addr | size) < TASK_SIZE_MAX) || !size;
+Already exists.  We could potentially clean that up.
 
-    David
+For the block that started this thread, we can just drop it.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Jonathan
 
