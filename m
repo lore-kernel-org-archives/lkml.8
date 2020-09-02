@@ -2,139 +2,135 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFF1C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89501C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 405C72072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 626492072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:25:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aWhkyKDW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="b7qb3TCi";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="cesCGjJe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgIBHZN (ORCPT
+        id S1727903AbgIBHZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:25:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727797AbgIBHZF (ORCPT
+        Wed, 2 Sep 2020 03:25:35 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:33919 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgIBHZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:25:05 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 060E9C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:25:05 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id s10so1428152plp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 00:25:05 -0700 (PDT)
+        Wed, 2 Sep 2020 03:25:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1599031527; x=1630567527;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+  b=b7qb3TCiajUu7YTebKvXGvLqXQlfNc5YW6gu5KIJeI04aMp4BcO/A9TN
+   VLrnY3QRsQCAxwdq+/tRBGoYxTVHdFgv0bKvy3CmQSgr9PxByhSmlpYO7
+   iInwuTlMg5VhyVSUtl/FjBmwP79qcWu9Omom+5Vr/y/O0hjA1GhHOtDnR
+   JcXuzUTYxaj2imY9n40F23xSjcnMVBtdNB5eLaQxzEKfQtkWzkreyvrWz
+   dskBsHiNxfAp/GAkAhdUGf7baHEFBodOJN7x0vK8GZNx1D6mx3jwJcs5P
+   K+GWLravCE78ZjPrfWI3IlTIt963NmhJopGEFHs2fgbAKNDFYpVMo8Esn
+   g==;
+IronPort-SDR: fXJETAcNQLN7LEW7VpJYhBjGKo7gZ7wKCRkpHIeQWNg6YWpSvmXvjeFax5RC5M9pEhVD63Nv6C
+ VLxrIgtl4qDdoHxwiVWobhBvn2+jo/RP0wRUB6N1EJFj9ohUlJu8Efi1gA1PmgBjKKI/oHIXLY
+ hmvGhRTgfUI0KYj7v5UEau64H90BxuKe8uQHTKTroOmIrcuNtuPSKVmJmN+RkiR4XrMJ7S1X2+
+ oByl2eZ2K2yyupZt46GJNXR2ckVRzBxlf/QKT0enddBtX9cHuEqRQUzNOuz8C13P8dwq1ZEuur
+ wxQ=
+X-IronPort-AV: E=Sophos;i="5.76,381,1592841600"; 
+   d="scan'208";a="150728301"
+Received: from mail-mw2nam10lp2109.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.109])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Sep 2020 15:25:26 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aAumDdQ379wMVhjMVIlCBsNHlf0I7TylEa01yaiVQCu45oSUsNhfSvaxuux/lpHwGG+an5lmKaM/IedmF0nEjje6djK4qZrcjxo6X/3oNCppSbORkNBpOS7Hb5JCYeRrlDg8RwxnoFyrJ57972yX7+LwlcT0aP909yXP/eNqhV/ET9vgocNlUhEm9pQPz9Bqhecx3A62N17Cj3OOvt39SUjVMe603G8/wQSTg2x/oERZy2g5Yf0O9WfUavMlWou5+nZiBOwpUEezuPHFo4sDBP36b7OuGNFPGTZ27j0sLz+Z+FmzpFEpdL0uUcjtX6brQdfyDk6RV1gu4wl8fqr4dA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=GV7P0RlHcFuIoOFDIjg+jzrj7HeLUPdQSLb+xr6FNShXkeS3+dRyuLkER98+UceXRIFD7RvMbkj7MdzW/dNAQuxbCAxQAmK3I6kZ42euingdwY2i89f+YZjvWnuZDn8S7fvjOFqsnbqgaigBkj8tghUWTYcVb4h4NhGSKvBHi7AhbWIN5eo35i6YA1wIMHrgKuLZWbPlDOWRA9ejLr7w8TT57fYrz5K5be7rgxHtaBVPkcYu1h0zr4O5HzsM1Jyubz7W3qFjKZ9TyqB5OYD39M1EHaaZ+GSX8WLzgH6Dt9MLz2l1xYcbi3nTnNa1Zakqxx7b3CPXJcqwaMCCFSH9UQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+tJBzI8lB5wRp0GmHPQXlUe4WhX44ejADtz0Zhvnig4=;
-        b=aWhkyKDWAf5betm7xqDa2cSgBjrX/ykPr83ItMwjnU8aSuoXBr6L5cgQA2wfKMApbI
-         kw6gED2PvEapoNJZ5BuBEykbjCWuQVICq/DMqc9hIa3OSwLAOaTaa5GOiwPaoA4Lb3PP
-         CT2A1RTX68yyGQtdLtMZBJUSgLmMs0jz2zo6bjcSIXqAnbk/LTUtwuA8UMskxth+Am+0
-         8orfpjeS8IeUv2Dxfxy3FxWqrxMYFukMWwuBF96mREo+fRklhDq/As1WbMpBJscIG3SD
-         AIqPjjmMpZFmNZlVK5tf6Lr1TVOR/ynpstIrM7IQKckzLhg4Ot8zqA/EHZ93B2YMxY9z
-         BBIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+tJBzI8lB5wRp0GmHPQXlUe4WhX44ejADtz0Zhvnig4=;
-        b=RDJerBKq4nnTtzggLLjETBJEFKrCvT6t8nkZN6TqyEEepOLL07aHl8Ux9lEzfI3PnG
-         lefLljJpwxUN6KtbzGB0l05XW+YwsnSE9s2oZhznql1b8f28QXC7tteGgrGLaybc4SQ5
-         /QxZDZLxA2TQgItK/ChwJPldluQqu4UlsBWpwYymwx+zWsFnFhhn6cFLp4yHcIA6yltl
-         +IcQkh/aUkbry71u0V7jnPtLlQ6I/mBRWpXz6ZzA/fWwGtzOPtyr+maESujQYadoEUjV
-         bFMCX1XkzJuv/daPQDRHkO+1tRX1RKw5cQ5M8+eLscyHyAw0kGMLi88ipW2DDBdig5Do
-         4kPw==
-X-Gm-Message-State: AOAM5325xLaPvIuOvZY3fwswm0RyeLb+NkhcdKSglssjIkSICAvAy/zI
-        QzCm0bo6UjPKzEmt19Pth0XyUA==
-X-Google-Smtp-Source: ABdhPJxBiV6IU6Th5b0VjfN5Yh4wllGr8D63b3s0G1pEnxDa/etejmq6Y08SyqhjURtrz+Er6DVkog==
-X-Received: by 2002:a17:902:a50e:: with SMTP id s14mr1053168plq.164.1599031504547;
-        Wed, 02 Sep 2020 00:25:04 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id h11sm4240987pgm.79.2020.09.02.00.25.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Sep 2020 00:25:03 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Lukasz Luba <lukasz.luba@arm.com>, cristian.marussi@arm.com,
-        sudeep.holla@arm.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] cpufreq: stats: Remove locking
-Date:   Wed,  2 Sep 2020 12:54:42 +0530
-Message-Id: <d4a64a4310805b1641c2582e56fbda503688b789.1599031227.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
-In-Reply-To: <cover.1599031227.git.viresh.kumar@linaro.org>
-References: <cover.1599031227.git.viresh.kumar@linaro.org>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=cesCGjJeg67Fr/o+mffwEK2tKaA/9Xq+dcQTCLG/hIz/S90fBAqrcc6/QHxisuVuHGUcEM6SzYv9FZX8BAN1FJcmCR+KR8eoxCBG3vWy7cMD7XBQXmWpz37eOsIZ8AePqLzyrkon2Q+Welk/SUbU5ix53KOLQzyNZFZ0y6+oUqE=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN6PR04MB4238.namprd04.prod.outlook.com
+ (2603:10b6:805:2c::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Wed, 2 Sep
+ 2020 07:25:24 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3326.023; Wed, 2 Sep 2020
+ 07:25:24 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Josef Bacik <josef@toxicpanda.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "nbd@other.debian.org" <nbd@other.debian.org>,
+        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 9/9] block: remove revalidate_disk()
+Thread-Topic: [PATCH 9/9] block: remove revalidate_disk()
+Thread-Index: AQHWgHjsV9Wx4QVWTUmpDJeETk/HdA==
+Date:   Wed, 2 Sep 2020 07:25:24 +0000
+Message-ID: <SN4PR0401MB3598AEA05439AFC90EC56A5B9B2F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200901155748.2884-1-hch@lst.de>
+ <20200901155748.2884-10-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2001:a62:1590:f101:bd07:d1f9:7e6b:2014]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 56a9516e-9407-4c12-2214-08d84f115bf4
+x-ms-traffictypediagnostic: SN6PR04MB4238:
+x-microsoft-antispam-prvs: <SN6PR04MB4238A60483B44842DE54E14F9B2F0@SN6PR04MB4238.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +QuZyk93hFCG+4OoRyiTp8yfdan5CCNsg1rveJPbezwv4RfQDVnNUewO8TCxY4Ojzk2wzTjVGEUyvlY9Eirbpu7ayh9JdAfZO8gq2MFhNyR8HEAqTO2ity+LzQ418vLBkwwnHU6UC5beXkShDrK37fThx0P7fxGBAcfTe635uUeZr/HnakuXd3Ovi3B2Eewza580RmLcoFeN8GNRPosL7i8bLRg8ciJ84I8mpI6mE65Z3dqhSy1YE6Hn2HlXUdF2Rvgy6973iivq/FCpb+60WuOm3qd8YDdUHda/CdC/qaw3xvEjDVKjB50M2ybJsMIKW9+bWt7h29t4YdBsIC+Wfg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(396003)(136003)(366004)(346002)(7416002)(2906002)(19618925003)(76116006)(8936002)(5660300002)(558084003)(66946007)(33656002)(91956017)(86362001)(66556008)(7696005)(64756008)(66446008)(66476007)(316002)(52536014)(8676002)(9686003)(71200400001)(186003)(6506007)(54906003)(478600001)(4270600006)(4326008)(55016002)(110136005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: yYWhuFO3+1mVufL+7/XDMetN8PFJUrNbHwiKu3VgtUw3teOPU9Gdef21UCo/B8dWn7/i3WN4PSaiMwg5r5suGsCwCqs53dcz4PixltVNvR+X3H4cCtWV07CseGuH1VnTXZJhX6/UKc2WcUNLp4gAwIE05kRG02yVo92oXcQ2E9yyZdIXrKdORjJ+tGRK8CEKXD2QWrSDPo55VXGi6K6hbRHY3mJdFsgDF8uibBcz2Jl29RypT2/39fU0RW9wL0z9bINjNUZeQdl2wmMjH5RhivQJg4CmQCR8VWnluy5G2Ud61BOo8tJ3L0wQLXCgjXA5IeAqrqIClEyG2d2GKEk+dNTGy4E2qJbEnMd7IcPLoCuJEBjpg7aWVofIZM+oBxxL1MLJFXyqCBMxm9L0I7ZXarr819sTr03OYPKC10vE0Efk/HGZnJsXRFy2+yYlk4uUre4YqV55/R5iKZWkomR3mnLUQJ5t301jzIxzx27daveW/Iks1Q9jAMz4UN/1Wgwel+h8gM36QBit8ZM7gNkru9xBrs9Al+JincBBmdbQ/3NkjsyMePwluJZJh38Z6/3oKgwevqIyOueV7IYnyzRZDmUjW/dBp4mUx3sw4Hhv75KJlIyVh1EJc3F20Hjy0qetGrzbMrpYymC2zRBH8hz9nxkkQWBW3BscPlmdACymSjk9f7SVjXxA9QmFmRj7VTU2cZHceFtEdoraJz3s5CAfKw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56a9516e-9407-4c12-2214-08d84f115bf4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 07:25:24.7140
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1jDmRTD2XeJ1WDCANZ3s9tarIUmEgrjdIo6AcCx+DZ4GZjVbbGdD5wBDIkV4JblgCahOC8m6otLDhimciYzeBWSWiKAiL8J2qvtUilvhsik=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4238
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The locking isn't required anymore as stats can get updated only from
-one place at a time. Remove it.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/cpufreq/cpufreq_stats.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/drivers/cpufreq/cpufreq_stats.c b/drivers/cpufreq/cpufreq_stats.c
-index fdf9e8556a49..d86ea9744649 100644
---- a/drivers/cpufreq/cpufreq_stats.c
-+++ b/drivers/cpufreq/cpufreq_stats.c
-@@ -19,7 +19,6 @@ struct cpufreq_stats {
- 	unsigned int state_num;
- 	unsigned int last_index;
- 	u64 *time_in_state;
--	spinlock_t lock;
- 	unsigned int *freq_table;
- 	unsigned int *trans_table;
- 
-@@ -41,7 +40,6 @@ static void cpufreq_stats_reset_table(struct cpufreq_stats *stats)
- {
- 	unsigned int count = stats->max_state;
- 
--	spin_lock(&stats->lock);
- 	memset(stats->time_in_state, 0, count * sizeof(u64));
- 	memset(stats->trans_table, 0, count * count * sizeof(int));
- 	stats->last_time = get_jiffies_64();
-@@ -50,7 +48,6 @@ static void cpufreq_stats_reset_table(struct cpufreq_stats *stats)
- 	/* Adjust for the time elapsed since reset was requested */
- 	atomic_set(&stats->reset_pending, 0);
- 	cpufreq_stats_update(stats, stats->reset_time);
--	spin_unlock(&stats->lock);
- }
- 
- static ssize_t show_total_trans(struct cpufreq_policy *policy, char *buf)
-@@ -244,7 +241,6 @@ void cpufreq_stats_create_table(struct cpufreq_policy *policy)
- 	stats->state_num = i;
- 	stats->last_time = get_jiffies_64();
- 	stats->last_index = freq_table_get_index(stats, policy->cur);
--	spin_lock_init(&stats->lock);
- 
- 	policy->stats = stats;
- 	ret = sysfs_create_group(&policy->kobj, &stats_attr_group);
-@@ -277,11 +273,9 @@ void cpufreq_stats_record_transition(struct cpufreq_policy *policy,
- 	if (old_index == -1 || new_index == -1 || old_index == new_index)
- 		return;
- 
--	spin_lock(&stats->lock);
- 	cpufreq_stats_update(stats, stats->last_time);
- 
- 	stats->last_index = new_index;
- 	stats->trans_table[old_index * stats->max_state + new_index]++;
- 	stats->total_trans++;
--	spin_unlock(&stats->lock);
- }
--- 
-2.25.0.rc1.19.g042ed3e048af
-
+Looks good,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
