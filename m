@@ -2,114 +2,137 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE69FC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7FFC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8521420773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S9Eq1c0q"
+	by mail.kernel.org (Postfix) with ESMTP id B24EF2078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgIBOVd (ORCPT
+        id S1728015AbgIBOU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:21:33 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:53174 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbgIBOIn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:08:43 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082E8ZBv004104;
-        Wed, 2 Sep 2020 09:08:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599055715;
-        bh=YNjauqsvYcJTZcBL24cWGDogJK4+fiqf2K9zoPEdmdo=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=S9Eq1c0qJHzDHmcUdlZSOUsRNEXr/PqVa6tiFf2QfQjtL7squaXqjpsEkYiMUTNmy
-         nO2ZjOxumnCuljeNuYAM+3mDPQTHCtTk5k/xAmrfVWhaFjXpvErdA7D7q5dEJXrFLh
-         mf9gWVg9ohje0m45PDEAK+sxBIJ/C+EmDg8VXhc0=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082E8ZD4108666
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 2 Sep 2020 09:08:35 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
- 2020 09:08:34 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 2 Sep 2020 09:08:34 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082E8Ygc025835;
-        Wed, 2 Sep 2020 09:08:34 -0500
-Date:   Wed, 2 Sep 2020 09:08:34 -0500
-From:   Nishanth Menon <nm@ti.com>
-To:     <santosh.shilimkar@oracle.com>
-CC:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH next v2 0/3] soc: ti: k3: ringacc: add am65x sr2.0 support
-Message-ID: <20200902140834.5fficxrxy6t572um@kahuna>
-References: <20200829184139.15547-1-grygorii.strashko@ti.com>
- <b9310d10-46c5-2c63-a921-88be23363d44@oracle.com>
+        Wed, 2 Sep 2020 10:20:56 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60938 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726928AbgIBOJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 10:09:16 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 167854F4ABFBBC0CE5F6;
+        Wed,  2 Sep 2020 22:09:03 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 2 Sep 2020
+ 22:08:53 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <amitkarwar@gmail.com>, <ganapathi.bhat@nxp.com>,
+        <huxinming820@gmail.com>, <kvalo@codeaurora.org>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <yuehaibing@huawei.com>
+CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] mwifiex: wmm: Fix -Wunused-const-variable warnings
+Date:   Wed, 2 Sep 2020 22:08:46 +0800
+Message-ID: <20200902140846.29024-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <b9310d10-46c5-2c63-a921-88be23363d44@oracle.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11:34-20200831, santosh.shilimkar@oracle.com wrote:
-> On 8/29/20 11:41 AM, Grygorii Strashko wrote:
-> > Hi Santosh,
-> > 
-> > I've rebased on top of  linux-next and identified merge conflict of patch 3
-> > with commit 6da45875fa17 ("arm64: dts: k3-am65: Update the RM resource types")
-> > in -next.
-> > 
-> > ---
-> > This series adds support for the TI AM65x SR2.0 SoC Ringacc which has fixed
-> > errata i2023 "RINGACC, UDMA: RINGACC and UDMA Ring State Interoperability
-> > Issue after Channel Teardown". This errata also fixed for J271E SoC.
-> > The SOC bus chipinfo data is used to identify the SoC and configure
-> > i2023 errata W/A.
-> > 
-> > This changes made "ti,dma-ring-reset-quirk" DT property obsolete, so it's removed.
-> > 
-> > Changes in v2:
-> >   - no functional changes
-> >   - rebased on top of linux-next
-> >   - added ask from Rob Herring
-> > 
-> Thanks. Can you please followup DT acks for PRUSS series so that I can
-> apply PRUSS + $subject series.
+In file included from drivers/net/wireless/marvell/mwifiex//cmdevt.c:26:0:
+drivers/net/wireless/marvell/mwifiex//wmm.h:41:17: warning: ‘tos_to_tid_inv’ defined but not used [-Wunused-const-variable=]
+ static const u8 tos_to_tid_inv[] = {
+                 ^~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex//wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
+ static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
+                  ^~~~~~~~~~~~~~~~~~~~~~~
 
+move the variables definition to .c file, and leave declarations
+in the header file to fix these warnings.
 
-Santosh, in this series, may i suggest that the dtsi changes[1] be hosted
-on my tree? else we are going to create a mix of rc1 and rc3 branches
-which is going to be irritating, to say the least.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/wireless/marvell/mwifiex/main.c |  2 ++
+ drivers/net/wireless/marvell/mwifiex/wmm.c  | 15 +++++++++++++++
+ drivers/net/wireless/marvell/mwifiex/wmm.h  | 18 ++----------------
+ 3 files changed, 19 insertions(+), 16 deletions(-)
 
-I will pick [1] the day after I see the patches 1 and 2 in linux-next tag.
-
-[1] https://lore.kernel.org/lkml/20200829184139.15547-4-grygorii.strashko@ti.com/
-
+diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
+index 9ee5600351a7..9ba8a8f64976 100644
+--- a/drivers/net/wireless/marvell/mwifiex/main.c
++++ b/drivers/net/wireless/marvell/mwifiex/main.c
+@@ -48,6 +48,8 @@ bool aggr_ctrl;
+ module_param(aggr_ctrl, bool, 0000);
+ MODULE_PARM_DESC(aggr_ctrl, "usb tx aggregation enable:1, disable:0");
+ 
++const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
++
+ /*
+  * This function registers the device and performs all the necessary
+  * initializations.
+diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.c b/drivers/net/wireless/marvell/mwifiex/wmm.c
+index a06fff199ea3..b8f19ca73414 100644
+--- a/drivers/net/wireless/marvell/mwifiex/wmm.c
++++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
+@@ -40,6 +40,21 @@
+ static bool disable_tx_amsdu;
+ module_param(disable_tx_amsdu, bool, 0644);
+ 
++/* This table inverses the tos_to_tid operation to get a priority
++ * which is in sequential order, and can be compared.
++ * Use this to compare the priority of two different TIDs.
++ */
++const u8 tos_to_tid_inv[] = {
++	0x02,  /* from tos_to_tid[2] = 0 */
++	0x00,  /* from tos_to_tid[0] = 1 */
++	0x01,  /* from tos_to_tid[1] = 2 */
++	0x03,
++	0x04,
++	0x05,
++	0x06,
++	0x07
++};
++
+ /* WMM information IE */
+ static const u8 wmm_info_ie[] = { WLAN_EID_VENDOR_SPECIFIC, 0x07,
+ 	0x00, 0x50, 0xf2, 0x02,
+diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.h b/drivers/net/wireless/marvell/mwifiex/wmm.h
+index 04d7da95e307..1cb3d1804758 100644
+--- a/drivers/net/wireless/marvell/mwifiex/wmm.h
++++ b/drivers/net/wireless/marvell/mwifiex/wmm.h
+@@ -31,22 +31,8 @@ enum ieee_types_wmm_ecw_bitmasks {
+ 	MWIFIEX_ECW_MAX = (BIT(4) | BIT(5) | BIT(6) | BIT(7)),
+ };
+ 
+-static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
+-
+-/*
+- * This table inverses the tos_to_tid operation to get a priority
+- * which is in sequential order, and can be compared.
+- * Use this to compare the priority of two different TIDs.
+- */
+-static const u8 tos_to_tid_inv[] = {
+-	0x02,  /* from tos_to_tid[2] = 0 */
+-	0x00,  /* from tos_to_tid[0] = 1 */
+-	0x01,  /* from tos_to_tid[1] = 2 */
+-	0x03,
+-	0x04,
+-	0x05,
+-	0x06,
+-	0x07};
++extern const u16 mwifiex_1d_to_wmm_queue[];
++extern const u8 tos_to_tid_inv[];
+ 
+ /*
+  * This function retrieves the TID of the given RA list.
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+2.17.1
+
+
