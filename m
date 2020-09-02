@@ -2,113 +2,144 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A783AC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E37AC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E47C20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:56:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Vm47Ac3g"
+	by mail.kernel.org (Postfix) with ESMTP id F0C1F20829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599065818;
+	bh=3L0UKK9I3jzsNDU7uoBmqoLSAuzEp6xeiPAyAHHY3TU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XZUNG1pdAARGxLPhbQJdUk6fkFHZ9nb37XtrEUwp+5A9KA4eXm72DU0m5MU1Wwf80
+	 PdyB77/UW904NFNsqEWLwOdUzVrHIs2EgKpodkIYm4GlmjYuWKzvveh4B9n3s5LdpF
+	 MCPlZamouQ2eRypRKnr3TO8YJjdIWjH2tMHAVdpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgIBQ4E (ORCPT
+        id S1728072AbgIBQ44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:56:04 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35114 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgIBQ4C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:56:02 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082GtwpO084430;
-        Wed, 2 Sep 2020 11:55:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599065758;
-        bh=0qtaTguyC1JTVEkfEOKEcqIkL2HQNyxtluNu0xGBoBs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Vm47Ac3gI55IoXFL72xPpDw/ZIrYYxQ80vVuHue9aetMXFxhO/gRlDSK3vvtcvIBv
-         j6LnQfTx4elcWq0Ea/MtOiiqlmQkvXvEaByVhszz1FPe3jk/jIi2nDCllgiZ1zI1ZO
-         qdv92J9bEF46TLQvvIq5ECczs58XL4MbCy4nTV9M=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082GtvDX102461
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 2 Sep 2020 11:55:58 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
- 2020 11:55:57 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 2 Sep 2020 11:55:57 -0500
-Received: from [10.250.34.112] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082GtuCl086619;
-        Wed, 2 Sep 2020 11:55:56 -0500
-Subject: Re: [PATCH 5/7] arm64: dts: ti: k3-am65-wakeup: Use generic
- temperature-sensor for node name
-To:     Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, "J, KEERTHY" <j-keerthy@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <lokeshvutla@ti.com>,
-        <grygorii.strashko@ti.com>, <nsekhar@ti.com>
-References: <20200901223059.14801-1-nm@ti.com>
- <20200901223059.14801-6-nm@ti.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <1cdb8cb1-3a08-423d-ba34-299ac1a4b9b4@ti.com>
-Date:   Wed, 2 Sep 2020 11:55:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 2 Sep 2020 12:56:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbgIBQ4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:56:55 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44AEF20767;
+        Wed,  2 Sep 2020 16:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599065815;
+        bh=3L0UKK9I3jzsNDU7uoBmqoLSAuzEp6xeiPAyAHHY3TU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PwzQTWVBLJdtXjHBNJVsqNMDwSOSHw+Behn/R2Ao0hmf3cDm71pOIk6ineflrY7kJ
+         Q6oSoFXIYha4Fwo9EU6zTDiY/DnjBeXnaX6jrJp0anvhufdI1xvo9a+2B+s9RUUiMD
+         fpmy/PnDjNQ2VqFsG1fku138mjpokMEKcm3GRWzo=
+Received: by pali.im (Postfix)
+        id EF6FA7BF; Wed,  2 Sep 2020 18:56:52 +0200 (CEST)
+Date:   Wed, 2 Sep 2020 18:56:52 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] phy: marvell: comphy: Convert internal SMCC firmware
+ return codes to errno
+Message-ID: <20200902165652.cvb74kgxx5uejpta@pali>
+References: <20200902144344.16684-1-pali@kernel.org>
+ <20200902144344.16684-2-pali@kernel.org>
+ <20200902161328.GE3050651@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <20200901223059.14801-6-nm@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200902161328.GE3050651@lunn.ch>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 5:30 PM, Nishanth Menon wrote:
-> Use temperature-sensor@ naming for nodes following standard conventions of device
-> tree (section 2.2.2 Generic Names recommendation in [1]).
+On Wednesday 02 September 2020 18:13:28 Andrew Lunn wrote:
+> On Wed, Sep 02, 2020 at 04:43:43PM +0200, Pali Rohár wrote:
+> > Driver ->power_on and ->power_off callbacks leaks internal SMCC firmware
+> > return codes to phy caller. This patch converts SMCC error codes to
+> > standard linux errno codes. Include file linux/arm-smccc.h already provides
+> > defines for SMCC error codes, so use them instead of custom driver defines.
+> > Note that return value is signed 32bit, but stored in unsigned long type
+> > with zero padding.
+> > 
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > ---
+> >  drivers/phy/marvell/phy-mvebu-a3700-comphy.c | 14 +++++++++++---
+> >  drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 14 +++++++++++---
+> >  2 files changed, 22 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c b/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
+> > index 1a138be8bd6a..810f25a47632 100644
+> > --- a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
+> > +++ b/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
+> > @@ -26,7 +26,6 @@
+> >  #define COMPHY_SIP_POWER_ON			0x82000001
+> >  #define COMPHY_SIP_POWER_OFF			0x82000002
+> >  #define COMPHY_SIP_PLL_LOCK			0x82000003
+> > -#define COMPHY_FW_NOT_SUPPORTED			(-1)
+> >  
+> >  #define COMPHY_FW_MODE_SATA			0x1
+> >  #define COMPHY_FW_MODE_SGMII			0x2
+> > @@ -112,10 +111,19 @@ static int mvebu_a3700_comphy_smc(unsigned long function, unsigned long lane,
+> >  				  unsigned long mode)
+> >  {
+> >  	struct arm_smccc_res res;
+> > +	s32 ret;
+> >  
+> >  	arm_smccc_smc(function, lane, mode, 0, 0, 0, 0, 0, &res);
+> > +	ret = res.a0;
+> >  
+> > -	return res.a0;
 > 
-> [1] https://github.com/devicetree-org/devicetree-specification/tree/v0.3
+> > +	switch (ret) {
+> > +	case SMCCC_RET_SUCCESS:
+> > +		return 0;
+> > +	case SMCCC_RET_NOT_SUPPORTED:
+> > +		return -EOPNOTSUPP;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> >  }
 > 
-> Suggested-by: Suman Anna <s-anna@ti.com>
-> Suggested-by: Vignesh Raghavendra <vigneshr@ti.com>
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Hi Pali
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> index bb498be2f0a4..ed42f13e7663 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> @@ -95,7 +95,7 @@
->  		clock-names = "gpio";
->  	};
->  
-> -	wkup_vtm0: thermal@42050000 {
-> +	wkup_vtm0: temperature-sensor@42050000 {
-
-There has been a suggestion to use something like thermal-sensor during the
-bindings review, but it is better to use this standard node name.
-
-Reviewed-by: Suman Anna <s-anna@ti.com>
-
-regards
-Suman
-
->  		compatible = "ti,am654-vtm";
->  		reg = <0x42050000 0x25c>;
->  		power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
+> Maybe this should be a global helper translating SMCCC_RET_* into a
+> standard errno value?
 > 
+> 	 Andrew
 
+Hello Andrew!
+
+Well, I'm not sure if some standard global helper is the correct way for
+marvell comphy handler. It returns 0 for success and -1 on error when
+handler is not supported.
+
+Generic SMCC helper would need to support also other values which are
+defined/used by SMCC. And I'm not sure if some helpers cannot define and
+use also non-standard codecs.
+
+I think that such generic helper would need larger discussion and aim of
+these patches is to fix PCIe support on Armada 3720 HW which is broken
+since mentioned commit when users use factory firmware. So patches could
+be easily backported to stable kernels.
+
+On Espressobin is kernel stored on uSD card, so updating it is simple
+and easy -- as opposite of updating ATF firmware which is stored in SPI.
