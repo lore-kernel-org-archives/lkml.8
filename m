@@ -2,188 +2,103 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92126C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DA4C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCA320773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57EE207D3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:08:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599059309;
+	bh=5iRwtqLGIaU3uPg9BY6GBRjrupD8zIVjtKmDsp2Jg/s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rnY5fqhqSlnO3WmEaQX7lcw93zCIkXdOQqx/g8o63YNy64auDZpFH72qylf191XmJ
+	 WGuWaC5lpbKOYmFii/dO6oZnMsYir1jvhf+lZkjcMiC2ankXdiU1Zaa0WhZi/hrzfz
+	 usnxP22+JJ/skAEQqcG07zKWJZVplaugeP1dy9IU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgIBPIW (ORCPT
+        id S1728089AbgIBPI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:08:22 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2742 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726762AbgIBPHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:07:15 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id C3B94761A13BA2A600AB;
-        Wed,  2 Sep 2020 16:07:09 +0100 (IST)
-Received: from localhost (10.52.121.91) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 2 Sep 2020
- 16:07:09 +0100
-Date:   Wed, 2 Sep 2020 16:05:36 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-CC:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] MAINTAINERS: Consolidate Analog Devices IIO
- entries and remove Beniamin Bia
-Message-ID: <20200902160536.00000cfe@Huawei.com>
-In-Reply-To: <20200902145957.13861-1-krzk@kernel.org>
-References: <20200902145957.13861-1-krzk@kernel.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.91]
-X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+        Wed, 2 Sep 2020 11:08:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728204AbgIBPHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:07:19 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3641A2145D;
+        Wed,  2 Sep 2020 15:07:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599059238;
+        bh=5iRwtqLGIaU3uPg9BY6GBRjrupD8zIVjtKmDsp2Jg/s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GNkiuU8Rl/r3xUgj/bZpKyVKzsX0Nx9oVCnPdouXwVG6rZR2yOaF7PHRgruua9nDi
+         TnkASDWk8S0GyFhAqP7pw++HhJGYsGqRSBRgPqeelc8g5bSlthQm2F5s1ldnv4E87X
+         J8DvKMe7sEJbzUZnKCxDCYIk3PTG96q28dwRaog8=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@kernel.org>,
+        linux-i2c@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5/9] i2c: davinci: Simplify with dev_err_probe()
+Date:   Wed,  2 Sep 2020 17:06:39 +0200
+Message-Id: <20200902150643.14839-5-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200902150643.14839-1-krzk@kernel.org>
+References: <20200902150643.14839-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Sep 2020 16:59:56 +0200
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and the error value gets printed.
 
-> Emails to Beniamin Bia bounce with no such address so remove him from
-> maintainers.  After this removal, many entries for Analog Devices Inc
-> IIO drivers look exactly the same so consolidate them.
-> 
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Michael Hennerich <Michael.Hennerich@analog.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: linux-iio <linux-iio@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/i2c/busses/i2c-davinci.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-I'll need acks from Michael and Lars to do this.
-
-Jonathan
-
-> ---
-> 
-> Changes since v1:
-> 1. Consolidate IIO entries
-> ---
->  MAINTAINERS | 56 ++++-------------------------------------------------
->  1 file changed, 4 insertions(+), 52 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8107b3d5d6df..facffcf7b1d1 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -950,38 +950,6 @@ S:	Supported
->  F:	arch/arm64/boot/dts/amd/amd-seattle-xgbe*.dtsi
->  F:	drivers/net/ethernet/amd/xgbe/
->  
-> -ANALOG DEVICES INC AD5686 DRIVER
-> -M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> -L:	linux-pm@vger.kernel.org
-> -S:	Supported
-> -W:	http://ez.analog.com/community/linux-device-drivers
-> -F:	drivers/iio/dac/ad5686*
-> -F:	drivers/iio/dac/ad5696*
-> -
-> -ANALOG DEVICES INC AD5758 DRIVER
-> -M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> -L:	linux-iio@vger.kernel.org
-> -S:	Supported
-> -W:	http://ez.analog.com/community/linux-device-drivers
-> -F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
-> -F:	drivers/iio/dac/ad5758.c
-> -
-> -ANALOG DEVICES INC AD7091R5 DRIVER
-> -M:	Beniamin Bia <beniamin.bia@analog.com>
-> -L:	linux-iio@vger.kernel.org
-> -S:	Supported
-> -W:	http://ez.analog.com/community/linux-device-drivers
-> -F:	Documentation/devicetree/bindings/iio/adc/adi,ad7091r5.yaml
-> -F:	drivers/iio/adc/ad7091r5.c
-> -
-> -ANALOG DEVICES INC AD7124 DRIVER
-> -M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> -L:	linux-iio@vger.kernel.org
-> -S:	Supported
-> -W:	http://ez.analog.com/community/linux-device-drivers
-> -F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-> -F:	drivers/iio/adc/ad7124.c
-> -
->  ANALOG DEVICES INC AD7192 DRIVER
->  M:	Alexandru Tachici <alexandru.tachici@analog.com>
->  L:	linux-iio@vger.kernel.org
-> @@ -998,15 +966,6 @@ W:	http://ez.analog.com/community/linux-device-drivers
->  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
->  F:	drivers/iio/adc/ad7292.c
->  
-> -ANALOG DEVICES INC AD7606 DRIVER
-> -M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> -M:	Beniamin Bia <beniamin.bia@analog.com>
-> -L:	linux-iio@vger.kernel.org
-> -S:	Supported
-> -W:	http://ez.analog.com/community/linux-device-drivers
-> -F:	Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> -F:	drivers/iio/adc/ad7606.c
-> -
->  ANALOG DEVICES INC AD7768-1 DRIVER
->  M:	Michael Hennerich <Michael.Hennerich@analog.com>
->  L:	linux-iio@vger.kernel.org
-> @@ -1068,7 +1027,6 @@ F:	drivers/iio/imu/adis16475.c
->  F:	Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
->  
->  ANALOG DEVICES INC ADM1177 DRIVER
-> -M:	Beniamin Bia <beniamin.bia@analog.com>
->  M:	Michael Hennerich <Michael.Hennerich@analog.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Supported
-> @@ -1135,15 +1093,6 @@ S:	Supported
->  W:	http://ez.analog.com/community/linux-device-drivers
->  F:	drivers/dma/dma-axi-dmac.c
->  
-> -ANALOG DEVICES INC HMC425A DRIVER
-> -M:	Beniamin Bia <beniamin.bia@analog.com>
-> -M:	Michael Hennerich <michael.hennerich@analog.com>
-> -L:	linux-iio@vger.kernel.org
-> -S:	Supported
-> -W:	http://ez.analog.com/community/linux-device-drivers
-> -F:	Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-> -F:	drivers/iio/amplifiers/hmc425a.c
-> -
->  ANALOG DEVICES INC IIO DRIVERS
->  M:	Lars-Peter Clausen <lars@metafoo.de>
->  M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> @@ -1152,8 +1101,12 @@ W:	http://wiki.analog.com/
->  W:	http://ez.analog.com/community/linux-device-drivers
->  F:	Documentation/ABI/testing/sysfs-bus-iio-frequency-ad9523
->  F:	Documentation/ABI/testing/sysfs-bus-iio-frequency-adf4350
-> +F:	Documentation/devicetree/bindings/iio/adc/adi*
-> +F:	Documentation/devicetree/bindings/iio/amplifiers/adi*
-> +F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
->  F:	drivers/iio/*/ad*
->  F:	drivers/iio/adc/ltc249*
-> +F:	drivers/iio/amplifiers/hmc425a.c
->  F:	drivers/staging/iio/*/ad*
->  X:	drivers/iio/*/adjd*
->  
-> @@ -16537,7 +16490,6 @@ F:	drivers/staging/rtl8712/
->  
->  STAGING - SEPS525 LCD CONTROLLER DRIVERS
->  M:	Michael Hennerich <michael.hennerich@analog.com>
-> -M:	Beniamin Bia <beniamin.bia@analog.com>
->  L:	linux-fbdev@vger.kernel.org
->  S:	Supported
->  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-
+diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-davinci.c
+index 232a7679b69b..e9d07323c604 100644
+--- a/drivers/i2c/busses/i2c-davinci.c
++++ b/drivers/i2c/busses/i2c-davinci.c
+@@ -768,10 +768,7 @@ static int davinci_i2c_probe(struct platform_device *pdev)
+ 	if (irq <= 0) {
+ 		if (!irq)
+ 			irq = -ENXIO;
+-		if (irq != -EPROBE_DEFER)
+-			dev_err(&pdev->dev,
+-				"can't get irq resource ret=%d\n", irq);
+-		return irq;
++		return dev_err_probe(&pdev->dev, irq, "can't get irq resource\n");
+ 	}
+ 
+ 	dev = devm_kzalloc(&pdev->dev, sizeof(struct davinci_i2c_dev),
+-- 
+2.17.1
 
