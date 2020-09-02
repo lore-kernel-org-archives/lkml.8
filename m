@@ -2,149 +2,109 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100D0C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4927DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD70820767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A74207C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FhSmNf9A"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="U0dn4rqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgIBEao (ORCPT
+        id S1727004AbgIBEbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 00:30:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18144 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726755AbgIBEad (ORCPT
+        Wed, 2 Sep 2020 00:31:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbgIBEbI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 00:30:33 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0824DS8F084329;
-        Wed, 2 Sep 2020 00:30:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=rTG77Xf8QbKTzcCimDkhTPuRC+vx7lwB9xW36lycOxE=;
- b=FhSmNf9AQxC5NkYaabvLrZn11htJFxqLMlWFEZxLmnNS0aA8YSu2F+zl14Ngl20ePpYV
- b8w272eGGhhAlk/7xvwmuWLvDEPZiV1Ms4Ay5i5/+PiKAMg5D2eKZgj5s/T+J4c/OiKy
- PJru/HbGJvw/F8KEPAAxEOE0fSQgjlNLxEYbaGK8Ye2KiNbG0+8K/ik+Y9MI9P2kVFRv
- opfP/McohT7pYhTH0lVCg+NPuJfOmwYN9AWrbzYZQOYPoVbuw1p2jjmOmvYk2I7xzVUn
- k5XCQy2cjGmdwISAmhAYwtHF+IeJ2nUOI86e52t1Cmuu2ZWmjUMTvxNCt8sYiu9SIZtc zg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33a462gaj4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 00:30:17 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0824Dw2r084714;
-        Wed, 2 Sep 2020 00:30:17 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33a462gagn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 00:30:16 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0824RYqf008622;
-        Wed, 2 Sep 2020 04:30:14 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 337en8c80h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 04:30:14 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0824UB4w23921140
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Sep 2020 04:30:11 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 803E0A4054;
-        Wed,  2 Sep 2020 04:30:11 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 35E5CA405C;
-        Wed,  2 Sep 2020 04:30:09 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.37.120])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  2 Sep 2020 04:30:09 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au, christophe.leroy@c-s.fr
-Cc:     ravi.bangoria@linux.ibm.com, mikey@neuling.org, paulus@samba.org,
-        naveen.n.rao@linux.vnet.ibm.com, pedromfc@linux.ibm.com,
-        rogealve@linux.ibm.com, jniethe5@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 7/8] powerpc/watchpoint/ptrace: Introduce PPC_DEBUG_FEATURE_DATA_BP_ARCH_31
-Date:   Wed,  2 Sep 2020 09:59:44 +0530
-Message-Id: <20200902042945.129369-8-ravi.bangoria@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200902042945.129369-1-ravi.bangoria@linux.ibm.com>
-References: <20200902042945.129369-1-ravi.bangoria@linux.ibm.com>
+        Wed, 2 Sep 2020 00:31:08 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45887C061244;
+        Tue,  1 Sep 2020 21:31:08 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bh9x26YwLz9sVM;
+        Wed,  2 Sep 2020 14:31:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599021064;
+        bh=LYXE/eRHSYQwf1yYG1qPpZSA6Bga2Hru1cXsS3OFbrA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=U0dn4rqn/9o/qT8zpjzh1Cx0eeDJ/58nxLhM4zRtOs93q8RuTGZX46OPtJL7jvfe6
+         sLV+qw0X9l4bvBJHZR9G3U0xitBNVx3uxbqeuCaZJQEx8Fgtt5aOaDfpKnmDfqoH/U
+         0AYbQo7xmDgHiYvAcv9dQxFws0Gvf2/SOvbzC5N5EutEn6CpxX43OS76s1zIFqtlZA
+         856n2Z0xbz16XvUX4sRWB72nqTb+DmiaYZBxx6QvSgsp/HMnGTA3NoLrCUIhYbzAJ9
+         aT/pQ1/7Sgkl8Dr3lHWY24AOP5+8dpqkhxeBs7++aM5FhaNVPeKJS4ECASmc4wuvye
+         kiipVNEMYwy9g==
+Date:   Wed, 2 Sep 2020 14:31:01 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     SeongJae Park <sjpark@amazon.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the rcu tree with the jc_docs tree
+Message-ID: <20200902143101.4ea59943@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-02_02:2020-09-01,2020-09-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- suspectscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- malwarescore=0 mlxlogscore=999 impostorscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2009020037
+Content-Type: multipart/signed; boundary="Sig_/SHXcAPSjBpQylasw0XSay3G";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PPC_DEBUG_FEATURE_DATA_BP_ARCH_31 can be used to determine whether
-we are running on an ISA 3.1 compliant machine. Which is needed to
-determine DAR behaviour, 512 byte boundary limit etc. This was
-requested by Pedro Miraglia Franco de Carvalho for extending
-watchpoint features in gdb. Note that availability of 2nd DAWR is
-independent of this flag and should be checked using
-ppc_debug_info->num_data_bps.
+--Sig_/SHXcAPSjBpQylasw0XSay3G
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- Documentation/powerpc/ptrace.rst          | 1 +
- arch/powerpc/include/uapi/asm/ptrace.h    | 1 +
- arch/powerpc/kernel/ptrace/ptrace-noadv.c | 2 ++
- 3 files changed, 4 insertions(+)
+Hi all,
 
-diff --git a/Documentation/powerpc/ptrace.rst b/Documentation/powerpc/ptrace.rst
-index 864d4b6dddd1..77725d69eb4a 100644
---- a/Documentation/powerpc/ptrace.rst
-+++ b/Documentation/powerpc/ptrace.rst
-@@ -46,6 +46,7 @@ features will have bits indicating whether there is support for::
-   #define PPC_DEBUG_FEATURE_DATA_BP_RANGE		0x4
-   #define PPC_DEBUG_FEATURE_DATA_BP_MASK		0x8
-   #define PPC_DEBUG_FEATURE_DATA_BP_DAWR		0x10
-+  #define PPC_DEBUG_FEATURE_DATA_BP_ARCH_31		0x20
- 
- 2. PTRACE_SETHWDEBUG
- 
-diff --git a/arch/powerpc/include/uapi/asm/ptrace.h b/arch/powerpc/include/uapi/asm/ptrace.h
-index f5f1ccc740fc..7004cfea3f5f 100644
---- a/arch/powerpc/include/uapi/asm/ptrace.h
-+++ b/arch/powerpc/include/uapi/asm/ptrace.h
-@@ -222,6 +222,7 @@ struct ppc_debug_info {
- #define PPC_DEBUG_FEATURE_DATA_BP_RANGE		0x0000000000000004
- #define PPC_DEBUG_FEATURE_DATA_BP_MASK		0x0000000000000008
- #define PPC_DEBUG_FEATURE_DATA_BP_DAWR		0x0000000000000010
-+#define PPC_DEBUG_FEATURE_DATA_BP_ARCH_31	0x0000000000000020
- 
- #ifndef __ASSEMBLY__
- 
-diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-index 48c52426af80..aa36fcad36cd 100644
---- a/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-+++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-@@ -57,6 +57,8 @@ void ppc_gethwdinfo(struct ppc_debug_info *dbginfo)
- 	} else {
- 		dbginfo->features = 0;
- 	}
-+	if (cpu_has_feature(CPU_FTR_ARCH_31))
-+		dbginfo->features |= PPC_DEBUG_FEATURE_DATA_BP_ARCH_31;
- }
- 
- int ptrace_get_debugreg(struct task_struct *child, unsigned long addr,
--- 
-2.26.2
+Today's linux-next merge of the rcu tree got a conflict in:
 
+  Documentation/memory-barriers.txt
+
+between commit:
+
+  537f3a7cf48e ("docs/memory-barriers.txt: Fix references for DMA*.txt file=
+s")
+
+from the jc_docs tree and commit:
+
+  6f6705147bab ("docs: fix references for DMA*.txt files")
+
+from the rcu tree.
+
+I fixed it up (they are preety much the same - I used the former) and
+can carry the fix as necessary. This is now fixed as far as linux-next
+is concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/SHXcAPSjBpQylasw0XSay3G
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9PIAUACgkQAVBC80lX
+0GyYDwf9HL0CcBNj2gvncc6m0Td7K6AuLEUlshix/SsSejxwRVv/YPnuQ/qfMPi9
+u8XEQFalv9tr10J0XElsRP+x3+58aDRv3yzO70j6m2cKhGEgtABX8Q/wf1wtJVEv
+VxzazvAnbyuR1eLthvDi3WncwGbgFFygUcN6meto24JyW7s5R6DsxonSSBImI0rR
+8jECC50nwg2da4aWHHgVSjDyYEtw6G6HC/dReLt4VUYDp2Cwa1ZI7dXfHJJeD7Vt
+xfthCT5RJQAmIbys4CJr//SvBM+JkUCOqgQVpT/SeNZW7ivuBkhRlny1nfwCKLpT
+DdWwL98ZwYCggVPIh+E4u7S9DHnj9Q==
+=ouqH
+-----END PGP SIGNATURE-----
+
+--Sig_/SHXcAPSjBpQylasw0XSay3G--
