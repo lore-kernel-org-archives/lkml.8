@@ -2,87 +2,113 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9D5C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D38C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7F70207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:32:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599064365;
-	bh=yCZ82wEQrcGfe6X5PNectLGO+bsmwuVhlJTUr6FnevA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ASlDetKZAH0QQ9/8QLshm3FxGTFHY2BZqMCtQPUiQXqjtUPYncGhdbil/WUMaFrcN
-	 EuhZyrTPG43FLIzrZEuhWEKUVOBKrASIbkAdzX959n7MYrcXmwv6IG5H415u4fk0DA
-	 23qrHlPFMkSFx95o0fIhQUDJguEhsaqHxOAitOhI=
+	by mail.kernel.org (Postfix) with ESMTP id 0497220758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:33:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXdH0tcs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgIBQco (ORCPT
+        id S1727820AbgIBQd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:32:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726247AbgIBQcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:32:43 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 446D420758;
-        Wed,  2 Sep 2020 16:32:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599064363;
-        bh=yCZ82wEQrcGfe6X5PNectLGO+bsmwuVhlJTUr6FnevA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=pNQOe7N6kEGzUzeNy/aBiwiLLg08GkywQ3zNqjWxeh94oya0il2et8wGxmZVAjGhZ
-         CzirKd/Q4jS1/95OuRk3BYnfaHFCmC+HlTMk/r2FGG8VFVF2rwRoNPGrZT51YbkYwZ
-         OO+i+zyhE5MTi86q8As86xeJAmW/AqTLgnOPWVsA=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Wed, 2 Sep 2020 12:33:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbgIBQd1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:33:27 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81355C061244;
+        Wed,  2 Sep 2020 09:33:25 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id w2so38892wmi.1;
+        Wed, 02 Sep 2020 09:33:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/2qvkwmqjjGM0RfjIplcORNd0dXrXenfHRoPeccCbQs=;
+        b=KXdH0tcsr9jfN4LME7Eb84NGipaYEBMx/4+RmQdbyAVwvyGz/ShRyowlf6Rdyr4QnY
+         vVfKBHD5FL98h2XvAsSRJUV5OGLUwMPORVwHuHnKVTMs3X92tIzDMTgILqiZU2thOles
+         4k5n3Dnt08XLYzpEM8UPqnEKMBIKnsAfg5iws8ljUgmu4uW3gMxRXSAEuWnJQeDm4zL/
+         9wYGwdrz1I2yOYuL5wDnhzjEbz4krFN6h7T1mRDD3raE33VIoMDm06b9btfnbDWhMFPu
+         YwqeB0Dmb87GNBAoe5Of5Tt3/IVlz9W7dN943AgfxXxc5J0eyOHvutxymLEGcO1C3I0Y
+         +2WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/2qvkwmqjjGM0RfjIplcORNd0dXrXenfHRoPeccCbQs=;
+        b=eE6LzxVexLIXlCadXkkTuuZoaDT3wxup/ia9XGdmMAnw2jGK48cFlFCFhz8WZOmnbJ
+         Mc6wquYN2Ae0+3TcXgC14LfY6bKjInHP9DPdxcoLCWaXrlkuEkEd1ZdH/pFo5mqxhbQm
+         NylwZqG1PmVBB8x7CooRb8PCSpxMH466L1XgZWEtxOkiU0R36FgzpCA0HlH9AT4ArRnE
+         zhs7NhknBDLfMV3QSzYDjAmAMZfYcia1rd5o3oOxhZpd3oBgJZdR9QLZJkUJqH0DPq/K
+         oS8L43AdusOAnA3e8ik4F+nBqUKW82OJWmrR//WBxVgEAH/CSni/A1Mz+y3IvjChhZID
+         ViiA==
+X-Gm-Message-State: AOAM530l0qGXSDbiGUSpg1YX+Ab7qysIhIpx+CFwEt/TBbACwQAG1nvu
+        S8662ymfokQtyV05Spr+wZaQMZ5g4v79wcVt
+X-Google-Smtp-Source: ABdhPJyZP2b3PC6lr0p1xYM3weE5VehC7kVZPjSkxTsr3W781y4DnPLrA2RkZfLDCBDllx+SgK7vwA==
+X-Received: by 2002:a1c:1f42:: with SMTP id f63mr1424093wmf.1.1599064404161;
+        Wed, 02 Sep 2020 09:33:24 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id y6sm237545wrt.80.2020.09.02.09.33.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 09:33:23 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] arm64: dts: imx8mm-var-som: Add 32.768 kHz clock to PMIC
-Date:   Wed,  2 Sep 2020 18:32:23 +0200
-Message-Id: <20200902163223.17784-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+Subject: [PATCH] xsk: Free variable on error path
+Date:   Wed,  2 Sep 2020 17:33:19 +0100
+Message-Id: <20200902163319.345284-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ROHM BD71847 PMIC has a 32.768 kHz clock.  Adding necessary parent
-allows to probe the bd718x7 clock driver fixing boot errors:
+In xp_create_dma_map(), memory is allocated to dma_map->dma_pages, but
+then dma_map is erroneously compared to NULL, rather than the member.
+Fix this.
 
-    bd718xx-clk bd71847-clk.1.auto: No parent clk found
-    bd718xx-clk: probe of bd71847-clk.1.auto failed with error -22
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Addresses-Coverity: ("Dead code")
+Fixes: 921b68692abb ("xsk: Enable sharing of dma mappings")
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/xdp/xsk_buff_pool.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi
-index baef13d67554..7f74fba58aeb 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi
-@@ -175,6 +175,10 @@
- 		interrupts = <8 GPIO_ACTIVE_LOW>;
- 		rohm,reset-snvs-powered;
+diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c
+index 795d7c81c0ca..5b00bc5707f2 100644
+--- a/net/xdp/xsk_buff_pool.c
++++ b/net/xdp/xsk_buff_pool.c
+@@ -287,7 +287,7 @@ static struct xsk_dma_map *xp_create_dma_map(struct device *dev, struct net_devi
+ 		return NULL;
  
-+		#clock-cells = <0>;
-+		clocks = <&osc_32k 0>;
-+		clock-output-names = "clk-32k-out";
-+
- 		regulators {
- 			buck1_reg: BUCK1 {
- 				regulator-name = "buck1";
+ 	dma_map->dma_pages = kvcalloc(nr_pages, sizeof(*dma_map->dma_pages), GFP_KERNEL);
+-	if (!dma_map) {
++	if (!dma_map->dma_pages) {
+ 		kfree(dma_map);
+ 		return NULL;
+ 	}
 -- 
-2.17.1
+2.28.0
 
