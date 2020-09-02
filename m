@@ -2,78 +2,86 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F98C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60440C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABC5E2087D
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3802D20773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:19:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgIBJR6 (ORCPT
+        id S1726493AbgIBJTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 05:17:58 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10754 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726140AbgIBJRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 05:17:55 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A46FE76BC740ABAE0AE1;
-        Wed,  2 Sep 2020 17:17:53 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.33) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 2 Sep 2020
- 17:17:43 +0800
-Subject: Re: [PATCH v2 0/2] ACPI/IORT: Code cleanups
-From:   Hanjun Guo <guohanjun@huawei.com>
-To:     Zenghui Yu <yuzenghui@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <sudeep.holla@arm.com>
-CC:     <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
-        Will Deacon <will@kernel.org>
-References: <20200818063625.980-1-yuzenghui@huawei.com>
- <12667629-5c3f-4606-ec27-72e5ef19f35a@huawei.com>
-Message-ID: <3142b38e-fef0-a7cf-319e-96c5da04967c@huawei.com>
-Date:   Wed, 2 Sep 2020 17:17:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <12667629-5c3f-4606-ec27-72e5ef19f35a@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.33]
-X-CFilter-Loop: Reflected
+        Wed, 2 Sep 2020 05:19:39 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:49234 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726210AbgIBJTi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 05:19:38 -0400
+X-IronPort-AV: E=Sophos;i="5.76,381,1592838000"; 
+   d="scan'208";a="55959941"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 02 Sep 2020 18:19:30 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9B48842786AE;
+        Wed,  2 Sep 2020 18:19:28 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH v2] dt-bindings: timer: renesas,cmt: Document r8a7742 CMT support
+Date:   Wed,  2 Sep 2020 10:19:27 +0100
+Message-Id: <20200902091927.32211-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Cc Will
+Document SoC specific compatible strings for r8a7742. No driver change
+is needed as the fallback strings will activate the right code.
 
-On 2020/8/18 17:16, Hanjun Guo wrote:
-> On 2020/8/18 14:36, Zenghui Yu wrote:
->> * From v1 [1]:
->>    - As pointed out by Hanjun, remove two now unused inline functions.
->>      Compile tested with CONFIG_IOMMU_API is not selected.
->>
->> [1] https://lore.kernel.org/r/20200817105946.1511-1-yuzenghui@huawei.com
->>
->> Zenghui Yu (2):
->>    ACPI/IORT: Drop the unused @ops of iort_add_device_replay()
->>    ACPI/IORT: Remove the unused inline functions
->>
->>   drivers/acpi/arm64/iort.c | 10 ++--------
->>   1 file changed, 2 insertions(+), 8 deletions(-)
-> 
-> Nice cleanup.
-> 
-> Acked-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v1->v2
+* Reabsed the patch on top YAML conversion
+* Restored the Acks
+---
+ Documentation/devicetree/bindings/timer/renesas,cmt.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Will, would you mind taking this patch set via ARM64 tree?
-
-Thanks
-Hanjun
+diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.yaml b/Documentation/devicetree/bindings/timer/renesas,cmt.yaml
+index 7e4dc5623da8..762b65094292 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,cmt.yaml
++++ b/Documentation/devicetree/bindings/timer/renesas,cmt.yaml
+@@ -39,6 +39,7 @@ properties:
+       - items:
+           - enum:
+               - renesas,r8a73a4-cmt0      # 32-bit CMT0 on R-Mobile APE6
++              - renesas,r8a7742-cmt0      # 32-bit CMT0 on RZ/G1H
+               - renesas,r8a7743-cmt0      # 32-bit CMT0 on RZ/G1M
+               - renesas,r8a7744-cmt0      # 32-bit CMT0 on RZ/G1N
+               - renesas,r8a7745-cmt0      # 32-bit CMT0 on RZ/G1E
+@@ -53,6 +54,7 @@ properties:
+       - items:
+           - enum:
+               - renesas,r8a73a4-cmt1      # 48-bit CMT1 on R-Mobile APE6
++              - renesas,r8a7742-cmt1      # 48-bit CMT1 on RZ/G1H
+               - renesas,r8a7743-cmt1      # 48-bit CMT1 on RZ/G1M
+               - renesas,r8a7744-cmt1      # 48-bit CMT1 on RZ/G1N
+               - renesas,r8a7745-cmt1      # 48-bit CMT1 on RZ/G1E
+-- 
+2.17.1
 
