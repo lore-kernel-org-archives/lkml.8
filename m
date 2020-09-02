@@ -2,96 +2,115 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AA8C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121E3C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 700E020707
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:22:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eQ9q1Uyy"
+	by mail.kernel.org (Postfix) with ESMTP id DB77520707
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 01:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgIBBWy (ORCPT
+        id S1726311AbgIBBX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 21:22:54 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54016 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgIBBWx (ORCPT
+        Tue, 1 Sep 2020 21:23:56 -0400
+Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net ([209.97.182.222]:37662
+        "HELO zg8tmja5ljk3lje4mi4ymjia.icoremail.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with SMTP id S1726122AbgIBBXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 21:22:53 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0821J9a3061241;
-        Wed, 2 Sep 2020 01:22:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : mime-version :
- content-type; s=corp-2020-01-29;
- bh=d2A/fakPT8AvXHlc10w6SP/dKYZddFmLCUQoXWCKYhI=;
- b=eQ9q1UyyTxQIdRzS77ffkMWeqgouJabgfmTIGV5vaP/zCJRUU1GoPK+CjzKs7sTByp5o
- r7Ck+duKpX1obYuAO5ErMDhDwVzx04DQvEDm2EAujm0vXMtWus5zE5wxPv/xXS8tY6RO
- QKpSjz7hqQ1zdCtvjI9DQAq9jhJWWtLndrqxylsr6SQwt37X2/Ldp3/Z/+CnJX3OOusB
- +HkMo+USjJ641ha7ehYIZL2iVKsSGh04UbuLV5TO46tO1a3FM5skGsoKccnCYRd8oxQF
- k0wNSThLH8cT5yvUU7XbEc3JAjwMNkNHqJdpWyh01frAR21+smtK0MgnJ5gAb6igB2OV TQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 337eeqyndu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 02 Sep 2020 01:22:49 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0821Kb2Z095669;
-        Wed, 2 Sep 2020 01:22:48 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 3380x51ts1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 02 Sep 2020 01:22:48 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0821Mkc3025912;
-        Wed, 2 Sep 2020 01:22:47 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Sep 2020 18:22:46 -0700
-To:     Alex Dewar <alex.dewar90@gmail.com>
-Cc:     GR-QLogic-Storage-Upstream@marvell.com, jejb@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, njavali@marvell.com
-Subject: Re: [PATCH v2] scsi: Don't call memset after dma_alloc_coherent()
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1eenlezwf.fsf@ca-mkp.ca.oracle.com>
-References: <20200820185149.932178-1-alex.dewar90@gmail.com>
-        <20200820234952.317313-1-alex.dewar90@gmail.com>
-Date:   Tue, 01 Sep 2020 21:22:44 -0400
-In-Reply-To: <20200820234952.317313-1-alex.dewar90@gmail.com> (Alex Dewar's
-        message of "Fri, 21 Aug 2020 00:49:52 +0100")
+        Tue, 1 Sep 2020 21:23:55 -0400
+Received: from [166.111.139.123] (unknown [166.111.139.123])
+        by app-1 (Coremail) with SMTP id DwQGZQDnviIb9E5fYIv8AA--.33306S2;
+        Wed, 02 Sep 2020 09:23:39 +0800 (CST)
+Subject: Re: [PATCH 4.19 016/125] media: pci: ttpci: av7110: fix possible
+ buffer overflow caused by bad DMA value in debiirq()
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Sean Young <sean@mess.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju@tsinghua.edu.cn>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <20200901150934.576210879@linuxfoundation.org>
+ <20200901150935.368387062@linuxfoundation.org>
+ <20200901162512.GA30837@gofer.mess.org> <20200901163523.GA1458104@kroah.com>
+ <20200901211626.GA17861@duo.ucw.cz>
+From:   Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+Message-ID: <5c177bce-c7f8-6938-45a9-820d7d32e2e0@tsinghua.edu.cn>
+Date:   Wed, 2 Sep 2020 09:23:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
- mlxlogscore=810 adultscore=0 suspectscore=1 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009020009
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 impostorscore=0 mlxlogscore=830 bulkscore=0 suspectscore=1
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009020009
+In-Reply-To: <20200901211626.GA17861@duo.ucw.cz>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID: DwQGZQDnviIb9E5fYIv8AA--.33306S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Aw17tFyUXr4xWFWUWrWktFb_yoW8XF48pF
+        W7KayrKFsYqrZFkryktwnYva40y3WYqryxXr1UZ3yUGwn0qFyayr4xGa13ua4qvrs5Ga4Y
+        vF4jqasFg3yDZa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+        IcxG8wCY02Avz4vE14v_KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+        wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+        v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2
+        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73Uj
+        IFyTuYvjfUOMKZDUUUU
+X-CM-SenderInfo: xedlyxhdmxq3pvlqwxlxdovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Alex,
 
-> dma_alloc_coherent() already zeroes memory, so the extra call to
-> memset() is unnecessary.
+On 2020/9/2 5:16, Pavel Machek wrote:
+> On Tue 2020-09-01 18:35:23, Greg Kroah-Hartman wrote:
+>> On Tue, Sep 01, 2020 at 05:25:12PM +0100, Sean Young wrote:
+>>> Greg,
+>>>
+>>> On Tue, Sep 01, 2020 at 05:09:31PM +0200, Greg Kroah-Hartman wrote:
+>>>> From: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+>>>>
+>>>> [ Upstream commit 6499a0db9b0f1e903d52f8244eacc1d4be00eea2 ]
+>>>>
+>>>> The value av7110->debi_virt is stored in DMA memory, and it is assigned
+>>>> to data, and thus data[0] can be modified at any time by malicious
+>>>> hardware. In this case, "if (data[0] < 2)" can be passed, but then
+>>>> data[0] can be changed into a large number, which may cause buffer
+>>>> overflow when the code "av7110->ci_slot[data[0]]" is used.
+>>>>
+>>>> To fix this possible bug, data[0] is assigned to a local variable, which
+>>>> replaces the use of data[0].
+>>> See the discussion here:
+>>>
+>>> https://lkml.org/lkml/2020/8/31/479
+>>>
+>>> It does not seem worthwhile merging to the stable trees.
+>> It doesn't hurt either :)
+> Update stable kernel rules.
+>
+> If "patch does not match description and is pretty obviously useless"
+> but "does not hurt" is acceptable for stable tree, people should know.
+>
+> You are pushing known junk into stable. Stop that.
 
-One patch per driver, please.
+Sorry for my useless patch...
 
-Thanks!
+Recently I submitted a new patch wiith READ_ONCE() to fix the problem 
+that Pavel said:
+https://lkml.org/lkml/2020/8/30/67
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+If you think this new patch is still useless, reverting the code is fine 
+to me.
+
+
+Best wishes,
+Jia-Ju Bai
+
