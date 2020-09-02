@@ -2,162 +2,130 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDA1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A85C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA75F206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90A02083B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:06:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="S1ka07XL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vOM8SLwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgIBSGX convert rfc822-to-8bit (ORCPT
+        id S1727954AbgIBSGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:06:23 -0400
-Received: from mailoutvs22.siol.net ([185.57.226.213]:34409 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726567AbgIBSGR (ORCPT
+        Wed, 2 Sep 2020 14:06:43 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:41175 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726567AbgIBSGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:06:17 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id DC7AB526A96;
-        Wed,  2 Sep 2020 20:06:13 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id JLXQv0_kZthx; Wed,  2 Sep 2020 20:06:13 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 5A4CB526A97;
-        Wed,  2 Sep 2020 20:06:13 +0200 (CEST)
-Received: from kista.localnet (cpe1-5-97.cable.triera.net [213.161.5.97])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 8177A526A92;
-        Wed,  2 Sep 2020 20:06:12 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     peron.clem@gmail.com, Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Samuel Holland <samuel@sholland.org>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [linux-sunxi] [PATCH 05/16] ASoc: sun4i-i2s: Add 20 and 24 bit support
-Date:   Wed, 02 Sep 2020 20:10:47 +0200
-Message-ID: <9148679.oVN3Z7rve9@kista>
-In-Reply-To: <1e320dfd-9388-54b2-dba9-7def0bf4bbad@sholland.org>
-References: <20200704113902.336911-1-peron.clem@gmail.com> <20200704113902.336911-6-peron.clem@gmail.com> <1e320dfd-9388-54b2-dba9-7def0bf4bbad@sholland.org>
+        Wed, 2 Sep 2020 14:06:34 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 45A6A5C0150;
+        Wed,  2 Sep 2020 14:06:32 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 02 Sep 2020 14:06:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
+        :to:cc:subject:date:message-id:in-reply-to:references:reply-to
+        :mime-version:content-transfer-encoding; s=fm1; bh=BMorf3eXecNKl
+        H7Og7d/a2LFgjFUH2s538ZL40vPoMM=; b=S1ka07XLcVy/MEwyYQQLdq5MMrvIN
+        BVYTs5kA1XKydBgD2prQYhC1XuYcqKuRwdpwxsoVZrMrzc53vwZ/VbdMAmqud4e7
+        kcnpPpJ8dMaXpFQKb+A4iUvq1ZL+MmQJuKKY2IutfabDsDVU5YwAimNJrOx2BHip
+        c9mzFK/v58rZKkga3x6/Rz+EW70taXa1N1LeiuDgAhHbGP6n0SqAmHiSKr70x/IG
+        XBOZFT6UteDCDRGVB7glRFjp+fDSy4OqaV0UVhXtX0LtlwvPLxNHNClY54xMyhvK
+        tHjq7cMNJaBA8YBeEr4uLXbvFcb+QjrmHRUSlx1DZu51dvO7ypr/HQHvA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:reply-to:subject
+        :to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=BMorf3eXecNKlH7Og7d/a2LFgjFUH2s538ZL40vPoMM=; b=vOM8SLwb
+        2XsKEmgyTZDsilXBWFEx1lOB7+OIn7JslP62C+9Kph3REvyh3/GFAEAyVXq2/QZE
+        AQ3H/bf7YjdsHmRDiGCPUOHmp2OHVZL+y7PJspOe9tMOBIxhtZX1rWyvvWibKj/g
+        T21vTpO43QPP76Cc2T53VZygIY5GgBCzQaYVfqZhCSNxP5QQuDsBC7e4Gq0+OHN2
+        lBYfdxh8cl+PoqgszrYsm866A6F14rodJKPT1elM9ArxIR90Z1s0HG9UabNDNdxQ
+        xLycRN8KL5gBOD/KvLcNMmLFZoSAkpZ5AYHJSQAp6CgbdRpUXG+XSJDBAeyd3Vfv
+        MVFjRKKObf3SCQ==
+X-ME-Sender: <xms:J99PX76dUOfiz1hoQ4Zq8enqRCnhHH6VdAIho7UX4BwJdniNk6nHGg>
+    <xme:J99PXw76KWI2q8-63pvOt0VdqP4ohr2Q4ViIhdeQ2rW72JrxFTjCq8Ntlb6UvqS1h
+    t9XJsQ_yAc_G5Qb9A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledguddvudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhvffufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpegkihcu
+    jggrnhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrhhnpeduhf
+    ffveektdduhfdutdfgtdekkedvhfetuedufedtgffgvdevleehheevjefgtdenucfkphep
+    uddvrdegiedruddtiedrudeigeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpeiiihdrhigrnhesshgvnhhtrdgtohhm
+X-ME-Proxy: <xmx:J99PXydk0CLV7KXZbBV4ZV6xCy13mk6FzzwOlCDzsFhwktufiOkSBw>
+    <xmx:J99PX8IajXey4R1cmtPEVQpwZkxXL8OGUxDyduvKQrtgJF_e4MwYFQ>
+    <xmx:J99PX_J0OtBdjE5tjvjGKBKR-CwnHUcA-o4WSYht779a8YrvjR0LYQ>
+    <xmx:KN9PX8ojXsFnJHyZkGycYQjS7uuJuDddCcjsuOr71IWRKoxGWcvFzw>
+Received: from nvrsysarch6.NVidia.COM (unknown [12.46.106.164])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6E1A43060272;
+        Wed,  2 Sep 2020 14:06:31 -0400 (EDT)
+From:   Zi Yan <zi.yan@sent.com>
+To:     linux-mm@kvack.org, Roman Gushchin <guro@fb.com>
+Cc:     Rik van Riel <riel@surriel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Nellans <dnellans@nvidia.com>,
+        linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>
+Subject: [RFC PATCH 03/16] mm: proc: add 1GB THP kpageflag.
+Date:   Wed,  2 Sep 2020 14:06:15 -0400
+Message-Id: <20200902180628.4052244-4-zi.yan@sent.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200902180628.4052244-1-zi.yan@sent.com>
+References: <20200902180628.4052244-1-zi.yan@sent.com>
+Reply-To: Zi Yan <ziy@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Samuel!
+From: Zi Yan <ziy@nvidia.com>
 
-Dne petek, 10. julij 2020 ob 07:44:51 CEST je Samuel Holland napisal(a):
-> On 7/4/20 6:38 AM, Clément Péron wrote:
-> > From: Marcus Cooper <codekipper@gmail.com>
-> > 
-> > Extend the functionality of the driver to include support of 20 and
-> > 24 bits per sample.
-> > 
-> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > ---
-> > 
-> >  sound/soc/sunxi/sun4i-i2s.c | 11 +++++++++--
-> >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> > index f78167e152ce..bc7f9343bc7a 100644
-> > --- a/sound/soc/sunxi/sun4i-i2s.c
-> > +++ b/sound/soc/sunxi/sun4i-i2s.c
-> > @@ -577,6 +577,9 @@ static int sun4i_i2s_hw_params(struct
-> > snd_pcm_substream *substream,> 
-> >  	case 16:
-> >  		width = DMA_SLAVE_BUSWIDTH_2_BYTES;
-> >  		break;
-> > 
-> > +	case 32:
-> > +		width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-> > +		break;
-> 
-> This breaks the sun4i variants, because sun4i_i2s_get_wss returns 4 for a 32
-> bit width, but it needs to return 3.
+Bit 27 is used to identify 1GB THP.
 
-I'm not sure what has WSS with physical width and DMA?
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+---
+ fs/proc/page.c                         | 2 ++
+ include/uapi/linux/kernel-page-flags.h | 2 ++
+ 2 files changed, 4 insertions(+)
 
-> 
-> As a side note, I wonder why we use the physical width (the spacing between
-> samples in RAM) to drive the slot width. S24_LE takes up 4 bytes per sample
-> in RAM, which we need for DMA. But I don't see why we would want to
-> transmit the padding over the wire. I would expect it to be transmitted the
-> same as S24_3LE (which has no padding). It did not matter before, because
-> the only supported format had no padding.
-
-Allwinner DMA engines support only 1, 2, 4 and sometimes 8 bytes for bus 
-width, so if sample is 24 bits in size, we have no other way but to transmit 
-padding too.
-
-Best regards,
-Jernej
-
-> 
-> Regards,
-> Samuel
-> 
-> >  	default:
-> >  		dev_err(dai->dev, "Unsupported physical sample width: 
-%d\n",
-> >  		
-> >  			params_physical_width(params));
-> > 
-> > @@ -1063,6 +1066,10 @@ static int sun4i_i2s_dai_probe(struct snd_soc_dai
-> > *dai)> 
-> >  	return 0;
-> >  
-> >  }
-> > 
-> > +#define SUN4I_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE | \
-> > +			 SNDRV_PCM_FMTBIT_S20_LE | \
-> > +			 SNDRV_PCM_FMTBIT_S24_LE)
-> > +
-> > 
-> >  static struct snd_soc_dai_driver sun4i_i2s_dai = {
-> >  
-> >  	.probe = sun4i_i2s_dai_probe,
-> >  	.capture = {
-> > 
-> > @@ -1070,14 +1077,14 @@ static struct snd_soc_dai_driver sun4i_i2s_dai = {
-> > 
-> >  		.channels_min = 1,
-> >  		.channels_max = 8,
-> >  		.rates = SNDRV_PCM_RATE_8000_192000,
-> > 
-> > -		.formats = SNDRV_PCM_FMTBIT_S16_LE,
-> > +		.formats = SUN4I_FORMATS,
-> > 
-> >  	},
-> >  	.playback = {
-> >  	
-> >  		.stream_name = "Playback",
-> >  		.channels_min = 1,
-> >  		.channels_max = 8,
-> >  		.rates = SNDRV_PCM_RATE_8000_192000,
-> > 
-> > -		.formats = SNDRV_PCM_FMTBIT_S16_LE,
-> > +		.formats = SUN4I_FORMATS,
-> > 
-> >  	},
-> >  	.ops = &sun4i_i2s_dai_ops,
-> >  	.symmetric_rates = 1,
-
-
-
+diff --git a/fs/proc/page.c b/fs/proc/page.c
+index f3b39a7d2bf3..e4e2ad3612c9 100644
+--- a/fs/proc/page.c
++++ b/fs/proc/page.c
+@@ -161,6 +161,8 @@ u64 stable_page_flags(struct page *page)
+ 			u |= BIT_ULL(KPF_ZERO_PAGE);
+ 			u |= BIT_ULL(KPF_THP);
+ 		}
++		if (compound_order(head) == HPAGE_PUD_ORDER)
++			u |= 1 << KPF_PUD_THP;
+ 	} else if (is_zero_pfn(page_to_pfn(page)))
+ 		u |= BIT_ULL(KPF_ZERO_PAGE);
+ 
+diff --git a/include/uapi/linux/kernel-page-flags.h b/include/uapi/linux/kernel-page-flags.h
+index 6f2f2720f3ac..cdeb33ab655c 100644
+--- a/include/uapi/linux/kernel-page-flags.h
++++ b/include/uapi/linux/kernel-page-flags.h
+@@ -36,5 +36,7 @@
+ #define KPF_ZERO_PAGE		24
+ #define KPF_IDLE		25
+ #define KPF_PGTABLE		26
++#define KPF_PUD_THP		27
++
+ 
+ #endif /* _UAPILINUX_KERNEL_PAGE_FLAGS_H */
+-- 
+2.28.0
 
