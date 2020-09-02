@@ -2,92 +2,102 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B62C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4C9C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE8BB20773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 777212078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:25:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G7X44HiR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjpScwUd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgIBOY5 (ORCPT
+        id S1727927AbgIBOZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:24:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38138 "EHLO
+        Wed, 2 Sep 2020 10:25:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbgIBONL (ORCPT
+        with ESMTP id S1727935AbgIBOPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:13:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA39C061258;
-        Wed,  2 Sep 2020 07:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=F3ySvW+0LV/eEp4ukNxLWcqNSpE01eTInOOTJQ8Lr18=; b=G7X44HiRcM/JgcWlZooMaP4koW
-        rcfEa3NDJkcDkQKo8ORctDDkXQ5IseKhAws17oXMoud7xM2TlcsfR/GqWZvJ75mlyalzSDqid/81C
-        PAMCykjZi+PpLdP2yzYKuVt9+tFvVmIEZtbSe1zF2Yhr87Bnn0ktPOM2Q6AsFj/MDh07bvgDsHP9E
-        oZh/erionLIYWEtxl7f/8F700PmHfi6W6QYGTGNoRy4a/2gsckqgfiWOBqXX3g9wTDAgGG0T59Pea
-        7zGDP0q4DYNPXWRB+c5iVq2k3wL7Ys8qFaGX0hz/qWZrpj8Oz5/qWXDh/YKV78xpBK26bi+limiW5
-        xnQ16DeQ==;
-Received: from [2001:4bb8:184:af1:6a63:7fdb:a80e:3b0b] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDTV4-0005eB-Gm; Wed, 02 Sep 2020 14:12:34 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 11/19] gdrom: use bdev_check_media_change
-Date:   Wed,  2 Sep 2020 16:12:10 +0200
-Message-Id: <20200902141218.212614-12-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200902141218.212614-1-hch@lst.de>
-References: <20200902141218.212614-1-hch@lst.de>
+        Wed, 2 Sep 2020 10:15:05 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13B9C061244;
+        Wed,  2 Sep 2020 07:15:03 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id 31so2592433pgy.13;
+        Wed, 02 Sep 2020 07:15:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cFLb4ALCE9PWhj/xokRnuSTEiqPwTe35SqHGat4xPp0=;
+        b=MjpScwUdFE3fRuo4tpJ8mThAprEUlU5sAZ1fVxRkhEKDEURdoxqeTfLUqAUtptSn8P
+         hzdbKjDUgDMFzmTJUr8SNWxWrI+zjb2opOoq/sBVmg0ylKz2tanz4eaOEIhP2BGT7Oeg
+         lP7tVRFb9tcRF3AczoMazWas5btp3qBuN2ZH/vDBKkG2gEdT2GARmAXtAcP3ZrBAmdfN
+         RpEfYzDo1gSUMee6dByOJcejSVRuvpkxwDV6CepIjeQboDVRT8j7b27eaZmyNDYG+dD8
+         ZqkPCotHQlenkafHjlsisWb+KFV54K/qW01lNY56EaK1rLhSdy8k7EUI1mwkk8V298li
+         5A6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cFLb4ALCE9PWhj/xokRnuSTEiqPwTe35SqHGat4xPp0=;
+        b=YfH3EQKGF9b2nmctQtntAIvoTujPkvAhxtnKNwhkhri/1MSQX6G+vce7RNkW7ubuLE
+         0V2NFpDjmhFcqK1h5UQX6SCEPHUQQySycctexL73btvwx8dmcDtx/nazZSzJMtfxyhz7
+         SALvRoV2rYE/MHaFl8yfCt7UhrIUvTfIUlTmrk7MWse5UP0xPxror0u7i5NtlP7gomFe
+         qmSS0/AHrtdC64ijgAKz6vjZ8hK8MuynHry9OA049FqM9f+/AykpmeYOjAqtfNwPIfjI
+         Z4iC4A9EvZSY9+el7IBGQHO7dJ/YoD5xqz9MzRmVvfngTXONSt9sJeuYKZLGazB2oM7A
+         xCEw==
+X-Gm-Message-State: AOAM532AeRZz+KJDJF/y8TQweV2uKLGxuXvSANjti5SQ4NZVBPyKh2u2
+        4mWebWyEqPJn6U1PonUlZ/1ezicdaCH4Mg==
+X-Google-Smtp-Source: ABdhPJwW4Z0ynOopYuaSrZSMqfN7YG8EJohAI7fTxnN0I+NmXgGNZWynN/Psc6pizc9um0Rvsagvpg==
+X-Received: by 2002:aa7:80d3:: with SMTP id a19mr3338479pfn.102.1599056103443;
+        Wed, 02 Sep 2020 07:15:03 -0700 (PDT)
+Received: from gmail.com ([223.190.81.142])
+        by smtp.gmail.com with ESMTPSA id u8sm5751415pfm.133.2020.09.02.07.15.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 07:15:02 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 19:43:12 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the pci tree
+Message-ID: <20200902141312.GA50412@gmail.com>
+References: <20200902110743.0519779d@canb.auug.org.au>
+ <20200902123312.GA242674@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200902123312.GA242674@bjorn-Precision-5520>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GD-ROM driver does not have a ->revalidate_disk method, so it can
-just use bdev_check_media_change without any additional changes.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/cdrom/gdrom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/cdrom/gdrom.c b/drivers/cdrom/gdrom.c
-index 09b0cd292720fa..9874fc1c815b53 100644
---- a/drivers/cdrom/gdrom.c
-+++ b/drivers/cdrom/gdrom.c
-@@ -479,7 +479,7 @@ static int gdrom_bdops_open(struct block_device *bdev, fmode_t mode)
- {
- 	int ret;
- 
--	check_disk_change(bdev);
-+	bdev_check_media_change(bdev);
- 
- 	mutex_lock(&gdrom_mutex);
- 	ret = cdrom_open(gd.cd_info, bdev, mode);
--- 
-2.28.0
-
+On Wed, Sep 02, 2020 at 07:33:12AM -0500, Bjorn Helgaas wrote:
+> On Wed, Sep 02, 2020 at 11:07:43AM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > After merging the pci tree, today's linux-next build (x86_64 allmodconfig)
+> > produced this warning:
+> > 
+> > drivers/pci/pci-driver.c: In function 'pci_pm_thaw_noirq':
+> > drivers/pci/pci-driver.c:1037:6: warning: unused variable 'error' [-Wunused-variable]
+> >  1037 |  int error;
+> >       |      ^~~~~
+> > drivers/pci/pci-driver.c: In function 'pci_pm_restore_noirq':
+> > drivers/pci/pci-driver.c:1169:6: warning: unused variable 'error' [-Wunused-variable]
+> >  1169 |  int error;
+> >       |      ^~~~~
+> > 
+> > Introduced by commit
+> > 
+> >   89a8561c63d3 ("PCI: Remove unused pcibios_pm_ops")
+Hello, I did compile test it with W=1 flag. I am sorry, I must have missed it.
+> 
+> Fixed, thanks!
+Thanks for the fix.
