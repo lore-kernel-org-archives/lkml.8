@@ -2,171 +2,361 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2DFC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D5DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0A342071B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C762206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:13:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VtztkQyv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgIBKJN (ORCPT
+        id S1726307AbgIBKNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 06:09:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:34874 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726247AbgIBKJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 06:09:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E238D6E;
-        Wed,  2 Sep 2020 03:09:11 -0700 (PDT)
-Received: from [192.168.1.179] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF5313F66F;
-        Wed,  2 Sep 2020 03:09:09 -0700 (PDT)
-Subject: Re: [RFC PATCH 0/5] KVM: arm64: Add pvtime LPT support
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Keqian Zhu <zhukeqian1@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        wanghaibin.wang@huawei.com
-References: <20200817084110.2672-1-zhukeqian1@huawei.com>
- <8308f52e4c906cad710575724f9e3855@kernel.org>
- <f14cfd5b-c103-5d56-82fb-59d0371c6f21@arm.com> <87h7svm0o5.wl-maz@kernel.org>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <75ce4c12-f0e3-32c4-604f-9745980022e0@arm.com>
-Date:   Wed, 2 Sep 2020 11:09:04 +0100
+        Wed, 2 Sep 2020 06:13:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgIBKNP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 06:13:15 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5514C061244;
+        Wed,  2 Sep 2020 03:13:14 -0700 (PDT)
+Received: from [192.168.0.20] (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 32A209CC;
+        Wed,  2 Sep 2020 12:13:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1599041592;
+        bh=ktz25n1HDpTh4QSxQctN3Qhxboucjg/cY9qzXQPk6MA=;
+        h=Reply-To:Subject:To:References:From:Date:In-Reply-To:From;
+        b=VtztkQyvkCVngriSgBowAjXg8jKIqtm3QN7vqk6lTsZ6N+5WQWGZu1A2i0BX9dNty
+         jpUYr60w+1YPMM1bwvfvC7EzsNjU0Z3Xd/o7jnU9bfSVDiJON1UDKcQ9n6SF7d+YTl
+         4uogtDWAtED6FwGcjiqcued8D4J1vwChSOQS+5gQ=
+Reply-To: kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v3 5/9] media: vimc: Separate closing of stream and thread
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200819180442.11630-1-kgupta@es.iitr.ac.in>
+ <20200819180442.11630-6-kgupta@es.iitr.ac.in>
+From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
+Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
+ mQINBFYE/WYBEACs1PwjMD9rgCu1hlIiUA1AXR4rv2v+BCLUq//vrX5S5bjzxKAryRf0uHat
+ V/zwz6hiDrZuHUACDB7X8OaQcwhLaVlq6byfoBr25+hbZG7G3+5EUl9cQ7dQEdvNj6V6y/SC
+ rRanWfelwQThCHckbobWiQJfK9n7rYNcPMq9B8e9F020LFH7Kj6YmO95ewJGgLm+idg1Kb3C
+ potzWkXc1xmPzcQ1fvQMOfMwdS+4SNw4rY9f07Xb2K99rjMwZVDgESKIzhsDB5GY465sCsiQ
+ cSAZRxqE49RTBq2+EQsbrQpIc8XiffAB8qexh5/QPzCmR4kJgCGeHIXBtgRj+nIkCJPZvZtf
+ Kr2EAbc6tgg6DkAEHJb+1okosV09+0+TXywYvtEop/WUOWQ+zo+Y/OBd+8Ptgt1pDRyOBzL8
+ RXa8ZqRf0Mwg75D+dKntZeJHzPRJyrlfQokngAAs4PaFt6UfS+ypMAF37T6CeDArQC41V3ko
+ lPn1yMsVD0p+6i3DPvA/GPIksDC4owjnzVX9kM8Zc5Cx+XoAN0w5Eqo4t6qEVbuettxx55gq
+ 8K8FieAjgjMSxngo/HST8TpFeqI5nVeq0/lqtBRQKumuIqDg+Bkr4L1V/PSB6XgQcOdhtd36
+ Oe9X9dXB8YSNt7VjOcO7BTmFn/Z8r92mSAfHXpb07YJWJosQOQARAQABtDBLaWVyYW4gQmlu
+ Z2hhbSA8a2llcmFuLmJpbmdoYW1AaWRlYXNvbmJvYXJkLmNvbT6JAlcEEwEKAEECGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4ACGQEWIQSQLdeYP70o/eNy1HqhHkZyEKRh/QUCXWTtygUJ
+ CyJXZAAKCRChHkZyEKRh/f8dEACTDsbLN2nioNZMwyLuQRUAFcXNolDX48xcUXsWS2QjxaPm
+ VsJx8Uy8aYkS85mdPBh0C83OovQR/OVbr8AxhGvYqBs3nQvbWuTl/+4od7DfK2VZOoKBAu5S
+ QK2FYuUcikDqYcFWJ8DQnubxfE8dvzojHEkXw0sA4igINHDDFX3HJGZtLio+WpEFQtCbfTAG
+ YZslasz1YZRbwEdSsmO3/kqy5eMnczlm8a21A3fKUo3g8oAZEFM+f4DUNzqIltg31OAB/kZS
+ enKZQ/SWC8PmLg/ZXBrReYakxXtkP6w3FwMlzOlhGxqhIRNiAJfXJBaRhuUWzPOpEDE9q5YJ
+ BmqQL2WJm1VSNNVxbXJHpaWMH1sA2R00vmvRrPXGwyIO0IPYeUYQa3gsy6k+En/aMQJd27dp
+ aScf9am9PFICPY5T4ppneeJLif2lyLojo0mcHOV+uyrds9XkLpp14GfTkeKPdPMrLLTsHRfH
+ fA4I4OBpRrEPiGIZB/0im98MkGY/Mu6qxeZmYLCcgD6qz4idOvfgVOrNh+aA8HzIVR+RMW8H
+ QGBN9f0E3kfwxuhl3omo6V7lDw8XOdmuWZNC9zPq1UfryVHANYbLGz9KJ4Aw6M+OgBC2JpkD
+ hXMdHUkC+d20dwXrwHTlrJi1YNp6rBc+xald3wsUPOZ5z8moTHUX/uPA/qhGsbkCDQRWBP1m
+ ARAAzijkb+Sau4hAncr1JjOY+KyFEdUNxRy+hqTJdJfaYihxyaj0Ee0P0zEi35CbE6lgU0Uz
+ tih9fiUbSV3wfsWqg1Ut3/5rTKu7kLFp15kF7eqvV4uezXRD3Qu4yjv/rMmEJbbD4cTvGCYI
+ d6MDC417f7vK3hCbCVIZSp3GXxyC1LU+UQr3fFcOyCwmP9vDUR9JV0BSqHHxRDdpUXE26Dk6
+ mhf0V1YkspE5St814ETXpEus2urZE5yJIUROlWPIL+hm3NEWfAP06vsQUyLvr/GtbOT79vXl
+ En1aulcYyu20dRRxhkQ6iILaURcxIAVJJKPi8dsoMnS8pB0QW12AHWuirPF0g6DiuUfPmrA5
+ PKe56IGlpkjc8cO51lIxHkWTpCMWigRdPDexKX+Sb+W9QWK/0JjIc4t3KBaiG8O4yRX8ml2R
+ +rxfAVKM6V769P/hWoRGdgUMgYHFpHGSgEt80OKK5HeUPy2cngDUXzwrqiM5Sz6Od0qw5pCk
+ NlXqI0W/who0iSVM+8+RmyY0OEkxEcci7rRLsGnM15B5PjLJjh1f2ULYkv8s4SnDwMZ/kE04
+ /UqCMK/KnX8pwXEMCjz0h6qWNpGwJ0/tYIgQJZh6bqkvBrDogAvuhf60Sogw+mH8b+PBlx1L
+ oeTK396wc+4c3BfiC6pNtUS5GpsPMMjYMk7kVvEAEQEAAYkCPAQYAQoAJgIbDBYhBJAt15g/
+ vSj943LUeqEeRnIQpGH9BQJdizzIBQkLSKZiAAoJEKEeRnIQpGH9eYgQAJpjaWNgqNOnMTmD
+ MJggbwjIotypzIXfhHNCeTkG7+qCDlSaBPclcPGYrTwCt0YWPU2TgGgJrVhYT20ierN8LUvj
+ 6qOPTd+Uk7NFzL65qkh80ZKNBFddx1AabQpSVQKbdcLb8OFs85kuSvFdgqZwgxA1vl4TFhNz
+ PZ79NAmXLackAx3sOVFhk4WQaKRshCB7cSl+RIng5S/ThOBlwNlcKG7j7W2MC06BlTbdEkUp
+ ECzuuRBv8wX4OQl+hbWbB/VKIx5HKlLu1eypen/5lNVzSqMMIYkkZcjV2SWQyUGxSwq0O/sx
+ S0A8/atCHUXOboUsn54qdxrVDaK+6jIAuo8JiRWctP16KjzUM7MO0/+4zllM8EY57rXrj48j
+ sbEYX0YQnzaj+jO6kJtoZsIaYR7rMMq9aUAjyiaEZpmP1qF/2sYenDx0Fg2BSlLvLvXM0vU8
+ pQk3kgDu7kb/7PRYrZvBsr21EIQoIjXbZxDz/o7z95frkP71EaICttZ6k9q5oxxA5WC6sTXc
+ MW8zs8avFNuA9VpXt0YupJd2ijtZy2mpZNG02fFVXhIn4G807G7+9mhuC4XG5rKlBBUXTvPU
+ AfYnB4JBDLmLzBFavQfvonSfbitgXwCG3vS+9HEwAjU30Bar1PEOmIbiAoMzuKeRm2LVpmq4
+ WZw01QYHU/GUV/zHJSFk
+Organization: Ideas on Board
+Message-ID: <1614accb-dee5-1c0e-ece3-ecdd56f45253@ideasonboard.com>
+Date:   Wed, 2 Sep 2020 11:13:09 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <87h7svm0o5.wl-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200819180442.11630-6-kgupta@es.iitr.ac.in>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Hi Kaaira,
 
-Sorry for the slow response, I've been on holiday.
-
-On 22/08/2020 11:31, Marc Zyngier wrote:
-> Hi Steven,
+On 19/08/2020 19:04, Kaaira Gupta wrote:
+> Make separate functions for stopping streaming of entities in path of a
+> particular stream and stopping thread. This is needed to ensure that
+> thread doesn't stop when one device stops streaming in case of multiple
+> streams.
 > 
-> On Wed, 19 Aug 2020 09:54:40 +0100,
-> Steven Price <steven.price@arm.com> wrote:
->>
->> On 18/08/2020 15:41, Marc Zyngier wrote:
->>> On 2020-08-17 09:41, Keqian Zhu wrote:
-[...]
->>>>
->>>> Things need concern:
->>>> 1. https://developer.arm.com/docs/den0057/a needs update.
->>>
->>> LPT was explicitly removed from the spec because it doesn't really
->>> solve the problem, specially for the firmware: EFI knows
->>> nothing about this, for example. How is it going to work?
->>> Also, nobody was ever able to explain how this would work for
->>> nested virt.
->>>
->>> ARMv8.4 and ARMv8.6 have the feature set that is required to solve
->>> this problem without adding more PV to the kernel.
->>
->> Hi Marc,
->>
->> These are good points, however we do still have the situation that
->> CPUs that don't have ARMv8.4/8.6 clearly cannot implement this. I
->> presume the use-case Keqian is looking at predates the necessary
->> support in the CPU - Keqian if you can provide more details on the
->> architecture(s) involved that would be helpful.
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> ---
+>  .../media/test-drivers/vimc/vimc-streamer.c   | 82 ++++++++++++-------
+>  1 file changed, 52 insertions(+), 30 deletions(-)
 > 
-> My take on this is that it is a fictional use case. In my experience,
-> migration happens across *identical* systems, and *any* difference
-> visible to guests will cause things to go wrong. Errata management
-> gets in the way, as usual (name *one* integration that isn't broken
-> one way or another!).
+> diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/drivers/media/test-drivers/vimc/vimc-streamer.c
+> index cc40ecabe95a..6b5ea1537952 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-streamer.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
+> @@ -13,29 +13,59 @@
+>  #include "vimc-streamer.h"
+>  
+>  /**
+> - * vimc_streamer_pipeline_terminate - Disable stream in all ved in stream
+> + * vimc_streamer_pipeline_terminate - Terminate the thread
+>   *
+> - * @stream: the pointer to the stream structure with the pipeline to be
+> - *	    disabled.
+> + * @stream: the pointer to the stream structure
+>   *
+> - * Calls s_stream to disable the stream in each entity of the pipeline
+> + * Erases values of stream struct and terminates the thread
 
-Keqian appears to have a use case - but obviously I don't know the 
-details. I guess Keqian needs to convince you of that.
+It would help if the function brief described it's purpose rather than
+'what it does'. "Erases values of stream struct" is not helpful here, as
+that's just a direct read of what happens in the code.
 
-> Allowing migration across heterogeneous hosts requires a solution to
-> the errata management problem, which everyone (including me) has
-> decided to ignore so far (and I claim that not having a constant timer
-> frequency exposed to guests is an architecture bug).
+I'm guessing here, but how about:
 
-I agree - errata management needs to be solved before LPT. Between 
-restricted subsets of hosts this doesn't seem impossible, but I guess we 
-should stall LPT until a credible solution is proposed. I'm certainly 
-not proposing one at the moment.
+"Tear down all resources belonging to the pipeline when there are no
+longer any active streams being used. This includes stopping the active
+processing thread"
 
->> Nested virt is indeed more of an issue - we did have some ideas around
->> using SDEI that never made it to the spec.
+
+But reading my text makes me worry about the ordering that might take
+place. The thread should be stopped as soon as the last stream using it
+is stopped. Presumably as the 'first thing' that happens to make sure
+there is no concurrent processing while the stream is being disabled.
+
+Hopefully there's no race condition ...
+
+
+>   *
+>   */
+>  static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
+>  {
+>  	struct vimc_ent_device *ved;
+> -	struct v4l2_subdev *sd;
+>  
+>  	while (stream->pipe_size) {
+>  		stream->pipe_size--;
+>  		ved = stream->ved_pipeline[stream->pipe_size];
+>  		stream->ved_pipeline[stream->pipe_size] = NULL;
+> +	}
+>  
+> -		if (!is_media_entity_v4l2_subdev(ved->ent))
+> -			continue;
+> +	kthread_stop(stream->kthread);
+> +	stream->kthread = NULL;
+> +}
+>  
+> -		sd = media_entity_to_v4l2_subdev(ved->ent);
+> -		v4l2_subdev_call(sd, video, s_stream, 0);
+> +/**
+> + * vimc_streamer_stream_terminate - Disable stream in all ved in stream
+> + *
+> + * @ved: pointer to the ved for which stream needs to be disabled
+> + *
+> + * Calls s_stream to disable the stream in each entity of the stream
+> + *
+> + */
+> +static void vimc_streamer_stream_terminate(struct vimc_ent_device *ved)
+
+I would call this vimc_streamer_stream_stop to match
+vimc_streamer_stream_start() rather than terminate...
+
+> +{
+> +	struct media_entity *entity = ved->ent;
+> +	struct video_device *vdev;
+> +	struct v4l2_subdev *sd;
+> +
+> +	while (entity) {
+> +		if (is_media_entity_v4l2_subdev(ved->ent)) {
+> +			sd = media_entity_to_v4l2_subdev(ved->ent);
+> +			v4l2_subdev_call(sd, video, s_stream, 0);
+> +		}
+> +		entity = vimc_get_source_entity(ved->ent);
+> +		if (!entity)
+> +			break;
+> +
+> +		if (is_media_entity_v4l2_subdev(entity)) {
+> +			sd = media_entity_to_v4l2_subdev(entity);
+> +			ved = v4l2_get_subdevdata(sd);
+> +		} else {
+> +			vdev = container_of(entity,
+> +					    struct video_device,
+> +					    entity);
+> +			ved = video_get_drvdata(vdev);
+> +		}
+
+It looks like this is walking back through the linked graph, calling
+s_stream(0) right?
+
+I wonder if struct vimc_ent_device should have a pointer to the entity
+it's connected to, to simplify this. ... presumably this is done
+elsewhere too?
+
+Although then that's still walking 'backwards' rather than forwards...
+
+
+
+
+>  	}
+>  }
+>  
+> @@ -43,25 +73,25 @@ static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
+>   * vimc_streamer_stream_start - Starts streaming for all entities
+>   * in a stream
+>   *
+> - * @ved:    the pointer to the vimc entity initializing the stream
+> + * @cved:    the pointer to the vimc entity initializing the stream
+>   *
+>   * Walks through the entity graph to call vimc_streamer_s_stream()
+>   * to enable stream in all entities in path of a stream.
+>   *
+>   * Return: 0 if success, error code otherwise.
+>   */
+> -static int vimc_streamer_stream_start(struct vimc_stream *stream,
+> -				      struct vimc_ent_device *ved)
+> +static int vimc_streamer_stream_start(struct vimc_ent_device *cved)
+>  {
+>  	struct media_entity *entity;
+>  	struct video_device *vdev;
+>  	struct v4l2_subdev *sd;
+> +	struct vimc_ent_device *ved = cved;
+>  	int stream_size = 0;
+>  	int ret = 0;
+>  
+>  	while (stream_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
+>  		if (!ved) {
+> -			vimc_streamer_pipeline_terminate(stream);
+> +			vimc_streamer_stream_terminate(cved);
+>  			return -EINVAL;
+>  		}
+>  
+> @@ -71,7 +101,7 @@ static int vimc_streamer_stream_start(struct vimc_stream *stream,
+>  			if (ret && ret != -ENOIOCTLCMD) {
+>  				dev_err(ved->dev, "subdev_call error %s\n",
+>  					ved->ent->name);
+> -				vimc_streamer_pipeline_terminate(stream);
+> +				vimc_streamer_stream_terminate(cved);
+>  				return ret;
+>  			}
+>  		}
+> @@ -84,7 +114,7 @@ static int vimc_streamer_stream_start(struct vimc_stream *stream,
+>  				dev_err(ved->dev,
+>  					"first entity in the pipe '%s' is not a source\n",
+>  					ved->ent->name);
+> -				vimc_streamer_pipeline_terminate(stream);
+> +				vimc_streamer_stream_terminate(cved);
+>  				pr_info ("first entry not source");
+>  				return -EPIPE;
+>  			}
+> @@ -104,7 +134,7 @@ static int vimc_streamer_stream_start(struct vimc_stream *stream,
+>  		stream_size++;
+>  	}
+>  
+> -	vimc_streamer_pipeline_terminate(stream);
+> +	vimc_streamer_stream_terminate(cved);
+>  	return -EINVAL;
+>  }
+>  
+> @@ -120,13 +150,14 @@ static int vimc_streamer_stream_start(struct vimc_stream *stream,
+>   * Return: 0 if success, error code otherwise.
+>   */
+>  static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+> -				       struct vimc_ent_device *ved)
+> +				       struct vimc_ent_device *cved)
+>  {
+>  	struct media_entity *entity;
+>  	struct media_device *mdev;
+>  	struct media_graph graph;
+>  	struct video_device *vdev;
+>  	struct v4l2_subdev *sd;
+> +	struct vimc_ent_device *ved = cved;
+>  	int ret;
+>  
+>  	entity = ved->ent;
+> @@ -170,6 +201,7 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+>  		}
+>  	}
+>  
+> +	vimc_streamer_stream_terminate(cved);
+>  	vimc_streamer_pipeline_terminate(stream);
+>  	return -EINVAL;
+>  }
+> @@ -246,7 +278,7 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
+>  		if (stream->kthread)
+>  			return 0;
+>  
+> -		ret = vimc_streamer_stream_start(stream, ved);
+> +		ret = vimc_streamer_stream_start(ved);
+>  		if (ret)
+>  			return ret;
+>  
+> @@ -260,6 +292,7 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
+>  		if (IS_ERR(stream->kthread)) {
+>  			ret = PTR_ERR(stream->kthread);
+>  			dev_err(ved->dev, "kthread_run failed with %d\n", ret);
+> +			vimc_streamer_stream_terminate(ved);
+>  			vimc_streamer_pipeline_terminate(stream);
+>  			stream->kthread = NULL;
+
+If vimc_streamer_pipeline_terminate() sets stream->kthread = NULL, it
+doesn't need to be done again here.
+
+
+>  			return ret;
+> @@ -269,18 +302,7 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
+>  		if (!stream->kthread)
+>  			return 0;
+>  
+> -		ret = kthread_stop(stream->kthread);
+> -		/*
+> -		 * kthread_stop returns -EINTR in cases when streamon was
+> -		 * immediately followed by streamoff, and the thread didn't had
+> -		 * a chance to run. Ignore errors to stop the stream in the
+> -		 * pipeline.
+> -		 */
+
+Do we need to retain that comment when stopping the thread?
+
+> -		if (ret)
+> -			dev_dbg(ved->dev, "kthread_stop returned '%d'\n", ret);
+> -
+> -		stream->kthread = NULL;
+> -
+> +		vimc_streamer_stream_terminate(ved);
+>  		vimc_streamer_pipeline_terminate(stream);
+>  	}
+>  
 > 
-> SDEI? Sigh... Why would SDEI be useful for NV and not for !NV?
 
-SDEI provides a way of injecting a synchronous exception on migration - 
-although that certainly isn't the only possible mechanism. For NV we 
-have the problem that a guest-guest may be running at the point of 
-migration. However it's not practical for the host hypervisor to provide 
-the necessary table directly to the guest-guest which means the 
-guest-hypervisor must update the tables before the guest-guest is 
-allowed to run on the new host. The only plausible route I could see for 
-this is injecting a synchronous exception into the guest (per VCPU) to 
-ensure any guest-guests running are exited at migration time.
-
-!NV is easier because we don't have to worry about multiple levels of 
-para-virtualisation.
-
->> However I would argue that the most pragmatic approach would be to
->> not support the combination of nested virt and LPT. Hopefully that
->> can wait until the counter scaling support is available and not
->> require PV.
-> 
-> And have yet another set of band aids that paper over the fact that we
-> can't get a consistent story on virtualization? No, thank you.
-> 
-> NV is (IMHO) much more important than LPT as it has a chance of
-> getting used. LPT is just another tick box, and the fact that ARM is
-> ready to ignore sideline a decent portion of the architecture is a
-> clear sign that it hasn't been thought out.
-
-Different people have different priorities. NV is definitely important 
-for many people. LPT may also be important if you've already got a bunch 
-of VMs running on machines and you want to be able to (gradually) 
-replace them with newer hosts which happen to have a different clock 
-frequency. Those VMs running now clearly aren't using NV.
-
-However, I have to admit it's not me that has the use-case, so I'll 
-leave it for others who might actually know the specifics to explain the 
-details.
-
->> We are discussing (re-)releasing the spec with the LPT parts added. If
->> you have fundamental objections then please me know.
-> 
-> I do, see above. I'm stating that the use case doesn't really exist
-> given the state of the available HW and the fragmentation of the
-> architecture, and that ignoring the most important innovation in the
-> virtualization architecture since ARMv7 is at best short-sighted.
-> 
-> Time scaling is just an instance of the errata management problem, and
-> that is the issue that needs solving. Papering over part of the
-> problem is not helping.
-
-I fully agree - errata management is definitely the first step that 
-needs solving. This is why I abandoned LPT originally because I don't 
-have a generic solution and the testing I did involved really ugly hacks 
-just to make the migration possible.
-
-For now I propose we (again) park LPT until some progress has been made 
-on errata management.
-
-Thanks,
-
-Steve
+-- 
+Regards
+--
+Kieran
