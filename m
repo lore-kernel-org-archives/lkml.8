@@ -2,116 +2,174 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0A8C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28099C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6537020767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57CB20773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:00:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="RrcyI2Cw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jGdZtAdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgIBW7u (ORCPT
+        id S1727792AbgIBW77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 18:59:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34568 "EHLO
+        Wed, 2 Sep 2020 18:59:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbgIBW7b (ORCPT
+        with ESMTP id S1727089AbgIBW7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 18:59:31 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC47C061246
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 15:59:31 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id y187so448793qka.10
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 15:59:31 -0700 (PDT)
+        Wed, 2 Sep 2020 18:59:44 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E99BC061245
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 15:59:44 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id j11so1073214ejk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 15:59:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=a4tZCER4et/ZOnqo0bwgxKeJi/AmG4wV7j4nx2O9a/E=;
-        b=RrcyI2CwZNT3X5GAqgqiZXGZju0PRzTwK589pkyiuhlKah9yC2vJ5Mano/bO0o4auN
-         PeIgXcYBujGIb8QGchbbL1pCA6G4WEAlGIXxGG2CpBsRCLrQAzkLLb2d/WT5h2qISN7v
-         66+m9otTSCsomB4KhTK6YKANnqE9UBsjXAz30MfpbcJUCKbrg5FHp6CnfE1+MrO1V1Cq
-         jqxtzmas5oViJOOGN6d7elPXGnngddP9oB9w0ZbTsDDYm7fC2/zvFP4CuzfeBP81dHCr
-         nde9xukTPLJwj3GR0bPHz8KJlAVtu0ZJOLrKcapKaMGujhrfo/FFqeDJt89INz/wqpZT
-         xM9g==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K6cGerCxO46Qm24iFA5aZEL6UdjUDW3jjNLe5Ls8bmw=;
+        b=jGdZtAdc7CvPt+P2PuAbn91E6yyatAb+8jgjU+0k3SbWdjhBWYOEa+KKGF/DNvtW66
+         en6JA8kGE7oWpnaCF9TivIQ7+3Wq0KMsx0qHCQo9Z0s+0Hp789sEBg4fQNaaLg2TRPun
+         LHR6LIHcTsZo10OmpUpN2XpJpF5YaKSPfVhv0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=a4tZCER4et/ZOnqo0bwgxKeJi/AmG4wV7j4nx2O9a/E=;
-        b=C95psgc8timPsHKUGRanu4ywqj4d1NgfRPj7ezYMUr7NVX+o656V6KFSd8gXn6o4R7
-         9K1ci/xnSFJToD8CfGfAHY/07yCkl4faEpEv2+3r93lRz4Jtl3tW7SjN2/FP+1QSSXkE
-         kjYN5rQSzKOkI9zW3XlKczFw5F3tdnu/FHlY5iEAMC31CLNZO2/ckvuZv9wEybf6j2wb
-         9YCPOUHUoh8QSQiOXrvjn0GZDzqyG/he2NUQAp0i0IpC8xGzp5Se7P/BspqtYHMlg7br
-         muuR8Pbxlc4RL8tyKsIlIsgqkud1r5HON/gzhANo4hm1J33o95NUj/ZStWa9Al43tPgL
-         PpLw==
-X-Gm-Message-State: AOAM531IZdeJ1Oris+oXaYyQVALHgrb25sqbXGHE9R9SWHJlRBOhJ8lN
-        W3bU/8ZtDxCDPNFexQ+i1GcFclS7nl76oXLuWH0=
-X-Google-Smtp-Source: ABdhPJyar+QZinYrvh1B+O87J7oQ62bttnlZOOJQnWAc5e5nV0SswX1z41FlI6BIJmKrWUBGsu56LeCyRBu1kiU6mT0=
-X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:15c:211:202:f693:9fff:fef4:4d25])
- (user=ndesaulniers job=sendgmr) by 2002:a0c:c207:: with SMTP id
- l7mr105339qvh.239.1599087570306; Wed, 02 Sep 2020 15:59:30 -0700 (PDT)
-Date:   Wed,  2 Sep 2020 15:59:09 -0700
-In-Reply-To: <20200902225911.209899-1-ndesaulniers@google.com>
-Message-Id: <20200902225911.209899-6-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20200902225911.209899-1-ndesaulniers@google.com>
-X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
-Subject: [PATCH v3 5/7] Partially revert "ARM: 8905/1: Emit __gnu_mcount_nc
- when using Clang 10.0.0 or newer"
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K6cGerCxO46Qm24iFA5aZEL6UdjUDW3jjNLe5Ls8bmw=;
+        b=ijVnDaKyQTVXD7YFHkuEYy2dAeB6dq0uUWGgczUJzMTQRONcZ2uAGk+n9z4J5kY1he
+         mZ0Nd8wwEBi3qRcjE2Rkp2JV6O24hLdA3RO7WiTceWZznq6QTDZomvlbAYfBSZPXSRoA
+         d8+eAmZqVem19nfN5K+ZmNFjVZhrzvhAGRaWWCMgvAGIxoliL6xYLpKJTY18tNMTszHT
+         NbxToqiazDAsLGrTaFk8ErtOSAmKMvN3u9EqMTQM5UbYCf9nz0iZRVy3/JOQ7lKkoUhI
+         QruI9OLGIlKzknzF4OuW83x16Ye6ow77cY1SKdmNuzQFYZuKKVcKEUBHNwMCV1naxLno
+         1BOQ==
+X-Gm-Message-State: AOAM532y70rcJs5+q//2kKvFmICDHEIeNxNgULt/Cw480u4IVZQpNj/e
+        YPBYqj32Zdb3nvqMtZgL0s5qHsuTB0wVAQ==
+X-Google-Smtp-Source: ABdhPJzBHzOyofc+K541iOIjbw62KXAws5uEA0pDh4+MB5CqBk6Ng3mLhAxlVJ/kcX5xB+m7g92aqA==
+X-Received: by 2002:a17:906:2618:: with SMTP id h24mr408773ejc.198.1599087582493;
+        Wed, 02 Sep 2020 15:59:42 -0700 (PDT)
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com. [209.85.221.50])
+        by smtp.gmail.com with ESMTPSA id n20sm1008033ejg.65.2020.09.02.15.59.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Sep 2020 15:59:41 -0700 (PDT)
+Received: by mail-wr1-f50.google.com with SMTP id t10so1092953wrv.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 15:59:41 -0700 (PDT)
+X-Received: by 2002:a5d:4e0b:: with SMTP id p11mr416596wrt.32.1599087580861;
+ Wed, 02 Sep 2020 15:59:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <1597380295-6297-1-git-send-email-wuxy@bitland.com.cn>
+ <1597380295-6297-5-git-send-email-wuxy@bitland.com.cn> <20200831174057.GO31019@paasikivi.fi.intel.com>
+In-Reply-To: <20200831174057.GO31019@paasikivi.fi.intel.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Thu, 3 Sep 2020 00:59:20 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5ARYNVMjScuk5-w_z5Pt6jD=CPkCYG+rM2Znvt9j1Od6g@mail.gmail.com>
+Message-ID: <CAAFQd5ARYNVMjScuk5-w_z5Pt6jD=CPkCYG+rM2Znvt9j1Od6g@mail.gmail.com>
+Subject: Re: [PATCH V3 3/3] media: i2c: gc5035: Add GC5035 image sensor driver
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Xingyu Wu <wuxy@bitland.com.cn>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "shawnx.tu" <shawnx.tu@intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "dave.stevenson" <dave.stevenson@raspberrypi.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Cao Bing Bu <bingbu.cao@intel.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Sj Huang <sj.huang@mediatek.com>,
+        darfur_liu <darfur_liu@gcoreinc.com>,
+        "hao.he7" <hao.he7@gmail.com>,
+        =?UTF-8?B?5L2V5rWpQjAzMjA1?= <hao.he@bitland.com.cn>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This partially reverts commit b0fe66cf095016e0b238374c10ae366e1f087d11.
+Hi Sakari,
 
-The minimum supported version of clang is now clang 10.0.1. We still
-want to pass -meabi=gnu.
+On Mon, Aug 31, 2020 at 7:41 PM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> Hi Xingyu,
+>
+> Thanks for the update. I've got a few more comments below.
+>
+> Do you happen to have some insight on what the OTP data contains and what
+> does the driver do with it?
+>
+> At least in principle the OTP data may be programmed for the customer so
+> the same sensor could contain something else what the driver expects to
+> find there.
+>
 
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
----
- arch/arm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the review. For anything without my reply, assume fixed. :)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 82c197a248dd..09a7669eea1d 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -83,7 +83,7 @@ config ARM
- 	select HAVE_FAST_GUP if ARM_LPAE
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
--	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && (CC_IS_GCC || CLANG_VERSION >= 100000)
-+	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
- 	select HAVE_GCC_PLUGINS
- 	select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
- 	select HAVE_IDE if PCI || ISA || PCMCIA
--- 
-2.28.0.402.g5ffc5be6b7-goog
+As far as I can see, the data is being read from an area that is
+supposed to be reserved for Galaxycore, so I'd assume it doesn't
+depend on the customer.
 
+[snip]
+> > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> > index da11036..aeaf594 100644
+> > --- a/drivers/media/i2c/Kconfig
+> > +++ b/drivers/media/i2c/Kconfig
+> > @@ -712,6 +712,18 @@ config VIDEO_APTINA_PLL
+> >  config VIDEO_SMIAPP_PLL
+> >       tristate
+> >
+> > +config VIDEO_GC5035
+> > +     tristate "Galaxycore GC5035 sensor support"
+> > +     depends on I2C && VIDEO_V4L2
+> > +     select MEDIA_CONTROLLER
+> > +     select VIDEO_V4L2_SUBDEV_API
+>
+> Add:
+>
+>         V4L2_FWNODE
+>         OF
+
+This driver doesn't depend on OF. It uses the firmware-independent
+property access API. (v4 I sent actually uses device_property_*()).
+
+[snip]
+> > +static int __gc5035_power_on(struct gc5035 *gc5035)
+> > +{
+> > +     struct device *dev = &gc5035->client->dev;
+> > +     int i, ret;
+> > +
+> > +     ret = clk_prepare_enable(gc5035->xvclk);
+> > +     if (ret < 0) {
+> > +             dev_err(dev, "Failed to enable xvclk\n");
+> > +             return ret;
+> > +     }
+> > +
+> > +     gpiod_set_value_cansleep(gc5035->reset_gpio, 1);
+> > +
+> > +     for (i = 0; i < GC5035_NUM_SUPPLIES; i++) {
+> > +             ret = regulator_enable(gc5035->supplies[i].consumer);
+> > +             if (ret) {
+> > +                     dev_err(dev, "Failed to enable %s: %d\n",
+> > +                             gc5035->supplies[i].supply, ret);
+> > +                     goto disable_reg_clk;
+>
+> Please use regulator_bulk_enable() here, and regulator_bulk_disable()
+> below.
+>
+
+This actually needs to have one of the regulators (iovdd) enabled
+before the other ones, but regulator_bulk_enable() is async. In v4 I
+used regulator_enable() for iovdd and regulator_bulk_enable() for the
+other two for optimal sequencing.
+
+Best regards,
+Tomasz
