@@ -2,107 +2,140 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F89C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A0CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD50420639
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B76220639
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063443;
-	bh=737eL5OJnps+Fgda6I/02laUfr4yPyternnQSNU90a0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=d+XBV/gop1ry4hi3j0xJxDps3G3XsAfOpeip9JZDPvcqVltlvlyUv5jxRmtPGXQuL
-	 UjSwTKYtxdrJQ2tTcYET99G4V/bNF7MLjXfvIUFyBWmi/orhs2D3GspV+3hBgGISZS
-	 ujXiaTJgK6WVol/cZGOzhxxz5IjVd2LOrqL6tKRk=
+	s=default; t=1599063455;
+	bh=0Hj7ZIEL0P3+LazNj3oWTUDc18jn9Tcv84+tSkI0Wtg=;
+	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
+	b=YyB9YPK5ItpVX+QbPHEIraE/vjWaa2zpEgCM9nLWsOZv6rSSWnKYqGtgaTOcYd3SE
+	 F6A300duZIJS7KrBBy6gPAkFqDdwrHalLx4Dz7FIcpFKF+MPt/8TEMglcSJG97Cgjm
+	 8iAWl03++Z0q1T9l5tqGK6ra6qZU+P19rat2jU/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbgIBQRR (ORCPT
+        id S1728856AbgIBQRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:17:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57742 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 12:17:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728756AbgIBQRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:17:04 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        id S1728045AbgIBQKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:10:51 -0400
+Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 607D220639;
-        Wed,  2 Sep 2020 16:17:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAC322145D;
+        Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599063424;
-        bh=737eL5OJnps+Fgda6I/02laUfr4yPyternnQSNU90a0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ai+8YXn0v79UX78y4IXY2HWQ5Bt6T6zyzZQlahXCcyiagM/Z9NIXdZY7Fm3rms1xl
-         hpgsXBGEVeTa09MJcILzKm9XOjrsX1qUOQcq2GiAScX+HtZHzLMJkmAdLayUo4e6IR
-         EV67gJrXzXM3MbDr4TCpX5V1mgs/HXSVGLutSoxI=
-Date:   Wed, 2 Sep 2020 11:23:15 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonghwa Lee <jonghwa3.lee@samsung.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH v2] power: supply: charger-manager: Fix info message in
- check_charging_duration()
-Message-ID: <20200902162315.GA11384@embeddedor>
+        s=default; t=1599063046;
+        bh=0Hj7ZIEL0P3+LazNj3oWTUDc18jn9Tcv84+tSkI0Wtg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VA1GN01hnAbujexln0WXKOHjK5Pa4EMpteFO/qoRPoLo700l4eXmKSgDC8ry2xvJe
+         NbCw3PqKHFOy/OHBHi5tSYUBkXpBmk16gxahSRl3o9FGd0SSMMBP9faddVrPmsk4z1
+         +86S5WrUxcqj1cz+be5EXucse5DHu9lzZ38p3nds=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kDVLP-000t9w-QL; Wed, 02 Sep 2020 18:10:43 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 07/38] media: tda10021: avoid casts when using symbol_rate
+Date:   Wed,  2 Sep 2020 18:10:10 +0200
+Message-Id: <316f5e497a02dc245953134f22cfb70aa67ccd26.1599062230.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
+References: <cover.1599062230.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A few months ago, commit e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
-changed the expression in the if statement from "duration > desc->discharging_max_duration_ms"
-to "duration > desc->charging_max_duration_ms", but the arguments for dev_info() were left unchanged.
-Apparently, due to a copy-paste error.
+The usage of castings and float point when checking for
+the setup based at the symbol_rate cause those warnings
+with smatch:
 
-Fix this by using the proper arguments for dev_info().
+	drivers/media/dvb-frontends/tda10021.c:153 tda10021_set_symbolrate() warn: unsigned 'symbolrate' is never less than zero.
+	drivers/media/dvb-frontends/tda10021.c:155 tda10021_set_symbolrate() warn: unsigned 'symbolrate' is never less than zero.
+	drivers/media/dvb-frontends/tda10021.c:157 tda10021_set_symbolrate() warn: unsigned 'symbolrate' is never less than zero.
+	drivers/media/dvb-frontends/tda10021.c:159 tda10021_set_symbolrate() warn: unsigned 'symbolrate' is never less than zero.
 
-Also, while there, replace "exceed" with "exceeds", for both messages.
+While the code should work with gcc, as it will evaluate the
+values into a constant before compiling, other compilers
+could do otherwise. So, get rid of float pointing math on it,
+avoiding the need of doing typecasts.
 
-Addresses-Coverity-ID: 1496803 ("Copy-paste error")
-Fixes: e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+While here, cleanup some coding style issues at the related
+code.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
-Changes in v2:
- -  Replace "exceed" with "exceeds"
+ drivers/media/dvb-frontends/tda10021.c | 38 ++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 14 deletions(-)
 
- drivers/power/supply/charger-manager.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
-index 07992821e252..a6d5dbd55e37 100644
---- a/drivers/power/supply/charger-manager.c
-+++ b/drivers/power/supply/charger-manager.c
-@@ -464,7 +464,7 @@ static int check_charging_duration(struct charger_manager *cm)
- 		duration = curr - cm->charging_start_time;
+diff --git a/drivers/media/dvb-frontends/tda10021.c b/drivers/media/dvb-frontends/tda10021.c
+index 9fb207b41576..faa6e54b3372 100644
+--- a/drivers/media/dvb-frontends/tda10021.c
++++ b/drivers/media/dvb-frontends/tda10021.c
+@@ -137,26 +137,36 @@ static int tda10021_set_symbolrate (struct tda10021_state* state, u32 symbolrate
+ {
+ 	s32 BDR;
+ 	s32 BDRI;
+-	s16 SFIL=0;
++	s16 SFIL = 0;
+ 	u16 NDEC = 0;
+ 	u32 tmp, ratio;
  
- 		if (duration > desc->charging_max_duration_ms) {
--			dev_info(cm->dev, "Charging duration exceed %ums\n",
-+			dev_info(cm->dev, "Charging duration exceeds %ums\n",
- 				 desc->charging_max_duration_ms);
- 			ret = true;
- 		}
-@@ -472,8 +472,8 @@ static int check_charging_duration(struct charger_manager *cm)
- 		duration = curr - cm->charging_end_time;
+-	if (symbolrate > XIN/2)
+-		symbolrate = XIN/2;
+-	if (symbolrate < 500000)
++	if (symbolrate > XIN / 2)
++		symbolrate = XIN / 2;
++	else if (symbolrate < 500000)
+ 		symbolrate = 500000;
  
- 		if (duration > desc->charging_max_duration_ms) {
--			dev_info(cm->dev, "Discharging duration exceed %ums\n",
--				 desc->discharging_max_duration_ms);
-+			dev_info(cm->dev, "Charging duration exceeds %ums\n",
-+				 desc->charging_max_duration_ms);
- 			ret = true;
- 		}
- 	}
+-	if (symbolrate < XIN/16) NDEC = 1;
+-	if (symbolrate < XIN/32) NDEC = 2;
+-	if (symbolrate < XIN/64) NDEC = 3;
++	if (symbolrate < XIN / 16)
++		NDEC = 1;
++	if (symbolrate < XIN / 32)
++		NDEC = 2;
++	if (symbolrate < XIN / 64)
++		NDEC = 3;
+ 
+-	if (symbolrate < (u32)(XIN/12.3)) SFIL = 1;
+-	if (symbolrate < (u32)(XIN/16))	 SFIL = 0;
+-	if (symbolrate < (u32)(XIN/24.6)) SFIL = 1;
+-	if (symbolrate < (u32)(XIN/32))	 SFIL = 0;
+-	if (symbolrate < (u32)(XIN/49.2)) SFIL = 1;
+-	if (symbolrate < (u32)(XIN/64))	 SFIL = 0;
+-	if (symbolrate < (u32)(XIN/98.4)) SFIL = 1;
++	if (symbolrate < XIN * 10 / 123)
++		SFIL = 1;
++	if (symbolrate < XIN * 10 / 160)
++		SFIL = 0;
++	if (symbolrate < XIN * 10 / 246)
++		SFIL = 1;
++	if (symbolrate < XIN * 10 / 320)
++		SFIL = 0;
++	if (symbolrate < XIN * 10 / 492)
++		SFIL = 1;
++	if (symbolrate < XIN * 10 / 640)
++		SFIL = 0;
++	if (symbolrate < XIN * 10 / 984)
++		SFIL = 1;
+ 
+ 	symbolrate <<= NDEC;
+ 	ratio = (symbolrate << 4) / FIN;
 -- 
-2.27.0
+2.26.2
 
