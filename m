@@ -2,171 +2,155 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D65C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CEDC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 264A020826
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:37:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599032279;
-	bh=iFXnCVDajhd3aJwTuotc3NIfBYK03nWNbME76hRIE3E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jp6MBQ8WtxibDIinlLIeht6uQCkAf1GXh/roa4j6/+SemIQen1/CVfJ3lf0YwrsMY
-	 WU4wksXQqw+X0WjoWi90gnekLlwva6+WCeNAh5vRSQL1A8ScYFGxRX0rFNZji2l9mL
-	 RON00Gi6DL0itNwodDdhCn8T1u5TN0TzeP8sb060=
+	by mail.kernel.org (Postfix) with ESMTP id 40D38207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:38:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BwSBLBRw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgIBHh6 (ORCPT
+        id S1727004AbgIBHiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgIBHhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:37:55 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6708F207EA;
-        Wed,  2 Sep 2020 07:37:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599032274;
-        bh=iFXnCVDajhd3aJwTuotc3NIfBYK03nWNbME76hRIE3E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0/Zk8paGaiM5UeB3wJSU1hsl18hyQeIrV/ftf9d6Dsr6ykra+hgdgrZFMBHAOnJWd
-         awzTp+UnOZ/6juadAoZeExjuTqhw4Gz8i+WoO9MOLPn2IrmPBqBbbBo9yUT/lz5Oty
-         9LXMB8I5Ox+0u8nVUf/QIfeyQJePscTWvZo4A1B4=
-Date:   Wed, 2 Sep 2020 09:38:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH 5.8 000/255] 5.8.6-rc1 review
-Message-ID: <20200902073820.GE1610179@kroah.com>
-References: <20200901151000.800754757@linuxfoundation.org>
- <CA+G9fYt+NW7w_NSmqhgQYEmWR_Yo0XDGj1skSoCSqUeLfDPu_A@mail.gmail.com>
+        Wed, 2 Sep 2020 03:38:16 -0400
+Received: from mail-eopbgr150082.outbound.protection.outlook.com ([40.107.15.82]:30150
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726144AbgIBHiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 03:38:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZJxq38cm1Eu9GCmGM0+eBmJ0oEUyR27NL1H0PIWVosx/yrsWIGn3OqQLzklBU/5fgd21IvPORzgJ6OV1LxY1f5WtDqMm8c4DPK6l7ZA6k6AgvJBh37wNjHN70dxzfbgV1RJ5yKYRy5P25VbEPGg/hT1NU17yff7z+GXgQMluYm/llQzkOTa59i6b1RXdcIefpKUvhY9fS/YKBJH3Bmo+k0/2tOazQYyCi+7fR/BVyXTb0ywbFqlvfWJXt+o/6g1FI/8VrvWQIE5aWgg3RH1RTLLRTIrlElLAQ7NKWUcKJMueWyoGEsJ9YD5WL83Tx1ehPoHMS4+3BEtNpWMyS3bUsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SWMswocfRyzIHpknS4KEEU/9D5ELXptk/bt5N7Sw/eE=;
+ b=Db5is+bEOnOTDKCOg3Qfb5AqCAMKWutRJJ0knc1gmF1SCQD6XjZvFWamMpfuraMQtcI5BChtHkTkeIv7Mx8z9S81hdcDYEyV/ybw5fxtlwf7GkFLeMehj0/jZujj7t7T4SW3cwooHXChdFBppxPrG6n9RbkTEz6iboA5PUQw2n/zQ83H3nR2b9dC6D0o3LENxHw+KM1SNog5cqBNsQeGwyAV6knamJr/10CAd5T2+yddhBvTPbylcbivkej7lVcbEoa2r7BtLHOT+kp72u6SloLeHeLg38Q9oLA6wH+vlb1xoEyMaS9c9rRKjNN5GAV4022HADZleazdakqpkEQEiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SWMswocfRyzIHpknS4KEEU/9D5ELXptk/bt5N7Sw/eE=;
+ b=BwSBLBRwEEarfcVg13biIINzwBp7ej/69DgCLF+Txh1gEZ6nB0qIXjNvR8YEF4pPnMAR2aUGYAXKfxeDH0quPs2maeyYW/DIwKxZzKmsyNN5yOpifXWqqRheLhqmazqI2GWxDZJuc02ltxUOVtRjPH6hEhKrdPiHygZjJ6LmxGg=
+Received: from DBBPR04MB6090.eurprd04.prod.outlook.com (2603:10a6:10:c4::22)
+ by DBBPR04MB6090.eurprd04.prod.outlook.com (2603:10a6:10:c4::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Wed, 2 Sep
+ 2020 07:38:08 +0000
+Received: from DBBPR04MB6090.eurprd04.prod.outlook.com
+ ([fe80::84ae:b125:a2d9:a302]) by DBBPR04MB6090.eurprd04.prod.outlook.com
+ ([fe80::84ae:b125:a2d9:a302%6]) with mapi id 15.20.3326.025; Wed, 2 Sep 2020
+ 07:38:08 +0000
+From:   Andy Tang <andy.tang@nxp.com>
+To:     "axboe@kernel.dk" <axboe@kernel.dk>
+CC:     "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Udit Kumar <udit.kumar@nxp.com>
+Subject: RE: [PATCH] ahci: qoriq: enable acpi support in qoriq ahci driver
+Thread-Topic: [PATCH] ahci: qoriq: enable acpi support in qoriq ahci driver
+Thread-Index: AQHWdHCC26gfJwrS7UWFZen0Rx+fYqlVDtnw
+Date:   Wed, 2 Sep 2020 07:38:08 +0000
+Message-ID: <DBBPR04MB60900C1FC4AF99E7C86E17BFF32F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
+References: <20200817082204.13523-1-andy.tang@nxp.com>
+In-Reply-To: <20200817082204.13523-1-andy.tang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.dk; dkim=none (message not signed)
+ header.d=none;kernel.dk; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 826f9c9d-795c-40ff-2456-08d84f13235a
+x-ms-traffictypediagnostic: DBBPR04MB6090:
+x-microsoft-antispam-prvs: <DBBPR04MB60904C2B359F3F676AD933E4F32F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PNxnHYTTdwGWAJ9U3vqSTIFY21krzAFqL7U2Nv8IPTH7q9UtId/iEsioZM9cyOVJYprGmaAdVMV0+2F32gpcw7dJyL+K3QZ1tqF26WgW6GhwuB3uUdSNQmMdQBnkLybfhO0ejmNc7U8tdJ5QAAle3XOd5SEDXwMgpUk/AlwshVOIL78DYyW113VEDU24JiiGISF3EgLb0YpV1uCRvC7pSjuUfpOlOWMrG2G0nRUV/+k+QY5Qv3wLAwjOecjw/hwOPNYxfnRAJm02F92+1dTtmqkhDQfvwMqpR3yllDI+eMJFTmvvxxOmX101iliQbqufG9CdLwnL1NW1v5oO22qf0g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR04MB6090.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(396003)(136003)(376002)(366004)(55016002)(66946007)(52536014)(4326008)(186003)(6506007)(8936002)(66446008)(26005)(71200400001)(53546011)(44832011)(2906002)(5660300002)(64756008)(6916009)(478600001)(83380400001)(66556008)(66476007)(54906003)(9686003)(316002)(8676002)(33656002)(76116006)(7696005)(86362001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: rDxgLYOSQ8fJohfLn7t1RFoLQffhgXE0umAJkuZ7JIiTmW61CbBsabJ+JSytdy74r1CbduiCNVWTIYxTEf7W7Hv+NRXal00xPvQX1q9GED3f6Mn9bL0x0BtzwQOafRkYe7RlhySUHTkujBBmk1dBZTiPSSUW4zX8ciKpds9Qvla4tqlJmItOP4Yrz/gzz4t5KNLn+Ff/5M3EoY25gvPNHZOpuL87qxARPGk69CBsGneynCzcCznLfgbxE+uuqspMNkdJczwZC5dgc5TjIXLVX7hp4FR0Pl32tr8woqOdOhogbLmLoNDeWFEj0yucKwXj3brVV84jP4ICU4rt1WWnOKuev7VaETvDJa+EbwlHD7MQU0DI8Ijn2WvdSD3K+NkjdQkFwyRnEHN0Hla79C2dbf3c4nurIwF2X6NT4GDH7EFkMH7+nbuLwlP4eMvqUmyzMaEm4fth80X168BmvhoaxebLOuX4ElMCHe2nFlqnNuPLXiAIwU0Cvzmb1GQOnhDNCgtAAr42T3QgS9QeFhf6TpniAdA7Pfo6dFUHcpXHPnIi5Z5iDCZZAT12bBPTRGMO0fKYsG53r5wdSrtE1Iau76e0J2z1zuYGkoxXGIWUB2RhiGclH1vqF1bQUnPtKzHTUoZXkSy8hSpDmDjKRIIlcQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYt+NW7w_NSmqhgQYEmWR_Yo0XDGj1skSoCSqUeLfDPu_A@mail.gmail.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DBBPR04MB6090.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 826f9c9d-795c-40ff-2456-08d84f13235a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 07:38:08.7079
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vK2lF81SKGG3LKeVYD8vMSqbDThpFrhFVqJP8KZtb/v6sZTsTQbjdsj07KygPfRdK5+RfK5mlJuMShSJNZ38xQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB6090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 11:14:54AM +0530, Naresh Kamboju wrote:
-> On Tue, 1 Sep 2020 at 21:06, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.8.6 release.
-> > There are 255 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Thu, 03 Sep 2020 15:09:01 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.8.6-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.8.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
-> 
-> While running LTP CVE test suite on i386 this BUG triggered
-> after the known warning. Please find below full test log link [1].
-> This was reported on the mailing list on next-20200811 but
-> did not get any reply [2].
-> 
-> [  138.177043] ------------[ cut here ]------------
-> [  138.181675] WARNING: CPU: 1 PID: 8301 at mm/mremap.c:230
-> move_page_tables+0x6ef/0x720
-> [  138.189515] Modules linked in: x86_pkg_temp_thermal
-> [  138.194436] CPU: 1 PID: 8301 Comm: true Not tainted 5.8.6-rc1 #1
-> [  138.194437] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> 2.2 05/23/2018
-> [  138.194439] EIP: move_page_tables+0x6ef/0x720
-> 
-> <>
-> 
-> [  802.156512] BUG: unable to handle page fault for address: fe402000
-> [  802.162703] #PF: supervisor write access in kernel mode
-> [  802.167927] #PF: error_code(0x0002) - not-present page
-> [  802.173064] *pde = 23e61067 *pte = 64b32163
-> [  802.177329] Oops: 0002 [#1] SMP
-> [  802.180469] CPU: 1 PID: 13118 Comm: cve-2017-17053 Tainted: G
->  W         5.8.6-rc1 #1
-> [  802.188811] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> 2.2 05/23/2018
-> [  802.196199] EIP: memcpy+0x14/0x30
-> [  802.199517] Code: e8 a1 72 c5 ff 0f 31 31 c3 59 58 eb 85 cc cc cc
-> cc cc cc cc cc cc 3e 8d 74 26 00 55 89 e5 57 89 c7 56 89 d6 53 89 cb
-> c1 e9 02 <f3> a5 89 d9 83 e1 03 74 02 f3 a4 5b 5e 5f 5d c3 8d b4 26 00
-> 00 00
-> [  802.218259] EAX: fe402000 EBX: 00010000 ECX: 00004000 EDX: fb3dd000
-> [  802.224518] ESI: fb3dd000 EDI: fe402000 EBP: ea799ddc ESP: ea799dd0
-> [  802.230773] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010206
-> [  802.237551] CR0: 80050033 CR2: fe402000 CR3: 1eee9000 CR4: 003406d0
-> [  802.243809] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-> [  802.250065] DR6: fffe0ff0 DR7: 00000400
-> [  802.253897] Call Trace:
-> [  802.256345]  ldt_dup_context+0x6b/0x90
-> [  802.260093]  dup_mm+0x2b3/0x480
-> [  802.263230]  copy_process+0x13d6/0x1650
-> [  802.267062]  _do_fork+0x7b/0x3b0
-> [  802.270284]  ? set_next_entity+0xa9/0x250
-> [  802.274290]  __ia32_sys_clone+0x77/0xa0
-> [  802.278119]  do_syscall_32_irqs_on+0x3d/0x250
-> [  802.282472]  ? do_fast_syscall_32+0x2d/0xc0
-> [  802.286656]  ? trace_hardirqs_on+0x30/0xf0
-> [  802.290746]  ? trace_hardirqs_off_finish+0x32/0xa0
-> [  802.295533]  ? do_SYSENTER_32+0x15/0x20
-> [  802.299371]  do_fast_syscall_32+0x49/0xc0
-> [  802.303374]  do_SYSENTER_32+0x15/0x20
-> [  802.307032]  entry_SYSENTER_32+0x9f/0xf2
-> [  802.310956] EIP: 0xb7fbb549
-> [  802.313747] Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01
-> 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f
-> 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
-> 8d 76
-> [  802.332483] EAX: ffffffda EBX: 01200011 ECX: 00000000 EDX: 00000000
-> [  802.338742] ESI: 00000000 EDI: b7dbdba8 EBP: b7dbd348 ESP: b7dbd2f0
-> [  802.344998] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
-> [  802.351776] Modules linked in: algif_hash x86_pkg_temp_thermal
-> [  802.357608] CR2: 00000000fe402000
-> [  802.360920] ---[ end trace ea48459ba50c2a87 ]---
-> [  802.365542] EIP: memcpy+0x14/0x30
-> [  802.368858] Code: e8 a1 72 c5 ff 0f 31 31 c3 59 58 eb 85 cc cc cc
-> cc cc cc cc cc cc 3e 8d 74 26 00 55 89 e5 57 89 c7 56 89 d6 53 89 cb
-> c1 e9 02 <f3> a5 89 d9 83 e1 03 74 02 f3 a4 5b 5e 5f 5d c3 8d b4 26 00
-> 00 00
-> [  802.387593] EAX: fe402000 EBX: 00010000 ECX: 00004000 EDX: fb3dd000
-> [  802.393852] ESI: fb3dd000 EDI: fe402000 EBP: ea799ddc ESP: ea799dd0
-> [  802.400107] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010206
-> [  802.406887] CR0: 80050033 CR2: fe402000 CR3: 1eee9000 CR4: 003406d0
-> [  802.413143] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-> [  802.419400] DR6: fffe0ff0 DR7: 00000400
-> 
-> full test log,
-> [1] https://qa-reports.linaro.org/lkft/linux-stable-rc-5.8-oe/build/v5.8.5-256-gad57c5b5e64d/testrun/3148295/suite/linux-log-parser/test/check-kernel-bug-1727425/log
-> 
-> [2] https://lore.kernel.org/linux-mm/CA+G9fYsiNgoh09h0paf1+UTKhPnn490QCoLB2dRFhMT+Cjh9RA@mail.gmail.com/
-
-As this also triggers on mainline/Linus's tree, I'll just let it be for
-now, thanks!
-
-greg k-h
+SGkgQXhib2UsDQoNClBsZWFzZSB0YWtlIHNvbWUgdGltZXMgcmV2aWV3aW5nIHRoaXMgcGF0Y2gu
+DQoNClRoYW5rcywNCkFuZHkNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9t
+OiBhbmR5LnRhbmdAbnhwLmNvbSA8YW5keS50YW5nQG54cC5jb20+DQo+IFNlbnQ6IDIwMjDE6jjU
+wjE3yNUgMTY6MjINCj4gVG86IGF4Ym9lQGtlcm5lbC5kaw0KPiBDYzogbGludXgtaWRlQHZnZXIu
+a2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgQW5keSBUYW5nDQo+IDxh
+bmR5LnRhbmdAbnhwLmNvbT47IFVkaXQgS3VtYXIgPHVkaXQua3VtYXJAbnhwLmNvbT4NCj4gU3Vi
+amVjdDogW1BBVENIXSBhaGNpOiBxb3JpcTogZW5hYmxlIGFjcGkgc3VwcG9ydCBpbiBxb3JpcSBh
+aGNpIGRyaXZlcg0KPiANCj4gRnJvbTogWXVhbnRpYW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+
+DQo+IA0KPiBUaGlzIHBhdGNoIGVuYWJsZXMgQUNQSSBzdXBwb3J0IGluIHFvcmlxIGFoY2kgZHJp
+dmVyLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogVWRpdCBLdW1hciA8dWRpdC5rdW1hckBueHAuY29t
+Pg0KPiBTaWduZWQtb2ZmLWJ5OiBZdWFudGlhbiBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT4NCj4g
+LS0tDQo+ICBkcml2ZXJzL2F0YS9haGNpX3FvcmlxLmMgfCAyMCArKysrKysrKysrKysrKysrKy0t
+LQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDE3IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+
+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9hdGEvYWhjaV9xb3JpcS5jIGIvZHJpdmVycy9hdGEv
+YWhjaV9xb3JpcS5jIGluZGV4DQo+IGEzMzAzMDdkMzIwMS4uNWI0NmZjOWFlYjRhIDEwMDY0NA0K
+PiAtLS0gYS9kcml2ZXJzL2F0YS9haGNpX3FvcmlxLmMNCj4gKysrIGIvZHJpdmVycy9hdGEvYWhj
+aV9xb3JpcS5jDQo+IEBAIC02LDYgKzYsNyBAQA0KPiAgICogICBUYW5nIFl1YW50aWFuIDxZdWFu
+dGlhbi5UYW5nQGZyZWVzY2FsZS5jb20+DQo+ICAgKi8NCj4gDQo+ICsjaW5jbHVkZSA8bGludXgv
+YWNwaS5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4
+L21vZHVsZS5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L3BtLmg+DQo+IEBAIC04MCw2ICs4MSwxMiBA
+QCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBhaGNpX3FvcmlxX29mX21hdGNoW10g
+PQ0KPiB7ICB9OyAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYWhjaV9xb3JpcV9vZl9tYXRjaCk7
+DQo+IA0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBhY3BpX2RldmljZV9pZCBhaGNpX3FvcmlxX2Fj
+cGlfbWF0Y2hbXSA9IHsNCj4gKwl7Ik5YUDAwMDQiLCAuZHJpdmVyX2RhdGEgPSAoa2VybmVsX3Vs
+b25nX3QpQUhDSV9MWDIxNjBBfSwNCj4gKwl7IH0NCj4gK307DQo+ICtNT0RVTEVfREVWSUNFX1RB
+QkxFKGFjcGksIGFoY2lfcW9yaXFfYWNwaV9tYXRjaCk7DQo+ICsNCj4gIHN0YXRpYyBpbnQgYWhj
+aV9xb3JpcV9oYXJkcmVzZXQoc3RydWN0IGF0YV9saW5rICpsaW5rLCB1bnNpZ25lZCBpbnQgKmNs
+YXNzLA0KPiAgCQkJICB1bnNpZ25lZCBsb25nIGRlYWRsaW5lKQ0KPiAgew0KPiBAQCAtMjU1LDYg
+KzI2Miw3IEBAIHN0YXRpYyBpbnQgYWhjaV9xb3JpcV9waHlfaW5pdChzdHJ1Y3QgYWhjaV9ob3N0
+X3ByaXYNCj4gKmhwcml2KSAgc3RhdGljIGludCBhaGNpX3FvcmlxX3Byb2JlKHN0cnVjdCBwbGF0
+Zm9ybV9kZXZpY2UgKnBkZXYpICB7DQo+ICAJc3RydWN0IGRldmljZV9ub2RlICpucCA9IHBkZXYt
+PmRldi5vZl9ub2RlOw0KPiArCWNvbnN0IHN0cnVjdCBhY3BpX2RldmljZV9pZCAqYWNwaV9pZDsN
+Cj4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KPiAgCXN0cnVjdCBhaGNpX2hv
+c3RfcHJpdiAqaHByaXY7DQo+ICAJc3RydWN0IGFoY2lfcW9yaXFfcHJpdiAqcW9yaXFfcHJpdjsN
+Cj4gQEAgLTI2NywxNCArMjc1LDE4IEBAIHN0YXRpYyBpbnQgYWhjaV9xb3JpcV9wcm9iZShzdHJ1
+Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ICpwZGV2KQ0KPiAgCQlyZXR1cm4gUFRSX0VSUihocHJpdik7
+DQo+IA0KPiAgCW9mX2lkID0gb2ZfbWF0Y2hfbm9kZShhaGNpX3FvcmlxX29mX21hdGNoLCBucCk7
+DQo+IC0JaWYgKCFvZl9pZCkNCj4gKwlhY3BpX2lkID0gYWNwaV9tYXRjaF9kZXZpY2UoYWhjaV9x
+b3JpcV9hY3BpX21hdGNoLCAmcGRldi0+ZGV2KTsNCj4gKwlpZiAoIShvZl9pZCB8fCBhY3BpX2lk
+KSkNCj4gIAkJcmV0dXJuIC1FTk9ERVY7DQo+IA0KPiAgCXFvcmlxX3ByaXYgPSBkZXZtX2t6YWxs
+b2MoZGV2LCBzaXplb2YoKnFvcmlxX3ByaXYpLCBHRlBfS0VSTkVMKTsNCj4gIAlpZiAoIXFvcmlx
+X3ByaXYpDQo+ICAJCXJldHVybiAtRU5PTUVNOw0KPiANCj4gLQlxb3JpcV9wcml2LT50eXBlID0g
+KGVudW0gYWhjaV9xb3JpcV90eXBlKW9mX2lkLT5kYXRhOw0KPiArCWlmIChvZl9pZCkNCj4gKwkJ
+cW9yaXFfcHJpdi0+dHlwZSA9IChlbnVtIGFoY2lfcW9yaXFfdHlwZSlvZl9pZC0+ZGF0YTsNCj4g
+KwllbHNlDQo+ICsJCXFvcmlxX3ByaXYtPnR5cGUgPSAoZW51bSBhaGNpX3FvcmlxX3R5cGUpYWNw
+aV9pZC0+ZHJpdmVyX2RhdGE7DQo+IA0KPiAgCWlmICh1bmxpa2VseSghZWNjX2luaXRpYWxpemVk
+KSkgew0KPiAgCQlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2VfYnluYW1lKHBkZXYsDQo+IEBA
+IC0yODgsNyArMzAwLDggQEAgc3RhdGljIGludCBhaGNpX3FvcmlxX3Byb2JlKHN0cnVjdCBwbGF0
+Zm9ybV9kZXZpY2UNCj4gKnBkZXYpDQo+ICAJCX0NCj4gIAl9DQo+IA0KPiAtCXFvcmlxX3ByaXYt
+PmlzX2RtYWNvaGVyZW50ID0gb2ZfZG1hX2lzX2NvaGVyZW50KG5wKTsNCj4gKwlpZiAoZGV2aWNl
+X2dldF9kbWFfYXR0cigmcGRldi0+ZGV2KSA9PSBERVZfRE1BX0NPSEVSRU5UKQ0KPiArCQlxb3Jp
+cV9wcml2LT5pc19kbWFjb2hlcmVudCA9IHRydWU7DQo+IA0KPiAgCXJjID0gYWhjaV9wbGF0Zm9y
+bV9lbmFibGVfcmVzb3VyY2VzKGhwcml2KTsNCj4gIAlpZiAocmMpDQo+IEBAIC0zNTQsNiArMzY3
+LDcgQEAgc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgYWhjaV9xb3JpcV9kcml2ZXIgPSB7
+DQo+ICAJLmRyaXZlciA9IHsNCj4gIAkJLm5hbWUgPSBEUlZfTkFNRSwNCj4gIAkJLm9mX21hdGNo
+X3RhYmxlID0gYWhjaV9xb3JpcV9vZl9tYXRjaCwNCj4gKwkJLmFjcGlfbWF0Y2hfdGFibGUgPSBh
+aGNpX3FvcmlxX2FjcGlfbWF0Y2gsDQo+ICAJCS5wbSA9ICZhaGNpX3FvcmlxX3BtX29wcywNCj4g
+IAl9LA0KPiAgfTsNCj4gLS0NCj4gMi4xNy4xDQoNCg==
