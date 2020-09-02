@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A034C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6021BC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43928208B3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3B420678
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599061002;
-	bh=LN9CdnpYig01xRkC8IS2l0nFAprnIaPmxff2deSsbdM=;
+	s=default; t=1599061007;
+	bh=CvZl/N6bMSMI88HBcyd5T1/2bkJNYPalt1VI58vbW94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DX3QF+gsWJ57xTtWVEGBbkpu+p03JGsVEa6aC+y6CmlySeO2RIdBfdRufDmR4lZIu
-	 6tra9XwYuTXMT+hPgiKb2muVwQXNBhieouCDyZxkSjDICgVSR+hRBW+ADOQQBZT+6r
-	 ayvVVibWwqfp8UN594qDhyaQJniBKUgFyvmhTGyM=
+	b=rdZjDwJjxF4zNskrfwC9t+wF3gzsWPX8KX+2xhswzYdLVxvq5pgYuBo5vvIkUzX/M
+	 Xm9OWQBoWNhEii2olDPkfya92enQn+APNSOlSW7BjYC/2t0PxZ/EUmBxfWAtAVkemy
+	 pChZ0/rowLIwNLz8cyE3PSdtQSK36cTIDBg8qr7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgIBPgl (ORCPT
+        id S1728422AbgIBPgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:36:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41464 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 11:36:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727776AbgIBPEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:04:05 -0400
+        id S1726979AbgIBPEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:04:10 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8370220FC3;
-        Wed,  2 Sep 2020 15:04:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8107C2137B;
+        Wed,  2 Sep 2020 15:04:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599059045;
-        bh=LN9CdnpYig01xRkC8IS2l0nFAprnIaPmxff2deSsbdM=;
+        s=default; t=1599059050;
+        bh=CvZl/N6bMSMI88HBcyd5T1/2bkJNYPalt1VI58vbW94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l4ySjj6OWiLULGbFujoNttxjHcvTS2LNjJ813tKQEwBBwwM/JP6aKrbDFnPg0hkFh
-         SpLHJW1E2JjNxHSu4W4Nej/7Xfx8k/dlx8N6T4j0+HeiLFB+ShEsCXvy0UYilPoIER
-         hYd9EHZ7Bq02kC+guJsYtkNpKh/BenrYY9Amn0vk=
+        b=BSlvK2dLedkxybPvtTPtPYsetOZIwJjk6zGqLrgUjsKzoJwBX+Y974vrDZgNMf/fL
+         og7ZFTaWpdhrgmsKOXlFhO/TU60eSw5LmOWZKRSFc2gwf/1hs7jxhcXiDphxEv4doI
+         IzaCIiKljgWKe0HsH/hGjN5xRV/AWfFWQtqjOUPo=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -59,9 +59,9 @@ To:     Michael Turquette <mturquette@baylibre.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 02/10] clk: fixed: Add missing kerneldoc
-Date:   Wed,  2 Sep 2020 17:03:40 +0200
-Message-Id: <20200902150348.14465-2-krzk@kernel.org>
+Subject: [PATCH 03/10] clk: bulk: Simplify with dev_err_probe()
+Date:   Wed,  2 Sep 2020 17:03:41 +0200
+Message-Id: <20200902150348.14465-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200902150348.14465-1-krzk@kernel.org>
 References: <20200902150348.14465-1-krzk@kernel.org>
@@ -70,40 +70,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing kerneldoc to fix compile warnings like:
-
-  drivers/clk/clk-fixed-factor.c:211: warning: Function parameter or member 'node' not described in 'of_fixed_factor_clk_setup'
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and the error value gets printed.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/clk/clk-fixed-factor.c | 1 +
- drivers/clk/clk-fixed-rate.c   | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/clk/clk-bulk.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-index 8b343e59dc61..910e6e74ae90 100644
---- a/drivers/clk/clk-fixed-factor.c
-+++ b/drivers/clk/clk-fixed-factor.c
-@@ -206,6 +206,7 @@ static struct clk_hw *_of_fixed_factor_clk_setup(struct device_node *node)
+diff --git a/drivers/clk/clk-bulk.c b/drivers/clk/clk-bulk.c
+index e9e16425c739..15978d2a1233 100644
+--- a/drivers/clk/clk-bulk.c
++++ b/drivers/clk/clk-bulk.c
+@@ -96,9 +96,8 @@ static int __clk_bulk_get(struct device *dev, int num_clks,
+ 			if (ret == -ENOENT && optional)
+ 				continue;
  
- /**
-  * of_fixed_factor_clk_setup() - Setup function for simple fixed factor clock
-+ * @node:	device node for the clock
-  */
- void __init of_fixed_factor_clk_setup(struct device_node *node)
- {
-diff --git a/drivers/clk/clk-fixed-rate.c b/drivers/clk/clk-fixed-rate.c
-index 77499a27c8fb..45501637705c 100644
---- a/drivers/clk/clk-fixed-rate.c
-+++ b/drivers/clk/clk-fixed-rate.c
-@@ -168,6 +168,7 @@ static struct clk_hw *_of_fixed_clk_setup(struct device_node *node)
- 
- /**
-  * of_fixed_clk_setup() - Setup function for simple fixed rate clock
-+ * @node:	device node for the clock
-  */
- void __init of_fixed_clk_setup(struct device_node *node)
- {
+-			if (ret != -EPROBE_DEFER)
+-				dev_err(dev, "Failed to get clk '%s': %d\n",
+-					clks[i].id, ret);
++			dev_err_probe(dev, ret, "Failed to get clk '%s'\n",
++				      clks[i].id);
+ 			goto err;
+ 		}
+ 	}
 -- 
 2.17.1
 
