@@ -2,72 +2,71 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8F5C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6776C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7FE208C7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B77208C7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="cP6uhp21";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VOjyCc0p"
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="PJXHnhUf";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q1lYAdVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgIBSHT (ORCPT
+        id S1728043AbgIBSHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:07:19 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:57639 "EHLO
+        Wed, 2 Sep 2020 14:07:25 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:55239 "EHLO
         out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727924AbgIBSGi (ORCPT
+        by vger.kernel.org with ESMTP id S1727907AbgIBSGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:06:38 -0400
+        Wed, 2 Sep 2020 14:06:35 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id C87BE5C01D8;
+        by mailout.nyi.internal (Postfix) with ESMTP id 4F6685C01A4;
         Wed,  2 Sep 2020 14:06:32 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
   by compute4.internal (MEProxy); Wed, 02 Sep 2020 14:06:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references:reply-to
-        :mime-version:content-transfer-encoding; s=fm1; bh=ws1j/mKPYHXFd
-        qyNwo3xjFGDqqtwldYO4m1W2BzXBgU=; b=cP6uhp21LZjEK3HPsSfdk3nRply0h
-        woG1gTdXGPQbDfCEYGO6Hhb10dFnSp8VVRKe9+1IVV5V7bhLhF1PPK792xs36ZUt
-        L8E3joubwWsCF++JHZSGekQRv+9IrgJ/ioygr3uIGpJPuseNqP9ZJa3MnU8k9bVX
-        CQgI35Z03RXq4oLm+FjkyQc+5B84fccBeknsbX0hNy24xWg+5a1mgDsz+Bt1fB2R
-        0VtdIPdZ0eJJNMhK2sO8B/SGs5oFWo4c9aP/+LQ9MuSLOs3Q225GIlqBOtAFj97P
-        7Mp+sLPOuu8B9w/8y0k61iJlueJwx/1tPA1IsaXMq0KicxURdmxidpT0Q==
+        :to:cc:subject:date:message-id:reply-to:mime-version
+        :content-transfer-encoding; s=fm1; bh=H8HNgVZpNLyS97Lm5Jt7xG0OIC
+        bZNaw8cSgWLA+at1M=; b=PJXHnhUf0gaJ23B/6hvbawXzFgKTBFHeequ3qKbw1W
+        drG5RZxSzap23n/Bq4QDhr1BhxqatNgGg8AtXQz5Uc2ScIisJwF/4//vwlHBNP8b
+        HqBtaE2jQ/KfYvku10oKGcltuzzCxAFqbvtNCN7hjO7H/Hp6WZ5Agb3yilrxSJGy
+        icavEwkxRSzn4ZNlbRFLCnQFVHggZ0fKWVvskeILsnhNYd/GH8iuYTPdjkiM62vt
+        y/CYmJflOGTNpGYg5cnoueVOvOELH/+lUun4162i6Ctl4qdHU8IwudMzd5KCLq6V
+        BUN/rFWUuNSbIbkCSgS7QdXT7H6XgScq1py9+wb6FuxQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:reply-to:subject
-        :to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=ws1j/mKPYHXFdqyNwo3xjFGDqqtwldYO4m1W2BzXBgU=; b=VOjyCc0p
-        eT9nNtSZ0qxyKFx3RSDvo+copPgeDQitDQBqeXndq3dt9cigisVB2HU2cHG/QyvJ
-        /d0/wf8Oed8TnJJtHMnix3eQqKi7IbkXMKj9ShSTbuFAV0anLPIGU0E5PJQC3ebV
-        W1BvW0y7DFLYdArzDLjDBwh307KyNw1G0rPUyaRu+N9C6VadKVgzuCZh5c1Qc2p/
-        gQwySLUjhFrEZbFjwm+d1+yOuaeZQwCvHkmbEHQmGY7uGuvT0/vp0Dg4fvV/eGkg
-        cWA+j8Lpi4iotTKfSCsejg+4bCjIX28hHYTIBsNvkEX4ALPQb6JuzdUuzUxbZQaC
-        IfpXdivBEOBLmA==
-X-ME-Sender: <xms:KN9PX7Rg8zkI6G9n1sThRT9GggTBNH3qlYl65eieMNP1KTro5ezGNw>
-    <xme:KN9PX8wAaNvvBYeWYLlVxA_72oGVQxhbXDoMfx3N0cUa1IDvgq2sUEo9408R2r6Kk
-    jmksTMY9WDvgPiBlA>
+        :message-id:mime-version:reply-to:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=H8HNgV
+        ZpNLyS97Lm5Jt7xG0OICbZNaw8cSgWLA+at1M=; b=Q1lYAdVgd3SG7cJ4Z8ARC1
+        tB3fxx7R0R6P3hNvRiy+GdYnLtBOPx8mBzyfV1er1qfxPtVbthpiHVet98fA+UcV
+        ScyVr6nmH1kEPSnXkaAAgfmNjDtHRWeZIhSx7QTm/3+UnbvsGq2ioKbnHtH458pK
+        rnt7HTuH02WQuFMmTbfyRhLfwCIFWqD3geUz3ctUHTydmInvLxuHN/RZan1+RRRL
+        /geRoFaqImMxueHE04erKkFy6yMIEnhOyv8qrqVopt3XTwyZP5PuzccAqGL1uMTk
+        rheT2oUCdR/k/fqznMRgwbrE658USOeUGtcnlNeoMFLgbg//BFajjfoDChSUVWFg
+        ==
+X-ME-Sender: <xms:Jt9PX7KwZYnOwJ0QI9_TsyHkgGrfP5-DJ6OSn5UmP0GQ7jUwrl1UMg>
+    <xme:Jt9PX_JDGmVMh8IfWlZNiAkmMfWH3azoh4BlYzWf0y5KcV3mM75YjJukB9ytof6Ip
+    Jc-Ic1sU2k843IRSA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledguddvudcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvffufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpegkihcu
-    jggrnhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrhhnpeduhf
-    ffveektdduhfdutdfgtdekkedvhfetuedufedtgffgvdevleehheevjefgtdenucfkphep
-    uddvrdegiedruddtiedrudeigeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpeiiihdrhigrnhesshgvnhhtrdgtohhm
-X-ME-Proxy: <xmx:KN9PXw33b3cu7Zxzkola4xVgtoX2aID56FJmF4F67-bc9HI161lLLw>
-    <xmx:KN9PX7BKgb2RWn9LoFrQ06_h6CHqnOeg2Fqt59ttYkXa60tNp_FQYQ>
-    <xmx:KN9PX0ixqo_8sTtbc-ZnANwLYW4MvDwWy5FMoUsnv9hpfTr3emhyIA>
-    <xmx:KN9PXwhWQ1T0azYYnMShbh0MW3ZSPQQwmQnibK5up4k0R1hYcr8trA>
+    enucfjughrpefhvffufffkofhrggfgsedtkeertdertddtnecuhfhrohhmpegkihcujggr
+    nhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrhhnpefgleelhf
+    dviedtheffjeehlefghedtveehjefhgfeltdeihedtjefffeevieejheenucfkphepuddv
+    rdegiedruddtiedrudeigeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpeiiihdrhigrnhesshgvnhhtrdgtohhm
+X-ME-Proxy: <xmx:J99PXzuysht00oVTgMy8IK9zMQQxK-C0cssVFy-du1bzwM4KCMcBYA>
+    <xmx:J99PX0ZRfhSw1hTn1v5oSIg4QujO_OBCl2L0BTsPs0DDHIV7AuRluQ>
+    <xmx:J99PXyZDmRNbcNbPSjqtvM7h2yk5km12uVVJbrZT388dHMfVf5eR8w>
+    <xmx:KN9PX66uRFwz38j0gmRjX2QKBGF1dLNrjEIJLdUNQhxb9ncjvveyRg>
 Received: from nvrsysarch6.NVidia.COM (unknown [12.46.106.164])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E1AA130600A6;
-        Wed,  2 Sep 2020 14:06:31 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id A6F7030600A9;
+        Wed,  2 Sep 2020 14:06:30 -0400 (EDT)
 From:   Zi Yan <zi.yan@sent.com>
 To:     linux-mm@kvack.org, Roman Gushchin <guro@fb.com>
 Cc:     Rik van Riel <riel@surriel.com>,
@@ -77,12 +76,10 @@ Cc:     Rik van Riel <riel@surriel.com>,
         Yang Shi <yang.shi@linux.alibaba.com>,
         David Nellans <dnellans@nvidia.com>,
         linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>
-Subject: [RFC PATCH 05/16] mm: thp: handling 1GB THP reference bit.
-Date:   Wed,  2 Sep 2020 14:06:17 -0400
-Message-Id: <20200902180628.4052244-6-zi.yan@sent.com>
+Subject: [RFC PATCH 00/16] 1GB THP support on x86_64
+Date:   Wed,  2 Sep 2020 14:06:12 -0400
+Message-Id: <20200902180628.4052244-1-zi.yan@sent.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200902180628.4052244-1-zi.yan@sent.com>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
 Reply-To: Zi Yan <ziy@nvidia.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -93,203 +90,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zi Yan <ziy@nvidia.com>
 
-Add PUD-level TLB flush ops and teach page_vma_mapped_talk about 1GB
-THPs.
+Hi all,
 
-Signed-off-by: Zi Yan <ziy@nvidia.com>
----
- arch/x86/include/asm/pgtable.h |  3 +++
- arch/x86/mm/pgtable.c          | 13 +++++++++++++
- include/linux/mmu_notifier.h   | 13 +++++++++++++
- include/linux/pgtable.h        | 14 ++++++++++++++
- include/linux/rmap.h           |  1 +
- mm/page_vma_mapped.c           | 33 +++++++++++++++++++++++++++++----
- mm/rmap.c                      | 12 +++++++++---
- 7 files changed, 82 insertions(+), 7 deletions(-)
+This patchset adds support for 1GB THP on x86_64. It is on top of
+v5.9-rc2-mmots-2020-08-25-21-13.
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 26255cac78c0..15334f5ba172 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -1127,6 +1127,9 @@ extern int pudp_test_and_clear_young(struct vm_area_struct *vma,
- extern int pmdp_clear_flush_young(struct vm_area_struct *vma,
- 				  unsigned long address, pmd_t *pmdp);
- 
-+#define __HAVE_ARCH_PUDP_CLEAR_YOUNG_FLUSH
-+extern int pudp_clear_flush_young(struct vm_area_struct *vma,
-+				  unsigned long address, pud_t *pudp);
- 
- #define pmd_write pmd_write
- static inline int pmd_write(pmd_t pmd)
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index 7be73aee6183..e4a2dffcc418 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -633,6 +633,19 @@ int pmdp_clear_flush_young(struct vm_area_struct *vma,
- 
- 	return young;
- }
-+int pudp_clear_flush_young(struct vm_area_struct *vma,
-+			   unsigned long address, pud_t *pudp)
-+{
-+	int young;
-+
-+	VM_BUG_ON(address & ~HPAGE_PUD_MASK);
-+
-+	young = pudp_test_and_clear_young(vma, address, pudp);
-+	if (young)
-+		flush_tlb_range(vma, address, address + HPAGE_PUD_SIZE);
-+
-+	return young;
-+}
- #endif
- 
- /**
-diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
-index b8200782dede..4ffa179e654f 100644
---- a/include/linux/mmu_notifier.h
-+++ b/include/linux/mmu_notifier.h
-@@ -557,6 +557,19 @@ static inline void mmu_notifier_range_init_migrate(
- 	__young;							\
- })
- 
-+#define pudp_clear_flush_young_notify(__vma, __address, __pudp)		\
-+({									\
-+	int __young;							\
-+	struct vm_area_struct *___vma = __vma;				\
-+	unsigned long ___address = __address;				\
-+	__young = pudp_clear_flush_young(___vma, ___address, __pudp);	\
-+	__young |= mmu_notifier_clear_flush_young(___vma->vm_mm,	\
-+						  ___address,		\
-+						  ___address +		\
-+							PUD_SIZE);	\
-+	__young;							\
-+})
-+
- #define ptep_clear_young_notify(__vma, __address, __ptep)		\
- ({									\
- 	int __young;							\
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index 255275d5b73e..8ef358c386af 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -240,6 +240,20 @@ static inline int pmdp_clear_flush_young(struct vm_area_struct *vma,
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
- #endif
- 
-+#ifndef __HAVE_ARCH_PUDP_CLEAR_YOUNG_FLUSH
-+#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-+extern int pudp_clear_flush_young(struct vm_area_struct *vma,
-+				  unsigned long address, pud_t *pudp);
-+#else
-+int pudp_clear_flush_young(struct vm_area_struct *vma,
-+				  unsigned long address, pud_t *pudp)
-+{
-+	BUILD_BUG();
-+	return 0;
-+}
-+#endif /* CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD  */
-+#endif
-+
- #ifndef __HAVE_ARCH_PTEP_GET_AND_CLEAR
- static inline pte_t ptep_get_and_clear(struct mm_struct *mm,
- 				       unsigned long address,
-diff --git a/include/linux/rmap.h b/include/linux/rmap.h
-index 3a6adfa70fb0..0af61dd193d2 100644
---- a/include/linux/rmap.h
-+++ b/include/linux/rmap.h
-@@ -206,6 +206,7 @@ struct page_vma_mapped_walk {
- 	struct page *page;
- 	struct vm_area_struct *vma;
- 	unsigned long address;
-+	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
- 	spinlock_t *ptl;
-diff --git a/mm/page_vma_mapped.c b/mm/page_vma_mapped.c
-index 5e77b269c330..d9d39ec06e21 100644
---- a/mm/page_vma_mapped.c
-+++ b/mm/page_vma_mapped.c
-@@ -145,9 +145,12 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
- 	struct page *page = pvmw->page;
- 	pgd_t *pgd;
- 	p4d_t *p4d;
--	pud_t *pud;
-+	pud_t pude;
- 	pmd_t pmde;
- 
-+	if (!pvmw->pte && !pvmw->pmd && pvmw->pud)
-+		return not_found(pvmw);
-+
- 	/* The only possible pmd mapping has been handled on last iteration */
- 	if (pvmw->pmd && !pvmw->pte)
- 		return not_found(pvmw);
-@@ -174,10 +177,31 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
- 	p4d = p4d_offset(pgd, pvmw->address);
- 	if (!p4d_present(*p4d))
- 		return false;
--	pud = pud_offset(p4d, pvmw->address);
--	if (!pud_present(*pud))
-+	pvmw->pud = pud_offset(p4d, pvmw->address);
-+
-+	/*
-+	 * Make sure the pud value isn't cached in a register by the
-+	 * compiler and used as a stale value after we've observed a
-+	 * subsequent update.
-+	 */
-+	pude = READ_ONCE(*pvmw->pud);
-+	if (pud_trans_huge(pude)) {
-+		pvmw->ptl = pud_lock(mm, pvmw->pud);
-+		if (likely(pud_trans_huge(*pvmw->pud))) {
-+			if (pvmw->flags & PVMW_MIGRATION)
-+				return not_found(pvmw);
-+			if (pud_page(*pvmw->pud) != page)
-+				return not_found(pvmw);
-+			return true;
-+		} else {
-+			/* THP pud was split under us: handle on pmd level */
-+			spin_unlock(pvmw->ptl);
-+			pvmw->ptl = NULL;
-+		}
-+	} else if (!pud_present(pude))
- 		return false;
--	pvmw->pmd = pmd_offset(pud, pvmw->address);
-+
-+	pvmw->pmd = pmd_offset(pvmw->pud, pvmw->address);
- 	/*
- 	 * Make sure the pmd value isn't cached in a register by the
- 	 * compiler and used as a stale value after we've observed a
-@@ -213,6 +237,7 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
- 	} else if (!pmd_present(pmde)) {
- 		return false;
- 	}
-+
- 	if (!map_pte(pvmw))
- 		goto next_pte;
- 	while (1) {
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 10195a2421cf..77cec0658b76 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -803,9 +803,15 @@ static bool page_referenced_one(struct page *page, struct vm_area_struct *vma,
- 					referenced++;
- 			}
- 		} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
--			if (pmdp_clear_flush_young_notify(vma, address,
--						pvmw.pmd))
--				referenced++;
-+			if (pvmw.pmd) {
-+				if (pmdp_clear_flush_young_notify(vma, address,
-+							pvmw.pmd))
-+					referenced++;
-+			} else if (pvmw.pud) {
-+				if (pudp_clear_flush_young_notify(vma, address,
-+							pvmw.pud))
-+					referenced++;
-+			}
- 		} else {
- 			/* unexpected pmd-mapped page? */
- 			WARN_ON_ONCE(1);
--- 
+1GB THP is more flexible for reducing translation overhead and increasing the
+performance of applications with large memory footprint without application
+changes compared to hugetlb.
+
+Design
+=======
+
+1GB THP implementation looks similar to exiting THP code except some new designs
+for the additional page table level.
+
+1. Page table deposit and withdraw using a new pagechain data structure:
+   instead of one PTE page table page, 1GB THP requires 513 page table pages
+   (one PMD page table page and 512 PTE page table pages) to be deposited
+   at the page allocaiton time, so that we can split the page later. Currently,
+   the page table deposit is using ->lru, thus only one page can be deposited.
+   A new pagechain data structure is added to enable multi-page deposit.
+
+2. Triple mapped 1GB THP : 1GB THP can be mapped by a combination of PUD, PMD,
+   and PTE entries. Mixing PUD an PTE mapping can be achieved with existing
+   PageDoubleMap mechanism. To add PMD mapping, PMDPageInPUD and
+   sub_compound_mapcount are introduced. PMDPageInPUD is the 512-aligned base
+   page in a 1GB THP and sub_compound_mapcount counts the PMD mapping by using
+   page[N*512 + 3].compound_mapcount.
+
+3. Using CMA allocaiton for 1GB THP: instead of bump MAX_ORDER, it is more sane
+   to use something less intrusive. So all 1GB THPs are allocated from reserved
+   CMA areas shared with hugetlb. At page splitting time, the bitmap for the 1GB
+   THP is cleared as the resulting pages can be freed via normal page free path.
+   We can fall back to alloc_contig_pages for 1GB THP if necessary.
+
+
+Patch Organization
+=======
+
+Patch 01 adds the new pagechain data structure.
+
+Patch 02 to 13 adds 1GB THP support in variable places.
+
+Patch 14 tries to use alloc_contig_pages for 1GB THP allocaiton.
+
+Patch 15 moves hugetlb_cma reservation to cma.c and rename it to hugepage_cma.
+
+Patch 16 use hugepage_cma reservation for 1GB THP allocation.
+
+
+Any suggestions and comments are welcome.
+
+
+Zi Yan (16):
+  mm: add pagechain container for storing multiple pages.
+  mm: thp: 1GB anonymous page implementation.
+  mm: proc: add 1GB THP kpageflag.
+  mm: thp: 1GB THP copy on write implementation.
+  mm: thp: handling 1GB THP reference bit.
+  mm: thp: add 1GB THP split_huge_pud_page() function.
+  mm: stats: make smap stats understand PUD THPs.
+  mm: page_vma_walk: teach it about PMD-mapped PUD THP.
+  mm: thp: 1GB THP support in try_to_unmap().
+  mm: thp: split 1GB THPs at page reclaim.
+  mm: thp: 1GB THP follow_p*d_page() support.
+  mm: support 1GB THP pagemap support.
+  mm: thp: add a knob to enable/disable 1GB THPs.
+  mm: page_alloc: >=MAX_ORDER pages allocation an deallocation.
+  hugetlb: cma: move cma reserve function to cma.c.
+  mm: thp: use cma reservation for pud thp allocation.
+
+ .../admin-guide/kernel-parameters.txt         |   2 +-
+ arch/arm64/mm/hugetlbpage.c                   |   2 +-
+ arch/powerpc/mm/hugetlbpage.c                 |   2 +-
+ arch/x86/include/asm/pgalloc.h                |  68 ++
+ arch/x86/include/asm/pgtable.h                |  26 +
+ arch/x86/kernel/setup.c                       |   8 +-
+ arch/x86/mm/pgtable.c                         |  38 +
+ drivers/base/node.c                           |   3 +
+ fs/proc/meminfo.c                             |   2 +
+ fs/proc/page.c                                |   2 +
+ fs/proc/task_mmu.c                            | 122 ++-
+ include/linux/cma.h                           |  18 +
+ include/linux/huge_mm.h                       |  84 +-
+ include/linux/hugetlb.h                       |  12 -
+ include/linux/memcontrol.h                    |   5 +
+ include/linux/mm.h                            |  29 +-
+ include/linux/mm_types.h                      |   1 +
+ include/linux/mmu_notifier.h                  |  13 +
+ include/linux/mmzone.h                        |   1 +
+ include/linux/page-flags.h                    |  47 +
+ include/linux/pagechain.h                     |  73 ++
+ include/linux/pgtable.h                       |  34 +
+ include/linux/rmap.h                          |  10 +-
+ include/linux/swap.h                          |   2 +
+ include/linux/vm_event_item.h                 |   7 +
+ include/uapi/linux/kernel-page-flags.h        |   2 +
+ kernel/events/uprobes.c                       |   4 +-
+ kernel/fork.c                                 |   5 +
+ mm/cma.c                                      | 119 +++
+ mm/gup.c                                      |  60 +-
+ mm/huge_memory.c                              | 939 +++++++++++++++++-
+ mm/hugetlb.c                                  | 114 +--
+ mm/internal.h                                 |   2 +
+ mm/khugepaged.c                               |   6 +-
+ mm/ksm.c                                      |   4 +-
+ mm/memcontrol.c                               |  13 +
+ mm/memory.c                                   |  51 +-
+ mm/mempolicy.c                                |  21 +-
+ mm/migrate.c                                  |  12 +-
+ mm/page_alloc.c                               |  57 +-
+ mm/page_vma_mapped.c                          | 129 ++-
+ mm/pgtable-generic.c                          |  56 ++
+ mm/rmap.c                                     | 289 ++++--
+ mm/swap.c                                     |  31 +
+ mm/swap_slots.c                               |   2 +
+ mm/swapfile.c                                 |   8 +-
+ mm/userfaultfd.c                              |   2 +-
+ mm/util.c                                     |  16 +-
+ mm/vmscan.c                                   |  58 +-
+ mm/vmstat.c                                   |   8 +
+ 50 files changed, 2270 insertions(+), 349 deletions(-)
+ create mode 100644 include/linux/pagechain.h
+
+--
 2.28.0
 
