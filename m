@@ -2,116 +2,161 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E5EC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D0FC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F62E2071B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BEA2071B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:09:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=emersion.fr header.i=@emersion.fr header.b="OCtM6on/"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mXeGjyM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgIBJJk (ORCPT
+        id S1726406AbgIBJJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 05:09:40 -0400
-Received: from mail2.protonmail.ch ([185.70.40.22]:57005 "EHLO
-        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgIBJJU (ORCPT
+        Wed, 2 Sep 2020 05:09:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:65412 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726210AbgIBJJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 05:09:20 -0400
-Date:   Wed, 02 Sep 2020 09:09:11 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emersion.fr;
-        s=protonmail2; t=1599037758;
-        bh=tWZLjcjpso7hjA2WIHTYXpXERR7Rr72qonBHENyVUic=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=OCtM6on/gZ0ul9beiqs+h6tfxzqMwNoEgh0KOMhiK4wJgFngrAoHuauJBUvPBXfZR
-         ssM3+Fp3Hl4kO/KU6fqcc5xI00srJ+T7mYBlW7KPt6coX3GdGPLb7XoKuWotg6liAn
-         UWLMEyEo8Rd3g7rl+56KDPfy4auvXuOm9rLI8Av8jNi3V2exqaGNVmdasJjMG0s42j
-         vz+NH/qSj4XBMGp6eLJ/6WTNrKjW62+OBXwVw8Z2yyahKMRhV+TsoAJsvIlPBEPCh3
-         3HdEXAjZVzWHEZLX91ti8HnEcZJSmOwJ64n4ajA/mHAa2PmFUwd3d+IKIROMUJS5zm
-         K+YTYFZMtCjaQ==
-To:     Daniel Vetter <daniel@ffwll.ch>
-From:   Simon Ser <contact@emersion.fr>
-Cc:     =?utf-8?Q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Melissa Wen <melissa.srw@gmail.com>,
-        Sidong Yang <realwakka@gmail.com>
-Reply-To: Simon Ser <contact@emersion.fr>
-Subject: Re: [PATCH] drm/vkms: add support for gamma_set interface
-Message-ID: <DtMHF2YzGDmVCCHE0UKH2NdZW1XmY3V3DoP-rvWbpYlFi1s5ncHyqDZd27U6ya_LBm64G73rqYlZMU0rI4IBcdiUaiSvtGDj2WW3bgZGKDc=@emersion.fr>
-In-Reply-To: <20200901132656.GD2352366@phenom.ffwll.local>
-References: <20200829140647.7626-1-realwakka@gmail.com> <UeJwFKvmNgKdZY_icN0-nrFly9R1vbzaMZ-TiyxIIPBcdl278uZsK6YdTTdRl6rFukBAmN-eyCFpnfsIB-El9QpyYiutdcpgJg64n4tsRRc=@emersion.fr> <20200831133858.GA9280@realwakka> <20200831134852.GY6112@intel.com> <C7EgdPUBX9nRTKx9kkGIZijd0yGMOLEtXOwa2jvk-rKtprmNZKSDP-Jos7mYU88DOQYiXJBnz0_D2FAQ1x7jCwLcR-cmZtzCc5cLsJqyDCk=@emersion.fr> <20200901132656.GD2352366@phenom.ffwll.local>
+        Wed, 2 Sep 2020 05:09:30 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08292jM8004758;
+        Wed, 2 Sep 2020 05:09:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=tDxGVhOX0cCEXcDAZ8mLZt95/LUEO78Nvk7je6okY4s=;
+ b=mXeGjyM/p43+bv+J3fpYg1C/MwliHRR/CFPpUZO+YYuVQncjli7efXUPBvDyyBVoUJdr
+ a/JM68yNW24XzA1zlXvKwAJIFXomOJr9ooPrjKYQIftRmFTrt3b0aM7POFLgCNcdcmMP
+ Nz4B0Ax/DPwYb3ogD9xyssR6YT1bSviSu+n55taE3HHV6XBIxCvDbmwE3B0G4qlbzXX1
+ NDiz89dfE5Q/h3p4r858MHwrHcPwUby63n9WeQskdLdKhOZcAXwnBAPBdyYmDk34Ctd9
+ HFdOj9L3iI2BtHufwIsngFYMtA4DCYrEhbFKTVGf0qpFCn0tWWOU50QKKO4Ieu9cdtOG Zw== 
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33a8dnr4yh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 05:09:18 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 082983SQ001107;
+        Wed, 2 Sep 2020 09:09:16 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03fra.de.ibm.com with ESMTP id 337en8arxg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 09:09:16 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08299D0L30540124
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 2 Sep 2020 09:09:13 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 320C2AE074;
+        Wed,  2 Sep 2020 09:09:13 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D7685AE056;
+        Wed,  2 Sep 2020 09:09:12 +0000 (GMT)
+Received: from pomme.tlslab.ibm.com (unknown [9.145.28.120])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  2 Sep 2020 09:09:12 +0000 (GMT)
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     nathanl@linux.ibm.com, cheloha@linux.ibm.com,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] mm: check for memory's node later during boot
+Date:   Wed,  2 Sep 2020 11:09:11 +0200
+Message-Id: <20200902090911.11363-1-ldufour@linux.ibm.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-02_03:2020-09-02,2020-09-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ spamscore=0 mlxscore=0 suspectscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1011 phishscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009020085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, September 1, 2020 3:26 PM, Daniel Vetter <daniel@ffwll.ch> wrot=
-e:
+register_mem_sect_under_nodem() is checking the memory block's node id only
+if the system state is "SYSTEM_BOOTING". On PowerPC, the memory blocks are
+registered while the system state is "SYSTEM_SCHEDULING", the one before
+SYSTEM_RUNNING.
 
-> On Tue, Sep 01, 2020 at 08:57:37AM +0000, Simon Ser wrote:
->
-> > On Monday, August 31, 2020 3:48 PM, Ville Syrj=C3=A4l=C3=A4 ville.syrja=
-la@linux.intel.com wrote:
-> >
-> > > > > It doesn't seem like this IGT test's goal is to exercise support =
-for
-> > > > > gamma LUTs. Does the test just tries to reset the gamma LUT to li=
-near?
-> > > > > If so, I think the IGT test should be fixed to ignore "I don't su=
-pport
-> > > > > gamma" errors.
-> > > >
-> > > > It seems like that IGT test pixel-format is to make gamma lut like =
-below.
-> > > > for (i =3D 0; i < lut_size; i++)
-> > > > lut[i] =3D (i * 0xffff / (lut_size - 1)) & mask;
-> > > > And set this table to drm driver. and test begins. It's the test ab=
-out pixel
-> > > > format. I think you're right. It's not about gamma lut.
-> > >
-> > > The point of the gamma LUT stuff in the pixel format test is to throw
-> > > away a bunch of the lsbs so that the test passes when the result is
-> > > "close enough" to the 8bpc RGB reference image. Without it we would
-> > > never get a crc match when testing non-8bpc or YCbCr formats.
-> >
-> > OK, that makes sense. Would it be sensible to:
-> >
-> > -   Don't set gamma if the pixel format being tested is 8bpc
->
-> Hm not sure what 8bpc format you mean here, because we have C8 (needs
-> gamma table or doesn't work) and the 8b greyscale one with the R8 one. If
-> you ask for legacy 8bpc you get C8.
+The consequence on PowerPC guest with interleaved memory node's ranges is
+that some memory block could be assigned to multiple nodes on sysfs. This
+lately prevents some memory hot-plug and hot-unplug to succeed because
+links are remaining. Such a panic is then displayed:
 
-Why do we need a gamma LUT for C8 and R8? There shouldn't be any
-precision loss, right?
+------------[ cut here ]------------
+kernel BUG at /Users/laurent/src/linux-ppc/mm/memory_hotplug.c:1084!
+Oops: Exception in kernel mode, sig: 5 [#1]
+LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+Modules linked in: rpadlpar_io rpaphp pseries_rng rng_core vmx_crypto gf128mul binfmt_misc ip_tables x_tables xfs libcrc32c crc32c_vpmsum autofs4
+CPU: 8 PID: 10256 Comm: drmgr Not tainted 5.9.0-rc1+ #25
+NIP:  c000000000403f34 LR: c000000000403f2c CTR: 0000000000000000
+REGS: c0000004876e3660 TRAP: 0700   Not tainted  (5.9.0-rc1+)
+MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 24000448  XER: 20040000
+CFAR: c000000000846d20 IRQMASK: 0
+GPR00: c000000000403f2c c0000004876e38f0 c0000000012f6f00 ffffffffffffffef
+GPR04: 0000000000000227 c0000004805ae680 0000000000000000 00000004886f0000
+GPR08: 0000000000000226 0000000000000003 0000000000000002 fffffffffffffffd
+GPR12: 0000000088000484 c00000001ec96280 0000000000000000 0000000000000000
+GPR16: 0000000000000000 0000000000000000 0000000000000004 0000000000000003
+GPR20: c00000047814ffe0 c0000007ffff7c08 0000000000000010 c0000000013332c8
+GPR24: 0000000000000000 c0000000011f6cc0 0000000000000000 0000000000000000
+GPR28: ffffffffffffffef 0000000000000001 0000000150000000 0000000010000000
+NIP [c000000000403f34] add_memory_resource+0x244/0x340
+LR [c000000000403f2c] add_memory_resource+0x23c/0x340
+Call Trace:
+[c0000004876e38f0] [c000000000403f2c] add_memory_resource+0x23c/0x340 (unreliable)
+[c0000004876e39c0] [c00000000040408c] __add_memory+0x5c/0xf0
+[c0000004876e39f0] [c0000000000e2b94] dlpar_add_lmb+0x1b4/0x500
+[c0000004876e3ad0] [c0000000000e3888] dlpar_memory+0x1f8/0xb80
+[c0000004876e3b60] [c0000000000dc0d0] handle_dlpar_errorlog+0xc0/0x190
+[c0000004876e3bd0] [c0000000000dc398] dlpar_store+0x198/0x4a0
+[c0000004876e3c90] [c00000000072e630] kobj_attr_store+0x30/0x50
+[c0000004876e3cb0] [c00000000051f954] sysfs_kf_write+0x64/0x90
+[c0000004876e3cd0] [c00000000051ee40] kernfs_fop_write+0x1b0/0x290
+[c0000004876e3d20] [c000000000438dd8] vfs_write+0xe8/0x290
+[c0000004876e3d70] [c0000000004391ac] ksys_write+0xdc/0x130
+[c0000004876e3dc0] [c000000000034e40] system_call_exception+0x160/0x270
+[c0000004876e3e20] [c00000000000d740] system_call_common+0xf0/0x27c
+Instruction dump:
+48442e35 60000000 0b030000 3cbe0001 7fa3eb78 7bc48402 38a5fffe 7ca5fa14
+78a58402 48442db1 60000000 7c7c1b78 <0b030000> 7f23cb78 4bda371d 60000000
+---[ end trace 562fd6c109cd0fb2 ]---
 
-> > -   Make the test skip if the pixel format is >8bpc and gamma isn't
-> >     supported
-> >
->
-> Yeah the test should skip if gamma isn't there.
-> -Daniel
->
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
->
-> --
->
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+To prevent this multiple links, make the node checking done for states
+prior to SYSTEM_RUNNING.
 
+Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Fixes: 4fbce633910e ("mm/memory_hotplug.c: make register_mem_sect_under_node() a callback of walk_memory_range()")
+---
+ drivers/base/node.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index 508b80f6329b..8e9f39b562ef 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -789,7 +789,7 @@ static int register_mem_sect_under_node(struct memory_block *mem_blk,
+ 		 * case, during hotplug we know that all pages in the memory
+ 		 * block belong to the same node.
+ 		 */
+-		if (system_state == SYSTEM_BOOTING) {
++		if (system_state < SYSTEM_RUNNING) {
+ 			page_nid = get_nid_for_pfn(pfn);
+ 			if (page_nid < 0)
+ 				continue;
+-- 
+2.28.0
 
