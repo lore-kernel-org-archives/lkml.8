@@ -2,198 +2,88 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99936C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FAFC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 771D32083B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:44:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YU9/MzA5"
+	by mail.kernel.org (Postfix) with ESMTP id 59E7A2083B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599072296;
+	bh=JGk7LSAU5LH/dw5N8RtShtpaM2nsX5tomgXsw1xzhz8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OGU/lTybSIRUxk4NcXjKejBJQTldAxQeEmbp/vwNRbR/rrjXypxJ8agv7CR3TqQoT
+	 Bp30Cx3MX77ED4tv9UVIV5/PURcNBTIEhrttaB3PslZW0ZyW+Pph1r1uz+50bBh5TR
+	 nhoSie1JNT5IDtsK2v/D9T1P6cZ1jFBkoE0tSLAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgIBSn7 (ORCPT
+        id S1728111AbgIBSoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:43:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728047AbgIBSn6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:43:58 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA5A5C061244;
-        Wed,  2 Sep 2020 11:43:57 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id t10so508698wrv.1;
-        Wed, 02 Sep 2020 11:43:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UKk0FikPFSnv2wlgEYZiX1TTnSriok/p6lQGPIKn3B8=;
-        b=YU9/MzA5Xfr3hz+eiBR3BSbV89vqkeWvzNr6+qXwIbDW+DS7o4ok2Lpr1oAP3E9Fv2
-         EgRkgvM3ELkiqDu6fREZPNELXRy+JXBZeKK7yCQX16KbDg879r+85zhYgbLB/2CSLOPa
-         T8+pKX0a5pXYKVjmqXoENXclcUdsICKUm10d/EgEZmNOYQDMUewoKhXIG4BZ0Z4xpSP9
-         aDS9xfj7dVocMJARiyawFRZxY307R6RgqiE+mUx86pEQeqQjJwiZ8Uv4lLHhFn92iGdm
-         h9zqEbbzaWh91f6LmopjVwlq073Zx0enuj5vUFIYEOKmZQTedDt90ITXvSoUB5Hsi7wJ
-         xZog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UKk0FikPFSnv2wlgEYZiX1TTnSriok/p6lQGPIKn3B8=;
-        b=ZJwGpMJjUeo6d+6LJVmzN3qG+0zgip37xGqiKgpDQwXTNXNbP4QabiHWbjMDejBV9r
-         iTgts3MuUi2yz1HskcmhOfFDZqTw436trpaehi4nHmRlB2ZCuCFSWSMwkAh4Ab7rTO4j
-         dFxxUHKoKcd4FoQ4O/iQ3gzfwD8V+InicXRIANKGcfESxSLkR7jvPBa3XYgIo0QhMB79
-         VhriKZSThYqmqiHxzvvQZ1TRmJqj0M9/CpLNj7V9oHPm0K/V/CnTrDdLtj9RSx8VpwOW
-         PVmXuQxatKBh2l59D+XZ3WUEg19wHzUk6thZww2Ki05Rksmrl2p1aD3mcLag0nxjpuIL
-         vItw==
-X-Gm-Message-State: AOAM533uDwTtnG3wx5ayXsCpQysCQXWzi5u7jMFjY2nth7R6Rv3PJIJs
-        BF0XyCRJoHLiUBm87UqWjnw=
-X-Google-Smtp-Source: ABdhPJxkaoiLsTUQO7T2dIlHN18eiRrmRwRn8OeMgrU5jihup2RN5cDNezt0rf3blbWyMPHHwKvSYA==
-X-Received: by 2002:adf:fa02:: with SMTP id m2mr1662464wrr.273.1599072236550;
-        Wed, 02 Sep 2020 11:43:56 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id g18sm818276wru.27.2020.09.02.11.43.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 11:43:56 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alan Cox <alan@linux.intel.com>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: media: atomisp: Fix error path in lm3554_probe()
-Date:   Wed,  2 Sep 2020 19:41:50 +0100
-Message-Id: <20200902184207.479525-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Wed, 2 Sep 2020 14:44:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49310 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727894AbgIBSox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 14:44:53 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE8722083B;
+        Wed,  2 Sep 2020 18:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599072293;
+        bh=JGk7LSAU5LH/dw5N8RtShtpaM2nsX5tomgXsw1xzhz8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0t8EmjCocLj/y/w/pyEuLpfdjthKFB5AmS4vj6xjX92yI7Sxg7Rc7ujVrjwx7hVBb
+         Mt2UlXTqg3x5ffhTDTf4lbEvOYYGwp3rg/CqW8CKucZqobgAIh21xxtKaQ7sjJvAal
+         c8UgCHHDkVsW6cmEnrv+e/y5IJTcteHaRhEZqujU=
+Date:   Wed, 2 Sep 2020 21:44:49 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH rdma-next 1/4] gcov: Open-code kmemdup() to work
+ correctly with kernel and user space pointers
+Message-ID: <20200902184449.GN59010@unreal>
+References: <20200902085513.748149-1-leon@kernel.org>
+ <20200902085513.748149-2-leon@kernel.org>
+ <CAHk-=wiOJ4H=YFO8+EumOcrciQgeKXY1Z92jdqY8OQdprPXkbg@mail.gmail.com>
+ <20200902174600.GK59010@unreal>
+ <CAHk-=whG7MPx0_6S8ATd4yRPtwKTThDNtbKQDQARHbaPp2H1Wg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whG7MPx0_6S8ATd4yRPtwKTThDNtbKQDQARHbaPp2H1Wg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The error path for lm3554_probe() contains a number of bugs, including:
- * resource leaks
- * jumping to error labels out of sequence
- * not setting the return value appropriately
+On Wed, Sep 02, 2020 at 11:27:14AM -0700, Linus Torvalds wrote:
+> On Wed, Sep 2, 2020 at 10:46 AM Leon Romanovsky <leon@kernel.org> wrote:
+> >
+> > Definitely my explanation is wrong, but it was my interpretation of
+> > "BUG: KASAN: global-out-of-bounds in kmemdup+0x43/0x70" line. I saw
+> > that the failure was in memcpy() inside of kmemdup(), so I changed
+> > from memcpy to be copy_from_user() and it solved the KASAN warning.
+>
+> But the actual patch attached to that explanation *doesn't* use
+> copy_from_user().
+>
+> So your "changed from memcpy to be copy_from_user() solved the KASAN
+> warning" explanation makes even less sense. Because that's not at all
+> what the patch does.
 
-Fix it up and give the labels more memorable names.
+I already don't remember why, but copy_from_user() caused to second flow
+of gcov_info_dup() through gcov_event() to generate another set of warnings.
 
-This issue has existed since the code was originally contributed in
-commit a49d25364dfb ("staging/atomisp: Add support for the Intel IPU v2"),
-although the code was subsequently removed altogether and then
-reinstated with commit ad85094b293e ("Revert "media: staging: atomisp: Remove driver"").
+As a summary, I have a workaround, but I don't know why it works and not
+proud about it.
 
-Addresses-Coverity: ("Resource leak")
-Fixes: a49d25364dfb ("staging/atomisp: Add support for the Intel IPU v2")
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- .../media/atomisp/i2c/atomisp-lm3554.c        | 47 ++++++++++---------
- 1 file changed, 25 insertions(+), 22 deletions(-)
+Thanks
 
-diff --git a/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c b/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c
-index 7ca7378b1859..9aad6721fc84 100644
---- a/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c
-+++ b/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c
-@@ -833,7 +833,6 @@ static void *lm3554_platform_data_func(struct i2c_client *client)
- 
- static int lm3554_probe(struct i2c_client *client)
- {
--	int err = 0;
- 	struct lm3554 *flash;
- 	unsigned int i;
- 	int ret;
-@@ -843,36 +842,38 @@ static int lm3554_probe(struct i2c_client *client)
- 		return -ENOMEM;
- 
- 	flash->pdata = lm3554_platform_data_func(client);
--	if (IS_ERR(flash->pdata))
--		return PTR_ERR(flash->pdata);
-+	if (IS_ERR(flash->pdata)) {
-+		ret = PTR_ERR(flash->pdata);
-+		goto err_free_flash;
-+	}
- 
- 	v4l2_i2c_subdev_init(&flash->sd, client, &lm3554_ops);
- 	flash->sd.internal_ops = &lm3554_internal_ops;
- 	flash->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
- 	flash->mode = ATOMISP_FLASH_MODE_OFF;
- 	flash->timeout = LM3554_MAX_TIMEOUT / LM3554_TIMEOUT_STEPSIZE - 1;
--	ret =
--	    v4l2_ctrl_handler_init(&flash->ctrl_handler,
--				   ARRAY_SIZE(lm3554_controls));
-+	ret = v4l2_ctrl_handler_init(&flash->ctrl_handler,
-+				     ARRAY_SIZE(lm3554_controls));
- 	if (ret) {
--		dev_err(&client->dev, "error initialize a ctrl_handler.\n");
--		goto fail2;
-+		dev_err(&client->dev, "error initializing ctrl_handler");
-+		goto err_unregister_sd;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(lm3554_controls); i++)
- 		v4l2_ctrl_new_custom(&flash->ctrl_handler, &lm3554_controls[i],
- 				     NULL);
- 
--	if (flash->ctrl_handler.error) {
--		dev_err(&client->dev, "ctrl_handler error.\n");
--		goto fail2;
-+	ret = flash->ctrl_handler.error;
-+	if (ret) {
-+		dev_err(&client->dev, "ctrl_handler error");
-+		goto err_free_ctrl_handler;
- 	}
- 
- 	flash->sd.ctrl_handler = &flash->ctrl_handler;
--	err = media_entity_pads_init(&flash->sd.entity, 0, NULL);
--	if (err) {
--		dev_err(&client->dev, "error initialize a media entity.\n");
--		goto fail1;
-+	ret = media_entity_pads_init(&flash->sd.entity, 0, NULL);
-+	if (ret) {
-+		dev_err(&client->dev, "error initializing media entity");
-+		goto err_free_ctrl_handler;
- 	}
- 
- 	flash->sd.entity.function = MEDIA_ENT_F_FLASH;
-@@ -881,20 +882,22 @@ static int lm3554_probe(struct i2c_client *client)
- 
- 	timer_setup(&flash->flash_off_delay, lm3554_flash_off_delay, 0);
- 
--	err = lm3554_gpio_init(client);
--	if (err) {
-+	ret = lm3554_gpio_init(client);
-+	if (ret) {
- 		dev_err(&client->dev, "gpio request/direction_output fail");
--		goto fail2;
-+		goto err_cleanup_entity;
- 	}
- 	return atomisp_register_i2c_module(&flash->sd, NULL, LED_FLASH);
--fail2:
-+
-+err_cleanup_entity:
- 	media_entity_cleanup(&flash->sd.entity);
-+err_free_ctrl_handler:
- 	v4l2_ctrl_handler_free(&flash->ctrl_handler);
--fail1:
-+err_unregister_sd:
- 	v4l2_device_unregister_subdev(&flash->sd);
-+err_free_flash:
- 	kfree(flash);
--
--	return err;
-+	return ret;
- }
- 
- static int lm3554_remove(struct i2c_client *client)
--- 
-2.28.0
-
+>
+>              Linus
