@@ -2,183 +2,127 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFDCC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC8CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0ED5206CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23DC32065E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:22:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CiTUxPZN"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ugTzqlrK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgIBDUG (ORCPT
+        id S1726770AbgIBDWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 23:20:06 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:44929 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgIBDUF (ORCPT
+        Tue, 1 Sep 2020 23:22:41 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:39633 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgIBDWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 23:20:05 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200902032002epoutp030a17099a43294663e4620ec3e145f34f~w2U9dG8bC0477104771epoutp03G
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 03:20:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200902032002epoutp030a17099a43294663e4620ec3e145f34f~w2U9dG8bC0477104771epoutp03G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599016802;
-        bh=OeFJWd67PkprncYZWH0UPmR1JOJnHKz8/zBMhy+xCNw=;
-        h=Subject:Reply-To:From:To:CC:Date:References:From;
-        b=CiTUxPZN4VjxMgqzOr/FIN/ANHrWta/RRsK6ijPFNwyAGcKk7vLcTC7ohAzRpYNdd
-         yLwmyH2rYWG3r1KRa4SV38PhFqKuQYfiCaBSLoQlX1upQb2x4c00SEgYJivNjI1e4U
-         8R4aD59cvBIFbAnQ2oBG04ATWSjp10n2WtODaWcw=
-Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p3.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200902032002epcas1p30b93ea2e31abf29db25a1a5ffc2032fe~w2U8_39wl3003730037epcas1p3e;
-        Wed,  2 Sep 2020 03:20:02 +0000 (GMT)
-Mime-Version: 1.0
-Subject: [PATCH v11 0/4] scsi: ufs: Add Host Performance Booster Support
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        Daejun Park <daejun7.park@samsung.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>,
-        SEUNGUK SHIN <seunguk.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <231786897.01599016802080.JavaMail.epsvc@epcpadp1>
-Date:   Wed, 02 Sep 2020 12:17:13 +0900
-X-CMS-MailID: 20200902031713epcms2p664cebf386ba19d3d05895fec89aaf4fe
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200902031713epcms2p664cebf386ba19d3d05895fec89aaf4fe
-References: <CGME20200902031713epcms2p664cebf386ba19d3d05895fec89aaf4fe@epcms2p6>
+        Tue, 1 Sep 2020 23:22:39 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 471B984487;
+        Wed,  2 Sep 2020 15:22:35 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1599016955;
+        bh=Qsnp+Uwy/PPWqKBD20EdDvSCjEBEWSRlM/tVJS9qc1w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=ugTzqlrKE3yf9DY3ACtN9QxxjokVvy6oWjyM2z8jbazIvOMbMoiMsd2MK7v5zUIYn
+         aIeA4z7yV6Ewli38tbRd7n5nBw0OKR/FKyBrbvDUujpiJexObOPoqv3whOAfsFLyKD
+         pLTFaX2TQNmdGC5UHocsCwe4a7EscuW3edRwdetBpkB4V/VQNf8gncrS6CYqw1xOh0
+         6fzLfofOdmguezlJHUsJNt7K2CcoXuDFt1k+jLp9rS2ioRJiSzVK84YEjz9uwwGivQ
+         og13D3IOqAKi+VHFvMhdnlHy892LBj+krx4G2aG0NMSAKd6YD/6noC26OQsV1b3o15
+         /pVDIRbQ+rXRA==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f4f0ffb0002>; Wed, 02 Sep 2020 15:22:35 +1200
+Received: from pauld-dl.ws.atlnz.lc (pauld-dl.ws.atlnz.lc [10.33.23.16])
+        by smtp (Postfix) with ESMTP id C81C013EEBA;
+        Wed,  2 Sep 2020 15:22:34 +1200 (NZST)
+Received: by pauld-dl.ws.atlnz.lc (Postfix, from userid 1684)
+        id 1BB051E05CC; Wed,  2 Sep 2020 15:22:35 +1200 (NZST)
+From:   Paul Davey <paul.davey@alliedtelesis.co.nz>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Davey <paul.davey@alliedtelesis.co.nz>
+Subject: [PATCH net-next 2/2] ipmr: Use full VIF ID in netlink cache reports
+Date:   Wed,  2 Sep 2020 15:22:22 +1200
+Message-Id: <20200902032222.25109-3-paul.davey@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200902032222.25109-1-paul.davey@alliedtelesis.co.nz>
+References: <20200902032222.25109-1-paul.davey@alliedtelesis.co.nz>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changelog:
+Insert the full 16 bit VIF ID into ipmr Netlink cache reports.
 
-v10 -> v11
-Add a newline at end the last line on Kconfig file.
+If using more than 255 multicast interfaces it is necessary to have
+access to a VIF ID for cache reports that is wider than 8 bits, the
+VIF ID present in the igmpmsg reports sent to mroute_sk are only 8
+bits wide in the igmpmsg header.  The VIF_ID attribute has 32 bits of
+space however so can store the full VIF ID.
 
-v9 -> v10
-1. Fix 64-bit division error
-2. Fix problems commentted in Bart's review.
+Signed-off-by: Paul Davey <paul.davey@alliedtelesis.co.nz>
+---
+ net/ipv4/ipmr.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-v8 -> v9
-1. Change sysfs initialization.
-2. Change reading descriptor during HPB initialization
-3. Fix problems commentted in Bart's review.
-4. Change base commit from 5.9/scsi-queue to 5.10/scsi-queue.
+diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+index 19b2f586319b..26cd4ec450f4 100644
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -104,7 +104,7 @@ static int ipmr_cache_report(struct mr_table *mrt,
+ 			     struct sk_buff *pkt, vifi_t vifi, int assert);
+ static void mroute_netlink_event(struct mr_table *mrt, struct mfc_cache =
+*mfc,
+ 				 int cmd);
+-static void igmpmsg_netlink_event(struct mr_table *mrt, struct sk_buff *=
+pkt);
++static void igmpmsg_netlink_event(struct mr_table *mrt, struct sk_buff *=
+pkt, vifi_t vifi);
+ static void mroute_clean_tables(struct mr_table *mrt, int flags);
+ static void ipmr_expire_process(struct timer_list *t);
+=20
+@@ -1072,7 +1072,7 @@ static int ipmr_cache_report(struct mr_table *mrt,
+ 		return -EINVAL;
+ 	}
+=20
+-	igmpmsg_netlink_event(mrt, skb);
++	igmpmsg_netlink_event(mrt, skb, vifi);
+=20
+ 	/* Deliver to mrouted */
+ 	ret =3D sock_queue_rcv_skb(mroute_sk, skb);
+@@ -2404,7 +2404,7 @@ static size_t igmpmsg_netlink_msgsize(size_t payloa=
+dlen)
+ 	return len;
+ }
+=20
+-static void igmpmsg_netlink_event(struct mr_table *mrt, struct sk_buff *=
+pkt)
++static void igmpmsg_netlink_event(struct mr_table *mrt, struct sk_buff *=
+pkt, vifi_t vifi)
+ {
+ 	struct net *net =3D read_pnet(&mrt->net);
+ 	struct nlmsghdr *nlh;
+@@ -2428,7 +2428,7 @@ static void igmpmsg_netlink_event(struct mr_table *=
+mrt, struct sk_buff *pkt)
+ 	rtgenm =3D nlmsg_data(nlh);
+ 	rtgenm->rtgen_family =3D RTNL_FAMILY_IPMR;
+ 	if (nla_put_u8(skb, IPMRA_CREPORT_MSGTYPE, msg->im_msgtype) ||
+-	    nla_put_u32(skb, IPMRA_CREPORT_VIF_ID, msg->im_vif) ||
++	    nla_put_u32(skb, IPMRA_CREPORT_VIF_ID, vifi) ||
+ 	    nla_put_in_addr(skb, IPMRA_CREPORT_SRC_ADDR,
+ 			    msg->im_src.s_addr) ||
+ 	    nla_put_in_addr(skb, IPMRA_CREPORT_DST_ADDR,
+--=20
+2.28.0
 
-v7 -> v8
-Remove wrongly added tags.
-
-v6 -> v7
-1. Remove UFS feature layer.
-2. Cleanup for sparse error.
-
-v5 -> v6
-Change base commit to b53293fa662e28ae0cdd40828dc641c09f133405
-
-v4 -> v5
-Delete unused macro define.
-
-v3 -> v4
-1. Cleanup.
-
-v2 -> v3
-1. Add checking input module parameter value.
-2. Change base commit from 5.8/scsi-queue to 5.9/scsi-queue.
-3. Cleanup for unused variables and label.
-
-v1 -> v2
-1. Change the full boilerplate text to SPDX style.
-2. Adopt dynamic allocation for sub-region data structure.
-3. Cleanup.
-
-NAND flash memory-based storage devices use Flash Translation Layer (FTL)
-to translate logical addresses of I/O requests to corresponding flash
-memory addresses. Mobile storage devices typically have RAM with
-constrained size, thus lack in memory to keep the whole mapping table.
-Therefore, mapping tables are partially retrieved from NAND flash on
-demand, causing random-read performance degradation.
-
-To improve random read performance, JESD220-3 (HPB v1.0) proposes HPB
-(Host Performance Booster) which uses host system memory as a cache for the
-FTL mapping table. By using HPB, FTL data can be read from host memory
-faster than from NAND flash memory. 
-
-The current version only supports the DCM (device control mode).
-This patch consists of 3 parts to support HPB feature.
-
-1) HPB probe and initialization process
-2) READ -> HPB READ using cached map information
-3) L2P (logical to physical) map management
-
-In the HPB probe and init process, the device information of the UFS is
-queried. After checking supported features, the data structure for the HPB
-is initialized according to the device information.
-
-A read I/O in the active sub-region where the map is cached is changed to
-HPB READ by the HPB.
-
-The HPB manages the L2P map using information received from the
-device. For active sub-region, the HPB caches through ufshpb_map
-request. For the in-active region, the HPB discards the L2P map.
-When a write I/O occurs in an active sub-region area, associated dirty
-bitmap checked as dirty for preventing stale read.
-
-HPB is shown to have a performance improvement of 58 - 67% for random read
-workload. [1]
-
-This series patches are based on the 5.9/scsi-queue branch.
-
-[1]:
-https://www.usenix.org/conference/hotstorage17/program/presentation/jeong
-
-Daejun park (4):
- scsi: ufs: Add HPB feature related parameters
- scsi: ufs: Introduce HPB feature
- scsi: ufs: L2P map management for HPB read
- scsi: ufs: Prepare HPB read for cached sub-region
- 
- drivers/scsi/ufs/Kconfig  |   10 +
- drivers/scsi/ufs/Makefile |    1 +
- drivers/scsi/ufs/ufs.h    |   47 +
- drivers/scsi/ufs/ufshcd.c |   60 ++
- drivers/scsi/ufs/ufshcd.h |   23 +-
- drivers/scsi/ufs/ufshpb.c | 1845 ++++++++++++++++++++++++++++++++++++++++
- drivers/scsi/ufs/ufshpb.h |  229 +++++
- 7 files changed, 2214 insertions(+), 1 deletion(-)
- created mode 100644 drivers/scsi/ufs/ufshpb.c
- created mode 100644 drivers/scsi/ufs/ufshpb.h
