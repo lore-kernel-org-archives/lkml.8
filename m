@@ -2,92 +2,91 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBFFC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE74CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 238AF20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599060764;
-	bh=gBiAdSr/rlD2GPMPqMUuP5613nlb1jdrzG98kvU5uTY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=UjPJD3U2u2Fa8MnL+hVXvsFNv4ArF5Wc/JUbZ4q6J4ulhh/Dc54wMqZ2A8NlOQkYK
-	 438DU8JiA34wZvsx0RQj9JiEFZavTMSCN1hEAgSqBxC26caRhpXMiy+ZPr5iga19BN
-	 SkKe2WM4h5bFRDiaqr+ULV0r8oKnWcJsHc9hq4DY=
+	by mail.kernel.org (Postfix) with ESMTP id 902B220767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbgIBPcn (ORCPT
+        id S1728390AbgIBPcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:32:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726941AbgIBPcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:32:35 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0753D208CA;
-        Wed,  2 Sep 2020 15:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599060754;
-        bh=gBiAdSr/rlD2GPMPqMUuP5613nlb1jdrzG98kvU5uTY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=02VlrZVDpXeIJFmuhXQHWRzQzXZcBm5YdfcDu5Dm85ecv/ADBPKebuLK8IlzPyfrO
-         gHh3gx32KmGCZ5kiPrlpaKMftGgPqM8p3S4uqMrHjS9Eiz+aCUB4b6UyoxqnmwfASJ
-         fipW98xGJ81469ZT5m9LqluK8ml9ajbw68qLT1es=
-Date:   Wed, 2 Sep 2020 10:38:46 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Jonghwa Lee <jonghwa3.lee@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Bakker <xc-racer2@live.ca>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH] power: supply: charger-manager: Fix info message in
- check_charging_duration()
-Message-ID: <20200902153846.GA10327@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 2 Sep 2020 11:32:47 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:52307 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728381AbgIBPcg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:32:36 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from ayal@mellanox.com)
+        with SMTP; 2 Sep 2020 18:32:28 +0300
+Received: from dev-l-vrt-210.mtl.labs.mlnx (dev-l-vrt-210.mtl.labs.mlnx [10.234.210.1])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 082FWSaN014692;
+        Wed, 2 Sep 2020 18:32:28 +0300
+Received: from dev-l-vrt-210.mtl.labs.mlnx (localhost [127.0.0.1])
+        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Debian-8ubuntu1) with ESMTP id 082FWSrs026687;
+        Wed, 2 Sep 2020 18:32:28 +0300
+Received: (from ayal@localhost)
+        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 082FWPW4026686;
+        Wed, 2 Sep 2020 18:32:25 +0300
+From:   Aya Levin <ayal@mellanox.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org
+Cc:     Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        linux-kernel@vger.kernel.org, Aya Levin <ayal@mellanox.com>
+Subject: [PATCH net-next RFC v1 0/4] Add devlink traps in devlink port context
+Date:   Wed,  2 Sep 2020 18:32:10 +0300
+Message-Id: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
+X-Mailer: git-send-email 1.8.4.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A few months ago, commit e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
-changed the expression in the if statement from "duration > desc->discharging_max_duration_ms"
-to "duration > desc->charging_max_duration_ms", but the arguments for dev_info() were left unchanged.
-Apparently, due to a copy-paste error.
+Implement support for devlink traps on per-port basis.
+Dropped packets in the RX flow are related to the Ethernet port and
+thus should be in port context. Traps per device should trap global
+configuration which can cause drops. On top of that, enabling a trap
+on a device level should trigger this trap on its siblings ports.
+In addition, when devlink traps is enabled, it may cause a degradation
+in performance. Hence devlink traps should be regard as a debug mode.
+Considering that, it is preferred to encapsulate the debug mode as
+much as possible and not to effect all the device.
 
-Fix this by using the proper arguments for dev_info().
+Patchset:
+Patch 1: Refactors devlink trap for easier code re-use in the coming
+patches
+Patch 2: Adds devlink traps under devlink port context
+Patch 3: Adds a relation between traps in device context and traps in
+ports context. In a nutshell it allows enable/disable of a trap on
+all related ports which registered this trap.
+Patch 4: Display a use in devlink traps in port context in mlx5
+ethernet driver.
 
-Addresses-Coverity-ID: 1496803 ("Copy-paste error")
-Fixes: e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/power/supply/charger-manager.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Aya Levin (4):
+  devlink: Wrap trap related lists and ops in trap_mngr
+  devlink: Add devlink traps under devlink_ports context
+  devlink: Add hiererchy between traps in device level and port level
+  net/mlx5e: Add devlink trap to catch oversize packets
 
-diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
-index 07992821e252..6117018e89df 100644
---- a/drivers/power/supply/charger-manager.c
-+++ b/drivers/power/supply/charger-manager.c
-@@ -472,8 +472,8 @@ static int check_charging_duration(struct charger_manager *cm)
- 		duration = curr - cm->charging_end_time;
- 
- 		if (duration > desc->charging_max_duration_ms) {
--			dev_info(cm->dev, "Discharging duration exceed %ums\n",
--				 desc->discharging_max_duration_ms);
-+			dev_info(cm->dev, "Charging duration exceed %ums\n",
-+				 desc->charging_max_duration_ms);
- 			ret = true;
- 		}
- 	}
+ drivers/net/ethernet/mellanox/mlx5/core/Makefile   |   2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en.h       |   2 +
+ drivers/net/ethernet/mellanox/mlx5/core/en/traps.c |  32 ++
+ drivers/net/ethernet/mellanox/mlx5/core/en/traps.h |  13 +
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |  41 ++
+ drivers/net/ethernet/mellanox/mlx5/core/en_rx.c    |  11 +-
+ drivers/net/ethernet/mellanox/mlxsw/core.c         |   5 +
+ include/net/devlink.h                              |  84 ++-
+ net/core/devlink.c                                 | 616 +++++++++++++++++----
+ 9 files changed, 665 insertions(+), 141 deletions(-)
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/traps.c
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/traps.h
+
 -- 
-2.27.0
+2.14.1
 
