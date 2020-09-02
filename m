@@ -2,151 +2,86 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8011C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3438BC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C04B020773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:36:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RA9h04Gf"
+	by mail.kernel.org (Postfix) with ESMTP id 161D020773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:37:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgIBIg5 (ORCPT
+        id S1726426AbgIBIgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:36:57 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51336 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726140AbgIBIgZ (ORCPT
+        Wed, 2 Sep 2020 04:36:13 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46311 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgIBIgN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:36:25 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0828VZFQ160336;
-        Wed, 2 Sep 2020 04:36:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : reply-to : references : mime-version : content-type
- : in-reply-to; s=pp1; bh=G92Hnl95YGBFYaXfwRX/u5OBkMFB+BAE9YB8vdXBHZ8=;
- b=RA9h04GfqI9EWNcAyotn22fDX6A9FMRDHjAfoAocoiXi/b8U5HuxCPmwMgv8yblS3f2e
- ouADjAfIpySmbm4ZTMX+jb1nJ3/3PSJOJuta07UZjSuQiXIeXsq2m82ctQhEU9JeqPHO
- 6pi7I798W7JLRSlmJSnyKxqw76gSCnurm8jpWobd4b1zcE5Hq/IYYHTABZVAOkctnJ+g
- I9kJWVneYIU3V+lBKqSUW1XvR37aZZXULhU+KslWremtubgV6kpA2NrTTOJ+RLPfmxKK
- o7E1/3u8xoUiR14mv/aueVcMLKXSWGR64G7nENJbMgHdwhNLEKAyfPQHkUSiBsgIa1/d UQ== 
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33a6je2rm1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 04:36:15 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0828XEp5000387;
-        Wed, 2 Sep 2020 08:36:13 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma04wdc.us.ibm.com with ESMTP id 337en9eeey-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 08:36:13 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0828aDIV52036084
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Sep 2020 08:36:13 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 261D3124058;
-        Wed,  2 Sep 2020 08:36:13 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B62D4124052;
-        Wed,  2 Sep 2020 08:36:11 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.79.220.196])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  2 Sep 2020 08:36:11 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 000A72E3027; Wed,  2 Sep 2020 14:05:32 +0530 (IST)
-Date:   Wed, 2 Sep 2020 14:05:32 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH] cpuidle-pseries: Fix CEDE latency conversion from tb to
- us
-Message-ID: <20200902083532.GA14369@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <1598969293-29228-1-git-send-email-ego@linux.vnet.ibm.com>
- <CACPK8XfZdnKusEuu8i=-aH=Wfr6X6sMrvX=btFq9PtnXJ2w-SQ@mail.gmail.com>
+        Wed, 2 Sep 2020 04:36:13 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1kDOFW-0006Fr-GN; Wed, 02 Sep 2020 08:36:10 +0000
+Date:   Wed, 2 Sep 2020 10:36:09 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Tycho Andersen <tycho@tycho.pizza>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: [PATCH 2/2] mailmap, MAINTAINERS: move to tycho.pizza
+Message-ID: <20200902083609.qkwzqg4h53n4skey@wittgenstein>
+References: <20200902014017.934315-1-tycho@tycho.pizza>
+ <20200902014017.934315-2-tycho@tycho.pizza>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CACPK8XfZdnKusEuu8i=-aH=Wfr6X6sMrvX=btFq9PtnXJ2w-SQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-02_03:2020-09-02,2020-09-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
- clxscore=1011 impostorscore=0 malwarescore=0 spamscore=0 bulkscore=0
- mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009020074
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200902014017.934315-2-tycho@tycho.pizza>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Joel,
-
-On Wed, Sep 02, 2020 at 01:08:35AM +0000, Joel Stanley wrote:
-> On Tue, 1 Sep 2020 at 14:09, Gautham R. Shenoy <ego@linux.vnet.ibm.com> wrote:
-> >
-> > From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-> >
-> > commit d947fb4c965c ("cpuidle: pseries: Fixup exit latency for
-> > CEDE(0)") sets the exit latency of CEDE(0) based on the latency values
-> > of the Extended CEDE states advertised by the platform. The values
-> > advertised by the platform are in timebase ticks. However the cpuidle
-> > framework requires the latency values in microseconds.
-> >
-> > If the tb-ticks value advertised by the platform correspond to a value
-> > smaller than 1us, during the conversion from tb-ticks to microseconds,
-> > in the current code, the result becomes zero. This is incorrect as it
-> > puts a CEDE state on par with the snooze state.
-> >
-> > This patch fixes this by rounding up the result obtained while
-> > converting the latency value from tb-ticks to microseconds.
-> >
-> > Fixes: commit d947fb4c965c ("cpuidle: pseries: Fixup exit latency for
-> > CEDE(0)")
-> >
-> > Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+On Tue, Sep 01, 2020 at 07:40:17PM -0600, Tycho Andersen wrote:
+> I've changed my e-mail address to tycho.pizza, so let's reflect that in
+> these files.
 > 
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
->
-
-Thanks for reviewing the fix.
-
-> Should you check for the zero case and print a warning?
-
-Yes, that would be better. I will post a v2 with that.
-
+> Signed-off-by: Tycho Andersen <tycho@tycho.pizza>
+> ---
+>  .mailmap    | 1 +
+>  MAINTAINERS | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
 > 
-> > ---
-> >  drivers/cpuidle/cpuidle-pseries.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/cpuidle/cpuidle-pseries.c b/drivers/cpuidle/cpuidle-pseries.c
-> > index ff6d99e..9043358 100644
-> > --- a/drivers/cpuidle/cpuidle-pseries.c
-> > +++ b/drivers/cpuidle/cpuidle-pseries.c
-> > @@ -361,7 +361,7 @@ static void __init fixup_cede0_latency(void)
-> >         for (i = 0; i < nr_xcede_records; i++) {
-> >                 struct xcede_latency_record *record = &payload->records[i];
-> >                 u64 latency_tb = be64_to_cpu(record->latency_ticks);
-> > -               u64 latency_us = tb_to_ns(latency_tb) / NSEC_PER_USEC;
-> > +               u64 latency_us = DIV_ROUND_UP_ULL(tb_to_ns(latency_tb), NSEC_PER_USEC);
-> >
-> >                 if (latency_us < min_latency_us)
-> >                         min_latency_us = latency_us;
-> > --
-> > 1.9.4
-> >
+> diff --git a/.mailmap b/.mailmap
+> index 332c7833057f..50096b96c85d 100644
+> --- a/.mailmap
+> +++ b/.mailmap
+> @@ -308,6 +308,7 @@ Tony Luck <tony.luck@intel.com>
+>  TripleX Chung <xxx.phy@gmail.com> <triplex@zh-kernel.org>
+>  TripleX Chung <xxx.phy@gmail.com> <zhongyu@18mail.cn>
+>  Tsuneo Yoshioka <Tsuneo.Yoshioka@f-secure.com>
+> +Tycho Andersen <tycho@tycho.pizza> <tycho@tycho.ws>
+>  Uwe Kleine-König <ukleinek@informatik.uni-freiburg.de>
+>  Uwe Kleine-König <ukl@pengutronix.de>
+>  Uwe Kleine-König <Uwe.Kleine-Koenig@digi.com>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e4647c84c987..2c60f3ec2496 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9776,7 +9776,7 @@ F:	drivers/scsi/53c700*
+>  
+>  LEAKING_ADDRESSES
+>  M:	Tobin C. Harding <me@tobin.cc>
+> -M:	Tycho Andersen <tycho@tycho.ws>
+> +M:	Tycho Andersen <tycho@tycho.pizza>
+
+Honestly, I'm just acking this because I truly belive we need more pizza
+in the kernel:
+
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+
+Christian
