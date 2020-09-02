@@ -2,265 +2,81 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B217C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0732C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4151E207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:00:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599073207;
-	bh=m7dab6zgYPsBP10ZzjOLqWiJXikP+vtrxyKVWAUKSzw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=TBp/sjVzyogR/lzlEea6KZ3D7r9+MsUkIVLSyc92njIQmd3HYpF5H31Znjd/pC0YI
-	 vSdosIKvEuRVo2uoA2NhoaS5TPVoJsUuOoF8rndNKGOc6MTvkOZJB2hXokM51bxeDD
-	 k2F6hqlN+X1HRUf7uOywyL8YV7IOGTJ0hy3GB600=
+	by mail.kernel.org (Postfix) with ESMTP id A108420DD4
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgIBTAG (ORCPT
+        id S1728149AbgIBTDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 15:00:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54314 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 15:03:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:44940 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbgIBTAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 15:00:04 -0400
-Received: from localhost (47.sub-72-107-117.myvzw.com [72.107.117.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FA58208C7;
-        Wed,  2 Sep 2020 19:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599073203;
-        bh=m7dab6zgYPsBP10ZzjOLqWiJXikP+vtrxyKVWAUKSzw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IMG1STsFQZ86rslUzvSvPWR68C/6MnVb8PoDM7TPcxfjN83ri7YqR7uODaoGYabJS
-         Ve4z+bByFXF1BT8/9SUYsoQW9Xo0B9YRUmfzaVNu2IWvqoUMu+QrTQ6ARPsWS4Wkhb
-         v9MRbQlUPt/YkDRKCpKmoiBrl2pt4LoZOQ2WPcww=
-Date:   Wed, 2 Sep 2020 14:00:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com, qiuxu.zhuo@intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 04/10] PCI/RCEC: Add pcie_walk_rcec() to walk
- associated RCiEPs
-Message-ID: <20200902190000.GA204399@bjorn-Precision-5520>
+        id S1726124AbgIBTDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 15:03:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57F1F1045;
+        Wed,  2 Sep 2020 12:03:13 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.4.242])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ACB313F71F;
+        Wed,  2 Sep 2020 12:03:09 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 20:03:06 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [PATCH v2 0/3] arm64: Convert to ARCH_STACKWALK
+Message-ID: <20200902190306.GB5875@C02TD0UTHF1T.local>
+References: <20200819124913.37261-1-broonie@kernel.org>
+ <20200901160626.GE95447@C02TD0UTHF1T.local>
+ <20200902173803.GE6162@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200812164659.1118946-5-sean.v.kelley@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200902173803.GE6162@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 09:46:53AM -0700, Sean V Kelley wrote:
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+On Wed, Sep 02, 2020 at 06:38:03PM +0100, Mark Brown wrote:
+> On Tue, Sep 01, 2020 at 05:06:26PM +0100, Mark Rutland wrote:
 > 
-> When an RCEC device signals error(s) to a CPU core, the CPU core
-> needs to walk all the RCiEPs associated with that RCEC to check
-> errors. So add the function pcie_walk_rcec() to walk all RCiEPs
-> associated with the RCEC device.
+> > Just to check, has the skipping logic been tested to work equivalently
+> > to what we had before? By inspection I think it should, but since it
+> > relies on function call boundaries it always strikes me as fragile.
 > 
-> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/pci/pci.h       |  4 +++
->  drivers/pci/pcie/rcec.c | 76 +++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 80 insertions(+)
+> > If you could confirm that (e.g. with LKDTM perhaps?) that'd be great.
+> > Assuming that looks right, for the series:
 > 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index bd25e6047b54..8bd7528d6977 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -473,9 +473,13 @@ static inline void pci_dpc_init(struct pci_dev *pdev) {}
->  #ifdef CONFIG_PCIEPORTBUS
->  void pci_rcec_init(struct pci_dev *dev);
->  void pci_rcec_exit(struct pci_dev *dev);
-> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
-> +		    void *userdata);
->  #else
->  static inline void pci_rcec_init(struct pci_dev *dev) {}
->  static inline void pci_rcec_exit(struct pci_dev *dev) {}
-> +static inline void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
-> +				  void *userdata) {}
->  #endif
->  
->  #ifdef CONFIG_PCI_ATS
-> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
-> index 519ae086ff41..405f92fcdf7f 100644
-> --- a/drivers/pci/pcie/rcec.c
-> +++ b/drivers/pci/pcie/rcec.c
-> @@ -17,6 +17,82 @@
->  
->  #include "../pci.h"
->  
-> +static int pcie_walk_rciep_devfn(struct pci_bus *bus, int (*cb)(struct pci_dev *, void *),
-> +				 void *userdata, const unsigned long bitmap)
-> +{
-> +	unsigned int devn, fn;
-> +	struct pci_dev *dev;
-> +	int retval;
-> +
-> +	for_each_set_bit(devn, &bitmap, 32) {
-> +		for (fn = 0; fn < 8; fn++) {
-> +			dev = pci_get_slot(bus, PCI_DEVFN(devn, fn));
+> I've tested this with LKDTM and otherwise and didn't spot any issues
+> (and just did a bit of retesting) but it is a pretty manual process so
+> it's possible I missed something.
 
-Wow, this is a lot of churning to call pci_get_slot() 256 times per
-bus for the "associated bus numbers" case where we pass a bitmap of
-0xffffffff.  They didn't really make it easy for software when they
-added the next/last bus number thing.
+It looks like the case Mirolav pointed out (self-bactrace with NULL
+regs) isn't triggered by LKDTM (since it always causes a backtrace from
+an exception with non-NULL regs), but we do rely on that elsewhere in
+the kernel.
 
-Just thinking out loud here.  What if we could set dev->rcec during
-enumeration, and then use that to build pcie_walk_rcec()?
+It might be worth adding an LKDTM test to trigger that.
 
-  bool rcec_assoc_rciep(rcec, rciep)
-  {
-    if (rcec->bus == rciep->bus)
-      return (rcec->bitmap contains rciep->devfn);
+I'll wait for a respin that handles that -- please drop the ack for now.
 
-    return (rcec->next/last contains rciep->bus);
-  }
-
-  link_rcec(dev, data)
-  {
-    struct pci_dev *rcec = data;
-
-    if ((dev is RCiEP) && rcec_assoc_rciep(rcec, dev))
-      dev->rcec = rcec;
-  }
-
-  find_rcec(dev, data)
-  {
-    struct pci_dev *rciep = data;
-
-    if ((dev is RCEC) && rcec_assoc_rciep(dev, rciep))
-      rciep->rcec = dev;
-  }
-
-  pci_setup_device
-    ...
-      if (dev is RCEC) {
-	pci_rcec_init(dev)		# cache bitmap, next/last bus #
-	pci_walk_bus(root_bus, link_rcec, dev); # link any RCiEP already found
-      }
-      if (dev is RCiEP) {
-	pci_walk_bus(root_bus, find_rcec, dev); # link any RCEC already found
-      }
-
-Now we should have a valid dev->rcec for everything we've enumerated.
-
-  struct walk_rcec_data {
-    struct pci_dev *rcec;
-    ... user_callback;
-    void *user_data;
-  };
-
-  pcie_rcec_helper(dev, callback, data)
-  {
-    struct walk_rcec_data *rcec_data = data;
-
-    if (dev->rcec == rcec_data->rcec)
-      rcec_data->user_callback(dev, rcec_data->user_data);
-  }
-
-  pcie_walk_rcec(rcec, callback, data)
-  {
-    struct walk_rcec_data rcec_data;
-    ...
-    rcec_data.rcec = rcec;
-    rcec_data.user_callback = callback;
-    rcec_data.user_data = data;
-    pci_walk_bus(root_bus, pcie_rcec_helper, &rcec_data);
-  }
-
-I hate having to walk the bus so many times, but I do like the fact
-that in the runtime path (pcie_walk_rcec()) we don't have to do 256
-pci_get_slot() calls per bus, almost all of which are going to fail.
-
-> +			if (!dev)
-> +				continue;
-> +
-> +			if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END) {
-> +				pci_dev_put(dev);
-> +				continue;
-> +			}
-> +
-> +			retval = cb(dev, userdata);
-> +			pci_dev_put(dev);
-> +			if (retval)
-> +				return retval;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * pcie_walk_rcec - Walk RCiEP devices associating with RCEC and call callback.
-> + * @rcec     RCEC whose RCiEP devices should be walked.
-> + * @cb       Callback to be called for each RCiEP device found.
-> + * @userdata Arbitrary pointer to be passed to callback.
-> + *
-> + * Walk the given RCEC. Call the provided callback on each RCiEP device found.
-> + *
-> + * We check the return of @cb each time. If it returns anything
-> + * other than 0, we break out.
-> + */
-> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
-> +		    void *userdata)
-> +{
-> +	u8 nextbusn, lastbusn;
-> +	struct pci_bus *bus;
-> +	unsigned int bnr;
-> +
-> +	if (!rcec->rcec_cap)
-> +		return;
-> +
-> +	/* Find RCiEP devices on the same bus as the RCEC */
-> +	if (pcie_walk_rciep_devfn(rcec->bus, cb, userdata, rcec->rcec_ext->bitmap))
-> +		return;
-> +
-> +	/* Check whether RCEC BUSN register is present */
-> +	if (rcec->rcec_ext->ver < PCI_RCEC_BUSN_REG_VER)
-> +		return;
-> +
-> +	nextbusn = rcec->rcec_ext->nextbusn;
-> +	lastbusn = rcec->rcec_ext->lastbusn;
-> +
-> +	/* All RCiEP devices are on the same bus as the RCEC */
-> +	if (nextbusn == 0xff && lastbusn == 0x00)
-> +		return;
-> +
-> +	for (bnr = nextbusn; bnr <= lastbusn; bnr++) {
-
-I think we also need to skip the RCEC bus here, don't we?  7.9.10.3
-says the Associated Bus Numbers register does not indicate association
-between an EC and any Function on the same bus number as the EC
-itself.  Something like this:
-
-  if (bnr == rcec->bus->number)
-    continue;
-
-> +		bus = pci_find_bus(pci_domain_nr(rcec->bus), bnr);
-> +		if (!bus)
-> +			continue;
-> +
-> +		/* Find RCiEP devices on the given bus */
-> +		if (pcie_walk_rciep_devfn(bus, cb, userdata, 0xffffffff))
-> +			return;
-> +	}
-> +}
-> +
->  void pci_rcec_init(struct pci_dev *dev)
->  {
->  	u32 rcec, hdr, busn;
-> -- 
-> 2.28.0
-> 
+Thanks,
+Mark.
