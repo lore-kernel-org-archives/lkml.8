@@ -2,120 +2,153 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AD8C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A548CC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07AE52067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DE42067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:02:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="Katv3Er1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dSW58hqu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728805AbgIBRCH (ORCPT
+        id S1728350AbgIBRC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 13:02:07 -0400
-Received: from mail-co1nam11on2066.outbound.protection.outlook.com ([40.107.220.66]:11893
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726293AbgIBQ6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:58:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N/1HVMMSb3342qizsJmnDsV220chwTLlE7+M0QHACwL/83nCIErInsxGYwa+9PkjT8QlE+CYvB7LPMRL1QUo/vCE02HremS1H5mUFOyKepz2vDWCRQk6fnE8zCTtvKvoNKIXG6rvc2maEMyJZUIZQF1QhZ2uC+BKBt1fUZgIWdGCURPzeN+b7nAXNEJpSpkQZ/4arnvi1IqItNVKpLWevIrSrJNqusIbFC899JOO2gJZoFMb8DWfUnsNp736B4Uo6igLJeTgJok/J+AN/9ENjU2vVMhre5YrM3Wct0/W78CR9M9BkQGhwdVqwLrr0jwmagKnrEn3kzwJJ4K2LhkTmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zSlXYCsry2CVxm8M1GpGYo7MbziIJcFay8NwyKA0UrU=;
- b=OdzZw9hoFoOcg198utGHJgWjmRf5HIb7kyo/pXE6BdDkSGCuNqOoAPx90kQhvHd2OOP/+dcs879Bg57JVuvXOt/TtQuNRKGLcgvqmj8NUs4NZG833PHdAdNCbW37HRzhPrYwaHGD8wJLKFF85l5PnGvHgv5nitHDYGXONFvpx+ItkN1iGiBMAbjRyhe38KEZyJsw/njWeSP1dOIbsGu+LMIihsAsGcNDyBwcM561w3rfMvdGN8wBQsBL6tPU/n01EGOMki+yS9pvbK/H9CE4OxNQei7I0Tz8QudEwHC4zlNfSsZhkefxjxJn+dCedUujA9vwivnlH3T/zrFa0a4HYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zSlXYCsry2CVxm8M1GpGYo7MbziIJcFay8NwyKA0UrU=;
- b=Katv3Er1eb8Of2KlJjsMSe2rhzj3DnwrD2PSK2uPiF5psgwKMlKbxhzIdGpmkcoj46MKuar4fHdOp7JPS6Wv3YDJ1Q4hDAP8iLqw5Tvd4kapDzrFwPqVJ0o5bCn3t6aU40P8RC4cKOOkU1WCgjoaD3JlUpI33YVOKUn2XA45y70=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (2603:10b6:a03:4a::18)
- by BYAPR05MB4070.namprd05.prod.outlook.com (2603:10b6:a02:88::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.5; Wed, 2 Sep
- 2020 16:58:16 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::9cef:3341:6ae9:a2c5]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::9cef:3341:6ae9:a2c5%7]) with mapi id 15.20.3348.014; Wed, 2 Sep 2020
- 16:58:16 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86 <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] x86/special_insn: reverse __force_order logic
-Thread-Topic: [PATCH] x86/special_insn: reverse __force_order logic
-Thread-Index: AQHWgSgoL1dmFxhMRECqVhfYnO9uuKlVeiqAgAAXogCAAABjgA==
-Date:   Wed, 2 Sep 2020 16:58:16 +0000
-Message-ID: <1678A071-A4D7-4BE6-A768-0985E3F10444@vmware.com>
-References: <20200901161857.566142-1-namit@vmware.com>
- <20200902125402.GG1362448@hirez.programming.kicks-ass.net>
- <1E3FD845-E71A-4518-A0BF-FAD31CBC3E28@vmware.com>
- <20200902165652.GO1362448@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200902165652.GO1362448@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=none action=none header.from=vmware.com;
-x-originating-ip: [2601:647:4700:9b2:4945:3524:19f7:23e9]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f1cea981-c015-4d08-e34c-08d84f6162d7
-x-ms-traffictypediagnostic: BYAPR05MB4070:
-x-microsoft-antispam-prvs: <BYAPR05MB407082A07D3BE2E56AA9B532D02F0@BYAPR05MB4070.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uwbClMklO+ofyL1egIfhB9esJfsvrODcm236RFsFRtbb6s8LC7GiKMRGuQ6bCctY2BZbJR421hw3T1yLswXxcL/gw/xOQbDLRTWHA4cXARZQbzZ3JcdPczlxB170Iu8HHwxbBq3G2tFR/nwmt3w/3t/EvxU3deFvnh1j6HATxAiI6Yc+RwgLlmyduZUGNVC/vC2cYCzfFc5tI8NOA+tl2IAjsyCREUVUZxUaagTcNjXOiNcaSBF2EHzhqECFsZ+u1sRiwCv05Q0aGEaaLiJyszh+x+vxHyJjiv/OjNz5lYfS/fR8KxK61yyvSXClLA325pqm1kAGirckwfQabT6ISw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR05MB4776.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(396003)(376002)(39860400002)(366004)(6486002)(83380400001)(76116006)(316002)(2906002)(86362001)(6506007)(66946007)(478600001)(33656002)(66556008)(6512007)(54906003)(36756003)(64756008)(2616005)(6916009)(66476007)(66446008)(186003)(7416002)(4326008)(8936002)(4744005)(5660300002)(71200400001)(8676002)(53546011);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: V+PcX61a3nCIowl0PI0DT61ZQbKO9AUSor+KIxrto/Yf00faLcW2zpTBTfiYgVocGdF4E+rs39fryalTXUvSPgIB4gru8g1DZwd8/ANGmLTHgrrLnj1/xl2J6EyHABrpSViPLs5F5VyCV0P/utz/4YY/jJcBY/xbCzFSslFfNYtggKiQm9dTUI4s3Oe/srBCf7EUkM6MuNrjh3nW+PDKoRiRFaBMi5vpilayJkBhPXi7ItdefvLqHZtqhSAPnYTf7k04rw2CA7Wbgw+yrWE2+HoLxy13Y7fvqSnx7BxFb0rq1JOKFBDfkKkYISeQGivzTIf1B7pYfb1Atx9MZU/9qbyKsgKGap1SVEMZyFYAzH6jjANbvEUMqDB4gVIxRTSL0JLCnfTfFYnW/gu9pvZQJQdU6bwUiXO6B1KxnT/yncSzTb6rH4JLZTV+yUCdV078s2XvpGg1TMGH9zIZqeLaLRhMqP9PB26AT+bIz1XGTBNCdG+JI5TkMz35iXEUv2NngxjTzVFHAw9GdPqB7qJzPvTxjvsgvg5GBY3gtr9m/8aTHK5vXz7eKyuLwsNomYjOKw5wIrHJRDQmz/IXsC4VXAwGtt6PD0sAI86d0/bV3jdDJpxpLavsYLlhndyyP5kRvkrvCXa5Ru83wjLEPMe+5qKXrkMrW4Srhq4sQjrqYma8aRdX+DlVpEpU6hxmFsUiDvB+MCcjBxV66JStjpMNCA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <EDF969D98B8F3147811B860589CA9521@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 2 Sep 2020 13:02:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgIBRCU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 13:02:20 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B932C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 10:02:19 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id u126so6511716iod.12
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 10:02:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xYcoL6IB0Wq6/qeVTU/n5lnOlUSrCMA6TFnZUgAyGsE=;
+        b=dSW58hqu76qgwVPU3bA+u5m6uUoMYTaMSISCeNMZijC0E/BRbjoLIFnWiV9GKxGejJ
+         1uZ7r5kcVM7ddnfrNnVjI94iOPgjMtUX+Z/H1svxvnBct646Ukya0wm+E7Zx9iGy+7Ez
+         6LYzcixO7WEcQY4+/Iu8VQLw10Fx2tK/1ZqqnKAl7zT980iodfPlTS8Fub3xc30/aLO1
+         QsQqkRyB065CW1u3f0CCnUsj5xnrjIJ75UVIrWGI0b05RCM7K5ONP6eubMZGWRJWclXK
+         Q2LSVhFzMECHyI/FltfQmijEWApqa2H0cJXGlxLpAkqV29ap9APkUEI2awS/E47QWD9b
+         2NMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xYcoL6IB0Wq6/qeVTU/n5lnOlUSrCMA6TFnZUgAyGsE=;
+        b=VnLn2SIm3xTwMLRmWxY72uqbbr40N0tojAj9TnEamxIf+q/4a9lhePj26QC4242NGo
+         ffMX2qnkDpP0MN7Sx0IEF15H9Wwnbd+grPAVBvZ9SOoOoB1wmJSzieeanfNbKPVhUzJh
+         0/EJbRMbilZa8Q35VwITxTqt5qSdn9XKFMHGXbHpCUQ+D6a21aWKaNA+r1qKk3xgZimz
+         9CYig4W1tQScdAxDN88YGOAOIZYm0ry31cVBkTFlDAhswu6tPYj0E+R5oBGK6XK0VNr7
+         WRNEaY4dYGaRLI92w/WDfzb8SopdJqm83lf98mUtGCwqcR+ATEL3pLJUo9eQ8mXkrrIG
+         4B9A==
+X-Gm-Message-State: AOAM531qtDet9Z1/XLOvzvBTK3sHK3RiHle8G9UN0rPTztALTy017+mS
+        HgWg/erLgczzNabuU3jTvzsiVfrhFxE/ngh9vw==
+X-Google-Smtp-Source: ABdhPJyKqo74mGtwvw1L3zfRTdgO/00hoqv9t2Vf627AexQNQkSArDkNadSAw/tkgR5LTW6uunvQ/Y8UMw001QLvARg=
+X-Received: by 2002:a5d:841a:: with SMTP id i26mr4167807ion.144.1599066138555;
+ Wed, 02 Sep 2020 10:02:18 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR05MB4776.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1cea981-c015-4d08-e34c-08d84f6162d7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 16:58:16.0313
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1oUNrkGvpL7mTDDi4mxD6RHyKOQ98gGE/qGByz53QlDbt7LqpJ61tLl0+oEIX40BeoxIv2alM6/HCKRG6XC8Eg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4070
+References: <20200902132549.496605622@infradead.org> <20200902133200.666781610@infradead.org>
+ <CAMzpN2i9C5Sj-M0b9Y7VtOphDJs2Z9NPux9Dg347PSeNBaXRMQ@mail.gmail.com>
+ <c6915915-1c94-70cf-453d-861a4ca2da4c@suse.com> <20200902163115.GM1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200902163115.GM1362448@hirez.programming.kicks-ass.net>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Wed, 2 Sep 2020 13:02:07 -0400
+Message-ID: <CAMzpN2hRrx2R_wLT4imB3w9RApL1XK5SYcyXk5Cbp9fkY_s-Dg@mail.gmail.com>
+Subject: Re: [PATCH 01/13] x86/entry: Fix AC assertion
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kyle Huey <me@kylehuey.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        "Robert O'Callahan" <rocallahan@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Andrew Cooper <Andrew.Cooper3@citrix.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Sep 2, 2020, at 9:56 AM, peterz@infradead.org wrote:
->=20
-> On Wed, Sep 02, 2020 at 03:32:18PM +0000, Nadav Amit wrote:
->=20
->> Thanks for pointer. I did not see the discussion, and embarrassingly, I =
-have
->> also never figured out how to reply on lkml emails without registering t=
-o
->> lkml.
->=20
-> The lore.kernel.org thing I pointed you to allows you to download an
-> mbox with the email in (see the very bottom of the page). Use your
-> favorite MUA to open it and reply :-)
+On Wed, Sep 2, 2020 at 12:31 PM <peterz@infradead.org> wrote:
+>
+> On Wed, Sep 02, 2020 at 06:24:27PM +0200, J=C3=BCrgen Gro=C3=9F wrote:
+> > On 02.09.20 17:58, Brian Gerst wrote:
+> > > On Wed, Sep 2, 2020 at 9:38 AM Peter Zijlstra <peterz@infradead.org> =
+wrote:
+> > > >
+> > > > From: Peter Zijlstra <peterz@infradead.org>
+> > > >
+> > > > The WARN added in commit 3c73b81a9164 ("x86/entry, selftests: Furth=
+er
+> > > > improve user entry sanity checks") unconditionally triggers on my I=
+VB
+> > > > machine because it does not support SMAP.
+> > > >
+> > > > For !SMAP hardware we patch out CLAC/STAC instructions and thus if
+> > > > userspace sets AC, we'll still have it set after entry.
+> > > >
+> > > > Fixes: 3c73b81a9164 ("x86/entry, selftests: Further improve user en=
+try sanity checks")
+> > > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > > Acked-by: Andy Lutomirski <luto@kernel.org>
+> > > > ---
+> > > >   arch/x86/include/asm/entry-common.h |   11 +++++++++--
+> > > >   1 file changed, 9 insertions(+), 2 deletions(-)
+> > > >
+> > > > --- a/arch/x86/include/asm/entry-common.h
+> > > > +++ b/arch/x86/include/asm/entry-common.h
+> > > > @@ -18,8 +18,16 @@ static __always_inline void arch_check_u
+> > > >                   * state, not the interrupt state as imagined by X=
+en.
+> > > >                   */
+> > > >                  unsigned long flags =3D native_save_fl();
+> > > > -               WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF=
+ |
+> > > > -                                     X86_EFLAGS_NT));
+> > > > +               unsigned long mask =3D X86_EFLAGS_DF | X86_EFLAGS_N=
+T;
+> > > > +
+> > > > +               /*
+> > > > +                * For !SMAP hardware we patch out CLAC on entry.
+> > > > +                */
+> > > > +               if (boot_cpu_has(X86_FEATURE_SMAP) ||
+> > > > +                   (IS_ENABLED(CONFIG_64_BIT) && boot_cpu_has(X86_=
+FEATURE_XENPV)))
+> > > > +                       mask |=3D X86_EFLAGS_AC;
+> > >
+> > > Is the explicit Xen check necessary?  IIRC the Xen hypervisor will
+> > > filter out the SMAP bit in the cpuid pvop.
+> >
+> > Right, and this test will nevertheless result in setting AC in the mask=
+.
+> > IIRC this was the main objective here.
+>
+> Correct, this asserts that 64bit Xen-PV will never have AC set; it had
+> better not have it set since it runs in ring 3.
 
-Thanks!=
+Ok.  That should be added to the comment to avoid confusion.
+
+--
+Brian Gerst
