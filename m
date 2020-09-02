@@ -2,110 +2,144 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A678C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3613CC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 140A220773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:32:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZKW3UwWf"
+	by mail.kernel.org (Postfix) with ESMTP id 1C2BF20773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgIBIc1 (ORCPT
+        id S1726311AbgIBIe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:32:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgIBIcZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:32:25 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38144C061246
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 01:32:25 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id g11so1316186ual.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 01:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V59oKVGgQ2o/hrV2OUnBHec2zNyLXF8phchXBgtNQf4=;
-        b=ZKW3UwWfVmaJ7OUihqUwbWM0KxRjc5z+m5CDEaVftJB8efuWn9X40Ib8Z5tfvwApHa
-         wQYES3HC6ruUfDohVzEUxEHvvX7qlbus/XvNhvEoXGCA/YawKvHGP/ibStZGq7iMcg/y
-         XBvnqJ7w8XicH2VcNqsyivv7cRj2H1j8qXYpEVx89XDKaCiJjKx2otlIro4U9Y7POqu3
-         J/S/Si1auHeHqSdj/0ZGa+1SfPeLiYixs0s8UUhQcYgxj8f80egeQPSduPL5Ih64gENY
-         ISrt0Icc1gjJD55DhRrM7GtojiwI3s4lEWUTrLqlWt3PKznWlM5lxXNKK1f1jtKkxknL
-         6OmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V59oKVGgQ2o/hrV2OUnBHec2zNyLXF8phchXBgtNQf4=;
-        b=nIgtcFm5j5dKN4kcyf9d0ng50AIjGv8bkXjPO4/b803umWrWcRIKxFSPSoF2D5Vi3u
-         NkFjA+6gwMbJLnBeZAoCYRVRZGgjNzoEqBbFamDw67oY8KUf6XVDbpzgJyd8QGihDVhC
-         GsAGAXaqBm7jlz0bE/BlV2y6fC419hyGFIcFnOexd67h45ZP1n5bM/nTSRn2vyXj/7Ov
-         krYOFNNtd6MsG0bhpN4QXDahQGXg4ifppQGArUhGEekvELqWtmOYSh+OkgC4EAqcJgk2
-         NsjTcsEMtJp0xrg2Z3wO5FpOHJQmxRmpg0EroEN8BD8Yf68hkWb0H4DwFX1K5ydddNLM
-         RhUw==
-X-Gm-Message-State: AOAM530FMzLaujJI3n9sDIjn+o0zn0TMyS+yOZlEPS0r0EzQViiNWYN6
-        ObnIgZWrwGW231d70p4nT4jsd7cNXhj251Kth+0YQw==
-X-Google-Smtp-Source: ABdhPJzJlz0hPiPBx35vVZO+9fTCBRG4euIzrUMfRIboxgPwg9dJcuWO9GyJxP8/hgp9b5ll67xVA7G/+FfNxda+yJc=
-X-Received: by 2002:a9f:2431:: with SMTP id 46mr3617265uaq.129.1599035543174;
- Wed, 02 Sep 2020 01:32:23 -0700 (PDT)
+        Wed, 2 Sep 2020 04:34:26 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10792 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726140AbgIBIe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 04:34:26 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0DAF42C11693830390BC;
+        Wed,  2 Sep 2020 16:34:24 +0800 (CST)
+Received: from [127.0.0.1] (10.174.176.211) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 2 Sep 2020
+ 16:34:18 +0800
+Subject: Re: [PATCH v3] PCI: Add pci_iounmap
+To:     George Cherian <gcherian@marvell.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "mst@redhat.com" <mst@redhat.com>
+References: <BYAPR18MB2679AAA983C2AF3CD399ABD8C52E0@BYAPR18MB2679.namprd18.prod.outlook.com>
+From:   Yang Yingliang <yangyingliang@huawei.com>
+Message-ID: <5aff44b1-a293-3ab1-a102-9e1ad8229431@huawei.com>
+Date:   Wed, 2 Sep 2020 16:34:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200901150438.228887-1-ulf.hansson@linaro.org>
- <20200901150654.GB30034@lst.de> <CAPDyKFqZXdtVokrDQvJAh-NzN0T2ayPD6MepemLEaDt1TRPduw@mail.gmail.com>
- <20200901154049.GA376@lst.de>
-In-Reply-To: <20200901154049.GA376@lst.de>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 2 Sep 2020 10:31:47 +0200
-Message-ID: <CAPDyKFqDKUG3RC241hv535CLFGEQc4b-vv0e3bexzGkDSY82Jg@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: mmc_spi: Allow the driver to be built when
- CONFIG_HAS_DMA is unset
-To:     Christoph Hellwig <hch@lst.de>, Rich Felker <dalias@libc.org>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <BYAPR18MB2679AAA983C2AF3CD399ABD8C52E0@BYAPR18MB2679.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.174.176.211]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Sep 2020 at 17:40, Christoph Hellwig <hch@lst.de> wrote:
+Hi,
+
+On 2020/9/2 2:05, George Cherian wrote:
+> Hi Yang,
 >
-> On Tue, Sep 01, 2020 at 05:36:17PM +0200, Ulf Hansson wrote:
-> > > I still don't think this makes sense, as the dma_mask should always
-> > > be non-NULL here.
-> >
-> > If that is the case, I wonder how the driver could even have worked without DMA.
-> >
-> > Because in the existing code, host->dma_dev gets assigned to
-> > spi->master->dev.parent->dma_mask - which seems to turn on the DMA
-> > usage in the driver.
-> >
-> > What am I missing?
+>> -----Original Message-----
+>> From: Yang Yingliang <yangyingliang@huawei.com>
+>> Sent: Tuesday, September 1, 2020 6:59 PM
+>> To: George Cherian <gcherian@marvell.com>; linux-kernel@vger.kernel.org;
+>> linux-arch@vger.kernel.org; linux-pci@vger.kernel.org
+>> Cc: kbuild-all@lists.01.org; bhelgaas@google.com; arnd@arndb.de;
+>> mst@redhat.com
+>> Subject: Re: [PATCH v3] PCI: Add pci_iounmap
+>>
+>>
+>>
+>>
+>> On 2020/8/25 9:25, kernel test robot wrote:
+>>> Hi George,
+>>>
+>>> I love your patch! Yet something to improve:
+>>>
+>>> [auto build test ERROR on pci/next]
+>>> [also build test ERROR on linux/master linus/master asm-generic/master
+>>> v5.9-rc2 next-20200824] [If your patch is applied to the wrong git tree,
+>> kindly drop us a note.
+>>> And when submitting patch, we suggest to use '--base' as documented in
+>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__git-
+>> 2Dscm.com_doc
+>>> s_git-2Dformat-2Dpatch&d=DwIC-
+>> g&c=nKjWec2b6R0mOyPaz7xtfQ&r=TjMsEFPc7di
+>> rkF6u2D3eSIS0cA8FeYpzRkkMzr4aCbk&m=dvtRkwC273FmalEZE_KonLRWrIV
+>> WLSWfG61
+>>> NWTWG5LI&s=ycW6SZOVRuKAm3YwdhyAuSh22oPuengSMVuv-
+>> EwaUew&e= ]
+>>> url:    https://urldefense.proofpoint.com/v2/url?u=https-
+>> 3A__github.com_0day-2Dci_linux_commits_George-2DCherian_PCI-2DAdd-
+>> 2Dpci-5Fiounmap_20200824-2D212149&d=DwIC-
+>> g&c=nKjWec2b6R0mOyPaz7xtfQ&r=TjMsEFPc7dirkF6u2D3eSIS0cA8FeYpzRkk
+>> Mzr4aCbk&m=dvtRkwC273FmalEZE_KonLRWrIVWLSWfG61NWTWG5LI&s=6c
+>> UOYHeDOBZ0HaFc2z-vaDgDmbIK4LCBRt9kNkn1sto&e=
+>>> base:   https://urldefense.proofpoint.com/v2/url?u=https-
+>> 3A__git.kernel.org_pub_scm_linux_kernel_git_helgaas_pci.git&d=DwIC-
+>> g&c=nKjWec2b6R0mOyPaz7xtfQ&r=TjMsEFPc7dirkF6u2D3eSIS0cA8FeYpzRkk
+>> Mzr4aCbk&m=dvtRkwC273FmalEZE_KonLRWrIVWLSWfG61NWTWG5LI&s=h-
+>> TMyLlEdAwew-u52q4dgWBUMgm0ys-xKzvOO86e1Lw&e=  next
+>>> config: powerpc-allyesconfig (attached as .config)
+>>> compiler: powerpc64-linux-gcc (GCC) 9.3.0 reproduce (this is a W=1
+>>> build):
+>>>           wget https://urldefense.proofpoint.com/v2/url?u=https-
+>> 3A__raw.githubusercontent.com_intel_lkp-
+>> 2Dtests_master_sbin_make.cross&d=DwIC-
+>> g&c=nKjWec2b6R0mOyPaz7xtfQ&r=TjMsEFPc7dirkF6u2D3eSIS0cA8FeYpzRkk
+>> Mzr4aCbk&m=dvtRkwC273FmalEZE_KonLRWrIVWLSWfG61NWTWG5LI&s=az
+>> QcL0MQmPpr9UfvyBSSdQiu1UbjJgFrzNJOtcZ_--E&e=  -O ~/bin/make.cross
+>>>           chmod +x ~/bin/make.cross
+>>>           # save the attached .config to linux build tree
+>>>           COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0
+>>> make.cross ARCH=powerpc
+>>>
+>>> If you fix the issue, kindly add following tag as appropriate
+>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>
+>>> All errors (new ones prefixed by >>):
+>>>
+>>>      powerpc64-linux-ld: lib/pci_iomap.o: in function `__crc_pci_iounmap':
+>>>>> (.rodata+0x10): multiple definition of `__crc_pci_iounmap';
+>>>>> lib/iomap.o:(.rodata+0x68): first defined here
+>> EXPORT_SYMBOL(pci_iounmap) in lib/iomap.c need be removed.
+> I really don't think that is the way to fix this. I have also seen your other patch
+> in which iomap being moved out of lib/iomap.c to header file.
 >
-> Do you know of other non-DMA users?  For SH nommu it probably worked
+> There was a reason for moving iomap and its variants to a lib since most of
+> the arch's implementation of map was similar. Whereas the unmap had multiple
+> implementation per arch's. So, the lib/iomap never implemented the generic unmap.
+>
+> I see either of the following solution.
+> a. Have an arm64 specific implementation for the unmap function.
+> Or
+> b. something on the lines of v2[1], which accommodates all the arch's but has the #ifdef
+> for which Bjorn raised his concerns.
+I think 'a' may be better, and I have already make a patch, I can send 
+it after testing.
+>
+> Bjorn, any comments?
+>
+> Regards
+> -George
+>
+> [1] - https://lkml.org/lkml/2020/8/20/28
 
-I don't know of other non-DMA users. As I said, I wish someone could
-step in and take better care of mmc_spi - as I know it's being used a
-lot.
-
-> because SH nommu used to provide a DMA implementation that worked
-> fine for streaming maps, but was completely broken for coherent
-> allocation.  And this driver appears to only use the former.
-
-Alright, so you are saying the DMA support may potentially never have
-been optional to this driver. In any case, I can remove the check in
-$subject patch, as it shouldn't matter.
-
-Anyway, let's see what Rich thinks of this. I am curious to see if the
-patch works on his SH boards - as I haven't been able to test it.
-
-Kind regards
-Uffe
