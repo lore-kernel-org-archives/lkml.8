@@ -2,116 +2,89 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A6BC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81E3C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E67920826
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599060245;
-	bh=x3POqbn4b/hj4C4s0Hk+zf9rTRiYWs7wlVg18R4VMcU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aWifEwmYafIOr4ygq13Z3upecb+ChRdeal1XFVTYYjsst3/JuD1XpaGMP3MqtfH+X
-	 aw9xuyTRs9evq5PSG46mjxx9RftF8ogTgX69fnFhupNkH0jGOCl2KZiqzWrQ7S22x+
-	 ZPVrzbhJI9Q+0LQkdN+dWvW4gUbXkToVFdo0PMso=
+	by mail.kernel.org (Postfix) with ESMTP id 9F9C920767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgIBPX7 (ORCPT
+        id S1728005AbgIBPYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:23:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51862 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 11:24:19 -0400
+Received: from mga09.intel.com ([134.134.136.24]:44207 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727930AbgIBPV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:21:27 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EADBB20767;
-        Wed,  2 Sep 2020 15:21:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599060086;
-        bh=x3POqbn4b/hj4C4s0Hk+zf9rTRiYWs7wlVg18R4VMcU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q+zfeqOR+6hdjoTVnVBLGhd8rHUGFE0NW2iqszVvebJ6RN7fOjeJ9cbCJm8RJFvFj
-         xLJfjWXjni//s3sYQxALkrMTfpdpKnCC6TVeC0gPIy18dZyCtjQEVUFnOAp8OIj8Bt
-         nL0PMy9kYEOiLpMAwsIIX0r/wXP85mGZBdf6ZENw=
-Date:   Wed, 2 Sep 2020 17:21:51 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     himadrispandya@gmail.com, dvyukov@google.com,
-        linux-usb@vger.kernel.org, perex@perex.cz, tiwai@suse.com,
-        stern@rowland.harvard.ed, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 04/10] USB: core: hub.c: use usb_control_msg_send() in a
- few places
-Message-ID: <20200902152151.GA2032878@kroah.com>
-References: <20200902110115.1994491-1-gregkh@linuxfoundation.org>
- <20200902110115.1994491-5-gregkh@linuxfoundation.org>
- <20200902145701.GA624583@rowland.harvard.edu>
+        id S1726637AbgIBPVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:21:03 -0400
+IronPort-SDR: WXReCybxJdxHS2J5btFqGPIY4jVz16bnTx3g5NMWm6AWaeZZ9fphe4awJpXVYNpyo89GDnOMd/
+ 4l0e66/WAcJw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="158398293"
+X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
+   d="scan'208";a="158398293"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 08:18:50 -0700
+IronPort-SDR: 84PhDN9HHr/+zSjnMDCSGNAPptVMhcinqyKwasO4yk24J3FhV2mRwDQaVWAeny12WobOhMqmF2
+ k/mrv8Lkysdg==
+X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
+   d="scan'208";a="446557920"
+Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 08:18:49 -0700
+Date:   Wed, 2 Sep 2020 08:18:48 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KVM: VMX: fix crash cleanup when KVM wasn't used
+Message-ID: <20200902151848.GA11695@sjchrist-ice>
+References: <20200401081348.1345307-1-vkuznets@redhat.com>
+ <CALMp9eROXAOg_g=R8JRVfywY7uQXzBtVxKJYXq0dUcob-BfR-g@mail.gmail.com>
+ <20200822034046.GE4769@sjchrist-ice>
+ <CALMp9eRHh9KXO12k4GaoenSJazFnSaN68FTVxOGhE9Mxw-hf2A@mail.gmail.com>
+ <CALMp9eS1HusEZvzLShuuuxQnReKgTtunsKLoy+2GMVJAaTrZ7A@mail.gmail.com>
+ <20200825000920.GB15046@sjchrist-ice>
+ <87pn75wzpj.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200902145701.GA624583@rowland.harvard.edu>
+In-Reply-To: <87pn75wzpj.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 10:57:01AM -0400, Alan Stern wrote:
-> On Wed, Sep 02, 2020 at 01:01:06PM +0200, Greg Kroah-Hartman wrote:
-> > There are a few calls to usb_control_msg() that can be converted to use
-> > usb_control_msg_send() instead, so do that in order to make the error
-> > checking a bit simpler and the code smaller.
-> > 
-> > Cc: Alan Stern <stern@rowland.harvard.edu>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Tue, Sep 01, 2020 at 12:36:40PM +0200, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
 > 
-> One problem in this patch...
+> > On Mon, Aug 24, 2020 at 03:45:26PM -0700, Jim Mattson wrote:
+> >> On Mon, Aug 24, 2020 at 11:57 AM Jim Mattson <jmattson@google.com> wrote:
+> >> >
+> >> > On Fri, Aug 21, 2020 at 8:40 PM Sean Christopherson
+> >> > <sean.j.christopherson@intel.com> wrote:
+> >> > > I agree the code is a mess (kvm_init() and kvm_exit() included), but I'm
+> >> > > pretty sure hardware_disable_nolock() is guaranteed to be a nop as it's
+> >> > > impossible for kvm_usage_count to be non-zero if vmx_init() hasn't
+> >> > > finished.
+> >> >
+> >> > Unless I'm missing something, there's no check for a non-zero
+> >> > kvm_usage_count on this path. There is such a check in
+> >> > hardware_disable_all_nolock(), but not in hardware_disable_nolock().
+> >> 
+> >> However, cpus_hardware_enabled shouldn't have any bits set, so
+> >> everything's fine. Nothing to see here, after all.
+> >
+> > Ugh, I forgot that hardware_disable_all_nolock() does a BUG_ON() instead of
+> > bailing on !kvm_usage_count.
 > 
-> > @@ -3896,27 +3875,14 @@ static int usb_req_set_sel(struct usb_device *udev, enum usb3_link_state state)
-> >  	if (u2_pel > USB3_LPM_MAX_U2_SEL_PEL)
-> >  		u2_pel = USB3_LPM_MAX_U2_SEL_PEL;
-> >  
-> > -	/*
-> > -	 * usb_enable_lpm() can be called as part of a failed device reset,
-> > -	 * which may be initiated by an error path of a mass storage driver.
-> > -	 * Therefore, use GFP_NOIO.
-> > -	 */
-> > -	sel_values = kmalloc(sizeof *(sel_values), GFP_NOIO);
-> > -	if (!sel_values)
-> > -		return -ENOMEM;
-> > -
-> > -	sel_values->u1_sel = u1_sel;
-> > -	sel_values->u1_pel = u1_pel;
-> > -	sel_values->u2_sel = cpu_to_le16(u2_sel);
-> > -	sel_values->u2_pel = cpu_to_le16(u2_pel);
-> > +	sel_values.u1_sel = u1_sel;
-> > +	sel_values.u1_pel = u1_pel;
-> > +	sel_values.u2_sel = cpu_to_le16(u2_sel);
-> > +	sel_values.u2_pel = cpu_to_le16(u2_pel);
-> >  
-> > -	ret = usb_control_msg(udev, usb_sndctrlpipe(udev, 0),
-> > -			USB_REQ_SET_SEL,
-> > -			USB_RECIP_DEVICE,
-> > -			0, 0,
-> > -			sel_values, sizeof *(sel_values),
-> > -			USB_CTRL_SET_TIMEOUT);
-> > -	kfree(sel_values);
-> > +	ret = usb_control_msg_send(udev, 0, USB_REQ_SET_SEL, USB_RECIP_DEVICE,
-> > +				   0, 0, &sel_values, sizeof(sel_values),
-> > +				   USB_CTRL_SET_TIMEOUT);
-> 
-> This effectively changes GFP_NOIO to GFP_KERNEL.  Probably you should
-> leave this particular call alone.
+> But we can't hit this BUG_ON(), right? I'm failing to see how
+> hardware_disable_all_nolock() can be reached with kvm_usage_count==0.
 
-I thought about that, but for some reason thought that usb_control_msg()
-would eventually call for an allocation with GFP_KERNEL, but I was
-wrong, usb_internal_control_msg() calls usb_alloc_urb() with GFP_NOIO,
-my fault.  I'll go fix this up, thanks for the review.
-
-greg k-h
+Correct, I was mostly talking to myself.
