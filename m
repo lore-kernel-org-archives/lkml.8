@@ -2,94 +2,258 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E60C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA96C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0807520773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:18:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="StgYX6WE"
+	by mail.kernel.org (Postfix) with ESMTP id CEBDC2078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgIBOS1 (ORCPT
+        id S1727956AbgIBOTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:18:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727924AbgIBOFh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:05:37 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06977C061246
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 07:05:36 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id b12so5042167edz.11
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 07:05:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dgidSd24Zz8hlurLEhIlaHA9MiqL30gKJkyfF1ZIoik=;
-        b=StgYX6WEyNguJD78wKYoIc6Bzw+h1h27+/lHbg8EEcbJLQWRdtTLBBo2MvJLB0JA0t
-         2caDPPZvN2//8XqW34Pr9rzgXIq2uZf4ppROnvkJ/9k0I/WQUEfjInuFmYgrPh8h4QGu
-         /qGTVuI7qoYn8+VkcBDVd4cR5QATBjsET5R/+G6lI4HFHqjjSFwWHf0uTBBazCX+5H1P
-         iqOv/FiQAUevHmNdZuiGuiualTDluCi9wv2rGAF3vs8tAlUzL/sMiay2Uw2AH0dzClta
-         f264i5ORJ8UI/S6kL9tKAZE8KikP0FsnYFeEd4Jze8N6N+fdp5ucJic2l80+hiXHC8LT
-         HuXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dgidSd24Zz8hlurLEhIlaHA9MiqL30gKJkyfF1ZIoik=;
-        b=hUEdMAuJAETQbTZ/5AVCB38rOYsYu7Ej6eFBYaLmiPN72fB1vbLoDdP51AjypLjerH
-         2Q16Gd3XP6IzKMOGDMs6ILyCmAkmGzCKH45jshS1IgEsODNUvDPh5YbFFkDPCxe7UHa2
-         b3D4qTmNQ5wo9cSXFTkfoj58PRO3ZSH5ER9FkiPxjS5QWKvFxKxoV2WzBIPFgVD3MwO7
-         OAlIEwogM3EFCYkDGHLtzSmSyRcYO/0xg5iJvloeqRhR0ulC4BfsBSKQYIyXEH1slJSP
-         7A8qXifO4dLZLN9Ymhr8ahlmTkSKKOWmjrvGrWt/9SSs6piSDSXUO+JwCfU7c6TqfRem
-         3oZw==
-X-Gm-Message-State: AOAM53361bff7qQ9TsOGhVd69YCMu4vCUwgJe3g2QnBkWibDjpvwr2XC
-        sEMkrZ7Wdkij50xglBe4WpUUMfAm2AUBZb99
-X-Google-Smtp-Source: ABdhPJztMFzXGv+nvq1KeuMgIijPAhD16TI+0vCZRXdeRoRtJ+KR5eRiK0oQrCc5mxuqp+TRU0lkYg==
-X-Received: by 2002:a05:6402:489:: with SMTP id k9mr192758edv.287.1599055534860;
-        Wed, 02 Sep 2020 07:05:34 -0700 (PDT)
-Received: from tim.froidcoeur.net (ptr-7tznw14oqa3w7cibjsc.18120a2.ip6.access.telenet.be. [2a02:1811:50e:f0f0:8cba:3abe:17e1:aaec])
-        by smtp.gmail.com with ESMTPSA id os15sm4354775ejb.61.2020.09.02.07.05.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 07:05:34 -0700 (PDT)
-From:   Tim Froidcoeur <tim.froidcoeur@tessares.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, gregkh@linuxfoundation.org,
-        matthieu.baerts@tessares.net, davem@davemloft.net,
-        Tim Froidcoeur <tim.froidcoeur@tessares.net>
-Subject: [PATCH 4.4 0/2] net: initialize fastreuse on inet_inherit_port
-Date:   Wed,  2 Sep 2020 16:05:11 +0200
-Message-Id: <20200902140513.866712-1-tim.froidcoeur@tessares.net>
-X-Mailer: git-send-email 2.25.1
+        Wed, 2 Sep 2020 10:19:04 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2741 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727965AbgIBOIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 10:08:32 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 8E65A4BAA80922454AE3;
+        Wed,  2 Sep 2020 14:18:15 +0100 (IST)
+Received: from localhost (10.52.121.91) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 2 Sep 2020
+ 14:18:15 +0100
+Date:   Wed, 2 Sep 2020 14:16:40 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Darren Schachter <dts86@cornell.edu>
+CC:     Jonathan Cameron <jic23@kernel.org>, <knaack.h@gmx.de>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        Matthew Porter <mporter@konsulko.com>,
+        <robertcnelson@beagleboard.org>, <drew@beagleboard.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH] iio: pulse: Support PWM capture with TI AM3358 eCAP
+ module
+Message-ID: <20200902141640.00006b53@Huawei.com>
+In-Reply-To: <CAMEcr2-0_ZPE4uNGZJZDe8G-GtqchvyTLVGG+QZRYGEMMBwfiw@mail.gmail.com>
+References: <20200818153614.6438-1-dts86@cornell.edu>
+        <20200830134239.449bf411@archlinux>
+        <CAMEcr2-0_ZPE4uNGZJZDe8G-GtqchvyTLVGG+QZRYGEMMBwfiw@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.121.91]
+X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix for TPROXY initialization of fastreuse flag.
-upstream patch was backported by Greg K-H to 4.14 and higher stable version.
+On Tue, 1 Sep 2020 17:11:46 -0400
+Darren Schachter <dts86@cornell.edu> wrote:
 
-see also https://lore.kernel.org/stable/20200818072007.GA9254@kroah.com
+> On Sun, Aug 30, 2020 at 8:42 AM Jonathan Cameron <jic23@kernel.org> wrote:
+> >
+> > On Tue, 18 Aug 2020 10:36:14 -0500
+> > Darren Schachter <dts86@cornell.edu> wrote:
+> >  
+> > > This IIO driver adds support for PWM capture with the TI eCAP module.
+> > > This driver is based on Matt Porter's eCAP driver from January 2014,
+> > > which was never merged into the mainline [1]. Like Matt's code, this
+> > > driver implements interrupt driven triggered buffer capture. However,
+> > > the driver has been updated based on previous suggestions in the IIO
+> > > mailing list. Additionally, support for prescalar control and finer
+> > > polarity control has been included. Users can now configure the
+> > > polarities of CAP1 and CAP2 individually, allowing for the measurement
+> > > of a signal's high-time, low-time, or period.
+> > >
+> > > [1] https://marc.info/?l=linux-iio&m=145968010427392&w=2
+> > >
+> > > Signed-off-by: Darren Schachter <dts86@cornell.edu>  
+> > Hi Darren,
+> >
+> > I'll review this as is, but from earlier feedback it seems we have
+> > some other questions to answer before potentially taking this
+> > into IIO.
+> >
+> > There is a fair bit of new ABI in here that all needs documenting.
+> >
+> > Thanks,
+> >
+> > Jonathan  
+> Thank you for the feedback, Jonathan. I am working through your
+> suggestions now. I have most of the requested modifications completed.
+> However, I was hoping to receive clarifications on some of the notes
+> you left (see below). I really appreciate your help.
+> 
+> Best,
+> Darren
+> 
+Hi Darren,
 
-code in inet_csk_get_port for 4.4 (and 4.9) is different from
-the upstream version, so these backports had to be adapted (a bit)
+Replies below.
 
-Tim Froidcoeur (2):
-  net: refactor bind_bucket fastreuse into helper
-  net: initialize fastreuse on inet_inherit_port
+Thanks,
 
- include/net/inet_connection_sock.h |  4 +++
- net/ipv4/inet_connection_sock.c    | 46 ++++++++++++++++++------------
- net/ipv4/inet_hashtables.c         |  1 +
- 3 files changed, 33 insertions(+), 18 deletions(-)
+Jonathan
 
---
-2.25.1
+
+> > > +static ssize_t ecap_attr_pol_cap2_store(struct device *dev,
+> > > +                                     struct device_attribute *attr,
+> > > +                                     const char *buf,
+> > > +                                     size_t len)
+> > > +{
+> > > +     int ret;
+> > > +     bool val;
+> > > +     struct ecap_state *state = dev_to_ecap_state(dev);
+> > > +
+> > > +     if (test_bit(ECAP_ENABLED, &state->flags))
+> > > +             return -EINVAL;
+> > > +
+> > > +     ret = strtobool(buf, &val);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +  
+> >
+> > The locking around state->flags is a bit uneven.
+> > Whilst these are atomic they could happen mid way through
+> > the read modify write cycles elsewhere and leave things in an odd state.  
+> 
+> I understand what you mean with this. I have combed through the code
+> and ensured that all non-atomic reads/writes are surrounded by mutex
+> locks. I believe you are suggesting that, in addition, I surround
+> these atomic functions with mutex locks to ensure they are not
+> executed in the middle of some other read-modify-writes to
+> state->flags. Is this correct?
+
+Exactly. An atomic update can otherwise occur somewhere after the
+read and before the write in rmw.
+
+> 
+> >  
+> > > +     if (val)
+> > > +             set_bit(ECAP_POL_CAP2_OFFSET, &state->flags);
+> > > +     else
+> > > +             clear_bit(ECAP_POL_CAP2_OFFSET, &state->flags);
+> > > +
+> > > +     return len;
+> > > +}
+> > > +
+
+...
+
+> > > +static struct attribute_group ecap_attribute_group = {
+> > > +     .attrs = ecap_attributes,
+> > > +};
+> > > +
+> > > +static const struct iio_trigger_ops iio_interrupt_trigger_ops = {
+> > > +     //.owner = THIS_MODULE;  
+> > Unusual to not have at least an enable tied up to a trigger.
+> >
+> > If the trigger is only useful for this device and is sufficiently
+> > tightly coupled to the buffer (like here) then there is no need to
+> > expose the trigger at all.
+> >
+> > We have other devices that provide buffered access without triggers.
+> >  
+> 
+> I have looked through other IIO drivers and I assume that, by enable,
+> you are referring to the set_trigger_state function. I have added this
+> function to trigger ops. Right now, I am not entirely sure if it is
+> necessary -- I am still seeing if there is any useful functionality I
+> could include in it -- but I will continue researching this. I should
+> hopefully have more to say on this with v2.
+
+It's possible it isn't required here because we are effectively enabling
+the interrupt as part of the buffer setup.  That indicates we shouldn't
+really be exposing this as a trigger at all.
+
+> 
+> With regards to not exposing the trigger, would your recommendation be
+> to use a pure buffer instead of a triggered buffer? If not, is there a
+> way to prevent the exposure of a trigger used in a triggered buffer?
+
+Yes, setup the buffer without using the triggered_buffer helpers..
+
+> My apologies if this problem has an obvious solution -- I have tried
+> looking through the documentation and other IIO drivers, but I can't
+> seem to find the answer to this.
+> 
+
+No problem. I should have given an example.  This particular combination
+tends to happen when there is a hardware kfifo involved.  In most drivers
+where that happens, we also have a mode where a conventional trigger can
+be used to capture one scan of the channels at a time.  Those take no
+supplied trigger as meaning we should use route that skips it.
+
+IIRC
+
+https://elixir.bootlin.com/linux/latest/source/drivers/iio/adc/ti_am335x_adc.c#L390
+
+Is an example where we only support buffered capture with no option for
+triggers.
+
+> > > +};
+> > > +
+> > > +
+
+...
+
+
+> > > +static irqreturn_t ecap_interrupt_handler(int irq, void *private)
+> > > +{
+> > > +     struct iio_dev *idev = private;
+> > > +     struct ecap_state *state = iio_priv(idev);
+> > > +     u16 ints;
+> > > +
+> > > +     dev_dbg(&idev->dev, "TIECAP: Interrupt handling...\n");
+> > > +
+> > > +     iio_trigger_poll(idev->trig);
+> > > +
+> > > +     /* Clear CAP2 interrupt */
+> > > +     ints = readw(state->regs + ECAP_ECFLG);
+> > > +     if (ints & ECAP_ECINT_CEVT2)
+> > > +             writew(ECAP_ECINT_CEVT2, state->regs + ECAP_ECCLR);
+> > > +     else
+> > > +             dev_warn(&idev->dev, "unhandled interrupt flag: %04x\n", ints);  
+> >
+> > This should be in the try_reenable callback I think to ensure we are actually
+> > done with the interrupt.  Will also allow us to use the trigger to gather
+> > other measurements at roughly the same time.  
+> 
+> I have tried moving this section of code to the try_reenable callback
+> of the trigger, but I am running into issues. It seems like the kernel
+> is getting stuck in interrupt mode if I do this. I have spent a few
+> hours looking into this. My understanding of why this is happening is
+> that try_reenable is called in the bottom half of the IRQ (at least
+> with my set-up). In particular, try_reenable is only called after
+> iio_trigger_notify_done is called, which occurs in
+> ecap_trigger_handler in my code (i.e. the bottom half of the trigger's
+> pollfun). Therefore, because the interrupt is not getting cleared, the
+> ISR is continuously being called and the bottom half never has the
+> chance to be executed.
+> 
+> Does this seem reasonable? Would you recommend keeping the interrupt
+> clearing in this function, or do you think there is a better solution?
+> Please let me know if I am misunderstanding something.
+
+Mark the interrupt as ONESHOT when you request it and it should be masked
+until we are ready for another one. This is often needed for level interrupts
+with threaded handlers. 
+
+> 
+> >  
+> > > +
+> > > +     return IRQ_HANDLED;
+> > > +}
+> > > +
+
+...
+
