@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0842FC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067C6C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8CE720639
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD4020639
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:43:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DhDCmGyU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JFdC0oyh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbgIBPnv (ORCPT
+        id S1728072AbgIBPnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60958 "EHLO
+        Wed, 2 Sep 2020 11:43:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgIBNj3 (ORCPT
+        with ESMTP id S1726426AbgIBNj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 09:39:29 -0400
 Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A69C06125E
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 06:38:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF268C06125C
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 06:38:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=urzGtrnZ2TssED/dYrhaoAZnSG8zHOBp4RAF4ZA4GhY=; b=DhDCmGyU0RF+YHVJmEwaqA63dI
-        n69Lf8W08eEl0uW7aw7Bz0wOd0zFjfplYssBMtHhBmEogzk8U4rrfDoPxp8NAfjpgN1HF2TJrlBcR
-        G4J7Vr1RFMH35OAd9OCOEc9DepZaRdWoekW05txIXJtZxYq8gtXQWFpyhFciOIEzqG69sS+a2SY6e
-        qZrYk5anjzAO7yh3XrSH0W1rD1kHY3iv7MeiRBHMo3qHJLRYb+N9dDoZXoHnutYfdI8fB2KVACVmf
-        2pRnwxLNtL4P4CVLq28DI6NG1natCxHbKOBnBWPpQrrI3SSL7C1CRr0NXTfSDcD2UBbn+wgq3uQVa
-        M1+58gAQ==;
+        bh=k4DE+5ONAG9eVccLyAeotunJBXd6kNtASO5ksZQFXK8=; b=JFdC0oyhuPdP1PljLQWiGKkBtS
+        BnuhyNIL41yW3o/M8IHSXTKvusre8UFKU6qMBBzYfiKUpDOQ3JlY831Z06eg4RGD3AJJeVjlFK6SU
+        rljUFpxG0sFtcQEETcGyePFkgxSFIxVYKvJzsPjKhPEHCHgRcPJBbZFG+Fi2SdJdPRxe+hj40nHQA
+        k/6+LziB79dczC9H2dtwa+St4GP+OHMZ0LEcPs5loy8LMJ1dHmUwQGxXQLYg8dkJvLa5UJFCsoHhG
+        gmCVG4RQvtp2Jiy4VUfyec6N9+pjBWc2SmQyzChIedGk7VUcaMJSbSdUKKBr+IhnWj9U2o4wmTOwM
+        AjjdImVA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDSxq-0002dc-VJ; Wed, 02 Sep 2020 13:38:15 +0000
+        id 1kDSxr-0002de-GY; Wed, 02 Sep 2020 13:38:15 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9B79B306E07;
-        Wed,  2 Sep 2020 15:38:12 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CF3993060EF;
+        Wed,  2 Sep 2020 15:38:11 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id C243029A82C22; Wed,  2 Sep 2020 15:38:11 +0200 (CEST)
-Message-ID: <20200902133200.907020598@infradead.org>
+        id BC6F829A82C20; Wed,  2 Sep 2020 15:38:11 +0200 (CEST)
+Message-ID: <20200902133200.847465360@infradead.org>
 User-Agent: quilt/0.66
-Date:   Wed, 02 Sep 2020 15:25:54 +0200
+Date:   Wed, 02 Sep 2020 15:25:53 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org, Kyle Huey <me@kylehuey.com>,
@@ -69,7 +69,7 @@ Cc:     linux-kernel@vger.kernel.org, Kyle Huey <me@kylehuey.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Daniel Thompson <daniel.thompson@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 05/13] x86/debug: Remove handle_debug(.user) argument
+Subject: [PATCH 04/13] x86/debug: Move kprobe_debug_handler() into exc_debug_kernel()
 References: <20200902132549.496605622@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -78,71 +78,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The handle_debug(.user) argument is used to terminate the #DB handler
-early for the INT1-from-kernel case, since the kernel doesn't use
-INT1.
-
-Remove the argument and handle this explicitly in #DB-from-kernel.
+Kprobes are on kernel text, and thus only matter for #DB-from-kernel.
+Kprobes are ordered before the generic notifier, preserve that order.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 Acked-by: Andy Lutomirski <luto@kernel.org>
 ---
- arch/x86/kernel/traps.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ arch/x86/include/asm/kprobes.h |    4 ++++
+ arch/x86/kernel/traps.c        |   10 ++++------
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
+--- a/arch/x86/include/asm/kprobes.h
++++ b/arch/x86/include/asm/kprobes.h
+@@ -106,5 +106,9 @@ extern int kprobe_exceptions_notify(stru
+ extern int kprobe_int3_handler(struct pt_regs *regs);
+ extern int kprobe_debug_handler(struct pt_regs *regs);
+ 
++#else
++
++static inline int kprobe_debug_handler(struct pt_regs *regs) { return 0; }
++
+ #endif /* CONFIG_KPROBES */
+ #endif /* _ASM_X86_KPROBES_H */
 --- a/arch/x86/kernel/traps.c
 +++ b/arch/x86/kernel/traps.c
-@@ -783,25 +783,18 @@ static __always_inline unsigned long deb
-  *
-  * May run on IST stack.
-  */
--static void handle_debug(struct pt_regs *regs, unsigned long dr6, bool user)
-+static void handle_debug(struct pt_regs *regs, unsigned long dr6)
- {
- 	struct task_struct *tsk = current;
- 	bool user_icebp;
- 	int si_code;
- 
- 	/*
--	 * If DR6 is zero, no point in trying to handle it. The kernel is
--	 * not using INT1.
--	 */
--	if (!user && !dr6)
--		return;
--
--	/*
- 	 * If dr6 has no reason to give us about the origin of this trap,
- 	 * then it's very likely the result of an icebp/int01 trap.
- 	 * User wants a sigtrap for that.
- 	 */
--	user_icebp = user && !dr6;
-+	user_icebp = !dr6;
- 
+@@ -806,12 +806,6 @@ static void handle_debug(struct pt_regs
  	/* Store the virtualized DR6 value */
  	tsk->thread.debugreg6 = dr6;
-@@ -874,7 +867,13 @@ static __always_inline void exc_debug_ke
- 	if (kprobe_debug_handler(regs))
- 		goto out;
  
--	handle_debug(regs, dr6, false);
-+	/*
-+	 * The kernel doesn't use INT1
-+	 */
-+	if (!dr6)
+-#ifdef CONFIG_KPROBES
+-	if (kprobe_debug_handler(regs)) {
+-		return;
+-	}
+-#endif
+-
+ 	if (notify_die(DIE_DEBUG, "debug", regs, (long)&dr6, 0,
+ 		       SIGTRAP) == NOTIFY_STOP) {
+ 		return;
+@@ -877,8 +871,12 @@ static __always_inline void exc_debug_ke
+ 	if ((dr6 & DR_STEP) && is_sysenter_singlestep(regs))
+ 		dr6 &= ~DR_STEP;
+ 
++	if (kprobe_debug_handler(regs))
 +		goto out;
 +
-+	handle_debug(regs, dr6);
+ 	handle_debug(regs, dr6, false);
  
- out:
++out:
  	instrumentation_end();
-@@ -904,7 +903,7 @@ static __always_inline void exc_debug_us
- 	irqentry_enter_from_user_mode(regs);
- 	instrumentation_begin();
+ 	idtentry_exit_nmi(regs, irq_state);
  
--	handle_debug(regs, dr6, true);
-+	handle_debug(regs, dr6);
- 
- 	instrumentation_end();
- 	irqentry_exit_to_user_mode(regs);
 
 
