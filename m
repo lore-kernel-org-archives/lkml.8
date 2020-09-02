@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A0CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB49C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B76220639
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFAA720639
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063455;
-	bh=0Hj7ZIEL0P3+LazNj3oWTUDc18jn9Tcv84+tSkI0Wtg=;
+	s=default; t=1599063460;
+	bh=+2RR6roDnn65j3iO36CYLbDLclz+0rrWulMZeG9XTOk=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=YyB9YPK5ItpVX+QbPHEIraE/vjWaa2zpEgCM9nLWsOZv6rSSWnKYqGtgaTOcYd3SE
-	 F6A300duZIJS7KrBBy6gPAkFqDdwrHalLx4Dz7FIcpFKF+MPt/8TEMglcSJG97Cgjm
-	 8iAWl03++Z0q1T9l5tqGK6ra6qZU+P19rat2jU/c=
+	b=JAFw37kSYfi2D3CPybkwWQmB5Gz2KJp00tJUBh4jUIdDQWmHUV6forTEcVHXs+mdG
+	 xClOOZQrVXPk9tTOG9uViffikVPkTN8fjkRRchFbK4tWrEOnt/fKQze+Tl5FxlBoH7
+	 L6yhxdD7ZSfp240mxrYm6K/Q9wi3RYHfDPjuh/aQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgIBQRb (ORCPT
+        id S1728873AbgIBQRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:17:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53892 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 12:17:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728045AbgIBQKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728152AbgIBQKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 12:10:51 -0400
 Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAC322145D;
+        by mail.kernel.org (Postfix) with ESMTPSA id E355221527;
         Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599063046;
-        bh=0Hj7ZIEL0P3+LazNj3oWTUDc18jn9Tcv84+tSkI0Wtg=;
+        bh=+2RR6roDnn65j3iO36CYLbDLclz+0rrWulMZeG9XTOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VA1GN01hnAbujexln0WXKOHjK5Pa4EMpteFO/qoRPoLo700l4eXmKSgDC8ry2xvJe
-         NbCw3PqKHFOy/OHBHi5tSYUBkXpBmk16gxahSRl3o9FGd0SSMMBP9faddVrPmsk4z1
-         +86S5WrUxcqj1cz+be5EXucse5DHu9lzZ38p3nds=
+        b=y4CnJRus8XbEmh08o5k7WLby+AoyTlP/estB+zYDEA8ccRF3QXheYEh094E8DV+oD
+         bhyXKWq1gnCqgoieLbaTEjMlSLl1StG435UgWv8JT1y1mDhyYMRvJY0nGXouLtiEH7
+         HGxkbVHeoqZR6rVHIdjZ6uzjJmqTYNiqoCkXUTKE=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kDVLP-000t9w-QL; Wed, 02 Sep 2020 18:10:43 +0200
+        id 1kDVLQ-000tAL-1s; Wed, 02 Sep 2020 18:10:44 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 07/38] media: tda10021: avoid casts when using symbol_rate
-Date:   Wed,  2 Sep 2020 18:10:10 +0200
-Message-Id: <316f5e497a02dc245953134f22cfb70aa67ccd26.1599062230.git.mchehab+huawei@kernel.org>
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 15/38] media: vivid: fix error path
+Date:   Wed,  2 Sep 2020 18:10:18 +0200
+Message-Id: <276afb2977c68e7d9e8d8d90237abff8ed2cd21c.1599062230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
 References: <cover.1599062230.git.mchehab+huawei@kernel.org>
@@ -59,83 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The usage of castings and float point when checking for
-the setup based at the symbol_rate cause those warnings
-with smatch:
-
-	drivers/media/dvb-frontends/tda10021.c:153 tda10021_set_symbolrate() warn: unsigned 'symbolrate' is never less than zero.
-	drivers/media/dvb-frontends/tda10021.c:155 tda10021_set_symbolrate() warn: unsigned 'symbolrate' is never less than zero.
-	drivers/media/dvb-frontends/tda10021.c:157 tda10021_set_symbolrate() warn: unsigned 'symbolrate' is never less than zero.
-	drivers/media/dvb-frontends/tda10021.c:159 tda10021_set_symbolrate() warn: unsigned 'symbolrate' is never less than zero.
-
-While the code should work with gcc, as it will evaluate the
-values into a constant before compiling, other compilers
-could do otherwise. So, get rid of float pointing math on it,
-avoiding the need of doing typecasts.
-
-While here, cleanup some coding style issues at the related
-code.
+If something fails after calling v4l2_device_register(),
+it should call v4l2_device_put().
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/media/dvb-frontends/tda10021.c | 38 ++++++++++++++++----------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+ drivers/media/test-drivers/vivid/vivid-core.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/dvb-frontends/tda10021.c b/drivers/media/dvb-frontends/tda10021.c
-index 9fb207b41576..faa6e54b3372 100644
---- a/drivers/media/dvb-frontends/tda10021.c
-+++ b/drivers/media/dvb-frontends/tda10021.c
-@@ -137,26 +137,36 @@ static int tda10021_set_symbolrate (struct tda10021_state* state, u32 symbolrate
- {
- 	s32 BDR;
- 	s32 BDRI;
--	s16 SFIL=0;
-+	s16 SFIL = 0;
- 	u16 NDEC = 0;
- 	u32 tmp, ratio;
+diff --git a/drivers/media/test-drivers/vivid/vivid-core.c b/drivers/media/test-drivers/vivid/vivid-core.c
+index 54df7e0c13fc..48809991f037 100644
+--- a/drivers/media/test-drivers/vivid/vivid-core.c
++++ b/drivers/media/test-drivers/vivid/vivid-core.c
+@@ -1698,10 +1698,8 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
+ 				       &has_tuner, &has_modulator,
+ 				       &ccs_cap, &ccs_out,
+ 				       in_type_counter, out_type_counter);
+-	if (ret) {
+-		kfree(dev);
+-		return ret;
+-	}
++	if (ret)
++		goto free_dev;
  
--	if (symbolrate > XIN/2)
--		symbolrate = XIN/2;
--	if (symbolrate < 500000)
-+	if (symbolrate > XIN / 2)
-+		symbolrate = XIN / 2;
-+	else if (symbolrate < 500000)
- 		symbolrate = 500000;
+ 	vivid_set_capabilities(dev);
  
--	if (symbolrate < XIN/16) NDEC = 1;
--	if (symbolrate < XIN/32) NDEC = 2;
--	if (symbolrate < XIN/64) NDEC = 3;
-+	if (symbolrate < XIN / 16)
-+		NDEC = 1;
-+	if (symbolrate < XIN / 32)
-+		NDEC = 2;
-+	if (symbolrate < XIN / 64)
-+		NDEC = 3;
- 
--	if (symbolrate < (u32)(XIN/12.3)) SFIL = 1;
--	if (symbolrate < (u32)(XIN/16))	 SFIL = 0;
--	if (symbolrate < (u32)(XIN/24.6)) SFIL = 1;
--	if (symbolrate < (u32)(XIN/32))	 SFIL = 0;
--	if (symbolrate < (u32)(XIN/49.2)) SFIL = 1;
--	if (symbolrate < (u32)(XIN/64))	 SFIL = 0;
--	if (symbolrate < (u32)(XIN/98.4)) SFIL = 1;
-+	if (symbolrate < XIN * 10 / 123)
-+		SFIL = 1;
-+	if (symbolrate < XIN * 10 / 160)
-+		SFIL = 0;
-+	if (symbolrate < XIN * 10 / 246)
-+		SFIL = 1;
-+	if (symbolrate < XIN * 10 / 320)
-+		SFIL = 0;
-+	if (symbolrate < XIN * 10 / 492)
-+		SFIL = 1;
-+	if (symbolrate < XIN * 10 / 640)
-+		SFIL = 0;
-+	if (symbolrate < XIN * 10 / 984)
-+		SFIL = 1;
- 
- 	symbolrate <<= NDEC;
- 	ratio = (symbolrate << 4) / FIN;
 -- 
 2.26.2
 
