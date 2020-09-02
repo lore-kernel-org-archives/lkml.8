@@ -2,82 +2,73 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36272C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4B2C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D30B20709
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE13420829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:03:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599037410;
+	bh=bfO9wCuw+Eh9xeDv1yXorY5yhggM67D8s0J74GOKDgQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Su88CsomHyXoprcc/Ug7WjzHmGrUYmliz9kDH4UTdOEhKwAZ2C0r7S2T2Fssr43wo
+	 FlZY1HCbZAXGftWkMhTwlWfERonOtaT1jamolaXB5dE5kzn4nL+K3P/HGZ/PjqaZOV
+	 9sU5em5FeVNAUlslMlvKIdiBTv5CTaRO/PeRuOqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726301AbgIBJCi convert rfc822-to-8bit (ORCPT
+        id S1726377AbgIBJD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 05:02:38 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:35697 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgIBJCi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 05:02:38 -0400
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 3EB3224000C;
-        Wed,  2 Sep 2020 09:02:35 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 2 Sep 2020 05:03:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbgIBJD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 05:03:28 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99A0F20709;
+        Wed,  2 Sep 2020 09:03:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599037408;
+        bh=bfO9wCuw+Eh9xeDv1yXorY5yhggM67D8s0J74GOKDgQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U2ekdiUC150UFqQQk4z9g5zUnK03MRqYroxIcjwi8ZfHW256FHduePnaWT9spydm8
+         y6J9mZJgA2HCvLpAMBMIPQiiuvp1svhC2EGdYTc1WJQMTZw8/ZcokM5JDmqBxAKUNV
+         HZHmPCUYva0NwENmptRlmW4kqNRDL15veWgNizng=
+Date:   Wed, 2 Sep 2020 12:03:25 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Tong Zhang <ztong0001@gmail.com>
+Cc:     selvin.xavier@broadcom.com, devesh.sharma@broadcom.com,
+        dledford@redhat.com, jgg@ziepe.ca, kamalheib1@gmail.com,
+        maxg@mellanox.com, monis@mellanox.com, gustavoars@kernel.org,
+        galpress@amazon.com, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bernard Metzler <bmt@zurich.ibm.com>
+Subject: Re: [PATCH] RDMA: error code handling
+Message-ID: <20200902090325.GF59010@unreal>
+References: <20200824234422.1261394-1-ztong0001@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200827064402.7130-2-efremov@linux.com>
-References: <20200827064402.7130-1-efremov@linux.com> <20200827064402.7130-2-efremov@linux.com>
-Subject: Re: [PATCH v2 1/4] crypto: inside-secure - use kfree_sensitive()
-To:     Denis Efremov <efremov@linux.com>, linux-crypto@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-kernel@vger.kernel.org
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-Message-ID: <159903735372.787733.15894349534421505943@kwain>
-Date:   Wed, 02 Sep 2020 11:02:34 +0200
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824234422.1261394-1-ztong0001@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Denis,
-
-Quoting Denis Efremov (2020-08-27 08:43:59)
-> Use kfree_sensitive() instead of open-coding it.
-> 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-
-Acked-by: Antoine Tenart <antoine.tenart@bootlin.com>
-
-Thanks!
-Antoine
-
+On Mon, Aug 24, 2020 at 07:44:21PM -0400, Tong Zhang wrote:
+> ocrdma_qp_state_change() returns 1 when new and old state are the same,
+> however caller is checking using <0
+>
+> Signed-off-by: Tong Zhang <ztong0001@gmail.com>
 > ---
->  drivers/crypto/inside-secure/safexcel_hash.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
-> index 16a467969d8e..5ffdc1cd5847 100644
-> --- a/drivers/crypto/inside-secure/safexcel_hash.c
-> +++ b/drivers/crypto/inside-secure/safexcel_hash.c
-> @@ -1082,8 +1082,7 @@ static int safexcel_hmac_init_pad(struct ahash_request *areq,
->                 }
->  
->                 /* Avoid leaking */
-> -               memzero_explicit(keydup, keylen);
-> -               kfree(keydup);
-> +               kfree_sensitive(keydup);
->  
->                 if (ret)
->                         return ret;
-> -- 
-> 2.26.2
-> 
+>  drivers/infiniband/hw/ocrdma/ocrdma_verbs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
 
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Fixes: 057729cb2347 ("RDMA/ocrdma: Remove driver QP state machine")
+
+Thanks,
+Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
