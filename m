@@ -2,116 +2,86 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06044C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2486DC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D841F2087D
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E97FC2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599034684;
-	bh=qdQyUMNUhAH9maeN6ovzgNf69ci5TtGdr1dfZzvLgdA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GX2M+FADuQqZutaA4N3PNPQOaluk8hx+JeMLQCdkzGWKcddk8fGFZzhfSe9i5WfqU
-	 qECSMzXqy3zeF23wfVD7ZqRyr8QgzvnDwMwDbtBFGAABV6oFAOeeQBrBKkPLRUJrPK
-	 cW++YTDty5tJedymJDRY14v0lXlP4fHl9CH792fA=
+	s=default; t=1599034724;
+	bh=7+JEzktISsgTMdUzuapRscBPtX4N6Y3wMNOli4jVPQ4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SPkO9T472a8v6lvueUOjrmM7v/YorzUPt39j6FC4h044BVSyWhVNgxqLukHzGY1p7
+	 2ICVO7EdHTYu/9QD5BpDMqCNA9tls1zyM3Cr0tzzJwyGebozAGmbueugxddF3D32WJ
+	 c9RkROR/TCUFRoROGpGD9gyWdAWvMDJBKgczbYF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgIBISE (ORCPT
+        id S1726946AbgIBISn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:18:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38686 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 04:18:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgIBISC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:18:02 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S1726310AbgIBISl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 04:18:41 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60C932084C;
-        Wed,  2 Sep 2020 08:17:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BADA92084C;
+        Wed,  2 Sep 2020 08:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599034682;
-        bh=qdQyUMNUhAH9maeN6ovzgNf69ci5TtGdr1dfZzvLgdA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EStQ3aZ2B9NdDnStmYfSTp4NUc7ccT/Lbg+egmiKIWRUKvK+dbk6N+ELmZLhaRlcx
-         UYwnP7Oc7HlMGkqo5sYfTVjc0sJj9yRGsTZavaX5FCxqfOahLiFxbViVz3lHQWo+56
-         NwhOJn9sRsy4+dLeR1EH/LJh72i9fiKMagAYlkYM=
-Date:   Wed, 2 Sep 2020 17:17:55 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     peterz@infradead.org
-Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
-        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
-        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
-        paulmck@kernel.org
-Subject: Re: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers
- and make kretprobe lockless
-Message-Id: <20200902171755.b126672093a3c5d1b3a62a4f@kernel.org>
-In-Reply-To: <20200902070226.GG2674@hirez.programming.kicks-ass.net>
-References: <159870598914.1229682.15230803449082078353.stgit@devnote2>
-        <20200901190808.GK29142@worktop.programming.kicks-ass.net>
-        <20200902093739.8bd13603380951eaddbcd8a5@kernel.org>
-        <20200902070226.GG2674@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        s=default; t=1599034720;
+        bh=7+JEzktISsgTMdUzuapRscBPtX4N6Y3wMNOli4jVPQ4=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=AUuruMhNnTWN9d+oIWMoSqWA8+m8sBM+oeWPLsiObVeHFiq7BNSvIvN4IuQjBGrUN
+         k+B+5u9HrYhoRwTH/Os1qWGB1TXIiwzK1gOw6wV1fQkR0xWwE/1B4a4FZP7bKSHIC9
+         PP5dp0UkLkUuQvkHkcTKYHlSgMUgvsrGj9E2u+Z4=
+Date:   Wed, 2 Sep 2020 10:18:35 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+cc:     linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-scsi@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [RFC v2 09/11] HID: hyperv: Make ringbuffer at least take two
+ pages
+In-Reply-To: <20200902030107.33380-10-boqun.feng@gmail.com>
+Message-ID: <nycvar.YFH.7.76.2009021018080.4671@cbobk.fhfr.pm>
+References: <20200902030107.33380-1-boqun.feng@gmail.com> <20200902030107.33380-10-boqun.feng@gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Sep 2020 09:02:26 +0200
-peterz@infradead.org wrote:
+On Wed, 2 Sep 2020, Boqun Feng wrote:
 
-> On Wed, Sep 02, 2020 at 09:37:39AM +0900, Masami Hiramatsu wrote:
-> > On Tue, 1 Sep 2020 21:08:08 +0200
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > > On Sat, Aug 29, 2020 at 09:59:49PM +0900, Masami Hiramatsu wrote:
-> > > > Masami Hiramatsu (16):
-> > > >       kprobes: Add generic kretprobe trampoline handler
-> > > >       x86/kprobes: Use generic kretprobe trampoline handler
-> > > >       arm: kprobes: Use generic kretprobe trampoline handler
-> > > >       arm64: kprobes: Use generic kretprobe trampoline handler
-> > > >       arc: kprobes: Use generic kretprobe trampoline handler
-> > > >       csky: kprobes: Use generic kretprobe trampoline handler
-> > > >       ia64: kprobes: Use generic kretprobe trampoline handler
-> > > >       mips: kprobes: Use generic kretprobe trampoline handler
-> > > >       parisc: kprobes: Use generic kretprobe trampoline handler
-> > > >       powerpc: kprobes: Use generic kretprobe trampoline handler
-> > > >       s390: kprobes: Use generic kretprobe trampoline handler
-> > > >       sh: kprobes: Use generic kretprobe trampoline handler
-> > > >       sparc: kprobes: Use generic kretprobe trampoline handler
-> > > >       kprobes: Remove NMI context check
-> > > >       kprobes: Free kretprobe_instance with rcu callback
-> > > >       kprobes: Make local used functions static
-> > > > 
-> > > > Peter Zijlstra (5):
-> > > >       llist: Add nonatomic __llist_add() and __llist_dell_all()
-> > > >       kprobes: Remove kretprobe hash
-> > > >       asm-generic/atomic: Add try_cmpxchg() fallbacks
-> > > >       freelist: Lock less freelist
-> > > >       kprobes: Replace rp->free_instance with freelist
-> > > 
-> > > This looks good to me, do you want me to merge them through -tip? If so,
-> > > do we want to try and get them in this release still?
-> > 
-> > Yes, thanks. For the kretprobe missing issue, we will need the first half
-> > (up to "kprobes: Remove NMI context check"), so we can split the series
-> > if someone think the lockless is still immature.
+> When PAGE_SIZE > HV_HYP_PAGE_SIZE, we need the ringbuffer size to be at
+> least 2 * PAGE_SIZE: one page for the header and at least one page of
+> the data part (because of the alignment requirement for double mapping).
 > 
-> Ok, but then lockdep will yell at you if you have that enabled and run
-> the unoptimized things.
+> So make sure the ringbuffer sizes to be at least 2 * PAGE_SIZE when
+> using vmbus_open() to establish the vmbus connection.
+> 
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 
-Oh, does it warn for all spinlock things in kprobes if it is unoptimized?
-Hmm, it has to be noted in the documentation.
-
-Thank you,
-
+Acked-by: Jiri Kosina <jkosina@suse.cz>
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Jiri Kosina
+SUSE Labs
+
