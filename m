@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A93C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FFAC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 541EA20773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092582072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063094;
-	bh=jLwPewIQn+pgFUopzBjLSNLeLllS2zvZWT+HqHEkCss=;
+	s=default; t=1599063106;
+	bh=9dhD+Wjohk46Ke51HQQMWLMkqd0e9PqJih4Q6OfTONc=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=hJYUNaO3R2p8bkiPNBOkUt0Xj+g7YW4PoxH6cvMVYwplRoME0CAf7FPnS5ZqKF0hs
-	 fz48ZWb1PMnoRMSsEltWsFpNRVK3D/7pW8g7/gCTab+DoDU4v9cVknDRdlEq+0Eo+C
-	 i2/AYyQIY45bMieHKjN06OaiEFVfqsMMrDwvCy1k=
+	b=NFHCHe4izI0xZy6XejVkgIbueJWt+0yxfk9KtjYi69H51FnzpLuZ/cU07CWohnAyv
+	 4P4vsQLVTw1zf7XSkdIY7RBeJg+B4DvuRMNgVivuswmwftVNx7k+zGSo91stCNgU9t
+	 leWNTnyWBwMe2hK446HRDQ3XfSsZsggUTmZo2z4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgIBQL1 (ORCPT
+        id S1728446AbgIBQLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:11:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53930 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 12:11:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728261AbgIBQKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:10:52 -0400
+        id S1728332AbgIBQK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:10:56 -0400
 Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E524B21532;
-        Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9164E221E8;
+        Wed,  2 Sep 2020 16:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599063046;
-        bh=jLwPewIQn+pgFUopzBjLSNLeLllS2zvZWT+HqHEkCss=;
+        bh=9dhD+Wjohk46Ke51HQQMWLMkqd0e9PqJih4Q6OfTONc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mfGsMbIFHQAtssLyUM73TwAZkAt+2AAhZnlAsVA0zni6U3JNgnIdJRkMEb6bziIrR
-         oF6+7psEzCsO8jJDQG4mZM5t8RKmSqk380rORMbIeuv+TkiN0XD6Ew56MyX5C/EjSI
-         aLle/FcBysGu2c9nmQCpppgffNzQqbkndQ+F0lDc=
+        b=k0VEbQoNKyc2Yz9vgdO8iQB/m3f1cvgbKN/GG6tSlHCa+1ucLPHyBu7SXJhxPS+ke
+         G2yA/i8zGXE1gKJBhz5n59/tgjpWS8VOyNLEttP07h2JOEXy+cjR1SHV185qjv78+1
+         Niujss0KYm2fmxGeZEDRjEQqhXwa1gYSrLlaYAwg=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kDVLQ-000tAW-57; Wed, 02 Sep 2020 18:10:44 +0200
+        id 1kDVLQ-000tBH-P7; Wed, 02 Sep 2020 18:10:44 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 19/38] media: cx88-alsa: number of pages should be unsigned long
-Date:   Wed,  2 Sep 2020 18:10:22 +0200
-Message-Id: <0f391afa1692b65fa61f795e192fcef43e1779ba.1599062230.git.mchehab+huawei@kernel.org>
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 34/38] media: atomisp: remove compile-time tests from input_system_global.h
+Date:   Wed,  2 Sep 2020 18:10:37 +0200
+Message-Id: <8154b39cf94a2aca6dfea194a63cc5acc3e0c2d1.1599062230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
 References: <cover.1599062230.git.mchehab+huawei@kernel.org>
@@ -61,61 +62,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As reported by smatch:
-
-	drivers/media/pci/cx88/cx88-alsa.c:286 cx88_alsa_dma_init() warn: should 'nr_pages << 12' be a 64 bit type?
-
-the number of patches should be unsigned long.
+Now that there's no duplication between ISP2400 and ISP2401
+input system functions, we can include both at the system
+global.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/media/pci/cx88/cx88-alsa.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/staging/media/atomisp/pci/input_system_global.h | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/pci/cx88/cx88-alsa.c b/drivers/media/pci/cx88/cx88-alsa.c
-index 7d7aceecc985..aec60ebb010f 100644
---- a/drivers/media/pci/cx88/cx88-alsa.c
-+++ b/drivers/media/pci/cx88/cx88-alsa.c
-@@ -42,12 +42,12 @@
-  */
+diff --git a/drivers/staging/media/atomisp/pci/input_system_global.h b/drivers/staging/media/atomisp/pci/input_system_global.h
+index 5929d529950b..1450964445f6 100644
+--- a/drivers/staging/media/atomisp/pci/input_system_global.h
++++ b/drivers/staging/media/atomisp/pci/input_system_global.h
+@@ -24,10 +24,7 @@ typedef enum {
+ 	INPUT_SYSTEM_ERR_PARAMETER_NOT_SUPPORTED,
+ } input_system_err_t;
  
- struct cx88_audio_buffer {
--	unsigned int               bpl;
--	struct cx88_riscmem        risc;
-+	unsigned int		bpl;
-+	struct cx88_riscmem	risc;
- 	void			*vaddr;
- 	struct scatterlist	*sglist;
- 	int                     sglen;
--	int                     nr_pages;
-+	unsigned long		nr_pages;
- };
+-#ifdef ISP2401
+-#  include "isp2401_input_system_global.h"
+-#else
+-#  include "isp2400_input_system_global.h"
+-#endif
++#include "isp2401_input_system_global.h"
++#include "isp2400_input_system_global.h"
  
- struct cx88_audio_dev {
-@@ -271,7 +271,8 @@ static irqreturn_t cx8801_irq(int irq, void *dev_id)
- 	return IRQ_RETVAL(handled);
- }
- 
--static int cx88_alsa_dma_init(struct cx88_audio_dev *chip, int nr_pages)
-+static int cx88_alsa_dma_init(struct cx88_audio_dev *chip,
-+			      unsigned long nr_pages)
- {
- 	struct cx88_audio_buffer *buf = chip->buf;
- 	struct page *pg;
-@@ -279,11 +280,11 @@ static int cx88_alsa_dma_init(struct cx88_audio_dev *chip, int nr_pages)
- 
- 	buf->vaddr = vmalloc_32(nr_pages << PAGE_SHIFT);
- 	if (!buf->vaddr) {
--		dprintk(1, "vmalloc_32(%d pages) failed\n", nr_pages);
-+		dprintk(1, "vmalloc_32(%lu pages) failed\n", nr_pages);
- 		return -ENOMEM;
- 	}
- 
--	dprintk(1, "vmalloc is at addr %p, size=%d\n",
-+	dprintk(1, "vmalloc is at addr %p, size=%lu\n",
- 		buf->vaddr, nr_pages << PAGE_SHIFT);
- 
- 	memset(buf->vaddr, 0, nr_pages << PAGE_SHIFT);
+ #endif /* __INPUT_SYSTEM_GLOBAL_H_INCLUDED__ */
 -- 
 2.26.2
 
