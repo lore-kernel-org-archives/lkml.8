@@ -2,239 +2,84 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B731C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 676DDC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6776020709
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E7F207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgIBRI7 (ORCPT
+        id S1728284AbgIBRJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 13:08:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:43028 "EHLO foss.arm.com"
+        Wed, 2 Sep 2020 13:09:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgIBRI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:08:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D1BE1045;
-        Wed,  2 Sep 2020 10:08:58 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0CDB3F66F;
-        Wed,  2 Sep 2020 10:08:56 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 18:08:54 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Boyan Karatotev <boyan.karatotev@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>, boian4o1@gmail.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        amit.kachhap@arm.com, vincenzo.frascino@arm.com,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v2 3/4] kselftests/arm64: add PAuth test for whether
- exec() changes keys
-Message-ID: <20200902170854.GK6642@arm.com>
-References: <20200831110450.30188-1-boyan.karatotev@arm.com>
- <20200831110450.30188-4-boyan.karatotev@arm.com>
+        id S1727088AbgIBRJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 13:09:19 -0400
+Received: from gaia (unknown [46.69.195.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81C1520709;
+        Wed,  2 Sep 2020 17:09:14 +0000 (UTC)
+Date:   Wed, 2 Sep 2020 18:09:11 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     will@kernel.org, james.morse@arm.com, tglx@linutronix.de,
+        mingo@redhat.com, dyoung@redhat.com, bhe@redhat.com,
+        corbet@lwn.net, John.P.donnelly@oracle.com,
+        prabhakar.pkin@gmail.com, bhsharma@redhat.com, horms@verge.net.au,
+        robh+dt@kernel.org, arnd@arndb.de, nsaenzjulienne@suse.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+        guohanjun@huawei.com, xiexiuqi@huawei.com, huawei.libin@huawei.com,
+        wangkefeng.wang@huawei.com
+Subject: Re: [PATCH v11 3/5] arm64: kdump: reimplement crashkernel=X
+Message-ID: <20200902170910.GB16673@gaia>
+References: <20200801130856.86625-1-chenzhou10@huawei.com>
+ <20200801130856.86625-4-chenzhou10@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200831110450.30188-4-boyan.karatotev@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200801130856.86625-4-chenzhou10@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 12:04:49PM +0100, Boyan Karatotev wrote:
-> Kernel documentation states that it will change PAuth keys on exec() calls.
+On Sat, Aug 01, 2020 at 09:08:54PM +0800, Chen Zhou wrote:
+> There are following issues in arm64 kdump:
+> 1. We use crashkernel=X to reserve crashkernel below 4G, which
+> will fail when there is no enough low memory.
+> 2. If reserving crashkernel above 4G, in this case, crash dump
+> kernel will boot failure because there is no low memory available
+> for allocation.
+> 3. Since commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32"),
+> if the memory reserved for crash dump kernel falled in ZONE_DMA32,
+> the devices in crash dump kernel need to use ZONE_DMA will alloc
+> fail.
 > 
-> Verify that all keys are correctly switched to new ones.
+> To solve these issues, change the behavior of crashkernel=X.
+> crashkernel=X tries low allocation in ZONE_DMA, and fall back to
+> high allocation if it fails.
 > 
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Reviewed-by: Vincenzo Frascino <Vincenzo.Frascino@arm.com>
-> Reviewed-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
-> Signed-off-by: Boyan Karatotev <boyan.karatotev@arm.com>
-> ---
->  tools/testing/selftests/arm64/pauth/Makefile  |   4 +
->  .../selftests/arm64/pauth/exec_target.c       |  35 +++++
->  tools/testing/selftests/arm64/pauth/helper.h  |  10 ++
->  tools/testing/selftests/arm64/pauth/pac.c     | 148 ++++++++++++++++++
->  4 files changed, 197 insertions(+)
->  create mode 100644 tools/testing/selftests/arm64/pauth/exec_target.c
+> If requized size X is too large and leads to very little free memory
+> in ZONE_DMA after low allocation, the system may not work normally.
+> So add a threshold and go for high allocation directly if the required
+> size is too large. The value of threshold is set as the half of
+> the low memory.
 > 
-> diff --git a/tools/testing/selftests/arm64/pauth/Makefile b/tools/testing/selftests/arm64/pauth/Makefile
-> index 5c0dd129562f..72e290b0b10c 100644
-> --- a/tools/testing/selftests/arm64/pauth/Makefile
-> +++ b/tools/testing/selftests/arm64/pauth/Makefile
-> @@ -13,6 +13,7 @@ pauth_cc_support := $(shell if ($(CC) $(CFLAGS) -march=armv8.3-a -E -x c /dev/nu
->  ifeq ($(pauth_cc_support),1)
->  TEST_GEN_PROGS := pac
->  TEST_GEN_FILES := pac_corruptor.o helper.o
-> +TEST_GEN_PROGS_EXTENDED := exec_target
->  endif
->  
->  include ../../lib.mk
-> @@ -30,6 +31,9 @@ $(OUTPUT)/helper.o: helper.c
->  # greater, gcc emits pac* instructions which are not in HINT NOP space,
->  # preventing the tests from occurring at all. Compile for ARMv8.2 so tests can
->  # run on earlier targets and print a meaningful error messages
-> +$(OUTPUT)/exec_target: exec_target.c $(OUTPUT)/helper.o
-> +	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
-> +
->  $(OUTPUT)/pac: pac.c $(OUTPUT)/pac_corruptor.o $(OUTPUT)/helper.o
->  	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
->  endif
-> diff --git a/tools/testing/selftests/arm64/pauth/exec_target.c b/tools/testing/selftests/arm64/pauth/exec_target.c
-> new file mode 100644
-> index 000000000000..07addef5a1d7
-> --- /dev/null
-> +++ b/tools/testing/selftests/arm64/pauth/exec_target.c
-> @@ -0,0 +1,35 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2020 ARM Limited
-> +
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <sys/auxv.h>
-> +
-> +#include "helper.h"
-> +
-> +
-> +int main(void)
-> +{
-> +	struct signatures signed_vals;
-> +	unsigned long hwcaps;
-> +	size_t val;
-> +
-> +	fread(&val, sizeof(size_t), 1, stdin);
-> +
-> +	/* don't try to execute illegal (unimplemented) instructions) caller
-> +	 * should have checked this and keep worker simple
-> +	 */
-> +	hwcaps = getauxval(AT_HWCAP);
-> +
-> +	if (hwcaps & HWCAP_PACA) {
-> +		signed_vals.keyia = keyia_sign(val);
-> +		signed_vals.keyib = keyib_sign(val);
-> +		signed_vals.keyda = keyda_sign(val);
-> +		signed_vals.keydb = keydb_sign(val);
-> +	}
-> +	signed_vals.keyg = (hwcaps & HWCAP_PACG) ?  keyg_sign(val) : 0;
-> +
-> +	fwrite(&signed_vals, sizeof(struct signatures), 1, stdout);
-> +
-> +	return 0;
-> +}
-> diff --git a/tools/testing/selftests/arm64/pauth/helper.h b/tools/testing/selftests/arm64/pauth/helper.h
-> index e2ed910c9863..da6457177727 100644
-> --- a/tools/testing/selftests/arm64/pauth/helper.h
-> +++ b/tools/testing/selftests/arm64/pauth/helper.h
-> @@ -6,6 +6,16 @@
->  
->  #include <stdlib.h>
->  
-> +#define NKEYS 5
-> +
-> +
-> +struct signatures {
-> +	size_t keyia;
-> +	size_t keyib;
-> +	size_t keyda;
-> +	size_t keydb;
-> +	size_t keyg;
-> +};
->  
->  void pac_corruptor(void);
->  
-> diff --git a/tools/testing/selftests/arm64/pauth/pac.c b/tools/testing/selftests/arm64/pauth/pac.c
-> index 035fdd6aae9b..1b9e3acfeb61 100644
-> --- a/tools/testing/selftests/arm64/pauth/pac.c
-> +++ b/tools/testing/selftests/arm64/pauth/pac.c
-> @@ -2,6 +2,8 @@
->  // Copyright (C) 2020 ARM Limited
->  
->  #include <sys/auxv.h>
-> +#include <sys/types.h>
-> +#include <sys/wait.h>
->  #include <signal.h>
->  
->  #include "../../kselftest_harness.h"
-> @@ -33,6 +35,117 @@ do { \
->  } while (0)
->  
->  
-> +void sign_specific(struct signatures *sign, size_t val)
-> +{
-> +	sign->keyia = keyia_sign(val);
-> +	sign->keyib = keyib_sign(val);
-> +	sign->keyda = keyda_sign(val);
-> +	sign->keydb = keydb_sign(val);
-> +}
-> +
-> +void sign_all(struct signatures *sign, size_t val)
-> +{
-> +	sign->keyia = keyia_sign(val);
-> +	sign->keyib = keyib_sign(val);
-> +	sign->keyda = keyda_sign(val);
-> +	sign->keydb = keydb_sign(val);
-> +	sign->keyg  = keyg_sign(val);
-> +}
-> +
-> +int are_same(struct signatures *old, struct signatures *new, int nkeys)
-> +{
-> +	int res = 0;
-> +
-> +	res |= old->keyia == new->keyia;
-> +	res |= old->keyib == new->keyib;
-> +	res |= old->keyda == new->keyda;
-> +	res |= old->keydb == new->keydb;
-> +	if (nkeys == NKEYS)
-> +		res |= old->keyg  == new->keyg;
-> +
-> +	return res;
-> +}
-> +
-> +int exec_sign_all(struct signatures *signed_vals, size_t val)
-> +{
-> +	int new_stdin[2];
-> +	int new_stdout[2];
-> +	int status;
-> +	ssize_t ret;
-> +	pid_t pid;
+> If crash_base is outside ZONE_DMA, try to allocate at least 256M in
+> ZONE_DMA automatically. "crashkernel=Y,low" can be used to allocate
+> specified size low memory.
 
-Can we simplify this with popen(3)?  Fork-and-exec is notoriously
-fiddly...
+Except for the threshold to keep zone ZONE_DMA memory,
+reserve_crashkernel() looks very close to the x86 version. Shall we try
+to make this generic as well? In the first instance, you could avoid the
+threshold check if it takes an explicit ",high" option.
 
-[...]
-
-> +/*
-> + * fork() does not change keys. Only exec() does so call a worker program.
-> + * Its only job is to sign a value and report back the resutls
-> + */
-> +TEST(exec_unique_keys)
-> +{
-
-The kernel doesn't guarantee that keys are unique.
-
-Can we present all the "unique keys" wording differently, say
-
-	exec_key_collision_likely()
-
-Otherwise people might infer from this test code that the keys are
-supposed to be truly unique and start reporting bugs on the kernel.
-
-I can't see an obvious security argument for unique keys (rather, the
-keys just need to be "unique enough".  That's the job of
-get_random_bytes().)
-
-[...]
-
-Cheers
----Dave
+-- 
+Catalin
