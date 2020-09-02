@@ -2,112 +2,122 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2698CC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145BCC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F130520767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3381207D3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d4G7qqP4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EzvW+WRU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgIBO3l (ORCPT
+        id S1728120AbgIBO3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:29:41 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35204 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbgIBOY7 (ORCPT
+        Wed, 2 Sep 2020 10:29:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbgIBONl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:24:59 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082EOa2Z123302;
-        Wed, 2 Sep 2020 09:24:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599056676;
-        bh=CqP4NhGh7o1w/3Pi3oiKGtX3gGAk0+fcZXuBWvmIbR0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=d4G7qqP4sFoXC4+X/1sxQJNJnGvylvV9lWQCyodhulSJxWSGkqIx+FUbNrcQu5/fg
-         6LxhZfXHBOjeXMqWUeJsTbCIopLyNcGojMa05Tb+/DLl4bA1u8R44K4hK3qmkdY5A2
-         ux4+u04989jP8GnV9fO+h5c4kMI22mCShj4OZ9vg=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082EOaMc119573
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 2 Sep 2020 09:24:36 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
- 2020 09:24:35 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 2 Sep 2020 09:24:35 -0500
-Received: from [10.250.34.112] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082EOZRi056117;
-        Wed, 2 Sep 2020 09:24:35 -0500
-Subject: Re: [PATCH -next] remoteproc: k3-dsp: Fix return value check in
- k3_dsp_rproc_of_get_memories()
-To:     YueHaibing <yuehaibing@huawei.com>, <ohad@wizery.com>,
-        <bjorn.andersson@linaro.org>, <mathieu.poirier@linaro.org>
-CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200902140614.28636-1-yuehaibing@huawei.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <53dc15d3-c101-77fc-c58d-f9634a649a48@ti.com>
-Date:   Wed, 2 Sep 2020 09:24:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 2 Sep 2020 10:13:41 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EEB5C061231;
+        Wed,  2 Sep 2020 07:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=JsmSEHqUTPHzIdiuujgytMYVmaPLDkPMtqBFsN746VA=; b=EzvW+WRU6ocqroaF91GmMLKtwY
+        nTHpPcnlF9niVs+7RjtJZeCQxp9v5fF0wGWanEjySq1iFFZJDMZKzPCqtyKrSQTbWAkyTsqjVT55Q
+        iD/n2seyc/esMFg4wQO5m3F72Mwva4oG37BI1mEQ4gESiyggBoHE0cZAegPOy6vyED9ZhEWbCiVgT
+        Ys8Wi2PNgTCN/rHxeRVjAIvzNNpREuSn4i/ikZs+x/ZDO9ofVpQmJ7ld/bWo2F83N3CjGGsx3JHJv
+        Hl2OAV7Tbs9yDOCOr0rXsb0f53R+j06c53vCxpYfinFl+LSPeDGn2hvVwJCIIdnTQON4fRKP+bbLs
+        Zl0N0jOA==;
+Received: from [2001:4bb8:184:af1:6a63:7fdb:a80e:3b0b] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDTVG-0005hA-83; Wed, 02 Sep 2020 14:12:46 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 19/19] block: remove check_disk_change
+Date:   Wed,  2 Sep 2020 16:12:18 +0200
+Message-Id: <20200902141218.212614-20-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200902141218.212614-1-hch@lst.de>
+References: <20200902141218.212614-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200902140614.28636-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 9:06 AM, YueHaibing wrote:
-> In case of error, the function devm_ioremap_wc() returns NULL pointer
-> not ERR_PTR(). The IS_ERR() test in the return value check should be
-> replaced with NULL test.
+Remove the now unused check_disk_change helper.
 
-Thanks for the fix.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/block_dev.c        | 20 --------------------
+ include/linux/genhd.h |  1 -
+ 2 files changed, 21 deletions(-)
 
-> 
-> Fixes: 87218f96c21a ("remoteproc: k3-dsp: Add support for C71x DSPs")
-
-This should instead be
-Fixes: 6edbe024ba17 ("remoteproc: k3-dsp: Add a remoteproc driver of K3 C66x DSPs")
-
-With that,
-Acked-by: Suman Anna <s-anna@ti.com>
-
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/remoteproc/ti_k3_dsp_remoteproc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> index 9011e477290c..f373df35d7d0 100644
-> --- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> +++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> @@ -445,10 +445,10 @@ static int k3_dsp_rproc_of_get_memories(struct platform_device *pdev,
->  
->  		kproc->mem[i].cpu_addr = devm_ioremap_wc(dev, res->start,
->  							 resource_size(res));
-> -		if (IS_ERR(kproc->mem[i].cpu_addr)) {
-> +		if (!kproc->mem[i].cpu_addr) {
->  			dev_err(dev, "failed to map %s memory\n",
->  				data->mems[i].name);
-> -			return PTR_ERR(kproc->mem[i].cpu_addr);
-> +			return -EBUSY;
->  		}
->  		kproc->mem[i].bus_addr = res->start;
->  		kproc->mem[i].dev_addr = data->mems[i].dev_addr;
-> 
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 37cb809b217926..c6baae5b85060c 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1339,26 +1339,6 @@ void revalidate_disk_size(struct gendisk *disk, bool verbose)
+ }
+ EXPORT_SYMBOL(revalidate_disk_size);
+ 
+-/*
+- * This routine checks whether a removable media has been changed,
+- * and invalidates all buffer-cache-entries in that case. This
+- * is a relatively slow routine, so we have to try to minimize using
+- * it. Thus it is called only upon a 'mount' or 'open'. This
+- * is the best way of combining speed and utility, I think.
+- * People changing diskettes in the middle of an operation deserve
+- * to lose :-)
+- */
+-int check_disk_change(struct block_device *bdev)
+-{
+-	if (!bdev_check_media_change(bdev))
+-		return 0;
+-	if (bdev->bd_disk->fops->revalidate_disk)
+-		bdev->bd_disk->fops->revalidate_disk(bdev->bd_disk);
+-	return 1;
+-}
+-
+-EXPORT_SYMBOL(check_disk_change);
+-
+ void bd_set_nr_sectors(struct block_device *bdev, sector_t sectors)
+ {
+ 	spin_lock(&bdev->bd_size_lock);
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 322d48a207728a..1c97cf84f011a7 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -370,7 +370,6 @@ int register_blkdev(unsigned int major, const char *name);
+ void unregister_blkdev(unsigned int major, const char *name);
+ 
+ void revalidate_disk_size(struct gendisk *disk, bool verbose);
+-int check_disk_change(struct block_device *bdev);
+ bool bdev_check_media_change(struct block_device *bdev);
+ int __invalidate_device(struct block_device *bdev, bool kill_dirty);
+ void bd_set_nr_sectors(struct block_device *bdev, sector_t sectors);
+-- 
+2.28.0
 
