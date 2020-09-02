@@ -2,156 +2,153 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB4AC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DF8C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 565F4208B3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC82208B3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:25:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MPFeFxv4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2+GQz00"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728382AbgIBQZI (ORCPT
+        id S1728417AbgIBQZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:25:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58542 "EHLO
+        Wed, 2 Sep 2020 12:25:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgIBQZH (ORCPT
+        with ESMTP id S1727019AbgIBQZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:25:07 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01992C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 09:25:06 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id w11so140760lfn.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 09:25:06 -0700 (PDT)
+        Wed, 2 Sep 2020 12:25:17 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34CECC061244;
+        Wed,  2 Sep 2020 09:25:15 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a9so9903wmm.2;
+        Wed, 02 Sep 2020 09:25:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=p+VjSP7tWh9A7Uo1/vh88a9JUwYsjFZ9oMpqJyM2gdY=;
-        b=MPFeFxv4rz28exekZb65X+RzUZbSJI6wj3xc5X+1ubXwzX2F32DFftTcr+fFuEvoHn
-         3h3ncpRSXJUD9WxPpbJs29Zh2PBe9OGw4RV80EEL4sJsfWNjwnrM80cUbv4MXaEt+yLn
-         +/arP/dsNH9bw+n5vMFzeXJsdQBr+gJdw7KZk=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IM8g9T+1paRJIrOJC76fHo0IpLaUyt8i4HL4OIdzFuc=;
+        b=B2+GQz00nIQZOtBPEZoLKRASyI8CwIfL6it7dkhK5H4BAaxeqjpmswv5wfu8j3X6te
+         2Okl7N5w3cpyjLmEqD0GVdtWw3zczf0Bo1qz6FDl0BhIXsERo8Lu0vlZBmTaLIMm5UkF
+         tpO//JFMYSPB+ZT/CaOBYhrSnT+Bch9WDYQDnTC49CfHqBW/jUrbJzkLbJcpWS6EGjR2
+         b9VmW38Us0m/V+PGDFvqJxPt0QFwkBvzOuI1nt7LPRbDafgGkK8N7VtxhhYK6q8UAKUD
+         +/ArC/pCnz6X00D3RAK8v2qw6DQZ2zuBpLx+j8Vk4o7uBILBlmqIP7f56qnj/Vho7zkT
+         hqIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=p+VjSP7tWh9A7Uo1/vh88a9JUwYsjFZ9oMpqJyM2gdY=;
-        b=e+YkntI77JnErC9lY4SBlrQXj8CGmOojfXAkEs1JIfzRgID3MZtCetdB1Sy8OUPaSU
-         5wEcjMikzn2nTAODWhddNFUCBUM0Iy2ty5XoyFaQBS8nM4t5r6KLmIR/RJ7+hnmthUOv
-         qyDbtJ8JOK9DMeUdnG0AB0EfdTdj6M8qiyU2Vh/oOOgBqp7ErbaA/ynWtEFTlIMswKt0
-         k10QAq+D0myvh9idKjU45G9qsi7lKoxlA6O15uKHWmiaJ7lOexDzdPkIS7IOo9dHSoAb
-         1TtPZR0Sy+1e/VOWSAnd+ygfsPaqvmLbs6HeUtdVuyGhYK6PU8ZvrLtWbF3dyeZUsz0d
-         agVw==
-X-Gm-Message-State: AOAM532u/M1SmXV3aVR6LMYIwOEKeJ0gwdFdjHj+HT6PlcwzBL+RNfLs
-        9gzgfB27ebQZ2sG4YOzs3A9U5GFTokKU2Q==
-X-Google-Smtp-Source: ABdhPJxM7kti4+8R8ABR5jiDlR0WH54FFzm3nrzV6i8gWd1Fezy6Ok7ZtgSz+mByB19GJfVuPvPUfQ==
-X-Received: by 2002:a19:c157:: with SMTP id r84mr3747804lff.34.1599063904930;
-        Wed, 02 Sep 2020 09:25:04 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id z24sm1217145lfe.54.2020.09.02.09.25.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 09:25:04 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id v23so6685010ljd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 09:25:04 -0700 (PDT)
-X-Received: by 2002:adf:d0cb:: with SMTP id z11mr6506581wrh.192.1599063439238;
- Wed, 02 Sep 2020 09:17:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IM8g9T+1paRJIrOJC76fHo0IpLaUyt8i4HL4OIdzFuc=;
+        b=Z1GEJgn8kj+Sk7oZsEjIdFqHL6tHN6F4r8OeY8tpxIFJVOZeBcbXvLsYni05IxxMXl
+         AP97P3VC4Uap/RMfnkZO5qOiW5RWpuoWnPtTZZ3oh0ukBVzimPPP333K8pysdBHz+qXr
+         EgGFZnlcyzB3xsqiTW57SfugjLwAw+CPZG1+2wM8OcQ2E+YwQT5WIyvZFmVVNS3d+uz8
+         LILPXGRUwBfF6BcLYu3bbGCJX4n4tbZlUYz210rPjQs+331kg6t0IVtg8fUe26BNxmdF
+         hWDdpY9YjffIURznXbArUoKUzmJ/1FAcXx24naxiMeY8iGKxaRdMsX8nagvxWnpWoYAU
+         vqeg==
+X-Gm-Message-State: AOAM532Z4HhGL18sK1gRzl/PASuzS33TGVGyYCnzpnT3ShEsqp66VTA+
+        ttc6hhfUM2oTHBD/e/qCNsE=
+X-Google-Smtp-Source: ABdhPJzJiXUwTBLVaQlzQfXxywxTActdtTjuZnc5B7izvhRc3Q7JcYCaGG/bMYaa8N9VfBA/iJagUQ==
+X-Received: by 2002:a1c:f20e:: with SMTP id s14mr1372933wmc.23.1599063913866;
+        Wed, 02 Sep 2020 09:25:13 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id y6sm206120wrt.80.2020.09.02.09.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 09:25:13 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] RDMA/ucma: Fix resource leak on error path
+Date:   Wed,  2 Sep 2020 17:24:51 +0100
+Message-Id: <20200902162454.332828-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <1597380295-6297-1-git-send-email-wuxy@bitland.com.cn>
- <20200831180211.GQ31019@paasikivi.fi.intel.com> <tencent_0189E021005C2124231E353A@qq.com>
-In-Reply-To: <tencent_0189E021005C2124231E353A@qq.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Wed, 2 Sep 2020 18:17:00 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5AQ7nmOqTrGOtmqAk9PHGdypzBb3woG1QS45bO8yfaVJQ@mail.gmail.com>
-Message-ID: <CAAFQd5AQ7nmOqTrGOtmqAk9PHGdypzBb3woG1QS45bO8yfaVJQ@mail.gmail.com>
-Subject: Re: [PATCH V3] Add GalaxyCore image sensor driver
-To:     =?UTF-8?B?5ZC05YW06IKyQjAxNzc5?= <wuxy@bitland.com.cn>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        mchehab <mchehab@kernel.org>, "robh+dt" <robh+dt@kernel.org>,
-        davem <davem@davemloft.net>, "shawnx.tu" <shawnx.tu@intel.com>,
-        hverkuil-cisco <hverkuil-cisco@xs4all.nl>,
-        "dave.stevenson" <dave.stevenson@raspberrypi.com>,
-        "manivannan.sadhasivam" <manivannan.sadhasivam@linaro.org>,
-        "bingbu.cao" <bingbu.cao@intel.com>,
-        drinkcat <drinkcat@chromium.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "dongchun.zhu" <dongchun.zhu@mediatek.com>,
-        "sj.huang" <sj.huang@mediatek.com>,
-        darfur_liu <darfur_liu@gcoreinc.com>,
-        "hao.he7" <hao.he7@gmail.com>, "hao.he" <hao.he@bitland.com.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everyone,
+In ucma_process_join(), if the call to xa_alloc() fails, the function
+will return without freeing mc. Fix this by jumping to the correct line.
 
-On Tue, Sep 1, 2020 at 7:19 AM =E5=90=B4=E5=85=B4=E8=82=B2B01779 <wuxy@bitl=
-and.com.cn> wrote:
->
-> Hi Sakari,
->
-> It seems the e-mails you're sending do not end up to LMML nor kernel.org
-> Patchwork.
->  =3D=3D=3D>It looks like we need to fix this before patch can land in pat=
-chwork.
->
+In the process I renamed the jump labels to something more memorable for
+extra clarity.
 
-FYI, I'll take care of addressing the comments to v3 and posting v4 to the =
-list.
+Addresses-Coverity: ("Resource leak")
+Fixes: 95fe51096b7a ("RDMA/ucma: Remove mc_list and rely on xarray")
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/infiniband/core/ucma.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-PS. Please use plain text only messages when communicating with the
-mailing lists as HTML emails are often blocked. Please also use bottom
-posting. More guidance can be found at [1] (the specific question the
-link points to and other questions too).
+diff --git a/drivers/infiniband/core/ucma.c b/drivers/infiniband/core/ucma.c
+index f2c9ef6ae481..a5595bd489b0 100644
+--- a/drivers/infiniband/core/ucma.c
++++ b/drivers/infiniband/core/ucma.c
+@@ -1453,7 +1453,7 @@ static ssize_t ucma_process_join(struct ucma_file *file,
+ 	mc = kzalloc(sizeof(*mc), GFP_KERNEL);
+ 	if (!mc) {
+ 		ret = -ENOMEM;
+-		goto err1;
++		goto err_put_ctx;
+ 	}
+ 
+ 	mc->ctx = ctx;
+@@ -1464,7 +1464,7 @@ static ssize_t ucma_process_join(struct ucma_file *file,
+ 	if (xa_alloc(&multicast_table, &mc->id, NULL, xa_limit_32b,
+ 		     GFP_KERNEL)) {
+ 		ret = -ENOMEM;
+-		goto err1;
++		goto err_free_mc;
+ 	}
+ 
+ 	mutex_lock(&ctx->mutex);
+@@ -1472,13 +1472,13 @@ static ssize_t ucma_process_join(struct ucma_file *file,
+ 				  join_state, mc);
+ 	mutex_unlock(&ctx->mutex);
+ 	if (ret)
+-		goto err2;
++		goto err_xa_erase;
+ 
+ 	resp.id = mc->id;
+ 	if (copy_to_user(u64_to_user_ptr(cmd->response),
+ 			 &resp, sizeof(resp))) {
+ 		ret = -EFAULT;
+-		goto err3;
++		goto err_leave_multicast;
+ 	}
+ 
+ 	xa_store(&multicast_table, mc->id, mc, 0);
+@@ -1486,15 +1486,16 @@ static ssize_t ucma_process_join(struct ucma_file *file,
+ 	ucma_put_ctx(ctx);
+ 	return 0;
+ 
+-err3:
++err_leave_multicast:
+ 	mutex_lock(&ctx->mutex);
+ 	rdma_leave_multicast(ctx->cm_id, (struct sockaddr *) &mc->addr);
+ 	mutex_unlock(&ctx->mutex);
+ 	ucma_cleanup_mc_events(mc);
+-err2:
++err_xa_erase:
+ 	xa_erase(&multicast_table, mc->id);
++err_free_mc:
+ 	kfree(mc);
+-err1:
++err_put_ctx:
+ 	ucma_put_ctx(ctx);
+ 	return ret;
+ }
+-- 
+2.28.0
 
-[1] http://vger.kernel.org/lkml/#s3-9
-
-Best regards,
-Tomasz
-
-> Thanks.
->
-> ------------------ Original ------------------
-> From:  "Sakari Ailus"<sakari.ailus@linux.intel.com>;
-> Date:  Tue, Sep 1, 2020 02:02 AM
-> To:  "Xingyu Wu"<wuxy@bitland.com.cn>;
-> Cc:  "mchehab"<mchehab@kernel.org>; "robh+dt"<robh+dt@kernel.org>; "davem=
-"<davem@davemloft.net>; "shawnx.tu"<shawnx.tu@intel.com>; "hverkuil-cisco"<=
-hverkuil-cisco@xs4all.nl>; "dave.stevenson"<dave.stevenson@raspberrypi.com>=
-; "manivannan.sadhasivam"<manivannan.sadhasivam@linaro.org>; "bingbu.cao"<b=
-ingbu.cao@intel.com>; "tfiga"<tfiga@chromium.org>; "drinkcat"<drinkcat@chro=
-mium.org>; "linux-media"<linux-media@vger.kernel.org>; "linux-kernel"<linux=
--kernel@vger.kernel.org>; "devicetree"<devicetree@vger.kernel.org>; "dongch=
-un.zhu"<dongchun.zhu@mediatek.com>; "sj.huang"<sj.huang@mediatek.com>; "dar=
-fur_liu"<darfur_liu@gcoreinc.com>; "hao.he7"<hao.he7@gmail.com>; "hao.he"<h=
-ao.he@bitland.com.cn>;
-> Subject:  Re: [PATCH V3] Add GalaxyCore image sensor driver
->
-> Hi Xingyu,
->
-> On Fri, Aug 14, 2020 at 12:44:51PM +0800, Xingyu Wu wrote:
-> > This patch series add GalaxyCore GC5035 image sensor driver.
-> >
-> > Change in v3:
-> > 1.Optimize gc5035 driver.
-> > 2.Redescibe reset-gpio in documentation.
->
-> It seems the e-mails you're sending do not end up to LMML nor kernel.org
-> Patchwork.
->
-> I'm not sure why, but that needs to be fixed.
->
-> --
-> Kind regards,
->
-> Sakari Ailus
