@@ -2,143 +2,709 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A10AFC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFCEC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6886C20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC34B2078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:31:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WQH2h9V/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VD0OSq39"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgIBMbB (ORCPT
+        id S1726968AbgIBMbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 08:31:01 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:49967 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726377AbgIBMao (ORCPT
+        Wed, 2 Sep 2020 08:31:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbgIBMbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 08:30:44 -0400
-X-UUID: ea9ba8abf0e14f189b56f1e741f232ca-20200902
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ZtjJKtZNAVuZVOOlw4wrd3u0b/ydDS0OmQrA7mmZt64=;
-        b=WQH2h9V/SoJ0o8LoWpTXrzLicqG7ZRxrmRTMlxpN1Gniwc+5xbhPJJXm6EORjCSMT2+CaVTJC7ouefkuT0lvGOjPixhCsxEX7+IXm4YyQbN7cexa/0MxrwohtcCDhsdGmTChYuKWo0sFPAYh5gnEH4XDC6wEQf/jgJEuLJBkcxs=;
-X-UUID: ea9ba8abf0e14f189b56f1e741f232ca-20200902
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <irui.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 218364270; Wed, 02 Sep 2020 20:30:18 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 2 Sep
- 2020 20:30:15 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 2 Sep 2020 20:30:16 +0800
-Message-ID: <1599049719.25072.4.camel@mhfsdcap03>
-Subject: Re: [PATCH] media: mtk-vcodec: set dma max segment size
-From:   Irui Wang <irui.wang@mediatek.com>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-CC:     <linux-mediatek@lists.infradead.org>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-media@vger.kernel.org>,
-        Anand K Mistry <amistry@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        Yunfei Dong <Yunfei.Dong@mediatek.com>
-Date:   Wed, 2 Sep 2020 20:28:39 +0800
-In-Reply-To: <20200821041414.1560707-1-hsinyi@chromium.org>
-References: <20200821041414.1560707-1-hsinyi@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 2 Sep 2020 08:31:32 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED746C061244;
+        Wed,  2 Sep 2020 05:31:31 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t11so2227056plr.5;
+        Wed, 02 Sep 2020 05:31:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nWY+6erNVM6Xl8glEmPwXLUrDWTRISXUW1W403933l8=;
+        b=VD0OSq39q348n1v0uQAp3k88+WIjjZosqgA9X8iTDSWTjcUIiBYN3MZ9VOTTkyBU/Q
+         Q8A5ixCGv3EdEq1ELmY51HVWXGc6dVFfTsdeZMCnFDhjOZa2FlBInUpVq5Vrea0B3Ij5
+         8KFVifnTJ3frLnDMCOfvogXrKpMfrvqfZLCnChDBdXM6iRJ7ccpTaCPtYApB6msTmr5a
+         TnM7Y9wvDxm0xsxg79JeuF/yIcTYKrAts5AAKNZD1I2OSDSdVrPUR2F+rRVe/9YNR+5R
+         Faa2IUmCjlH7Il+4Irn4qnbm9MEs4rRa8geygx0mGNnyegeHbk7GuA/2LUGvi/S/7vF1
+         aabQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nWY+6erNVM6Xl8glEmPwXLUrDWTRISXUW1W403933l8=;
+        b=T8R/J9o7Rx1Lb2PMpTm/M7EP17rwxp8BBwa7K0hkiMvz5s+UVahiGw4BecHsWD7yg8
+         IC6TB31kb3A8rRSY4/JxyzqYOxt5BqY6xIU3ZWLjbwoKdyVo4Fxoye+QLICcn3BrJNTU
+         4Vt7PBXsi5GGw8hdKM3WXzIuYq8l87JnHhDn7Xt/dAkoM8jVspthotP5tqY390VicVol
+         cN5wfWkRgQ/4z9JxDnYy7dPkQ8O4H19ZFJKZVj3PsxoOAYJ6ONrB3zqm6p2ycZKrLi5u
+         83VaJ7KYCjImfADARpW4OMZd0Cr9xHTjOw3QFBEAaAqbFqB82tV3X/D3A+ztCbD3w822
+         qdLw==
+X-Gm-Message-State: AOAM533yV5tqpeXSl1HyD2Yrcxsploa1ag5YPaV6M6rJZnxvP89L2EZb
+        KdJxu++3agDHkLTPtXyhnlw=
+X-Google-Smtp-Source: ABdhPJy5I6Gyc/KFdPbcmJPMUULGfd168li2aLRy3APbEPCpTrTUdoGGSsFGxSMYWgDx+YsfSquKCw==
+X-Received: by 2002:a17:90a:bf8d:: with SMTP id d13mr2160253pjs.100.1599049891350;
+        Wed, 02 Sep 2020 05:31:31 -0700 (PDT)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id gx5sm1062511pjb.57.2020.09.02.05.31.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 05:31:30 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Wed, 2 Sep 2020 20:31:25 +0800
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        syzkaller-bugs@googlegroups.com,
+        syzbot+dd768a260f7358adbaf9@syzkaller.appspotmail.com,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Bluetooth: fix "list_add double add" in
+ hci_conn_complete_evt
+Message-ID: <20200902122357.ca2fztgah7gwz7yp@Rk>
+References: <000000000000c57f2d05ac4c5b8e@google.com>
+ <20200823010022.938532-1-coiby.xu@gmail.com>
+ <C0A907BA-9C0D-4124-A2AF-3748055DB062@holtmann.org>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 88726D815BBC0380A972E320C447704F65376A421771C015CAE967C03689FAF22000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="yijhrv2ys2svaijk"
+Content-Disposition: inline
+In-Reply-To: <C0A907BA-9C0D-4124-A2AF-3748055DB062@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RGVhciBIc2luLVlpLA0KDQpiZWNhdXNlIHRoaXMgV2FybmluZyBpcyBvY2N1cmVkIHdpdGggY29u
-ZmlnIENPTkZJR19ETUFfQVBJX0RFQlVHX1NHPXksDQpob3cgYWJvdXQgYWRkIHRoZXNlIG1vZGlm
-aWNhdGlvbnMgd2l0aCB0aGlzIGNvbmZpZ3VyYXRpb24gYXMgd2VsbD8NCg0KT24gRnJpLCAyMDIw
-LTA4LTIxIGF0IDEyOjE0ICswODAwLCBIc2luLVlpIFdhbmcgd3JvdGU6DQo+IFNldCBkbWEgbWF4
-IHNlZ21lbnQgc2l6ZSBmb3IgZW5jb2RlciBhbmQgZGVjb2RlciBkcml2ZXIuDQo+IA0KPiBGaXgg
-Zm9sbG93aW5nIHdhcm5pbmcgd2l0aCBDT05GSUdfRE1BX0FQSV9ERUJVR19TRz15DQo+IA0KPiBb
-ICAgNzUuMTQ3ODI1XSAtLS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0NCj4gWyAg
-IDc1LjE0Nzg0NF0gbXRrLXZjb2RlYy1lbmMgMTkwMDIwMDAudmNvZGVjOiBETUEtQVBJOiBtYXBw
-aW5nIHNnIHNlZ21lbnQgbG9uZ2VyIHRoYW4gZGV2aWNlIGNsYWltcyB0byBzdXBwb3J0IFtsZW49
-OTgzMDQwXSBbbWF4PTY1NTM2XQ0KPiBbICAgNzUuMTQ3ODc2XSBXQVJOSU5HOiBDUFU6IDIgUElE
-OiA0MDY5IGF0IGtlcm5lbC9kbWEvZGVidWcuYzoxMzAyIGRlYnVnX2RtYV9tYXBfc2crMHgxYTgv
-MHgyYzQNCj4gLi4uDQo+IFsgICA3NS4xNDgxMzldIENhbGwgdHJhY2U6DQo+IFsgICA3NS4xNDgx
-NDldICBkZWJ1Z19kbWFfbWFwX3NnKzB4MWE4LzB4MmM0DQo+IFsgICA3NS4xNDgxNjVdICB2YjJf
-ZGNfZ2V0X3VzZXJwdHIrMHgyMjgvMHgzNjQgW3ZpZGVvYnVmMl9kbWFfY29udGlnXQ0KPiBbICAg
-NzUuMTQ4MTc4XSAgX19idWZfcHJlcGFyZSsweDNhYy8weDhjMCBbdmlkZW9idWYyX2NvbW1vbl0N
-Cj4gWyAgIDc1LjE0ODE4OF0gIHZiMl9jb3JlX3FidWYrMHhhNC8weDU4YyBbdmlkZW9idWYyX2Nv
-bW1vbl0NCj4gWyAgIDc1LjE0ODE5OV0gIHZiMl9xYnVmKzB4ODgvMHhlNCBbdmlkZW9idWYyX3Y0
-bDJdDQo+IFsgICA3NS4xNDgyMTFdICB2NGwyX20ybV9xYnVmKzB4ODAvMHhmOCBbdjRsMl9tZW0y
-bWVtXQ0KPiBbICAgNzUuMTQ4MjIxXSAgdmlkaW9jX3ZlbmNfcWJ1ZisweDNjLzB4NzAgW210a192
-Y29kZWNfZW5jXQ0KPiBbICAgNzUuMTQ4MjM0XSAgdjRsX3FidWYrMHg0OC8weDU4DQo+IFsgICA3
-NS4xNDgyNDJdICBfX3ZpZGVvX2RvX2lvY3RsKzB4MjAwLzB4MzdjDQo+IFsgICA3NS4xNDgyNTBd
-ICB2aWRlb191c2VyY29weSsweDM2MC8weDgzNA0KPiBbICAgNzUuMTQ4MjU5XSAgdmlkZW9faW9j
-dGwyKzB4MzgvMHg0OA0KPiBbICAgNzUuMTQ4MjY3XSAgdjRsMl9pb2N0bCsweDZjLzB4ODANCj4g
-WyAgIDc1LjE0ODI3Nl0gIGRvX3ZpZGVvX2lvY3RsKzB4ZWZjLzB4NGI3MA0KPiBbICAgNzUuMTQ4
-Mjg0XSAgdjRsMl9jb21wYXRfaW9jdGwzMisweDVjLzB4Y2MNCj4gWyAgIDc1LjE0ODI5NF0gIF9f
-YXJtNjRfY29tcGF0X3N5c19pb2N0bCsweGY0LzB4MjQwDQo+IFsgICA3NS4xNDgzMDRdICBlbDBf
-c3ZjX2NvbW1vbisweGFjLzB4MTk4DQo+IFsgICA3NS4xNDgzMTJdICBlbDBfc3ZjX2NvbXBhdF9o
-YW5kbGVyKzB4MmMvMHg0MA0KPiBbICAgNzUuMTQ4MzIxXSAgZWwwX3N2Y19jb21wYXQrMHg4LzB4
-MTgNCj4gWyAgIDc1LjE0ODMyOF0gaXJxIGV2ZW50IHN0YW1wOiAwDQo+IFsgICA3NS4xNDgzMzdd
-IGhhcmRpcnFzIGxhc3QgIGVuYWJsZWQgYXQgKDApOiBbPDAwMDAwMDAwMDAwMDAwMDA+XSAgICAg
-ICAgICAgKG51bGwpDQo+IFsgICA3NS4xNDgzNDddIGhhcmRpcnFzIGxhc3QgZGlzYWJsZWQgYXQg
-KDApOiBbPGZmZmZmZjkwMDgwZTY1YzA+XSBjb3B5X3Byb2Nlc3MrMHgzODAvMHgxMTVjDQo+IFsg
-ICA3NS4xNDgzNTZdIHNvZnRpcnFzIGxhc3QgIGVuYWJsZWQgYXQgKDApOiBbPGZmZmZmZjkwMDgw
-ZTY1ZDg+XSBjb3B5X3Byb2Nlc3MrMHgzOTgvMHgxMTVjDQo+IFsgICA3NS4xNDgzNjRdIHNvZnRp
-cnFzIGxhc3QgZGlzYWJsZWQgYXQgKDApOiBbPDAwMDAwMDAwMDAwMDAwMDA+XSAgICAgICAgICAg
-KG51bGwpDQo+IFsgICA3NS4xNDgzNzJdIC0tLVsgZW5kIHRyYWNlIDU4OGJmNTI5NDUxZTM1MzEg
-XS0tLQ0KPiANCj4gUmVwb3J0ZWQtYnk6IEFuYW5kIEsgTWlzdHJ5IDxhbWlzdHJ5QGNocm9taXVt
-Lm9yZz4NCj4gU2lnbmVkLW9mZi1ieTogSHNpbi1ZaSBXYW5nIDxoc2lueWlAY2hyb21pdW0ub3Jn
-Pg0KPiAtLS0NCj4gIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVj
-X2RlY19kcnYuYyB8IDggKysrKysrKysNCj4gIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZj
-b2RlYy9tdGtfdmNvZGVjX2VuY19kcnYuYyB8IDggKysrKysrKysNCj4gIDIgZmlsZXMgY2hhbmdl
-ZCwgMTYgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxh
-dGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2RlY19kcnYuYyBiL2RyaXZlcnMvbWVkaWEvcGxh
-dGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2RlY19kcnYuYw0KPiBpbmRleCA5N2ExYjY2NjRj
-MjAuLjNiYmQwYmFjNTZkNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9t
-dGstdmNvZGVjL210a192Y29kZWNfZGVjX2Rydi5jDQo+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxh
-dGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2RlY19kcnYuYw0KPiBAQCAtMjQyLDYgKzI0Miwx
-NCBAQCBzdGF0aWMgaW50IG10a192Y29kZWNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
-cGRldikNCj4gIAkJbXRrX3Y0bDJfZXJyKCJbVlBVXSB2cHUgZGV2aWNlIGluIG5vdCByZWFkeSIp
-Ow0KPiAgCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsNCj4gIAl9DQo+ICsJaWYgKCFwZGV2LT5kZXYu
-ZG1hX3Bhcm1zKSB7DQo+ICsJCXBkZXYtPmRldi5kbWFfcGFybXMgPSBkZXZtX2t6YWxsb2MoJnBk
-ZXYtPmRldiwNCj4gKwkJCQkJCXNpemVvZigqcGRldi0+ZGV2LmRtYV9wYXJtcyksDQo+ICsJCQkJ
-CQlHRlBfS0VSTkVMKTsNCj4gKwkJaWYgKCFwZGV2LT5kZXYuZG1hX3Bhcm1zKQ0KPiArCQkJcmV0
-dXJuIC1FTk9NRU07DQo+ICsJfQ0KPiArCWRtYV9zZXRfbWF4X3NlZ19zaXplKCZwZGV2LT5kZXYs
-IERNQV9CSVRfTUFTSygzMikpOw0KPiAgDQo+ICAJdnB1X3dkdF9yZWdfaGFuZGxlcihkZXYtPnZw
-dV9wbGF0X2RldiwgbXRrX3Zjb2RlY19kZWNfcmVzZXRfaGFuZGxlciwNCj4gIAkJCWRldiwgVlBV
-X1JTVF9ERUMpOw0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNv
-ZGVjL210a192Y29kZWNfZW5jX2Rydi5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNv
-ZGVjL210a192Y29kZWNfZW5jX2Rydi5jDQo+IGluZGV4IDRkMzFmMWVkMTEzZi4uZmY0YTg3NDg1
-ZDY5IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRr
-X3Zjb2RlY19lbmNfZHJ2LmMNCj4gKysrIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNv
-ZGVjL210a192Y29kZWNfZW5jX2Rydi5jDQo+IEBAIC0yNDksNiArMjQ5LDE0IEBAIHN0YXRpYyBp
-bnQgbXRrX3Zjb2RlY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgCQlt
-dGtfdjRsMl9lcnIoIltWUFVdIHZwdSBkZXZpY2UgaW4gbm90IHJlYWR5Iik7DQo+ICAJCXJldHVy
-biAtRVBST0JFX0RFRkVSOw0KPiAgCX0NCj4gKwlpZiAoIXBkZXYtPmRldi5kbWFfcGFybXMpIHsN
-Cj4gKwkJcGRldi0+ZGV2LmRtYV9wYXJtcyA9IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LA0KPiAr
-CQkJCQkJc2l6ZW9mKCpwZGV2LT5kZXYuZG1hX3Bhcm1zKSwNCj4gKwkJCQkJCUdGUF9LRVJORUwp
-Ow0KPiArCQlpZiAoIXBkZXYtPmRldi5kbWFfcGFybXMpDQo+ICsJCQlyZXR1cm4gLUVOT01FTTsN
-Cj4gKwl9DQo+ICsJZG1hX3NldF9tYXhfc2VnX3NpemUoJnBkZXYtPmRldiwgRE1BX0JJVF9NQVNL
-KDMyKSk7DQo+ICANCj4gIAl2cHVfd2R0X3JlZ19oYW5kbGVyKGRldi0+dnB1X3BsYXRfZGV2LCBt
-dGtfdmNvZGVjX2VuY19yZXNldF9oYW5kbGVyLA0KPiAgCQkJCWRldiwgVlBVX1JTVF9FTkMpOw0K
-DQo=
 
+--yijhrv2ys2svaijk
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+
+On Mon, Aug 31, 2020 at 06:06:18PM +0200, Marcel Holtmann wrote:
+>Hi Coiby,
+
+Hi Marcel,
+
+Thank you for reviewing this patch!
+
+>
+>> When two HCI_EV_CONN_COMPLETE event packets with status=0 of the same
+>> HCI connection are received, device_add would be called twice which
+>> leads to kobject_add being called twice. Thus duplicate
+>> (struct hci_conn *conn)->dev.kobj.entry would be inserted into
+>> (struct hci_conn *conn)->dev.kobj.kset->list.
+>>
+>> This issue can be fixed by checking (struct hci_conn *conn)->debugfs.
+>> If it's not NULL, it means the HCI connection has been completed and we
+>> won't duplicate the work as for processing the first
+>> HCI_EV_CONN_COMPLETE event.
+>
+>do you have a btmon trace for this happening?
+
+Please see the attachment "btmon_output" which is a plain text file.
+I couldn't find a way to save traces in btsnoop format (the kernel would
+panic immediately after running the re-producer before QEMU has a chance
+to write the btsnoop file to the disk image).
+
+I've also also attached a simplified re-producer rep9_min.c if it interests you.
+>
+>> Reported-and-tested-by: syzbot+dd768a260f7358adbaf9@syzkaller.appspotmail.com
+>> Link: https://syzkaller.appspot.com/bug?extid=dd768a260f7358adbaf9
+>> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+>> ---
+>> net/bluetooth/hci_event.c | 5 +++++
+>> 1 file changed, 5 insertions(+)
+>>
+>> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+>> index 4b7fc430793c..1233739ce760 100644
+>> --- a/net/bluetooth/hci_event.c
+>> +++ b/net/bluetooth/hci_event.c
+>> @@ -2605,6 +2605,11 @@ static void hci_conn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
+>> 	}
+>>
+>> 	if (!ev->status) {
+>> +		if (conn->debugfs) {
+>> +			bt_dev_err(hdev, "The connection has been completed");
+>> +			goto unlock;
+>> +		}
+>> +
+>
+>And instead of doing papering over a hole, I would rather detect that the HCI event is not valid since we already received one for this connection.
+
+To check conn->debugfs is what I think could be used to detect this
+duplicate HCI event. Or you are suggesting this is not sufficient
+and implement something like a state machine instead?
+
+>
+>Regards
+>
+>Marcel
+>
+
+--
+Best regards,
+Coiby
+
+--yijhrv2ys2svaijk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename=btmon_output
+
+Bluetooth monitor ver 5.54
+= Note: Linux version 5.8.0+ (x86_64)                                  0.447880
+= Note: Bluetooth subsystem version 2.22                               0.447950
+@ MGMT Open: btmon (privileged) version 1.18                  {0x0001} 0.449370
+= New Index: 00:00:00:00:00:00 (Primary,Virtual,hci0)           [hci0] 5.834012
+@ RAW Open: rep9_ (privileged) version 2.22                   {0x0002} 5.840840
+= Open Index: 00:00:00:00:00:00                                 [hci0] 5.843719
+< HCI Command: Reset (0x03|0x0003) plen 0                    #1 [hci0] 5.844689
+> HCI Event: Command Complete (0x0e) plen 252                #2 [hci0] 5.844982
+      Reset (0x03|0x0003) ncmd 1
+        invalid packet size
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00                       .........
+< HCI Command: Read Local Supported... (0x04|0x0003) plen 0  #3 [hci0] 5.845194
+> HCI Event: Command Complete (0x0e) plen 252                #4 [hci0] 5.845356
+      Read Local Supported Features (0x04|0x0003) ncmd 1
+        invalid packet size
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00                       .........
+< HCI Command: Read Local Version In.. (0x04|0x0001) plen 0  #5 [hci0] 5.845522
+> HCI Event: Command Complete (0x0e) plen 252                #6 [hci0] 5.845593
+      Read Local Version Information (0x04|0x0001) ncmd 1
+        invalid packet size
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00                       .........
+< HCI Command: Read BD ADDR (0x04|0x0009) plen 0             #7 [hci0] 5.845849
+> HCI Event: Command Complete (0x0e) plen 10                 #8 [hci0] 5.845914
+      Read BD ADDR (0x04|0x0009) ncmd 1
+        Status: Success (0x00)
+[   50.133219][ T8087] kobject_add_internal failed for hci0:200 with -EEXIST, don't try to register things with the same name in the same directory.
+[   50.135031][ T8087] Bluetooth: hci0: failed to register connection device
+        Address: AA:AA:AA:AA:AA:AA (OUI AA-AA-AA)
+< HCI Command: Read Buffer Size (0x04|0x0005) plen 0         #9 [hci0] 5.846623
+> HCI Event: Command Complete (0x0e) plen 11                #10 [hci0] 5.846710
+      Read Buffer Size (0x04|0x0005) ncmd 1
+        Status: Success (0x00)
+        ACL MTU: 1021 ACL max packet: 4
+        SCO MTU: 96   SCO max packet: 6
+< HCI Command: Read Class of Device (0x03|0x0023) plen 0    #11 [hci0] 5.846806
+> HCI Event: Command Complete (0x0e) plen 252               #12 [hci0] 5.846862
+      Read Class of Device (0x03|0x0023) ncmd 1
+        invalid packet size
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00                       .........
+< HCI Command: Read Local Name (0x03|0x0014) plen 0         #13 [hci0] 5.893252
+> HCI Event: Command Complete (0x0e) plen 252               #14 [hci0] 5.893318
+      Read Local Name (0x03|0x0014) ncmd 1
+        Status: Success (0x00)
+        Name:
+< HCI Command: Read Voice Setting (0x03|0x0025) plen 0      #15 [hci0] 5.893439
+> HCI Event: Command Complete (0x0e) plen 252               #16 [hci0] 5.893490
+      Read Voice Setting (0x03|0x0025) ncmd 1
+        invalid packet size
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00                       .........
+< HCI Command: Read Number of Suppo.. (0x03|0x0038) plen 0  #17 [hci0] 5.893559
+> HCI Event: Command Complete (0x0e) plen 252               #18 [hci0] 5.893600
+      Read Number of Supported IAC (0x03|0x0038) ncmd 1
+        invalid packet size
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00                       .........
+< HCI Command: Read Current IAC LAP (0x03|0x0039) plen 0    #19 [hci0] 5.893666
+> HCI Event: Command Complete (0x0e) plen 252               #20 [hci0] 5.893710
+      Read Current IAC LAP (0x03|0x0039) ncmd 1
+        Status: Success (0x00)
+        Number of IAC: 0
+< HCI Command: Set Event Filter (0x03|0x0005) plen 1        #21 [hci0] 5.893777
+        Type: Clear All Filters (0x00)
+> HCI Event: Command Complete (0x0e) plen 252               #22 [hci0] 5.893818
+      Set Event Filter (0x03|0x0005) ncmd 1
+        invalid packet size
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00                       .........
+< HCI Command: Write Connection Acc.. (0x03|0x0016) plen 2  #23 [hci0] 5.893884
+        Timeout: 20000.000 msec (0x7d00)
+> HCI Event: Command Complete (0x0e) plen 252               #24 [hci0] 5.893925
+      Write Connection Accept Timeout (0x03|0x0016) ncmd 1
+        invalid packet size
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+        00 00 00 00 00 00 00 00 00                       .........
+= Index Info: AA:AA:AA:AA:AA.. (Ericsson Technology Licensing)  [hci0] 5.894458
+@ MGMT Event: Index Added (0x0004) plen 0              {0x0001} [hci0] 5.894531
+< HCI Command: Write Scan Enable (0x03|0x001a) plen 1       #25 [hci0] 5.895481
+        Scan enable: Page Scan (0x02)
+> HCI Event: Command Complete (0x0e) plen 4                 #26 [hci0] 5.895547
+      Write Scan Enable (0x03|0x001a) ncmd 1
+        Status: Success (0x00)
+> HCI Event: Connect Request (0x04) plen 10                 #27 [hci0] 5.895786
+        Address: 10:AA:AA:AA:AA:AA (OUI 10-AA-AA)
+        Class: 0x000000
+          Major class: Miscellaneous
+          Minor class: 0x00
+        Link type: ACL (0x01)
+> HCI Event: Connect Complete (0x03) plen 11                #28 [hci0] 5.895828
+        Status: Success (0x00)
+        Handle: 200
+        Address: 10:AA:AA:AA:AA:AA (OUI 10-AA-AA)
+        Link type: ACL (0x01)
+        Encryption: Disabled (0x00)
+> HCI Event: Connect Complete (0x03) plen 11                #29 [hci0] 5.895842
+        Status: Success (0x00)
+        Handle: 200
+        Address: 10:AA:AA:AA:AA:AA (OUI 10-AA-AA)
+        Link type: ACL (0x01)
+        Encryption: Disabled (0x00)
+@ RAW Close: rep9_                                            {0x0002} 5.951790
+< HCI Command: Accept Connection Re.. (0x01|0x0009) plen 7  #30 [hci0] 6.130913
+        Address: 10:AA:AA:AA:AA:AA (OUI 10-AA-AA)
+        Role: Slave (0x01)
+
+--yijhrv2ys2svaijk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="rep9_min.c"
+
+// based on the reproducer
+// https://syzkaller.appspot.com/bug?id=f0ec9a394925aafbdf13d0a7e6af4cff860f0ed6
+// wich is autogenerated by syzkaller (https://github.com/google/syzkaller)
+
+#define _GNU_SOURCE
+
+#include <dirent.h>
+#include <endian.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <pthread.h>
+#include <sched.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/epoll.h>
+#include <sys/ioctl.h>
+#include <sys/mount.h>
+#include <sys/prctl.h>
+#include <sys/resource.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/syscall.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <sys/wait.h>
+#include <time.h>
+#include <unistd.h>
+
+#include <linux/capability.h>
+
+const int kInitNetNsFd = 239;
+
+#define MAX_FDS 30
+
+static long syz_init_net_socket(volatile long domain, volatile long type,
+                                volatile long proto)
+{
+  int netns = open("/proc/self/ns/net", O_RDONLY);
+
+  if (netns == -1)
+    return netns;
+
+  int sock = syscall(__NR_socket, domain, type, proto);
+  int err = errno;
+
+  /** if (setns(netns, 0)) */
+  /**   exit(1); */
+
+  close(netns);
+  errno = err;
+  return sock;
+}
+
+#define BTPROTO_HCI 1
+#define ACL_LINK 1
+#define SCAN_PAGE 2
+
+typedef struct {
+  uint8_t b[6];
+} __attribute__((packed)) bdaddr_t;
+
+#define HCI_COMMAND_PKT 1
+#define HCI_EVENT_PKT 4
+#define HCI_VENDOR_PKT 0xff
+
+struct hci_command_hdr {
+  uint16_t opcode;
+  uint8_t plen;
+} __attribute__((packed));
+
+struct hci_event_hdr {
+  uint8_t evt;
+  uint8_t plen;
+} __attribute__((packed));
+
+#define HCI_EV_CONN_COMPLETE 0x03
+struct hci_ev_conn_complete {
+  uint8_t status;
+  uint16_t handle;
+  bdaddr_t bdaddr;
+  uint8_t link_type;
+  uint8_t encr_mode;
+} __attribute__((packed));
+
+#define HCI_EV_CONN_REQUEST 0x04
+struct hci_ev_conn_request {
+  bdaddr_t bdaddr;
+  uint8_t dev_class[3];
+  uint8_t link_type;
+} __attribute__((packed));
+
+#define HCI_EV_REMOTE_FEATURES 0x0b
+struct hci_ev_remote_features {
+  uint8_t status;
+  uint16_t handle;
+  uint8_t features[8];
+} __attribute__((packed));
+
+#define HCI_EV_CMD_COMPLETE 0x0e
+struct hci_ev_cmd_complete {
+  uint8_t ncmd;
+  uint16_t opcode;
+} __attribute__((packed));
+
+#define HCI_OP_WRITE_SCAN_ENABLE 0x0c1a
+
+#define HCI_OP_READ_BUFFER_SIZE 0x1005
+struct hci_rp_read_buffer_size {
+  uint8_t status;
+  uint16_t acl_mtu;
+  uint8_t sco_mtu;
+  uint16_t acl_max_pkt;
+  uint16_t sco_max_pkt;
+} __attribute__((packed));
+
+#define HCI_OP_READ_BD_ADDR 0x1009
+struct hci_rp_read_bd_addr {
+  uint8_t status;
+  bdaddr_t bdaddr;
+} __attribute__((packed));
+
+#define HCI_EV_LE_META 0x3e
+struct hci_ev_le_meta {
+  uint8_t subevent;
+} __attribute__((packed));
+
+#define HCI_EV_LE_CONN_COMPLETE 0x01
+struct hci_ev_le_conn_complete {
+  uint8_t status;
+  uint16_t handle;
+  uint8_t role;
+  uint8_t bdaddr_type;
+  bdaddr_t bdaddr;
+  uint16_t interval;
+  uint16_t latency;
+  uint16_t supervision_timeout;
+  uint8_t clk_accurancy;
+} __attribute__((packed));
+
+struct hci_dev_req {
+  uint16_t dev_id;
+  uint32_t dev_opt;
+};
+
+struct vhci_vendor_pkt {
+  uint8_t type;
+  uint8_t opcode;
+  uint16_t id;
+};
+
+#define HCIDEVUP _IOW('H', 201, int)
+#define HCISETSCAN _IOW('H', 221, int)
+
+static int vhci_fd = -1;
+
+static void hci_send_event_packet(int fd, uint8_t evt, void* data,
+                                  size_t data_len)
+{
+  struct iovec iv[3];
+  struct hci_event_hdr hdr;
+  hdr.evt = evt;
+  hdr.plen = data_len;
+  uint8_t type = HCI_EVENT_PKT;
+  iv[0].iov_base = &type;
+  iv[0].iov_len = sizeof(type);
+  iv[1].iov_base = &hdr;
+  iv[1].iov_len = sizeof(hdr);
+  iv[2].iov_base = data;
+  iv[2].iov_len = data_len;
+  if (writev(fd, iv, sizeof(iv) / sizeof(struct iovec)) < 0)
+    exit(1);
+}
+
+static void hci_send_event_cmd_complete(int fd, uint16_t opcode, void* data,
+                                        size_t data_len)
+{
+  struct iovec iv[4];
+  struct hci_event_hdr hdr;
+  hdr.evt = HCI_EV_CMD_COMPLETE;
+  hdr.plen = sizeof(struct hci_ev_cmd_complete) + data_len;
+  struct hci_ev_cmd_complete evt_hdr;
+  evt_hdr.ncmd = 1;
+  evt_hdr.opcode = opcode;
+  uint8_t type = HCI_EVENT_PKT;
+  iv[0].iov_base = &type;
+  iv[0].iov_len = sizeof(type);
+  iv[1].iov_base = &hdr;
+  iv[1].iov_len = sizeof(hdr);
+  iv[2].iov_base = &evt_hdr;
+  iv[2].iov_len = sizeof(evt_hdr);
+  iv[3].iov_base = data;
+  iv[3].iov_len = data_len;
+  if (writev(fd, iv, sizeof(iv) / sizeof(struct iovec)) < 0)
+    exit(1);
+}
+
+#define HCI_HANDLE_1 200
+#define HCI_HANDLE_2 201
+
+static void send_complte_ev()
+{
+  struct hci_ev_conn_complete complete;
+  memset(&complete, 0, sizeof(complete));
+  complete.status = 0;
+  complete.handle = HCI_HANDLE_1;
+  memset(&complete.bdaddr, 0xaa, 6);
+  *(uint8_t*)&complete.bdaddr.b[5] = 0x10;
+  complete.link_type = ACL_LINK;
+  complete.encr_mode = 0;
+  hci_send_event_packet(vhci_fd, HCI_EV_CONN_COMPLETE, &complete,
+                        sizeof(complete));
+}
+
+static bool process_command_pkt(int fd, char* buf, ssize_t buf_size)
+{
+  struct hci_command_hdr* hdr = (struct hci_command_hdr*)buf;
+  if (buf_size < (ssize_t)sizeof(struct hci_command_hdr) ||
+      hdr->plen != buf_size - sizeof(struct hci_command_hdr)) {
+    exit(1);
+  }
+  switch (hdr->opcode) {
+  case HCI_OP_WRITE_SCAN_ENABLE: {
+    uint8_t status = 0;
+    hci_send_event_cmd_complete(fd, hdr->opcode, &status, sizeof(status));
+    return true;
+  }
+  case HCI_OP_READ_BD_ADDR: {
+    struct hci_rp_read_bd_addr rp = {0};
+    rp.status = 0;
+    memset(&rp.bdaddr, 0xaa, 6);
+    hci_send_event_cmd_complete(fd, hdr->opcode, &rp, sizeof(rp));
+    return false;
+  }
+  case HCI_OP_READ_BUFFER_SIZE: {
+    struct hci_rp_read_buffer_size rp = {0};
+    rp.status = 0;
+    rp.acl_mtu = 1021;
+    rp.sco_mtu = 96;
+    rp.acl_max_pkt = 4;
+    rp.sco_max_pkt = 6;
+    hci_send_event_cmd_complete(fd, hdr->opcode, &rp, sizeof(rp));
+    return false;
+  }
+  }
+  char dummy[0xf9] = {0};
+  hci_send_event_cmd_complete(fd, hdr->opcode, dummy, sizeof(dummy));
+  return false;
+}
+
+static void* event_thread(void* arg)
+{
+  while (1) {
+    char buf[1024] = {0};
+    ssize_t buf_size = read(vhci_fd, buf, sizeof(buf));
+    if (buf_size < 0)
+      exit(1);
+    if (buf_size > 0 && buf[0] == HCI_COMMAND_PKT) {
+      if (process_command_pkt(vhci_fd, buf + 1, buf_size - 1))
+        break;
+    }
+  }
+  return NULL;
+}
+static void initialize_vhci()
+{
+  int hci_sock = syz_init_net_socket(AF_BLUETOOTH, SOCK_RAW, BTPROTO_HCI);
+  if (hci_sock < 0)
+    exit(1);
+
+  vhci_fd = open("/dev/vhci", O_RDWR);
+  if (vhci_fd == -1)
+    exit(1);
+
+  struct vhci_vendor_pkt vendor_pkt;
+  if (read(vhci_fd, &vendor_pkt, sizeof(vendor_pkt)) != sizeof(vendor_pkt))
+    exit(1);
+
+  if (vendor_pkt.type != HCI_VENDOR_PKT)
+    exit(1);
+
+  pthread_t th;
+  if (pthread_create(&th, NULL, event_thread, NULL))
+    exit(1);
+
+  if (ioctl(hci_sock, HCIDEVUP, vendor_pkt.id) && errno != EALREADY)
+    exit(1);
+
+  struct hci_dev_req dr = {0};
+  dr.dev_id = vendor_pkt.id;
+  dr.dev_opt = SCAN_PAGE;
+  if (ioctl(hci_sock, HCISETSCAN, &dr))
+    exit(1);
+  struct hci_ev_conn_request request;
+  memset(&request, 0, sizeof(request));
+  memset(&request.bdaddr, 0xaa, 6);
+  *(uint8_t*)&request.bdaddr.b[5] = 0x10;
+  request.link_type = ACL_LINK;
+  hci_send_event_packet(vhci_fd, HCI_EV_CONN_REQUEST, &request,
+                        sizeof(request));
+
+  send_complte_ev();
+  send_complte_ev();
+  pthread_join(th, NULL);
+  close(hci_sock);
+}
+
+int main(void)
+{
+  initialize_vhci();
+  return 0;
+}
+
+--yijhrv2ys2svaijk--
