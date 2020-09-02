@@ -2,360 +2,220 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 446FFC433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5795FC433E7
 	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B014207EA
+	by mail.kernel.org (Postfix) with ESMTP id 3E16F208B3
 	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:59:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599062360;
-	bh=EEWUe+BYBpRsswLs/pmCsNcn2OYqWi5mBe/LDOaGULA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=R8uXW4nNlJh5NsgyvjvDbMwPnKOmWxANIYOAcwX3aj+Zdp+IzptCmZJ0xPV0WHB5P
-	 V19WKxzjM5rrf9NAMMS8MiQbhaDET0sydv44mm61JytNKEoo3Y2e/EvlzyI3aeSVTS
-	 s6sWJ2iRWTTMUCcMV0fpUuNJISVqW0bZX/swir7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgIBP7S (ORCPT
+        id S1726377AbgIBP7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:59:18 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:30974 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbgIBP7M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:59:12 -0400
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 082FwpUC011268;
-        Thu, 3 Sep 2020 00:58:52 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 082FwpUC011268
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1599062332;
-        bh=xg1lHOdLvPs4wIcNE5BTYeU/mB/VXpUhZ8/utbHvD+U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ersggAhpAUae67ViM5hc/9a2Dj6H8eS574gFJR5TCSNbGQw1BwklAG3zygAIFOgGv
-         KAYObhGn12sUj+5ADdKlhcT9wwePs5+594QWDA8E8v918C8q5H5bDfy1R55FCyCeTU
-         s+FHKGtFx6APVNn9xyk3JQfMNtOafheIQdpYYlEFnxKKHRoHP4E2i6P/5Vb2J7Fxjb
-         ssdQi2gJDcHK+O97RlGZKeiO+OosSaXInMVoXvdSLZiGuciTC2JJbgyEPNggf28JBq
-         wO+NzsR7vogAjBiz9vt0L6/1p0xPhH5YNjW/yhBvvG7mJ1DTELJOHPyK1PNBkcj5s5
-         DAOuzt92Aq8Pw==
-X-Nifty-SrcIP: [209.85.214.175]
-Received: by mail-pl1-f175.google.com with SMTP id l9so2489070plt.8;
-        Wed, 02 Sep 2020 08:58:52 -0700 (PDT)
-X-Gm-Message-State: AOAM530q6Gs0+wtqASH/okUx9kGCBw4rV8TUTOpa2wsGz+Wnx41HfHXt
-        AX8xyxLJ0CZOzh7LdCTWge8ab46sbMMDo0rgoik=
-X-Google-Smtp-Source: ABdhPJyhRe9uyya+PU49N3I9jbZZWiwmQ6B5Tpviu+McET8binEp6ah2KEbgcxq6Xm4KhXl+4XoVZHEzI7W9o2I2ARw=
-X-Received: by 2002:a17:90b:1211:: with SMTP id gl17mr2877937pjb.87.1599062331269;
- Wed, 02 Sep 2020 08:58:51 -0700 (PDT)
+        Wed, 2 Sep 2020 11:59:15 -0400
+Received: from 8bytes.org ([81.169.241.247]:40548 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726966AbgIBP7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:59:10 -0400
+Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 955AB507;
+        Wed,  2 Sep 2020 17:59:06 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Joerg Roedel <jroedel@suse.de>,
+        linux-kernel@vger.kernel.org,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        stable@vger.kernel.org
+Subject: [PATCH] x86/mm/32: Bring back vmalloc faulting on x86_32
+Date:   Wed,  2 Sep 2020 17:59:04 +0200
+Message-Id: <20200902155904.17544-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20200805102550.GO2674@hirez.programming.kicks-ass.net> <20200806120438.GG35926@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200806120438.GG35926@hirez.programming.kicks-ass.net>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 3 Sep 2020 00:58:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQE2jPUQJUa1yi7+=w--Jj-wwnGVR2hyPQZxR7Yp9odBA@mail.gmail.com>
-Message-ID: <CAK7LNAQE2jPUQJUa1yi7+=w--Jj-wwnGVR2hyPQZxR7Yp9odBA@mail.gmail.com>
-Subject: Re: [PATCH -v2] scipts/tags.sh: Add custom sort order
-To:     "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000003ac72b05ae56b6fc"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000003ac72b05ae56b6fc
-Content-Type: text/plain; charset="UTF-8"
+From: Joerg Roedel <jroedel@suse.de>
 
-On Fri, Aug 7, 2020 at 2:28 AM <peterz@infradead.org> wrote:
->
->
-> One long standing annoyance I have with using vim-tags is that our tags
-> file is not properly sorted. That is, the sorting exhuberant Ctags does
-> is only on the tag itself.
->
-> The problem with that is that, for example, the tag 'mutex' appears a
-> mere 505 times, 492 of those are structure members. However it is _far_
-> more likely that someone wants the struct definition when looking for
-> the mutex tag than any of those members. However, due to the nature of
-> the sorting, the struct definition will not be first.
->
-> So add a script that does a custom sort of the tags file, taking the tag
-> kind into account.
->
-> The kind ordering is roughly: 'type', 'function', 'macro', 'enum', rest.
->
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
-> Changes since v1:
->  - removed the need for tags.unsorted by using a pipe
->
-> Due to this change 'make tags' is now actually faster than it was before
-> due to less sorting.
->
->  scripts/sort-tags.awk | 79 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  scripts/tags.sh       | 11 +++++--
->  2 files changed, 87 insertions(+), 3 deletions(-)
->
-> diff --git a/scripts/sort-tags.awk b/scripts/sort-tags.awk
-> new file mode 100755
-> index 000000000000..1eb50406c9d3
-> --- /dev/null
-> +++ b/scripts/sort-tags.awk
-> @@ -0,0 +1,79 @@
-> +#!/usr/bin/awk -f
-> +
-> +# $ ctags --list-kinds
-> +# C
-> +#   c  classes
-> +#   s  structure names
-> +#   t  typedefs
-> +#   g  enumeration names
-> +#   u  union names
-> +#   n  namespaces
-> +
-> +#   f  function definitions
-> +#   p  function prototypes [off]
-> +#   d  macro definitions
-> +
-> +#   e  enumerators (values inside an enumeration)
-> +#   m  class, struct, and union members
-> +#   v  variable definitions
-> +
-> +#   l  local variables [off]
-> +#   x  external and forward variable declarations [off]
-> +
-> +BEGIN {
-> +       FS = "\t"
-> +
-> +       sort = "LC_ALL=C sort"
-> +
-> +       # our sort order for C kinds:
-> +       order["c"] = "A"
-> +       order["s"] = "B"
-> +       order["t"] = "C"
-> +       order["g"] = "D"
-> +       order["u"] = "E"
-> +       order["n"] = "F"
-> +       order["f"] = "G"
-> +       order["p"] = "H"
-> +       order["d"] = "I"
-> +       order["e"] = "J"
-> +       order["m"] = "K"
-> +       order["v"] = "L"
-> +       order["l"] = "M"
-> +       order["x"] = "N"
-> +}
-> +
-> +# pass through header
-> +/^!_TAG/ {
-> +       print $0
-> +       next
-> +}
-> +
-> +{
-> +       # find 'kinds'
-> +       for (i = 1; i <= NF; i++) {
-> +               if ($i ~ /;"$/) {
-> +                       kind = $(i+1)
-> +                       break;
-> +               }
-> +       }
-> +
-> +       # create sort key
-> +       if (order[kind])
-> +               key = $1 order[kind];
-> +       else
-> +               key = $1 "Z";
-> +
-> +       # get it sorted
-> +       print key "\t" $0 |& sort
-> +}
-> +
-> +END {
-> +       close(sort, "to")
-> +       while ((sort |& getline) > 0) {
-> +               # strip key
-> +               sub(/[^[:space:]]*[[:space:]]*/, "")
-> +               print $0
-> +       }
-> +       close(sort)
-> +}
-> +
-> diff --git a/scripts/tags.sh b/scripts/tags.sh
-> index 4e18ae5282a6..51087c3d8b1e 100755
-> --- a/scripts/tags.sh
-> +++ b/scripts/tags.sh
-> @@ -251,8 +251,10 @@ setup_regex()
->
->  exuberant()
->  {
-> +       (
-> +
->         setup_regex exuberant asm c
-> -       all_target_sources | xargs $1 -a                        \
-> +       all_target_sources | xargs $1                           \
->         -I __initdata,__exitdata,__initconst,__ro_after_init    \
->         -I __initdata_memblock                                  \
->         -I __refdata,__attribute,__maybe_unused,__always_unused \
-> @@ -266,12 +268,15 @@ exuberant()
->         -I DEFINE_TRACE,EXPORT_TRACEPOINT_SYMBOL,EXPORT_TRACEPOINT_SYMBOL_GPL \
->         -I static,const                                         \
->         --extra=+fq --c-kinds=+px --fields=+iaS --langmap=c:+.h \
-> +       --sort=no -o -                                          \
->         "${regex[@]}"
->
->         setup_regex exuberant kconfig
-> -       all_kconfigs | xargs $1 -a                              \
-> -       --langdef=kconfig --language-force=kconfig "${regex[@]}"
-> +       all_kconfigs | xargs $1                                 \
-> +       --langdef=kconfig --language-force=kconfig --sort=no    \
-> +       -o - "${regex[@]}"
->
-> +       ) | scripts/sort-tags.awk > tags
->  }
->
->  emacs()
+One can not simply remove vmalloc faulting on x86-32. Upstream
 
+	commit: 7f0a002b5a21 ("x86/mm: remove vmalloc faulting")
 
-Sorry for the long delay.
+removed it on x86 alltogether because previously the
+arch_sync_kernel_mappings() interface was introduced. This interface
+added synchronization of vmalloc/ioremap page-table updates to all
+page-tables in the system at creation time and was thought to make
+vmalloc faulting obsolete.
 
-First, this patch breaks 'make TAGS'
-if 'etags' is a symlink to exuberant ctags.
+But that assumption was incredibly naive.
 
+It turned out that there is a race window between the time the vmalloc
+or ioremap code establishes a mapping and the time it synchronizes
+this change to other page-tables in the system.
 
-masahiro@oscar:~/ref/linux$ etags --version
-Exuberant Ctags 5.9~svn20110310, Copyright (C) 1996-2009 Darren Hiebert
-  Addresses: <dhiebert@users.sourceforge.net>, http://ctags.sourceforge.net
-  Optional compiled features: +wildcards, +regex
+During this race window another CPU or thread can establish a vmalloc
+mapping which uses the same intermediate page-table entries (e.g. PMD
+or PUD) and does no synchronization in the end, because it found all
+necessary mappings already present in the kernel reference page-table.
 
-masahiro@oscar:~/ref/linux$ make TAGS
-  GEN     TAGS
-etags: Warning: include/linux/seqlock.h:738: null expansion of name pattern "\2"
-sed: can't read TAGS: No such file or directory
-make: *** [Makefile:1820: TAGS] Error 2
+But when these intermediate page-table entries are not yet
+synchronized, the other CPU or thread will continue with a vmalloc
+address that is not yet mapped in the page-table it currently uses,
+causing an unhandled page fault and oops like below:
 
+	BUG: unable to handle page fault for address: fe80c000
+	#PF: supervisor write access in kernel mode
+	#PF: error_code(0x0002) - not-present page
+	*pde = 33183067 *pte = a8648163
+	Oops: 0002 [#1] SMP
+	CPU: 1 PID: 13514 Comm: cve-2017-17053 Tainted: G
+	0-next-20200811 #1
+	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+	4/01/2014
+	EIP: memcpy+0xf/0x20
+	Code: 68 d0 7d ee d6 e8 11 1c c7 ff 0f 31 31 c3 59 58 cc cc cc cc cc cc 55 89 e5 57 89 c7 56 89 d6 53 89 cb a5 89 d9 83 e1 03 74 02 f3 a4 5b 5e 5f 5d c3 90 55 89 e5
+	EAX: fe80c000 EBX: 00010000 ECX: 00004000 EDX: fbfbd000
+	ESI: fbfbd000 EDI: fe80c000 EBP: f11f1e2c ESP: f11f1e20
+	DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010216
+	CR0: 80050033 CR2: fe80c000 CR3: 314c0000 CR4: 003506d0
+	DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+	DR6: ffff4ff0 DR7: 00000400
+	Call Trace:
+	 ldt_dup_context+0x66/0x80
+	 dup_mm+0x2b3/0x480
+	 copy_process+0x133b/0x15c0
+	 _do_fork+0x94/0x3e0
+	 __ia32_sys_clone+0x67/0x80
+	 __do_fast_syscall_32+0x3f/0x70
+	 do_fast_syscall_32+0x29/0x60
+	 do_SYSENTER_32+0x15/0x20
+	 entry_SYSENTER_32+0x9f/0xf2
+	EIP: 0xb7eef549
 
+So the arch_sync_kernel_mappings() interface is racy, but removing it
+would mean to re-introduce the vmalloc_sync_all() interface, which is
+even more awful. Keep arch_sync_kernel_mappings() in place and catch
+the race condition in the page-fault handler instead.
 
+Do a partial revert of above commit to get vmalloc faulting on x86-32
+back in place.
 
-The reason is the hard-coded ' > tags',
-and easy to fix.
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: 7f0a002b5a21 ("x86/mm: remove vmalloc faulting")
+Cc: stable@vger.kernel.org # v5.8+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/mm/fault.c | 78 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
-
-
-But, honestly, I am not super happy about this patch.
-
-Reason 1
-  In my understanding, sorting by the tag kind only works
-  for ctags. My favorite editor is emacs.
-  (Do not get me wrong. I do not intend emacs vs vi war).
-  So, I rather do 'make TAGS' instead of 'make tags',
-  but this solution would not work for etags because
-  etags has a different format.
-  So, I'd rather want to see a more general solution.
-
-Reason 2
-  We would have more messy code, mixing two files/languages
-
-
-
-When is it useful to tag structure members?
-
-If they are really annoying, why don't we delete them
-instead of moving them to the bottom of the tag file?
-
-
-
-I attached an alternative solution,
-and wrote up my thoughts in the log.
-
-What do you think?
-
-
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 35f1498e9832..6e3e8a124903 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -190,6 +190,53 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
+ 	return pmd_k;
+ }
+ 
++/*
++ *   Handle a fault on the vmalloc or module mapping area
++ *
++ *   This is needed because there is a race condition between the time
++ *   when the vmalloc mapping code updates the PMD to the point in time
++ *   where it synchronizes this update with the other page-tables in the
++ *   system.
++ *
++ *   In this race window another thread/CPU can map an area on the same
++ *   PMD, finds it already present and does not synchronize it with the
++ *   rest of the system yet. As a result v[mz]alloc might return areas
++ *   which are not mapped in every page-table in the system, causing an
++ *   unhandled page-fault when they are accessed.
++ */
++static noinline int vmalloc_fault(unsigned long address)
++{
++	unsigned long pgd_paddr;
++	pmd_t *pmd_k;
++	pte_t *pte_k;
++
++	/* Make sure we are in vmalloc area: */
++	if (!(address >= VMALLOC_START && address < VMALLOC_END))
++		return -1;
++
++	/*
++	 * Synchronize this task's top level page-table
++	 * with the 'reference' page table.
++	 *
++	 * Do _not_ use "current" here. We might be inside
++	 * an interrupt in the middle of a task switch..
++	 */
++	pgd_paddr = read_cr3_pa();
++	pmd_k = vmalloc_sync_one(__va(pgd_paddr), address);
++	if (!pmd_k)
++		return -1;
++
++	if (pmd_large(*pmd_k))
++		return 0;
++
++	pte_k = pte_offset_kernel(pmd_k, address);
++	if (!pte_present(*pte_k))
++		return -1;
++
++	return 0;
++}
++NOKPROBE_SYMBOL(vmalloc_fault);
++
+ void arch_sync_kernel_mappings(unsigned long start, unsigned long end)
+ {
+ 	unsigned long addr;
+@@ -1110,6 +1157,37 @@ do_kern_addr_fault(struct pt_regs *regs, unsigned long hw_error_code,
+ 	 */
+ 	WARN_ON_ONCE(hw_error_code & X86_PF_PK);
+ 
++#ifdef CONFIG_X86_32
++	/*
++	 * We can fault-in kernel-space virtual memory on-demand. The
++	 * 'reference' page table is init_mm.pgd.
++	 *
++	 * NOTE! We MUST NOT take any locks for this case. We may
++	 * be in an interrupt or a critical region, and should
++	 * only copy the information from the master page table,
++	 * nothing more.
++	 *
++	 * Before doing this on-demand faulting, ensure that the
++	 * fault is not any of the following:
++	 * 1. A fault on a PTE with a reserved bit set.
++	 * 2. A fault caused by a user-mode access.  (Do not demand-
++	 *    fault kernel memory due to user-mode accesses).
++	 * 3. A fault caused by a page-level protection violation.
++	 *    (A demand fault would be on a non-present page which
++	 *     would have X86_PF_PROT==0).
++	 *
++	 * This is only needed to close a race condition on x86-32 in
++	 * the vmalloc mapping/unmapping code. See the comment above
++	 * vmalloc_fault() for details. On x86-64 the race does not
++	 * exist as the vmalloc mappings don't need to be synchronized
++	 * there.
++	 */
++	if (!(hw_error_code & (X86_PF_RSVD | X86_PF_USER | X86_PF_PROT))) {
++		if (vmalloc_fault(address) >= 0)
++			return;
++	}
++#endif
++
+ 	/* Was the fault spurious, caused by lazy TLB invalidation? */
+ 	if (spurious_kernel_fault(hw_error_code, address))
+ 		return;
 -- 
-Best Regards
-Masahiro Yamada
+2.28.0
 
---0000000000003ac72b05ae56b6fc
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-scripts-tags.sh-remove-m-v-x-tag-kinds-from-exuberan.patch"
-Content-Disposition: attachment; 
-	filename="0001-scripts-tags.sh-remove-m-v-x-tag-kinds-from-exuberan.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_kelke9dc0>
-X-Attachment-Id: f_kelke9dc0
-
-RnJvbSAxYTAwM2ZjZTdlNGY4NDYwZWYzMjU2ZmI1ZDk1OGZiNWM2Y2M2MzFlIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBNYXNhaGlybyBZYW1hZGEgPG1hc2FoaXJveUBrZXJuZWwub3Jn
-PgpEYXRlOiBXZWQsIDIgU2VwIDIwMjAgMjE6NDk6NTkgKzA5MDAKU3ViamVjdDogW1BBVENIXSBz
-Y3JpcHRzL3RhZ3Muc2g6IHJlbW92ZSBtLCB2LCB4IHRhZyBraW5kcyBmcm9tIGV4dWJlcmFudCB0
-YWdzCgpFeHViZXJhbnQgQ3RhZ3Mgc3VwcG9ydHMgdGhlIGZvbGxvd2luZyBraW5kcyBvZiB0YWdz
-OgoKICAkIGN0YWdzIC0tbGlzdC1raW5kcz1jCiAgYyAgY2xhc3NlcwogIGQgIG1hY3JvIGRlZmlu
-aXRpb25zCiAgZSAgZW51bWVyYXRvcnMgKHZhbHVlcyBpbnNpZGUgYW4gZW51bWVyYXRpb24pCiAg
-ZiAgZnVuY3Rpb24gZGVmaW5pdGlvbnMKICBnICBlbnVtZXJhdGlvbiBuYW1lcwogIGwgIGxvY2Fs
-IHZhcmlhYmxlcyBbb2ZmXQogIG0gIGNsYXNzLCBzdHJ1Y3QsIGFuZCB1bmlvbiBtZW1iZXJzCiAg
-biAgbmFtZXNwYWNlcwogIHAgIGZ1bmN0aW9uIHByb3RvdHlwZXMgW29mZl0KICBzICBzdHJ1Y3R1
-cmUgbmFtZXMKICB0ICB0eXBlZGVmcwogIHUgIHVuaW9uIG5hbWVzCiAgdiAgdmFyaWFibGUgZGVm
-aW5pdGlvbnMKICB4ICBleHRlcm5hbCBhbmQgZm9yd2FyZCB2YXJpYWJsZSBkZWNsYXJhdGlvbnMg
-W29mZl0KClRoaXMgY29tbWl0IGV4Y2x1ZGVzICdtJywgJ3YnLCBhbmQgJ3gnLgoKUGV0ZXIgWmlq
-bHN0cmEgc3RhdGVzOgoiVGhlIHByb2JsZW0gd2l0aCB0aGF0IGlzIHRoYXQsIGZvciBleGFtcGxl
-LCB0aGUgdGFnICdtdXRleCcgYXBwZWFycyBhCm1lcmUgNTA1IHRpbWVzLCA0OTIgb2YgdGhvc2Ug
-YXJlIHN0cnVjdHVyZSBtZW1iZXJzLiBIb3dldmVyIGl0IGlzIF9mYXJfCm1vcmUgbGlrZWx5IHRo
-YXQgc29tZW9uZSB3YW50cyB0aGUgc3RydWN0IGRlZmluaXRpb24gd2hlbiBsb29raW5nIGZvcgp0
-aGUgbXV0ZXggdGFnIHRoYW4gYW55IG9mIHRob3NlIG1lbWJlcnMuIgooaHR0cHM6Ly9sa21sLm9y
-Zy9sa21sLzIwMjAvOC82LzUxMiIpCgpTbywgJ20nIGlzIHJhdGhlciBhbm5veWluZyB0aGFuIHVz
-ZWZ1bC4gRm9yIHRoZSBzYW1lIHJlYXNvbiwgaXQgc2VlbXMKYmV0dGVyIHRvIHR1cm4gb2ZmICd2
-Jy4KCllvdSBtYXkgYXJndWUgYWJvdXQgdGhlIGNyaXRlcmlhLCBidXQgd2UgbmVlZCB0byBkcmF3
-IGEgbGluZSBzb21ld2hlcmUKdG8gbWFrZSBpdCByZWFzb25hYmxlIGZvciB0aGUgbWFqb3JpdHkg
-b2YgcGVvcGxlLgoKV2UgZmxpcHBlZCAncCcgYW5kICd4JyBpbiB0aGUgcGFzdDoKClsxXSBjb21t
-aXQgZjYzMzNlYjRlNzg4ICgia2J1aWxkOiBBZGQgY3RhZ3Mgc3VwcG9ydCBmb3IgZnVuY3Rpb24K
-ICAgIHByb3RvdHlwZXMgYW5kIGV4dGVybmFsIHZhcmlhYmxlIGRlY2xhcmF0aW9ucyIpIGFkZGVk
-ICdwJyBhbmQgJ3gnLAogICAgYnV0IGRpZCBub3QgZXhwbGFpbiB3aGVuIHRoZXkgYXJlIGFjdHVh
-bGx5IHVzZWZ1bC4KClsyXSBjb21taXQgN2RiODZkYzk3ZmIwICgiY3RhZ3M6IHVzYWJpbGl0eSBm
-aXgiKSByZW1vdmVkICdwJyBhbmQgJ3gnLAogICAgc3RhdGluZyBib3RoIG9mIHRoZW0gbWFrZSBu
-byByZWFsIHNlbnNlLgoKWzNdIGNvbW1pdCAwYTE4YTkzODZjMDUgKCJ0YWdzOiBwdXQgZnVuY3Rp
-b24gcHJvdG90eXBlcyBiYWNrISIpCiAgICByZS1hZGRlZCAncCcgYW5kICd4JywgYnV0IHRoZSBj
-b21taXQgbG9nIG9ubHkgbWVudGlvbmVkICdwJy4KCk9LLCBbM10gY2xlYXJseSBleHBsYWluZWQg
-d2h5ICdwJyBpcyB1c2VmdWwsIGJ1dCB0dXJuZWQgLS1jLWtpbmRzPStweAppbnRvIC0tYy1raW5k
-cz0tcHguIFNvLCAneCcgd2FzIGFsc28gKGFjY2lkZW50YWxseT8pIGRpc2FibGVkLiBJIHRoaW5r
-Cml0IHNob3VsZCBoYXZlIGJlZW4gLS1jLWtpbmRzPStwLXgsIG9yIG1vcmUgc2ltcGx5IC0tYy1r
-aW5kcz0rcCBzaW5jZQoneCcgaXMgb2ZmIGJ5IGRlZmF1bHQuCgpJdCBzZWVtcyBhIGJ1ZyBvZiBb
-M10sIHNvIEkgZGlzYWJsZWQgJ3gnIHRvIGdldCBiYWNrIHRoZSBwcmUtWzNdCmJlaGF2aW9yLgoK
-J21ha2UgdGFncycgYW5kICdtYWtlIFRBR1MnIHdpbGwgcnVuIGZhc3RlciwgY3JlYXRlIG11Y2gg
-c21hbGxlciB0YWdzCmlmIEN0YWdzIGlzIGV4dWJlcmFudC4KClJldmlld2VkLWJ5OiBQZXRlciBa
-aWpsc3RyYSAoSW50ZWwpIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz4KU2lnbmVkLW9mZi1ieTogTWFz
-YWhpcm8gWWFtYWRhIDxtYXNhaGlyb3lAa2VybmVsLm9yZz4KLS0tCiBzY3JpcHRzL3RhZ3Muc2gg
-fCAxNSArLS0tLS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMTQg
-ZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvc2NyaXB0cy90YWdzLnNoIGIvc2NyaXB0cy90YWdz
-LnNoCmluZGV4IDMyZDNmNTNhZjEwYi4uNDQwZjRlY2FkNDNiIDEwMDc1NQotLS0gYS9zY3JpcHRz
-L3RhZ3Muc2gKKysrIGIvc2NyaXB0cy90YWdzLnNoCkBAIC0xNzksMTkgKzE3OSw2IEBAIHJlZ2V4
-X2M9KAogCScvXkRFRl9QQ0lfQUNfXChcfE5PXClSRVQoXChbWzphbG51bTpdX10qXCkuKi9cMi8n
-CiAJJy9eUENJX09QX1JFQUQoXChcdypcKS4qWzEtNF0pL3BjaV9idXNfcmVhZF9jb25maWdfXDEv
-JwogCScvXlBDSV9PUF9XUklURShcKFx3KlwpLipbMS00XSkvcGNpX2J1c193cml0ZV9jb25maWdf
-XDEvJwotCScvXDxERUZJTkVfXChSVF9NVVRFWFx8TVVURVhcfFNFTUFQSE9SRVx8U1BJTkxPQ0tc
-KShcKFtbOmFsbnVtOl1fXSpcKS9cMi92LycKLQknL1w8REVGSU5FX1woUkFXX1NQSU5MT0NLXHxS
-V0xPQ0tcfFNFUUxPQ0tcKShcKFtbOmFsbnVtOl1fXSpcKS9cMi92LycKLQknL1w8REVDTEFSRV9c
-KFJXU0VNXHxDT01QTEVUSU9OXCkoXChbWzphbG51bTpdX11cK1wpL1wyL3YvJwotCScvXDxERUNM
-QVJFX0JJVE1BUChcKFtbOmFsbnVtOl1fXSpcKS9cMS92LycKLQknL1woXlx8XHNcKVwoXHxMXHxI
-XClMSVNUX0hFQUQoXChbWzphbG51bTpdX10qXCkvXDMvdi8nCi0JJy9cKF5cfFxzXClSQURJWF9U
-UkVFKFwoW1s6YWxudW06XV9dKlwpL1wyL3YvJwotCScvXDxERUZJTkVfUEVSX0NQVShbXixdKiwg
-KlwoW1s6YWxudW06XV9dKlwpL1wxL3YvJwotCScvXDxERUZJTkVfUEVSX0NQVV9TSEFSRURfQUxJ
-R05FRChbXixdKiwgKlwoW1s6YWxudW06XV9dKlwpL1wxL3YvJwotCScvXDxERUNMQVJFX1dBSVRf
-UVVFVUVfSEVBRChcKFtbOmFsbnVtOl1fXSpcKS9cMS92LycKLQknL1w8REVDTEFSRV9cKFRBU0tM
-RVRcfFdPUktcfERFTEFZRURfV09SS1wpKFwoW1s6YWxudW06XV9dKlwpL1wyL3YvJwotCScvXChe
-XHNcKU9GRlNFVChcKFtbOmFsbnVtOl1fXSpcKS9cMi92LycKLQknL1woXlxzXClERUZJTkUoXChb
-WzphbG51bTpdX10qXCkvXDIvdi8nCi0JJy9cPFwoREVGSU5FXHxERUNMQVJFXClfSEFTSFRBQkxF
-KFwoW1s6YWxudW06XV9dKlwpL1wyL3YvJwogCScvXDxERUZJTkVfSURcKFJcfEFcKShcKFtbOmFs
-bnVtOl1fXVwrXCkvXDIvJwogCScvXDxERUZJTkVfV0RfQ0xBU1MoXChbWzphbG51bTpdX11cK1wp
-L1wxLycKIAknL1w8QVRPTUlDX05PVElGSUVSX0hFQUQoXChbWzphbG51bTpdX11cK1wpL1wxLycK
-QEAgLTI1NSw3ICsyNDIsNyBAQCBleHViZXJhbnQoKQogCS1JIEVYUE9SVF9TWU1CT0wsRVhQT1JU
-X1NZTUJPTF9HUEwsQUNQSV9FWFBPUlRfU1lNQk9MICAgXAogCS1JIERFRklORV9UUkFDRSxFWFBP
-UlRfVFJBQ0VQT0lOVF9TWU1CT0wsRVhQT1JUX1RSQUNFUE9JTlRfU1lNQk9MX0dQTCBcCiAJLUkg
-c3RhdGljLGNvbnN0CQkJCQkJXAotCS0tZXh0cmE9K2ZxIC0tYy1raW5kcz0rcHggLS1maWVsZHM9
-K2lhUyAtLWxhbmdtYXA9YzorLmggXAorCS0tZXh0cmE9K2ZxIC0tYy1raW5kcz0rcC1tdiAtLWZp
-ZWxkcz0raWFTIC0tbGFuZ21hcD1jOisuaCBcCiAJIiR7cmVnZXhbQF19IgogCiAJc2V0dXBfcmVn
-ZXggZXh1YmVyYW50IGtjb25maWcKLS0gCjIuMjUuMQoK
---0000000000003ac72b05ae56b6fc--
