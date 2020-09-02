@@ -2,137 +2,69 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7FFC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF87C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B24EF2078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49D8720773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599056511;
+	bh=gM9T3vWDXP+R8rA9KXPhmDwJIIC+hPMMGQ6hZ5o8Ui8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jGYfHGcHrd08YE2AFp5DfLwber/EKFZDntnDrrd55Pl5vF6sY92CYdN+QFSk3ueGd
+	 KXux3Em1VTBccVBoldn5z2i64SzeyIlMyG8GQ1zvCnm57C+4P8My5r1KciKAGzthwo
+	 99EVHzyVEqS5XhEv6IaZ+viyzyV/8GhM8yU46fWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgIBOU4 (ORCPT
+        id S1727932AbgIBOVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:20:56 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60938 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726928AbgIBOJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:09:16 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 167854F4ABFBBC0CE5F6;
-        Wed,  2 Sep 2020 22:09:03 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 2 Sep 2020
- 22:08:53 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <amitkarwar@gmail.com>, <ganapathi.bhat@nxp.com>,
-        <huxinming820@gmail.com>, <kvalo@codeaurora.org>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <yuehaibing@huawei.com>
-CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] mwifiex: wmm: Fix -Wunused-const-variable warnings
-Date:   Wed, 2 Sep 2020 22:08:46 +0800
-Message-ID: <20200902140846.29024-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 2 Sep 2020 10:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46188 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbgIBOJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 10:09:38 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B9CC2078E;
+        Wed,  2 Sep 2020 14:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599055775;
+        bh=gM9T3vWDXP+R8rA9KXPhmDwJIIC+hPMMGQ6hZ5o8Ui8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0BnISZH8FpmdrWOwzjHoRStWKDv4AA9A++fzHBjKhNv18807g3uusiJeoMNKQym3J
+         aANb53n4A5ZzhOj8pX8kOwQawqHjR3Ky0y0Tx9uFTjUs5Ze3ogq6ZSPSg15x2oq/ep
+         gOHSkPNqUBUs+57a+6ZMCjWAEmYnyu6zZDSvJWEI=
+Date:   Wed, 2 Sep 2020 16:10:00 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Antoni Przybylik <antoni.przybylik@wp.pl>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: gdm724x: gdm_tty: replaced macro with a function
+Message-ID: <20200902141000.GA2020271@kroah.com>
+References: <20200902132419.61220-1-antoni.przybylik@wp.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902132419.61220-1-antoni.przybylik@wp.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In file included from drivers/net/wireless/marvell/mwifiex//cmdevt.c:26:0:
-drivers/net/wireless/marvell/mwifiex//wmm.h:41:17: warning: ‘tos_to_tid_inv’ defined but not used [-Wunused-const-variable=]
- static const u8 tos_to_tid_inv[] = {
-                 ^~~~~~~~~~~~~~
-drivers/net/wireless/marvell/mwifiex//wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
- static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
-                  ^~~~~~~~~~~~~~~~~~~~~~~
+On Wed, Sep 02, 2020 at 03:24:19PM +0200, Antoni Przybylik wrote:
+> This approach is more elegant and prevents some problems related to
+> macros such as operator precedence in expanded expression.
+> -------------------------------------------------------------------
+> Changed return type to bool and removed inline sepcifier.
 
-move the variables definition to .c file, and leave declarations
-in the header file to fix these warnings.
+What is this here for?
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/wireless/marvell/mwifiex/main.c |  2 ++
- drivers/net/wireless/marvell/mwifiex/wmm.c  | 15 +++++++++++++++
- drivers/net/wireless/marvell/mwifiex/wmm.h  | 18 ++----------------
- 3 files changed, 19 insertions(+), 16 deletions(-)
+Please read the documentation for how to properly version patches, it
+should be in the submitting patches file somewhere...
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
-index 9ee5600351a7..9ba8a8f64976 100644
---- a/drivers/net/wireless/marvell/mwifiex/main.c
-+++ b/drivers/net/wireless/marvell/mwifiex/main.c
-@@ -48,6 +48,8 @@ bool aggr_ctrl;
- module_param(aggr_ctrl, bool, 0000);
- MODULE_PARM_DESC(aggr_ctrl, "usb tx aggregation enable:1, disable:0");
- 
-+const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
-+
- /*
-  * This function registers the device and performs all the necessary
-  * initializations.
-diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.c b/drivers/net/wireless/marvell/mwifiex/wmm.c
-index a06fff199ea3..b8f19ca73414 100644
---- a/drivers/net/wireless/marvell/mwifiex/wmm.c
-+++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
-@@ -40,6 +40,21 @@
- static bool disable_tx_amsdu;
- module_param(disable_tx_amsdu, bool, 0644);
- 
-+/* This table inverses the tos_to_tid operation to get a priority
-+ * which is in sequential order, and can be compared.
-+ * Use this to compare the priority of two different TIDs.
-+ */
-+const u8 tos_to_tid_inv[] = {
-+	0x02,  /* from tos_to_tid[2] = 0 */
-+	0x00,  /* from tos_to_tid[0] = 1 */
-+	0x01,  /* from tos_to_tid[1] = 2 */
-+	0x03,
-+	0x04,
-+	0x05,
-+	0x06,
-+	0x07
-+};
-+
- /* WMM information IE */
- static const u8 wmm_info_ie[] = { WLAN_EID_VENDOR_SPECIFIC, 0x07,
- 	0x00, 0x50, 0xf2, 0x02,
-diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.h b/drivers/net/wireless/marvell/mwifiex/wmm.h
-index 04d7da95e307..1cb3d1804758 100644
---- a/drivers/net/wireless/marvell/mwifiex/wmm.h
-+++ b/drivers/net/wireless/marvell/mwifiex/wmm.h
-@@ -31,22 +31,8 @@ enum ieee_types_wmm_ecw_bitmasks {
- 	MWIFIEX_ECW_MAX = (BIT(4) | BIT(5) | BIT(6) | BIT(7)),
- };
- 
--static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
--
--/*
-- * This table inverses the tos_to_tid operation to get a priority
-- * which is in sequential order, and can be compared.
-- * Use this to compare the priority of two different TIDs.
-- */
--static const u8 tos_to_tid_inv[] = {
--	0x02,  /* from tos_to_tid[2] = 0 */
--	0x00,  /* from tos_to_tid[0] = 1 */
--	0x01,  /* from tos_to_tid[1] = 2 */
--	0x03,
--	0x04,
--	0x05,
--	0x06,
--	0x07};
-+extern const u16 mwifiex_1d_to_wmm_queue[];
-+extern const u8 tos_to_tid_inv[];
- 
- /*
-  * This function retrieves the TID of the given RA list.
--- 
-2.17.1
+thanks,
 
-
+greg k-h
