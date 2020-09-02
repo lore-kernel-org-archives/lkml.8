@@ -2,121 +2,79 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB009C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E46C6C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B80C520639
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:16:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063374;
-	bh=TyB5qk7Sh1O8/duNBsCmd6m1J0cmxULTBPs5i10qCv4=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=O296wvQSsjEPPbfAuu7clSyMgmh0okz/knpo7svU2PTQ5KxVjPirkPG3ppCNUSiUY
-	 yn1GURvufQEuf7tquH+tKE7XUBoruM5yp65xr04G6X4Hnc67NSqwh0FnaCND7gnSvF
-	 PSmn1D1fP+4KYpwOBCgxAGEXHIGg0ujdj55EVnIo=
+	by mail.kernel.org (Postfix) with ESMTP id C846A20829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:16:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbgIBQQL (ORCPT
+        id S1728824AbgIBQQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:16:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbgIBQK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:10:56 -0400
-Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2CCB2158C;
-        Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599063046;
-        bh=TyB5qk7Sh1O8/duNBsCmd6m1J0cmxULTBPs5i10qCv4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X8hl2OM2sVEtfrkk2thA9m4OvAG754Js57hqXJuQYYiDQRMEp/L5O536GhFLyEuAG
-         wyCt/12joTSh/IBm7vFAom7koT/laCTuUl3snPaaqWVoVZCBGdQA8wcSDbIcQK1I+V
-         kQzB5Vm/BZvEO9kbiyYfPjkeH2rPum7INZiNN498=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kDVLQ-000tAU-4J; Wed, 02 Sep 2020 18:10:44 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Forest Crossman <cyrozap@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 18/38] media: cx23885-alsa: number of pages should be unsigned long
-Date:   Wed,  2 Sep 2020 18:10:21 +0200
-Message-Id: <1ca468a8b0b6b0e6a1843a9eed04568902833b68.1599062230.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
-References: <cover.1599062230.git.mchehab+huawei@kernel.org>
+        Wed, 2 Sep 2020 12:16:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59766 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728338AbgIBQNj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:13:39 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1kDVO8-0005jC-I8; Wed, 02 Sep 2020 16:13:32 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] xsk: fix incorrect memory allocation failure check on dma_map->dma_pages
+Date:   Wed,  2 Sep 2020 17:13:32 +0100
+Message-Id: <20200902161332.199961-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As reported by smatch:
+From: Colin Ian King <colin.king@canonical.com>
 
-	drivers/media//pci/cx23885/cx23885-alsa.c:83 cx23885_alsa_dma_init() warn: should 'nr_pages << 12' be a 64 bit type?
+The failed memory allocation check for dma_map->dma_pages is incorrect,
+it is null checking dma_map and not dma_map->dma_pages. Fix this.
 
-the number of patches should be unsigned long.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Addresses-Coverity: ("Logicall dead code")
+Fixes: 921b68692abb ("xsk: Enable sharing of dma mappings")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/media/pci/cx23885/cx23885-alsa.c | 7 ++++---
- drivers/media/pci/cx23885/cx23885.h      | 4 ++--
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ net/xdp/xsk_buff_pool.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/cx23885/cx23885-alsa.c b/drivers/media/pci/cx23885/cx23885-alsa.c
-index df44ed7393a0..141852f02236 100644
---- a/drivers/media/pci/cx23885/cx23885-alsa.c
-+++ b/drivers/media/pci/cx23885/cx23885-alsa.c
-@@ -68,7 +68,8 @@ MODULE_PARM_DESC(audio_debug, "enable debug messages [analog audio]");
- #define AUD_INT_MCHG_IRQ        (1 << 21)
- #define GP_COUNT_CONTROL_RESET	0x3
+diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c
+index 795d7c81c0ca..5b00bc5707f2 100644
+--- a/net/xdp/xsk_buff_pool.c
++++ b/net/xdp/xsk_buff_pool.c
+@@ -287,7 +287,7 @@ static struct xsk_dma_map *xp_create_dma_map(struct device *dev, struct net_devi
+ 		return NULL;
  
--static int cx23885_alsa_dma_init(struct cx23885_audio_dev *chip, int nr_pages)
-+static int cx23885_alsa_dma_init(struct cx23885_audio_dev *chip,
-+				 unsigned long nr_pages)
- {
- 	struct cx23885_audio_buffer *buf = chip->buf;
- 	struct page *pg;
-@@ -76,11 +77,11 @@ static int cx23885_alsa_dma_init(struct cx23885_audio_dev *chip, int nr_pages)
- 
- 	buf->vaddr = vmalloc_32(nr_pages << PAGE_SHIFT);
- 	if (NULL == buf->vaddr) {
--		dprintk(1, "vmalloc_32(%d pages) failed\n", nr_pages);
-+		dprintk(1, "vmalloc_32(%lu pages) failed\n", nr_pages);
- 		return -ENOMEM;
+ 	dma_map->dma_pages = kvcalloc(nr_pages, sizeof(*dma_map->dma_pages), GFP_KERNEL);
+-	if (!dma_map) {
++	if (!dma_map->dma_pages) {
+ 		kfree(dma_map);
+ 		return NULL;
  	}
- 
--	dprintk(1, "vmalloc is at addr %p, size=%d\n",
-+	dprintk(1, "vmalloc is at addr %p, size=%lu\n",
- 		buf->vaddr, nr_pages << PAGE_SHIFT);
- 
- 	memset(buf->vaddr, 0, nr_pages << PAGE_SHIFT);
-diff --git a/drivers/media/pci/cx23885/cx23885.h b/drivers/media/pci/cx23885/cx23885.h
-index c472498e57c4..349462ee2c48 100644
---- a/drivers/media/pci/cx23885/cx23885.h
-+++ b/drivers/media/pci/cx23885/cx23885.h
-@@ -325,8 +325,8 @@ struct cx23885_audio_buffer {
- 	struct cx23885_riscmem	risc;
- 	void			*vaddr;
- 	struct scatterlist	*sglist;
--	int                     sglen;
--	int                     nr_pages;
-+	int			sglen;
-+	unsigned long		nr_pages;
- };
- 
- struct cx23885_audio_dev {
 -- 
-2.26.2
+2.27.0
 
