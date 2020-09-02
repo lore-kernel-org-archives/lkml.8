@@ -2,361 +2,132 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB70EC2BBD0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1CCC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9359B2087D
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882C32084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:54:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yhqz5khI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgIBJxF (ORCPT
+        id S1726479AbgIBJyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 05:53:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44030 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgIBJxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 05:53:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 534BBAE92;
-        Wed,  2 Sep 2020 09:53:03 +0000 (UTC)
-Subject: Re: [PATCH v2 00/28] The new cgroup slab memory controller
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Roman Gushchin <guro@fb.com>
-Cc:     Bharata B Rao <bharata@linux.ibm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>
-References: <20200127173453.2089565-1-guro@fb.com>
- <20200130020626.GA21973@in.ibm.com>
- <20200130024135.GA14994@xps.DHCP.thefacebook.com>
- <CA+CK2bCQcnTpzq2wGFa3D50PtKwBoWbDBm56S9y8c+j+pD+KSw@mail.gmail.com>
- <20200813000416.GA1592467@carbon.dhcp.thefacebook.com>
- <CA+CK2bDDToW=Q5RgeWkoN3_rUr3pyWGVb9MraTzM+DM3OZ+tdg@mail.gmail.com>
- <CA+CK2bBEHFuLLg79_h6bv4Vey+B0B2YXyBxTBa=Le12OKbNdwA@mail.gmail.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <6469324e-afa2-18b4-81fb-9e96466c1bf3@suse.cz>
-Date:   Wed, 2 Sep 2020 11:53:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 2 Sep 2020 05:54:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgIBJyH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 05:54:07 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54979C061245
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 02:54:07 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id w2so3773626wmi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 02:54:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=M8TcxUyh3FwDr1kvEIkJvkbvWI5FAt8CTFrE3ll+7dc=;
+        b=Yhqz5khIb730Hw/NZPk0CzwgE1uf+OzLd3XnuJ/A5Nd4t14o+2zuEeAM7oI3IWojWj
+         s/J32VPnBjf/1Q7yqUNT+EiSREHO9JXevgzinGyMCZKDAYgELrM4nSCvrt5FVHI33p+2
+         342y8/XYe1v6exWPjhdEq/0ndzwQLVE+FMQXcBCkuFXBeOUGZ6LFH1oGRCrtbyXnKRZQ
+         Mk43GSfd3auCbXq2gEcROtjQWzH0FGYonOqTFCzBV+PBrl61SqEkT6xRiuXOwzLfsoWb
+         RO/V4MTKBmoKLqZYGT2kgw55ZqObWM+P45RBzXoapFpsvabMbX3VqUTxyrbqq42f8g64
+         t6iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=M8TcxUyh3FwDr1kvEIkJvkbvWI5FAt8CTFrE3ll+7dc=;
+        b=C7nchV1hUAYnqU5c/s0Tv2yiAPpDwG4OYI8bbEXdflPIaGpG7IjMz/rqV0bW4iBwp5
+         eOf5dsrhBSwh0xjcdWvQA3AgajJbGvSPh1GZXJzZpuiA7aMwPtRsPgklIMABq1gxSBrs
+         6kP/OUZD44d/34J0vQb4rKjHVUV+kEeTGj2FZPiGv/PGh1Q/OLcd9fgxsDgXMhQIExqK
+         H/YLBVahNfx+vY2S7U1KaslkViUhb11GJDDMEVBdxC4Lp7pnwbiavsy8/0h1Y2xxXBJc
+         jWTlL3Jq/zQJ2kZfVfGT0Bj0VcQR0hfnvC0vtSU+6ZOIQ7NRBsenjO0PaMZ+Hdw1CZc1
+         4vYg==
+X-Gm-Message-State: AOAM533pxvJiyz36iDiadEMYQOPj8PB1h/rz/QT6hHHFvaSzJLzNe7D8
+        8TUkeQn5gAXf/q/za4bugrhvqA==
+X-Google-Smtp-Source: ABdhPJzidzZcJbtSblI1fVOA5IWxK7eDzxi7ZZLnT1lE/sVjG8wzghGcunr0siyIXU9SNK88ljnUiw==
+X-Received: by 2002:a7b:cc11:: with SMTP id f17mr6252389wmh.21.1599040445433;
+        Wed, 02 Sep 2020 02:54:05 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id j10sm6299078wrn.2.2020.09.02.02.54.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 02:54:04 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 10:54:02 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Andrey Lebedev <andrey@lebedev.lt>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: pwm-sun4i: PWM backlight is not turned off on shutdown
+Message-ID: <20200902095402.pombrirqqjdew34b@holly.lan>
+References: <ae58976c-a8d7-0d00-fe72-d21579b37240@lebedev.lt>
 MIME-Version: 1.0
-In-Reply-To: <CA+CK2bBEHFuLLg79_h6bv4Vey+B0B2YXyBxTBa=Le12OKbNdwA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ae58976c-a8d7-0d00-fe72-d21579b37240@lebedev.lt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/28/20 6:47 PM, Pavel Tatashin wrote:
-> There appears to be another problem that is related to the
-> cgroup_mutex -> mem_hotplug_lock deadlock described above.
+On Thu, Aug 27, 2020 at 10:55:28PM +0300, Andrey Lebedev wrote:
+> Hello,
 > 
-> In the original deadlock that I described, the workaround is to
-> replace crash dump from piping to Linux traditional save to files
-> method. However, after trying this workaround, I still observed
-> hardware watchdog resets during machine  shutdown.
+> I think I'm experiencing problem with pwm-sun4i module. I'll describe
+> the symptoms first.
 > 
-> The new problem occurs for the following reason: upon shutdown systemd
-> calls a service that hot-removes memory, and if hot-removing fails for
+> I have a device, based on Allwinner A20 (Cubieboard 2) with LVDS display
+> that has a PWM-based backlight. The problem is: when linux shuts down,
+> the backlight stays on. I expect it to be turned off. This used to work
+> as expected on kernel 5.2-rc2, but after upgrade to 5.8 the backlight
+> does not turn off anymore (most of the times, see below).
+> 
+> The backlight is configured in the device tree [1]. The brightness can
+> be changed by writing to "brightness" file on sysfs. So, linux can
+> control the PWM line. Backlight sysfs directory also has a "bl_power"
+> file, which can accept "0" to power on or "4" to power off the backlight
+> (according to [2]).
+> 
+> Now, writing "4" to bl_power sometimes turns the backlight off and
+> sometimes not. I've found that the probability of backlight turning off
+> pretty much correlates with the current screen brightness: on 100%
+> brightness it will never turn off, on 50% brightness it will turn off on
+> about half of the times. When backlight does not turn off, it goes on
+> full brightness. It feels like the line, controlled by pwm stays in
+> whatever state it was the moment backlight was powered down - either
+> full 1 or 0.
+> 
+> The pwm backlight device driver (pwm_bl) requests to set the duty cycle
+> to 0 and disable the pwm with the same request [3], but I suspect the
+> implementation driver (pwm-sun4i) does not actually set the duty cycle
+> to 0 before disabling the pulse width modulation.
+> 
+> Is there anything that can be done to fix this?
 
-Why is that hotremove even needed if we're shutting down? Are there any
-(virtualization?) platforms where it makes some difference over plain
-shutdown/restart?
+There's some rather odd logic in sun4i_pwm_apply() that results in the
+PWM being disabled twice... once when it applies the initial config
+and again after waiting for a duty_cycle.
 
-> some reason systemd kills that service after timeout. However, systemd
-> is never able to kill the service, and we get hardware reset caused by
-> watchdog or a hang during shutdown:
-> 
-> Thread #1: memory hot-remove systemd service
-> Loops indefinitely, because if there is something still to be migrated
-> this loop never terminates. However, this loop can be terminated via
-> signal from systemd after timeout.
-> __offline_pages()
->       do {
->           pfn = scan_movable_pages(pfn, end_pfn);
->                   # Returns 0, meaning there is nothing available to
->                   # migrate, no page is PageLRU(page)
->           ...
->           ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
->                                             NULL, check_pages_isolated_cb);
->                   # Returns -EBUSY, meaning there is at least one PFN that
->                   # still has to be migrated.
->       } while (ret);
-> 
-> Thread #2: ccs killer kthread
->    css_killed_work_fn
->      cgroup_mutex  <- Grab this Mutex
->      mem_cgroup_css_offline
->        memcg_offline_kmem.part
->           memcg_deactivate_kmem_caches
->             get_online_mems
->               mem_hotplug_lock <- waits for Thread#1 to get read access
-> 
-> Thread #3: systemd
-> ksys_read
->  vfs_read
->    __vfs_read
->      seq_read
->        proc_single_show
->          proc_cgroup_show
->            mutex_lock -> wait for cgroup_mutex that is owned by Thread #2
-> 
-> Thus, thread #3 systemd stuck, and unable to deliver timeout interrupt
-> to thread #1.
-> 
-> The proper fix for both of the problems is to avoid cgroup_mutex ->
-> mem_hotplug_lock ordering that was recently fixed in the mainline but
-> still present in all stable branches. Unfortunately, I do not see a
-> simple fix in how to remove mem_hotplug_lock from
-> memcg_deactivate_kmem_caches without using Roman's series that is too
-> big for stable.
-> 
-> Thanks,
-> Pasha
-> 
-> On Wed, Aug 12, 2020 at 8:31 PM Pavel Tatashin
-> <pasha.tatashin@soleen.com> wrote:
->>
->> On Wed, Aug 12, 2020 at 8:04 PM Roman Gushchin <guro@fb.com> wrote:
->> >
->> > On Wed, Aug 12, 2020 at 07:16:08PM -0400, Pavel Tatashin wrote:
->> > > Guys,
->> > >
->> > > There is a convoluted deadlock that I just root caused, and that is
->> > > fixed by this work (at least based on my code inspection it appears to
->> > > be fixed); but the deadlock exists in older and stable kernels, and I
->> > > am not sure whether to create a separate patch for it, or backport
->> > > this whole thing.
->> >
->>
->> Hi Roman,
->>
->> > Hi Pavel,
->> >
->> > wow, it's a quite complicated deadlock. Thank you for providing
->> > a perfect analysis!
->>
->> Thank you, it indeed took me a while to fully grasp the deadlock.
->>
->> >
->> > Unfortunately, backporting the whole new slab controller isn't an option:
->> > it's way too big and invasive.
->>
->> This is what I thought as well, this is why I want to figure out what
->> is the best way forward.
->>
->> > Do you already have a standalone fix?
->>
->> Not yet, I do not have a standalone fix. I suspect the best fix would
->> be to address fix css_killed_work_fn() stack so we never have:
->> cgroup_mutex -> mem_hotplug_lock. Either decoupling them or reverse
->> the order would work. If you have suggestions since you worked on this
->> code recently, please let me know.
->>
->> Thank you,
->> Pasha
->>
->> >
->> > Thanks!
->> >
->> >
->> > >
->> > > Thread #1: Hot-removes memory
->> > > device_offline
->> > >   memory_subsys_offline
->> > >     offline_pages
->> > >       __offline_pages
->> > >         mem_hotplug_lock <- write access
->> > >       waits for Thread #3 refcnt for pfn 9e5113 to get to 1 so it can
->> > > migrate it.
->> > >
->> > > Thread #2: ccs killer kthread
->> > >    css_killed_work_fn
->> > >      cgroup_mutex  <- Grab this Mutex
->> > >      mem_cgroup_css_offline
->> > >        memcg_offline_kmem.part
->> > >           memcg_deactivate_kmem_caches
->> > >             get_online_mems
->> > >               mem_hotplug_lock <- waits for Thread#1 to get read access
->> > >
->> > > Thread #3: crashing userland program
->> > > do_coredump
->> > >   elf_core_dump
->> > >       get_dump_page() -> get page with pfn#9e5113, and increment refcnt
->> > >       dump_emit
->> > >         __kernel_write
->> > >           __vfs_write
->> > >             new_sync_write
->> > >               pipe_write
->> > >                 pipe_wait   -> waits for Thread #4 systemd-coredump to
->> > > read the pipe
->> > >
->> > > Thread #4: systemd-coredump
->> > > ksys_read
->> > >   vfs_read
->> > >     __vfs_read
->> > >       seq_read
->> > >         proc_single_show
->> > >           proc_cgroup_show
->> > >             cgroup_mutex -> waits from Thread #2 for this lock.
->> >
->> > >
->> > > In Summary:
->> > > Thread#1 waits for Thread#3 for refcnt, Thread#3 waits for Thread#4 to
->> > > read pipe. Thread#4 waits for Thread#2 for cgroup_mutex lock; Thread#2
->> > > waits for Thread#1 for mem_hotplug_lock rwlock.
->> > >
->> > > This work appears to fix this deadlock because cgroup_mutex is not
->> > > called anymore before mem_hotplug_lock (unless I am missing it), as it
->> > > removes memcg_deactivate_kmem_caches.
->> > >
->> > > Thank you,
->> > > Pasha
->> > >
->> > > On Wed, Jan 29, 2020 at 9:42 PM Roman Gushchin <guro@fb.com> wrote:
->> > > >
->> > > > On Thu, Jan 30, 2020 at 07:36:26AM +0530, Bharata B Rao wrote:
->> > > > > On Mon, Jan 27, 2020 at 09:34:25AM -0800, Roman Gushchin wrote:
->> > > > > > The existing cgroup slab memory controller is based on the idea of
->> > > > > > replicating slab allocator internals for each memory cgroup.
->> > > > > > This approach promises a low memory overhead (one pointer per page),
->> > > > > > and isn't adding too much code on hot allocation and release paths.
->> > > > > > But is has a very serious flaw: it leads to a low slab utilization.
->> > > > > >
->> > > > > > Using a drgn* script I've got an estimation of slab utilization on
->> > > > > > a number of machines running different production workloads. In most
->> > > > > > cases it was between 45% and 65%, and the best number I've seen was
->> > > > > > around 85%. Turning kmem accounting off brings it to high 90s. Also
->> > > > > > it brings back 30-50% of slab memory. It means that the real price
->> > > > > > of the existing slab memory controller is way bigger than a pointer
->> > > > > > per page.
->> > > > > >
->> > > > > > The real reason why the existing design leads to a low slab utilization
->> > > > > > is simple: slab pages are used exclusively by one memory cgroup.
->> > > > > > If there are only few allocations of certain size made by a cgroup,
->> > > > > > or if some active objects (e.g. dentries) are left after the cgroup is
->> > > > > > deleted, or the cgroup contains a single-threaded application which is
->> > > > > > barely allocating any kernel objects, but does it every time on a new CPU:
->> > > > > > in all these cases the resulting slab utilization is very low.
->> > > > > > If kmem accounting is off, the kernel is able to use free space
->> > > > > > on slab pages for other allocations.
->> > > > > >
->> > > > > > Arguably it wasn't an issue back to days when the kmem controller was
->> > > > > > introduced and was an opt-in feature, which had to be turned on
->> > > > > > individually for each memory cgroup. But now it's turned on by default
->> > > > > > on both cgroup v1 and v2. And modern systemd-based systems tend to
->> > > > > > create a large number of cgroups.
->> > > > > >
->> > > > > > This patchset provides a new implementation of the slab memory controller,
->> > > > > > which aims to reach a much better slab utilization by sharing slab pages
->> > > > > > between multiple memory cgroups. Below is the short description of the new
->> > > > > > design (more details in commit messages).
->> > > > > >
->> > > > > > Accounting is performed per-object instead of per-page. Slab-related
->> > > > > > vmstat counters are converted to bytes. Charging is performed on page-basis,
->> > > > > > with rounding up and remembering leftovers.
->> > > > > >
->> > > > > > Memcg ownership data is stored in a per-slab-page vector: for each slab page
->> > > > > > a vector of corresponding size is allocated. To keep slab memory reparenting
->> > > > > > working, instead of saving a pointer to the memory cgroup directly an
->> > > > > > intermediate object is used. It's simply a pointer to a memcg (which can be
->> > > > > > easily changed to the parent) with a built-in reference counter. This scheme
->> > > > > > allows to reparent all allocated objects without walking them over and
->> > > > > > changing memcg pointer to the parent.
->> > > > > >
->> > > > > > Instead of creating an individual set of kmem_caches for each memory cgroup,
->> > > > > > two global sets are used: the root set for non-accounted and root-cgroup
->> > > > > > allocations and the second set for all other allocations. This allows to
->> > > > > > simplify the lifetime management of individual kmem_caches: they are
->> > > > > > destroyed with root counterparts. It allows to remove a good amount of code
->> > > > > > and make things generally simpler.
->> > > > > >
->> > > > > > The patchset* has been tested on a number of different workloads in our
->> > > > > > production. In all cases it saved significant amount of memory, measured
->> > > > > > from high hundreds of MBs to single GBs per host. On average, the size
->> > > > > > of slab memory has been reduced by 35-45%.
->> > > > >
->> > > > > Here are some numbers from multiple runs of sysbench and kernel compilation
->> > > > > with this patchset on a 10 core POWER8 host:
->> > > > >
->> > > > > ==========================================================================
->> > > > > Peak usage of memory.kmem.usage_in_bytes, memory.usage_in_bytes and
->> > > > > meminfo:Slab for Sysbench oltp_read_write with mysqld running as part
->> > > > > of a mem cgroup (Sampling every 5s)
->> > > > > --------------------------------------------------------------------------
->> > > > >                               5.5.0-rc7-mm1   +slab patch     %reduction
->> > > > > --------------------------------------------------------------------------
->> > > > > memory.kmem.usage_in_bytes    15859712        4456448         72
->> > > > > memory.usage_in_bytes         337510400       335806464       .5
->> > > > > Slab: (kB)                    814336          607296          25
->> > > > >
->> > > > > memory.kmem.usage_in_bytes    16187392        4653056         71
->> > > > > memory.usage_in_bytes         318832640       300154880       5
->> > > > > Slab: (kB)                    789888          559744          29
->> > > > > --------------------------------------------------------------------------
->> > > > >
->> > > > >
->> > > > > Peak usage of memory.kmem.usage_in_bytes, memory.usage_in_bytes and
->> > > > > meminfo:Slab for kernel compilation (make -s -j64) Compilation was
->> > > > > done from bash that is in a memory cgroup. (Sampling every 5s)
->> > > > > --------------------------------------------------------------------------
->> > > > >                               5.5.0-rc7-mm1   +slab patch     %reduction
->> > > > > --------------------------------------------------------------------------
->> > > > > memory.kmem.usage_in_bytes    338493440       231931904       31
->> > > > > memory.usage_in_bytes         7368015872      6275923968      15
->> > > > > Slab: (kB)                    1139072         785408          31
->> > > > >
->> > > > > memory.kmem.usage_in_bytes    341835776       236453888       30
->> > > > > memory.usage_in_bytes         6540427264      6072893440      7
->> > > > > Slab: (kB)                    1074304         761280          29
->> > > > >
->> > > > > memory.kmem.usage_in_bytes    340525056       233570304       31
->> > > > > memory.usage_in_bytes         6406209536      6177357824      3
->> > > > > Slab: (kB)                    1244288         739712          40
->> > > > > --------------------------------------------------------------------------
->> > > > >
->> > > > > Slab consumption right after boot
->> > > > > --------------------------------------------------------------------------
->> > > > >                               5.5.0-rc7-mm1   +slab patch     %reduction
->> > > > > --------------------------------------------------------------------------
->> > > > > Slab: (kB)                    821888          583424          29
->> > > > > ==========================================================================
->> > > > >
->> > > > > Summary:
->> > > > >
->> > > > > With sysbench and kernel compilation,  memory.kmem.usage_in_bytes shows
->> > > > > around 70% and 30% reduction consistently.
->> > > > >
->> > > > > Didn't see consistent reduction of memory.usage_in_bytes with sysbench and
->> > > > > kernel compilation.
->> > > > >
->> > > > > Slab usage (from /proc/meminfo) shows consistent 30% reduction and the
->> > > > > same is seen right after boot too.
->> > > >
->> > > > That's just perfect!
->> > > >
->> > > > memory.usage_in_bytes was most likely the same because the freed space
->> > > > was taken by pagecache.
->> > > >
->> > > > Thank you very much for testing!
->> > > >
->> > > > Roman
-> 
+I suspect disabling the initial disable would solve your issue... but it
+might provoke some new ones!
 
+Anyhow, try removing the else clause starting at line 299 and see what
+happens:
+https://elixir.bootlin.com/linux/v5.8/source/drivers/pwm/pwm-sun4i.c#L299
+
+
+Daniel.
