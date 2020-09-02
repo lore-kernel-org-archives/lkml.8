@@ -2,92 +2,82 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBFAC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F03C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C420F207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:57:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599037045;
-	bh=erLxW7j5o7FSd5rj0NxqCWgy7aHZnjT+0Hthxz+0GSs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zcrfNw1l2sU3YEeCR2qLZawLtHiATgHkyEH+Zx1BHCMk3DkFDtiDGrc3/Gt+rT2Cx
-	 C9ckyr6pmrTcBFDMMAMg1MXwhxqrgMlwyzdI2LzDTUw6MhJgZtoUb00BEXVfs+nl4R
-	 fr0NrizP8Ghrtq763UYFR1V6qWsJgY6W9N3Yyo+I=
+	by mail.kernel.org (Postfix) with ESMTP id 45FF12078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgIBI5Y (ORCPT
+        id S1726355AbgIBI6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:57:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36334 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 04:58:51 -0400
+Received: from mga18.intel.com ([134.134.136.126]:28395 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgIBI5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:57:24 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C6E52078B;
-        Wed,  2 Sep 2020 08:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599037043;
-        bh=erLxW7j5o7FSd5rj0NxqCWgy7aHZnjT+0Hthxz+0GSs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2C2LDLZM6uC4k8iSv3Mz8/3quiEVc3q0umMdFmNtQqrnya7FWr16ikqavSfC+T3nt
-         dbPBlHZNobA/Jax+WjT66d0sa/2QJTnZKbSh5cRslrhmeQVGDZN/i9pTzihIQtj+CL
-         UdkO08lDzzCs7wMkNo64+gRYPs4aDUon7HvDE/qw=
-Date:   Wed, 2 Sep 2020 09:57:18 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Clint Sbisa <csbisa@amazon.com>, linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
-Message-ID: <20200902085717.GA5409@willie-the-truck>
-References: <20200901183702.GA196025@bjorn-Precision-5520>
- <658051b1ba6533fef92648eba08dfdf240af7a18.camel@kernel.crashing.org>
+        id S1726167AbgIBI6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 04:58:51 -0400
+IronPort-SDR: cOLo8EOE4vTVNq9EjbZul+UXQyilz/e4KhF7nEa+OFRiHviiVWUidgi86tTeN0BwW/hDCUBvVv
+ gm61WFbsajeg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="145039202"
+X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
+   d="scan'208";a="145039202"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 01:58:47 -0700
+IronPort-SDR: 2CJGKaIlw/C2SVozeZwg1xN512nRjfKZQ7PytBv7Jg4gKlgIhwwX/EcPX2K5ZdHnnB0eUe0I2s
+ 7GQXpBiZKF9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
+   d="scan'208";a="331361247"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 02 Sep 2020 01:58:45 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kDOOg-00DfSo-2Y; Wed, 02 Sep 2020 11:45:38 +0300
+Date:   Wed, 2 Sep 2020 11:45:38 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>
+Cc:     wsa@kernel.org, jarkko.nikula@linux.intel.com, jdelvare@suse.de,
+        chris.packham@alliedtelesis.co.nz, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] i2c: algo-pca: Reapply i2c bus settings after
+ reset
+Message-ID: <20200902084538.GY1891694@smile.fi.intel.com>
+References: <20200901211747.20649-1-evan.nimmo@alliedtelesis.co.nz>
+ <20200902084356.GX1891694@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <658051b1ba6533fef92648eba08dfdf240af7a18.camel@kernel.crashing.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200902084356.GX1891694@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 09:22:53AM +1000, Benjamin Herrenschmidt wrote:
-> On Tue, 2020-09-01 at 13:37 -0500, Bjorn Helgaas wrote:
-> > On Mon, Aug 31, 2020 at 03:18:27PM +0000, Clint Sbisa wrote:
-> > > Using write-combine is crucial for performance of PCI devices where
-> > > significant amounts of transactions go over PCI BARs.
-> > > 
-> > > arm64 supports write-combine PCI mappings, so the appropriate
-> > > define
-> > > has been added which will expose write-combine mappings under sysfs
-> > > for prefetchable PCI resources.
-> > > 
-> > > Signed-off-by: Clint Sbisa <csbisa@amazon.com>
-> > 
-> > Fine with me, I assume Will or Catalin will apply this.
+On Wed, Sep 02, 2020 at 11:43:56AM +0300, Andy Shevchenko wrote:
+> On Wed, Sep 02, 2020 at 09:17:47AM +1200, Evan Nimmo wrote:
+> > If something goes wrong (such as the SCL being stuck low) then we need
+> > to reset the PCA chip. The issue with this is that on reset we lose all
+> > config settings and the chip ends up in a disabled state which results
+> > in a lock up/high cpu usage. We need to re-apply any configuration that
 > 
-> Haha ! Client had sent it to them originally and I told him to resend
-> it to linux-pci, yourself and Lorenzo :-)
+> cpu -> CPU (I guess Wolfram can decide with this when applying)
 > 
-> So the confusion is on me.
+> > had previously been set and re-enable the chip.
 > 
-> Will, Catalin, it's all yours. You should have the original patch in
-> your mbox already, otherwise:
-> 
-> https://patchwork.kernel.org/patch/11729875/
+> FWIW,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Yup, it's not the radar. We don't usually start queuing stuff until -rc3, so
-I'm working through the backlog this week. Would like an Ack from Lorenzo,
-though.
+And actually you forgot Chris' tag... But I dunno if the moving struct
+definition is something that Chris might not like.
 
-Will
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
