@@ -2,132 +2,99 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,GUARANTEED_100_PERCENT,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B9DC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE4DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58FF42078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:47:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UwzHBnTw"
+	by mail.kernel.org (Postfix) with ESMTP id 023B92087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 08:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726301AbgIBIrb (ORCPT
+        id S1726426AbgIBIsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 04:47:31 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:58649 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726140AbgIBIra (ORCPT
+        Wed, 2 Sep 2020 04:48:07 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46598 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgIBIsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 04:47:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1599036450; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=4h0ipg5/aFd2L0oIgKn9tOzzlf38TDXmZZeE/iyY8Lw=; b=UwzHBnTwQtcj+ajTAiixFuZGrSAoVEvjaV9Pk6YAK2zoaiDKD+O3LK9cs8igIoTqMb1gcSsP
- 0UJkb+AlQbptMvCJs6qFBwebRdsTWLEvoLtbxQxsnA5hiMNGt2+lRZ87kLu13yjCEC/plZe2
- Jek/GugBJPQNZWrIFIEocYA4tu0=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f4f5c19885efaea0a59bf38 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 02 Sep 2020 08:47:21
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 544F5C433C9; Wed,  2 Sep 2020 08:47:20 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9A1A7C433C6;
-        Wed,  2 Sep 2020 08:47:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9A1A7C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ath10k: Use bdf calibration variant for snoc targets
-References: <1593193990-30366-1-git-send-email-pillair@codeaurora.org>
-Date:   Wed, 02 Sep 2020 11:47:16 +0300
-In-Reply-To: <1593193990-30366-1-git-send-email-pillair@codeaurora.org>
-        (Rakesh Pillai's message of "Fri, 26 Jun 2020 23:23:10 +0530")
-Message-ID: <87y2ls4lbf.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Wed, 2 Sep 2020 04:48:07 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1kDOQk-0007IA-27; Wed, 02 Sep 2020 08:47:46 +0000
+Date:   Wed, 2 Sep 2020 10:47:45 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>,
+        "madhuparnabhowmik10@gmail.com" <madhuparnabhowmik10@gmail.com>,
+        "gustavoars@kernel.org" <gustavoars@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] signal: clean up codestyle
+Message-ID: <20200902084745.zhwqo56ch6imc6cy@wittgenstein>
+References: <e436dd19f0e740ebb93133ae3c625af4@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e436dd19f0e740ebb93133ae3c625af4@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rakesh Pillai <pillair@codeaurora.org> writes:
+On Wed, Sep 02, 2020 at 01:34:59AM +0000, linmiaohe wrote:
+> Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> >On Tue, Sep 01, 2020 at 06:39:05PM +0200, Oleg Nesterov wrote:
+> >> On 09/01, Christian Brauner wrote:
+> >> >
+> >> > On Tue, Sep 01, 2020 at 07:58:00AM -0400, Miaohe Lin wrote:
+> >> > > No functional change intended.
+> >> >
+> >> > Hey Miaohe,
+> >> >
+> >> > Thank you for the patch.
+> >> > I'm sure this is well-intended but afaict the whole file has more or 
+> >> > less a consistent style already where e.g. sig-1 without spaces 
+> >> > seems to be preferred. The same for the casts where most places use 
+> >> > a single space.
+> >> >
+> >> > Now, I know CodingStyle.rst is on your side at least when it comes 
+> >> > to the first point:
+> >> >
+> >> > Use one space around (on each side of) most binary and ternary 
+> >> > operators, such as any of these::
+> >> >
+> >> > 	=  +  -  <  >  *  /  %  |  &  ^  <=  >=  ==  !=  ?  :
+> >> >
+> >> > but then you'd need to change each place in kernel/signal.c where 
+> >> > that is currently not the case.
+> >> 
+> >> Or simply leave this code alone ;)
+> >
+> >I was trying to imply that by pointing out that this would be file-global change. I was likely too subtle. ;)
+> >
+> >Christian
+> 
+> Sorry for I did not get the imply.
 
-> Board Data File (BDF) is loaded upon driver boot-up procedure.
-> The right board data file is identified using bus and qmi-board-id.
->
-> The problem, however, can occur when the (default) board data
-> file cannot fulfill with the vendor requirements and it is
-> necessary to use a different board data file.
->
-> Add the support to get the variant field from DTSI and
-> use tht information to load the vendor specific BDF.
->
-> The device tree requires addition strings to define the variant name
->
->     wifi@a000000 {
->             status = "okay";
->             qcom,ath10k-calibration-variant = "xyz-v2";
->     };
->
->     wifi@a800000 {
->             status = "okay";
->             qcom,ath10k-calibration-variant = "xyz-v1";
->     };
->
-> This would create the boarddata identifiers for the board-2.bin search
->
->  *  bus=snoc,qmi-board-id=16,qmi-chip-id=0,variant=xyz-v1
->  *  bus=snoc,qmi-board-id=17,qmi-chip-id=0,variant=xyz-v2
+No need to apologize. That's my bad. 
 
-You mention nothing about qmi-chip-id in the commit log. Please document
-what it is and also give some examples what kind of values there can be.
+Maybe some context is useful.
+One of the reasons why we tend to sometimes not take changes such as
+this even though they would be covered by our officially documented
+coding style is to keep the churn minimal.
+Whenever functional change happens in codepaths such as this the risk of
+regressions is quite high. That's partially because we could use more
+tests to catch them (And if you're interested in stuff like this then
+writing selftests is always great. We can always use more of them.) but
+also simply because the code is complex. Having a lot of non-functional
+commits that don't really improve the legibility of the code
+significantly can become an issue for maintainers. Personally, I tend to
+be less worried about this but this is a collaborative endeavour. :)
 
-> --- a/drivers/net/wireless/ath/ath10k/qmi.c
-> +++ b/drivers/net/wireless/ath/ath10k/qmi.c
-> @@ -576,6 +576,8 @@ static int ath10k_qmi_cap_send_sync_msg(struct ath10k_qmi *qmi)
->  	if (resp->chip_info_valid) {
->  		qmi->chip_info.chip_id = resp->chip_info.chip_id;
->  		qmi->chip_info.chip_family = resp->chip_info.chip_family;
-> +	} else {
-> +		qmi->chip_info.chip_id = 0xFF;
->  	}
-
-So you hard code chip_id to 0xff if it's not valid. Is it 100%
-guaranteed that there never will be a chip id with 0xff?
-
->  
->  	if (resp->board_info_valid)
-> @@ -817,12 +819,18 @@ static void ath10k_qmi_event_server_arrive(struct ath10k_qmi *qmi)
->  static int ath10k_qmi_fetch_board_file(struct ath10k_qmi *qmi)
->  {
->  	struct ath10k *ar = qmi->ar;
-> +	int ret;
->  
->  	ar->hif.bus = ATH10K_BUS_SNOC;
->  	ar->id.qmi_ids_valid = true;
->  	ar->id.qmi_board_id = qmi->board_info.board_id;
-> +	ar->id.qmi_chip_id = qmi->chip_info.chip_id;
-
-To me a safer, and cleaner, option would be to have
-ar->id.qmi_chip_id_valid, and only add qmi-chip-id=%x to the board id if
-qmi_chip_id_valid is true. That way there's not this magic 0xff value
-hardcoded anywhere.
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Thanks!
+Christian
