@@ -2,154 +2,134 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34149C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED29C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5F82067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B966206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:27:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u9Whohex"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="T4r4QLno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgIBQ1V (ORCPT
+        id S1726742AbgIBQ13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:27:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgIBQ0x (ORCPT
+        Wed, 2 Sep 2020 12:27:29 -0400
+Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:29630 "EHLO
+        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgIBQ0p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:26:53 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5006CC061244;
-        Wed,  2 Sep 2020 09:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=dgHYD5IdZK2iAqYuyPO6sBiMoH+Cnrt6mDruNiD/1t8=; b=u9WhohexpIB2hFiCsGMJV1r/Us
-        H6gDY7WKYbJIR5x+YqGiGBddBMAgJCL+u7+5KUnHcimEFRon7y/Lq4jSbnuzqZTUXcre6g8flTeSl
-        uWEpFjq7LRxc9rETAPkiAtO+kuVxZqkkcHo0fw80DdvdTFYTf7d10t/TJSL+ZGYf0/Km/sng2YuN/
-        owe6+7crbwQtsXUs84DJMrgmZsB9TwioXFgZlACZuUcV5pkf2LJuiHvdlOkPzAKqY5lunccKRArTw
-        bSZAeD/jXHWd5PiJ+hrO76QDSFEAXFnszEgYH7Wi33mPtUkObgQGU5mNjdsRqD2DVp65GgPWlkrTK
-        M3hhl/gQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDVb0-0006J8-UQ; Wed, 02 Sep 2020 16:26:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 950733013E5;
-        Wed,  2 Sep 2020 18:26:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7D03823660041; Wed,  2 Sep 2020 18:26:49 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 18:26:49 +0200
-From:   peterz@infradead.org
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Subject: Re: [PATCH -v2] scipts/tags.sh: Add custom sort order
-Message-ID: <20200902162649.GL1362448@hirez.programming.kicks-ass.net>
-References: <20200805102550.GO2674@hirez.programming.kicks-ass.net>
- <20200806120438.GG35926@hirez.programming.kicks-ass.net>
- <CAK7LNAQE2jPUQJUa1yi7+=w--Jj-wwnGVR2hyPQZxR7Yp9odBA@mail.gmail.com>
+        Wed, 2 Sep 2020 12:26:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1599064004;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=YfR7qFQ6lEnKcTjso08AlQu8bZPg3hKojO7X7QBPHn0=;
+  b=T4r4QLnoyJMHys5MxUOZ46p/hoGomKatIgssJ4AB3S2kdsJxenXFDXk0
+   EOkX5YRS8VgI8iqyJlAjIq5yNjL45KlKA3zqAca8eudRpulrXaKAKSlK7
+   fFiWi9rjeWwg2aPs/s2mnsYQTs8n1XzVxIaX/QeH84U2GYm5/QFVeflHi
+   4=;
+Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: PrzPGBdcOOZUYWLsFL9RAjiWG5UaWmrLsk34DoGETdKXfWpocC9QHZVtQv+06f8ZBZRgkL4W0c
+ 4eNh3ClOIxOzGNI1EVpcSyNE8dKmJwAmKs0XZDjfLwbzlxRQF3a/7/MM5KNETYNiNsRM8BpW+h
+ x7VYvW2nI0MCd3OTZiEiS8rhqLF3QwRjmDbA3YKV3tU4GdAqkPVC+5toOOTyaZQZ0W0RwMN3A0
+ dg5UWx5OGJzxrRG0LfeG8EsxIqWTvmlMQSwIXL2gQefTWCntm09duJfYx7SuZNnnTqfbtVVN/E
+ vI0=
+X-SBRS: 2.7
+X-MesageID: 25861089
+X-Ironport-Server: esa2.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.76,383,1592884800"; 
+   d="scan'208";a="25861089"
+Subject: Re: [PATCH 01/13] x86/entry: Fix AC assertion
+To:     Brian Gerst <brgerst@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kyle Huey <me@kylehuey.com>,
+        "Alexandre Chartre" <alexandre.chartre@oracle.com>,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Frederic Weisbecker" <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Daniel Thompson" <daniel.thompson@linaro.org>
+References: <20200902132549.496605622@infradead.org>
+ <20200902133200.666781610@infradead.org>
+ <CAMzpN2i9C5Sj-M0b9Y7VtOphDJs2Z9NPux9Dg347PSeNBaXRMQ@mail.gmail.com>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <f3441d27-1ae1-ddc8-de6d-519ed825b2b8@citrix.com>
+Date:   Wed, 2 Sep 2020 17:26:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAQE2jPUQJUa1yi7+=w--Jj-wwnGVR2hyPQZxR7Yp9odBA@mail.gmail.com>
+In-Reply-To: <CAMzpN2i9C5Sj-M0b9Y7VtOphDJs2Z9NPux9Dg347PSeNBaXRMQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ FTLPEX02CL05.citrite.net (10.13.108.178)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 12:58:14AM +0900, Masahiro Yamada wrote:
+On 02/09/2020 16:58, Brian Gerst wrote:
+> On Wed, Sep 2, 2020 at 9:38 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>> From: Peter Zijlstra <peterz@infradead.org>
+>>
+>> The WARN added in commit 3c73b81a9164 ("x86/entry, selftests: Further
+>> improve user entry sanity checks") unconditionally triggers on my IVB
+>> machine because it does not support SMAP.
+>>
+>> For !SMAP hardware we patch out CLAC/STAC instructions and thus if
+>> userspace sets AC, we'll still have it set after entry.
+>>
+>> Fixes: 3c73b81a9164 ("x86/entry, selftests: Further improve user entry sanity checks")
+>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Acked-by: Andy Lutomirski <luto@kernel.org>
+>> ---
+>>  arch/x86/include/asm/entry-common.h |   11 +++++++++--
+>>  1 file changed, 9 insertions(+), 2 deletions(-)
+>>
+>> --- a/arch/x86/include/asm/entry-common.h
+>> +++ b/arch/x86/include/asm/entry-common.h
+>> @@ -18,8 +18,16 @@ static __always_inline void arch_check_u
+>>                  * state, not the interrupt state as imagined by Xen.
+>>                  */
+>>                 unsigned long flags = native_save_fl();
+>> -               WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
+>> -                                     X86_EFLAGS_NT));
+>> +               unsigned long mask = X86_EFLAGS_DF | X86_EFLAGS_NT;
+>> +
+>> +               /*
+>> +                * For !SMAP hardware we patch out CLAC on entry.
+>> +                */
+>> +               if (boot_cpu_has(X86_FEATURE_SMAP) ||
+>> +                   (IS_ENABLED(CONFIG_64_BIT) && boot_cpu_has(X86_FEATURE_XENPV)))
+>> +                       mask |= X86_EFLAGS_AC;
+> Is the explicit Xen check necessary?  IIRC the Xen hypervisor will
+> filter out the SMAP bit in the cpuid pvop.
 
-> Sorry for the long delay.
-> 
-> First, this patch breaks 'make TAGS'
-> if 'etags' is a symlink to exuberant ctags.
-> 
-> 
-> masahiro@oscar:~/ref/linux$ etags --version
-> Exuberant Ctags 5.9~svn20110310, Copyright (C) 1996-2009 Darren Hiebert
->   Addresses: <dhiebert@users.sourceforge.net>, http://ctags.sourceforge.net
->   Optional compiled features: +wildcards, +regex
-> 
-> masahiro@oscar:~/ref/linux$ make TAGS
->   GEN     TAGS
-> etags: Warning: include/linux/seqlock.h:738: null expansion of name pattern "\2"
-> sed: can't read TAGS: No such file or directory
-> make: *** [Makefile:1820: TAGS] Error 2
-> 
-> The reason is the hard-coded ' > tags',
-> and easy to fix.
+The Xen check isn't anything to do with SMAP.
 
-Ah, my bad, I forgot to check.
+64bit PV guest kernels run in Ring3, so userspace's choice of AC for
+real alignment check purposes needs to not leak into kernel context.
 
-> But, honestly, I am not super happy about this patch.
-> 
-> Reason 1
->   In my understanding, sorting by the tag kind only works
->   for ctags. My favorite editor is emacs.
->   (Do not get me wrong. I do not intend emacs vs vi war).
->   So, I rather do 'make TAGS' instead of 'make tags',
->   but this solution would not work for etags because
->   etags has a different format.
->   So, I'd rather want to see a more general solution.
+Xen's ABI for a user => kernel context switch should clear AC on behalf
+of the kernel, but the fact still remains that if AC actually leaks into
+context for whatever reason, stuff is going to break.
 
-It might be possible that emacs' tags implementation can already do this
-natively. Initially I tried to fix this in vim, with a macro, but I
-couldn't get access to the 'kind' tag.
-
-> Reason 2
->   We would have more messy code, mixing two files/languages
-
-I could try and write the whole thing in bash I suppose.
-
-> When is it useful to tag structure members?
-
-Often, just not when there is a naming conflict.
-
-> If they are really annoying, why don't we delete them
-> instead of moving them to the bottom of the tag file?
-
-Because they're really useful :-)
-
-> I attached an alternative solution,
-> and wrote up my thoughts in the log.
-> 
-> What do you think?
-
-> Exuberant Ctags supports the following kinds of tags:
-> 
->   $ ctags --list-kinds=c
->   c  classes
->   d  macro definitions
->   e  enumerators (values inside an enumeration)
->   f  function definitions
->   g  enumeration names
->   l  local variables [off]
->   m  class, struct, and union members
->   n  namespaces
->   p  function prototypes [off]
->   s  structure names
->   t  typedefs
->   u  union names
->   v  variable definitions
->   x  external and forward variable declarations [off]
-> 
-> This commit excludes 'm', 'v', and 'x'.
-
-So my main beef is with m vs s conflicts (they're pretty prevalent),
-removing v is insane, but even removing m is undesired IMO.
-
-> Reviewed-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-Very much not I'm afraid. I really do like my tags, it's just that I'd
-like to have a set precedence when there's a naming conflict.
-
-My claim is that a structure definition is more interesting than a
-member variable, not that member variables are not interesting.
-
+~Andrew
