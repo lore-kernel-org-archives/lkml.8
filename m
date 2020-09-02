@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54548C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0097C2BBD0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2508E207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B38652083B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599079745;
-	bh=/GhIFha/+TBHI6MyiiKEJbWoOQuukXfIzVKICT5nktg=;
+	s=default; t=1599079749;
+	bh=s+F12H96PgtRNsd1OHfWDfQQChwh5OhgEc9C9LdXm9Y=;
 	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ew3po1fTjsfP02e8/YDsSXVJt/MFYLbgveJHjhS26aKMxWyu7ONtYgsBPFzjpCYW8
-	 puQ8aPyFuwGChZeAVEh47BxU7AgVJfj+8jKzhcBWeo63HK2JXa6jF+XswAz7OCxUeM
-	 BFDhaTIQOP4/H36ABa1syYQ3zutHcVdfuKDXKV2Q=
+	b=pC88J25kMDaUWPtimR/6CAdUT77iyOEvebFVz7ZyChtAuApUcyPiRBLxHXoi+DFaC
+	 PtkaufxG4z7hfyElgRESHE0qInb8X8vb3b3gkNwsUqdSZbgyiuwJkOg00hnhsgTmIg
+	 K48q1AdWT/ECNezgxzEgH2Pu0BF1++o9KfX2xECI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgIBUtD (ORCPT
+        id S1726742AbgIBUtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 16:49:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58420 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 16:49:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726226AbgIBUtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 16:49:00 -0400
+        id S1726523AbgIBUtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 16:49:02 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DD2F2083B;
-        Wed,  2 Sep 2020 20:48:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DAC5208C7;
+        Wed,  2 Sep 2020 20:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599079739;
-        bh=/GhIFha/+TBHI6MyiiKEJbWoOQuukXfIzVKICT5nktg=;
+        s=default; t=1599079742;
+        bh=s+F12H96PgtRNsd1OHfWDfQQChwh5OhgEc9C9LdXm9Y=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=co/qoHbiTAzDR0BKe7yk+ALRQGX6M9VQAT24HXHnyX6QT1AS2FLEr0iuuygtYDhth
-         2Y45ZWyWOqgzE+dgRyTu/qxPorUj+6vMKc/7b4qho98ADAFvt46DLoemA49Ytn0dSm
-         tRYWNmq2GSRu5KeRe8fiu6R2gphLESuin1E9h640=
+        b=X5jBvMBSiU0fnDH4PWicRH3OqFscHWmjwayDx66UpI40A/o8ofDnneqY9E2Wc0NLo
+         zDSTOqsxYqszZ5pUR8x6Sc+fK3JyQo5k0HRNxyPSYPg1RWRmzOGtiZdsotBi/zlgYy
+         t4Qkj0Bans2B565n+00hI6Eeq/7D8qFNiC4PCGZM=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Ben Dooks <ben-linux@fluff.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/3] mmc: s3cmci: Use proper printk format for iomem pointer
-Date:   Wed,  2 Sep 2020 22:48:46 +0200
-Message-Id: <20200902204847.2764-2-krzk@kernel.org>
+Subject: [PATCH 3/3] mmc: s3cmci: Cast driver data through long
+Date:   Wed,  2 Sep 2020 22:48:47 +0200
+Message-Id: <20200902204847.2764-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200902204847.2764-1-krzk@kernel.org>
 References: <20200902204847.2764-1-krzk@kernel.org>
@@ -56,12 +56,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-iomem pointers should be printed with pointer format to hide the
-actual value and fix warnings when compile testing for 64-bit
-architecture:
+Since driver data is a pointer, direct casting to integer causes
+warning when compile testing for 64-bit architecture:
 
-  drivers/mmc/host/s3cmci.c:1355:46: warning:
-    cast from pointer to integer of different size [-Wpointer-to-int-cast]
+  drivers/mmc/host/s3cmci.c:1495:17: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+
+The actual driver data can be only 0 or 1, so cast it via long and do
+not care about any loss of value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
@@ -69,18 +70,18 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/mmc/host/s3cmci.c b/drivers/mmc/host/s3cmci.c
-index dcd458649338..3fb597095079 100644
+index 3fb597095079..ac94f926624d 100644
 --- a/drivers/mmc/host/s3cmci.c
 +++ b/drivers/mmc/host/s3cmci.c
-@@ -1352,7 +1352,7 @@ static int s3cmci_state_show(struct seq_file *seq, void *v)
- {
- 	struct s3cmci_host *host = seq->private;
+@@ -1492,7 +1492,7 @@ static int s3cmci_probe_dt(struct s3cmci_host *host)
+ 	struct mmc_host *mmc = host->mmc;
+ 	int ret;
  
--	seq_printf(seq, "Register base = 0x%08x\n", (u32)host->base);
-+	seq_printf(seq, "Register base = 0x%p\n", host->base);
- 	seq_printf(seq, "Clock rate = %ld\n", host->clk_rate);
- 	seq_printf(seq, "Prescale = %d\n", host->prescaler);
- 	seq_printf(seq, "is2440 = %d\n", host->is2440);
+-	host->is2440 = (int) of_device_get_match_data(&pdev->dev);
++	host->is2440 = (long) of_device_get_match_data(&pdev->dev);
+ 
+ 	ret = mmc_of_parse(mmc);
+ 	if (ret)
 -- 
 2.17.1
 
