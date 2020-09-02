@@ -2,114 +2,106 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCB6C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA0DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2E4520709
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:56:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MVYKoUM3"
+	by mail.kernel.org (Postfix) with ESMTP id 32BF320709
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgIBM4q (ORCPT
+        id S1726618AbgIBM6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 08:56:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgIBM4b (ORCPT
+        Wed, 2 Sep 2020 08:58:38 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:33630 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbgIBM6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 08:56:31 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CE13C061244;
-        Wed,  2 Sep 2020 05:56:30 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id w11so2768213lfn.2;
-        Wed, 02 Sep 2020 05:56:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZT5x+31ffQ1fSGTC6fc7HGVTmxRKwze1JkUzuev76fo=;
-        b=MVYKoUM3Qi3G4CUp4xP5XqgQvWvDo6PsrlPp55IW6273Lw81QISusbtPEsERRcR/3B
-         6Q9V3XlFUJX+GYIBnGeYqwwR874ISHS4jNWHMhiw3Xd9Cbj+/LCRCeKnA3PoLxkiV7/7
-         5Mv8uiLha6QtMHB1bcvZCBV/dmLOudMDK5KPo4gr3+uw85cQhRqjrrrRXXs3v5vfarZi
-         M3XO57ETyI3ba5lFOH2B1nqQ8sa5cAotWHZ3E4SjTQugzfR2BZbwQJXdi7G32HSxhpWZ
-         mxSgzvdo1Bwy2Jq/MPnxHYcDW70oYBulKZ2KTwNLhjhGYttHxAJ7+h9Y2O0+j8aOxN0r
-         EipA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZT5x+31ffQ1fSGTC6fc7HGVTmxRKwze1JkUzuev76fo=;
-        b=R+s2Ri2as/Tiz9gkSkzG/ygagfWJLu549zSORD09nwtEFbcdoEGuJoYWnE6AyKvT2O
-         FBXhkZk/KIH9aBtM96ykXypZxra548xW9IthsxlzomOfQlYnjPdqsf2ftRMXqRY4vbp9
-         BIizcQa0Q5neNAgVRv8qtAY7PkZBbgtt99Kq0JMJPdn8cbPprgh0jiMVMC9W5Q+c1OZR
-         cURczM74HWOsAHX5HTOTwOJqc2QbdAPS9gaHs9WjLsytPwUKdzsRQZVaRH14P4onEwfO
-         o/5KCONHK/YR3ISUBNVZRJzgMMb8B34qRUqTrmrAmAQtjmnEWQ9ryPe8jhsmnI0hH+lc
-         xpSQ==
-X-Gm-Message-State: AOAM533DGlnTdOBo1B1QkBYwRsBPgSsTLoCNBlNQ3tWkmCfbZsVRXqah
-        vE7Aov1p15i1F+JEBYgN7VE=
-X-Google-Smtp-Source: ABdhPJxTy7FYR0Pg0Sm71v/FU6NwzEy2QsoacvE/ywzrQ6k+5uGvuu7pKbD5nySOHsJOa5oGFo3R7A==
-X-Received: by 2002:ac2:44b7:: with SMTP id c23mr3315115lfm.128.1599051388556;
-        Wed, 02 Sep 2020 05:56:28 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id b13sm1064037lfa.92.2020.09.02.05.56.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 05:56:27 -0700 (PDT)
-Subject: Re: [PATCH v2 2/6] regmap: Use flexible sleep
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>
-References: <20200830185356.5365-1-digetx@gmail.com>
- <20200830185356.5365-3-digetx@gmail.com>
- <CGME20200902124731eucas1p13716070977dbef39d09147bb71e050f6@eucas1p1.samsung.com>
- <d936a2fc-8890-eec1-015c-d919e10d1dc5@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b580524a-d476-adbe-59b9-4ae7d62626b1@gmail.com>
-Date:   Wed, 2 Sep 2020 15:56:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 2 Sep 2020 08:58:32 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 95F651C0B7F; Wed,  2 Sep 2020 14:58:28 +0200 (CEST)
+Date:   Wed, 2 Sep 2020 14:58:27 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
+Subject: Re: [PATCH 4.19 108/125] USB: yurex: Fix bad gfp argument
+Message-ID: <20200902125827.GA8817@duo.ucw.cz>
+References: <20200901150934.576210879@linuxfoundation.org>
+ <20200901150939.905188730@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <d936a2fc-8890-eec1-015c-d919e10d1dc5@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
+Content-Disposition: inline
+In-Reply-To: <20200901150939.905188730@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-02.09.2020 15:47, Marek Szyprowski пишет:
-> Hi Dmitry,
-> 
-> On 30.08.2020 20:53, Dmitry Osipenko wrote:
->> The multi-reg write function uses udelay(), which is a busy-loop based
->> delaying function that is not suitable for a long delays. Hence let's
->> replace the udelay() with fsleep(), which is flexible sleep function that
->> selects best delay function based on the delay-time.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> 
-> This patch landed in today's linux-next (20200902) as commit 
-> 2b32d2f7ce0a. Sadly it breaks booting of ARM 64bit Amlogic S922X based 
-> Odroid N2 board. Here is the log:
 
-Hello, Marek! Thank you for the feedback! I missed that remap supports
-different types of locking, I'll make a another patch to fix this problem.
+--gBBFr7Ir9EOA20Yy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> The syzbot fuzzer identified a bug in the yurex driver: It passes
+> GFP_KERNEL as a memory-allocation flag to usb_submit_urb() at a time
+> when its state is TASK_INTERRUPTIBLE, not TASK_RUNNING:
+
+Yeah, and instead of fixing the bug, patch papers over it, reducing
+reliability of the driver in the process.
+
+> This patch changes the call to use GFP_ATOMIC instead of GFP_KERNEL.
+
+Fixing it properly should be as simple as moving prepare_to_wait down,
+no?
+
+Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+
+diff --git a/drivers/usb/misc/yurex.c b/drivers/usb/misc/yurex.c
+index 785080f79073..5fbbb57e6e95 100644
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -489,10 +489,10 @@ static ssize_t yurex_write(struct file *file, const c=
+har __user *user_buffer,
+ 	}
+=20
+ 	/* send the data as the control msg */
+-	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
+ 	dev_dbg(&dev->interface->dev, "%s - submit %c\n", __func__,
+ 		dev->cntl_buffer[0]);
+-	retval =3D usb_submit_urb(dev->cntl_urb, GFP_ATOMIC);
++	retval =3D usb_submit_urb(dev->cntl_urb, GFP_KERNEL);
++	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
+ 	if (retval >=3D 0)
+ 		timeout =3D schedule_timeout(YUREX_WRITE_TIMEOUT);
+ 	finish_wait(&dev->waitq, &wait);
+
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--gBBFr7Ir9EOA20Yy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX0+W8wAKCRAw5/Bqldv6
+8qhCAKCALokkNqTK/gKXORopIw1iBG/XuwCguq4niA/xdb8rAIcmbmunTeGsIu0=
+=PAfh
+-----END PGP SIGNATURE-----
+
+--gBBFr7Ir9EOA20Yy--
