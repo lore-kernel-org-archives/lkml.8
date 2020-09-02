@@ -2,201 +2,189 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MIME_BASE64_TEXT,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF54C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C05AC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4BBC2075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:34:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tTlVqBt5"
+	by mail.kernel.org (Postfix) with ESMTP id 186DE20758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbgIBGeT (ORCPT
+        id S1726853AbgIBGec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 02:34:19 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:6506 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726312AbgIBGeQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 02:34:16 -0400
-X-UUID: c5f78bce01224232ac8d6165bfaf697c-20200902
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=kxH3tHGksx8HMp2pVMJOe2I26SY3rM5VW3ZL8QVRR+w=;
-        b=tTlVqBt5KGW7hJrtFvpexygtXonaW3wdHHGfALgKhgCCTHZPfLpjTtiUHbG0kS2/PJDnxU14UEsOaNDsQE+Try4F0Q1UQj0MsSwtMIiupxfiaSiSxRvPc1duw4Q/OQHpFRhIwdfH/reKU7jCg5/pVCT2zVeeIlDGqNPpbmEh0hI=;
-X-UUID: c5f78bce01224232ac8d6165bfaf697c-20200902
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <mark-pk.tsai@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1460731781; Wed, 02 Sep 2020 14:34:06 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 2 Sep 2020 14:34:05 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 2 Sep 2020 14:34:04 +0800
-From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-To:     <maz@kernel.org>, <robh+dt@kernel.org>
-CC:     <mark-pk.tsai@mediatek.com>, <alix.wu@mediatek.com>,
-        <daniel@0x0f.com>, <devicetree@vger.kernel.org>,
-        <jason@lakedaemon.net>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
-        <tglx@linutronix.de>, <yj.chiang@mediatek.com>
-Subject: [PATCH v3 1/2] irqchip: irq-mst: Add MStar interrupt controller support
-Date:   Wed, 2 Sep 2020 14:33:43 +0800
-Message-ID: <20200902063344.1852-2-mark-pk.tsai@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200902063344.1852-1-mark-pk.tsai@mediatek.com>
-References: <20200902063344.1852-1-mark-pk.tsai@mediatek.com>
+        Wed, 2 Sep 2020 02:34:32 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10790 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726446AbgIBGec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 02:34:32 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D9877D9EE9AF418DA077;
+        Wed,  2 Sep 2020 14:34:28 +0800 (CST)
+Received: from [10.74.191.121] (10.74.191.121) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 2 Sep 2020 14:34:20 +0800
+Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
+ enqueue op for lockless qdisc
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+CC:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
+        "David Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Linux Kernel Network Developers" <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
+ <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com>
+ <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com>
+ <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
+Date:   Wed, 2 Sep 2020 14:34:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: C1AD1E4F07400650ADD964CC6309425B7922614FDC0368EF2EA93CEBD55586AB2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIE1TdGFyIGludGVycnVwdCBjb250cm9sbGVyIHN1cHBvcnQgdXNpbmcgaGllcmFyY2h5IGly
-cQ0KZG9tYWluLg0KDQpTaWduZWQtb2ZmLWJ5OiBNYXJrLVBLIFRzYWkgPG1hcmstcGsudHNhaUBt
-ZWRpYXRlay5jb20+DQpUZXN0ZWQtYnk6IERhbmllbCBQYWxtZXIgPGRhbmllbEB0aGluZ3kuanA+
-DQotLS0NCiBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgfCAgIDcgKysNCiBkcml2ZXJz
-L2lycWNoaXAvS2NvbmZpZyAgICAgICAgfCAgIDggKysNCiBkcml2ZXJzL2lycWNoaXAvTWFrZWZp
-bGUgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvaXJxY2hpcC9pcnEtbXN0LWludGMuYyB8IDE5OSAr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCiA0IGZpbGVzIGNoYW5nZWQsIDIxNSBp
-bnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvaXJxY2hpcC9pcnEtbXN0
-LWludGMuYw0KDQpkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUw0KaW5kZXgg
-ZTQ2NDdjODRjOTg3Li5mM2NlNjBiMTgxYWYgMTAwNjQ0DQotLS0gYS9NQUlOVEFJTkVSUw0KKysr
-IGIvTUFJTlRBSU5FUlMNCkBAIC0xMTc1NSw2ICsxMTc1NSwxMyBAQCBROglodHRwOi8vcGF0Y2h3
-b3JrLmxpbnV4dHYub3JnL3Byb2plY3QvbGludXgtbWVkaWEvbGlzdC8NCiBUOglnaXQgZ2l0Oi8v
-bGludXh0di5vcmcvYW50dGlwL21lZGlhX3RyZWUuZ2l0DQogRjoJZHJpdmVycy9tZWRpYS91c2Iv
-bXNpMjUwMC8NCiANCitNU1RBUiBJTlRFUlJVUFQgQ09OVFJPTExFUiBEUklWRVINCitNOglNYXJr
-LVBLIFRzYWkgPG1hcmstcGsudHNhaUBtZWRpYXRlay5jb20+DQorTToJRGFuaWVsIFBhbG1lciA8
-ZGFuaWVsQHRoaW5neS5qcD4NCitTOglNYWludGFpbmVkDQorRjoJRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL21zdGFyLG1zdC1pbnRjLnlhbWwN
-CitGOglkcml2ZXJzL2lycWNoaXAvaXJxLW1zdC1pbnRjLmMNCisNCiBNU1lTVEVNUyBESVNLT05D
-SElQIEczIE1URCBEUklWRVINCiBNOglSb2JlcnQgSmFyem1payA8cm9iZXJ0LmphcnptaWtAZnJl
-ZS5mcj4NCiBMOglsaW51eC1tdGRAbGlzdHMuaW5mcmFkZWFkLm9yZw0KZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvaXJxY2hpcC9LY29uZmlnIGIvZHJpdmVycy9pcnFjaGlwL0tjb25maWcNCmluZGV4IGJm
-Yzk3MTlkYmNkYy4uYzYzMjFhNjlhZWQ5IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9pcnFjaGlwL0tj
-b25maWcNCisrKyBiL2RyaXZlcnMvaXJxY2hpcC9LY29uZmlnDQpAQCAtNTcxLDQgKzU3MSwxMiBA
-QCBjb25maWcgTE9PTkdTT05fUENIX01TSQ0KIAloZWxwDQogCSAgU3VwcG9ydCBmb3IgdGhlIExv
-b25nc29uIFBDSCBNU0kgQ29udHJvbGxlci4NCiANCitjb25maWcgTVNUX0lSUQ0KKwlib29sICJN
-U3RhciBJbnRlcnJ1cHQgQ29udHJvbGxlciINCisJZGVmYXVsdCBBUkNIX01FRElBVEVLDQorCXNl
-bGVjdCBJUlFfRE9NQUlODQorCXNlbGVjdCBJUlFfRE9NQUlOX0hJRVJBUkNIWQ0KKwloZWxwDQor
-CSAgU3VwcG9ydCBNU3RhciBJbnRlcnJ1cHQgQ29udHJvbGxlci4NCisNCiBlbmRtZW51DQpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9pcnFjaGlwL01ha2VmaWxlIGIvZHJpdmVycy9pcnFjaGlwL01ha2Vm
-aWxlDQppbmRleCAxMzNmOWM0NTc0NGEuLmUyNjg4YTYyNDAzZSAxMDA2NDQNCi0tLSBhL2RyaXZl
-cnMvaXJxY2hpcC9NYWtlZmlsZQ0KKysrIGIvZHJpdmVycy9pcnFjaGlwL01ha2VmaWxlDQpAQCAt
-MTExLDMgKzExMSw0IEBAIG9iai0kKENPTkZJR19MT09OR1NPTl9IVFBJQykJCSs9IGlycS1sb29u
-Z3Nvbi1odHBpYy5vDQogb2JqLSQoQ09ORklHX0xPT05HU09OX0hUVkVDKQkJKz0gaXJxLWxvb25n
-c29uLWh0dmVjLm8NCiBvYmotJChDT05GSUdfTE9PTkdTT05fUENIX1BJQykJCSs9IGlycS1sb29u
-Z3Nvbi1wY2gtcGljLm8NCiBvYmotJChDT05GSUdfTE9PTkdTT05fUENIX01TSSkJCSs9IGlycS1s
-b29uZ3Nvbi1wY2gtbXNpLm8NCitvYmotJChDT05GSUdfTVNUX0lSUSkJCQkrPSBpcnEtbXN0LWlu
-dGMubw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvaXJxY2hpcC9pcnEtbXN0LWludGMuYyBiL2RyaXZl
-cnMvaXJxY2hpcC9pcnEtbXN0LWludGMuYw0KbmV3IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAw
-MDAwMDAwMDAwMC4uNGJlMDc3NTkxODk4DQotLS0gL2Rldi9udWxsDQorKysgYi9kcml2ZXJzL2ly
-cWNoaXAvaXJxLW1zdC1pbnRjLmMNCkBAIC0wLDAgKzEsMTk5IEBADQorLy8gU1BEWC1MaWNlbnNl
-LUlkZW50aWZpZXI6IChHUEwtMi4wIE9SIEJTRC0zLUNsYXVzZSkNCisvKg0KKyAqIENvcHlyaWdo
-dCAoYykgMjAyMCBNZWRpYVRlayBJbmMuDQorICogQXV0aG9yIE1hcmstUEsgVHNhaSA8bWFyay1w
-ay50c2FpQG1lZGlhdGVrLmNvbT4NCisgKi8NCisjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+
-DQorI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQorI2luY2x1ZGUgPGxpbnV4L2lycS5oPg0KKyNpbmNs
-dWRlIDxsaW51eC9pcnFjaGlwLmg+DQorI2luY2x1ZGUgPGxpbnV4L2lycWRvbWFpbi5oPg0KKyNp
-bmNsdWRlIDxsaW51eC9vZi5oPg0KKyNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+DQorI2lu
-Y2x1ZGUgPGxpbnV4L29mX2lycS5oPg0KKyNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQorI2luY2x1
-ZGUgPGxpbnV4L3NwaW5sb2NrLmg+DQorDQorI2RlZmluZSBJTlRDX01BU0sJMHgwDQorI2RlZmlu
-ZSBJTlRDX0VPSQkweDIwDQorDQorc3RydWN0IG1zdF9pbnRjX2NoaXBfZGF0YSB7DQorCXJhd19z
-cGlubG9ja190CWxvY2s7DQorCXVuc2lnbmVkIGludAlpcnFfc3RhcnQsIG5yX2lycXM7DQorCXZv
-aWQgX19pb21lbQkqYmFzZTsNCisJYm9vbAkJbm9fZW9pOw0KK307DQorDQorc3RhdGljIHZvaWQg
-bXN0X3NldF9pcnEoc3RydWN0IGlycV9kYXRhICpkLCB1MzIgb2Zmc2V0KQ0KK3sNCisJaXJxX2h3
-X251bWJlcl90IGh3aXJxID0gaXJxZF90b19od2lycShkKTsNCisJc3RydWN0IG1zdF9pbnRjX2No
-aXBfZGF0YSAqY2QgPSBpcnFfZGF0YV9nZXRfaXJxX2NoaXBfZGF0YShkKTsNCisJdTE2IHZhbCwg
-bWFzazsNCisJdW5zaWduZWQgbG9uZyBmbGFnczsNCisNCisJbWFzayA9IDEgPDwgKGh3aXJxICUg
-MTYpOw0KKwlvZmZzZXQgKz0gKGh3aXJxIC8gMTYpICogNDsNCisNCisJcmF3X3NwaW5fbG9ja19p
-cnFzYXZlKCZjZC0+bG9jaywgZmxhZ3MpOw0KKwl2YWwgPSByZWFkd19yZWxheGVkKGNkLT5iYXNl
-ICsgb2Zmc2V0KSB8IG1hc2s7DQorCXdyaXRld19yZWxheGVkKHZhbCwgY2QtPmJhc2UgKyBvZmZz
-ZXQpOw0KKwlyYXdfc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmY2QtPmxvY2ssIGZsYWdzKTsNCit9
-DQorDQorc3RhdGljIHZvaWQgbXN0X2NsZWFyX2lycShzdHJ1Y3QgaXJxX2RhdGEgKmQsIHUzMiBv
-ZmZzZXQpDQorew0KKwlpcnFfaHdfbnVtYmVyX3QgaHdpcnEgPSBpcnFkX3RvX2h3aXJxKGQpOw0K
-KwlzdHJ1Y3QgbXN0X2ludGNfY2hpcF9kYXRhICpjZCA9IGlycV9kYXRhX2dldF9pcnFfY2hpcF9k
-YXRhKGQpOw0KKwl1MTYgdmFsLCBtYXNrOw0KKwl1bnNpZ25lZCBsb25nIGZsYWdzOw0KKw0KKwlt
-YXNrID0gMSA8PCAoaHdpcnEgJSAxNik7DQorCW9mZnNldCArPSAoaHdpcnEgLyAxNikgKiA0Ow0K
-Kw0KKwlyYXdfc3Bpbl9sb2NrX2lycXNhdmUoJmNkLT5sb2NrLCBmbGFncyk7DQorCXZhbCA9IHJl
-YWR3X3JlbGF4ZWQoY2QtPmJhc2UgKyBvZmZzZXQpICYgfm1hc2s7DQorCXdyaXRld19yZWxheGVk
-KHZhbCwgY2QtPmJhc2UgKyBvZmZzZXQpOw0KKwlyYXdfc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgm
-Y2QtPmxvY2ssIGZsYWdzKTsNCit9DQorDQorc3RhdGljIHZvaWQgbXN0X2ludGNfbWFza19pcnEo
-c3RydWN0IGlycV9kYXRhICpkKQ0KK3sNCisJbXN0X3NldF9pcnEoZCwgSU5UQ19NQVNLKTsNCisJ
-aXJxX2NoaXBfbWFza19wYXJlbnQoZCk7DQorfQ0KKw0KK3N0YXRpYyB2b2lkIG1zdF9pbnRjX3Vu
-bWFza19pcnEoc3RydWN0IGlycV9kYXRhICpkKQ0KK3sNCisJbXN0X2NsZWFyX2lycShkLCBJTlRD
-X01BU0spOw0KKwlpcnFfY2hpcF91bm1hc2tfcGFyZW50KGQpOw0KK30NCisNCitzdGF0aWMgdm9p
-ZCBtc3RfaW50Y19lb2lfaXJxKHN0cnVjdCBpcnFfZGF0YSAqZCkNCit7DQorCXN0cnVjdCBtc3Rf
-aW50Y19jaGlwX2RhdGEgKmNkID0gaXJxX2RhdGFfZ2V0X2lycV9jaGlwX2RhdGEoZCk7DQorDQor
-CWlmICghY2QtPm5vX2VvaSkNCisJCW1zdF9zZXRfaXJxKGQsIElOVENfRU9JKTsNCisNCisJaXJx
-X2NoaXBfZW9pX3BhcmVudChkKTsNCit9DQorDQorc3RhdGljIHN0cnVjdCBpcnFfY2hpcCBtc3Rf
-aW50Y19jaGlwID0gew0KKwkubmFtZQkJCT0gIm1zdC1pbnRjIiwNCisJLmlycV9tYXNrCQk9IG1z
-dF9pbnRjX21hc2tfaXJxLA0KKwkuaXJxX3VubWFzawkJPSBtc3RfaW50Y191bm1hc2tfaXJxLA0K
-KwkuaXJxX2VvaQkJPSBtc3RfaW50Y19lb2lfaXJxLA0KKwkuaXJxX2dldF9pcnFjaGlwX3N0YXRl
-CT0gaXJxX2NoaXBfZ2V0X3BhcmVudF9zdGF0ZSwNCisJLmlycV9zZXRfaXJxY2hpcF9zdGF0ZQk9
-IGlycV9jaGlwX3NldF9wYXJlbnRfc3RhdGUsDQorCS5pcnFfc2V0X2FmZmluaXR5CT0gaXJxX2No
-aXBfc2V0X2FmZmluaXR5X3BhcmVudCwNCisJLmlycV9zZXRfdmNwdV9hZmZpbml0eQk9IGlycV9j
-aGlwX3NldF92Y3B1X2FmZmluaXR5X3BhcmVudCwNCisJLmlycV9zZXRfdHlwZQkJPSBpcnFfY2hp
-cF9zZXRfdHlwZV9wYXJlbnQsDQorCS5pcnFfcmV0cmlnZ2VyCQk9IGlycV9jaGlwX3JldHJpZ2dl
-cl9oaWVyYXJjaHksDQorCS5mbGFncwkJCT0gSVJRQ0hJUF9TRVRfVFlQRV9NQVNLRUQgfA0KKwkJ
-CQkgIElSUUNISVBfU0tJUF9TRVRfV0FLRSB8DQorCQkJCSAgSVJRQ0hJUF9NQVNLX09OX1NVU1BF
-TkQsDQorfTsNCisNCitzdGF0aWMgaW50IG1zdF9pbnRjX2RvbWFpbl90cmFuc2xhdGUoc3RydWN0
-IGlycV9kb21haW4gKmQsDQorCQkJCSAgICAgc3RydWN0IGlycV9md3NwZWMgKmZ3c3BlYywNCisJ
-CQkJICAgICB1bnNpZ25lZCBsb25nICpod2lycSwNCisJCQkJICAgICB1bnNpZ25lZCBpbnQgKnR5
-cGUpDQorew0KKwlzdHJ1Y3QgbXN0X2ludGNfY2hpcF9kYXRhICpjZCA9IGQtPmhvc3RfZGF0YTsN
-CisNCisJaWYgKGlzX29mX25vZGUoZndzcGVjLT5md25vZGUpKSB7DQorCQlpZiAoZndzcGVjLT5w
-YXJhbV9jb3VudCAhPSAzKQ0KKwkJCXJldHVybiAtRUlOVkFMOw0KKw0KKwkJLyogTm8gUFBJIHNo
-b3VsZCBwb2ludCB0byB0aGlzIGRvbWFpbiAqLw0KKwkJaWYgKGZ3c3BlYy0+cGFyYW1bMF0gIT0g
-MCkNCisJCQlyZXR1cm4gLUVJTlZBTDsNCisNCisJCWlmIChmd3NwZWMtPnBhcmFtWzFdID49IGNk
-LT5ucl9pcnFzKQ0KKwkJCXJldHVybiAtRUlOVkFMOw0KKw0KKwkJKmh3aXJxID0gZndzcGVjLT5w
-YXJhbVsxXTsNCisJCSp0eXBlID0gZndzcGVjLT5wYXJhbVsyXSAmIElSUV9UWVBFX1NFTlNFX01B
-U0s7DQorCQlyZXR1cm4gMDsNCisJfQ0KKw0KKwlyZXR1cm4gLUVJTlZBTDsNCit9DQorDQorc3Rh
-dGljIGludCBtc3RfaW50Y19kb21haW5fYWxsb2Moc3RydWN0IGlycV9kb21haW4gKmRvbWFpbiwg
-dW5zaWduZWQgaW50IHZpcnEsDQorCQkJCSB1bnNpZ25lZCBpbnQgbnJfaXJxcywgdm9pZCAqZGF0
-YSkNCit7DQorCWludCBpOw0KKwlpcnFfaHdfbnVtYmVyX3QgaHdpcnE7DQorCXN0cnVjdCBpcnFf
-ZndzcGVjIHBhcmVudF9md3NwZWMsICpmd3NwZWMgPSBkYXRhOw0KKwlzdHJ1Y3QgbXN0X2ludGNf
-Y2hpcF9kYXRhICpjZCA9IGRvbWFpbi0+aG9zdF9kYXRhOw0KKw0KKwkvKiBOb3QgR0lDIGNvbXBs
-aWFudCAqLw0KKwlpZiAoZndzcGVjLT5wYXJhbV9jb3VudCAhPSAzKQ0KKwkJcmV0dXJuIC1FSU5W
-QUw7DQorDQorCS8qIE5vIFBQSSBzaG91bGQgcG9pbnQgdG8gdGhpcyBkb21haW4gKi8NCisJaWYg
-KGZ3c3BlYy0+cGFyYW1bMF0pDQorCQlyZXR1cm4gLUVJTlZBTDsNCisNCisJaHdpcnEgPSBmd3Nw
-ZWMtPnBhcmFtWzFdOw0KKwlmb3IgKGkgPSAwOyBpIDwgbnJfaXJxczsgaSsrKQ0KKwkJaXJxX2Rv
-bWFpbl9zZXRfaHdpcnFfYW5kX2NoaXAoZG9tYWluLCB2aXJxICsgaSwgaHdpcnEgKyBpLA0KKwkJ
-CQkJICAgICAgJm1zdF9pbnRjX2NoaXAsDQorCQkJCQkgICAgICBkb21haW4tPmhvc3RfZGF0YSk7
-DQorDQorCXBhcmVudF9md3NwZWMgPSAqZndzcGVjOw0KKwlwYXJlbnRfZndzcGVjLmZ3bm9kZSA9
-IGRvbWFpbi0+cGFyZW50LT5md25vZGU7DQorCXBhcmVudF9md3NwZWMucGFyYW1bMV0gPSBjZC0+
-aXJxX3N0YXJ0ICsgaHdpcnE7DQorCXJldHVybiBpcnFfZG9tYWluX2FsbG9jX2lycXNfcGFyZW50
-KGRvbWFpbiwgdmlycSwgbnJfaXJxcywgJnBhcmVudF9md3NwZWMpOw0KK30NCisNCitzdGF0aWMg
-Y29uc3Qgc3RydWN0IGlycV9kb21haW5fb3BzIG1zdF9pbnRjX2RvbWFpbl9vcHMgPSB7DQorCS50
-cmFuc2xhdGUJPSBtc3RfaW50Y19kb21haW5fdHJhbnNsYXRlLA0KKwkuYWxsb2MJCT0gbXN0X2lu
-dGNfZG9tYWluX2FsbG9jLA0KKwkuZnJlZQkJPSBpcnFfZG9tYWluX2ZyZWVfaXJxc19jb21tb24s
-DQorfTsNCisNCitpbnQgX19pbml0DQorbXN0X2ludGNfb2ZfaW5pdChzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKmRuLCBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBhcmVudCkNCit7DQorCXN0cnVjdCBpcnFfZG9t
-YWluICpkb21haW4sICpkb21haW5fcGFyZW50Ow0KKwlzdHJ1Y3QgbXN0X2ludGNfY2hpcF9kYXRh
-ICpjZDsNCisJdTMyIGlycV9zdGFydCwgaXJxX2VuZDsNCisNCisJZG9tYWluX3BhcmVudCA9IGly
-cV9maW5kX2hvc3QocGFyZW50KTsNCisJaWYgKCFkb21haW5fcGFyZW50KSB7DQorCQlwcl9lcnIo
-Im1zdC1pbnRjOiBpbnRlcnJ1cHQtcGFyZW50IG5vdCBmb3VuZFxuIik7DQorCQlyZXR1cm4gLUVJ
-TlZBTDsNCisJfQ0KKw0KKwlpZiAob2ZfcHJvcGVydHlfcmVhZF91MzJfaW5kZXgoZG4sICJtc3Rh
-cixpcnFzLW1hcC1yYW5nZSIsIDAsICZpcnFfc3RhcnQpIHx8DQorCSAgICBvZl9wcm9wZXJ0eV9y
-ZWFkX3UzMl9pbmRleChkbiwgIm1zdGFyLGlycXMtbWFwLXJhbmdlIiwgMSwgJmlycV9lbmQpKQ0K
-KwkJcmV0dXJuIC1FSU5WQUw7DQorDQorCWNkID0ga3phbGxvYyhzaXplb2YoKmNkKSwgR0ZQX0tF
-Uk5FTCk7DQorCWlmICghY2QpDQorCQlyZXR1cm4gLUVOT01FTTsNCisNCisJY2QtPmJhc2UgPSBv
-Zl9pb21hcChkbiwgMCk7DQorCWlmICghY2QtPmJhc2UpIHsNCisJCWtmcmVlKGNkKTsNCisJCXJl
-dHVybiAtRU5PTUVNOw0KKwl9DQorDQorCWNkLT5ub19lb2kgPSBvZl9wcm9wZXJ0eV9yZWFkX2Jv
-b2woZG4sICJtc3RhcixpbnRjLW5vLWVvaSIpOw0KKwlyYXdfc3Bpbl9sb2NrX2luaXQoJmNkLT5s
-b2NrKTsNCisJY2QtPmlycV9zdGFydCA9IGlycV9zdGFydDsNCisJY2QtPm5yX2lycXMgPSBpcnFf
-ZW5kIC0gaXJxX3N0YXJ0ICsgMTsNCisJZG9tYWluID0gaXJxX2RvbWFpbl9hZGRfaGllcmFyY2h5
-KGRvbWFpbl9wYXJlbnQsIDAsIGNkLT5ucl9pcnFzLCBkbiwNCisJCQkJCSAgJm1zdF9pbnRjX2Rv
-bWFpbl9vcHMsIGNkKTsNCisJaWYgKCFkb21haW4pIHsNCisJCWlvdW5tYXAoY2QtPmJhc2UpOw0K
-KwkJa2ZyZWUoY2QpOw0KKwkJcmV0dXJuIC1FTk9NRU07DQorCX0NCisNCisJcmV0dXJuIDA7DQor
-fQ0KKw0KK0lSUUNISVBfREVDTEFSRShtc3RfaW50YywgIm1zdGFyLG1zdC1pbnRjIiwgbXN0X2lu
-dGNfb2ZfaW5pdCk7DQotLSANCjIuMTguMA0K
+On 2020/9/2 12:41, Cong Wang wrote:
+> On Tue, Sep 1, 2020 at 6:42 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>
+>> On 2020/9/2 2:24, Cong Wang wrote:
+>>> On Mon, Aug 31, 2020 at 5:59 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>>>
+>>>> Currently there is concurrent reset and enqueue operation for the
+>>>> same lockless qdisc when there is no lock to synchronize the
+>>>> q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
+>>>> qdisc_deactivate() called by dev_deactivate_queue(), which may cause
+>>>> out-of-bounds access for priv->ring[] in hns3 driver if user has
+>>>> requested a smaller queue num when __dev_xmit_skb() still enqueue a
+>>>> skb with a larger queue_mapping after the corresponding qdisc is
+>>>> reset, and call hns3_nic_net_xmit() with that skb later.
+>>>
+>>> Can you be more specific here? Which call path requests a smaller
+>>> tx queue num? If you mean netif_set_real_num_tx_queues(), clearly
+>>> we already have a synchronize_net() there.
+>>
+>> When the netdevice is in active state, the synchronize_net() seems to
+>> do the correct work, as below:
+>>
+>> CPU 0:                                       CPU1:
+>> __dev_queue_xmit()                       netif_set_real_num_tx_queues()
+>> rcu_read_lock_bh();
+>> netdev_core_pick_tx(dev, skb, sb_dev);
+>>         .
+>>         .                               dev->real_num_tx_queues = txq;
+>>         .                                       .
+>>         .                                       .
+>>         .                               synchronize_net();
+>>         .                                       .
+>> q->enqueue()                                    .
+>>         .                                       .
+>> rcu_read_unlock_bh()                            .
+>>                                         qdisc_reset_all_tx_gt
+>>
+>>
+> 
+> Right.
+> 
+> 
+>> but dev->real_num_tx_queues is not RCU-protected, maybe that is a problem
+>> too.
+>>
+>> The problem we hit is as below:
+>> In hns3_set_channels(), hns3_reset_notify(h, HNAE3_DOWN_CLIENT) is called
+>> to deactive the netdevice when user requested a smaller queue num, and
+>> txq->qdisc is already changed to noop_qdisc when calling
+>> netif_set_real_num_tx_queues(), so the synchronize_net() in the function
+>> netif_set_real_num_tx_queues() does not help here.
+> 
+> How could qdisc still be running after deactivating the device?
 
+qdisc could be running during the device deactivating process.
+
+The main process of changing channel number is as below:
+
+1. dev_deactivate()
+2. hns3 handware related setup
+3. netif_set_real_num_tx_queues()
+4. netif_tx_wake_all_queues()
+5. dev_activate()
+
+During step 1, qdisc could be running while qdisc is resetting, so
+there could be skb left in the old qdisc(which will be restored back to
+txq->qdisc during dev_activate()), as below:
+
+CPU 0:                                       CPU1:
+__dev_queue_xmit():                      dev_deactivate_many():
+rcu_read_lock_bh();                      qdisc_deactivate(qdisc);
+q = rcu_dereference_bh(txq->qdisc);		.
+netdev_core_pick_tx(dev, skb, sb_dev);		.
+	.
+	.				rcu_assign_pointer(dev_queue->qdisc, qdisc_default);
+	.					.
+	.				    	.
+        .                               	.
+	.					.
+q->enqueue()					.
+	.					.
+rcu_read_unlock_bh()				.
+
+And During step 3, txq->qdisc is pointing to noop_qdisc, so the qdisc_reset()
+only reset the noop_qdisc, but not the actual qdisc, which is stored in
+txq->qdisc_sleeping, so the actual qdisc may still have skb.
+
+When hns3_link_status_change() call step 4 and 5, it will restore all queue's
+qdisc using txq->qdisc_sleeping and schedule all queue with net_tx_action().
+The skb enqueued in step 1 may be dequeued and run, which cause the problem.
+
+> 
+> 
+>>
+>>>
+>>>>
+>>>> Avoid the above concurrent op by calling synchronize_rcu_tasks()
+>>>> after assigning new qdisc to dev_queue->qdisc and before calling
+>>>> qdisc_deactivate() to make sure skb with larger queue_mapping
+>>>> enqueued to old qdisc will always be reset when qdisc_deactivate()
+>>>> is called.
+>>>
+>>> Like Eric said, it is not nice to call such a blocking function when
+>>> we have a large number of TX queues. Possibly we just need to
+>>> add a synchronize_net() as in netif_set_real_num_tx_queues(),
+>>> if it is missing.
+>>
+>> As above, the synchronize_net() in netif_set_real_num_tx_queues() seems
+>> to work when netdevice is in active state, but does not work when in
+>> deactive.
+> 
+> Please explain why deactivated device still has qdisc running?
+> 
+> At least before commit 379349e9bc3b4, we always test deactivate
+> bit before enqueueing. Are you complaining about that commit?
+> That commit is indeed suspicious, at least it does not precisely revert
+> commit ba27b4cdaaa66561aaedb21 as it claims.
+
+I am not familiar with TCQ_F_CAN_BYPASS.
+From my understanding, the problem is that there is no order between
+qdisc enqueuing and qdisc reset.
+
+
+> 
+> 
+>>
+>> And we do not want skb left in the old qdisc when netdevice is deactived,
+>> right?
+> 
+> Yes, and more importantly, qdisc should not be running after deactivation.
+> 
+> Thanks.
+> .
+> 
