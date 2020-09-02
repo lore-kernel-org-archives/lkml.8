@@ -2,147 +2,96 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B96C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EEDC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A71232068F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0964E2068F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="nm2odj8d"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y8MTB0Xo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbgIBCMm (ORCPT
+        id S1726380AbgIBCPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 22:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgIBCMe (ORCPT
+        Tue, 1 Sep 2020 22:15:14 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51468 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgIBCPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 22:12:34 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67986C061246
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 19:12:34 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id h12so1737265pgm.7
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 19:12:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eDn4H8C3rvbkfT2QTNfX9/NNgOmpWWzhsOOAvMq08G0=;
-        b=nm2odj8d9USAWrDN0g+bHXzNG/RcPcWRX7VnJYkhvFC3aw2I0bzjfDViTVS8ODRYUA
-         fLd8SEAnfNgAT4J7OV5fy1vq1dFtpwcEcZrSmM8swQO2qdRMxBrqTZpsuhSmyxWgo8Ch
-         pjzsQ7BIFq5DOVeNcrGoPoJqUyAYu3xeaMhaJNH/V05Pe9gh9FN1P5LXGjNTHYVJCx3a
-         aNMpWu1BTNTCKTfDvKmVSpVs54K+LWOnSZWhFxLzS9bJMlzy5T8/QXtR1chxEDBpqjZE
-         4sU0BicGDTKLHrJCseGnWW2FJCv9YJjkLdPgzJGfTBrLrVDnQkEx8HE4iGYoCdsdjpxr
-         ++Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eDn4H8C3rvbkfT2QTNfX9/NNgOmpWWzhsOOAvMq08G0=;
-        b=GASqdjeV6bPMX394s//k+VYWWiLdOFkrVI3jrK9bTiiGb5qRvK1ZggGeTeyjjH2/TR
-         z6tP9d6y0ChJUlRNRZakDAO3D4Bo+RDx6kuydZ2rkBmzdJotbuUCNnNuA6+iTgs8mMeC
-         j0jNffc0+hqmqUBUUh+8lpFIMZiY7yKqplHdsowZJLrJXy/AQkpfRiLFj83kV9+g9roZ
-         +zp5tVR54t4Yzt0ZYqEQt9395PsOabhHJG8PlzlPsL9SkVeDiHDHz4bJ96jfCZ3wOSw2
-         23ICZG61l+7dMA856EttFg7bRHWTwy+jtz8EZojI4EQ6kAVKnt2WpVksZjSDSfOa8AlY
-         jTMw==
-X-Gm-Message-State: AOAM530qeiGb7XvNT/5pyBxlph+Kn0tW9XT3YSNXYDaZTS0zjFLJmFLc
-        nb9VhyJU7KEAJniItKwyM05oeWOTjb6xMmah
-X-Google-Smtp-Source: ABdhPJxRN5Q1ePyU37A3TlwCXtmce0zhsFRZjYXGpiehBCiXkA2V5nB0n9WaHKiS5nHgJ2MzwAb31w==
-X-Received: by 2002:aa7:9584:: with SMTP id z4mr1063657pfj.271.1599012753395;
-        Tue, 01 Sep 2020 19:12:33 -0700 (PDT)
-Received: from [192.168.1.187] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id q2sm3552880pgs.90.2020.09.01.19.12.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 19:12:32 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: Fix NULL pointer dereference in
- io_sq_wq_submit_work()
-To:     Xin Yin <yinxin_1989@aliyun.com>, viro@zeniv.linux.org.uk
-Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200902015948.109580-1-yinxin_1989@aliyun.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <1c1ae234-0084-bddd-990f-5fd92c4e6430@kernel.dk>
-Date:   Tue, 1 Sep 2020 20:12:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 1 Sep 2020 22:15:13 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0822DsEd072486;
+        Wed, 2 Sep 2020 02:15:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=jZBAh3zUXLf+UaVhTxXwAHlk2vhbKawpf5sEetxslcQ=;
+ b=Y8MTB0XoTvENYaozojqcOkx0fPlEU0elNL1X+5ECNXwueEqtFt8Phf3R6G6+n3KeLJ8F
+ 4wGUCW8qbziispKqITXe8CoAFvnLDTwQRQGoV+yf8NxUFNz1vjthuLVwiSd3AFp1dw4I
+ 62XoCM/T7rYd543qjnxZecfZD78qTFX/U+/UvskHkjsh6jCi/yHEcbt8E5l0K1483yGk
+ Rl1pRyhRmhupfuUqqFIuxz1uGCw1/y+/yVvVDq5ihNPjrDC/c6AWKPR8zdrlMm6c0+Rb
+ JbHxR0bRoxDoIvb+yjKUoFdvfty94D2ik9V0PsbdzxquE6JjuD8rY7kitcCQ3NPER6Z0 wQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 339dmmx6wj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 02 Sep 2020 02:15:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0822B1DE074677;
+        Wed, 2 Sep 2020 02:13:06 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 3380ssy0x5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Sep 2020 02:13:06 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0822D5ev024752;
+        Wed, 2 Sep 2020 02:13:05 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Sep 2020 19:13:01 -0700
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>
+Subject: Re: [PATCH V2] scsi: ufs-pci: Add LTR support for Intel controllers
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq14kohexka.fsf@ca-mkp.ca.oracle.com>
+References: <20200827072030.24655-1-adrian.hunter@intel.com>
+Date:   Tue, 01 Sep 2020 22:12:59 -0400
+In-Reply-To: <20200827072030.24655-1-adrian.hunter@intel.com> (Adrian Hunter's
+        message of "Thu, 27 Aug 2020 10:20:30 +0300")
 MIME-Version: 1.0
-In-Reply-To: <20200902015948.109580-1-yinxin_1989@aliyun.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009020018
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=1
+ spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009020018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 7:59 PM, Xin Yin wrote:
-> the commit <1c4404efcf2c0> ("<io_uring: make sure async workqueue
-> is canceled on exit>") caused a crash in io_sq_wq_submit_work().
-> when io_ring-wq get a req form async_list, which not have been
-> added to task_list. Then try to delete the req from task_list will caused
-> a "NULL pointer dereference".
-> 
-> Ensure add req to async_list and task_list at the sametime.
-> 
-> The crash log looks like this:
-> [95995.973638] Unable to handle kernel NULL pointer dereference at virtual address 00000000
-> [95995.979123] pgd = c20c8964
-> [95995.981803] [00000000] *pgd=1c72d831, *pte=00000000, *ppte=00000000
-> [95995.988043] Internal error: Oops: 817 [#1] SMP ARM
-> [95995.992814] Modules linked in: bpfilter(-)
-> [95995.996898] CPU: 1 PID: 15661 Comm: kworker/u8:5 Not tainted 5.4.56 #2
-> [95996.003406] Hardware name: Amlogic Meson platform
-> [95996.008108] Workqueue: io_ring-wq io_sq_wq_submit_work
-> [95996.013224] PC is at io_sq_wq_submit_work+0x1f4/0x5c4
-> [95996.018261] LR is at walk_stackframe+0x24/0x40
-> [95996.022685] pc : [<c059b898>]    lr : [<c030da7c>]    psr: 600f0093
-> [95996.028936] sp : dc6f7e88  ip : dc6f7df0  fp : dc6f7ef4
-> [95996.034148] r10: deff9800  r9 : dc1d1694  r8 : dda58b80
-> [95996.039358] r7 : dc6f6000  r6 : dc6f7ebc  r5 : dc1d1600  r4 : deff99c0
-> [95996.045871] r3 : 0000cb5d  r2 : 00000000  r1 : ef6b9b80  r0 : c059b88c
-> [95996.052385] Flags: nZCv  IRQs off  FIQs on  Mode SVC_32  ISA ARM  Segment user
-> [95996.059593] Control: 10c5387d  Table: 22be804a  DAC: 00000055
-> [95996.065325] Process kworker/u8:5 (pid: 15661, stack limit = 0x78013c69)
-> [95996.071923] Stack: (0xdc6f7e88 to 0xdc6f8000)
-> [95996.076268] 7e80:                   dc6f7ecc dc6f7e98 00000000 c1f06c08 de9dc800 deff9a04
-> [95996.084431] 7ea0: 00000000 dc6f7f7c 00000000 c1f65808 0000080c dc677a00 c1ee9bd0 dc6f7ebc
-> [95996.092594] 7ec0: dc6f7ebc d085c8f6 c0445a90 dc1d1e00 e008f300 c0288400 e4ef7100 00000000
-> [95996.100757] 7ee0: c20d45b0 e4ef7115 dc6f7f34 dc6f7ef8 c03725f0 c059b6b0 c0288400 c0288400
-> [95996.108921] 7f00: c0288400 00000001 c0288418 e008f300 c0288400 e008f314 00000088 c0288418
-> [95996.117083] 7f20: c1f03d00 dc6f6038 dc6f7f7c dc6f7f38 c0372df8 c037246c dc6f7f5c 00000000
-> [95996.125245] 7f40: c1f03d00 c1f03d00 c20d3cbe c0288400 dc6f7f7c e1c43880 e4fa7980 00000000
-> [95996.133409] 7f60: e008f300 c0372d9c e48bbe74 e1c4389c dc6f7fac dc6f7f80 c0379244 c0372da8
-> [95996.141570] 7f80: 600f0093 e4fa7980 c0379108 00000000 00000000 00000000 00000000 00000000
-> [95996.149734] 7fa0: 00000000 dc6f7fb0 c03010ac c0379114 00000000 00000000 00000000 00000000
-> [95996.157897] 7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [95996.166060] 7fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-> [95996.174217] Backtrace:
-> [95996.176662] [<c059b6a4>] (io_sq_wq_submit_work) from [<c03725f0>] (process_one_work+0x190/0x4c0)
-> [95996.185425]  r10:e4ef7115 r9:c20d45b0 r8:00000000 r7:e4ef7100 r6:c0288400 r5:e008f300
-> [95996.193237]  r4:dc1d1e00
-> [95996.195760] [<c0372460>] (process_one_work) from [<c0372df8>] (worker_thread+0x5c/0x5bc)
-> [95996.203836]  r10:dc6f6038 r9:c1f03d00 r8:c0288418 r7:00000088 r6:e008f314 r5:c0288400
-> [95996.211647]  r4:e008f300
-> [95996.214173] [<c0372d9c>] (worker_thread) from [<c0379244>] (kthread+0x13c/0x168)
-> [95996.221554]  r10:e1c4389c r9:e48bbe74 r8:c0372d9c r7:e008f300 r6:00000000 r5:e4fa7980
-> [95996.229363]  r4:e1c43880
-> [95996.231888] [<c0379108>] (kthread) from [<c03010ac>] (ret_from_fork+0x14/0x28)
-> [95996.239088] Exception stack(0xdc6f7fb0 to 0xdc6f7ff8)
-> [95996.244127] 7fa0:                                     00000000 00000000 00000000 00000000
-> [95996.252291] 7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [95996.260453] 7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> [95996.267054]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c0379108
-> [95996.274866]  r4:e4fa7980 r3:600f0093
-> [95996.278430] Code: eb3a59e1 e5952098 e5951094 e5812004 (e5821000)
 
-Thanks for catching this, I'll get it queued for stable.
+Adrian,
+
+> Intel host controllers support the setting of latency tolerance.
+> Accordingly, implement the PM QoS ->set_latency_tolerance() callback. The
+> raw register values are also exposed via debugfs.
+
+Does not apply to 5.10/scsi-queue. Please rebase. Thanks!
 
 -- 
-Jens Axboe
-
+Martin K. Petersen	Oracle Linux Engineering
