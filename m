@@ -2,136 +2,122 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F825C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD83C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEED7206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9ECB206EB
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="slBjyMf9"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eKQfDg0F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgIBSNy (ORCPT
+        id S1727993AbgIBSOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:13:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgIBSNw (ORCPT
+        Wed, 2 Sep 2020 14:14:52 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45272 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbgIBSOt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:13:52 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57118C061244;
-        Wed,  2 Sep 2020 11:13:52 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id j11so125023plk.9;
-        Wed, 02 Sep 2020 11:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iz9IwyNAPHOdvHV+qKdwdXbfIBOQcrl01GVTHqaFy8Y=;
-        b=slBjyMf9lA2UMcRZNGjoNklbTtn6nWoC3yN7gMube3mAbWTAtnlQNuvDstGSZoNlpP
-         DxOS/g6r0/vte0sg9tyZBPMG008lDq+w+uZR0Ke1GQNYhBsTlyq2Go6VvGjsXC7pVhN1
-         F2iSgEiUHxweBGEsfRLW2FsJDGEYLlKebIIFtZJylasF2hANcBNmmIEJFOxBeMMIJUBA
-         3Vczr1PzayXbGHMnHzfawdWQ36oCBimV61R3xGkMGWDOv2xsgqU794UDNEQpolDQWX3Y
-         9nsXPZAJyogmwFZFMUqVYsGKgzKv29taejmb8QjSII6YC3KUIthKtF+uWTETYhW1KDce
-         99mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iz9IwyNAPHOdvHV+qKdwdXbfIBOQcrl01GVTHqaFy8Y=;
-        b=VcJIibaKO/r5u9Hmq6rGrXVLTiw7CP/JSD3xDvvB++H7QlLTnlYQbxxMmYoDzgjIs1
-         dP4f+IAlCP88nmvH72PfMBfS1KzImg9wmvcWKvDLvrBXvCRL1lbayVXGNr9XruEjwB1X
-         MEshg4yN79e3m37KiGB/4GB4yc5gwcdRcQhKag7xRErAUYfFgxwWNr7omrFO3wAAjkjJ
-         0XQWzoViFfa80s9aayNdLPHzQqng4quO2BmBiMFtf0Cm6kQZ5QvhB05YyN81TUtUTjvz
-         chDNAFzjuh0/OJsLmRwN684b8G1gAiU80hU0cpO99X6IfGVCqgKB5a6jg90uCw1gJ0M9
-         OOfg==
-X-Gm-Message-State: AOAM532RgCgImC5usMw8bgKdfNCDdA7mBe2BNGikMVIXXb3kxGLUcyxP
-        b67sIEfzAcqqKO8K97z5LMmR8BlAd9HV0Ncjbc4=
-X-Google-Smtp-Source: ABdhPJziHGmyiFn4xCNoJgII4iCOfoLaLXiyMWQnYUeyVlB7eIb4cXtUUg7Ymi6n4SAu7Gutm22N4htGSAQE+oGCQzE=
-X-Received: by 2002:a17:902:8eca:: with SMTP id x10mr3055894plo.129.1599070431881;
- Wed, 02 Sep 2020 11:13:51 -0700 (PDT)
+        Wed, 2 Sep 2020 14:14:49 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082IEjVR105945;
+        Wed, 2 Sep 2020 13:14:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599070485;
+        bh=VkCOVQ5uxVARjNX9T8FosOrt2wUqD7roXG4iCY1NK5A=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=eKQfDg0FbSTqqwSic1qeN80TJ5pHAxhSF7NyYGlQW5KR2hTRlQ7wHPc2OJuGUx4p/
+         Ldmj2lAhcueZrFCsXmD0WE1fX6zAva3dFHGhHdyBdwPyjH05xsEU4hQVK3XHgPhe9v
+         V4W2Tno3P7krltiD1PTJ8P9P3vilKpktrHLriOyw=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082IEiBJ002659
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Sep 2020 13:14:44 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
+ 2020 13:14:44 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 2 Sep 2020 13:14:44 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082IEi7v045986;
+        Wed, 2 Sep 2020 13:14:44 -0500
+Date:   Wed, 2 Sep 2020 13:14:39 -0500
+From:   Nishanth Menon <nm@ti.com>
+To:     Suman Anna <s-anna@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        "J, KEERTHY" <j-keerthy@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <lokeshvutla@ti.com>,
+        <grygorii.strashko@ti.com>, <nsekhar@ti.com>
+Subject: Re: [PATCH 5/7] arm64: dts: ti: k3-am65-wakeup: Use generic
+ temperature-sensor for node name
+Message-ID: <20200902181439.ywzxknv3vb7fcfeo@akan>
+References: <20200901223059.14801-1-nm@ti.com>
+ <20200901223059.14801-6-nm@ti.com>
+ <1cdb8cb1-3a08-423d-ba34-299ac1a4b9b4@ti.com>
 MIME-Version: 1.0
-References: <20200902145957.13861-1-krzk@kernel.org> <20200902145957.13861-2-krzk@kernel.org>
-In-Reply-To: <20200902145957.13861-2-krzk@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 2 Sep 2020 21:13:33 +0300
-Message-ID: <CAHp75VeDqd1fiXVgcZXei2vLJrR4067o0E8wgqUbDio4sKvS7A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] MAINTAINERS: Move Hartmut Knaack to Credits
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1cdb8cb1-3a08-423d-ba34-299ac1a4b9b4@ti.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 6:01 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Hartmut Knaack was an active reviewer and contributor to the IIO
-> subsystem and drivers.  However his last message on LKML is from
-> October 2015.
->
-> In thanks for Hartmut's effort, move him name to the Credits.
+On 11:55-20200902, Suman Anna wrote:
+> On 9/1/20 5:30 PM, Nishanth Menon wrote:
+> > Use temperature-sensor@ naming for nodes following standard conventions of device
+> > tree (section 2.2.2 Generic Names recommendation in [1]).
+> > 
+> > [1] https://github.com/devicetree-org/devicetree-specification/tree/v0.3
+> > 
+> > Suggested-by: Suman Anna <s-anna@ti.com>
+> > Suggested-by: Vignesh Raghavendra <vigneshr@ti.com>
+> > Signed-off-by: Nishanth Menon <nm@ti.com>
+> > ---
+> >  arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+> > index bb498be2f0a4..ed42f13e7663 100644
+> > --- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+> > +++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+> > @@ -95,7 +95,7 @@
+> >  		clock-names = "gpio";
+> >  	};
+> >  
+> > -	wkup_vtm0: thermal@42050000 {
+> > +	wkup_vtm0: temperature-sensor@42050000 {
+> 
+> There has been a suggestion to use something like thermal-sensor during the
+> bindings review, but it is better to use this standard node name.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: linux-iio <linux-iio@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
->
-> Changes since v1:
-> 1. Fix order in CREDITS
-> ---
->  CREDITS     | 4 ++++
->  MAINTAINERS | 1 -
->  2 files changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/CREDITS b/CREDITS
-> index 32ee70a7562e..c741455498a4 100644
-> --- a/CREDITS
-> +++ b/CREDITS
-> @@ -1942,6 +1942,10 @@ S: Post Office Box 611311
->  S: San Jose, California 95161-1311
->  S: USA
->
-> +N: Hartmut Knaack
-> +E: knaack.h@gmx.de
-> +D: IIO subsystem and drivers
-> +
->  N: Thorsten Knabe
->  E: Thorsten Knabe <tek@rbg.informatik.tu-darmstadt.de>
->  E: Thorsten Knabe <tek01@hrzpub.tu-darmstadt.de>
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index facffcf7b1d1..94dda8ae202c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8489,7 +8489,6 @@ F:        drivers/iio/multiplexer/iio-mux.c
->
->  IIO SUBSYSTEM AND DRIVERS
->  M:     Jonathan Cameron <jic23@kernel.org>
-> -R:     Hartmut Knaack <knaack.h@gmx.de>
->  R:     Lars-Peter Clausen <lars@metafoo.de>
->  R:     Peter Meerwald-Stadler <pmeerw@pmeerw.net>
->  L:     linux-iio@vger.kernel.org
-> --
-> 2.17.1
->
-
+Yes - I did notice it as well, and then picked up the recommendation
+straight from 0.3 spec itself.
+> 
+> Reviewed-by: Suman Anna <s-anna@ti.com>
+> 
+> regards
+> Suman
+> 
+> >  		compatible = "ti,am654-vtm";
+> >  		reg = <0x42050000 0x25c>;
+> >  		power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
+> > 
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
