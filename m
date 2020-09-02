@@ -2,137 +2,143 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,TVD_SPACE_RATIO autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C5CC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A232DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E916207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:23:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="nfW+3cTN";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="a0CG+qyT"
+	by mail.kernel.org (Postfix) with ESMTP id 784EA2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:23:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599031439;
+	bh=9ggE8lB4fLOzytqntNeN+BEJFMLCazCIAGhJHuRBPeo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LaadgL+YodBgLLM9dhvgR781ayC4aKvA8UcDWiV95OqwwplrftsGV7jVSXNBR4jWn
+	 fJfbTUDWsreDuIAVmOH943iqLzFB2XOtqgwlhRCz4VzD9bN3Wq9CFQCcrAWgHkCKyQ
+	 jYwBV5Zv3r9/qEhIluGUEbOhCgVkviY1Nv/EY5q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgIBHXn (ORCPT
+        id S1727020AbgIBHX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:23:43 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:24211 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgIBHXk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:23:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1599031419; x=1630567419;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
-  b=nfW+3cTNWUVE8cN3Te21d31lGMuOSidmtE5L6onJ7eWk+YoPZmsczkZo
-   JHQ8OiRodHiwTjfFt00VMXeWGBQoZ/VIW/4fuWJbfhpd77EsFmsFburBI
-   dY7kWQplHdRLerDCnCHHt0fcK7MxeZNyw5q9pRY/gh0h1LsUzSyj/6fVg
-   NGmKirmf7U/LClUyGo3FBxGX5fWqn3g4App25sEm/QwS2x0Nvzg1T1sJw
-   f4V89SXA9muDiuCSU1O3Ye9UuPNwq4S7UusKNqRVlT5YDYMI0O+wHfJLK
-   X4SXPA+mL9jvL4wcHB7bXJO6zGsOeRikLEa8o4MbTMuuJOrCsbFfTtOqD
-   Q==;
-IronPort-SDR: Cwx4g1CTg2IeQchW+p8iZspbzLam5Ls2gDQoq+b33eWNErJBjSVJv+pYAz+JVNykTvC4gg5wcW
- QMS8zVPI6HP+C6s49YTpnAeWdnSD3/eM/AUFmdAmXCEP8lqmbYW2H5ckgX/hSYPiXyEWsaFviG
- +bjCbx2dYdpZpjZ3ms2pzKHY+0Y6fYm2lQ9No8N6ZNIKKOdFxiML0t4jBlGOuRXk08yQhK7K26
- FufD9jW2kiXPk7/DvrzWg/3vXKD4brLSHNXXEww+BDURGs2u1SMo4LqBfBH2fulBI3qesyLps6
- OYI=
-X-IronPort-AV: E=Sophos;i="5.76,381,1592841600"; 
-   d="scan'208";a="255918296"
-Received: from mail-co1nam11lp2173.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.173])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Sep 2020 15:23:37 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bP9Dj6N1mezn8GxU5tZXXlVOuCgyr9hly/haLsQQK20DiTRTgJMfg/fVo9k8KKtyixL0aQr84CBTjrgNWgMpI9NE0hYA7odP/DF4DyPnXC07krPD6RQ49OMLGfBcWBWpAM6Z4cMaeZAbRfCCQHP/ieVyYRKqP0qdYtNkIgSj2ts1oYZyZXglB2NVkD2JjAbnhpdjezuZPQoGTbeq4l3mHz1g2ODhu8awQbzx+E0hAZiNpY/vmNJsmc97Kvznncg0YrmMrwuZY44SrimMd9DixwKCU455EqrjqVl4lQ/6DB0BuqlWdeWlZZLpfikIewZYairZGId6yIMNrpJbY06K1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=EgAigTXxKK/fbRVRc7J4yhM4WCkGA6P4EtAnm45UZh7AvqeltUBF/Ios5+8DPgJEaUB9F0Rpo7es/uLmlfmay15QVvoaa0oU/CkMprsufX3esF5PxmHz1Jjh1QMJOU2VlwzhTKq4iwnQuvAXf8E8EctzMQvnZHqQuLVw0uj3C3EUhOcuxVL0HDalplLy6Q3R9P6HZWHgk06JSPmOfVMt0gFNIJJcknUVviZc17j83uyfzw5kaMin0lPDCAVVFWtE0lY20yelk2bVYjCnq6Kodeb9iQ8SXyl/CSG6YFFFlCbkLiQgYVjaup/iLn1JGaqMrYPNWJzPwsdH7jhTfMYpMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=a0CG+qyTlkm0v+lBfyXExhpdfnZqklTax2Mv3n9nuWgmrhW8junaq4o8iPgcy43RZnYFXa2JPvs1ZwEQaHTkSochv71oOLj4Fw6Sy0D1gTrzvj9GBpyB5nVcOJ59Q8NQQj89QjqaZ1U9As1ZqkISd4IKXiwycYWpqsHiPZMXksk=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB3966.namprd04.prod.outlook.com
- (2603:10b6:805:48::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Wed, 2 Sep
- 2020 07:23:36 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3326.023; Wed, 2 Sep 2020
- 07:23:36 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Josef Bacik <josef@toxicpanda.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "nbd@other.debian.org" <nbd@other.debian.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 5/9] block: use revalidate_disk_size in
- set_capacity_revalidate_and_notify
-Thread-Topic: [PATCH 5/9] block: use revalidate_disk_size in
- set_capacity_revalidate_and_notify
-Thread-Index: AQHWgHjE05l6FVr+70GNhORFziJQhA==
-Date:   Wed, 2 Sep 2020 07:23:36 +0000
-Message-ID: <SN4PR0401MB35987F80C36AB409503DC0059B2F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200901155748.2884-1-hch@lst.de>
- <20200901155748.2884-6-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2001:a62:1590:f101:bd07:d1f9:7e6b:2014]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6de1b2e0-f78c-452f-b4a5-08d84f111b69
-x-ms-traffictypediagnostic: SN6PR04MB3966:
-x-microsoft-antispam-prvs: <SN6PR04MB39668F869286235937E9DE549B2F0@SN6PR04MB3966.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Lu4rznRnSXAWn/mRhvJdRylBVYy9k6gJLexdA2XG7czJBvRnncbiLSge2QR7Iw8nMyTzDthReYZBSyOiLKqK3CBLqn+YeUxZVg0UGM4pKJ/sKj9UQbwdYKajzH0fuYIet3fQRgP9CqqRonpkHi64nDnQGHdH+AQ7Jf8JArva3ApNf2HPLcehsQoy5FsmaJKdzCDQpsClP5m0WbC0sLQsCDOAVJ7s2V2WFiMcflJYSDXzARtU8wbvwO0DQBuCbViaPQK1B0Q8q6kXw+l2drbeahJtTzGPkLPNnnZ9bzBNJTRNSJUYiGk8mJTe3CovNBrQQVNx+n6LHzbiLOKzgBWKxA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(396003)(376002)(39860400002)(366004)(136003)(55016002)(4270600006)(8676002)(110136005)(54906003)(86362001)(8936002)(186003)(478600001)(2906002)(6506007)(19618925003)(7696005)(52536014)(316002)(558084003)(71200400001)(33656002)(66476007)(7416002)(66946007)(5660300002)(76116006)(9686003)(4326008)(66446008)(91956017)(66556008)(64756008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 4+yMaX1z5FtIl8wxSD4U0mvnRUN8c3FW/o+aDrLkW+NY5j4rucRJ9VHZx72B/AVP0x5TanHtAVxI+lJkBsUdfX/EHKg2hyFaVEd9e3MQmsCRuwpXALo5/BvHzJ0ng+OnQ0iHcNkXxNVDfzGhnez0WoDF/NFVhk+hTfoF+eeehY0eZwaWl3awGYM4c6O+k9iQjJ0z+3lDlQJlJiEfP211c5XGdTskHdLzyLNxYeu580OGy2sYfH3ksK1hLXTxk8rbWdGusun3VtrwJBVwkJ6jr/KReNYVkiViQqPHvu/bsGJ6uKTkqab+CHsw//uHuQJcRLL6fBIIutY6TMjy7YB/27DGNNz25mb/O7hDU5zYqgL6fmGjJyIxAoPCPGrKPwSqYFyJxjnO4Iw4pVo05nGnCzP5r3B9c1x97wUtFdUVq8vp6Oo9rmkrJUzLh+rjGtK2rRpuGPUMIcfCFu9SfbJ1v02Vhmwmjjo9eXEFt93ildNGrc5PzmCR4IVGS72sCRem66g3JZpBuMlQfUZLv2okM34Pz313BYpb/DIU9fOKws7WZfpos3tci136D3hjpbq9kOZWONIaop8J4gQIW4MtFdT9XLudZY9NOKH0ck1+SDqALn1Qq74Ele9dBqbupIMBQVRRvBRoMjYprPW5HSDG0kTcIOsnHUsBovWyUip5XnGS1IIniOuaPZ2bADQYr7n8s2ZYv78qpRLxJXSIniNBnQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 2 Sep 2020 03:23:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgIBHX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 03:23:56 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A995D207EA;
+        Wed,  2 Sep 2020 07:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599031435;
+        bh=9ggE8lB4fLOzytqntNeN+BEJFMLCazCIAGhJHuRBPeo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Nwh+4kDJPpAVaf3StG6MUO1wbTA2pTR527FnnyPY18YYKIQW+Uo7wKpHbXLY5j1kb
+         zPVJx527tmzn6rOh3T5JfnEnOr6TE8YAw+RvBO63/4imEv6GxGJEYt+knGB+XySfYp
+         x06/Kjlb+8EplLQ4X9lBY/zKCa+stEfJnC1b12r8=
+Date:   Wed, 2 Sep 2020 09:24:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.4 000/214] 5.4.62-rc1 review
+Message-ID: <20200902072421.GA1610179@kroah.com>
+References: <20200901150952.963606936@linuxfoundation.org>
+ <694f63b6-c5a0-f434-5212-27f1cb7b5f2a@roeck-us.net>
+ <CA+G9fYtoxNSRKncYBnc=LgYVJTW51rQGAgnLaWwhYZT==VeqAA@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6de1b2e0-f78c-452f-b4a5-08d84f111b69
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 07:23:36.4386
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: w1q8Bz+9jP6wkq7Rp1bTVJgrygj3CR45cOjuSlB7UWuFZC8p4T6RoR/BtLuEdd1cqIWUzyStoPvVm/saG9xrLhnutI9A4To9YD5ib2HncMo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3966
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYtoxNSRKncYBnc=LgYVJTW51rQGAgnLaWwhYZT==VeqAA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+On Wed, Sep 02, 2020 at 10:47:51AM +0530, Naresh Kamboju wrote:
+> On Wed, 2 Sep 2020 at 00:39, Guenter Roeck <linux@roeck-us.net> wrote:
+> >
+> > On 9/1/20 8:08 AM, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 5.4.62 release.
+> > > There are 214 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > >
+> > > Responses should be made by Thu, 03 Sep 2020 15:09:01 +0000.
+> > > Anything received after that time might be too late.
+> > >
+> >
+> > Building x86_64:tools/perf ... failed
+> > --------------
+> > Error log:
+> > Warning: Kernel ABI header at 'tools/include/uapi/linux/kvm.h' differs from latest version at 'include/uapi/linux/kvm.h'
+> > Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
+> > Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
+> > Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/unistd.h' differs from latest version at 'arch/x86/include/uapi/asm/unistd.h'
+> > Makefile.config:846: No libcap found, disables capability support, please install libcap-devel/libcap-dev
+> > Makefile.config:958: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+> >   PERF_VERSION = 5.4.61.gf5583dd12e6f
+> > In file included from btf_dump.c:16:0:
+> > btf_dump.c: In function ‘btf_align_of’:
+> > tools/include/linux/kernel.h:53:17: error: comparison of distinct pointer types lacks a cast [-Werror]
+> >   (void) (&_min1 == &_min2);  \
+> >                  ^
+> > btf_dump.c:770:10: note: in expansion of macro ‘min’
+> >    return min(sizeof(void *), t->size);
+> >           ^~~
+> > cc1: all warnings being treated as errors
+> > make[7]: *** [/tmp/buildbot-builddir/tools/perf/staticobjs/btf_dump.o] Error 1
+> 
+> This perf build break noticed and reported on mailing list [1]
+> 
+> >
+> > Bisect log below. Reverting the following two patches fixes the problem.
+> >
+> > 497ef945f327 libbpf: Fix build on ppc64le architecture
+> > 401834f55ce7 libbpf: Handle GCC built-in types for Arm NEON
+> >
+> > Guenter
+> >
+> > ---
+> > $ git bisect log
+> > # bad: [f5583dd12e6fc8a3c11ae732f38bce8334e150a2] Linux 5.4.62-rc1
+> > # good: [6576d69aac94cd8409636dfa86e0df39facdf0d2] Linux 5.4.61
+> > git bisect start 'HEAD' 'v5.4.61'
+> > # good: [6c747bd0794c982b500bda7334ef55d9dabb6cc6] nvme-fc: Fix wrong return value in __nvme_fc_init_request()
+> > git bisect good 6c747bd0794c982b500bda7334ef55d9dabb6cc6
+> > # bad: [81b5698e6d9ecdc9569df8f4b93be70d587f5ddf] serial: samsung: Removes the IRQ not found warning
+> > git bisect bad 81b5698e6d9ecdc9569df8f4b93be70d587f5ddf
+> > # bad: [973679736caa8e1b39b68866535bdc7899a46f25] ASoC: wm8994: Avoid attempts to read unreadable registers
+> > git bisect bad 973679736caa8e1b39b68866535bdc7899a46f25
+> > # good: [1789df2a787c589dbe83bc3ed52af2abbc739d1b] ext4: correctly restore system zone info when remount fails
+> > git bisect good 1789df2a787c589dbe83bc3ed52af2abbc739d1b
+> > # good: [ba1fb0301a60cbded377e0f312c82847415a1820] drm/amd/powerplay: correct UVD/VCE PG state on custom pptable uploading
+> > git bisect good ba1fb0301a60cbded377e0f312c82847415a1820
+> > # bad: [1ef070d29e73a50e98a93d9a68f69cfef4247170] netfilter: avoid ipv6 -> nf_defrag_ipv6 module dependency
+> > git bisect bad 1ef070d29e73a50e98a93d9a68f69cfef4247170
+> > # bad: [401834f55ce7f86bf2c0f8fdd8fbf9e1baf19f1c] libbpf: Handle GCC built-in types for Arm NEON
+> > git bisect bad 401834f55ce7f86bf2c0f8fdd8fbf9e1baf19f1c
+> > # good: [ccb6e88cd42a9cb65bde705f7f8e7c9822dcb711] drm/amd/display: Switch to immediate mode for updating infopackets
+> > git bisect good ccb6e88cd42a9cb65bde705f7f8e7c9822dcb711
+> > # first bad commit: [401834f55ce7f86bf2c0f8fdd8fbf9e1baf19f1c] libbpf: Handle GCC built-in types for Arm NEON
+> 
+> [1] https://lore.kernel.org/stable/CA+G9fYvsNkxvs7hdCB3LC9W+rP8hBa3F1fG3951S+xHfiOJwNA@mail.gmail.com/
+
+Yes, sorry, I thought the follow-on patch I added would solve this
+issue, I guess not :(
+
+Odd that it works in Linus's tree?  I'll go drop both of these patches
+now...
+
+thanks,
+
+greg k-h
