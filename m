@@ -2,153 +2,290 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49524C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED04AC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 258D62072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDEE92072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063117;
-	bh=yHxkHJXmHHTyvyIwik9o+Zn+nYcXFp6fggzlMJQEB0w=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=IoSWZixp82OFTg1/ufFuhWSIAB11xKT+6syqPXps1KyrEdW+Og97rCobKxvfuVgby
-	 5soSlOYfy2H2rkYsgB/Cwiki+E4ySXyO2Q/dUNIFeAIC0FKBcKUf2CbFklIC0T5Hkg
-	 OZCIalhLx/PWb/qG2HhlnRPFTzHqB7OYSLAcn6hE=
+	s=default; t=1599063122;
+	bh=L0BBzYFiyXDK+rr+zJX3mWJtGQqDiZHoasNcHiaSIIc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wSXM/VSCt1/4BDJ12XioZWKxejYuk4Pc/KR2BVbUwRwNpB0Ht3U3MUXS2Bu0e1VM8
+	 Tgw3PAo16yxOPV4nGbogofcYgiyMAwbySNGUjqeI2DFXLu56UYGiD0caPiK85ESeRg
+	 vAUzwX5CDJ8aa4trm/DN2IO1iajqOlRY3CiYdR+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgIBQL0 (ORCPT
+        id S1728441AbgIBQMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728164AbgIBQKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:10:52 -0400
-Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA1312137B;
-        Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599063046;
-        bh=yHxkHJXmHHTyvyIwik9o+Zn+nYcXFp6fggzlMJQEB0w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2alxKTRfIVmUUpPCedtGlFXhuDyxf1uwEBLlY7gwRwZx4sF0APleIQv6D5VLfX/zK
-         pTG8GW4JxZPNBkUDj2PmZse9xJklp/hvnjECggpAcCjAnSEsP1tgNZx+NXZ1LAh/FB
-         OBO39kdozwMgLnQEynMss6S/y14oBGm2PHeD7qTc=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kDVLP-000t9n-N0; Wed, 02 Sep 2020 18:10:43 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Antti Palosaari <crope@iki.fi>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 03/38] media: qt1010: fix usage of unititialized value
-Date:   Wed,  2 Sep 2020 18:10:06 +0200
-Message-Id: <b14f07b9c89456001f4d9c1ce7a66d5ebea40fdf.1599062230.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
-References: <cover.1599062230.git.mchehab+huawei@kernel.org>
+        Wed, 2 Sep 2020 12:12:01 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:51819 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728430AbgIBQLh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:11:37 -0400
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 082GBKCw025833;
+        Thu, 3 Sep 2020 01:11:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 082GBKCw025833
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1599063081;
+        bh=pmpNm0w+p5nlVYLPePodcVS+2N4Uzz6SNAcWSFoTljw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tBHyVFJzVx/oMfZevwZjdAxfAj4dnC48HGlQznfHvJTNjKRd73poWwY7U1q6ZJm4X
+         GBmPjbGTMOxDzjIRTNM491keqtrTsA9SmD3FtQzNJpDMUoRF+XLbd0gy68HCnbufyi
+         fn0RglKGtqhM1qpajMjBnNE0hbVKDcf5oZ/1GaXs+c1p7B1ImUyWi19M8yDYRXl7iT
+         ryp5bKa0VWModKZYQx+TiVsefLN2xJ5Gvvbbqj9YgwMPMXI9iqhlUzmJor02EX+mdX
+         FvcrbfyMU/OXpfFIVOw57JIkRcOn8sJx4cRWDD7bCkS1hauB66kvWXFMkLbIu6QXP1
+         e7GFkK6M2DSLw==
+X-Nifty-SrcIP: [209.85.214.174]
+Received: by mail-pl1-f174.google.com with SMTP id z15so2508376plo.7;
+        Wed, 02 Sep 2020 09:11:21 -0700 (PDT)
+X-Gm-Message-State: AOAM530odV6eY69qrp4T0IJ+zmdYNTl0viUXDgDVkSsdv4p0JNzu9XUd
+        f7MzfhQiVGwHSfAgq8Rrg5R8awXItThlrTms7o0=
+X-Google-Smtp-Source: ABdhPJyCqJK+5kgvvUd1wa6DSBhxAKsQe2h8sXywOVBayNFFwCj2zJHSi27A2mbZFv8H2iekRZne3+oyj3XaIJEoNvE=
+X-Received: by 2002:a17:90b:360a:: with SMTP id ml10mr2755492pjb.198.1599063080458;
+ Wed, 02 Sep 2020 09:11:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200805102550.GO2674@hirez.programming.kicks-ass.net>
+ <20200806120438.GG35926@hirez.programming.kicks-ass.net> <CAK7LNAQE2jPUQJUa1yi7+=w--Jj-wwnGVR2hyPQZxR7Yp9odBA@mail.gmail.com>
+In-Reply-To: <CAK7LNAQE2jPUQJUa1yi7+=w--Jj-wwnGVR2hyPQZxR7Yp9odBA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 3 Sep 2020 01:10:42 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASLtE-vuZD6ZAnUGT2zxn72e_-NWg3kD=DigLMQ4-ZDTw@mail.gmail.com>
+Message-ID: <CAK7LNASLtE-vuZD6ZAnUGT2zxn72e_-NWg3kD=DigLMQ4-ZDTw@mail.gmail.com>
+Subject: Re: [PATCH -v2] scipts/tags.sh: Add custom sort order
+To:     "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As pointed by smatch:
+On Thu, Sep 3, 2020 at 12:58 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Fri, Aug 7, 2020 at 2:28 AM <peterz@infradead.org> wrote:
+> >
+> >
+> > One long standing annoyance I have with using vim-tags is that our tags
+> > file is not properly sorted. That is, the sorting exhuberant Ctags does
+> > is only on the tag itself.
+> >
+> > The problem with that is that, for example, the tag 'mutex' appears a
+> > mere 505 times, 492 of those are structure members. However it is _far_
+> > more likely that someone wants the struct definition when looking for
+> > the mutex tag than any of those members. However, due to the nature of
+> > the sorting, the struct definition will not be first.
+> >
+> > So add a script that does a custom sort of the tags file, taking the tag
+> > kind into account.
+> >
+> > The kind ordering is roughly: 'type', 'function', 'macro', 'enum', rest.
+> >
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> > Changes since v1:
+> >  - removed the need for tags.unsorted by using a pipe
+> >
+> > Due to this change 'make tags' is now actually faster than it was before
+> > due to less sorting.
+> >
+> >  scripts/sort-tags.awk | 79 +++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  scripts/tags.sh       | 11 +++++--
+> >  2 files changed, 87 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/scripts/sort-tags.awk b/scripts/sort-tags.awk
+> > new file mode 100755
+> > index 000000000000..1eb50406c9d3
+> > --- /dev/null
+> > +++ b/scripts/sort-tags.awk
+> > @@ -0,0 +1,79 @@
+> > +#!/usr/bin/awk -f
+> > +
+> > +# $ ctags --list-kinds
+> > +# C
+> > +#   c  classes
+> > +#   s  structure names
+> > +#   t  typedefs
+> > +#   g  enumeration names
+> > +#   u  union names
+> > +#   n  namespaces
+> > +
+> > +#   f  function definitions
+> > +#   p  function prototypes [off]
+> > +#   d  macro definitions
+> > +
+> > +#   e  enumerators (values inside an enumeration)
+> > +#   m  class, struct, and union members
+> > +#   v  variable definitions
+> > +
+> > +#   l  local variables [off]
+> > +#   x  external and forward variable declarations [off]
+> > +
+> > +BEGIN {
+> > +       FS = "\t"
+> > +
+> > +       sort = "LC_ALL=C sort"
+> > +
+> > +       # our sort order for C kinds:
+> > +       order["c"] = "A"
+> > +       order["s"] = "B"
+> > +       order["t"] = "C"
+> > +       order["g"] = "D"
+> > +       order["u"] = "E"
+> > +       order["n"] = "F"
+> > +       order["f"] = "G"
+> > +       order["p"] = "H"
+> > +       order["d"] = "I"
+> > +       order["e"] = "J"
+> > +       order["m"] = "K"
+> > +       order["v"] = "L"
+> > +       order["l"] = "M"
+> > +       order["x"] = "N"
+> > +}
+> > +
+> > +# pass through header
+> > +/^!_TAG/ {
+> > +       print $0
+> > +       next
+> > +}
+> > +
+> > +{
+> > +       # find 'kinds'
+> > +       for (i = 1; i <= NF; i++) {
+> > +               if ($i ~ /;"$/) {
+> > +                       kind = $(i+1)
+> > +                       break;
+> > +               }
+> > +       }
+> > +
+> > +       # create sort key
+> > +       if (order[kind])
+> > +               key = $1 order[kind];
+> > +       else
+> > +               key = $1 "Z";
+> > +
+> > +       # get it sorted
+> > +       print key "\t" $0 |& sort
+> > +}
+> > +
+> > +END {
+> > +       close(sort, "to")
+> > +       while ((sort |& getline) > 0) {
+> > +               # strip key
+> > +               sub(/[^[:space:]]*[[:space:]]*/, "")
+> > +               print $0
+> > +       }
+> > +       close(sort)
+> > +}
+> > +
+> > diff --git a/scripts/tags.sh b/scripts/tags.sh
+> > index 4e18ae5282a6..51087c3d8b1e 100755
+> > --- a/scripts/tags.sh
+> > +++ b/scripts/tags.sh
+> > @@ -251,8 +251,10 @@ setup_regex()
+> >
+> >  exuberant()
+> >  {
+> > +       (
+> > +
+> >         setup_regex exuberant asm c
+> > -       all_target_sources | xargs $1 -a                        \
+> > +       all_target_sources | xargs $1                           \
+> >         -I __initdata,__exitdata,__initconst,__ro_after_init    \
+> >         -I __initdata_memblock                                  \
+> >         -I __refdata,__attribute,__maybe_unused,__always_unused \
+> > @@ -266,12 +268,15 @@ exuberant()
+> >         -I DEFINE_TRACE,EXPORT_TRACEPOINT_SYMBOL,EXPORT_TRACEPOINT_SYMBOL_GPL \
+> >         -I static,const                                         \
+> >         --extra=+fq --c-kinds=+px --fields=+iaS --langmap=c:+.h \
+> > +       --sort=no -o -                                          \
+> >         "${regex[@]}"
+> >
+> >         setup_regex exuberant kconfig
+> > -       all_kconfigs | xargs $1 -a                              \
+> > -       --langdef=kconfig --language-force=kconfig "${regex[@]}"
+> > +       all_kconfigs | xargs $1                                 \
+> > +       --langdef=kconfig --language-force=kconfig --sort=no    \
+> > +       -o - "${regex[@]}"
+> >
+> > +       ) | scripts/sort-tags.awk > tags
+> >  }
+> >
+> >  emacs()
+>
+>
+> Sorry for the long delay.
+>
+> First, this patch breaks 'make TAGS'
+> if 'etags' is a symlink to exuberant ctags.
+>
+>
+> masahiro@oscar:~/ref/linux$ etags --version
+> Exuberant Ctags 5.9~svn20110310, Copyright (C) 1996-2009 Darren Hiebert
+>   Addresses: <dhiebert@users.sourceforge.net>, http://ctags.sourceforge.net
+>   Optional compiled features: +wildcards, +regex
+>
+> masahiro@oscar:~/ref/linux$ make TAGS
+>   GEN     TAGS
+> etags: Warning: include/linux/seqlock.h:738: null expansion of name pattern "\2"
+> sed: can't read TAGS: No such file or directory
+> make: *** [Makefile:1820: TAGS] Error 2
+>
+>
+>
+>
+> The reason is the hard-coded ' > tags',
+> and easy to fix.
+>
+>
+>
+> But, honestly, I am not super happy about this patch.
+>
+> Reason 1
+>   In my understanding, sorting by the tag kind only works
+>   for ctags. My favorite editor is emacs.
+>   (Do not get me wrong. I do not intend emacs vs vi war).
+>   So, I rather do 'make TAGS' instead of 'make tags',
+>   but this solution would not work for etags because
+>   etags has a different format.
+>   So, I'd rather want to see a more general solution.
+>
+> Reason 2
+>   We would have more messy code, mixing two files/languages
+>
+>
+>
+> When is it useful to tag structure members?
+>
+> If they are really annoying, why don't we delete them
+> instead of moving them to the bottom of the tag file?
+>
+>
+>
+> I attached an alternative solution,
+> and wrote up my thoughts in the log.
+>
+> What do you think?
+>
 
-	drivers/media/tuners/qt1010.c:239 qt1010_init_meas1() error: uninitialized symbol 'val2'.
-	drivers/media/tuners/qt1010.c:273 qt1010_init_meas2() error: uninitialized symbol 'val'.
 
-The logic is ok, but it is hard for static analyzers
-to parse it, as it depends on a value read in the middle
-of a loop.
 
-Also, it takes a while for humans to verify.
+Sorry, the commit log of the attachment was wrong.
 
-Re-write the first function to use a more direct way.
+The correct sentence is:
 
-At the second one, I opted to just initialize the read var,
-in order to shut up the report.
+"OK, [3] clearly explained why 'p' is useful, but turned --c-kinds=-px
+into --c-kinds=+px. So, 'x' was also (accidentally?) enabled."
 
-While here, address a few coding style issues at the
-function code.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- drivers/media/tuners/qt1010.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/media/tuners/qt1010.c b/drivers/media/tuners/qt1010.c
-index e48faf942830..3853a3d43d4f 100644
---- a/drivers/media/tuners/qt1010.c
-+++ b/drivers/media/tuners/qt1010.c
-@@ -222,23 +222,24 @@ static int qt1010_init_meas1(struct qt1010_priv *priv,
- 		{ QT1010_WR, reg, reg_init_val },
- 		{ QT1010_WR, 0x1e, 0x00 },
- 		{ QT1010_WR, 0x1e, oper },
--		{ QT1010_RD, reg, 0xff }
- 	};
- 
- 	for (i = 0; i < ARRAY_SIZE(i2c_data); i++) {
--		if (i2c_data[i].oper == QT1010_WR) {
--			err = qt1010_writereg(priv, i2c_data[i].reg,
--					      i2c_data[i].val);
--		} else {
--			err = qt1010_readreg(priv, i2c_data[i].reg, &val2);
--		}
--		if (err) return err;
-+		err = qt1010_writereg(priv, i2c_data[i].reg,
-+				      i2c_data[i].val);
-+		if (err)
-+			return err;
- 	}
- 
-+	err = qt1010_readreg(priv, reg, &val2);
-+	if (err)
-+		return err;
- 	do {
- 		val1 = val2;
- 		err = qt1010_readreg(priv, reg, &val2);
--		if (err) return err;
-+		if (err)
-+			return err;
-+
- 		dev_dbg(&priv->i2c->dev, "%s: compare reg:%02x %02x %02x\n",
- 				__func__, reg, val1, val2);
- 	} while (val1 != val2);
-@@ -250,7 +251,7 @@ static int qt1010_init_meas1(struct qt1010_priv *priv,
- static int qt1010_init_meas2(struct qt1010_priv *priv,
- 			    u8 reg_init_val, u8 *retval)
- {
--	u8 i, val;
-+	u8 i, val = 0xff;
- 	int err;
- 	qt1010_i2c_oper_t i2c_data[] = {
- 		{ QT1010_WR, 0x07, reg_init_val },
-@@ -261,6 +262,7 @@ static int qt1010_init_meas2(struct qt1010_priv *priv,
- 		{ QT1010_WR, 0x1e, 0x00 },
- 		{ QT1010_WR, 0x22, 0xff }
- 	};
-+
- 	for (i = 0; i < ARRAY_SIZE(i2c_data); i++) {
- 		if (i2c_data[i].oper == QT1010_WR) {
- 			err = qt1010_writereg(priv, i2c_data[i].reg,
-@@ -268,7 +270,8 @@ static int qt1010_init_meas2(struct qt1010_priv *priv,
- 		} else {
- 			err = qt1010_readreg(priv, i2c_data[i].reg, &val);
- 		}
--		if (err) return err;
-+		if (err)
-+			return err;
- 	}
- 	*retval = val;
- 	return 0;
 -- 
-2.26.2
-
+Best Regards
+Masahiro Yamada
