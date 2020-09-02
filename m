@@ -2,164 +2,124 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F22C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B736FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40D502078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:58:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GxNyzBhm"
+	by mail.kernel.org (Postfix) with ESMTP id 8D93B20829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599058716;
+	bh=mlVSzvECMBL4DuwaHxiiBTcwnXHH869ZUNFNn5ZDfIE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=r1gAT1byFa4wIz1m4tg/s6vbbKTIzZp219FWVbeOUH9GyYUeLPUxUvUijc2NID4EP
+	 9limZswkRdhF3Z+yHG3+60FKzGb8H7Ft6bRN8qrmPyINnqoDwX0hfqaynLOyjXYsJN
+	 5EOCg201m5ZRQKM/nL0LHp5CSmvvJyQYF60nsuMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgIBO5w (ORCPT
+        id S1726742AbgIBNxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:57:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgIBOAJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:00:09 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 303C4C061245;
-        Wed,  2 Sep 2020 07:00:06 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ls14so2383720pjb.3;
-        Wed, 02 Sep 2020 07:00:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=4dcRwjz1s1csX6AJeRsJaJoQkhF+IffbkvIIRG1ifvo=;
-        b=GxNyzBhmbUbco22yiPt89zB0uDIK5sv/wJtKrrZQZKYJYir5JrZI+VujGdPxpnrncU
-         MSE8jSu+n5w1xqLilKadjA8pGGHPFmrQIy4aivBmKA/WqhP1S5iXGxIEObGvQEx5uSlF
-         mOJldA+0y1jmqZ7A84vJdCG/MWIvbxlvqrni2aGpxpC6ukzEPFblx+GHDlFP2Y1Q0/SO
-         H25Wfovg6NZC+o2jE4XGNmE0ZCZUfd9s90s/R8XDKaywrWyouOpaCSLMpa8y+6oH5bQs
-         wjZdKSKBPtUx+g/lQAid6UaK1B8wGAxn2OynHDYHEPpotx2S96ENktBTrmBDKW3hADFN
-         vJtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=4dcRwjz1s1csX6AJeRsJaJoQkhF+IffbkvIIRG1ifvo=;
-        b=JfqVZrYrFwLjoceiQ35LUFJ9cZ8DLJrO6fMYHaUgPwZUs+exw6LSxGajxl6kE4YWHJ
-         3UhlGk/EOvIl0ez+5h7dow2n5UnxVfZdZtHWX9iiEkb/+IHqam67CE1plJ11isSA3drU
-         XtCOblOCRarPiuWB2LVRoxodHjxE7Mk6DBcV87xWenGTlG7sB71Xc/AcmOKS9Nfx/eDA
-         5XxaXbRlDfNmBmxkaqq2Fj/kSxiOU8siDXmLQHITkVy1sk3deWb7K1X0GRIlvf3Orgt7
-         FuF4cOgltUn6lqAf8D6tjMcEds+ULDtM/yLDfz9TX2kv6FTaQEK8MGnHogN/b5DvnvQX
-         FCRQ==
-X-Gm-Message-State: AOAM532M/wWawIeZEQTxFZuAlbhv70/EbarlwzlOeAPL0P0jNQHWSsaU
-        Jp0pYeMIcT+E8CWpNlp0Xr4=
-X-Google-Smtp-Source: ABdhPJw0G+CAri9uK6EPx9JuyMKErX89MtRXrDoep9PQfAEqaQUg7YZEmumP+oKYa1Im6FRNdUDsSw==
-X-Received: by 2002:a17:90a:d315:: with SMTP id p21mr2475624pju.88.1599055205640;
-        Wed, 02 Sep 2020 07:00:05 -0700 (PDT)
-Received: from localhost ([2001:e42:102:1532:160:16:113:140])
-        by smtp.gmail.com with ESMTPSA id lb1sm4321084pjb.26.2020.09.02.07.00.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 07:00:05 -0700 (PDT)
-From:   Coiby Xu <coiby.xu@gmail.com>
-X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
-Date:   Wed, 2 Sep 2020 22:00:00 +0800
-To:     Benjamin Poirier <benjamin.poirier@gmail.com>
-Cc:     devel@driverdev.osuosl.org, Manish Chopra <manishc@marvell.com>,
-        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
-        <GR-Linux-NIC-Dev@marvell.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] staging: qlge: fix build breakage with dumping enabled
-Message-ID: <20200902140000.jcarw6eqryyergig@Rk>
-References: <20200826232735.104077-1-coiby.xu@gmail.com>
- <20200827005010.GA46897@f3>
+        Wed, 2 Sep 2020 09:53:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37120 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726722AbgIBNp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:45:28 -0400
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F16C72083B;
+        Wed,  2 Sep 2020 13:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599053758;
+        bh=mlVSzvECMBL4DuwaHxiiBTcwnXHH869ZUNFNn5ZDfIE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DwzP+62VAkbSZJH8gW+nur/seLAwcNH8Ot1zw2vohP9iERCpl+JdNyWK+dAjlIBnm
+         FggnPXJH4LDrWLkgYmIpCe4olylTBdsvVLMkwhMcsq63oBMMBJ+AEUHGzVgkisBFIy
+         MavokkFPF7CcXwUWfrLhL5UlGLpKzoT3KeMfLI4M=
+Received: by mail-ed1-f51.google.com with SMTP id ba12so4951029edb.2;
+        Wed, 02 Sep 2020 06:35:57 -0700 (PDT)
+X-Gm-Message-State: AOAM533GsUM+0dZ3Pl1SDkzZ3skkYTgjfzm73wAeMX1PuCPbE5GA7KKL
+        N+Yswd37JpLFXR5M4TpkHAev9vI591tqPdDUl3U=
+X-Google-Smtp-Source: ABdhPJz83yuoWiKxgnivqzO50jIviESHbD2DdRL9JF0O0+pfD5vS2zg0SRBJnAffD9VLx1ZV5W17UvR9A9KJ7ydvdaM=
+X-Received: by 2002:a05:6402:ca7:: with SMTP id cn7mr70494edb.143.1599053756468;
+ Wed, 02 Sep 2020 06:35:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200827005010.GA46897@f3>
+References: <20200827201707.27075-1-krzk@kernel.org> <CAHp75VcnV8_SRQuiTnzzaWxfA1m37gVXfxgPkH51tbMT+-T2RA@mail.gmail.com>
+ <20200829155410.6d34a8b9@archlinux> <CAJKOXPd78m-3jMsFRa7ySREDdx+GMZ_YHMG3AcqCHTABLBwqVA@mail.gmail.com>
+ <DM6PR03MB441122FDB3323690166C21A0F92F0@DM6PR03MB4411.namprd03.prod.outlook.com>
+ <CAHp75VeOQpR00AZhaw=Dy3sEArhSQAPHXb7mhJGB80uyrSZ3Qg@mail.gmail.com> <20200902142656.00007ad1@Huawei.com>
+In-Reply-To: <20200902142656.00007ad1@Huawei.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 2 Sep 2020 15:35:45 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcSctHLWGWwSPCyCR-U4QsB=WYBX3JMRqE7U9RHVKhNHA@mail.gmail.com>
+Message-ID: <CAJKOXPcSctHLWGWwSPCyCR-U4QsB=WYBX3JMRqE7U9RHVKhNHA@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Remove bouncing email of Beniamin Bia
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 09:50:10AM +0900, Benjamin Poirier wrote:
->On 2020-08-27 07:27 +0800, Coiby Xu wrote:
->> This fixes commit 0107635e15ac
->> ("staging: qlge: replace pr_err with netdev_err") which introduced an
->> build breakage of missing `struct ql_adapter *qdev` for some functions
->> and a warning of type mismatch with dumping enabled, i.e.,
->>
->> $ make CFLAGS_MODULE="QL_ALL_DUMP=1 QL_OB_DUMP=1 QL_CB_DUMP=1 \
->>   QL_IB_DUMP=1 QL_REG_DUMP=1 QL_DEV_DUMP=1" M=drivers/staging/qlge
->>
->> qlge_dbg.c: In function ‘ql_dump_ob_mac_rsp’:
->> qlge_dbg.c:2051:13: error: ‘qdev’ undeclared (first use in this function); did you mean ‘cdev’?
->>  2051 |  netdev_err(qdev->ndev, "%s\n", __func__);
->>       |             ^~~~
->> qlge_dbg.c: In function ‘ql_dump_routing_entries’:
->> qlge_dbg.c:1435:10: warning: format ‘%s’ expects argument of type ‘char *’, but argument 3 has type ‘int’ [-Wformat=]
->>  1435 |        "%s: Routing Mask %d = 0x%.08x\n",
->>       |         ~^
->>       |          |
->>       |          char *
->>       |         %d
->>  1436 |        i, value);
->>       |        ~
->>       |        |
->>       |        int
->> qlge_dbg.c:1435:37: warning: format ‘%x’ expects a matching ‘unsigned int’ argument [-Wformat=]
->>  1435 |        "%s: Routing Mask %d = 0x%.08x\n",
->>       |                                 ~~~~^
->>       |                                     |
->>       |                                     unsigned int
->>
->> Fixes: 0107635e15ac ("staging: qlge: replace pr_err with netdev_err")
->> Reported-by: Benjamin Poirier <benjamin.poirier@gmail.com>
->> Suggested-by: Benjamin Poirier <benjamin.poirier@gmail.com>
->> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
->> ---
->>  drivers/staging/qlge/qlge.h      | 20 ++++++++++----------
->>  drivers/staging/qlge/qlge_dbg.c  | 24 ++++++++++++++++++------
->>  drivers/staging/qlge/qlge_main.c |  8 ++++----
->>  3 files changed, 32 insertions(+), 20 deletions(-)
->>
->[...]
->> @@ -1632,6 +1635,8 @@ void ql_dump_wqicb(struct wqicb *wqicb)
->>
->>  void ql_dump_tx_ring(struct tx_ring *tx_ring)
->>  {
->> +	struct ql_adapter *qdev = tx_ring->qdev;
->> +
->>  	if (!tx_ring)
->>  		return;
+On Wed, 2 Sep 2020 at 15:28, Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
 >
->Given the null check for tx_ring, it seems unwise to dereference tx_ring
->before the check.
+> On Wed, 2 Sep 2020 10:49:04 +0300
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 >
->Looking at ql_dump_all(), I'm not sure that the check is needed at all
->though. Maybe it should be removed.
+> > On Wed, Sep 2, 2020 at 8:56 AM Ardelean, Alexandru
+> > <alexandru.Ardelean@analog.com> wrote:
+> > >
+> > > [yes, I know, bad-email format, but I wanted this to come from my work email]
+> > >
+> > > Apologies also for the delay here. Things pile-up on my side and I defer things a bit.
+> > >
+> > > Talked to Michael Hennerich about this [since he's the more senior contact at Analog].
+> > > We can replace the email from Beniamin Bia with Michael's.
+> > > Or, we can remove the "Orphan" blocks and just have the catch-all "drivers/iio/*/ad*" cover this driver and others that were upstreamed by Beniamin.
+> > >
+> > > Either option is fine from us.
+> >
+> > As a participant of activity to put MAINTAINERS in some order, I
+> > prefer to have similar blocks be squashed.
+> > If there will be a dedicated maintainer for a certain driver in the
+> > future, we can always split into separate sections.
+> >
+> > So, something like
+> > ANALOG DEVICES ADC (I guess it makes sense to have some grouping still)
+> > ...
+> > F: .../ad1234
+> > F: .../ad2345
+> >
+> > In one section (no need to have wildcards right now).
+> >
 >
->Same problem in ql_dump_rx_ring().
+> ANALOG DEVICES INC IIO DRIVERS
+> M:      Lars-Peter Clausen <lars@metafoo.de>
+> M:      Michael Hennerich <Michael.Hennerich@analog.com>
+> S:      Supported
+> W:      http://wiki.analog.com/
+> W:      http://ez.analog.com/community/linux-device-drivers
+> F:      Documentation/ABI/testing/sysfs-bus-iio-frequency-ad9523
+> F:      Documentation/ABI/testing/sysfs-bus-iio-frequency-adf4350
+> F:      drivers/iio/*/ad*
+> F:      drivers/iio/adc/ltc249*
+> F:      drivers/staging/iio/*/ad*
+> X:      drivers/iio/*/adjd*
+>
+> Already exists.  We could potentially clean that up.
+>
+> For the block that started this thread, we can just drop it.
 
-Thank you for the spotting this issue! I'll remove the check.
+I can send a follow up to merge/remove the entries.
 
->
->>  	netdev_err(qdev->ndev, "===================== Dumping tx_ring %d ===============\n",
->> @@ -1657,6 +1662,8 @@ void ql_dump_tx_ring(struct tx_ring *tx_ring)
->>  void ql_dump_ricb(struct ricb *ricb)
->>  {
->>  	int i;
->> +	struct ql_adapter *qdev =
->> +		container_of(ricb, struct ql_adapter, ricb);
->
->Here, davem would point out that the variables are not declared in
->"reverse xmas tree" order.
-
-I'll make davem happy then:)
-
---
 Best regards,
-Coiby
+Krzysztof
