@@ -2,177 +2,120 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC5EC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78402C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 009F7207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A0920829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:41:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g7CdvOFo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbgIBPk5 (ORCPT
+        id S1727915AbgIBPkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:40:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39248 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726802AbgIBNpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:45:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9147AB60B;
-        Wed,  2 Sep 2020 13:45:34 +0000 (UTC)
-Date:   Wed, 2 Sep 2020 15:45:33 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nstange@suse.de
-Subject: Re: [PATCH 1/2] docs/livepatch: Add new compiler considerations
- doc
-In-Reply-To: <20200721161407.26806-2-joe.lawrence@redhat.com>
-Message-ID: <alpine.LSU.2.21.2009021452560.23200@pobox.suse.cz>
-References: <20200721161407.26806-1-joe.lawrence@redhat.com> <20200721161407.26806-2-joe.lawrence@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 2 Sep 2020 11:40:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727820AbgIBNrT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:47:19 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4013C061263
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 06:38:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=foTURamxtEN9X3i0RjfHeLtNA5SSGcsEY9liioF14Wk=; b=g7CdvOFoB5l+sMrGzEDaFenhFG
+        abw+JZw+S+JydSBs+4XB9iwIDOuTD/hSh+YycwtjIcrJlVxvoTgJ+RsvT/gOGrZF8VAM8A0J2DD3n
+        O5ABZZy3NFyrb2KbvYjPxk+EsRW0sOyPQe6uVy5qGTupytO/xWlK9zXsTvcRbZ2PfOsIRvBaCu9dz
+        GVu/WA/uLIFzOU3GsWGmm4qJAnwxZblwhFshDOvuFCTW1+uR/0ITDbpYmIspBfhqK+wmUoN1n92wV
+        +zMVQu0lFXTqGh//2OWPdOZke0d0b96Uffhn+OTDEn2zMcXG/3pO0Tgt/E+ZdglJnwf74fPaIlgRd
+        +9MqbcaA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDSxp-0003ZQ-IE; Wed, 02 Sep 2020 13:38:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CD1AA3059DD;
+        Wed,  2 Sep 2020 15:38:11 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id B880E29A82C1F; Wed,  2 Sep 2020 15:38:11 +0200 (CEST)
+Message-ID: <20200902133200.786888252@infradead.org>
+User-Agent: quilt/0.66
+Date:   Wed, 02 Sep 2020 15:25:52 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Kyle Huey <me@kylehuey.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 03/13] x86/debug: Sync BTF earlier
+References: <20200902132549.496605622@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Move the BTF sync near the DR6 load, as this will be the only common
+code guaranteed to run on every #DB.
 
-first, I'm sorry for the late reply. Thanks, Josh, for the reminder.
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+---
+ arch/x86/kernel/traps.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-CCing Nicolai. Nicolai, could you take a look at the proposed 
-documentation too, please? You have more up-to-date experience.
-
-On Tue, 21 Jul 2020, Joe Lawrence wrote:
-
-> +Examples
-> +========
-> +
-> +Interprocedural optimization (IPA)
-> +----------------------------------
-> +
-> +Function inlining is probably the most common compiler optimization that
-> +affects livepatching.  In a simple example, inlining transforms the original
-> +code::
-> +
-> +	foo() { ... [ foo implementation ] ... }
-> +
-> +	bar() { ...  foo() ...  }
-> +
-> +to::
-> +
-> +	bar() { ...  [ foo implementation ] ...  }
-> +
-> +Inlining is comparable to macro expansion, however the compiler may inline
-> +cases which it determines worthwhile (while preserving original call/return
-> +semantics in others) or even partially inline pieces of functions (see cold
-> +functions in GCC function suffixes section below).
-> +
-> +To safely livepatch ``foo()`` from the previous example, all of its callers
-> +need to be taken into consideration.  For those callers that the compiler had
-> +inlined ``foo()``, a livepatch should include a new version of the calling
-> +function such that it:
-> +
-> +  1. Calls a new, patched version of the inlined function, or
-> +  2. Provides an updated version of the caller that contains its own inlined
-> +     and updated version of the inlined function
-
-I'm afraid the above could cause a confusion...
-
-"1. Calls a new, patched version of the inlined function, or". The 
-function is not inlined in this case. Would it be more understandable to 
-use function names?
-
-1. Calls a new, patched version of function foo(), or
-2. Provides an updated version of bar() that contains its own inlined and 
-   updated version of foo() (as seen in the example above).
-
-Not to say that it is again a call of the compiler to decide that, so one 
-usually prepares an updated version of foo() and updated version of bar() 
-calling to it. Updated foo() has to be there for non-inlined cases anyway.
-
-> +
-> +Other interesting IPA examples include:
-> +
-> +- *IPA-SRA*: removal of unused parameters, replace parameters passed by
-> +  referenced by parameters passed by value.  This optimization basically
-
-s/referenced/reference/
-
-> +  violates ABI.
-> +
-> +  .. note::
-> +     GCC changes the name of function.  See GCC function suffixes
-> +     section below.
-> +
-> +- *IPA-CP*: find values passed to functions are constants and then optimizes
-> +  accordingly Several clones of a function are possible if a set is limited.
-
-"...accordingly. Several..."
-
-[...]
-
-> +  	void cdev_put(struct cdev *p)
-> +  	{
-> +  		if (p) {
-> +  			struct module *owner = p->owner;
-> +  			kobject_put(&p->kobj);
-> +  			module_put(owner);
-> +  		}
-> +  	}
-
-git am complained here about whitespace damage.
-
-[...]
-
-> +kgraft-analysis-tool
-> +--------------------
-> +
-> +With the -fdump-ipa-clones flag, GCC will dump IPA clones that were created
-> +by all inter-procedural optimizations in ``<source>.000i.ipa-clones`` files.
-> +
-> +kgraft-analysis-tool pretty-prints those IPA cloning decisions.  The full
-> +list of affected functions provides additional updates that the source-based
-> +livepatch author may need to consider.  For example, for the function
-> +``scatterwalk_unmap()``:
-> +
-> +::
-> +
-> +  $ ./kgraft-ipa-analysis.py --symbol=scatterwalk_unmap aesni-intel_glue.i.000i.ipa-clones
-> +  Function: scatterwalk_unmap/2930 (include/crypto/scatterwalk.h:81:60)
-> +    isra: scatterwalk_unmap.isra.2/3142 (include/crypto/scatterwalk.h:81:60)
-> +      inlining to: helper_rfc4106_decrypt/3007 (arch/x86/crypto/aesni-intel_glue.c:1016:12)
-> +      inlining to: helper_rfc4106_decrypt/3007 (arch/x86/crypto/aesni-intel_glue.c:1016:12)
-> +      inlining to: helper_rfc4106_encrypt/3006 (arch/x86/crypto/aesni-intel_glue.c:939:12)
-> +
-> +    Affected functions: 3
-> +      scatterwalk_unmap.isra.2/3142 (include/crypto/scatterwalk.h:81:60)
-> +      helper_rfc4106_decrypt/3007 (arch/x86/crypto/aesni-intel_glue.c:1016:12)
-> +      helper_rfc4106_encrypt/3006 (arch/x86/crypto/aesni-intel_glue.c:939:12)
-
-The example for the github is not up-to-date. The tool now expects 
-file_list with *.ipa-clones files and the output is a bit different for 
-the recent kernel.
-
-$ echo arch/x86/crypto/aesni-intel_glue.c.000i.ipa-clones | kgraft-ipa-analysis.py --symbol=scatterwalk_unmap /dev/stdin
-Parsing file (1/1): arch/x86/crypto/aesni-intel_glue.c.000i.ipa-clones
-Function: scatterwalk_unmap/3935 (./include/crypto/scatterwalk.h:59:20) [REMOVED] [object file: arch/x86/crypto/aesni-intel_glue.c.000i.ipa-clones]
-  isra: scatterwalk_unmap.isra.8/4117 (./include/crypto/scatterwalk.h:59:20) [REMOVED]
-    inlining to: gcmaes_crypt_by_sg/4019 (arch/x86/crypto/aesni-intel_glue.c:682:12) [REMOVED] [edges: 4]
-      constprop: gcmaes_crypt_by_sg.constprop.13/4182 (arch/x86/crypto/aesni-intel_glue.c:682:12)
-
-  Affected functions: 3
-    scatterwalk_unmap.isra.8/4117 (./include/crypto/scatterwalk.h:59:20) [REMOVED]
-    gcmaes_crypt_by_sg/4019 (arch/x86/crypto/aesni-intel_glue.c:682:12) [REMOVED]
-    gcmaes_crypt_by_sg.constprop.13/4182 (arch/x86/crypto/aesni-intel_glue.c:682:12)
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -749,6 +749,13 @@ static __always_inline unsigned long deb
+ 	/* Filter out all the reserved bits which are preset to 1 */
+ 	dr6 &= ~DR6_RESERVED;
+ 
++	/*
++	 * The SDM says "The processor clears the BTF flag when it
++	 * generates a debug exception."  Clear TIF_BLOCKSTEP to keep
++	 * TIF_BLOCKSTEP in sync with the hardware BTF flag.
++	 */
++	clear_thread_flag(TIF_BLOCKSTEP);
++
+ 	return dr6;
+ }
+ 
+@@ -783,13 +790,6 @@ static void handle_debug(struct pt_regs
+ 	int si_code;
+ 
+ 	/*
+-	 * The SDM says "The processor clears the BTF flag when it
+-	 * generates a debug exception."  Clear TIF_BLOCKSTEP to keep
+-	 * TIF_BLOCKSTEP in sync with the hardware BTF flag.
+-	 */
+-	clear_thread_flag(TIF_BLOCKSTEP);
+-
+-	/*
+ 	 * If DR6 is zero, no point in trying to handle it. The kernel is
+ 	 * not using INT1.
+ 	 */
 
 
-
-The rest looks great. Thanks a lot, Joe, for putting it together.
-
-Miroslav
