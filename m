@@ -2,144 +2,139 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983E9C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D169C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 706AA20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4BF220767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:49:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="je3R8F/N";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lQbFkQ4H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WeC0rKuB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgIBNre (ORCPT
+        id S1727776AbgIBNsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 09:47:34 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:58045 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727796AbgIBNcj (ORCPT
+        Wed, 2 Sep 2020 09:48:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59984 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727800AbgIBNcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 09:32:39 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 9C5C6E96;
-        Wed,  2 Sep 2020 09:32:23 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 02 Sep 2020 09:32:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=y4ddWAdtJRtlQaf00kaReh39twe
-        7Zr1EjOVYFP+ScYo=; b=je3R8F/N9IrxQXtWq/Z22fFeLkYOOBe4P2Z/qkoUrZK
-        1sUpau9WJpMNd5SPQEvrUDKuGIvk3vIgDX7TIxJG0GspwoQJuO/Dv9PLDVt3hGwh
-        3/teGTHbzJJ7AFiM9wtVNcu1VcwllFhE7bls/1bWkArQEULRWThpM/++6v6aujpt
-        WAg839Qe9+hUtDUSjgM+l6JutxHh9MinPPVJ6oDJKgFm9cttTXOPdSyW5Jw4OpWO
-        dN4vv0A+Q53lWOGHbACp+SdNSOJe6oReyuA51dFerEusZIk4CqLKapWR573OmO8/
-        WEcbasZZ8a7BmKp9RMnRiWi8z+jl7epKnt4od88MOpA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=y4ddWA
-        dtJRtlQaf00kaReh39twe7Zr1EjOVYFP+ScYo=; b=lQbFkQ4H2MnmJI23oXWQ9P
-        RX+NyCbMmiOt9zkN+aA4zt1pl/ghgzJvApoGpVFIG5ZF2SczjofRFPPUr0ESgSwl
-        BWk7s70xOgfTS/oP0SnDCdkPMDYhQw77E8Cpp886hLO+d/aurmwv5rPgolFSj3QB
-        5MWbPh/UAGZaZJDX/U5Hjcp8yy8R4s+yO19J4NvA1mqrkH0AMKhjpI3bNIpnUmga
-        a1Wraq/nzWVm2lSELDck37SzFxGSscE/ES1/Ay8SI7/Lw8G/0AgTjq0ywlFyvzX1
-        HDdDxH0mdvRVdOdcmOamzAWhNrGAiMbCdHWLrAWj6lpz4FUTf5mcySrL3KGl9hlQ
-        ==
-X-ME-Sender: <xms:5Z5PX8gKFSRpYuzEvSBaxN7XGSFBX2nRZODNr-E7PPSqDGoOySobtA>
-    <xme:5Z5PX1Bj--xlWu-xQx01wtIrHRwr2kHBSdtmMQOoqrpJoUO1qrRT9856sqcV4hcs7
-    REx95fmfIhka9S_iOw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledgieeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepuddvudfhkeekhefgffetffelgffftdehffduffegveetffehueeivddvjedv
-    gfevnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:5Z5PX0GBY6dwnhdFyJPru3PMm3WkCz7dPtPnCTB0-39rYjKh4CFqPw>
-    <xmx:5Z5PX9TaTXaseCkiyeUSKOqrIWnrxffQIq3kcMQkjPmgLqbv0vUDnA>
-    <xmx:5Z5PX5xodCGa1NWCbBVuehMOSqBeA9tNGQ0OAhve471IBFjmC8HLmw>
-    <xmx:555PX-JxpMUQeawDrYfvmh9UoqEsXNKKZvQvtrbFREkXg-k9HYRWewTXY8o>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A56B23280060;
-        Wed,  2 Sep 2020 09:32:21 -0400 (EDT)
-Date:   Wed, 2 Sep 2020 15:32:20 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 00/78] drm/vc4: Support BCM2711 Display Pipeline
-Message-ID: <20200902133220.avp6dhfv2fhpiyf3@gilmour.lan>
-References: <CGME20200709070649epcas1p13664bacc66a0f73443bf4d3e8940f933@epcas1p1.samsung.com>
- <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <1a39aedf-b708-e490-6acb-9a07e1b73300@samsung.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ptnwrc5vhcz5nwzs"
-Content-Disposition: inline
-In-Reply-To: <1a39aedf-b708-e490-6acb-9a07e1b73300@samsung.com>
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A796C061249
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 06:21:50 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id m6so5243240wrn.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 06:21:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Dp9RzDfRoyGirVF9rnp5ThGeOxcnpzQ3a8srsa+1lUU=;
+        b=WeC0rKuBWXZP6A+4Id+ZPil00at0EmiJ4asfA+iD1ym96Gmxa0/Y0qhsBm+FdBdlUn
+         I/xdOfz9reyrToCMyI3WxdDTo+86BXSslEzXCcUOQmxb1ANwsi4RGHBNC6vR+Fo00v2y
+         PjE8FBFLFVZ0fQuUwdrtFFTxXikhxXKMR337+049gbCmKlkcbG7gZ3o4WUbm0UHWlcrA
+         FsJmSnjhUDiSHqCEIUrAQImVSOJ+vKGzZwD1joOAZ1q513bxLYpfp4xjyTQ6CattV+ya
+         svr8A4brwcRTktNZU+4K5FHmCzih3HsVm8uM966wqmuZVBrE8ixA0TzN3CGRHJr8FdhD
+         rFOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Dp9RzDfRoyGirVF9rnp5ThGeOxcnpzQ3a8srsa+1lUU=;
+        b=px25B1UvXZ9fh+rCw5hL8f7Reid15Lj3ZcjUJ5eNv7mZRVIOxTlxicQXOR/iVupgmM
+         htbb1u2CexYQem7hIzHDterlfvrxsIy/MJRv41v3IT6cDuoqhKj2ASRMwszKmny361WA
+         kqmwQxLMi48V6xKBvOS/eA+gg4QGB5cPn47V9e3i0vUAmFWnu2p0Qr/5OzWJSBOD4NGU
+         vUiavocniM+4CabH/q1ll+9hJqB2XHzRB1NJRWDJMwAjYLSJZGVlmcVnwxY0gOwUqPdq
+         A10eeP4Mx5ukfD40rVlrHXko6LCx9DEAQINVOCHHfXk5YiQX/d30g3xct8lFbDJ1kHgs
+         6FPQ==
+X-Gm-Message-State: AOAM532RZIDo/yGfSOyOzskjN7lZbeuNHwMg97OPit67uBc1/VnNAGaD
+        8dV1gM6VfIKHmT4ae+t2lUQJ0g==
+X-Google-Smtp-Source: ABdhPJytVOjNeECBJYodcv/4duI7Vpy8B8hgJ6H1Lzi3VUv+p+Z3EMBVFamYkAYQMk4LAlvEEcFt/A==
+X-Received: by 2002:adf:80c7:: with SMTP id 65mr7008202wrl.35.1599052908669;
+        Wed, 02 Sep 2020 06:21:48 -0700 (PDT)
+Received: from hackbox2.linaro.org ([81.128.185.34])
+        by smtp.gmail.com with ESMTPSA id q4sm2520403wru.65.2020.09.02.06.21.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 06:21:48 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Wei Li <liwei391@huawei.com>,
+        Al Grant <al.grant@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kemeng Shi <shikemeng@huawei.com>,
+        Ian Rogers <irogers@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Stephane Eranian <eranian@google.com>,
+        Nick Gasson <nick.gasson@arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Steve MacLean <Steve.MacLean@Microsoft.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v3 2/6] perf tsc: Add rdtsc() for Arm64
+Date:   Wed,  2 Sep 2020 14:21:27 +0100
+Message-Id: <20200902132131.36304-3-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200902132131.36304-1-leo.yan@linaro.org>
+References: <20200902132131.36304-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The system register CNTVCT_EL0 can be used to retrieve the counter from
+user space.  Add rdtsc() for Arm64.
 
---ptnwrc5vhcz5nwzs
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/arch/arm64/util/Build |  1 +
+ tools/perf/arch/arm64/util/tsc.c | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
+ create mode 100644 tools/perf/arch/arm64/util/tsc.c
 
-Hi Hoegeun
+diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+index 5c13438c7bd4..b53294d74b01 100644
+--- a/tools/perf/arch/arm64/util/Build
++++ b/tools/perf/arch/arm64/util/Build
+@@ -1,6 +1,7 @@
+ perf-y += header.o
+ perf-y += machine.o
+ perf-y += perf_regs.o
++perf-y += tsc.o
+ perf-$(CONFIG_DWARF)     += dwarf-regs.o
+ perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+ perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/arm64/util/tsc.c b/tools/perf/arch/arm64/util/tsc.c
+new file mode 100644
+index 000000000000..53c6adf8ea6e
+--- /dev/null
++++ b/tools/perf/arch/arm64/util/tsc.c
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/types.h>
++
++#include "../../../util/tsc.h"
++
++u64 rdtsc(void)
++{
++	u64 val;
++
++	asm volatile("mrs %0, cntvct_el0" : "=r" (val));
++
++	return val;
++}
+-- 
+2.17.1
 
-On Fri, Aug 21, 2020 at 04:18:34PM +0900, Hoegeun Kwon wrote:
-> Hi Maxime,
->=20
-> Thank you for your version 4 patch.
-> I tested all 78 patches based on the next-20200708.
->=20
->=20
-> Dual HDMI opearation does not work normally.
-> flip_done timed out occurs and doesn't work.
-> Could you check please it.
->=20
-> [=A0 105.694541] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR*=20
-> [CRTC:64:crtc-3] flip_done timed out
-> [=A0 115.934994] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR*=20
-> [CONNECTOR:32:HDMI-A-1] flip_done timed out
-> [=A0 126.174545] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR*=20
-> [PLANE:60:plane-3] flip_done timed out
-
-Thanks for testing and reporting this. I've been looking into it, and it
-seems that it's not just the dual output that's broken, but HDMI1
-entirely (so even a single display connected to HDMI1 doesn't work).
-
-Is it happening for you as well?
-
-Maxime
-
---ptnwrc5vhcz5nwzs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0+e5AAKCRDj7w1vZxhR
-xR+5APoDUUTLzhy0qxhPFbilcNUaS2gepejJLqHbcQU3isBUBQEAzxjkL4IbaWNw
-oW7yn9VBzDQ8y/JSlGuj5y3LEiaGzgs=
-=L5e7
------END PGP SIGNATURE-----
-
---ptnwrc5vhcz5nwzs--
