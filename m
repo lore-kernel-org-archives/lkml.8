@@ -2,151 +2,165 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5EBC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C0DC2BC11
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4C2B20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57596208B3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:58:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jaDoR8zH"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UuV7rEAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgIBQ6c (ORCPT
+        id S1728481AbgIBQ6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbgIBQ6X (ORCPT
+        Wed, 2 Sep 2020 12:58:46 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10769 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728418AbgIBQ6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:58:23 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 464A4C061244;
-        Wed,  2 Sep 2020 09:58:22 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z1so178144wrt.3;
-        Wed, 02 Sep 2020 09:58:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JcXQvmAkY/k2J1p9we4yfCScXrpnX5eBNUZhNJtw/Hk=;
-        b=jaDoR8zHGWv18DZ+k2xRN07EgfAnZ+2OtQTUEsDgS2Nvtiwv4dbl7FdLnw+v8ogXKP
-         IMQQbEAkaVY21jp4yPHkzkdnmeSKvw2i7L+6m+oITeHfBtrLGKyWUByU2JIh7fgnkQbp
-         bbg99vBEaeAYHE0xgr/9QZi1zx5d+2cnSbNhKc+IA804dttxHFV2YRdv5EMjr9DoY/qb
-         Yi2lVRfBCAutj3gUwyx5hQY+957XlH6H+Zix/qZuAs6QtD/SpLwRYbLNCFgmjk0N9QTw
-         0o4y6hpEJ1zIl7Wfl09nMZpS0hLGJ5Ae+VOfnr4xFTvFEz6ispXooDBEzykBeCcR9384
-         cDfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JcXQvmAkY/k2J1p9we4yfCScXrpnX5eBNUZhNJtw/Hk=;
-        b=KIZV47ZKQNePAhyQYW/F2G5xTRqjhwLmaryX/4jZXR+n/gfbPURF/37lKU0Eeyk7lg
-         j15do3nLMTcAQTjcavoq/uYUIUzOdGcPkohj4bVqG6H+5lcS76fNSfSSq3/IF6rlkbvW
-         ybguXjZjaTVgeCj9hda8VvGGYyWK5qIlK/b000m9xyWh2iX7GQLTSiJkRO437n3Jlgry
-         WCFLRY+emba9WOoaE8SDGtcEawxz+eXPkTKxwhoEJNaPckSlqU+sM1myGDpSPDJb4gYS
-         MaIlDJ4zMPA5qcklBWNw8LY6r+LEF/ml7viw+EK6VF/AYQjfhP4IsPmyMfjQKYp1Fmqf
-         YNqQ==
-X-Gm-Message-State: AOAM532XNCBO1o6fSVWTDpeR0TVR2wo80wPnb/xUVVn54quWOwxJejYK
-        4TCXEAGY2zTeV8aj+6FR24g=
-X-Google-Smtp-Source: ABdhPJyGog7lMzfBNy5rF2ditlUSIh4T71Lu/c3ROK2tC/kiQgMwPGZcTxRdjEoeV/4SjVJlTa4jew==
-X-Received: by 2002:a5d:4e0b:: with SMTP id p11mr7711127wrt.13.1599065900919;
-        Wed, 02 Sep 2020 09:58:20 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id c205sm369795wmd.33.2020.09.02.09.58.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 09:58:20 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] power: supply: charger-manager: Tidy function
-Date:   Wed,  2 Sep 2020 17:58:16 +0100
-Message-Id: <20200902165816.401213-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Wed, 2 Sep 2020 12:58:39 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4fcebc0000>; Wed, 02 Sep 2020 09:56:28 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 02 Sep 2020 09:58:36 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 02 Sep 2020 09:58:36 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 2 Sep
+ 2020 16:58:35 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 2 Sep 2020 16:58:35 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f4fcf3b0003>; Wed, 02 Sep 2020 09:58:35 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH v2 1/7] mm/thp: fix __split_huge_pmd_locked() for migration PMD
+Date:   Wed, 2 Sep 2020 09:58:24 -0700
+Message-ID: <20200902165830.5367-2-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200902165830.5367-1-rcampbell@nvidia.com>
+References: <20200902165830.5367-1-rcampbell@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599065788; bh=rYznWX/3ek3S83R/7nq7shz57nrdV/4Q+HZHpdHukkI=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=UuV7rEAutskEk3OCoCdPdBe6gOlmH/ZAhnWtJDfMYT0NTh+pvndsN15Tz3easb3Ns
+         Rw1AZsD/UIX3dsS6tZs9MF8t4KZk4EkyC9a/zfDNF91ULaQYYwgWo+1lyQw6ghegAj
+         7b1+UKbB1rIZUMGwJ393qEydUIxuKq2enGDw3lxEdWnd1NFYlaT6NYd1/LshOIVCre
+         MYHQqUrKh00QlOGM759IN1pT/I9LM68S4Ni6bn2k0IBRGJMzpJNNgg+Xcxhx/hf5+T
+         8sKcmGSNF+FNHsej6fZYSfrR6IaovFTJokeCvDqqWsD5w/zyYIX2JHUAmd9+v+d0hR
+         E76dIGIbzcvMA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-check_charging_duration() contains some copy-pasted code, which makes it
-less readable. Refactor the function to be a bit tidier.
+A migrating transparent huge page has to already be unmapped. Otherwise,
+the page could be modified while it is being copied to a new page and
+data could be lost. The function __split_huge_pmd() checks for a PMD
+migration entry before calling __split_huge_pmd_locked() leading one to
+think that __split_huge_pmd_locked() can handle splitting a migrating PMD.
+However, the code always increments the page->_mapcount and adjusts the
+memory control group accounting assuming the page is mapped.
+Also, if the PMD entry is a migration PMD entry, the call to
+is_huge_zero_pmd(*pmd) is incorrect because it calls pmd_pfn(pmd) instead
+of migration_entry_to_pfn(pmd_to_swp_entry(pmd)).
+Fix these problems by checking for a PMD migration entry.
 
-I've also fixed a couple of typos.
-
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
 ---
- drivers/power/supply/charger-manager.c | 39 +++++++++-----------------
- 1 file changed, 14 insertions(+), 25 deletions(-)
+ mm/huge_memory.c | 42 +++++++++++++++++++++++-------------------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
-index 07992821e252..67c7b1fb6601 100644
---- a/drivers/power/supply/charger-manager.c
-+++ b/drivers/power/supply/charger-manager.c
-@@ -443,42 +443,31 @@ static int try_charger_enable(struct charger_manager *cm, bool enable)
-  * check_charging_duration - Monitor charging/discharging duration
-  * @cm: the Charger Manager representing the battery.
-  *
-- * If whole charging duration exceed 'charging_max_duration_ms',
-+ * If whole charging duration exceeds 'charging_max_duration_ms',
-  * cm stop charging to prevent overcharge/overheat. If discharging
-- * duration exceed 'discharging _max_duration_ms', charger cable is
-+ * duration exceeds 'discharging _max_duration_ms', charger cable is
-  * attached, after full-batt, cm start charging to maintain fully
-  * charged state for battery.
-  */
- static int check_charging_duration(struct charger_manager *cm)
- {
- 	struct charger_desc *desc = cm->desc;
--	u64 curr = ktime_to_ms(ktime_get());
- 	u64 duration;
--	int ret = false;
- 
--	if (!desc->charging_max_duration_ms &&
--			!desc->discharging_max_duration_ms)
--		return ret;
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 2a468a4acb0a..606d712d9505 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2023,7 +2023,7 @@ static void __split_huge_pmd_locked(struct vm_area_st=
+ruct *vma, pmd_t *pmd,
+ 		put_page(page);
+ 		add_mm_counter(mm, mm_counter_file(page), -HPAGE_PMD_NR);
+ 		return;
+-	} else if (is_huge_zero_pmd(*pmd)) {
++	} else if (pmd_trans_huge(*pmd) && is_huge_zero_pmd(*pmd)) {
+ 		/*
+ 		 * FIXME: Do we want to invalidate secondary mmu by calling
+ 		 * mmu_notifier_invalidate_range() see comments below inside
+@@ -2117,30 +2117,34 @@ static void __split_huge_pmd_locked(struct vm_area_=
+struct *vma, pmd_t *pmd,
+ 		pte =3D pte_offset_map(&_pmd, addr);
+ 		BUG_ON(!pte_none(*pte));
+ 		set_pte_at(mm, addr, pte, entry);
+-		atomic_inc(&page[i]._mapcount);
+-		pte_unmap(pte);
+-	}
 -
--	if (cm->charger_enabled) {
--		duration = curr - cm->charging_start_time;
--
--		if (duration > desc->charging_max_duration_ms) {
--			dev_info(cm->dev, "Charging duration exceed %ums\n",
--				 desc->charging_max_duration_ms);
--			ret = true;
--		}
--	} else if (cm->battery_status == POWER_SUPPLY_STATUS_NOT_CHARGING) {
--		duration = curr - cm->charging_end_time;
-+	if ((desc->charging_max_duration_ms == 0 &&
-+			desc->discharging_max_duration_ms == 0))
-+		return false;
-+	if (!cm->charger_enabled &&
-+			cm->battery_status != POWER_SUPPLY_STATUS_NOT_CHARGING)
-+		return false;
- 
--		if (duration > desc->charging_max_duration_ms) {
--			dev_info(cm->dev, "Discharging duration exceed %ums\n",
--				 desc->discharging_max_duration_ms);
--			ret = true;
--		}
-+	duration = ktime_to_ms(ktime_get()) - cm->charging_start_time;
-+	if (duration > desc->charging_max_duration_ms) {
-+		dev_info(cm->dev, "Charging duration exceeds %ums\n",
-+				desc->charging_max_duration_ms);
-+		return true;
+-	/*
+-	 * Set PG_double_map before dropping compound_mapcount to avoid
+-	 * false-negative page_mapped().
+-	 */
+-	if (compound_mapcount(page) > 1 && !TestSetPageDoubleMap(page)) {
+-		for (i =3D 0; i < HPAGE_PMD_NR; i++)
++		if (!pmd_migration)
+ 			atomic_inc(&page[i]._mapcount);
++		pte_unmap(pte);
  	}
--
--	return ret;
-+	return false;
- }
- 
- static int cm_get_battery_temperature_by_psy(struct charger_manager *cm,
--- 
-2.28.0
+=20
+-	lock_page_memcg(page);
+-	if (atomic_add_negative(-1, compound_mapcount_ptr(page))) {
+-		/* Last compound_mapcount is gone. */
+-		__dec_lruvec_page_state(page, NR_ANON_THPS);
+-		if (TestClearPageDoubleMap(page)) {
+-			/* No need in mapcount reference anymore */
++	if (!pmd_migration) {
++		/*
++		 * Set PG_double_map before dropping compound_mapcount to avoid
++		 * false-negative page_mapped().
++		 */
++		if (compound_mapcount(page) > 1 &&
++		    !TestSetPageDoubleMap(page)) {
+ 			for (i =3D 0; i < HPAGE_PMD_NR; i++)
+-				atomic_dec(&page[i]._mapcount);
++				atomic_inc(&page[i]._mapcount);
++		}
++
++		lock_page_memcg(page);
++		if (atomic_add_negative(-1, compound_mapcount_ptr(page))) {
++			/* Last compound_mapcount is gone. */
++			__dec_lruvec_page_state(page, NR_ANON_THPS);
++			if (TestClearPageDoubleMap(page)) {
++				/* No need in mapcount reference anymore */
++				for (i =3D 0; i < HPAGE_PMD_NR; i++)
++					atomic_dec(&page[i]._mapcount);
++			}
+ 		}
++		unlock_page_memcg(page);
+ 	}
+-	unlock_page_memcg(page);
+=20
+ 	smp_wmb(); /* make pte visible before pmd */
+ 	pmd_populate(mm, pmd, pgtable);
+--=20
+2.20.1
 
