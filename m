@@ -2,112 +2,139 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49544C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1231FC2BC0E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 266E620767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:02:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PYlXhRot"
+	by mail.kernel.org (Postfix) with ESMTP id EBEE320FC3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgIBWCp (ORCPT
+        id S1726674AbgIBWNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 18:02:45 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19894 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIBWCo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 18:02:44 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f5016550000>; Wed, 02 Sep 2020 15:01:57 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 02 Sep 2020 15:02:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 02 Sep 2020 15:02:44 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 2 Sep
- 2020 22:02:43 +0000
-Subject: Re: [PATCH v2 1/7] mm/thp: fix __split_huge_pmd_locked() for
- migration PMD
-To:     Zi Yan <ziy@nvidia.com>
-CC:     <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Jerome Glisse" <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Alistair Popple" <apopple@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <stable@vger.kernel.org>
-References: <20200902165830.5367-1-rcampbell@nvidia.com>
- <20200902165830.5367-2-rcampbell@nvidia.com>
- <78B69571-13C6-4BF5-8478-6AAA4AB2C287@nvidia.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <171f31cd-91e5-5c74-a68a-ec7cbd9bb450@nvidia.com>
-Date:   Wed, 2 Sep 2020 15:02:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 2 Sep 2020 18:13:32 -0400
+Received: from mga09.intel.com ([134.134.136.24]:15764 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726226AbgIBWNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 18:13:30 -0400
+IronPort-SDR: Cw4HrZqAfJn0bMSeXoQPGS1A19oJnDKVdQnjpYwdty5RF4TquWsOUz5B9KGzSM79P12pVA7+6t
+ j88yFRZZ0Ubg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="158474574"
+X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
+   d="scan'208";a="158474574"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 15:13:30 -0700
+IronPort-SDR: asXQxrAHQY0ypQlzQMhOK9cXZfQZ5oauEEPyWryjVwDA5T6xwunenQzQ456ke4dBZXqTrLZvQt
+ oJ/uKNqXBEfA==
+X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
+   d="scan'208";a="315258943"
+Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.209.147.104]) ([10.209.147.104])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 15:13:28 -0700
+Subject: Re: [PATCH v11 6/9] x86/cet: Add PTRACE interface for CET
+To:     Jann Horn <jannh@google.com>
+Cc:     the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-doc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <20200825002645.3658-1-yu-cheng.yu@intel.com>
+ <20200825002645.3658-7-yu-cheng.yu@intel.com>
+ <CAG48ez21a_afHJrRQeweuHu8c+fxJ+VN1dezD18UOtZA5q-Shg@mail.gmail.com>
+From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Message-ID: <9be5356c-ec51-4541-89e5-05a1727a09a8@intel.com>
+Date:   Wed, 2 Sep 2020 15:13:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <78B69571-13C6-4BF5-8478-6AAA4AB2C287@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CAG48ez21a_afHJrRQeweuHu8c+fxJ+VN1dezD18UOtZA5q-Shg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599084117; bh=kkuRtxf1vezbhGt7LWXFhp9w3lxcVmX2TYTJjhJna0A=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=PYlXhRotiQZLfTXQ3wUKaNi2lAIqWGmhDdY0PnXG5Z+lN/QCMYFo0RG5cTDV6WwFH
-         CnfNo7aO+sfSX2fI+lJwU6aarLglAM/a5KXmMrCwp2e1o9Baq4M81nd71iUwdUgx//
-         uZ/a2+LKxSXP2G1SaaWWxXeK+62Cc8u3wUAa1bnCoMsdwDkTq4p9UjZ7iM9A35rRXq
-         JIFyutr6uKQ66rQKeR1y+8M4g0+cnTjIYBu59SdC1oEOjQqwNU4m4C6gP6n5Hhq5ba
-         bJJgl8MHVyNQvB3qHhrFcZXNGUdYAp0il6xrP4DrP96t1panNvmqFIm5/Wpc+h4Dk6
-         GwYzA74WFlDOQ==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 9/2/20 2:47 PM, Zi Yan wrote:
-> On 2 Sep 2020, at 12:58, Ralph Campbell wrote:
->=20
->> A migrating transparent huge page has to already be unmapped. Otherwise,
->> the page could be modified while it is being copied to a new page and
->> data could be lost. The function __split_huge_pmd() checks for a PMD
->> migration entry before calling __split_huge_pmd_locked() leading one to
->> think that __split_huge_pmd_locked() can handle splitting a migrating PM=
-D.
->> However, the code always increments the page->_mapcount and adjusts the
->> memory control group accounting assuming the page is mapped.
->> Also, if the PMD entry is a migration PMD entry, the call to
->> is_huge_zero_pmd(*pmd) is incorrect because it calls pmd_pfn(pmd) instea=
-d
->> of migration_entry_to_pfn(pmd_to_swp_entry(pmd)).
->> Fix these problems by checking for a PMD migration entry.
+On 9/2/2020 1:03 PM, Jann Horn wrote:
+> On Tue, Aug 25, 2020 at 2:30 AM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
+>> Add REGSET_CET64/REGSET_CET32 to get/set CET MSRs:
 >>
->> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
->=20
-> Thanks for the fix. You can add Reviewed-by: Zi Yan <ziy@nvidia.com>
->=20
-> I think you also want to add the Fixes tag and cc stable.
->=20
-> Fixes 84c3fc4e9c56 (=E2=80=9Cmm: thp: check pmd migration entry in common=
- path=E2=80=9D)
-> cc: stable@vger.kernel.org # 4.14+
+>>      IA32_U_CET (user-mode CET settings) and
+>>      IA32_PL3_SSP (user-mode Shadow Stack)
+> [...]
+>> diff --git a/arch/x86/kernel/fpu/regset.c b/arch/x86/kernel/fpu/regset.c
+> [...]
+>> +int cetregs_get(struct task_struct *target, const struct user_regset *regset,
+>> +               struct membuf to)
+>> +{
+>> +       struct fpu *fpu = &target->thread.fpu;
+>> +       struct cet_user_state *cetregs;
+>> +
+>> +       if (!boot_cpu_has(X86_FEATURE_SHSTK))
+>> +               return -ENODEV;
+>> +
+>> +       fpu__prepare_read(fpu);
+>> +       cetregs = get_xsave_addr(&fpu->state.xsave, XFEATURE_CET_USER);
+>> +       if (!cetregs)
+>> +               return -EFAULT;
+> 
+> Can this branch ever be hit without a kernel bug? If yes, I think
+> -EFAULT is probably a weird error code to choose here. If no, this
+> should probably use WARN_ON(). Same thing in cetregs_set().
+> 
 
-Thanks, I'll add these.
+When a thread is not CET-enabled, its CET state does not exist.  I 
+looked at EFAULT, and it means "Bad address".  Maybe this can be ENODEV, 
+which means "No such device"?
+
+[...]
+
+>> @@ -1284,6 +1293,13 @@ static struct user_regset x86_32_regsets[] __ro_after_init = {
+> [...]
+>> +       [REGSET_CET32] = {
+>> +               .core_note_type = NT_X86_CET,
+>> +               .n = sizeof(struct cet_user_state) / sizeof(u64),
+>> +               .size = sizeof(u64), .align = sizeof(u64),
+>> +               .active = cetregs_active, .regset_get = cetregs_get,
+>> +               .set = cetregs_set
+>> +       },
+>>   };
+> 
+> Why are there different identifiers for 32-bit CET and 64-bit CET when
+> they operate on the same structs and have the same handlers? If
+> there's a good reason for that, the commit message should probably
+> point that out.
+> 
+
+Yes, the reason for two regsets is that fill_note_info() does not expect 
+any holes in a regsets.  I will put this in the commit log.
+
+Thanks,
+Yu-cheng
