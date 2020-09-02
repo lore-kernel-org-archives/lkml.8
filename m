@@ -2,84 +2,111 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2900AC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63064C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F144D2078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33AD62078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:12:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="hIB8qVeU"
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="g8lfdQuv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgIBNJ5 (ORCPT
+        id S1726674AbgIBNMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 09:09:57 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:41982 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726310AbgIBNJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:09:30 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 0F011574E9;
-        Wed,  2 Sep 2020 13:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:date:date:from:from:subject:subject
-        :message-id:received:received:received; s=mta-01; t=1599051709;
-         x=1600866110; bh=dxrkS/aX5yeChGiqu1IMF0Fne/EsfHUnIkOcp1B4TN8=; b=
-        hIB8qVeU9aSDbCq8oo0SIymw3RagNFW6M8y0CevJWdj6qJHNFbfjvYoItoHAPotU
-        jwQvYfbRuBxCR6gk2jAaTvdkXK9vSFRsCE1qV2pdvieXQKYXdU9jqtRbWac8E0TI
-        hmghWAjnIL2ldcv2/HAn45mNx2kaAzFCh4qVSkg13cg=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9t_TD-qV_gA5; Wed,  2 Sep 2020 16:01:49 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 65A6B574FE;
-        Wed,  2 Sep 2020 15:59:33 +0300 (MSK)
-Received: from localhost.localdomain (10.199.3.6) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Wed, 2 Sep
- 2020 15:59:32 +0300
-Message-ID: <d2343032814705f33cd81f18f45630bf327c0ff8.camel@yadro.com>
-Subject: watchdog start on restart
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Date:   Wed, 2 Sep 2020 16:02:53 +0300
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Wed, 2 Sep 2020 09:12:23 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:34711 "EHLO smtp2.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbgIBNKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:10:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=1591; q=dns/txt; s=axis-central1;
+  t=1599052203; x=1630588203;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jmdOtuNubT1ZEKtREuMAQ5TNemzYAnItJGf7EFlP8x8=;
+  b=g8lfdQuvUerJqC9IzOHCEscuOoAbSHZ11frgAPVHS0RHfAUI2DKXnZj5
+   sm0F/hzbEiNUtlTjh17X+VSVGY0wDOVSHeOp2yxuGKO1b7e8rF0a0BHga
+   HeFDZ6lDUIEB9gW29A8eLu567tQxBCbrpXScNMB9tmR/NHNk07eT/d3yO
+   tGwIk6N8KkkFyV5VTQHcJYpY/sz1TYA7IK7SwKK5exfYIy6AI7yBalb0i
+   DMm4PueZJpBJCHT5woxvyXRe0Itms7d64p4ouJAlCd19LQU5iUYZ1kCud
+   dLyMoSKJomoGpo8YOGbXejglA+xo0FjTibLtxRO86LiQxdyDwV8C7dSox
+   g==;
+IronPort-SDR: CDuK86HC4X1sC726NKZHv8n0Q+wDH+mgg6XjolL0dJERNbsymLjbXSyHoje8zuoOQDC8oitN5Q
+ kJG5b8Zha2IEFIbAsgdpvd9wkI6HsZYrBjA5UyjpOs714vDIHmi8PvlkNshinQcqiCGPmYUJcm
+ gNPT9d5gy1fNbBGPN3VDJc9QEbEuSZBY9mKrxCxjodSpkm3Q9bITzUI+GEwOEW9skF6uyODIL/
+ XVS2MGXonD6S3WO47PB1cDhDtzxt4i41MdRj2JLlUzDltEUiTxbr6N/5qVJ5D31EOzgSWkZuf1
+ c3c=
+X-IronPort-AV: E=Sophos;i="5.76,383,1592863200"; 
+   d="scan'208";a="12127323"
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     <kernel@axis.com>, <linux-kernel@vger.kernel.org>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
+Subject: [PATCH] regulator: pwm: Fix machine constraints application
+Date:   Wed, 2 Sep 2020 15:09:52 +0200
+Message-ID: <20200902130952.24880-1-vincent.whitchurch@axis.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.199.3.6]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello everyone. Currently, the watchdog interface only has "stop watchdog on
-restart" but lacks a "start watchdog on restart" one. Is there a way to achieve
-such functionality?
+If the zero duty cycle doesn't correspond to any voltage in the voltage
+table, the PWM regulator returns an -EINVAL from get_voltage_sel() which
+results in the core erroring out with a "failed to get the current
+voltage" and ending up not applying the machine constraints.
 
-I'd like to know why "stop watchdog on restart" wasn't implemented via ioctl
-interface? It would be more convenient from user perspective and you can
-control that behavior whenever you want from application layer.
+Instead, return -ENOTRECOVERABLE which makes the core set the voltage
+since it's at an unknown value.
 
-I have some thoughts on this problem that solve the aforementioned
-issue with "start watchdog on restart" but I don't think that my solution is
-correct.
+For example, with this device tree:
 
-Looking forward for your feedback.
+	fooregulator {
+		compatible = "pwm-regulator";
+		pwms = <&foopwm 0 100000>;
+		regulator-min-microvolt = <2250000>;
+		regulator-max-microvolt = <2250000>;
+		regulator-name = "fooregulator";
+		regulator-always-on;
+		regulator-boot-on;
+		voltage-table = <2250000 30>;
+	};
 
-Thanks.
+Before this patch:
+
+  fooregulator: failed to get the current voltage(-22)
+
+After this patch:
+
+  fooregulator: Setting 2250000-2250000uV
+  fooregulator: 2250 mV
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+---
+ drivers/regulator/pwm-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
+index 3234b118b53e..990bd50771d8 100644
+--- a/drivers/regulator/pwm-regulator.c
++++ b/drivers/regulator/pwm-regulator.c
+@@ -279,7 +279,7 @@ static int pwm_regulator_init_table(struct platform_device *pdev,
+ 		return ret;
+ 	}
+ 
+-	drvdata->state			= -EINVAL;
++	drvdata->state			= -ENOTRECOVERABLE;
+ 	drvdata->duty_cycle_table	= duty_cycle_table;
+ 	drvdata->desc.ops = &pwm_regulator_voltage_table_ops;
+ 	drvdata->desc.n_voltages	= length / sizeof(*duty_cycle_table);
+-- 
+2.28.0
 
