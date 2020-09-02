@@ -2,94 +2,105 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C310C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA82BC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1EF8207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A81C12083B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:14:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c1JBJ6VT"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Qwf6X/kG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgIBUMH (ORCPT
+        id S1726654AbgIBUOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 16:12:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37150 "EHLO
+        Wed, 2 Sep 2020 16:14:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbgIBUMF (ORCPT
+        with ESMTP id S1726226AbgIBUN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 16:12:05 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D220C061244;
-        Wed,  2 Sep 2020 13:12:05 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id o20so249149pfp.11;
-        Wed, 02 Sep 2020 13:12:05 -0700 (PDT)
+        Wed, 2 Sep 2020 16:13:58 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D335EC061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 13:13:57 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id w186so1005315qkd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 13:13:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uYImFOJu0K//+DZFWON8MWJNUVLoQV7sBihFc3kX8Xo=;
-        b=c1JBJ6VTvqs9gxo5fDc8w8Vl0x5F9qV6AD1yaO+4DZ9QWYyxoX/SqdEU4OvAHVCgdC
-         MCsrkfRhk5Tuc7fUg8JQ9Bo45NU/I+JdhxB9eHr9eTMnM46EswR2yBwTDK2j7MBsEYz3
-         1CqEss1Sjrixd2/j3R4jXfGpP/mXiX2ZOODDpvv3zBDY1vFf6d8gQ5zG3SkrLJHnqoI7
-         +vAN1q7bGUZp4ZQAyEOy0JdlmgkvOyLyqf7rvzvr2KpAQpGeEVIbB/OnibxnqS4fn4Pn
-         9oi5bRD4AGfouZTl4nD/S3sXgv8F+1HmgBwm5yhnccGZmBPbAHHYmskM/9p7WgyPz2A+
-         /pwQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VtKLlAudRnA2vKDoZNQw5csEIPXvQwIKm3VyTbaIKFY=;
+        b=Qwf6X/kGgSmY9tKp7Kmk3c8MgxIjvqFpEQAe+tb1+XOXXgvyehDPKeYG7dZ/Yg3IX6
+         htTDkWFcqvo513Hi/a7qgs846lJoqXVAXRLY91hdU61Y6OJwM73W0pMKYYASAJzRG86+
+         Dg/4lQzFDbgl69fZkKJw7LZwiwF3cwnrxKfHjCVxdDezuLssdPD1RCUPY998/GHXvD66
+         vXdCC47ctdTSW43mZLLck7PEVdwrveAum6OrxzF6kuLEFcjT+1LtRvd1cwQbcz8kXeCO
+         1YqtVf246V4JoEYZACerGXbT/EI/gGjAeg6BCbC2etnr610vhlV/2Mf9s7fG3C/sl3Zf
+         cwzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uYImFOJu0K//+DZFWON8MWJNUVLoQV7sBihFc3kX8Xo=;
-        b=TvjHjpidmoB478UzeZTem3u3kABIJQ9WSIyBqGi9Ty+DcECIeA8Sy+eZLLcz9zHP5C
-         H59xHu6/GzGHA7mMFToydhX6C+SPYj6U50jQRtcBoMJOHa9209ytr3LdoimYC5sRm4uv
-         VuFV58AAl9QdY10LHY2k+TPeX+haE4JAculmY4najS4V5fNXaEfDCqf48oNWR4ZAaTOk
-         QFsK3TvV75LUaBaRJu++wXkbbHA/AY74T0hhILz4CqxY7xTSQMmeVkE+y+Gs+lt3NfNn
-         V25wYE/4spm3n5LxXt3C+JBpAa8KrnkHBPoIP+Fojb+EGfdv+o94OMW6pt8ijsKbxm7n
-         iGpQ==
-X-Gm-Message-State: AOAM533eRGx4gjEtBbEZuBbxepvK2lwIKIPJfKsrxpP0lZ6L47DvoiV9
-        Y3qobin8NX3MWk8p7gaVUluoc7CeA5M=
-X-Google-Smtp-Source: ABdhPJzk7Hgcfa6oT9Ta03/6Bd/JRgpaRnATLm3cYkkw2w2yvuXgWH6XlwV9+C/K79H5BD4r5ApX0A==
-X-Received: by 2002:a17:902:a584:: with SMTP id az4mr113062plb.165.1599077524214;
-        Wed, 02 Sep 2020 13:12:04 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x3sm190131pgg.54.2020.09.02.13.12.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 13:12:03 -0700 (PDT)
-Subject: Re: [PATCH net] net: dp83867: Fix WoL SecureOn password
-To:     Dan Murphy <dmurphy@ti.com>, davem@davemloft.net, andrew@lunn.ch,
-        hkallweit1@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200902192704.9220-1-dmurphy@ti.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <997e979c-6447-84f3-d433-5c5194abd201@gmail.com>
-Date:   Wed, 2 Sep 2020 13:12:01 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.1.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VtKLlAudRnA2vKDoZNQw5csEIPXvQwIKm3VyTbaIKFY=;
+        b=jMBew3d6EqurLalpRfA3SNWid1byjuLbpo+9z7eHaQLowdTHaGnNeptGvPgHjmJAjG
+         R5KfMUKQDDV7KI9kS7JRbFw8EMzX86P99culhyd+YJa3Htmtsb6KM/+HRTHBwxCu0M6e
+         IQKQKxJ1/hotcNpfXKsqzUQpWXZC7Li/5dZtKAYN/5toLM2UxJGMWAZsyg2KPTpCDVRS
+         nsvcy+ZpeZ/SyMO4o1uCWsWOs5cIafz4BmaBydmF3pvHxVUti/rawola0/4df7KaloNM
+         pWaYRKQvKAczeBDseOgexiD50JdLadbnA+Pg2DNaBr5wT/lVpVJ8UlVojOY/5LQnCxIu
+         exvw==
+X-Gm-Message-State: AOAM533aw7ehg+1yeLhSyiwu1xcRhJgc5f7K7aMUKBKWQSDUyUbiosW/
+        PxYkbn5qg1xKmisln/fzsAFKpw==
+X-Google-Smtp-Source: ABdhPJxP9sYQMnp7dADWRBTcdNFumTmUhJGfW+FF9H/GSd4vNcNPJ3p18WOwE1ej6gXtP23Bzcc3NA==
+X-Received: by 2002:a37:a484:: with SMTP id n126mr8834583qke.5.1599077636904;
+        Wed, 02 Sep 2020 13:13:56 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id g18sm347980qtu.69.2020.09.02.13.13.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 13:13:56 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kDZ8l-0068s3-Em; Wed, 02 Sep 2020 17:13:55 -0300
+Date:   Wed, 2 Sep 2020 17:13:55 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: Re: [RFC PATCH 0/2] mm/gup: fix gup_fast with dynamic page table
+ folding
+Message-ID: <20200902201355.GJ24045@ziepe.ca>
+References: <20200828140314.8556-1-gerald.schaefer@linux.ibm.com>
+ <9071c9fa-ba6a-90dc-2d7a-8b155141d890@de.ibm.com>
+ <20200831121553.8be5dcdbdbc5256846ac513e@linux-foundation.org>
+ <20200901194020.418da486@thinkpad>
+ <91988792-069c-31a6-7840-0122357538c7@nvidia.com>
+ <20200902142437.5f39b4bb@thinkpad>
+ <20200902170958.09be0c3e@thinkpad>
 MIME-Version: 1.0
-In-Reply-To: <20200902192704.9220-1-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902170958.09be0c3e@thinkpad>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 02, 2020 at 05:09:58PM +0200, Gerald Schaefer wrote:
+> I guess we *could* assume that all the extra pXd_offset() calls and
+> also the de-referencing would be optimized out by the compiler for other
+> archs, but it is one example where my gut tells me that this might not
+> be so trivial and w/o unwanted effects after all.
 
+Assigning to a variable that is never read should be eliminated.. If
+things are very complex then the pXX_offset function might need to be
+marked with attribute pure, but I think this should be reliable?
 
-On 9/2/2020 12:27 PM, Dan Murphy wrote:
-> Fix the registers being written to as the values were being over written
-> when writing the same registers.
-> 
-> Fixes: caabee5b53f5 ("net: phy: dp83867: support Wake on LAN")
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Jason
