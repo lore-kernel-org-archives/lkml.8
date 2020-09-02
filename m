@@ -2,116 +2,116 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6FAC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7809DC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05D8820678
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:36:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHDTXriP"
+	by mail.kernel.org (Postfix) with ESMTP id 4879220678
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:36:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599060997;
+	bh=3L9tzl4u2+eRjqvvA0npofzQcIH6WAV2kMNA4WSIx8U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lY32ESfD32VBnwbmOQF4d44xxSMgkZHHRcUlnP2mmr8E+B9yyRylX27j0AlQK9kno
+	 6v20lHJZeK6R7/HatXMGBOaiYAcQMm3uW3zoKhe2tuaGmLYutRd1gHv68JkBlStv2a
+	 FAKZtCHFmMNZPgcodtn3eX7iO9ttpuRRKm+c/SeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgIBPf6 (ORCPT
+        id S1728314AbgIBPgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:35:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728312AbgIBPfr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:35:47 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CDEDC061244;
-        Wed,  2 Sep 2020 08:35:45 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id k15so3033008pfc.12;
-        Wed, 02 Sep 2020 08:35:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=HEqwK4t3Jbhbn9WZdb3oUG7FILqb8kl/CCgidI15uDY=;
-        b=kHDTXriPodcCimTodp4iPeVr/AekjfXT50p2ukyjZp6e16RJa0u708YWek45zszv3C
-         Fp/vea5VhkArLmNoriItDE91gvIqPHZqGRqPoqHdCstr8iMz+E4qo/0PmUCarHxcTZNk
-         D3fUssP5yY2hYcM3XuyVinhVsdzjSf2puMyTiHDZFxyHRbDEveX0UqmxAA9xsBU/I0W9
-         OTNVmSrDeEy26aw3cdSrEfzEsR8QuM4li2SKqNmzDgMqvBwdoN6n45bZlV8kADcH7Nai
-         NVI4/vnFlm8Kwwl0g/Rl28VIKAF5XpuVcG70+0X5LKFhMqsakOHeOL6TUHBms+IqOKgh
-         akTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HEqwK4t3Jbhbn9WZdb3oUG7FILqb8kl/CCgidI15uDY=;
-        b=LMRGay1Jo0UkPqbCq0Ekes8MZGMy1S9hsyFf9OaBCn9on3BTJd9LB3O676BW/Y8LlU
-         Pt1iIOL4PqAexliK166L5DZZ/BhOfcku9jZBPZopsiHHwfqVSNhpG7NF3aIAxid2l0lx
-         wVWDkKEVvTxXZIBwf/wht1FJQIAWEHdX36SB8nr6GR3zwcfcv5gP4FujF9F0/X6jCXVK
-         RamFzXXX4Hloxm1d42vY9QYoWgz7sy3ZaX06bi8fz4OHUExBIHKKTCd/QOfbc8VR25eK
-         lN+m7OJ6Er0jbwaU7Xl8oGaGdWpy1GPJ3V3lz2xYjZSg37CWdqpRoBVRJk+AQFU3+Dhi
-         2OYQ==
-X-Gm-Message-State: AOAM533Xlovo6igmRtMbwlBamcDQ3m7Bql+JTxxQm0l5G7o6oHBF4WVF
-        ca27zG9GXhbdWAbujgDCz+Y=
-X-Google-Smtp-Source: ABdhPJxHJXPfvXBk6OiHcYKsndf2R7W1LPm3hgGc5pDEcgNbal5oYmhxvi2HRzhZgeA3KaOaKDJWiw==
-X-Received: by 2002:a63:f804:: with SMTP id n4mr2278378pgh.155.1599060944940;
-        Wed, 02 Sep 2020 08:35:44 -0700 (PDT)
-Received: from localhost.localdomain ([123.241.84.106])
-        by smtp.gmail.com with ESMTPSA id m3sm4835402pjn.28.2020.09.02.08.35.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Sep 2020 08:35:43 -0700 (PDT)
-From:   cy_huang <u0084500@gmail.com>
-To:     linux@roeck-us.net, heikki.krogerus@linux.intel.com
-Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cy_huang@richtek.com
-Subject: [PATCH] usb: typec: tcpm: Fix if vbus before cc, hard_reset_count not reset issue
-Date:   Wed,  2 Sep 2020 23:35:33 +0800
-Message-Id: <1599060933-8092-1-git-send-email-u0084500@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 2 Sep 2020 11:36:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726937AbgIBPEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:04:15 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94941208DB;
+        Wed,  2 Sep 2020 15:04:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599059055;
+        bh=3L9tzl4u2+eRjqvvA0npofzQcIH6WAV2kMNA4WSIx8U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gQz17aiDJxWjN5u0gkMVHoT0kOpnx9Aw8d/3hmPayrgvGXvxNoPFYzUx0695et0Un
+         xS6+vVBM76+LXioFjGMJIliKQWU0yIq2JlW9nbOIcyMQWSA0E5CQ45IbU3z8ulp7Fm
+         wQD2L4S/Wtec4RA/wK5mIpvp41++szi2OJq0PUM4=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        David Lechner <david@lechnology.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 04/10] clk: gpio: Simplify with dev_err_probe()
+Date:   Wed,  2 Sep 2020 17:03:42 +0200
+Message-Id: <20200902150348.14465-4-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200902150348.14465-1-krzk@kernel.org>
+References: <20200902150348.14465-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ChiYuan Huang <cy_huang@richtek.com>
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and the error value gets printed.
 
-Fix: If vbus event is before cc_event trigger, hard_reset_count
-won't bt reset for some case.
-
-Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
-Below's the flow.
+ drivers/clk/clk-gpio.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-_tcpm_pd_vbus_off() -> run_state_machine to change state to SNK_UNATTACHED
-call tcpm_snk_detach() -> tcpm_snk_detach() -> tcpm_detach()
-tcpm_port_is_disconnected() will be called.
-But port->attached is still true and port->cc1=open and port->cc2=open
-
-It cause tcpm_port_is_disconnected return false, then hard_reset_count won't be reset.
-After that, tcpm_reset_port() is called.
-port->attached become false.
-
-After that, cc now trigger cc_change event, the hard_reset_count will be kept.
-Even tcpm_detach will be called, due to port->attached is false, tcpm_detach()
-will directly return.
-
-CC_EVENT will only trigger drp toggling again.
----
- drivers/usb/typec/tcpm/tcpm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index a48e3f90..5c73e1d 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -2797,8 +2797,7 @@ static void tcpm_detach(struct tcpm_port *port)
- 		port->tcpc->set_bist_data(port->tcpc, false);
- 	}
+diff --git a/drivers/clk/clk-gpio.c b/drivers/clk/clk-gpio.c
+index 38755a241ab7..a3cc53edcb11 100644
+--- a/drivers/clk/clk-gpio.c
++++ b/drivers/clk/clk-gpio.c
+@@ -199,7 +199,6 @@ static int gpio_clk_driver_probe(struct platform_device *pdev)
+ 	struct gpio_desc *gpiod;
+ 	struct clk_hw *hw;
+ 	bool is_mux;
+-	int ret;
  
--	if (tcpm_port_is_disconnected(port))
--		port->hard_reset_count = 0;
-+	port->hard_reset_count = 0;
+ 	is_mux = of_device_is_compatible(node, "gpio-mux-clock");
  
- 	tcpm_reset_port(port);
- }
+@@ -211,17 +210,10 @@ static int gpio_clk_driver_probe(struct platform_device *pdev)
+ 
+ 	gpio_name = is_mux ? "select" : "enable";
+ 	gpiod = devm_gpiod_get(dev, gpio_name, GPIOD_OUT_LOW);
+-	if (IS_ERR(gpiod)) {
+-		ret = PTR_ERR(gpiod);
+-		if (ret == -EPROBE_DEFER)
+-			pr_debug("%pOFn: %s: GPIOs not yet available, retry later\n",
+-					node, __func__);
+-		else
+-			pr_err("%pOFn: %s: Can't get '%s' named GPIO property\n",
+-					node, __func__,
+-					gpio_name);
+-		return ret;
+-	}
++	if (IS_ERR(gpiod))
++		return dev_err_probe(dev, PTR_ERR(gpiod),
++				     "%pOFn: Can't get '%s' named GPIO property\n",
++				     node, gpio_name);
+ 
+ 	if (is_mux)
+ 		hw = clk_hw_register_gpio_mux(dev, gpiod);
 -- 
-2.7.4
+2.17.1
 
