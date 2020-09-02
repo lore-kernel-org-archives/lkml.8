@@ -2,100 +2,121 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84991C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B8CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F654207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:51:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSJwp82j"
+	by mail.kernel.org (Postfix) with ESMTP id 8880B2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:51:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgIBPvU (ORCPT
+        id S1728238AbgIBPvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:51:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgIBPvS (ORCPT
+        Wed, 2 Sep 2020 11:51:36 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46752 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgIBPvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:51:18 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B48C061244;
-        Wed,  2 Sep 2020 08:51:17 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id e11so3442831wme.0;
-        Wed, 02 Sep 2020 08:51:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dzKY3NK+bPcp95h+ajPimug08LR9zIvaotW8xkZTp8Y=;
-        b=QSJwp82jwQlpRQ173CqB+2lwvREIreH2XPy6w+aYPSRH5xOZQeqXclQ8lxnrbJboSD
-         nZUz0qQG15+qEpJPEsTfg2qfHBKDyo+3yDry9sSGH2xl/OdChZk97wS+0PwExJ3sP14R
-         6yp9NJoomQCmAIUscEYEiPR7DU6llo1AXTS1/6PdCPnPAf8DMVG1tfR+SIcGEW/eBBaM
-         cpIm8Kb6sFHYrRyhTYnOo9GBXeF0AclXFLMGDvyXJTj3tE+bTQ+vM7Lb/cDiWMDH+9iD
-         UptJbo2qR1jNKHICbjMiOses8rmzJlcVLA0VtIAKObiiWHJgLstRKrxgU/oANJ6pnYoH
-         GX0Q==
+        Wed, 2 Sep 2020 11:51:35 -0400
+Received: by mail-oi1-f195.google.com with SMTP id u126so4780867oif.13;
+        Wed, 02 Sep 2020 08:51:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dzKY3NK+bPcp95h+ajPimug08LR9zIvaotW8xkZTp8Y=;
-        b=Oky5S7YLhNvyUP0yGf2I2KQN85Y+Ppu38K+RHAtx8Ec3lYwlE731R7UvFs2YiWgPgo
-         6Kyv2XH6r+p9qobHEKQ9kkFQeQCcZF25+G8xon5p+9Y6XirjhXtKMpCWnrbh8tqx8++4
-         CCAnvnkAlTgKnCg857I3pILHHZPeWfdJsYQE7HNnFncKPbO+uJov5jSmeZNJpErFAZH3
-         Bf6EWFP8Mogu4BHcCsh/Kfn1nOukbjHhLaVtMlA7Z1BUIBIIzlIHHCaGVsdL5XULV2Hw
-         Qn8Ebk7WT2jkMHtkREgqf9nbR6C/3yh27XyTPKCaZigkBLKTVWaUfuKAyOh1caj+Dwg6
-         V8WQ==
-X-Gm-Message-State: AOAM5335kZ+N4DpmVvy6+9G0PIpaR8KQOJS1ni2Qnnyc36YSf05LfWN3
-        n01vSnvD0g3JHmjP1pygCPU=
-X-Google-Smtp-Source: ABdhPJwAFrZJGRFUqoWN0L52cBSPeBinyeOxBCh5wyL5+14HTA0oQoA6n7B39XUVnqvUbla+quem7g==
-X-Received: by 2002:a1c:bbd7:: with SMTP id l206mr1350845wmf.185.1599061876398;
-        Wed, 02 Sep 2020 08:51:16 -0700 (PDT)
-Received: from medion (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id n11sm67365wrx.91.2020.09.02.08.51.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 08:51:15 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
-Date:   Wed, 2 Sep 2020 16:51:14 +0100
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        GR-QLogic-Storage-Upstream@marvell.com, jejb@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        njavali@marvell.com
-Subject: Re: [PATCH v2] scsi: Don't call memset after dma_alloc_coherent()
-Message-ID: <20200902155114.bscqz3a5mdp27toj@medion>
-References: <20200820185149.932178-1-alex.dewar90@gmail.com>
- <20200820234952.317313-1-alex.dewar90@gmail.com>
- <yq1eenlezwf.fsf@ca-mkp.ca.oracle.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6JeD4q3u5m7TYib0XXdTzqaKmJDZ9r459ZslYXgh8lw=;
+        b=R0RP1QqWC6Vl5ns9rFZZPBpOcsrxGubYGd35tp7med77+8iTPnX0Njt0CTmQiDBc95
+         XuZDr6jM8PaZ2LrBdNNNG9d2En1Kt01RfUQP7VUKx7TAWoFmZTzzgBiKhF20Qwg7mlUU
+         1/TkmMXr1G++itn360HLqRXoNJwGBd1vCogIXoFZ5XZvp1AtkfySwNnrki6YvsEAnQJU
+         KXOKimvFqqOe5PkjlTiHfsyv8StnnP6rPvR3aRgIEi5uPhl8z+bRIF7JEzNkWHJqJd9H
+         fKNVj/42by9YxO1eV/xFnSckdLkJdhsoTipbZXREOFggzTt7tC3oKZ5g0Lt6TGiB9Ook
+         2opw==
+X-Gm-Message-State: AOAM531uSrSVMDskfGkG0AlrfGNMD5S1raKkQ/khFFP/FMXOsjC8Ja6y
+        TbijvlGJiXWHLX1+oHUqxTY3D23tKR+rjs7gZK3638xx
+X-Google-Smtp-Source: ABdhPJxae6UIMdm5zyNbrXO7nReKqvFeikbvh88AnM0v5RcEpiean7ErLZWr+e2Mgvg5T/MqKiUm1LPR+XrJcw1TLSs=
+X-Received: by 2002:aca:d509:: with SMTP id m9mr2399947oig.71.1599061888397;
+ Wed, 02 Sep 2020 08:51:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq1eenlezwf.fsf@ca-mkp.ca.oracle.com>
+References: <20200901150438.228887-1-ulf.hansson@linaro.org>
+ <20200901150654.GB30034@lst.de> <CAPDyKFqZXdtVokrDQvJAh-NzN0T2ayPD6MepemLEaDt1TRPduw@mail.gmail.com>
+ <20200901154049.GA376@lst.de> <CAPDyKFqDKUG3RC241hv535CLFGEQc4b-vv0e3bexzGkDSY82Jg@mail.gmail.com>
+ <20200902134418.GR3265@brightrain.aerifal.cx>
+In-Reply-To: <20200902134418.GR3265@brightrain.aerifal.cx>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 2 Sep 2020 17:51:16 +0200
+Message-ID: <CAMuHMdUiPhHtkQfcpMSA6HMvmcFyg__rSGUoHRKQfQf2N5QTYA@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: mmc_spi: Allow the driver to be built when
+ CONFIG_HAS_DMA is unset
+To:     Rich Felker <dalias@libc.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 09:22:44PM -0400, Martin K. Petersen wrote:
-> 
-> Alex,
-> 
-> > dma_alloc_coherent() already zeroes memory, so the extra call to
-> > memset() is unnecessary.
-> 
-> One patch per driver, please.
+Hi Rich,
 
-There's a single patch for QLA2XXX already submitted: https://lore.kernel.org/lkml/20200820185149.932178-1-alex.dewar90@gmail.com/
+On Wed, Sep 2, 2020 at 5:43 PM Rich Felker <dalias@libc.org> wrote:
+> On Wed, Sep 02, 2020 at 10:31:47AM +0200, Ulf Hansson wrote:
+> > On Tue, 1 Sep 2020 at 17:40, Christoph Hellwig <hch@lst.de> wrote:
+> > > On Tue, Sep 01, 2020 at 05:36:17PM +0200, Ulf Hansson wrote:
+> > > > > I still don't think this makes sense, as the dma_mask should always
+> > > > > be non-NULL here.
+> > > >
+> > > > If that is the case, I wonder how the driver could even have worked without DMA.
+> > > >
+> > > > Because in the existing code, host->dma_dev gets assigned to
+> > > > spi->master->dev.parent->dma_mask - which seems to turn on the DMA
+> > > > usage in the driver.
+> > > >
+> > > > What am I missing?
+> > >
+> > > Do you know of other non-DMA users?  For SH nommu it probably worked
+> >
+> > I don't know of other non-DMA users. As I said, I wish someone could
+> > step in and take better care of mmc_spi - as I know it's being used a
+> > lot.
+> >
+> > > because SH nommu used to provide a DMA implementation that worked
+> > > fine for streaming maps, but was completely broken for coherent
+> > > allocation.  And this driver appears to only use the former.
+> >
+> > Alright, so you are saying the DMA support may potentially never have
+> > been optional to this driver. In any case, I can remove the check in
+> > $subject patch, as it shouldn't matter.
+>
+> DMA support was always optional, because even on systems where DMA is
+> present, it doesn't necessarily mean the SPI controller uses DMA. In
+> particular, pure bit-banged SPI via GPIOs doesn't have DMA, but has
+> always worked. See my previous reply to Christoph about host->dma_dev
+> for my current-best understanding of what's going on here.
+>
+> > Anyway, let's see what Rich thinks of this. I am curious to see if the
+> > patch works on his SH boards - as I haven't been able to test it.
+>
+> I'll rebuild and retest just to confirm, but I already tested a
+> functionally equivalent patch that just did the #ifdef inline (rather
+> than moving the logic out to separate functions) and it worked fine.
 
-I'll send separate patches for the other cases.
+Hence, Tested-by? ;-)
 
-> 
-> Thanks!
-> 
-> -- 
-> Martin K. Petersen	Oracle Linux Engineering
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
