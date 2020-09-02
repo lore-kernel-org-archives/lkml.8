@@ -2,244 +2,138 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90B8C28E83
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A5DC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAE92068F
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:06:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="S4NyqMv/"
+	by mail.kernel.org (Postfix) with ESMTP id 8BB2D2068F
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:07:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgIBDGf (ORCPT
+        id S1726794AbgIBDHB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 23:06:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:41429 "EHLO ozlabs.org"
+        Tue, 1 Sep 2020 23:07:01 -0400
+Received: from mga03.intel.com ([134.134.136.65]:62774 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgIBDGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 23:06:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bh83R5Kh2z9sSJ;
-        Wed,  2 Sep 2020 13:06:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599015990;
-        bh=zim69dfuPpB8Yc/TUTIMWuP0ktKGex5mslQ+gJxzaq0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=S4NyqMv/TQ3NRUoeVx95Jqy8U4YUbFnZDytjI8fpZrDZYqqvSK6kp82n2SQpnRKjt
-         PkBLDzrcz24MU2xUbXqehJgEXy89v5JM9+ETWwuL5ktGRyf078zXDRRwyJyBZ2A6dA
-         76QM/XUS8aKK+dRL6YKa9GT5P1HNVoA/wZhg+QIO6qeuLM9M8fZs8WUTSvBxIii2oL
-         ajU/FFlGx3EXM3NYTuSDXDCJMq5NzzPPXUQnZ5/dQ+Mbj1pvzdnpZQacD6gtnf9Wwv
-         V/fUpA5CZLX9KEybaCM44/aHaCl482MG7h4BTbpq49hh/6nSHHZRKECudeEFbUWaui
-         4+OKMjaKkalzg==
-Date:   Wed, 2 Sep 2020 13:06:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Sidong Yang <realwakka@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-Message-ID: <20200902130624.18983108@canb.auug.org.au>
-In-Reply-To: <20200826105547.4f6ea26d@canb.auug.org.au>
-References: <20200826105547.4f6ea26d@canb.auug.org.au>
+        id S1726144AbgIBDHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 23:07:00 -0400
+IronPort-SDR: unM1avL+8Bv4KDKX5LdlKNNHpvgTp8c/uGlUQQAeULU62FTFHVjLXJQ0HJQijyEEGKvu0xFcMZ
+ Nk+ChD4fgRIg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="157314554"
+X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
+   d="scan'208";a="157314554"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 20:07:00 -0700
+IronPort-SDR: dLeqMVa6k07q6GfWLy1bB+3vOfmMnoTP2rO/Z3OhbuYRKqvNNOSecXkZNbJOFaa/e5W5oPifUo
+ wxSBJ2F+iiIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
+   d="scan'208";a="502498257"
+Received: from hhuan26-mobl1.amr.corp.intel.com ([10.255.35.33])
+  by fmsmga005.fm.intel.com with ESMTP; 01 Sep 2020 20:06:36 -0700
+Content-Type: text/plain; charset=utf-8; format=flowed; delsp=yes
+To:     "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        "Jethro Beekman" <jethro@fortanix.com>,
+        "Chunyang Hui" <sanqian.hcy@antfin.com>,
+        "Jordan Hand" <jorhand@linux.microsoft.com>,
+        "Nathaniel McCallum" <npmccallum@redhat.com>,
+        "Seth Moore" <sethmo@google.com>,
+        "Suresh Siddha" <suresh.b.siddha@intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, dave.hansen@intel.com, josh@joshtriplett.org,
+        kai.huang@intel.com, kai.svahn@intel.com, kmoy@google.com,
+        ludloff@google.com, luto@kernel.org, nhorman@redhat.com,
+        puiterwijk@redhat.com, rientjes@google.com, tglx@linutronix.de,
+        yaozhangx@google.com
+Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
+ <20200702035902.GC1819@linux.intel.com>
+ <20200704033025.GA144756@linux.intel.com>
+Date:   Tue, 01 Sep 2020 22:06:32 -0500
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/YizQk8yowqeEyhmG.EVW9OP";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8BIT
+From:   "Haitao Huang" <haitao.huang@linux.intel.com>
+Organization: Intel Corp
+Message-ID: <op.0qaqw6rvwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
+In-Reply-To: <20200704033025.GA144756@linux.intel.com>
+User-Agent: Opera Mail/1.0 (Win32)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/YizQk8yowqeEyhmG.EVW9OP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, 03 Jul 2020 22:31:10 -0500, Jarkko Sakkinen  
+<jarkko.sakkinen@linux.intel.com> wrote:
 
-Hi all,
-
-On Wed, 26 Aug 2020 10:55:47 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+> On Wed, Jul 01, 2020 at 08:59:02PM -0700, Sean Christopherson wrote:
+>> On Thu, Jun 18, 2020 at 01:08:33AM +0300, Jarkko Sakkinen wrote:
+>> > +static int sgx_validate_secs(const struct sgx_secs *secs,
+>> > +			     unsigned long ssaframesize)
+>> > +{
+>> > +	if (secs->size < (2 * PAGE_SIZE) || !is_power_of_2(secs->size))
+>> > +		return -EINVAL;
+>> > +
+>> > +	if (secs->base & (secs->size - 1))
+>> > +		return -EINVAL;
+>> > +
+>> > +	if (secs->miscselect & sgx_misc_reserved_mask ||
+>> > +	    secs->attributes & sgx_attributes_reserved_mask ||
+>> > +	    secs->xfrm & sgx_xfrm_reserved_mask)
+>> > +		return -EINVAL;
+>> > +
+>> > +	if (secs->attributes & SGX_ATTR_MODE64BIT) {
+>> > +		if (secs->size > sgx_encl_size_max_64)
+>> > +			return -EINVAL;
+>> > +	} else if (secs->size > sgx_encl_size_max_32)
+>> > +		return -EINVAL;
+>>
+>> These should be >=, not >, the SDM uses one of those fancy ≥ ligatures.
+>>
+>> Internal versions use more obvious pseudocode, e.g.:
+>>
+>>     if ((DS:TMP_SECS.ATTRIBUTES.MODE64BIT = 1) AND
+>>         (DS:TMP_SECS.SIZE AND (~((1 << CPUID.18.0:EDX[15:8]) – 1)))
+>>     {
+>>         #GP(0);
 >
-> After merging the drm-misc tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->=20
-> drivers/gpu/drm/qxl/qxl_display.c: In function 'qxl_display_read_client_m=
-onitors_config':
-> include/drm/drm_modeset_lock.h:167:7: error: implicit declaration of func=
-tion 'drm_drv_uses_atomic_modeset' [-Werror=3Dimplicit-function-declaration]
->   167 |  if (!drm_drv_uses_atomic_modeset(dev))    \
->       |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/qxl/qxl_display.c:187:2: note: in expansion of macro 'DRM=
-_MODESET_LOCK_ALL_BEGIN'
->   187 |  DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, DRM_MODESET_ACQUIRE_INTERRU=
-PTIBLE, ret);
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/qxl/qxl_display.c:189:35: error: macro "DRM_MODESET_LOCK_=
-ALL_END" requires 3 arguments, but only 2 given
->   189 |  DRM_MODESET_LOCK_ALL_END(ctx, ret);
->       |                                   ^
-> In file included from include/drm/drm_crtc.h:36,
->                  from include/drm/drm_atomic.h:31,
->                  from drivers/gpu/drm/qxl/qxl_display.c:29:
-> include/drm/drm_modeset_lock.h:194: note: macro "DRM_MODESET_LOCK_ALL_END=
-" defined here
->   194 | #define DRM_MODESET_LOCK_ALL_END(dev, ctx, ret)    \
->       |=20
-> drivers/gpu/drm/qxl/qxl_display.c:189:2: error: 'DRM_MODESET_LOCK_ALL_END=
-' undeclared (first use in this function)
->   189 |  DRM_MODESET_LOCK_ALL_END(ctx, ret);
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/qxl/qxl_display.c:189:2: note: each undeclared identifier=
- is reported only once for each function it appears in
-> drivers/gpu/drm/qxl/qxl_display.c:187:2: error: label 'modeset_lock_fail'=
- used but not defined
->   187 |  DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, DRM_MODESET_ACQUIRE_INTERRU=
-PTIBLE, ret);
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> In file included from include/drm/drm_crtc.h:36,
->                  from include/drm/drm_atomic.h:31,
->                  from drivers/gpu/drm/qxl/qxl_display.c:29:
-> include/drm/drm_modeset_lock.h:170:1: warning: label 'modeset_lock_retry'=
- defined but not used [-Wunused-label]
->   170 | modeset_lock_retry:       \
->       | ^~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/qxl/qxl_display.c:187:2: note: in expansion of macro 'DRM=
-_MODESET_LOCK_ALL_BEGIN'
->   187 |  DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, DRM_MODESET_ACQUIRE_INTERRU=
-PTIBLE, ret);
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/qxl/qxl_display.c: In function 'qxl_framebuffer_surface_d=
-irty':
-> drivers/gpu/drm/qxl/qxl_display.c:434:35: error: macro "DRM_MODESET_LOCK_=
-ALL_END" requires 3 arguments, but only 2 given
->   434 |  DRM_MODESET_LOCK_ALL_END(ctx, ret);
->       |                                   ^
-> In file included from include/drm/drm_crtc.h:36,
->                  from include/drm/drm_atomic.h:31,
->                  from drivers/gpu/drm/qxl/qxl_display.c:29:
-> include/drm/drm_modeset_lock.h:194: note: macro "DRM_MODESET_LOCK_ALL_END=
-" defined here
->   194 | #define DRM_MODESET_LOCK_ALL_END(dev, ctx, ret)    \
->       |=20
-> drivers/gpu/drm/qxl/qxl_display.c:434:2: error: 'DRM_MODESET_LOCK_ALL_END=
-' undeclared (first use in this function)
->   434 |  DRM_MODESET_LOCK_ALL_END(ctx, ret);
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/qxl/qxl_display.c:411:2: error: label 'modeset_lock_fail'=
- used but not defined
->   411 |  DRM_MODESET_LOCK_ALL_BEGIN(fb->dev, ctx, DRM_MODESET_ACQUIRE_INT=
-ERRUPTIBLE, ret);
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> In file included from include/drm/drm_crtc.h:36,
->                  from include/drm/drm_atomic.h:31,
->                  from drivers/gpu/drm/qxl/qxl_display.c:29:
-> include/drm/drm_modeset_lock.h:170:1: warning: label 'modeset_lock_retry'=
- defined but not used [-Wunused-label]
->   170 | modeset_lock_retry:       \
->       | ^~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/qxl/qxl_display.c:411:2: note: in expansion of macro 'DRM=
-_MODESET_LOCK_ALL_BEGIN'
->   411 |  DRM_MODESET_LOCK_ALL_BEGIN(fb->dev, ctx, DRM_MODESET_ACQUIRE_INT=
-ERRUPTIBLE, ret);
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~
->=20
-> Caused by commit
->=20
->   bbaac1354cc9 ("drm/qxl: Replace deprecated function in qxl_display")
->=20
-> interacting with commit
->=20
->   77ef38574beb ("drm/modeset-lock: Take the modeset BKL for legacy driver=
-s")
->=20
-> from the drm-misc-fixes tree.
->=20
-> drivers/gpu/drm/qxl/qxl_display.c manages to include
-> drm/drm_modeset_lock.h by some indirect route, but fails to have
-> drm/drm_drv.h similarly included.  In fact, drm/drm_modeset_lock.h should
-> have included drm/drm_drv.h since it uses things declared there, and
-> drivers/gpu/drm/qxl/qxl_display.c should include drm/drm_modeset_lock.h
-> similarly.
->=20
-> I have added the following hack patch for today.
->=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Wed, 26 Aug 2020 10:40:18 +1000
-> Subject: [PATCH] fix interaction with drm-misc-fix commit
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  drivers/gpu/drm/qxl/qxl_display.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/qxl/qxl_display.c b/drivers/gpu/drm/qxl/qxl_=
-display.c
-> index fa79688013b7..6063f3a15329 100644
-> --- a/drivers/gpu/drm/qxl/qxl_display.c
-> +++ b/drivers/gpu/drm/qxl/qxl_display.c
-> @@ -26,6 +26,7 @@
->  #include <linux/crc32.h>
->  #include <linux/delay.h>
-> =20
-> +#include <drm/drm_drv.h>
->  #include <drm/drm_atomic.h>
->  #include <drm/drm_atomic_helper.h>
->  #include <drm/drm_gem_framebuffer_helper.h>
-> @@ -186,7 +187,7 @@ void qxl_display_read_client_monitors_config(struct q=
-xl_device *qdev)
-> =20
->  	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, DRM_MODESET_ACQUIRE_INTERRUPTIBLE,=
- ret);
->  	qxl_update_offset_props(qdev);
-> -	DRM_MODESET_LOCK_ALL_END(ctx, ret);
-> +	DRM_MODESET_LOCK_ALL_END(dev, ctx, ret);
->  	if (!drm_helper_hpd_irq_event(dev)) {
->  		/* notify that the monitor configuration changed, to
->  		   adjust at the arbitrary resolution */
-> @@ -431,7 +432,7 @@ static int qxl_framebuffer_surface_dirty(struct drm_f=
-ramebuffer *fb,
->  			  clips, num_clips, inc, 0);
-> =20
->  out_lock_end:
-> -	DRM_MODESET_LOCK_ALL_END(ctx, ret);
-> +	DRM_MODESET_LOCK_ALL_END(fb->dev, ctx, ret);
-> =20
->  	return 0;
->  }
-> --=20
-> 2.28.0
+> Updated as:
+>
+> static int sgx_validate_secs(const struct sgx_secs *secs)
+> {
+> 	u64 max_size = (secs->attributes & SGX_ATTR_MODE64BIT) ?
+> 		       sgx_encl_size_max_64 : sgx_encl_size_max_32;
+>
+> 	if (secs->size < (2 * PAGE_SIZE) || !is_power_of_2(secs->size))
+> 		return -EINVAL;
+>
+> 	if (secs->base & (secs->size - 1))
+> 		return -EINVAL;
+>
+> 	if (secs->miscselect & sgx_misc_reserved_mask ||
+> 	    secs->attributes & sgx_attributes_reserved_mask ||
+> 	    secs->xfrm & sgx_xfrm_reserved_mask)
+> 		return -EINVAL;
+>
+> 	if (secs->size >= max_size)
+> 		return -EINVAL;
+>
 
-This is now a build failure in the drm tree merg.  I have added the
-above hack to the merge of the drm tree today.
+This should be > not >=. Issue raised and fixed by Fábio Silva for ported  
+patches for OOT SGX support:  
+https://github.com/intel/SGXDataCenterAttestationPrimitives/pull/123
 
---=20
-Cheers,
-Stephen Rothwell
+I tested and verified with Intel arch, the comparison indeed should be >.
 
---Sig_/YizQk8yowqeEyhmG.EVW9OP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9PDDAACgkQAVBC80lX
-0GwWdQgAoEm/nwWRUBzrY04JBxZ/dU6Tyuaalu0tAfgNKW5ve0o+yoPr/wVNxDM5
-hX94A3NBEErFIfrm2DSXLWhGmbO4MTYqxJVxFE9ZffZgiabFuQNpQXTVNYApFsuU
-4Wo+7W02qcSFNP4wUEOpa45kHiBgdfbMhkc6nA7kepgDx6n1BWuwEhuv9gBhrnfu
-hov8SK949yEdeWfkdLFkSv0LTsBVWjTHqMJT/qLBM/JCJooX2wIFcL2TMcKIO3qE
-3lrUnoC0LIQsfLDXnhF8uaZvg3dwTRmc3YARO/iaCJGo0RIFIXVdH8JayAg9Dhk2
-ei7kweWMeYAB9xeho1VqxUQC1vf3NQ==
-=qzdE
------END PGP SIGNATURE-----
-
---Sig_/YizQk8yowqeEyhmG.EVW9OP--
+Thanks
+Haitao
