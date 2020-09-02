@@ -2,120 +2,169 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D686EC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9620C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0A3B207D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB91420767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:30:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TWTumlPN"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="MnyrJeZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgIBOaE (ORCPT
+        id S1728241AbgIBO36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:30:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38226 "EHLO
+        Wed, 2 Sep 2020 10:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgIBONl (ORCPT
+        with ESMTP id S1727927AbgIBO1W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:13:41 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A309CC06123A;
-        Wed,  2 Sep 2020 07:13:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=W0vMWQBgGgqKGkq/ZVvGLbZ6CKd/5CcgKMoWsNAi6yg=; b=TWTumlPNV4nH9eq9Gh3f9FViES
-        NHZN4Kw0CBEJcMigOFlTCbzR0F3B9cWB7TOXmhqdDxF4ugy73ZhKFiyIEob+QRxXBR0JJkh+kRsw9
-        pQfOYUviYjY8awuiNG60FSvJsm40o9YcRQ1+2gDZoNRQTX7IdbO6aYgBZCVHrJhvOVCmiPm5a6LYA
-        1wilHTzH7Bto1mDL9p3+6WpMuAtjGzmphMtPuAUDMGsLxWneMs6q105TQImWgpz0LkD883tarnxmt
-        Z38EGbo/Ek76sNa+l2Ex5XW7stVNMobUNC+X2bQXeADo0S94487fA58oTziynqUjGfEKnijlA1Ifu
-        8ALFS/kA==;
-Received: from [2001:4bb8:184:af1:6a63:7fdb:a80e:3b0b] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDTVD-0005gC-Mk; Wed, 02 Sep 2020 14:12:43 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 17/19] sr: use bdev_check_media_change
-Date:   Wed,  2 Sep 2020 16:12:16 +0200
-Message-Id: <20200902141218.212614-18-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200902141218.212614-1-hch@lst.de>
-References: <20200902141218.212614-1-hch@lst.de>
+        Wed, 2 Sep 2020 10:27:22 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5669FC061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 07:27:22 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id ba12so5139711edb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 07:27:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6OOrr3ankKVwxGGNXToxy8jZJ4HxhbpceY6NaN50tLo=;
+        b=MnyrJeZWxNanxx+EeVE/LB7iSafmhLfk8zHRAK7voOONuaQFQEp8FWuNryGn4WlrvK
+         YiaPAiGMbL43ABgId2yZdBMutBWeYG80LAvLktNAUeReCRCAZKhDQWdZkH1TmA9HM64N
+         97zfvWaoPMpVrPbgWPW1wqg0HWi1CpGicWQ3wAt15K5BXPdJSkrWz8XKHqA6CzYunlJJ
+         Ku9rD8Q0Iw5rjGvtQN99M3OpzxqqRu/OB1JoIRpo8DeZHDJ+oSIz3AjII/VHvkAxOYtx
+         6GwaI7NjueIhnz9V2rhOZmvj6CETY7E8dvX0Gzl7zMZbpyVd2hEnFU55UESMBey8sU0O
+         dHtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6OOrr3ankKVwxGGNXToxy8jZJ4HxhbpceY6NaN50tLo=;
+        b=uXWeYotZ3DPGLnA9eQFCjuHbGiclLGFyO34CMVokelj0Y5paaNzdpBeK+f9LQrkIpq
+         FxuxxLKeQLPB80AnSkppXtsHA88dvjGUL8E2d6mRVDp9o+zkJY0mw7eqwRDad/r4Lduc
+         9uE6QeQEwrxHWF8YJvRq/YFLV1QPkBO+Ug8a7EVO1QwIW6X6g+1SwDHulQgwaNY5R5uo
+         rkeW178cwylEC54Lk5rhmARD/kHTverBxqlc7+naZaGq9sE6FkRrigH0cHxZVmbHerIx
+         F33Tr9UqUfs9IOtsH/vm9vCi/5j6KlmCKbbj97sMw6AjuCO1Y5JkWuTC6p6mMklNRzwV
+         OCYA==
+X-Gm-Message-State: AOAM530nG7ug/khQCIF0sf4WOQ168fmwC3/RwhUpRDSmvEbCxnHuMPce
+        4LLXrJxYD5WDrFO3EmQNK9M9ewtbLlEMYey1xEApkQ==
+X-Google-Smtp-Source: ABdhPJzNVkeIY5bugg1hnssT2HP/1orWqIA4ATC5qddKjKxgYam+9CmN4LlIuehn0Ap7B63fkyLj5KnhXd2jZIkpPrM=
+X-Received: by 2002:a05:6402:1d0f:: with SMTP id dg15mr352913edb.342.1599056840905;
+ Wed, 02 Sep 2020 07:27:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200901124615.137200-1-pasha.tatashin@soleen.com> <20200902140851.GJ4617@dhcp22.suse.cz>
+In-Reply-To: <20200902140851.GJ4617@dhcp22.suse.cz>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Wed, 2 Sep 2020 10:26:44 -0400
+Message-ID: <CA+CK2bBZdN56fmsC2jyY_ju8rQfG2-9hForf1CEdcUVL1+wrrA@mail.gmail.com>
+Subject: Re: [PATCH] mm/memory_hotplug: drain per-cpu pages again during
+ memory offline
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch to use bdev_check_media_change instead of check_disk_change and
-call sr_block_revalidate_disk manually.  Also add an explicit call to
-sr_block_revalidate_disk just before disk_add() to ensure we always
-read check for a ready unit and read the TOC and then stop wiring up
-->revalidate_disk.
+On Wed, Sep 2, 2020 at 10:08 AM Michal Hocko <mhocko@suse.com> wrote:
+>
+> On Tue 01-09-20 08:46:15, Pavel Tatashin wrote:
+> > There is a race during page offline that can lead to infinite loop:
+> > a page never ends up on a buddy list and __offline_pages() keeps
+> > retrying infinitely or until a termination signal is received.
+> >
+> > Thread#1 - a new process:
+> >
+> > load_elf_binary
+> >  begin_new_exec
+> >   exec_mmap
+> >    mmput
+> >     exit_mmap
+> >      tlb_finish_mmu
+> >       tlb_flush_mmu
+> >        release_pages
+> >         free_unref_page_list
+> >          free_unref_page_prepare
+> >           set_pcppage_migratetype(page, migratetype);
+> >              // Set page->index migration type below  MIGRATE_PCPTYPES
+> >
+> > Thread#2 - hot-removes memory
+> > __offline_pages
+> >   start_isolate_page_range
+> >     set_migratetype_isolate
+> >       set_pageblock_migratetype(page, MIGRATE_ISOLATE);
+> >         Set migration type to MIGRATE_ISOLATE-> set
+> >         drain_all_pages(zone);
+> >              // drain per-cpu page lists to buddy allocator.
+>
+> It is not really clear to me how we could have passed
+> has_unmovable_pages at this stage when the page is not PageBuddy. Is
+> this because you are using Movable Zones?
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/scsi/sr.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Yes, we hot-remove memory from the movable zone.
 
-diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-index 3b3a53c6a0de53..34be94b62523fa 100644
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@ -86,6 +86,7 @@ static int sr_remove(struct device *);
- static blk_status_t sr_init_command(struct scsi_cmnd *SCpnt);
- static int sr_done(struct scsi_cmnd *);
- static int sr_runtime_suspend(struct device *dev);
-+static int sr_block_revalidate_disk(struct gendisk *disk);
- 
- static const struct dev_pm_ops sr_pm_ops = {
- 	.runtime_suspend	= sr_runtime_suspend,
-@@ -529,7 +530,8 @@ static int sr_block_open(struct block_device *bdev, fmode_t mode)
- 
- 	sdev = cd->device;
- 	scsi_autopm_get_device(sdev);
--	check_disk_change(bdev);
-+	if (bdev_check_media_change(bdev))
-+		sr_block_revalidate_disk(bdev->bd_disk);
- 
- 	mutex_lock(&cd->lock);
- 	ret = cdrom_open(&cd->cdi, bdev, mode);
-@@ -688,7 +690,6 @@ static const struct block_device_operations sr_bdops =
- 	.compat_ioctl	= sr_block_compat_ioctl,
- #endif
- 	.check_events	= sr_block_check_events,
--	.revalidate_disk = sr_block_revalidate_disk,
- };
- 
- static int sr_open(struct cdrom_device_info *cdi, int purpose)
-@@ -802,6 +803,7 @@ static int sr_probe(struct device *dev)
- 
- 	dev_set_drvdata(dev, cd);
- 	disk->flags |= GENHD_FL_REMOVABLE;
-+	sr_block_revalidate_disk(disk);
- 	device_add_disk(&sdev->sdev_gendev, disk, NULL);
- 
- 	sdev_printk(KERN_DEBUG, sdev,
--- 
-2.28.0
+>
+> >
+> > Thread#1 - continue
+> >          free_unref_page_commit
+> >            migratetype = get_pcppage_migratetype(page);
+> >               // get old migration type
+> >            list_add(&page->lru, &pcp->lists[migratetype]);
+> >               // add new page to already drained pcp list
+> >
+> > Thread#2
+> > Never drains pcp again, and therefore gets stuck in the loop.
+> >
+> > The fix is to try to drain per-cpu lists again after
+> > check_pages_isolated_cb() fails.
+>
+> But this means that the page is not isolated and so it could be reused
+> for something else. No?
 
+The page is in a movable zone, has zero references, and the section is
+isolated (i.e. set_pageblock_migratetype(page, MIGRATE_ISOLATE);) is
+set. The page should be offlinable, but it is lost in a pcp list as
+that list is never drained again after the first failure to migrate
+all pages in the range.
+
+>
+> > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> > Cc: stable@vger.kernel.org
+> > ---
+> >  mm/memory_hotplug.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> > index e9d5ab5d3ca0..d6d54922bfce 100644
+> > --- a/mm/memory_hotplug.c
+> > +++ b/mm/memory_hotplug.c
+> > @@ -1575,6 +1575,15 @@ static int __ref __offline_pages(unsigned long start_pfn,
+> >               /* check again */
+> >               ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
+> >                                           NULL, check_pages_isolated_cb);
+> > +             /*
+> > +              * per-cpu pages are drained in start_isolate_page_range, but if
+> > +              * there are still pages that are not free, make sure that we
+> > +              * drain again, because when we isolated range we might
+> > +              * have raced with another thread that was adding pages to
+> > +              * pcp list.
+> > +              */
+> > +             if (ret)
+> > +                     drain_all_pages(zone);
+> >       } while (ret);
+> >
+> >       /* Ok, all of our target is isolated.
+> > --
+> > 2.25.1
+> >
+>
+> --
+> Michal Hocko
+> SUSE Labs
