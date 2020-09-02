@@ -2,126 +2,182 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DFAC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA635C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B448E20758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:31:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NFSvDO0r"
+	by mail.kernel.org (Postfix) with ESMTP id 99EEF20758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgIBQbG (ORCPT
+        id S1728041AbgIBQbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:31:06 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:60901 "EHLO m43-7.mailgun.net"
+        Wed, 2 Sep 2020 12:31:38 -0400
+Received: from mga14.intel.com ([192.55.52.115]:63503 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726380AbgIBQbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:31:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1599064264; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=v7KI2IOZSWqzeky+H8zIluMlkBlqx7++lCpZiGls5wk=; b=NFSvDO0rVMaLtNYPXB/hGJvddvRfKu6/SRITZwGcD0jBQp/oZMr2y2Etdo2s4sDK0z6AzvpK
- z5zTw3mNxbENxBctBDHir1qJ8qLIR96UWwX4SaQDnrMEfcgHTRrW9nCo97LbJuvWMcXj50+N
- GLaVYGsNmApv+d8sOxUpTSAO+uU=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f4fc8b673afa3417ee89ed7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 02 Sep 2020 16:30:46
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E445AC433C9; Wed,  2 Sep 2020 16:30:45 +0000 (UTC)
-Received: from [192.168.1.38] (unknown [59.99.0.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: deesin)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC518C433C6;
-        Wed,  2 Sep 2020 16:30:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC518C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=deesin@codeaurora.org
-Subject: Re: [PATCH V5 0/4] Signaling api support in glink/rpmsg clients
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     bjorn.andersson@linaro.org, clew@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1593182819-30747-1-git-send-email-deesin@codeaurora.org>
- <20200706180437.GB614737@xps15>
-From:   Deepak Kumar Singh <deesin@codeaurora.org>
-Message-ID: <5ce032b8-6b26-d0a7-f92d-f8487d810f0c@codeaurora.org>
-Date:   Wed, 2 Sep 2020 22:00:33 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726247AbgIBQbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:31:36 -0400
+IronPort-SDR: qYXaaLftrUZI2NfJT6GyCR8UK7pHF4hSiHgcNqGuyVha73YbKuUK5I2IqIxK2Vze/A4S5TNEzx
+ F6eCSomTF9Ig==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="156690331"
+X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
+   d="scan'208";a="156690331"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 09:31:31 -0700
+IronPort-SDR: oKo8s8s3uyIVvMOH0uxsebFxZ0LHUmVVq7s/nKCpDe1twQxZV3ZWWyK0neQTHr3LAP+OCrvEdN
+ 9DaLdvTzMhew==
+X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
+   d="scan'208";a="297727627"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 09:31:27 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 1E8192071B; Wed,  2 Sep 2020 19:31:22 +0300 (EEST)
+Date:   Wed, 2 Sep 2020 19:31:22 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v7 6/6] Documentation: ACPI: Document
+ allow-low-power-probe _DSD property
+Message-ID: <20200902163121.GE32646@paasikivi.fi.intel.com>
+References: <20200901210333.8462-1-sakari.ailus@linux.intel.com>
+ <20200901210333.8462-7-sakari.ailus@linux.intel.com>
+ <CAJZ5v0jFceTFRTD55cz3ZHRZpuNRK_z9=_DxWexc8ArsGU3cog@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200706180437.GB614737@xps15>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0jFceTFRTD55cz3ZHRZpuNRK_z9=_DxWexc8ArsGU3cog@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Rafael,
 
-On 7/6/2020 11:34 PM, Mathieu Poirier wrote:
-> Hi Deepak,
->
-> On Fri, Jun 26, 2020 at 08:16:55PM +0530, Deepak Kumar Singh wrote:
->> Change from version 5
->> [V5,4/4] rpmsg: char: Add signal callback and POLLPRI support
->> Updated for sparse warning. Replaced POLLPRI => EPOLLPRI to fix
->> warning.
->>
->> Change from version 4
->> I am taking over these patches from aneela@codeaurora.org
->> Fixed all the trivial review comments.
->>
->> Signal conversion to and from native signal as done in patch V4,2/4
->> is intentional.
->>
->> Arun Kumar Neelakantam (3):
->>    rpmsg: glink: Add support to handle signals command
->>    rpmsg: char: Add TIOCMGET/TIOCMSET ioctl support
->>    rpmsg: char: Add signal callback and POLLPRI support
->>
->> Deepak Kumar Singh (1):
->>    rpmsg: core: Add signal API support
-> I'm confused here - V5 (or what I think it is) was sent out on June 24th without
-> a cover letter.  This set has a cover letter but it is labeled V5.  So is this
-> the cover letter that should have been sent out on the 24th and the content
-> herein relevent to that set?  Or is it accurate and the label on the cover
-> letter of this set is wrong and should have been V6?
->
-> I have little confidence in both sets and as such won't be reviewing them.
-> Please send a new revision that is properly labeled.
->
-> Thanks,
-> Mathieu
->
-Mistakenly i forgot to update label for cover letter to V6.
+Thank you for the review.
 
-I have uploaded patch set V7 with updated cover letter.
+On Wed, Sep 02, 2020 at 05:57:01PM +0200, Rafael J. Wysocki wrote:
+> On Tue, Sep 1, 2020 at 11:03 PM Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
+> >
+> > Document the probe-low-power _DSD property and how it is used with I²C
+> > drivers.
+> 
+> I would reorder the series to make this go right after the [1/6] or
+> maybe even fold it into that patch.
+> 
+> The point is that the changes in [1/6] clearly depend on the property
+> defined here.
 
-There is no change in patches.
+Ack.
 
->>   drivers/rpmsg/qcom_glink_native.c | 125 ++++++++++++++++++++++++++++++++++++++
->>   drivers/rpmsg/rpmsg_char.c        |  76 ++++++++++++++++++++++-
->>   drivers/rpmsg/rpmsg_core.c        |  40 ++++++++++++
->>   drivers/rpmsg/rpmsg_internal.h    |   5 ++
->>   include/linux/rpmsg.h             |  27 ++++++++
->>   5 files changed, 270 insertions(+), 3 deletions(-)
->>
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
+> 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  .../acpi/dsd/allow-low-power-probe.rst        | 28 +++++++++++++++++++
+> >  Documentation/firmware-guide/acpi/index.rst   |  1 +
+> >  2 files changed, 29 insertions(+)
+> >  create mode 100644 Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst
+> >
+> > diff --git a/Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst b/Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst
+> > new file mode 100644
+> > index 0000000000000..6fcc89162b898
+> > --- /dev/null
+> > +++ b/Documentation/firmware-guide/acpi/dsd/allow-low-power-probe.rst
+> > @@ -0,0 +1,28 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +======================================
+> > +Probing I²C devices in low power state
+> > +======================================
+> > +
+> > +Introduction
+> > +============
+> > +
+> > +In some cases it may be preferred to leave certain devices powered off for the
+> > +entire system bootup if powering on these devices has adverse side effects,
+> > +beyond just powering on the said device. Linux recognizes the _DSD property
+> > +"allow-low-power-probe" that can be used for this purpose.
+> 
+> It would be good to refer to the document defining the generic _DSD
+> properties mechanism and the GUID used for that from here.
+
+I'll add a reference to the device properties UUID for _DSD spec.
+
+> 
+> The meaning of  "_DSD property" may not be entirely clear to the
+> reader as it stands.
+> 
+> And maybe call the property "i2c-allow-low-power-probe" or similar, to
+> indicate that it is specific to i2c.
+
+The bus determines that already, and it's only defined for I²C here. Should
+we need this in the future for e.g. I3C, there would be no need to think of
+renaming it, just changing the documentation and implementation.
+
+I don't have a strong opinion on that though. 
+
+> 
+> > +
+> > +How it works
+> > +============
+> > +
+> > +The property "allow-low-power-probe" boolean property may be used to tell Linux
+> 
+> "boolean device property" ?
+
+Oops. The other "property" was supposed to be removed by now. But yes, I
+agree with the suggestion.
+
+> 
+> > +that the I²C framework should instruct the kernel ACPI framework to leave the
+> > +device in the low power state. If the driver indicates its support for this by
+> > +setting the I2C_DRV_FL_ALLOW_LOW_POWER_PROBE flag in struct i2c_driver.flags
+> > +field and the "allow-low-power-probe" property is present, the device will not
+> > +be powered on for probe.
+> > +
+> > +The downside is that as the device is not powered on, even if there's a problem
+> > +with the device, the driver likely probes just fine but the first user will
+> > +find out the device doesn't work, instead of a failure at probe time. This
+> > +feature should thus be used sparingly.
+> 
+> It would be good to give an ASL example with this property provided.
+
+I'll add that for v8.
+
+> 
+> > diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+> > index ad3b5afdae77e..0070fcde9e669 100644
+> > --- a/Documentation/firmware-guide/acpi/index.rst
+> > +++ b/Documentation/firmware-guide/acpi/index.rst
+> > @@ -11,6 +11,7 @@ ACPI Support
+> >     dsd/graph
+> >     dsd/data-node-references
+> >     dsd/leds
+> > +   dsd/allow-low-power-probe
+> >     enumeration
+> >     osi
+> >     method-customizing
+> > --
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+Kind regards,
 
+Sakari Ailus
