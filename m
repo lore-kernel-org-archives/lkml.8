@@ -2,189 +2,109 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C05AC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF1CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 186DE20758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FC920758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:40:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SAeqizcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgIBGec (ORCPT
+        id S1726406AbgIBGkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 02:34:32 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10790 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726446AbgIBGec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 02:34:32 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D9877D9EE9AF418DA077;
-        Wed,  2 Sep 2020 14:34:28 +0800 (CST)
-Received: from [10.74.191.121] (10.74.191.121) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 2 Sep 2020 14:34:20 +0800
-Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
- enqueue op for lockless qdisc
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-CC:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        "David Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Linux Kernel Network Developers" <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
- <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com>
- <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com>
- <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
-Date:   Wed, 2 Sep 2020 14:34:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Wed, 2 Sep 2020 02:40:22 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:58192 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726144AbgIBGkW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 02:40:22 -0400
+X-UUID: 13d9684db23f408e8e3c481806eabd02-20200902
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=8IuUV5he8cIh84ZEbWw62FnvkLiyHdpDvFusK86GRYY=;
+        b=SAeqizcr1H4YJbaVLfk3xuKLqPkRfpNgI1aCyPe3UqPbiGRv3fC5EQrwSo8L8LX4vpLjDZBSODyfaPEBAoWTxo4SXQ95yYAnQznmkSPRXPfwnYgDwW9mhI4Pjvc+3YBkiTWwxN0NFV0vvMdXry+lvFlcgp7DH5aXkc0Nw9xhn8o=;
+X-UUID: 13d9684db23f408e8e3c481806eabd02-20200902
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1720327968; Wed, 02 Sep 2020 14:40:14 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 2 Sep 2020 14:40:12 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 2 Sep 2020 14:40:12 +0800
+Message-ID: <1599028813.32069.1.camel@mtkswgap22>
+Subject: Re: [PATCH v7] Add MediaTek MT6779 devapc driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Neal Liu <neal.liu@mediatek.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Wed, 2 Sep 2020 14:40:13 +0800
+In-Reply-To: <1598497593-15781-1-git-send-email-neal.liu@mediatek.com>
+References: <1598497593-15781-1-git-send-email-neal.liu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/9/2 12:41, Cong Wang wrote:
-> On Tue, Sep 1, 2020 at 6:42 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>
->> On 2020/9/2 2:24, Cong Wang wrote:
->>> On Mon, Aug 31, 2020 at 5:59 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>>>
->>>> Currently there is concurrent reset and enqueue operation for the
->>>> same lockless qdisc when there is no lock to synchronize the
->>>> q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
->>>> qdisc_deactivate() called by dev_deactivate_queue(), which may cause
->>>> out-of-bounds access for priv->ring[] in hns3 driver if user has
->>>> requested a smaller queue num when __dev_xmit_skb() still enqueue a
->>>> skb with a larger queue_mapping after the corresponding qdisc is
->>>> reset, and call hns3_nic_net_xmit() with that skb later.
->>>
->>> Can you be more specific here? Which call path requests a smaller
->>> tx queue num? If you mean netif_set_real_num_tx_queues(), clearly
->>> we already have a synchronize_net() there.
->>
->> When the netdevice is in active state, the synchronize_net() seems to
->> do the correct work, as below:
->>
->> CPU 0:                                       CPU1:
->> __dev_queue_xmit()                       netif_set_real_num_tx_queues()
->> rcu_read_lock_bh();
->> netdev_core_pick_tx(dev, skb, sb_dev);
->>         .
->>         .                               dev->real_num_tx_queues = txq;
->>         .                                       .
->>         .                                       .
->>         .                               synchronize_net();
->>         .                                       .
->> q->enqueue()                                    .
->>         .                                       .
->> rcu_read_unlock_bh()                            .
->>                                         qdisc_reset_all_tx_gt
->>
->>
-> 
-> Right.
-> 
-> 
->> but dev->real_num_tx_queues is not RCU-protected, maybe that is a problem
->> too.
->>
->> The problem we hit is as below:
->> In hns3_set_channels(), hns3_reset_notify(h, HNAE3_DOWN_CLIENT) is called
->> to deactive the netdevice when user requested a smaller queue num, and
->> txq->qdisc is already changed to noop_qdisc when calling
->> netif_set_real_num_tx_queues(), so the synchronize_net() in the function
->> netif_set_real_num_tx_queues() does not help here.
-> 
-> How could qdisc still be running after deactivating the device?
+SGkgUm9iLCBNYXR0aGlhcywgQ2h1bi1LdWFuZywNCg0KR2VudGxlIHBpbmcgZm9yIHRoaXMgcGF0
+Y2ggc2V0Lg0KVGhhbmtzDQoNCi1OZWFsDQoNCk9uIFRodSwgMjAyMC0wOC0yNyBhdCAxMTowNiAr
+MDgwMCwgTmVhbCBMaXUgd3JvdGU6DQo+IFRoZXNlIHBhdGNoIHNlcmllcyBpbnRyb2R1Y2UgYSBN
+ZWRpYVRlayBNVDY3NzkgZGV2YXBjIGRyaXZlci4NCj4gDQo+IE1lZGlhVGVrIGJ1cyBmYWJyaWMg
+cHJvdmlkZXMgVHJ1c3Rab25lIHNlY3VyaXR5IHN1cHBvcnQgYW5kIGRhdGEgcHJvdGVjdGlvbiB0
+byBwcmV2ZW50IHNsYXZlcyBmcm9tIGJlaW5nIGFjY2Vzc2VkIGJ5IHVuZXhwZWN0ZWQgbWFzdGVy
+cy4NCj4gVGhlIHNlY3VyaXR5IHZpb2xhdGlvbiBpcyBsb2dnZWQgYW5kIHNlbnQgdG8gdGhlIHBy
+b2Nlc3NvciBmb3IgZnVydGhlciBhbmFseXNpcyBvciBjb3VudGVybWVhc3VyZXMuDQo+IA0KPiBB
+bnkgb2NjdXJyZW5jZSBvZiBzZWN1cml0eSB2aW9sYXRpb24gd291bGQgcmFpc2UgYW4gaW50ZXJy
+dXB0LCBhbmQgaXQgd2lsbCBiZSBoYW5kbGVkIGJ5IG10ay1kZXZhcGMgZHJpdmVyLg0KPiBUaGUg
+dmlvbGF0aW9uIGluZm9ybWF0aW9uIGlzIHByaW50ZWQgaW4gb3JkZXIgdG8gZmluZCB0aGUgbXVy
+ZGVyZXIuDQo+IA0KPiBjaGFuZ2VzIHNpbmNlIHY2Og0KPiAtIHJlbW92ZSB1bm5lY2Vzc2FyeSBt
+YXNrL3VubWFzayBtb2R1bGUgaXJxIGR1cmluZyBJU1IuDQo+IA0KPiBjaGFuZ2VzIHNpbmNlIHY1
+Og0KPiAtIHJlbW92ZSByZWR1bmRhbnQgd3JpdGUgcmVnIG9wZXJhdGlvbi4NCj4gLSB1c2Ugc3Rh
+dGljIHZhcmlhYmxlIG9mIHZpb19kYmdzIGluc3RlYWQuDQo+IC0gYWRkIHN0b3BfZGV2YXBjKCkg
+aWYgZHJpdmVyIGlzIHJlbW92ZWQuDQo+IA0KPiBjaGFuZ2VzIHNpbmNlIHY0Og0KPiAtIHJlZmFj
+dG9yIGRhdGEgc3RydWN0dXJlLg0KPiAtIG1lcmdlIHR3byBzaW1wbGUgZnVuY3Rpb25zIGludG8g
+b25lLg0KPiAtIHJlZmFjdG9yIHJlZ2lzdGVyIHNldHRpbmcgdG8gcHJldmVudCB0b28gbWFueSBm
+dW5jdGlvbiBjYWxsIG92ZXJoZWFkLg0KPiANCj4gY2hhbmdlcyBzaW5jZSB2MzoNCj4gLSByZXZp
+c2UgdmlvbGF0aW9uIGhhbmRsaW5nIGZsb3cgdG8gbWFrZSBpdCBtb3JlIGVhc2lseSB0byB1bmRl
+cnN0YW5kDQo+ICAgaGFyZHdhcmUgYmVoYXZpb3IuDQo+IC0gYWRkIG1vcmUgY29tbWVudHMgdG8g
+dW5kZXJzdGFuZCBob3cgaGFyZHdhcmUgd29ya3MuDQo+IA0KPiBjaGFuZ2VzIHNpbmNlIHYyOg0K
+PiAtIHBhc3MgcGxhdGZvcm0gaW5mbyB0aHJvdWdoIERUIGRhdGEuDQo+IC0gcmVtb3ZlIHVubmVj
+ZXNzYXJ5IGZ1bmN0aW9uLg0KPiAtIHJlbW92ZSBzbGF2ZV90eXBlIGJlY2F1c2UgaXQgYWx3YXlz
+IGVxdWFscyB0byAxIGluIGN1cnJlbnQgc3VwcG9ydCBTb0MuDQo+IC0gdXNlIHZpb19pZHhfbnVt
+IGluc3RyZWFkIG9mIGxpc3QgYWxsIGRldmljZXMnIGluZGV4Lg0KPiAtIGFkZCBtb3JlIGNvbW1l
+bnRzIHRvIGRlc2NyaWJlIGhhcmR3YXJlIGJlaGF2aW9yLg0KPiANCj4gY2hhbmdlcyBzaW5jZSB2
+MToNCj4gLSBtb3ZlIFNvQyBzcGVjaWZpYyBwYXJ0IHRvIERUIGRhdGEuDQo+IC0gcmVtb3ZlIHVu
+bmVjZXNzYXJ5IGJvdW5kYXJ5IGNoZWNrLg0KPiAtIHJlbW92ZSB1bm5lY2Vzc2FyeSBkYXRhIHR5
+cGUgZGVjbGFyYXRpb24uDQo+IC0gdXNlIHJlYWRfcG9sbF90aW1lb3V0KCkgaW5zdHJlYWQgb2Yg
+Zm9yIGxvb3AgcG9sbGluZy4NCj4gLSByZXZpc2UgY29kaW5nIHN0eWxlIGVsZWdhbnRseS4NCj4g
+DQo+IA0KPiAqKiogQkxVUkIgSEVSRSAqKioNCj4gDQo+IE5lYWwgTGl1ICgyKToNCj4gICBkdC1i
+aW5kaW5nczogZGV2YXBjOiBhZGQgYmluZGluZ3MgZm9yIG10ay1kZXZhcGMNCj4gICBzb2M6IG1l
+ZGlhdGVrOiBhZGQgbXQ2Nzc5IGRldmFwYyBkcml2ZXINCj4gDQo+ICAuLi4vYmluZGluZ3Mvc29j
+L21lZGlhdGVrL2RldmFwYy55YW1sICAgICAgICAgfCAgNTggKysrKw0KPiAgZHJpdmVycy9zb2Mv
+bWVkaWF0ZWsvS2NvbmZpZyAgICAgICAgICAgICAgICAgIHwgICA5ICsNCj4gIGRyaXZlcnMvc29j
+L21lZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL3Nv
+Yy9tZWRpYXRlay9tdGstZGV2YXBjLmMgICAgICAgICAgICAgfCAzMDUgKysrKysrKysrKysrKysr
+KysrDQo+ICA0IGZpbGVzIGNoYW5nZWQsIDM3MyBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9k
+ZXZhcGMueWFtbA0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvc29jL21lZGlhdGVrL210
+ay1kZXZhcGMuYw0KPiANCg0K
 
-qdisc could be running during the device deactivating process.
-
-The main process of changing channel number is as below:
-
-1. dev_deactivate()
-2. hns3 handware related setup
-3. netif_set_real_num_tx_queues()
-4. netif_tx_wake_all_queues()
-5. dev_activate()
-
-During step 1, qdisc could be running while qdisc is resetting, so
-there could be skb left in the old qdisc(which will be restored back to
-txq->qdisc during dev_activate()), as below:
-
-CPU 0:                                       CPU1:
-__dev_queue_xmit():                      dev_deactivate_many():
-rcu_read_lock_bh();                      qdisc_deactivate(qdisc);
-q = rcu_dereference_bh(txq->qdisc);		.
-netdev_core_pick_tx(dev, skb, sb_dev);		.
-	.
-	.				rcu_assign_pointer(dev_queue->qdisc, qdisc_default);
-	.					.
-	.				    	.
-        .                               	.
-	.					.
-q->enqueue()					.
-	.					.
-rcu_read_unlock_bh()				.
-
-And During step 3, txq->qdisc is pointing to noop_qdisc, so the qdisc_reset()
-only reset the noop_qdisc, but not the actual qdisc, which is stored in
-txq->qdisc_sleeping, so the actual qdisc may still have skb.
-
-When hns3_link_status_change() call step 4 and 5, it will restore all queue's
-qdisc using txq->qdisc_sleeping and schedule all queue with net_tx_action().
-The skb enqueued in step 1 may be dequeued and run, which cause the problem.
-
-> 
-> 
->>
->>>
->>>>
->>>> Avoid the above concurrent op by calling synchronize_rcu_tasks()
->>>> after assigning new qdisc to dev_queue->qdisc and before calling
->>>> qdisc_deactivate() to make sure skb with larger queue_mapping
->>>> enqueued to old qdisc will always be reset when qdisc_deactivate()
->>>> is called.
->>>
->>> Like Eric said, it is not nice to call such a blocking function when
->>> we have a large number of TX queues. Possibly we just need to
->>> add a synchronize_net() as in netif_set_real_num_tx_queues(),
->>> if it is missing.
->>
->> As above, the synchronize_net() in netif_set_real_num_tx_queues() seems
->> to work when netdevice is in active state, but does not work when in
->> deactive.
-> 
-> Please explain why deactivated device still has qdisc running?
-> 
-> At least before commit 379349e9bc3b4, we always test deactivate
-> bit before enqueueing. Are you complaining about that commit?
-> That commit is indeed suspicious, at least it does not precisely revert
-> commit ba27b4cdaaa66561aaedb21 as it claims.
-
-I am not familiar with TCQ_F_CAN_BYPASS.
-From my understanding, the problem is that there is no order between
-qdisc enqueuing and qdisc reset.
-
-
-> 
-> 
->>
->> And we do not want skb left in the old qdisc when netdevice is deactived,
->> right?
-> 
-> Yes, and more importantly, qdisc should not be running after deactivation.
-> 
-> Thanks.
-> .
-> 
