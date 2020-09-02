@@ -2,165 +2,183 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D40C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9020BC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 839A1206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5E920758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:45:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d/0Oj2wd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pWeCaUwg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgIBFlf (ORCPT
+        id S1726386AbgIBFpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 01:41:35 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:54604 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgIBFlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 01:41:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1599025291; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Z9Z0H5TEgsdJR/eXSC6huP92wNBsGld/Kkg8DDcyq/g=; b=d/0Oj2wdTJ6rJkzYWzZW9L0lddtiE0LWY3aVTi8NfUhXoUX04dmkPzli1ZBdzYU9BY0YyrZu
- rCU1WmgS6gicaolsVHWUtgNWDcVlpsMxuPVPgBbk2wPgapjMCYegbvCQQy/NxM0+Zufe+fAs
- alqMNxsm1w+ieU7pU8vm+2iR40w=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f4f307954e87432bef0b842 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 02 Sep 2020 05:41:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C768BC433C6; Wed,  2 Sep 2020 05:41:12 +0000 (UTC)
-Received: from [192.168.1.16] (unknown [61.1.229.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 038DAC433C9;
-        Wed,  2 Sep 2020 05:41:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 038DAC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add 'sustainable_power' for CPU
- thermal zones
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Doug Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-References: <20200813113030.1.I89c33c4119eaffb986b1e8c1bc6f0e30267089cd@changeid>
- <20200901170745.GA3419728@google.com>
- <CAD=FV=Xv0FLtWWcQcRy7p2LPNdDtSjdarsvNHRHaLkWwABnwJw@mail.gmail.com>
- <20200901213319.GB3419728@google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <0ec01666-a3b6-1204-60a9-20e1107db81c@codeaurora.org>
-Date:   Wed, 2 Sep 2020 11:11:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Wed, 2 Sep 2020 01:45:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgIBFpG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 01:45:06 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 822C3C061245
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 22:45:06 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id s127so946959vkg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 22:45:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3/Xek+aHJ1oV+/IRX9g/TNwyAOedPvUNfL3S5dPG/BE=;
+        b=pWeCaUwgspRSRjIOPFTl5saGeyVvo3wFZ0lHctrmXK6LaY0E5sEejX7ovnxDXDsAsl
+         2SmtwFX3FjfXTE0RsrywFV/i+81sJaHckdo5q4pAJQsMv8hRN7bPT/Fq82lDs9OT15vH
+         PPWQAzABxPUbrfIMoZRS3Eqa818CJZtty8JUGgNW4rJgMGGM0O4nSPJUX2zoQq9F5Z5M
+         i/OopyoZOJyJA8RO851+DAjrU3LFc/Ien0GwQjZnf4qbCLC+wrkzIK9EmXLnNuIR5fbN
+         iX3/j4fid7C4r0gHGrhVrvdC+AnI08XWRJpOWuSUyAlVKl3etSjUJZ3SSAwMAIkqc/Ar
+         isUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3/Xek+aHJ1oV+/IRX9g/TNwyAOedPvUNfL3S5dPG/BE=;
+        b=Wp2SGSUjEzmk94ORu7UbBegMM8toaaXOHtOF3xkKACH7ymUlNwrkr5HZW/DP9w2WO3
+         y6ipWYfSZYOQFWBk0vHkuiz1peIY9cNfuUFSu/FxEnDeTf0h7OTCgsekKgy104bnvvP6
+         YtsRcDuA6xCc0Wyc+JnUaRjy6Ic68P0Syf6sgeC2U+hOrB0DDkSw3Nfxw7B4drCJhMh8
+         yTXdidulM1/ic9GrjI0HcbqqWRWnRT9CHLq34Ig71S+4gziOlajMILyf1rCG3SrDdaRg
+         TdAOyU52df8rR/PbDiIp3ulBdHHXMWJ8ffGbMW7h7Ar7uvadiArNQ+IWLYEI8ofbEH/f
+         Iipg==
+X-Gm-Message-State: AOAM532fqyFN0MAJH9I14YTwJD8uNl5Ylff2ab7XsDCjaW+QMvAXr8z8
+        nDLd8xNgZpL8xIrJzf04rIC9eFqZZ0CIlwPzo4CiFw==
+X-Google-Smtp-Source: ABdhPJz35iMbbKWurAIhsbjOySH/ZZUKjNUocr7QXr2PmB7sPue60+rLanIr6NVsFJm+azlokdwEBEQL+Ep20bsc1Kg=
+X-Received: by 2002:ac5:c8b9:: with SMTP id o25mr4183591vkl.51.1599025505408;
+ Tue, 01 Sep 2020 22:45:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200901213319.GB3419728@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200901151000.800754757@linuxfoundation.org>
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 2 Sep 2020 11:14:54 +0530
+Message-ID: <CA+G9fYt+NW7w_NSmqhgQYEmWR_Yo0XDGj1skSoCSqUeLfDPu_A@mail.gmail.com>
+Subject: Re: [PATCH 5.8 000/255] 5.8.6-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 1 Sep 2020 at 21:06, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.8.6 release.
+> There are 255 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 03 Sep 2020 15:09:01 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.8.6-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.8.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
->> I'm not massively familiar with this area of the code, but I guess I
->> shouldn't let that stop me from having an opinion!  :-P
->>
->> * I would agree that it seems highly unlikely that someone would put
->> one of these chips in a device that could only dissipate the heat from
->> the lowest OPP, so having some higher estimate definitely makes sense.
->>
->> * In terms of the numbers here, I believe that you're claiming that we
->> can dissipate 768 mW * 6 + 1202 mW * 2 = ~7 Watts of power.
-> 
-> No, I'm claiming it's 768 mW + 1202 mW = ~2 W.
-> 
-> SC7180 has a 6 thermal zones for the 6 little cores and 4 zones for the
-> 2 big cores. Each of these thermal zones uses either all little or all big
-> cores as cooling devices, hence the power sustainable power of the
-> individual zones doesn't add up. 768 mW corresponds to 6x 128 mW (aka all
-> little cores at 1.8 GHz), and 1202 mW to 2x 601 mW (both big cores at 1.9 GHz).
-> 
->> My memory
->> of how much power we could dissipate in previous laptops I worked on
->> is a little fuzzy, but that doesn't seem insane for a passively-cooled
->> laptop.  However, I think someone could conceivably put this chip in a
->> smaller form factor.  In such a case, it seems like we'd want these
->> things to sum up to ~2000 (if it would ever make sense for someone to
->> put this chip in a phone) or ~4000 (if it would ever make sense for
->> someone to put this chip in a small tablet).
-> 
-> See above, the sustainable power with this patch only adds up to ~2000.
-> It is possible though that it would be lower in a smaller form factor
-> device.
-> 
-> I'd be ok with posting something lower for SC7180 (it would be a guess
-> though) and use the specific numbers in the device specific DT.
-> 
->> It seems possible that,
->> to achieve this, we might have to tweak the
->> "dynamic-power-coefficient".  I don't know how much thought was put
->> into those numbers, but the fact that the little cores have a super
->> round 100 for their dynamic-power-coefficient makes me feel like they
->> might have been more schwags than anything.  Rajendra maybe knows?
-> 
-> Yeah, it's possible that that was just an approximation
+While running LTP CVE test suite on i386 this BUG triggered
+after the known warning. Please find below full test log link [1].
+This was reported on the mailing list on next-20200811 but
+did not get any reply [2].
 
-No, these are based on actual power measurements.
+[  138.177043] ------------[ cut here ]------------
+[  138.181675] WARNING: CPU: 1 PID: 8301 at mm/mremap.c:230
+move_page_tables+0x6ef/0x720
+[  138.189515] Modules linked in: x86_pkg_temp_thermal
+[  138.194436] CPU: 1 PID: 8301 Comm: true Not tainted 5.8.6-rc1 #1
+[  138.194437] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.2 05/23/2018
+[  138.194439] EIP: move_page_tables+0x6ef/0x720
 
-> 
->> * I'm curious about the fact that there are two numbers here: one for
->> littles and one for bigs.  If I had to guess I'd say that since all
->> the cores are in one package so the contributions kinda need to be
->> thought of together, right?  If we're sitting there thermally
->> throttled then we'd want to pick the best perf-per-watt for the
->> overall package.  This is why your patch says we can sustain the
->> little cores at max and the big cores get whatever is left over,
->> right?
-> 
-> It's derived from how Qualcomm specified the thermal zones and cooling
-> devices. Any ("cpu") zone is either cooled by (all) big cores or by (all)
-> little cores, but not a mix of them. In my tests I also saw that the big
-> cores seemed to have little impact on the little ones. The little cores
-> are at max because even running at max frequency the temperature in the
-> 'little zones' wouldn't come close to the trip point.
-> 
->> * Should we be leaving some room in here for the GPU?  ...or I guess
->> once we list it as a cooling device we'll have to decrease the amount
->> the CPUs can use?
-> 
-> I don't know for sure, but judging from the CPU zones I wouldn't be
-> surprised if the GPU was managed exclusively in the dedicated GPU
-> thermal zones (I guess that's what 'gpuss0-thermal' and 'gpuss1-thermal'
-> are). If that's not the case the values in the CPU zones can be
-> adjusted when specific data is available.
-> 
->> So I guess the tl; dr is:
->>
->> a) We should check "dynamic-power-coefficient" and possibly adjust.
-> 
-> ok, lets see if Rajendra can check if there is room for tweaking.
+<>
 
-I suggest we don't :)
+[  802.156512] BUG: unable to handle page fault for address: fe402000
+[  802.162703] #PF: supervisor write access in kernel mode
+[  802.167927] #PF: error_code(0x0002) - not-present page
+[  802.173064] *pde = 23e61067 *pte = 64b32163
+[  802.177329] Oops: 0002 [#1] SMP
+[  802.180469] CPU: 1 PID: 13118 Comm: cve-2017-17053 Tainted: G
+ W         5.8.6-rc1 #1
+[  802.188811] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.2 05/23/2018
+[  802.196199] EIP: memcpy+0x14/0x30
+[  802.199517] Code: e8 a1 72 c5 ff 0f 31 31 c3 59 58 eb 85 cc cc cc
+cc cc cc cc cc cc 3e 8d 74 26 00 55 89 e5 57 89 c7 56 89 d6 53 89 cb
+c1 e9 02 <f3> a5 89 d9 83 e1 03 74 02 f3 a4 5b 5e 5f 5d c3 8d b4 26 00
+00 00
+[  802.218259] EAX: fe402000 EBX: 00010000 ECX: 00004000 EDX: fb3dd000
+[  802.224518] ESI: fb3dd000 EDI: fe402000 EBP: ea799ddc ESP: ea799dd0
+[  802.230773] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010206
+[  802.237551] CR0: 80050033 CR2: fe402000 CR3: 1eee9000 CR4: 003406d0
+[  802.243809] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+[  802.250065] DR6: fffe0ff0 DR7: 00000400
+[  802.253897] Call Trace:
+[  802.256345]  ldt_dup_context+0x6b/0x90
+[  802.260093]  dup_mm+0x2b3/0x480
+[  802.263230]  copy_process+0x13d6/0x1650
+[  802.267062]  _do_fork+0x7b/0x3b0
+[  802.270284]  ? set_next_entity+0xa9/0x250
+[  802.274290]  __ia32_sys_clone+0x77/0xa0
+[  802.278119]  do_syscall_32_irqs_on+0x3d/0x250
+[  802.282472]  ? do_fast_syscall_32+0x2d/0xc0
+[  802.286656]  ? trace_hardirqs_on+0x30/0xf0
+[  802.290746]  ? trace_hardirqs_off_finish+0x32/0xa0
+[  802.295533]  ? do_SYSENTER_32+0x15/0x20
+[  802.299371]  do_fast_syscall_32+0x49/0xc0
+[  802.303374]  do_SYSENTER_32+0x15/0x20
+[  802.307032]  entry_SYSENTER_32+0x9f/0xf2
+[  802.310956] EIP: 0xb7fbb549
+[  802.313747] Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01
+10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f
+34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
+8d 76
+[  802.332483] EAX: ffffffda EBX: 01200011 ECX: 00000000 EDX: 00000000
+[  802.338742] ESI: 00000000 EDI: b7dbdba8 EBP: b7dbd348 ESP: b7dbd2f0
+[  802.344998] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
+[  802.351776] Modules linked in: algif_hash x86_pkg_temp_thermal
+[  802.357608] CR2: 00000000fe402000
+[  802.360920] ---[ end trace ea48459ba50c2a87 ]---
+[  802.365542] EIP: memcpy+0x14/0x30
+[  802.368858] Code: e8 a1 72 c5 ff 0f 31 31 c3 59 58 eb 85 cc cc cc
+cc cc cc cc cc cc 3e 8d 74 26 00 55 89 e5 57 89 c7 56 89 d6 53 89 cb
+c1 e9 02 <f3> a5 89 d9 83 e1 03 74 02 f3 a4 5b 5e 5f 5d c3 8d b4 26 00
+00 00
+[  802.387593] EAX: fe402000 EBX: 00010000 ECX: 00004000 EDX: fb3dd000
+[  802.393852] ESI: fb3dd000 EDI: fe402000 EBP: ea799ddc ESP: ea799dd0
+[  802.400107] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010206
+[  802.406887] CR0: 80050033 CR2: fe402000 CR3: 1eee9000 CR4: 003406d0
+[  802.413143] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+[  802.419400] DR6: fffe0ff0 DR7: 00000400
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+full test log,
+[1] https://qa-reports.linaro.org/lkft/linux-stable-rc-5.8-oe/build/v5.8.5-256-gad57c5b5e64d/testrun/3148295/suite/linux-log-parser/test/check-kernel-bug-1727425/log
+
+[2] https://lore.kernel.org/linux-mm/CA+G9fYsiNgoh09h0paf1+UTKhPnn490QCoLB2dRFhMT+Cjh9RA@mail.gmail.com/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
