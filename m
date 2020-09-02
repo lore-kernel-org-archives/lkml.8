@@ -2,127 +2,121 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96197C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2933C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0DA20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75FCB20767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="V8U7jhgO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgIBMkH (ORCPT
+        id S1726937AbgIBMn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 08:40:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55092 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbgIBMjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 08:39:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id B4F83B12A;
-        Wed,  2 Sep 2020 12:39:38 +0000 (UTC)
-Date:   Wed, 2 Sep 2020 14:39:36 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: state names: vas: Re: [PATCH next v3 6/8] printk: ringbuffer:
- add finalization/extension support
-Message-ID: <20200902123936.GC9496@alley>
-References: <20200831011058.6286-1-john.ogness@linutronix.de>
- <20200831011058.6286-7-john.ogness@linutronix.de>
- <20200902105250.GA15764@alley>
- <87r1rkctn5.fsf@jogness.linutronix.de>
+        Wed, 2 Sep 2020 08:43:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbgIBMnB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 08:43:01 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC52C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 05:42:51 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id d26so6475948ejr.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 05:42:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SccKNTt3YC7XbTuW2H30Zmdads/idBqIfZTM94c1dTk=;
+        b=V8U7jhgODsB8A//a8e72+JnBkGzNrjWlf+cOescmbiJ3DdRRPUNnX7AH0GN4CKTzGQ
+         +/DnJnNFfFFBJdJNHpWGYydROSt6ust0nCR9krxGx1RYNVxs3B9Vt6pXMrhZ8ezZilSg
+         5iMLITForaLMdJBbuQ8/D4kKbKs5exxbDRNVJo9rsu4teVNsFhLVlefNJLDkf5vnWjK6
+         zCRx5PQacyjnr2low+ElUA4KMRIwH64tKzzsty1u/A5yrzKTSqH1Y5b+yFxgftrNkQrZ
+         nsrBzKgtGopGLoDGEl4qx5f3eYHngO7vqpj+i4F57egPLI66c960+Mpld71TPJl37vP/
+         c1sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SccKNTt3YC7XbTuW2H30Zmdads/idBqIfZTM94c1dTk=;
+        b=oencepJrrcELnjiFuES+/Eoa1HrIalgBgFyJ3+TfOoPMmLVa1RZUJtwPwNGK01Whld
+         RXQMtu6Qy7uvSrDHuQ7UvFqXjwuUJ26CmayBkkj0PlSZJiKGP7vhJFm+b9Bu7rmjG1ZQ
+         QhG193lq5uU+iy6ziLPzWEVeDzm5e/ZE08arQviRT432uSfacp2fBZxuTvmcd7xJnPUV
+         D6HIkNO2wTM1c3HtECobvSk+T+V5TPlKWQMJmgI3wF94XL1ktfJoQ7NxY1xpzhVTnZM3
+         NpRhU3BcsrY+xtdka/hqOKkL1HClqHDdiW/DLeHTOJ5X+O9i82gLrHFC+5VhchuNg+G6
+         J/iQ==
+X-Gm-Message-State: AOAM530O7QiMfmFatn+ebTAyV8DC16uKDDIGfIvMVulz/OsYqULpXOlK
+        tnhTh7UPMaLw09iZlFN7uc+q2hkedd+uD5WqiTXByg==
+X-Google-Smtp-Source: ABdhPJx66UO5GHi9sHXGjEoebE3qu+qT1iXTpFKwiHny0D+6C+OPmtHNdkot7yilBnEj0otgEXsEp/WbFvPk7azEl3E=
+X-Received: by 2002:a17:906:715b:: with SMTP id z27mr2767202ejj.166.1599050569831;
+ Wed, 02 Sep 2020 05:42:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r1rkctn5.fsf@jogness.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <6469324e-afa2-18b4-81fb-9e96466c1bf3@suse.cz> <A8A8D5FE-86C3-40B4-919C-5FF2A134F366@redhat.com>
+In-Reply-To: <A8A8D5FE-86C3-40B4-919C-5FF2A134F366@redhat.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Wed, 2 Sep 2020 08:42:13 -0400
+Message-ID: <CA+CK2bAebg4PALh3_-49MXGJ-FNP3hE98wHZd5uEC-q7wG6Vmg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/28] The new cgroup slab memory controller
+To:     David Hildenbrand <dhildenb@redhat.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-09-02 13:26:14, John Ogness wrote:
-> On 2020-09-02, Petr Mladek <pmladek@suse.com> wrote:
-> >> +static struct prb_desc *desc_reopen_last(struct prb_desc_ring *desc_ring,
-> >> +					 u32 caller_id, unsigned long *id_out)
-> >> +{
-> >> +	unsigned long prev_state_val;
-> >> +	enum desc_state d_state;
-> >> +	struct prb_desc desc;
-> >> +	struct prb_desc *d;
-> >> +	unsigned long id;
-> >> +
-> >> +	id = atomic_long_read(&desc_ring->head_id);
-> >> +
-> >> +	/*
-> >> +	 * To minimize unnecessarily reopening a descriptor, first check the
-> >> +	 * descriptor is in the correct state and has a matching caller ID.
-> >> +	 */
-> >> +	d_state = desc_read(desc_ring, id, &desc);
-> >> +	if (d_state != desc_reserved ||
-> >> +	    !(atomic_long_read(&desc.state_var) & DESC_COMMIT_MASK) ||
+> > Am 02.09.2020 um 11:53 schrieb Vlastimil Babka <vbabka@suse.cz>:
 > >
-> > First, define 5 desc_states, something like:
+> > =EF=BB=BFOn 8/28/20 6:47 PM, Pavel Tatashin wrote:
+> >> There appears to be another problem that is related to the
+> >> cgroup_mutex -> mem_hotplug_lock deadlock described above.
+> >>
+> >> In the original deadlock that I described, the workaround is to
+> >> replace crash dump from piping to Linux traditional save to files
+> >> method. However, after trying this workaround, I still observed
+> >> hardware watchdog resets during machine  shutdown.
+> >>
+> >> The new problem occurs for the following reason: upon shutdown systemd
+> >> calls a service that hot-removes memory, and if hot-removing fails for
 > >
-> > enum desc_state {
-> > 	desc_miss = -1,		/* ID mismatch */
-> > 	desc_modified =	 0x0,	/* reserved, being modified by writer */
-> 
-> I prefer the "desc_reserved" name. It may or may not have be modified yet.
+> > Why is that hotremove even needed if we're shutting down? Are there any
+> > (virtualization?) platforms where it makes some difference over plain
+> > shutdown/restart?
+>
+> If all it=E2=80=98s doing is offlining random memory that sounds unnecess=
+ary and dangerous. Any pointers to this service so we can figure out what i=
+t=E2=80=98s doing and why? (Arch? Hypervisor?)
 
-Yeah, "desc_reserved" sounds better. I probably just wanted to free my
-fantasy from the current code ;-)
+Hi David,
 
+This is how we are using it at Microsoft: there is  a very large
+number of small memory machines (8G each) with low downtime
+requirements (reboot must be under a second). There is also a large
+state ~2G of memory that we need to transfer during reboot, otherwise
+it is very expensive to recreate the state. We have 2G of system
+memory memory reserved as a pmem in the device tree, and use it to
+pass information across reboots. Once the information is not needed we
+hot-add that memory and use it during runtime, before shutdown we
+hot-remove the 2G, save the program state on it, and do the reboot.
 
-> > 	desc_committed = 0x1,	/* committed by writer, could get reopened */
-> > 	desc_finalized = 0x2,	/* committed, could not longer get modified */
-> > 	desc_reusable =	 0x3,	/* free, not yet used by any writer */
-> > };
-> >
-> > Second, only 4 variants of the 3 state bits are currently used.
-> > It means that two bits are enough and they might use exactly
-> > the above names:
-> >
-> > I mean to do something like:
-> >
-> > #define DESC_SV_BITS		(sizeof(unsigned long) * 8)
-> > #define DESC_SV(desc_state)	((unsigned long)desc_state << (DESC_SV_BITS - 2))
-> > #define DESC_ST(state_val)	((unsigned long)state_val >> (DESC_SV_BITS - 2))
-> 
-> This makes sense and will get us back the bit we lost because of
-> finalization.
-
-Yup. Which is good especially on 32-bit architectures.
-
-> I am wondering if VMCOREINFO should include a DESC_FLAGS_MASK so that
-> crash tools could at least successfully iterate the ID's, even if they
-> didn't know what all the flag values mean (in the case that more bits
-> are added later).
-
-Good point. I am just not sure whether they should try read all ids
-or they should refuse reading anything when a new bit is added.
-
-Well, I really hope that we will not need new states anytime soon.
-It would need a really strong reason.
-
-I personally can't think about any use case. pr_cont() was special
-because it was the writer side. All other steps of the printk rework
-are on the reader side.
-
-I believe that we are getting close with all the ring buffer code.
-And I have good feeling about it.
-
-Best Regards,
-Petr
+Pasha
