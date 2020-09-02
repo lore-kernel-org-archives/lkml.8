@@ -2,103 +2,108 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD498C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A833CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73CCC2078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E89207D3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbgIBOHT (ORCPT
+        id S1727951AbgIBOHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:07:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45416 "EHLO mx2.suse.de"
+        Wed, 2 Sep 2020 10:07:35 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:57898 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727906AbgIBNvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:51:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id DCFC3B609;
-        Wed,  2 Sep 2020 13:51:31 +0000 (UTC)
-Date:   Wed, 2 Sep 2020 15:51:30 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v2 00/28] The new cgroup slab memory controller
-Message-ID: <20200902135130.GG4617@dhcp22.suse.cz>
-References: <20200127173453.2089565-1-guro@fb.com>
- <20200130020626.GA21973@in.ibm.com>
- <20200130024135.GA14994@xps.DHCP.thefacebook.com>
- <CA+CK2bCQcnTpzq2wGFa3D50PtKwBoWbDBm56S9y8c+j+pD+KSw@mail.gmail.com>
- <20200813000416.GA1592467@carbon.dhcp.thefacebook.com>
- <CA+CK2bDDToW=Q5RgeWkoN3_rUr3pyWGVb9MraTzM+DM3OZ+tdg@mail.gmail.com>
- <CA+CK2bBEHFuLLg79_h6bv4Vey+B0B2YXyBxTBa=Le12OKbNdwA@mail.gmail.com>
- <6469324e-afa2-18b4-81fb-9e96466c1bf3@suse.cz>
- <20200902112624.GC4617@dhcp22.suse.cz>
- <CA+CK2bA43fZpdDc3WXOaQ_dtmy=wHV7eFQW8k++tbfGwERMrhg@mail.gmail.com>
+        id S1727921AbgIBNvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:51:14 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BhPmw3p97z9txT6;
+        Wed,  2 Sep 2020 15:24:48 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 2rn6LwTKxIyn; Wed,  2 Sep 2020 15:24:48 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BhPmw30TRz9txT5;
+        Wed,  2 Sep 2020 15:24:48 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D0A9A8B7E9;
+        Wed,  2 Sep 2020 15:24:49 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id mWFGbiENwioP; Wed,  2 Sep 2020 15:24:49 +0200 (CEST)
+Received: from [10.25.210.31] (po15451.idsi0.si.c-s.fr [10.25.210.31])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A555F8B7E5;
+        Wed,  2 Sep 2020 15:24:49 +0200 (CEST)
+Subject: Re: [PATCH 10/10] powerpc: remove address space overrides using
+ set_fs()
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Christoph Hellwig' <hch@lst.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200827150030.282762-1-hch@lst.de>
+ <20200827150030.282762-11-hch@lst.de>
+ <8974838a-a0b1-1806-4a3a-e983deda67ca@csgroup.eu>
+ <20200902123646.GA31184@lst.de>
+ <61b9a880a6424a34b841cf3dddb463ad@AcuMS.aculab.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <8de54fe0-4be9-5624-dd1d-d95d792e933d@csgroup.eu>
+Date:   Wed, 2 Sep 2020 15:24:39 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+CK2bA43fZpdDc3WXOaQ_dtmy=wHV7eFQW8k++tbfGwERMrhg@mail.gmail.com>
+In-Reply-To: <61b9a880a6424a34b841cf3dddb463ad@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 02-09-20 08:51:06, Pavel Tatashin wrote:
-> > > > Thread #1: memory hot-remove systemd service
-> > > > Loops indefinitely, because if there is something still to be migrated
-> > > > this loop never terminates. However, this loop can be terminated via
-> > > > signal from systemd after timeout.
-> > > > __offline_pages()
-> > > >       do {
-> > > >           pfn = scan_movable_pages(pfn, end_pfn);
-> > > >                   # Returns 0, meaning there is nothing available to
-> > > >                   # migrate, no page is PageLRU(page)
-> > > >           ...
-> > > >           ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
-> > > >                                             NULL, check_pages_isolated_cb);
-> > > >                   # Returns -EBUSY, meaning there is at least one PFN that
-> > > >                   # still has to be migrated.
-> > > >       } while (ret);
-> >
-> 
-> Hi Micahl,
-> 
-> > This shouldn't really happen. What does prevent from this to proceed?
-> > Did you manage to catch the specific pfn and what is it used for?
-> 
-> I did.
-> 
-> > start_isolate_page_range and scan_movable_pages should fail if there is
-> > any memory that cannot be migrated permanently. This is something that
-> > we should focus on when debugging.
-> 
-> I was hitting this issue:
-> mm/memory_hotplug: drain per-cpu pages again during memory offline
-> https://lore.kernel.org/lkml/20200901124615.137200-1-pasha.tatashin@soleen.com
 
-I have noticed the patch but didn't have time to think it through (have
-been few days off and catching up with emails). Will give it a higher
-priority.
 
--- 
-Michal Hocko
-SUSE Labs
+Le 02/09/2020 à 15:13, David Laight a écrit :
+> From: Christoph Hellwig
+>> Sent: 02 September 2020 13:37
+>>
+>> On Wed, Sep 02, 2020 at 08:15:12AM +0200, Christophe Leroy wrote:
+>>>> -		return 0;
+>>>> -	return (size == 0 || size - 1 <= seg.seg - addr);
+>>>> +	if (addr >= TASK_SIZE_MAX)
+>>>> +		return false;
+>>>> +	if (size == 0)
+>>>> +		return false;
+>>>
+>>> __access_ok() was returning true when size == 0 up to now. Any reason to
+>>> return false now ?
+>>
+>> No, this is accidental and broken.  Can you re-run your benchmark with
+>> this fixed?
+> 
+> Is TASK_SIZE_MASK defined such that you can do:
+> 
+> 	return (addr | size) < TASK_SIZE_MAX) || !size;
+
+TASK_SIZE_MAX will usually be 0xc0000000
+
+With:
+addr = 0x80000000;
+size = 0x80000000;
+
+I expect it to fail ....
+
+With the formula you propose it will succeed, won't it ?
+
+Christophe
