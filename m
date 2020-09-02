@@ -2,154 +2,108 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EB8C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E4BC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 980C120709
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FAC820709
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:12:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="b3MC0sS0";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="T3MF2QhM"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UUWGYckU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgIBFKd (ORCPT
+        id S1726446AbgIBFMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 01:10:33 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:6012 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbgIBFKa (ORCPT
+        Wed, 2 Sep 2020 01:12:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgIBFMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 01:10:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1599023428; x=1630559428;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Mck26RQzN5xmNC5QAv5OOxbey49vtuBE6wweHry4UzA=;
-  b=b3MC0sS0KHIBuY2YX/GCXQ3qXMDQ8W7F0uTTSYz4hv/D3dSlW6c7RsRZ
-   +eaipqnLcxSvmbtVIP0pbBPdq8edS+g6sZ0beZma3TkcTsZGHzk59vn/F
-   5Gyv/PKPKJL+DItwAWVpAAtTTHKCCGLCuaGTCoX4FTSEIKHHWW4464HXI
-   CNYiLdbdwSgbvHJJTtW9Q5kHjhVe7XhEb/VbU94FQXMB6Qq9sRO/5FL/M
-   wQ4xyg+v1FSvCoI/BK9l3C2uoI10EUFA6vev6ieKcyl2KZI+MpBH1zBbh
-   9W8m8ZfHKEiVSgrrjc8JSTH+zApltiHkp3/vhmVd++tH6DubOfqgkga2p
-   Q==;
-IronPort-SDR: iAnFgyusQRUalp/mCk1baiv068tzzPuFo95n0g3b7PCpx724hNwmN6hgIbHxlMOaPTK2sIxhGt
- NdHQt4d3AV7djfPynJ2zTgeqeJz/A7sAtYSz2FB8x00Og15N1KVHOLcnj74mm74NnHwyjPwVDa
- LKYTaQQ+NghIpZ8V8bTIM36mFpnEDjeQoLzt7sgiVf3tfjboKRk/z2M9rq/qmkAhgNhtJkqT1F
- JZamA/XNoY/5ssLOoBWRc1WoTx5gQcA5AUDsD4axHVEUE1LTP9sGy5VwPAhqO3LZTWMozbRPF7
- yzM=
-X-IronPort-AV: E=Sophos;i="5.76,381,1592841600"; 
-   d="scan'208";a="147603230"
-Received: from mail-bn7nam10lp2101.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.101])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Sep 2020 13:10:25 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eyxxyfGhZ1JZHUS/gTd596zGL2M5GT19sSUBEqR3zfQOCnMtId7tnr46TvUjCgbJtGrDXqt7zBo55gi8N6tvRrlJMAx6AZh/qmcLDmkcjpNi/gqhYDbHfPg3Tyjsr960sLtvRY1higEKjQwtYI8ouIVGf+Cgy3tFMtoKQL3xr13khlwnI/oPvchWdghvrLm+z0Jv6WXNg59szsC6jZyRSLwbbSqTn9hIL7Jve5GVt2HFPeAYDcwQPmz9rKmKfpO4RxY/sik+IscLt27MUvNrWQCZq9AtHPAJ6w88lMPzEKEo2VmxKBrhUWFoB8qyGqb9ObcFpRk0ANKWEyFW80mVyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mck26RQzN5xmNC5QAv5OOxbey49vtuBE6wweHry4UzA=;
- b=RvSKBHI5CNZUZflixHF7b8txsCQxfqWMjKV2pg+5VGnSCj0xDHNw8pYeTFHnZ0uCQwO6QYp0xlpipy4zorSeJAOO6jNAYxxNjV7O+IXXQ+W0PAmDNKOamZc4MvDKRJKIAgMuHm+sxGv0r1ibgue5oe17tcitm/n+Zqm/tdcDOLYP8JVnC59aJi76pgsKLPM32GiZer1hssmBnWvkT4I3zvWV5e0130Aus2/wmiuVQb39wN7bPYVkEzojP0v2HYEuz+h0k1hj+o2Wwzed/ETad6YfVTtx/y4pdysnZqa0Qna0x8j3aBdNDEQWDkp0D2DoWBIydX0pGV9b70viXKBzhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mck26RQzN5xmNC5QAv5OOxbey49vtuBE6wweHry4UzA=;
- b=T3MF2QhMQPnOAb1XezFZjJNZXM2v7fsGIpT4aTZkk4LS0gXPGakiq54d31k0Sgkgt00hDP5h7Z0NErY/IzHwKa/PB85FEIP8G5uSisB59Zckqe88A9LvHdv/oVIU9ZREzg9chmcrWskdOfy7s9UP4e73EexhNuOFvaVOb4DLM7w=
-Received: from BY5PR04MB6705.namprd04.prod.outlook.com (2603:10b6:a03:220::8)
- by BYAPR04MB5767.namprd04.prod.outlook.com (2603:10b6:a03:10e::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Wed, 2 Sep
- 2020 05:10:23 +0000
-Received: from BY5PR04MB6705.namprd04.prod.outlook.com
- ([fe80::1083:4093:49fa:a3fd]) by BY5PR04MB6705.namprd04.prod.outlook.com
- ([fe80::1083:4093:49fa:a3fd%2]) with mapi id 15.20.3326.025; Wed, 2 Sep 2020
- 05:10:23 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>
-CC:     "cang@codeaurora.org" <cang@codeaurora.org>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Nitin Rawat <nitirawa@codeaurora.org>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1 1/1] scsi: ufshcd: Allow zero value setting to
- Auto-Hibernate Timer
-Thread-Topic: [PATCH v1 1/1] scsi: ufshcd: Allow zero value setting to
- Auto-Hibernate Timer
-Thread-Index: AQHWfaC3kd0c1Nm+d0KoEDt9jyytd6lOsAkwgAPXxwCAAkrNAA==
-Date:   Wed, 2 Sep 2020 05:10:23 +0000
-Message-ID: <BY5PR04MB67058266FB01737736CFC978FC2F0@BY5PR04MB6705.namprd04.prod.outlook.com>
-References: <b141cfcd7998b8933635828b56fbb64f8ad4d175.1598661071.git.nguyenb@codeaurora.org>
- <BY5PR04MB6705177184FC1A0E5F7710FDFC530@BY5PR04MB6705.namprd04.prod.outlook.com>
- <96e34a8d7d52dfbc47738f04d2a127c2@codeaurora.org>
-In-Reply-To: <96e34a8d7d52dfbc47738f04d2a127c2@codeaurora.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: codeaurora.org; dkim=none (message not signed)
- header.d=none;codeaurora.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [77.138.4.172]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f6914c38-d949-40c0-ea37-08d84efe7f62
-x-ms-traffictypediagnostic: BYAPR04MB5767:
-x-microsoft-antispam-prvs: <BYAPR04MB576755241CA685B9A2FCC905FC2F0@BYAPR04MB5767.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qiOeiQWildYDvFdYx8C1y7tmDkFV4ningbkIWlfOyJXrJ9Vx0oNE5qT/xLKIbMzCebM9rpMCckKC9wayj6BwtByYQqENULbH1ZK2+JTmmySk9R7ugzy4ITDQ0LYRrGCeVm98mZURNKYa/elojJ4+FbRnQvr+b2+HN5Q5tcbhy4sAqXM14dfZBIjjsLpawTLW0Kh2ACv1O3qiueQVA7JvTfUPSOo1Sjp1vUdEs7d22JDgMzeKiSRO+EMwozfF88qOVBD/ngZn02irxMNnWD2dJxD9z/IyYagibhKJLL8fhlGUTZID/RwEKMEG3ws3sWsK
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6705.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(366004)(396003)(376002)(346002)(76116006)(83380400001)(86362001)(4326008)(316002)(2906002)(54906003)(26005)(52536014)(9686003)(186003)(478600001)(53546011)(66946007)(64756008)(55016002)(66476007)(71200400001)(6916009)(66556008)(66446008)(8676002)(5660300002)(7416002)(8936002)(6506007)(33656002)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 1Q7ybvo8JSqdArxVPjyB1fXKh2s/fijEUwO5JMFoi4nUX7d9yY6cPn6OFyvzKuYQiUNDAEgNref9YpS0mLMq87lwF2hS+vQiGQU1mprQz5c23QDU8wqRA4dpVpNV5TygqwNS0/jOw7Pc6O9qVlkl1xOARWx1VChkf1UoSqdS5LtC6gfd0BiQ63gd53YbKRqa0cvO9nUgL/fJScV1Yz1qgMh8P7vThkXfbegmTDaxjblopacjdtOMtwXY/gPig1eZhL3luNEbbfO3zrytMG7mbm+I8Jwjpou1qPU2eFi+y//oxQWaX8DDDXo5QWoZCVDXYGDeeg4F4r0qPBVDOhUWbbJF3p9AsTTS5aRE7HL2Dv748DpePa9PhGXRcPVcFvo2FCean4LtLTV7nLGlt5zriLPh5ml0JyLh981u8thqarc9TpG4SlrXuITnkOdwTxAK6lZF+HXDkB8CcSYqpPIz+C9X0jTGlYC2jXqyqw9EZv0B8F1YFdYcRwPCm720bDAgkbjQuIVNaTqf2J7D4uIzFdUf6/l8MvsxqluNYfh3BV9BM1XVAmAQRzMb9BlWoMw6UwJardIUYTweOcoPenAG2Wf13Heo+Sv2vR8MCsS0SjAYcZOQeIFYYUv5/hKx+RrQ+NDVIXnOpC+4OLBav3AnGA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 2 Sep 2020 01:12:38 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B903DC061244;
+        Tue,  1 Sep 2020 22:12:37 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BhBrz6Kp2z9sV8;
+        Wed,  2 Sep 2020 15:12:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599023556;
+        bh=OVgpZwxPKZezs4JAEifU3gj0ckhtJSxC91J7cHQ4v1w=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UUWGYckU+kitR0kgC1HoK27w+JH3/e8ZUqVUNDveqaeSCa0hTNfwQdsfZkY2+4XQz
+         rhP2836bMdMo3H4N3Jgm8ouf9nguQARZpOQj5D0kAuaLzVnVP+2gkmUvgnLWnMRNc3
+         bmlWWPgailmz4BCqvnTePYlvqXNi4c5Hlf45+05QdxKuq/Ir0BqyLsMvpRvKxJCR1w
+         /RMipEpHL2L6R2BMvCvoHpQZ4sFd44VL7769O5Zd1Ht0EAgKFe9+cAYdWnwPLiGPat
+         LwSN8YUGh/4JsRv5m0CUZAgYFCtKRAZR00QG6HCj2y7rox+ZlDQ74UiRi7GWcHigTI
+         /xv9aBtQ9gd4A==
+Date:   Wed, 2 Sep 2020 15:12:35 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the scsi-mkp tree with Linus' tree
+Message-ID: <20200902151235.49794c8a@canb.auug.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR04MB6705.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6914c38-d949-40c0-ea37-08d84efe7f62
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 05:10:23.7847
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kZfUngvAt0g1xZlMpMLt8aZWEqFYpRSf7d+miJeGix7Ju9cByBZqO+epG/R/dDNKiaYiwLMLlTyGZhud9yFs0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5767
+Content-Type: multipart/signed; boundary="Sig_/xl2_zGKK.=F9mmU41lRmPsK";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IA0KPiANCj4gT24gMjAyMC0wOC0yOSAwMDozMiwgQXZyaSBBbHRtYW4gd3JvdGU6DQo+ID4+DQo+
-ID4+IFRoZSB6ZXJvIHZhbHVlIEF1dG8tSGliZXJuYXRlIFRpbWVyIGlzIGEgdmFsaWQgc2V0dGlu
-ZywgYW5kIGl0DQo+ID4+IGluZGljYXRlcyB0aGUgQXV0by1IaWJlcm5hdGUgZmVhdHVyZSBiZWlu
-ZyBkaXNhYmxlZC4gQ29ycmVjdGx5DQo+ID4gUmlnaHQuIFNvICIgdWZzaGNkX2F1dG9faGliZXJu
-OF9lbmFibGUiIGlzIG5vIGxvbmdlciBhbiBhcHByb3ByaWF0ZQ0KPiA+IG5hbWUuDQo+ID4gTWF5
-YmUgdWZzaGNkX2F1dG9faGliZXJuOF9zZXQgaW5zdGVhZD8NCj4gVGhhbmtzIGZvciB5b3VyIGNv
-bW1lbnQuIEkgYW0gb2sgd2l0aCB0aGUgbmFtZSBjaGFuZ2Ugc3VnZ2VzdGlvbi4NCj4gPg0KPiA+
-IEFsc28sIGRpZCB5b3UgdmVyaWZpZWQgdGhhdCBubyBvdGhlciBwbGF0Zm9ybSByZWxpZXMgb24g
-aXRzIG5vbi16ZXJvDQo+ID4gdmFsdWU/DQo+IEkgb25seSB0ZXN0ZWQgdGhlIGNoYW5nZSBvbiBR
-dWFsY29tbSdzIHBsYXRmb3JtLiBJIGRvIG5vdCBoYXZlIG90aGVyDQo+IHBsYXRmb3JtcyB0byBk
-byB0aGUgdGVzdC4NCj4gVGhlIFVGUyBob3N0IGNvbnRyb2xsZXIgc3BlYyBKRVNEMjIwRSwgU2Vj
-dGlvbiA1LjIuNSBzYXlzDQo+ICJTb2Z0d2FyZSB3cml0ZXMg4oCcMOKAnSB0byBkaXNhYmxlIEF1
-dG8tSGliZXJuYXRlIElkbGUgVGltZXIiLiBTbyB0aGUgc3BlYw0KPiBzdXBwb3J0cyB0aGlzIHpl
-cm8gdmFsdWUuDQo+IFNvbWUgb3B0aW9uczoNCj4gLSBXZSBjb3VsZCBhZGQgYSBoYmEtPmNhcHMg
-c28gdGhhdCB3ZSBvbmx5IGFwcGx5IHRoZSBjaGFuZ2UgZm9yDQo+IFF1YWxjb21tJ3MgcGxhdGZv
-cm1zLg0KPiBUaGlzIGlzIG5vdCBwcmVmZXJyZWQgYmVjYXVzZSBpdCBpcyBmb2xsb3dpbmcgdGhl
-IHNwZWMgaW1wbGVtZW50YXRpb25zLg0KPiAtIE9yIG90aGVyIHBsYXRmb3JtcyB0aGF0IGRvIG5v
-dCBzdXBwb3J0IHRoZSB6ZXJvIHZhbHVlIG5lZWRzIGEgY2Fwcy4NClllYWgsIEkgZG9uJ3QgdGhp
-bmsgYW5vdGhlciBjYXBzIGlzIHJlcXVpcmVkLA0KTWF5YmUganVzdCBhbiBhY2sgZnJvbSBTdGFu
-bGV5Lg0KDQpUaGFua3MsDQpBdnJpDQo=
+--Sig_/xl2_zGKK.=F9mmU41lRmPsK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+Today's linux-next merge of the scsi-mkp tree got a conflict in:
+
+  drivers/scsi/aacraid/aachba.c
+
+between commit:
+
+  df561f6688fe ("treewide: Use fallthrough pseudo-keyword")
+
+from Linus' tree and commit:
+
+  cfd3d2225aa5 ("scsi: aacraid: Remove erroneous fallthrough annotation")
+
+from the scsi-mkp tree.
+
+I fixed it up (I removed the line removed by the latter - it was rewritten
+by the former to "fallthrough;") and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/xl2_zGKK.=F9mmU41lRmPsK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9PKcMACgkQAVBC80lX
+0GzpWQf9GYOr24YfmpdQL8abruYVhTYJGW54jz3DJzz9fN1j3AaLNaFybN7mqWAg
+PSK6de6pmUc2QklsSS39/Ppdz5Q+JWODIMy8mPsBIMbfw2/3bTSVPfILhfNpu6oV
+IHPHAGcwFB/8keBjwu6W1TOaVEOU29TiVIMQ/Y6ohebjVhQ0th7hoip6sDTHdD0n
+rQKHc4gKV2bNpc2w9etWeHRl7uXZE2Ql3LGoe9EqUIQ1n6KbQMQeMEkQsph4gXqH
+VUkxxNtuADAq5cAaYDgWKZHZwxoiIbXAJ/nN8SpXvwQBAZJseptA+lkT3eUjzg2h
+0gySE3OBZgyQuhrP9jb4ip6HkXDV4g==
+=459c
+-----END PGP SIGNATURE-----
+
+--Sig_/xl2_zGKK.=F9mmU41lRmPsK--
