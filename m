@@ -2,94 +2,97 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8564EC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7F8C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD8820773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E372F20826
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgIBPNw (ORCPT
+        id S1728020AbgIBPN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:13:52 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:42217 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727961AbgIBPMk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:12:40 -0400
-Received: (qmail 626110 invoked by uid 1000); 2 Sep 2020 11:12:33 -0400
-Date:   Wed, 2 Sep 2020 11:12:33 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
-Subject: Re: [PATCH 4.19 108/125] USB: yurex: Fix bad gfp argument
-Message-ID: <20200902151233.GC624583@rowland.harvard.edu>
-References: <20200901150934.576210879@linuxfoundation.org>
- <20200901150939.905188730@linuxfoundation.org>
- <20200902125827.GA8817@duo.ucw.cz>
+        Wed, 2 Sep 2020 11:13:59 -0400
+Received: from mga12.intel.com ([192.55.52.136]:48194 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727894AbgIBPNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:13:01 -0400
+IronPort-SDR: 4RFcDI+54DGBArQgUMgTRIZL+ZVSgJkpzJ3Co5jQm5jMMuF6p/GsXSp7Z0GlQdQtJHsi0/A8vW
+ iq/R0lbhroaw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="136919855"
+X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
+   d="scan'208";a="136919855"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 08:12:55 -0700
+IronPort-SDR: yvtPt9TafLz36hZCHsDyQ9gNZ/wB7BqUwZ5VfNnECYGBUpRk1QpdS01s0uI0t/9xuIOHMMgBpd
+ 1HanuGyF3DKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
+   d="scan'208";a="297703764"
+Received: from ishaula-mobl1.ger.corp.intel.com (HELO btopel-mobl.ger.intel.com) ([10.249.39.98])
+  by orsmga003.jf.intel.com with ESMTP; 02 Sep 2020 08:12:51 -0700
+Subject: Re: [PATCH][next] xsk: Fix null check on error return path
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200902150750.GA7257@embeddedor>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
+Message-ID: <7b3d5e02-852e-189b-7c0e-9f9827fca730@intel.com>
+Date:   Wed, 2 Sep 2020 17:12:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902125827.GA8817@duo.ucw.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200902150750.GA7257@embeddedor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 02:58:27PM +0200, Pavel Machek wrote:
-> Hi!
+On 2020-09-02 17:07, Gustavo A. R. Silva wrote:
+> Currently, dma_map is being checked, when the right object identifier
+> to be null-checked is dma_map->dma_pages, instead.
 > 
-> > The syzbot fuzzer identified a bug in the yurex driver: It passes
-> > GFP_KERNEL as a memory-allocation flag to usb_submit_urb() at a time
-> > when its state is TASK_INTERRUPTIBLE, not TASK_RUNNING:
+> Fix this by null-checking dma_map->dma_pages.
 > 
-> Yeah, and instead of fixing the bug, patch papers over it, reducing
-> reliability of the driver in the process.
-> 
-> > This patch changes the call to use GFP_ATOMIC instead of GFP_KERNEL.
-> 
-> Fixing it properly should be as simple as moving prepare_to_wait down,
-> no?
+> Addresses-Coverity-ID: 1496811 ("Logically dead code")
+> Fixes: 921b68692abb ("xsk: Enable sharing of dma mappings")
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Sigh.  That never occurred to me, but of course it is right.
+Nice catch!
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Acked-by: Björn Töpel <bjorn.topel@intel.com>
 
-Alan Stern
-
-> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+> ---
+>   net/xdp/xsk_buff_pool.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/usb/misc/yurex.c b/drivers/usb/misc/yurex.c
-> index 785080f79073..5fbbb57e6e95 100644
-> --- a/drivers/usb/misc/yurex.c
-> +++ b/drivers/usb/misc/yurex.c
-> @@ -489,10 +489,10 @@ static ssize_t yurex_write(struct file *file, const char __user *user_buffer,
->  	}
->  
->  	/* send the data as the control msg */
-> -	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
->  	dev_dbg(&dev->interface->dev, "%s - submit %c\n", __func__,
->  		dev->cntl_buffer[0]);
-> -	retval = usb_submit_urb(dev->cntl_urb, GFP_ATOMIC);
-> +	retval = usb_submit_urb(dev->cntl_urb, GFP_KERNEL);
-> +	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
->  	if (retval >= 0)
->  		timeout = schedule_timeout(YUREX_WRITE_TIMEOUT);
->  	finish_wait(&dev->waitq, &wait);
+> diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c
+> index 795d7c81c0ca..5b00bc5707f2 100644
+> --- a/net/xdp/xsk_buff_pool.c
+> +++ b/net/xdp/xsk_buff_pool.c
+> @@ -287,7 +287,7 @@ static struct xsk_dma_map *xp_create_dma_map(struct device *dev, struct net_devi
+>   		return NULL;
+>   
+>   	dma_map->dma_pages = kvcalloc(nr_pages, sizeof(*dma_map->dma_pages), GFP_KERNEL);
+> -	if (!dma_map) {
+> +	if (!dma_map->dma_pages) {
+>   		kfree(dma_map);
+>   		return NULL;
+>   	}
 > 
-> 
-> Best regards,
-> 									Pavel
-> 
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-
