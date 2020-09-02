@@ -2,126 +2,204 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0937DC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 21:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A45C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 21:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B722120758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 21:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D66FC2100A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 21:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sez8vDAI"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="YdLCm4KW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgIBVLu (ORCPT
+        id S1726858AbgIBVPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 17:11:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIBVLr (ORCPT
+        Wed, 2 Sep 2020 17:15:51 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:40631 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgIBVPu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 17:11:47 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02803C061244;
-        Wed,  2 Sep 2020 14:11:45 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d22so389900pfn.5;
-        Wed, 02 Sep 2020 14:11:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ygs/IE+McqnrSxyHqHFy4fGxAYxycxzoXo7z9MWjpSE=;
-        b=Sez8vDAIPo2dPyGnQS6dBAJTSd0ckApYKvLiT9kh86tRC6TiCt5SJAojVGqMwV2n83
-         6e7NK12P3Q7uJeGKoAS+QiuTjmYQEQ71+Ju10FG173eW/ohTlMCHtolivsvGo32sMTUZ
-         ou9a8HpwbAwXEjagxptwwJE2Ul9gxP9s4xTsBcFRb4G+NeirUs+cyAGW6bKRRsF75+hk
-         e+rHfd6C0f+L7C6bYmwmhm0uEDXgpa82OGhqWYk5Jeb0cXQXXVetmpbofL3lsNx98bbQ
-         vSqMTJqsOQ/ol2leiJwMDpMsorJ7czXI94iwpAVYdDFC5ta2EYWspEd9J4sR4vSEssAS
-         gs7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ygs/IE+McqnrSxyHqHFy4fGxAYxycxzoXo7z9MWjpSE=;
-        b=Tg7kfB3CDd12gaogG2k3/d8cjg9DQLkLwv9/kH84mJ6hr5kU/AwirpXRA+fxFMaP2P
-         b1iEHHckpERYSzyXGqdD4Ir8qm5MtoH2W8cKRMy0yKzeis+0u+h496N2poyT7TciN8mJ
-         KWq07weK8SPmZV1zOj3AR8EYd8LrCE/Of3f4XhcswpgDcccSj15A52Mppj3SNYuBalFz
-         wwUBb58HIJgBxZsthDM1rGb9Uya7s2GdKbGypMJZI2glzUMrBRHLWEf17aeMPz0Ye0fh
-         wKbLferFvvjcQk9JL9rhSKAiPvT/zVow0gdTUFzs9P/4tgNbX5HOse3rB7Q1tu+rB1oJ
-         coMA==
-X-Gm-Message-State: AOAM533yCPcZFyTxsI/9dhIbnbBbTJvpoIXoOpM4lWxVq7Ygg7+h5pSu
-        8/NcjZ4BuEAIM6+iiCpupuo=
-X-Google-Smtp-Source: ABdhPJzwflc8pRYyFM7ZKAJJz2UK59HuPj0IrOAB2Ka2pobxtUpsmQA6rXJrwy/UfT2ubcgeTptjZA==
-X-Received: by 2002:a17:902:b60d:: with SMTP id b13mr331817pls.48.1599081105327;
-        Wed, 02 Sep 2020 14:11:45 -0700 (PDT)
-Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:b49f:31b6:73e2:b3d2])
-        by smtp.gmail.com with ESMTPSA id q71sm337132pja.9.2020.09.02.14.11.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 14:11:44 -0700 (PDT)
-From:   Xie He <xie.he.0141@gmail.com>
-To:     Krzysztof Halasa <khc@pm.waw.pl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>, Martin Schiller <ms@dev.tdt.de>
-Subject: [PATCH net] drivers/net/wan/hdlc_fr: Add needed_headroom for PVC devices
-Date:   Wed,  2 Sep 2020 14:11:41 -0700
-Message-Id: <20200902211141.48712-1-xie.he.0141@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 2 Sep 2020 17:15:50 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id E9EC3806B5;
+        Thu,  3 Sep 2020 09:15:47 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1599081347;
+        bh=q4GGIkhlaHm4FjxDpDQ2kOnfg6glCs3Rp8TegxtnfVc=;
+        h=From:To:Cc:Subject:Date;
+        b=YdLCm4KWILAlaI8gu5XuIk1aHYamrcPPVZHPKFEIq71gibxDMQOUF4y0jHgyJ6vS1
+         RAvVqNUqrHEkdsyYQSTq+Je8faAjVw9i0UKp+6hq4MbTtXS6p6Kpr0yUi+lBgQckWc
+         RbkQIrHe+PnqYzM6urUqVW6GhdPEskdpGtJSrIwA5d20IbyQfohPzu1QBJHIoPPOk+
+         EdplCz6nZXbNjxQVgl4YV6aP2XZyHuv7ae3ec7FUHBbrC7p5bSFoV8nEvxIa6Ekvzs
+         o5zUrhidByNHMo8rks9eOoJImIP5IPAjb/R2WIs7XYzdT7ZlfZYIzHEb8QgUEeMCBN
+         H6GW4TvG6iM4A==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f500b820000>; Thu, 03 Sep 2020 09:15:46 +1200
+Received: from evann-dl.ws.atlnz.lc (evann-dl.ws.atlnz.lc [10.33.23.31])
+        by smtp (Postfix) with ESMTP id C0BFE13EEB7;
+        Thu,  3 Sep 2020 09:15:46 +1200 (NZST)
+Received: by evann-dl.ws.atlnz.lc (Postfix, from userid 1780)
+        id 687C11A4E97; Thu,  3 Sep 2020 09:15:47 +1200 (NZST)
+From:   Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>
+To:     wsa@kernel.org, andriy.shevchenko@linux.intel.com,
+        jarkko.nikula@linux.intel.com, jdelvare@suse.de,
+        chris.packham@alliedtelesis.co.nz
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>
+Subject: [PATCH v3 1/1] i2c: algo-pca: Reapply i2c bus settings after reset
+Date:   Thu,  3 Sep 2020 09:15:32 +1200
+Message-Id: <20200902211532.22684-1-evan.nimmo@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PVC devices are virtual devices in this driver stacked on top of the
-actual HDLC device. They are the devices normal users would use.
-PVC devices have two types: normal PVC devices and Ethernet-emulated
-PVC devices.
+If something goes wrong (such as the SCL being stuck low) then we need
+to reset the PCA chip. The issue with this is that on reset we lose all
+config settings and the chip ends up in a disabled state which results
+in a lock up/high CPU usage. We need to re-apply any configuration that
+had previously been set and re-enable the chip.
 
-When transmitting data with PVC devices, the ndo_start_xmit function
-will prepend a header of 4 or 10 bytes. Currently this driver requests
-this headroom to be reserved for normal PVC devices by setting their
-hard_header_len to 10. However, this does not work when these devices
-are used with AF_PACKET/RAW sockets. Also, this driver does not request
-this headroom for Ethernet-emulated PVC devices (but deals with this
-problem by reallocating the skb when needed, which is not optimal).
+Signed-off-by: Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>
+Reviewed-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This patch replaces hard_header_len with needed_headroom, and set
-needed_headroom for Ethernet-emulated PVC devices, too. This makes
-the driver to request headroom for all PVC devices in all cases.
-
-Cc: Krzysztof Halasa <khc@pm.waw.pl>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
 ---
- drivers/net/wan/hdlc_fr.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+changes in v2:
+- changed lowercase "pca to uppercase "PCA".
+- reworded and reformatted the multiline comment.
+- moved the clock frequency KERN_INFO closer to the call that sets this.
+- moved the i2c_bus_settings struct to the more generic i2c.h and removed
+- the comments indicating this as being for the pca chip.
 
-diff --git a/drivers/net/wan/hdlc_fr.c b/drivers/net/wan/hdlc_fr.c
-index 9acad651ea1f..12b35404cd8e 100644
---- a/drivers/net/wan/hdlc_fr.c
-+++ b/drivers/net/wan/hdlc_fr.c
-@@ -1041,7 +1041,7 @@ static void pvc_setup(struct net_device *dev)
- {
- 	dev->type = ARPHRD_DLCI;
- 	dev->flags = IFF_POINTOPOINT;
--	dev->hard_header_len = 10;
-+	dev->hard_header_len = 0;
- 	dev->addr_len = 2;
- 	netif_keep_dst(dev);
+changes in v3:
+- changed lowercase "cpu" to uppercase "CPU".
+
+ drivers/i2c/algos/i2c-algo-pca.c | 36 +++++++++++++++++++++-----------
+ include/linux/i2c-algo-pca.h     |  1 +
+ include/linux/i2c.h              | 14 +++++++++++++
+ 3 files changed, 39 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/i2c/algos/i2c-algo-pca.c b/drivers/i2c/algos/i2c-alg=
+o-pca.c
+index 710fbef9a9c2..8b98b737b499 100644
+--- a/drivers/i2c/algos/i2c-algo-pca.c
++++ b/drivers/i2c/algos/i2c-algo-pca.c
+@@ -41,8 +41,22 @@ static void pca_reset(struct i2c_algo_pca_data *adap)
+ 		pca_outw(adap, I2C_PCA_INDPTR, I2C_PCA_IPRESET);
+ 		pca_outw(adap, I2C_PCA_IND, 0xA5);
+ 		pca_outw(adap, I2C_PCA_IND, 0x5A);
++
++		/*
++		 * After a reset we need to re-apply any configuration
++		 * (calculated in pca_init) to get the bus in a working state.
++		 */
++		pca_outw(adap, I2C_PCA_INDPTR, I2C_PCA_IMODE);
++		pca_outw(adap, I2C_PCA_IND, adap->bus_settings.mode);
++		pca_outw(adap, I2C_PCA_INDPTR, I2C_PCA_ISCLL);
++		pca_outw(adap, I2C_PCA_IND, adap->bus_settings.tlow);
++		pca_outw(adap, I2C_PCA_INDPTR, I2C_PCA_ISCLH);
++		pca_outw(adap, I2C_PCA_IND, adap->bus_settings.thi);
++
++		pca_set_con(adap, I2C_PCA_CON_ENSIO);
+ 	} else {
+ 		adap->reset_chip(adap->data);
++		pca_set_con(adap, I2C_PCA_CON_ENSIO | adap->bus_settings.clock_freq);
+ 	}
  }
-@@ -1093,6 +1093,7 @@ static int fr_add_pvc(struct net_device *frad, unsigned int dlci, int type)
- 	dev->mtu = HDLC_MAX_MTU;
- 	dev->min_mtu = 68;
- 	dev->max_mtu = HDLC_MAX_MTU;
-+	dev->needed_headroom = 10;
- 	dev->priv_flags |= IFF_NO_QUEUE;
- 	dev->ml_priv = pvc;
- 
--- 
-2.25.1
+=20
+@@ -423,13 +437,15 @@ static int pca_init(struct i2c_adapter *adap)
+ 				" Use the nominal frequency.\n", adap->name);
+ 		}
+=20
+-		pca_reset(pca_data);
+-
+ 		clock =3D pca_clock(pca_data);
++
+ 		printk(KERN_INFO "%s: Clock frequency is %dkHz\n",
+ 		     adap->name, freqs[clock]);
+=20
+-		pca_set_con(pca_data, I2C_PCA_CON_ENSIO | clock);
++		/* Store settings as these will be needed when the PCA chip is reset *=
+/
++		pca_data->bus_settings.clock_freq =3D clock;
++
++		pca_reset(pca_data);
+ 	} else {
+ 		int clock;
+ 		int mode;
+@@ -496,19 +512,15 @@ static int pca_init(struct i2c_adapter *adap)
+ 			thi =3D tlow * min_thi / min_tlow;
+ 		}
+=20
++		/* Store settings as these will be needed when the PCA chip is reset *=
+/
++		pca_data->bus_settings.mode =3D mode;
++		pca_data->bus_settings.tlow =3D tlow;
++		pca_data->bus_settings.thi =3D thi;
++
+ 		pca_reset(pca_data);
+=20
+ 		printk(KERN_INFO
+ 		     "%s: Clock frequency is %dHz\n", adap->name, clock * 100);
+-
+-		pca_outw(pca_data, I2C_PCA_INDPTR, I2C_PCA_IMODE);
+-		pca_outw(pca_data, I2C_PCA_IND, mode);
+-		pca_outw(pca_data, I2C_PCA_INDPTR, I2C_PCA_ISCLL);
+-		pca_outw(pca_data, I2C_PCA_IND, tlow);
+-		pca_outw(pca_data, I2C_PCA_INDPTR, I2C_PCA_ISCLH);
+-		pca_outw(pca_data, I2C_PCA_IND, thi);
+-
+-		pca_set_con(pca_data, I2C_PCA_CON_ENSIO);
+ 	}
+ 	udelay(500); /* 500 us for oscillator to stabilise */
+=20
+diff --git a/include/linux/i2c-algo-pca.h b/include/linux/i2c-algo-pca.h
+index d03071732db4..97d1f4cd8e56 100644
+--- a/include/linux/i2c-algo-pca.h
++++ b/include/linux/i2c-algo-pca.h
+@@ -64,6 +64,7 @@ struct i2c_algo_pca_data {
+ 	 * For PCA9665, use the frequency you want here. */
+ 	unsigned int			i2c_clock;
+ 	unsigned int			chip;
++	struct i2c_bus_settings		bus_settings;
+ };
+=20
+ int i2c_pca_add_bus(struct i2c_adapter *);
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index fc55ea41d323..8c5138fbe532 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -724,6 +724,20 @@ struct i2c_adapter {
+ };
+ #define to_i2c_adapter(d) container_of(d, struct i2c_adapter, dev)
+=20
++/**
++ * struct i2c_bus_settings - The configured i2c bus settings
++ * @mode: Configured i2c bus mode
++ * @tlow: Configured SCL LOW period
++ * @thi: Configured SCL HIGH period
++ * @clock_freq: The configured clock frequency
++ */
++struct i2c_bus_settings {
++	int mode;
++	int tlow;
++	int thi;
++	int clock_freq;
++};
++
+ static inline void *i2c_get_adapdata(const struct i2c_adapter *adap)
+ {
+ 	return dev_get_drvdata(&adap->dev);
+--=20
+2.27.0
 
