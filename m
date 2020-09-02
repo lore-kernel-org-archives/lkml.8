@@ -2,116 +2,86 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB97C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B03C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D322120758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCD4207DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599026830;
-	bh=5+KmkwCh74/cntArpz/UMLM/pddG8ulQKVSpeB3X+RY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XtcARuvNMKqPPGgSAeTKs4Rl9Cf3ukJp2J25bdftD7Ep/bW5gM4VR0i4jimlcdY60
-	 65m6e7UJvLT0nREmGykwPCVv0m5QjdQ+AwbKOnXa/w5fyGZCh3zh72scY1X1jSC7x9
-	 r3rUVFyMSgJCkJxsAOoa+ghmh7TIySpK8M0ncwKA=
+	s=default; t=1599026869;
+	bh=K9hPv0moh+VVqHvEFvjmnIkS0cdhPRY28MtLaDip6uc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kyj76yC0XUQ6eBDDlAdGWfzFBanNURd5NaVRvfVPXuCpArzsHeJtNlaHUUFREJAr6
+	 9eqdLgC/VcVS3u6Gn72zpc7Owg6mxAMHXw5TZ5lzwwz5H3fttwIHIF9nyScTNLQUTr
+	 l532ODoPer1G1BS8OfvZCnoqFgeMFVctzHE4bJXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgIBGHJ (ORCPT
+        id S1726559AbgIBGHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 02:07:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34400 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 02:07:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgIBGHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 02:07:07 -0400
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726140AbgIBGHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 02:07:47 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6830220758;
-        Wed,  2 Sep 2020 06:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B3AC20758;
+        Wed,  2 Sep 2020 06:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599026826;
-        bh=5+KmkwCh74/cntArpz/UMLM/pddG8ulQKVSpeB3X+RY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cTkF1377EKFMiKH243aPvnk5sDiPB+mAJ8UbjY3H3CxHW3ub6AhJm8zB6sjCeyjos
-         0Zb34r3LG95586+asqAax7/k2wV4jNsfLjOB7nVyJnDD7czJn3t7iganE4hOlIZPud
-         bwrsx4majAT2w7kFdtUeFxc30f6s6TlOONSSdwLw=
-Received: by mail-lj1-f181.google.com with SMTP id a15so4432606ljk.2;
-        Tue, 01 Sep 2020 23:07:06 -0700 (PDT)
-X-Gm-Message-State: AOAM531wo4BTlz2HG9icZPboh263vixMIECn1BCzuBJqVPF+HveKr8CU
-        +IkexbLSoJ7mbsIoPypTK4b3saCDZC/Xafb8sVQ=
-X-Google-Smtp-Source: ABdhPJyE5jGOrYyZE6ORaRQIp51/fhLfZD64Ax0jpOVcS4L2G+U2YIU+6jbqUjHlXVyGhP2izG2P3ekqYZd5wXuophY=
-X-Received: by 2002:a2e:81c2:: with SMTP id s2mr2472465ljg.10.1599026824658;
- Tue, 01 Sep 2020 23:07:04 -0700 (PDT)
+        s=default; t=1599026867;
+        bh=K9hPv0moh+VVqHvEFvjmnIkS0cdhPRY28MtLaDip6uc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XjaV7xCJi8O5HE5ELXkiQTJkKzIjnCuUuT6nVjDKP+Xtrudat9G9ENEyWDZRK7gQI
+         siMyVEgcSler8y2AtSZkR7o9Y3LffwJv6Toac2EQUD7lGvlUc+/XGrHfPNK4bm7ICp
+         xmelw100vL6tp2bxu26Ji31eQreaqXC4hfuqSTcE=
+Date:   Wed, 2 Sep 2020 08:07:44 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [RFC PATCH] USB: misc: Add usb_hub_pwr driver
+Message-ID: <20200902060744.GA142357@kroah.com>
+References: <20200901132005.RFC.1.I7c9a1f1d6ced41dd8310e8a03da666a32364e790@changeid>
 MIME-Version: 1.0
-References: <20200901155748.2884-1-hch@lst.de> <20200901155748.2884-5-hch@lst.de>
-In-Reply-To: <20200901155748.2884-5-hch@lst.de>
-From:   Song Liu <song@kernel.org>
-Date:   Tue, 1 Sep 2020 23:06:52 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5-nfKQK_178R-Y+ps6KLNMrwvWe0Rh5=M1-xvcKHYTgg@mail.gmail.com>
-Message-ID: <CAPhsuW5-nfKQK_178R-Y+ps6KLNMrwvWe0Rh5=M1-xvcKHYTgg@mail.gmail.com>
-Subject: Re: [PATCH 4/9] block: add a new revalidate_disk_size helper
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>,
-        Dan Williams <dan.j.williams@intel.com>, dm-devel@redhat.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, nbd@other.debian.org,
-        ceph-devel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901132005.RFC.1.I7c9a1f1d6ced41dd8310e8a03da666a32364e790@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 9:00 AM Christoph Hellwig <hch@lst.de> wrote:
->
-[...]
+On Tue, Sep 01, 2020 at 01:21:43PM -0700, Matthias Kaehlcke wrote:
+> diff --git a/drivers/usb/misc/Makefile b/drivers/usb/misc/Makefile
+> index da39bddb0604..2bd02388ca62 100644
+> --- a/drivers/usb/misc/Makefile
+> +++ b/drivers/usb/misc/Makefile
+> @@ -31,3 +31,4 @@ obj-$(CONFIG_USB_CHAOSKEY)		+= chaoskey.o
+>  
+>  obj-$(CONFIG_USB_SISUSBVGA)		+= sisusbvga/
+>  obj-$(CONFIG_USB_LINK_LAYER_TEST)	+= lvstest.o
+> +obj-$(CONFIG_USB_HUB_PWR)		+= usb_hub_pwr.o usb_hub_psupply.o
 
->  drivers/md/md-cluster.c       |  6 ++---
->  drivers/md/md-linear.c        |  2 +-
->  drivers/md/md.c               | 10 ++++-----
+Why is this 2 files?  Why can't it just be one?
 
-For md bits:
-Acked-by: Song Liu <song@kernel.org>
+And isn't this much the same thing as many of the other "misc" hub
+controller drivers we have?
 
-[...]
->
-> +/**
-> + * revalidate_disk_size - checks for disk size change and adjusts bdev size.
-> + * @disk: struct gendisk to check
-> + * @verbose: if %true log a message about a size change if there is any
-> + *
-> + * This routine checks to see if the bdev size does not match the disk size
-> + * and adjusts it if it differs. When shrinking the bdev size, its all caches
-> + * are freed.
-> + */
-> +void revalidate_disk_size(struct gendisk *disk, bool verbose)
-> +{
-> +       struct block_device *bdev;
-> +
-> +       /*
-> +        * Hidden disks don't have associated bdev so there's no point in
-> +        * revalidating them.
-> +        */
-> +       if (disk->flags & GENHD_FL_HIDDEN)
-> +               return;
-> +
-> +       bdev = bdget_disk(disk, 0);
-> +       if (bdev) {
-> +               check_disk_size_change(disk, bdev, verbose);
-> +               bdput(bdev);
-> +       }
-> +}
-> +EXPORT_SYMBOL(revalidate_disk_size);
+And to make it easier to review, can you split out the device tree
+descriptions so that the DT maintainers can review that?
 
-Shall we use EXPORT_SYMBOL_GPL() here?
+thanks,
 
-[...]
+greg k-h
