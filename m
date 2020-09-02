@@ -2,78 +2,153 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4039FC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49524C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1045C2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 258D62072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599063117;
+	bh=yHxkHJXmHHTyvyIwik9o+Zn+nYcXFp6fggzlMJQEB0w=;
+	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
+	b=IoSWZixp82OFTg1/ufFuhWSIAB11xKT+6syqPXps1KyrEdW+Og97rCobKxvfuVgby
+	 5soSlOYfy2H2rkYsgB/Cwiki+E4ySXyO2Q/dUNIFeAIC0FKBcKUf2CbFklIC0T5Hkg
+	 OZCIalhLx/PWb/qG2HhlnRPFTzHqB7OYSLAcn6hE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgIBQLt (ORCPT
+        id S1728407AbgIBQL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:11:49 -0400
-Received: from mga02.intel.com ([134.134.136.20]:52905 "EHLO mga02.intel.com"
+        Wed, 2 Sep 2020 12:11:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728393AbgIBQLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:11:23 -0400
-IronPort-SDR: Nkv4QFO2wSh+RmfhOOyPnZMFUasuUocSOyr3wLBie0IH/uP2JrFWo5mk0FjDBkfFdrBYJFrzcT
- F28he9AYzS5g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="145155091"
-X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
-   d="scan'208";a="145155091"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 09:11:21 -0700
-IronPort-SDR: dzq/eTDlVsR7B4yi7O/Ekb/ikEJN30Omp5QxCbDTyG1S8/Nh3R2rw+yhsu9OM9sTn50+n42ubu
- rpZNiETQ/MxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
-   d="scan'208";a="331483741"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 02 Sep 2020 09:11:20 -0700
-Received: from [10.249.227.213] (abudanko-mobl.ccr.corp.intel.com [10.249.227.213])
-        by linux.intel.com (Postfix) with ESMTP id 239AE58041C;
-        Wed,  2 Sep 2020 09:11:16 -0700 (PDT)
-Subject: Re: [PATCH V2 2/6] perf tools: Handle read errors from ctl_fd
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        id S1728164AbgIBQKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:10:52 -0400
+Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA1312137B;
+        Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599063046;
+        bh=yHxkHJXmHHTyvyIwik9o+Zn+nYcXFp6fggzlMJQEB0w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2alxKTRfIVmUUpPCedtGlFXhuDyxf1uwEBLlY7gwRwZx4sF0APleIQv6D5VLfX/zK
+         pTG8GW4JxZPNBkUDj2PmZse9xJklp/hvnjECggpAcCjAnSEsP1tgNZx+NXZ1LAh/FB
+         OBO39kdozwMgLnQEynMss6S/y14oBGm2PHeD7qTc=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kDVLP-000t9n-N0; Wed, 02 Sep 2020 18:10:43 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Antti Palosaari <crope@iki.fi>, linux-media@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20200901093758.32293-1-adrian.hunter@intel.com>
- <20200901093758.32293-3-adrian.hunter@intel.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <3172471f-7343-6efb-e549-ba7d95d7dfb3@linux.intel.com>
-Date:   Wed, 2 Sep 2020 19:11:14 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+Subject: [PATCH 03/38] media: qt1010: fix usage of unititialized value
+Date:   Wed,  2 Sep 2020 18:10:06 +0200
+Message-Id: <b14f07b9c89456001f4d9c1ce7a66d5ebea40fdf.1599062230.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
+References: <cover.1599062230.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200901093758.32293-3-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As pointed by smatch:
 
-On 01.09.2020 12:37, Adrian Hunter wrote:
-> Handle read errors from ctl_fd such as EINTR, EAGAIN and EWOULDBLOCK.
-> 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/perf/util/evlist.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
+	drivers/media/tuners/qt1010.c:239 qt1010_init_meas1() error: uninitialized symbol 'val2'.
+	drivers/media/tuners/qt1010.c:273 qt1010_init_meas2() error: uninitialized symbol 'val'.
 
-Acked-by: Alexei Budankov <alexey.budankov@linux.intel.com>
+The logic is ok, but it is hard for static analyzers
+to parse it, as it depends on a value read in the middle
+of a loop.
 
-Regards,
-Alexei
+Also, it takes a while for humans to verify.
+
+Re-write the first function to use a more direct way.
+
+At the second one, I opted to just initialize the read var,
+in order to shut up the report.
+
+While here, address a few coding style issues at the
+function code.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ drivers/media/tuners/qt1010.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/media/tuners/qt1010.c b/drivers/media/tuners/qt1010.c
+index e48faf942830..3853a3d43d4f 100644
+--- a/drivers/media/tuners/qt1010.c
++++ b/drivers/media/tuners/qt1010.c
+@@ -222,23 +222,24 @@ static int qt1010_init_meas1(struct qt1010_priv *priv,
+ 		{ QT1010_WR, reg, reg_init_val },
+ 		{ QT1010_WR, 0x1e, 0x00 },
+ 		{ QT1010_WR, 0x1e, oper },
+-		{ QT1010_RD, reg, 0xff }
+ 	};
+ 
+ 	for (i = 0; i < ARRAY_SIZE(i2c_data); i++) {
+-		if (i2c_data[i].oper == QT1010_WR) {
+-			err = qt1010_writereg(priv, i2c_data[i].reg,
+-					      i2c_data[i].val);
+-		} else {
+-			err = qt1010_readreg(priv, i2c_data[i].reg, &val2);
+-		}
+-		if (err) return err;
++		err = qt1010_writereg(priv, i2c_data[i].reg,
++				      i2c_data[i].val);
++		if (err)
++			return err;
+ 	}
+ 
++	err = qt1010_readreg(priv, reg, &val2);
++	if (err)
++		return err;
+ 	do {
+ 		val1 = val2;
+ 		err = qt1010_readreg(priv, reg, &val2);
+-		if (err) return err;
++		if (err)
++			return err;
++
+ 		dev_dbg(&priv->i2c->dev, "%s: compare reg:%02x %02x %02x\n",
+ 				__func__, reg, val1, val2);
+ 	} while (val1 != val2);
+@@ -250,7 +251,7 @@ static int qt1010_init_meas1(struct qt1010_priv *priv,
+ static int qt1010_init_meas2(struct qt1010_priv *priv,
+ 			    u8 reg_init_val, u8 *retval)
+ {
+-	u8 i, val;
++	u8 i, val = 0xff;
+ 	int err;
+ 	qt1010_i2c_oper_t i2c_data[] = {
+ 		{ QT1010_WR, 0x07, reg_init_val },
+@@ -261,6 +262,7 @@ static int qt1010_init_meas2(struct qt1010_priv *priv,
+ 		{ QT1010_WR, 0x1e, 0x00 },
+ 		{ QT1010_WR, 0x22, 0xff }
+ 	};
++
+ 	for (i = 0; i < ARRAY_SIZE(i2c_data); i++) {
+ 		if (i2c_data[i].oper == QT1010_WR) {
+ 			err = qt1010_writereg(priv, i2c_data[i].reg,
+@@ -268,7 +270,8 @@ static int qt1010_init_meas2(struct qt1010_priv *priv,
+ 		} else {
+ 			err = qt1010_readreg(priv, i2c_data[i].reg, &val);
+ 		}
+-		if (err) return err;
++		if (err)
++			return err;
+ 	}
+ 	*retval = val;
+ 	return 0;
+-- 
+2.26.2
+
