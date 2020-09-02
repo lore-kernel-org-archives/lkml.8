@@ -2,84 +2,171 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9665CC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2DFC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5C520658
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A342071B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:09:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbgIBKHz (ORCPT
+        id S1726726AbgIBKJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 06:07:55 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:45512 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgIBKHw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 06:07:52 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id E205B1C0B7F; Wed,  2 Sep 2020 12:07:49 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 12:07:48 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 00/61] 4.4.235-rc2 review
-Message-ID: <20200902100748.GB3765@duo.ucw.cz>
-References: <20200902074814.459749499@linuxfoundation.org>
+        Wed, 2 Sep 2020 06:09:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:34874 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726247AbgIBKJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 06:09:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E238D6E;
+        Wed,  2 Sep 2020 03:09:11 -0700 (PDT)
+Received: from [192.168.1.179] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF5313F66F;
+        Wed,  2 Sep 2020 03:09:09 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/5] KVM: arm64: Add pvtime LPT support
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Keqian Zhu <zhukeqian1@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        wanghaibin.wang@huawei.com
+References: <20200817084110.2672-1-zhukeqian1@huawei.com>
+ <8308f52e4c906cad710575724f9e3855@kernel.org>
+ <f14cfd5b-c103-5d56-82fb-59d0371c6f21@arm.com> <87h7svm0o5.wl-maz@kernel.org>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <75ce4c12-f0e3-32c4-604f-9745980022e0@arm.com>
+Date:   Wed, 2 Sep 2020 11:09:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="V0207lvV8h4k8FAm"
-Content-Disposition: inline
-In-Reply-To: <20200902074814.459749499@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87h7svm0o5.wl-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Marc,
 
---V0207lvV8h4k8FAm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry for the slow response, I've been on holiday.
 
-Hi!
+On 22/08/2020 11:31, Marc Zyngier wrote:
+> Hi Steven,
+> 
+> On Wed, 19 Aug 2020 09:54:40 +0100,
+> Steven Price <steven.price@arm.com> wrote:
+>>
+>> On 18/08/2020 15:41, Marc Zyngier wrote:
+>>> On 2020-08-17 09:41, Keqian Zhu wrote:
+[...]
+>>>>
+>>>> Things need concern:
+>>>> 1. https://developer.arm.com/docs/den0057/a needs update.
+>>>
+>>> LPT was explicitly removed from the spec because it doesn't really
+>>> solve the problem, specially for the firmware: EFI knows
+>>> nothing about this, for example. How is it going to work?
+>>> Also, nobody was ever able to explain how this would work for
+>>> nested virt.
+>>>
+>>> ARMv8.4 and ARMv8.6 have the feature set that is required to solve
+>>> this problem without adding more PV to the kernel.
+>>
+>> Hi Marc,
+>>
+>> These are good points, however we do still have the situation that
+>> CPUs that don't have ARMv8.4/8.6 clearly cannot implement this. I
+>> presume the use-case Keqian is looking at predates the necessary
+>> support in the CPU - Keqian if you can provide more details on the
+>> architecture(s) involved that would be helpful.
+> 
+> My take on this is that it is a fictional use case. In my experience,
+> migration happens across *identical* systems, and *any* difference
+> visible to guests will cause things to go wrong. Errata management
+> gets in the way, as usual (name *one* integration that isn't broken
+> one way or another!).
 
-> This is the start of the stable review cycle for the 4.4.235 release.
-> There are 61 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Fri, 04 Sep 2020 07:47:57 +0000.
-> Anything received after that time might be too late.
+Keqian appears to have a use case - but obviously I don't know the 
+details. I guess Keqian needs to convince you of that.
 
-CIP testing did not find any problems.
+> Allowing migration across heterogeneous hosts requires a solution to
+> the errata management problem, which everyone (including me) has
+> decided to ignore so far (and I claim that not having a constant timer
+> frequency exposed to guests is an architecture bug).
 
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/pipelines/1=
-84683545
+I agree - errata management needs to be solved before LPT. Between 
+restricted subsets of hosts this doesn't seem impossible, but I guess we 
+should stall LPT until a credible solution is proposed. I'm certainly 
+not proposing one at the moment.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+>> Nested virt is indeed more of an issue - we did have some ideas around
+>> using SDEI that never made it to the spec.
+> 
+> SDEI? Sigh... Why would SDEI be useful for NV and not for !NV?
 
---V0207lvV8h4k8FAm
-Content-Type: application/pgp-signature; name="signature.asc"
+SDEI provides a way of injecting a synchronous exception on migration - 
+although that certainly isn't the only possible mechanism. For NV we 
+have the problem that a guest-guest may be running at the point of 
+migration. However it's not practical for the host hypervisor to provide 
+the necessary table directly to the guest-guest which means the 
+guest-hypervisor must update the tables before the guest-guest is 
+allowed to run on the new host. The only plausible route I could see for 
+this is injecting a synchronous exception into the guest (per VCPU) to 
+ensure any guest-guests running are exited at migration time.
 
------BEGIN PGP SIGNATURE-----
+!NV is easier because we don't have to worry about multiple levels of 
+para-virtualisation.
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX09u9AAKCRAw5/Bqldv6
-8k8XAKC9SFLASD4DclvwZTPgwQpd5l8YWwCfVpcwWAwQJTE91Secfch5Ph11i/U=
-=srbG
------END PGP SIGNATURE-----
+>> However I would argue that the most pragmatic approach would be to
+>> not support the combination of nested virt and LPT. Hopefully that
+>> can wait until the counter scaling support is available and not
+>> require PV.
+> 
+> And have yet another set of band aids that paper over the fact that we
+> can't get a consistent story on virtualization? No, thank you.
+> 
+> NV is (IMHO) much more important than LPT as it has a chance of
+> getting used. LPT is just another tick box, and the fact that ARM is
+> ready to ignore sideline a decent portion of the architecture is a
+> clear sign that it hasn't been thought out.
 
---V0207lvV8h4k8FAm--
+Different people have different priorities. NV is definitely important 
+for many people. LPT may also be important if you've already got a bunch 
+of VMs running on machines and you want to be able to (gradually) 
+replace them with newer hosts which happen to have a different clock 
+frequency. Those VMs running now clearly aren't using NV.
+
+However, I have to admit it's not me that has the use-case, so I'll 
+leave it for others who might actually know the specifics to explain the 
+details.
+
+>> We are discussing (re-)releasing the spec with the LPT parts added. If
+>> you have fundamental objections then please me know.
+> 
+> I do, see above. I'm stating that the use case doesn't really exist
+> given the state of the available HW and the fragmentation of the
+> architecture, and that ignoring the most important innovation in the
+> virtualization architecture since ARMv7 is at best short-sighted.
+> 
+> Time scaling is just an instance of the errata management problem, and
+> that is the issue that needs solving. Papering over part of the
+> problem is not helping.
+
+I fully agree - errata management is definitely the first step that 
+needs solving. This is why I abandoned LPT originally because I don't 
+have a generic solution and the testing I did involved really ugly hacks 
+just to make the migration possible.
+
+For now I propose we (again) park LPT until some progress has been made 
+on errata management.
+
+Thanks,
+
+Steve
