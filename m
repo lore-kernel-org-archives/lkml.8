@@ -2,72 +2,83 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D321C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF01C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0619020767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F64220767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599060724;
+	bh=1yFSuoH/C7lnmRudCqwmn4PxNv6Wotrb39IdIF3mqF8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MlFX7Folx/DTNy8oR0N+tA/XK6ICr8h2XPAYAhBDL4DdW5JEr+jHZKZaAULigYy0b
+	 DK/uX2nWdEqPvcMXuyNZFaEmObLwfBhtp7jQe1aAMBel4pxVqEELiK9VpHffE6IDzW
+	 n4mysR/RqJzGfFf7GxMne46DnOTxD7xMphIBAfCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgIBPby (ORCPT
+        id S1728291AbgIBPcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:31:54 -0400
-Received: from verein.lst.de ([213.95.11.211]:32841 "EHLO verein.lst.de"
+        Wed, 2 Sep 2020 11:32:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728329AbgIBPbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:31:35 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 4B24C68B05; Wed,  2 Sep 2020 17:31:30 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 17:31:29 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Denis Efremov <efremov@linux.com>,
-        Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
+        id S1726625AbgIBPa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:30:27 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC1CA207D3;
+        Wed,  2 Sep 2020 15:30:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599060627;
+        bh=1yFSuoH/C7lnmRudCqwmn4PxNv6Wotrb39IdIF3mqF8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TAkKjmUb9ADt8b940JXfKW/NzoXeUaE+tXnHyz8gTVCnQnnYi8VhCJhM5wRuLPsx2
+         ATM94eUjJrL5KbjR4uCcpIA/HAIdo6LP49EFLukgREoCjZd/RYIhfPR5fZ1jiMfKcj
+         Hc5NT8QqrG3gkz7q8j7GGRUrLq2ZXVzoHffW3KDs=
+Date:   Wed, 2 Sep 2020 08:30:25 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     Moshe Shemesh <moshe@nvidia.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 05/19] swim: use bdev_check_media_change
-Message-ID: <20200902153129.GA2304@lst.de>
-References: <20200902141218.212614-1-hch@lst.de> <20200902141218.212614-6-hch@lst.de> <SN4PR0401MB359876A023673111737EB7BE9B2F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next RFC v3 01/14] devlink: Add reload action option
+ to devlink reload command
+Message-ID: <20200902083025.43407d8f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200902094627.GB2568@nanopsycho>
+References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
+        <1598801254-27764-2-git-send-email-moshe@mellanox.com>
+        <20200831121501.GD3794@nanopsycho.orion>
+        <9fffbe80-9a2a-33de-2e11-24be34648686@nvidia.com>
+        <20200902094627.GB2568@nanopsycho>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN4PR0401MB359876A023673111737EB7BE9B2F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 03:30:14PM +0000, Johannes Thumshirn wrote:
-> Looks good,
-> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+On Wed, 2 Sep 2020 11:46:27 +0200 Jiri Pirko wrote:
+> >? Do we need such change there too or keep it as is, each action by itself
+> >and return what was performed ?  
 > 
-> > +static int floppy_revalidate(struct gendisk *disk);
-> 
-> Completely unrelated to this series but, this is the 3rd floppy 
-> driver in the series defining it's own floppy_revalidate() and 
-> naming it floppy_revalidate().
-> 
-> This makes grepping and reviewing a pain.
+> Well, I don't know. User asks for X, X should be performed, not Y or Z.
+> So perhaps the return value is not needed.
+> Just driver advertizes it supports X, Y, Z and the users says:
+> 1) do X, driver does X
+> 2) do Y, driver does Y
+> 3) do Z, driver does Z
+> [
+> I think this kindof circles back to the original proposal...
 
-Yes, I noticed it as well.  They also use the floppy_ prefix for
-various other methods.
-
-> 
----end quoted text---
+Why? User does not care if you activate new devlink params when
+activating new firmware. Trust me. So why make the user figure out
+which of all possible reset option they should select? If there is 
+a legitimate use case to limit what is reset - it should be handled
+by a separate negative attribute, like --live which says don't reset
+anything.
