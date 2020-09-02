@@ -2,106 +2,99 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8592C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFD5C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC512078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:49:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="DEE5OKKG"
+	by mail.kernel.org (Postfix) with ESMTP id 2D9E020829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599058187;
+	bh=MiWguh0ZdqjRHfKFH4zgJMvVsPTVbIzzNVlCVTWhG5o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iRcRVoXvi3vYSeeYJRGjZw8PbMe2+aXDYVQUCDXEB5CdML0IzzGmrRZ2o9klt9kY7
+	 +0nfOICJdY7EYXRBufi37PeSK/N+qdEifoqef2e3EHAhMO2f2mJvexH5BXDfhSEYCx
+	 mlvvzR+5mRuQCl0W+sIkEZ3lMKt7fw25OadgBzQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgIBOt3 (ORCPT
+        id S1728019AbgIBOtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:49:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36488 "EHLO
+        Wed, 2 Sep 2020 10:49:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbgIBODD (ORCPT
+        with ESMTP id S1726771AbgIBOtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:03:03 -0400
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB263C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 07:02:51 -0700 (PDT)
-Received: by mail-io1-xd29.google.com with SMTP id h4so5863958ioe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 07:02:51 -0700 (PDT)
+        Wed, 2 Sep 2020 10:49:43 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E6B9C061244;
+        Wed,  2 Sep 2020 07:49:42 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id g3so3668003qtq.10;
+        Wed, 02 Sep 2020 07:49:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ku7e+DesYlsL/c7k5HJw65rc3jrpfmGqzPu51jyJxJY=;
-        b=DEE5OKKGh1r8VHsSbRDOHXyr0EY/JZmo9R9NjqSjJKawRaCP4hU7gd7TYcJP/9YZM7
-         f9ePonEEbp/l91A6T4zFQxTQLDeZxmy0LMYDoRrMahsz8WSo30cFpFYAnwscMWxFdIlp
-         oD8CXLDbgxFmE3UimYbtHYWaCjvm1HLjDP1Jf/oc196Q0dgg3xrDzjQ3BN32QyrfzGEu
-         BAA+ZfhsIf58ZQsISLcJD7bVqjEF28U7NRblbSxZYn9AOlHAjsBMyhDBaU/uxguqX2OT
-         X2fZVbjEQa6505uyiqaXXm9chdV79wx7RHjRntV/V2w1d3oytjJ926JWuLbQ8ZonRWBw
-         7Msg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ErDxBP292qgM2mdm4g7gOIU3Qvf4dij7fK4XJfVrt7I=;
+        b=fDRpDALP3bYgR3k1YEHRw6BXEs5qjmQfmVRQWhHf0hTi/Vh3J7y8xh42UsDaXWxp+Y
+         0/TYBma5AgrIW6tV8iSjbjhBKth62GXZAjXRZk5EpOlXjmR08WpNGkfUY5GnsmB25Ozm
+         goBYJK/tywAzaUqXg6XBV3SodkrPxZttoAfBNu3nJRVDalbCa9CCqbQBQcr2nKfL+4PL
+         KBTbv8tuKuFMr4xLHJWWdhDYSR1c+kWpCn7Frqtkwf8sAduRWDR7R7uSDqrJWoflHvGk
+         BPtNxz8bQwCH7t/Rj9GvDUH5LqbE4ttYa1SkqNoGkWkmH9qtOqKoxmYDmCf7JhIt++tw
+         S0dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ku7e+DesYlsL/c7k5HJw65rc3jrpfmGqzPu51jyJxJY=;
-        b=XXJ0GnCxyLGC3vPY9d+8ByowBU2QEiiJ3V2Lb4fmtB1KREyvE1mHcC6Nf28Q1aNgMa
-         m9urwQjrGwuHDZ+OhZySOSXlCBK8PtW/EJjvS61f/VRdvacY6bK2iPNyFSo8TI5HbHVV
-         BdKKhk6RgxVIZ6uJWkfzltSahZn+3sNrxwdbA84nvuJgWfCw0DNjRa9O6GDb57FBq/3O
-         flA5GO1VorrfntV50ZGiA2af1lxqOshxii0T+0/JvlFLdJyjfeUyDBq/NyurzGQ1HB8c
-         1YZyMtzFdotOKlS4IfTnDOFsn1nBtQtrjjYCnxImQRIQ0YubQjxWrXRp0VObZpySiHCd
-         85XQ==
-X-Gm-Message-State: AOAM5320iFWuUbMzpIJw5GknBKg/pEWwhOVMqqUEMGvVJAT3xY9I9JbE
-        QByKeyizAv4FRWahre1NSxt5QA==
-X-Google-Smtp-Source: ABdhPJxFrZXWesZv0xLmVsuUB1MDZ450c11yMQmgXL3dPEcVh+WgJjGeEIGPOaG+O49/dxLkaoYMdQ==
-X-Received: by 2002:a05:6602:2043:: with SMTP id z3mr3472576iod.93.1599055371125;
-        Wed, 02 Sep 2020 07:02:51 -0700 (PDT)
-Received: from [192.168.1.57] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id s10sm616030ilo.53.2020.09.02.07.02.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 07:02:50 -0700 (PDT)
-Subject: Re: remove revalidate_disk()
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        Dan Williams <dan.j.williams@intel.com>, dm-devel@redhat.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        nbd@other.debian.org, ceph-devel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-raid@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200901155748.2884-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <78d5ab8a-4387-7bfb-6e25-07fd6c1ddc10@kernel.dk>
-Date:   Wed, 2 Sep 2020 08:02:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=ErDxBP292qgM2mdm4g7gOIU3Qvf4dij7fK4XJfVrt7I=;
+        b=Fok1CMT9XjLkKf8PEZ18KF7d1VE7Zz3p4VE8LXLUVTWjACvaX4oakNodw8OiarUjAb
+         VIj931ZPvmdnfYebClBDfhNpF3MTDBEvu53zNXuwQNOJisla5zCiODG4/13mWl10u7lv
+         6/M8Y1d4k0Zr7DYWlh7LPETHzRGdTYU/VOf0l7HrDhn0CLGVKfI+R0H6trRoBKvPr8hA
+         lF37ym8RniA5YCyiuL5M8e0PVTAq3EDJZSibbISvf+426/ZP5UtcjIMDwPwOkXKbLZJ5
+         z+q6iXYgp4LHq3MXgCyW7iYb1AsOp4Z53OMo6/HkH4lPb6nW+6HKM34V4B136Wsh8Nl1
+         Hn9Q==
+X-Gm-Message-State: AOAM530unpogK9j+PE5Rq/SvXq4f12LwO1W05h5dKOlg1KYXAt8zj8QY
+        vW1ndH+0+0qD/+OQdxmfreoky4BTUzAaxA==
+X-Google-Smtp-Source: ABdhPJy/odyVVr3CmJTQ56PF7zNzYEEkAS3D/iWyhHTPHR1m5NSr/u0mWgQqCYJmcvCYZLmX8jzKtQ==
+X-Received: by 2002:ac8:4052:: with SMTP id j18mr7058151qtl.352.1599058181467;
+        Wed, 02 Sep 2020 07:49:41 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:a198])
+        by smtp.gmail.com with ESMTPSA id f7sm4974480qkj.32.2020.09.02.07.49.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 07:49:39 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 10:49:36 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     trix@redhat.com, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] writeback: clear auto_free in initializaiton
+Message-ID: <20200902144936.GF4230@mtj.thefacebook.com>
+References: <20200818141330.29134-1-trix@redhat.com>
+ <20200826161126.GB8760@quack2.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200901155748.2884-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826161126.GB8760@quack2.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 9:57 AM, Christoph Hellwig wrote:
-> Hi Jens,
-> 
-> this series removes the revalidate_disk() function, which has been a
-> really odd duck in the last years.  The prime reason why most people
-> use it is because it propagates a size change from the gendisk to
-> the block_device structure.  But it also calls into the rather ill
-> defined ->revalidate_disk method which is rather useless for the
-> callers.  So this adds a new helper to just propagate the size, and
-> cleans up all kinds of mess around this area.  Follow on patches
-> will eventuall kill of ->revalidate_disk entirely, but ther are a lot
-> more patches needed for that.
+Hello,
 
-Applied, thanks.
+On Wed, Aug 26, 2020 at 06:11:26PM +0200, Jan Kara wrote:
+> > Which seems like a strange place to set auto_free as
+> > it is not where the rest of base_work is initialized.
+> 
+> Otherwise I agree it's a strange place. I've added Tejun to CC just in case
+> he remembers why he's added that.
+
+I don't remember exactly but maybe I was trying to mirror the
+CGROUP_WRITEBACK counterpart without actually thinking about it? The patch
+looks good to me.
+
+Thanks.
 
 -- 
-Jens Axboe
-
+tejun
