@@ -2,94 +2,111 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AF2C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA25C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB87220658
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D9520658
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:58:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dckr91+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgICO54 (ORCPT
+        id S1729459AbgICO6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:57:56 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:24457 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729135AbgICOJm (ORCPT
+        Thu, 3 Sep 2020 10:58:04 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:28291 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729083AbgICOJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:09:42 -0400
-X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
-   d="scan'208";a="465940153"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 16:09:16 +0200
-Date:   Thu, 3 Sep 2020 16:09:16 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>
-cc:     linux-kernel@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@inria.fr>
-Subject: SD_LOAD_BALANCE
-Message-ID: <alpine.DEB.2.22.394.2009031605190.2496@hadrien>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Thu, 3 Sep 2020 10:09:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599142150;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=AsDU97yPtXUIgx3X3eSsp3sqqPMSM2dtQaXgynJpGX8=;
+        b=Dckr91+/2we/Y94xJgypUfDGcI7AmWZXGKYkfKdi8BowdfS/Dq1848M2KpMDh0bq7Z7RlK
+        l0GiRwrVRjskh7VJkVuen/EBx2zZzeIf0Yw+o1caL1/mig6dqqlD4sqLFXpJ9D6sgItig9
+        GTWFunrYQjA58ZaxyKxbFPCuk0dimYE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-489-IrTADZdnNQq1I3hpiR1V-Q-1; Thu, 03 Sep 2020 09:27:50 -0400
+X-MC-Unique: IrTADZdnNQq1I3hpiR1V-Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC4EE10199A6;
+        Thu,  3 Sep 2020 13:27:49 +0000 (UTC)
+Received: from fuller.cnet (ovpn-112-7.gru2.redhat.com [10.97.112.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7A8F0105DFA1;
+        Thu,  3 Sep 2020 13:27:49 +0000 (UTC)
+Received: by fuller.cnet (Postfix, from userid 1000)
+        id C55A74168BB3; Wed,  2 Sep 2020 16:42:40 -0300 (-03)
+Date:   Wed, 2 Sep 2020 16:42:40 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [patch 1/2] nohz: try to avoid IPI when configuring per-CPU
+ posix timer
+Message-ID: <20200902194240.GA986833@fuller.cnet>
+References: <20200825184147.948670309@fuller.cnet>
+ <20200825184414.442457749@fuller.cnet>
+ <20200901233858.GA9322@lenoir>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901233858.GA9322@lenoir>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Uses of SD_LOAD_BALANCE were removed in commit e669ac8ab952 (first
-released in v5.8), with the comment:
+On Wed, Sep 02, 2020 at 01:38:59AM +0200, Frederic Weisbecker wrote:
+> On Tue, Aug 25, 2020 at 03:41:48PM -0300, Marcelo Tosatti wrote:
+> > When enabling per-CPU posix timers, an IPI to nohz_full CPUs might be
+> > performed (to re-read the dependencies and possibly not re-enter
+> > nohz_full on a given CPU).
+> > 
+> > A common case is for applications that run on nohz_full= CPUs 
+> > to not use POSIX timers (eg DPDK). This patch skips the IPI 
+> > in case the task allowed mask does not intersect with nohz_full= CPU mask,
+> > when going through tick_nohz_dep_set_signal.
+> > 
+> > This reduces interruptions to nohz_full= CPUs.
+> > 
+> > Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+> [...]
+> >  /*
+> > + * Set bit on nohz full dependency, kicking all cpus
+> > + * only if task can run on nohz full CPUs.
+> > + */
+> > +static void tick_nohz_dep_set_all_cond(struct task_struct *tsk,
+> > +				       atomic_t *dep,
+> > +				       enum tick_dep_bits bit)
+> > +{
+> > +	int prev;
+> > +	unsigned long flags;
+> > +
+> > +	prev = atomic_fetch_or(BIT(bit), dep);
+> > +	if (prev)
+> > +		return;
+> > +
+> > +	raw_spin_lock_irqsave(&tsk->pi_lock, flags);
+> > +	if (cpumask_intersects(&tsk->cpus_mask, tick_nohz_full_mask))
+> > +		tick_nohz_full_kick_all();
+> 
+> So that's for one task but what about the other threads in that
+> process? We are setting the tick dependency on all tasks sharing that
+> struct signal.
 
-The SD_LOAD_BALANCE flag is set unconditionally for all domains in
-sd_init().
+Hi Frederic,
 
-I have the impression that this was not quite true.  The NUMA domain was
-not initialized with sd_init, and didn't have the SD_LOAD_BALANCE flag
-set.  The effect is that in v5.8, the for_each_domain loop in
-select_task_rq_fair can always end up at the global NUMA domain, and thus
-consider any pair of waking cpu (cpu) and previous cpus of the wakee
-(prev_cpu) as arguments to wake_affine.  Up to v5.7, this was only
-possible if cpu and prev_cpu were together in some lower level domain, ie
-sharing the LLC.  The effect is that in v5.8 wake_affine can often end up
-choosing as a target a core that does not share the LLC with the core
-where the thread ran previously.  Threads then move around a lot between
-the different sockets.
+Yep, fixing in -v2, thanks.
 
-Was this intentional?
 
-The effect can be seen in the traces of the parsec vips benchmark at the
-following URL:
-
-https://pages.lip6.fr/Julia.Lawall/vips.pdf
-
-The first two graphs (complete run and small fragment) are Linux v5.7 and
-the next two are Linux v5.8.  The machine has 160 hardware threads
-organized in 4 sockets and the colors are by socket.  In the small
-fragment for v5.7 (second graph), one can see that a given pid pretty much
-stays on the same socket, while in the corresponding fragment for v5.8
-(fourth graph), the pids move around between the sockets.  The x's
-describe the unblocks that result in a migration.  A pink x means that the
-migration is in the same socket, while a blue x means that the migration
-is to another socket. It's not apparent from the graphs, but by adding
-some tracing, it seems that the new socket is always the one of the core
-that handles the wakeup.
-
-I haven't yet studied the early part of the execution of vips in detail,
-but I suspect that the same issue causes all of the threads to be
-initially on the same socket in v5.7, while in v5.8 they are more quickly
-dispersed to other sockets.
-
-My impression from the parsec and the NAS benchmarks is that the v5.8
-performance is a bit better than v5.7, probably because of getting more
-threads to more different sockets earlier, but other benchmarks might
-rely more on locality and might react less well to threads moving around
-so much in this way.
-
-julia
