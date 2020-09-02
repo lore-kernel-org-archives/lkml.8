@@ -2,88 +2,126 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC32EC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8827C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA2E207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599060801;
-	bh=/0DWAYC3uSsJFAAy4B6zrY6VAccL8xuJeu1JNjixCV8=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=KXmQEOAa9NJDpGlAJpZNiWFbsa547Dj3WIUQA/yiEilmd0gigOckKpoBqPUaF+ShB
-	 wEZCFbEA4EhzphSQTjcvXQTJ/Qx9Uuy+uZswahSBZwDwmYqmdwmnejyBaVD8x6mpuZ
-	 hXFxilsOEbY0Jb0CkWRNZPw3ZGOze7dFW7UR/kaM=
+	by mail.kernel.org (Postfix) with ESMTP id 8C87420767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbgIBPc1 (ORCPT
+        id S1728313AbgIBPd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:32:27 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34491 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgIBPXZ (ORCPT
+        Wed, 2 Sep 2020 11:33:28 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:52305 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728382AbgIBPcg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:23:25 -0400
-Received: by mail-ed1-f68.google.com with SMTP id q21so5344446edv.1;
-        Wed, 02 Sep 2020 08:23:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F44EDajBvPviYlEA0jAJJoSkCusNo9MYluuMOfOxWLU=;
-        b=Vm4UBiiWc6r65Fr3S9oSwoS9IKRrKK9daTUdpL6677aYwKYInPwinNK5IOVv5BaUjM
-         6xh4zzh+AHqtDa0j6UHvmU+CNK4EQfJKSGb8N2AGcNExHg33ql0wDJilNUDJcw0Ez8l/
-         jhD2XNChZRLRiKtESXIA6SassQSpJpL3OAKD27c5NHXwVAJTuerXjrK3ARiPtXV80X9l
-         xsPrtWAL53GfwHZDU1oaXXeZVnjPhPNea7iWMVPQjpNE9oFNF/+Hn8MxpjdlCPBmxsUq
-         mcXr1zxShoxQGix5Mnt89ofdZZ30YVQrvtt6T0Nh9QxZTyK6mH6VxRwEFu6EmOrgxO8N
-         AtGA==
-X-Gm-Message-State: AOAM533U1vx96wxkSZCWIQDZI1tewE1Qqzvqq//jmpUlpVOFEYyDL6T3
-        1v7oDzofLctLfE+ItgDyW/EQ//iaWvpdMQ==
-X-Google-Smtp-Source: ABdhPJwcIaf0v6xkFM1k0x3N8F3tYYiXoNV0F88TN+IXKED6qPsMiiyEq9fRbbO3sWuXtKXA2Ml7vg==
-X-Received: by 2002:aa7:c394:: with SMTP id k20mr537020edq.279.1599060188992;
-        Wed, 02 Sep 2020 08:23:08 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.106])
-        by smtp.googlemail.com with ESMTPSA id v7sm5078926edd.48.2020.09.02.08.23.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Sep 2020 08:23:08 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 17:23:06 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 2/2] memory: tegra186-emc: Simplify with dev_err_probe()
-Message-ID: <20200902152306.GB19659@kozik-lap>
-References: <20200828153747.22358-1-krzk@kernel.org>
- <20200828153747.22358-2-krzk@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200828153747.22358-2-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 2 Sep 2020 11:32:36 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from ayal@mellanox.com)
+        with SMTP; 2 Sep 2020 18:32:29 +0300
+Received: from dev-l-vrt-210.mtl.labs.mlnx (dev-l-vrt-210.mtl.labs.mlnx [10.234.210.1])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 082FWTDB014704;
+        Wed, 2 Sep 2020 18:32:29 +0300
+Received: from dev-l-vrt-210.mtl.labs.mlnx (localhost [127.0.0.1])
+        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Debian-8ubuntu1) with ESMTP id 082FWTUU026693;
+        Wed, 2 Sep 2020 18:32:29 +0300
+Received: (from ayal@localhost)
+        by dev-l-vrt-210.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 082FWTiR026692;
+        Wed, 2 Sep 2020 18:32:29 +0300
+From:   Aya Levin <ayal@mellanox.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org
+Cc:     Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        linux-kernel@vger.kernel.org, Aya Levin <ayal@mellanox.com>
+Subject: [PATCH net-next RFC v1 3/4] devlink: Add hierarchy between traps in device level and port level
+Date:   Wed,  2 Sep 2020 18:32:13 +0300
+Message-Id: <1599060734-26617-4-git-send-email-ayal@mellanox.com>
+X-Mailer: git-send-email 1.8.4.3
+In-Reply-To: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
+References: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 05:37:47PM +0200, Krzysztof Kozlowski wrote:
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and the error value gets printed.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/memory/tegra/tegra186-emc.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
+Managing large scale port's traps may be complicated. This patch
+introduces a shortcut: when setting a trap on a device and this trap is
+not registered on this device, the action will take place on all related
+ports that did register this trap.
 
-Applied.
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+---
+ net/core/devlink.c | 43 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 33 insertions(+), 10 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/net/core/devlink.c b/net/core/devlink.c
+index b13e1b40bf1c..dea5482b2517 100644
+--- a/net/core/devlink.c
++++ b/net/core/devlink.c
+@@ -6501,23 +6501,46 @@ static int devlink_nl_cmd_trap_set_doit(struct sk_buff *skb,
+ 	struct devlink *devlink = info->user_ptr[0];
+ 	struct devlink_trap_mngr *trap_mngr;
+ 	struct devlink_trap_item *trap_item;
++	struct devlink_port *devlink_port;
+ 	int err;
+ 
+-	trap_mngr = devlink_trap_get_trap_mngr_from_info(devlink, info);
+-	if (list_empty(&trap_mngr->trap_list))
+-		return -EOPNOTSUPP;
++	devlink_port = devlink_port_get_from_attrs(devlink, info->attrs);
++	if (IS_ERR(devlink_port)) {
++		trap_mngr =  &devlink->trap_mngr;
++		if (list_empty(&trap_mngr->trap_list))
++			goto loop_over_ports;
+ 
+-	trap_item = devlink_trap_item_get_from_info(trap_mngr, info);
+-	if (!trap_item) {
+-		NL_SET_ERR_MSG_MOD(extack, "Device did not register this trap");
+-		return -ENOENT;
++		trap_item = devlink_trap_item_get_from_info(trap_mngr, info);
++		if (!trap_item)
++			goto loop_over_ports;
++	} else {
++		trap_mngr = &devlink_port->trap_mngr;
++		if (list_empty(&trap_mngr->trap_list))
++			return -EOPNOTSUPP;
++
++		trap_item = devlink_trap_item_get_from_info(trap_mngr, info);
++		if (!trap_item) {
++			NL_SET_ERR_MSG_MOD(extack, "Port did not register this trap");
++			return -ENOENT;
++		}
+ 	}
+ 	return devlink_trap_action_set(devlink, trap_mngr, trap_item, info);
+ 
+-	err = devlink_trap_action_set(devlink, trap_mngr, trap_item, info);
+-	if (err)
+-		return err;
++loop_over_ports:
++	if (list_empty(&devlink->port_list))
++		return -EOPNOTSUPP;
++	list_for_each_entry(devlink_port, &devlink->port_list, list) {
++		trap_mngr = &devlink_port->trap_mngr;
++		if (list_empty(&trap_mngr->trap_list))
++			continue;
+ 
++		trap_item = devlink_trap_item_get_from_info(trap_mngr, info);
++		if (!trap_item)
++			continue;
++		err = devlink_trap_action_set(devlink, trap_mngr, trap_item, info);
++		if (err)
++			return err;
++	}
+ 	return 0;
+ }
+ 
+-- 
+2.14.1
 
