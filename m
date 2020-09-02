@@ -2,112 +2,198 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD98C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99936C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1205420C56
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771D32083B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="amGpMxv6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YU9/MzA5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgIBSlS (ORCPT
+        id S1728169AbgIBSn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:41:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51150 "EHLO
+        Wed, 2 Sep 2020 14:43:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727949AbgIBSkD (ORCPT
+        with ESMTP id S1728047AbgIBSn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:40:03 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39930C061247
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 11:40:02 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id g72so650480qke.8
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 11:40:02 -0700 (PDT)
+        Wed, 2 Sep 2020 14:43:58 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA5A5C061244;
+        Wed,  2 Sep 2020 11:43:57 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id t10so508698wrv.1;
+        Wed, 02 Sep 2020 11:43:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xZ0W2CvSOqgevHE21Wvc9Ii5sefbzh3TG/j8nJsk3zc=;
-        b=amGpMxv6FvcAg54gGJVlhJ2rkwaxD6yAwwrDqBRT8krp7t6DTO5eNbTLg3vELZMxf3
-         i5EFYxV2aMGDxbXZNoDC0RxPxo3kXTUJ2qqEk1X+CGK77nVItz4G9D55EsiBIKV0tQDV
-         cjuQ6+rd6wsXLqyiIL605ZocjnWmgTbGiWYGU2ZVkz9wONFpQLJR4r0YUeA1SCDo+WzC
-         X5/HEqAZS+sIHWEBYDv1b7MikqvYHYjR0cww3OOLRRrfUFXOsa5fuGhLfVVtgHII05Ni
-         KpU03yh8vfqr5g0UZn7DLMfYGq9UY9YlUZKY0NSR8Myh5zfqYSVsRjlKJhVZ0wUaT7KV
-         wD9A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UKk0FikPFSnv2wlgEYZiX1TTnSriok/p6lQGPIKn3B8=;
+        b=YU9/MzA5Xfr3hz+eiBR3BSbV89vqkeWvzNr6+qXwIbDW+DS7o4ok2Lpr1oAP3E9Fv2
+         EgRkgvM3ELkiqDu6fREZPNELXRy+JXBZeKK7yCQX16KbDg879r+85zhYgbLB/2CSLOPa
+         T8+pKX0a5pXYKVjmqXoENXclcUdsICKUm10d/EgEZmNOYQDMUewoKhXIG4BZ0Z4xpSP9
+         aDS9xfj7dVocMJARiyawFRZxY307R6RgqiE+mUx86pEQeqQjJwiZ8Uv4lLHhFn92iGdm
+         h9zqEbbzaWh91f6LmopjVwlq073Zx0enuj5vUFIYEOKmZQTedDt90ITXvSoUB5Hsi7wJ
+         xZog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xZ0W2CvSOqgevHE21Wvc9Ii5sefbzh3TG/j8nJsk3zc=;
-        b=Y6Kom19Un3VmeYDkfg1TIsT1ZUyXF0vCUlRB2FEWu9mT1kvLixMNFdvRalRKZ6W/Dn
-         556T8j5lWreoiHwnJWMc3yUJrf4y6zr6SaZNx/xA8Xqa1UuiO+CONSJEkGPlnnk8a9pJ
-         VG2RLGRF9SP0Fno6GHavFEwypzfn4TkHnTfidAMMHEhfGGHXogUNhOcrT5jS1Szpyszv
-         QKipprE07/MERhs/69+kA7wL5YsrbRlC5GaexzZq7fbz/yFmEAHppOHcJIDAz3UkUO0H
-         HkZYGLHsw+CRyJ8spCA7qKLoJoBr2qZuJYLJj+crD4f/zwrWESwrJcKxdpPZ0KTGGwEl
-         fCvA==
-X-Gm-Message-State: AOAM533KHmhmV1jsuoF13+FCEf/90Wp409K+3QfewtigUW+iCaA2hYjG
-        zmvpHpsC3tcAuMWn577jLqjpNg==
-X-Google-Smtp-Source: ABdhPJxTU9b7WO883MKtpvazzxZ5+pb+oWzXy1zuPWo5OXWaGGxtczyZMtE99Y1PD5VxXfdH9gLNkA==
-X-Received: by 2002:a05:620a:78f:: with SMTP id 15mr2612760qka.340.1599072001235;
-        Wed, 02 Sep 2020 11:40:01 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id s47sm208004qtb.13.2020.09.02.11.40.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UKk0FikPFSnv2wlgEYZiX1TTnSriok/p6lQGPIKn3B8=;
+        b=ZJwGpMJjUeo6d+6LJVmzN3qG+0zgip37xGqiKgpDQwXTNXNbP4QabiHWbjMDejBV9r
+         iTgts3MuUi2yz1HskcmhOfFDZqTw436trpaehi4nHmRlB2ZCuCFSWSMwkAh4Ab7rTO4j
+         dFxxUHKoKcd4FoQ4O/iQ3gzfwD8V+InicXRIANKGcfESxSLkR7jvPBa3XYgIo0QhMB79
+         VhriKZSThYqmqiHxzvvQZ1TRmJqj0M9/CpLNj7V9oHPm0K/V/CnTrDdLtj9RSx8VpwOW
+         PVmXuQxatKBh2l59D+XZ3WUEg19wHzUk6thZww2Ki05Rksmrl2p1aD3mcLag0nxjpuIL
+         vItw==
+X-Gm-Message-State: AOAM533uDwTtnG3wx5ayXsCpQysCQXWzi5u7jMFjY2nth7R6Rv3PJIJs
+        BF0XyCRJoHLiUBm87UqWjnw=
+X-Google-Smtp-Source: ABdhPJxkaoiLsTUQO7T2dIlHN18eiRrmRwRn8OeMgrU5jihup2RN5cDNezt0rf3blbWyMPHHwKvSYA==
+X-Received: by 2002:adf:fa02:: with SMTP id m2mr1662464wrr.273.1599072236550;
+        Wed, 02 Sep 2020 11:43:56 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id g18sm818276wru.27.2020.09.02.11.43.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 11:40:00 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/7] dt-bindings: clock: sdm845-dispcc: same name for dp_phy clocks as sc7180
-Date:   Wed,  2 Sep 2020 14:38:41 -0400
-Message-Id: <20200902183852.14510-2-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200902183852.14510-1-jonathan@marek.ca>
-References: <20200902183852.14510-1-jonathan@marek.ca>
+        Wed, 02 Sep 2020 11:43:56 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alan Cox <alan@linux.intel.com>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: media: atomisp: Fix error path in lm3554_probe()
+Date:   Wed,  2 Sep 2020 19:41:50 +0100
+Message-Id: <20200902184207.479525-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes it easier to combine dt bindings for sdm845/sc7180 dispcc.
+The error path for lm3554_probe() contains a number of bugs, including:
+ * resource leaks
+ * jumping to error labels out of sequence
+ * not setting the return value appropriately
 
-Note: nothing upstream provides these clocks and the sdm845 dispcc driver
-hasn't switched to using .fw_name for these clocks (these properties are
-ignored), so changing this shouldn't be a problem.
+Fix it up and give the labels more memorable names.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+This issue has existed since the code was originally contributed in
+commit a49d25364dfb ("staging/atomisp: Add support for the Intel IPU v2"),
+although the code was subsequently removed altogether and then
+reinstated with commit ad85094b293e ("Revert "media: staging: atomisp: Remove driver"").
+
+Addresses-Coverity: ("Resource leak")
+Fixes: a49d25364dfb ("staging/atomisp: Add support for the Intel IPU v2")
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
 ---
- .../devicetree/bindings/clock/qcom,sdm845-dispcc.yaml         | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../media/atomisp/i2c/atomisp-lm3554.c        | 47 ++++++++++---------
+ 1 file changed, 25 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
-index 4a3be733d042..3825dd6e67e3 100644
---- a/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
-@@ -43,8 +43,8 @@ properties:
-       - const: dsi0_phy_pll_out_dsiclk
-       - const: dsi1_phy_pll_out_byteclk
-       - const: dsi1_phy_pll_out_dsiclk
--      - const: dp_link_clk_divsel_ten
--      - const: dp_vco_divided_clk_src_mux
-+      - const: dp_phy_pll_link_clk
-+      - const: dp_phy_pll_vco_div_clk
+diff --git a/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c b/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c
+index 7ca7378b1859..9aad6721fc84 100644
+--- a/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c
++++ b/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c
+@@ -833,7 +833,6 @@ static void *lm3554_platform_data_func(struct i2c_client *client)
  
-   '#clock-cells':
-     const: 1
+ static int lm3554_probe(struct i2c_client *client)
+ {
+-	int err = 0;
+ 	struct lm3554 *flash;
+ 	unsigned int i;
+ 	int ret;
+@@ -843,36 +842,38 @@ static int lm3554_probe(struct i2c_client *client)
+ 		return -ENOMEM;
+ 
+ 	flash->pdata = lm3554_platform_data_func(client);
+-	if (IS_ERR(flash->pdata))
+-		return PTR_ERR(flash->pdata);
++	if (IS_ERR(flash->pdata)) {
++		ret = PTR_ERR(flash->pdata);
++		goto err_free_flash;
++	}
+ 
+ 	v4l2_i2c_subdev_init(&flash->sd, client, &lm3554_ops);
+ 	flash->sd.internal_ops = &lm3554_internal_ops;
+ 	flash->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+ 	flash->mode = ATOMISP_FLASH_MODE_OFF;
+ 	flash->timeout = LM3554_MAX_TIMEOUT / LM3554_TIMEOUT_STEPSIZE - 1;
+-	ret =
+-	    v4l2_ctrl_handler_init(&flash->ctrl_handler,
+-				   ARRAY_SIZE(lm3554_controls));
++	ret = v4l2_ctrl_handler_init(&flash->ctrl_handler,
++				     ARRAY_SIZE(lm3554_controls));
+ 	if (ret) {
+-		dev_err(&client->dev, "error initialize a ctrl_handler.\n");
+-		goto fail2;
++		dev_err(&client->dev, "error initializing ctrl_handler");
++		goto err_unregister_sd;
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(lm3554_controls); i++)
+ 		v4l2_ctrl_new_custom(&flash->ctrl_handler, &lm3554_controls[i],
+ 				     NULL);
+ 
+-	if (flash->ctrl_handler.error) {
+-		dev_err(&client->dev, "ctrl_handler error.\n");
+-		goto fail2;
++	ret = flash->ctrl_handler.error;
++	if (ret) {
++		dev_err(&client->dev, "ctrl_handler error");
++		goto err_free_ctrl_handler;
+ 	}
+ 
+ 	flash->sd.ctrl_handler = &flash->ctrl_handler;
+-	err = media_entity_pads_init(&flash->sd.entity, 0, NULL);
+-	if (err) {
+-		dev_err(&client->dev, "error initialize a media entity.\n");
+-		goto fail1;
++	ret = media_entity_pads_init(&flash->sd.entity, 0, NULL);
++	if (ret) {
++		dev_err(&client->dev, "error initializing media entity");
++		goto err_free_ctrl_handler;
+ 	}
+ 
+ 	flash->sd.entity.function = MEDIA_ENT_F_FLASH;
+@@ -881,20 +882,22 @@ static int lm3554_probe(struct i2c_client *client)
+ 
+ 	timer_setup(&flash->flash_off_delay, lm3554_flash_off_delay, 0);
+ 
+-	err = lm3554_gpio_init(client);
+-	if (err) {
++	ret = lm3554_gpio_init(client);
++	if (ret) {
+ 		dev_err(&client->dev, "gpio request/direction_output fail");
+-		goto fail2;
++		goto err_cleanup_entity;
+ 	}
+ 	return atomisp_register_i2c_module(&flash->sd, NULL, LED_FLASH);
+-fail2:
++
++err_cleanup_entity:
+ 	media_entity_cleanup(&flash->sd.entity);
++err_free_ctrl_handler:
+ 	v4l2_ctrl_handler_free(&flash->ctrl_handler);
+-fail1:
++err_unregister_sd:
+ 	v4l2_device_unregister_subdev(&flash->sd);
++err_free_flash:
+ 	kfree(flash);
+-
+-	return err;
++	return ret;
+ }
+ 
+ static int lm3554_remove(struct i2c_client *client)
 -- 
-2.26.1
+2.28.0
 
