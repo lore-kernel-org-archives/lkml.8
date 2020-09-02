@@ -2,452 +2,191 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BD6C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCBAC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D93E920767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5A42078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 13:04:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="HfI13r9k"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JVNF5sON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgIBNDz (ORCPT
+        id S1727821AbgIBNEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 09:03:55 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:52893 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbgIBNAa (ORCPT
+        Wed, 2 Sep 2020 09:04:00 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:24755 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727853AbgIBNDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:00:30 -0400
+        Wed, 2 Sep 2020 09:03:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1599051630; x=1630587630;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1DoI56HXaC544N7Sf0PN0PANJQUmQ9eN9nXQFHzrxH0=;
-  b=HfI13r9kslZURNew9ft7PyYLG3XWYliHuG+oPB3IDFLQnXlAOi6busWX
-   ekHEqQL0ZdBD92xGsErKHWnKZnhgPupwp3qG4kuWeKTAHEfKZ+VcRNMtx
-   /Yq908HD+rt3JSjsq1JIqGis/fjUMwq/FiPxd2GCp1pfN+ZenioDSELnR
+  t=1599051823; x=1630587823;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=QLxPQFBP46++2i4owKYOXHmzCOmdzFmbWEdIhpGKEOY=;
+  b=JVNF5sON2MeCJ+NeMaIexpbEtNk7TnkqBbzcO/nlK5xsDBF3Cvy4EeYj
+   0nAzvou+OSkGXewRf9GOT9KolJYJsdkgbhZmeSVO8QKc6fB9p0f3z05n7
+   w0339TgpJzf5P4wSBhnfm5Am6TE6D7k6mF4BzZQmLfcI/w1O85bTBt0mZ
    M=;
 X-IronPort-AV: E=Sophos;i="5.76,383,1592870400"; 
-   d="scan'208";a="64794765"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-22cc717f.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 02 Sep 2020 13:00:16 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-22cc717f.us-west-2.amazon.com (Postfix) with ESMTPS id B56B7A20DF;
-        Wed,  2 Sep 2020 13:00:11 +0000 (UTC)
+   d="scan'208";a="51552217"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-c6afef2e.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 02 Sep 2020 13:01:35 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-c6afef2e.us-west-2.amazon.com (Postfix) with ESMTPS id 7AA74A2A12;
+        Wed,  2 Sep 2020 13:01:33 +0000 (UTC)
 Received: from EX13D20UWC002.ant.amazon.com (10.43.162.163) by
  EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 2 Sep 2020 13:00:11 +0000
-Received: from u79c5a0a55de558.ant.amazon.com (10.43.160.215) by
+ id 15.0.1497.2; Wed, 2 Sep 2020 13:01:33 +0000
+Received: from Alexanders-MacBook-Air.local (10.43.161.85) by
  EX13D20UWC002.ant.amazon.com (10.43.162.163) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 2 Sep 2020 13:00:07 +0000
-From:   Alexander Graf <graf@amazon.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-CC:     Jonathan Corbet <corbet@lwn.net>,
+ id 15.0.1497.2; Wed, 2 Sep 2020 13:01:29 +0000
+Subject: Re: [PATCH v6 0/7] Allow user space to restrict and augment MSR
+ emulation
+To:     Aaron Lewis <aaronlewis@google.com>
+CC:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
-        "Joerg Roedel" <joro@8bytes.org>,
+        Joerg Roedel <joro@8bytes.org>,
         KarimAllah Raslan <karahmed@amazon.de>,
-        Aaron Lewis <aaronlewis@google.com>,
         Dan Carpenter <dan.carpenter@oracle.com>,
-        <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 5/7] KVM: x86: VMX: Prevent MSR passthrough when MSR access is denied
-Date:   Wed, 2 Sep 2020 14:59:33 +0200
-Message-ID: <20200902125935.20646-6-graf@amazon.com>
-X-Mailer: git-send-email 2.28.0.394.ge197136389
-In-Reply-To: <20200902125935.20646-1-graf@amazon.com>
-References: <20200902125935.20646-1-graf@amazon.com>
+References: <20200901201517.29086-1-graf@amazon.com>
+ <CAAAPnDFChjpK=nF=CGhLM9JJHcmW-6STJ5Am41CBjVei9-s4ow@mail.gmail.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <a4700ac2-fd92-44b4-70c5-4a3690c02269@amazon.com>
+Date:   Wed, 2 Sep 2020 15:01:27 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:78.0)
+ Gecko/20100101 Thunderbird/78.2.0
 MIME-Version: 1.0
-X-Originating-IP: [10.43.160.215]
-X-ClientProxiedBy: EX13D05UWC004.ant.amazon.com (10.43.162.223) To
+In-Reply-To: <CAAAPnDFChjpK=nF=CGhLM9JJHcmW-6STJ5Am41CBjVei9-s4ow@mail.gmail.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.85]
+X-ClientProxiedBy: EX13D04UWA001.ant.amazon.com (10.43.160.47) To
  EX13D20UWC002.ant.amazon.com (10.43.162.163)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We will introduce the concept of MSRs that may not be handled in kernel
-space soon. Some MSRs are directly passed through to the guest, effectively
-making them handled by KVM from user space's point of view.
-
-This patch introduces all logic required to ensure that MSRs that
-user space wants trapped are not marked as direct access for guests.
-
-Signed-off-by: Alexander Graf <graf@amazon.com>
----
- arch/x86/kvm/vmx/vmx.c | 226 +++++++++++++++++++++++++++++++----------
- arch/x86/kvm/vmx/vmx.h |   7 ++
- 2 files changed, 181 insertions(+), 52 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 1313e47a5a1e..6523f792652d 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -148,6 +148,26 @@ module_param_named(preemption_timer, enable_preemption_timer, bool, S_IRUGO);
- #define MSR_IA32_RTIT_OUTPUT_BASE_MASK \
- 	(~((1UL << cpuid_query_maxphyaddr(vcpu)) - 1) | 0x7f)
- 
-+/*
-+ * List of MSRs that can be directly passed to the guest.
-+ * In addition to these x2apic and PT MSRs are handled specially.
-+ */
-+static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSGHROUGH_MSRS] = {
-+	MSR_IA32_SPEC_CTRL,
-+	MSR_IA32_PRED_CMD,
-+	MSR_IA32_TSC,
-+	MSR_FS_BASE,
-+	MSR_GS_BASE,
-+	MSR_KERNEL_GS_BASE,
-+	MSR_IA32_SYSENTER_CS,
-+	MSR_IA32_SYSENTER_ESP,
-+	MSR_IA32_SYSENTER_EIP,
-+	MSR_CORE_C1_RES,
-+	MSR_CORE_C3_RESIDENCY,
-+	MSR_CORE_C6_RESIDENCY,
-+	MSR_CORE_C7_RESIDENCY,
-+};
-+
- /*
-  * These 2 parameters are used to config the controls for Pause-Loop Exiting:
-  * ple_gap:    upper bound on the amount of time between two successive
-@@ -622,6 +642,41 @@ static inline bool report_flexpriority(void)
- 	return flexpriority_enabled;
- }
- 
-+static int possible_passthrough_msr_idx(u32 msr)
-+{
-+	u32 i;
-+
-+	for (i = 0; i < ARRAY_SIZE(vmx_possible_passthrough_msrs); i++)
-+		if (vmx_possible_passthrough_msrs[i] == msr)
-+			return i;
-+
-+	return -ENOENT;
-+}
-+
-+static bool is_valid_passthrough_msr(u32 msr)
-+{
-+	bool r;
-+
-+	switch (msr) {
-+	case 0x800 ... 0x8ff:
-+		/* x2APIC MSRs. These are handled in vmx_update_msr_bitmap_x2apic() */
-+		return true;
-+	case MSR_IA32_RTIT_STATUS:
-+	case MSR_IA32_RTIT_OUTPUT_BASE:
-+	case MSR_IA32_RTIT_OUTPUT_MASK:
-+	case MSR_IA32_RTIT_CR3_MATCH:
-+	case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B:
-+		/* PT MSRs. These are handled in pt_update_intercept_for_msr() */
-+		return true;
-+	}
-+
-+	r = possible_passthrough_msr_idx(msr) != -ENOENT;
-+
-+	WARN(!r, "Invalid MSR %x, please adapt vmx_possible_passthrough_msrs[]", msr);
-+
-+	return r;
-+}
-+
- static inline int __find_msr_index(struct vcpu_vmx *vmx, u32 msr)
- {
- 	int i;
-@@ -3690,12 +3745,51 @@ void free_vpid(int vpid)
- 	spin_unlock(&vmx_vpid_lock);
- }
- 
-+static void vmx_clear_msr_bitmap_read(ulong *msr_bitmap, u32 msr)
-+{
-+	int f = sizeof(unsigned long);
-+
-+	if (msr <= 0x1fff)
-+		__clear_bit(msr, msr_bitmap + 0x000 / f);
-+	else if ((msr >= 0xc0000000) && (msr <= 0xc0001fff))
-+		__clear_bit(msr & 0x1fff, msr_bitmap + 0x400 / f);
-+}
-+
-+static void vmx_clear_msr_bitmap_write(ulong *msr_bitmap, u32 msr)
-+{
-+	int f = sizeof(unsigned long);
-+
-+	if (msr <= 0x1fff)
-+		__clear_bit(msr, msr_bitmap + 0x800 / f);
-+	else if ((msr >= 0xc0000000) && (msr <= 0xc0001fff))
-+		__clear_bit(msr & 0x1fff, msr_bitmap + 0xc00 / f);
-+}
-+
-+static void vmx_set_msr_bitmap_read(ulong *msr_bitmap, u32 msr)
-+{
-+	int f = sizeof(unsigned long);
-+
-+	if (msr <= 0x1fff)
-+		__set_bit(msr, msr_bitmap + 0x000 / f);
-+	else if ((msr >= 0xc0000000) && (msr <= 0xc0001fff))
-+		__set_bit(msr & 0x1fff, msr_bitmap + 0x400 / f);
-+}
-+
-+static void vmx_set_msr_bitmap_write(ulong *msr_bitmap, u32 msr)
-+{
-+	int f = sizeof(unsigned long);
-+
-+	if (msr <= 0x1fff)
-+		__set_bit(msr, msr_bitmap + 0x800 / f);
-+	else if ((msr >= 0xc0000000) && (msr <= 0xc0001fff))
-+		__set_bit(msr & 0x1fff, msr_bitmap + 0xc00 / f);
-+}
-+
- static __always_inline void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu,
- 							  u32 msr, int type)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
--	int f = sizeof(unsigned long);
- 
- 	if (!cpu_has_vmx_msr_bitmap())
- 		return;
-@@ -3704,30 +3798,37 @@ static __always_inline void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu,
- 		evmcs_touch_msr_bitmap();
- 
- 	/*
--	 * See Intel PRM Vol. 3, 20.6.9 (MSR-Bitmap Address). Early manuals
--	 * have the write-low and read-high bitmap offsets the wrong way round.
--	 * We can control MSRs 0x00000000-0x00001fff and 0xc0000000-0xc0001fff.
--	 */
--	if (msr <= 0x1fff) {
--		if (type & MSR_TYPE_R)
--			/* read-low */
--			__clear_bit(msr, msr_bitmap + 0x000 / f);
-+	 * Mark the desired intercept state in shadow bitmap, this is needed
-+	 * for resync when the MSR filters change.
-+	*/
-+	if (is_valid_passthrough_msr(msr)) {
-+		int idx = possible_passthrough_msr_idx(msr);
-+
-+		if (idx != -ENOENT) {
-+			if (type & MSR_TYPE_R)
-+				clear_bit(idx, vmx->shadow_msr_intercept.read);
-+			if (type & MSR_TYPE_W)
-+				clear_bit(idx, vmx->shadow_msr_intercept.write);
-+		}
-+	}
- 
--		if (type & MSR_TYPE_W)
--			/* write-low */
--			__clear_bit(msr, msr_bitmap + 0x800 / f);
-+	if ((type & MSR_TYPE_R) &&
-+	    !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ)) {
-+		vmx_set_msr_bitmap_read(msr_bitmap, msr);
-+		type &= ~MSR_TYPE_R;
-+	}
- 
--	} else if ((msr >= 0xc0000000) && (msr <= 0xc0001fff)) {
--		msr &= 0x1fff;
--		if (type & MSR_TYPE_R)
--			/* read-high */
--			__clear_bit(msr, msr_bitmap + 0x400 / f);
-+	if ((type & MSR_TYPE_W) &&
-+	    !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE)) {
-+		vmx_set_msr_bitmap_write(msr_bitmap, msr);
-+		type &= ~MSR_TYPE_W;
-+	}
- 
--		if (type & MSR_TYPE_W)
--			/* write-high */
--			__clear_bit(msr, msr_bitmap + 0xc00 / f);
-+	if (type & MSR_TYPE_R)
-+		vmx_clear_msr_bitmap_read(msr_bitmap, msr);
- 
--	}
-+	if (type & MSR_TYPE_W)
-+		vmx_clear_msr_bitmap_write(msr_bitmap, msr);
- }
- 
- static __always_inline void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu,
-@@ -3735,7 +3836,6 @@ static __always_inline void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu,
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
--	int f = sizeof(unsigned long);
- 
- 	if (!cpu_has_vmx_msr_bitmap())
- 		return;
-@@ -3744,30 +3844,25 @@ static __always_inline void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu,
- 		evmcs_touch_msr_bitmap();
- 
- 	/*
--	 * See Intel PRM Vol. 3, 20.6.9 (MSR-Bitmap Address). Early manuals
--	 * have the write-low and read-high bitmap offsets the wrong way round.
--	 * We can control MSRs 0x00000000-0x00001fff and 0xc0000000-0xc0001fff.
--	 */
--	if (msr <= 0x1fff) {
--		if (type & MSR_TYPE_R)
--			/* read-low */
--			__set_bit(msr, msr_bitmap + 0x000 / f);
--
--		if (type & MSR_TYPE_W)
--			/* write-low */
--			__set_bit(msr, msr_bitmap + 0x800 / f);
--
--	} else if ((msr >= 0xc0000000) && (msr <= 0xc0001fff)) {
--		msr &= 0x1fff;
--		if (type & MSR_TYPE_R)
--			/* read-high */
--			__set_bit(msr, msr_bitmap + 0x400 / f);
-+	 * Mark the desired intercept state in shadow bitmap, this is needed
-+	 * for resync when the MSR filter changes.
-+	*/
-+	if (is_valid_passthrough_msr(msr)) {
-+		int idx = possible_passthrough_msr_idx(msr);
-+
-+		if (idx != -ENOENT) {
-+			if (type & MSR_TYPE_R)
-+				set_bit(idx, vmx->shadow_msr_intercept.read);
-+			if (type & MSR_TYPE_W)
-+				set_bit(idx, vmx->shadow_msr_intercept.write);
-+		}
-+	}
- 
--		if (type & MSR_TYPE_W)
--			/* write-high */
--			__set_bit(msr, msr_bitmap + 0xc00 / f);
-+	if (type & MSR_TYPE_R)
-+		vmx_set_msr_bitmap_read(msr_bitmap, msr);
- 
--	}
-+	if (type & MSR_TYPE_W)
-+		vmx_set_msr_bitmap_write(msr_bitmap, msr);
- }
- 
- static __always_inline void vmx_set_intercept_for_msr(struct kvm_vcpu *vcpu,
-@@ -3794,15 +3889,14 @@ static u8 vmx_msr_bitmap_mode(struct kvm_vcpu *vcpu)
- 	return mode;
- }
- 
--static void vmx_update_msr_bitmap_x2apic(struct kvm_vcpu *vcpu,
--					 unsigned long *msr_bitmap, u8 mode)
-+static void vmx_update_msr_bitmap_x2apic(struct kvm_vcpu *vcpu, u8 mode)
- {
- 	int msr;
- 
--	for (msr = 0x800; msr <= 0x8ff; msr += BITS_PER_LONG) {
--		unsigned word = msr / BITS_PER_LONG;
--		msr_bitmap[word] = (mode & MSR_BITMAP_MODE_X2APIC_APICV) ? 0 : ~0;
--		msr_bitmap[word + (0x800 / sizeof(long))] = ~0;
-+	for (msr = 0x800; msr <= 0x8ff; msr++) {
-+		bool intercepted = !!(mode & MSR_BITMAP_MODE_X2APIC_APICV);
-+
-+		vmx_set_intercept_for_msr(vcpu, msr, MSR_TYPE_RW, intercepted);
- 	}
- 
- 	if (mode & MSR_BITMAP_MODE_X2APIC) {
-@@ -3822,7 +3916,6 @@ static void vmx_update_msr_bitmap_x2apic(struct kvm_vcpu *vcpu,
- void vmx_update_msr_bitmap(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
--	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
- 	u8 mode = vmx_msr_bitmap_mode(vcpu);
- 	u8 changed = mode ^ vmx->msr_bitmap_mode;
- 
-@@ -3830,7 +3923,7 @@ void vmx_update_msr_bitmap(struct kvm_vcpu *vcpu)
- 		return;
- 
- 	if (changed & (MSR_BITMAP_MODE_X2APIC | MSR_BITMAP_MODE_X2APIC_APICV))
--		vmx_update_msr_bitmap_x2apic(vcpu, msr_bitmap, mode);
-+		vmx_update_msr_bitmap_x2apic(vcpu, mode);
- 
- 	vmx->msr_bitmap_mode = mode;
- }
-@@ -3871,6 +3964,29 @@ static bool vmx_guest_apic_has_interrupt(struct kvm_vcpu *vcpu)
- 	return ((rvi & 0xf0) > (vppr & 0xf0));
- }
- 
-+static void vmx_msr_filter_changed(struct kvm_vcpu *vcpu)
-+{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	u32 i;
-+
-+	/*
-+	 * Set intercept permissions for all potentially passed through MSRs
-+	 * again. They will automatically get filtered through the MSR filter,
-+	 * so we are back in sync after this.
-+	 */
-+	for (i = 0; i < ARRAY_SIZE(vmx_possible_passthrough_msrs); i++) {
-+		u32 msr = vmx_possible_passthrough_msrs[i];
-+		bool read = test_bit(i, vmx->shadow_msr_intercept.read);
-+		bool write = test_bit(i, vmx->shadow_msr_intercept.write);
-+
-+		vmx_set_intercept_for_msr(vcpu, msr, MSR_TYPE_R, read);
-+		vmx_set_intercept_for_msr(vcpu, msr, MSR_TYPE_W, write);
-+	}
-+
-+	pt_update_intercept_for_msr(vcpu);
-+	vmx_update_msr_bitmap_x2apic(vcpu, vmx_msr_bitmap_mode(vcpu));
-+}
-+
- static inline bool kvm_vcpu_trigger_posted_interrupt(struct kvm_vcpu *vcpu,
- 						     bool nested)
- {
-@@ -6901,6 +7017,10 @@ static int vmx_create_vcpu(struct kvm_vcpu *vcpu)
- 	if (err < 0)
- 		goto free_pml;
- 
-+	/* The MSR bitmap starts with all ones */
-+	bitmap_fill(vmx->shadow_msr_intercept.read, MAX_POSSIBLE_PASSGHROUGH_MSRS);
-+	bitmap_fill(vmx->shadow_msr_intercept.write, MAX_POSSIBLE_PASSGHROUGH_MSRS);
-+
- 	msr_bitmap = vmx->vmcs01.msr_bitmap;
- 	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_TSC, MSR_TYPE_R);
- 	vmx_disable_intercept_for_msr(vcpu, MSR_FS_BASE, MSR_TYPE_RW);
-@@ -7965,6 +8085,8 @@ static struct kvm_x86_ops vmx_x86_ops __initdata = {
- 	.need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
- 	.apic_init_signal_blocked = vmx_apic_init_signal_blocked,
- 	.migrate_timers = vmx_migrate_timers,
-+
-+	.msr_filter_changed = vmx_msr_filter_changed,
- };
- 
- static __init int hardware_setup(void)
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index b3c74f0fe8a1..05694d2fd4ff 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -300,6 +300,13 @@ struct vcpu_vmx {
- 	u64 ept_pointer;
- 
- 	struct pt_desc pt_desc;
-+
-+	/* Save desired MSR intercept (read: pass-through) state */
-+#define MAX_POSSIBLE_PASSGHROUGH_MSRS	13
-+	struct {
-+		DECLARE_BITMAP(read, MAX_POSSIBLE_PASSGHROUGH_MSRS);
-+		DECLARE_BITMAP(write, MAX_POSSIBLE_PASSGHROUGH_MSRS);
-+	} shadow_msr_intercept;
- };
- 
- enum ept_pointers_status {
--- 
-2.17.1
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+CgpPbiAwMi4wOS4yMCAwMDozMiwgQWFyb24gTGV3aXMgd3JvdGU6Cj4gCj4gT24gVHVlLCBTZXAg
+MSwgMjAyMCBhdCAxOjE1IFBNIEFsZXhhbmRlciBHcmFmIDxncmFmQGFtYXpvbi5jb20+IHdyb3Rl
+Ogo+Pgo+PiBXaGlsZSB0eWluZyB0byBhZGQgc3VwcG9ydCBmb3IgdGhlIE1TUl9DT1JFX1RIUkVB
+RF9DT1VOVCBNU1IgaW4gS1ZNLAo+PiBJIHJlYWxpemVkIHRoYXQgd2Ugd2VyZSBzdGlsbCBpbiBh
+IHdvcmxkIHdoZXJlIHVzZXIgc3BhY2UgaGFzIG5vIGNvbnRyb2wKPj4gb3ZlciB3aGF0IGhhcHBl
+bnMgd2l0aCBNU1IgZW11bGF0aW9uIGluIEtWTS4KPj4KPj4gVGhhdCBpcyBiYWQgZm9yIG11bHRp
+cGxlIHJlYXNvbnMuIEluIG15IGNhc2UsIEkgd2FudGVkIHRvIGVtdWxhdGUgdGhlCj4+IE1TUiBp
+biB1c2VyIHNwYWNlLCBiZWNhdXNlIGl0J3MgYSBDUFUgc3BlY2lmaWMgcmVnaXN0ZXIgdGhhdCBk
+b2VzIG5vdAo+PiBleGlzdCBvbiBvbGRlciBDUFVzIGFuZCB0aGF0IHJlYWxseSBvbmx5IGNvbnRh
+aW5zIGluZm9ybWF0aW9uYWwgZGF0YSB0aGF0Cj4+IGlzIG9uIHRoZSBwYWNrYWdlIGxldmVsLCBz
+byBpdCdzIGEgbmF0dXJhbCBmaXQgZm9yIHVzZXIgc3BhY2UgdG8gcHJvdmlkZQo+PiBpdC4KPj4K
+Pj4gSG93ZXZlciwgaXQgaXMgYWxzbyBiYWQgb24gYSBwbGF0Zm9ybSBjb21wYXRpYmlsaXR5IGxl
+dmVsLiBDdXJycmVudGx5LAo+PiBLVk0gaGFzIG5vIHdheSB0byBleHBvc2UgZGlmZmVyZW50IE1T
+UnMgYmFzZWQgb24gdGhlIHNlbGVjdGVkIHRhcmdldCBDUFUKPj4gdHlwZS4KPj4KPj4gVGhpcyBw
+YXRjaCBzZXQgaW50cm9kdWNlcyBhIHdheSBmb3IgdXNlciBzcGFjZSB0byBpbmRpY2F0ZSB0byBL
+Vk0gd2hpY2gKPj4gTVNScyBzaG91bGQgYmUgaGFuZGxlZCBpbiBrZXJuZWwgc3BhY2UuIFdpdGgg
+dGhhdCwgd2UgY2FuIHNvbHZlIHBhcnQgb2YKPj4gdGhlIHBsYXRmb3JtIGNvbXBhdGliaWxpdHkg
+c3RvcnkuIE9yIGF0IGxlYXN0IHdlIGNhbiBub3QgaGFuZGxlIEFNRCBzcGVjaWZpYwo+PiBNU1Jz
+IG9uIGFuIEludGVsIHBsYXRmb3JtIGFuZCB2aWNlIHZlcnNhLgo+Pgo+PiBJbiBhZGRpdGlvbiwg
+aXQgaW50cm9kdWNlcyBhIHdheSBmb3IgdXNlciBzcGFjZSB0byBnZXQgaW50byB0aGUgbG9vcAo+
+PiB3aGVuIGFuIE1TUiBhY2Nlc3Mgd291bGQgZ2VuZXJhdGUgYSAjR1AgZmF1bHQsIHN1Y2ggYXMg
+d2hlbiBLVk0gZmluZHMgYW4KPj4gTVNSIHRoYXQgaXMgbm90IGhhbmRsZWQgYnkgdGhlIGluLWtl
+cm5lbCBNU1IgZW11bGF0aW9uIG9yIHdoZW4gdGhlIGd1ZXN0Cj4+IGlzIHRyeWluZyB0byBhY2Nl
+c3MgcmVzZXJ2ZWQgcmVnaXN0ZXJzLgo+Pgo+PiBJbiBjb21iaW5hdGlvbiB3aXRoIGZpbHRlcmlu
+ZywgdXNlciBzcGFjZSB0cmFwcGluZyBhbGxvd3MgdXMgdG8gZW11bGF0ZQo+PiBhcmJpdHJhcnkg
+TVNScyBpbiB1c2VyIHNwYWNlLCBwYXZpbmcgdGhlIHdheSBmb3IgdGFyZ2V0IENQVSBzcGVjaWZp
+YyBNU1IKPj4gaW1wbGVtZW50YXRpb25zIGZyb20gdXNlciBzcGFjZS4KPj4KPj4gdjEgLT4gdjI6
+Cj4+Cj4+ICAgIC0gcy9FVFJBUF9UT19VU0VSX1NQQUNFL0VOT0VOVC9nCj4+ICAgIC0gZGVmbGVj
+dCBhbGwgI0dQIGluamVjdGlvbiBldmVudHMgdG8gdXNlciBzcGFjZSwgbm90IGp1c3QgdW5rbm93
+biBNU1JzLgo+PiAgICAgIFRoYXQgd2FzIHdlIGNhbiBhbHNvIGRlZmxlY3QgYWxsb3dsaXN0IGVy
+cm9ycyBsYXRlcgo+PiAgICAtIGZpeCBlbXVsYXRvciBjYXNlCj4+ICAgIC0gbmV3IHBhdGNoOiBL
+Vk06IHg4NjogSW50cm9kdWNlIGFsbG93IGxpc3QgZm9yIE1TUiBlbXVsYXRpb24KPj4gICAgLSBu
+ZXcgcGF0Y2g6IEtWTTogc2VsZnRlc3RzOiBBZGQgdGVzdCBmb3IgdXNlciBzcGFjZSBNU1IgaGFu
+ZGxpbmcKPj4KPj4gdjIgLT4gdjM6Cj4+Cj4+ICAgIC0gcmV0dXJuIHIgaWYgciA9PSBYODZFTVVM
+X0lPX05FRURFRAo+PiAgICAtIHMvS1ZNX0VYSVRfUkRNU1IvS1ZNX0VYSVRfWDg2X1JETVNSL2cK
+Pj4gICAgLSBzL0tWTV9FWElUX1dSTVNSL0tWTV9FWElUX1g4Nl9XUk1TUi9nCj4+ICAgIC0gVXNl
+IGNvbXBsZXRlX3VzZXJzcGFjZV9pbyBsb2dpYyBpbnN0ZWFkIG9mIHJlcGx5IGZpZWxkCj4+ICAg
+IC0gU2ltcGxpZnkgdHJhcHBpbmcgY29kZQo+PiAgICAtIGRvY3VtZW50IGZsYWdzIGZvciBLVk1f
+WDg2X0FERF9NU1JfQUxMT1dMSVNUCj4+ICAgIC0gZ2VuZXJhbGl6ZSBleGl0IHBhdGgsIGFsd2F5
+cyB1bmxvY2sgd2hlbiByZXR1cm5pbmcKPj4gICAgLSBzL0tWTV9DQVBfQUREX01TUl9BTExPV0xJ
+U1QvS1ZNX0NBUF9YODZfTVNSX0FMTE9XTElTVC9nCj4+ICAgIC0gQWRkIEtWTV9YODZfQ0xFQVJf
+TVNSX0FMTE9XTElTVAo+PiAgICAtIEFkZCB0ZXN0IHRvIGNsZWFyIHdoaXRlbGlzdAo+PiAgICAt
+IEFkanVzdCB0byByZXBseS1sZXNzIEFQSQo+PiAgICAtIEZpeCBhc3NlcnRzCj4+ICAgIC0gQWN0
+dWFsbHkgdHJhcCBvbiBNU1JfSUEzMl9QT1dFUl9DVEwgd3JpdGVzCj4+Cj4+IHYzIC0+IHY0Ogo+
+Pgo+PiAgICAtIE1lbnRpb24gZXhpdCByZWFzb25zIGluIHJlLWVudGVyIG1hbmRhdG9yeSBzZWN0
+aW9uIG9mIEFQSSBkb2N1bWVudGF0aW9uCj4+ICAgIC0gQ2xlYXIgcGFkZGluZyBieXRlcwo+PiAg
+ICAtIEdlbmVyYWxpemUgZ2V0L3NldCBkZWZsZWN0IGZ1bmN0aW9ucwo+PiAgICAtIFJlbW92ZSBy
+ZWR1bmRhbnQgcGVuZGluZ191c2VyX21zciBmaWVsZAo+PiAgICAtIGxvY2sgYWxsb3cgY2hlY2sg
+YW5kIGNsZWFyaW5nCj4+ICAgIC0gZnJlZSBiaXRtYXBzIG9uIGNsZWFyCj4+Cj4+IHY0IC0+IHY1
+Ogo+Pgo+PiAgICAtIHVzZSBzcmN1Cj4+Cj4+IHY1IC0+IHY2Ogo+Pgo+PiAgICAtIFN3aXRjaCBm
+cm9tIGFsbG93IGxpc3QgdG8gZmlsdGVyaW5nIEFQSSB3aXRoIGV4cGxpY2l0IGZhbGxiYWNrIG9w
+dGlvbgo+PiAgICAtIFN1cHBvcnQgYW5kIHRlc3QgcGFzc3Rocm91Z2ggTVNSIGZpbHRlcmluZwo+
+PiAgICAtIENoZWNrIGZvciBmaWx0ZXIgZXhpdCByZWFzb24KPj4gICAgLSBBZGQgLmdpdGlnbm9y
+ZQo+PiAgICAtIHNlbmQgZmlsdGVyIGNoYW5nZSBub3RpZmljYXRpb24KPj4gICAgLSBjaGFuZ2Ug
+dG8gYXRvbWljIHNldF9tc3JfZmlsdGVyIGlvY3RsIHdpdGggZmFsbGJhY2sgZmxhZwo+PiAgICAt
+IHVzZSBFUEVSTSBmb3IgZmlsdGVyIGJsb2Nrcwo+PiAgICAtIGFkZCBiaXQgZm9yIE1TUiB1c2Vy
+IHNwYWNlIGRlZmxlY3Rpb24KPj4gICAgLSBjaGVjayBmb3Igb3ZlcmZsb3cgb2YgQklUU19UT19M
+T05HUyAodGhhbmtzIERhbiBDYXJwZW50ZXIhKQo+PiAgICAtIHMvaW50IGk7L3UzMiBpOy8KPj4g
+ICAgLSByZW1vdmUgb3ZlcmxhcCBjaGVjawo+PiAgICAtIEludHJvZHVjZSBleGl0IHJlYXNvbiBt
+YXNrIHRvIGFsbG93IGZvciBmdXR1cmUgZXhwYW5zaW9uIGFuZCBmaWx0ZXJpbmcKPj4gICAgLSBz
+L2VtdWxfdG9fdmNwdShjdHh0KS92Y3B1Lwo+PiAgICAtIGltcG9ydGVkIHBhdGNoOiBLVk06IHg4
+NjogUHJlcGFyZSBNU1IgYml0bWFwcyBmb3IgdXNlcnNwYWNlIHRyYWNrZWQgTVNScwo+PiAgICAt
+IG5ldyBwYXRjaDogS1ZNOiB4ODY6IEFkZCBpbmZyYXN0cnVjdHVyZSBmb3IgTVNSIGZpbHRlcmlu
+Zwo+PiAgICAtIG5ldyBwYXRjaDogS1ZNOiB4ODY6IFNWTTogUHJldmVudCBNU1IgcGFzc3Rocm91
+Z2ggd2hlbiBNU1IgYWNjZXNzIGlzIGRlbmllZAo+PiAgICAtIG5ldyBwYXRjaDogS1ZNOiB4ODY6
+IFZNWDogUHJldmVudCBNU1IgcGFzc3Rocm91Z2ggd2hlbiBNU1IgYWNjZXNzIGlzIGRlbmllZAo+
+Pgo+PiBBYXJvbiBMZXdpcyAoMSk6Cj4+ICAgIEtWTTogeDg2OiBQcmVwYXJlIE1TUiBiaXRtYXBz
+IGZvciB1c2Vyc3BhY2UgdHJhY2tlZCBNU1JzCj4+Cj4+IEFsZXhhbmRlciBHcmFmICg2KToKPj4g
+ICAgS1ZNOiB4ODY6IERlZmxlY3QgdW5rbm93biBNU1IgYWNjZXNzZXMgdG8gdXNlciBzcGFjZQo+
+PiAgICBLVk06IHg4NjogQWRkIGluZnJhc3RydWN0dXJlIGZvciBNU1IgZmlsdGVyaW5nCj4+ICAg
+IEtWTTogeDg2OiBTVk06IFByZXZlbnQgTVNSIHBhc3N0aHJvdWdoIHdoZW4gTVNSIGFjY2VzcyBp
+cyBkZW5pZWQKPj4gICAgS1ZNOiB4ODY6IFZNWDogUHJldmVudCBNU1IgcGFzc3Rocm91Z2ggd2hl
+biBNU1IgYWNjZXNzIGlzIGRlbmllZAo+PiAgICBLVk06IHg4NjogSW50cm9kdWNlIE1TUiBmaWx0
+ZXJpbmcKPj4gICAgS1ZNOiBzZWxmdGVzdHM6IEFkZCB0ZXN0IGZvciB1c2VyIHNwYWNlIE1TUiBo
+YW5kbGluZwo+Pgo+PiAgIERvY3VtZW50YXRpb24vdmlydC9rdm0vYXBpLnJzdCAgICAgICAgICAg
+ICAgICB8IDE3NiArKysrKysrKystCj4+ICAgYXJjaC94ODYvaW5jbHVkZS9hc20va3ZtX2hvc3Qu
+aCAgICAgICAgICAgICAgIHwgIDE4ICsrCj4+ICAgYXJjaC94ODYvaW5jbHVkZS91YXBpL2FzbS9r
+dm0uaCAgICAgICAgICAgICAgIHwgIDE5ICsrCj4+ICAgYXJjaC94ODYva3ZtL2VtdWxhdGUuYyAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgIDE4ICstCj4+ICAgYXJjaC94ODYva3ZtL3N2bS9zdm0u
+YyAgICAgICAgICAgICAgICAgICAgICAgIHwgMTIyICsrKysrLS0KPj4gICBhcmNoL3g4Ni9rdm0v
+c3ZtL3N2bS5oICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDcgKwo+PiAgIGFyY2gveDg2L2t2
+bS92bXgvbmVzdGVkLmMgICAgICAgICAgICAgICAgICAgICB8ICAgMiArLQo+PiAgIGFyY2gveDg2
+L2t2bS92bXgvdm14LmMgICAgICAgICAgICAgICAgICAgICAgICB8IDMwMyArKysrKysrKysrKyst
+LS0tLS0KPj4gICBhcmNoL3g4Ni9rdm0vdm14L3ZteC5oICAgICAgICAgICAgICAgICAgICAgICAg
+fCAgIDkgKy0KPj4gICBhcmNoL3g4Ni9rdm0veDg2LmMgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAyNjcgKysrKysrKysrKysrKystCj4+ICAgYXJjaC94ODYva3ZtL3g4Ni5oICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICAxICsKPj4gICBpbmNsdWRlL3RyYWNlL2V2ZW50cy9rdm0u
+aCAgICAgICAgICAgICAgICAgICAgfCAgIDIgKy0KPj4gICBpbmNsdWRlL3VhcGkvbGludXgva3Zt
+LmggICAgICAgICAgICAgICAgICAgICAgfCAgMTcgKwo+PiAgIHRvb2xzL3Rlc3Rpbmcvc2VsZnRl
+c3RzL2t2bS8uZ2l0aWdub3JlICAgICAgICB8ICAgMSArCj4+ICAgdG9vbHMvdGVzdGluZy9zZWxm
+dGVzdHMva3ZtL01ha2VmaWxlICAgICAgICAgIHwgICAxICsKPj4gICAuLi4vc2VsZnRlc3RzL2t2
+bS94ODZfNjQvdXNlcl9tc3JfdGVzdC5jICAgICAgfCAyMjQgKysrKysrKysrKysrKwo+PiAgIDE2
+IGZpbGVzIGNoYW5nZWQsIDEwNTUgaW5zZXJ0aW9ucygrKSwgMTMyIGRlbGV0aW9ucygtKQo+PiAg
+IGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9rdm0veDg2XzY0L3Vz
+ZXJfbXNyX3Rlc3QuYwo+Pgo+PiAtLQo+PiAyLjE3LjEKPj4KPj4KPj4KPj4KPj4gQW1hem9uIERl
+dmVsb3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKPj4gS3JhdXNlbnN0ci4gMzgKPj4gMTAxMTcg
+QmVybGluCj4+IEdlc2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRo
+YW4gV2Vpc3MKPj4gRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50
+ZXIgSFJCIDE0OTE3MyBCCj4+IFNpdHo6IEJlcmxpbgo+PiBVc3QtSUQ6IERFIDI4OSAyMzcgODc5
+Cj4+Cj4+Cj4+Cj4gCj4gSGkgQWxleCwKPiAKPiBJJ20gb25seSBzZWVpbmcgNCBjb21taXRzLiAg
+QXJlIHlvdSBwbGFubmluZyBvbiBzZW5kaW5nIHRoZSByZW1haW5pbmcgMz8KCkhtbSwgbG9va3Mg
+bGlrZSBhIGNvbWJpbmF0aW9uIG9mIGJhZCBlbWFpbCBzZXJ2ZXIgYW5kIGJ1Z2d5IGdpdCBicm9r
+ZSBteSAKbmVjayBoZXJlLiBJIGZvdW5kIGEgc21hbGwgYnVnIGluIHRoZSBzZXJpZXMsIHNvIEkn
+dmUganVzdCBzZW50IHRoZSBmdWxsIApzZXQgb3V0IGFnYWluLCBob3BlZnVsbHkgY29tcGxldGVs
+eSB0aGlzIHRpbWUgOikuCgoKQWxleAoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIEdlcm1h
+bnkgR21iSApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhydW5nOiBD
+aHJpc3RpYW4gU2NobGFlZ2VyLCBKb25hdGhhbiBXZWlzcwpFaW5nZXRyYWdlbiBhbSBBbXRzZ2Vy
+aWNodCBDaGFybG90dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVybGluClVzdC1J
+RDogREUgMjg5IDIzNyA4NzkKCgo=
 
