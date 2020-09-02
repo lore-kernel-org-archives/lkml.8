@@ -2,124 +2,169 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A087C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CA6C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A64C20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4214F20767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgIBQqu convert rfc822-to-8bit (ORCPT
+        id S1728233AbgIBQq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:46:50 -0400
-Received: from mailoutvs19.siol.net ([185.57.226.210]:44758 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727776AbgIBQqq (ORCPT
+        Wed, 2 Sep 2020 12:46:56 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60594 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728161AbgIBQqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:46:46 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 5D25E52676B;
-        Wed,  2 Sep 2020 18:46:43 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ORtNQRatnqJ9; Wed,  2 Sep 2020 18:46:43 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id E90D752676F;
-        Wed,  2 Sep 2020 18:46:42 +0200 (CEST)
-Received: from kista.localnet (cpe1-5-97.cable.triera.net [213.161.5.97])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id DB01552676B;
-        Wed,  2 Sep 2020 18:46:40 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Roman Stratiienko <r.stratiienko@gmail.com>
-Cc:     mripard@kernel.org, wens@csie.org, irlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/sun4i: Fix DE2 YVU handling
-Date:   Wed, 02 Sep 2020 18:51:15 +0200
-Message-ID: <10671571.W45mMbEh4O@kista>
-In-Reply-To: <CAGphcdnT4U8AztL_B_B2HYskQSAYKRgCQcnO3Q8Qj+UFO082hQ@mail.gmail.com>
-References: <20200901220305.6809-1-jernej.skrabec@siol.net> <CAGphcdnT4U8AztL_B_B2HYskQSAYKRgCQcnO3Q8Qj+UFO082hQ@mail.gmail.com>
+        Wed, 2 Sep 2020 12:46:52 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1kDVuK-0008QT-VV; Wed, 02 Sep 2020 16:46:49 +0000
+Subject: Re: [PATCH v2] power: supply: charger-manager: Fix info message in
+ check_charging_duration()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200902162315.GA11384@embeddedor>
+ <f93c0fa0-51a1-291f-feda-fbd8d7397e88@infradead.org>
+ <20200902164344.GC31464@embeddedor>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <33793c11-0705-f072-00c8-adfd1bee8915@canonical.com>
+Date:   Wed, 2 Sep 2020 17:46:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200902164344.GC31464@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne sreda, 02. september 2020 ob 09:01:17 CEST je Roman Stratiienko 
-napisal(a):
-> ср, 2 сент. 2020 г. в 00:58, Jernej Skrabec <jernej.skrabec@siol.net>:
-> > Function sun8i_vi_layer_get_csc_mode() is supposed to return CSC mode
-> > but due to inproper return type (bool instead of u32) it returns just 0
-> > or 1. Colors are wrong for YVU formats because of that.
-> > 
-> > Fixes: daab3d0e8e2b ("drm/sun4i: de2: csc_mode in de2 format struct is
-> > mostly redundant") Reported-by: Roman Stratiienko
-> > <r.stratiienko@gmail.com>
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> >  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> > b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c index 22c8c5375d0d..c0147af6a840
-> > 100644
-> > --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> > +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> > @@ -211,7 +211,7 @@ static int sun8i_vi_layer_update_coord(struct
-> > sun8i_mixer *mixer, int channel,> 
-> >         return 0;
-> >  
-> >  }
-> > 
-> > -static bool sun8i_vi_layer_get_csc_mode(const struct drm_format_info
-> > *format) +static u32 sun8i_vi_layer_get_csc_mode(const struct
-> > drm_format_info *format)> 
-> >  {
-> >  
-> >         if (!format->is_yuv)
-> >         
-> >                 return SUN8I_CSC_MODE_OFF;
-> > 
-> > --
-> > 2.28.0
+On 02/09/2020 17:43, Gustavo A. R. Silva wrote:
+> On Wed, Sep 02, 2020 at 09:29:31AM -0700, Randy Dunlap wrote:
+>> On 9/2/20 9:23 AM, Gustavo A. R. Silva wrote:
+>>> A few months ago, commit e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
+>>> changed the expression in the if statement from "duration > desc->discharging_max_duration_ms"
+>>> to "duration > desc->charging_max_duration_ms", but the arguments for dev_info() were left unchanged.
+>>> Apparently, due to a copy-paste error.
+>>>
+>>> Fix this by using the proper arguments for dev_info().
+>>>
+>>> Also, while there, replace "exceed" with "exceeds", for both messages.
+>>>
+>>> Addresses-Coverity-ID: 1496803 ("Copy-paste error")
+>>> Fixes: e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
+>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> ---
+>>> Changes in v2:
+>>>  -  Replace "exceed" with "exceeds"
+>>>
+>>>  drivers/power/supply/charger-manager.c | 6 +++---
+>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
+>>> index 07992821e252..a6d5dbd55e37 100644
+>>> --- a/drivers/power/supply/charger-manager.c
+>>> +++ b/drivers/power/supply/charger-manager.c
+>>> @@ -464,7 +464,7 @@ static int check_charging_duration(struct charger_manager *cm)
+>>>  		duration = curr - cm->charging_start_time;
+>>>  
+>>>  		if (duration > desc->charging_max_duration_ms) {
+>>> -			dev_info(cm->dev, "Charging duration exceed %ums\n",
+>>> +			dev_info(cm->dev, "Charging duration exceeds %ums\n",
+>>>  				 desc->charging_max_duration_ms);
+>>>  			ret = true;
+>>>  		}
+>>> @@ -472,8 +472,8 @@ static int check_charging_duration(struct charger_manager *cm)
+>>>  		duration = curr - cm->charging_end_time;
+>>>  
+>>>  		if (duration > desc->charging_max_duration_ms) {
+>>> -			dev_info(cm->dev, "Discharging duration exceed %ums\n",
+>>> -				 desc->discharging_max_duration_ms);
+>>> +			dev_info(cm->dev, "Charging duration exceeds %ums\n",
+>>> +				 desc->charging_max_duration_ms);
+>>>  			ret = true;
+>>>  		}
+>>>  	}
+>>>
+>>
+>> Hi,
+>>
+>> It looks to me like the second block (else if) should be about discharging,
+>> not charging, more like Colin King's patch had it:
+>>
 > 
-> Hi Jernej,
+> I had the same impression for a moment, but what makes me think this is
+> more about charging than discharging, is this line:
 > 
-> Thank you for the fix.
-> I can confirm this patch fixes the issue with wrong colors.
-
-Thanks! Can I assume that this means your Tested-by tag can be added?
-
+> 471         } else if (cm->battery_status == POWER_SUPPLY_STATUS_NOT_CHARGING) {
 > 
-> Let me share my thoughts:
-> I've looked into csc code, and it seems to me reordering U, V offsets
-> should be a much simpler solution than applying
-> color transformation matrices.It should also simplify adding more
-> color encodings in the future.
+> which was introduced by the same commit:
+> 
+> e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
+> 
+> let's find out... :)
 
-Switching offsets assumes that you have separate planes for U and V which may 
-not be true in the future. I agree that CSC matrices are needlessly duplicated 
-for handling U/V switch. I have a patch which reorganize matrix on the fly when 
-coefficients are written in registers but since it's a part of a bigger, 
-unfinished series, I didn't sent it out yet. Only difference in YUV and YVU CSC 
-matrices are switched 2nd and 3rd column.
-
-Best regards,
-Jernej
+It's a 50/50 bet :-)
 
 > 
-> Regards,
-> Roman
-
-
-
+> Thanks
+> --
+> Gustavo
+> 
 
