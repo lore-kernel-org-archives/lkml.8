@@ -2,189 +2,81 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDC7C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05890C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4B220758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:40:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rXWlyxq+"
+	by mail.kernel.org (Postfix) with ESMTP id DB13520758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:43:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgIBWkU (ORCPT
+        id S1726814AbgIBWnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 18:40:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59838 "EHLO
+        Wed, 2 Sep 2020 18:43:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgIBWkR (ORCPT
+        with ESMTP id S1726247AbgIBWnD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 18:40:17 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B266AC061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 15:40:17 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q1so488728pjd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 15:40:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Et/xc2YROl4qNYcn8Qs+aCkZEYKnAaIEsZ0/FKsLWP4=;
-        b=rXWlyxq+7xy8HCIGDawd2y3Q9cNhx3h14WdEfZpVCnXHn/W7dIw0hrnqlfwn7/bxBc
-         cX0HRuUSLpuKmOqUkj6PU74xgDN+yWwhqBtk4/xoZBLQ8kzJ8RHU0V6iVlTNzswd5BQ6
-         MBBxZDsW7WasDh52zjB1XiYWf3KOM6m/Oq9dQ71MY8NM/UC8dGl7JyioqZQUhC5EB4bQ
-         rBWuZbUeeYuVgTbc79XUAvzqwQcek7la+DjQwh1fiDuWW8Zg8nTFAKrcL/M8hcwCBCoL
-         UN0d0QGbs2TXeYQ+PanIQTJ/SGk+IVboTQzAbP3iKk624k6HIzXLPUcktL55yHC28vGB
-         /L1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Et/xc2YROl4qNYcn8Qs+aCkZEYKnAaIEsZ0/FKsLWP4=;
-        b=FDTo5j57dwjWdIPxNMsw4JncJKi9fmrGDTmmHYKqOyOnQCj+fUr5PwcRqNTJ+vF1Vf
-         P+JhhE0mayXW/mDqmfuLq8nnEWBDYh02HrSgLM468KN1E1olRhdNBB8yds+JubZXVEHi
-         kftgpy8SnSU9ww7tJZlOYrXG6j5PLROdSfi6bkhNFlrR98FvTsXKZMfzUd4xR1oxnSL3
-         fYniguBnocpH6+ONLt4N7N69ksbL4ORo0dX9eWOJA6PizGS9/1vfzAYNtqxQL/o1p0gL
-         j78fsRKqM9e5D8zQnnVN+AWg6LU3PXeNmxW6i/5Czs5oUniFp9yYDmcnS3KUSgY9PVGq
-         JJFA==
-X-Gm-Message-State: AOAM530CO0bPdkjFjtlX+R050c9MYWzivAeniFyq0SyDC66lkpj6jdXZ
-        SDu/whQk3LPcFWtCgW/psKVY4K42djWPYwwqsOT+9Q==
-X-Google-Smtp-Source: ABdhPJxcdId1jw1ooHY4s038mjOk1feFDY5gNw9gtUjdobC0Ug+3mX37JstD4Yuuwen7SNvDFv06RaZUgSy6viXWt6A=
-X-Received: by 2002:a17:90a:e517:: with SMTP id t23mr3922497pjy.25.1599086414557;
- Wed, 02 Sep 2020 15:40:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200820220955.3325555-1-ndesaulniers@google.com> <CAK7LNAQO9sKw=7RLPSnsChddrwNCc_si-XgSDQcGHTSxeq4_Pg@mail.gmail.com>
-In-Reply-To: <CAK7LNAQO9sKw=7RLPSnsChddrwNCc_si-XgSDQcGHTSxeq4_Pg@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 2 Sep 2020 15:40:03 -0700
-Message-ID: <CAKwvOdnbdhkB=OG0Gec5jt5H4b4jRGPvKfgJ-JbZY+gym-u3_g@mail.gmail.com>
-Subject: Re: [PATCH] Makefile: add -fuse-ld=lld to KBUILD_HOSTLDFLAGS when LLVM=1
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     stable <stable@vger.kernel.org>,
-        Matthias Maennich <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Stephen Hines <srhines@google.com>,
-        Dan Albert <danalbert@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Elliott Hughes <enh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 2 Sep 2020 18:43:03 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B25AAC061244;
+        Wed,  2 Sep 2020 15:43:02 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C42E4157347A0;
+        Wed,  2 Sep 2020 15:26:15 -0700 (PDT)
+Date:   Wed, 02 Sep 2020 15:43:01 -0700 (PDT)
+Message-Id: <20200902.154301.2111662696967293761.davem@davemloft.net>
+To:     xie.he.0141@gmail.com
+Cc:     khc@pm.waw.pl, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ms@dev.tdt.de
+Subject: Re: [PATCH net] drivers/net/wan/hdlc: Change the default of
+ hard_header_len to 0
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200902120706.3411-1-xie.he.0141@gmail.com>
+References: <20200902120706.3411-1-xie.he.0141@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Wed, 02 Sep 2020 15:26:16 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:14 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Fri, Aug 21, 2020 at 7:10 AM 'Nick Desaulniers' via Clang Built
-> Linux <clang-built-linux@googlegroups.com> wrote:
-> >
-> > While moving Android kernels over to use LLVM=1, we observe the failure
-> > when building in a hermetic docker image:
-> >   HOSTCC  scripts/basic/fixdep
-> > clang: error: unable to execute command: Executable "ld" doesn't exist!
-> >
-> > The is because the build of the host utility fixdep builds the fixdep
-> > executable in one step by invoking the compiler as the driver, rather
-> > than individual compile then link steps.
-> >
-> > Clang when configured from source defaults to use the system's linker,
-> > and not LLVM's own LLD, unless the CMake config
-> > -DCLANG_DEFAULT_LINKER='lld' is set when configuring a build of clang
-> > itself.
-> >
-> > Don't rely on the compiler's implicit default linker; be explicit.
->
->
-> I do not understand this patch.
->
-> The host compiler should be able to link executables
-> without any additional settings.
+From: Xie He <xie.he.0141@gmail.com>
+Date: Wed,  2 Sep 2020 05:07:06 -0700
 
-Correct; there is no issue linking working executables. The issue is
-which linker is used by default or implied when -fuse-ld=* is not
-explicitly set.
+> Change the default value of hard_header_len in hdlc.c from 16 to 0.
+> 
+> Currently there are 6 HDLC protocol drivers, among them:
+> 
+> hdlc_raw_eth, hdlc_cisco, hdlc_ppp, hdlc_x25 set hard_header_len when
+> attaching the protocol, overriding the default. So this patch does not
+> affect them.
+> 
+> hdlc_raw and hdlc_fr don't set hard_header_len when attaching the
+> protocol. So this patch will change the hard_header_len of the HDLC
+> device for them from 16 to 0.
+> 
+> This is the correct change because both hdlc_raw and hdlc_fr don't have
+> header_ops, and the code in net/packet/af_packet.c expects the value of
+> hard_header_len to be consistent with header_ops.
+> 
+> In net/packet/af_packet.c, in the packet_snd function,
+> for AF_PACKET/DGRAM sockets it would reserve a headroom of
+> hard_header_len and call dev_hard_header to fill in that headroom,
+> and for AF_PACKET/RAW sockets, it does not reserve the headroom and
+> does not call dev_hard_header, but checks if the user has provided a
+> header of length hard_header_len (in function dev_validate_header).
+> 
+> Cc: Krzysztof Halasa <khc@pm.waw.pl>
+> Cc: Martin Schiller <ms@dev.tdt.de>
+> Signed-off-by: Xie He <xie.he.0141@gmail.com>
 
->
-> So, can you link a hello world program
-> in your docker?
->
-> masahiro@zoe:~$ cat test.c
-> #include <stdio.h>
-> int main(void)
-> {
->         printf("helloworld\n");
->         return 0;
-> }
-> masahiro@zoe:~$ clang test.c
-
-It will fail, because:
-1. clang will implicitly default to ld.bfd on linux hosts and ld on
-OSX hosts (idk about windows).
-2. ld.bfd is not installed, and we *dont'* want to install it.
-Instead, we *want* to use ld.lld in a hermetic environment.
-
-> If this fails, your environment is broken.
-
-Disagree.  The environment has unique constraints (cross compiling for
-Android from OSX host, caring about builds being hermetic, etc.).
-
-> Just do  -DCLANG_DEFAULT_LINKER='lld'
-> if you know GNU ld is missing in your docker environment.
-
-I understand your point. However, I have two reasons I still think
-this patch should be upstream rather than downstream:
-
-1. The build of clang that is distributed with Android, "AOSP LLVM"
-[0], does not and cannot yet set `-DCLANG_DEFAULT_LINKER='lld'`.  See
-the discussion in the comments of [1] where I'm trying to do that.
-The reason is that AOSP LLVM is used to build Android userspace,
-kernel, and is part of the NDK for developers to target Android from
-Windows, OSX, and Linux.  If AOSP is used to build a "host binary" on
-OSX, LLD will not work there for that quite yet.  OSX has its own
-linker that is not LLD, and LLD support for mach-o binaries is a work
-in progress.  NDK has their own timeline that's blocking that change.
-
-You might think "that's Android problem" and that we should just carry
-the patch downstream/out of tree since it is somewhat self-inflicted
-but a very important second point why I think this should be upstream:
-
-2. clang itself (upstream of AOSP LLVM) doesn't yet default to
--fuse-ld=lld (likely for similar reasons related to OSX).  That means
-distributions of clang-10 from your distro package manager such as
-Debian's apt won't be hermetic.  That means if you build clang from
-source, and don't configure it with -DCLANG_DEFAULT_LINKER='lld', then
-your kernel builds with LLVM=1 will not be hermetic.  That means we
-have to document this somewhere for other people to know or find this.
-That means I have to run around and tell all of the different Kernel
-CI folks about this compiler configuration in order to test
-hermetically.
-
-...
-
-Or, encouraged by the zen of Python, we can just be explicit about
-what linker we want when using LLVM=1, which already signals that that
-is what we want to do.
-
-I think there are similar issues with other distros changing default
-flags of GCC (like -fstack-protector) [2].  The kernel is already
-explicit, so that differences in distro's changes to compiler defaults
-don't matter for kernel builds (except where people accidentally wipe
-out KBUILD_CFLAGS).  I'd argue my change is in the same bucket.
-Please reconsider this patch.
-
-(I should also probably add something like this for `make LD=ld.lld`
-and `make LD=ld.bfd`, regardless of compiler, since everyone supports
-`-fuse-ld=`)
-
-[0] https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/
-[1] https://android-review.googlesource.com/c/toolchain/llvm_android/+/1007826
-[2] https://fedoraproject.org/wiki/Changes/HardenedCompiler#Detailed_Description
--- 
-Thanks,
-~Nick Desaulniers
+Applied, thanks.
