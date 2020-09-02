@@ -2,92 +2,125 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC53C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE21C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E22C62078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62D522078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:59:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599058767;
+	bh=s6nqfBIuq3dFoDRkLqgA8cQMjG1yVZ4UtRlISUFc8VE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=hsS6sPOgznB5wthMXGtm8lhOqIczgBWE/C1C23I+obPEErAkeWIUpXutvafez+AGB
+	 yXcoTMDqjjrKBE+3h4roiSPbNOSnMOaUoSjn+ZPbXUg+PFTgg0ISFOiQr2rEbmlWIK
+	 q0w/FVU+zkY0WM0IuoLEPtmexXNTKFhFN9OGspRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgIBO7I (ORCPT
+        id S1728039AbgIBO7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:59:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46544 "EHLO mx2.suse.de"
+        Wed, 2 Sep 2020 10:59:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726355AbgIBNxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:53:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 77D7EB630;
-        Wed,  2 Sep 2020 13:53:00 +0000 (UTC)
-Date:   Wed, 2 Sep 2020 15:52:58 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v2 00/28] The new cgroup slab memory controller
-Message-ID: <20200902135258.GH4617@dhcp22.suse.cz>
-References: <20200127173453.2089565-1-guro@fb.com>
- <20200130020626.GA21973@in.ibm.com>
- <20200130024135.GA14994@xps.DHCP.thefacebook.com>
- <CA+CK2bCQcnTpzq2wGFa3D50PtKwBoWbDBm56S9y8c+j+pD+KSw@mail.gmail.com>
- <20200813000416.GA1592467@carbon.dhcp.thefacebook.com>
- <CA+CK2bDDToW=Q5RgeWkoN3_rUr3pyWGVb9MraTzM+DM3OZ+tdg@mail.gmail.com>
- <CA+CK2bBEHFuLLg79_h6bv4Vey+B0B2YXyBxTBa=Le12OKbNdwA@mail.gmail.com>
- <6469324e-afa2-18b4-81fb-9e96466c1bf3@suse.cz>
- <20200902113204.GD4617@dhcp22.suse.cz>
- <CA+CK2bA6EpfSMZD6egysFqdw0tZFuPAxEJc-rQbJTnjf+u2TGA@mail.gmail.com>
+        id S1727037AbgIBNwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:52:03 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D3F020767;
+        Wed,  2 Sep 2020 13:52:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599054722;
+        bh=s6nqfBIuq3dFoDRkLqgA8cQMjG1yVZ4UtRlISUFc8VE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=IbeQzyFkL0L1Xx0MynJJM3KNt2ZzKm747XMqTTSZrHK5HGG1gK3K6+OcBg5Zpw390
+         8UBtwQJ/QuRKdnq6FdcKrsbpA98aFmiAnH7wlT2JxLVtma/p5+Ma9v005KFEEZT76T
+         Q6zZtSxr2fDTjJhybaShUyWoecF+njvfmRhpJL3M=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0D17F3520DED; Wed,  2 Sep 2020 06:52:02 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 06:52:02 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        madhuparnabhowmik10@gmail.com,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        peterz@infrdead.org, Lina Iyer <ilina@codeaurora.org>
+Subject: Re: WARNING: suspicious RCU usage - sdhci-pltfm: SDHCI platform and
+ OF driver helper
+Message-ID: <20200902135202.GG29330@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <CA+G9fYuiJwN1ad955Xw4ShamX2=373r+56KsbpeverEs+i_NAg@mail.gmail.com>
+ <20200831194402.GD2855@paulmck-ThinkPad-P72>
+ <CAPDyKFq7KWo=4VmPhgrt7vEEQ_P6NdVgQp+MO_1cg1dtoVR_Fw@mail.gmail.com>
+ <20200901150047.GB29330@paulmck-ThinkPad-P72>
+ <CAPDyKFptZK-OqnAuJYGnpfPbZ1qw-iSd4t5SuE7SmWic=ms48Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+CK2bA6EpfSMZD6egysFqdw0tZFuPAxEJc-rQbJTnjf+u2TGA@mail.gmail.com>
+In-Reply-To: <CAPDyKFptZK-OqnAuJYGnpfPbZ1qw-iSd4t5SuE7SmWic=ms48Q@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 02-09-20 08:53:49, Pavel Tatashin wrote:
-> On Wed, Sep 2, 2020 at 7:32 AM Michal Hocko <mhocko@suse.com> wrote:
+On Wed, Sep 02, 2020 at 08:49:11AM +0200, Ulf Hansson wrote:
+> On Tue, 1 Sep 2020 at 17:00, Paul E. McKenney <paulmck@kernel.org> wrote:
+
+[ . . . ]
+
+> > Here is the list, though it is early in the morning here:
 > >
-> > On Wed 02-09-20 11:53:00, Vlastimil Babka wrote:
-> > > >> > > Thread #2: ccs killer kthread
-> > > >> > >    css_killed_work_fn
-> > > >> > >      cgroup_mutex  <- Grab this Mutex
-> > > >> > >      mem_cgroup_css_offline
-> > > >> > >        memcg_offline_kmem.part
-> > > >> > >           memcg_deactivate_kmem_caches
-> > > >> > >             get_online_mems
-> > > >> > >               mem_hotplug_lock <- waits for Thread#1 to get read access
+> > 1.      RCU_NONIDLE().
 > >
-> > And one more thing. THis has been brought up several times already.
-> > Maybe I have forgoten but why do we take hotplug locks in this path in
-> > the first place? Memory hotplug notifier takes slab_mutex so this
-> > shouldn't be really needed.
+> > 2.      Peter's patch, if it turns out to hoist your code out of what
+> >         RCU considers to be the idle loop.
+> >
+> > 3.      If the problem is trace events, use the _rcuidle() variant of the
+> >         trace event.  Instead of trace_blah(), use trace_blah_rcuidle().
+> >
+> > 4.      Switch from RCU (as in rcu_read_lock()) to SRCU (as in
+> >         srcu_read_lock()).
+> >
+> > 5.      Take Peter's patch a step further, moving the rcu_idle_enter()
+> >         and rcu_idle_exit() calls as needed.  But please keep in mind
+> >         that these two functions require that irqs be disabled by their
+> >         callers.
+> >
+> > 6.      If RCU_NONIDLE() in inconvenient due to early exits and such,
+> >         you could use the rcu_irq_enter_irqson() and rcu_irq_exit_irqson()
+> >         functions that it calls.
+> >
+> > Do any of those help?
 > 
-> Good point, it seems this lock can be completely removed from
-> memcg_deactivate_kmem_caches
+> Yes, they will, in one way or the other. Thanks for providing me with
+> all the available options.
+> 
+> BTW, I still don't get what good rcu_idle_enter|exit() does, but I am
+> assuming those need to be called at some point before the CPU goes to
+> sleep.
 
-I am pretty sure we have discussed that in the past. But I do not
-remember the outcome. Either we have concluded that this is indeed the
-case but nobody came up with a patch or we have hit some obscure
-issue... Maybe David/Roman rememeber more than I do.
+These functions allow RCU to leave idle CPUs undisturbed.  If they
+were not invoked, RCU would periodically IPI idle CPUs to verify that
+there were no RCU readers running on them.  This would be quite bad for
+battery lifetime, among other things.  So the call to rcu_idle_enter()
+tells RCU that it may safely completely ignore this CPU until its next
+call to rcu_idle_exit().
 
--- 
-Michal Hocko
-SUSE Labs
+							Thanx, Paul
