@@ -2,105 +2,99 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA82BC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40807C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A81C12083B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5A72083B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:14:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Qwf6X/kG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXneTfPz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgIBUOA (ORCPT
+        id S1727066AbgIBUOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 16:14:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37432 "EHLO
+        Wed, 2 Sep 2020 16:14:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIBUN6 (ORCPT
+        with ESMTP id S1726936AbgIBUOe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 16:13:58 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D335EC061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 13:13:57 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id w186so1005315qkd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 13:13:57 -0700 (PDT)
+        Wed, 2 Sep 2020 16:14:34 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48BCBC061244;
+        Wed,  2 Sep 2020 13:14:34 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id k20so466106otr.1;
+        Wed, 02 Sep 2020 13:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VtKLlAudRnA2vKDoZNQw5csEIPXvQwIKm3VyTbaIKFY=;
-        b=Qwf6X/kGgSmY9tKp7Kmk3c8MgxIjvqFpEQAe+tb1+XOXXgvyehDPKeYG7dZ/Yg3IX6
-         htTDkWFcqvo513Hi/a7qgs846lJoqXVAXRLY91hdU61Y6OJwM73W0pMKYYASAJzRG86+
-         Dg/4lQzFDbgl69fZkKJw7LZwiwF3cwnrxKfHjCVxdDezuLssdPD1RCUPY998/GHXvD66
-         vXdCC47ctdTSW43mZLLck7PEVdwrveAum6OrxzF6kuLEFcjT+1LtRvd1cwQbcz8kXeCO
-         1YqtVf246V4JoEYZACerGXbT/EI/gGjAeg6BCbC2etnr610vhlV/2Mf9s7fG3C/sl3Zf
-         cwzw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=suskJZAhhjGPyfzpjHKUgDnYaYIBJVKayGrzunUwjkE=;
+        b=NXneTfPzbwpxYqCpRItbeYtQ9ktjsEXsnMi3VhIDt7E2w+tuR2J10+9TbnlH1W8/dv
+         XfVUTcfvUK+ioH/yneIC/qH7le9q6ZJLgU9OpM7C08On7oAC7At3hmyKJ3aiQxrsgxwF
+         19dkOCqc3J2IkUG8gmevfWneEBnFhvohbzA0RQIRtTw8rsox+815w8XOHzdNoJ8V19rf
+         8An8U7yDj9LV+Az4y2Xsx5xjyUDCE9SVyntKrgFSbpVlJyxSwSUINspIfrjzX/TzYC4y
+         F1ewYXKoFn3EtnmkUDvn6JmehjS480KcGpiFuoaRnRyw9oNv4uFoREXNGJquCvm1cXED
+         X+Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VtKLlAudRnA2vKDoZNQw5csEIPXvQwIKm3VyTbaIKFY=;
-        b=jMBew3d6EqurLalpRfA3SNWid1byjuLbpo+9z7eHaQLowdTHaGnNeptGvPgHjmJAjG
-         R5KfMUKQDDV7KI9kS7JRbFw8EMzX86P99culhyd+YJa3Htmtsb6KM/+HRTHBwxCu0M6e
-         IQKQKxJ1/hotcNpfXKsqzUQpWXZC7Li/5dZtKAYN/5toLM2UxJGMWAZsyg2KPTpCDVRS
-         nsvcy+ZpeZ/SyMO4o1uCWsWOs5cIafz4BmaBydmF3pvHxVUti/rawola0/4df7KaloNM
-         pWaYRKQvKAczeBDseOgexiD50JdLadbnA+Pg2DNaBr5wT/lVpVJ8UlVojOY/5LQnCxIu
-         exvw==
-X-Gm-Message-State: AOAM533aw7ehg+1yeLhSyiwu1xcRhJgc5f7K7aMUKBKWQSDUyUbiosW/
-        PxYkbn5qg1xKmisln/fzsAFKpw==
-X-Google-Smtp-Source: ABdhPJxP9sYQMnp7dADWRBTcdNFumTmUhJGfW+FF9H/GSd4vNcNPJ3p18WOwE1ej6gXtP23Bzcc3NA==
-X-Received: by 2002:a37:a484:: with SMTP id n126mr8834583qke.5.1599077636904;
-        Wed, 02 Sep 2020 13:13:56 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id g18sm347980qtu.69.2020.09.02.13.13.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 13:13:56 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kDZ8l-0068s3-Em; Wed, 02 Sep 2020 17:13:55 -0300
-Date:   Wed, 2 Sep 2020 17:13:55 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Subject: Re: [RFC PATCH 0/2] mm/gup: fix gup_fast with dynamic page table
- folding
-Message-ID: <20200902201355.GJ24045@ziepe.ca>
-References: <20200828140314.8556-1-gerald.schaefer@linux.ibm.com>
- <9071c9fa-ba6a-90dc-2d7a-8b155141d890@de.ibm.com>
- <20200831121553.8be5dcdbdbc5256846ac513e@linux-foundation.org>
- <20200901194020.418da486@thinkpad>
- <91988792-069c-31a6-7840-0122357538c7@nvidia.com>
- <20200902142437.5f39b4bb@thinkpad>
- <20200902170958.09be0c3e@thinkpad>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=suskJZAhhjGPyfzpjHKUgDnYaYIBJVKayGrzunUwjkE=;
+        b=pJN2wDEtd2/DbZFGOMWL33mm7m9pWLtnFp5x/JcLP4Vzn4DQc8f1LqM4d/+oEU9AEt
+         PwLhy4QafzYEgZC/LuMZ3QxEcDylGTxnyppMpLfQ77KzpHyY6TaXl1exSBZFPDrpYABj
+         yAkHW6JV4sO5kKLuX9FqNks98wO9XKFN+XPOzKLJ2zHOh4e28+kc7dKGIuDgnxrVNwpc
+         DwAFj0n31DQJ4PhLafhL8vcPToOshKDVKmjHr04jVoXZ1Qd6ge6on53JhOExH/Hu5oEt
+         vEJnNsfmLVWsX9OB36UKcssE/BUj2nAuADNpy7zHqCjicxLaRdxwgCOe44FbtLUeO05n
+         cwGQ==
+X-Gm-Message-State: AOAM533gJtJQEx7KFGWh5kjE+vzbyAVC3wbaRDd32Qho27v2i45Mb4Hs
+        gjDN86W4e8JYBduu5gngWPpM0ym7NifW/+zxLVQcTMmJ
+X-Google-Smtp-Source: ABdhPJzOOPPiscqZ4JYYa0ccAxr0YcUZaX1N88o+045RfHWYTYf7vSZhHIwwpjHUdFsqhszvg18l83mlBUfhZeLwHZM=
+X-Received: by 2002:a9d:a2b:: with SMTP id 40mr8974otg.308.1599077673643; Wed,
+ 02 Sep 2020 13:14:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902170958.09be0c3e@thinkpad>
+References: <159827188271.306468.16962617119460123110.stgit@warthog.procyon.org.uk>
+ <159827190508.306468.12755090833140558156.stgit@warthog.procyon.org.uk>
+ <CAKgNAkho1WSOsxvCYQOs7vDxpfyeJ9JGdTL-Y0UEZtO3jVfmKw@mail.gmail.com> <667616.1599063270@warthog.procyon.org.uk>
+In-Reply-To: <667616.1599063270@warthog.procyon.org.uk>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Wed, 2 Sep 2020 22:14:22 +0200
+Message-ID: <CAKgNAkhjDB9bvQ0h5b13fkbhuP9tYrkBQe7w1cbeOH8gM--D0g@mail.gmail.com>
+Subject: Re: [PATCH 4/5] Add manpage for fsopen(2) and fsmount(2)
+To:     David Howells <dhowells@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 05:09:58PM +0200, Gerald Schaefer wrote:
-> I guess we *could* assume that all the extra pXd_offset() calls and
-> also the de-referencing would be optimized out by the compiler for other
-> archs, but it is one example where my gut tells me that this might not
-> be so trivial and w/o unwanted effects after all.
+On Wed, 2 Sep 2020 at 18:14, David Howells <dhowells@redhat.com> wrote:
+>
+> Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
+>
+> > The term "filesystem configuration context" is introduced, but never
+> > really explained. I think it would be very helpful to have a sentence
+> > or three that explains this concept at the start of the page.
+>
+> Does that need a .7 manpage?
 
-Assigning to a variable that is never read should be eliminated.. If
-things are very complex then the pXX_offset function might need to be
-marked with attribute pure, but I think this should be reliable?
+I was hoping a sentence or a paragraph in this page might suffice. Do
+you think more is required?
 
-Jason
+Cheers,
+
+Michael
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
