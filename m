@@ -2,156 +2,135 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EFAC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE42C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD1120767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8561920767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:30:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="TYUCwox4";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="RmLMexsr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgIBP3x (ORCPT
+        id S1728284AbgIBP3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:29:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:40616 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728192AbgIBP3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 11:29:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD693101E;
-        Wed,  2 Sep 2020 08:29:07 -0700 (PDT)
-Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DAFFF3F71F;
-        Wed,  2 Sep 2020 08:29:06 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
-        jeremy.linton@arm.com, coresight@lists.linaro.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH v2] coresight: etm4x: Handle unreachable sink in perf mode
-Date:   Wed,  2 Sep 2020 16:28:47 +0100
-Message-Id: <20200902152847.195909-1-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.24.1
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:6218 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728161AbgIBPZE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:25:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1599060304; x=1630596304;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+  b=TYUCwox4mTo4ySGXeofvaUhiGrgqqX9UOsOiOiyocwa67TQFmpjCkWb9
+   1IaXjzj6TpKEsoB10FgUjaRhkqcY4l7k8HDsHbl/6c0fS6ZzlpfycUVnx
+   fNcpu7SMtL3wvz1bbk5tCRSKrLOHkZ1gq3jbpsWthjfWJfb3P0sqNevaZ
+   a8r586SPsDtMPgqzR3LjQD5D9tlMmSwRnfJbI18kY5HgKpuRivsGCqPPz
+   LRRTVOB2WSidiRdmS7kX5xBtzm2gEPlQQFhfU4tFXUNIaV9jRhbRNbbfi
+   8tSLv7FSouylX5AzRQJM29Cw0g/6V1qb8PIv5gU4DormFAJJAzCNww9t/
+   Q==;
+IronPort-SDR: ZBbAUPenMn+ytTD1+bDbQC2AhmRnNJ1KJq+8Kl4eNXiSXe7ZStfJXze9p4R/Z8eP9M8BGFPB/G
+ RQd3ZSNGL3Yi6dZbK00sur0oGWL8e6d+sszospbM/u9BnHvHp0YntNHyKqxO4Ug1AZ2rgf2hQi
+ 16iIwRRvOx2iiPI+KrIkmRjB86ni5FpIJThKgS5Kztz468pYZ5DlxH9LUCfoaBcQHvMpoENECS
+ ZI+vHDi3jQwQpL1KOhdlyp556PZh+9OovMSdTyNqFurWThwkhUyKSdW4guJRBuSV/yn4ctLBmQ
+ fTY=
+X-IronPort-AV: E=Sophos;i="5.76,383,1592841600"; 
+   d="scan'208";a="150760263"
+Received: from mail-dm6nam10lp2103.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.103])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Sep 2020 23:24:47 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NDFSJWo5U5uW0071hnlRGRZCWsYYoEvUHJ1Lj9/g6ehhgpqmdcHxlhllOIcFIPSQj2Z3RH80chxRNxHhIs73DXEQoctfeknI2ijBzYPVLk8Je7ahbLHF8HuarWBIIjJVQBdELrVHwrjAjDNMebi7ctAWIsPTkOrrAWFvJRga1EmsaT+bNo4yjfvbIyo+y4wmBdcHjtofGRHoU5Jr68pMZ8Q586L0Yf7lG/B2WYFFVWH51SJF37QrJakTPSVSNbRKwng+YJ0Dry9/ZsxgUosmUJVIVjsE8Me2uXDAV7wO+kRZcsoI8rAsHshDUgaf3yZAJb+uNlm8zeH2QvD8++5ziA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=IySUSGLrsKvOjcDDqtrLGfWM9OEVT0ckuK6yI9bMEu/hc9iT1PfeEIugjRVnO6Cotzs1N4tRK57vu71+QBr7vFjq2FfNAwyBkbaJKWB1quQHTsEVXZlWNniH0GTCdPFE/yF572AIrpWqr2F7zGqORAa62PvwRJV4Amjm9T+Bs5IkVs9EB7U/s9JJE0rI2ACORLSt+7lCy3S4o/BiMqd8OG5ojO9u2s11XmYPa7OpUPUjexAqCFddte+RY0tbfQ24sJURG24BOY3vgUonLJcpC9bbnO0uOUQlskzIogFgqnTfoCz+PQbhASeg0oM8cKGky3KawLChr8VR9fu3W+4Kfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=RmLMexsr63hNqnwhKnJPpkUz0Sj5LjI59ddiOjxaoJRnwVBmHBGdOcJOcECG7sg2mJ27uT2/PUKeZDEKb7kjntgIiDW9/82h+Q7F3pxvm1p8MTKsStfCbEJcBzLBHLB5PZiNVvVyi4mbKoG9vIMql8NzAxCtLTYpmP7izpQxH+E=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN4PR0401MB3679.namprd04.prod.outlook.com
+ (2603:10b6:803:46::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.25; Wed, 2 Sep
+ 2020 15:24:39 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3326.023; Wed, 2 Sep 2020
+ 15:24:39 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 04/19] floppy: use bdev_check_media_change
+Thread-Topic: [PATCH 04/19] floppy: use bdev_check_media_change
+Thread-Index: AQHWgTQMdY22DogrRE+XphQq0renYQ==
+Date:   Wed, 2 Sep 2020 15:24:39 +0000
+Message-ID: <SN4PR0401MB35982192F35579A6B487EECE9B2F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200902141218.212614-1-hch@lst.de>
+ <20200902141218.212614-5-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2001:a62:1590:f101:1584:4722:fd5f:b30e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1a846bd3-c68b-4270-9755-08d84f544f44
+x-ms-traffictypediagnostic: SN4PR0401MB3679:
+x-microsoft-antispam-prvs: <SN4PR0401MB36793EE2B17B449273A42E149B2F0@SN4PR0401MB3679.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rZLriCRvFtx2yWIglYlTZyPzesPWZqYxxoxSYy1RObVBiof/0pbRw2e1iD1dmxHxy3TicKw83CsCl/GPlF1p9U38vbKsmCeKThkfeg1Sy6/8FSivhhtmertHHejzI1S4LwPSfnBwI6rrUtE1Qw5dDb5g31WtCwkL4C80M6VHxDJgDaOL4u4WvyVWOFveoWRjkS66zLcbV52HwywrrJbr6T45fYuD8u5NEFs7Lre9kT1ZEKxeZRGWTP6Ac+xKLFcs+JlT3KP7lRHrTS+A+cy5V4l2MV8Ho64Z85v/CyUkjAXBAIJ9V4jVLMwG9zyRvQjqsJ0W+7Q1JWPuk0mBt9C/xw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(39850400004)(396003)(366004)(8936002)(86362001)(76116006)(52536014)(91956017)(66476007)(66556008)(33656002)(66946007)(71200400001)(5660300002)(4326008)(66446008)(64756008)(7696005)(316002)(558084003)(54906003)(110136005)(7416002)(8676002)(186003)(19618925003)(478600001)(4270600006)(6506007)(55016002)(9686003)(2906002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 2sx8UtjjLAr/68EpndtxVX+X4lAGVRid0f0OjetQsFzSuiZ7yfSTYbhvcghKpT/K47q80wPsEeVruYnsbSFh1xidv+OnliW7my+/nxbIjTy1GfJik1BVkF38WcnQBGvbaw1jzjjQGbSZdijKTNIH8cmMgfbVw6AQFrt3/A4Gj/xKJdqTWgRSK+EkhY567NvX3X3ojuJO0FeTpEV4AnYVxiPfuWvzOeHssEp9pGOrY38UHRBcjUE7rQHPIwgcUri506enIsqENY990aLVmxFftWOviEsYbAr60qNHeagXG+JTS4HY8yAAPYvRnChC/oXduYZKaJotJpdjsD/AAuH5m58OQdK1v58nd4jjkygJaqC6x75ZmAD3NhlpoNcob6h7wvJf7XinTO+PmyoN4u0B93EmjcHFBHXnL7j1YBLNASbC4nfi5NWn0oJ4HDdaeHeZSdnG3wWfQOikE62YR3uFNIV2tN7q1vdzUNFeQMNd7GqN3wFeKXepEnnAlDEPhB65pBhNsYyLnCapuGXG43HqwX+XdzyJh0+zK5I+xRrBtJa4Ku2Iz3ld3s2seuo3HtGeMiMmAUn74GeeHRELnyRk1NOaHe3cFx0RqfbDW9iFdsYrne7tqDUD0FP3VERpjTj5jBJgDgNO4WKdrqY6AscJoyVOGJMaL+GRTlPyfFhvhLpNLQIBAafVeTuwt6oDjk7uBqHl/mJ67lKKAgHXAvdfiA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a846bd3-c68b-4270-9755-08d84f544f44
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 15:24:39.6658
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZlarJBzYgLLzI8LbjKqT+WhKFDXf6aM5JGoDbq+MVlUbhqK3Yv3GKVKlEE9XLCCzGpLKeeqM1dBPGgua4Qwl+OWv+InSVHhijJmut5ed1kE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3679
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the specified/hinted sink is not reachable from a subset of the CPUs,
-we could end up unable to trace the event on those CPUs. This
-is the best effort we could do until we support 1:1 configurations.
-Fail gracefully in such cases avoiding a WARN_ON, which can be easily
-triggered by the user on certain platforms (Arm N1SDP), with the following
-trace paths :
-
- CPU0
-      \
-       -- Funnel0 --> ETF0 -->
-      /                        \
- CPU1                           \
-                                  MainFunnel
- CPU2                           /
-      \                        /
-       -- Funnel1 --> ETF1 -->
-      /
- CPU1
-
-$ perf record --per-thread -e cs_etm/@ETF0/u -- <app>
-
-could trigger the following WARNING, when the event is scheduled
-on CPU2.
-
-[10919.513250] ------------[ cut here ]------------
-[10919.517861] WARNING: CPU: 2 PID: 24021 at
-drivers/hwtracing/coresight/coresight-etm-perf.c:316 etm_event_start+0xf8/0x100
-...
-
-[10919.564403] CPU: 2 PID: 24021 Comm: perf Not tainted 5.8.0+ #24
-[10919.570308] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
-[10919.575865] pc : etm_event_start+0xf8/0x100
-[10919.580034] lr : etm_event_start+0x80/0x100
-[10919.584202] sp : fffffe001932f940
-[10919.587502] x29: fffffe001932f940 x28: fffffc834995f800
-[10919.592799] x27: 0000000000000000 x26: fffffe0011f3ced0
-[10919.598095] x25: fffffc837fce244c x24: fffffc837fce2448
-[10919.603391] x23: 0000000000000002 x22: fffffc8353529c00
-[10919.608688] x21: fffffc835bb31000 x20: 0000000000000000
-[10919.613984] x19: fffffc837fcdcc70 x18: 0000000000000000
-[10919.619281] x17: 0000000000000000 x16: 0000000000000000
-[10919.624577] x15: 0000000000000000 x14: 00000000000009f8
-[10919.629874] x13: 00000000000009f8 x12: 0000000000000018
-[10919.635170] x11: 0000000000000000 x10: 0000000000000000
-[10919.640467] x9 : fffffe00108cd168 x8 : 0000000000000000
-[10919.645763] x7 : 0000000000000020 x6 : 0000000000000001
-[10919.651059] x5 : 0000000000000002 x4 : 0000000000000001
-[10919.656356] x3 : 0000000000000000 x2 : 0000000000000000
-[10919.661652] x1 : fffffe836eb40000 x0 : 0000000000000000
-[10919.666949] Call trace:
-[10919.669382]  etm_event_start+0xf8/0x100
-[10919.673203]  etm_event_add+0x40/0x60
-[10919.676765]  event_sched_in.isra.134+0xcc/0x210
-[10919.681281]  merge_sched_in+0xb0/0x2a8
-[10919.685017]  visit_groups_merge.constprop.140+0x15c/0x4b8
-[10919.690400]  ctx_sched_in+0x15c/0x170
-[10919.694048]  perf_event_sched_in+0x6c/0xa0
-[10919.698130]  ctx_resched+0x60/0xa0
-[10919.701517]  perf_event_exec+0x288/0x2f0
-[10919.705425]  begin_new_exec+0x4c8/0xf58
-[10919.709247]  load_elf_binary+0x66c/0xf30
-[10919.713155]  exec_binprm+0x15c/0x450
-[10919.716716]  __do_execve_file+0x508/0x748
-[10919.720711]  __arm64_sys_execve+0x40/0x50
-[10919.724707]  do_el0_svc+0xf4/0x1b8
-[10919.728095]  el0_sync_handler+0xf8/0x124
-[10919.732003]  el0_sync+0x140/0x180
-
-Even though we don't support using separate sinks for the ETMs yet (e.g,
-for 1:1 configurations), we should at least honor the user's choice and
-handle the limitations gracefully, by simply skipping the tracing on ETMs
-which can't reach the requested sink.
-
-Fixes: f9d81a657bb8 ("coresight: perf: Allow tracing on hotplugged CPUs")
-Reported-by: Jeremy Linton <jeremy.linton@arm.com>
-Tested-by: Jeremy Linton <jeremy.linton@arm.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
-Change since v1:
- - Updated the description, added Tested-by.
- - No code changes
- - Rebased on coresight/next
----
- drivers/hwtracing/coresight/coresight-etm-perf.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index 1a3169e69bb1..9d61a71da96f 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -321,6 +321,16 @@ static void etm_event_start(struct perf_event *event, int flags)
- 	if (!event_data)
- 		goto fail;
- 
-+	/*
-+	 * Check if this ETM is allowed to trace, as decided
-+	 * at etm_setup_aux(). This could be due to an unreachable
-+	 * sink from this ETM. We can't do much in this case if
-+	 * the sink was specified or hinted to the driver. For
-+	 * now, simply don't record anything on this ETM.
-+	 */
-+	if (!cpumask_test_cpu(cpu, &event_data->mask))
-+		goto fail_end_stop;
-+
- 	path = etm_event_cpu_path(event_data, cpu);
- 	/* We need a sink, no need to continue without one */
- 	sink = coresight_get_sink(path);
--- 
-2.24.1
-
+Looks good,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
