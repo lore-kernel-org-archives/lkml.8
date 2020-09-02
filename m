@@ -2,135 +2,129 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F66C2BBD0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC27C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1B9208B3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A33A208B3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:48:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="pgQgsgl5";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ttjnDOcQ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="j/L2keva"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgIBPsF (ORCPT
+        id S1728231AbgIBPsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:48:05 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:61583 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728550AbgIBPrT (ORCPT
+        Wed, 2 Sep 2020 11:48:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45574 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728571AbgIBPre (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:47:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1599061659; x=1630597659;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
-  b=pgQgsgl5xKk48BtF/8tMXvPTF9HZRzl11yjWki54gXMu2s+3KQ8BrmI3
-   ohRneP7BE92psRfPeikRkK3gQSvckybO20PVlfrZ8YGYqVS8O7ogxoJ63
-   DLMIXDFNNgMPV6OIYrChWebuF8Z5R3jxaprp7QT1fW2Tj1IvKWK9NAvtA
-   EZCOqrvDluJyPM77s47jlYAlTjQNC3eaNdHHe0P2Q/fg9LPKIu8cKtp/5
-   uNtETOijdPPGnqdaKx2X1nC0FTrgvctxkzQPjC9aMuzIDFxarEbC7t5I1
-   CdEXk+SY0vBfRG+XcF7Cp4ANr4wl1A2cEyzrevXpchw0b03+ebgbP8HKA
-   g==;
-IronPort-SDR: B0uWa6Qxz5ZtjFaDz70FMSPv/KeYBdkInP/2UPv7rs1uiOB9GLvc7x80tuHj/fQD8OYKNZ/nwk
- h7ifF1VCM7Xbr5MH0Js1RgBFPQDPF562tTmaUYGKP8i1jehIIatJFI0bzfhgOvLHedKIkVUe2W
- dUg/JeyhF9eUvb7rYfJo3wx+aaW8xtLir5NaFnSBrMy6K8UteDP+IVlsA3tn8VdX42LTcnuo/d
- vvcgl202UqJax2/pU/7g6NAjnZavA4VM4TFdZhp83+8CQWl5c3IAbkwaqK1RdO2S+fuW544o1w
- woU=
-X-IronPort-AV: E=Sophos;i="5.76,383,1592841600"; 
-   d="scan'208";a="249683061"
-Received: from mail-dm6nam10lp2108.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.108])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Sep 2020 23:47:36 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TT39A1ny8naSsAywazFLDuAz8V4r/QHkvRAJJR+n7NXs72zs5NT5NLFidUl04B0JH2NM7qtJwQ7JoXg2PwRc8ScqYTABGS4Ab2siXYdXIZ5hzHPzquQWVK9IsLscCCqTkWIYWHyyC1ApeYCxJ7rHIB8Q52indNuoEGRSfjWS6r1RU6cXq8/OMQY5gVippaJ3mAH+591TMoz8AxWzM6B9KPGViMg12sI3KL+HEP1J8SRDVS7a3rPRunN3Pqp0h6M8ylsgFp0IPwPwgL2+skguhx0elMjrvIOe3EtAOCb17jUXcaKSo+sJHRuXDYP5CouR4JDKNcUQnDvNXz2nbg6EHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=fOHlQcRaxCQ1Iws2JdT+KDmWFxzqRJV1yz8gvDgNS6jG34SU1Hf9tttSfNvLOTF0XuAndIPwxrK3XlE6GPR2J6OF3Gct/tYns4rxV1QhmfEj4BfwlwqvSTD9bRqYaqMnQnuFrcLYFoInhLXYb9IIGwYlZLXyM7uodrQRTgpBxFMSD5nqXzbVHFUeolwuX/fjrhAInTUSE70OTG18+y2XuQqNDQjKA7Nta0FZAUHKTDVFj8UFxQSQbottSMON29/9pEINMV2RlYbKWw+y6O73Wktbe9aVXLs91PwsE2w3dxuQiwR//Yxafjp+QiuMQgaJdPHQHQcUeGzFeuLtcrgnBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=ttjnDOcQE6QgnDlm77OL5eDdzNpitHR4JDP+kuRGydp+RcY7SAT8xrH+5BXJR0JVwqW5LDrXo9tD0ONK3pd6nKKkJLLigBbf0TbPVEWYVGhBbbeP6yCPQ9WA0hz8q3LwgZJL/oM+IMWRCMCzAalBdAiS8BDnHb/DSX5mih0qIKo=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB3886.namprd04.prod.outlook.com
- (2603:10b6:805:44::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.21; Wed, 2 Sep
- 2020 15:47:16 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3326.023; Wed, 2 Sep 2020
- 15:47:16 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 12/19] ide-cd: use bdev_check_media_changed
-Thread-Topic: [PATCH 12/19] ide-cd: use bdev_check_media_changed
-Thread-Index: AQHWgTf3PmNLrab4VU+j1SQRgo0d6g==
-Date:   Wed, 2 Sep 2020 15:47:16 +0000
-Message-ID: <SN4PR0401MB35989B6BD2A66BF40234650B9B2F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200902141218.212614-1-hch@lst.de>
- <20200902141218.212614-13-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2001:a62:1590:f101:1584:4722:fd5f:b30e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9ba6b4e8-668c-4c8e-3aff-08d84f5777b2
-x-ms-traffictypediagnostic: SN6PR04MB3886:
-x-microsoft-antispam-prvs: <SN6PR04MB38864BCC550BBD658DF61BFF9B2F0@SN6PR04MB3886.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vcKxSHHY9NBu82gQjw8fDIvvoxJKMMs4SzpQNZnQXE4Q0gBtP+68OgoabLH4mAdvrmmMfadb4UQ+y7dnV+j6jngXZTMIXgMrHCpmfmyGmoBlC+qgOrq1FOwXK3YcGRz81OXFEfkHh+x7h7M7H/lyMt/SJwcM15XvzJ0V4UoSWbwzsFEMexQjSxfVOloNQnsw/Q/hPIGtfrf5Vtzt1lSpaZJWSgLIlINDTC6B8mHFERxmvQDkp4le4KisZTh7xKXZ1ptdDY1MKufMWDpGped9AJ7LCWpxvIpkYdIkhafaUAQxfKNyaaaOTMrkI5yzKIloTo5iUrwKdbi5KNjYGnBKMQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(376002)(346002)(396003)(39850400004)(33656002)(8936002)(9686003)(7416002)(52536014)(4270600006)(71200400001)(4326008)(6506007)(186003)(19618925003)(5660300002)(55016002)(8676002)(7696005)(66446008)(316002)(558084003)(2906002)(478600001)(64756008)(66476007)(54906003)(66946007)(86362001)(66556008)(110136005)(91956017)(76116006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: onUXIU7UtbzkjyIu6Y2if4VMDpg8SdM7FdtqY0Lh6FWaZN3Q5XWTIe+cduiSj/jWXAJfn39/0WQm1NnMHxJ66AAYi2fogBEaMkJeYFWFKwlgppK/XjtBmbA2hdLWTvqnXbjVFpPr1RgA6C3qYTBesBYFTOqyGPMOp7WBhmbAA10WWRlAnqpyjNNGfYKpO5+xRdkb+PP0XnvyQt1QgF4UzyG7gBHWJMJam7BlBBeqB3G+mj1ZYRctFcGxjb4/dOB+7qhlFoAVCZ/QJZpu/XoFFHJqqdvSisIoE3WNtmBlOM1OMPOJj6m4Jr4rSU7hcQgmpSvtdGEQl+CyvdiXpntCoYy/QxRqK7MUkkTX/RT62MsjWTSIFFM/vEBHb6Q4zDokpsrAOj3aSrlqbY/iVWzC9FehumbjgWPayXS9SOLKna4kwILm1OOyhXXBnS0unvHhfDUav+vR9TR14wuyZnUvEU9rxB1a/EjKg446H8YxRrb/LyN3u2KGDNHTLkbTqtJSVjHzPd67f3uT4ATP9h15/QpDAZR7j5yLnYiBj7gM5vY2KNYytcd8GsZdmWoiYhEXWTEAHqCOr4irTohktQL2P/HyLIlXuh3p2lxUAymWbOXtjFeXnRB6VRQsGxzFGYZjNbtajiKbEoK4IuqC1STB9o4IO8vIO6Ggrt6KNFaGOVoTQbdbGwxQFGmMP9urVUWONxNeu3k8yxb0FzO1wn4HvQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 2 Sep 2020 11:47:34 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 082FW52j046432;
+        Wed, 2 Sep 2020 11:47:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=B9HMMIYxV7dLKsUViztHWLvJvaoop/tt7LeMtRlkEdg=;
+ b=j/L2kevaqTtg0L2RSlXvTdVbe+bR5FpGm3jSl3XkfCeJYMtWlz4wTp6ho1KQ7ifeuYss
+ JhzRrfLNCMor+uQiL3FlIUBJ0UtFGbxHPonJa1PJlFPUCo1B/l5mcqCSAdoShdaKiN14
+ OI+qbcqPndA51Ome97Nwjj/oOiiMsE4D/6gJgsRMCeKq2amt5Z3C1V7WlrDOkWBcH5It
+ zEXxwgkzWsOftYzMqm/qny+zP9gR6LVkAT9kQgJRt/b4e7mj2+75aYFypfh5nWvf2P5Z
+ 8RJjuQUKgDS9zDlhCs7RjyWonF3AcReiB2nm12t4AXCs1ZbrdROeyXXH6jXqBZ2sjTka Fw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33ae37rh9x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 11:47:23 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 082FgMtE113019;
+        Wed, 2 Sep 2020 11:47:22 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33ae37rh8u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 11:47:22 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 082FlK8B021110;
+        Wed, 2 Sep 2020 15:47:20 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma01wdc.us.ibm.com with ESMTP id 337en990f3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 15:47:20 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 082FlGsH34472356
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 2 Sep 2020 15:47:16 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5785C78064;
+        Wed,  2 Sep 2020 15:47:19 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CA4E67806B;
+        Wed,  2 Sep 2020 15:47:18 +0000 (GMT)
+Received: from [9.211.74.86] (unknown [9.211.74.86])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  2 Sep 2020 15:47:18 +0000 (GMT)
+Subject: Re: [PATCH 2/5] input: misc: Add IBM Operation Panel driver
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        linux-i2c@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au,
+        benh@kernel.crashing.org, brendanhiggins@google.com,
+        dmitry.torokhov@gmail.com, robh+dt@kernel.org
+References: <20200820161152.22751-1-eajames@linux.ibm.com>
+ <20200820161152.22751-3-eajames@linux.ibm.com>
+ <20200901061108.GB1148@ninjato>
+From:   Eddie James <eajames@linux.ibm.com>
+Message-ID: <796de8d4-6771-a8da-ea93-6e7e08aa93b0@linux.ibm.com>
+Date:   Wed, 2 Sep 2020 10:47:18 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ba6b4e8-668c-4c8e-3aff-08d84f5777b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 15:47:16.0624
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MDKQfAGWVLBVPqdPTjVQazV2yiw0wB32nr3IJAPyQ3vtmhx2B3L2BiEIFHHzlYwpwrUYgFT/TXCY6s+DmGyYTgwokk6+RSI3fx6w97v5/wg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3886
+In-Reply-To: <20200901061108.GB1148@ninjato>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-02_09:2020-09-02,2020-09-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ spamscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 clxscore=1011
+ mlxlogscore=999 malwarescore=0 priorityscore=1501 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009020144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+
+On 9/1/20 1:11 AM, Wolfram Sang wrote:
+>> +	switch (event) {
+>> +	case I2C_SLAVE_STOP:
+>> +		command_size = panel->idx;
+>> +		fallthrough;
+>> +	case I2C_SLAVE_WRITE_REQUESTED:
+>> +		panel->idx = 0;
+>> +		break;
+>> +	case I2C_SLAVE_WRITE_RECEIVED:
+>> +		if (panel->idx < sizeof(panel->command))
+>> +			panel->command[panel->idx++] = *val;
+>> +		else
+>> +			dev_dbg(&panel->input->dev, "command truncated\n");
+> Just double checking: Do you really want to process truncated commands?
+> Since you detect the state here, you could also choose to reject such
+> commands?
+
+
+Yes I suppose not. It could still be a valid command with extra bytes, 
+but unlikely, so probably better not to handle it.
+
+
+Thanks,
+
+Eddie
+
+
+>
