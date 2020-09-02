@@ -2,150 +2,286 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70C4C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1802DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD06F20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:36:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="kvAX7gx5"
+	by mail.kernel.org (Postfix) with ESMTP id E5EC920767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgIBOf5 (ORCPT
+        id S1728127AbgIBOgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:35:57 -0400
-Received: from gateway30.websitewelcome.com ([192.185.193.11]:41233 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727895AbgIBOf3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:35:29 -0400
-X-Greylist: delayed 1275 seconds by postgrey-1.27 at vger.kernel.org; Wed, 02 Sep 2020 10:35:28 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 223FA4718
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 09:14:07 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id DTWZkQS9bOIGpDTWZkwUx9; Wed, 02 Sep 2020 09:14:07 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=VfJ4a1TS1d2GvTG5jmxmBPb/Aevm1zxN6E7ujp5j+A8=; b=kvAX7gx5C9K0XM1Ryu373oOKpw
-        E0NaF4mn9DWrfJ1UQZLJRtCKgAK7q4wf6NLuGew17iBMPN6qev8Hp7SO9s17OV8UwPDuWjoDLA1Sm
-        lLZX33byeO4id3zQhorfp+j13HwT7fiKb4l/84pzF02Hs6NikU/+y2lgjr6SB0S6JCqJBfmCN5nhc
-        SQmoz2zofdeMPzPQXwyPn38vsmsyd6qjyU6KrkfCiZMsvLsMLhABqkl/zVi5NuFXWohL6SVQwtZAS
-        EVJ1flVGKa5f7L8b0bNo45HaEO67KpEGgrCYGYbf+sF/EvKzH7AuZYHCj47RKS6VNdtztS+R8D6cG
-        UG5drKZQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:47548 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1kDTWY-002Q8v-Lf; Wed, 02 Sep 2020 09:14:06 -0500
-Subject: Re: [PATCH] rt2x00: Use fallthrough pseudo-keyword macro
-To:     Leesoo Ahn <dev@ooseel.net>
-Cc:     Stanislaw Gruszka <stf_xl@wp.pl>,
-        Helmut Schaa <helmut.schaa@googlemail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200902130507.227611-1-dev@ooseel.net>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Message-ID: <88a62415-5859-efb6-f608-db7dcb84ad9b@embeddedor.com>
-Date:   Wed, 2 Sep 2020 09:20:19 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200902130507.227611-1-dev@ooseel.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1kDTWY-002Q8v-Lf
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:47548
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Wed, 2 Sep 2020 10:36:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57068 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727044AbgIBOfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 10:35:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 4F2C7B1AE;
+        Wed,  2 Sep 2020 14:35:36 +0000 (UTC)
+Date:   Wed, 02 Sep 2020 16:35:33 +0200
+Message-ID: <s5hh7sg9rgq.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     himadrispandya@gmail.com, dvyukov@google.com,
+        linux-usb@vger.kernel.org, perex@perex.cz, tiwai@suse.com,
+        stern@rowland.harvard.ed, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, alsa-devel@alsa-project.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Eli Billauer <eli.billauer@gmail.com>,
+        Emiliano Ingrassia <ingrassia@epigenesys.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Tsoy <alexander@tsoy.me>,
+        "Geoffrey D. Bennett" <g@b4.vu>, Jussi Laako <jussi@sonarnerd.net>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Dmitry Panchenko <dmitry@d-systems.ee>,
+        Chris Wulff <crwulff@gmail.com>,
+        Jesus Ramos <jesus-ramos@live.com>
+Subject: Re: [PATCH 01/10] USB: move snd_usb_pipe_sanity_check into the USB core
+In-Reply-To: <20200902110115.1994491-2-gregkh@linuxfoundation.org>
+References: <20200902110115.1994491-1-gregkh@linuxfoundation.org>
+        <20200902110115.1994491-2-gregkh@linuxfoundation.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/2/20 08:05, Leesoo Ahn wrote:
-> Replace all '/* fall through */' comments with the macro[1].
+On Wed, 02 Sep 2020 13:01:03 +0200,
+Greg Kroah-Hartman wrote:
 > 
-> [1]: https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> snd_usb_pipe_sanity_check() is a great function, so let's move it into
+> the USB core so that other parts of the kernel, including the USB core,
+> can call it.
 > 
+> Name it usb_pipe_type_check() to match the existing
+> usb_urb_ep_type_check() call, which now uses this function.
+> 
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: Eli Billauer <eli.billauer@gmail.com>
+> Cc: Emiliano Ingrassia <ingrassia@epigenesys.com>
+> Cc: Alan Stern <stern@rowland.harvard.edu>
+> Cc: Alexander Tsoy <alexander@tsoy.me>
+> Cc: "Geoffrey D. Bennett" <g@b4.vu>
+> Cc: Jussi Laako <jussi@sonarnerd.net>
+> Cc: Nick Kossifidis <mickflemm@gmail.com>
+> Cc: Dmitry Panchenko <dmitry@d-systems.ee>
+> Cc: Chris Wulff <crwulff@gmail.com>
+> Cc: Jesus Ramos <jesus-ramos@live.com>
+> Cc: linux-usb@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This looks familiar...
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
 
-https://lore.kernel.org/lkml/20200821062052.GA8618@embeddedor/
 
-Thanks
---
-Gustavo
+thanks,
+
+Takashi
+
+
+> ---
+>  drivers/usb/core/urb.c          | 29 ++++++++++++++++++++++-------
+>  include/linux/usb.h             |  1 +
+>  sound/usb/helper.c              | 16 +---------------
+>  sound/usb/helper.h              |  1 -
+>  sound/usb/mixer_scarlett_gen2.c |  2 +-
+>  sound/usb/quirks.c              | 12 ++++++------
+>  6 files changed, 31 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/usb/core/urb.c b/drivers/usb/core/urb.c
+> index 27e83e55a590..45bc2914c1ba 100644
+> --- a/drivers/usb/core/urb.c
+> +++ b/drivers/usb/core/urb.c
+> @@ -192,24 +192,39 @@ static const int pipetypes[4] = {
+>  };
+>  
+>  /**
+> - * usb_urb_ep_type_check - sanity check of endpoint in the given urb
+> - * @urb: urb to be checked
+> + * usb_pipe_type_check - sanity check of a specific pipe for a usb device
+> + * @dev: struct usb_device to be checked
+> + * @pipe: pipe to check
+>   *
+>   * This performs a light-weight sanity check for the endpoint in the
+> - * given urb.  It returns 0 if the urb contains a valid endpoint, otherwise
+> - * a negative error code.
+> + * given usb device.  It returns 0 if the pipe is a valid for the specific usb
+> + * device, otherwise a negative error code.
+>   */
+> -int usb_urb_ep_type_check(const struct urb *urb)
+> +int usb_pipe_type_check(struct usb_device *dev, unsigned int pipe)
+>  {
+>  	const struct usb_host_endpoint *ep;
+>  
+> -	ep = usb_pipe_endpoint(urb->dev, urb->pipe);
+> +	ep = usb_pipe_endpoint(dev, pipe);
+>  	if (!ep)
+>  		return -EINVAL;
+> -	if (usb_pipetype(urb->pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
+> +	if (usb_pipetype(pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
+>  		return -EINVAL;
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL_GPL(usb_pipe_type_check);
+> +
+> +/**
+> + * usb_urb_ep_type_check - sanity check of endpoint in the given urb
+> + * @urb: urb to be checked
+> + *
+> + * This performs a light-weight sanity check for the endpoint in the
+> + * given urb.  It returns 0 if the urb contains a valid endpoint, otherwise
+> + * a negative error code.
+> + */
+> +int usb_urb_ep_type_check(const struct urb *urb)
+> +{
+> +	return usb_pipe_type_check(urb->dev, urb->pipe);
+> +}
+>  EXPORT_SYMBOL_GPL(usb_urb_ep_type_check);
+>  
+>  /**
+> diff --git a/include/linux/usb.h b/include/linux/usb.h
+> index 20c555db4621..0b3963d7ec38 100644
+> --- a/include/linux/usb.h
+> +++ b/include/linux/usb.h
+> @@ -1764,6 +1764,7 @@ static inline int usb_urb_dir_out(struct urb *urb)
+>  	return (urb->transfer_flags & URB_DIR_MASK) == URB_DIR_OUT;
+>  }
+>  
+> +int usb_pipe_type_check(struct usb_device *dev, unsigned int pipe);
+>  int usb_urb_ep_type_check(const struct urb *urb);
+>  
+>  void *usb_alloc_coherent(struct usb_device *dev, size_t size,
+> diff --git a/sound/usb/helper.c b/sound/usb/helper.c
+> index 4c12cc5b53fd..cf92d7110773 100644
+> --- a/sound/usb/helper.c
+> +++ b/sound/usb/helper.c
+> @@ -63,20 +63,6 @@ void *snd_usb_find_csint_desc(void *buffer, int buflen, void *after, u8 dsubtype
+>  	return NULL;
+>  }
+>  
+> -/* check the validity of pipe and EP types */
+> -int snd_usb_pipe_sanity_check(struct usb_device *dev, unsigned int pipe)
+> -{
+> -	static const int pipetypes[4] = {
+> -		PIPE_CONTROL, PIPE_ISOCHRONOUS, PIPE_BULK, PIPE_INTERRUPT
+> -	};
+> -	struct usb_host_endpoint *ep;
+> -
+> -	ep = usb_pipe_endpoint(dev, pipe);
+> -	if (!ep || usb_pipetype(pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
+> -		return -EINVAL;
+> -	return 0;
+> -}
+> -
+>  /*
+>   * Wrapper for usb_control_msg().
+>   * Allocates a temp buffer to prevent dmaing from/to the stack.
+> @@ -89,7 +75,7 @@ int snd_usb_ctl_msg(struct usb_device *dev, unsigned int pipe, __u8 request,
+>  	void *buf = NULL;
+>  	int timeout;
+>  
+> -	if (snd_usb_pipe_sanity_check(dev, pipe))
+> +	if (usb_pipe_type_check(dev, pipe))
+>  		return -EINVAL;
+>  
+>  	if (size > 0) {
+> diff --git a/sound/usb/helper.h b/sound/usb/helper.h
+> index 5e8a18b4e7b9..f5b4c6647e4d 100644
+> --- a/sound/usb/helper.h
+> +++ b/sound/usb/helper.h
+> @@ -7,7 +7,6 @@ unsigned int snd_usb_combine_bytes(unsigned char *bytes, int size);
+>  void *snd_usb_find_desc(void *descstart, int desclen, void *after, u8 dtype);
+>  void *snd_usb_find_csint_desc(void *descstart, int desclen, void *after, u8 dsubtype);
+>  
+> -int snd_usb_pipe_sanity_check(struct usb_device *dev, unsigned int pipe);
+>  int snd_usb_ctl_msg(struct usb_device *dev, unsigned int pipe,
+>  		    __u8 request, __u8 requesttype, __u16 value, __u16 index,
+>  		    void *data, __u16 size);
+> diff --git a/sound/usb/mixer_scarlett_gen2.c b/sound/usb/mixer_scarlett_gen2.c
+> index 0ffff7640892..9609c6d9655c 100644
+> --- a/sound/usb/mixer_scarlett_gen2.c
+> +++ b/sound/usb/mixer_scarlett_gen2.c
+> @@ -1978,7 +1978,7 @@ static int scarlett2_mixer_status_create(struct usb_mixer_interface *mixer)
+>  		return 0;
+>  	}
+>  
+> -	if (snd_usb_pipe_sanity_check(dev, pipe))
+> +	if (usb_pipe_type_check(dev, pipe))
+>  		return -EINVAL;
+>  
+>  	mixer->urb = usb_alloc_urb(0, GFP_KERNEL);
+> diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+> index abf99b814a0f..fc3aab04a0bc 100644
+> --- a/sound/usb/quirks.c
+> +++ b/sound/usb/quirks.c
+> @@ -846,7 +846,7 @@ static int snd_usb_accessmusic_boot_quirk(struct usb_device *dev)
+>  	static const u8 seq[] = { 0x4e, 0x73, 0x52, 0x01 };
+>  	void *buf;
+>  
+> -	if (snd_usb_pipe_sanity_check(dev, usb_sndintpipe(dev, 0x05)))
+> +	if (usb_pipe_type_check(dev, usb_sndintpipe(dev, 0x05)))
+>  		return -EINVAL;
+>  	buf = kmemdup(seq, ARRAY_SIZE(seq), GFP_KERNEL);
+>  	if (!buf)
+> @@ -875,7 +875,7 @@ static int snd_usb_nativeinstruments_boot_quirk(struct usb_device *dev)
+>  {
+>  	int ret;
+>  
+> -	if (snd_usb_pipe_sanity_check(dev, usb_sndctrlpipe(dev, 0)))
+> +	if (usb_pipe_type_check(dev, usb_sndctrlpipe(dev, 0)))
+>  		return -EINVAL;
+>  	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
+>  				  0xaf, USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+> @@ -984,7 +984,7 @@ static int snd_usb_axefx3_boot_quirk(struct usb_device *dev)
+>  
+>  	dev_dbg(&dev->dev, "Waiting for Axe-Fx III to boot up...\n");
+>  
+> -	if (snd_usb_pipe_sanity_check(dev, usb_sndctrlpipe(dev, 0)))
+> +	if (usb_pipe_type_check(dev, usb_sndctrlpipe(dev, 0)))
+>  		return -EINVAL;
+>  	/* If the Axe-Fx III has not fully booted, it will timeout when trying
+>  	 * to enable the audio streaming interface. A more generous timeout is
+> @@ -1018,7 +1018,7 @@ static int snd_usb_motu_microbookii_communicate(struct usb_device *dev, u8 *buf,
+>  {
+>  	int err, actual_length;
+>  
+> -	if (snd_usb_pipe_sanity_check(dev, usb_sndintpipe(dev, 0x01)))
+> +	if (usb_pipe_type_check(dev, usb_sndintpipe(dev, 0x01)))
+>  		return -EINVAL;
+>  	err = usb_interrupt_msg(dev, usb_sndintpipe(dev, 0x01), buf, *length,
+>  				&actual_length, 1000);
+> @@ -1030,7 +1030,7 @@ static int snd_usb_motu_microbookii_communicate(struct usb_device *dev, u8 *buf,
+>  
+>  	memset(buf, 0, buf_size);
+>  
+> -	if (snd_usb_pipe_sanity_check(dev, usb_rcvintpipe(dev, 0x82)))
+> +	if (usb_pipe_type_check(dev, usb_rcvintpipe(dev, 0x82)))
+>  		return -EINVAL;
+>  	err = usb_interrupt_msg(dev, usb_rcvintpipe(dev, 0x82), buf, buf_size,
+>  				&actual_length, 1000);
+> @@ -1117,7 +1117,7 @@ static int snd_usb_motu_m_series_boot_quirk(struct usb_device *dev)
+>  {
+>  	int ret;
+>  
+> -	if (snd_usb_pipe_sanity_check(dev, usb_sndctrlpipe(dev, 0)))
+> +	if (usb_pipe_type_check(dev, usb_sndctrlpipe(dev, 0)))
+>  		return -EINVAL;
+>  	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
+>  			      1, USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+> -- 
+> 2.28.0
+> 
