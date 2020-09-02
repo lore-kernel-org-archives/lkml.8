@@ -2,221 +2,127 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E49C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EB8C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48BD620866
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF66D206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgIBCiY (ORCPT
+        id S1726298AbgIBCn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 22:38:24 -0400
-Received: from mga05.intel.com ([192.55.52.43]:35819 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgIBCiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 22:38:24 -0400
-IronPort-SDR: EAynJOmDnpIVl6KuB8Bw+/lxGmGPYQNwUlhOaEhyCNPCi2Zep1EQEdeVF7FVvJztBANyVXvHZq
- 64OaFB/zN0fw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="242130223"
-X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
-   d="scan'208";a="242130223"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 19:38:16 -0700
-IronPort-SDR: aZSU+ZLQz0ENjg6NjK4o25JwGrOEraIT0ITp8QCaAVPhTQwSC5/TRZwV68MqlLvHALBCLk2wAZ
- sgOICUlTUBvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
-   d="scan'208";a="325600112"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Sep 2020 19:38:13 -0700
-Cc:     baolu.lu@linux.intel.com, CobeChen-oc <CobeChen-oc@zhaoxin.com>,
-        RaymondPang-oc <RaymondPang-oc@zhaoxin.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: =?UTF-8?B?UmU6IOetlOWkjTogW1BBVENIIHYzIDIvMl0gaW9tbXUvdnQtZDpBZGQg?=
- =?UTF-8?Q?support_for_probing_ACPI_device_in_RMRR?=
-To:     FelixCui-oc <FelixCui-oc@zhaoxin.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Tue, 1 Sep 2020 22:43:28 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41666 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726122AbgIBCn0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 22:43:26 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t9so1999190pfq.8;
+        Tue, 01 Sep 2020 19:43:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=GmGOgTocY/ucDNb9A9eFMAHlTcsCKWY8HYB7MCccFoc=;
+        b=Ipsn3MRCoUGfmJWAwNyZ8/MIw+xoI4NG8KjyPdY9BzuT2b6OHTbHCn1+Lui1P3n90w
+         qV63+TfGEJBGPFTMH1KKRuAO/0/mKbAkDL9TuaKyhhgoCcznnakX9GQ8H9nPI/9lD2Uz
+         7bdpr0540jyy2JfYR4O8mVoZyv9yu2BY1YCGM2zb62iZ0jU/aYpkN/awtZNFKrpzh75Y
+         FHTVQGvwcAvufFJPAvVUgsEGublQXYeCe0VAXAY2sHp0Zw+6/qM6aG1+mqwGgmTKT6/+
+         Q4uFhvYh/hqFkVUpCMPSEJNAyr/HcNiaj7hEOnYI5/IYJrPflu8l0Z5StEagcMqSmVYd
+         tv4g==
+X-Gm-Message-State: AOAM5324zd7W0ko58Vl6VZypvDiod4TYCem71WlubVAD8Q3qU3iVT96w
+        WLHjcTPEFi4YchQdtymu4gk=
+X-Google-Smtp-Source: ABdhPJwbvu6lpMb5tbEI7rNE5dr2z7U30mgncQm7KYJT1gSvLmRpZyhwNvVe0tCQqY3FFANr8bFiTA==
+X-Received: by 2002:a63:338b:: with SMTP id z133mr205155pgz.226.1599014605094;
+        Tue, 01 Sep 2020 19:43:25 -0700 (PDT)
+Received: from [192.168.3.218] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id 65sm857981pfg.7.2020.09.01.19.43.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 19:43:24 -0700 (PDT)
+Subject: Re: [PATCH V10 2/4] scsi: ufs: Introduce HPB feature
+To:     daejun7.park@samsung.com,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "kbuild@lists.01.org" <kbuild@lists.01.org>
-References: <20200827100217.21324-1-FelixCui-oc@zhaoxin.com>
- <20200827100217.21324-3-FelixCui-oc@zhaoxin.com>
- <e5b1daaf-f073-94c9-714c-832b10d284f4@linux.intel.com>
- <cde22f0f02f94efcae8bf044e2cd9441@zhaoxin.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <7e5f2c33-c6c3-f344-9014-1f6a306c55aa@linux.intel.com>
-Date:   Wed, 2 Sep 2020 10:32:36 +0800
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>,
+        SEUNGUK SHIN <seunguk.shin@samsung.com>
+References: <231786897.01598943181634.JavaMail.epsvc@epcpadp2>
+ <CGME20200901043152epcms2p55ba1891c12bd8002dff38a1214aace72@epcms2p6>
+ <231786897.01598943781742.JavaMail.epsvc@epcpadp2>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <36970d82-3ece-f9ec-e627-e84a7e4c79c6@acm.org>
+Date:   Tue, 1 Sep 2020 19:43:22 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <cde22f0f02f94efcae8bf044e2cd9441@zhaoxin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <231786897.01598943781742.JavaMail.epsvc@epcpadp2>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 5:13 PM, FelixCui-oc wrote:
-> hi  baolu ,
-> 
->                     These ACPI devices can be retrieved from the kernel 
-> and there is no bound device driver .
+On 2020-08-31 23:54, Daejun Park wrote:
+> This is a patch for the HPB feature.
+> This patch adds HPB function calls to UFS core driver.
 
-So you have a hidden device (invisible to host kernel). But you need to
-setup some identity mappings for this device, so that the firmware
-could keep working, right?
+[ ... ]
 
-The platform designs this by putting that range in the RMRR table and
-expecting the OS kernel to setup identity mappings during boot.
+> +config SCSI_UFS_HPB
+> +	bool "Support UFS Host Performance Booster"
+> +	depends on SCSI_UFSHCD
+> +	help
+> +	  The UFS HPB feature improves random read performance. It caches
+> +	  L2P (logical to physical) map of UFS to host DRAM. The driver uses HPB
+> +	  read command by piggybacking physical page number for bypassing FTL (flash
+> +	  translation layer)'s L2P address translation.
+> \ No newline at end of file
 
-Do I understand it right?
+Please end the last line with a newline.
 
-Best regards,
-baolu
+Anyway:
 
-> 
-> 
-> Best regards
-> 
-> Felixcui-oc
-> 
-> ------------------------------------------------------------------------
-> *发件人:* Lu Baolu <baolu.lu@linux.intel.com>
-> *发送时间:* 2020年9月1日 14:12:34
-> *收件人:* FelixCui-oc; Joerg Roedel; iommu@lists.linux-foundation.org; 
-> linux-kernel@vger.kernel.org; David Woodhouse; Dan Carpenter; 
-> kbuild@lists.01.org
-> *抄送:* baolu.lu@linux.intel.com; CobeChen-oc; RaymondPang-oc; Tony W 
-> Wang-oc
-> *主题:* Re: [PATCH v3 2/2] iommu/vt-d:Add support for probing ACPI 
-> device in RMRR
-> Hi Felix,
-> 
-> On 8/27/20 6:02 PM, FelixCuioc wrote:
->> After acpi device in RMRR is detected,it is necessary
->> to establish a mapping for these devices.
->> In acpi_device_create_direct_mappings(),create a mapping
->> for the acpi device in RMRR.
->> Add a helper to achieve the acpi namespace device can
->> access the RMRR region.
-> 
-> Are those ACPI devices visible to kernel? If so, any device driver bound
-> for it?
-> 
-> Best regards,
-> baolu
-> 
->> 
->> Signed-off-by: FelixCuioc <FelixCui-oc@zhaoxin.com>
->> ---
->>   drivers/iommu/intel/iommu.c | 29 +++++++++++++++++++++++++++++
->>   drivers/iommu/iommu.c       |  6 ++++++
->>   include/linux/iommu.h       |  3 +++
->>   3 files changed, 38 insertions(+)
->> 
->> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
->> index 208a91605288..51d7a5b18f41 100644
->> --- a/drivers/iommu/intel/iommu.c
->> +++ b/drivers/iommu/intel/iommu.c
->> @@ -4799,6 +4799,21 @@ static int __init platform_optin_force_iommu(void)
->>        return 1;
->>   }
->>   
->> +static int acpi_device_create_direct_mappings(struct device *pn_dev, struct device *acpi_device)
->> +{
->> +     struct iommu_group *group;
->> +
->> +     acpi_device->bus->iommu_ops = &intel_iommu_ops;
->> +     group = iommu_group_get(pn_dev);
->> +     if (!group) {
->> +             pr_warn("ACPI name space devices create direct mappings wrong!\n");
->> +             return -EINVAL;
->> +     }
->> +     __acpi_device_create_direct_mappings(group, acpi_device);
->> +
->> +     return 0;
->> +}
->> +
->>   static int __init probe_acpi_namespace_devices(void)
->>   {
->>        struct dmar_drhd_unit *drhd;
->> @@ -4813,6 +4828,7 @@ static int __init probe_acpi_namespace_devices(void)
->>                        struct acpi_device_physical_node *pn;
->>                        struct iommu_group *group;
->>                        struct acpi_device *adev;
->> +                     struct device *pn_dev = NULL;
->>   
->>                        if (dev->bus != &acpi_bus_type)
->>                                continue;
->> @@ -4823,6 +4839,7 @@ static int __init probe_acpi_namespace_devices(void)
->>                                            &adev->physical_node_list, node) {
->>                                group = iommu_group_get(pn->dev);
->>                                if (group) {
->> +                                     pn_dev = pn->dev;
->>                                        iommu_group_put(group);
->>                                        continue;
->>                                }
->> @@ -4831,7 +4848,19 @@ static int __init probe_acpi_namespace_devices(void)
->>                                ret = iommu_probe_device(pn->dev);
->>                                if (ret)
->>                                        break;
->> +                             pn_dev = pn->dev;
->> +                     }
->> +                     if (!pn_dev) {
->> +                             dev->bus->iommu_ops = &intel_iommu_ops;
->> +                             ret = iommu_probe_device(dev);
->> +                             if (ret) {
->> +                                     pr_err("acpi_device probe fail! ret:%d\n", ret);
->> +                                     goto unlock;
->> +                             }
->> +                             goto unlock;
->>                        }
->> +                     ret = acpi_device_create_direct_mappings(pn_dev, dev);
->> +unlock:
->>                        mutex_unlock(&adev->physical_node_lock);
->>   
->>                        if (ret)
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 609bd25bf154..4f714a2d5ef7 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -779,6 +779,12 @@ static bool iommu_is_attach_deferred(struct iommu_domain *domain,
->>        return false;
->>   }
->>   
->> +void  __acpi_device_create_direct_mappings(struct iommu_group *group, struct device *acpi_device)
->> +{
->> +     iommu_create_device_direct_mappings(group, acpi_device);
->> +}
->> +EXPORT_SYMBOL_GPL(__acpi_device_create_direct_mappings);
->> +
->>   /**
->>    * iommu_group_add_device - add a device to an iommu group
->>    * @group: the group into which to add the device (reference should be held)
->> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
->> index fee209efb756..9be134775886 100644
->> --- a/include/linux/iommu.h
->> +++ b/include/linux/iommu.h
->> @@ -514,6 +514,9 @@ extern void iommu_domain_window_disable(struct iommu_domain *domain, u32 wnd_nr)
->>   extern int report_iommu_fault(struct iommu_domain *domain, struct device *dev,
->>                              unsigned long iova, int flags);
->>   
->> +extern void __acpi_device_create_direct_mappings(struct iommu_group *group,
->> +                                             struct device *acpi_device);
->> +
->>   static inline void iommu_flush_tlb_all(struct iommu_domain *domain)
->>   {
->>        if (domain->ops->flush_iotlb_all)
->> 
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+
