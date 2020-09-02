@@ -2,369 +2,163 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE83C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F3EC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 408A6207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90BDA207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 20:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZN1D82+s"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f6Y2z+4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgIBUBt (ORCPT
+        id S1726871AbgIBUEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 16:01:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35506 "EHLO
+        Wed, 2 Sep 2020 16:04:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbgIBUBd (ORCPT
+        with ESMTP id S1726448AbgIBUEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 16:01:33 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2254C061249
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 13:01:32 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id d20so939215qka.5
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 13:01:32 -0700 (PDT)
+        Wed, 2 Sep 2020 16:04:02 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45774C061246
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 13:04:01 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a15so399530ejf.11
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 13:04:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=7pDoBXPlYeWPUtZm+sZHbNINSW/2NZCcI7xwI04WHX0=;
-        b=ZN1D82+sQ4JgKdDSBDMH3VV3v9i6jgSL4Haligr/VKnZnzkg/mFZnfLqHdMgGzXniu
-         Lb6/1JsfMclFv+6GoU4D87MK31TkT/zYWRchGgH+uxkhSP/xNQflm8x2l6dKegk+CMMG
-         sh/ZM4eLtQR4Xe0jkI4ILbwQ5aHa/uQThxUWTuuNrwwAKXdtJc8dvCnqCi4jWjKw9ozj
-         GPWCO0GW+jhnQtV/U1dB3zqvz1r81KgAh+yMbRcp13N9GixLniThDJod9WDozdNaHJv2
-         ksIRKJ7VY6qgRG1mBQHO4+1PhTabAdVdorypXfCyyGuCIAZmiIEsq+FEg7ZTFQp6GjMK
-         icZA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F516FSLG1Fg8AtLKWaugsZmUz1NztosX6XlYqbdsuWY=;
+        b=f6Y2z+4eUCL25q5+1hV+JdNT5QdsgtJQm4tYO85DSSJSP6ZbhVl0Pu/DGRtriAVW+b
+         WfP1t1YBGF9QBZamybjj9qIxqSYyBtWhFH+UNdEsL5i46u/W/nO3/DaUVi8nknD45c6h
+         dQmMY6/P3s7DaNBO12JbCBxZsP/wuCG5/ZPos3Yi4GFKwWHFNFcBd24JwwQsnu+v+meI
+         WccDRMkKFTcytzbZsyNJYl4UWpZa3uO5ENrpsL8JMWimpV6NgRkETZKsp6Je7IDQx/14
+         ZrGlSRPKBZHel/NtVFdQkQrr+l9Bnc9XSYPUtsdV77DkGFS9r+kfiSpO/cYOf/QQxkZV
+         3PIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=7pDoBXPlYeWPUtZm+sZHbNINSW/2NZCcI7xwI04WHX0=;
-        b=A53nZlQ3mpoI5zGl/j9hIFtGDmnxudXMgnBxrnvWx2eI9HLw1GBzTbpuQ1W1qYCpNM
-         B24+9exb4Qcted2hzHHwzKUjPXFZIq5u42/roi9tLOoe0735kkUS6AbzfveWEuCCqXir
-         dORzlAOSpmvzG8IemVsUXbhGYKHtprIpqw8zcrSuhyCNX+T9XCJUQIFVacJZqsoWexNV
-         QEdZt257XZQiL9JtcE7ryw34Ta/v2s4ANDOOA4ZEFAMnrIJSzTpPbVkcWmnw1WyPxts8
-         jOIbYhdSNCFid+wq3ax5yM6ZBPKHkfA6heOZwESHlktfkN/Q2CYM2w/xJfV0UKMDoK/Z
-         jPaw==
-X-Gm-Message-State: AOAM533RbZAbvDU9T0JDLl4CGnxVR7Y1+5anqXPcAQrlhmG8ByfNNkT0
-        NJoF2vR7e+g5UWg49KOP3X76mZbh8UYS2vxu
-X-Google-Smtp-Source: ABdhPJy/LK0AJ2tVcWREsO/Vbms666qF83apK7H9FHByRjprPgvdHn8Ka3j1EKSPphV25JjWepj9PQ==
-X-Received: by 2002:a05:620a:127b:: with SMTP id b27mr8280131qkl.398.1599076892123;
-        Wed, 02 Sep 2020 13:01:32 -0700 (PDT)
-Received: from ubuntu (69-220-158-6.lightspeed.rlghnc.sbcglobal.net. [69.220.158.6])
-        by smtp.gmail.com with ESMTPSA id i10sm563915qkh.15.2020.09.02.13.01.31
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Wed, 02 Sep 2020 13:01:31 -0700 (PDT)
-From:   Nachammai Karuppiah <nachukannan@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F516FSLG1Fg8AtLKWaugsZmUz1NztosX6XlYqbdsuWY=;
+        b=IAGntn00Z1ScyJ1TJiIjZLNf3xhrzgwFnpJKxB7JpEJL+9H+hb++/SYqqfJ5WmkKei
+         VzoNsshJXv/sQA+petkDHoUpowMW9UM3/yk1GgKulETrqt1nnKV+dBSR7mq04sELu+5/
+         xWFZQbtcNCb/mlYQCE5fbSnnFt9/G3s6oH3+Rg3mU9nbUOcJfZM1i4cKA4H/KA5qJu/q
+         68b2mD1daFOOyV1qZ948zK7ho8G7QG92IHEb0Dxq8YtIzeiQDM8mf6lUWNWr9AyQJbuG
+         AByYnKqezqKrE/yO5xn5tfQPIhCOX9gW6f/gzXHSl3kPapqGuTJKurW8/M94IZ30u8Lz
+         X5yg==
+X-Gm-Message-State: AOAM5331KrjHndZvK66s9W0Zf3anJinYvSxC/SnUmYm72bksyoz1shj0
+        bmbC+d6hzBlsUe0MJ0FFBa9QnYjPjdUSpZwCBLFWuw==
+X-Google-Smtp-Source: ABdhPJwnWyiUGJ5BXUL9kg40H50dxwEYKvN25v96OuWjX6DKbErT05o6VXF3YX5pYXjmTfRVQSjnap/k1SenzliIvsE=
+X-Received: by 2002:a17:906:4088:: with SMTP id u8mr1814815ejj.184.1599077039554;
+ Wed, 02 Sep 2020 13:03:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200825002645.3658-1-yu-cheng.yu@intel.com> <20200825002645.3658-7-yu-cheng.yu@intel.com>
+In-Reply-To: <20200825002645.3658-7-yu-cheng.yu@intel.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 2 Sep 2020 22:03:33 +0200
+Message-ID: <CAG48ez21a_afHJrRQeweuHu8c+fxJ+VN1dezD18UOtZA5q-Shg@mail.gmail.com>
+Subject: Re: [PATCH v11 6/9] x86/cet: Add PTRACE interface for CET
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-doc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
         Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Cc:     joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        Nachammai Karuppiah <nachukannan@gmail.com>
-Subject: [RFC PATCH 6/7] tracing: Use ramtrace alloc and free methods while using persistent RAM
-Date:   Wed,  2 Sep 2020 13:00:21 -0700
-Message-Id: <6fe6de0e7093a61c8b8ff151bf9cef67e5ca7343.1599072725.git.nachukannan@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1599072725.git.nachukannan@gmail.com>
-References: <cover.1599072725.git.nachukannan@gmail.com>
-In-Reply-To: <cover.1599072725.git.nachukannan@gmail.com>
-References: <cover.1599072725.git.nachukannan@gmail.com>
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If persistent RAM is being used to record trace entries, allocate and
-free pages using ramtrace_alloc_page and ramtrace_free_page.
+On Tue, Aug 25, 2020 at 2:30 AM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
+> Add REGSET_CET64/REGSET_CET32 to get/set CET MSRs:
+>
+>     IA32_U_CET (user-mode CET settings) and
+>     IA32_PL3_SSP (user-mode Shadow Stack)
+[...]
+> diff --git a/arch/x86/kernel/fpu/regset.c b/arch/x86/kernel/fpu/regset.c
+[...]
+> +int cetregs_get(struct task_struct *target, const struct user_regset *regset,
+> +               struct membuf to)
+> +{
+> +       struct fpu *fpu = &target->thread.fpu;
+> +       struct cet_user_state *cetregs;
+> +
+> +       if (!boot_cpu_has(X86_FEATURE_SHSTK))
+> +               return -ENODEV;
+> +
+> +       fpu__prepare_read(fpu);
+> +       cetregs = get_xsave_addr(&fpu->state.xsave, XFEATURE_CET_USER);
+> +       if (!cetregs)
+> +               return -EFAULT;
 
-Signed-off-by: Nachammai Karuppiah <nachukannan@gmail.com>
----
- kernel/trace/ring_buffer.c | 122 +++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 119 insertions(+), 3 deletions(-)
+Can this branch ever be hit without a kernel bug? If yes, I think
+-EFAULT is probably a weird error code to choose here. If no, this
+should probably use WARN_ON(). Same thing in cetregs_set().
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 34e50c1..c99719e 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -353,6 +353,18 @@ static void free_buffer_page(struct buffer_page *bpage)
- 	kfree(bpage);
- }
- 
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+static void
-+free_buffer_page_cpu(struct buffer_page *bpage, int cpu, bool use_pstore)
-+{
-+	if (use_pstore) {
-+		ramtrace_free_page(bpage->page, cpu);
-+		kfree(bpage);
-+	} else
-+		free_buffer_page(bpage);
-+}
-+#endif
-+
- /*
-  * We need to fit the time_stamp delta into 27 bits.
-  */
-@@ -1200,7 +1212,12 @@ static int rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
- 	return 0;
- }
- 
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+static int __rb_allocate_pages(long nr_pages, struct list_head *pages, int cpu,
-+				bool use_pstore)
-+#else
- static int __rb_allocate_pages(long nr_pages, struct list_head *pages, int cpu)
-+#endif
- {
- 	struct buffer_page *bpage, *tmp;
- 	bool user_thread = current->mm != NULL;
-@@ -1214,6 +1231,11 @@ static int __rb_allocate_pages(long nr_pages, struct list_head *pages, int cpu)
- 	 * to prevent doing any allocation when it is obvious that it is
- 	 * not going to succeed.
- 	 */
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+	if (use_pstore)
-+		i = ramtrace_available_mem();
-+	else
-+#endif
- 	i = si_mem_available();
- 	if (i < nr_pages)
- 		return -ENOMEM;
-@@ -1246,10 +1268,22 @@ static int __rb_allocate_pages(long nr_pages, struct list_head *pages, int cpu)
- 
- 		list_add(&bpage->list, pages);
- 
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+		if (use_pstore) {
-+			void *address = ramtrace_alloc_page(cpu);
-+
-+			if (!address)
-+				goto free_pages;
-+			bpage->page = address;
-+		} else {
-+#endif
- 		page = alloc_pages_node(cpu_to_node(cpu), mflags, 0);
- 		if (!page)
- 			goto free_pages;
- 		bpage->page = page_address(page);
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+		}
-+#endif
- 		rb_init_page(bpage->page);
- 
- 		if (user_thread && fatal_signal_pending(current))
-@@ -1263,7 +1297,11 @@ static int __rb_allocate_pages(long nr_pages, struct list_head *pages, int cpu)
- free_pages:
- 	list_for_each_entry_safe(bpage, tmp, pages, list) {
- 		list_del_init(&bpage->list);
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+		free_buffer_page_cpu(bpage, cpu, use_pstore);
-+#else
- 		free_buffer_page(bpage);
-+#endif
- 	}
- 	if (user_thread)
- 		clear_current_oom_origin();
-@@ -1278,7 +1316,12 @@ static int rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 
- 	WARN_ON(!nr_pages);
- 
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+	if (__rb_allocate_pages(nr_pages, &pages, cpu_buffer->cpu,
-+				cpu_buffer->use_pstore))
-+#else
- 	if (__rb_allocate_pages(nr_pages, &pages, cpu_buffer->cpu))
-+#endif
- 		return -ENOMEM;
- 
- 	/*
-@@ -1414,10 +1457,23 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
- 	rb_check_bpage(cpu_buffer, bpage);
- 
- 	cpu_buffer->reader_page = bpage;
-+
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+	if (cpu_buffer->use_pstore) {
-+		void *address = ramtrace_alloc_page(cpu);
-+
-+		if (!address)
-+			goto fail_free_reader;
-+		bpage->page = address;
-+	} else {
-+#endif
- 	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL, 0);
- 	if (!page)
- 		goto fail_free_reader;
- 	bpage->page = page_address(page);
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+	}
-+#endif
- 	rb_init_page(bpage->page);
- 
- 	INIT_LIST_HEAD(&cpu_buffer->reader_page->list);
-@@ -1436,7 +1492,12 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
- 	return cpu_buffer;
- 
-  fail_free_reader:
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+	free_buffer_page_cpu(cpu_buffer->reader_page, cpu,
-+			     cpu_buffer->use_pstore);
-+#else
- 	free_buffer_page(cpu_buffer->reader_page);
-+#endif
- 
-  fail_free_buffer:
- 	kfree(cpu_buffer);
-@@ -1447,18 +1508,32 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct list_head *head = cpu_buffer->pages;
- 	struct buffer_page *bpage, *tmp;
--
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+	free_buffer_page_cpu(cpu_buffer->reader_page, cpu_buffer->cpu,
-+			     cpu_buffer->use_pstore);
-+#else
- 	free_buffer_page(cpu_buffer->reader_page);
-+#endif
- 
- 	rb_head_page_deactivate(cpu_buffer);
- 
- 	if (head) {
- 		list_for_each_entry_safe(bpage, tmp, head, list) {
- 			list_del_init(&bpage->list);
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+			free_buffer_page_cpu(bpage, cpu_buffer->cpu,
-+					     cpu_buffer->use_pstore);
-+#else
- 			free_buffer_page(bpage);
-+#endif
- 		}
- 		bpage = list_entry(head, struct buffer_page, list);
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+		free_buffer_page_cpu(bpage, cpu_buffer->cpu,
-+				     cpu_buffer->use_pstore);
-+#else
- 		free_buffer_page(bpage);
-+#endif
- 	}
- 
- 	kfree(cpu_buffer);
-@@ -1832,7 +1907,12 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
- 		 * We have already removed references to this list item, just
- 		 * free up the buffer_page and its page
- 		 */
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+		free_buffer_page_cpu(to_remove_page, cpu_buffer->cpu,
-+				     cpu_buffer->use_pstore);
-+#else
- 		free_buffer_page(to_remove_page);
-+#endif
- 		nr_removed--;
- 
- 	} while (to_remove_page != last_page);
-@@ -1913,7 +1993,12 @@ rb_insert_pages(struct ring_buffer_per_cpu *cpu_buffer)
- 		list_for_each_entry_safe(bpage, tmp, &cpu_buffer->new_pages,
- 					 list) {
- 			list_del_init(&bpage->list);
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+			free_buffer_page_cpu(bpage, cpu_buffer->cpu,
-+					     cpu_buffer->use_pstore);
-+#else
- 			free_buffer_page(bpage);
-+#endif
- 		}
- 	}
- 	return success;
-@@ -2252,8 +2337,14 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- 			 * allocated without receiving ENOMEM
- 			 */
- 			INIT_LIST_HEAD(&cpu_buffer->new_pages);
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+			if (__rb_allocate_pages(cpu_buffer->nr_pages_to_update,
-+						&cpu_buffer->new_pages, cpu,
-+						cpu_buffer->use_pstore)) {
-+#else
- 			if (__rb_allocate_pages(cpu_buffer->nr_pages_to_update,
- 						&cpu_buffer->new_pages, cpu)) {
-+#endif
- 				/* not enough memory for new pages */
- 				err = -ENOMEM;
- 				goto out_err;
-@@ -2319,7 +2410,12 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- 		INIT_LIST_HEAD(&cpu_buffer->new_pages);
- 		if (cpu_buffer->nr_pages_to_update > 0 &&
- 			__rb_allocate_pages(cpu_buffer->nr_pages_to_update,
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+					    &cpu_buffer->new_pages, cpu_id,
-+					    cpu_buffer->use_pstore)) {
-+#else
- 					    &cpu_buffer->new_pages, cpu_id)) {
-+#endif
- 			err = -ENOMEM;
- 			goto out_err;
- 		}
-@@ -2379,7 +2475,12 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- 		list_for_each_entry_safe(bpage, tmp, &cpu_buffer->new_pages,
- 					list) {
- 			list_del_init(&bpage->list);
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+			free_buffer_page_cpu(bpage, cpu,
-+					     cpu_buffer->use_pstore);
-+#else
- 			free_buffer_page(bpage);
-+#endif
- 		}
- 	}
-  out_err_unlock:
-@@ -5184,13 +5285,22 @@ void *ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
- 	if (bpage)
- 		goto out;
- 
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+	if (cpu_buffer->use_pstore) {
-+		bpage = (struct buffer_data_page *)ramtrace_alloc_page(cpu);
-+		if (!bpage)
-+			return ERR_PTR(-ENOMEM);
-+	} else {
-+#endif
- 	page = alloc_pages_node(cpu_to_node(cpu),
- 				GFP_KERNEL | __GFP_NORETRY, 0);
- 	if (!page)
- 		return ERR_PTR(-ENOMEM);
- 
- 	bpage = page_address(page);
--
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+	}
-+#endif
-  out:
- 	rb_init_page(bpage);
- 	down_read(&trace_read_sem);
-@@ -5229,7 +5339,13 @@ void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu, void *data
- 	arch_spin_unlock(&cpu_buffer->lock);
- 	local_irq_restore(flags);
- 
-- out:
-+out:
-+#ifdef CONFIG_TRACE_EVENTS_TO_PSTORE
-+	if (cpu_buffer->use_pstore) {
-+		ramtrace_free_page(bpage, cpu);
-+		return;
-+	}
-+#endif
- 	free_page((unsigned long)bpage);
- 	up_read(&trace_read_sem);
- }
--- 
-2.7.4
+> +       return membuf_write(&to, cetregs, sizeof(struct cet_user_state));
+> +}
+[...]
+> diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+[...]
+> @@ -52,7 +52,9 @@ enum x86_regset {
+>         REGSET_IOPERM64 = REGSET_XFP,
+>         REGSET_XSTATE,
+>         REGSET_TLS,
+> +       REGSET_CET64 = REGSET_TLS,
+>         REGSET_IOPERM32,
+> +       REGSET_CET32,
+>  };
+[...]
+> @@ -1229,6 +1231,13 @@ static struct user_regset x86_64_regsets[] __ro_after_init = {
+[...]
+> +       [REGSET_CET64] = {
+> +               .core_note_type = NT_X86_CET,
+> +               .n = sizeof(struct cet_user_state) / sizeof(u64),
+> +               .size = sizeof(u64), .align = sizeof(u64),
+> +               .active = cetregs_active, .regset_get = cetregs_get,
+> +               .set = cetregs_set
+> +       },
+>  };
+[...]
+> @@ -1284,6 +1293,13 @@ static struct user_regset x86_32_regsets[] __ro_after_init = {
+[...]
+> +       [REGSET_CET32] = {
+> +               .core_note_type = NT_X86_CET,
+> +               .n = sizeof(struct cet_user_state) / sizeof(u64),
+> +               .size = sizeof(u64), .align = sizeof(u64),
+> +               .active = cetregs_active, .regset_get = cetregs_get,
+> +               .set = cetregs_set
+> +       },
+>  };
 
+Why are there different identifiers for 32-bit CET and 64-bit CET when
+they operate on the same structs and have the same handlers? If
+there's a good reason for that, the commit message should probably
+point that out.
