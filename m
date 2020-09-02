@@ -2,143 +2,109 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B1EC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C32C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07CDD20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B99B020767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:51:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MbZXF4kH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5HWNcO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgIBQvM (ORCPT
+        id S1728056AbgIBQv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:51:12 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54248 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgIBQvK (ORCPT
+        Wed, 2 Sep 2020 12:51:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgIBQvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:51:10 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082Gp5Pi033319;
-        Wed, 2 Sep 2020 11:51:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599065465;
-        bh=dDTC0gpdXie8DL9+hkg/Fiz8VsxEy70PtTPaF9NGk88=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=MbZXF4kHAWsQrSOmCIKVq4M7gPmwVSHjYUy0LvUa0K1wiYX8R+md9/hnxngJrx/im
-         q5371/6H3GfnClaIE2TUPU5Zl8O10v6Mc7NcxK9UxW9DjlEd3Rxwn0MkxZ3pYwnltx
-         VO2LyhJUciRtsGOWOtSKDP2PKL2/9s1z7C4igTAE=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082Gp4eq095150
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 2 Sep 2020 11:51:05 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
- 2020 11:51:04 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 2 Sep 2020 11:51:04 -0500
-Received: from [10.250.34.112] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082Gp4rc046690;
-        Wed, 2 Sep 2020 11:51:04 -0500
-Subject: Re: [PATCH 6/7] arm64: dts: ti: k3-*: Use generic adc for node names
-To:     Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <lokeshvutla@ti.com>,
-        <grygorii.strashko@ti.com>, <nsekhar@ti.com>
-References: <20200901223059.14801-1-nm@ti.com>
- <20200901223059.14801-7-nm@ti.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <60e6b790-360a-6eaf-03a3-5bb256adf215@ti.com>
-Date:   Wed, 2 Sep 2020 11:51:03 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 2 Sep 2020 12:51:54 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F23C061244;
+        Wed,  2 Sep 2020 09:51:53 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id w186so2824266pgb.8;
+        Wed, 02 Sep 2020 09:51:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MDQ6zE/6jTTf94dZqMVJJO0yNqdkkuqD2ZIum9z6agY=;
+        b=D5HWNcO3fqSJb2fbmO436H6p2IureVMKox8lMGdkpsJhCIMWALwgteR47zQ1PL3OED
+         Bpfsbk08mMDQOTjkhJuz9QB3VeBDJIp/nxBTfxyK1tW/R4JXw8LSoyigApMMxm86XSul
+         6ZcIlk1BD124Jr1n4VhtpEw6k3aNgpEl0c4lGTlhdmiXiXxqkMd9qCN5R8qwzJzStnbs
+         YyNv/rgNhoi98eXPOuhel175ds+TbLZkyUZt/rmjN7eAmcLBgUXDsaGCaJyWWP8OFvvJ
+         XYhfM9jWPa/tvpa4vyrpBac7u5u7dMhPhHXqqioay6s92XxVCqvl+NR/eEN1CwPWyW8K
+         ofDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MDQ6zE/6jTTf94dZqMVJJO0yNqdkkuqD2ZIum9z6agY=;
+        b=A9vVVJ+9s1Pm4JZIskIrmf2AIHjhKADPP08f5E6yFhSHozF118gMz80hK9ZXfnIVn5
+         9xweXw/AWe0ZPzJbghXd0pCeo3QI/dLm6hPZ7hSiYUjxyq7WKVVxwstF9En0z5O3D4ll
+         AnYH1NHrBbZGZPlC9oAdfj9HOdfjHCwvHRMKIJzRK7RXaCQ7EO/qhao0Jmysr3gBsfmY
+         lo2h/n8J5R1YS8wzhA7OteTnqlh/BbC9pP7idS6dKD5/MBO3OfLwrLpy32TzFa5vSQzN
+         3rShTflbYH3NxT/tk4KPes6u0XZhZsiwZAwtoRgE9Z8KK0DsDNQHjauELxZsEglwXd41
+         ujPQ==
+X-Gm-Message-State: AOAM531X7JOsmg6h6D+sJvql1kjiucn3F8nAZjm3GsFrhT/ft52FHQ7Q
+        /1v0HPPUGLJ+C7w0FKG89bI=
+X-Google-Smtp-Source: ABdhPJxXmqTQh+bXXErTrtCeqxkYMajb6H/4VNuRUQ6RN0T/bivgtsl8lU1x28vNKFgT7k4c/QI+9g==
+X-Received: by 2002:a63:fe06:: with SMTP id p6mr2544230pgh.337.1599065513033;
+        Wed, 02 Sep 2020 09:51:53 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id m188sm26713pfd.56.2020.09.02.09.51.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 02 Sep 2020 09:51:52 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 09:51:51 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.8 000/253] 5.8.6-rc2 review
+Message-ID: <20200902165151.GF56237@roeck-us.net>
+References: <20200902074837.329205434@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200901223059.14801-7-nm@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902074837.329205434@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 5:30 PM, Nishanth Menon wrote:
-> Use adc@ naming for nodes following standard conventions of device
-> tree (section 2.2.2 Generic Names recommendation in [1]).
+On Wed, Sep 02, 2020 at 09:49:11AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.8.6 release.
+> There are 253 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> [1] https://github.com/devicetree-org/devicetree-specification/tree/v0.3
-> 
-> Suggested-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi         | 4 ++--
->  arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-> index 51ca4b4d4c21..6dfec68ac865 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-> @@ -80,7 +80,7 @@
->  		#size-cells = <0>;
->  	};
->  
-> -	tscadc0: tscadc@40200000 {
-> +	tscadc0: adc@40200000 {
-
-OK with these changes, since these seem to be only have the adc child nodes.
-This node is essentially a parent node for touchscreen and adc child nodes. The
-driver is currently looking for "tsc" on touchscreen child nodes, but none of
-the K3 SoCs have them atm.
-
-regards
-Suman
-
->  		compatible = "ti,am654-tscadc", "ti,am3359-tscadc";
->  		reg = <0x0 0x40200000 0x0 0x1000>;
->  		interrupts = <GIC_SPI 580 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -98,7 +98,7 @@
->  		};
->  	};
->  
-> -	tscadc1: tscadc@40210000 {
-> +	tscadc1: adc@40210000 {
->  		compatible = "ti,am654-tscadc", "ti,am3359-tscadc";
->  		reg = <0x0 0x40210000 0x0 0x1000>;
->  		interrupts = <GIC_SPI 581 IRQ_TYPE_LEVEL_HIGH>;
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-> index 9ad0266598ad..81801f519a61 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-> @@ -211,7 +211,7 @@
->  		};
->  	};
->  
-> -	tscadc0: tscadc@40200000 {
-> +	tscadc0: adc@40200000 {
->  		compatible = "ti,am3359-tscadc";
->  		reg = <0x0 0x40200000 0x0 0x1000>;
->  		interrupts = <GIC_SPI 860 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -230,7 +230,7 @@
->  		};
->  	};
->  
-> -	tscadc1: tscadc@40210000 {
-> +	tscadc1: adc@40210000 {
->  		compatible = "ti,am3359-tscadc";
->  		reg = <0x0 0x40210000 0x0 0x1000>;
->  		interrupts = <GIC_SPI 861 IRQ_TYPE_LEVEL_HIGH>;
+> Responses should be made by Fri, 04 Sep 2020 07:47:48 +0000.
+> Anything received after that time might be too late.
 > 
 
+Build results:
+	total: 154 pass: 153 fail: 1
+Failed builds:
+	powerpc:allmodconfig
+Qemu test results:
+	total: 430 pass: 430 fail: 0
+
+The build failure is:
+
+Inconsistent kallsyms data
+Try make KALLSYMS_EXTRA_PASS=1 as a workaround
+
+The suggested workaround doesn't help. I see the problem in mainline
+and in -next as well, and it is elusive (meaning it is not easy to
+reproduce). Given that, it is not an immediate concern.
+
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+
+Guenter
