@@ -2,131 +2,242 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B82AC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EC4C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52BEF20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:34:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="0noPyYcS"
+	by mail.kernel.org (Postfix) with ESMTP id BC984207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgIBPeB (ORCPT
+        id S1728486AbgIBPeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:34:01 -0400
-Received: from mail-dm6nam11on2061.outbound.protection.outlook.com ([40.107.223.61]:51681
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727866AbgIBPcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:32:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cTHsNYct2oJhVdL/Va2ZFcNZSJPf883cJDLBZkD5kmQnm7Bte7VhJRlkwUIO6q4Do0GHOBA8s1cqstsKd14ZNMyRa9upOxRDg6KodLjKqePlyfSnb5rpc5z74nrkr8thTdV1UxuGEi1WWDNYpg8Kvao2C4wxifYphrplp3IFoYHNxxuO4inqNqutlcaNb/rtxfs55fYSZstdmZ23fv0YXT20tg5tiJBY5NvclD98BFcBkLsM8cDdwpR9jQy3eeBXd934O+o3tsmKtgl1aACZx21KhvBUvJpLz9fhdg8ApnWry1B1c/QmkCp54JmOJfJTgQDnPNqK6gelaohVGsD81A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xx8xFzZCXrr0sIX4WOxybu8mmPEpK6ptGa3uMn4cTkQ=;
- b=GNDrJMQtw59lYAQgoQnZsZ5KyS+h0L1VT8d4RLZ3P7PC6cmkjgPU7X3dM17awi/nMuxHIQcraPhyM7gEPviu8hgTfcrfB5c4gJiPpF/HfngICEwnr6zVr8uLa7XbliS9xuhoogMiapfQJGyOfkrb9mBy6mpg+0Lp2HPWBKMOoAE6mv3yDyPrO0Q7ALwTevAJLmle5tnKSyPsMGFDBAxGPTJSrVn+SvGi07eKyzxXz784/BL5TKhhT+dayX7vZsnE3PTpV+BQuvWDQeVGArw3MeXKYoDrwnQKbwJaC37OoVRyW8IqXuIq3JhhtH4InBzIXQFE8dxWrc0wAcjr4TBBAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xx8xFzZCXrr0sIX4WOxybu8mmPEpK6ptGa3uMn4cTkQ=;
- b=0noPyYcSmaETfD3H1zGvwPsHm+IzHG+o+c3OV21TQI4PRCOT26D1+WoK4wo6fyRiOmoyJztRfMSgxPHViqv7et3Sch/p7S1OaciEf4iP95cS4E8N1HX2b+U0n5dgmjQ9sYWjG3eZW/+eB5IaDxBKhmIOO4e/yQEJ94uPZ0sy3ek=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (2603:10b6:a03:4a::18)
- by BYAPR05MB6037.namprd05.prod.outlook.com (2603:10b6:a03:d9::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.7; Wed, 2 Sep
- 2020 15:32:18 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::9cef:3341:6ae9:a2c5]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::9cef:3341:6ae9:a2c5%7]) with mapi id 15.20.3348.014; Wed, 2 Sep 2020
- 15:32:18 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
+        Wed, 2 Sep 2020 11:34:07 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44912 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728303AbgIBPdt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:33:49 -0400
+Received: by mail-qt1-f194.google.com with SMTP id e7so3860105qtj.11
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 08:33:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bZV9KGWZ5viva61/b9hVQgmVhPVV/tpGu2oJRA3hrXM=;
+        b=YpT7Bq+Pq8YW448aD4i1t19E4j38m6S+gV4+Uulcl+r8+fIdM9x3s+iP0mpOtU0Vq9
+         E9rGgoSDC2qLDGnSXvitIXvcCKB3u2oUZAy3qnczm2/kEfHO+0Ep5ZiRoALb5ZX5yo1E
+         V8XgzQiyyXZ+whZv1RCK6R9GDdIDUvEJiF5clsRjSnlxZvbfGpVpZ9IvWAN/VI6e64Ng
+         691fO488YiPjdMF3W3xmRDV275MFEo00JUstN0MEuNKqQqRaZ169WsqHfBEEUruSKeOQ
+         ymfrVxEx/rbvj5mtqhVgQ5nvYg+sBUwvkzHZ2fxHsWWLwtBWDYsdlZhdhx1k+WMECudL
+         JyXQ==
+X-Gm-Message-State: AOAM530NWjW75y9BOKpls9hHJiFRDc7MB2iFAGDq+b/BduReiQKoztvJ
+        /J6bOCPRTVdAxdoPkp5A8zk=
+X-Google-Smtp-Source: ABdhPJy6QbLwtOyT3a76JJXs74p0x7CU5UhCCJrGCssoI+PBHW60+HcTrz7oZlV5QR+lFDCQf51jow==
+X-Received: by 2002:ac8:7a6b:: with SMTP id w11mr6806456qtt.316.1599060827762;
+        Wed, 02 Sep 2020 08:33:47 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id v42sm5195260qth.35.2020.09.02.08.33.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 08:33:47 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86 <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
         Kees Cook <keescook@chromium.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] x86/special_insn: reverse __force_order logic
-Thread-Topic: [PATCH] x86/special_insn: reverse __force_order logic
-Thread-Index: AQHWgSgoL1dmFxhMRECqVhfYnO9uuKlVeiqA
-Date:   Wed, 2 Sep 2020 15:32:18 +0000
-Message-ID: <1E3FD845-E71A-4518-A0BF-FAD31CBC3E28@vmware.com>
-References: <20200901161857.566142-1-namit@vmware.com>
- <20200902125402.GG1362448@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200902125402.GG1362448@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: infradead.org; dkim=none (message not signed)
- header.d=none;infradead.org; dmarc=none action=none header.from=vmware.com;
-x-originating-ip: [2601:647:4700:9b2:4945:3524:19f7:23e9]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a0172435-1b0f-444e-924c-08d84f556068
-x-ms-traffictypediagnostic: BYAPR05MB6037:
-x-microsoft-antispam-prvs: <BYAPR05MB6037134E5FF80994510554C9D02F0@BYAPR05MB6037.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yRcrxjzyUdM2GrDU12LhGDcZFLgNqhTrk+HcoQyEP5weeB/nER9GHGKMPeQE+V6WTLhASJodxw/jwnsEUrY6VYludDPjxQd4ka/n4JIYAVGgqoHlVAEajHXupLnRhT6IDeasoVbc/79tF+DNlMDyrJeuoAiW5lXO1WuL9NVFYpvNBdX9vOqBLY/oGiJ6cvopWrYBkHpHDI29gdO9S5K/Qj75sETPtDVkx/dMfZdSgIe5soatZCx2X1aTVi/X5eJ9D0TPAEfct2GaxmJNb7ns+fXHhE7x0n/+2LuMN1OxFzuDt8QAHpbAtx+vLFDEIgbYnKuQzKXkhyGO/bMPOhHcCsI3QVjyomjVjMhnTvF6Pg9EVIlI//Bo92EvT+3he13DbVIrVI04h8ugeMUjmPmluQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR05MB4776.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39860400002)(346002)(136003)(366004)(376002)(45080400002)(83380400001)(8676002)(316002)(478600001)(36756003)(71200400001)(64756008)(54906003)(8936002)(186003)(66556008)(86362001)(66946007)(66476007)(66446008)(6486002)(76116006)(2906002)(5660300002)(53546011)(6506007)(4326008)(33656002)(6512007)(2616005)(966005)(7416002)(6916009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Oy7G0rTgQDjVOLIHY1axlCtDgIhj0ZIUFnEUZGNZlQif3zXdGinITUhu99MOduxE4L48FGxO87xnq9VoUGNjtV0tygb4rsIfBolsPKmrEXiZwsX5AxjLYLz/BsBDp7nFWJGUDOAbUy2RPGK3iJ4L3Ur+AUVFLGfh56vTwLTbKLxmZo7l/P3t0aEqy0rzMWsCLA2LFCsdFcciGHK7aNaAoYqK4BcT8vN6i5FVyphmKN/eLUg4P8a3NTxWiMSbdaXTDlOpniy7++pcZbHKGhPv3EWvlI3xV03DoMtMEah45AmyGs4jxrCFqySXdDlmyZ7cIPu1c4snrHnofMe9Q7N/jJT+6lBoYeOWPsEqaXkU3URQ+68EcjP4r30owrGRoddyEMN2t1hmHFBd/1IjTMuPH9Ud+aU2l214203Y36Dqfoc/3X0At2AD7P8gyjjMImSXGn2W5nGS/p/8GINkwT/jPasHR1gj+Vs8Lg/+znnmmRBM7bGkXbU3Sx3CVTa+4otZ9T8glGXROYUGc5V3qrL8cDZ3SqSAhJ1Xhh0qMtKEMVx82/necsWKFDd3PCjP7VTcqZnd71AAQowQ3WsfadIQvJ1bxr28E5wVdJ0cdQeSA/KOmtStB/H5AC0w028LlO9lxJOjC8L29BkR10xWXm/YLgGJCyy1rGm3btMylIJ1LS3czhKYrFcsghNt9UMp48LMv6EUmoE+N/dPnn1oSrsI2Q==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B86B4DB3C2D38C40A447546E77C04369@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Will Deacon <will@kernel.org>, nadav.amit@gmail.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH v2] x86/asm: Replace __force_order with memory clobber
+Date:   Wed,  2 Sep 2020 11:33:46 -0400
+Message-Id: <20200902153346.3296117-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200823212550.3377591-1-nivedita@alum.mit.edu>
+References: <20200823212550.3377591-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR05MB4776.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0172435-1b0f-444e-924c-08d84f556068
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 15:32:18.0266
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Rtd0IMv/5LcI4hgmJjzFT68lCGolWthg5Wp8Wxl1pn2zADtnZJ6d5S4fHqCJw9OXgA2itWAPCoMI8UO4HoFGgw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6037
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Sep 2, 2020, at 5:54 AM, peterz@infradead.org wrote:
->=20
-> On Tue, Sep 01, 2020 at 09:18:57AM -0700, Nadav Amit wrote:
->=20
->> Unless I misunderstand the logic, __force_order should also be used by
->> rdpkru() and wrpkru() which do not have dependency on __force_order. I
->> also did not understand why native_write_cr0() has R/W dependency on
->> __force_order, and why native_write_cr4() no longer has any dependency
->> on __force_order.
->=20
-> There was a fairly large thread about this thing here:
->=20
->  https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flkml=
-.kernel.org%2Fr%2F20200527135329.1172644-1-arnd%40arndb.de&amp;data=3D02%7C=
-01%7Cnamit%40vmware.com%7C387b68745a984454d50708d84f3f499c%7Cb39138ca3cee4b=
-4aa4d6cd83d9dd62f0%7C0%7C0%7C637346480527901622&amp;sdata=3DPR%2BCUy%2FYNKz=
-a6he78coaDR3x1G7BYuzFfS9SGfWZ9p8%3D&amp;reserved=3D0
->=20
-> I didn't keep up, but I think the general concensus was that it's
-> indeed a bit naf.
+The CRn accessor functions use __force_order as a dummy operand to
+prevent the compiler from reordering the inline asm.
 
-Thanks for pointer. I did not see the discussion, and embarrassingly, I hav=
-e
-also never figured out how to reply on lkml emails without registering to
-lkml.
+The fact that the asm is volatile should be enough to prevent this
+already, however older versions of GCC had a bug that could sometimes
+result in reordering. This was fixed in 8.1, 7.3 and 6.5. Versions prior
+to these, including 5.x and 4.9.x, may reorder volatile asm.
 
-Anyhow, indeed, the patch that Arvind provided seems to address this issue.
+There are some issues with __force_order as implemented:
+- It is used only as an input operand for the write functions, and hence
+  doesn't do anything additional to prevent reordering writes.
+- It allows memory accesses to be cached/reordered across write
+  functions, but CRn writes affect the semantics of memory accesses, so
+  this could be dangerous.
+- __force_order is not actually defined in the kernel proper, but the
+  LLVM toolchain can in some cases require a definition: LLVM (as well
+  as GCC 4.9) requires it for PIE code, which is why the compressed
+  kernel has a definition, but also the clang integrated assembler may
+  consider the address of __force_order to be significant, resulting in
+  a reference that requires a definition.
+
+Fix this by:
+- Using a memory clobber for the write functions to additionally prevent
+  caching/reordering memory accesses across CRn writes.
+- Using a dummy input operand with an arbitrary constant address for the
+  read functions, instead of a global variable. This will prevent reads
+  from being reordered across writes, while allowing memory loads to be
+  cached/reordered across CRn reads, which should be safe.
+
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=82602
+Link: https://lore.kernel.org/lkml/20200527135329.1172644-1-arnd@arndb.de/
+---
+Changes from v1:
+- Add lore link to email thread and mention state of 5.x/4.9.x in commit log
+
+ arch/x86/boot/compressed/pgtable_64.c |  9 ---------
+ arch/x86/include/asm/special_insns.h  | 27 ++++++++++++++-------------
+ arch/x86/kernel/cpu/common.c          |  4 ++--
+ 3 files changed, 16 insertions(+), 24 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
+index c8862696a47b..7d0394f4ebf9 100644
+--- a/arch/x86/boot/compressed/pgtable_64.c
++++ b/arch/x86/boot/compressed/pgtable_64.c
+@@ -5,15 +5,6 @@
+ #include "pgtable.h"
+ #include "../string.h"
+ 
+-/*
+- * __force_order is used by special_insns.h asm code to force instruction
+- * serialization.
+- *
+- * It is not referenced from the code, but GCC < 5 with -fPIE would fail
+- * due to an undefined symbol. Define it to make these ancient GCCs work.
+- */
+-unsigned long __force_order;
+-
+ #define BIOS_START_MIN		0x20000U	/* 128K, less than this is insane */
+ #define BIOS_START_MAX		0x9f000U	/* 640K, absolute maximum */
+ 
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index 59a3e13204c3..8f7791217ef4 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -11,45 +11,46 @@
+ #include <linux/jump_label.h>
+ 
+ /*
+- * Volatile isn't enough to prevent the compiler from reordering the
+- * read/write functions for the control registers and messing everything up.
+- * A memory clobber would solve the problem, but would prevent reordering of
+- * all loads stores around it, which can hurt performance. Solution is to
+- * use a variable and mimic reads and writes to it to enforce serialization
++ * The compiler should not reorder volatile asm, however older versions of GCC
++ * had a bug (which was fixed in 8.1, 7.3 and 6.5) where they could sometimes
++ * reorder volatile asm. The write functions are not a problem since they have
++ * memory clobbers preventing reordering. To prevent reads from being reordered
++ * with respect to writes, use a dummy memory operand.
+  */
+-extern unsigned long __force_order;
++
++#define __FORCE_ORDER "m"(*(unsigned int *)0x1000UL)
+ 
+ void native_write_cr0(unsigned long val);
+ 
+ static inline unsigned long native_read_cr0(void)
+ {
+ 	unsigned long val;
+-	asm volatile("mov %%cr0,%0\n\t" : "=r" (val), "=m" (__force_order));
++	asm volatile("mov %%cr0,%0\n\t" : "=r" (val) : __FORCE_ORDER);
+ 	return val;
+ }
+ 
+ static __always_inline unsigned long native_read_cr2(void)
+ {
+ 	unsigned long val;
+-	asm volatile("mov %%cr2,%0\n\t" : "=r" (val), "=m" (__force_order));
++	asm volatile("mov %%cr2,%0\n\t" : "=r" (val) : __FORCE_ORDER);
+ 	return val;
+ }
+ 
+ static __always_inline void native_write_cr2(unsigned long val)
+ {
+-	asm volatile("mov %0,%%cr2": : "r" (val), "m" (__force_order));
++	asm volatile("mov %0,%%cr2": : "r" (val) : "memory");
+ }
+ 
+ static inline unsigned long __native_read_cr3(void)
+ {
+ 	unsigned long val;
+-	asm volatile("mov %%cr3,%0\n\t" : "=r" (val), "=m" (__force_order));
++	asm volatile("mov %%cr3,%0\n\t" : "=r" (val) : __FORCE_ORDER);
+ 	return val;
+ }
+ 
+ static inline void native_write_cr3(unsigned long val)
+ {
+-	asm volatile("mov %0,%%cr3": : "r" (val), "m" (__force_order));
++	asm volatile("mov %0,%%cr3": : "r" (val) : "memory");
+ }
+ 
+ static inline unsigned long native_read_cr4(void)
+@@ -64,10 +65,10 @@ static inline unsigned long native_read_cr4(void)
+ 	asm volatile("1: mov %%cr4, %0\n"
+ 		     "2:\n"
+ 		     _ASM_EXTABLE(1b, 2b)
+-		     : "=r" (val), "=m" (__force_order) : "0" (0));
++		     : "=r" (val) : "0" (0), __FORCE_ORDER);
+ #else
+ 	/* CR4 always exists on x86_64. */
+-	asm volatile("mov %%cr4,%0\n\t" : "=r" (val), "=m" (__force_order));
++	asm volatile("mov %%cr4,%0\n\t" : "=r" (val) : __FORCE_ORDER);
+ #endif
+ 	return val;
+ }
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index c5d6f17d9b9d..178499f90366 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -359,7 +359,7 @@ void native_write_cr0(unsigned long val)
+ 	unsigned long bits_missing = 0;
+ 
+ set_register:
+-	asm volatile("mov %0,%%cr0": "+r" (val), "+m" (__force_order));
++	asm volatile("mov %0,%%cr0": "+r" (val) : : "memory");
+ 
+ 	if (static_branch_likely(&cr_pinning)) {
+ 		if (unlikely((val & X86_CR0_WP) != X86_CR0_WP)) {
+@@ -378,7 +378,7 @@ void native_write_cr4(unsigned long val)
+ 	unsigned long bits_changed = 0;
+ 
+ set_register:
+-	asm volatile("mov %0,%%cr4": "+r" (val), "+m" (cr4_pinned_bits));
++	asm volatile("mov %0,%%cr4": "+r" (val) : : "memory");
+ 
+ 	if (static_branch_likely(&cr_pinning)) {
+ 		if (unlikely((val & cr4_pinned_mask) != cr4_pinned_bits)) {
+-- 
+2.26.2
 
