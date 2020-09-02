@@ -2,99 +2,143 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFD5C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D725C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9E020829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:49:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599058187;
-	bh=MiWguh0ZdqjRHfKFH4zgJMvVsPTVbIzzNVlCVTWhG5o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iRcRVoXvi3vYSeeYJRGjZw8PbMe2+aXDYVQUCDXEB5CdML0IzzGmrRZ2o9klt9kY7
-	 +0nfOICJdY7EYXRBufi37PeSK/N+qdEifoqef2e3EHAhMO2f2mJvexH5BXDfhSEYCx
-	 mlvvzR+5mRuQCl0W+sIkEZ3lMKt7fw25OadgBzQ0=
+	by mail.kernel.org (Postfix) with ESMTP id DBECB20829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:53:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="Ik/dePyz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ovfYQGFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgIBOtq (ORCPT
+        id S1728266AbgIBOuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:49:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgIBOtn (ORCPT
+        Wed, 2 Sep 2020 10:50:15 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:57659 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726674AbgIBOK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:49:43 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E6B9C061244;
-        Wed,  2 Sep 2020 07:49:42 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id g3so3668003qtq.10;
-        Wed, 02 Sep 2020 07:49:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ErDxBP292qgM2mdm4g7gOIU3Qvf4dij7fK4XJfVrt7I=;
-        b=fDRpDALP3bYgR3k1YEHRw6BXEs5qjmQfmVRQWhHf0hTi/Vh3J7y8xh42UsDaXWxp+Y
-         0/TYBma5AgrIW6tV8iSjbjhBKth62GXZAjXRZk5EpOlXjmR08WpNGkfUY5GnsmB25Ozm
-         goBYJK/tywAzaUqXg6XBV3SodkrPxZttoAfBNu3nJRVDalbCa9CCqbQBQcr2nKfL+4PL
-         KBTbv8tuKuFMr4xLHJWWdhDYSR1c+kWpCn7Frqtkwf8sAduRWDR7R7uSDqrJWoflHvGk
-         BPtNxz8bQwCH7t/Rj9GvDUH5LqbE4ttYa1SkqNoGkWkmH9qtOqKoxmYDmCf7JhIt++tw
-         S0dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=ErDxBP292qgM2mdm4g7gOIU3Qvf4dij7fK4XJfVrt7I=;
-        b=Fok1CMT9XjLkKf8PEZ18KF7d1VE7Zz3p4VE8LXLUVTWjACvaX4oakNodw8OiarUjAb
-         VIj931ZPvmdnfYebClBDfhNpF3MTDBEvu53zNXuwQNOJisla5zCiODG4/13mWl10u7lv
-         6/M8Y1d4k0Zr7DYWlh7LPETHzRGdTYU/VOf0l7HrDhn0CLGVKfI+R0H6trRoBKvPr8hA
-         lF37ym8RniA5YCyiuL5M8e0PVTAq3EDJZSibbISvf+426/ZP5UtcjIMDwPwOkXKbLZJ5
-         z+q6iXYgp4LHq3MXgCyW7iYb1AsOp4Z53OMo6/HkH4lPb6nW+6HKM34V4B136Wsh8Nl1
-         Hn9Q==
-X-Gm-Message-State: AOAM530unpogK9j+PE5Rq/SvXq4f12LwO1W05h5dKOlg1KYXAt8zj8QY
-        vW1ndH+0+0qD/+OQdxmfreoky4BTUzAaxA==
-X-Google-Smtp-Source: ABdhPJy/odyVVr3CmJTQ56PF7zNzYEEkAS3D/iWyhHTPHR1m5NSr/u0mWgQqCYJmcvCYZLmX8jzKtQ==
-X-Received: by 2002:ac8:4052:: with SMTP id j18mr7058151qtl.352.1599058181467;
-        Wed, 02 Sep 2020 07:49:41 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:a198])
-        by smtp.gmail.com with ESMTPSA id f7sm4974480qkj.32.2020.09.02.07.49.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 07:49:39 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 10:49:36 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     trix@redhat.com, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] writeback: clear auto_free in initializaiton
-Message-ID: <20200902144936.GF4230@mtj.thefacebook.com>
-References: <20200818141330.29134-1-trix@redhat.com>
- <20200826161126.GB8760@quack2.suse.cz>
+        Wed, 2 Sep 2020 10:10:56 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id A92C95804E0;
+        Wed,  2 Sep 2020 10:10:02 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 02 Sep 2020 10:10:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=7PqQE5cZt4VblhYOFjuBF76nPi
+        qQ+OY9NWSl6QlW+yY=; b=Ik/dePyzFb9DjEnkX6mBpWhIC5q8lnvR7KVTQIhzNG
+        ZX2MHIsErogNQbToOA0wgSzuT7MzW5m7VEFc8abaQZJbuKAqAMjb8Kche59WgD11
+        nJZR+XvWL5Fmn5XoOF8Tsfr2MbFOtNYvnieUMhu0KwODBMLA5/gH8UhNphCiB3CN
+        POs3ngjUw1sbJpVWCj6gPaFsh6mrHwN6yIHCPp6KJ2N7a+4oeBS6yIX7ZK1WnT40
+        zsJRUC7XtoQ+//WLplFUPUHhHn8qfDdwHRWR7HqQ/OOk1WUuLdC1+Zh95kty4Ia5
+        kc62Q2Ayj3aK+ampuMg8ukY9Ykl6C4nYUmtg6e2ULeMQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=7PqQE5cZt4VblhYOF
+        juBF76nPiqQ+OY9NWSl6QlW+yY=; b=ovfYQGFGto3wTFfVtbTt5ITF4AHVGlqi3
+        etwi4cd9+FDTy+yPbYqDlyKu0G9CTQ9czZmUlN05KMAXuSN6F5OtPd04GTp73jcc
+        RngsOPJzWvkd9X9H1EQINNwuBHIzyyQNXtrxpkMIK6vufY+afa99C26VSGNu3fCT
+        FdQhXwSUj/wzdluhVJSvQ7iZ6eVbYe6v0pwDKzgznk2uD4HLT9tH1wtUbTni3ukY
+        qZiAGmBflvuKJ7SL2E5cre65xzTBCdhkrsMxAMQaocsCvejMVV5xUlDverK0Ip/B
+        BBIE9k+TUu1gqyhApyD1e5mHlITPsdavqIRMIfMboMw2UOqCHCFhw==
+X-ME-Sender: <xms:uadPX3BX95NtbpswHaB2B4hL4ifHjT1JZc8bcbYRzdeTIR1NpVVe_Q>
+    <xme:uadPX9j2FDxgwoeFWSupTqGDFyNcHdTqKttGMbPh4K80C9xfAoFE3c6UpgBX6pPgp
+    Lt71AmXIuj3R7RZc08>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledgjeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefvhigthhhoucet
+    nhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtffrrghtth
+    gvrhhnpeelveehveejgefgkedttedvteffgfelfeeuveduteelvdduhefhjeetjeehheel
+    keenucfkphepuddvkedruddtjedrvdeguddrudejkeenucfuphgrmhfkphfpvghtfihorh
+    hkpeduvdekrddutdejrddvgedurddujeeknecuvehluhhsthgvrhfuihiivgeptdenucfr
+    rghrrghmpehmrghilhhfrhhomhepthihtghhohesthihtghhohdrphhiiiiirg
+X-ME-Proxy: <xmx:uadPXymCM0E46r2hSP4V-HbjLZ7mZcA1egQTM-cG1o1YmFY9Njin3A>
+    <xmx:uadPX5ytjtpYMW5jPtc_bH_MCmWlGBZj4YEtzhOvSZ1t2znzTzzzew>
+    <xmx:uadPX8TXzc5xYLhPNy09UZAJ5dkuTDnOJ8bj2oW53Mz-IfZXdNhKbg>
+    <xmx:uqdPX3eZqinJZMiY8ir1iuPTMbNQdCgXaMWK4gpHmazZlfDxiiXhp8FbYnw>
+Received: from cisco.hsd1.co.comcast.net (unknown [128.107.241.178])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0A334306005F;
+        Wed,  2 Sep 2020 10:09:59 -0400 (EDT)
+From:   Tycho Andersen <tycho@tycho.pizza>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.pizza>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH] seccomp: don't leave dangling ->notif if file allocation fails
+Date:   Wed,  2 Sep 2020 08:09:53 -0600
+Message-Id: <20200902140953.1201956-1-tycho@tycho.pizza>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826161126.GB8760@quack2.suse.cz>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Christian and Kees both pointed out that this is a bit sloppy to open-code
+both places, and Christian points out that we leave a dangling pointer to
+->notif if file allocation fails. Since we check ->notif for null in order
+to determine if it's ok to install a filter, this means people won't be
+able to install a filter if the file allocation fails for some reason, even
+if they subsequently should be able to.
 
-On Wed, Aug 26, 2020 at 06:11:26PM +0200, Jan Kara wrote:
-> > Which seems like a strange place to set auto_free as
-> > it is not where the rest of base_work is initialized.
-> 
-> Otherwise I agree it's a strange place. I've added Tejun to CC just in case
-> he remembers why he's added that.
+To fix this, let's hoist this free+null into its own little helper and use
+it.
 
-I don't remember exactly but maybe I was trying to mirror the
-CGROUP_WRITEBACK counterpart without actually thinking about it? The patch
-looks good to me.
+Reported-by: Kees Cook <keescook@chromium.org>
+Reported-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Tycho Andersen <tycho@tycho.pizza>
+---
+ kernel/seccomp.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-Thanks.
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index bb0dd9ae699a..676d4af62103 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -1109,6 +1109,12 @@ static long seccomp_set_mode_strict(void)
+ }
+ 
+ #ifdef CONFIG_SECCOMP_FILTER
++static void seccomp_notify_free(struct seccomp_filter *filter)
++{
++	kfree(filter->notif);
++	filter->notif = NULL;
++}
++
+ static void seccomp_notify_detach(struct seccomp_filter *filter)
+ {
+ 	struct seccomp_knotif *knotif;
+@@ -1138,8 +1144,7 @@ static void seccomp_notify_detach(struct seccomp_filter *filter)
+ 		complete(&knotif->ready);
+ 	}
+ 
+-	kfree(filter->notif);
+-	filter->notif = NULL;
++	seccomp_notify_free(filter);
+ 	mutex_unlock(&filter->notify_lock);
+ }
+ 
+@@ -1494,7 +1499,7 @@ static struct file *init_listener(struct seccomp_filter *filter)
+ 
+ out_notif:
+ 	if (IS_ERR(ret))
+-		kfree(filter->notif);
++		seccomp_notify_free(filter);
+ out:
+ 	return ret;
+ }
 
+base-commit: 7b6aa0bb62fd6fd50f2d14136136262d28fb2dfe
 -- 
-tejun
+2.25.1
+
