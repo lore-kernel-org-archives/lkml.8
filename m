@@ -2,322 +2,92 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8782DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B62C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58FB420773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8BB20773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:25:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F3kwlrhj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G7X44HiR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgIBOXL (ORCPT
+        id S1727020AbgIBOY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:23:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37804 "EHLO
+        Wed, 2 Sep 2020 10:24:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727866AbgIBOLH (ORCPT
+        with ESMTP id S1727986AbgIBONL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:11:07 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96370C061246
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 07:11:05 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id p9so6835331ejf.6
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 07:11:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=i/HlHFqSuaR6dxYOM/8osOiJcPMDGWG074RIMXEYjHk=;
-        b=F3kwlrhjCN/Vt+MIgtn9IRnB2PGVxgiaj6ruzQ/7Qdd453h/HGdT3wQG8KNFOCCsJA
-         oIn3MYp8dV7OAt2mt6Zu+urV3kKU3+8dqN3eSWxePQtNuoBWVgA73FJR+Wt0KEpOXG7O
-         +OKpPG70xKSU4nq/i4U8CIpaKKFdGuaEorbZhZgmECaY8CIL7fDepzaH4woxXAyBBe0s
-         p/Xpd+NC0PIYaz3Z4i7NBEMVFM1otVpbkbaGYT43x5xJGVwfqCF6uDdAZtDdoDFryzRI
-         ZqRVgwmviTd6LhuyIu/LtfYDC4vkgpZudadSgB7Ub40/xmjsKU9wZPFTXDL+bk2ba4CU
-         DXIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=i/HlHFqSuaR6dxYOM/8osOiJcPMDGWG074RIMXEYjHk=;
-        b=PHB51w46Ep9i9bEI7yqxJPZJDH/Ly8GPmxKpU8teMYKhAOVM+tBAlvyz0bQtWpfryl
-         gydp/61TIYcEcROj61lv0sul4aAu5ZnfqnJf31T75zXfxw8kBXxhNPGWEFMWhyuzwb2t
-         +H9HM+Ocwo1WphYTXxTE78asBpQf6yJP5rwp5gaY6PEoyFLw2y6KEmoNgbKj3MSTQfcy
-         6qopr3nXCCXgAHMZwIo8uK3M2PuasLkUtHQNLaVXU3hBEVYG7qbHgAMKs2WuWuqz7P6o
-         ZBa0dC/HPWH58YtqeV8EaBUf3NnyeDv8MbVHAawSxcRNiwh8+v3JV57Ng8Hbxia4R7M5
-         tOGQ==
-X-Gm-Message-State: AOAM533OdZfyoQH1ICRbMVxn6a9QoQWkJwSZlxj6AF8/HFo+kCzaMdvO
-        T7sXgTLWHewXGrpvKLEIrZd148o8fuxwWQ==
-X-Google-Smtp-Source: ABdhPJyLVq2gfllz56sKBWfYi0fzh6UvSPeKEaTJ90sakLczVUeaTGEN6NQ4xU3ZMB0xB3nHTqtBTg==
-X-Received: by 2002:a17:906:a43:: with SMTP id x3mr171783ejf.321.1599055864057;
-        Wed, 02 Sep 2020 07:11:04 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:2450:102f:d6a:5cc2:d98c:ab6b:cb16])
-        by smtp.gmail.com with ESMTPSA id h25sm4459336ejq.12.2020.09.02.07.11.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 07:11:03 -0700 (PDT)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     dongchun.zhu@mediatek.com, mchehab@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ben Kao <ben.kao@intel.com>, Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [PATCH v1 2/2] media: ov8856: Add support for 3264x2448 mode
-Date:   Wed,  2 Sep 2020 16:10:37 +0200
-Message-Id: <20200902141037.240549-2-robert.foss@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200902141037.240549-1-robert.foss@linaro.org>
-References: <20200902141037.240549-1-robert.foss@linaro.org>
+        Wed, 2 Sep 2020 10:13:11 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA39C061258;
+        Wed,  2 Sep 2020 07:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=F3ySvW+0LV/eEp4ukNxLWcqNSpE01eTInOOTJQ8Lr18=; b=G7X44HiRcM/JgcWlZooMaP4koW
+        rcfEa3NDJkcDkQKo8ORctDDkXQ5IseKhAws17oXMoud7xM2TlcsfR/GqWZvJ75mlyalzSDqid/81C
+        PAMCykjZi+PpLdP2yzYKuVt9+tFvVmIEZtbSe1zF2Yhr87Bnn0ktPOM2Q6AsFj/MDh07bvgDsHP9E
+        oZh/erionLIYWEtxl7f/8F700PmHfi6W6QYGTGNoRy4a/2gsckqgfiWOBqXX3g9wTDAgGG0T59Pea
+        7zGDP0q4DYNPXWRB+c5iVq2k3wL7Ys8qFaGX0hz/qWZrpj8Oz5/qWXDh/YKV78xpBK26bi+limiW5
+        xnQ16DeQ==;
+Received: from [2001:4bb8:184:af1:6a63:7fdb:a80e:3b0b] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDTV4-0005eB-Gm; Wed, 02 Sep 2020 14:12:34 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 11/19] gdrom: use bdev_check_media_change
+Date:   Wed,  2 Sep 2020 16:12:10 +0200
+Message-Id: <20200902141218.212614-12-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200902141218.212614-1-hch@lst.de>
+References: <20200902141218.212614-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OV8856 supports 3264x2448 @ 30 FPS, which is added
-in this commit.
+The GD-ROM driver does not have a ->revalidate_disk method, so it can
+just use bdev_check_media_change without any additional changes.
 
-Signed-off-by: Robert Foss <robert.foss@linaro.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/media/i2c/ov8856.c | 215 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 215 insertions(+)
+ drivers/cdrom/gdrom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
-index 9b99affa90e2..2f4ceaa80593 100644
---- a/drivers/media/i2c/ov8856.c
-+++ b/drivers/media/i2c/ov8856.c
-@@ -338,6 +338,209 @@ static const struct ov8856_reg mode_3280x2464_regs[] = {
- 	{0x5e00, 0x00}
- };
+diff --git a/drivers/cdrom/gdrom.c b/drivers/cdrom/gdrom.c
+index 09b0cd292720fa..9874fc1c815b53 100644
+--- a/drivers/cdrom/gdrom.c
++++ b/drivers/cdrom/gdrom.c
+@@ -479,7 +479,7 @@ static int gdrom_bdops_open(struct block_device *bdev, fmode_t mode)
+ {
+ 	int ret;
  
-+static const struct ov8856_reg mode_3264x2448_regs[] = {
-+	{0x0103, 0x01},
-+	{0x0302, 0x3c},
-+	{0x0303, 0x01},
-+	{0x031e, 0x0c},
-+	{0x3000, 0x20},
-+	{0x3003, 0x08},
-+	{0x300e, 0x20},
-+	{0x3010, 0x00},
-+	{0x3015, 0x84},
-+	{0x3018, 0x72},
-+	{0x3021, 0x23},
-+	{0x3033, 0x24},
-+	{0x3500, 0x00},
-+	{0x3501, 0x9a},
-+	{0x3502, 0x20},
-+	{0x3503, 0x08},
-+	{0x3505, 0x83},
-+	{0x3508, 0x01},
-+	{0x3509, 0x80},
-+	{0x350c, 0x00},
-+	{0x350d, 0x80},
-+	{0x350e, 0x04},
-+	{0x350f, 0x00},
-+	{0x3510, 0x00},
-+	{0x3511, 0x02},
-+	{0x3512, 0x00},
-+	{0x3600, 0x72},
-+	{0x3601, 0x40},
-+	{0x3602, 0x30},
-+	{0x3610, 0xc5},
-+	{0x3611, 0x58},
-+	{0x3612, 0x5c},
-+	{0x3613, 0xca},
-+	{0x3614, 0x60},
-+	{0x3628, 0xff},
-+	{0x3629, 0xff},
-+	{0x362a, 0xff},
-+	{0x3633, 0x10},
-+	{0x3634, 0x10},
-+	{0x3635, 0x10},
-+	{0x3636, 0x10},
-+	{0x3663, 0x08},
-+	{0x3669, 0x34},
-+	{0x366d, 0x00},
-+	{0x366e, 0x10},
-+	{0x3706, 0x86},
-+	{0x370b, 0x7e},
-+	{0x3714, 0x23},
-+	{0x3730, 0x12},
-+	{0x3733, 0x10},
-+	{0x3764, 0x00},
-+	{0x3765, 0x00},
-+	{0x3769, 0x62},
-+	{0x376a, 0x2a},
-+	{0x376b, 0x30},
-+	{0x3780, 0x00},
-+	{0x3781, 0x24},
-+	{0x3782, 0x00},
-+	{0x3783, 0x23},
-+	{0x3798, 0x2f},
-+	{0x37a1, 0x60},
-+	{0x37a8, 0x6a},
-+	{0x37ab, 0x3f},
-+	{0x37c2, 0x04},
-+	{0x37c3, 0xf1},
-+	{0x37c9, 0x80},
-+	{0x37cb, 0x16},
-+	{0x37cc, 0x16},
-+	{0x37cd, 0x16},
-+	{0x37ce, 0x16},
-+	{0x3800, 0x00},
-+	{0x3801, 0x00},
-+	{0x3802, 0x00},
-+	{0x3803, 0x0c},
-+	{0x3804, 0x0c},
-+	{0x3805, 0xdf},
-+	{0x3806, 0x09},
-+	{0x3807, 0xa3},
-+	{0x3808, 0x0c},
-+	{0x3809, 0xc0},
-+	{0x380a, 0x09},
-+	{0x380b, 0x90},
-+	{0x380c, 0x07},
-+	{0x380d, 0x8c},
-+	{0x380e, 0x09},
-+	{0x380f, 0xb2},
-+	{0x3810, 0x00},
-+	{0x3811, 0x04},
-+	{0x3812, 0x00},
-+	{0x3813, 0x02},
-+	{0x3814, 0x01},
-+	{0x3815, 0x01},
-+	{0x3816, 0x00},
-+	{0x3817, 0x00},
-+	{0x3818, 0x00},
-+	{0x3819, 0x10},
-+	{0x3820, 0x80},
-+	{0x3821, 0x46},
-+	{0x382a, 0x01},
-+	{0x382b, 0x01},
-+	{0x3830, 0x06},
-+	{0x3836, 0x02},
-+	{0x3862, 0x04},
-+	{0x3863, 0x08},
-+	{0x3cc0, 0x33},
-+	{0x3d85, 0x17},
-+	{0x3d8c, 0x73},
-+	{0x3d8d, 0xde},
-+	{0x4001, 0xe0},
-+	{0x4003, 0x40},
-+	{0x4008, 0x00},
-+	{0x4009, 0x0b},
-+	{0x400a, 0x00},
-+	{0x400b, 0x84},
-+	{0x400f, 0x80},
-+	{0x4010, 0xf0},
-+	{0x4011, 0xff},
-+	{0x4012, 0x02},
-+	{0x4013, 0x01},
-+	{0x4014, 0x01},
-+	{0x4015, 0x01},
-+	{0x4042, 0x00},
-+	{0x4043, 0x80},
-+	{0x4044, 0x00},
-+	{0x4045, 0x80},
-+	{0x4046, 0x00},
-+	{0x4047, 0x80},
-+	{0x4048, 0x00},
-+	{0x4049, 0x80},
-+	{0x4041, 0x03},
-+	{0x404c, 0x20},
-+	{0x404d, 0x00},
-+	{0x404e, 0x20},
-+	{0x4203, 0x80},
-+	{0x4307, 0x30},
-+	{0x4317, 0x00},
-+	{0x4502, 0x50},
-+	{0x4503, 0x08},
-+	{0x4601, 0x80},
-+	{0x4800, 0x44},
-+	{0x4816, 0x53},
-+	{0x481b, 0x50},
-+	{0x481f, 0x27},
-+	{0x4823, 0x3c},
-+	{0x482b, 0x00},
-+	{0x4831, 0x66},
-+	{0x4837, 0x16},
-+	{0x483c, 0x0f},
-+	{0x484b, 0x05},
-+	{0x5000, 0x77},
-+	{0x5001, 0x0a},
-+	{0x5003, 0xc8},
-+	{0x5004, 0x04},
-+	{0x5006, 0x00},
-+	{0x5007, 0x00},
-+	{0x502e, 0x03},
-+	{0x5030, 0x41},
-+	{0x5780, 0x14},
-+	{0x5781, 0x0f},
-+	{0x5782, 0x44},
-+	{0x5783, 0x02},
-+	{0x5784, 0x01},
-+	{0x5785, 0x01},
-+	{0x5786, 0x00},
-+	{0x5787, 0x04},
-+	{0x5788, 0x02},
-+	{0x5789, 0x0f},
-+	{0x578a, 0xfd},
-+	{0x578b, 0xf5},
-+	{0x578c, 0xf5},
-+	{0x578d, 0x03},
-+	{0x578e, 0x08},
-+	{0x578f, 0x0c},
-+	{0x5790, 0x08},
-+	{0x5791, 0x04},
-+	{0x5792, 0x00},
-+	{0x5793, 0x52},
-+	{0x5794, 0xa3},
-+	{0x5795, 0x02},
-+	{0x5796, 0x20},
-+	{0x5797, 0x20},
-+	{0x5798, 0xd5},
-+	{0x5799, 0xd5},
-+	{0x579a, 0x00},
-+	{0x579b, 0x50},
-+	{0x579c, 0x00},
-+	{0x579d, 0x2c},
-+	{0x579e, 0x0c},
-+	{0x579f, 0x40},
-+	{0x57a0, 0x09},
-+	{0x57a1, 0x40},
-+	{0x59f8, 0x3d},
-+	{0x5a08, 0x02},
-+	{0x5b00, 0x02},
-+	{0x5b01, 0x10},
-+	{0x5b02, 0x03},
-+	{0x5b03, 0xcf},
-+	{0x5b05, 0x6c},
-+	{0x5e00, 0x00},
-+	{0x5e10, 0xfc}
-+};
-+
- static const struct ov8856_reg mode_1640x1232_regs[] = {
- 	{0x3000, 0x20},
- 	{0x3003, 0x08},
-@@ -772,6 +975,18 @@ static const struct ov8856_mode supported_modes[] = {
- 		},
- 		.link_freq_index = OV8856_LINK_FREQ_720MBPS,
- 	},
-+	{
-+		.width = 3264,
-+		.height = 2448,
-+		.hts = 1932,
-+		.vts_def = 2482,
-+		.vts_min = 2482,
-+		.reg_list = {
-+			.num_of_regs = ARRAY_SIZE(mode_3264x2448_regs),
-+			.regs = mode_3264x2448_regs,
-+		},
-+		.link_freq_index = OV8856_LINK_FREQ_720MBPS,
-+	},
- 	{
- 		.width = 1640,
- 		.height = 1232,
+-	check_disk_change(bdev);
++	bdev_check_media_change(bdev);
+ 
+ 	mutex_lock(&gdrom_mutex);
+ 	ret = cdrom_open(gd.cd_info, bdev, mode);
 -- 
-2.25.1
+2.28.0
 
