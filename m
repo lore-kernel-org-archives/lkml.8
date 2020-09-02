@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C26CBC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281AEC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 992522083B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 002ED20E65
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599075496;
-	bh=SQl/6OS4NtkfhoHM6x57EjikQWPjJp6R4j4puLXRYOQ=;
+	s=default; t=1599075501;
+	bh=lLhkPRvbTO/inodevltgwxchcR9zWQtrcdcrepSqhK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W3KH2raBagS6xoPP3avAR+8ME4Var+4ywbrIwegIlHn7wRI/AnpTiP/NFlDQYrk85
-	 9ZgS295UeLndjK4LJsaapZ3hjwv9wiZJ9RCKWzTaatIJgSfniip1KgebmXrnk/xCmF
-	 eyfbEbeDpo0ucaX6hIBM1gLdXN3Y5v5lUwOz69hA=
+	b=h9mS4q0ILxa7PDnbHZKIKdKECUc8M+H9Rob3qbn3eBXeuLNVnCS2VTxLRefbHYj8W
+	 KpmDc4zk3bp28190fwMin6D7BHJMCcUz9+nKh1otFkRBGUnOWjIeleClqDhgocmBMs
+	 RnEAq8bLQNRx8Q7PaNbvJBPq2dHUECuv2WoJRyI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgIBTiL (ORCPT
+        id S1728190AbgIBTiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 15:38:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43870 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 15:38:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727112AbgIBTiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 15:38:08 -0400
+        id S1726900AbgIBTiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 15:38:17 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F4B720C56;
-        Wed,  2 Sep 2020 19:38:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3A7920E65;
+        Wed,  2 Sep 2020 19:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599075488;
-        bh=SQl/6OS4NtkfhoHM6x57EjikQWPjJp6R4j4puLXRYOQ=;
+        s=default; t=1599075497;
+        bh=lLhkPRvbTO/inodevltgwxchcR9zWQtrcdcrepSqhK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tnPu8F1exJo+uPphLfUjycPSojRrb5lbYJCxy0OkbDJoBIbtJlppeGGRantb0xIHK
-         wZTnr9qAwMjHtzjSypym5MrBxUODR9ojVsLzCCi9AExiyKzJmWJ+LpoGJ9xmkVXtgX
-         ZyNbL60PgIqbyR0miZYsDgn1IJnK+/B8f+ssAeeE=
+        b=yssYkjoh6faFQ/FjleguPOY6QVSDnvEP1PSVxRr/5m42aL34ZVKII5jaoYZfQ4Eis
+         fbEKTuy6g4Lc0vLuIw3i41Hm5AXc7pw+6aCfL6P070XzUeDLd4IQBBI/G3ivFhsUL8
+         iHLJK5mFLNB9oqnzCNNc1kRRVeortgFfP8YH87Gs=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -66,9 +66,9 @@ To:     Ulf Hansson <ulf.hansson@linaro.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-tegra@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 07/11] mmc: sdhci-of-arasan: Simplify with dev_err_probe()
-Date:   Wed,  2 Sep 2020 21:36:54 +0200
-Message-Id: <20200902193658.20539-8-krzk@kernel.org>
+Subject: [PATCH 08/11] mmc: sdhci-tegra: Simplify with dev_err_probe()
+Date:   Wed,  2 Sep 2020 21:36:55 +0200
+Message-Id: <20200902193658.20539-9-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200902193658.20539-1-krzk@kernel.org>
 References: <20200902193658.20539-1-krzk@kernel.org>
@@ -82,27 +82,27 @@ dev_err_probe().  Less code and the error value gets printed.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-arasan.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/mmc/host/sdhci-tegra.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index f186fbd016b1..3aea46db2ea7 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -1543,10 +1543,9 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
- 		of_node_put(node);
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 0a3f9d024f2a..118528f3325d 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -1615,11 +1615,8 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
  
- 		if (IS_ERR(sdhci_arasan->soc_ctl_base)) {
--			ret = PTR_ERR(sdhci_arasan->soc_ctl_base);
--			if (ret != -EPROBE_DEFER)
--				dev_err(&pdev->dev, "Can't get syscon: %d\n",
--					ret);
-+			ret = dev_err_probe(&pdev->dev,
-+					    PTR_ERR(sdhci_arasan->soc_ctl_base),
-+					    "Can't get syscon\n");
- 			goto err_pltfm_free;
- 		}
+ 	clk = devm_clk_get(mmc_dev(host->mmc), NULL);
+ 	if (IS_ERR(clk)) {
+-		rc = PTR_ERR(clk);
+-
+-		if (rc != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "failed to get clock: %d\n", rc);
+-
++		rc = dev_err_probe(&pdev->dev, PTR_ERR(clk),
++				   "failed to get clock\n");
+ 		goto err_clk_get;
  	}
+ 	clk_prepare_enable(clk);
 -- 
 2.17.1
 
