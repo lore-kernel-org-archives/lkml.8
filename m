@@ -2,28 +2,27 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81132C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6932CC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69C5620767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50056206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:45:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgIBMoP (ORCPT
+        id S1727101AbgIBMpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 08:44:15 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:37960 "EHLO vps0.lunn.ch"
+        Wed, 2 Sep 2020 08:45:20 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:37968 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgIBMnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 08:43:42 -0400
+        id S1726686AbgIBMoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 08:44:06 -0400
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
         (envelope-from <andrew@lunn.ch>)
-        id 1kDS6x-00CtCS-4e; Wed, 02 Sep 2020 14:43:35 +0200
-Date:   Wed, 2 Sep 2020 14:43:35 +0200
+        id 1kDS7A-00CtCp-34; Wed, 02 Sep 2020 14:43:48 +0200
+Date:   Wed, 2 Sep 2020 14:43:48 +0200
 From:   Andrew Lunn <andrew@lunn.ch>
 To:     Florian Fainelli <f.fainelli@gmail.com>
 Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
@@ -33,51 +32,24 @@ Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 1/3] dt-bindings: net: Document Broadcom SF2
- switch clocks
-Message-ID: <20200902124335.GB3071395@lunn.ch>
+Subject: Re: [PATCH net-next 2/3] net: dsa: bcm_sf2: request and handle clocks
+Message-ID: <20200902124348.GC3071395@lunn.ch>
 References: <20200901225913.1587628-1-f.fainelli@gmail.com>
- <20200901225913.1587628-2-f.fainelli@gmail.com>
+ <20200901225913.1587628-3-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200901225913.1587628-2-f.fainelli@gmail.com>
+In-Reply-To: <20200901225913.1587628-3-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 03:59:11PM -0700, Florian Fainelli wrote:
-> Describe the two possible clocks feeding into the Broadcom SF2
-> integrated Ethernet switch. BCM7445 systems have two clocks, one for the
-> main switch core clock, and another for controlling the switch clock
-> divider whereas BCM7278 systems only have the first kind.
+On Tue, Sep 01, 2020 at 03:59:12PM -0700, Florian Fainelli wrote:
+> Fetch the corresponding clock resource and enable/disable it during
+> suspend/resume if and only if we have no ports defined for Wake-on-LAN.
 > 
 > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  .../devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt   | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt b/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
-> index 88b57b0ca1f4..97ca62b0e14d 100644
-> --- a/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
-> +++ b/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
-> @@ -50,6 +50,13 @@ Optional properties:
->  - reset-names: If the "reset" property is specified, this property should have
->    the value "switch" to denote the switch reset line.
->  
-> +- clocks: when provided, the first phandle is to the switch's main clock and
-> +  is valid for both BCM7445 and BCM7278. The second phandle is only applicable
-> +  to BCM7445 and is to support dividing the switch core clock.
-> +
-> +- clock-names: when provided, the first phandle must be "sw_switch", and the
-> +  second must be named "sw_switch_mdiv".
-
-Hi Florian
-
-Since you look clocks up by name, i don't think the order matters.
-
-Otherwise:
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
