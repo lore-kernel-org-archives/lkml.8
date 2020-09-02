@@ -2,97 +2,140 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7360DC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DEFC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40944204FD
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:48:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599061735;
-	bh=oEW7Ti95bf1zZVT0yfakqtxXc2POC94uojRerlND+SI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E+LtwuNs7TN9LW38qFKvAKsYuPN8KdfpR8gH6eIBMoHHkOrIl/0hLoRQDPG2cGqVA
-	 Uzreru4FxO1EEq65ITlQ08doWdC2gWIouQYQ3fEIlb+f5O6iKjVApYtKEH7QYG36gH
-	 wS5FhBjA3Eq0Axd3rvUcGhAOVoTt/gSwEpUDN46U=
+	by mail.kernel.org (Postfix) with ESMTP id C4567204FD
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:50:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="jb2GWYTc";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="IjQVYtQG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgIBPsx (ORCPT
+        id S1727859AbgIBPus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:48:53 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34090 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgIBPsv (ORCPT
+        Wed, 2 Sep 2020 11:50:48 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:26868 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgIBPuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:48:51 -0400
-Received: by mail-ed1-f67.google.com with SMTP id q21so5431750edv.1;
-        Wed, 02 Sep 2020 08:48:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=25BrYDkb4I/zfoyKcwfjx4o/YRMeDib3DPF5ryd2jrY=;
-        b=oJfFRmLNxWmAvtif2KXjvhAUc+x+e3fiFEbqamCkYeWn12B/cnKt6213V4YR/LFcvo
-         TzvB73D9HHUdeKqyuaQLx5jZErJ7rHrSS8f6gdUsR6zMwd6SydRJBoQ3PqT7zAfIl35T
-         sV4NbGJj9Lgd+TVaYWorYeeweF+ynv+Jtm3HB7nZ7dtJwmOUYO+AEHcekpZEjbDOoTRP
-         HtnLyEFlxyBD9jtqSIeRFlVYsvn8d3wBLMYoHzwEx3aJGLOSzA8J83KfKWGlyOFcT8Jw
-         1n3F0efu+WK/1vpgnqJsKUqyolBMSoF07m1ZNME3lr6h9wG4XAHeUD+4/V0cz24YCNVU
-         TxOw==
-X-Gm-Message-State: AOAM5319AgQo0YmjdT64EJBNcmRPKDAUua8OximjcvoH5ZcSYKKQiVI2
-        ETKcT8vo/GaOxk1AU7uGJVc=
-X-Google-Smtp-Source: ABdhPJyOr19mAVgDdQqKqdQcQlhxjLl5c+AwMZYRoKvZUU35wrmZXDj8yOg7lapvI4vsZNgh0bClog==
-X-Received: by 2002:aa7:da16:: with SMTP id r22mr736126eds.132.1599061728604;
-        Wed, 02 Sep 2020 08:48:48 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.106])
-        by smtp.googlemail.com with ESMTPSA id s7sm3100909ejd.103.2020.09.02.08.48.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Sep 2020 08:48:48 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 17:48:45 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Denis GNUtoo Carikli <GNUtoo@cyberdimension.org>,
-        Simon Shields <simon@lineageos.org>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: Re: [PATCH 24/33] ARM: dts: exynos: Correct compatible of fixed
- clocks in Midas boards
-Message-ID: <20200902154845.GE21503@kozik-lap>
-References: <20200830135200.24304-1-krzk@kernel.org>
- <20200830135200.24304-24-krzk@kernel.org>
+        Wed, 2 Sep 2020 11:50:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1599061839; x=1630597839;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=G7FnAaeCQVz1lg9agcRSwLtZU+QOM37C5Rky0CPIiCw=;
+  b=jb2GWYTczXO12ZXVvRw9SwP6kObR0euLIe6SNFst0LxtdgSMD8/U7GP6
+   jLRxS/UsOLvqIZAH3ApHqV9wCLGBH1v1/uGYCUsQCzti6IGdMwomQtRVE
+   Hxw17/DlSn26dKz0Ixy2KOF/VuKQYH23anpCUFlGcZ3Ugs9I+gJ8Q2Lid
+   ZLsnmtzyZ9U3uMPp9XnU3ETCEfx+9CDugc2VWRgvm1DOGlVKYgcZ041IU
+   hDjDxTr2gSmLkmMq441DiurpkmDty5VkdKIyis9i14ghT2MmMVgLLss4y
+   JpLtlUvli4QIgCFkxi1fQUleKPqiKTiRdDmGcleXnNBf91HsqmEYe8dt3
+   Q==;
+IronPort-SDR: RDpCMZWNgCGcqiIs+lByLNegwTptUgkDXw0Af+7ZAZ4SOIfoG0vGiZZWA43GmShRIEUUPjFF04
+ +7CG3BzpRvYKwWSkIgp2qJTl0HHos5q9dhDqOrWjtA5P0xZWWSJTYoScvrRW8tF3fHZsQwxx7c
+ DYzUwuj6TlktwmDj+M+7MVx2JpqWik6UwsoteHCQyGuBtjMRoHqdsYlre8r1QEkNbGbGIdX3dw
+ 5066XdtnGPipF6GnfzPcm7m/AijKRQUrd5hjhiOiUK+pJHS7oqRy2LZj+YeW/xut+hNhlOpT95
+ gvY=
+X-IronPort-AV: E=Sophos;i="5.76,383,1592841600"; 
+   d="scan'208";a="255953793"
+Received: from mail-bn7nam10lp2104.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.104])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Sep 2020 23:50:37 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lUd6ifeajH3CqvmnVzh8+osWdYHkIz/LfVkY6RmRYVeHIJycpE3myTPr7wYjKvXHHchhrmk9FulFSZNVySESPiZZlTqDMVbthiHFPcOovWbfb6WUtKTR/+3FnZtl3c+aTyuuSN9sbubQDFchZ82waoKFr1GeeAnSmsSDwPxm9re+P3BPQPnppoBxKW29/mdWWfkLvbRcIPMspwM6cIrDxm4dC5QUgCeW5GDeVB0vd2i5Q5p503+uR5XFbkEVKRdKpyKeKzVzvYx2SuWo8o3I/CRZoN1wmxhkewukbRUJfKMIPhRYPXIlfCuJychpCU3miVdM0NvuDQRCnRkZhPBSgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CxTCnHKAlsG57GwcVqyOhhRf04t1PU+FB0q8//OAfCo=;
+ b=azp+HB/gUdE8/CLPo8/q026n9OKHotnfOUtSLoScgzn+DKykxNYwHYmTD2anHMxOKUFLEH0OUfi34AjPadI9Fmbjk89RZwOZ8zgS22J2qAc8v7AuLVyGSuRif0NjjuS9OCoAgX7tH24+CSNhJyKm9sNREuMZaACexXBFfSm90FzT9BKTDqsKvVC4n77EMfCYPEHjGC8NwAaquukAFhKSRFojN12QZAt29FU58SYStKYdeW7FX6jrKzlvYl4E6CsLzuP07/TzujFENVXLncdj7nj4wfA2gJdQDCq7fcpF3G3kanBTBcyccc/JQf054DHZZXFpklyVkzrbGDKgJfa61w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CxTCnHKAlsG57GwcVqyOhhRf04t1PU+FB0q8//OAfCo=;
+ b=IjQVYtQGYIoc2eA3WOwSSRezAIrPUMHpk8a/4qqoq02vsy4E5w1bn0qNhQuceS4yQ/2APx51nvZAskv+SHjpPTDlJAHuYRs4EkZ+DrfmS0S1TvsbSZ9gj0xCo0LDN/5+0LpGEz1aZJM81DHaUcxZ7xBuww7Zm7hoKIYI77KgHa8=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN4PR0401MB3680.namprd04.prod.outlook.com
+ (2603:10b6:803:4e::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.25; Wed, 2 Sep
+ 2020 15:50:37 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3326.023; Wed, 2 Sep 2020
+ 15:50:37 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 15/19] md: use bdev_check_media_change
+Thread-Topic: [PATCH 15/19] md: use bdev_check_media_change
+Thread-Index: AQHWgTOwoIis0HtRJ0e9zodZpaIyaw==
+Date:   Wed, 2 Sep 2020 15:50:36 +0000
+Message-ID: <SN4PR0401MB3598E01FAFE1FC30C39C4FB09B2F0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200902141218.212614-1-hch@lst.de>
+ <20200902141218.212614-16-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2001:a62:1590:f101:1584:4722:fd5f:b30e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d3a3d111-2cd7-4188-c6b2-08d84f57ef6d
+x-ms-traffictypediagnostic: SN4PR0401MB3680:
+x-microsoft-antispam-prvs: <SN4PR0401MB3680AF124717581FBACA406F9B2F0@SN4PR0401MB3680.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TdZHxvT4DexMmdxMbxJRWKOjh0JpOaR8TUFlm84euYs4QInecvCeVYYx+jX0wwkaynCmJ93z69PRlK+cr7tqOWrC2ZdZ8/9HJ35qz0Az7IbSlE0Jr3B6g5rpPWFgojJwhrNJaxB0CsFQTWVPgGRXg5mVboVbjVfcTgKaUp5mA0M/VNh0i3IkDSFhS0GKpVG2dKjeOp2t7tuyEllwqa8SB57NpmOsHIUjg3U+TO5oQiOn5lh+2Ipx2N6wfHyBoDvM35k4njHzFhsvysE7Vizzy3t7p6lsEx5B9kWs7GlPuCBJiZKJV9ZhtLVLx5oZQIDZopNW8RtGN69t8qG7jIXF8w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39850400004)(396003)(366004)(346002)(376002)(136003)(71200400001)(83380400001)(7696005)(66446008)(7416002)(186003)(316002)(66556008)(54906003)(110136005)(66476007)(6506007)(66946007)(91956017)(52536014)(64756008)(76116006)(4326008)(53546011)(8676002)(9686003)(86362001)(33656002)(55016002)(558084003)(5660300002)(8936002)(478600001)(2906002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: lZVkIJeOktV/6wR0UJVIDVwKBJzzxeSlztVXSUK6N3SA15E9vIIkf0WdGRNOGXWtr2QJASGCm5Uz67POhK/n0cZkK1zmsyCyYD7KpDKKjhE/x83X1gStlMptjUJlidYcMNy33nijHwnjebp0KehAHp4D7IANvJqovOyVO0mRib/3IFOlz5rbih6o0vUBNBbXAFQK5aJCcxPip09fyBeADBJfQb5mzg+CnZD0tUhZxQWRDIYn7EaMtXyyszhi2mlZAjXDuLCpQwVNb5FhdmczpaMQO2+bKRaWOJ1Y0uWR+bez2NKwAAJuU3HDixtOTosyJTN4KoF9CH9Cnm1cVnROYsQLv1CkJ3RvDE2TYhPZ0bmJqix+8a73aDX3lso+/3XKXG3Eml1zu+wQ6yxxNI37N2/nft3Glh6bWg1SUavOiCPkAztJkHH+f0p/3KCKA4yYeqQiUK7/b6tLzwkw4qSoZZUFTa017iO3nDwonBTz7/EaQleo1lH8kWxcA8Ij70xiCIqjxRwZI6yRptZ+6My+q0/OpWR+JmbpMR1Kt03x1dRsYQC/XCu7uiMQC+sf0jgOL5x6YdHv/a9aW0CWOn3It32QFTzFwbeh0N970u7pOKNEnkfyj2f0HhwDxqcq5CBv9+mLSuYn0GfAsxsV5BsFxQVtRUpnTT4Jw+iftZMBSgSI0D30LxSPY76TDrzrRAPbTMNwwANI5IIkY9XMY2u5qw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200830135200.24304-24-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3a3d111-2cd7-4188-c6b2-08d84f57ef6d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 15:50:36.9273
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: imVxx6Csmc6JHVsYEfdx8LFfjeX7p3hmRdX9azQ0D5UBKKNfYI9S+t6ktlwd2265AGYQ2STOTULYhVQo8Wyxb48Ph7/cUcABykAtHhGV4aQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3680
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 03:51:51PM +0200, Krzysztof Kozlowski wrote:
-> The fixed clocks implemented by Samsung clock drivers use only one
-> compatible so drop the additional "fixed-clock" to fix dtbs_check
-> warnings like:
-> 
->   arch/arm/boot/dts/exynos4412-i9300.dt.yaml: xxti: compatible:0: 'fixed-clock' was expected
->     From schema: Documentation/devicetree/bindings/clock/fixed-clock.yaml
->   arch/arm/boot/dts/exynos4412-i9300.dt.yaml: xxti: compatible: ['samsung,clock-xxti', 'fixed-clock'] is too long
->   arch/arm/boot/dts/exynos4412-i9300.dt.yaml: xxti: compatible: Additional items are not allowed ('fixed-clock' was unexpected)
->   arch/arm/boot/dts/exynos4412-i9300.dt.yaml: xxti: '#clock-cells' is a required property
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/boot/dts/exynos4412-midas.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-
-Applied 24-33.
-
-Best regards,
-Krzysztof
-
+On 02/09/2020 16:16, Christoph Hellwig wrote:=0A=
+> The pcd driver does not have a ->revalidate_disk method, so it can just=
+=0A=
+   md ~^=0A=
+=0A=
+Otherwise looks good,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
