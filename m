@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CE2C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92922C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43F3D20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F32020767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:03:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K4g8otJW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DFebTShM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgIBXDY (ORCPT
+        id S1727984AbgIBXDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 19:03:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35044 "EHLO
+        Wed, 2 Sep 2020 19:03:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgIBXCW (ORCPT
+        with ESMTP id S1726947AbgIBXCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 19:02:22 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B623BC061245
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 16:02:22 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id 5so510144pgl.4
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 16:02:22 -0700 (PDT)
+        Wed, 2 Sep 2020 19:02:21 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA1FC061258
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 16:02:21 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id k15so517352pji.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 16:02:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ReQxmAY0XLGu4xlFoP8MkkA+httZz7j6v/IQOYimHkQ=;
-        b=K4g8otJW0E9wNY7YOjmJvvQwzfV/cxt8c8JdEjAqsRf6k2JXkfk5PoYTEimA7OSMg8
-         VlqdB2lWJ75x09Z2nu1XeP6dDaiwqaKJjFDI1BP15J1Ip+C+TaAxF1Fk/1WDearpy9mW
-         lAliQrDffpLVL928QNiTAo42kzSOK2WserSco=
+        bh=6TZt2amfy5qzjmnWe5xTFuhN9jzSvSMQp9lB8VeO0GI=;
+        b=DFebTShMc8xpKVOBQ2cjdLkpsamauUKkoqnBeCYWLLHkD5A37kEP/3Cq72866RcrzK
+         TkHot7DuwTpHAPZDfyM2otz7atFL/81flusMaxNaQ/0qYiifQUb4IxoUNGDyRZDGqGst
+         YrQPwJfHY6boslEjErd4MZXFKgAFTYkhU9pGA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ReQxmAY0XLGu4xlFoP8MkkA+httZz7j6v/IQOYimHkQ=;
-        b=kkKpRHGhxFdfTzJLgFAgtpkSzflR0ET1CRmDaTFSElHPNpFaPZrIzKOzoittiS4iiV
-         Jri8NyhixN6SkEDIT/4MbcoLST1E7XWaRz6Bl8WphtezAhG1qRXw9KVk7N20nKZWMq11
-         XraQMtI+J/PVQFPLtVlSnSG54YzieFyJGvlACJJFbYXaeIwN1AqVmLoMSy7X+b2fBdtZ
-         dQ01YAt4dNcKdFP6v8pf2Xe9Zhrkar1dBL6KdOPneuRbnZifVw1lCs3FbNkj9S4+4L3E
-         1UeaZCd9549NtBqlHjFMrcN6k7Hs7vrsWUDxjcSKROsxCAGy5CVkFkzH37zor6vwG5W/
-         Ffiw==
-X-Gm-Message-State: AOAM532dn+6Cp8Hau5xJp5y5qtgYHZN4ULndN6kMuRyZguOZLpbKJuy8
-        f2Q9X7DZ1MqSqabc+7HYFJYbKw==
-X-Google-Smtp-Source: ABdhPJz710h0ob6rAZi0gAmUP2063DYIgqyaJA+mJdlSf2zU/LxK/6afH2RgwNpEOjpiknSgzXFADQ==
-X-Received: by 2002:a17:902:d904:: with SMTP id c4mr166902plz.115.1599087742035;
-        Wed, 02 Sep 2020 16:02:22 -0700 (PDT)
+        bh=6TZt2amfy5qzjmnWe5xTFuhN9jzSvSMQp9lB8VeO0GI=;
+        b=DhMfIP1J/KR4eIrxbCWFIewNPpoE52ucZLlopte2HcJKMPLJOGWChnq5pEz/UNWIHN
+         GZsmGglOH6SslHCBN1nTKSqDDcdUarv6g3plkFRkPpSqHT+djQXD9e5HBqh5l0+lZZZ8
+         TwwX07l3q93dbZdv20ZXEXXx7iXlCl2JPOdldL7ApYdBLTICIDBH3A4tGvcSdenTIdrd
+         RPHyhn7yPce0vVxpe75TPtATV9B48j5RvnuF1oMrPLfmmmC7gRQoG9SwBQyYfhrxXUT/
+         kFb1rKnJJlilRTyPpgpet3FbLnHp0ItChfKlNo6D5Leo4pIFLWPUSubMiP5OsShv7+sX
+         4eqw==
+X-Gm-Message-State: AOAM530xtDTxrkIqpeCPnsrMutE54L+aR7E3xgO9+f2mA+Mhr/qSJLQ3
+        A9Fr2JzfxLd1Zo5xz6yawdycgw==
+X-Google-Smtp-Source: ABdhPJwoqwZdfX4vzGy1hAALb8ZdSSp6MKKLSNrANSwIKpt9ZrsGycADNYmWNLF+VaH/7VtrVAI1HQ==
+X-Received: by 2002:a17:90a:fb52:: with SMTP id iq18mr56019pjb.162.1599087740815;
+        Wed, 02 Sep 2020 16:02:20 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id x12sm410277pjq.43.2020.09.02.16.02.20
+        by smtp.gmail.com with ESMTPSA id x12sm410277pjq.43.2020.09.02.16.02.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 16:02:21 -0700 (PDT)
+        Wed, 02 Sep 2020 16:02:20 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Vinod Koul <vkoul@kernel.org>
@@ -73,9 +73,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Jonathan Marek <jonathan@marek.ca>,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
         Rob Clark <robdclark@chromium.org>
-Subject: [PATCH v2 03/10] phy: qcom-qmp: Remove 'initialized' in favor of 'init_count'
-Date:   Wed,  2 Sep 2020 16:02:08 -0700
-Message-Id: <20200902230215.3452712-4-swboyd@chromium.org>
+Subject: [PATCH v2 02/10] phy: qcom-qmp: Move phy mode into struct qmp_phy
+Date:   Wed,  2 Sep 2020 16:02:07 -0700
+Message-Id: <20200902230215.3452712-3-swboyd@chromium.org>
 X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
 In-Reply-To: <20200902230215.3452712-1-swboyd@chromium.org>
 References: <20200902230215.3452712-1-swboyd@chromium.org>
@@ -86,9 +86,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We already track if any phy inside the qmp wrapper has been initialized
-by means of the struct qcom_qmp::init_count member. Let's drop the
-duplicate 'initalized' member to simplify the code a bit.
+The phy mode pertains to the phy itself, i.e. 'struct qmp_phy', not the
+wrapper, i.e. 'struct qcom_qmp'. Move the phy mode into the phy
+structure to more accurately reflect what is going on. This also cleans
+up 'struct qcom_qmp' so that it can eventually be the place where qmp
+wrapper wide data is located, paving the way for the USB3+DP combo phy.
 
 Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
 Cc: Chandan Uddaraju <chandanu@codeaurora.org>
@@ -104,64 +106,85 @@ Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qmp.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 7ee9e966dc6d..4a23ba9361b3 100644
+index 562053ce9455..7ee9e966dc6d 100644
 --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
 +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -1844,7 +1844,6 @@ struct qmp_phy {
-  * @phys: array of per-lane phy descriptors
+@@ -1812,6 +1812,7 @@ struct qmp_phy_cfg {
+  * @index: lane index
+  * @qmp: QMP phy to which this lane belongs
+  * @lane_rst: lane's reset controller
++ * @mode: current PHY mode
+  */
+ struct qmp_phy {
+ 	struct phy *phy;
+@@ -1825,6 +1826,7 @@ struct qmp_phy {
+ 	unsigned int index;
+ 	struct qcom_qmp *qmp;
+ 	struct reset_control *lane_rst;
++	enum phy_mode mode;
+ };
+ 
+ /**
+@@ -1843,7 +1845,6 @@ struct qmp_phy {
   * @phy_mutex: mutex lock for PHY common block initialization
   * @init_count: phy common block initialization count
-- * @phy_initialized: indicate if PHY has been initialized
+  * @phy_initialized: indicate if PHY has been initialized
+- * @mode: current PHY mode
   * @ufs_reset: optional UFS PHY reset handle
   */
  struct qcom_qmp {
-@@ -1861,7 +1860,6 @@ struct qcom_qmp {
- 
+@@ -1861,7 +1862,6 @@ struct qcom_qmp {
  	struct mutex phy_mutex;
  	int init_count;
--	bool phy_initialized;
+ 	bool phy_initialized;
+-	enum phy_mode mode;
  
  	struct reset_control *ufs_reset;
  };
-@@ -2748,7 +2746,6 @@ static int qcom_qmp_phy_enable(struct phy *phy)
- 		dev_err(qmp->dev, "phy initialization timed-out\n");
- 		goto err_pcs_ready;
- 	}
--	qmp->phy_initialized = true;
- 	return 0;
+@@ -2801,9 +2801,8 @@ static int qcom_qmp_phy_set_mode(struct phy *phy,
+ 				 enum phy_mode mode, int submode)
+ {
+ 	struct qmp_phy *qphy = phy_get_drvdata(phy);
+-	struct qcom_qmp *qmp = qphy->qmp;
  
- err_pcs_ready:
-@@ -2792,8 +2789,6 @@ static int qcom_qmp_phy_disable(struct phy *phy)
+-	qmp->mode = mode;
++	qphy->mode = mode;
  
- 	qcom_qmp_phy_com_exit(qmp);
- 
--	qmp->phy_initialized = false;
--
  	return 0;
  }
+@@ -2816,8 +2815,8 @@ static void qcom_qmp_phy_enable_autonomous_mode(struct qmp_phy *qphy)
+ 	void __iomem *pcs_misc = qphy->pcs_misc;
+ 	u32 intr_mask;
  
-@@ -2868,7 +2863,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_suspend(struct device *dev)
+-	if (qmp->mode == PHY_MODE_USB_HOST_SS ||
+-	    qmp->mode == PHY_MODE_USB_DEVICE_SS)
++	if (qphy->mode == PHY_MODE_USB_HOST_SS ||
++	    qphy->mode == PHY_MODE_USB_DEVICE_SS)
+ 		intr_mask = ARCVR_DTCT_EN | ALFPS_DTCT_EN;
+ 	else
+ 		intr_mask = ARCVR_DTCT_EN | ARCVR_DTCT_EVENT_SEL;
+@@ -2863,7 +2862,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_suspend(struct device *dev)
+ 	struct qmp_phy *qphy = qmp->phys[0];
+ 	const struct qmp_phy_cfg *cfg = qmp->cfg;
+ 
+-	dev_vdbg(dev, "Suspending QMP phy, mode:%d\n", qmp->mode);
++	dev_vdbg(dev, "Suspending QMP phy, mode:%d\n", qphy->mode);
+ 
+ 	/* Supported only for USB3 PHY */
  	if (cfg->type != PHY_TYPE_USB3)
- 		return 0;
+@@ -2889,7 +2888,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_resume(struct device *dev)
+ 	const struct qmp_phy_cfg *cfg = qmp->cfg;
+ 	int ret = 0;
  
--	if (!qmp->phy_initialized) {
-+	if (!qmp->init_count) {
- 		dev_vdbg(dev, "PHY not initialized, bailing out\n");
- 		return 0;
- 	}
-@@ -2894,7 +2889,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_resume(struct device *dev)
+-	dev_vdbg(dev, "Resuming QMP phy, mode:%d\n", qmp->mode);
++	dev_vdbg(dev, "Resuming QMP phy, mode:%d\n", qphy->mode);
+ 
+ 	/* Supported only for USB3 PHY */
  	if (cfg->type != PHY_TYPE_USB3)
- 		return 0;
- 
--	if (!qmp->phy_initialized) {
-+	if (!qmp->init_count) {
- 		dev_vdbg(dev, "PHY not initialized, bailing out\n");
- 		return 0;
- 	}
 -- 
 Sent by a computer, using git, on the internet
 
