@@ -2,185 +2,169 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC147C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F59C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4E46206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD22A2068E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJFqOwmx"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="l8T0YacL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgIBDyz (ORCPT
+        id S1726298AbgIBEEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 23:54:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgIBDyy (ORCPT
+        Wed, 2 Sep 2020 00:04:21 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:29968 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725791AbgIBEEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 23:54:54 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06916C061244;
-        Tue,  1 Sep 2020 20:54:53 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id x12so2672235qtp.1;
-        Tue, 01 Sep 2020 20:54:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HlV9ceNvzksFcv30Uxn9Xc+kYIG9dGoe3UtoGctT3TA=;
-        b=eJFqOwmxdWn3Z66quZvnVjSlHiKcxRXdI6P7DNculVGgVn78I3WKsJAwqz3rSOt146
-         DgekxtnBn5VFdkKSbfcM4hrRS8I+2HflY+f6hnIxV801ZE//PfkblMCZ1uVaQLm9KwYr
-         pUvLr/Eg8In5wP0bt+m4peNSydvKe64vARKNm6hXa7ODHe3JUmhmQHH0TMnDg5j2aw7M
-         XvD2lBKlHdcibhc7rb/JYylPmxIhZyU6ZWc3qVsoZHp1HVCFf88QhuyJ1fz6bn6gKdeT
-         m5w2KzNMOVqUUciYLjvD/1+1wDVv2vM+bTe1I3R8kK+NBwRpyjbh9BwuGFTR6Z8drOKH
-         V/FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HlV9ceNvzksFcv30Uxn9Xc+kYIG9dGoe3UtoGctT3TA=;
-        b=pKukamAxbMhRuGBRYrrnjPN+7uG6wqg9clLTnEoaSOhCNW3hH18LTw31NJx/ZMSQTN
-         YBJdcRk5yY8aOFsKUHDVBCAWtXw48uAqjEkxEA5nO+tSO/+xTqMmTZhtzO8Gbj8xqayT
-         3Bt3CgWAE9d0ZNRbZ7AAZnVROpebPEg1rlKmWndGIP6qZtmdcTAhnMd9245uCoAXBEhE
-         syghiRUvru+Vp7/eg8G2/UpJB0FdtbUcu4CCXjKAaqjm6XIRo6pgraf0bnQV7JUmE4c3
-         qN4F+GPv9NpGq8K727Ae7CpXYQywp5h4sPXbXS8U6iDQmmjLZ02KJilyGoMV7kaPaVNp
-         qXlg==
-X-Gm-Message-State: AOAM532BHa4EY7QAqqPYL6GIKv8xv41QF8/ITDVu5qj/4FYSFee1H3mJ
-        8H6UUiQn/7zanKVy9RNR75A=
-X-Google-Smtp-Source: ABdhPJzl4KivwOT8F3phBf97gSbd2nqKH/G1aJvVj3JNnzzK9j4dbHwhfCrwEMdVpfgxt5TMQTySzQ==
-X-Received: by 2002:ac8:7c90:: with SMTP id y16mr5015497qtv.45.1599018892780;
-        Tue, 01 Sep 2020 20:54:52 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id d16sm4092148qte.19.2020.09.01.20.54.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Sep 2020 20:54:52 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 02DC827C0054;
-        Tue,  1 Sep 2020 23:54:51 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 01 Sep 2020 23:54:51 -0400
-X-ME-Sender: <xms:ihdPXzlip1zbNTbImsQjJQDYVvN6gqw5UEnkngYnnfGMTYFi-I3xBA>
-    <xme:ihdPX20kBhjpWNE27hq88dltCEtaBxg_axp0EJkSczsxYPufPvzurJHfV4y7qrHN9
-    jbZdNzh5vR1lD9nFA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefkedgjeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesthdtre
-    dttddtvdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehg
-    mhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpedvleeigedugfegveejhfejveeuve
-    eiteejieekvdfgjeefudehfefhgfegvdegjeenucfkphephedvrdduheehrdduuddurdej
-    udenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
-    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
-    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
-    gvrdhnrghmvg
-X-ME-Proxy: <xmx:ihdPX5rIM9GG3iP2CEbiHkkrZYozXKPIfhvoWm3EeZtw-7FrsGVOEw>
-    <xmx:ihdPX7kxIliCRTKwqxFpoPXr91ld8TOjpmO2dK7wzNiAaX8hm4Rf_w>
-    <xmx:ihdPXx0mC8DYNg34hXBRz-D8oxUPcjtEL9fR8TmP3R5wYkCUP5CMYw>
-    <xmx:ixdPX_NP_A3v67q5A0E__yX3HQ41CnGTFQifln_c0pUK96W3bdAulFtqVwg>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C4565306005E;
-        Tue,  1 Sep 2020 23:54:49 -0400 (EDT)
-Date:   Wed, 2 Sep 2020 11:54:48 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     paulmck@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, stern@rowland.harvard.edu,
-        parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr, akiyks@gmail.com
-Subject: Re: [PATCH kcsan 6/9] tools/memory-model: Expand the cheatsheet.txt
- notion of relaxed
-Message-ID: <20200902035448.GC49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
- <20200831182037.2034-6-paulmck@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831182037.2034-6-paulmck@kernel.org>
+        Wed, 2 Sep 2020 00:04:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1599019459; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=D/v2+5o8QeDQqJpVgc8PAhNMYlKjB1Kp896axpESimk=; b=l8T0YacL7LaMvd4qHg8n4EtGT5GPG/T63zcnr4YkgE/jc2Ag3Wt+7yYL6LbU1eVAcX+1sF3q
+ lbCzOAr0hrPFXKTRNlTeKWxYlC+PEd8qHrK0FLH7SFB3MgGJdCn0m4pYuCWreF1Pq6MyoQs+
+ gBdYBbTTdjzJKfezbfWrxrWySlI=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f4f19c3252c522440555896 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 02 Sep 2020 04:04:19
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 31C08C433CA; Wed,  2 Sep 2020 04:04:19 +0000 (UTC)
+Received: from hyd-lnxbld210.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: srivasam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F24BC433C9;
+        Wed,  2 Sep 2020 04:04:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7F24BC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=srivasam@codeaurora.org
+From:   Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rohitkr@codeaurora.org,
+        srinivas.kandagatla@linaro.org
+Cc:     Ajit Pandey <ajitp@codeaurora.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
+Subject: [PATCH v2] arm64: dts: qcom: sc7180: Add lpass cpu node for I2S driver
+Date:   Wed,  2 Sep 2020 09:34:01 +0530
+Message-Id: <1599019441-29308-1-git-send-email-srivasam@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 11:20:34AM -0700, paulmck@kernel.org wrote:
-> From: "Paul E. McKenney" <paulmck@kernel.org>
-> 
-> This commit adds a key entry enumerating the various types of relaxed
-> operations.
-> 
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
->  tools/memory-model/Documentation/cheatsheet.txt | 27 ++++++++++++++-----------
->  1 file changed, 15 insertions(+), 12 deletions(-)
-> 
-> diff --git a/tools/memory-model/Documentation/cheatsheet.txt b/tools/memory-model/Documentation/cheatsheet.txt
-> index 33ba98d..31b814d 100644
-> --- a/tools/memory-model/Documentation/cheatsheet.txt
-> +++ b/tools/memory-model/Documentation/cheatsheet.txt
-> @@ -5,7 +5,7 @@
->  
->  Store, e.g., WRITE_ONCE()            Y                                       Y
->  Load, e.g., READ_ONCE()              Y                          Y   Y        Y
-> -Unsuccessful RMW operation           Y                          Y   Y        Y
-> +Relaxed operation                    Y                          Y   Y        Y
->  rcu_dereference()                    Y                          Y   Y        Y
->  Successful *_acquire()               R                   Y  Y   Y   Y    Y   Y
->  Successful *_release()         C        Y  Y    Y     W                      Y
-> @@ -17,14 +17,17 @@ smp_mb__before_atomic()       CP        Y  Y    Y        a  a   a   a    Y
->  smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
->  
->  
-> -Key:	C:	Ordering is cumulative
-> -	P:	Ordering propagates
-> -	R:	Read, for example, READ_ONCE(), or read portion of RMW
-> -	W:	Write, for example, WRITE_ONCE(), or write portion of RMW
-> -	Y:	Provides ordering
-> -	a:	Provides ordering given intervening RMW atomic operation
-> -	DR:	Dependent read (address dependency)
-> -	DW:	Dependent write (address, data, or control dependency)
-> -	RMW:	Atomic read-modify-write operation
-> -	SELF:	Orders self, as opposed to accesses before and/or after
-> -	SV:	Orders later accesses to the same variable
-> +Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
-> +		  operation, an unsuccessful RMW operation, or one of
-> +		  the atomic_read() and atomic_set() family of operations.
+From: Ajit Pandey <ajitp@codeaurora.org>
 
-To be accurate, atomic_set() doesn't return any value, so it cannot be
-ordered against DR and DW ;-)
+Add the I2S controller node to sc7180 dtsi.
+Add pinmux for primary and secondary I2S.
 
-I think we can split the Relaxed family into two groups:
+Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Signed-off-by: Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
+---
 
-void Relaxed: atomic_set() or atomic RMW operations that don't return
-              any value (e.g atomic_inc())
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 69 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-non-void Relaxed: a *_relaxed() RMW operation, an unsuccessful RMW
-                  operation, or atomic_read().
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index d46b383..db60ca5 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -676,6 +676,36 @@
+ 			};
+ 		};
+ 
++		lpass_cpu: lpass@62f00000 {
++			compatible = "qcom,sc7180-lpass-cpu";
++
++			reg = <0 0x62f00000 0 0x29000>;
++			reg-names = "lpass-lpaif";
++
++			iommus = <&apps_smmu 0x1020 0>;
++
++			power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
++
++			clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
++				 <&lpasscc LPASS_AUDIO_CORE_CORE_CLK>,
++				 <&lpasscc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
++				 <&lpasscc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
++				 <&lpasscc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
++				 <&lpasscc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
++
++			clock-names = "pcnoc-sway-clk", "audio-core",
++					"mclk0", "pcnoc-mport-clk",
++					"mi2s-bit-clk0", "mi2s-bit-clk1";
++
++
++			#sound-dai-cells = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "lpass-irq-lpaif";
++		};
++
+ 		sdhc_1: sdhci@7c4000 {
+ 			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+ 			reg = <0 0x7c4000 0 0x1000>,
+@@ -1721,6 +1751,45 @@
+ 				};
+ 			};
+ 
++			sec_mi2s_active: sec-mi2s-active {
++				pinmux {
++					pins = "gpio49", "gpio50", "gpio51";
++					function = "mi2s_1";
++				};
++
++				pinconf {
++					pins = "gpio49", "gpio50", "gpio51";;
++					drive-strength = <8>;
++					bias-pull-up;
++				};
++			};
++
++			pri_mi2s_active: pri-mi2s-active {
++				pinmux {
++					pins = "gpio53", "gpio54", "gpio55", "gpio56";
++					function = "mi2s_0";
++				};
++
++				pinconf {
++					pins = "gpio53", "gpio54", "gpio55", "gpio56";
++					drive-strength = <8>;
++					bias-pull-up;
++				};
++			};
++
++			pri_mi2s_mclk_active: pri-mi2s-mclk-active {
++				pinmux {
++					pins = "gpio57";
++					function = "lpass_ext";
++				};
++
++				pinconf {
++					pins = "gpio57";
++					drive-strength = <8>;
++					bias-pull-up;
++				};
++			};
++
+ 			sdc1_on: sdc1-on {
+ 				pinconf-clk {
+ 					pins = "sdc1_clk";
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-And "void Relaxed" is similar to WRITE_ONCE(), only has "Self" and "SV"
-equal "Y", while "non-void Relaxed" plays the same rule as "Relaxed"
-in this patch.
-
-Thoughts?
-
-Regards,
-Boqun
-
-
-> +	C:	  Ordering is cumulative
-> +	P:	  Ordering propagates
-> +	R:	  Read, for example, READ_ONCE(), or read portion of RMW
-> +	W:	  Write, for example, WRITE_ONCE(), or write portion of RMW
-> +	Y:	  Provides ordering
-> +	a:	  Provides ordering given intervening RMW atomic operation
-> +	DR:	  Dependent read (address dependency)
-> +	DW:	  Dependent write (address, data, or control dependency)
-> +	RMW:	  Atomic read-modify-write operation
-> +	SELF:	  Orders self, as opposed to accesses before and/or after
-> +	SV:	  Orders later accesses to the same variable
-> -- 
-> 2.9.5
-> 
