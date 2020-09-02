@@ -2,774 +2,146 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E45C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98324C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1536820758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:47:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AuFCGL90"
+	by mail.kernel.org (Postfix) with ESMTP id 710DF20758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:50:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgIBLrc (ORCPT
+        id S1726528AbgIBLu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 07:47:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49824 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726307AbgIBLp2 (ORCPT
+        Wed, 2 Sep 2020 07:50:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51608 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbgIBLuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 07:45:28 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 082BWCML109781;
-        Wed, 2 Sep 2020 07:45:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : subject :
- date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=TN1KK3+25NFh8zF3Lcq820B7HR6WPr1OtpzqZu10iOE=;
- b=AuFCGL905z3GCkWdIBd/eoFxCf9cTlZM52Q/Uix/r4jvH2V2kH3xRFo0FYwDSstpfxzi
- H3G1lAA0jmkviCW6xU9tENeYpSVZE7puJtvV6hjQ3HJzsKe/vc7qVckfoyiPL1Ehgx5q
- 3gXub7bCTzWwvnRJYb5fLeFR0g/uTTpLO/nvaNwC42EIYS9njtaFc2Pg+VBkNeWqUxX4
- jr1RyE2WBV8t73/GYO9zo46BFFymkgP0oCMCwSRPVSzR2RpENkC3oXjGuMcDTvGz8mjw
- PETVMWW7716U4MnK2UKbbCS69exXj9oWOY2/XQ8c4uzxK9Bg389qM1DbSPtvGjkEPZDU 8Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33aakmrcy3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 07:45:17 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 082BWF5m110113;
-        Wed, 2 Sep 2020 07:45:17 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33aakmrcx6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 07:45:16 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 082Bi1Hn016904;
-        Wed, 2 Sep 2020 11:45:15 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04fra.de.ibm.com with ESMTP id 339ap7s6ba-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 11:45:15 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 082BjCsc24052060
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Sep 2020 11:45:12 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 05D3CAE05A;
-        Wed,  2 Sep 2020 11:45:12 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C20F8AE04D;
-        Wed,  2 Sep 2020 11:45:09 +0000 (GMT)
-Received: from pratiks-thinkpad.ibmuc.com (unknown [9.77.200.65])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  2 Sep 2020 11:45:09 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     rjw@rjwysocki.net, daniel.lezcano@linaro.org,
-        srivatsa@csail.mit.edu, shuah@kernel.org, npiggin@gmail.com,
-        ego@linux.vnet.ibm.com, svaidy@linux.ibm.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, pratik.r.sampat@gmail.com,
-        psampat@linux.ibm.com
-Subject: [RFC v4 1/1] selftests/cpuidle: Add support for cpuidle latency measurement
-Date:   Wed,  2 Sep 2020 17:15:06 +0530
-Message-Id: <20200902114506.45809-2-psampat@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200902114506.45809-1-psampat@linux.ibm.com>
-References: <20200902114506.45809-1-psampat@linux.ibm.com>
+        Wed, 2 Sep 2020 07:50:16 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1kDRFp-0003Ca-70; Wed, 02 Sep 2020 11:48:41 +0000
+Subject: Re: [PATCH] ACPI: sysfs: copy ACPI data using io memory copying
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Len Brown <lenb@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+References: <20200312111345.1057569-1-colin.king@canonical.com>
+ <2440284.4js2fAD822@kreacher>
+ <65817d75-7272-2ef3-33a5-f390b5b0ec30@canonical.com>
+ <e94b289c3dfb4ac0b05a7134f9ae8bb3@AcuMS.aculab.com>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <6c8386dd-d1a9-fde1-2416-7c4560680d30@canonical.com>
+Date:   Wed, 2 Sep 2020 12:48:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-02_03:2020-09-02,2020-09-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=2
- malwarescore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
- mlxlogscore=999 spamscore=0 phishscore=0 adultscore=0 impostorscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009020105
+In-Reply-To: <e94b289c3dfb4ac0b05a7134f9ae8bb3@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Measure cpuidle latencies on wakeup to determine and compare with the
-advertsied wakeup latencies for each idle state.
+On 02/09/2020 12:13, David Laight wrote:
+> From: Colin Ian King
+>> Sent: 02 September 2020 11:27
+>>
+>> On 14/03/2020 10:23, Rafael J. Wysocki wrote:
+>>> On Thursday, March 12, 2020 12:13:45 PM CET Colin King wrote:
+>>>> From: Colin Ian King <colin.king@canonical.com>
+>>>>
+>>>> Reading ACPI data on ARM64 at a non-aligned offset from
+>>>> /sys/firmware/acpi/tables/data/BERT will cause a splat because
+>>>> the data is I/O memory mapped and being read with just a memcpy.
+>>>> Fix this by introducing an I/O variant of memory_read_from_buffer
+>>>> and using I/O memory mapped copies instead.
+> ..
+>>>> +/**
+>>>> + * memory_read_from_io_buffer - copy data from a io memory mapped buffer
+>>>> + * @to: the kernel space buffer to read to
+>>>> + * @count: the maximum number of bytes to read
+>>>> + * @ppos: the current position in the buffer
+>>>> + * @from: the buffer to read from
+>>>> + * @available: the size of the buffer
+>>>> + *
+>>>> + * The memory_read_from_buffer() function reads up to @count bytes from the
+>>>> + * io memory mappy buffer @from at offset @ppos into the kernel space address
+>>>> + * starting at @to.
+>>>> + *
+>>>> + * On success, the number of bytes read is returned and the offset @ppos is
+>>>> + * advanced by this number, or negative value is returned on error.
+>>>> + **/
+> 
+> Apart from the return value how is this different from the generic
+> memcpy_from_io() ?
+> 
+> 	David
 
-Cpuidle wakeup latencies are determined for IPIs and Timer events and
-can help determine any deviations from what is advertsied by the
-hardware.
 
-A baseline measurement for each case of IPI and timers is taken at
-100 percent CPU usage to quantify for the kernel-userpsace overhead
-during execution.
+The intention is to be semantically the same as
+memory_read_from_buffer(), so in that respect quite a bit different from
+memcpy_fromio()
 
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
----
- tools/testing/selftests/Makefile          |   1 +
- tools/testing/selftests/cpuidle/Makefile  |   7 +
- tools/testing/selftests/cpuidle/cpuidle.c | 616 ++++++++++++++++++++++
- tools/testing/selftests/cpuidle/settings  |   1 +
- 4 files changed, 625 insertions(+)
- create mode 100644 tools/testing/selftests/cpuidle/Makefile
- create mode 100644 tools/testing/selftests/cpuidle/cpuidle.c
- create mode 100644 tools/testing/selftests/cpuidle/settings
+Colin
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 9018f45d631d..2bb0e87f76fd 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -8,6 +8,7 @@ TARGETS += cgroup
- TARGETS += clone3
- TARGETS += core
- TARGETS += cpufreq
-+TARGETS += cpuidle
- TARGETS += cpu-hotplug
- TARGETS += drivers/dma-buf
- TARGETS += efivarfs
-diff --git a/tools/testing/selftests/cpuidle/Makefile b/tools/testing/selftests/cpuidle/Makefile
-new file mode 100644
-index 000000000000..d332485e1bc5
---- /dev/null
-+++ b/tools/testing/selftests/cpuidle/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0
-+TEST_GEN_PROGS := cpuidle
-+
-+CFLAGS += -O2
-+LDLIBS += -lpthread
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/cpuidle/cpuidle.c b/tools/testing/selftests/cpuidle/cpuidle.c
-new file mode 100644
-index 000000000000..4b1e7a91f75c
---- /dev/null
-+++ b/tools/testing/selftests/cpuidle/cpuidle.c
-@@ -0,0 +1,616 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Cpuidle latency measurement microbenchmark
-+ *
-+ * A mechanism to measure wakeup latency for IPI and Timer based interrupts
-+ * Results of this microbenchmark can be used to check and validate against the
-+ * advertised latencies for each cpuidle state
-+ *
-+ * IPIs (using pipes) and Timers are used to wake the CPU up and measure the
-+ * time difference
-+ *
-+ * Usage:
-+ *	./cpuidle --mode <full / quick / num_cpus> --output <output location>
-+ *
-+ * Copyright (C) 2020 Pratik Rajesh Sampat <psampat@linux.ibm.com>, IBM
-+ */
-+
-+#define _GNU_SOURCE
-+#include <assert.h>
-+#include <dirent.h>
-+#include <fcntl.h>
-+#include <getopt.h>
-+#include <inttypes.h>
-+#include <limits.h>
-+#include <pthread.h>
-+#include <sched.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/time.h>
-+#include <unistd.h>
-+
-+#define READ		0
-+#define WRITE		1
-+#define TIMEOUT_US	500000
-+
-+static int pipe_fd[2];
-+static int *cpu_list;
-+static int cpus;
-+static int idle_states;
-+static uint64_t *latency_list;
-+static uint64_t *residency_list;
-+
-+static char *log_file = "cpuidle.log";
-+
-+static int get_online_cpus(int *online_cpu_list, int total_cpus)
-+{
-+	char filename[80];
-+	int i, index = 0;
-+	FILE *fptr;
-+
-+	for (i = 0; i < total_cpus; i++) {
-+		char status;
-+
-+		sprintf(filename, "/sys/devices/system/cpu/cpu");
-+		sprintf(filename + strlen(filename), "%d%s", i, "/online");
-+		fptr = fopen(filename, "r");
-+		if (!fptr)
-+			continue;
-+		assert(fscanf(fptr, "%c", &status) != EOF);
-+		if (status == '1')
-+			online_cpu_list[index++] = i;
-+		fclose(fptr);
-+	}
-+	return index;
-+}
-+
-+static uint64_t us_to_ns(uint64_t val)
-+{
-+	return val * 1000;
-+}
-+
-+static void get_latency(int cpu)
-+{
-+	char filename[80];
-+	uint64_t latency;
-+	FILE *fptr;
-+	int state;
-+
-+	for (state = 0; state < idle_states; state++) {
-+		sprintf(filename, "%s%d%s%d%s", "/sys/devices/system/cpu/cpu",
-+			cpu, "/cpuidle/state",
-+			state, "/latency");
-+		fptr = fopen(filename, "r");
-+		assert(fptr);
-+
-+		assert(fscanf(fptr, "%ld", &latency) != EOF);
-+		latency_list[state] = latency;
-+		fclose(fptr);
-+	}
-+}
-+
-+static void get_residency(int cpu)
-+{
-+	uint64_t residency;
-+	char filename[80];
-+	FILE *fptr;
-+	int state;
-+
-+	for (state = 0; state < idle_states; state++) {
-+		sprintf(filename, "%s%d%s%d%s", "/sys/devices/system/cpu/cpu",
-+			cpu, "/cpuidle/state",
-+			state, "/residency");
-+		fptr = fopen(filename, "r");
-+		assert(fptr);
-+
-+		assert(fscanf(fptr, "%ld", &residency) != EOF);
-+		residency_list[state] = residency;
-+		fclose(fptr);
-+	}
-+}
-+
-+static int get_idle_state_count(int cpu)
-+{
-+	struct dirent *entry;
-+	int dir_count = 0;
-+	char filename[80];
-+	DIR *dirp;
-+
-+	sprintf(filename, "%s%d%s", "/sys/devices/system/cpu/cpu",
-+		cpu, "/cpuidle");
-+
-+	dirp = opendir(filename);
-+	if (!dirp)
-+		return -1;
-+	while (entry = readdir(dirp)) {
-+		if (entry->d_type == DT_DIR) {
-+			if (strcmp(entry->d_name, ".") == 0 ||
-+			    strcmp(entry->d_name, "..") == 0)
-+				continue;
-+			dir_count++;
-+		}
-+	}
-+	closedir(dirp);
-+	return dir_count;
-+}
-+
-+/* Enable or disable all idle states */
-+static int state_all_idle(char *disable)
-+{
-+	char filename[80];
-+	FILE *fptr;
-+	int i, j;
-+
-+	for (i = 0; i < cpus; i++) {
-+		for (j = 0; j < idle_states; j++) {
-+			sprintf(filename, "%s%d%s%d%s",
-+				"/sys/devices/system/cpu/cpu", cpu_list[i],
-+				"/cpuidle/state", j, "/disable");
-+			fptr = fopen(filename, "w");
-+			assert(fptr);
-+			fprintf(fptr, "%s", disable);
-+			fclose(fptr);
-+		}
-+	}
-+	return 0;
-+}
-+
-+/* Disable all idle states */
-+static int cpuidle_disable_all_states(void)
-+{
-+	return state_all_idle("1");
-+}
-+
-+static int cpuidle_enable_all_states(void)
-+{
-+	return state_all_idle("0");
-+}
-+
-+static int state_operation(char *disable, int state)
-+{
-+	char filename[80];
-+	FILE *fptr;
-+	int i;
-+
-+	for (i = 0; i < cpus; i++) {
-+		sprintf(filename, "%s%d%s%d%s", "/sys/devices/system/cpu/cpu",
-+			cpu_list[i], "/cpuidle/state", state, "/disable");
-+		fptr = fopen(filename, "w");
-+		assert(fptr);
-+		fprintf(fptr, "%s", disable);
-+		fclose(fptr);
-+	}
-+	return 0;
-+}
-+
-+static int cpuidle_enable_state(int state)
-+{
-+	return state_operation("0", state);
-+}
-+
-+static int cpuidle_disable_state(int state)
-+{
-+	return state_operation("1", state);
-+}
-+
-+static uint64_t average(uint64_t *arr, int size)
-+{
-+	int i, sum = 0;
-+
-+	assert(size != 0);
-+	for (i = 0; i < size; i++)
-+		sum += arr[i];
-+	return sum / size;
-+}
-+
-+static pthread_t start_thread_on(void *(*fn)(void *), void *arg, uint64_t cpu)
-+{
-+	pthread_attr_t attr;
-+	cpu_set_t cpuset;
-+	pthread_t tid;
-+	int rc;
-+
-+	CPU_ZERO(&cpuset);
-+	CPU_SET(cpu, &cpuset);
-+
-+	rc = pthread_attr_init(&attr);
-+	if (rc) {
-+		perror("pthread_attr_init");
-+		exit(1);
-+	}
-+
-+	rc = pthread_attr_setaffinity_np(&attr, sizeof(cpu_set_t), &cpuset);
-+	if (rc) {
-+		perror("pthread_attr_setaffinity_np");
-+		exit(1);
-+	}
-+
-+	rc = pthread_create(&tid, &attr, fn, arg);
-+	if (rc) {
-+		perror("pthread_create");
-+		exit(1);
-+	}
-+	return tid;
-+}
-+
-+void *util_full_cpu(void *unused)
-+{
-+	FILE *fptr;
-+
-+	fptr = fopen("/dev/null", "w");
-+	assert(fptr);
-+	while (1) {
-+		fprintf(fptr, "0");
-+		nanosleep((const struct timespec[]){{0, 10L}}, NULL);
-+	}
-+	fclose(fptr);
-+}
-+
-+/* IPI based wakeup latencies */
-+struct latency {
-+	unsigned int src_cpu;
-+	unsigned int dest_cpu;
-+	struct timespec time_start;
-+	struct timespec time_end;
-+	uint64_t latency_ns;
-+} ipi_wakeup;
-+
-+static void *writer(void *unused)
-+{
-+	signed char c = 'P';
-+
-+	assert(write(pipe_fd[WRITE], &c, 1) == 1);
-+	ipi_wakeup.src_cpu = sched_getcpu();
-+
-+	return NULL;
-+}
-+
-+static void *reader(void *unused)
-+{
-+	signed char c;
-+
-+	assert(read(pipe_fd[READ], &c, 1) ==  1);
-+	ipi_wakeup.dest_cpu = sched_getcpu();
-+
-+	return NULL;
-+}
-+
-+static void ipi_test_once(int baseline, int src_cpu, int dest_cpu)
-+{
-+	pthread_t tid, tid1, baseline_tid;
-+
-+	if (baseline) {
-+		baseline_tid = start_thread_on(util_full_cpu, NULL, dest_cpu);
-+		/* Run process for long enough to gain 100% usage*/
-+		sleep(2);
-+	}
-+
-+	clock_gettime(CLOCK_REALTIME, &ipi_wakeup.time_start);
-+
-+	tid = start_thread_on(writer, NULL, src_cpu);
-+	pthread_join(tid, NULL);
-+	tid1 = start_thread_on(reader, NULL, dest_cpu);
-+	pthread_join(tid1, NULL);
-+
-+	clock_gettime(CLOCK_REALTIME, &ipi_wakeup.time_end);
-+	ipi_wakeup.latency_ns = (ipi_wakeup.time_end.tv_sec -
-+		ipi_wakeup.time_start.tv_sec) * 1000000000ULL +
-+		ipi_wakeup.time_end.tv_nsec - ipi_wakeup.time_start.tv_nsec;
-+
-+	if (baseline)
-+		pthread_cancel(baseline_tid);
-+}
-+
-+static void ipi_test(int src_cpu)
-+{
-+	uint64_t avg_arr[cpus], avg_latency;
-+	int cpu, state;
-+	FILE *fptr;
-+
-+	assert(cpuidle_disable_all_states() == 0);
-+
-+	if (pipe(pipe_fd))
-+		exit(1);
-+
-+	fptr = fopen(log_file, "a");
-+	fprintf(fptr, "----IPI TEST----\n");
-+
-+	fprintf(fptr, "----Baseline IPI Latency----\n");
-+	fprintf(fptr, "%s %10s %18s\n", "SRC_CPU", "DEST_CPU",
-+		"Baseline_latency(ns)");
-+	/* Run the test as dummy once to stablize */
-+	ipi_test_once(1, src_cpu, cpu_list[0]);
-+	for (cpu = 0; cpu < cpus; cpu++) {
-+		ipi_test_once(1, src_cpu, cpu_list[cpu]);
-+		fprintf(fptr, "%3d %10d %12ld\n", ipi_wakeup.src_cpu,
-+			ipi_wakeup.dest_cpu,
-+			ipi_wakeup.latency_ns);
-+		avg_arr[cpu] = ipi_wakeup.latency_ns;
-+	}
-+	avg_latency = average(avg_arr, cpus);
-+	fprintf(fptr, "Baseline average IPI latency(ns): %ld\n\n", avg_latency);
-+
-+	for (state = 0; state < idle_states; state++) {
-+		fprintf(fptr, "--Enabling state: %d--\n", state);
-+		assert(cpuidle_enable_state(state) == 0);
-+		fprintf(fptr, "%s %10s %18s\n", "SRC_CPU", "DEST_CPU",
-+			"IPI_Latency(ns)");
-+		for (cpu = 0; cpu < cpus; cpu++) {
-+			/* Allow sufficient cycles to go idle */
-+			sleep(1);
-+			ipi_test_once(0, src_cpu, cpu_list[cpu]);
-+			fprintf(fptr, "%3d %10d %18ld\n", ipi_wakeup.src_cpu,
-+				ipi_wakeup.dest_cpu,
-+				ipi_wakeup.latency_ns);
-+			avg_arr[cpu] = ipi_wakeup.latency_ns;
-+		}
-+		fprintf(fptr, "Expected Latency(ns): %ld\n",
-+			us_to_ns(latency_list[state]));
-+		avg_latency = average(avg_arr, cpus);
-+		fprintf(fptr, "Observed Average IPI latency(ns): %ld\n\n",
-+			avg_latency);
-+		assert(cpuidle_disable_state(state) == 0);
-+	}
-+
-+	assert(cpuidle_enable_all_states() == 0);
-+	fclose(fptr);
-+}
-+
-+/* Timer based wakeup latencies */
-+static int soak_done;
-+struct timer_data {
-+	unsigned int src_cpu;
-+	uint64_t timeout;
-+	struct timespec time_start;
-+	struct timespec time_end;
-+	uint64_t timeout_diff_ns;
-+} timer_wakeup;
-+
-+void catch_alarm(int sig)
-+{
-+	soak_done = 1;
-+}
-+
-+static void setup_timer(void)
-+{
-+	struct itimerval timer_settings = {};
-+	int err;
-+
-+	timer_settings.it_value.tv_usec = timer_wakeup.timeout;
-+	err = setitimer(ITIMER_REAL, &timer_settings, NULL);
-+	if (err < 0) {
-+		perror("failed to arm interval timer");
-+		exit(1);
-+	}
-+	signal(SIGALRM, catch_alarm);
-+	while (!soak_done)
-+		sleep(1);
-+}
-+
-+static void *queue_timer(void *timeout)
-+{
-+	timer_wakeup.src_cpu = sched_getcpu();
-+	timer_wakeup.timeout = (uint64_t)timeout;
-+	setup_timer();
-+
-+	return NULL;
-+}
-+
-+static void timeout_test_once(int baseline, uint64_t timeout, int dest_cpu)
-+{
-+	pthread_t tid, baseline_tid;
-+
-+	if (baseline) {
-+		baseline_tid = start_thread_on(util_full_cpu, NULL, dest_cpu);
-+		/* Run process for long enough to gain 100% usage */
-+		sleep(2);
-+	}
-+
-+	clock_gettime(CLOCK_REALTIME, &timer_wakeup.time_start);
-+
-+	tid = start_thread_on(queue_timer, (void *)timeout, dest_cpu);
-+	pthread_join(tid, NULL);
-+
-+	clock_gettime(CLOCK_REALTIME, &timer_wakeup.time_end);
-+	timer_wakeup.timeout_diff_ns = (timer_wakeup.time_end.tv_sec -
-+		timer_wakeup.time_start.tv_sec) * 1000000000ULL +
-+		(timer_wakeup.time_end.tv_nsec - timer_wakeup.time_start.tv_nsec);
-+	if (baseline)
-+		pthread_cancel(baseline_tid);
-+}
-+
-+static void timeout_test(unsigned long timeout)
-+{
-+	uint64_t avg_arr[cpus], avg_timeout_diff;
-+	int state, cpu;
-+	FILE *fptr;
-+
-+	assert(cpuidle_disable_all_states() == 0);
-+	fptr = fopen(log_file, "a");
-+	fprintf(fptr, "----TIMEOUT TEST----\n");
-+
-+	fprintf(fptr, "----Baseline Timeout Latency diff----\n");
-+	fprintf(fptr, "%s %10s\n", "SRC_CPU", "Baseline_Latency(ns)");
-+	/* Run the test as dummy once to stablize */
-+	timeout_test_once(1, timeout, cpu_list[0]);
-+	for (cpu = 0; cpu < cpus; cpu++) {
-+		timeout_test_once(1, timeout, cpu_list[cpu]);
-+		fprintf(fptr, "%3d %11ld\n", timer_wakeup.src_cpu,
-+			timer_wakeup.timeout_diff_ns);
-+		avg_arr[cpu] = timer_wakeup.timeout_diff_ns;
-+	}
-+	avg_timeout_diff = average(avg_arr, cpus);
-+	fprintf(fptr, "Baseline Average Timeout diff(ns): %ld\n\n",
-+		avg_timeout_diff);
-+
-+	for (state = 0; state < idle_states; state++) {
-+		fprintf(fptr, "--Enabling state: %d--\n", state);
-+		assert(cpuidle_enable_state(state) == 0);
-+		fprintf(fptr, "%s %11s\n", "SRC_CPU", "Timeout_Latency(ns)");
-+		for (cpu = 0; cpu < cpus; cpu++) {
-+			/* Allow sufficient cycles to go idle */
-+			sleep(1);
-+			timeout_test_once(0, timeout,
-+					  cpu_list[cpu]);
-+			fprintf(fptr, "%3d %15ld\n", timer_wakeup.src_cpu,
-+				timer_wakeup.timeout_diff_ns);
-+			avg_arr[cpu] = timer_wakeup.timeout_diff_ns;
-+		}
-+		fprintf(fptr, "Expected Residency(ns): %ld\n",
-+			us_to_ns(residency_list[state]));
-+		avg_timeout_diff = average(avg_arr, cpus);
-+		fprintf(fptr, "Observed Average Timeout diff(ns): %ld\n\n",
-+			avg_timeout_diff);
-+		assert(cpuidle_disable_state(state) == 0);
-+	}
-+	assert(cpuidle_enable_all_states() == 0);
-+	fclose(fptr);
-+}
-+
-+static struct option options[] = {
-+	{"output", required_argument, 0, 'o'},
-+	{"mode", required_argument, 0, 'm'},
-+};
-+
-+static void usage(void)
-+{
-+	fprintf(stderr, "Usage: cpuidle <options>\n\n");
-+	fprintf(stderr, "\t\t--mode=X\t(quick / full / <num_cpus>)\n");
-+	fprintf(stderr, "\t\t--output=X\tOutput loc (def: cpuidle.log)\n\n");
-+}
-+
-+void get_n_random_cpus(int *shf_list, int shf_size, int *list, int n)
-+{
-+	/* Shuffle the Online CPU list */
-+	int i;
-+	int shuffle_index_list[shf_size];
-+
-+	for (i = 0; i < shf_size; i++)
-+		shuffle_index_list[i] = i;
-+	for (i = 0; i < shf_size; i++) {
-+		int idx = i + rand() % (shf_size - i);
-+		int temp = shuffle_index_list[i];
-+
-+		shuffle_index_list[i] = shuffle_index_list[idx];
-+		shuffle_index_list[idx] = temp;
-+	}
-+
-+	/* Pick the first n from the shf_list elements */
-+	for (i = 0; i < n; i++)
-+		list[i] = shf_list[shuffle_index_list[i]];
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int total_cpus, online_cpus, option_index = 0;
-+	int *online_cpu_list;
-+	signed char c;
-+	FILE *fptr;
-+
-+	if (getuid()) {
-+		fprintf(stderr, "cpuidle latency test must run as root\n");
-+		exit(1);
-+	}
-+
-+	total_cpus = sysconf(_SC_NPROCESSORS_ONLN);
-+	online_cpu_list = malloc(total_cpus * sizeof(int));
-+	if (!online_cpu_list) {
-+		perror("Malloc failure");
-+		exit(1);
-+	}
-+
-+	online_cpus = get_online_cpus(&online_cpu_list[0], total_cpus);
-+	if (!online_cpus) {
-+		perror("Unable to get online CPUS");
-+		exit(1);
-+	}
-+
-+	/* Get one CPU for a quick test */
-+	cpus = 1;
-+	cpu_list = malloc(1 * sizeof(int));
-+	srand(time(NULL));
-+	cpu_list[0] = online_cpu_list[(rand() % online_cpus) + 1];
-+
-+	while (1) {
-+		c = getopt_long(argc, argv, "", options, &option_index);
-+		if (c == -1)
-+			break;
-+
-+		switch (c) {
-+		case 'o':
-+			log_file = optarg;
-+			break;
-+		case 'm':
-+			if (!strcmp(optarg, "full")) {
-+				cpu_list = realloc(cpu_list,
-+						   online_cpus * sizeof(int));
-+				memcpy(cpu_list, online_cpu_list,
-+				       online_cpus * sizeof(int));
-+				cpus = online_cpus;
-+			} else if (strcmp(optarg, "quick")) {
-+				int opt_cpus;
-+
-+				opt_cpus = atoi(optarg);
-+				if (!opt_cpus) {
-+					fprintf(stderr, "Error parsing mode\n");
-+					usage();
-+					exit(1);
-+				}
-+				if (opt_cpus > online_cpus) {
-+					fprintf(stderr, "Number of CPUS > Online CPUs\n");
-+					usage();
-+					exit(1);
-+				}
-+				cpu_list = realloc(cpu_list,
-+						   opt_cpus * sizeof(int));
-+				get_n_random_cpus(online_cpu_list, online_cpus,
-+						  &cpu_list[0], opt_cpus);
-+				cpus = opt_cpus;
-+			}
-+			break;
-+		default:
-+			usage();
-+			exit(1);
-+		}
-+	}
-+
-+	idle_states = get_idle_state_count(online_cpu_list[0]);
-+	if (idle_states == -1) {
-+		perror("Unable to get idle states");
-+		exit(1);
-+	}
-+
-+	fptr = fopen(log_file, "w+");
-+	fprintf(fptr, "cpuidle latency selftests. IPI & Timers\n");
-+	fprintf(fptr, "Number of CPUS: %d\n", total_cpus);
-+	fprintf(fptr, "Number of idle states: %d\n", idle_states);
-+	fclose(fptr);
-+
-+	latency_list = malloc(idle_states * sizeof(uint64_t));
-+	residency_list = malloc(idle_states * sizeof(uint64_t));
-+	if (!latency_list || !residency_list) {
-+		perror("Malloc failure");
-+		exit(1);
-+	}
-+
-+	get_latency(online_cpu_list[0]);
-+	get_residency(online_cpu_list[0]);
-+
-+	ipi_test(online_cpu_list[0]);
-+	printf("IPI test done\n");
-+	fflush(stdout);
-+
-+	timeout_test(TIMEOUT_US);
-+	printf("Timeout test done\n");
-+	fflush(stdout);
-+
-+	printf("Output logged at: %s\n", log_file);
-+
-+	free(latency_list);
-+	free(residency_list);
-+	free(cpu_list);
-+	free(online_cpu_list);
-+	return 0;
-+}
-diff --git a/tools/testing/selftests/cpuidle/settings b/tools/testing/selftests/cpuidle/settings
-new file mode 100644
-index 000000000000..e7b9417537fb
---- /dev/null
-+++ b/tools/testing/selftests/cpuidle/settings
-@@ -0,0 +1 @@
-+timeout=0
--- 
-2.26.2
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+> 
 
