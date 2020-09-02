@@ -2,235 +2,363 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E71C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE18C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD08620758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6655920758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:33:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TH5fADQT"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JRT9i3iQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgIBDaf (ORCPT
+        id S1726489AbgIBDdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 23:30:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgIBDae (ORCPT
+        Tue, 1 Sep 2020 23:33:12 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:45586 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgIBDdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 23:30:34 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18C4C061244;
-        Tue,  1 Sep 2020 20:30:32 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id u3so3136687qkd.9;
-        Tue, 01 Sep 2020 20:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qMRTb7o6tIn+KisH8T8lV1168u11aqmlDTHJpu+vCTQ=;
-        b=TH5fADQT02n8Tst99kTzXf6CYfr3NTZcx0AOksGt5slcYgd9BZI5X2LIuUq+vlm4Cc
-         6xjTqTf7rcMdzJI0tzNTp7cHAOIOKOlZAFoVy4xGau/ZOLobafVUEIqzK9P8v+2ea3EK
-         s61PPtwdULj5Ej+PH+FzTbG9lSaYZWp5Y9K50ji24S9mE9wJrb/dXMyl3KwF8vyA7w7p
-         rbpdXsaENmoF5JmYeDV4tH9plQnXjZk9lSr+SHl0Jo3BviKRnbKNNRbDw+YZNy9Itv11
-         PeqykzvkVuH+BG9DoxX+Q7VRt0c59Dq/6OSw0mNYrY0E+gRaL6dfZ6e2Ldc1j0oMnCVS
-         GLhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qMRTb7o6tIn+KisH8T8lV1168u11aqmlDTHJpu+vCTQ=;
-        b=g4YqmzViaGLpVosVIxBlToAKLQSuns/hFIvyfGr27/DDoYC4JrKAVOoLXKZ8mLMUaT
-         8rI6mf+/y0KXGZA913G2lgt7fK2Bgc4Inzbzew0/H6XHB3Y7rr0C3v/jt6DJykjeQC0/
-         VIxKHPJkmkP9MAPrlcC3Gxt8ql7IFsd2xrxhUojL5rM4mbSjtUwjbuH563cLF0I14awO
-         8plJjXPVNLY+OvDW/9HhheReCtncbz5qwGPDyfPTgaZGKjfM0S3ECoMKu3bNmqSfRfQ1
-         B0O7MJ7mS4vWpl49dXVzfGF+SF3WL0Wm1JO1XwFCZJ18asltNYhEFc202DgjwWmOP169
-         L73g==
-X-Gm-Message-State: AOAM530NZSyWFxlXXUtwuC73N5/1If1fb+8d70GOoaRxAsP/74AlkUE1
-        ex805/LiHhia/eVWuPFaKUc=
-X-Google-Smtp-Source: ABdhPJwEdn9HbPItGUvHj9yO+mznmI7gOcG1q8yS28wb6gaxPhht0Q+iGUkYabV6q6GKaEYv0gJbBA==
-X-Received: by 2002:a05:620a:2096:: with SMTP id e22mr5204355qka.177.1599017431655;
-        Tue, 01 Sep 2020 20:30:31 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id k48sm4335084qtk.44.2020.09.01.20.30.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Sep 2020 20:30:10 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id C26DE27C0054;
-        Tue,  1 Sep 2020 23:30:09 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 01 Sep 2020 23:30:09 -0400
-X-ME-Sender: <xms:wBFPX3NzlpjwtBY4EJ9Vo1DpIzeZ9djSqDYyZs3QXRCygAQueXerBg>
-    <xme:wBFPXx-WwpMENqbc2cWCj3ZRbqfzMalM4Ii2yuKF6x20oKpZaEHYG-Tc71TpeHRpU
-    m2NaUWLE8D4oIenrg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefkedgjedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhepvdelieegudfggeevjefhjeevueevieetjeeikedvgfejfeduheefhffggedv
-    geejnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
-    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
-    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:wBFPX2QdrvqYHYFOY5RNAO3SxklCFWCRbV4Kts2GNCQrTVDp8D9GDQ>
-    <xmx:wBFPX7vHnT94bpNT8kZlxzBcWvnMxWgh19WD6BC3Fdv-tTUoPqCdSA>
-    <xmx:wBFPX_fQR15FDiGU2WP5D54xIve0z8c3zQ-_lqrScj6qeCiHriYzWg>
-    <xmx:wRFPX6_YnMsWOtfcnnRfKBu131T7Rsy5qclM0NqIzfqcPo8T0kIFOyaU_10>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 34A95328005A;
-        Tue,  1 Sep 2020 23:30:08 -0400 (EDT)
-Date:   Wed, 2 Sep 2020 11:30:06 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     paulmck@kernel.org
-Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        kernel-team@fb.com, mingo@kernel.org, elver@google.com,
-        andreyknvl@google.com, glider@google.com, dvyukov@google.com,
-        cai@lca.pw, Will Deacon <will@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH kcsan 18/19] bitops, kcsan: Partially revert
- instrumentation for non-atomic bitops
-Message-ID: <20200902033006.GB49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200831181715.GA1530@paulmck-ThinkPad-P72>
- <20200831181805.1833-18-paulmck@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831181805.1833-18-paulmck@kernel.org>
+        Tue, 1 Sep 2020 23:33:11 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200902033307epoutp02aab4e4ea38efa6654f4ee271bf0a2f5b~w2gX-kio_1629016290epoutp02f
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 03:33:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200902033307epoutp02aab4e4ea38efa6654f4ee271bf0a2f5b~w2gX-kio_1629016290epoutp02f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599017587;
+        bh=fQzOwnKl71y9vFlqOMQkwhC4yQbO7O5YdXFCmZaDovU=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=JRT9i3iQiZGGjq5SuwiE95kQlxrSYKTCXgEbs+3MAc0cKttb4UGMC0b46IjboG0wv
+         vW3su88ohei3rPLOuSf+DPdV1nsAba87CwpYorFEw5cfW93CxJyxQ4Xy8pyKmLBZzI
+         5GifyZWz/LWqf1PkZF3Kd7F4/QyEIWj3oLgDpLmw=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p1.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200902033306epcas1p1dcfb65011bc6803bd9475bf1deed13a1~w2gXTOSOK1688716887epcas1p1p;
+        Wed,  2 Sep 2020 03:33:06 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [PATCH v11 4/4] scsi: ufs: Prepare HPB read for cached sub-region
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Daejun Park <daejun7.park@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>,
+        SEUNGUK SHIN <seunguk.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <231786897.01599016802080.JavaMail.epsvc@epcpadp1>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <1431530910.81599017586257.JavaMail.epsvc@epcpadp2>
+Date:   Wed, 02 Sep 2020 12:22:27 +0900
+X-CMS-MailID: 20200902032227epcms2p6cab951031ee7d2fbc33058f8b07f1a0b
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200902031713epcms2p664cebf386ba19d3d05895fec89aaf4fe
+References: <231786897.01599016802080.JavaMail.epsvc@epcpadp1>
+        <CGME20200902031713epcms2p664cebf386ba19d3d05895fec89aaf4fe@epcms2p6>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul and Marco,
+This patch changes the read I/O to the HPB read I/O.
 
-The whole update patchset looks good to me, just one question out of
-curiosity fo this one, please see below:
+If the logical address of the read I/O belongs to active sub-region, the
+HPB driver modifies the read I/O command to HPB read. It modifies the UPIU
+command of UFS instead of modifying the existing SCSI command.
 
-On Mon, Aug 31, 2020 at 11:18:04AM -0700, paulmck@kernel.org wrote:
-> From: Marco Elver <elver@google.com>
-> 
-> Previous to the change to distinguish read-write accesses, when
-> CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=y is set, KCSAN would consider
-> the non-atomic bitops as atomic. We want to partially revert to this
-> behaviour, but with one important distinction: report racing
-> modifications, since lost bits due to non-atomicity are certainly
-> possible.
-> 
-> Given the operations here only modify a single bit, assuming
-> non-atomicity of the writer is sufficient may be reasonable for certain
-> usage (and follows the permissible nature of the "assume plain writes
-> atomic" rule). In other words:
-> 
-> 	1. We want non-atomic read-modify-write races to be reported;
-> 	   this is accomplished by kcsan_check_read(), where any
-> 	   concurrent write (atomic or not) will generate a report.
-> 
-> 	2. We do not want to report races with marked readers, but -do-
-> 	   want to report races with unmarked readers; this is
-> 	   accomplished by the instrument_write() ("assume atomic
-> 	   write" with Kconfig option set).
-> 
+In the HPB version 1.0, the maximum read I/O size that can be converted to
+HPB read is 4KB.
 
-Is there any code in kernel using the above assumption (i.e.
-non-atomicity of the writer is sufficient)? IOW, have you observed
-anything bad (e.g. an anoying false positive) after applying the
-read_write changes but without this patch?
+The dirty map of the active sub-region prevents an incorrect HPB read that
+has stale physical page number which is updated by previous write I/O.
 
-Regards,
-Boqun
+Acked-by: Avri Altman <Avri.Altman@wdc.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Tested-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+---
+ drivers/scsi/ufs/ufshpb.c | 231 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 231 insertions(+)
 
-> With the above rules, when KCSAN_ASSUME_PLAIN_WRITES_ATOMIC is selected,
-> it is hoped that KCSAN's reporting behaviour is better aligned with
-> current expected permissible usage for non-atomic bitops.
-> 
-> Note that, a side-effect of not telling KCSAN that the accesses are
-> read-writes, is that this information is not displayed in the access
-> summary in the report. It is, however, visible in inline-expanded stack
-> traces. For now, it does not make sense to introduce yet another special
-> case to KCSAN's runtime, only to cater to the case here.
-> 
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Daniel Axtens <dja@axtens.net>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: <linux-arch@vger.kernel.org>
-> Signed-off-by: Marco Elver <elver@google.com>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
->  .../asm-generic/bitops/instrumented-non-atomic.h   | 30 +++++++++++++++++++---
->  1 file changed, 27 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/asm-generic/bitops/instrumented-non-atomic.h b/include/asm-generic/bitops/instrumented-non-atomic.h
-> index f86234c..37363d5 100644
-> --- a/include/asm-generic/bitops/instrumented-non-atomic.h
-> +++ b/include/asm-generic/bitops/instrumented-non-atomic.h
-> @@ -58,6 +58,30 @@ static inline void __change_bit(long nr, volatile unsigned long *addr)
->  	arch___change_bit(nr, addr);
->  }
->  
-> +static inline void __instrument_read_write_bitop(long nr, volatile unsigned long *addr)
-> +{
-> +	if (IS_ENABLED(CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC)) {
-> +		/*
-> +		 * We treat non-atomic read-write bitops a little more special.
-> +		 * Given the operations here only modify a single bit, assuming
-> +		 * non-atomicity of the writer is sufficient may be reasonable
-> +		 * for certain usage (and follows the permissible nature of the
-> +		 * assume-plain-writes-atomic rule):
-> +		 * 1. report read-modify-write races -> check read;
-> +		 * 2. do not report races with marked readers, but do report
-> +		 *    races with unmarked readers -> check "atomic" write.
-> +		 */
-> +		kcsan_check_read(addr + BIT_WORD(nr), sizeof(long));
-> +		/*
-> +		 * Use generic write instrumentation, in case other sanitizers
-> +		 * or tools are enabled alongside KCSAN.
-> +		 */
-> +		instrument_write(addr + BIT_WORD(nr), sizeof(long));
-> +	} else {
-> +		instrument_read_write(addr + BIT_WORD(nr), sizeof(long));
-> +	}
-> +}
-> +
->  /**
->   * __test_and_set_bit - Set a bit and return its old value
->   * @nr: Bit to set
-> @@ -68,7 +92,7 @@ static inline void __change_bit(long nr, volatile unsigned long *addr)
->   */
->  static inline bool __test_and_set_bit(long nr, volatile unsigned long *addr)
->  {
-> -	instrument_read_write(addr + BIT_WORD(nr), sizeof(long));
-> +	__instrument_read_write_bitop(nr, addr);
->  	return arch___test_and_set_bit(nr, addr);
->  }
->  
-> @@ -82,7 +106,7 @@ static inline bool __test_and_set_bit(long nr, volatile unsigned long *addr)
->   */
->  static inline bool __test_and_clear_bit(long nr, volatile unsigned long *addr)
->  {
-> -	instrument_read_write(addr + BIT_WORD(nr), sizeof(long));
-> +	__instrument_read_write_bitop(nr, addr);
->  	return arch___test_and_clear_bit(nr, addr);
->  }
->  
-> @@ -96,7 +120,7 @@ static inline bool __test_and_clear_bit(long nr, volatile unsigned long *addr)
->   */
->  static inline bool __test_and_change_bit(long nr, volatile unsigned long *addr)
->  {
-> -	instrument_read_write(addr + BIT_WORD(nr), sizeof(long));
-> +	__instrument_read_write_bitop(nr, addr);
->  	return arch___test_and_change_bit(nr, addr);
->  }
->  
-> -- 
-> 2.9.5
-> 
+diff --git a/drivers/scsi/ufs/ufshpb.c b/drivers/scsi/ufs/ufshpb.c
+index 2ac4cd6e4aa4..8ad2a711dd16 100644
+--- a/drivers/scsi/ufs/ufshpb.c
++++ b/drivers/scsi/ufs/ufshpb.c
+@@ -31,6 +31,29 @@ bool ufshpb_is_allowed(struct ufs_hba *hba)
+ 	return !(hba->ufshpb_dev.hpb_disabled);
+ }
+ 
++static int ufshpb_is_valid_srgn(struct ufshpb_region *rgn,
++			     struct ufshpb_subregion *srgn)
++{
++	return rgn->rgn_state != HPB_RGN_INACTIVE &&
++		srgn->srgn_state == HPB_SRGN_VALID;
++}
++
++static bool ufshpb_is_read_cmd(struct scsi_cmnd *cmd)
++{
++	return req_op(cmd->request) == REQ_OP_READ;
++}
++
++static bool ufshpb_is_write_discard_cmd(struct scsi_cmnd *cmd)
++{
++	return op_is_write(req_op(cmd->request)) ||
++	       op_is_discard(req_op(cmd->request));
++}
++
++static bool ufshpb_is_support_chunk(int transfer_len)
++{
++	return transfer_len <= HPB_MULTI_CHUNK_HIGH;
++}
++
+ static bool ufshpb_is_general_lun(int lun)
+ {
+ 	return lun < UFS_UPIU_MAX_UNIT_NUM_ID;
+@@ -97,8 +120,216 @@ static void ufshpb_set_state(struct ufshpb_lu *hpb, int state)
+ 	atomic_set(&hpb->hpb_state, state);
+ }
+ 
++static void ufshpb_set_ppn_dirty(struct ufshpb_lu *hpb, int rgn_idx,
++			     int srgn_idx, int srgn_offset, int cnt)
++{
++	struct ufshpb_region *rgn;
++	struct ufshpb_subregion *srgn;
++	int set_bit_len;
++	int bitmap_len = hpb->entries_per_srgn;
++
++next_srgn:
++	rgn = hpb->rgn_tbl + rgn_idx;
++	srgn = rgn->srgn_tbl + srgn_idx;
++
++	if ((srgn_offset + cnt) > bitmap_len)
++		set_bit_len = bitmap_len - srgn_offset;
++	else
++		set_bit_len = cnt;
++
++	if (rgn->rgn_state != HPB_RGN_INACTIVE &&
++	    srgn->srgn_state == HPB_SRGN_VALID)
++		bitmap_set(srgn->mctx->ppn_dirty, srgn_offset, set_bit_len);
++
++	srgn_offset = 0;
++	if (++srgn_idx == hpb->srgns_per_rgn) {
++		srgn_idx = 0;
++		rgn_idx++;
++	}
++
++	cnt -= set_bit_len;
++	if (cnt > 0)
++		goto next_srgn;
++
++	WARN_ON(cnt < 0);
++}
++
++static bool ufshpb_test_ppn_dirty(struct ufshpb_lu *hpb, int rgn_idx,
++				   int srgn_idx, int srgn_offset, int cnt)
++{
++	struct ufshpb_region *rgn;
++	struct ufshpb_subregion *srgn;
++	int bitmap_len = hpb->entries_per_srgn;
++	int bit_len;
++
++next_srgn:
++	rgn = hpb->rgn_tbl + rgn_idx;
++	srgn = rgn->srgn_tbl + srgn_idx;
++
++	if (!ufshpb_is_valid_srgn(rgn, srgn))
++		return true;
++
++	/*
++	 * If the region state is active, mctx must be allocated.
++	 * In this case, check whether the region is evicted or
++	 * mctx allcation fail.
++	 */
++	WARN_ON(!srgn->mctx);
++
++	if ((srgn_offset + cnt) > bitmap_len)
++		bit_len = bitmap_len - srgn_offset;
++	else
++		bit_len = cnt;
++
++	if (find_next_bit(srgn->mctx->ppn_dirty,
++			  bit_len, srgn_offset) >= srgn_offset)
++		return true;
++
++	srgn_offset = 0;
++	if (++srgn_idx == hpb->srgns_per_rgn) {
++		srgn_idx = 0;
++		rgn_idx++;
++	}
++
++	cnt -= bit_len;
++	if (cnt > 0)
++		goto next_srgn;
++
++	return false;
++}
++
++static u64 ufshpb_get_ppn(struct ufshpb_lu *hpb,
++			  struct ufshpb_map_ctx *mctx, int pos, int *error)
++{
++	u64 *ppn_table;
++	struct page *page;
++	int index, offset;
++
++	index = pos / (PAGE_SIZE / HPB_ENTRY_SIZE);
++	offset = pos % (PAGE_SIZE / HPB_ENTRY_SIZE);
++
++	page = mctx->m_page[index];
++	if (unlikely(!page)) {
++		*error = -ENOMEM;
++		dev_err(&hpb->sdev_ufs_lu->sdev_dev,
++			"error. cannot find page in mctx\n");
++		return 0;
++	}
++
++	ppn_table = page_address(page);
++	if (unlikely(!ppn_table)) {
++		*error = -ENOMEM;
++		dev_err(&hpb->sdev_ufs_lu->sdev_dev,
++			"error. cannot get ppn_table\n");
++		return 0;
++	}
++
++	return ppn_table[offset];
++}
++
++static void
++ufshpb_get_pos_from_lpn(struct ufshpb_lu *hpb, unsigned long lpn, int *rgn_idx,
++			int *srgn_idx, int *offset)
++{
++	int rgn_offset;
++
++	*rgn_idx = lpn >> hpb->entries_per_rgn_shift;
++	rgn_offset = lpn & hpb->entries_per_rgn_mask;
++	*srgn_idx = rgn_offset >> hpb->entries_per_srgn_shift;
++	*offset = rgn_offset & hpb->entries_per_srgn_mask;
++}
++
++static void
++ufshpb_set_hpb_read_to_upiu(struct ufshpb_lu *hpb, struct ufshcd_lrb *lrbp,
++				  u32 lpn, u64 ppn,  unsigned int transfer_len)
++{
++	unsigned char *cdb = lrbp->ucd_req_ptr->sc.cdb;
++
++	cdb[0] = UFSHPB_READ;
++
++	put_unaligned_be64(ppn, &cdb[6]);
++	cdb[14] = transfer_len;
++}
++
++/*
++ * This function will set up HPB read command using host-side L2P map data.
++ * In HPB v1.0, maximum size of HPB read command is 4KB.
++ */
+ void ufshpb_prep(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+ {
++	struct ufshpb_lu *hpb;
++	struct ufshpb_region *rgn;
++	struct ufshpb_subregion *srgn;
++	struct scsi_cmnd *cmd = lrbp->cmd;
++	u32 lpn;
++	u64 ppn;
++	unsigned long flags;
++	int transfer_len, rgn_idx, srgn_idx, srgn_offset;
++	int err = 0;
++
++	hpb = ufshpb_get_hpb_data(cmd);
++	if (!hpb)
++		return;
++
++	if (ufshpb_get_state(hpb) != HPB_PRESENT) {
++		dev_notice(&hpb->sdev_ufs_lu->sdev_dev,
++			   "%s: ufshpb state is not PRESENT", __func__);
++		return;
++	}
++
++	WARN_ON(hpb->lun != cmd->device->lun);
++	if (!ufshpb_is_write_discard_cmd(cmd) &&
++	    !ufshpb_is_read_cmd(cmd))
++		return;
++
++	transfer_len = sectors_to_logical(cmd->device, blk_rq_sectors(cmd->request));
++	if (unlikely(!transfer_len))
++		return;
++
++	lpn = sectors_to_logical(cmd->device, blk_rq_pos(cmd->request));
++	ufshpb_get_pos_from_lpn(hpb, lpn, &rgn_idx, &srgn_idx, &srgn_offset);
++	rgn = hpb->rgn_tbl + rgn_idx;
++	srgn = rgn->srgn_tbl + srgn_idx;
++
++	/* If command type is WRITE or DISCARD, set bitmap as drity */
++	if (ufshpb_is_write_discard_cmd(cmd)) {
++		spin_lock_irqsave(&hpb->hpb_state_lock, flags);
++		ufshpb_set_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
++				 transfer_len);
++		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
++		return;
++	}
++
++	WARN_ON(!ufshpb_is_read_cmd(cmd));
++
++	if (!ufshpb_is_support_chunk(transfer_len))
++		return;
++
++	spin_lock_irqsave(&hpb->hpb_state_lock, flags);
++	if (ufshpb_test_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
++				   transfer_len)) {
++		atomic_inc(&hpb->stats.miss_cnt);
++		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
++		return;
++	}
++
++	ppn = ufshpb_get_ppn(hpb, srgn->mctx, srgn_offset, &err);
++	spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
++	if (unlikely(err)) {
++		/*
++		 * In this case, the region state is active,
++		 * but the ppn table is not allocated.
++		 * Make sure that ppn table must be allocated on
++		 * active state.
++		 */
++		WARN_ON(true);
++		dev_err(hba->dev, "ufshpb_get_ppn failed. err %d\n", err);
++		return;
++	}
++
++	ufshpb_set_hpb_read_to_upiu(hpb, lrbp, lpn, ppn, transfer_len);
++
++	atomic_inc(&hpb->stats.hit_cnt);
+ }
+ 
+ static struct ufshpb_req *ufshpb_get_map_req(struct ufshpb_lu *hpb,
+-- 
+2.17.1
+
+
