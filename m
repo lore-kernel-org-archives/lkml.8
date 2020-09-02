@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2328C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756ECC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFD5020639
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F6B20639
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063508;
-	bh=fpks8/wgVNH3xUBKsGhywKHuyIv8sN2aTZ5fHxmheuM=;
+	s=default; t=1599063528;
+	bh=20rwtaupDb1aKHEooDzQl/rU/dgCpdJe5nG7WDKkIQo=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=zEIT0bWWo13gWhfMzSO2pm64LMtKLHP5uOhLBikmk8NaDI6Z3UcGH3U1HYQ0XhT1M
-	 d4V3EYb6CwZfnPQ5AGN/+3iD72l5X+TTVRVar7hbPXJsZsIwN5OGOBqVw+gewnNhqC
-	 S9gRXkgRrIaGQDDzgMZ8ZhU8hVI376AgicHycVJE=
+	b=NavKaL4fxXO6WwexnblnQFxbQz18voD2IVYaQAj+byFFXMdlfvtFKzkEjoxMtvq20
+	 NzDFKN0S48Lj2sWXnPEpSmai743ortuqFiPAO7h/h5+jGi5XkpnM/oTLf3JVOOYUI8
+	 SB36K/n50xO0r1uyNrd4ffoxz1cqibeaalxW3pQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgIBQSM (ORCPT
+        id S1728918AbgIBQSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:18:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53842 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 12:18:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbgIBQKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:10:48 -0400
+        id S1727944AbgIBQKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:10:47 -0400
 Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6D1D208C7;
+        by mail.kernel.org (Postfix) with ESMTPSA id D8B2C20BED;
         Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599063046;
-        bh=fpks8/wgVNH3xUBKsGhywKHuyIv8sN2aTZ5fHxmheuM=;
+        bh=20rwtaupDb1aKHEooDzQl/rU/dgCpdJe5nG7WDKkIQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sZm4UigSYItvrgyo3ZQ5jhbMEUIVHtHTwQbKUsSwIaqGhjKsoCQm/vGhYLO5IR5QD
-         ltTBCRxT45+x76RlQaeFQBdhxtD4yiLkgOD2wE0MOCvWy+iL8af1uCDIDVdPQ7HkHk
-         uQmGMODE9wotHtT5VjPpI2st9L/X2gSn3BlwdhHc=
+        b=C7Ydg7tr6cIAabckT8QZ+dQywwCWAHNr54q6yEDZ0ogV5DvrWeCuEL/fTKSPZNE7l
+         dvQddlUG516QXmMdSznl9IbkJAB9a+D3AlMk8bpcJ+Lkg0qYDNg6YNbbZd3UpOJgxz
+         FdqXwEsrpFrojPjmeXXodDfrFizyaFHu8ZeuD084=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kDVLP-000tA1-S2; Wed, 02 Sep 2020 18:10:43 +0200
+        id 1kDVLP-000tAD-Vy; Wed, 02 Sep 2020 18:10:44 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 09/38] media: vivid: move the detection part out of vivid_create_instance
-Date:   Wed,  2 Sep 2020 18:10:12 +0200
-Message-Id: <5c740fb631ed95df4b15ea5de43bd9b1a7a53493.1599062230.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 13/38] media: vivid: move the create queues to a separate function
+Date:   Wed,  2 Sep 2020 18:10:16 +0200
+Message-Id: <42219ecf5014d677d6fb65ae70086b7ae3b36931.1599062230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
 References: <cover.1599062230.git.mchehab+huawei@kernel.org>
@@ -60,241 +60,215 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vivid_create_instance() function is too harry. Smatch can't
-process it, because it takes too long.
-
-The detection part is an important piece of it. As such, there
-are even comments before and after such block.
-
-So, it makes sense to just move it to a separate function.
+Instead of placing everything inside vivid_create_instance(),
+we can move the part which creates per-type video queues
+into a separate function.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/media/test-drivers/vivid/vivid-core.c | 151 ++++++++++--------
- 1 file changed, 83 insertions(+), 68 deletions(-)
+ drivers/media/test-drivers/vivid/vivid-core.c | 175 +++++++++---------
+ 1 file changed, 92 insertions(+), 83 deletions(-)
 
 diff --git a/drivers/media/test-drivers/vivid/vivid-core.c b/drivers/media/test-drivers/vivid/vivid-core.c
-index 931218fa955e..d4785da440d9 100644
+index 3340b61e68c0..69cc8456a323 100644
 --- a/drivers/media/test-drivers/vivid/vivid-core.c
 +++ b/drivers/media/test-drivers/vivid/vivid-core.c
-@@ -832,56 +832,16 @@ static int vivid_create_queue(struct vivid_dev *dev,
- 	return vb2_queue_init(q);
+@@ -1218,6 +1218,93 @@ static int vivid_init_dv_timings(struct vivid_dev *dev)
+ 	return 0;
  }
  
--static int vivid_create_instance(struct platform_device *pdev, int inst)
-+static int vivid_detect_feature_set(struct vivid_dev *dev, int inst,
-+				    unsigned node_type,
-+				    bool *has_tuner,
-+				    bool *has_modulator,
-+				    int *ccs_cap,
-+				    int *ccs_out,
-+				    unsigned in_type_counter[4],
-+				    unsigned out_type_counter[4])
- {
--	static const struct v4l2_dv_timings def_dv_timings =
--					V4L2_DV_BT_CEA_1280X720P60;
--	unsigned in_type_counter[4] = { 0, 0, 0, 0 };
--	unsigned out_type_counter[4] = { 0, 0, 0, 0 };
--	int ccs_cap = ccs_cap_mode[inst];
--	int ccs_out = ccs_out_mode[inst];
--	bool has_tuner;
--	bool has_modulator;
--	struct vivid_dev *dev;
--	struct video_device *vfd;
--	unsigned node_type = node_types[inst];
--	v4l2_std_id tvnorms_cap = 0, tvnorms_out = 0;
--	int ret;
- 	int i;
--#ifdef CONFIG_VIDEO_VIVID_CEC
--	unsigned int cec_tx_bus_cnt = 0;
--#endif
--
--	/* allocate main vivid state structure */
--	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
--	if (!dev)
--		return -ENOMEM;
--
--	dev->inst = inst;
--
--#ifdef CONFIG_MEDIA_CONTROLLER
--	dev->v4l2_dev.mdev = &dev->mdev;
--
--	/* Initialize media device */
--	strscpy(dev->mdev.model, VIVID_MODULE_NAME, sizeof(dev->mdev.model));
--	snprintf(dev->mdev.bus_info, sizeof(dev->mdev.bus_info),
--		 "platform:%s-%03d", VIVID_MODULE_NAME, inst);
--	dev->mdev.dev = &pdev->dev;
--	media_device_init(&dev->mdev);
--	dev->mdev.ops = &vivid_media_ops;
--#endif
--
--	/* register v4l2_device */
--	snprintf(dev->v4l2_dev.name, sizeof(dev->v4l2_dev.name),
--			"%s-%03d", VIVID_MODULE_NAME, inst);
--	ret = v4l2_device_register(&pdev->dev, &dev->v4l2_dev);
--	if (ret) {
--		kfree(dev);
--		return ret;
--	}
--	dev->v4l2_dev.release = vivid_dev_release;
--
--	/* start detecting feature set */
- 
- 	/* do we use single- or multi-planar? */
- 	dev->multiplanar = multiplanar[inst] > 1;
-@@ -947,14 +907,12 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
- 	    !dev->has_vid_cap && !dev->has_meta_cap) {
- 		v4l2_warn(&dev->v4l2_dev,
- 			  "Webcam or HDMI input without video or metadata nodes\n");
--		kfree(dev);
- 		return -EINVAL;
- 	}
- 	if ((in_type_counter[TV] || in_type_counter[SVID]) &&
- 	    !dev->has_vid_cap && !dev->has_vbi_cap && !dev->has_meta_cap) {
- 		v4l2_warn(&dev->v4l2_dev,
- 			  "TV or S-Video input without video, VBI or metadata nodes\n");
--		kfree(dev);
- 		return -EINVAL;
- 	}
- 
-@@ -976,13 +934,11 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
- 	    !dev->has_vid_out && !dev->has_vbi_out && !dev->has_meta_out) {
- 		v4l2_warn(&dev->v4l2_dev,
- 			  "S-Video output without video, VBI or metadata nodes\n");
--		kfree(dev);
- 		return -EINVAL;
- 	}
- 	if (out_type_counter[HDMI] && !dev->has_vid_out && !dev->has_meta_out) {
- 		v4l2_warn(&dev->v4l2_dev,
- 			  "HDMI output without video or metadata nodes\n");
--		kfree(dev);
- 		return -EINVAL;
- 	}
- 
-@@ -999,25 +955,25 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
- 	dev->has_tv_tuner = in_type_counter[TV];
- 
- 	/* do we have a tuner? */
--	has_tuner = ((dev->has_vid_cap || dev->has_vbi_cap) && in_type_counter[TV]) ||
--		    dev->has_radio_rx || dev->has_sdr_cap;
-+	*has_tuner = ((dev->has_vid_cap || dev->has_vbi_cap) && in_type_counter[TV]) ||
-+		      dev->has_radio_rx || dev->has_sdr_cap;
- 
- 	/* do we have a modulator? */
--	has_modulator = dev->has_radio_tx;
-+	*has_modulator = dev->has_radio_tx;
- 
- 	if (dev->has_vid_cap)
- 		/* do we have a framebuffer for overlay testing? */
- 		dev->has_fb = node_type & 0x10000;
- 
- 	/* can we do crop/compose/scaling while capturing? */
--	if (no_error_inj && ccs_cap == -1)
--		ccs_cap = 7;
-+	if (no_error_inj && *ccs_cap == -1)
-+		*ccs_cap = 7;
- 
- 	/* if ccs_cap == -1, then the user can select it using controls */
--	if (ccs_cap != -1) {
--		dev->has_crop_cap = ccs_cap & 1;
--		dev->has_compose_cap = ccs_cap & 2;
--		dev->has_scaler_cap = ccs_cap & 4;
-+	if (*ccs_cap != -1) {
-+		dev->has_crop_cap = *ccs_cap & 1;
-+		dev->has_compose_cap = *ccs_cap & 2;
-+		dev->has_scaler_cap = *ccs_cap & 4;
- 		v4l2_info(&dev->v4l2_dev, "Capture Crop: %c Compose: %c Scaler: %c\n",
- 			dev->has_crop_cap ? 'Y' : 'N',
- 			dev->has_compose_cap ? 'Y' : 'N',
-@@ -1025,14 +981,14 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
- 	}
- 
- 	/* can we do crop/compose/scaling with video output? */
--	if (no_error_inj && ccs_out == -1)
--		ccs_out = 7;
-+	if (no_error_inj && *ccs_out == -1)
-+		*ccs_out = 7;
- 
- 	/* if ccs_out == -1, then the user can select it using controls */
--	if (ccs_out != -1) {
--		dev->has_crop_out = ccs_out & 1;
--		dev->has_compose_out = ccs_out & 2;
--		dev->has_scaler_out = ccs_out & 4;
-+	if (*ccs_out != -1) {
-+		dev->has_crop_out = *ccs_out & 1;
-+		dev->has_compose_out = *ccs_out & 2;
-+		dev->has_scaler_out = *ccs_out & 4;
- 		v4l2_info(&dev->v4l2_dev, "Output Crop: %c Compose: %c Scaler: %c\n",
- 			dev->has_crop_out ? 'Y' : 'N',
- 			dev->has_compose_out ? 'Y' : 'N',
-@@ -1042,7 +998,66 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
- 	/* do we create a touch capture device */
- 	dev->has_touch_cap = node_type & 0x80000;
- 
--	/* end detecting feature set */
++static int vivid_create_queues(struct vivid_dev *dev)
++{
++	int ret;
++
++	/* start creating the vb2 queues */
++	if (dev->has_vid_cap) {
++		/* initialize vid_cap queue */
++		ret = vivid_create_queue(dev, &dev->vb_vid_cap_q,
++					 V4L2_BUF_TYPE_VIDEO_CAPTURE, 2,
++					 &vivid_vid_cap_qops);
++		if (ret)
++			return ret;
++	}
++
++	if (dev->has_vid_out) {
++		/* initialize vid_out queue */
++		ret = vivid_create_queue(dev, &dev->vb_vid_out_q,
++					 V4L2_BUF_TYPE_VIDEO_OUTPUT, 2,
++					 &vivid_vid_out_qops);
++		if (ret)
++			return ret;
++	}
++
++	if (dev->has_vbi_cap) {
++		/* initialize vbi_cap queue */
++		ret = vivid_create_queue(dev, &dev->vb_vbi_cap_q,
++					 V4L2_BUF_TYPE_VBI_CAPTURE, 2,
++					 &vivid_vbi_cap_qops);
++		if (ret)
++			return ret;
++	}
++
++	if (dev->has_vbi_out) {
++		/* initialize vbi_out queue */
++		ret = vivid_create_queue(dev, &dev->vb_vbi_out_q,
++					 V4L2_BUF_TYPE_VBI_OUTPUT, 2,
++					 &vivid_vbi_out_qops);
++		if (ret)
++			return ret;
++	}
++
++	if (dev->has_sdr_cap) {
++		/* initialize sdr_cap queue */
++		ret = vivid_create_queue(dev, &dev->vb_sdr_cap_q,
++					 V4L2_BUF_TYPE_SDR_CAPTURE, 8,
++					 &vivid_sdr_cap_qops);
++		if (ret)
++			return ret;
++	}
++
++	if (dev->has_meta_cap) {
++		/* initialize meta_cap queue */
++		ret = vivid_create_queue(dev, &dev->vb_meta_cap_q,
++					 V4L2_BUF_TYPE_META_CAPTURE, 2,
++					 &vivid_meta_cap_qops);
++		if (ret)
++			return ret;
++	}
++
++	if (dev->has_meta_out) {
++		/* initialize meta_out queue */
++		ret = vivid_create_queue(dev, &dev->vb_meta_out_q,
++					 V4L2_BUF_TYPE_META_OUTPUT, 1,
++					 &vivid_meta_out_qops);
++		if (ret)
++			return ret;
++	}
++
++	if (dev->has_touch_cap) {
++		/* initialize touch_cap queue */
++		ret = vivid_create_queue(dev, &dev->vb_touch_cap_q,
++					 V4L2_BUF_TYPE_VIDEO_CAPTURE, 1,
++					 &vivid_touch_cap_qops);
++		if (ret)
++			return ret;
++	}
++
++	if (dev->has_fb) {
++		/* Create framebuffer for testing capture/output overlay */
++		ret = vivid_fb_init(dev);
++		if (ret)
++			return ret;
++		v4l2_info(&dev->v4l2_dev, "Framebuffer device registered as fb%d\n",
++			  dev->fb_info.node);
++	}
 +	return 0;
 +}
-+
-+static int vivid_create_instance(struct platform_device *pdev, int inst)
-+{
-+	static const struct v4l2_dv_timings def_dv_timings =
-+					V4L2_DV_BT_CEA_1280X720P60;
-+	unsigned in_type_counter[4] = { 0, 0, 0, 0 };
-+	unsigned out_type_counter[4] = { 0, 0, 0, 0 };
-+	int ccs_cap = ccs_cap_mode[inst];
-+	int ccs_out = ccs_out_mode[inst];
-+	bool has_tuner;
-+	bool has_modulator;
-+	struct vivid_dev *dev;
-+	struct video_device *vfd;
-+	unsigned node_type = node_types[inst];
-+	v4l2_std_id tvnorms_cap = 0, tvnorms_out = 0;
-+	int ret;
-+	int i;
-+#ifdef CONFIG_VIDEO_VIVID_CEC
-+	unsigned int cec_tx_bus_cnt = 0;
-+#endif
-+
-+	/* allocate main vivid state structure */
-+	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-+	if (!dev)
-+		return -ENOMEM;
-+
-+	dev->inst = inst;
-+
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	dev->v4l2_dev.mdev = &dev->mdev;
-+
-+	/* Initialize media device */
-+	strscpy(dev->mdev.model, VIVID_MODULE_NAME, sizeof(dev->mdev.model));
-+	snprintf(dev->mdev.bus_info, sizeof(dev->mdev.bus_info),
-+		 "platform:%s-%03d", VIVID_MODULE_NAME, inst);
-+	dev->mdev.dev = &pdev->dev;
-+	media_device_init(&dev->mdev);
-+	dev->mdev.ops = &vivid_media_ops;
-+#endif
-+
-+	/* register v4l2_device */
-+	snprintf(dev->v4l2_dev.name, sizeof(dev->v4l2_dev.name),
-+			"%s-%03d", VIVID_MODULE_NAME, inst);
-+	ret = v4l2_device_register(&pdev->dev, &dev->v4l2_dev);
-+	if (ret) {
-+		kfree(dev);
-+		return ret;
-+	}
-+	dev->v4l2_dev.release = vivid_dev_release;
-+
-+	ret = vivid_detect_feature_set(dev, inst, node_type,
-+				       &has_tuner, &has_modulator,
-+				       &ccs_cap, &ccs_out,
-+				       in_type_counter, out_type_counter);
-+	if (ret) {
-+		kfree(dev);
-+		return ret;
-+	}
  
- 	if (dev->has_vid_cap) {
- 		/* set up the capabilities of the video capture device */
+ static int vivid_create_instance(struct platform_device *pdev, int inst)
+ {
+@@ -1399,8 +1486,8 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
+ 	 * Same as create_singlethread_workqueue, but now I can use the
+ 	 * string formatting of alloc_ordered_workqueue.
+ 	 */
+-	dev->cec_workqueue =
+-		alloc_ordered_workqueue("vivid-%03d-cec", WQ_MEM_RECLAIM, inst);
++	dev->cec_workqueue = alloc_ordered_workqueue("vivid-%03d-cec",
++						     WQ_MEM_RECLAIM, inst);
+ 	if (!dev->cec_workqueue) {
+ 		ret = -ENOMEM;
+ 		goto unreg_dev;
+@@ -1409,87 +1496,9 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
+ 	if (allocators[inst] == 1)
+ 		dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+ 
+-	/* start creating the vb2 queues */
+-	if (dev->has_vid_cap) {
+-		/* initialize vid_cap queue */
+-		ret = vivid_create_queue(dev, &dev->vb_vid_cap_q,
+-					 V4L2_BUF_TYPE_VIDEO_CAPTURE, 2,
+-					 &vivid_vid_cap_qops);
+-		if (ret)
+-			goto unreg_dev;
+-	}
+-
+-	if (dev->has_vid_out) {
+-		/* initialize vid_out queue */
+-		ret = vivid_create_queue(dev, &dev->vb_vid_out_q,
+-					 V4L2_BUF_TYPE_VIDEO_OUTPUT, 2,
+-					 &vivid_vid_out_qops);
+-		if (ret)
+-			goto unreg_dev;
+-	}
+-
+-	if (dev->has_vbi_cap) {
+-		/* initialize vbi_cap queue */
+-		ret = vivid_create_queue(dev, &dev->vb_vbi_cap_q,
+-					 V4L2_BUF_TYPE_VBI_CAPTURE, 2,
+-					 &vivid_vbi_cap_qops);
+-		if (ret)
+-			goto unreg_dev;
+-	}
+-
+-	if (dev->has_vbi_out) {
+-		/* initialize vbi_out queue */
+-		ret = vivid_create_queue(dev, &dev->vb_vbi_out_q,
+-					 V4L2_BUF_TYPE_VBI_OUTPUT, 2,
+-					 &vivid_vbi_out_qops);
+-		if (ret)
+-			goto unreg_dev;
+-	}
+-
+-	if (dev->has_sdr_cap) {
+-		/* initialize sdr_cap queue */
+-		ret = vivid_create_queue(dev, &dev->vb_sdr_cap_q,
+-					 V4L2_BUF_TYPE_SDR_CAPTURE, 8,
+-					 &vivid_sdr_cap_qops);
+-		if (ret)
+-			goto unreg_dev;
+-	}
+-
+-	if (dev->has_meta_cap) {
+-		/* initialize meta_cap queue */
+-		ret = vivid_create_queue(dev, &dev->vb_meta_cap_q,
+-					 V4L2_BUF_TYPE_META_CAPTURE, 2,
+-					 &vivid_meta_cap_qops);
+-		if (ret)
+-			goto unreg_dev;
+-	}
+-
+-	if (dev->has_meta_out) {
+-		/* initialize meta_out queue */
+-		ret = vivid_create_queue(dev, &dev->vb_meta_out_q,
+-					 V4L2_BUF_TYPE_META_OUTPUT, 1,
+-					 &vivid_meta_out_qops);
+-		if (ret)
+-			goto unreg_dev;
+-	}
+-
+-	if (dev->has_touch_cap) {
+-		/* initialize touch_cap queue */
+-		ret = vivid_create_queue(dev, &dev->vb_touch_cap_q,
+-					 V4L2_BUF_TYPE_VIDEO_CAPTURE, 1,
+-					 &vivid_touch_cap_qops);
+-		if (ret)
+-			goto unreg_dev;
+-	}
+-
+-	if (dev->has_fb) {
+-		/* Create framebuffer for testing capture/output overlay */
+-		ret = vivid_fb_init(dev);
+-		if (ret)
+-			goto unreg_dev;
+-		v4l2_info(&dev->v4l2_dev, "Framebuffer device registered as fb%d\n",
+-			  dev->fb_info.node);
+-	}
++	ret = vivid_create_queues(dev);
++	if (ret)
++		goto unreg_dev;
+ 
+ #ifdef CONFIG_VIDEO_VIVID_CEC
+ 	if (dev->has_vid_cap && in_type_counter[HDMI]) {
 -- 
 2.26.2
 
