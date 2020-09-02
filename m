@@ -2,202 +2,149 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E73C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC7CC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B4AB208B3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78384208C7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:47:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXiCD4p1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="NqUyei0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728564AbgIBPrc (ORCPT
+        id S1728580AbgIBPrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:47:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgIBNbz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:31:55 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6696CC061245
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 06:21:32 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id n3so2182791pjq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 06:21:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QqnE1mjS+I4FTToYrCF01Tknyh8nbuS0HjQ3DvAj0xw=;
-        b=ZXiCD4p1lUsT0bZRCCEYoZGItvSknNp0exOkzELJmz1TIQjcZmqGjB4j7wiVKc0SH6
-         0yEKtD874m9oFGzsu4s/HTOpURwgUIx6t1RJqbT+7TBc9hSFHpFjPDrJLpRo06izCRar
-         DL9j5wQZbsm9HHFr4eeHFLXi8V4vJ/+HfnuFdOykaqBuFLykHPLmL1cYjqHpFIDz2t22
-         ygMnszhybso7OvuDOMSfgctqy/UO1LrW+YQt5RXyp9Lf6bErZ2rdRSW82RN0Vt0Nwb5k
-         e4B1jTK+8GgWLspb39iRfUFzoyBgzz0PSCq+pK3fHMucY0kP1O/nAmZadowB6vSkGaHN
-         NIQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=QqnE1mjS+I4FTToYrCF01Tknyh8nbuS0HjQ3DvAj0xw=;
-        b=WAq4Raf9CI3CaJm9fL+XjEkfVlc0zXWOcKkTCnM/OE913w5rSQenXZcTLhWCyvwjeC
-         b55SnBc5Rbvd5EQZJf9DD1FUf4qTSSEhhcLLO8sQ0PIXjPFFoQ/m+6dFujHCPwrO5YfX
-         U00/3Cr/grD2NJu7Sotc9WDEW/BfZgeTkoMxl8BY3Ctss1nozFi6rUceDhCOTsPoNWYj
-         cAiwxr2Ad5mz/L7VS6zGyWaALbQrHUeOZv750UtWw3UWmdDUUZQpKaAc9f90NnAYiAQR
-         nzO5sifW3M4dfi0B99sxj0Tz9ANGqEKjtr3VMEUgmMVadaKmqA2u4wxH7BD4QgimvKCo
-         XzjQ==
-X-Gm-Message-State: AOAM530NQnjXOTPZvXeAVzuG2E4uoJorbUFDnRQcK/c9grb9DBnfqa0a
-        CGBRojVwgxhf6NU1PPEkKqpV9KiGvto=
-X-Google-Smtp-Source: ABdhPJwu9F6G1e7nNgGx3JhPwduWrQzLJUG0NDK0txYyjtnvOQizMo+j1yn2yJDI8yO9Y30EouT70A==
-X-Received: by 2002:a17:902:8203:: with SMTP id x3mr2059327pln.166.1599052891941;
-        Wed, 02 Sep 2020 06:21:31 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u22sm5203555pgi.85.2020.09.02.06.21.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 06:21:31 -0700 (PDT)
-Subject: Re: [PATCH v2 11/11] lockdep,trace: Expose tracepoints
-To:     peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org,
-        npiggin@gmail.com, elver@google.com, jgross@suse.com,
-        paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
-        joel@joelfernandes.org, svens@linux.ibm.com, tglx@linutronix.de
-References: <20200821084738.508092956@infradead.org>
- <20200821085348.782688941@infradead.org>
- <20200902035146.GA45826@roeck-us.net>
- <20200902072432.GI2674@hirez.programming.kicks-ass.net>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <44e1d3a7-3cd5-8fa8-7fb2-f82b83a019d7@roeck-us.net>
-Date:   Wed, 2 Sep 2020 06:21:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200902072432.GI2674@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 2 Sep 2020 11:47:37 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:55958 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727115AbgIBNb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:31:56 -0400
+IronPort-SDR: ynhBwUvpTDAdxSmhtK0/tq1se06C30r7rSzdg+m1Dczrxvhg6XmwcqpywYWKHseuZyuwsGLGcR
+ /NlMEV59mcXRomai5W34hck4enUyq1HQNOTBa63VpRqUvksGnCVhVz5hOsuPYx8XKwrUGVkmk+
+ CzcYtsGqAK17X2hO+72ulHQSUy8ycgCoF9CdbSjbgRZO+A8yw3F0/+a+2dGKOt+BOdZFOGWaqA
+ 69eQOY+2frKVsx8W9tim6HbdhsUTebtWQamrh+30j/7lhwNB8bAdAogIQBh1f5ZsNNcP6FgtEl
+ 04c=
+X-IronPort-AV: E=Sophos;i="5.76,383,1592863200"; 
+   d="scan'208";a="13702691"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 02 Sep 2020 15:30:59 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Wed, 02 Sep 2020 15:30:59 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Wed, 02 Sep 2020 15:30:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1599053459; x=1630589459;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=PAWy/HPTCyiBJJXehMsiFyv52ASflEFQdfpXpet28Os=;
+  b=NqUyei0uz8oLf9ls68yFwPth03LLEbAkbI3FiUA02HLIOz+TiKPj5r3i
+   FbWMYFnPm/ory+OGOZpVLoSKMV6TnUEErbpnI6GM9+IRiNBrcL4/MKgwh
+   g0D9+I/NiMyfoPbr/KdrQ2Fl9+ibCfnGulYJ26gkJGuTl40zHaCUDK1xX
+   FHmb7xdFQ4K+U1LdDfmzWy5ToI1ddNGcHcJDruuul0YXBJHgNr+siVUH5
+   NiNhUzl0I4YsMUwVRIvi2GNnVx7EOcl6BMsnkxhP0IXOMY371mHLBt4/B
+   9SwlcPHnVf1kxw8AT2cRmrLbqbI2PZWtddhfteW8o2WPlTtp/t4YoUgYr
+   g==;
+IronPort-SDR: rWvoANrAZeIWQdiwCcblue0yI4e69UUmziRI7o7snFdUsgH1nSIycvETIf39GW6hBfLsZ3qlVQ
+ bVYBQFfU5xw/f/ahP82HTYq8rzXJwzcRixKrMTUQ87/OL3gydHh/koOuM32nDiMKD6szZQjoja
+ F1TbeFqK63RGbC76gImMYscHjVR1qXygpoJb3MPG8MssHpSQTwmSOmC3WDf0ISIXIy1ZqmgINS
+ pZ7gKl1UbSVw7NIn/XKHZAic8C28AbaJUht0hvoq1CBXHx5ybGKlElLXcgqAl40sdOv8JJSg20
+ m0E=
+X-IronPort-AV: E=Sophos;i="5.76,383,1592863200"; 
+   d="scan'208";a="13702689"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 02 Sep 2020 15:30:59 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 2FB3D280070;
+        Wed,  2 Sep 2020 15:30:59 +0200 (CEST)
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH 2/2] ASoC: codec: tlv320aic32x4: do software reset before clock registration
+Date:   Wed,  2 Sep 2020 15:30:43 +0200
+Message-Id: <20200902133043.19504-2-matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200902133043.19504-1-matthias.schiffer@ew.tq-group.com>
+References: <20200902133043.19504-1-matthias.schiffer@ew.tq-group.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 12:24 AM, peterz@infradead.org wrote:
-> On Tue, Sep 01, 2020 at 08:51:46PM -0700, Guenter Roeck wrote:
->> On Fri, Aug 21, 2020 at 10:47:49AM +0200, Peter Zijlstra wrote:
->>> The lockdep tracepoints are under the lockdep recursion counter, this
->>> has a bunch of nasty side effects:
->>>
->>>  - TRACE_IRQFLAGS doesn't work across the entire tracepoint
->>>
->>>  - RCU-lockdep doesn't see the tracepoints either, hiding numerous
->>>    "suspicious RCU usage" warnings.
->>>
->>> Pull the trace_lock_*() tracepoints completely out from under the
->>> lockdep recursion handling and completely rely on the trace level
->>> recusion handling -- also, tracing *SHOULD* not be taking locks in any
->>> case.
->>>
->>
->> Wonder what is worse - the problem or its fix. This patch results in
->> a number of WARNING backtraces for several archtectures/platforms.
->> Reverting it fixes the problems.
-> 
-> Without all this there was a recursion that could crash. But yes,
-> tedious.
-> 
-> OTOH the warnings are about real bugs that were pre-existing, we now see
-> them and can fix them.
-> 
-> I'll reply to ARM separately, but let's have a peek at s390.
-> 
->> s390:
->>
->> [   19.490586] =============================
->> [   19.490752] WARNING: suspicious RCU usage
->> [   19.490921] 5.9.0-rc3 #1 Not tainted
->> [   19.491086] -----------------------------
->> [   19.491253] include/trace/events/lock.h:37 suspicious rcu_dereference_check() usage!
-> 
->> [   19.493147]  [<00000000001d5de2>] lock_acquire+0x41a/0x498
->> [   19.493320]  [<0000000000103b72>] enabled_wait+0xca/0x198
->> [   19.493493]  [<0000000000103f80>] arch_cpu_idle+0x20/0x38
-> 
-> Does this help?
-> 
-> ---
-> 
-> diff --git a/arch/s390/kernel/idle.c b/arch/s390/kernel/idle.c
-> index c73f50649e7e..f7f1e64e0d98 100644
-> --- a/arch/s390/kernel/idle.c
-> +++ b/arch/s390/kernel/idle.c
-> @@ -39,14 +39,13 @@ void enabled_wait(void)
->  	local_irq_restore(flags);
->  
->  	/* Account time spent with enabled wait psw loaded as idle time. */
-> -	/* XXX seqcount has tracepoints that require RCU */
-> -	write_seqcount_begin(&idle->seqcount);
-> +	raw_write_seqcount_begin(&idle->seqcount);
->  	idle_time = idle->clock_idle_exit - idle->clock_idle_enter;
->  	idle->clock_idle_enter = idle->clock_idle_exit = 0ULL;
->  	idle->idle_time += idle_time;
->  	idle->idle_count++;
->  	account_idle_time(cputime_to_nsecs(idle_time));
-> -	write_seqcount_end(&idle->seqcount);
-> +	raw_write_seqcount_end(&idle->seqcount);
->  }
->  NOKPROBE_SYMBOL(enabled_wait);
->  
+To avoid the actual PLL settings to differ from the state expected by
+the clock driver, the codec should only be fully reset before the clocks
+are registered. But we also need to ensure that the software reset
+happens at all before clock registration, as not all boards have a reset
+GPIO.
 
-Yes, it does.
+Move the software reset from aic32x4_component_probe() to
+aic32x4_probe() and reorder the reset and registration sequence:
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+1. Reset via GPIO (if available)
+2. Reset via software
+3. Register component
+4. Register clocks
 
-Guenter
+Note that aic32x4_component_probe() is only called after aic32x4_probe()
+has finished, so the reset in aic32x4_component_probe() was happening too
+late.
+
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+---
+ sound/soc/codecs/tlv320aic32x4.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
+index a45fb496082c..470dc0ef0359 100644
+--- a/sound/soc/codecs/tlv320aic32x4.c
++++ b/sound/soc/codecs/tlv320aic32x4.c
+@@ -981,8 +981,6 @@ static int aic32x4_component_probe(struct snd_soc_component *component)
+ 	if (ret)
+ 		return ret;
+ 
+-	snd_soc_component_write(component, AIC32X4_RESET, 0x01);
+-
+ 	if (aic32x4->setup)
+ 		aic32x4_setup_gpios(component);
+ 
+@@ -1226,6 +1224,16 @@ int aic32x4_probe(struct device *dev, struct regmap *regmap)
+ 		return ret;
+ 	}
+ 
++	if (gpio_is_valid(aic32x4->rstn_gpio)) {
++		ndelay(10);
++		gpio_set_value_cansleep(aic32x4->rstn_gpio, 1);
++		mdelay(1);
++	}
++
++	ret = regmap_write(regmap, AIC32X4_RESET, 0x01);
++	if (ret)
++		goto err_disable_regulators;
++
+ 	ret = devm_snd_soc_register_component(dev,
+ 			&soc_component_dev_aic32x4, &aic32x4_dai, 1);
+ 	if (ret) {
+@@ -1233,12 +1241,6 @@ int aic32x4_probe(struct device *dev, struct regmap *regmap)
+ 		goto err_disable_regulators;
+ 	}
+ 
+-	if (gpio_is_valid(aic32x4->rstn_gpio)) {
+-		ndelay(10);
+-		gpio_set_value_cansleep(aic32x4->rstn_gpio, 1);
+-		mdelay(1);
+-	}
+-
+ 	ret = aic32x4_register_clocks(dev, aic32x4->mclk_name);
+ 	if (ret)
+ 		goto err_disable_regulators;
+-- 
+2.17.1
+
