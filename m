@@ -2,117 +2,116 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7D2C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58119C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03D2E20767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308C220767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:57:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oryep4f/"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="maRen52V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgIBT4w (ORCPT
+        id S1727004AbgIBT5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 15:56:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34752 "EHLO
+        Wed, 2 Sep 2020 15:57:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgIBT4r (ORCPT
+        with ESMTP id S1726968AbgIBT5l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 15:56:47 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5854C061244;
-        Wed,  2 Sep 2020 12:56:47 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id np15so2608226pjb.0;
-        Wed, 02 Sep 2020 12:56:47 -0700 (PDT)
+        Wed, 2 Sep 2020 15:57:41 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22DC9C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 12:57:41 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id j10so183545qvk.11
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 12:57:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=kuKGy0nMzCedIxYfbaeRSNCf0OjAifTH7DorC8oMLIc=;
-        b=Oryep4f/il09PEeRvkAzCa5yEamHX3IfI4haHnZFqft2sDVyMzWOa2oW6q5r7iV5cP
-         4WT9+KMNL0+EhJccY9W2L8b8ZRNf5/yo2w1W4WhJ8XUROyxfdUB59D07znI18+pINr/N
-         BcNZBzI0Gy8lVLdV6hEaC0yuvFtHvvTjC55K9Sa9xT2q7JBJXf2m3p90Sa3cB7/q91y0
-         ceFFSnakSGrgS6Uk+aqsVKfyHoIJd+8xJXzN2S5xseiX/Z3zDW4R94HHyVGEN+V6jqOz
-         ByLYj8x/gERQejNbUXCouYpjDKb2Tvtc67e8dxDbrAFFi+bTIhE6bVbxm/6YTah8KX7G
-         xOWA==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GvfTb4Ukg4eRdTfVxDoeOFtlOK7caIxpUoVhsrSJNME=;
+        b=maRen52VTm0wyWAEpZ/yQqgL+ekrkSonuUlxs/DRhPm2NSJk8pJsxABr+8gFZkramm
+         udpBGDXt0itgVjM6xvA4f1TAuK+5UWmH21cZxvA4Rlan4lv6dQxeUJDR+QkoDV6ruvQN
+         lIQcIk0asoiZyx+LBevV81cJ21B84/0NqhFo3qTOYbRsfmjgGOm2v2B/rS2ziupKYry4
+         lxGF5rYqh/vNzsfLo9msR64aIGidn5j6VQhrxKLS5+o49R0IulsNg4veF8DBaFY5VkgC
+         LS7+okBbJlUwLeFymf+ihx7wNF9ECOAoKR1HL4KFshgNvGY2AgrPc925I5coEX+EqtEW
+         Q+TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kuKGy0nMzCedIxYfbaeRSNCf0OjAifTH7DorC8oMLIc=;
-        b=KwuTkCAP5jj1LePyWciFHCHs4MqJq/x9RNvBHXSdGTlCLufgQyfCT2LvOkuCTWqiKY
-         6B6/vliucj2x94poi/u72SWQiwUF2IIdC+x5UX2IeYqNeqvJaxIcBRVrzI3Qgof0iaNO
-         t0c+wfKYFY6Tp367JtX6nIBRI/yvAM3UyvHrI3vK0I0j+VgSSjG/+Hq2zSV9bJ1U/yTX
-         4Nac2ncxdCqy4PRhG7WayvS9gL6m/BCCxUSO98YFH5eXE+432aZlqQaokymW5sET2+hB
-         7ZnZ9XCCbVhfkzVoDEhjQK96N2J+XwKQlOu48IrBcmBpEtndhVZjAQDWfsEdWhyEONJ/
-         mSvw==
-X-Gm-Message-State: AOAM530xg2dH+nhKMEbfjEENKlVKSxrjWvDVfc8t4SSoTUzpLhLJgQE0
-        ClK3vG9pxr8KYO15NM98v2b3vofehNQ=
-X-Google-Smtp-Source: ABdhPJyEGSaG8BPaN9z2skZyEo+FUnajjLrY5nUupDll1Zmgpd/sTj0J5IIHRSDG1t8oto5PtF2n8Q==
-X-Received: by 2002:a17:902:d213:: with SMTP id t19mr111855ply.46.1599076606592;
-        Wed, 02 Sep 2020 12:56:46 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id t20sm225492pjg.21.2020.09.02.12.56.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 12:56:45 -0700 (PDT)
-Subject: Re: [PATCH 01/11] mmc: bcm2835: Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-tegra@vger.kernel.org
-References: <20200902193658.20539-1-krzk@kernel.org>
- <20200902193658.20539-2-krzk@kernel.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <03ecf673-908c-823e-484b-7c442ad16621@gmail.com>
-Date:   Wed, 2 Sep 2020 12:56:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.1.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GvfTb4Ukg4eRdTfVxDoeOFtlOK7caIxpUoVhsrSJNME=;
+        b=nZA6HnBq5RGh22UKxccE02ldqkkccgSNG023bKDtWLqR2CTHWUBpjvZ0l33VC9WW9r
+         UphLRKXdtBBPFvxsLzV7kBCmBN+1ri39paJa9hOzXWV8yN8rtE6MrThSaf8LsvV4VLxf
+         QpJXhvtXK0t7ejckEyQxvCxzF7GPUKnCogr0TPMk1qBs5amN30BzlB7iQekgspQEQ0/n
+         2sMFDv3ZSRDZZTq8yscefCzFxALMU/PiCWoPzyPGEGRp4JlLbMt1dkKeph792PG0V87H
+         zhGC5Pbkirq2fHCqwGgE1jkW5Mc+245DyB8wgL8ewOPNb2GqoMYcxyAQbVFNQE0gN1D/
+         Tbqw==
+X-Gm-Message-State: AOAM530RFXPwxh9e1D20zIzc35PSqqmxbCuUmYVfZNzluevp+0U4ki0t
+        Yp+krffQfQzDgtHJaxFnyI8DQg==
+X-Google-Smtp-Source: ABdhPJxfwT9NmGMEK0ziwhKHyFx6LE3R67e7mvrI7pfZ6XNSJjy0TEfEwKf4DP9bDtwS6q+bT7Eedg==
+X-Received: by 2002:ad4:4890:: with SMTP id bv16mr8542219qvb.148.1599076660399;
+        Wed, 02 Sep 2020 12:57:40 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id c1sm331693qta.86.2020.09.02.12.57.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 12:57:39 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kDYt1-0065rX-4P; Wed, 02 Sep 2020 16:57:39 -0300
+Date:   Wed, 2 Sep 2020 16:57:39 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Zi Yan <ziy@nvidia.com>
+Cc:     linux-mm@kvack.org, Roman Gushchin <guro@fb.com>,
+        Rik van Riel <riel@surriel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Nellans <dnellans@nvidia.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
+Message-ID: <20200902195739.GI24045@ziepe.ca>
+References: <20200902180628.4052244-1-zi.yan@sent.com>
+ <20200902184053.GF24045@ziepe.ca>
+ <E78A0F18-223C-44A8-BCBA-73CF7AF6F8A5@nvidia.com>
+ <20200902184852.GH24045@ziepe.ca>
+ <C5EFA1CC-311C-47D5-9506-D087D9AE58D1@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200902193658.20539-2-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <C5EFA1CC-311C-47D5-9506-D087D9AE58D1@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/2/2020 12:36 PM, Krzysztof Kozlowski wrote:
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and the error value gets printed.
+On Wed, Sep 02, 2020 at 03:05:39PM -0400, Zi Yan wrote:
+> On 2 Sep 2020, at 14:48, Jason Gunthorpe wrote:
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > On Wed, Sep 02, 2020 at 02:45:37PM -0400, Zi Yan wrote:
+> >
+> >>> Surprised this doesn't touch mm/pagewalk.c ?
+> >>
+> >> 1GB PUD page support is present for DAX purpose, so the code is there
+> >> in mm/pagewalk.c already. I only needed to supply ops->pud_entry when using
+> >> the functions in mm/pagewalk.c. :)
+> >
+> > Yes, but doesn't this change what is possible under the mmap_sem
+> > without the page table locks?
+> >
+> > ie I would expect some thing like pmd_trans_unstable() to be required
+> > as well for lockless walkers. (and I don't think the pmd code is 100%
+> > right either)
+> >
+> 
+> Right. I missed that. Thanks for pointing it out.
+> The code like this, right?
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Technically all those *pud's are racy too, the design here with the
+_unstable function call always seemed weird. I strongly suspect it
+should mirror how get_user_pages_fast works for lockless walking
+
+Jason
