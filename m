@@ -2,150 +2,228 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA7DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C69620773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C06320773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnk+c8Bq"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QTo5QbZD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgIBQPD (ORCPT
+        id S1728795AbgIBQPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728419AbgIBQOe (ORCPT
+        Wed, 2 Sep 2020 12:15:14 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58366 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728787AbgIBQOa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:14:34 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA27C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 09:14:33 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id o64so155603qkb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 09:14:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Wfu3+LD5LYR9xjUm060ljmpR4bdkzzrekUkQirlGcak=;
-        b=rnk+c8BqbbNLwwgHLjq5yKxsCA5qTHCSv2hR5J9gD4gXNVpnQzsC4j0nmhXJMyN+e8
-         V0rnrO+dFhaeScv09/+jFTIxjtTNc4gTQc8Cjgiuk6dBCHZQkHWJQExFqhcxvX5bRPC/
-         Z6YKot23H3CmMguddd9Obby1nOSTHen+P3d2CFt6TTlU5FVYRBYJOIq9vyULNKVpxZuy
-         KNzNKOyltmRdGWHL390JxqkPka7ub/0DEn1R/ZiCqgt46Ypi+E322K+Uxrgn1XqNypsG
-         CsXQC7AeKJ3WDkgyewAwEBr+rG/x7pSjBFi5S6JpO8A3CtUAzB5dqZ+vA9J2ofado0Nm
-         Nayg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=Wfu3+LD5LYR9xjUm060ljmpR4bdkzzrekUkQirlGcak=;
-        b=syJN33/mIsGU3wg7X3M4lQoJ62c44/lvevOUug+oPX9m3tG2WwWNEiAub/RSCRDD9F
-         h7zoejDggQdPXYf0q4+I953e585fTuVLyDOTtIQ3a1mA8u7++cdGNrAa+dr3xAau05mz
-         LuXSX+GxSHVKkQkbnpzGYIwB+2z/FXEn3JNz/FvQOZ3zX5ODZv/PX68VzVeiO2Gljvk4
-         wEtRxp0XFSNYcEDMSIpzHnABXSuKkccrE8gXvhMfGJtjsSrAdFzLA6fbKXl4LaAeL62K
-         qwB2hQtPsnUOa4Xp9boL8ebU2nqmUvwrXNdEtDIfwFWO5b9kEHvDyXUaaAHsxrXgGGxi
-         /OKg==
-X-Gm-Message-State: AOAM531jOAzMj2+WXCBfFSH3sXFq7tM/BJwIcL0NrjFNEio8Q2u9V8Sz
-        K5pJ9FYZflA0iJRg9Cxe5Q8=
-X-Google-Smtp-Source: ABdhPJz++BESwCj61Ss6UGWLqP9WWYdFuX2daonTAihLYQDmW6SbzW2KWN22eNPI/JY/Rmham54+hw==
-X-Received: by 2002:a37:9945:: with SMTP id b66mr7728406qke.51.1599063272786;
-        Wed, 02 Sep 2020 09:14:32 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id v39sm5180655qtv.47.2020.09.02.09.14.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 09:14:32 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 2 Sep 2020 12:14:29 -0400
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Arvind Sankar' <nivedita@alum.mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Will Deacon <will@kernel.org>,
-        "nadav.amit@gmail.com" <nadav.amit@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH v2] x86/asm: Replace __force_order with memory clobber
-Message-ID: <20200902161429.GB3297881@rani.riverdale.lan>
-References: <20200823212550.3377591-1-nivedita@alum.mit.edu>
- <20200902153346.3296117-1-nivedita@alum.mit.edu>
- <55a35a3d8fba417aabe63ad13d519198@AcuMS.aculab.com>
+        Wed, 2 Sep 2020 12:14:30 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082GEPQr073331;
+        Wed, 2 Sep 2020 11:14:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599063265;
+        bh=4U7Tu8S2YkBMp3KG+c8+MCT2MzCWjUpLKKMSrOYYYxM=;
+        h=Subject:From:To:References:Date:In-Reply-To;
+        b=QTo5QbZDftQm6jP/nsTVN6ecuOH/jU5c7msRq3f8CHmxu7ImZHH/9hxWYMmHxP2nO
+         MSa3rts5Pg8HV+/3xzzmUzshu41/d/9VcwAG63IVoMY/OwxGGuZ+2WONZXgmXD7602
+         KTBArZFsQw64bNvTHb7ic4UFemiOdmcty6kqY1Qk=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082GEOT0004597;
+        Wed, 2 Sep 2020 11:14:25 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
+ 2020 11:14:24 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 2 Sep 2020 11:14:24 -0500
+Received: from [10.250.53.226] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082GENJk010402;
+        Wed, 2 Sep 2020 11:14:23 -0500
+Subject: Re: [PATCH net-next 0/1] Support for VLAN interface over HSR/PRP
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <nsekhar@ti.com>,
+        <grygorii.strashko@ti.com>
+References: <20200901195415.4840-1-m-karicheri2@ti.com>
+Message-ID: <d93fbc54-1721-ebec-39ca-dc8b45e6e534@ti.com>
+Date:   Wed, 2 Sep 2020 12:14:23 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <55a35a3d8fba417aabe63ad13d519198@AcuMS.aculab.com>
+In-Reply-To: <20200901195415.4840-1-m-karicheri2@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 03:58:38PM +0000, David Laight wrote:
-> From: Arvind Sankar
-> > Sent: 02 September 2020 16:34
-> > 
-> > The CRn accessor functions use __force_order as a dummy operand to
-> > prevent the compiler from reordering the inline asm.
-> > 
-> > The fact that the asm is volatile should be enough to prevent this
-> > already, however older versions of GCC had a bug that could sometimes
-> > result in reordering. This was fixed in 8.1, 7.3 and 6.5. Versions prior
-> > to these, including 5.x and 4.9.x, may reorder volatile asm.
-> > 
-> > There are some issues with __force_order as implemented:
-> > - It is used only as an input operand for the write functions, and hence
-> >   doesn't do anything additional to prevent reordering writes.
-> > - It allows memory accesses to be cached/reordered across write
-> >   functions, but CRn writes affect the semantics of memory accesses, so
-> >   this could be dangerous.
-> > - __force_order is not actually defined in the kernel proper, but the
-> >   LLVM toolchain can in some cases require a definition: LLVM (as well
-> >   as GCC 4.9) requires it for PIE code, which is why the compressed
-> >   kernel has a definition, but also the clang integrated assembler may
-> >   consider the address of __force_order to be significant, resulting in
-> >   a reference that requires a definition.
-> > 
-> > Fix this by:
-> > - Using a memory clobber for the write functions to additionally prevent
-> >   caching/reordering memory accesses across CRn writes.
-> > - Using a dummy input operand with an arbitrary constant address for the
-> >   read functions, instead of a global variable. This will prevent reads
-> >   from being reordered across writes, while allowing memory loads to be
-> >   cached/reordered across CRn reads, which should be safe.
-> 
-> How much does using a full memory clobber for the reads cost?
-> 
-> It would remove any chance that the compiler decides it needs to
-> get the address of the 'dummy' location into a register so that
-> it can be used as a memory reference in a generated instruction
-> (which is probably what was happening for PIE compiles).
-> 
-> 	David
-> 
+All,
 
-It doesn't cost much. When I tested it, the only differences were in
-startup code and sleep/hibernate/reboot code.
+On 9/1/20 3:54 PM, Murali Karicheri wrote:
+> This series add support for creating VLAN interface over HSR or
+> PRP interface. Typically industrial networks uses VLAN in
+> deployment and this capability is needed to support these
+> networks.
+> 
+> This is tested using two TI AM572x IDK boards connected back
+> to back over CPSW  ports (eth0 and eth1).
+> 
+> Following is the setup
+> 
+>                  Physical Setup
+>                  ++++++++++++++
+>                        
+>   _______________    (CPSW)     _______________
+>   |              |----eth0-----|               |
+>   |TI AM572x IDK1|             | TI AM572x IDK2|
+>   |______________|----eth1-----|_______________|
+> 
+> 
+>                  Network Topolgy
+>                  +++++++++++++++
+> 
+>                         TI AM571x IDK  TI AM572x IDK
+> 
+>                                    
+> 192.168.100.10                 CPSW ports                 192.168.100.20
+>               IDK-1                                        IDK-2
+> hsr0/prp0.100--| 192.168.2.10  |--eth0--| 192.168.2.20 |--hsr0/prp0.100
+>                 |----hsr0/prp0--|        |---hsr0/prp0--|
+> hsr0/prp0.101--|               |--eth1--|              |--hsr0/prp0/101
+> 
+> 192.168.101.10                                            192.168.101.20
+> 
+> Following tests:-
+>   - create hsr or prp interface and ping the interface IP address
+>     and verify ping is successful.
+>   - Create 2 VLANs over hsr or prp interface on both IDKs (VID 100 and
+>     101). Ping between the IP address of the VLAN interfaces
+>   - Do iperf UDP traffic test with server on one IDK and client on the
+>     other. Do this using 100 and 101 subnet IP addresses
+>   - Dump /proc/net/vlan/{hsr|prp}0.100 and verify frames are transmitted
+>     and received at these interfaces.
+>   - Delete the vlan and hsr/prp interface and verify interfaces are
+>     removed cleanly.
+> 
+> Logs for IDK-1 at https://pastebin.ubuntu.com/p/NxF83yZFDX/
+> Logs for IDK-2 at https://pastebin.ubuntu.com/p/YBXBcsPgVK/
+> 
+> Murali Karicheri (1):
+>    net: hsr/prp: add vlan support
+> 
+>   net/hsr/hsr_device.c  |  4 ----
+>   net/hsr/hsr_forward.c | 16 +++++++++++++---
+>   2 files changed, 13 insertions(+), 7 deletions(-)
+> 
+I am not sure if the packet flow is right for this?
 
-The compiler doesn't load 0x1000 into a register even for PIE code, the
-reason it was doing it with a real symbol is to go through the GOT.
+VLAN over HSR frame format is like this.
 
-Thanks.
+<Start of Frame><VLAN tag><HSR Tag><IP><CRC>
+
+My ifconfig stats shows both hsr and hsr0.100 interfaces receiving
+frames.
+
+So I did a WARN_ON() in HSR driver before frame is forwarded to upper
+layer.
+
+a0868495local@uda0868495:~/Projects/upstream-kernel$ git diff
+diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
+index de21df30b0d9..545a3cd8c71b 100644
+--- a/net/hsr/hsr_forward.c
++++ b/net/hsr/hsr_forward.c
+@@ -415,9 +415,11 @@ static void hsr_forward_do(struct hsr_frame_info 
+*frame)
+                 }
+
+                 skb->dev = port->dev;
+-               if (port->type == HSR_PT_MASTER)
++               if (port->type == HSR_PT_MASTER) {
++                       if (skb_vlan_tag_present(skb))
++                               WARN_ON(1);
+                         hsr_deliver_master(skb, port->dev, 
+frame->node_src);
+-               else
++               } else
+                         hsr_xmit(skb, port, frame);
+         }
+  }
+
+And I get the trace shown below.
+
+[  275.125431] WARNING: CPU: 0 PID: 0 at net/hsr/hsr_forward.c:420 
+hsr_forward_skb+0x460/0x564
+[  275.133822] Modules linked in: snd_soc_omap_hdmi snd_soc_ti_sdma 
+snd_soc_core snd_pcm_dmaengine snd_pcm snd_time4
+[  275.199705] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W 
+5.9.0-rc1-00658-g473e463812c2-dirty #8
+[  275.209573] Hardware name: Generic DRA74X (Flattened Device Tree)
+[  275.215703] [<c011177c>] (unwind_backtrace) from [<c010b6f0>] 
+(show_stack+0x10/0x14)
+[  275.223487] [<c010b6f0>] (show_stack) from [<c055690c>] 
+(dump_stack+0xc4/0xe4)
+[  275.230747] [<c055690c>] (dump_stack) from [<c01386ac>] 
+(__warn+0xc0/0xf4)
+[  275.237656] [<c01386ac>] (__warn) from [<c0138a3c>] 
+(warn_slowpath_fmt+0x58/0xb8)
+[  275.245177] [<c0138a3c>] (warn_slowpath_fmt) from [<c09564bc>] 
+(hsr_forward_skb+0x460/0x564)
+[  275.253657] [<c09564bc>] (hsr_forward_skb) from [<c0955534>] 
+(hsr_handle_frame+0x15c/0x190)
+[  275.262047] [<c0955534>] (hsr_handle_frame) from [<c07c6704>] 
+(__netif_receive_skb_core+0x23c/0xc88)
+[  275.271223] [<c07c6704>] (__netif_receive_skb_core) from [<c07c7180>] 
+(__netif_receive_skb_one_core+0x30/0x74)
+[  275.281266] [<c07c7180>] (__netif_receive_skb_one_core) from 
+[<c07c72a4>] (netif_receive_skb+0x50/0x1c4)
+[  275.290793] [<c07c72a4>] (netif_receive_skb) from [<c071a55c>] 
+(cpsw_rx_handler+0x230/0x308)
+[  275.299272] [<c071a55c>] (cpsw_rx_handler) from [<c0715ee8>] 
+(__cpdma_chan_process+0xf4/0x188)
+[  275.307925] [<c0715ee8>] (__cpdma_chan_process) from [<c0717294>] 
+(cpdma_chan_process+0x3c/0x5c)
+[  275.316754] [<c0717294>] (cpdma_chan_process) from [<c071dd14>] 
+(cpsw_rx_mq_poll+0x44/0x98)
+[  275.325145] [<c071dd14>] (cpsw_rx_mq_poll) from [<c07c8ae0>] 
+(net_rx_action+0xf0/0x400)
+[  275.333185] [<c07c8ae0>] (net_rx_action) from [<c0101370>] 
+(__do_softirq+0xf0/0x3ac)
+[  275.340965] [<c0101370>] (__do_softirq) from [<c013f5ec>] 
+(irq_exit+0xa8/0xe4)
+[  275.348224] [<c013f5ec>] (irq_exit) from [<c0199344>] 
+(__handle_domain_irq+0x6c/0xe0)
+[  275.356093] [<c0199344>] (__handle_domain_irq) from [<c056f8fc>] 
+(gic_handle_irq+0x4c/0xa8)
+[  275.364481] [<c056f8fc>] (gic_handle_irq) from [<c0100b6c>] 
+(__irq_svc+0x6c/0x90)
+[  275.371996] Exception stack(0xc0e01f18 to 0xc0e01f60)
+
+Shouldn't it show vlan_do_receive() ?
+
+	if (skb_vlan_tag_present(skb)) {
+		if (pt_prev) {
+			ret = deliver_skb(skb, pt_prev, orig_dev);
+			pt_prev = NULL;
+		}
+		if (vlan_do_receive(&skb))
+			goto another_round;
+		else if (unlikely(!skb))
+			goto out;
+	}
+
+Thanks
+
+-- 
+Murali Karicheri
+Texas Instruments
