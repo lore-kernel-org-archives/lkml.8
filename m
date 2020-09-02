@@ -2,120 +2,207 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401EBC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C245C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 159DF207D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2048D20767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:16:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="T258nlBg"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="XopMhjZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgIBPOb (ORCPT
+        id S1727897AbgIBPPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:14:31 -0400
-Received: from mail-eopbgr30052.outbound.protection.outlook.com ([40.107.3.52]:31663
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728149AbgIBPNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:13:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ka4WHpf+eK5HAH8PUiG0AkMc0iLzI60u9VgpXn5IoEUCNoeOhYK6bTXdiWMdHEtX2OV88fZWwtImTKGh/VJAGuyH0R85YrwJYnArGcbm327I0yMGidBfdMcAdbDhcNTWqE+sdc4LtPBqfwcDoDHgKSgOo6zOUrpxnnHEXIRx4FHW1HrwGUkJJi2PUyzH2FiLue2+SHnkiOfmE70qzVdcebjzL573R+J+hg3WX3Z5Vl24Qe6WwxBkoG6UW0uKOW6yMJPw8c02SNIAysEfMh7f014f2o8pertUY6m9/GHf8m1vQxpxk0iIBqiWlEgL1sZ4K4zWgLT7o1co6ZhSzdQJnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rUKk4CDxUn//JaGG3abfJhc1RqmCVGzArMGsDhB2kKQ=;
- b=HkMf43w/88KL21lD5El3gE7wZYVBEe65E1kI2YIRb6HMNIhpee1vQLwf/iwzsLGR3cSCpVw2TCUUU8KO3AW3N5cdphu7un8G5dOysJlsyEF6Pf9vjwt/hhUyGwjRXYZUL+/GAg3XViZFhzZl7V/GCxj8TYa9Yh93pdAAVl+KroJ/gZEniCRQ9ALgp+pmZkgEXenFL55Q3kCM8LdpQYKCUp3zLSL3htB+g0xFODkKdURm2DdPaMH1zafP+bmw/4zqeGa0Mb69KmViPh8G0ad95tZ5R0SW/i8OIkY4dzVWyrOFd5Y+yy/qnqYyHYmGUZqr3sac59GuSeiGx2LYWxkmeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rUKk4CDxUn//JaGG3abfJhc1RqmCVGzArMGsDhB2kKQ=;
- b=T258nlBgCxCQ2DVSiG40kEXZY5iuKrN2Vma2bZcOoAMluGYVDGYAf/EcfcrvdP82bifSE2MXxT2BCVQuA2m8a40JBhKHNj3SoIx8waP5gCL2+ofwEbbVdkNMr/OGfEslOoehLLrHbOnV7KSdME5VagQigpKLP/Vq7vHTswPBInc=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB6885.eurprd04.prod.outlook.com (2603:10a6:20b:10d::24)
- by AM6PR04MB3957.eurprd04.prod.outlook.com (2603:10a6:209:40::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Wed, 2 Sep
- 2020 15:13:45 +0000
-Received: from AM7PR04MB6885.eurprd04.prod.outlook.com
- ([fe80::f431:1df6:f18b:ad99]) by AM7PR04MB6885.eurprd04.prod.outlook.com
- ([fe80::f431:1df6:f18b:ad99%7]) with mapi id 15.20.3348.015; Wed, 2 Sep 2020
- 15:13:44 +0000
-From:   meenakshi.aggarwal@nxp.com
-To:     shawnguo@kernel.org, robh+dt@kernel.org, V.sethi@nxp.com,
-        leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
-Subject: [PATCH 1/2] dt-bindings: arm64: add compatible for LX2162A QDS Board
-Date:   Wed,  2 Sep 2020 20:43:29 +0530
-Message-Id: <1599059610-7570-1-git-send-email-meenakshi.aggarwal@nxp.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR03CA0147.apcprd03.prod.outlook.com
- (2603:1096:4:c8::20) To AM7PR04MB6885.eurprd04.prod.outlook.com
- (2603:10a6:20b:10d::24)
+        Wed, 2 Sep 2020 11:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727037AbgIBPMD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:12:03 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CB43C061245
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 08:12:02 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id di5so2349435qvb.13
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 08:12:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vAvnVJ2C0HDa5znBhLliHVbA1rx/NHVEivHZZRcheUY=;
+        b=XopMhjZ2PAUrj8VpQlQNWEYvxy1KXpmPvftFZMfV2+PyXzE+FodZ6WgP+mymMpZT6r
+         WyJDW0n5P6de3D02kp0TEV8NI2FWhhNl8vacyIhDQA7XsK74VldEWEJlTrryCtKi8dc5
+         9ag+HKibRGKiikfGoAXhMICibSXIxWDyxWu5k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vAvnVJ2C0HDa5znBhLliHVbA1rx/NHVEivHZZRcheUY=;
+        b=kC3Mv02Hip6rmjcDIKM4ZjRnFvkprH3iOgJblEuIv1ynd6cdcuh4IqZkgS2/boIp+x
+         +e11EEhte+44nbHRL9LBnUKRwuhzo/rfLA0pcjtSEQ/l6SC24wmXO60Hnt5HUdtM29Cn
+         IEUmRoUT23YGyuHIlc9Wes8WnNec11F3+GhllN2UcOQLMm1aGTLhmrDtnCRaTdYA4Pnp
+         pn6P14UfmSd1N7nkvOog+WrRImgbfGle5f3AYkEYJuXyl3L7zJOJxuw5NO5HYPJze6+R
+         mKz3tqvVXf9Kw3PN4QR+cv16VYNvKhFae0ZdbQk0qAZyCgsBbtiopW6tOoPpdFn0sFPh
+         JOxw==
+X-Gm-Message-State: AOAM531LfBwrM9i2eROPXFzgfoUEEWwxi1ZaY3EScFbvz0rsN0yuqQvH
+        Vug6mjlQ0730ETfbPvZ9/DFnMw==
+X-Google-Smtp-Source: ABdhPJw0YYC2AT+yF7C++CYVj38G0sfihc5hBaSEHFnxFo9CwzMYrWfIJnTA/2RhtzFkgkmtxFx5DQ==
+X-Received: by 2002:a0c:e04e:: with SMTP id y14mr6912253qvk.117.1599059521585;
+        Wed, 02 Sep 2020 08:12:01 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id s184sm4556270qkf.50.2020.09.02.08.12.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 08:12:00 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 11:12:00 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Dhaval Giani <dhaval.giani@oracle.com>,
+        Chris Hyser <chris.hyser@oracle.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        mingo@kernel.org, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, fweisbec@gmail.com,
+        keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, vineeth@bitbyteword.org,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Agata Gruza <agata.gruza@intel.com>,
+        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
+        graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
+        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com,
+        Aubrey Li <aubrey.li@linux.intel.com>,
+        Tim Chen <tim.c.chen@intel.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [RFC PATCH v7 17/23] kernel/entry: Add support for core-wide
+ protection of kernel-mode
+Message-ID: <20200902151200.GA2474204@google.com>
+References: <cover.1598643276.git.jdesfossez@digitalocean.com>
+ <2a4398b55fe258ea53fb1fbc727063298f7eea8f.1598643276.git.jdesfossez@digitalocean.com>
+ <87y2lth4qa.fsf@nanos.tec.linutronix.de>
+ <20200901165052.GA1662854@google.com>
+ <875z8xl0zh.fsf@nanos.tec.linutronix.de>
+ <20200902012905.GB1703315@google.com>
+ <87h7sgk41y.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by SG2PR03CA0147.apcprd03.prod.outlook.com (2603:1096:4:c8::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3348.7 via Frontend Transport; Wed, 2 Sep 2020 15:13:42 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [14.142.151.118]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e0206887-e0ab-4ea0-43f6-08d84f52c882
-X-MS-TrafficTypeDiagnostic: AM6PR04MB3957:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR04MB395725B4E5BA6441F63D06C98E2F0@AM6PR04MB3957.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1079;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iC+uudEziKxbEoHVH+lG9agJTAz/2/XoQ3zv544tF886wUTPCbjsj0d7vkNnSX0RkHDY82/qy8JlJAy+2URro9T4pIjZtlK0xV7NSGmvpFuEsInW7wRG7Slt5NT3kKx6IVG54Dx91D7yJfFONusgW3O/hontfEuzw/wnoZSCCdO6RMRIF2+FR1xzKd2+NAH6obiHq3G2D6PoD/e+kFZSY8bReLGjRdaWaY63scGFH60Dw9hQdaLxYmqP+fApoo4huMqbNShXwzWxXZZK0Z+qTlj4Mqa1/HQk8zyb99Ty4FZ11Lqyg2IXZsfn8gi4rrjPShdv2wADkha6D5UVyA6H6g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB6885.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(39860400002)(366004)(396003)(6486002)(52116002)(8936002)(55236004)(16576012)(36756003)(66556008)(9686003)(478600001)(66946007)(8676002)(66476007)(6666004)(5660300002)(4744005)(86362001)(2616005)(956004)(186003)(4326008)(26005)(2906002)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: bzmN5cfFL6o0j2oWPlrKG3ReER+UVoRqmaxPsrTQGwFHSPaPgdt6OIPPONupzoIymq4Sdirri3mY0yU3lCHcX3xlzrvMASZG/+wz1TcBK0VS3SZg7crMNyDPqpvog0o/tTljvGUpPnAUMDSNzlvWpMKU4ke7Z0FRGC5LSLB9t3Ut846pB4WeOq6Rj4eKzkj2HWV8o96rIX70/wtlbiQGyQYISoLd3LvtI5VsNsdTtP8Ab4D5Rsw45cdzpQrJ+2iBlM74bGG2VT6yymoOGf0FwA6z5XCe5gvhyKHm2QY66z0/6T+tqCQ5Tf2a266nGZ+iNS5xC3G2uKMTtGMCghYdcA1GK8w8KkzLOj/6k/tCqGxlHzVMZutbYqnQdlgdFnSnDMOyRdg6N0D4e8pRnw6Pkp5yYGF8MoXakEIsjhNXOxj+ORZ5TLJjIRU5SFraB3sv4y2JZJvpOSxQhXVq75NB7KdP6v755iqMs/HVYn34ulO54dBaEaK1DvDzIR9FCEfx546tBrDyTXoDyzzr4FZrCuSf5Q5q1GQtTOIJkNrRhmeBgtp16lfzCQkKxLviksWClj3TwzeAl6VJYr6zKf+5N0u7SzhhZnrhU3JCYvdCD4KTRbO/dI9d5ywm0AyXG6DbZP/DI4HYTjw8tEClQAbvVg==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0206887-e0ab-4ea0-43f6-08d84f52c882
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB6885.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2020 15:13:44.6979
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1ip1zP4knpBSThPDy4h7mAXPc2ERmYCyRHUkOw7qq26EThs3+O6uYla4XrIKFg5n1UOLqW8Z4iOHSwKFKCv6NDb1NxsacTz48pjNHjO0ODE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB3957
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h7sgk41y.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
+Hi Thomas,
 
-Add support for LX2162A, LX2162A is LX2160A based SoC.
+On Wed, Sep 02, 2020 at 09:53:29AM +0200, Thomas Gleixner wrote:
+[...]
+> >> --- /dev/null
+> >> +++ b/include/linux/pretend_ht_secure.h
+> >> @@ -0,0 +1,21 @@
+> >> +#ifndef _LINUX_PRETEND_HT_SECURE_H
+> >> +#define _LINUX_PRETEND_HT_SECURE_H
+> >> +
+> >> +#ifdef CONFIG_PRETEND_HT_SECURE
+> >> +static inline void enter_from_user_ht_sucks(void)
+> >> +{
+> >> +	if (static_branch_unlikely(&pretend_ht_secure_key))
+> >> +		enter_from_user_pretend_ht_is_secure();
+> >> +}
+> >> +
+> >> +static inline void exit_to_user_ht_sucks(void)
+> >> +{
+> >> +	if (static_branch_unlikely(&pretend_ht_secure_key))
+> >> +		exit_to_user_pretend_ht_is_secure();
+> >
+> > We already have similar config and static keys for the core-scheduling
+> > feature itself. Can we just make it depend on that?
+> 
+> Of course. This was just for illustration. :)
 
-Signed-off-by: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Got it. :)
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 6da9d73..5c7b7dd 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -518,6 +518,7 @@ properties:
-           - enum:
-               - fsl,lx2160a-qds
-               - fsl,lx2160a-rdb
-+              - fsl,lx2162a-qds
-           - const: fsl,lx2160a
- 
-       - description: S32V234 based Boards
--- 
-2.7.4
+> > Or, are you saying users may want 'core scheduling' enabled but may want to
+> > leave out the kernel protection?
+> 
+> Core scheduling per se without all the protection muck, i.e. a relaxed
+> version which tries to gang schedule threads of a process on a core if
+> feasible has advantages to some workloads.
+
+Sure. So I will make it depending on the existing core-scheduling
+config/static-key so the kernel protection is there when core scheduling is
+enabled (so both userspace and with this patch the kernel is protected).
+
+> 
+> >> @@ -111,6 +113,12 @@ static __always_inline void exit_to_user
+> >>  /* Workaround to allow gradual conversion of architecture code */
+> >>  void __weak arch_do_signal(struct pt_regs *regs) { }
+> >>  
+> >> +static inline unsigned long exit_to_user_get_work(void)
+> >> +{
+> >> +	exit_to_user_ht_sucks();
+> >
+> > Ok, one issue with your patch is it does not take care of the waiting logic.
+> > sched_core_unsafe_exit_wait() needs to be called *after* all of the
+> > exit_to_user_mode_work is processed. This is because
+> > sched_core_unsafe_exit_wait() also checks for any new exit-to-usermode-work
+> > that popped up while it is spinning and breaks out of its spin-till-safe loop
+> > early. This is key to solving the stop-machine issue. If the stopper needs to
+> > run, then the need-resched flag will be set and we break out of the spin and
+> > redo the whole exit_to_user_mode_loop() as it should.
+> 
+> And where is the problem?
+> 
+> syscall_entry()
+>   ...
+>     sys_foo()
+>       ....
+>       return 0;
+> 
+>   local_irq_disable();
+>   exit_to_user_mode_prepare()
+>     ti_work = exit_to_user_get_work()
+>        {
+>         if (ht_muck)
+>           syscall_exit_ht_muck() {
+>             ....
+>             while (wait) {
+>             	local_irq_enable();
+>                 while (wait) cpu_relax();
+>                 local_irq_disable();
+>             }
+>           }
+>         return READ_ONCE(current_thread_info()->flags);
+>        }
+> 
+>     if (unlikely(ti_work & WORK))
+>     	ti_work = exit_loop(ti_work)
+> 
+>         while (ti_work & MASK) {
+>           local_irq_enable();
+>           .....
+>           local_irq_disable();
+>           ti_work = exit_to_user_get_work()
+>             {
+>               See above
+>             }
+>        }
+> 
+> It covers both the 'no work' and the 'do work' exit path. If that's not
+> sufficient, then something is fundamentally wrong with your design.
+
+Yes, you are right, I got confused from your previous patch. This works too
+and is exactly as my design. I will do it this way then. Thank you, Thomas!
+
+ - Joel
 
