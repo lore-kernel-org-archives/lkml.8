@@ -2,127 +2,117 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EB8C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBB7C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF66D206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7E7206F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599014642;
+	bh=GwS5hgbpilzz93f4cVCaZ/bbS6pjbRN50Cm/qLyYzIE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Slw6GaqCWWGIqPJoIcbjRVvIZpQ2aq/V12v9IwVPfdF4Ok5i9cqv5fVabeFYZrtaB
+	 E69jFpzN+YiidPnQWziQ4dQRPHB5SnnjStTpd8CBGI5/q1AhVOgP4k8n7/pfNPLaT9
+	 3cPNXOU3Yk80yZbW17+wmKxusCE1+EGyNMO6qy0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgIBCn2 (ORCPT
+        id S1726355AbgIBCoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 22:43:28 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41666 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726122AbgIBCn0 (ORCPT
+        Tue, 1 Sep 2020 22:44:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726122AbgIBCnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 22:43:26 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t9so1999190pfq.8;
-        Tue, 01 Sep 2020 19:43:25 -0700 (PDT)
+        Tue, 1 Sep 2020 22:43:55 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2F0DC061245
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 19:43:53 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id a15so4024015ljk.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 19:43:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EJ4PjoZDwwfzg0Z/mADsWEXL5wj1Bc8Q7ntv5NFy29c=;
+        b=G0Mo+VnwcXQu6DapPma+6KQV000biK2/pSEruCHZIfIsOaAgQvAECKM/J/+kV79Fi0
+         tJ8wEnuV4Mk3d8+jGGy441CKQsxVwsZE462jR3HGZf5gunOI6s04Bt7SsitS7Zf3FXpn
+         qdTqWBtthFAPcviuc0XwhkcjIslrp8yFn7hq0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=GmGOgTocY/ucDNb9A9eFMAHlTcsCKWY8HYB7MCccFoc=;
-        b=Ipsn3MRCoUGfmJWAwNyZ8/MIw+xoI4NG8KjyPdY9BzuT2b6OHTbHCn1+Lui1P3n90w
-         qV63+TfGEJBGPFTMH1KKRuAO/0/mKbAkDL9TuaKyhhgoCcznnakX9GQ8H9nPI/9lD2Uz
-         7bdpr0540jyy2JfYR4O8mVoZyv9yu2BY1YCGM2zb62iZ0jU/aYpkN/awtZNFKrpzh75Y
-         FHTVQGvwcAvufFJPAvVUgsEGublQXYeCe0VAXAY2sHp0Zw+6/qM6aG1+mqwGgmTKT6/+
-         Q4uFhvYh/hqFkVUpCMPSEJNAyr/HcNiaj7hEOnYI5/IYJrPflu8l0Z5StEagcMqSmVYd
-         tv4g==
-X-Gm-Message-State: AOAM5324zd7W0ko58Vl6VZypvDiod4TYCem71WlubVAD8Q3qU3iVT96w
-        WLHjcTPEFi4YchQdtymu4gk=
-X-Google-Smtp-Source: ABdhPJwbvu6lpMb5tbEI7rNE5dr2z7U30mgncQm7KYJT1gSvLmRpZyhwNvVe0tCQqY3FFANr8bFiTA==
-X-Received: by 2002:a63:338b:: with SMTP id z133mr205155pgz.226.1599014605094;
-        Tue, 01 Sep 2020 19:43:25 -0700 (PDT)
-Received: from [192.168.3.218] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id 65sm857981pfg.7.2020.09.01.19.43.23
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EJ4PjoZDwwfzg0Z/mADsWEXL5wj1Bc8Q7ntv5NFy29c=;
+        b=CHNBYm6T5niEL2skHRWMwG29g9y9K1fkan0S9s3ZTNPwPLaMoO/Sgd5ddoLaDotu8S
+         vbqzdj9MzHetPxhsNyMSAfEdv0K9lG29Rp1az2WIRiUO4A4sBUyGOYU5bxHVDiyuDWUs
+         UVjOat2yOBHhhh15T1LWAmdbzfsMIQsIR+ESMMImFmI5l25FJhDT+9YA4ytTKcUSeELe
+         O0ore0Yn5zo8hys6oSSqc52AmNfCTWnO3yawgNTcALTFcEI82r3FnC91pS4A9LelW4fC
+         F7SJwVTHjh6dXBGL8qTRZdzawUcLSAFb5EBbBkSiKkrVwNGECWACz+Ww5GwZAUXtyBOQ
+         p36Q==
+X-Gm-Message-State: AOAM530MOhD5yURfRHTH2YQN2Y0lCLBAUVbmKN36fJ6Ds3SeoW2IrAHm
+        DtP0hZNA9N++MYI/r3neQr0BgFI4NS62ew==
+X-Google-Smtp-Source: ABdhPJy/+1jDvZHHVFsJwJDXX6UosNgq/r5dOhWuXgEBDjHfuLBKyOqXTiYN1dh1Ur2VDZIZD9tcIg==
+X-Received: by 2002:a2e:965a:: with SMTP id z26mr2176654ljh.88.1599014631819;
+        Tue, 01 Sep 2020 19:43:51 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id b13sm713085lff.91.2020.09.01.19.43.50
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 19:43:24 -0700 (PDT)
-Subject: Re: [PATCH V10 2/4] scsi: ufs: Introduce HPB feature
-To:     daejun7.park@samsung.com,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>,
-        SEUNGUK SHIN <seunguk.shin@samsung.com>
-References: <231786897.01598943181634.JavaMail.epsvc@epcpadp2>
- <CGME20200901043152epcms2p55ba1891c12bd8002dff38a1214aace72@epcms2p6>
- <231786897.01598943781742.JavaMail.epsvc@epcpadp2>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <36970d82-3ece-f9ec-e627-e84a7e4c79c6@acm.org>
-Date:   Tue, 1 Sep 2020 19:43:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 01 Sep 2020 19:43:50 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id e11so4008747ljn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 19:43:50 -0700 (PDT)
+X-Received: by 2002:a05:651c:219:: with SMTP id y25mr2006023ljn.314.1599014629844;
+ Tue, 01 Sep 2020 19:43:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <231786897.01598943781742.JavaMail.epsvc@epcpadp2>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200901224154.3436175-1-acme@kernel.org>
+In-Reply-To: <20200901224154.3436175-1-acme@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 1 Sep 2020 19:43:33 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wifL-04oOF3RAbX9Odyfgz4zc4dE=pq-QL+2C-aTxUmqw@mail.gmail.com>
+Message-ID: <CAHk-=wifL-04oOF3RAbX9Odyfgz4zc4dE=pq-QL+2C-aTxUmqw@mail.gmail.com>
+Subject: Re: [GIT PULL] perf tools fixes for v5.9
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Al Grant <al.grant@arm.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        David Ahern <dsahern@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Like Xu <like.xu@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Wei Li <liwei391@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-31 23:54, Daejun Park wrote:
-> This is a patch for the HPB feature.
-> This patch adds HPB function calls to UFS core driver.
+On Tue, Sep 1, 2020 at 3:42 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>
+> - The SNOOPX and REMOTE offsets in the data_src bitmask in perf records were
+>   were both 37, SNOOPX is 38, fix it.
 
-[ ... ]
+The kernel uapi side thinks it's 37. What's up?
 
-> +config SCSI_UFS_HPB
-> +	bool "Support UFS Host Performance Booster"
-> +	depends on SCSI_UFSHCD
-> +	help
-> +	  The UFS HPB feature improves random read performance. It caches
-> +	  L2P (logical to physical) map of UFS to host DRAM. The driver uses HPB
-> +	  read command by piggybacking physical page number for bypassing FTL (flash
-> +	  translation layer)'s L2P address translation.
-> \ No newline at end of file
+  $ git grep PERF_MEM_SNOOPX_SHIFT
 
-Please end the last line with a newline.
+results in
 
-Anyway:
+  include/uapi/linux/perf_event.h:#define PERF_MEM_SNOOPX_SHIFT   37
+  tools/include/uapi/linux/perf_event.h:#define PERF_MEM_SNOOPX_SHIFT     38
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Hmm?
 
+                   Linus
