@@ -2,71 +2,72 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6776C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C62C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74B77208C7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C50EF2083B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 18:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="PJXHnhUf";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q1lYAdVg"
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="W993RT4Z";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JYCdfcFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgIBSHZ (ORCPT
+        id S1728061AbgIBSH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 14:07:25 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:55239 "EHLO
+        Wed, 2 Sep 2020 14:07:27 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:60475 "EHLO
         out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727907AbgIBSGf (ORCPT
+        by vger.kernel.org with ESMTP id S1727940AbgIBSGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 14:06:35 -0400
+        Wed, 2 Sep 2020 14:06:40 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 4F6685C01A4;
-        Wed,  2 Sep 2020 14:06:32 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id F26395C021E;
+        Wed,  2 Sep 2020 14:06:33 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 02 Sep 2020 14:06:32 -0400
+  by compute4.internal (MEProxy); Wed, 02 Sep 2020 14:06:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
-        :to:cc:subject:date:message-id:reply-to:mime-version
-        :content-transfer-encoding; s=fm1; bh=H8HNgVZpNLyS97Lm5Jt7xG0OIC
-        bZNaw8cSgWLA+at1M=; b=PJXHnhUf0gaJ23B/6hvbawXzFgKTBFHeequ3qKbw1W
-        drG5RZxSzap23n/Bq4QDhr1BhxqatNgGg8AtXQz5Uc2ScIisJwF/4//vwlHBNP8b
-        HqBtaE2jQ/KfYvku10oKGcltuzzCxAFqbvtNCN7hjO7H/Hp6WZ5Agb3yilrxSJGy
-        icavEwkxRSzn4ZNlbRFLCnQFVHggZ0fKWVvskeILsnhNYd/GH8iuYTPdjkiM62vt
-        y/CYmJflOGTNpGYg5cnoueVOvOELH/+lUun4162i6Ctl4qdHU8IwudMzd5KCLq6V
-        BUN/rFWUuNSbIbkCSgS7QdXT7H6XgScq1py9+wb6FuxQ==
+        :to:cc:subject:date:message-id:in-reply-to:references:reply-to
+        :mime-version:content-transfer-encoding; s=fm1; bh=x0au+BqqFQ547
+        Y2Nkd3x3yYveCHO8htqJqOYoJY8xgY=; b=W993RT4Z+UfTDB8hiyR98Nncw3Zum
+        Nwo2R/KiaS/dSOvMsrxY2lD6MfMTqZ5uuTobCfqclpiM6V2Rg3D0VraBdyzWhlgI
+        E4C1btPcssm+aEnqm1fNTk7kT3k/WSMZUoetoDZf+7qVOq34zGcttnjQvT5mPcOe
+        BBi3WuXoaa3y5b91zYnCzdN1+aDZmocGL3VD6wYRPGP4hJy+vSqLZAZEI9HiET9M
+        S90/ryHmIX1RENjtB12gYJJfpbTqdrrchEriHYuAl7nXgwdCuRy2b5UuCzGntGmH
+        v2XjOeQpbNZ7wDSBKQ1mKh03kNRiIX4bjAXpy1nQqNo7B0HJNtS4PVqDQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:reply-to:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=H8HNgV
-        ZpNLyS97Lm5Jt7xG0OICbZNaw8cSgWLA+at1M=; b=Q1lYAdVgd3SG7cJ4Z8ARC1
-        tB3fxx7R0R6P3hNvRiy+GdYnLtBOPx8mBzyfV1er1qfxPtVbthpiHVet98fA+UcV
-        ScyVr6nmH1kEPSnXkaAAgfmNjDtHRWeZIhSx7QTm/3+UnbvsGq2ioKbnHtH458pK
-        rnt7HTuH02WQuFMmTbfyRhLfwCIFWqD3geUz3ctUHTydmInvLxuHN/RZan1+RRRL
-        /geRoFaqImMxueHE04erKkFy6yMIEnhOyv8qrqVopt3XTwyZP5PuzccAqGL1uMTk
-        rheT2oUCdR/k/fqznMRgwbrE658USOeUGtcnlNeoMFLgbg//BFajjfoDChSUVWFg
-        ==
-X-ME-Sender: <xms:Jt9PX7KwZYnOwJ0QI9_TsyHkgGrfP5-DJ6OSn5UmP0GQ7jUwrl1UMg>
-    <xme:Jt9PX_JDGmVMh8IfWlZNiAkmMfWH3azoh4BlYzWf0y5KcV3mM75YjJukB9ytof6Ip
-    Jc-Ic1sU2k843IRSA>
+        :in-reply-to:message-id:mime-version:references:reply-to:subject
+        :to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=x0au+BqqFQ547Y2Nkd3x3yYveCHO8htqJqOYoJY8xgY=; b=JYCdfcFh
+        kC1U+EmfPS6SePapwBIkljtrpgHC/x7tgGdsQpelqsvYbZn1pgZ+y+iypQvA+jz+
+        QfTvci54nM2T7V90I/ETySUO5Iv6+ThkUhmSuO6sIvSU/VNK72LxozhGdB32TKrs
+        JcEAnHPlI4Pn9bVoG3EXpvhA4MafmZMttJGhmi2947QtkiNXPxdgnFVrK75K9h2f
+        yc1kpnsEgk1KzweTIyt+1m2ph8z5tLDmZoe7Kd1I+5NnXRPrEqPtlBsOi19gEnH+
+        7j1VH0DbrAPTlZVSKQWWrWPYJfvjObRxthL/iZ6lO9evrSCuPnmuqNwmkbbYDpTZ
+        SouX2dHQsi4CXQ==
+X-ME-Sender: <xms:Kd9PX8Y8pT02OsjZ5x0hG8QukN2BBfPm_9T9ORLAAvdcoZNEI_huMg>
+    <xme:Kd9PX3bgcrZbox20795Y7GpKYrSa3MYJDz5xibvYm-ZHVIlAoUwHjul8C4Yq0cShJ
+    PZIgV0_vztLHtvETw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledguddvudcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvffufffkofhrggfgsedtkeertdertddtnecuhfhrohhmpegkihcujggr
-    nhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrhhnpefgleelhf
-    dviedtheffjeehlefghedtveehjefhgfeltdeihedtjefffeevieejheenucfkphepuddv
-    rdegiedruddtiedrudeigeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpeiiihdrhigrnhesshgvnhhtrdgtohhm
-X-ME-Proxy: <xmx:J99PXzuysht00oVTgMy8IK9zMQQxK-C0cssVFy-du1bzwM4KCMcBYA>
-    <xmx:J99PX0ZRfhSw1hTn1v5oSIg4QujO_OBCl2L0BTsPs0DDHIV7AuRluQ>
-    <xmx:J99PXyZDmRNbcNbPSjqtvM7h2yk5km12uVVJbrZT388dHMfVf5eR8w>
-    <xmx:KN9PX66uRFwz38j0gmRjX2QKBGF1dLNrjEIJLdUNQhxb9ncjvveyRg>
+    enucfjughrpefhvffufffkofgjfhhrggfgsedtkeertdertddtnecuhfhrohhmpegkihcu
+    jggrnhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrhhnpeduhf
+    ffveektdduhfdutdfgtdekkedvhfetuedufedtgffgvdevleehheevjefgtdenucfkphep
+    uddvrdegiedruddtiedrudeigeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpeiiihdrhigrnhesshgvnhhtrdgtohhm
+X-ME-Proxy: <xmx:Kd9PX2_uuxwnHlDFx8fd0NQ3B8EZqWLNL2vMxrwWlH--Ba-T3vDW7Q>
+    <xmx:Kd9PX2qrc2mnZZPpnfqrdJeKYp7VGqiqLbrs12ooW3pN5oxoWTQOwA>
+    <xmx:Kd9PX3r8PAABIYVJdIBJ3DhBTeoR4U4oNHsQKJ3fCo7OvWGXGXYR3Q>
+    <xmx:Kd9PXzJ0zSCx0BRBnBmNHvE5UOxjDFJdpOU9Cht4OLzvMbzp7t6Glw>
 Received: from nvrsysarch6.NVidia.COM (unknown [12.46.106.164])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A6F7030600A9;
-        Wed,  2 Sep 2020 14:06:30 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 23F1430600B4;
+        Wed,  2 Sep 2020 14:06:33 -0400 (EDT)
 From:   Zi Yan <zi.yan@sent.com>
 To:     linux-mm@kvack.org, Roman Gushchin <guro@fb.com>
 Cc:     Rik van Riel <riel@surriel.com>,
@@ -76,10 +77,12 @@ Cc:     Rik van Riel <riel@surriel.com>,
         Yang Shi <yang.shi@linux.alibaba.com>,
         David Nellans <dnellans@nvidia.com>,
         linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>
-Subject: [RFC PATCH 00/16] 1GB THP support on x86_64
-Date:   Wed,  2 Sep 2020 14:06:12 -0400
-Message-Id: <20200902180628.4052244-1-zi.yan@sent.com>
+Subject: [RFC PATCH 10/16] mm: thp: split 1GB THPs at page reclaim.
+Date:   Wed,  2 Sep 2020 14:06:22 -0400
+Message-Id: <20200902180628.4052244-11-zi.yan@sent.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200902180628.4052244-1-zi.yan@sent.com>
+References: <20200902180628.4052244-1-zi.yan@sent.com>
 Reply-To: Zi Yan <ziy@nvidia.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -90,130 +93,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zi Yan <ziy@nvidia.com>
 
-Hi all,
+We cannot swap 1GB THPs, so split them before swap them out.
 
-This patchset adds support for 1GB THP on x86_64. It is on top of
-v5.9-rc2-mmots-2020-08-25-21-13.
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+---
+ mm/swap_slots.c |  2 ++
+ mm/vmscan.c     | 58 +++++++++++++++++++++++++++++++++++++------------
+ 2 files changed, 46 insertions(+), 14 deletions(-)
 
-1GB THP is more flexible for reducing translation overhead and increasing the
-performance of applications with large memory footprint without application
-changes compared to hugetlb.
-
-Design
-=======
-
-1GB THP implementation looks similar to exiting THP code except some new designs
-for the additional page table level.
-
-1. Page table deposit and withdraw using a new pagechain data structure:
-   instead of one PTE page table page, 1GB THP requires 513 page table pages
-   (one PMD page table page and 512 PTE page table pages) to be deposited
-   at the page allocaiton time, so that we can split the page later. Currently,
-   the page table deposit is using ->lru, thus only one page can be deposited.
-   A new pagechain data structure is added to enable multi-page deposit.
-
-2. Triple mapped 1GB THP : 1GB THP can be mapped by a combination of PUD, PMD,
-   and PTE entries. Mixing PUD an PTE mapping can be achieved with existing
-   PageDoubleMap mechanism. To add PMD mapping, PMDPageInPUD and
-   sub_compound_mapcount are introduced. PMDPageInPUD is the 512-aligned base
-   page in a 1GB THP and sub_compound_mapcount counts the PMD mapping by using
-   page[N*512 + 3].compound_mapcount.
-
-3. Using CMA allocaiton for 1GB THP: instead of bump MAX_ORDER, it is more sane
-   to use something less intrusive. So all 1GB THPs are allocated from reserved
-   CMA areas shared with hugetlb. At page splitting time, the bitmap for the 1GB
-   THP is cleared as the resulting pages can be freed via normal page free path.
-   We can fall back to alloc_contig_pages for 1GB THP if necessary.
-
-
-Patch Organization
-=======
-
-Patch 01 adds the new pagechain data structure.
-
-Patch 02 to 13 adds 1GB THP support in variable places.
-
-Patch 14 tries to use alloc_contig_pages for 1GB THP allocaiton.
-
-Patch 15 moves hugetlb_cma reservation to cma.c and rename it to hugepage_cma.
-
-Patch 16 use hugepage_cma reservation for 1GB THP allocation.
-
-
-Any suggestions and comments are welcome.
-
-
-Zi Yan (16):
-  mm: add pagechain container for storing multiple pages.
-  mm: thp: 1GB anonymous page implementation.
-  mm: proc: add 1GB THP kpageflag.
-  mm: thp: 1GB THP copy on write implementation.
-  mm: thp: handling 1GB THP reference bit.
-  mm: thp: add 1GB THP split_huge_pud_page() function.
-  mm: stats: make smap stats understand PUD THPs.
-  mm: page_vma_walk: teach it about PMD-mapped PUD THP.
-  mm: thp: 1GB THP support in try_to_unmap().
-  mm: thp: split 1GB THPs at page reclaim.
-  mm: thp: 1GB THP follow_p*d_page() support.
-  mm: support 1GB THP pagemap support.
-  mm: thp: add a knob to enable/disable 1GB THPs.
-  mm: page_alloc: >=MAX_ORDER pages allocation an deallocation.
-  hugetlb: cma: move cma reserve function to cma.c.
-  mm: thp: use cma reservation for pud thp allocation.
-
- .../admin-guide/kernel-parameters.txt         |   2 +-
- arch/arm64/mm/hugetlbpage.c                   |   2 +-
- arch/powerpc/mm/hugetlbpage.c                 |   2 +-
- arch/x86/include/asm/pgalloc.h                |  68 ++
- arch/x86/include/asm/pgtable.h                |  26 +
- arch/x86/kernel/setup.c                       |   8 +-
- arch/x86/mm/pgtable.c                         |  38 +
- drivers/base/node.c                           |   3 +
- fs/proc/meminfo.c                             |   2 +
- fs/proc/page.c                                |   2 +
- fs/proc/task_mmu.c                            | 122 ++-
- include/linux/cma.h                           |  18 +
- include/linux/huge_mm.h                       |  84 +-
- include/linux/hugetlb.h                       |  12 -
- include/linux/memcontrol.h                    |   5 +
- include/linux/mm.h                            |  29 +-
- include/linux/mm_types.h                      |   1 +
- include/linux/mmu_notifier.h                  |  13 +
- include/linux/mmzone.h                        |   1 +
- include/linux/page-flags.h                    |  47 +
- include/linux/pagechain.h                     |  73 ++
- include/linux/pgtable.h                       |  34 +
- include/linux/rmap.h                          |  10 +-
- include/linux/swap.h                          |   2 +
- include/linux/vm_event_item.h                 |   7 +
- include/uapi/linux/kernel-page-flags.h        |   2 +
- kernel/events/uprobes.c                       |   4 +-
- kernel/fork.c                                 |   5 +
- mm/cma.c                                      | 119 +++
- mm/gup.c                                      |  60 +-
- mm/huge_memory.c                              | 939 +++++++++++++++++-
- mm/hugetlb.c                                  | 114 +--
- mm/internal.h                                 |   2 +
- mm/khugepaged.c                               |   6 +-
- mm/ksm.c                                      |   4 +-
- mm/memcontrol.c                               |  13 +
- mm/memory.c                                   |  51 +-
- mm/mempolicy.c                                |  21 +-
- mm/migrate.c                                  |  12 +-
- mm/page_alloc.c                               |  57 +-
- mm/page_vma_mapped.c                          | 129 ++-
- mm/pgtable-generic.c                          |  56 ++
- mm/rmap.c                                     | 289 ++++--
- mm/swap.c                                     |  31 +
- mm/swap_slots.c                               |   2 +
- mm/swapfile.c                                 |   8 +-
- mm/userfaultfd.c                              |   2 +-
- mm/util.c                                     |  16 +-
- mm/vmscan.c                                   |  58 +-
- mm/vmstat.c                                   |   8 +
- 50 files changed, 2270 insertions(+), 349 deletions(-)
- create mode 100644 include/linux/pagechain.h
-
---
+diff --git a/mm/swap_slots.c b/mm/swap_slots.c
+index 3e6453573a89..65b8742a0446 100644
+--- a/mm/swap_slots.c
++++ b/mm/swap_slots.c
+@@ -312,6 +312,8 @@ swp_entry_t get_swap_page(struct page *page)
+ 	entry.val = 0;
+ 
+ 	if (PageTransHuge(page)) {
++		if (compound_order(page) == HPAGE_PUD_ORDER)
++			return entry;
+ 		if (IS_ENABLED(CONFIG_THP_SWAP))
+ 			get_swap_pages(1, &entry, HPAGE_PMD_NR);
+ 		goto out;
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 99e1796eb833..617d15a041f8 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1240,23 +1240,49 @@ static unsigned int shrink_page_list(struct list_head *page_list,
+ 				if (!(sc->gfp_mask & __GFP_IO))
+ 					goto keep_locked;
+ 				if (PageTransHuge(page)) {
+-					/* cannot split THP, skip it */
+-					if (!can_split_huge_page(page, NULL))
+-						goto activate_locked;
+-					/*
+-					 * Split pages without a PMD map right
+-					 * away. Chances are some or all of the
+-					 * tail pages can be freed without IO.
+-					 */
+-					if (!compound_mapcount(page) &&
+-					    split_huge_page_to_list(page,
+-								    page_list))
++					if (compound_order(page) == HPAGE_PUD_ORDER) {
++						/* cannot split THP, skip it */
++						if (!can_split_huge_pud_page(page, NULL))
++							goto activate_locked;
++						/*
++						 * Split pages without a PUD map right
++						 * away. Chances are some or all of the
++						 * tail pages can be freed without IO.
++						 */
++						if (!compound_mapcount(page) &&
++							split_huge_pud_page_to_list(page,
++										page_list))
++							goto activate_locked;
++					}
++					if (compound_order(page) == HPAGE_PMD_ORDER) {
++						/* cannot split THP, skip it */
++						if (!can_split_huge_page(page, NULL))
++							goto activate_locked;
++						/*
++						 * Split pages without a PMD map right
++						 * away. Chances are some or all of the
++						 * tail pages can be freed without IO.
++						 */
++						if (!compound_mapcount(page) &&
++							split_huge_page_to_list(page,
++										page_list))
++							goto activate_locked;
++					}
++				}
++				/* Split PUD THPs before swapping */
++				if (compound_order(page) == HPAGE_PUD_ORDER) {
++					if (split_huge_pud_page_to_list(page, page_list))
+ 						goto activate_locked;
++					else {
++						sc->nr_scanned -= (nr_pages - HPAGE_PMD_NR);
++						nr_pages = HPAGE_PMD_NR;
++					}
+ 				}
+ 				if (!add_to_swap(page)) {
+ 					if (!PageTransHuge(page))
+ 						goto activate_locked_split;
+ 					/* Fallback to swap normal pages */
++					VM_BUG_ON_PAGE(compound_order(page) != HPAGE_PMD_ORDER, page);
+ 					if (split_huge_page_to_list(page,
+ 								    page_list))
+ 						goto activate_locked;
+@@ -1273,6 +1299,7 @@ static unsigned int shrink_page_list(struct list_head *page_list,
+ 				mapping = page_mapping(page);
+ 			}
+ 		} else if (unlikely(PageTransHuge(page))) {
++			VM_BUG_ON_PAGE(compound_order(page) != HPAGE_PMD_ORDER, page);
+ 			/* Split file THP */
+ 			if (split_huge_page_to_list(page, page_list))
+ 				goto keep_locked;
+@@ -1298,9 +1325,12 @@ static unsigned int shrink_page_list(struct list_head *page_list,
+ 			enum ttu_flags flags = ttu_flags | TTU_BATCH_FLUSH;
+ 			bool was_swapbacked = PageSwapBacked(page);
+ 
+-			if (unlikely(PageTransHuge(page)))
+-				flags |= TTU_SPLIT_HUGE_PMD;
+-
++			if (unlikely(PageTransHuge(page))) {
++				if (compound_order(page) == HPAGE_PMD_ORDER)
++					flags |= TTU_SPLIT_HUGE_PMD;
++				else if (compound_order(page) == HPAGE_PUD_ORDER)
++					flags |= TTU_SPLIT_HUGE_PUD;
++			}
+ 			if (!try_to_unmap(page, flags)) {
+ 				stat->nr_unmap_fail += nr_pages;
+ 				if (!was_swapbacked && PageSwapBacked(page))
+-- 
 2.28.0
 
