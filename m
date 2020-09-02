@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32805C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B81C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0829320829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D10320829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063250;
-	bh=EERb3EiHYgV+kjoeUIa1qghfUpQCDCfNMYKTD1gr61w=;
+	s=default; t=1599063262;
+	bh=MAam3szAvyQjlLkEQdoK5/MrRc6oip9fFC54zFOdGNA=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=ugEaNT9ZIsP4U3UpHl2F72Jay3eMSPcttkM5/7RNWBZ43j8pk/X1djU21PlAlM49j
-	 Y98T46zBBskF31oNAeT8/ogFHyF4eytPI4b0nHk8wkXd+3yN0CaZwExF0ZPwi88lWV
-	 Qn5RMRpP1ipujhyQxwo1UH7Hmu3iMCn0y5zJ1O/I=
+	b=gB+pY2cGlC4WqR8GwSN+a7O2qxWtxAiQwLkjI9x8q1MrM2C/uHVf5RNBmksqVj7k4
+	 QNM53LoBkyu5JtMPoHGnZFa8vFY3vQ9Nli14S7tkBETiXyVKZG751IPS6fjSz+UftL
+	 ySVw6ToKPGaS8KyVYa0qZ3KjFvtHYmxBR4/V6i54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbgIBQOI (ORCPT
+        id S1728785AbgIBQOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53840 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 12:14:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728308AbgIBQK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728281AbgIBQK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 12:10:56 -0400
 Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6927C21D90;
-        Wed,  2 Sep 2020 16:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0E5A21582;
+        Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599063046;
-        bh=EERb3EiHYgV+kjoeUIa1qghfUpQCDCfNMYKTD1gr61w=;
+        bh=MAam3szAvyQjlLkEQdoK5/MrRc6oip9fFC54zFOdGNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kww1qjzBj12rxsBQlAPH4J1DJfhRyBctOFqrkl+9DzFmV9keKOc3OvN9WVnd3WESM
-         IQtIIkG8m5YjLySb0Akn8UoDYJCw8H4sGHVH97rUgRMO2Kkk7DUgcFwFKzuvAMD0NE
-         8Bq7gKZEvc6qXTp2QFbtGeKM/HDh+7UEkm0vEy1Q=
+        b=sHvO+/fkSkVARvG1XOXU+M3HD+f0y6SgRHkfLSx8v73wfnmnM4zeK5oZt+2IM2zp0
+         pb/6gW5TtMHWB8xCLAXiU2lAHd1mgM7QgEXpgQbRCs0bIkkFNZjPjFtNGe1IjUffwl
+         Hdol4IbSkXK99JphCsUwq29eW1SpWRYtlfVnYabQ=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kDVLQ-000tB1-IN; Wed, 02 Sep 2020 18:10:44 +0200
+        id 1kDVLQ-000tAd-6l; Wed, 02 Sep 2020 18:10:44 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH 28/38] media: atomisp: get rid of isys_dma.h and isys_dma_local.h
-Date:   Wed,  2 Sep 2020 18:10:31 +0200
-Message-Id: <5904ab04523f4d6e863e615b2a56f9734aa8a5ee.1599062230.git.mchehab+huawei@kernel.org>
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 21/38] media: dvb-ttusb-budget: don't use stack for USB transfers
+Date:   Wed,  2 Sep 2020 18:10:24 +0200
+Message-Id: <214db6f0cc80506ac2ade13475e1f359ae1ff7b4.1599062230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
 References: <cover.1599062230.git.mchehab+huawei@kernel.org>
@@ -62,202 +59,221 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There aren't much on this abstraction. Just move the defines
-to isys_dma_private.h and isys_dma_public.h, cleaning up
-the includes.
+As reported by smatch:
+
+    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:311 ttusb_boot_dsp() error: doing dma on the stack (b)
+    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:321 ttusb_boot_dsp() error: doing dma on the stack (b)
+    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:330 ttusb_boot_dsp() error: doing dma on the stack (b)
+    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:351 ttusb_set_channel() error: doing dma on the stack (b)
+    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:361 ttusb_del_channel() error: doing dma on the stack (b)
+    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:412 ttusb_init_controller() error: doing dma on the stack (b0)
+    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:416 ttusb_init_controller() error: doing dma on the stack (b1)
+    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:422 ttusb_init_controller() error: doing dma on the stack (b2)
+    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:425 ttusb_init_controller() error: doing dma on the stack (b3)
+    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:430 ttusb_init_controller() error: doing dma on the stack (get_version)
+
+This driver still uses the USB stack for DMA transfers,
+which is broken for a long time. I almost dropped this driver,
+as there's a high chance that nobody is using it with upstream
+Kernels, as we didn't receive any bug reports.
+
+As fixing this won't be hard, I ended opting to fix.
+
+While here, I dropped an ugly hack that implemented read via
+a separate function that was just doing a memcpy().
+
+It should be noticed that, during the init phase, there's
+a "b4" register that were never initialized, as its buffer
+were used just to store the results of "b3" initialization.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../pci/css_2401_system/host/isys_dma.c       | 10 +---
- .../pci/css_2401_system/host/isys_dma_local.h | 21 ---------
- .../css_2401_system/host/isys_dma_private.h   | 12 ++---
- .../host/isys_dma_public.h                    |  4 +-
- .../pci/hive_isp_css_include/isys_dma.h       | 47 -------------------
- .../atomisp/pci/isp2401_input_system_global.h |  3 +-
- .../atomisp/pci/runtime/isys/src/isys_init.c  |  2 +-
- 7 files changed, 12 insertions(+), 87 deletions(-)
- delete mode 100644 drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_local.h
- delete mode 100644 drivers/staging/media/atomisp/pci/hive_isp_css_include/isys_dma.h
+ .../media/usb/ttusb-budget/dvb-ttusb-budget.c | 83 +++++++------------
+ 1 file changed, 30 insertions(+), 53 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma.c b/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma.c
-index 5809dbb6e5aa..2a5159945a44 100644
---- a/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma.c
-+++ b/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma.c
-@@ -13,16 +13,10 @@
-  * more details.
-  */
+diff --git a/drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c b/drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c
+index 4e56ff83566b..2582a62184fd 100644
+--- a/drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c
++++ b/drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c
+@@ -72,6 +72,9 @@ DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr);
+ #define TTUSB_REV_2_2	0x22
+ #define TTUSB_BUDGET_NAME "ttusb_stc_fw"
  
--#include "isys_dma.h"
-+#include "system_local.h"
-+#include "isys_dma_global.h"
- #include "assert_support.h"
--
--#ifndef __INLINE_ISYS2401_DMA__
--/*
-- * Include definitions for isys dma register access functions. isys_dma.h
-- * includes declarations of these functions by including isys_dma_public.h.
-- */
- #include "isys_dma_private.h"
--#endif
++#define MAX_SEND	0x28
++#define MAX_RCV		0x20
++
+ /*
+  *  since we're casting (struct ttusb*) <-> (struct dvb_demux*) around
+  *  the dvb_demux field must be the first in struct!!
+@@ -119,87 +122,72 @@ struct ttusb {
+ 	int cc;			/* MuxCounter - will increment on EVERY MUX PACKET */
+ 	/* (including stuffing. yes. really.) */
  
- const isys2401_dma_channel N_ISYS2401_DMA_CHANNEL_PROCS[N_ISYS2401_DMA_ID] = {
- 	N_ISYS2401_DMA_CHANNEL
-diff --git a/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_local.h b/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_local.h
-deleted file mode 100644
-index 878933261a43..000000000000
---- a/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_local.h
-+++ /dev/null
-@@ -1,21 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Support for Intel Camera Imaging ISP subsystem.
-- * Copyright (c) 2015, Intel Corporation.
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- */
--
--#ifndef __ISYS_DMA_LOCAL_H_INCLUDED__
--#define __ISYS_DMA_LOCAL_H_INCLUDED__
--
--#include "isys_dma_global.h"
--
--#endif /* __ISYS_DMA_LOCAL_H_INCLUDED__ */
-diff --git a/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_private.h b/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_private.h
-index eb35b7bcead4..a313e1dc7c71 100644
---- a/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_private.h
-+++ b/drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_private.h
-@@ -23,10 +23,9 @@
- #include "dma_v2_defs.h"
- #include "print_support.h"
+-	u8 last_result[32];
++	u8 send_buf[MAX_SEND];
++	u8 last_result[MAX_RCV];
  
--STORAGE_CLASS_ISYS2401_DMA_C void isys2401_dma_reg_store(
--    const isys2401_dma_ID_t	dma_id,
--    const unsigned int	reg,
--    const hrt_data		value)
-+void isys2401_dma_reg_store(const isys2401_dma_ID_t	dma_id,
-+			    const unsigned int		reg,
-+			    const hrt_data		value)
+ 	int revision;
+ 
+ 	struct dvb_frontend* fe;
+ };
+ 
+-/* ugly workaround ... don't know why it's necessary to read */
+-/* all result codes. */
+-
+-static int ttusb_cmd(struct ttusb *ttusb,
+-	      const u8 * data, int len, int needresult)
++static int ttusb_cmd(struct ttusb *ttusb, u8 *data, int len, int len_result)
  {
- 	unsigned int reg_loc;
+ 	int actual_len;
+ 	int err;
+-	int i;
+-
+-	if (debug >= 3) {
+-		printk(KERN_DEBUG ">");
+-		for (i = 0; i < len; ++i)
+-			printk(KERN_CONT " %02x", data[i]);
+-		printk(KERN_CONT "\n");
+-	}
  
-@@ -40,9 +39,8 @@ STORAGE_CLASS_ISYS2401_DMA_C void isys2401_dma_reg_store(
- 	ia_css_device_store_uint32(reg_loc, value);
+ 	if (mutex_lock_interruptible(&ttusb->semusb) < 0)
+ 		return -EAGAIN;
+ 
++	if (debug >= 3)
++		printk(KERN_DEBUG "> %*ph\n", len, data);
++
++	memcpy(data, ttusb->send_buf, len);
++
+ 	err = usb_bulk_msg(ttusb->dev, ttusb->bulk_out_pipe,
+-			   (u8 *) data, len, &actual_len, 1000);
++			   ttusb->send_buf, len, &actual_len, 1000);
+ 	if (err != 0) {
+ 		dprintk("%s: usb_bulk_msg(send) failed, err == %i!\n",
+ 			__func__, err);
+-		mutex_unlock(&ttusb->semusb);
+-		return err;
++		goto err;
+ 	}
+ 	if (actual_len != len) {
++		err = -EIO;
+ 		dprintk("%s: only wrote %d of %d bytes\n", __func__,
+ 			actual_len, len);
+-		mutex_unlock(&ttusb->semusb);
+-		return -1;
++		goto err;
+ 	}
+ 
+ 	err = usb_bulk_msg(ttusb->dev, ttusb->bulk_in_pipe,
+-			   ttusb->last_result, 32, &actual_len, 1000);
++			   ttusb->last_result, MAX_RCV, &actual_len, 1000);
+ 
+ 	if (err != 0) {
+ 		printk("%s: failed, receive error %d\n", __func__,
+ 		       err);
+-		mutex_unlock(&ttusb->semusb);
+-		return err;
++		goto err;
+ 	}
+ 
+ 	if (debug >= 3) {
+ 		actual_len = ttusb->last_result[3] + 4;
+-		printk(KERN_DEBUG "<");
+-		for (i = 0; i < actual_len; ++i)
+-			printk(KERN_CONT " %02x", ttusb->last_result[i]);
+-		printk(KERN_CONT "\n");
++		printk(KERN_DEBUG "< %*ph\n", actual_len, ttusb->last_result);
+ 	}
+ 
+-	if (!needresult)
+-		mutex_unlock(&ttusb->semusb);
+-	return 0;
+-}
++	if (len_result)
++		memcpy(ttusb->send_buf, ttusb->last_result, len_result);
+ 
+-static int ttusb_result(struct ttusb *ttusb, u8 * data, int len)
+-{
+-	memcpy(data, ttusb->last_result, len);
++err:
+ 	mutex_unlock(&ttusb->semusb);
+-	return 0;
++	return err;
  }
  
--STORAGE_CLASS_ISYS2401_DMA_C hrt_data isys2401_dma_reg_load(
--    const isys2401_dma_ID_t	dma_id,
--    const unsigned int	reg)
-+hrt_data isys2401_dma_reg_load(const isys2401_dma_ID_t	dma_id,
-+			       const unsigned int	reg)
+ static int ttusb_i2c_msg(struct ttusb *ttusb,
+ 		  u8 addr, u8 * snd_buf, u8 snd_len, u8 * rcv_buf,
+ 		  u8 rcv_len)
  {
- 	unsigned int reg_loc;
- 	hrt_data value;
-diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/isys_dma_public.h b/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/isys_dma_public.h
-index 88ac78f69e7b..d9b6af898c06 100644
---- a/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/isys_dma_public.h
-+++ b/drivers/staging/media/atomisp/pci/hive_isp_css_include/host/isys_dma_public.h
-@@ -21,12 +21,12 @@
- #include "system_local.h"
- #include "type_support.h"
+-	u8 b[0x28];
++	u8 b[MAX_SEND];
+ 	u8 id = ++ttusb->c;
+ 	int i, err;
  
--STORAGE_CLASS_ISYS2401_DMA_H void isys2401_dma_reg_store(
-+extern void isys2401_dma_reg_store(
-     const isys2401_dma_ID_t dma_id,
-     const unsigned int	reg,
-     const hrt_data		value);
+-	if (snd_len > 0x28 - 7 || rcv_len > 0x20 - 7)
++	if (snd_len > MAX_SEND - 7 || rcv_len > MAX_RCV - 7)
+ 		return -EINVAL;
  
--STORAGE_CLASS_ISYS2401_DMA_H hrt_data isys2401_dma_reg_load(
-+extern hrt_data isys2401_dma_reg_load(
-     const isys2401_dma_ID_t dma_id,
-     const unsigned int	reg);
+ 	b[0] = 0xaa;
+@@ -213,13 +201,11 @@ static int ttusb_i2c_msg(struct ttusb *ttusb,
+ 	for (i = 0; i < snd_len; i++)
+ 		b[7 + i] = snd_buf[i];
  
-diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_include/isys_dma.h b/drivers/staging/media/atomisp/pci/hive_isp_css_include/isys_dma.h
-deleted file mode 100644
-index 6a759142eda8..000000000000
---- a/drivers/staging/media/atomisp/pci/hive_isp_css_include/isys_dma.h
-+++ /dev/null
-@@ -1,47 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Support for Intel Camera Imaging ISP subsystem.
-- * Copyright (c) 2015, Intel Corporation.
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- */
+-	err = ttusb_cmd(ttusb, b, snd_len + 7, 1);
++	err = ttusb_cmd(ttusb, b, snd_len + 7, MAX_RCV);
+ 
+ 	if (err)
+ 		return -EREMOTEIO;
+ 
+-	err = ttusb_result(ttusb, b, 0x20);
 -
--#ifndef __ISYS_DMA_H_INCLUDED__
--#define __ISYS_DMA_H_INCLUDED__
--
--/*
-- * This file is included on every cell {SP,ISP,host} and on every system
-- * that uses the input system device(s). It defines the API to DLI bridge
-- *
-- * System and cell specific interfaces and inline code are included
-- * conditionally through Makefile path settings.
-- *
-- * - system and cell agnostic interfaces, constants and identifiers
-- * - public:  system agnostic, cell specific interfaces
-- * - private: system dependent, cell specific interfaces &
-- *   inline implementations
-- * - global:  system specific constants and identifiers
-- * - local:   system and cell specific constants and identifiers
-- */
--
--#include "system_local.h"
--#include "isys_dma_local.h"
--
--#ifndef __INLINE_ISYS2401_DMA__
--#define STORAGE_CLASS_ISYS2401_DMA_H extern
--#define STORAGE_CLASS_ISYS2401_DMA_C
--#include "isys_dma_public.h"
--#else  /* __INLINE_ISYS2401_DMA__ */
--#define STORAGE_CLASS_ISYS2401_DMA_H static inline
--#define STORAGE_CLASS_ISYS2401_DMA_C static inline
--#include "isys_dma_private.h"
--#endif /* __INLINE_ISYS2401_DMA__ */
--
--#endif /* __ISYS_DMA_H_INCLUDED__ */
-diff --git a/drivers/staging/media/atomisp/pci/isp2401_input_system_global.h b/drivers/staging/media/atomisp/pci/isp2401_input_system_global.h
-index 5070e651f7c4..6407be9331ae 100644
---- a/drivers/staging/media/atomisp/pci/isp2401_input_system_global.h
-+++ b/drivers/staging/media/atomisp/pci/isp2401_input_system_global.h
-@@ -21,7 +21,8 @@
- /* CSI reveiver has 3 ports. */
- #define		N_CSI_PORTS (3)
+ 	/* check if the i2c transaction was successful */
+ 	if ((snd_len != b[5]) || (rcv_len != b[6])) return -EREMOTEIO;
  
--#include "isys_dma.h"		/*	isys2401_dma_channel,
-+#include "system_local.h"
-+#include "isys_dma_global.h"	/*	isys2401_dma_channel,
- 				 *	isys2401_dma_cfg_t
- 				 */
+@@ -400,8 +386,6 @@ static int ttusb_init_controller(struct ttusb *ttusb)
+ 	/* i2c write read: 5 bytes, addr 0x10, 0x02 bytes write, 1 bytes read. */
+ 	u8 b3[] =
+ 	    { 0xaa, ++ttusb->c, 0x31, 5, 0x10, 0x02, 0x01, 0x00, 0x1e };
+-	u8 b4[] =
+-	    { 0x55, ttusb->c, 0x31, 4, 0x10, 0x02, 0x01, 0x00, 0x1e };
  
-diff --git a/drivers/staging/media/atomisp/pci/runtime/isys/src/isys_init.c b/drivers/staging/media/atomisp/pci/runtime/isys/src/isys_init.c
-index c88b14ce69a5..484c5967ad1c 100644
---- a/drivers/staging/media/atomisp/pci/runtime/isys/src/isys_init.c
-+++ b/drivers/staging/media/atomisp/pci/runtime/isys/src/isys_init.c
-@@ -19,7 +19,7 @@
- #include "platform_support.h"
+ 	u8 get_version[] = { 0xaa, ++ttusb->c, 0x17, 5, 0, 0, 0, 0, 0 };
+ 	u8 get_dsp_version[0x20] =
+@@ -422,15 +406,11 @@ static int ttusb_init_controller(struct ttusb *ttusb)
+ 	if ((err = ttusb_cmd(ttusb, b2, sizeof(b2), 0)))
+ 		return err;
  
- #ifdef ISP2401
--#include "isys_dma.h"		/* isys2401_dma_set_max_burst_size() */
-+#include "isys_dma_public.h"	/* isys2401_dma_set_max_burst_size() */
- #include "isys_irq.h"
- #endif
+-	if ((err = ttusb_cmd(ttusb, b3, sizeof(b3), 1)))
++	if ((err = ttusb_cmd(ttusb, b3, sizeof(b3), 0)))
+ 		return err;
  
+-	err = ttusb_result(ttusb, b4, sizeof(b4));
+-
+-	if ((err = ttusb_cmd(ttusb, get_version, sizeof(get_version), 1)))
+-		return err;
+-
+-	if ((err = ttusb_result(ttusb, get_version, sizeof(get_version))))
++	if ((err = ttusb_cmd(ttusb, get_version,
++			     sizeof(get_version), sizeof(get_version))))
+ 		return err;
+ 
+ 	dprintk("%s: stc-version: %c%c%c%c%c\n", __func__,
+@@ -451,14 +431,11 @@ static int ttusb_init_controller(struct ttusb *ttusb)
+ 			   (get_version[8] - '0');
+ 
+ 	err =
+-	    ttusb_cmd(ttusb, get_dsp_version, sizeof(get_dsp_version), 1);
++	    ttusb_cmd(ttusb, get_dsp_version,
++		      sizeof(get_dsp_version), sizeof(get_dsp_version));
+ 	if (err)
+ 		return err;
+ 
+-	err =
+-	    ttusb_result(ttusb, get_dsp_version, sizeof(get_dsp_version));
+-	if (err)
+-		return err;
+ 	printk("%s: dsp-version: %c%c%c\n", __func__,
+ 	       get_dsp_version[4], get_dsp_version[5], get_dsp_version[6]);
+ 	return 0;
 -- 
 2.26.2
 
