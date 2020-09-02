@@ -2,136 +2,76 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235DAC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F071AC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF891207D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:14:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="FSIxk/zE"
+	by mail.kernel.org (Postfix) with ESMTP id BDC6A20829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgIBOOD (ORCPT
+        id S1728037AbgIBOO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:14:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727943AbgIBOGP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 10:06:15 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E81C4C061260
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 07:06:00 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id i26so6792025ejb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 07:06:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IVTgojsctywPYI2BEUQy4+C3blLe36Gj3Nv25ImuhV0=;
-        b=FSIxk/zEZcpRBi4QeA27pDHb8zta0fipi9M8oPao1vJqAKMQ1Nl/wY9iDXfn1qg2Fn
-         3UzMUKmDfog2N0nFQFUL8HycGnQzav+odJ5MCnGUhFKd9cqqptqDs2imsEN+lhkdbZTY
-         8DUfRu8NVnHHcWzgCsG3q9M/qsy7Nor83MI52S49iunbpGDDKQKOgmlKaXPdapwOZiYv
-         +30SxmXGZiQu7iHS91xxpfNmqBsUn45yyH69fICZeoJDP6QxBGSFjkVZDFsYOhDaS9i3
-         8loKeLHqNqi8NEveRFmFHKR36is9Pr11uHTNiAQLWDxhzlG+TnHfT5gLFW9PLeB3aatg
-         M8MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IVTgojsctywPYI2BEUQy4+C3blLe36Gj3Nv25ImuhV0=;
-        b=ITnQAWGvuQ8n7GyYfHP4Qi8G4rVHRBuJpZtIgwe8/6EcsN3FfiXDmozSbJujaKsXaI
-         oD9gEQRWOwGD4WVTum3dhcgMnEVJg+hp1KWOYsir1ZGRJcreBNoaT8YXekNpbB/E5kQA
-         340+GGh7bXNB5TCHTa+UpkOPzUGmvObkzPcYlme2x+gRz8xXucTo/Wm0MXf+qV+I0MJ+
-         WlEO5yNlo2uryp5fBgYCxbFTm/X6eZNBGtNbNrRSjoycidnWVDWaSdYEBN4GQ5FOmW2J
-         /5pI2GNNW7OC3t6+gl5VGIluMdqr/c1AxzVdDHZTk88wQbYaq3IIR2vG2XTbJCuE73+h
-         2kBw==
-X-Gm-Message-State: AOAM533MXFVRRlBt8cGcB2tzhDwFLr7NNXuLh7mNW++YpTUt48AEvQVh
-        U2Mnt+ew+LA4CJ1x2mSQXqrE4+2X1sg6ItTk
-X-Google-Smtp-Source: ABdhPJzvECs35eFjMsTYjZyxiCkatxfda7vl17SgvZwSIAVXMCxivw1u4HfLCZBNieZxqOzgVR4r9g==
-X-Received: by 2002:a17:906:5206:: with SMTP id g6mr199229ejm.292.1599055559289;
-        Wed, 02 Sep 2020 07:05:59 -0700 (PDT)
-Received: from tim.froidcoeur.net (ptr-7tznw14oqa3w7cibjsc.18120a2.ip6.access.telenet.be. [2a02:1811:50e:f0f0:8cba:3abe:17e1:aaec])
-        by smtp.gmail.com with ESMTPSA id r15sm4119296edv.94.2020.09.02.07.05.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 07:05:58 -0700 (PDT)
-From:   Tim Froidcoeur <tim.froidcoeur@tessares.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, gregkh@linuxfoundation.org,
-        matthieu.baerts@tessares.net, davem@davemloft.net,
-        Tim Froidcoeur <tim.froidcoeur@tessares.net>
-Subject: [PATCH 4.9 2/2] net: initialize fastreuse on inet_inherit_port
-Date:   Wed,  2 Sep 2020 16:05:45 +0200
-Message-Id: <20200902140545.867718-3-tim.froidcoeur@tessares.net>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200902140545.867718-1-tim.froidcoeur@tessares.net>
-References: <20200902140545.867718-1-tim.froidcoeur@tessares.net>
+        Wed, 2 Sep 2020 10:14:26 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10799 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726521AbgIBOGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 10:06:48 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 73C3263CD800FB392089;
+        Wed,  2 Sep 2020 22:06:45 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Wed, 2 Sep 2020
+ 22:06:35 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <ohad@wizery.com>, <bjorn.andersson@linaro.org>, <s-anna@ti.com>,
+        <mathieu.poirier@linaro.org>
+CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] remoteproc: k3-dsp: Fix return value check in k3_dsp_rproc_of_get_memories()
+Date:   Wed, 2 Sep 2020 22:06:14 +0800
+Message-ID: <20200902140614.28636-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d76f3351cea2d927fdf70dd7c06898235035e84e ]
+In case of error, the function devm_ioremap_wc() returns NULL pointer
+not ERR_PTR(). The IS_ERR() test in the return value check should be
+replaced with NULL test.
 
-In the case of TPROXY, bind_conflict optimizations for SO_REUSEADDR or
-SO_REUSEPORT are broken, possibly resulting in O(n) instead of O(1) bind
-behaviour or in the incorrect reuse of a bind.
-
-the kernel keeps track for each bind_bucket if all sockets in the
-bind_bucket support SO_REUSEADDR or SO_REUSEPORT in two fastreuse flags.
-These flags allow skipping the costly bind_conflict check when possible
-(meaning when all sockets have the proper SO_REUSE option).
-
-For every socket added to a bind_bucket, these flags need to be updated.
-As soon as a socket that does not support reuse is added, the flag is
-set to false and will never go back to true, unless the bind_bucket is
-deleted.
-
-Note that there is no mechanism to re-evaluate these flags when a socket
-is removed (this might make sense when removing a socket that would not
-allow reuse; this leaves room for a future patch).
-
-For this optimization to work, it is mandatory that these flags are
-properly initialized and updated.
-
-When a child socket is created from a listen socket in
-__inet_inherit_port, the TPROXY case could create a new bind bucket
-without properly initializing these flags, thus preventing the
-optimization to work. Alternatively, a socket not allowing reuse could
-be added to an existing bind bucket without updating the flags, causing
-bind_conflict to never be called as it should.
-
-Call inet_csk_update_fastreuse when __inet_inherit_port decides to create
-a new bind_bucket or use a different bind_bucket than the one of the
-listen socket.
-
-Fixes: 093d282321da ("tproxy: fix hash locking issue when using port redirection in __inet_inherit_port()")
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+Fixes: 87218f96c21a ("remoteproc: k3-dsp: Add support for C71x DSPs")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- net/ipv4/inet_hashtables.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/remoteproc/ti_k3_dsp_remoteproc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
-index 4bf542f4d980..887633870763 100644
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -163,6 +163,7 @@ int __inet_inherit_port(const struct sock *sk, struct sock *child)
- 				return -ENOMEM;
- 			}
+diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+index 9011e477290c..f373df35d7d0 100644
+--- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
++++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+@@ -445,10 +445,10 @@ static int k3_dsp_rproc_of_get_memories(struct platform_device *pdev,
+ 
+ 		kproc->mem[i].cpu_addr = devm_ioremap_wc(dev, res->start,
+ 							 resource_size(res));
+-		if (IS_ERR(kproc->mem[i].cpu_addr)) {
++		if (!kproc->mem[i].cpu_addr) {
+ 			dev_err(dev, "failed to map %s memory\n",
+ 				data->mems[i].name);
+-			return PTR_ERR(kproc->mem[i].cpu_addr);
++			return -EBUSY;
  		}
-+		inet_csk_update_fastreuse(tb, child);
- 	}
- 	inet_bind_hash(child, tb, port);
- 	spin_unlock(&head->lock);
+ 		kproc->mem[i].bus_addr = res->start;
+ 		kproc->mem[i].dev_addr = data->mems[i].dev_addr;
 -- 
-2.25.1
+2.17.1
+
 
