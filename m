@@ -2,97 +2,131 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55833C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5662C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32E9D206E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0EB2206E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:37:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599064656;
+	bh=Wni3x+GYLltlmuMdPoBYORxVVeiXa3j+1KYJ4MzXN9M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oFJMi2o8BEwXk/BmOgubNxG9Nipn/l2r9pLUUtZq+p5j/Ya6a/DaNk8cj9+pbWb3D
+	 CCMFU0Sn8acY46LbGFyT0SAG0o52kUQg2EbGwS5fUpYJyBnYQ2OzV4ajgnKfqzeX7L
+	 l8t73hfCt0S1mIwVqjxDxUFuIiI6K3ECuAEAAbk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgIBQgG (ORCPT
+        id S1727800AbgIBQhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:36:06 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:35899 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgIBQgF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:36:05 -0400
-X-Originating-IP: 90.66.108.79
-Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id C04D9C0003;
-        Wed,  2 Sep 2020 16:35:58 +0000 (UTC)
-Date:   Wed, 2 Sep 2020 18:35:58 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        David Lechner <david@lechnology.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 01/10] clk: at91: Drop unused at91sam9g45_pcr_layout
-Message-ID: <20200902163558.GA4137028@piout.net>
-References: <20200902150348.14465-1-krzk@kernel.org>
+        Wed, 2 Sep 2020 12:37:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbgIBQhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:37:33 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00E87206E7;
+        Wed,  2 Sep 2020 16:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599064652;
+        bh=Wni3x+GYLltlmuMdPoBYORxVVeiXa3j+1KYJ4MzXN9M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VCqXUbtn8+j07T3SZla2H1AsOoHroyVvb//SzsI9m+cc21OlcAttpbm1t3jLtbgl8
+         4YggRDJ6lvhZ4riGctIq6GUbyY3ncSoW3ny/T3BG7oRb0Wnfk1YlgkfsRefZ7xQ4ks
+         ucrwKYsyDVqpArW9sIVvT8vj6aKq36VQqf8CdRlY=
+Date:   Wed, 2 Sep 2020 11:43:44 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Colin Ian King <colin.king@canonical.com>
+Subject: Re: [PATCH v2] power: supply: charger-manager: Fix info message in
+ check_charging_duration()
+Message-ID: <20200902164344.GC31464@embeddedor>
+References: <20200902162315.GA11384@embeddedor>
+ <f93c0fa0-51a1-291f-feda-fbd8d7397e88@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200902150348.14465-1-krzk@kernel.org>
+In-Reply-To: <f93c0fa0-51a1-291f-feda-fbd8d7397e88@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/09/2020 17:03:39+0200, Krzysztof Kozlowski wrote:
-> The at91sam9g45_pcr_layout is not used so drop it to fix build warning:
+On Wed, Sep 02, 2020 at 09:29:31AM -0700, Randy Dunlap wrote:
+> On 9/2/20 9:23 AM, Gustavo A. R. Silva wrote:
+> > A few months ago, commit e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
+> > changed the expression in the if statement from "duration > desc->discharging_max_duration_ms"
+> > to "duration > desc->charging_max_duration_ms", but the arguments for dev_info() were left unchanged.
+> > Apparently, due to a copy-paste error.
+> > 
+> > Fix this by using the proper arguments for dev_info().
+> > 
+> > Also, while there, replace "exceed" with "exceeds", for both messages.
+> > 
+> > Addresses-Coverity-ID: 1496803 ("Copy-paste error")
+> > Fixes: e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> > Changes in v2:
+> >  -  Replace "exceed" with "exceeds"
+> > 
+> >  drivers/power/supply/charger-manager.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
+> > index 07992821e252..a6d5dbd55e37 100644
+> > --- a/drivers/power/supply/charger-manager.c
+> > +++ b/drivers/power/supply/charger-manager.c
+> > @@ -464,7 +464,7 @@ static int check_charging_duration(struct charger_manager *cm)
+> >  		duration = curr - cm->charging_start_time;
+> >  
+> >  		if (duration > desc->charging_max_duration_ms) {
+> > -			dev_info(cm->dev, "Charging duration exceed %ums\n",
+> > +			dev_info(cm->dev, "Charging duration exceeds %ums\n",
+> >  				 desc->charging_max_duration_ms);
+> >  			ret = true;
+> >  		}
+> > @@ -472,8 +472,8 @@ static int check_charging_duration(struct charger_manager *cm)
+> >  		duration = curr - cm->charging_end_time;
+> >  
+> >  		if (duration > desc->charging_max_duration_ms) {
+> > -			dev_info(cm->dev, "Discharging duration exceed %ums\n",
+> > -				 desc->discharging_max_duration_ms);
+> > +			dev_info(cm->dev, "Charging duration exceeds %ums\n",
+> > +				 desc->charging_max_duration_ms);
+> >  			ret = true;
+> >  		}
+> >  	}
+> > 
 > 
->   drivers/clk/at91/at91sam9g45.c:49:36: warning:
->     'at91sam9g45_pcr_layout' defined but not used [-Wunused-const-variable=]
+> Hi,
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> It looks to me like the second block (else if) should be about discharging,
+> not charging, more like Colin King's patch had it:
+>
 
-> ---
->  drivers/clk/at91/at91sam9g45.c | 7 -------
->  1 file changed, 7 deletions(-)
-> 
-> diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
-> index c88ee20bee31..cb4a406ed15d 100644
-> --- a/drivers/clk/at91/at91sam9g45.c
-> +++ b/drivers/clk/at91/at91sam9g45.c
-> @@ -46,13 +46,6 @@ static const struct {
->  	{ .n = "pck1",  .p = "prog1",    .id = 9 },
->  };
->  
-> -static const struct clk_pcr_layout at91sam9g45_pcr_layout = {
-> -	.offset = 0x10c,
-> -	.cmd = BIT(12),
-> -	.pid_mask = GENMASK(5, 0),
-> -	.div_mask = GENMASK(17, 16),
-> -};
-> -
->  struct pck {
->  	char *n;
->  	u8 id;
-> -- 
-> 2.17.1
-> 
+I had the same impression for a moment, but what makes me think this is
+more about charging than discharging, is this line:
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+471         } else if (cm->battery_status == POWER_SUPPLY_STATUS_NOT_CHARGING) {
+
+which was introduced by the same commit:
+
+e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
+
+let's find out... :)
+
+Thanks
+--
+Gustavo
