@@ -2,162 +2,177 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C095C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC5EC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13F07207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YO7kP1OV"
+	by mail.kernel.org (Postfix) with ESMTP id 009F7207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgIBPkn (ORCPT
+        id S1728302AbgIBPk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:40:43 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:43942 "EHLO mail.skyhub.de"
+        Wed, 2 Sep 2020 11:40:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39248 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbgIBPkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:40:24 -0400
-Received: from zn.tnic (p200300ec2f0d7a00acdede37bac547d6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:7a00:acde:de37:bac5:47d6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 470581EC0246;
-        Wed,  2 Sep 2020 17:40:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599061221;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=J2ZtrCLLChAY/AVO02S7bV94bTES+irZ+l2Kh5Mnf50=;
-        b=YO7kP1OV0x0zu4OiuDp2CMuP+xSsyUTCMPKm6cC1+d0SfXMjJQpJMFsHEhkhXjoj3eMbbi
-        AMuf+zQuu1dSOS4828rhouHWMdZ7UVQ/hHGPI7BKMwarA9PvbZSXt2rE4rU/kaPifOELbA
-        IcoHEJbe+CHKazqbLJ8Ghz20rgTeZFI=
-Date:   Wed, 2 Sep 2020 17:40:18 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] tools/x86: add kcpuid tool to show raw CPU features
-Message-ID: <20200902154018.GA21537@zn.tnic>
-References: <1598514543-90152-1-git-send-email-feng.tang@intel.com>
+        id S1726802AbgIBNpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:45:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 9147AB60B;
+        Wed,  2 Sep 2020 13:45:34 +0000 (UTC)
+Date:   Wed, 2 Sep 2020 15:45:33 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        nstange@suse.de
+Subject: Re: [PATCH 1/2] docs/livepatch: Add new compiler considerations
+ doc
+In-Reply-To: <20200721161407.26806-2-joe.lawrence@redhat.com>
+Message-ID: <alpine.LSU.2.21.2009021452560.23200@pobox.suse.cz>
+References: <20200721161407.26806-1-joe.lawrence@redhat.com> <20200721161407.26806-2-joe.lawrence@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1598514543-90152-1-git-send-email-feng.tang@intel.com>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 03:49:03PM +0800, Feng Tang wrote:
-> output of the tool
-> ------------------
-> 
-> 	CPUID leafs total: 28
-> 
-> 	cpu family	: 6
-> 	model		: 13
-> 	stepping	: 7
+Hi,
 
-Yeah, this should dump model etc and those numbers should be in hex and
-additionally in dec if people prefer them.
+first, I'm sorry for the late reply. Thanks, Josh, for the reminder.
 
-> 	CPU features
-> 	------------
-> 	 sse3
-> 	 pclmlqdq
-> 	 dtes64
-> 	 mwait
-> 	 ds_cpl
-> 	 vmx
-> 	 smx
-> 	 eist
-> 	 tm2
-> 	 ssse3
-> 	 cx16
-> 	 pctxid
-> 	 dca
-> 	 sse4_1
-> 	 sse4_2
-> 	 x2apic
-> 	 tsc_deadline_timer
-> 	 aes
-> 	 xsave
-> 	 osxsave
-> 	 avx
-> 	 fpu
-> 	 ...
+CCing Nicolai. Nicolai, could you take a look at the proposed 
+documentation too, please? You have more up-to-date experience.
 
-I guess that's good for grepping. With a lot of leafs, leaf output
-should probably be controlled by cmdline opts.
+On Tue, 21 Jul 2020, Joe Lawrence wrote:
 
-> [1] http://sr71.net/~dave/intel/stupid-cpuid.c
-> 
-> Originally-by: Borislav Petkov <bp@alien8.de>
-> Suggested-by: Dave Hansen <dave.hansen@intel.com>
-> Signed-off-by: Feng Tang <feng.tang@intel.com>
-> ---
->  tools/arch/x86/tools/kcpuid/Makefile |  21 ++
->  tools/arch/x86/tools/kcpuid/kcpuid.c | 422 +++++++++++++++++++++++++++++++++++
->  2 files changed, 443 insertions(+)
->  create mode 100644 tools/arch/x86/tools/kcpuid/Makefile
->  create mode 100644 tools/arch/x86/tools/kcpuid/kcpuid.c
+> +Examples
+> +========
+> +
+> +Interprocedural optimization (IPA)
+> +----------------------------------
+> +
+> +Function inlining is probably the most common compiler optimization that
+> +affects livepatching.  In a simple example, inlining transforms the original
+> +code::
+> +
+> +	foo() { ... [ foo implementation ] ... }
+> +
+> +	bar() { ...  foo() ...  }
+> +
+> +to::
+> +
+> +	bar() { ...  [ foo implementation ] ...  }
+> +
+> +Inlining is comparable to macro expansion, however the compiler may inline
+> +cases which it determines worthwhile (while preserving original call/return
+> +semantics in others) or even partially inline pieces of functions (see cold
+> +functions in GCC function suffixes section below).
+> +
+> +To safely livepatch ``foo()`` from the previous example, all of its callers
+> +need to be taken into consideration.  For those callers that the compiler had
+> +inlined ``foo()``, a livepatch should include a new version of the calling
+> +function such that it:
+> +
+> +  1. Calls a new, patched version of the inlined function, or
+> +  2. Provides an updated version of the caller that contains its own inlined
+> +     and updated version of the inlined function
 
-Let's drop the second "tools" from the path:
+I'm afraid the above could cause a confusion...
 
-tools/arch/x86/kcpuid/Makefile
-tools/arch/x86/kcpuid/kcpuid.c
+"1. Calls a new, patched version of the inlined function, or". The 
+function is not inlined in this case. Would it be more understandable to 
+use function names?
 
-> +struct reg_01_a {
-> +	u32 stepping: 4;	/* bit 0 */
-> +	u32 model: 4;
-> +	u32 family: 4;
-> +	u32 type: 2;
-> +	u32 pad1: 2;
-> +	u32 model_ext: 4;	/* bit 16 */
-> +	u32 family_ext: 8;
-> +};
+1. Calls a new, patched version of function foo(), or
+2. Provides an updated version of bar() that contains its own inlined and 
+   updated version of foo() (as seen in the example above).
 
-Yeah, instead of defining a separate struct for each leaf I think it
-would be smarter/better to have a text file in a machine parseable
-format which defines your leafs.
+Not to say that it is again a call of the compiler to decide that, so one 
+usually prepares an updated version of foo() and updated version of bar() 
+calling to it. Updated foo() has to be there for non-inlined cases anyway.
 
-When you need to add a new leaf, you simply extend the text file and the
-tool parses it anew and has its all CPUID info uptodate. This way you
-won't even have to recompile it. Adding new CPUID leafs would be adding new
-lines to the file.
+> +
+> +Other interesting IPA examples include:
+> +
+> +- *IPA-SRA*: removal of unused parameters, replace parameters passed by
+> +  referenced by parameters passed by value.  This optimization basically
 
-For example:
+s/referenced/reference/
 
-LEAF<num>,SUBLEAF<num>,[EAX,EBX,ECX,EDX]{[width]<Mnemonic>|<Long text>,...}
+> +  violates ABI.
+> +
+> +  .. note::
+> +     GCC changes the name of function.  See GCC function suffixes
+> +     section below.
+> +
+> +- *IPA-CP*: find values passed to functions are constants and then optimizes
+> +  accordingly Several clones of a function are possible if a set is limited.
 
-LEAF07,SUBLEAF00,EAX{[31:0]max_value|Max input value for supported subleafs}
-LEAF07,SUBLEAF00,EBX{[0]FSGSBASE|RDFSBASE/RDGSBASE/WRFSBASE/WRGSBASE if 1.,
-		     [1]TSC_ADJUST|IA32_TSC_ADJUST MSR is supported if 1.,
-		     [2]SGX|Supports Intel® Software Guard Extensions (Intel® SGX Extensions) if 1.,
-		     ...
-}
-LEAF07,SUBLEAF00,ECX{[0]PREFETCHWT1|(Intel® Xeon PhiTM only.),
-		     [1]AVX512_VBMI|,
-		     ...
+"...accordingly. Several..."
 
-This is just a dumb attempt but I hope it comes across where I'm getting
-with this.
+[...]
 
-Thx.
+> +  	void cdev_put(struct cdev *p)
+> +  	{
+> +  		if (p) {
+> +  			struct module *owner = p->owner;
+> +  			kobject_put(&p->kobj);
+> +  			module_put(owner);
+> +  		}
+> +  	}
 
--- 
-Regards/Gruss,
-    Boris.
+git am complained here about whitespace damage.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+[...]
+
+> +kgraft-analysis-tool
+> +--------------------
+> +
+> +With the -fdump-ipa-clones flag, GCC will dump IPA clones that were created
+> +by all inter-procedural optimizations in ``<source>.000i.ipa-clones`` files.
+> +
+> +kgraft-analysis-tool pretty-prints those IPA cloning decisions.  The full
+> +list of affected functions provides additional updates that the source-based
+> +livepatch author may need to consider.  For example, for the function
+> +``scatterwalk_unmap()``:
+> +
+> +::
+> +
+> +  $ ./kgraft-ipa-analysis.py --symbol=scatterwalk_unmap aesni-intel_glue.i.000i.ipa-clones
+> +  Function: scatterwalk_unmap/2930 (include/crypto/scatterwalk.h:81:60)
+> +    isra: scatterwalk_unmap.isra.2/3142 (include/crypto/scatterwalk.h:81:60)
+> +      inlining to: helper_rfc4106_decrypt/3007 (arch/x86/crypto/aesni-intel_glue.c:1016:12)
+> +      inlining to: helper_rfc4106_decrypt/3007 (arch/x86/crypto/aesni-intel_glue.c:1016:12)
+> +      inlining to: helper_rfc4106_encrypt/3006 (arch/x86/crypto/aesni-intel_glue.c:939:12)
+> +
+> +    Affected functions: 3
+> +      scatterwalk_unmap.isra.2/3142 (include/crypto/scatterwalk.h:81:60)
+> +      helper_rfc4106_decrypt/3007 (arch/x86/crypto/aesni-intel_glue.c:1016:12)
+> +      helper_rfc4106_encrypt/3006 (arch/x86/crypto/aesni-intel_glue.c:939:12)
+
+The example for the github is not up-to-date. The tool now expects 
+file_list with *.ipa-clones files and the output is a bit different for 
+the recent kernel.
+
+$ echo arch/x86/crypto/aesni-intel_glue.c.000i.ipa-clones | kgraft-ipa-analysis.py --symbol=scatterwalk_unmap /dev/stdin
+Parsing file (1/1): arch/x86/crypto/aesni-intel_glue.c.000i.ipa-clones
+Function: scatterwalk_unmap/3935 (./include/crypto/scatterwalk.h:59:20) [REMOVED] [object file: arch/x86/crypto/aesni-intel_glue.c.000i.ipa-clones]
+  isra: scatterwalk_unmap.isra.8/4117 (./include/crypto/scatterwalk.h:59:20) [REMOVED]
+    inlining to: gcmaes_crypt_by_sg/4019 (arch/x86/crypto/aesni-intel_glue.c:682:12) [REMOVED] [edges: 4]
+      constprop: gcmaes_crypt_by_sg.constprop.13/4182 (arch/x86/crypto/aesni-intel_glue.c:682:12)
+
+  Affected functions: 3
+    scatterwalk_unmap.isra.8/4117 (./include/crypto/scatterwalk.h:59:20) [REMOVED]
+    gcmaes_crypt_by_sg/4019 (arch/x86/crypto/aesni-intel_glue.c:682:12) [REMOVED]
+    gcmaes_crypt_by_sg.constprop.13/4182 (arch/x86/crypto/aesni-intel_glue.c:682:12)
+
+
+
+The rest looks great. Thanks a lot, Joe, for putting it together.
+
+Miroslav
