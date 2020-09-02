@@ -2,102 +2,83 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2613C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95323C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9572520773
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:06:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599062798;
-	bh=FjNqcIHsh7BzHOMd1Jic3POpDVsD+qe7+fq8mnsJI50=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e4Wxe0h/QSVeZnKLbdMIt4HtYycMe5tORv2D89aweAEDXlz3kgO/ZiFSMYhmuIA+a
-	 yErN4f/GZqV9f7YHZ/W8fG4+1qKI1D7noropkDR/vJO1Gq4kSEhVaaUiuHpUx0rivw
-	 CA/VfdyaymH5YkvZvuXsiisEbI2dWRzW0iw7j6po=
+	by mail.kernel.org (Postfix) with ESMTP id 6BA86207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgIBQGh (ORCPT
+        id S1728316AbgIBQHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:06:37 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39537 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728022AbgIBQGP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:06:15 -0400
-Received: by mail-ed1-f67.google.com with SMTP id c10so5465089edk.6;
-        Wed, 02 Sep 2020 09:06:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o/k/jl8kCbC36+2FeLOHphrZjREiZCdM+WriURHXorE=;
-        b=tslD+Vj+VwfqxW/voVbBn65F0Utb4fM3Kj4pnMb9z0F6/Q+Ryy5Xu0TSaXKJ1lQntY
-         JoFOj2phZYMbhzE48Y1LKge1S2x4seCBVKYIWUVjKQpRnOJs2/FgjDVy3hTBgZEAr97y
-         BwtX5rtB7x+k0HQEzPwRWXkRL6bG3gnTnG5IYjfs4wARLwckRyf6jVZZsIc6v1ixK7jR
-         6f9TTW1IoYn9O/c2xdw6M/b0BWYUcGjiX8dkOb7xwCqZLQomjhSTQZOjD6fkBVx/0Xob
-         LMOq5CuJKymfKos9h4Q5tosCgrUDogQJLOctFsdZnhoZmh+dp87v6OD0v1/BvNObe5S8
-         fWPg==
-X-Gm-Message-State: AOAM532XvBwUyNq65zpZv2PAqRkvvLZnF+mcawUuT8ssjlow96478v8V
-        uNaK+uka8X8nlBe/nBQyU10=
-X-Google-Smtp-Source: ABdhPJwJuyNgxyGPCkUCKgxVeWeN3ahgf+XnMGbzf/ZL2QQEUetIvvJw1gbkJlFGZoRrBdx+Cq2i1g==
-X-Received: by 2002:a50:d7d0:: with SMTP id m16mr772218edj.105.1599062772890;
-        Wed, 02 Sep 2020 09:06:12 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.106])
-        by smtp.googlemail.com with ESMTPSA id z5sm4657068ejm.111.2020.09.02.09.06.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Sep 2020 09:06:12 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 18:06:09 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        alsa-devel@alsa-project.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH 04/10] dt-bindings: mfd: syscon: Document Samsung Exynos
- compatibles
-Message-ID: <20200902160609.GA21555@kozik-lap>
-References: <20200829142501.31478-1-krzk@kernel.org>
- <20200829142501.31478-4-krzk@kernel.org>
+        Wed, 2 Sep 2020 12:07:12 -0400
+Received: from mga11.intel.com ([192.55.52.93]:38102 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726882AbgIBQHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:07:10 -0400
+IronPort-SDR: KUPLMY5MtGIL55SFlArTlIWy47JKypOd66wmGcllGa8bYBnvyWyrDmYRW6AgIsLJsAq9T0RTLJ
+ V5D9feM0wNrQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="154924114"
+X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
+   d="scan'208";a="154924114"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 09:06:53 -0700
+IronPort-SDR: l8VrC5+C1S9Nq/aHxQrvNL9I/tMg67YLfqcvEZMDqI/tLYiRgiyChsii2coNEufLjEDBkyVYj7
+ STZHlJtnPT6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,383,1592895600"; 
+   d="scan'208";a="315163057"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 02 Sep 2020 09:06:53 -0700
+Received: from [10.249.227.213] (abudanko-mobl.ccr.corp.intel.com [10.249.227.213])
+        by linux.intel.com (Postfix) with ESMTP id 4234D58041C;
+        Wed,  2 Sep 2020 09:06:52 -0700 (PDT)
+Subject: Re: [PATCH V2 1/6] perf tools: Consolidate --control option parsing
+ into one function
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20200901093758.32293-1-adrian.hunter@intel.com>
+ <20200901093758.32293-2-adrian.hunter@intel.com>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <d4769bfe-8d5a-b510-23ae-65012889bf92@linux.intel.com>
+Date:   Wed, 2 Sep 2020 19:06:51 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
+In-Reply-To: <20200901093758.32293-2-adrian.hunter@intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200829142501.31478-4-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 04:24:55PM +0200, Krzysztof Kozlowski wrote:
-> Samsung Exynos SoCs use syscon for system registers so document its
-> compatibles.
+
+On 01.09.2020 12:37, Adrian Hunter wrote:
+> Consolidate --control option parsing into one function, in preparation for
+> adding FIFO file name options.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 > ---
->  Documentation/devicetree/bindings/mfd/syscon.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
+>  tools/perf/builtin-record.c | 22 ++--------------------
+>  tools/perf/builtin-stat.c   | 22 ++--------------------
+>  tools/perf/util/evlist.c    | 24 ++++++++++++++++++++++++
+>  tools/perf/util/evlist.h    |  1 +
+>  4 files changed, 29 insertions(+), 40 deletions(-)
 
-As pointed by Sylwester, I will send a follow up to remove other YAML
-file. This patch could be dropped.
+Acked-by: Alexei Budankov <alexey.budankov@linux.intel.com>
 
-Best regards,
-Krzysztof
-
+Regards,
+Alexei
