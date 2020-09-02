@@ -2,202 +2,108 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3497FC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DDBC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 117172087D
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:13:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uZdIhUej"
+	by mail.kernel.org (Postfix) with ESMTP id 2D92A2087D
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:14:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgIBHNn (ORCPT
+        id S1726802AbgIBHON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:13:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58402 "EHLO
+        Wed, 2 Sep 2020 03:14:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726311AbgIBHNf (ORCPT
+        with ESMTP id S1726173AbgIBHOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:13:35 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BACCBC061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:13:34 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id n12so981857vkk.11
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 00:13:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9FyRqglKmbgC+YLd7eUpkAxWZYcCmplsY/5grczgp4M=;
-        b=uZdIhUejpj0MS9lSXbyyF5E/+kgUutyQsFhsYKZAeayBijIkNIER6kBOjXFhmOiOMj
-         /+oDnvt54tyNAa0Hq9UIIv9h1nbU6VvZT99Bp/cYH3i5pX22v5Uu8teHXRBXnwinupYV
-         63wHJhG8A/Ksh3Wr4uVjwHJ0GTkvMtTv963Ra6CHlJepWzMfHNV+y2fmnKsbdBxeiFvN
-         ySGWY3qKVSOw6NvWSftXayU1QgU4D5QVqiQ8bZ1RG6HJgjRP1Wth99dpD+AFOd2k4e31
-         2FSE4bd9m00lnzzQ8LZHA7nNr275ea6z261YDoY3ktW6n7sU4gRhJDM6ndaoaMTiEnIH
-         tLWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9FyRqglKmbgC+YLd7eUpkAxWZYcCmplsY/5grczgp4M=;
-        b=LLH6SIbdEawGSSRC4/WK+nEgzgtffi2+GLge+Ly6UKJ0ixZ3rdbI7pdruCZwLH7JFB
-         IrUDqizKvvpZRs+ZdoH8BaWzuiXt+pbDjDMr6KyLwDB+sLaMYpZS5op7xv33WcBpUpf4
-         FDWrlulfY5voCioGvOQRogp178Hqo/sFKNj+N5RIfKLflpT7Itp3CZkZ+5ZkkOd8/z8h
-         CKpywQ3zd7JrkjzsCoqOOnNx0cWYYvbPT6SppCYVZ+zZe6Ytfk5Te4hr2lOS1koZO8mn
-         BBLkOUI5wS960p/Gm7nzIzqrbdE5ofIv79cLvp49JEQPnNNm5uBEZTxM7TIZBS2M68ef
-         92Zw==
-X-Gm-Message-State: AOAM532Njxa4RHHCz7XVEkt6qX4Ga7XU9dC9au8xgc0DsnV/9V5MHhKc
-        L9ESX/N/yx5ObxwrXbmOf0EZD/+S/Irwuzj+CTq3OUMLVdH+Ig==
-X-Google-Smtp-Source: ABdhPJyrVAyQl3k4J4t4zLtuk6x7K8Pt+C7h2n0tGx6cjE6twG/jjc0/lGg6PvOYD0tQGrmUBPBp8lb5/xcH6L8oA8s=
-X-Received: by 2002:ac5:c8b9:: with SMTP id o25mr4294526vkl.51.1599030813900;
- Wed, 02 Sep 2020 00:13:33 -0700 (PDT)
+        Wed, 2 Sep 2020 03:14:12 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B19C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:14:09 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kDMxw-0003yr-OC; Wed, 02 Sep 2020 09:13:56 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kDMxw-0007za-AF; Wed, 02 Sep 2020 09:13:56 +0200
+Date:   Wed, 2 Sep 2020 09:13:56 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 4/6] pwm: sifive: Simplify with dev_err_probe()
+Message-ID: <20200902071356.5qxsit745xnpcq7g@pengutronix.de>
+References: <20200826144747.9436-1-krzk@kernel.org>
+ <20200826144747.9436-4-krzk@kernel.org>
 MIME-Version: 1.0
-References: <20200901150928.096174795@linuxfoundation.org>
-In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 2 Sep 2020 12:43:22 +0530
-Message-ID: <CA+G9fYtOetDR6EVygFx6S5wU6SL6fPYjwp25rbxYM_XmAqiLMA@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/91] 4.14.196-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vqfietzmphnlidcc"
+Content-Disposition: inline
+In-Reply-To: <20200826144747.9436-4-krzk@kernel.org>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Sep 2020 at 20:49, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.196 release.
-> There are 91 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 03 Sep 2020 15:09:01 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.196-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
+--vqfietzmphnlidcc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On Wed, Aug 26, 2020 at 04:47:45PM +0200, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Thanks
+Uwe
 
-NOTE:
-Kernel BUG on arm64 juno kasan config kernel running
-LTP tracing test suite found this BUG. This BUG is not specific
-to this stable rc release.
-BUG: KASAN: use-after-free in prepare_ftrace_return
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-Summary
-------------------------------------------------------------------------
+--vqfietzmphnlidcc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-kernel: 4.14.196-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 54fa008d06cd73d42acafb918a6ae005eaef4875
-git describe: v4.14.195-92-g54fa008d06cd
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.195-92-g54fa008d06cd
+-----BEGIN PGP SIGNATURE-----
 
-No regressions (compared to build v4.14.195)
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl9PRjEACgkQwfwUeK3K
+7Am3ngf9EhzuqEYogHP66J3qLjiTZkLGOydaBY1+zWND5h733JJpu6S3D0ZvDeba
+5qQ9BhpSTfMTZBwRWmKsXkR+JQ/L7r5pm+qT4c6Qt4tiX3BK42XaIkmgXBsnN6se
+S/fo1GCr6sKTrQFmBoynaZA2qo6+ECDAclJVy0/Od14DivhkCd2FPNfOjIsNWun8
+na90Bhbwtvd+RZtGnec5Z49Jy5dL5eonWXidiKT5diOSBWgOapB08LrNxbAtIbPT
+kmY9maP6NYl+Iwdo39siN0Rw1Pe6NWtDti8VD+8GIr7TxBrcUbI3etANaFg1XXQY
+1ZsWNC3Szpru4KUooANUfwLuE0kE1w==
+=8ydu
+-----END PGP SIGNATURE-----
 
-No fixes (compared to build v4.14.195)
-
-Ran 33060 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* igt-gpu-tools
-* install-android-platform-tools-r2600
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-tracing-tests
-* perf
-* v4l2-compliance
-* ltp-containers-tests
-* ltp-dio-tests
-* ltp-fs-tests
-* ltp-io-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* ssuite
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+--vqfietzmphnlidcc--
