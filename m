@@ -2,81 +2,113 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE56C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97068C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A22B020829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED72207D3
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 12:55:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CJFTE95K"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="HVouhgUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgIBMyq (ORCPT
+        id S1727099AbgIBMzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 08:54:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54082 "EHLO
+        Wed, 2 Sep 2020 08:55:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbgIBMyM (ORCPT
+        with ESMTP id S1726654AbgIBMy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 08:54:12 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BD2C061245;
-        Wed,  2 Sep 2020 05:54:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=isrzndUDYiz7AVFuWayAZA6ecBCJ63M610eK0GJhjus=; b=CJFTE95KS0gBy1UFDjdzh0P6Zl
-        vDTCAlAnnxWW+J6nr0RwUn6VRG66ylaYFPPlvlH8rhBCX30JAYid8uFSWuD69AtxC76S30Nr9yXsl
-        H9eSsb8jb691xbcuFWqBvs8VP94SA83/8/9kYBol3nd+u6Kw5IwsV0Hk7tHlS+sSfBM/nIW8oe1Ld
-        NuJu5EM1RRyv7zitERugqVYenzVQi7IoEjJFh8U4MGebZbpucb8EHJA9shCLT3QeAcitanIwf1GXL
-        hStgfJKmdVxowB0QR8dps2hyFpcFWoP2BEp4/AhKrNEmBmnuKbo2ZTE+mBMXLgyJG+bQq8WDwt5/L
-        6ggoxK7Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDSH5-00015w-UD; Wed, 02 Sep 2020 12:54:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F0D3E3011C6;
-        Wed,  2 Sep 2020 14:54:02 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DE4C423D3D75E; Wed,  2 Sep 2020 14:54:02 +0200 (CEST)
-Date:   Wed, 2 Sep 2020 14:54:02 +0200
-From:   peterz@infradead.org
-To:     Nadav Amit <nadav.amit@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Nadav Amit <namit@vmware.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] x86/special_insn: reverse __force_order logic
-Message-ID: <20200902125402.GG1362448@hirez.programming.kicks-ass.net>
-References: <20200901161857.566142-1-namit@vmware.com>
+        Wed, 2 Sep 2020 08:54:27 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA4EC061245
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 05:54:26 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id l63so4797880edl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 05:54:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jguf1LcpzdLbnb6m9J0BP0vWI/LKfE1Jts6BiXQTOXA=;
+        b=HVouhgUe0h/dT/d25fmAt8+AdYkGMgTHsNTj5v0ofRuKkDS632pxM+ScRs+0Hy3nLB
+         DQg3t5tY2PHuwD4M3USyJMU5+lCGOBjBvWIRfCYDvR1uXAoRV/weUz2gSAW/YzaPNURa
+         bdfxgPpU+zKvGI07WPyDNuiDG/hb9hQI2afHwcrREBe+XMU2rqLo+5ZmdyRNMNgtNnAq
+         bemfPQgUfLIOfyN9sCqvTNSP6TbOhP7odrcAnsvG82RdBk1oU7lD2QZd7LfgMPMz485Z
+         Vgnwbx9hyLy6RbBIBo2AtdkOVIvPpzojlLk71ifI/7XXL+r1pLdsrmvR7tu76psXNaoT
+         1e8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jguf1LcpzdLbnb6m9J0BP0vWI/LKfE1Jts6BiXQTOXA=;
+        b=rRPg/DDGBMWv6uAWf/PDGAOKw8gw4yx6IOd6/e5+B1aKuI29ZxIRH8tbuPZRP5g4A2
+         /dNXnnP/fjeZ26WV12NZImdTw8TuoxcI4MyD96xaFsCyYrGFL3eHJ9kvAIgvJxEEWcxJ
+         3tZ8pFIYbhpWnHQn9JV2JRPLLbBEB3VwiFeU9lpsV0H3RIKFYfzr3LLxRixio8clXy4F
+         420b/ESTJgYpIGwAXpwaeWm0oSdaUdOs/4fwOC3g2RyJJKYo/XVc9NqBHomA1WyrYJYg
+         XvMqktzTw5CDaNZDJNApf/t2nFKIpfFiVlaqckO1rg9w2x54Zq4l8Y6NzblwrfrOSiVh
+         X8Gw==
+X-Gm-Message-State: AOAM533FQYk9OYStaAN+UHS5UoH0vNRDR9eHy6n/9zRQ8HL+M7x6Nmmz
+        keC6Xn+axw4nlIhTB5MJ8ULV6MrJKQdmlg0NtSsuRA==
+X-Google-Smtp-Source: ABdhPJyaN78gS/ZUa0KTrLX84zGJiMFwqPH7s7EsAhv3YTCXunsjJ0gi6JjMwMbqDGXOC126EP7OpX0Pk8dwY/z8JZ4=
+X-Received: by 2002:a05:6402:1d0f:: with SMTP id dg15mr6629378edb.342.1599051265010;
+ Wed, 02 Sep 2020 05:54:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901161857.566142-1-namit@vmware.com>
+References: <20200127173453.2089565-1-guro@fb.com> <20200130020626.GA21973@in.ibm.com>
+ <20200130024135.GA14994@xps.DHCP.thefacebook.com> <CA+CK2bCQcnTpzq2wGFa3D50PtKwBoWbDBm56S9y8c+j+pD+KSw@mail.gmail.com>
+ <20200813000416.GA1592467@carbon.dhcp.thefacebook.com> <CA+CK2bDDToW=Q5RgeWkoN3_rUr3pyWGVb9MraTzM+DM3OZ+tdg@mail.gmail.com>
+ <CA+CK2bBEHFuLLg79_h6bv4Vey+B0B2YXyBxTBa=Le12OKbNdwA@mail.gmail.com>
+ <6469324e-afa2-18b4-81fb-9e96466c1bf3@suse.cz> <20200902113204.GD4617@dhcp22.suse.cz>
+In-Reply-To: <20200902113204.GD4617@dhcp22.suse.cz>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Wed, 2 Sep 2020 08:53:49 -0400
+Message-ID: <CA+CK2bA6EpfSMZD6egysFqdw0tZFuPAxEJc-rQbJTnjf+u2TGA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/28] The new cgroup slab memory controller
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 09:18:57AM -0700, Nadav Amit wrote:
+On Wed, Sep 2, 2020 at 7:32 AM Michal Hocko <mhocko@suse.com> wrote:
+>
+> On Wed 02-09-20 11:53:00, Vlastimil Babka wrote:
+> > >> > > Thread #2: ccs killer kthread
+> > >> > >    css_killed_work_fn
+> > >> > >      cgroup_mutex  <- Grab this Mutex
+> > >> > >      mem_cgroup_css_offline
+> > >> > >        memcg_offline_kmem.part
+> > >> > >           memcg_deactivate_kmem_caches
+> > >> > >             get_online_mems
+> > >> > >               mem_hotplug_lock <- waits for Thread#1 to get read access
+>
+> And one more thing. THis has been brought up several times already.
+> Maybe I have forgoten but why do we take hotplug locks in this path in
+> the first place? Memory hotplug notifier takes slab_mutex so this
+> shouldn't be really needed.
 
-> Unless I misunderstand the logic, __force_order should also be used by
-> rdpkru() and wrpkru() which do not have dependency on __force_order. I
-> also did not understand why native_write_cr0() has R/W dependency on
-> __force_order, and why native_write_cr4() no longer has any dependency
-> on __force_order.
+Good point, it seems this lock can be completely removed from
+memcg_deactivate_kmem_caches
 
-There was a fairly large thread about this thing here:
+Pasha
 
-  https://lkml.kernel.org/r/20200527135329.1172644-1-arnd@arndb.de
-
-I didn't keep up, but I think the general concensus was that it's
-indeed a bit naf.
+> --
+> Michal Hocko
+> SUSE Labs
