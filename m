@@ -2,99 +2,103 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E914DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B299FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8EF720767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:34:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599060899;
-	bh=9fjWbCmuALVUvcHuHMkm09b5211sjynNJ9Tq1XvySIY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=UtlUwhZimvwT5uDF37VtNe9gCMZD4UDkp+mHphOx5phxp5jelVmZBrM4o/6+jVsof
-	 E7Z9JqfPKWohAevUFh1PPGEiH/JSI8tPLDthzfFrkz1aF1KiWOukkVGke9hiykIXIj
-	 waRUhswnuUQC3L465I++ijjJ76+CXi8HGRyceRqM=
+	by mail.kernel.org (Postfix) with ESMTP id 73BC1207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:35:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="joGcDM7P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgIBPe5 (ORCPT
+        id S1728045AbgIBPfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:34:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbgIBPFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:05:38 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7370B20773;
-        Wed,  2 Sep 2020 15:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599059137;
-        bh=9fjWbCmuALVUvcHuHMkm09b5211sjynNJ9Tq1XvySIY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LsixEc0u2r/bJq7yAVUUGvglnE3PaYEdtJmatcn3Azh1lSeG+yUXR3cFJdaqoeUlb
-         o3vf/H1TyiQofCDsL5A9e9eY6nkyrb11Q0SqrM9eDjTfjqMJqIWHpF0ZLX45Z8J2Lo
-         rQWDbT7cGc35c4SOHoXjclIo1T5sLGHzkKBG0niw=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Chen Zhou <chenzhou10@huawei.com>,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/4] crypto: caam - Fix kerneldoc
-Date:   Wed,  2 Sep 2020 17:05:27 +0200
-Message-Id: <20200902150530.14640-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 2 Sep 2020 11:35:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728276AbgIBPez (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:34:55 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92216C061244;
+        Wed,  2 Sep 2020 08:34:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=cq7bXXRcLzbBq/NxnwB+6LP/PEJbfLvvVskEHmvDFfw=; b=joGcDM7PwydTjV3jNF6ZNuYqy3
+        idZOQCy8FTBjrOxeVSjYgjnErqBoWPc10FGKem/5RZ1k3SVfAvHIm2Vdi/HGZkA/ePUlZ4rWrhoYl
+        m8hd5stiW+6Rzw7VfhxuvxRhZ0YLCosoRTvDz0LxtWaGU1H4d0UVksCXz7PdD2jf/hnDpyU9LqtsM
+        WdDvZDY6MLOd6IpOIbxi+dMTdaUzxfPgCG2LM3LuIDTye9dzLMrom7B69PFfv1oeTISGpcf1gGgF1
+        fMH31FUtrAWKDtuVBYAVLxfJKGzgdEsp6qC8vuxER4at/A5SP88enk71tPFYx025NngwjrYkdebSm
+        yN0HFQtw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDUmg-0002me-MA; Wed, 02 Sep 2020 15:34:50 +0000
+Subject: Re: [PATCH] power: supply: charger-manager: Fix info message in
+ check_charging_duration()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Bakker <xc-racer2@live.ca>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200902153846.GA10327@embeddedor>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8d7be08f-fa20-d217-a606-738d79e36259@infradead.org>
+Date:   Wed, 2 Sep 2020 08:34:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200902153846.GA10327@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix kerneldoc warnings:
+On 9/2/20 8:38 AM, Gustavo A. R. Silva wrote:
+> A few months ago, commit e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
+> changed the expression in the if statement from "duration > desc->discharging_max_duration_ms"
+> to "duration > desc->charging_max_duration_ms", but the arguments for dev_info() were left unchanged.
+> Apparently, due to a copy-paste error.
+> 
+> Fix this by using the proper arguments for dev_info().
+> 
+> Addresses-Coverity-ID: 1496803 ("Copy-paste error")
+> Fixes: e132fc6bb89b ("power: supply: charger-manager: Make decisions focussed on battery status")
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/power/supply/charger-manager.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
+> index 07992821e252..6117018e89df 100644
+> --- a/drivers/power/supply/charger-manager.c
+> +++ b/drivers/power/supply/charger-manager.c
+> @@ -472,8 +472,8 @@ static int check_charging_duration(struct charger_manager *cm)
+>  		duration = curr - cm->charging_end_time;
+>  
+>  		if (duration > desc->charging_max_duration_ms) {
+> -			dev_info(cm->dev, "Discharging duration exceed %ums\n",
+> -				 desc->discharging_max_duration_ms);
+> +			dev_info(cm->dev, "Charging duration exceed %ums\n",
 
-  drivers/crypto/caam/caamalg_qi2.c:73: warning: cannot understand function prototype: 'struct caam_ctx '
-  drivers/crypto/caam/caamalg_qi2.c:2962: warning: cannot understand function prototype: 'struct caam_hash_ctx '
+preferably		                                     exceeds
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/crypto/caam/caamalg_qi2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> +				 desc->charging_max_duration_ms);
+>  			ret = true;
+>  		}
+>  	}
+> 
 
-diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
-index 66ae1d581168..0441e4ff2df2 100644
---- a/drivers/crypto/caam/caamalg_qi2.c
-+++ b/drivers/crypto/caam/caamalg_qi2.c
-@@ -59,7 +59,7 @@ struct caam_skcipher_alg {
- };
- 
- /**
-- * caam_ctx - per-session context
-+ * struct caam_ctx - per-session context
-  * @flc: Flow Contexts array
-  * @key:  [authentication key], encryption key
-  * @flc_dma: I/O virtual addresses of the Flow Contexts
-@@ -2951,7 +2951,7 @@ enum hash_optype {
- };
- 
- /**
-- * caam_hash_ctx - ahash per-session context
-+ * struct caam_hash_ctx - ahash per-session context
-  * @flc: Flow Contexts array
-  * @key: authentication key
-  * @flc_dma: I/O virtual addresses of the Flow Contexts
+thanks.
 -- 
-2.17.1
+~Randy
 
