@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2BAC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A60C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7309120639
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F0820639
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063429;
-	bh=zeOoW6dBDPMUDQNPabBvfdWG+dRh4/f7I9v8bSFs3WU=;
+	s=default; t=1599063434;
+	bh=vbQF66iKfyJ7E6H+ff93dGs/2GYrxlcC/G916kKGy4E=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=jLMg7lkhHKKvX8ttqgrGQIeKQsT9HBBvlka02M7OnrLm9DmnYe3wMPcGTYNls2f5a
-	 YgE8/ve9TKPBSTjmywuavcBBEKBWO/A00Xv+4vZlpUbr8mNemllfi0S2nDhQUycwZc
-	 NPGI4ovfAmRhKeu50DqKVdw117vFj+LFEhjwOIK0=
+	b=RQRvGvWlhy42x+T2sLTTU/lgkCs7nNdTt2c5wBDDvXlYz2N6rUhnfR3K7XjKvvl41
+	 BK1Z/ZuBJNJpLALN+K4hY8TYuBvlfmK3NpTLWTBV6YrdAucaxwvQF8yjYgkEXZ/Qm8
+	 5Mc6AC9iy+w6ykWz3ZfQJUaljAf72XAtEpULY0fY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgIBQRD (ORCPT
+        id S1728844AbgIBQRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:17:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53872 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 12:17:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728266AbgIBQK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728291AbgIBQK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 12:10:56 -0400
 Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECCF621556;
-        Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0766D2168B;
+        Wed,  2 Sep 2020 16:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599063046;
-        bh=zeOoW6dBDPMUDQNPabBvfdWG+dRh4/f7I9v8bSFs3WU=;
+        bh=vbQF66iKfyJ7E6H+ff93dGs/2GYrxlcC/G916kKGy4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bUdyaiYuY4fZeMpztbPCKFVt02npNMo5lxJyYxiEKUaImzANWtGLusfTdrnT4hEI7
-         No5KX2tAIiSX13BpwOpL4RafsKwyMsqn2lJBcOemc7RnQjAjHWiqaloew7JP8kepMV
-         iw7tXQglb/M6ZOc0gKp2B2rT6X3PC/bSr5V6eWIc=
+        b=geuusIYWolZAHBYtCkbEgiXNwSPLwg11C84pGwBvD5aeWsskXpag5zZz1chnORRY6
+         1vcg2vjCMlpdpCfC20sFlrjtKdIl3KxMGDp/+Rglaer+0YI+XkqSGFL7zQQteCPDRD
+         nvTAQ9Io/mXWnvuvdSZpyNQRnTmrJI4mB3NJiYFA=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kDVLQ-000tAN-2d; Wed, 02 Sep 2020 18:10:44 +0200
+        id 1kDVLQ-000tAh-8s; Wed, 02 Sep 2020 18:10:44 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@kernel.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 16/38] media: videobuf-dma-sg: number of pages should be unsigned long
-Date:   Wed,  2 Sep 2020 18:10:19 +0200
-Message-Id: <a57a3584ccc16f33b2e6e8a850b7cb7cf029dfb6.1599062230.git.mchehab+huawei@kernel.org>
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 23/38] media: saa7134: avoid a shift overflow
+Date:   Wed,  2 Sep 2020 18:10:26 +0200
+Message-Id: <6ee0a9ec8855f0388fee8cd183abeb60e28b293f.1599062230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
 References: <cover.1599062230.git.mchehab+huawei@kernel.org>
@@ -65,109 +60,31 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 As reported by smatch:
+	drivers/media/pci/saa7134//saa7134-tvaudio.c:686 saa_dsp_writel() warn: should 'reg << 2' be a 64 bit type?
 
-	drivers/media/v4l2-core/videobuf-dma-sg.c:245 videobuf_dma_init_kernel() warn: should 'nr_pages << 12' be a 64 bit type?
+On a 64-bits Kernel, the shift might be bigger than 32 bits.
 
-The printk should not be using %d for the number of pages.
-
-After looking better, the real problem here is that the
-number of pages should be long int.
+In real, this should never happen, but let's shut up the warning.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/media/v4l2-core/videobuf-dma-sg.c | 22 ++++++++++++----------
- include/media/videobuf-dma-sg.h           |  2 +-
- 2 files changed, 13 insertions(+), 11 deletions(-)
+ drivers/media/pci/saa7134/saa7134-tvaudio.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/v4l2-core/videobuf-dma-sg.c b/drivers/media/v4l2-core/videobuf-dma-sg.c
-index 46ff19df9f53..8dd0562de287 100644
---- a/drivers/media/v4l2-core/videobuf-dma-sg.c
-+++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
-@@ -180,7 +180,7 @@ static int videobuf_dma_init_user_locked(struct videobuf_dmabuf *dma,
- 	if (rw == READ)
- 		flags |= FOLL_WRITE;
- 
--	dprintk(1, "init user [0x%lx+0x%lx => %d pages]\n",
-+	dprintk(1, "init user [0x%lx+0x%lx => %lu pages]\n",
- 		data, size, dma->nr_pages);
- 
- 	err = pin_user_pages(data & PAGE_MASK, dma->nr_pages,
-@@ -188,7 +188,7 @@ static int videobuf_dma_init_user_locked(struct videobuf_dmabuf *dma,
- 
- 	if (err != dma->nr_pages) {
- 		dma->nr_pages = (err >= 0) ? err : 0;
--		dprintk(1, "pin_user_pages: err=%d [%d]\n", err,
-+		dprintk(1, "pin_user_pages: err=%d [%lu]\n", err,
- 			dma->nr_pages);
- 		return err < 0 ? err : -EINVAL;
- 	}
-@@ -208,11 +208,11 @@ static int videobuf_dma_init_user(struct videobuf_dmabuf *dma, int direction,
- }
- 
- static int videobuf_dma_init_kernel(struct videobuf_dmabuf *dma, int direction,
--			     int nr_pages)
-+				    unsigned long nr_pages)
+diff --git a/drivers/media/pci/saa7134/saa7134-tvaudio.c b/drivers/media/pci/saa7134/saa7134-tvaudio.c
+index 79e1afb71075..5cc4ef21f9d3 100644
+--- a/drivers/media/pci/saa7134/saa7134-tvaudio.c
++++ b/drivers/media/pci/saa7134/saa7134-tvaudio.c
+@@ -683,7 +683,8 @@ int saa_dsp_writel(struct saa7134_dev *dev, int reg, u32 value)
  {
- 	int i;
+ 	int err;
  
--	dprintk(1, "init kernel [%d pages]\n", nr_pages);
-+	dprintk(1, "init kernel [%lu pages]\n", nr_pages);
- 
- 	dma->direction = direction;
- 	dma->vaddr_pages = kcalloc(nr_pages, sizeof(*dma->vaddr_pages),
-@@ -238,11 +238,11 @@ static int videobuf_dma_init_kernel(struct videobuf_dmabuf *dma, int direction,
- 	dma->vaddr = vmap(dma->vaddr_pages, nr_pages, VM_MAP | VM_IOREMAP,
- 			  PAGE_KERNEL);
- 	if (NULL == dma->vaddr) {
--		dprintk(1, "vmalloc_32(%d pages) failed\n", nr_pages);
-+		dprintk(1, "vmalloc_32(%lu pages) failed\n", nr_pages);
- 		goto out_free_pages;
- 	}
- 
--	dprintk(1, "vmalloc is at addr %p, size=%d\n",
-+	dprintk(1, "vmalloc is at addr %p, size=%lu\n",
- 		dma->vaddr, nr_pages << PAGE_SHIFT);
- 
- 	memset(dma->vaddr, 0, nr_pages << PAGE_SHIFT);
-@@ -267,9 +267,9 @@ static int videobuf_dma_init_kernel(struct videobuf_dmabuf *dma, int direction,
- }
- 
- static int videobuf_dma_init_overlay(struct videobuf_dmabuf *dma, int direction,
--			      dma_addr_t addr, int nr_pages)
-+			      dma_addr_t addr, unsigned long nr_pages)
- {
--	dprintk(1, "init overlay [%d pages @ bus 0x%lx]\n",
-+	dprintk(1, "init overlay [%lu pages @ bus 0x%lx]\n",
- 		nr_pages, (unsigned long)addr);
- 	dma->direction = direction;
- 
-@@ -500,9 +500,11 @@ static int __videobuf_iolock(struct videobuf_queue *q,
- 			     struct videobuf_buffer *vb,
- 			     struct v4l2_framebuffer *fbuf)
- {
--	int err, pages;
--	dma_addr_t bus;
- 	struct videobuf_dma_sg_memory *mem = vb->priv;
-+	unsigned long pages;
-+	dma_addr_t bus;
-+	int err;
-+
- 	BUG_ON(!mem);
- 
- 	MAGIC_CHECK(mem->magic, MAGIC_SG_MEM);
-diff --git a/include/media/videobuf-dma-sg.h b/include/media/videobuf-dma-sg.h
-index 34450f7ad510..930ff8d454fc 100644
---- a/include/media/videobuf-dma-sg.h
-+++ b/include/media/videobuf-dma-sg.h
-@@ -60,7 +60,7 @@ struct videobuf_dmabuf {
- 	/* common */
- 	struct scatterlist  *sglist;
- 	int                 sglen;
--	int                 nr_pages;
-+	unsigned long       nr_pages;
- 	int                 direction;
- };
- 
+-	audio_dbg(2, "dsp write reg 0x%x = 0x%06x\n", reg << 2, value);
++	audio_dbg(2, "dsp write reg 0x%x = 0x%06x\n",
++		  (reg << 2) & 0xffffffff, value);
+ 	err = saa_dsp_wait_bit(dev,SAA7135_DSP_RWSTATE_WRR);
+ 	if (err < 0)
+ 		return err;
 -- 
 2.26.2
 
