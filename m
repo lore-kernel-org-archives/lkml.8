@@ -2,93 +2,102 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71224C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C3FC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFD520639
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599061238;
-	bh=SK4nYvO38qvVRfI/Lx8Yp9FVil1zW/NL6C0b8WMtpDY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=f5jIMZjC93hVYy6p8TF0Pe+Nrl+5Dac7LRXXSzo9Wom861rG+BYWEe844A9UIcFmm
-	 vUOCWISAKHcm21slcjQo9MaqgtahvbnrZkdJp6/rDh+0cBJL3vC8aaVJmeipFdc91i
-	 LjoQ3Wh7rbjWZwxqVzF7NgQc3c4PHfIfBJ9YE7P0=
+	by mail.kernel.org (Postfix) with ESMTP id 5941B207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 15:40:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+mAMeEL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgIBPkg (ORCPT
+        id S1728283AbgIBPkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 11:40:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727867AbgIBPBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 11:01:40 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC42420773;
-        Wed,  2 Sep 2020 15:01:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599058900;
-        bh=SK4nYvO38qvVRfI/Lx8Yp9FVil1zW/NL6C0b8WMtpDY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BSxzT0UhH6iH/VFnsyIqFh13nXQdv0+lMtmij304PLzD8hz9ikKgrcqSpXzwWvUhu
-         /yvS865el3WOJMemRt8gE56J3AyNFmxGF8DUtdRZVaZDq+YsrvJhL8B8yL1eYB5upC
-         4gULEkenKgB316QOdpwYOnl0EWeaJXgCVnWsp1kM=
-Date:   Wed, 2 Sep 2020 10:07:50 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] xsk: Fix null check on error return path
-Message-ID: <20200902150750.GA7257@embeddedor>
+        Wed, 2 Sep 2020 11:40:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727827AbgIBPBf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 11:01:35 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68B97C061244;
+        Wed,  2 Sep 2020 08:01:33 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id w16so655041oia.2;
+        Wed, 02 Sep 2020 08:01:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=nJe4bseURKFlSbOPv7F3NIQsZoqm5FYsgLr0QZUs55k=;
+        b=s+mAMeELwz+mjnmSPT3Zj6IVhbRc6v9DjE4m0Xbm+6ZuyynublUKEyZ7uAGImlVD/v
+         hvWGvgfkJV8LYZ30EvV8n1YN14fdkFmrBNoXGJljpY+0YaHsr31K392JhbyNnku5b/tv
+         sU9Tn88lvEMYCuk/+NlLaPtooFhkdwUQAJVMn4+GOkzi5tYPRsZuSS+mPfSj/EwXWKV4
+         pQSUsfw3YeJwbpGID5609rp6rdSmGKszfPM5CjpxZoUuh3JdwZ1wmBHyXvVB5T1FkFzC
+         2qUxvC9ZMKC70/Nc6hBV4y1pm71Fcp50MkEGf8t9e+i25q7t9CCsvRdT+AcbjLtANyLU
+         jX9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=nJe4bseURKFlSbOPv7F3NIQsZoqm5FYsgLr0QZUs55k=;
+        b=mclaPPKu9RulT0vnSine7oTnscct7i0w3bQYuZGsRnTxjtnViecDkWOPtE6+obHy18
+         we37SgRQGGVt/mpBJveCgc/e0S0XJMUq7AVxO8DDuyYxVfX+o/2gSvU8evBLosRDFmYf
+         6TF2lfcdFTD1gjM0Bkl++QWC9xluIdYlv1G/QLGA9iOcCio+J9SsW2EIZPuaNS7xNLGL
+         Y7/7S7oExGEyu6LeHjuU2V16umCmXSZ3ncK6a6Y5s5VsXc3msSJilhlu6xznnNmTWTxs
+         5mJFaBF7rZckVsWXINBBSAz1plM8VsxRA/pG+7XSbtDVcsHM5T1xXbVbBocLp+VAPzws
+         jK9g==
+X-Gm-Message-State: AOAM530kYEMkTXg+hRmYNFIwmnyK1FSWOX3SffYG+rz/pnH4x2xba20M
+        +zv51IAud9PwuFbyI0F1IZV9xuBryhAzGp8UpRw=
+X-Google-Smtp-Source: ABdhPJx/mXwElQ9ceRtlLkNMe4EmP2VKMWxpRmh+9jLPadSxEg/xZ12/Z1JM/YjWMx/YjFp+H/WaIu4DAIHja8b/REQ=
+X-Received: by 2002:a54:4117:: with SMTP id l23mr2346042oic.177.1599058892842;
+ Wed, 02 Sep 2020 08:01:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <159827188271.306468.16962617119460123110.stgit@warthog.procyon.org.uk>
+ <159827190508.306468.12755090833140558156.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159827190508.306468.12755090833140558156.stgit@warthog.procyon.org.uk>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Wed, 2 Sep 2020 17:01:21 +0200
+Message-ID: <CAKgNAkho1WSOsxvCYQOs7vDxpfyeJ9JGdTL-Y0UEZtO3jVfmKw@mail.gmail.com>
+Subject: Re: [PATCH 4/5] Add manpage for fsopen(2) and fsmount(2)
+To:     David Howells <dhowells@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, dma_map is being checked, when the right object identifier
-to be null-checked is dma_map->dma_pages, instead.
+Hi David,
 
-Fix this by null-checking dma_map->dma_pages.
+One further thought...
 
-Addresses-Coverity-ID: 1496811 ("Logically dead code")
-Fixes: 921b68692abb ("xsk: Enable sharing of dma mappings")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- net/xdp/xsk_buff_pool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +++ b/man2/fsopen.2
+[...]
+> +.BR fsopen ()
+> +creates a blank filesystem configuration context within the kernel for the
+> +filesystem named in the
+> +.I fsname
+> +parameter, puts it into creation mode and attaches it to a file descriptor,
+> +which it then returns.
 
-diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c
-index 795d7c81c0ca..5b00bc5707f2 100644
---- a/net/xdp/xsk_buff_pool.c
-+++ b/net/xdp/xsk_buff_pool.c
-@@ -287,7 +287,7 @@ static struct xsk_dma_map *xp_create_dma_map(struct device *dev, struct net_devi
- 		return NULL;
- 
- 	dma_map->dma_pages = kvcalloc(nr_pages, sizeof(*dma_map->dma_pages), GFP_KERNEL);
--	if (!dma_map) {
-+	if (!dma_map->dma_pages) {
- 		kfree(dma_map);
- 		return NULL;
- 	}
+The term "filesystem configuration context" is introduced, but never
+really explained. I think it would be very helpful to have a sentence
+or three that explains this concept at the start of the page.
+
+Cheers,
+
+Michael
+
 -- 
-2.27.0
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
