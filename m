@@ -2,170 +2,96 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D891C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E4CC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC3720665
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E24220665
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:49:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgIBGrC (ORCPT
+        id S1726900AbgIBGtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 02:47:02 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:4489 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgIBGrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 02:47:01 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BhDxr6VGJz9tybc;
-        Wed,  2 Sep 2020 08:46:56 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id iEERQsHpL4eE; Wed,  2 Sep 2020 08:46:56 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BhDxr5Sfgz9tybb;
-        Wed,  2 Sep 2020 08:46:56 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B9D0E8B788;
-        Wed,  2 Sep 2020 08:46:57 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id cHWP0PZXhRVt; Wed,  2 Sep 2020 08:46:57 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (unknown [10.25.210.31])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 18CA78B784;
-        Wed,  2 Sep 2020 08:46:57 +0200 (CEST)
-Subject: Re: [PATCH 2/2] powerpc/vdso32: link vdso64 with linker
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Kees Cook <keescook@chromium.org>,
-        Fangrui Song <maskray@google.com>
-References: <20200901222523.1941988-1-ndesaulniers@google.com>
- <20200901222523.1941988-3-ndesaulniers@google.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <b2066ccd-2b81-6032-08e3-41105b400f75@csgroup.eu>
-Date:   Wed, 2 Sep 2020 06:46:45 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200901222523.1941988-3-ndesaulniers@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 2 Sep 2020 02:49:07 -0400
+Received: from lucky1.263xmail.com ([211.157.147.131]:55602 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgIBGtE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 02:49:04 -0400
+Received: from localhost (unknown [192.168.167.32])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 3D3E9B0C7D;
+        Wed,  2 Sep 2020 14:48:59 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P11834T140500898137856S1599029334223657_;
+        Wed, 02 Sep 2020 14:48:58 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <6e24e846ed1d0e9b52d38a5c6f70ca22>
+X-RL-SENDER: zhangqing@rock-chips.com
+X-SENDER: zhangqing@rock-chips.com
+X-LOGIN-NAME: zhangqing@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Elaine Zhang <zhangqing@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org, xxx@rock-chips.com,
+        xf@rock-chips.com, huangtao@rock-chips.com,
+        kever.yang@rock-chips.com, Elaine Zhang <zhangqing@rock-chips.com>
+Subject: [PATCH v1 3/6] clk: rockchip: Export rockchip_register_softrst()
+Date:   Wed,  2 Sep 2020 14:48:44 +0800
+Message-Id: <20200902064847.18881-4-zhangqing@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200902064847.18881-1-zhangqing@rock-chips.com>
+References: <20200902064847.18881-1-zhangqing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is used by the Rockchip clk driver, export it to allow that
+driver to be compiled as a module..
+
+Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+---
+ drivers/clk/rockchip/softrst.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/clk/rockchip/softrst.c b/drivers/clk/rockchip/softrst.c
+index 5f1ff5e47c4f..caba9055090b 100644
+--- a/drivers/clk/rockchip/softrst.c
++++ b/drivers/clk/rockchip/softrst.c
+@@ -77,9 +77,9 @@ static const struct reset_control_ops rockchip_softrst_ops = {
+ 	.deassert	= rockchip_softrst_deassert,
+ };
+ 
+-void __init rockchip_register_softrst(struct device_node *np,
+-				      unsigned int num_regs,
+-				      void __iomem *base, u8 flags)
++void rockchip_register_softrst(struct device_node *np,
++			       unsigned int num_regs,
++			       void __iomem *base, u8 flags)
+ {
+ 	struct rockchip_softrst *softrst;
+ 	int ret;
+@@ -107,3 +107,4 @@ void __init rockchip_register_softrst(struct device_node *np,
+ 		kfree(softrst);
+ 	}
+ };
++EXPORT_SYMBOL(rockchip_register_softrst);
+-- 
+2.17.1
 
 
-On 09/01/2020 10:25 PM, Nick Desaulniers wrote:
-> Rather than invoke the compiler as the driver, use the linker. That way
-> we can check --orphan-handling=warn support correctly, as cc-ldoption
-> was removed in
-> commit 055efab3120b ("kbuild: drop support for cc-ldoption").
-> 
-> Requires dropping the .got section.  I couldn't find how it was used in
-> the vdso32.
 
-ld crashes:
-
-   LD      arch/powerpc/kernel/vdso32/vdso32.so.dbg
-/bin/sh: line 1: 23780 Segmentation fault      (core dumped) 
-ppc-linux-ld -EB -m elf32ppc -shared -soname linux-vdso32.so.1 
---eh-frame-hdr --orphan-handling=warn -T 
-arch/powerpc/kernel/vdso32/vdso32.lds 
-arch/powerpc/kernel/vdso32/sigtramp.o 
-arch/powerpc/kernel/vdso32/gettimeofday.o 
-arch/powerpc/kernel/vdso32/datapage.o 
-arch/powerpc/kernel/vdso32/cacheflush.o 
-arch/powerpc/kernel/vdso32/note.o arch/powerpc/kernel/vdso32/getcpu.o -o 
-arch/powerpc/kernel/vdso32/vdso32.so.dbg
-make[4]: *** [arch/powerpc/kernel/vdso32/vdso32.so.dbg] Error 139
-
-
-[root@localhost linux-powerpc]# ppc-linux-ld --version
-GNU ld (GNU Binutils) 2.26.20160125
-
-
-Christophe
-
-> 
-> Fixes: commit f2af201002a8 ("powerpc/build: vdso linker warning for orphan sections")
-> Link: https://lore.kernel.org/lkml/CAKwvOdnn3wxYdJomvnveyD_njwRku3fABWT_bS92duihhywLJQ@mail.gmail.com/
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
-> Not sure removing .got is a good idea or not.  Otherwise I observe the
-> following link error:
-> powerpc-linux-gnu-ld: warning: orphan section `.got' from `arch/powerpc/kernel/vdso32/sigtramp.o' being placed in section `.got'
-> powerpc-linux-gnu-ld: _GLOBAL_OFFSET_TABLE_ not defined in linker created .got
-> powerpc-linux-gnu-ld: final link failed: bad value
-> 
-> sigtramp.c doesn't mention anything from the GOT AFAICT, and doesn't
-> look like it contains relocations that do, so I'm not sure where
-> references to _GLOBAL_OFFSET_TABLE_ are coming from.
-> 
->   arch/powerpc/kernel/vdso32/Makefile     | 7 +++++--
->   arch/powerpc/kernel/vdso32/vdso32.lds.S | 3 ++-
->   2 files changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
-> index 87ab1152d5ce..611a5951945a 100644
-> --- a/arch/powerpc/kernel/vdso32/Makefile
-> +++ b/arch/powerpc/kernel/vdso32/Makefile
-> @@ -27,6 +27,9 @@ UBSAN_SANITIZE := n
->   ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
->   	-Wl,-soname=linux-vdso32.so.1 -Wl,--hash-style=both
->   asflags-y := -D__VDSO32__ -s
-> +ldflags-y := -shared -soname linux-vdso32.so.1 \
-> +	$(call ld-option, --eh-frame-hdr) \
-> +	$(call ld-option, --orphan-handling=warn) -T
->   
->   obj-y += vdso32_wrapper.o
->   extra-y += vdso32.lds
-> @@ -49,8 +52,8 @@ $(obj-vdso32): %.o: %.S FORCE
->   	$(call if_changed_dep,vdso32as)
->   
->   # actual build commands
-> -quiet_cmd_vdso32ld = VDSO32L $@
-> -      cmd_vdso32ld = $(VDSOCC) $(c_flags) $(CC32FLAGS) -o $@ $(call cc-ldoption, -Wl$(comma)--orphan-handling=warn) -Wl,-T$(filter %.lds,$^) $(filter %.o,$^)
-> +quiet_cmd_vdso32ld = LD      $@
-> +      cmd_vdso32ld = $(cmd_ld)
->   quiet_cmd_vdso32as = VDSO32A $@
->         cmd_vdso32as = $(VDSOCC) $(a_flags) $(CC32FLAGS) -c -o $@ $<
->   
-> diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-> index 4c985467a668..0ccdebad18b8 100644
-> --- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
-> +++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-> @@ -61,7 +61,6 @@ SECTIONS
->   	.fixup		: { *(.fixup) }
->   
->   	.dynamic	: { *(.dynamic) }		:text	:dynamic
-> -	.got		: { *(.got) }			:text
->   	.plt		: { *(.plt) }
->   
->   	_end = .;
-> @@ -108,7 +107,9 @@ SECTIONS
->   	.debug_varnames  0 : { *(.debug_varnames) }
->   
->   	/DISCARD/	: {
-> +		*(.got)
->   		*(.note.GNU-stack)
-> +		*(.branch_lt)
->   		*(.data .data.* .gnu.linkonce.d.* .sdata*)
->   		*(.bss .sbss .dynbss .dynsbss)
->   		*(.glink .iplt .plt .rela*)
-> 
