@@ -2,268 +2,174 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0832C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9008FC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A038E20665
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 519C320665
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:33:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sp5V/JNx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKcs7Qp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbgICOdH (ORCPT
+        id S1729329AbgICOdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:33:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36496 "EHLO
+        Thu, 3 Sep 2020 10:33:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729343AbgICOcH (ORCPT
+        with ESMTP id S1729179AbgICObk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:32:07 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71A18C061244;
-        Thu,  3 Sep 2020 06:20:24 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u128so2318381pfb.6;
-        Thu, 03 Sep 2020 06:20:24 -0700 (PDT)
+        Thu, 3 Sep 2020 10:31:40 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E3D5C061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 07:31:39 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id k15so2458415pfc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 07:31:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tAstEE7xW6ixGXMVKxjeyJUh3HVzf2XVOU1fodROD9k=;
-        b=sp5V/JNxeuZwW41J3Nt/ItaHN+ymHSD1609wWjH35AIvOnMn3Q8XyuVjRXF/qWZHVc
-         Bf7sNg7i0ZlTYb2w8bzz8kq6c17Y8EaLnxvitxVeibBQpYuBybZyI1u1NtbYFCMuSr6A
-         dWYBMdpRR9jkLQGMsKFOC34Q1F/Ga8JtdKqAHOcwhHWZbnLO1PWhI/zzKfOEH/39UKCW
-         YEuVE+M+fl1hk9KbNh5pIuqrx385OMMdoETaHbg460CYMaf0ruom85rn+CF1t+jKtV3I
-         NLYh0uTVIXDPBXoNSDTBPE8ZtwewdFaBNY8TxbTDmDlUCMhlvkiHA5z9xz4IQTvuQm4A
-         9Q6Q==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oFkfi9X0bSyXN4Ol4NwfhYQ7K4ImI2pu3/xQMs0Xbv0=;
+        b=MKcs7Qp8KGb5+t9fJnG083u4Kx6jssLPOPuGjGnViTuBwYXUYj8SkxVu8TxvG+761V
+         5jrmqvo5emK3h8WHpzZmo8kS5n6YpWxfdwzpUWLSnNpCl7HwfAbXFjVyuiEvxu52rM+j
+         +CFROzDjJI50NcZoCXs8L4qBWmoLZs+5/AkbOCFND0nfn3KRlAeoNd8AW3w8q68Zs2P9
+         zsNWJG8wLxAu7hZH/mIVYkmj02yfDn7D6TYV8WCac1RKjWV5gb1GF9qXq7r0U01Vu6wN
+         qMLWn8c7JX6P5kzXgnpEbs+WyooB9h+Cov7neLg4lwjLL31c6ZRjiH6LeiiU6X561wbU
+         UtBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tAstEE7xW6ixGXMVKxjeyJUh3HVzf2XVOU1fodROD9k=;
-        b=S+XHPbtgOb78Y7f3syZrq5eHaqAyMXiBBY138nwRo0q/k2LHcImF3hEHAlkFnrySHi
-         M38qyKIRoMpUf/IRo3FSRxYO9VJh05pPvKFwSYs2EXM4JtR3b97Chr2grFKh25C3aDyC
-         Y+RhRzXQZUjXCQ+p7oWzrj+qiH0KiM8EJrNl/FDfuS0T0pTRsD9kHMrRPSz1n9VxxIp9
-         QDV/tP6Z08UKLbmi+hpcLsc1bKcpwtgNy6JUqzHuN8I8KQTHC2qrcDW4z0Joj5Du4LA6
-         v9AqVfFOlthe11UBFQxaLbygYH8GTOOoQsnFJ419UBP9UkWD0UtMepW2uwlpJnSW5R7c
-         6MFA==
-X-Gm-Message-State: AOAM5339uWcwevlh5sdCggm5p9b+fHBaVr/vgTQ9XPpWZEe9pVZmBClN
-        cekRyAu1RElzsHHx2qGf1t6LOiYKReAbGkJMORs=
-X-Google-Smtp-Source: ABdhPJxvCqZfPwguDJuOSLvVm0bhXx1T/QU/L/L588R/Ui4F94yMIF1O6k3OR5G7YZqzuWcFAitepuvit4LisR6/978=
-X-Received: by 2002:aa7:942a:: with SMTP id y10mr2786604pfo.68.1599139221898;
- Thu, 03 Sep 2020 06:20:21 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oFkfi9X0bSyXN4Ol4NwfhYQ7K4ImI2pu3/xQMs0Xbv0=;
+        b=MYWL6u/uLe/eBA8dpuYsNlPoNrdI5OYVGutupymku4MwWin+4R3w1Fjg5gDzkuhRaU
+         c5Pl5NtCM8Dht7tONJkG8Ag9BG4yiygNpj7FFlJm6SZqLJ4RtCowMR/sLObnpeh+mHcm
+         n0tdczLOPDlU+WFaAlicTVaNqlMkNQuU02/e457LRPt7mOQxwMtV/urDtqGOYbvuysLq
+         MThiNV0hbe5jo33FAUAVjqNMnCiBgpfkoP9DZKppxn4mgSNP4Wby9KXtvg+PyA7BdUWA
+         8xF5ZhYAAR9tJCnIoCFzarMfRL98dCAjY8fPlFR+Sv8kjfl0BiRgG0uD5SnVxNFUu0aV
+         BoeA==
+X-Gm-Message-State: AOAM5328jlqhAsaNyM+x5l7N4fRl/y1Ya3h9uVn4iwu1YkybMwPxI52f
+        3h6XT6slHOe14CJZxsQHF5c=
+X-Google-Smtp-Source: ABdhPJwlYk90RS7DiBtFzKRDGKn9wXHh7hXxCQNlalKw2n+V/V5fU5hw8dP94ZQaoDksnGg07uKbtA==
+X-Received: by 2002:a05:6a00:811:: with SMTP id m17mr4053548pfk.20.1599143498199;
+        Thu, 03 Sep 2020 07:31:38 -0700 (PDT)
+Received: from localhost (g223.115-65-55.ppp.wakwak.ne.jp. [115.65.55.223])
+        by smtp.gmail.com with ESMTPSA id n1sm3489776pfu.154.2020.09.03.07.31.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 07:31:37 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 23:31:35 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        openrisc@lists.librecores.org
+Subject: Re: [PATCH] openrisc: Reserve memblock for initrd
+Message-ID: <20200903143135.GD3562056@lianli.shorne-pla.net>
+References: <20200831212102.4014642-1-shorne@gmail.com>
+ <20200901055924.GC432455@kernel.org>
+ <20200901102044.GB3562056@lianli.shorne-pla.net>
+ <20200901121130.GA698558@kernel.org>
 MIME-Version: 1.0
-References: <20200903130950.6274-1-nish.malpani25@gmail.com> <20200903130950.6274-2-nish.malpani25@gmail.com>
-In-Reply-To: <20200903130950.6274-2-nish.malpani25@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 3 Sep 2020 16:20:04 +0300
-Message-ID: <CAHp75Vc4hgvgoHrPaxDikqmAoqjpfOwPFTM-AvNvR3Ep=dQEfg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] iio: gyro: adxrs290: Add triggered buffer support
-To:     Nishant Malpani <nish.malpani25@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
-        darius.berghe@analog.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901121130.GA698558@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 4:10 PM Nishant Malpani <nish.malpani25@gmail.com> wrote:
->
-> Provide a way for continuous data capture by setting up buffer support. The
-> data ready signal exposed at the SYNC pin of the ADXRS290 is exploited as
-> a hardware interrupt which triggers to fill the buffer.
->
-> Triggered buffer setup was tested with both hardware trigger (DATA_RDY) and
-> software triggers (sysfs-trig & hrtimer).
+On Tue, Sep 01, 2020 at 03:11:30PM +0300, Mike Rapoport wrote:
+> On Tue, Sep 01, 2020 at 07:20:44PM +0900, Stafford Horne wrote:
+> > On Tue, Sep 01, 2020 at 08:59:24AM +0300, Mike Rapoport wrote:
+> > > On Tue, Sep 01, 2020 at 06:21:01AM +0900, Stafford Horne wrote:
+> > > > Recently OpenRISC added support for external initrd images, but I found
+> > > > some instability when using larger buildroot initrd images. It turned
+> > > > out that I forgot to reserve the memblock space for the initrd image.
+> > > > 
+> > > > This patch fixes the instability issue by reserving memblock space.
+> > > > 
+> > > > Fixes: ff6c923dbec3 ("openrisc: Add support for external initrd images")
+> > > > Signed-off-by: Stafford Horne <shorne@gmail.com>
+> > > > ---
+> > > >  arch/openrisc/kernel/setup.c | 9 +++++++++
+> > > >  1 file changed, 9 insertions(+)
+> > > > 
+> > > > diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
+> > > > index b18e775f8be3..2c8aa53cc7ba 100644
+> > > > --- a/arch/openrisc/kernel/setup.c
+> > > > +++ b/arch/openrisc/kernel/setup.c
+> > > > @@ -80,6 +80,15 @@ static void __init setup_memory(void)
+> > > >  	 */
+> > > >  	memblock_reserve(__pa(_stext), _end - _stext);
+> > > >  
+> > > > +#ifdef CONFIG_BLK_DEV_INITRD
+> > > > +	/* Then reserve the initrd, if any */
+> > > > +	if (initrd_start && (initrd_end > initrd_start)) {
+> > > > + 	memblock_reserve(ALIGN_DOWN(__pa(initrd_start), PAGE_SIZE),
+> > > > +		ALIGN(initrd_end, PAGE_SIZE) -
+> > > > +		ALIGN_DOWN(initrd_start, PAGE_SIZE));
+> > > > +	}
+> > > 
+> > > The core mm takes care of reserving the entrire pages for the memory
+> > > reserved with memblock, so it is not necessary to do it here.
+> > 
+> > Thanks for the pointer
+> > 
+> > I guess what you mean is it is not required to do the page alignment.
+> 
+> Right. 
+> 
+> > I used other architectures as an example and most do the alignment, I
+> > think for most architectures this can be pulled out to generic code.
+> 
+> You are more than welcome :)
+> We already have a generic free_initrd_mem(), maybe it's time to have a
+> generic reserve_initrd_mem().
+> 
+> I'm ok with openrisc doing the alignment, but I think using local
+> variables would make the core more readable, e.g
+> 
+> 	if (initd_start && (initrd_end)) {
+> 		unsigned long aligned_start = ALIGN_DOWN(initrd_start, PAGE_SIZE);
+> 		unsigned long aligned_end = ALIGN(end, PAGE_SIZE);
+> 
+> 		memblock_reserve(aligned_start, aligned_end);
+> 	}
+> 
+> What do you say?
 
-...
+Well, if the alignment is not needed I rather not do it.  That would make the
+code as simple as:
 
-> +static int adxrs290_set_mode(struct iio_dev *indio_dev, enum adxrs290_mode mode)
-> +{
-> +       struct adxrs290_state *st = iio_priv(indio_dev);
-> +       int val, ret;
-> +
-> +       if (st->mode == mode) {
+        if (initrd_start && (initrd_end > initrd_start)) {
+                memblock_reserve(__pa(initrd_start), initrd_end - initrd_start);
+        }
 
-> +               ret = 0;
-> +               goto done;
+Let me look what is involved in making a reserve_initrd_mem().
 
-Unlocking the not locked mutex is not good. Have you followed the
-Submitting Patches Checklist? It in particular suggests few debug
-options, like LOCKDEP, to be enabled.
+-Stafford
 
-> +       }
-> +
-> +       mutex_lock(&st->lock);
-> +
-> +       ret = spi_w8r8(st->spi, ADXRS290_READ_REG(ADXRS290_REG_POWER_CTL));
-> +       if (ret < 0)
-> +               goto done;
-> +
-> +       val = ret;
-> +
-> +       switch (mode) {
-> +       case ADXRS290_MODE_STANDBY:
-> +               val &= ~ADXRS290_MEASUREMENT;
-> +               break;
-> +       case ADXRS290_MODE_MEASUREMENT:
-> +               val |= ADXRS290_MEASUREMENT;
-> +               break;
-> +       default:
-> +               ret = -EINVAL;
-> +               goto done;
-> +       }
-> +
-> +       ret = adxrs290_spi_write_reg(st->spi,
-> +                                    ADXRS290_REG_POWER_CTL,
-> +                                    val);
-> +       if (ret < 0) {
-> +               dev_err(&st->spi->dev, "unable to set mode: %d\n", ret);
-> +               goto done;
-> +       }
-> +
-> +       /* update cached mode */
-> +       st->mode = mode;
-> +
-
-> +done:
-
-Much better to call it out_unlock. It will help eliminate the mistakes
-like above.
-
-> +       mutex_unlock(&st->lock);
-> +       return ret;
-> +}
-
-...
-
-
-What about
-
-  ret = -EINVAL;
-
->         switch (mask) {
->         case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
->                 lpf_idx = adxrs290_find_match(adxrs290_lpf_3db_freq_hz_table,
->                                               ARRAY_SIZE(adxrs290_lpf_3db_freq_hz_table),
->                                               val, val2);
-> -               if (lpf_idx < 0)
-> -                       return -EINVAL;
-
-> +               if (lpf_idx < 0) {
-
-> +                       ret = -EINVAL;
-> +                       break;
-> +               }
-
-Simple
-  break;
-
-and so on?
-
-> +
->                 /* caching the updated state of the low-pass filter */
->                 st->lpf_3db_freq_idx = lpf_idx;
->                 /* retrieving the current state of the high-pass filter */
->                 hpf_idx = st->hpf_3db_freq_idx;
-> -               return adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
-> +               ret = adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
-> +               break;
-> +
->         case IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY:
->                 hpf_idx = adxrs290_find_match(adxrs290_hpf_3db_freq_hz_table,
->                                               ARRAY_SIZE(adxrs290_hpf_3db_freq_hz_table),
->                                               val, val2);
-> -               if (hpf_idx < 0)
-> -                       return -EINVAL;
-> +               if (hpf_idx < 0) {
-> +                       ret = -EINVAL;
-> +                       break;
-> +               }
-> +
->                 /* caching the updated state of the high-pass filter */
->                 st->hpf_3db_freq_idx = hpf_idx;
->                 /* retrieving the current state of the low-pass filter */
->                 lpf_idx = st->lpf_3db_freq_idx;
-> -               return adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
-> +               ret = adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
-> +               break;
-> +
-> +       default:
-> +               ret = -EINVAL;
-> +               break;
->         }
->
-> -       return -EINVAL;
-> +       iio_device_release_direct_mode(indio_dev);
-> +       return ret;
->  }
-
-...
-
-> +static irqreturn_t adxrs290_trigger_handler(int irq, void *p)
-> +{
-
-> +       /* exercise a bulk data capture starting from reg DATAX0... */
-> +       ret = spi_write_then_read(st->spi, &tx, sizeof(tx), st->buffer.channels,
-> +                                 sizeof(st->buffer.channels));
-> +       if (ret < 0)
-> +               goto done;
-> +
-> +       iio_push_to_buffers_with_timestamp(indio_dev, &st->buffer,
-> +                                          pf->timestamp);
-> +
-> +done:
-
-out_unlock_notify:
-
-> +       mutex_unlock(&st->lock);
-> +       iio_trigger_notify_done(indio_dev->trig);
-> +
-> +       return IRQ_HANDLED;
-> +}
-
-...
-
-> +static int adxrs290_probe_trigger(struct iio_dev *indio_dev)
-> +{
-> +       struct adxrs290_state *st = iio_priv(indio_dev);
-> +       int ret;
-
-> +       if (!st->spi->irq) {
-> +               dev_info(&st->spi->dev, "no irq, using polling\n");
-> +               return 0;
-> +       }
-
-Wouldn't it be better to have this check outside of the function?
-And taking this into account...
-
-> +}
-
-...
-
-> +       ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-> +                                             &iio_pollfunc_store_time,
-> +                                             &adxrs290_trigger_handler, NULL);
-> +       if (ret < 0)
-> +               return dev_err_probe(&spi->dev, ret,
-> +                                    "iio triggered buffer setup failed\n");
-
-...do you really have to set up a trigger buffer w/o trigger being probed?
-
-> +       ret = adxrs290_probe_trigger(indio_dev);
-> +       if (ret < 0)
-> +               return ret;
-
--- 
-With Best Regards,
-Andy Shevchenko
+> > -Stafford
+> > 
+> > > > +#endif /* CONFIG_BLK_DEV_INITRD */
+> > > > +
+> > > >  	early_init_fdt_reserve_self();
+> > > >  	early_init_fdt_scan_reserved_mem();
+> > > >  
+> > > > -- 
+> > > > 2.26.2
+> > > > 
+> > > 
+> > > -- 
+> > > Sincerely yours,
+> > > Mike.
+> 
+> -- 
+> Sincerely yours,
+> Mike.
