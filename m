@@ -2,100 +2,108 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7209C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6AFC10DAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 839BC20786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:48:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Oywi+Oec"
+	by mail.kernel.org (Postfix) with ESMTP id 4B67A2078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:54:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599173686;
+	bh=UXKo8kyys7Jj/KQr45tWL3zKiNH9QtHrNfzW2RvKWt0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eW0IMeK3asiUUEiJNq3xNr4Xfl8imta19UKC5ItmYLFHi8ICHiI6hSmohIXUs/z9j
+	 jOLclRC74LVIb6tylmPG2aDna7MJy/3aoe5gRa98yl8MY8feNSjhOdhaTd9dyuej5b
+	 tmWHbIgOjWvcQTfcSUVvyeWdzvDBpSjCSdDJQKuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbgICWsm (ORCPT
+        id S1728684AbgICWyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:48:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728692AbgICWsj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:48:39 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0671CC061247
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:48:39 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 17so3498502pfw.9
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=N0kZAZSHXumzFlr+P3KSPa/xm/RvLBA66H9sz+ks+Hk=;
-        b=Oywi+Oecms9EF3LovMy4YD4zvKOmcmZdnBLP+RpPo6vJNZvq4Wn2exUrN/cYyBRvkj
-         QpHAOCzGUNXF3wIsqPQqbSCg3YTtavUaX+FrsM9NvoAyqfJuCJ9m05znPNWTjs0F38rh
-         A9mlrLTr/MJ+vIHnNL9G8CGzKKp8or3nRT3jg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=N0kZAZSHXumzFlr+P3KSPa/xm/RvLBA66H9sz+ks+Hk=;
-        b=eMjDds7nbslZb8e8bOUrgD0syxFm+n0sAWXkhBgu4onicRLesDk+if38bmQsKWWzFI
-         yZEZMUHno8/Zjx1QIBkU8kwT4XZo0+lSo8+CEVXlYvYIfdPOnb2WxISwMrhH6226a+kX
-         2yK+0ZRJlRbZYgvFU/p8xNQNqwyZNd4Yia+XjD7akx2HrHYq0MXiMpdnyW/8JVBN6Tkp
-         4vdIFage5fZsGQg0Ig3DdKhqlrmR08C3AqoOhtlNO4VtAE7I9m1jGnEWQMu92Qp8J6Kr
-         ZC6M+rWXXejNeDaynvPvzUKjIWZ80xJvSRlWjOIjtVDbPZBk1nHWbX9jaUQagbcrFeVd
-         H6gw==
-X-Gm-Message-State: AOAM532ow6Vdjc0YGSzQx1T98fEWdlDYHycS7lgh89tXkRCjgDd69NQh
-        nnW3vqc20ED0xH/ubrYjLOSmCw==
-X-Google-Smtp-Source: ABdhPJzhSDd0wUjK+CLAjJOCS+RRpwDZiMWAA9QXCsfZew5vqJTkaYMpTKaYMs063H+/576UYhDU1A==
-X-Received: by 2002:a63:f546:: with SMTP id e6mr4666553pgk.7.1599173318626;
-        Thu, 03 Sep 2020 15:48:38 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q71sm3612032pja.9.2020.09.03.15.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 15:48:37 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 15:48:36 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v2 28/28] x86, build: allow LTO_CLANG and THINLTO to be
- selected
-Message-ID: <202009031548.84902F3F@keescook>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com>
- <20200903203053.3411268-29-samitolvanen@google.com>
+        Thu, 3 Sep 2020 18:54:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727804AbgICWyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 18:54:44 -0400
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A23022083B
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599173683;
+        bh=UXKo8kyys7Jj/KQr45tWL3zKiNH9QtHrNfzW2RvKWt0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EmXfwBYt3D5p90EF4QL4KaB9rOBoRovhKKBkFVE8uGA5dui+0P8hxZrd3FY69Wliu
+         TTk9c/A0IjU+NziYUsCaN76rxm3L/o0iaout5mKVSD5nkUgrmwzBBpATVKe/S5ftGP
+         8y9pRGpGCh2RjzS9I/QpFRr1OIiFLmH8uoXa9OuQ=
+Received: by mail-ed1-f43.google.com with SMTP id a12so4247770eds.13
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:54:43 -0700 (PDT)
+X-Gm-Message-State: AOAM533Ud/YfR6M2w0JOH6/p0oSzGFD5knbHB9gr7Tfswo1P7cnwWTjG
+        vdOJxQeRrbSDmipOVZIpzIV6bw8Q2KCGokBlbw==
+X-Google-Smtp-Source: ABdhPJxV4e9JXF8pl9lR06Tx6AQ3q1ACWUDkZvY2hawRP5jIfK2LoCgaT7r5tM+Hy5bnYViKitxKW+Li7urVLN9lTTw=
+X-Received: by 2002:aa7:dcd2:: with SMTP id w18mr5713705edu.288.1599173682230;
+ Thu, 03 Sep 2020 15:54:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903203053.3411268-29-samitolvanen@google.com>
+References: <20200819081752.4805-1-linux@fw-web.de> <3B754053-BA89-4DB7-A089-665C5B6B34CC@public-files.de>
+In-Reply-To: <3B754053-BA89-4DB7-A089-665C5B6B34CC@public-files.de>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Fri, 4 Sep 2020 06:54:30 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9TYUWWNg+1zT4LwomrabBsiZQKXAS9jTHCFKiAmCm4PA@mail.gmail.com>
+Message-ID: <CAAOTY_9TYUWWNg+1zT4LwomrabBsiZQKXAS9jTHCFKiAmCm4PA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] make hdmi work on bananapi-r2
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Frank Wunderlich <linux@fw-web.de>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 01:30:53PM -0700, Sami Tolvanen wrote:
-> Allow CONFIG_LTO_CLANG and CONFIG_THINLTO to be enabled.
-> 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Frank Wunderlich <frank-w@public-files.de> =E6=96=BC 2020=E5=B9=B49=E6=9C=
+=883=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:07=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> Hi
+>
+> Any opinion about DTS Patches? Which maintainer will include it in tree? =
+Is any ack/review needed?
 
-I think it might be worth detailing why these arguments aren't handled
-in the normal fashion under Clang's LTO. Regardless, it's needed to make
-it work, so:
+According to maintainer list [1], the maintainer is
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+ARM/Mediatek SoC support
+M: Matthias Brugger <matthias.bgg@gmail.com>
+L: linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+L: linux-mediatek@lists.infradead.org (moderated for non-subscribers)
+S: Maintained
+W: https://mtk.bcnfs.org/
+C: irc://chat.freenode.net/linux-mediatek
+F: arch/arm/boot/dts/mt6*
+F: arch/arm/boot/dts/mt7*
+F: arch/arm/boot/dts/mt8*
+F: arch/arm/mach-mediatek/
+F: arch/arm64/boot/dts/mediatek/
+F: drivers/soc/mediatek/
+N: mtk
+N: mt[678]
+K: mediatek
 
--- 
-Kees Cook
+
+Regards,
+Chun-Kuang.
+
+[1] https://www.kernel.org/doc/linux/MAINTAINERS
+
+> regards Frank
