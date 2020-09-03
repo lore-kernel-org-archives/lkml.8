@@ -2,132 +2,169 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64839C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD14FC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ECAF20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A763020737
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AllhKL4d"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="COnn8dkB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgICPCy (ORCPT
+        id S1729139AbgICPDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:02:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52920 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729047AbgICN7I (ORCPT
+        Thu, 3 Sep 2020 11:03:10 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24702 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728998AbgICN7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 09:59:08 -0400
+        Thu, 3 Sep 2020 09:59:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599141547;
+        s=mimecast20190719; t=1599141541;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=q7d9IVaLdiU8t+KOY9YhvBtmvx3P89f14MOWNMV2Ces=;
-        b=AllhKL4dpaYEFLCH8jrr7hjEwCytlmrbXN2FsF3ESnhe9lhEPJ3umnHB29sWhMdbpQtVZ3
-        Qk9ihlN0rJOZpq1jSY63xkic/+TokLyLgB0+CNVmdSmPo0Rd7TpyyFqmCLVdyEsQky9wrk
-        7itnzsrTXu562Q+UYibLzWVUMgxy12c=
+        bh=4d0hEtzj1O3cLEd0CxX1kXJFeAKPS5/bs25SNIlY4YA=;
+        b=COnn8dkBJzEIwPBAmnnGndFE4V/PA/tzQHhkX2H9DbDFVfoTYEbJNSJFsIIqRSoBh1nTBR
+        NtogilpwIXkTsxHv2rUNqR8jqXzdW18vaBVBC75oljCF8KRjHZhzl8ynUxCRHr8arnfeQc
+        JCwMXPQuW7CVGAOhqf6FKg56jbPLISs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-546-Q4-sYnx8OtqZ9He-a06fKw-1; Thu, 03 Sep 2020 09:50:54 -0400
-X-MC-Unique: Q4-sYnx8OtqZ9He-a06fKw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-70--m16VAb4NcG2EptIAfNEgQ-1; Thu, 03 Sep 2020 09:40:16 -0400
+X-MC-Unique: -m16VAb4NcG2EptIAfNEgQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 99F8D85C733;
-        Thu,  3 Sep 2020 13:50:50 +0000 (UTC)
-Received: from krava (unknown [10.40.195.71])
-        by smtp.corp.redhat.com (Postfix) with SMTP id B95CD19C78;
-        Thu,  3 Sep 2020 13:50:45 +0000 (UTC)
-Date:   Thu, 3 Sep 2020 15:50:44 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Kemeng Shi <shikemeng@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Wei Li <liwei391@huawei.com>, Al Grant <Al.Grant@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/14] perf mem: Search event name with more flexible
- path
-Message-ID: <20200903135044.GC713364@krava>
-References: <20200901083815.13755-1-leo.yan@linaro.org>
- <20200901083815.13755-2-leo.yan@linaro.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04D2380046A;
+        Thu,  3 Sep 2020 13:40:15 +0000 (UTC)
+Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 183D61C4;
+        Thu,  3 Sep 2020 13:40:07 +0000 (UTC)
+Subject: Re: [PATCH v4 00/10] vfio/fsl-mc: VFIO support for FSL-MC device
+To:     Diana Craciun <diana.craciun@oss.nxp.com>,
+        alex.williamson@redhat.com, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
+        laurentiu.tudor@nxp.com
+References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <ae46be70-82d3-6137-6169-beb4bf8ae707@redhat.com>
+Date:   Thu, 3 Sep 2020 15:40:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901083815.13755-2-leo.yan@linaro.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 09:38:02AM +0100, Leo Yan wrote:
-> Perf tool searches memory event name under the folder
-> '/sys/devices/cpu/events/', this leads to the limitation for selection
-> memory profiling event which must be under this folder.  Thus it's
-> impossible to use any other event as memory event which is not under
-> this specific folder, e.g. Arm SPE hardware event is not located in
-> '/sys/devices/cpu/events/' so it cannot be enabled for memory profiling.
-> 
-> This patch changes to search folder from '/sys/devices/cpu/events/' to
-> '/sys/devices', so it give flexibility to find events which can be used
-> for memory profiling.
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Hi Diana,
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
-
-> ---
->  tools/perf/util/mem-events.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+On 8/26/20 11:33 AM, Diana Craciun wrote:
+> DPAA2 (Data Path Acceleration Architecture) consists in
+> mechanisms for processing Ethernet packets, queue management,
+> accelerators, etc.
 > 
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index ea0af0bc4314..35c8d175a9d2 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -18,8 +18,8 @@ unsigned int perf_mem_events__loads_ldlat = 30;
->  #define E(t, n, s) { .tag = t, .name = n, .sysfs_name = s }
->  
->  struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
-> -	E("ldlat-loads",	"cpu/mem-loads,ldlat=%u/P",	"mem-loads"),
-> -	E("ldlat-stores",	"cpu/mem-stores/P",		"mem-stores"),
-> +	E("ldlat-loads",	"cpu/mem-loads,ldlat=%u/P",	"cpu/events/mem-loads"),
-> +	E("ldlat-stores",	"cpu/mem-stores/P",		"cpu/events/mem-stores"),
->  };
->  #undef E
->  
-> @@ -93,7 +93,7 @@ int perf_mem_events__init(void)
->  		struct perf_mem_event *e = &perf_mem_events[j];
->  		struct stat st;
->  
-> -		scnprintf(path, PATH_MAX, "%s/devices/cpu/events/%s",
-> +		scnprintf(path, PATH_MAX, "%s/devices/%s",
->  			  mnt, e->sysfs_name);
->  
->  		if (!stat(path, &st))
-> -- 
-> 2.20.1
+> The Management Complex (mc) is a hardware entity that manages the DPAA2
+> hardware resources. It provides an object-based abstraction for software
+> drivers to use the DPAA2 hardware. The MC mediates operations such as
+> create, discover, destroy of DPAA2 objects.
+> The MC provides memory-mapped I/O command interfaces (MC portals) which
+> DPAA2 software drivers use to operate on DPAA2 objects.
+> 
+> A DPRC is a container object that holds other types of DPAA2 objects.
+> Each object in the DPRC is a Linux device and bound to a driver.
+> The MC-bus driver is a platform driver (different from PCI or platform
+> bus). The DPRC driver does runtime management of a bus instance. It
+> performs the initial scan of the DPRC and handles changes in the DPRC
+> configuration (adding/removing objects).
+> 
+> All objects inside a container share the same hardware isolation
+> context, meaning that only an entire DPRC can be assigned to
+> a virtual machine.
+> When a container is assigned to a virtual machine, all the objects
+> within that container are assigned to that virtual machine.
+> The DPRC container assigned to the virtual machine is not allowed
+> to change contents (add/remove objects) by the guest. The restriction
+> is set by the host and enforced by the mc hardware.
+> 
+> The DPAA2 objects can be directly assigned to the guest. However
+> the MC portals (the memory mapped command interface to the MC) need
+> to be emulated because there are commands that configure the
+> interrupts and the isolation IDs which are virtual in the guest.
+> 
+> Example:
+> echo vfio-fsl-mc > /sys/bus/fsl-mc/devices/dprc.2/driver_override
+> echo dprc.2 > /sys/bus/fsl-mc/drivers/vfio-fsl-mc/bind
+> 
+> The dprc.2 is bound to the VFIO driver and all the objects within
+> dprc.2 are going to be bound to the VFIO driver.
+> 
+> More details about the DPAA2 objects can be found here:
+> Documentation/networking/device_drivers/freescale/dpaa2/overview.rst
+> 
+> The patches are dependent on some changes in the mc-bus (bus/fsl-mc)
+> driver. The changes were needed in order to re-use code and to export
+> some more functions that are needed by the VFIO driver.
+> Currenlty the mc-bus patches are under review:
+> https://www.spinics.net/lists/kernel/msg3639226.html
+Could you share a branch with both series? This would help the review.
+
+Thanks
+
+Eric
+> 
+> v3 --> v4
+> - use bus provided functions to tear down the DPRC
+> - added reset support
+> 
+> v2 --> v3
+> - There is no need to align region size to page size
+> - read/write implemented for all DPAA2 objects
+> - review fixes
+> 
+> v1 --> v2
+> - Fixed the container reset, a new flag added to the firmware command
+> - Implement a bus notifier for setting driver_override
+> 
+> 
+> Bharat Bhushan (1):
+>   vfio/fsl-mc: Add VFIO framework skeleton for fsl-mc devices
+> 
+> Diana Craciun (9):
+>   vfio/fsl-mc: Scan DPRC objects on vfio-fsl-mc driver bind
+>   vfio/fsl-mc: Implement VFIO_DEVICE_GET_INFO ioctl
+>   vfio/fsl-mc: Implement VFIO_DEVICE_GET_REGION_INFO ioctl call
+>   vfio/fsl-mc: Allow userspace to MMAP fsl-mc device MMIO regions
+>   vfio/fsl-mc: Added lock support in preparation for interrupt handling
+>   vfio/fsl-mc: Add irq infrastructure for fsl-mc devices
+>   vfio/fsl-mc: trigger an interrupt via eventfd
+>   vfio/fsl-mc: Add read/write support for fsl-mc devices
+>   vfio/fsl-mc: Add support for device reset
+> 
+>  MAINTAINERS                               |   6 +
+>  drivers/vfio/Kconfig                      |   1 +
+>  drivers/vfio/Makefile                     |   1 +
+>  drivers/vfio/fsl-mc/Kconfig               |   9 +
+>  drivers/vfio/fsl-mc/Makefile              |   4 +
+>  drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 684 ++++++++++++++++++++++
+>  drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c    | 221 +++++++
+>  drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |  56 ++
+>  include/uapi/linux/vfio.h                 |   1 +
+>  9 files changed, 983 insertions(+)
+>  create mode 100644 drivers/vfio/fsl-mc/Kconfig
+>  create mode 100644 drivers/vfio/fsl-mc/Makefile
+>  create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc.c
+>  create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
+>  create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
 > 
 
