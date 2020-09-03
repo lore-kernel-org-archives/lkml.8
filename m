@@ -2,142 +2,140 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECC1C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538FDC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED7D20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 257C1206EB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:10:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q1yCvbZ8"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iQOezLnu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgICLFf (ORCPT
+        id S1728254AbgICLIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:05:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59738 "EHLO
+        Thu, 3 Sep 2020 07:08:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728354AbgICK6A (ORCPT
+        with ESMTP id S1726293AbgICK67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:58:00 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 250A4C061246;
-        Thu,  3 Sep 2020 03:57:57 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u20so2048061pfn.0;
-        Thu, 03 Sep 2020 03:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XvxPmxtC0Bk31a11OwZrMge+dU3uUM43arNhidKdfeY=;
-        b=q1yCvbZ8w01P8xuPxnIcZnEF3Hr07ImVQMcXxZgqnSncr+zba54pN3npDYYOjJXhbm
-         XIqjp77VnYo3sJUa9nsc/OkcPZ2a5Y90boSJn50VaZ74haoOIwzEqzuApddDmuRsWA4t
-         5LlNWMh47eFOI/t/pn9hyEBoN/9bMzFwyvwPxAFUkJ5XUIrhRgszLM/M8If1a/RC8WmZ
-         6qZ5sWP8uitmybmf3cwkB0qwBCXj3OoX/HrhU+S1S1dHFyplWZAkXiQoi27iG3iQmbnm
-         EQGK1zrcCUMrp+7WqPhSebA3XqqW6nM8d6/yeJZq7qMNXZRfKdpHSJtV5y0ESKKzTh/Z
-         pJhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XvxPmxtC0Bk31a11OwZrMge+dU3uUM43arNhidKdfeY=;
-        b=V3pK3e2Oog1j3HPAQsghba8wYWj1Mtrhpt2ehqrEjsJ/S4lckjMeBl1zy6AwYJ2p07
-         MjPkKE7T6pPseQHyQLb/nrp9N3e0hdaj4sSktyHB2neM406UB+Yd413XzbV+Atn0xfmi
-         Z415AMeFtnBVcs2QNmQPnp891RycLLVRTCwu7GNg8GQcCm7n2+tdQ223nOUWqHELKhlp
-         u7qcXnhY5V0qAnNkJbPbP7rFC2ceG2XU4Au4AOtVXvkUEeqOpVkdX6DTXWd5NrV9057N
-         T4aesZBQZhCHkbWOsAsjy9N8T14T8c3k09Hdw8Puo/L9/9FIaZo2JFKYirXYLYVJMTjH
-         cHRQ==
-X-Gm-Message-State: AOAM533pykzo0Pq5/z+hkZSIkPMwFxvqBvegu3w859zL2aEj/0LXi3qV
-        gKQzm5BlGL2x4mqc/QdhI7FMysM+vkWi7I45vieAzSzRLXUY+g==
-X-Google-Smtp-Source: ABdhPJzWVo7SnArbq5BTD4S1cYWUGvNIOFTqyxYbAJGJHhEbl/k7IWPLuudMRiwWjgcOrgrKPL+6Qt7HKDzE/CcnN7Y=
-X-Received: by 2002:a62:6083:0:b029:13c:1611:66c4 with SMTP id
- u125-20020a6260830000b029013c161166c4mr1648433pfb.15.1599130676695; Thu, 03
- Sep 2020 03:57:56 -0700 (PDT)
+        Thu, 3 Sep 2020 06:58:59 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F035C061244;
+        Thu,  3 Sep 2020 03:58:56 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0d7a005419317048ee0789.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:7a00:5419:3170:48ee:789])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 901D21EC04CB;
+        Thu,  3 Sep 2020 12:58:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1599130732;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=jFgR8B43svgkJTAQLtPGLdTbywp8lqxgXaF2hdYHOxI=;
+        b=iQOezLnuceBdy6FP5f1e+/Ky22aTiU2sbh7poxpJvORa7KBnNk66Rcr39qYjUCfFei0Tdo
+        QYChFscC2jEOZemAyZEtVFZhEtxKsPpJ/nx0yFkwjJ+Us6VUXojXdpblNYqjeZOLxzrHRm
+        zZMkFiKoqAPbmPzSCP9I904zpWEkViY=
+Date:   Thu, 3 Sep 2020 12:58:49 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Gregor Herburger <gregor.herburger@ew.tq-group.com>
+Cc:     york.sun@nxp.com, mchehab@kernel.org, tony.luck@intel.com,
+        james.morse@arm.com, rrichter@marvell.com,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] edac: fsl_ddr_edac: fix expected data message
+Message-ID: <20200903105849.GC5462@zn.tnic>
+References: <20200817095302.GD549@zn.tnic>
+ <20200827075600.22335-1-gregor.herburger@ew.tq-group.com>
 MIME-Version: 1.0
-References: <20200901221646.26491-1-nicoleotsuka@gmail.com> <20200901221646.26491-2-nicoleotsuka@gmail.com>
-In-Reply-To: <20200901221646.26491-2-nicoleotsuka@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 3 Sep 2020 13:57:39 +0300
-Message-ID: <CAHp75VcVJBSnPQ6NfdF8FdEDfM+oQ=Sr+cH5VGX4SrAqrgpf-g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dma-mapping: introduce dma_get_seg_boundary_nr_pages()
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        rth@twiddle.net, ink@jurassic.park.msu.ru,
-        Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        hca@linux.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200827075600.22335-1-gregor.herburger@ew.tq-group.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 1:20 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> We found that callers of dma_get_seg_boundary mostly do an ALIGN
-> with page mask and then do a page shift to get number of pages:
->     ALIGN(boundary + 1, 1 << shift) >> shift
->
-> However, the boundary might be as large as ULONG_MAX, which means
-> that a device has no specific boundary limit. So either "+ 1" or
-> passing it to ALIGN() would potentially overflow.
->
-> According to kernel defines:
->     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
->     #define ALIGN(x, a) ALIGN_MASK(x, (typeof(x))(a) - 1)
->
-> We can simplify the logic here into a helper function doing:
->   ALIGN(boundary + 1, 1 << shift) >> shift
-> = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
-> = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
-> = [b + 1 + (1 << s) - 1] >> s
-> = [b + (1 << s)] >> s
-> = (b >> s) + 1
->
-> This patch introduces and applies dma_get_seg_boundary_nr_pages()
-> as an overflow-free helper for the dma_get_seg_boundary() callers
-> to get numbers of pages. It also takes care of the NULL dev case
-> for non-DMA API callers.
+On Thu, Aug 27, 2020 at 09:56:00AM +0200, Gregor Herburger wrote:
+> When a correctable single bit error occurs, the driver calculates the
+> bad_data_bit respectively the bad_ecc_bit. If there is no error in the
+> corresponding data, the value becomes -1. With this the expected data
+> message is calculated.
+> 
+> In the case of an error in the lower 32 bits or no error (-1) the right
+> side operand of the bit-shift becomes negative which is undefined
+> behavior.
+> 
+> This can result in wrong and misleading messages like this:
+> [  311.103794] EDAC FSL_DDR MC0: Faulty Data bit: 36
+> [  311.108490] EDAC FSL_DDR MC0: Expected Data / ECC:   0xffffffef_ffffffff / 0x80000059
+> [  311.116135] EDAC FSL_DDR MC0: Captured Data / ECC:   0xffffffff_ffffffef / 0x59
+> 
+> Fix this by only calculating the expected data where the error occurred.
+> 
+> With the fix the dmesg output looks like this:
+> [  311.103794] EDAC FSL_DDR MC0: Faulty Data bit: 36
+> [  311.108490] EDAC FSL_DDR MC0: Expected Data / ECC:   0xffffffef_ffffffef / 0x59
+> [  311.116135] EDAC FSL_DDR MC0: Captured Data / ECC:   0xffffffff_ffffffef / 0x59
+> 
+> Signed-off-by: Gregor Herburger <gregor.herburger@ew.tq-group.com>
+> ---
+>  drivers/edac/fsl_ddr_edac.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/edac/fsl_ddr_edac.c b/drivers/edac/fsl_ddr_edac.c
+> index 6d8ea226010d..4b6989cf1947 100644
+> --- a/drivers/edac/fsl_ddr_edac.c
+> +++ b/drivers/edac/fsl_ddr_edac.c
+> @@ -343,9 +343,9 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
+>  
+>  		fsl_mc_printk(mci, KERN_ERR,
+>  			"Expected Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
+> -			cap_high ^ (1 << (bad_data_bit - 32)),
+> -			cap_low ^ (1 << bad_data_bit),
+> -			syndrome ^ (1 << bad_ecc_bit));
+> +			(bad_data_bit > 31) ? cap_high ^ (1 << (bad_data_bit - 32)) : cap_high,
+> +			(bad_data_bit <= 31) ? cap_low ^ (1 << (bad_data_bit)) : cap_low,
 
-...
+But if bad_data_bit is -1, this check above will hit and you'd still
+shift by -1, IINM.
 
-> +static inline unsigned long dma_get_seg_boundary_nr_pages(struct device *dev,
-> +               unsigned int page_shift)
-> +{
-> +       if (!dev)
-> +               return (U32_MAX >> page_shift) + 1;
-> +       return (dma_get_seg_boundary(dev) >> page_shift) + 1;
+How about you fix it properly, clean it up and make it more readable in
+the process (pasting the code directly instead of a diff because a diff
+is less readable):
 
-Can it be better to do something like
-  unsigned long boundary = dev ? dma_get_seg_boundary(dev) : U32_MAX;
+        if ((err_detect & DDR_EDE_SBE) && (bus_width == 64)) {
+                sbe_ecc_decode(cap_high, cap_low, syndrome,
+                                &bad_data_bit, &bad_ecc_bit);
 
-  return (boundary >> page_shift) + 1;
+                if (bad_data_bit != -1) {
+                        if (bad_data_bit > 31)
+                                cap_high ^= 1 << (bad_data_bit - 32);
+                        else
+                                cap_low  ^= 1 << bad_data_bit;
 
-?
+                        fsl_mc_printk(mci, KERN_ERR, "Faulty Data bit: %d\n", bad_data_bit);
+                        fsl_mc_printk(mci, KERN_ERR, "Expected Data: %#8.8x_%08x\n",
+                                      cap_high, cap_low);
+                }
 
-> +}
+                if (bad_ecc_bit != -1) {
+                        fsl_mc_printk(mci, KERN_ERR, "Faulty ECC bit: %d\n", bad_ecc_bit);
+                        fsl_mc_printk(mci, KERN_ERR, "Expected ECC: %#2.2x\n",
+                                      syndrome ^ (1 << bad_ecc_bit));
+                }
+        }
+
+This way you print only when the respective faulty bits have been
+properly found and not print anything otherwise.
+
+Hmm?
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
