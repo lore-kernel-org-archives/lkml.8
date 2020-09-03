@@ -2,191 +2,168 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B25C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B4FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51C552072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:10:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ccrlz93x"
+	by mail.kernel.org (Postfix) with ESMTP id BB0C12072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:10:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgICRKQ (ORCPT
+        id S1729002AbgICRKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 13:10:16 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40140 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726327AbgICRKP (ORCPT
+        Thu, 3 Sep 2020 13:10:21 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:39946 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726025AbgICRKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 13:10:15 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 083H1lKL138973;
-        Thu, 3 Sep 2020 13:10:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=++7FG1vvQy4IQVZV74Hxz4Q2iO5xLzsWU+5iC8BgQ/I=;
- b=ccrlz93xGaSI0r82viEIaGk3v5n6gPRGSSws8DK5mKCbN3V6GWDFi0Pveb/7oJ5MVmK1
- DYdiiJb4Jw2aNjPTbO++Q2vJvVPFC8y+bwOmIrNj1GK0gFCsygmU7R6pNlL1m30SQFl9
- 4M9qmKS1SUWXDWx2Olloa1mrt1dIewZL2OGloV8R0p0a5pfXVypXuNxtkst/Rvkd9rp7
- 9jBUCAzEEWm95czZOk1F5/3NYDpsh1+aXMB+by4Bi8KBt5l2AyKAt0Ewc/V4QZnGNh8G
- qQUuYKHXgTjI9o0xU6uof75NiwsFMH5xTmL4EmfU8epqz4BRmXjqg8Hk6hCqu5XRYI9p rQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33b3dx2h2r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 13:10:08 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 083H2bnW145734;
-        Thu, 3 Sep 2020 13:10:07 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33b3dx2h1d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 13:10:07 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 083H7VBO017133;
-        Thu, 3 Sep 2020 17:10:05 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma02wdc.us.ibm.com with ESMTP id 337ena19uj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 17:10:05 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 083HA1wp26739064
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Sep 2020 17:10:01 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8499E13604F;
-        Thu,  3 Sep 2020 17:10:04 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6ED36136065;
-        Thu,  3 Sep 2020 17:10:03 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.163.10.164])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  3 Sep 2020 17:10:03 +0000 (GMT)
-Subject: Re: [PATCH v4 1/3] PCI/IOV: Mark VFs as not implementing MSE bit
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     alex.williamson@redhat.com, bhelgaas@google.com,
-        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20200903164117.GA312152@bjorn-Precision-5520>
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-Message-ID: <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
-Date:   Thu, 3 Sep 2020 13:10:02 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 3 Sep 2020 13:10:16 -0400
+X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
+   d="scan'208";a="465973671"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 19:10:12 +0200
+Date:   Thu, 3 Sep 2020 19:10:12 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Valentin Schneider <valentin.schneider@arm.com>
+cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Gilles Muller <Gilles.Muller@inria.fr>
+Subject: Re: SD_LOAD_BALANCE
+In-Reply-To: <jhj7dtaokxe.mognet@arm.com>
+Message-ID: <alpine.DEB.2.22.394.2009031908280.2496@hadrien>
+References: <alpine.DEB.2.22.394.2009031605190.2496@hadrien> <jhj7dtaokxe.mognet@arm.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-In-Reply-To: <20200903164117.GA312152@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-03_10:2020-09-03,2020-09-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 clxscore=1015 suspectscore=0
- spamscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009030155
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/20 12:41 PM, Bjorn Helgaas wrote:
-> On Wed, Sep 02, 2020 at 03:46:34PM -0400, Matthew Rosato wrote:
->> Per the PCIe spec, VFs cannot implement the MSE bit
->> AKA PCI_COMMAND_MEMORY, and it must be hard-wired to 0.
->> Use a dev_flags bit to signify this requirement.
-> 
-> This approach seems sensible to me, but
-> 
->    - This is confusing because while the spec does not use "MSE" to
->      refer to the Command Register "Memory Space Enable" bit
->      (PCI_COMMAND_MEMORY), it *does* use "MSE" in the context of the
->      "VF MSE" bit, which is in the PF SR-IOV Capability.  But of
->      course, you're not talking about that here.  Maybe something like
->      this?
-> 
->        For VFs, the Memory Space Enable bit in the Command Register is
->        hard-wired to 0.
-> 
->        Add a dev_flags bit to signify devices where the Command
->        Register Memory Space Enable bit does not control the device's
->        response to MMIO accesses.
 
-Will do.  I'll change the usage of the MSE acronym in the other patches 
-as well.
 
-> 
->    - "PCI_DEV_FLAGS_FORCE_COMMAND_MEM" says something about how you
->      plan to *use* this, but I'd rather use a term that describes the
->      hardware, e.g., "PCI_DEV_FLAGS_NO_COMMAND_MEMORY".
+On Thu, 3 Sep 2020, Valentin Schneider wrote:
 
-Sure, I will change.
+>
+> Hi Julia,
+>
+> On 03/09/20 15:09, Julia Lawall wrote:
+> > Uses of SD_LOAD_BALANCE were removed in commit e669ac8ab952 (first
+> > released in v5.8), with the comment:
+> >
+> > The SD_LOAD_BALANCE flag is set unconditionally for all domains in
+> > sd_init().
+> >
+> > I have the impression that this was not quite true.  The NUMA domain was
+> > not initialized with sd_init, and didn't have the SD_LOAD_BALANCE flag
+> > set.
+>
+> Did you check the contents of
+>
+>   /proc/sys/kernel/sched_domain/cpu*/domain*/flags
+>
+> (requires CONFIG_SCHED_DEBUG)? If the LSB is set, it would mean
+> SD_LOAD_BALANCE is set.
 
-> 
->    - How do we decide whether to use dev_flags vs a bitfield like
->      dev->is_virtfn?  The latter seems simpler unless there's a reason
->      to use dev_flags.  If there's a reason, maybe we could add a
->      comment at pci_dev_flags for future reference.
-> 
+No, I didn't check that.  Thanks for the pointer.
 
-Something like:
+>
+> The sched_domain construction flow isn't the easiest thing to follow, but
+> NUMA domains *have* to go through sd_init().
+>
+> What happens is we first go through sched_init_numa(), and there we add
+> some more topology levels on top of the default ones (or the arch-defined
+> ones if using an arch-defined topology hierarchy) by using the NUMA
+> distance table.
+>
+> We then build the actual domains in sched_init_domains(), and that goes
+> through a loop that looks like
+>
+>   for_each_cpu() {
+>       for_each_sd_topology() {
+>           build_sched_domain() -> sd_init()
+>       }
+>   }
+>
+> where the SD topology loop is going to iterate over the newly-added
+> NUMA-specific topology levels. Since that used to unconditionally set
+> SD_LOAD_BALANCE, NUMA domains really ought to have it.
+>
+> If that wasn't the case, we would have fired the (now removed) warning in
+> sched_domain_debug_one() that would do:
+>
+>        if (!(sd->flags & SD_LOAD_BALANCE)) {
+>                printk("does not load-balance\n");
+>                if (sd->parent)
+>                        printk(KERN_ERR "ERROR: !SD_LOAD_BALANCE domain has parent");
+>                return -1;
+>        }
 
-/*
-  * Device does not implement PCI_COMMAND_MEMORY - this is true for any
-  * device marked is_virtfn, but is also true for any VF passed-through
-  * a lower-level hypervisor where emulation of the Memory Space Enable
-  * bit was not provided.
-  */
-PCI_DEV_FLAGS_NO_COMMAND_MEMORY = (__force pci_dev_flags_t) (1 << 12),
+OK, thanks for all of this information.  I will study the code and
+execution some more, and let you know what I find out.
 
-?
+julia
 
->    - Wrap the commit log to fill a 75-char line.  It's arbitrary, but
->      that's what I use for consistency.
-
-Sure, will do.  I'll roll up a new version once I have feedback from 
-Alex on the vfio changes.
-
-> 
->> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
->> ---
->>   drivers/pci/iov.c   | 1 +
->>   include/linux/pci.h | 2 ++
->>   2 files changed, 3 insertions(+)
->>
->> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
->> index b37e08c..2bec77c 100644
->> --- a/drivers/pci/iov.c
->> +++ b/drivers/pci/iov.c
->> @@ -180,6 +180,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->>   	virtfn->device = iov->vf_device;
->>   	virtfn->is_virtfn = 1;
->>   	virtfn->physfn = pci_dev_get(dev);
->> +	virtfn->dev_flags |= PCI_DEV_FLAGS_FORCE_COMMAND_MEM;
->>   
->>   	if (id == 0)
->>   		pci_read_vf_config_common(virtfn);
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 8355306..9316cce 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -227,6 +227,8 @@ enum pci_dev_flags {
->>   	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
->>   	/* Don't use Relaxed Ordering for TLPs directed at this device */
->>   	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
->> +	/* Device does not implement PCI_COMMAND_MEMORY (e.g. a VF) */
->> +	PCI_DEV_FLAGS_FORCE_COMMAND_MEM = (__force pci_dev_flags_t) (1 << 12),
->>   };
->>   
->>   enum pci_irq_reroute_variant {
->> -- 
->> 1.8.3.1
->>
-
+>
+> > The effect is that in v5.8, the for_each_domain loop in
+> > select_task_rq_fair can always end up at the global NUMA domain, and thus
+> > consider any pair of waking cpu (cpu) and previous cpus of the wakee
+> > (prev_cpu) as arguments to wake_affine.  Up to v5.7, this was only
+> > possible if cpu and prev_cpu were together in some lower level domain, ie
+> > sharing the LLC.  The effect is that in v5.8 wake_affine can often end up
+> > choosing as a target a core that does not share the LLC with the core
+> > where the thread ran previously.  Threads then move around a lot between
+> > the different sockets.
+> >
+> > Was this intentional?
+> >
+>
+> AFAICT it isn't forbidden for the logic here to peek outside of the
+> previous LLC. The NUMA reclaim distance thing says we allow affine wakeups
+> and fork / exec balancing to move a task to a CPU at most RECLAIM_DISTANCE
+> away (in NUMA distance values). However, I don't remember any patch
+> changing this between v5.7 and v5.8.
+>
+> Briefly glancing over the kernel/sched log between v5.7 and v5.8, I don't
+> see any obvious culprits. Did you try to bisect this? If it indeed ends on
+> the SD_LOAD_BALANCE thing, well, I'll be off eating my keyboard.
+>
+> > The effect can be seen in the traces of the parsec vips benchmark at the
+> > following URL:
+> >
+> > https://pages.lip6.fr/Julia.Lawall/vips.pdf
+> >
+> > The first two graphs (complete run and small fragment) are Linux v5.7 and
+> > the next two are Linux v5.8.  The machine has 160 hardware threads
+> > organized in 4 sockets and the colors are by socket.  In the small
+> > fragment for v5.7 (second graph), one can see that a given pid pretty much
+> > stays on the same socket, while in the corresponding fragment for v5.8
+> > (fourth graph), the pids move around between the sockets.  The x's
+> > describe the unblocks that result in a migration.  A pink x means that the
+> > migration is in the same socket, while a blue x means that the migration
+> > is to another socket. It's not apparent from the graphs, but by adding
+> > some tracing, it seems that the new socket is always the one of the core
+> > that handles the wakeup.
+> >
+>
+> Interesting graphs, thanks for sharing!
+>
+> > I haven't yet studied the early part of the execution of vips in detail,
+> > but I suspect that the same issue causes all of the threads to be
+> > initially on the same socket in v5.7, while in v5.8 they are more quickly
+> > dispersed to other sockets.
+> >
+> > My impression from the parsec and the NAS benchmarks is that the v5.8
+> > performance is a bit better than v5.7, probably because of getting more
+> > threads to more different sockets earlier, but other benchmarks might
+> > rely more on locality and might react less well to threads moving around
+> > so much in this way.
+> >
+> > julia
+>
