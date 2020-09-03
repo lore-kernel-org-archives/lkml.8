@@ -2,114 +2,103 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C43BC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AFCC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 626BA20767
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8114D20767
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:19:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="JXoZxY5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgICKTC (ORCPT
+        id S1726967AbgICKTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 06:19:02 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34568 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgICKS5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:18:57 -0400
-Received: by mail-oi1-f195.google.com with SMTP id z22so2609053oid.1;
-        Thu, 03 Sep 2020 03:18:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/K2TceG+YMiMk03lA1/MkZv11rftVfSaLBq2a+jxQc8=;
-        b=qaaBS6RtHt1XYsqBC1a7I57NwwAEXblT8/S9by8t2/hUFF0xKlgoJv6z2P7QMLw7AX
-         Y0XXBb/XwDLGowjUZvpiRNjceI1s5ZWDXm0YIQKaULmI11vEXkWuoI5T8g67Bn626I6S
-         pujx5ZtFZLfR9uXLSi+EAuxNV1UCN8Q6Rb0xcbZbnEdiJJtSatq9omYuUOyodHGbtpxn
-         qLvw0ATUW6qjizwkzGp99dQpOMlVcojra82vEp/79Xp4/5CRrKda8E70ZdGLzisoRzXl
-         1zHXjtjIlu8xnQ5y3sTuBmzP2o+q2xhOSUpmbuKbQULdS5gC0+lbCArp3ayXsXoL031A
-         jjeQ==
-X-Gm-Message-State: AOAM5319hro6XSn7ACOjCMX5KEGuGI9UVKfdaqMNG5b2/dJ/JRUUhGqv
-        IPAFiLxfHdsA8xUume6SV4Hpp7DW79BRlJaUBY+rQG2fP0A=
-X-Google-Smtp-Source: ABdhPJygFHNDUkjk3+rmdBnoZmAJdF/YWtr4NhfoiZrjCH9Eq7jvuwgTPXwEDXAMPSmAWyXJS+rtQBViBj54DoQym+g=
-X-Received: by 2002:aca:52d6:: with SMTP id g205mr1540672oib.54.1599128336542;
- Thu, 03 Sep 2020 03:18:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200825162718.5838-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200825162718.5838-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 3 Sep 2020 12:18:45 +0200
-Message-ID: <CAMuHMdVVvDEq-GSsPDrx09TCfGCWkNQvGYrNWP4gK2=63G2z1w@mail.gmail.com>
-Subject: Re: [PATCH 1/4] ARM: dts: r8a7742-iwg21d-q7: Enable PCIe Controller
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
+        Thu, 3 Sep 2020 06:19:46 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:56878 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726109AbgICKTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 06:19:45 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id D1869542D3;
+        Thu,  3 Sep 2020 10:19:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1599128381; x=1600942782; bh=3kdp/2jYfEvoYoAnfZ5egG/mA
+        0oy4YxmasQnagmOfwY=; b=JXoZxY5LnkQ8sRYeD9ge+xa+zCPTnCRsG7GfJ2z7Y
+        OMk8xuuuSwQxxqJRHcYp0mSueZP5qcUsFVjvQOoRyGZJZiH7aiKXb4jt86RZ7yhY
+        +eMhQiHROBWp81SmNqjE3rlxj1RRxAJVEpvTgBIQPu0xMFf2QmAtb33UyORqWU8c
+        Bk=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 1T_3FNt0-Y1M; Thu,  3 Sep 2020 13:19:41 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id B7BCC50242;
+        Thu,  3 Sep 2020 13:19:41 +0300 (MSK)
+Received: from localhost.localdomain (10.199.2.130) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Thu, 3 Sep 2020 13:19:41 +0300
+Message-ID: <2b14920abf9f430731ec11c1df6c0253185c7ce7.camel@yadro.com>
+Subject: Re: watchdog start on restart
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Date:   Thu, 3 Sep 2020 13:23:09 +0300
+In-Reply-To: <1721f170-95df-2451-e3af-6369e830afad@roeck-us.net>
+References: <d2343032814705f33cd81f18f45630bf327c0ff8.camel@yadro.com>
+         <1721f170-95df-2451-e3af-6369e830afad@roeck-us.net>
+Organization: YADRO
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.199.2.130]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Wed, 2020-09-02 at 06:36 -0700, Guenter Roeck wrote:
+> On 9/2/20 6:02 AM, Ivan Mikhaylov wrote:
+> > Hello everyone. Currently, the watchdog interface only has "stop watchdog on
+> > restart" but lacks a "start watchdog on restart" one. Is there a way to
+> > achieve
+> > such functionality?
+> > 
+> > I'd like to know why "stop watchdog on restart" wasn't implemented via ioctl
+> > interface? It would be more convenient from user perspective and you can
+> > control that behavior whenever you want from application layer.
+> > 
+> 
+> Because it is and always was a driver level decision. The function was added
+> to replace lots of driver level code implementing this functionality.
+> Overriding it from userspace doesn't make sense because the driver is supposed
+> to have a reason for disabling it on reboot (for example due to clock issues
+> or power issues or becasue it has a short hardware timeout).
 
-On Tue, Aug 25, 2020 at 6:28 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Enable PCIe Controller and set PCIe bus clock frequency.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+If it's only driver level decision then it makes sense.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
+> That functionality doesn't make much sense. It can be accomplished by not
+> stopping the watchdog on reboot in the first place. And if the watchdog
+> wasn't running before, it can be started from userspace just before the
+> reboot.
 
-One thing to double-check below.
+I understand that it can be started from userspace. As example, I want the
+watchdog trigger with guarantee that the userspace will be properly shut on
+reboot, how can I get it with current interface? Just start before the reboot
+doesn't guarantee that it will be triggered or will be triggered in middle
+of reboot/restart.
 
-> --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> @@ -238,6 +238,18 @@
->         /* status = "okay"; */
->  };
->
-> +&pcie_bus_clk {
-> +       clock-frequency = <100000000>;
-> +};
-> +
-> +&pciec {
-> +       /* SW2[6] determines which connector is activated
-> +        * ON = PCIe X4 (connector-J7)
-> +        * OFF = mini-PCIe (connector-J26)
+Thanks.
 
-The table on page 14 says it's the other way around.
-
-According to the CBTL02042ABQ datasheet, PCIe_SEL = low
-selects the first channel (PCIe x4), while PCIe_SEL = high selects the
-second channel (mini-PCIe).
-Enabling the switch ties the signal low, so the table must be wrong.
-
-> +        */
-> +       status = "okay";
-> +};
-> +
->  &pfc {
->         avb_pins: avb {
->                 groups = "avb_mdio", "avb_gmii";
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
