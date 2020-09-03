@@ -2,147 +2,136 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8184C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CDCC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F590206E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6587206D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:45:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O5o59mUd"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SG5ZKBSy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgICVor (ORCPT
+        id S1729278AbgICVpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 17:44:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgICVoo (ORCPT
+        Thu, 3 Sep 2020 17:45:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64584 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728037AbgICVpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 17:44:44 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5213C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 14:44:43 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id w186so3162621pgb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 14:44:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Wkni4eXx9E7Yx63VN0+vnviLhaoHNM+yB8xZjp7w5hM=;
-        b=O5o59mUdRprA27/bBNjMETG5FChmb/k7jW6G/CEqPxqkNExuhCDFNEGkwkwsAAOk9B
-         S/ND1TkN2Kb21Yt+dermQ1eJzMamhppfZcA/5BLAHvK0xooF6lH1S7/GgEK+o+mFn5sC
-         Q+9Q6xNOHekU+wFfZY8e2e5GVn6y3TV0ytjI0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Wkni4eXx9E7Yx63VN0+vnviLhaoHNM+yB8xZjp7w5hM=;
-        b=iXJOjSnckWDCzw18yicXkQWRidFNlPsYRkd2uyB0fTZkxda+CSSUY/DTabveWXBDcB
-         3L2+BCyaOsdZOBV4FBCo2XeS7po0vO7Ap4RqFxpQs8+QPxQq9wKMqBcsEMS3DBncnViT
-         coz+r5ixqHob9OoaVLAGI/TolT3mNTiY+NwDLPMcuOjMqT7V7k2LLdGiwvMYCeb/7FP+
-         oX4O7/lpAtm/Pn0T3ApI9Tqn/XowM8LLKPW+QdXJlB2op79zc5fMPdGbzwvnNX6BAEGx
-         jSna9dZ3DhR+TFBq59SwsQpjouJKiNnyjnOQ6o0hhGweZKSW7vTfzP7Yb85xb3iQdd6u
-         fdCw==
-X-Gm-Message-State: AOAM531nUIcUPzIlgCXHNNTiwdL6v2HmkmVfyZv4fuNSSR00CxmUEMIu
-        uA9y37ilDNMoNjgL/KEioQRYaQ==
-X-Google-Smtp-Source: ABdhPJzAv2fIwHx5fjsh6FyQ4DUXacQqnpd1HrcO3mYGfEva7Q9zQka0PVlCAE3Ap8Ww7DWt19mfFg==
-X-Received: by 2002:a62:1809:: with SMTP id 9mr5726960pfy.217.1599169483379;
-        Thu, 03 Sep 2020 14:44:43 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d77sm4259177pfd.121.2020.09.03.14.44.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 14:44:42 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 14:44:41 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, Arvind Sankar <nivedita@alum.mit.edu>
-Subject: Re: [PATCH v2 01/28] x86/boot/compressed: Disable relocation
- relaxation
-Message-ID: <202009031444.F2ECA89E@keescook>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com>
- <20200903203053.3411268-2-samitolvanen@google.com>
+        Thu, 3 Sep 2020 17:45:04 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 083LWo9g082046;
+        Thu, 3 Sep 2020 17:44:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
+ cc : subject : in-reply-to : date : message-id : mime-version :
+ content-type; s=pp1; bh=AJJtyDkK71KAtXDoyagJ/qdb1oShYkeR15uEJJIJ9Qk=;
+ b=SG5ZKBSyCKdVvkN9Eym4ccOJN5g1/5u2KtTUC8fvLqcIHlJX7u/hgyugadPKKoXa8wD4
+ 5Vx6mEIbXFvuNkgVGZUJDRvmVNcb8mXiJGok6eAHKvy9wJt8cBShb7YNKkBBoB04MFFo
+ WFWUDJs+Yq+2ju0uQ1/YtxMcdKUmOQHyHa+CqFnm3ClARnX6bFnbZ2htM/kGc4Ke2FGV
+ 6Ucwm6yTvm1U3FBlArU/UVBvZfhtOfkHDxkb6B4Xp3WjIm5/W9SGBmPKUyzsQbm3B4OI
+ +vjz9R5KbCWZImvU5O1SRw5k/p4FmnLCp75yDQFDaicCn/eVDQCgKTM+8xJky5PFq2IX rA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33b7cfsxv4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Sep 2020 17:44:09 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 083LX7j8082506;
+        Thu, 3 Sep 2020 17:44:09 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33b7cfsxur-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Sep 2020 17:44:09 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 083LgspW030969;
+        Thu, 3 Sep 2020 21:44:07 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma03wdc.us.ibm.com with ESMTP id 337en9tu7h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Sep 2020 21:44:07 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 083Li7dQ52232452
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 3 Sep 2020 21:44:07 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5EFDAAC05B;
+        Thu,  3 Sep 2020 21:44:07 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A1774AC059;
+        Thu,  3 Sep 2020 21:43:57 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.211.155.22])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu,  3 Sep 2020 21:43:57 +0000 (GMT)
+References: <20200901195029.30039-1-nramas@linux.microsoft.com>
+ <20200901195029.30039-2-nramas@linux.microsoft.com>
+User-agent: mu4e 1.4.10; emacs 27.1
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
+        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
+        vincenzo.frascino@arm.com, mark.rutland@arm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
+        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
+        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
+Subject: Re: [PATCH v5 1/3] powerpc: Refactor kexec functions to move arch
+ independent code to IMA
+In-reply-to: <20200901195029.30039-2-nramas@linux.microsoft.com>
+Date:   Thu, 03 Sep 2020 18:43:54 -0300
+Message-ID: <87y2lqy1r9.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903203053.3411268-2-samitolvanen@google.com>
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-03_14:2020-09-03,2020-09-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ mlxscore=0 phishscore=0 suspectscore=2 mlxlogscore=771 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 spamscore=0 priorityscore=1501
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009030189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 01:30:26PM -0700, Sami Tolvanen wrote:
-> From: Arvind Sankar <nivedita@alum.mit.edu>
-> 
-> The x86-64 psABI [0] specifies special relocation types
-> (R_X86_64_[REX_]GOTPCRELX) for indirection through the Global Offset
-> Table, semantically equivalent to R_X86_64_GOTPCREL, which the linker
-> can take advantage of for optimization (relaxation) at link time. This
-> is supported by LLD and binutils versions 2.26 onwards.
-> 
-> The compressed kernel is position-independent code, however, when using
-> LLD or binutils versions before 2.27, it must be linked without the -pie
-> option. In this case, the linker may optimize certain instructions into
-> a non-position-independent form, by converting foo@GOTPCREL(%rip) to $foo.
-> 
-> This potential issue has been present with LLD and binutils-2.26 for a
-> long time, but it has never manifested itself before now:
-> - LLD and binutils-2.26 only relax
-> 	movq	foo@GOTPCREL(%rip), %reg
->   to
-> 	leaq	foo(%rip), %reg
->   which is still position-independent, rather than
-> 	mov	$foo, %reg
->   which is permitted by the psABI when -pie is not enabled.
-> - gcc happens to only generate GOTPCREL relocations on mov instructions.
-> - clang does generate GOTPCREL relocations on non-mov instructions, but
->   when building the compressed kernel, it uses its integrated assembler
->   (due to the redefinition of KBUILD_CFLAGS dropping -no-integrated-as),
->   which has so far defaulted to not generating the GOTPCRELX
->   relocations.
-> 
-> Nick Desaulniers reports [1,2]:
->   A recent change [3] to a default value of configuration variable
->   (ENABLE_X86_RELAX_RELOCATIONS OFF -> ON) in LLVM now causes Clang's
->   integrated assembler to emit R_X86_64_GOTPCRELX/R_X86_64_REX_GOTPCRELX
->   relocations. LLD will relax instructions with these relocations based
->   on whether the image is being linked as position independent or not.
->   When not, then LLD will relax these instructions to use absolute
->   addressing mode (R_RELAX_GOT_PC_NOPIC). This causes kernels built with
->   Clang and linked with LLD to fail to boot.
-> 
-> Patch series [4] is a solution to allow the compressed kernel to be
-> linked with -pie unconditionally, but even if merged is unlikely to be
-> backported. As a simple solution that can be applied to stable as well,
-> prevent the assembler from generating the relaxed relocation types using
-> the -mrelax-relocations=no option. For ease of backporting, do this
-> unconditionally.
-> 
-> [0] https://gitlab.com/x86-psABIs/x86-64-ABI/-/blob/master/x86-64-ABI/linker-optimization.tex#L65
-> [1] https://lore.kernel.org/lkml/20200807194100.3570838-1-ndesaulniers@google.com/
-> [2] https://github.com/ClangBuiltLinux/linux/issues/1121
-> [3] https://reviews.llvm.org/rGc41a18cf61790fc898dcda1055c3efbf442c14c0
-> [4] https://lore.kernel.org/lkml/20200731202738.2577854-1-nivedita@alum.mit.edu/
-> 
-> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
+
+> The functions ima_get_kexec_buffer() and ima_free_kexec_buffer() that
+> handle carrying forward the IMA measurement logs on kexec for powerpc
+> do not have architecture specific code, but they are currently defined
+> for powerpc only.
+>
+> Move these functions to IMA subsystem so that it can be used for other
+> architectures as well. A later patch in this series will use these
+> functions for carrying forward the IMA measurement log for ARM64.
+>
+> Define FDT_PROP_IMA_KEXEC_BUFFER for the chosen node, namely
+> "linux,ima-kexec-buffer", that is added to the DTB to hold
+> the address and the size of the memory reserved to carry
+> the IMA measurement log.
+>
+> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+
+do_get_kexec_buffer() is still duplicated in generic code and powerpc
+code. It's a small and simple function though, so not really a problem.
+
+I think you'll need to move over remove_ima_buffer() if you agree with
+the comment I'll make on patch 3, in which case the powerpc-specific
+do_get_kexec_buffer() can be removed.
+
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
 -- 
-Kees Cook
+Thiago Jung Bauermann
+IBM Linux Technology Center
