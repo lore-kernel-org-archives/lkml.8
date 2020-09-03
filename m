@@ -2,93 +2,111 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01828C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EC3C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D718D20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:56:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K4bZxN0z"
+	by mail.kernel.org (Postfix) with ESMTP id 0B8BC206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:56:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbgICQ4T (ORCPT
+        id S1728885AbgICQ4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:56:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgICQ4R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:56:17 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29AE9C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 09:56:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/1m8FD1Bq3sHl8yu7KCZle+Y3qYoxUKr4gtXUdv0gU0=; b=K4bZxN0zw+2ODOI2cR/HKfTdze
-        iSDfdYhJwVooo4MfVxihgS9MLK05R8QxClTPDRG9vku7evCr0Mt8/9+qe5wSJXWWNxuBRR8deu+VH
-        rETQn4cRd2SjZ22XhUAc3cK+7OKfNF9Tgn9rnizYPrA/JZ5Eoz5hodDM5LSiZrewZE5bhKxP0Jwoh
-        eSy8ejsJy7ANqnPWvse0/hS2+VoaHh2013j6V30h/yIVBrzDVYpqnft2cNga0C5n/DMnLHs2MJzFA
-        tZ2xMGZ3qfF6xkfs5OO0z4r2S1uecvdU2BoBPIhut/5KNaGg7wvlWw5O48+ZL3iplW+P/aDCi+gNc
-        Jnn3KPtg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDsWl-0006eQ-PQ; Thu, 03 Sep 2020 16:55:59 +0000
-Date:   Thu, 3 Sep 2020 17:55:59 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
-        Roman Gushchin <guro@fb.com>, Rik van Riel <riel@surriel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
+        Thu, 3 Sep 2020 12:56:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726327AbgICQ4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 12:56:36 -0400
+Received: from gaia (unknown [46.69.195.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF3B9206A5;
+        Thu,  3 Sep 2020 16:56:34 +0000 (UTC)
+Date:   Thu, 3 Sep 2020 17:56:32 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        will@kernel.org, akpm@linux-foundation.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
-Message-ID: <20200903165559.GD14765@casper.infradead.org>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200902184053.GF24045@ziepe.ca>
- <E78A0F18-223C-44A8-BCBA-73CF7AF6F8A5@nvidia.com>
- <20200902184852.GH24045@ziepe.ca>
- <C5EFA1CC-311C-47D5-9506-D087D9AE58D1@nvidia.com>
- <20200902195739.GI24045@ziepe.ca>
- <C12C60A2-43EA-4AD3-9077-FFB61CCC964C@nvidia.com>
- <20200903164032.GM24045@ziepe.ca>
+Subject: Re: [PATCH 1/2] arm64/mm: Change THP helpers to comply with generic
+ MM semantics
+Message-ID: <20200903165631.GC31409@gaia>
+References: <1597655984-15428-1-git-send-email-anshuman.khandual@arm.com>
+ <1597655984-15428-2-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200903164032.GM24045@ziepe.ca>
+In-Reply-To: <1597655984-15428-2-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 01:40:32PM -0300, Jason Gunthorpe wrote:
-> However if the sizeof(*pXX) is 8 on a 32 bit platform then load
-> tearing is a problem. At lest the various pXX_*() test functions
-> operate on a single 32 bit word so don't tear, but to to convert the
-> *pXX to a lower level page table pointer a coherent, untorn, read is
-> required.
+On Mon, Aug 17, 2020 at 02:49:43PM +0530, Anshuman Khandual wrote:
+> pmd_present() and pmd_trans_huge() are expected to behave in the following
+> manner during various phases of a given PMD. It is derived from a previous
+> detailed discussion on this topic [1] and present THP documentation [2].
 > 
-> So, looking again, I remember now, I could never quite figure out why
-> gup_pmd_range() was safe to do:
+> pmd_present(pmd):
 > 
->                 pmd_t pmd = READ_ONCE(*pmdp);
-> [..]
->                 } else if (!gup_pte_range(pmd, addr, next, flags, pages, nr))
-> [..]
->         ptem = ptep = pte_offset_map(&pmd, addr);
-> 
-> As I don't see what prevents load tearing a 64 bit pmd.. Eg no
-> pmd_trans_unstable() or equivalent here.
+> - Returns true if pmd refers to system RAM with a valid pmd_page(pmd)
+> - Returns false if pmd does not refer to system RAM - Invalid pmd_page(pmd)
 
-I don't think there are any 32-bit page tables which support a PUD-sized
-page.  Pretty sure x86 doesn't until you get to 4- or 5- level page tables
-(which need you to be running in 64-bit mode).  There's not much utility
-in having 1GB of your 3GB process address space taken up by a single page.
+The second bullet doesn't make much sense. If you have a pmd mapping of
+some I/O memory, pmd_present() still returns true (as does
+pte_present()).
 
-I'm OK if there are some oddball architectures which support it, but
-Linux doesn't.
+> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
+> index 4d867c6446c4..28792fdd9627 100644
+> --- a/arch/arm64/include/asm/pgtable-prot.h
+> +++ b/arch/arm64/include/asm/pgtable-prot.h
+> @@ -19,6 +19,13 @@
+>  #define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
+>  #define PTE_PROT_NONE		(_AT(pteval_t, 1) << 58) /* only when !PTE_VALID */
+>  
+> +/*
+> + * This help indicate that the entry is present i.e pmd_page()
+
+Nit: add another . after i.e
+
+> + * still points to a valid huge page in memory even if the pmd
+> + * has been invalidated.
+> + */
+> +#define PMD_PRESENT_INVALID	(_AT(pteval_t, 1) << 59) /* only when !PMD_SECT_VALID */
+> +
+>  #ifndef __ASSEMBLY__
+>  
+>  #include <asm/cpufeature.h>
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index d5d3fbe73953..7aa69cace784 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -145,6 +145,18 @@ static inline pte_t set_pte_bit(pte_t pte, pgprot_t prot)
+>  	return pte;
+>  }
+>  
+> +static inline pmd_t clr_pmd_bit(pmd_t pmd, pgprot_t prot)
+> +{
+> +	pmd_val(pmd) &= ~pgprot_val(prot);
+> +	return pmd;
+> +}
+
+Could you use clear_pmd_bit (instead of clr) for consistency with
+clear_pte_bit()?
+
+It would be good if the mm folk can do a sanity check on the assumptions
+about pmd_present/pmdp_invalidate/pmd_trans_huge.
+
+The patch looks fine to me otherwise, feel free to add:
+
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+
+-- 
+Catalin
