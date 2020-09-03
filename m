@@ -2,74 +2,108 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AE4C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B097CC10DAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93DBC20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B5B20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:18:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWyRrvJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbgICWOL (ORCPT
+        id S1729189AbgICWSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:14:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51340 "EHLO
+        Thu, 3 Sep 2020 18:18:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgICWOH (ORCPT
+        with ESMTP id S1727065AbgICWST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:14:07 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C4EC061244;
-        Thu,  3 Sep 2020 15:14:06 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 27145127A0335;
-        Thu,  3 Sep 2020 14:57:19 -0700 (PDT)
-Date:   Thu, 03 Sep 2020 15:14:04 -0700 (PDT)
-Message-Id: <20200903.151404.2085033333649714923.davem@davemloft.net>
-To:     paul.davey@alliedtelesis.co.nz
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/2] Allow more than 255 IPv4 multicast
- interfaces
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200902032222.25109-1-paul.davey@alliedtelesis.co.nz>
-References: <20200902032222.25109-1-paul.davey@alliedtelesis.co.nz>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Thu, 03 Sep 2020 14:57:19 -0700 (PDT)
+        Thu, 3 Sep 2020 18:18:19 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54CAAC061244;
+        Thu,  3 Sep 2020 15:18:19 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id v23so5661552ljd.1;
+        Thu, 03 Sep 2020 15:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=L6OYjrBWLMGkLZUDNUHAcsUTScuiU6WSVwlqzVd6Pzc=;
+        b=TWyRrvJAvb5keY81T6x3lfqcDecwPzWx87ybAGWLnxTvc0Rha1udM7jn+nGN8AbBoX
+         /PPf1Jd2rpVcEBSnypYGZTUFD8BZoNRbJPQjnHXQphg4fL0cLyA3WB+SmZOB9DvHkH1s
+         2pje8dwelv9GhEcpHe/t1X6caFRA75du5buyYrB/0o6kdzGdyg4w05FVo3l6Af6iPKEl
+         DkfCwypiyhMfHKUEq9OSDThzRqYH5aCTQ/nIloDqhLezdVbDD2dfIAAQiYGucHtFY0yl
+         mbFNZUh7A9Fm9fL2eJrmeSyrp2mF3C22jcATK3HfQ+q/hx5dWhWRoWguSBy34/nG+rxO
+         hRzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=L6OYjrBWLMGkLZUDNUHAcsUTScuiU6WSVwlqzVd6Pzc=;
+        b=eFVaeUHOuvODiP4bKhjtTdaTPodYq24idoKW7mRYHI5kZKlFveu/HyU86OTq+cdGRd
+         6bG17rL8nXYQu0N6KhS+1jPYSqZaHFsnCr23+JH9Cn0jThJWOUnIpjV0ydGI0XBLaSpP
+         /CElyTO0HtMe802Ahczhnmc2aE7Vt70sVj6Rhmy/4dbgGJMITbp4R9SjfSvguW77kQ8M
+         dUGYx1U+JY+21BAy0I+EFfMdDgzRRuzqmW3OjoRKAZE8fqjMeaRdvdL2omXLb4CROGIt
+         77EfcfybIG3fajFg488X+StUnuSG094vcGmoWk2Nr1lCotcldiXE42jODS8D4fsayUYI
+         WhwA==
+X-Gm-Message-State: AOAM531fE3P4v4xG5zsetOZQuBmSVjW/CkM4z9InhnwWAyPXCs7baNG+
+        TfqNABHvQ6sBo2ie345rw2nGt6piB/M=
+X-Google-Smtp-Source: ABdhPJz5Ov+gqdpL+IzGjoOMfvZX5CXv7ChYUyHXwOI1HZaIVfBMeKzxeSNXqrpHCrWgQ4/DFUn0Xw==
+X-Received: by 2002:a2e:9d8e:: with SMTP id c14mr1019646ljj.135.1599171497517;
+        Thu, 03 Sep 2020 15:18:17 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id c13sm855258lfi.76.2020.09.03.15.18.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 15:18:16 -0700 (PDT)
+Subject: Re: [PATCH v1 00/12] Improvements for Tegra I2C driver
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200831202303.15391-1-digetx@gmail.com>
+ <20200902212026.GD1624@qmqm.qmqm.pl>
+ <04aae642-80f9-d22e-1d80-bb206bb27a8b@gmail.com>
+ <20200903164709.GA7406@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e1b7a9fc-e638-8576-a79e-7c2cf1cfbfe2@gmail.com>
+Date:   Fri, 4 Sep 2020 01:18:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200903164709.GA7406@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Davey <paul.davey@alliedtelesis.co.nz>
-Date: Wed,  2 Sep 2020 15:22:20 +1200
-
-> Currently it is not possible to use more than 255 multicast interfaces
-> for IPv4 due to the format of the igmpmsg header which only has 8 bits
-> available for the VIF ID.  There is enough space for the full VIF ID in
-> the Netlink cache notifications, however the value is currently taken
-> directly from the igmpmsg header and has thus already been truncated.
+03.09.2020 19:47, Michał Mirosław пишет:
+> On Thu, Sep 03, 2020 at 04:12:13AM +0300, Dmitry Osipenko wrote:
+>> 03.09.2020 00:20, Michał Mirosław пишет:
+>>> BTW, I wonder if you could expose i2c_in_atomic_xfer_mode() and use it
+>>> to differentiate atomic_xfer from normal and get rid of the internal
+>>> flag and .master_xfer_atomic callback.
+>>
+>> The atomic transfer uses 90% of the code path that a non-atomic transfer
+>> uses. I don't see how it could be exposed without duplicated lots of the
+>> code, unless I'm not missing what you're suggesting.
 > 
-> Using the full VIF ID in the Netlink notifications allows use of more
-> than 255 IPv4 multicast interfaces if the user space routing daemon
-> uses the Netlink notifications instead of the igmpmsg cache reports.
-> 
-> However doing this reveals a deficiency in the Netlink cache report
-> notifications, they lack any means for differentiating cache reports
-> relating to different multicast routing tables.  This is easily
-> resolved by adding the multicast route table ID to the cache reports.
+> The I2C core falls back to .master_xfer even in atomic mode if
+> .master_xfer_atomic is NULL, so what I'm suggesting is to make
+> i2c_in_atomic_xfer_mode() public (from i2c-core.h) and use it in
+> normal .master_xfer to choose atomic wait variants.
 
-But this means that mrouted has no way to see the full 16-bit value
-via traditional igmpmsg UAPI interfaces.
-
-Please instead make use of the unused3 member to store the high
-order 16-bits of the vifi_t in the igmpmsg, and then code your
-netlink changes around that.
-
+Okay, I see now. But the I2C core prints a noisy warning if
+master_xfer_atomic is NULL in atomic transfer, so I'm not sure whether
+changing all that code will bring much benefits to us and anyone else.
+It's a bit too questionable change to me, but maybe I'm still missing
+something. Will be great if you could provide an example patch.
