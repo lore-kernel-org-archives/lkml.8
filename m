@@ -2,134 +2,225 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0054EC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D631AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C264420786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:30:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="P8Iz+tAM"
+	by mail.kernel.org (Postfix) with ESMTP id A215A2078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:30:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599175839;
+	bh=B3pK5zZnU9RKRCpV09z0d2GVM5xHL2b8XThKQbrNalY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=2WFmvW1IOa9u9RVQkz9W+52xy0y/ydzbSZ46/X5j+Bcuws5jVoiGKPfHjmua2/XJA
+	 CmLRSqYNwj2usZpdfIERMx7I5XcjeMgohJijz0/Jtp9AUjAb3mH5hWet8TMb6gwWU1
+	 xSYa0PF0JNbQcbIVAFPglh5m48YXJYZraKWZdoB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbgICXa3 (ORCPT
+        id S1729547AbgICXai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 19:30:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbgICXa3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 19:30:29 -0400
-Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3529C061245
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 16:30:28 -0700 (PDT)
-Received: by mail-qk1-x732.google.com with SMTP id n133so4747509qkn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tER5efoKTXhoRI49DGq6kR5MKl16jgpcrniDIS3TWH4=;
-        b=P8Iz+tAMI2G73pmBCBPMKVteWRhgCOG8kZ5NkoW2pKohWNkpkYbaHlAfkCEVU1i2gN
-         EpI9213e0JXvYg81is2Tf8AXYcM5zB3+GMa1m+VTd8CuWnjRbRYk4Q1LOkFOU6eJVT3F
-         /gNZAcSmaqEmyH3DGWNvEQ7BNp0BWGhL6UFdvjy5Da5osKR6IDu1kVuECdiG88Mk8uqZ
-         5ta4+ky/SkoRH0zQKDx6eLfToQTXUvKv7Gn/VAxX4qV8d1MEelj9BKISJfLvW3wlcz2Q
-         gkknVBseAEIHH6qhcjO/fzbJpauwUvoeJrpSX50rQ108IuSpBKsJsZo5bVeHf9De5Kp/
-         n+qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tER5efoKTXhoRI49DGq6kR5MKl16jgpcrniDIS3TWH4=;
-        b=gp0idytBn0h6OnN3R0gChtbIaA0p0VS6iWdbGwuCIDyC6HlqUF6Pt4gUj85vps8jLX
-         KKWM7BaJ13qaYJCgZ9aCCKBFRo+Ap6/wIjirNKLPNlZHRui6fqm7oTeVvoQEBKvprx7X
-         PiNmdc9LLhYh/X1T62lwVqEkYShNbo/Fj3r/qXfLRCk+kfTUmO/mLTf6FUsTjgM0fGMS
-         141nWMlar06HTnp3pzFHc48ZapmkBo6LEd7PP1HrWplQpTuyPJY54ixt+JSgTMH4hkmR
-         4LUcYrMPON64oanDUvz53xByv0I4O9phpk1Mg3AGJ7JHBIn8SqGhkk02YWwH/LtW1Qd9
-         L+NA==
-X-Gm-Message-State: AOAM532F4Q7u6gVpW4HVqK2Qy7zzKic7264HD22CH5Z2HINbvkygRpDe
-        MKebTQGWBVyl6zMxbaCmIzbzWQ==
-X-Google-Smtp-Source: ABdhPJzGeyHICZQjuWnQYHvAm4kf2dcs+Bx6pEomtDyhHgZ0jZPH7Hh0NrALaByHL5XLSyHLvrHSsw==
-X-Received: by 2002:a37:c404:: with SMTP id d4mr5392815qki.273.1599175827627;
-        Thu, 03 Sep 2020 16:30:27 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id m26sm3209338qtc.83.2020.09.03.16.30.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 16:30:27 -0700 (PDT)
-Subject: Re: [PATCH v2 08/10] phy: qcom-qmp: Add support for sc7180 DP phy
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark <robdclark@chromium.org>
-References: <20200902230215.3452712-1-swboyd@chromium.org>
- <20200902230215.3452712-9-swboyd@chromium.org>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <c53059ac-dd88-f8fb-5473-ebc6f70f00d4@marek.ca>
-Date:   Thu, 3 Sep 2020 19:29:43 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 3 Sep 2020 19:30:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728271AbgICXai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 19:30:38 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67CE320786;
+        Thu,  3 Sep 2020 23:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599175837;
+        bh=B3pK5zZnU9RKRCpV09z0d2GVM5xHL2b8XThKQbrNalY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=LwWR5naI1s2ii2yNOtdTNaSVrP09eFKVIfqFTWOKhQuPyIOKvXAgGiY0Ubs+r27mO
+         SZhjVj/WmadlsOw71vF7bLirPmJzrVf0TrtBc7UlojTNUeVrFAwpo6HlgQdZ8ZlQae
+         4xcAN0CxGkJcgpEMws82bhehpK2iUXgyflAufPQo=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 4C62A3522636; Thu,  3 Sep 2020 16:30:37 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 16:30:37 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
+        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+        luc.maranget@inria.fr, akiyks@gmail.com
+Subject: Re: [PATCH kcsan 6/9] tools/memory-model: Expand the cheatsheet.txt
+ notion of relaxed
+Message-ID: <20200903233037.GW29330@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
+ <20200831182037.2034-6-paulmck@kernel.org>
+ <20200902035448.GC49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <20200902101412.GC1362448@hirez.programming.kicks-ass.net>
+ <20200902123715.GD49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 MIME-Version: 1.0
-In-Reply-To: <20200902230215.3452712-9-swboyd@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902123715.GD49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 7:02 PM, Stephen Boyd wrote:
+On Wed, Sep 02, 2020 at 08:37:15PM +0800, Boqun Feng wrote:
+> On Wed, Sep 02, 2020 at 12:14:12PM +0200, peterz@infradead.org wrote:
+> > On Wed, Sep 02, 2020 at 11:54:48AM +0800, Boqun Feng wrote:
+> > > On Mon, Aug 31, 2020 at 11:20:34AM -0700, paulmck@kernel.org wrote:
+> > > > From: "Paul E. McKenney" <paulmck@kernel.org>
+> > > > 
+> > > > This commit adds a key entry enumerating the various types of relaxed
+> > > > operations.
+> > > > 
+> > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > > > ---
+> > > >  tools/memory-model/Documentation/cheatsheet.txt | 27 ++++++++++++++-----------
+> > > >  1 file changed, 15 insertions(+), 12 deletions(-)
+> > > > 
+> > > > diff --git a/tools/memory-model/Documentation/cheatsheet.txt b/tools/memory-model/Documentation/cheatsheet.txt
+> > > > index 33ba98d..31b814d 100644
+> > > > --- a/tools/memory-model/Documentation/cheatsheet.txt
+> > > > +++ b/tools/memory-model/Documentation/cheatsheet.txt
+> > > > @@ -5,7 +5,7 @@
+> > > >  
+> > > >  Store, e.g., WRITE_ONCE()            Y                                       Y
+> > > >  Load, e.g., READ_ONCE()              Y                          Y   Y        Y
+> > > > -Unsuccessful RMW operation           Y                          Y   Y        Y
+> > > > +Relaxed operation                    Y                          Y   Y        Y
+> > > >  rcu_dereference()                    Y                          Y   Y        Y
+> > > >  Successful *_acquire()               R                   Y  Y   Y   Y    Y   Y
+> > > >  Successful *_release()         C        Y  Y    Y     W                      Y
+> > > > @@ -17,14 +17,17 @@ smp_mb__before_atomic()       CP        Y  Y    Y        a  a   a   a    Y
+> > > >  smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
+> > > >  
+> > > >  
+> > > > -Key:	C:	Ordering is cumulative
+> > > > -	P:	Ordering propagates
+> > > > -	R:	Read, for example, READ_ONCE(), or read portion of RMW
+> > > > -	W:	Write, for example, WRITE_ONCE(), or write portion of RMW
+> > > > -	Y:	Provides ordering
+> > > > -	a:	Provides ordering given intervening RMW atomic operation
+> > > > -	DR:	Dependent read (address dependency)
+> > > > -	DW:	Dependent write (address, data, or control dependency)
+> > > > -	RMW:	Atomic read-modify-write operation
+> > > > -	SELF:	Orders self, as opposed to accesses before and/or after
+> > > > -	SV:	Orders later accesses to the same variable
+> > > > +Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
+> > > > +		  operation, an unsuccessful RMW operation, or one of
+> > > > +		  the atomic_read() and atomic_set() family of operations.
+> > > 
+> > > To be accurate, atomic_set() doesn't return any value, so it cannot be
+> > > ordered against DR and DW ;-)
+> > 
+> > Surely DW is valid for any store.
+> > 
+> 
+> IIUC, the DW colomn stands for whether the corresponding operation (in
+> this case, it's atomic_set()) is ordered any write that depends on this
+> operation. I don't think there is a write->write dependency, so DW for
+> atomic_set() should not be Y, just as the DW for WRITE_ONCE().
+> 
+> > > I think we can split the Relaxed family into two groups:
+> > > 
+> > > void Relaxed: atomic_set() or atomic RMW operations that don't return
+> > >               any value (e.g atomic_inc())
+> > > 
+> > > non-void Relaxed: a *_relaxed() RMW operation, an unsuccessful RMW
+> > >                   operation, or atomic_read().
+> > > 
+> > > And "void Relaxed" is similar to WRITE_ONCE(), only has "Self" and "SV"
+> > > equal "Y", while "non-void Relaxed" plays the same rule as "Relaxed"
+> > > in this patch.
+> > > 
+> > > Thoughts?
+> > 
+> > I get confused by the mention of all this atomic_read() atomic_set()
+> > crud in the first place, why are they called out specifically from any
+> > other regular load/store ?
+> 
+> Agreed. Probably we should fold those two operations into "Load" and
+> "Store" cases.
 
-...
+All good points.
 
-> +static const struct qmp_phy_cfg sc7180_dpphy_cfg = {
-> +	.type			= PHY_TYPE_DP,
-> +	.nlanes			= 1,
-> +
-> +	.serdes_tbl		= qmp_v3_dp_serdes_tbl,
-> +	.serdes_tbl_num		= ARRAY_SIZE(qmp_v3_dp_serdes_tbl),
-> +	.tx_tbl			= qmp_v3_dp_tx_tbl,
-> +	.tx_tbl_num		= ARRAY_SIZE(qmp_v3_dp_tx_tbl),
-> +
-> +	.serdes_tbl_rbr		= qmp_v3_dp_serdes_tbl_rbr,
-> +	.serdes_tbl_rbr_num	= ARRAY_SIZE(qmp_v3_dp_serdes_tbl_rbr),
-> +	.serdes_tbl_hbr		= qmp_v3_dp_serdes_tbl_hbr,
-> +	.serdes_tbl_hbr_num	= ARRAY_SIZE(qmp_v3_dp_serdes_tbl_hbr),
-> +	.serdes_tbl_hbr2	= qmp_v3_dp_serdes_tbl_hbr2,
-> +	.serdes_tbl_hbr2_num	= ARRAY_SIZE(qmp_v3_dp_serdes_tbl_hbr2),
-> +	.serdes_tbl_hbr3	= qmp_v3_dp_serdes_tbl_hbr3,
-> +	.serdes_tbl_hbr3_num	= ARRAY_SIZE(qmp_v3_dp_serdes_tbl_hbr3),
-> +
-> +	.clk_list		= qmp_v3_phy_clk_l,
-> +	.num_clks		= ARRAY_SIZE(qmp_v3_phy_clk_l),
-> +	.reset_list		= sc7180_usb3phy_reset_l,
-> +	.num_resets		= ARRAY_SIZE(sc7180_usb3phy_reset_l),
-> +	.vreg_list		= qmp_phy_vreg_l,
-> +	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
+How about like this, adding "Relaxed" to the WRITE_ONCE() and READ_ONCE()
+rows and "RMW" to the "Relaxed operation" row?
 
-You need a ".regs = qmp_v3_usb3phy_regs_layout," here, otherwise phy 
-init functions like qcom_qmp_phy_serdes_init() can crash on a NULL 
-reference.
+The file contents are followed by a diff against the previous version.
 
-> +
-> +	.has_phy_dp_com_ctrl	= true,
-> +	.is_dual_lane_phy	= true,
-> +};
-> +
+							Thanx, Paul
 
-...
+------------------------------------------------------------------------
+
+                                  Prior Operation     Subsequent Operation
+                                  ---------------  ---------------------------
+                               C  Self  R  W  RMW  Self  R  W  DR  DW  RMW  SV
+                              --  ----  -  -  ---  ----  -  -  --  --  ---  --
+
+Relaxed store                        Y                                       Y
+Relaxed load                         Y                          Y   Y        Y
+Relaxed RMW operation                Y                          Y   Y        Y
+rcu_dereference()                    Y                          Y   Y        Y
+Successful *_acquire()               R                   Y  Y   Y   Y    Y   Y
+Successful *_release()         C        Y  Y    Y     W                      Y
+smp_rmb()                               Y       R        Y      Y        R
+smp_wmb()                                  Y    W           Y       Y    W
+smp_mb() & synchronize_rcu()  CP        Y  Y    Y        Y  Y   Y   Y    Y
+Successful full non-void RMW  CP     Y  Y  Y    Y     Y  Y  Y   Y   Y    Y   Y
+smp_mb__before_atomic()       CP        Y  Y    Y        a  a   a   a    Y
+smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
+
+
+Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
+		  operation, an unsuccessful RMW operation, READ_ONCE(),
+		  WRITE_ONCE(), or one of the atomic_read() and
+		  atomic_set() family of operations.
+	C:	  Ordering is cumulative
+	P:	  Ordering propagates
+	R:	  Read, for example, READ_ONCE(), or read portion of RMW
+	W:	  Write, for example, WRITE_ONCE(), or write portion of RMW
+	Y:	  Provides ordering
+	a:	  Provides ordering given intervening RMW atomic operation
+	DR:	  Dependent read (address dependency)
+	DW:	  Dependent write (address, data, or control dependency)
+	RMW:	  Atomic read-modify-write operation
+	SELF:	  Orders self, as opposed to accesses before and/or after
+	SV:	  Orders later accesses to the same variable
+
+------------------------------------------------------------------------
+
+diff --git a/tools/memory-model/Documentation/cheatsheet.txt b/tools/memory-model/Documentation/cheatsheet.txt
+index 31b814d..4146b8d 100644
+--- a/tools/memory-model/Documentation/cheatsheet.txt
++++ b/tools/memory-model/Documentation/cheatsheet.txt
+@@ -3,9 +3,9 @@
+                                C  Self  R  W  RMW  Self  R  W  DR  DW  RMW  SV
+                               --  ----  -  -  ---  ----  -  -  --  --  ---  --
+ 
+-Store, e.g., WRITE_ONCE()            Y                                       Y
+-Load, e.g., READ_ONCE()              Y                          Y   Y        Y
+-Relaxed operation                    Y                          Y   Y        Y
++Relaxed store                        Y                                       Y
++Relaxed load                         Y                          Y   Y        Y
++Relaxed RMW operation                Y                          Y   Y        Y
+ rcu_dereference()                    Y                          Y   Y        Y
+ Successful *_acquire()               R                   Y  Y   Y   Y    Y   Y
+ Successful *_release()         C        Y  Y    Y     W                      Y
+@@ -18,8 +18,9 @@ smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
+ 
+ 
+ Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
+-		  operation, an unsuccessful RMW operation, or one of
+-		  the atomic_read() and atomic_set() family of operations.
++		  operation, an unsuccessful RMW operation, READ_ONCE(),
++		  WRITE_ONCE(), or one of the atomic_read() and
++		  atomic_set() family of operations.
+ 	C:	  Ordering is cumulative
+ 	P:	  Ordering propagates
+ 	R:	  Read, for example, READ_ONCE(), or read portion of RMW
