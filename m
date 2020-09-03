@@ -2,105 +2,124 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DA5C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767C8C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A29B720578
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:34:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599150861;
-	bh=kx57slHLoB5I/Mwpn5KFxSA2CW1A6rJaqKR4d5CalmE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pA+T1rKSRFZMGvcIl1jnqIzQeVsYwHmRwTxRIk+FhquOK2XEiSJqHDt5Y4TfwbzCa
-	 VaOeiUzxCkY6AnpwYZECszUy26GbcBUeIbtuTtF6BlxVefLFDP8Y/lBW8+bWYLp92V
-	 RvC5v9j1spUtBM5EHGGbqDayl0jW2S0dKkrSMvDk=
+	by mail.kernel.org (Postfix) with ESMTP id 4EB0B2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:34:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATnKmeKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgICQeU (ORCPT
+        id S1728628AbgICQeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:34:20 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44597 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgICQeQ (ORCPT
+        Thu, 3 Sep 2020 12:34:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgICQeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:34:16 -0400
-Received: by mail-io1-f66.google.com with SMTP id g128so3530683iof.11;
-        Thu, 03 Sep 2020 09:34:15 -0700 (PDT)
+        Thu, 3 Sep 2020 12:34:20 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B0FEC061244;
+        Thu,  3 Sep 2020 09:34:20 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ls14so1724471pjb.3;
+        Thu, 03 Sep 2020 09:34:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0SreTI5dox8s28M6/auODVGh1xK1K6zrOSFNfC6w3vs=;
+        b=ATnKmeKZUHExDczaj8xkMPJN2gS11BwMtDb7bUQ6g4pIklbuK0WQd9f93dgXtWVw2D
+         5tOYirn4FAV8bDM8GA9GDvDNc3njkWEnDURleWktNDzN7Byqaj3IOLRdnPxR58Pvgxlj
+         SzB+9dqW68Lc6EzcBC7xvh9K9Vlcxa1SNYHjs9GzoFBzN73lQrsMP5jBmQl9doxA1KEh
+         g7nZppOQyq/NPHKpnyH03u2hk8J19Q39DbJlAKvfSuH4xslkv38yZzx5YoaHs/ntWBer
+         q6yGcb8GWEXJ5l/c5waspPuwwej1k91zaEh6+6W8Ci5i68H7cwcas9k5rNsX4ZVmK1RM
+         axpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6gSOm8OgxiG97XEUzZRkUwS5JBrdCqtaN4okFjD6uNs=;
-        b=AeXxkflCHi6WcQ06hguC2s76W5HuIpNxebvzfNRX4/gcUmQZ0vO/xJq1b/NZHd4qfv
-         zX6WwMYmqCgOVHqj7ewKuVUC9U3jUUyh15sC1CRaNqrPHDS5h2zrjmpJLinrH68OfsTV
-         AQxARg0Vl09u4OD4goDi+UbAIRLgBUGmaSuH+Fow69m/0Ki5VvbZHr12IC85Sys13LVS
-         ZfDZvfcUPuzzRejedd2IkYTzl2Pgsu6DggqgMIAzXaa1QVSNhqw70ZTvdnHHgIDKiLYZ
-         aEMpx9mykrpdzNwOsQM389r4MjlPxz7Qx4C/Y0ElgwLq3WY7Fd1vVQVKtTF0NmTzhwg8
-         xg6w==
-X-Gm-Message-State: AOAM533II7vtZPvSLmGnbeUhWu8bp2S8R7A7eVdu0yCpc5CtBR9VY0Ws
-        v5LLWKowG2KMPl5e8UKDZhUpTmgzFxPp
-X-Google-Smtp-Source: ABdhPJwxRGPAz0UbJQIhgX/WsF8U50D3/9nCBzjWTC2j9ZsdYhNO0FtVXG94pcYyvliB2Qlj2/005A==
-X-Received: by 2002:a02:1a83:: with SMTP id 125mr4190077jai.48.1599150855558;
-        Thu, 03 Sep 2020 09:34:15 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id c85sm1722831ilg.10.2020.09.03.09.34.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 09:34:14 -0700 (PDT)
-Received: (nullmailer pid 2908721 invoked by uid 1000);
-        Thu, 03 Sep 2020 16:34:12 -0000
-Date:   Thu, 3 Sep 2020 10:34:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        hao.he7@gmail.com, Xingyu Wu <wuxy@bitland.com.cn>,
-        linux-media@vger.kernel.org, drinkcat@chromium.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hao He <hao.he@bitland.com.cn>, sj.huang@mediatek.com,
-        dongchun.zhu@mediatek.com, darfur_liu@gcoreinc.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/4] media: dt-bindings: media: i2c: Add bindings for
- GC5035
-Message-ID: <20200903163412.GA2907310@bogus>
-References: <20200902224813.14283-1-tfiga@chromium.org>
- <20200902224813.14283-3-tfiga@chromium.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0SreTI5dox8s28M6/auODVGh1xK1K6zrOSFNfC6w3vs=;
+        b=k2gQ16C3vr9P2lh7SO3+js9TSOGJNcM9kwh8gcVLgvyMrnzsWwJxWXLTo3ZJbG5kEi
+         Fsgd6VytLrukOjEvWZwUmPO74xhbDl4ZkbaVRZzZJSseqGFEnMjIMHndunseI8lX+vfQ
+         63ismO/IhXxWx/uF2jr3B0jwDVkBM64CR19qBHca9OngtEZBIE6NbaXRoI5foPyhbJee
+         NO2VWj1iBkX4C0wUnFyw5oVSolorMQma2NhS3Grr81cKkmPc56wfj549qi7oszdwSeFa
+         dc5IacEo3dXSMfU+ucfMwQfJ2OYsPBpZjVRS99ClaHAkydGPwKj9BcucC5dP656Sjjrg
+         UP0Q==
+X-Gm-Message-State: AOAM530/mkyEF2a0G+fe0s+GkwgtzJ7RcMu2dmxdX2qyFDhyTs+ayrl0
+        istWTmFMCoEWY/gHUXwJAoAEDCqT7lo=
+X-Google-Smtp-Source: ABdhPJwkgKsBtCE1829dvyTApxuLPbPox3qrXCmcgEqLDh/V8fZGiZ1vw6uKb8/fz/uGwyktFN1Iag==
+X-Received: by 2002:a17:90b:3891:: with SMTP id mu17mr3935482pjb.160.1599150859236;
+        Thu, 03 Sep 2020 09:34:19 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id w185sm4098976pfc.36.2020.09.03.09.34.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 09:34:18 -0700 (PDT)
+Subject: Re: [PATCH net] net: phy: dp83867: Fix various styling and space
+ issues
+To:     Dan Murphy <dmurphy@ti.com>, davem@davemloft.net, andrew@lunn.ch,
+        hkallweit1@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200903141510.20212-1-dmurphy@ti.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <76046e32-a17d-b87c-26c7-6f48f4257916@gmail.com>
+Date:   Thu, 3 Sep 2020 09:34:16 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902224813.14283-3-tfiga@chromium.org>
+In-Reply-To: <20200903141510.20212-1-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 02 Sep 2020 22:48:11 +0000, Tomasz Figa wrote:
-> Add YAML device tree bindings for Galaxycore Inc. GC5035 imaging sensor.
+
+
+On 9/3/2020 7:15 AM, Dan Murphy wrote:
+> Fix spacing issues reported for misaligned switch..case and extra new
+> lines.
 > 
-> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> Also updated the file header to comply with networking commet style.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  .../devicetree/bindings/media/i2c/gc5035.yaml | 142 ++++++++++++++++++
->  1 file changed, 142 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/gc5035.yaml
+>   drivers/net/phy/dp83867.c | 47 ++++++++++++++++++---------------------
+>   1 file changed, 22 insertions(+), 25 deletions(-)
 > 
+> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+> index cd7032628a28..f182a8d767c6 100644
+> --- a/drivers/net/phy/dp83867.c
+> +++ b/drivers/net/phy/dp83867.c
+> @@ -1,6 +1,5 @@
+>   // SPDX-License-Identifier: GPL-2.0
+> -/*
+> - * Driver for the Texas Instruments DP83867 PHY
+> +/* Driver for the Texas Instruments DP83867 PHY
+>    *
+>    * Copyright (C) 2015 Texas Instruments Inc.
+>    */
+> @@ -35,7 +34,7 @@
+>   #define DP83867_CFG4_SGMII_ANEG_MASK (BIT(5) | BIT(6))
+>   #define DP83867_CFG4_SGMII_ANEG_TIMER_11MS   (3 << 5)
+>   #define DP83867_CFG4_SGMII_ANEG_TIMER_800US  (2 << 5)
+> -#define DP83867_CFG4_SGMII_ANEG_TIMER_2US    (1 << 5)
+> +#define DP83867_CFG4_SGMII_ANEG_TIMER_2US    BIT(5)
 
+Now the definitions are inconsistent, you would want to drop this one 
+and stick to the existing style.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+The rest of the changes look good, so with that fixed, and the subject 
+correct to "net-next" (this is no bug fix material), you can add:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/i2c/gc5035.yaml: $id: 'http://devicetree.org/schemas/media/i2c/gc5035.yaml' does not match 'http://devicetree.org/schemas/.*\\.yaml#'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/i2c/gc5035.yaml: ignoring, error in schema: $id
-warning: no schema found in file: ./Documentation/devicetree/bindings/media/i2c/gc5035.yaml
-
-
-See https://patchwork.ozlabs.org/patch/1356170
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
