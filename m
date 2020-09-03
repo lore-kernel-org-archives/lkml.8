@@ -2,80 +2,105 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0447CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE54C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDD0120716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C8020722
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599145748;
+	bh=0yVg4VB9wLo7/HcSqfX02PS0qyjpPXXI+/tghmjqUsw=;
+	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
+	b=n6xhxs4UJr35bllMFjeQUvGb6RAqBQZRbHeSjE9nK4hiJqE5beJxH2ZFqCS/Yib0H
+	 Z2vfGX3Pl3EUrxp8SJ1lFGoN0gV7zcMZ6ChtXkNwyl9NrPKC2IlNCR2D7wz591pz/z
+	 yj4HbLgPYfBFvPloJILl5sDe+nuBDs8QSjIIt/+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgICPIj (ORCPT
+        id S1729209AbgICPJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:08:39 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:46337 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729503AbgICPFh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:05:37 -0400
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 03 Sep 2020 08:05:34 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Sep 2020 08:05:32 -0700
-Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 03 Sep 2020 20:35:05 +0530
-Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
-        id 91B144433; Thu,  3 Sep 2020 20:35:04 +0530 (IST)
-From:   satya priya <skakit@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>, gregkh@linuxfoundation.org,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
-        satya priya <skakit@codeaurora.org>
-Subject: [PATCH V4 0/4] Add wakeup support over UART RX
-Date:   Thu,  3 Sep 2020 20:34:54 +0530
-Message-Id: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 3 Sep 2020 11:09:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728950AbgICN6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 09:58:15 -0400
+Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A8022098B;
+        Thu,  3 Sep 2020 13:57:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599141456;
+        bh=0yVg4VB9wLo7/HcSqfX02PS0qyjpPXXI+/tghmjqUsw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eiHTsGhtSrD4YW+TVgEhxy20fyB9O40sXdCq83+iJZ5OqFJFUtSF2LTZVgGCGGcPb
+         AdDPDkTTeF6INrEOOBBvmvuVcoX6bv8qPFj8bB1IQn6IX2QXAFiFnJyOcYdSz4bREr
+         aB17Wr4DPXm/ofqlgjURq4iPLWnZEg5qVO5W3rb8=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kDpk6-004T6n-4b; Thu, 03 Sep 2020 15:57:34 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anant Thazhemadam <anant.thazhemadam@gmail.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/5] media: atomisp: print a warning if error while setting downscaler
+Date:   Thu,  3 Sep 2020 15:57:29 +0200
+Message-Id: <20d420b6ccec9c8013336437781da0f0c7ffabac.1599141140.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1599141140.git.mchehab+huawei@kernel.org>
+References: <cover.1599141140.git.mchehab+huawei@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes in V2:
- - As per Matthias's comment added wakeup support for all the UARTs
-   of SC7180.
- - Added sleep state in sc7180-idp.dts file.
- - Modify the if check in set_mctrl API in serial driver to avoid
-   making RFR high during suspend.
+As warned by gcc:
 
-Changes in V3:
- - As per Matthias's comments modify the idp dts pin config to keep
-   only the required pin settings.
- - Remove the extra parentheses from serial driver patch.
+    drivers/staging/media/atomisp//pci/isp/kernels/dvs/dvs_1.0/ia_css_dvs.host.c:237:31: warning: variable ‘isp_data_ptr’ set but not used [-Wunused-but-set-variable]
 
-Changes in V4:
- - As per Matthias's comments, change the commit text to mention why
-   GPIO function needs to be selected in sleep.
- - Add separate patch for improvements made in pin conf settings.
+ia_css_vf_configure() logic has an error var that detects troubles
+when setting the kernel for downscaling. The driver just ignores
+it, without producing any warning. Add at least a warning message
+on such cases.
 
-satya priya (4):
-  arm64: dts: sc7180: Add wakeup support over UART RX
-  arm64: dts: qcom: sc7180: Improve the pin config settings for CTS and
-    TX
-  arm64: dts: qcom: sc7180: Add sleep pin ctrl for BT UART
-  tty: serial: qcom_geni_serial: Fix the UART wakeup issue
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 51 ++++++++++++++---
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 98 ++++++++++++++++++++++++++++-----
- drivers/tty/serial/qcom_geni_serial.c   |  2 +-
- 3 files changed, 128 insertions(+), 23 deletions(-)
-
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+index 3b850bb2d39d..dd3670972936 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+@@ -13,6 +13,8 @@
+  * more details.
+  */
+ 
++#include "atomisp_internal.h"
++
+ #include "ia_css_vf.host.h"
+ #include <assert_support.h>
+ #include <ia_css_err.h>
+@@ -129,6 +131,9 @@ ia_css_vf_configure(
+ 	const struct ia_css_binary_info *info = &binary->info->sp;
+ 
+ 	err = configure_kernel(info, out_info, vf_info, downscale_log2, &config);
++	if (err)
++		dev_warn(atomisp_dev, "Couldn't setup downscale\n");
++
+ 	configure_dma(&config, vf_info);
+ 
+ 	if (vf_info)
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+2.26.2
 
