@@ -2,119 +2,91 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9439CC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEC5C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 748CD2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F13720709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgICBZJ (ORCPT
+        id S1727972AbgICBZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 21:25:09 -0400
-Received: from mga09.intel.com ([134.134.136.24]:30095 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbgICBZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 21:25:08 -0400
-IronPort-SDR: MfJD0QIoKhJFb8mhUFnLuTGYfT9U0TMYeaSNJzBv5Fm31VrCwuVeQ1Izxb7vo4CXNx7lIB6Jsh
- iK2/36tQ72Xw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="158490058"
-X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
-   d="scan'208";a="158490058"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 18:25:08 -0700
-IronPort-SDR: 9OlQOLNTCVBaZ9smIxIy+2Xy0DizbfRWbdftxIkIbKSB/aWKDLcLTv6QEI0MLsXDUxULRXx6fY
- rtAbdqpu0zVA==
-X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
-   d="scan'208";a="326015912"
-Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 18:25:08 -0700
-Date:   Wed, 2 Sep 2020 18:25:06 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Chenyi Qiang <chenyi.qiang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [RFC v2 2/2] KVM: VMX: Enable bus lock VM exit
-Message-ID: <20200903012506.GM11695@sjchrist-ice>
-References: <20200817014459.28782-1-chenyi.qiang@intel.com>
- <20200817014459.28782-3-chenyi.qiang@intel.com>
- <87sgc1x4yn.fsf@vitty.brq.redhat.com>
- <20200902224405.GK11695@sjchrist-ice>
- <2e12df9d-4d56-d6c2-3470-9c990ab722c5@intel.com>
+        Wed, 2 Sep 2020 21:25:49 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51204 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727037AbgICBZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 21:25:48 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9F863FB4BAF801B71375;
+        Thu,  3 Sep 2020 09:25:46 +0800 (CST)
+Received: from [127.0.0.1] (10.74.149.191) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Thu, 3 Sep 2020
+ 09:25:40 +0800
+Subject: Re: [RFC net-next] udp: add a GSO type for UDPv6
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+CC:     David Miller <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, Jakub Kicinski <kuba@kernel.org>
+References: <1599048911-7923-1-git-send-email-tanhuazhong@huawei.com>
+ <CA+FuTSc_KOZRTdh34Vw3gTCzGMmi5XvDZKjpWMOXw7aby53wqw@mail.gmail.com>
+From:   tanhuazhong <tanhuazhong@huawei.com>
+Message-ID: <b4bf766c-4d56-cf6b-9018-468ebcd3e147@huawei.com>
+Date:   Thu, 3 Sep 2020 09:25:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e12df9d-4d56-d6c2-3470-9c990ab722c5@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CA+FuTSc_KOZRTdh34Vw3gTCzGMmi5XvDZKjpWMOXw7aby53wqw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.149.191]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 08:52:41AM +0800, Xiaoyao Li wrote:
-> On 9/3/2020 6:44 AM, Sean Christopherson wrote:
-> > On Tue, Sep 01, 2020 at 10:43:12AM +0200, Vitaly Kuznetsov wrote:
-> > > > +			vcpu->arch.bus_lock_detected = true;
-> > > > +		} else {
-> > > > +			vcpu->arch.bus_lock_detected = false;
-> > > 
-> > > This is a fast path so I'm wondering if we can move bus_lock_detected
-> > > clearing somewhere else.
-> > 
-> > Why even snapshot vmx->exit_reason.bus_lock_detected?  I don't see any
-> > reason why vcpu_enter_guest() needs to handle the exit to userspace, e.g.
-> > it's just as easily handled in VMX code.
+
+
+On 2020/9/2 22:33, Willem de Bruijn wrote:
+> On Wed, Sep 2, 2020 at 2:18 PM Huazhong Tan <tanhuazhong@huawei.com> wrote:
+>>
+>> In some cases, for UDP GSO, UDPv4 and UDPv6 need to be handled
+>> separately, for example, checksum offload, so add new GSO type
+>> SKB_GSO_UDPV6_L4 for UDPv6, and the old SKB_GSO_UDP_L4 stands
+>> for UDPv4.
 > 
-> Because we want to handle the exit to userspace only in one place, i.e.,
-> after kvm_x86_ops.handle_exit(vcpu, exit_fastpath). Otherwise, we would have
-> to check vmx->exit_reason.bus_lock_detected in every other handler, at least
-> in those can preempt the bus lock VM-exit theoretically.
+> This is in preparation for hardware you have that actually cares about
+> this distinction, I guess?
+> 
 
-That's not hard to do in vmx.c, e.g.
+it is mainly for separating checksum offload of IPv4 and IPv6 right now.
+with this patch, the user can switch checksum offload of IPv4 and not
+affect IPv6's, vice versa.
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 0316b86bad43a..ea2fed7f21565 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5677,7 +5677,7 @@ void dump_vmcs(void)
-  * The guest has exited.  See if we can fix it or if we need userspace
-  * assistance.
-  */
--static int vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
-+static int __vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
- {
-        struct vcpu_vmx *vmx = to_vmx(vcpu);
-        u32 exit_reason = vmx->exit_reason;
-@@ -5822,6 +5822,22 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
-        return 0;
- }
+> 
+>> diff --git a/include/linux/netdev_features.h b/include/linux/netdev_features.h
+>> index 2cc3cf8..b7c1a76 100644
+>> --- a/include/linux/netdev_features.h
+>> +++ b/include/linux/netdev_features.h
+>> @@ -54,6 +54,7 @@ enum {
+>>          NETIF_F_GSO_UDP_BIT,            /* ... UFO, deprecated except tuntap */
+>>          NETIF_F_GSO_UDP_L4_BIT,         /* ... UDP payload GSO (not UFO) */
+>>          NETIF_F_GSO_FRAGLIST_BIT,               /* ... Fraglist GSO */
+>> +       NETIF_F_GSO_UDPV6_L4_BIT,       /* ... UDPv6 payload GSO (not UFO) */
+>>          /**/NETIF_F_GSO_LAST =          /* last bit, see GSO_MASK */
+>>                  NETIF_F_GSO_FRAGLIST_BIT,
+> 
+> Need to update NETIF_F_GSO_LAST then, too.
 
-+static int vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
-+{
-+       int ret = __vmx_handle_exit(vcpu, exit_fastpath);
-+
-+       if (vmx->exit_reason.bus_lock_detected) {
-+               if (ret)
-+                       vcpu->run->exit_reason = KVM_EXIT_BUS_LOCK;
-+               else
-+                       vcpu->run->flags |= KVM_RUN_BUS_LOCK;
-+               return 0;
-+       }
-+
-+       vcpu->run->flags &= ~KVM_RUN_BUS_LOCK;
-+       return ret;
-+}
-+
- /*
-  * Software based L1D cache flush which is used when microcode providing
-  * the cache control MSR is not loaded.
+ok, thanks.
+
+> 
+> 
 
