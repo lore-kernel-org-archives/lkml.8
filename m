@@ -2,191 +2,282 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AD2C2BC0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566D8C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2923C20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2492020716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:41:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="2TRg6Pt2"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="VmXMkI7L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgICEgC (ORCPT
+        id S1726526AbgICElT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 00:36:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57762 "EHLO
+        Thu, 3 Sep 2020 00:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgICEgA (ORCPT
+        with ESMTP id S1725851AbgICElS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 00:36:00 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F006AC061249
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 21:35:59 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id gf14so835280pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 21:35:59 -0700 (PDT)
+        Thu, 3 Sep 2020 00:41:18 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09751C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 21:41:17 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id u13so1100006pgh.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 21:41:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=c4AodrXdr1y4XfEvpz1cwzbqc0Ntf48J70eL2aX9oQI=;
-        b=2TRg6Pt2o98tfWujTDiLLf6/VEGtI649lNEM2WkQGpk5OujV684ZLl1+qouHnVzCxI
-         ToSXizqAPkBQ6AVBn1hMw0OAXSQYfxGE+Cd7YpFLxFHGLySOQlE4kNo98rNNCUXhNf0c
-         arXqJo4aLZK1ppcDlHPJks8e3VOXyXWWVLeJEapUQJBuJ4hMrixSWr1qgns1jUDjIWTx
-         pdxrHsyVQ1Z/mAfec2PKKlgYL0dGUd7OABGH/Sq4mWZiDXD0WghrDhnCj/k2bluv3Zsk
-         z/YObrYdwUpa0M6OjGrUwZtO5PSXH20kWbGxRS0XihZlJktcT2tnAMU9AWWtGZEscSCp
-         lx+w==
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eA+xIfXWVIHr3w0+94yVdeO2PAT7eX4zIV3zNGN5GIw=;
+        b=VmXMkI7Lhn3k3cCdPsJ3a2d2gqZnwbSPE5q1n+jkkEgR5SMhhHlmpeSCya+G+TmLBT
+         hbdGlxuhpktrNxBY9I15Gcf09Aom9Z5j38jasj9zcpzHsBXGnlQkGxWVhKOQduCnu3bc
+         OTDuTft1TCQZFaChE5Pe7s8GUGKMoK8024Qz4n54IjLP/Nfxin7Oe5+GyXBdzfg1UNsK
+         D2JC4QtyoBm71Y2xGTHXpStcSMLqXWZ/iMeKknzrr2EDc7jhya2pr8eJJiH6W8sYEjSN
+         NEBTUiR3KF4NF8ysq9M+ihTRfD+2oHolyfLfBKQvT6fZVvJdcU6x1ueygECd6cyPQIKG
+         VY5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=c4AodrXdr1y4XfEvpz1cwzbqc0Ntf48J70eL2aX9oQI=;
-        b=qGKgoeutg6KBEAR5XmCOsOFQYG28XqT/PesORrnH2lVlrlnfQtdMJa6C0naWOyMfdn
-         DfLJgns6cVyzfgJKzPicYXspLzZy+5DvqVST4zuYjhgAo2Wdr5MQXs1Z6X7crFT05X7R
-         8ptVrxro+QVTn70ccHFAgWqIYp6MFLVZR0guGkh6hSa4hVF6PlFXlGL+c05e/V+alJ+v
-         +WkddDWSObJmBHBRB0y6NI/u55Sdj6ArpNZWam/kdMnSjVNdomr7ArseQnV3gJvk0vuK
-         EgokKitrWO6q7FBeOIhcbbmgubrMuZmUmB5EM0UQ1rOnXTAGBb+cJU7+ZYU0ba2II1th
-         3irw==
-X-Gm-Message-State: AOAM531eQNcicewSVNmvIOilybr8fpW4+XMEHrhJoVFsocEhH6YajwE5
-        g/grgE2gVM7cHAV8MIUn56taYw==
-X-Google-Smtp-Source: ABdhPJwaRQQGkv4eqs7ZIu/88dhYc9SDUGZTxIHWO2yBYvRFSnsqam/VW1c/u0PoJZoI8hvFN36jkw==
-X-Received: by 2002:a17:90a:160f:: with SMTP id n15mr1310345pja.75.1599107759363;
-        Wed, 02 Sep 2020 21:35:59 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b068:276f:834:4bae:7a0f:cb7d? ([2600:1010:b068:276f:834:4bae:7a0f:cb7d])
-        by smtp.gmail.com with ESMTPSA id q34sm917533pgl.28.2020.09.02.21.35.58
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eA+xIfXWVIHr3w0+94yVdeO2PAT7eX4zIV3zNGN5GIw=;
+        b=QbaJalFa4s+szpuI15kY27dPENNf+5OI1RDSRcU0P/vfQK+kbJsHED8I25J6zibQUw
+         zN9AgM7Rqd43SeJhwQbOxOEEHp22pVT7Lw9R/JM3YZ02DCkPDBmicqXeTCACuUAtFS6q
+         lpkSRZylAVdUoY09jTbqaymcrIsIoWsn3+QSyRuzNL+P14oVokNha8J1yVTYxMJrvf3Q
+         jHXq/1T5cKeDjsDGXNMLJpp9S7xMsRr7YcJ+SXqZLSQXDizx2cidmpao76Y4BzvLHm2r
+         B7xUFos5AywMeXAcXwwT3A1uEWcmU0LfB1bsU+fGhbvN7RbFkRZC+a9I/NsVMvc3y9/Y
+         hxHQ==
+X-Gm-Message-State: AOAM5330k2DuhfYgehkVgt+i0a/M69+yxfDTA4s+TS6MmnNxEWkBxBH6
+        wjrPZhHooe68B8QT5asv8Av6xgEkq+mGNI4t
+X-Google-Smtp-Source: ABdhPJw0qDKU1E5oEoxpvZ6enfboVD0sQdksKixhSM6Pl6ZD2er3EKyEgMx49g5Kq+IhScfezXx4vA==
+X-Received: by 2002:a17:902:7fc1:: with SMTP id t1mr1904321plb.24.1599108076007;
+        Wed, 02 Sep 2020 21:41:16 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id y29sm1256749pfp.141.2020.09.02.21.41.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 21:35:58 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v11 6/9] x86/cet: Add PTRACE interface for CET
-Date:   Wed, 2 Sep 2020 21:35:56 -0700
-Message-Id: <40BC093A-F430-4DCC-8DC0-2BA90A6FC3FA@amacapital.net>
-References: <46e42e5e-0bca-5f3f-efc9-5ab15827cc0b@intel.com>
-Cc:     Jann Horn <jannh@google.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-In-Reply-To: <46e42e5e-0bca-5f3f-efc9-5ab15827cc0b@intel.com>
-To:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-X-Mailer: iPhone Mail (17G80)
+        Wed, 02 Sep 2020 21:41:15 -0700 (PDT)
+Subject: Re: [PATCH v1 02/10] powerpc/kernel/iommu: Align size for
+ IOMMU_PAGE_SIZE on iommu_*_coherent()
+To:     Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Joel Stanley <joel@jms.id.au>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Brian King <brking@linux.vnet.ibm.com>,
+        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
+        David Dai <zdai@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200817234033.442511-1-leobras.c@gmail.com>
+ <20200817234033.442511-3-leobras.c@gmail.com>
+ <7b9640e0-568f-1470-40f4-a3ccec8abcf2@ozlabs.ru>
+ <c67c66e466ad27d15aa2b970c48d2336d95b2971.camel@gmail.com>
+ <da473389-f921-075a-ec8e-ea516de4f177@ozlabs.ru>
+ <2aacd45f047489642da1731c92d3555ad101e3c7.camel@gmail.com>
+ <81f106bd-8962-22f2-f14a-378d3486f57e@ozlabs.ru>
+ <39ad3a9c103faf9c5fc2fd5700d8606eb4a2b67e.camel@gmail.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Message-ID: <8f569f68-5145-676e-50a1-b13f3fbd69cc@ozlabs.ru>
+Date:   Thu, 3 Sep 2020 14:41:08 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <39ad3a9c103faf9c5fc2fd5700d8606eb4a2b67e.camel@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> On Sep 2, 2020, at 7:53 PM, Yu, Yu-cheng <yu-cheng.yu@intel.com> wrote:
->=20
-> =EF=BB=BFOn 9/2/2020 4:50 PM, Andy Lutomirski wrote:
->>>> On Sep 2, 2020, at 3:13 PM, Yu, Yu-cheng <yu-cheng.yu@intel.com> wrote:=
 
->>>=20
->>> =EF=BB=BFOn 9/2/2020 1:03 PM, Jann Horn wrote:
->>>>> On Tue, Aug 25, 2020 at 2:30 AM Yu-cheng Yu <yu-cheng.yu@intel.com> wr=
-ote:
->>>>> Add REGSET_CET64/REGSET_CET32 to get/set CET MSRs:
->>>>>=20
->>>>>     IA32_U_CET (user-mode CET settings) and
->>>>>     IA32_PL3_SSP (user-mode Shadow Stack)
->>>> [...]
->>>>> diff --git a/arch/x86/kernel/fpu/regset.c b/arch/x86/kernel/fpu/regset=
-.c
->>>> [...]
->>>>> +int cetregs_get(struct task_struct *target, const struct user_regset *=
-regset,
->>>>> +               struct membuf to)
->>>>> +{
->>>>> +       struct fpu *fpu =3D &target->thread.fpu;
->>>>> +       struct cet_user_state *cetregs;
->>>>> +
->>>>> +       if (!boot_cpu_has(X86_FEATURE_SHSTK))
->>>>> +               return -ENODEV;
->>>>> +
->>>>> +       fpu__prepare_read(fpu);
->>>>> +       cetregs =3D get_xsave_addr(&fpu->state.xsave, XFEATURE_CET_USE=
-R);
->>>>> +       if (!cetregs)
->>>>> +               return -EFAULT;
->>>> Can this branch ever be hit without a kernel bug? If yes, I think
->>>> -EFAULT is probably a weird error code to choose here. If no, this
->>>> should probably use WARN_ON(). Same thing in cetregs_set().
->>>=20
->>> When a thread is not CET-enabled, its CET state does not exist.  I looke=
-d at EFAULT, and it means "Bad address".  Maybe this can be ENODEV, which me=
-ans "No such device"?
+On 02/09/2020 08:34, Leonardo Bras wrote:
+> On Mon, 2020-08-31 at 10:47 +1000, Alexey Kardashevskiy wrote:
+>>>
+>>> Maybe testing with host 64k pagesize and IOMMU 16MB pagesize in qemu
+>>> should be enough, is there any chance to get indirect mapping in qemu
+>>> like this? (DDW but with smaller DMA window available)
+>>
+>> You will have to hack the guest kernel to always do indirect mapping or
+>> hack QEMU's rtas_ibm_query_pe_dma_window() to return a small number of
+>> available TCEs. But you will be testing QEMU/KVM which behave quite
+>> differently to pHyp in this particular case.
+>>
+> 
+> As you suggested before, building for 4k cpu pagesize should be the
+> best approach. It would allow testing for both pHyp and qemu scenarios.
+> 
+>>>>>> Because if we want the former (==support), then we'll have to align the
+>>>>>> size up to the bigger page size when allocating/zeroing system pages,
+>>>>>> etc.
+>>>>>
+>>>>> This part I don't understand. Why do we need to align everything to the
+>>>>> bigger pagesize?
+>>>>>
+>>>>> I mean, is not that enough that the range [ret, ret + size[ is both
+>>>>> allocated by mm and mapped on a iommu range?
+>>>>>
+>>>>> Suppose a iommu_alloc_coherent() of 16kB on PAGESIZE = 4k and
+>>>>> IOMMU_PAGE_SIZE() == 64k.
+>>>>> Why 4 * cpu_pages mapped by a 64k IOMMU page is not enough?
+>>>>> All the space the user asked for is allocated and mapped for DMA.
+>>>>
+>>>> The user asked to map 16K, the rest - 48K - is used for something else
+>>>> (may be even mapped to another device) but you are making all 64K
+>>>> accessible by the device which only should be able to access 16K.
+>>>>
+>>>> In practice, if this happens, H_PUT_TCE will simply fail.
+>>>
+>>> I have noticed mlx5 driver getting a few bytes in a buffer, and using
+>>> iommu_map_page(). It does map a whole page for as few bytes as the user
+>>
+>> Whole 4K system page or whole 64K iommu page?
+> 
+> I tested it in 64k system page + 64k iommu page.
+> 
+> The 64K system page may be used for anything, and a small portion of it
+> (say 128 bytes) needs to be used for DMA.
+> The whole page is mapped by IOMMU, and the driver gets info of the
+> memory range it should access / modify.
 
-Having read the code, I=E2=80=99m unconvinced. It looks like a get_xsave_add=
-r() failure means =E2=80=9Cstate not saved; task sees INIT state=E2=80=9D.  S=
-o *maybe* it=E2=80=99s reasonable -ENODEV this, but I=E2=80=99m not really c=
-onvinced. I tend to think we should return the actual INIT state and that we=
- should permit writes and handle them correctly.
 
-Dave, what do you think?
+This works because the whole system page belongs to the same memory 
+context and IOMMU allows a device to access that page. You can still 
+have problems if there is a bug within the page but it will go mostly 
+unnoticed as it will be memory corruption.
 
->>>=20
->>> [...]
->>>=20
->>>>> @@ -1284,6 +1293,13 @@ static struct user_regset x86_32_regsets[] __ro=
-_after_init =3D {
->>>> [...]
->>>>> +       [REGSET_CET32] =3D {
->>>>> +               .core_note_type =3D NT_X86_CET,
->>>>> +               .n =3D sizeof(struct cet_user_state) / sizeof(u64),
->>>>> +               .size =3D sizeof(u64), .align =3D sizeof(u64),
->>>>> +               .active =3D cetregs_active, .regset_get =3D cetregs_ge=
-t,
->>>>> +               .set =3D cetregs_set
->>>>> +       },
->>>>>  };
->>>> Why are there different identifiers for 32-bit CET and 64-bit CET when
->>>> they operate on the same structs and have the same handlers? If
->>>> there's a good reason for that, the commit message should probably
->>>> point that out.
->>>=20
->>> Yes, the reason for two regsets is that fill_note_info() does not expect=
- any holes in a regsets.  I will put this in the commit log.
->>>=20
->>>=20
->> Perhaps we could fix that instead?
->=20
-> As long as we understand the root cause, leaving it as-is may be OK.
+If you system page is smaller (4K) than IOMMU page (64K), then the 
+device gets wider access than it should but it is still going to be 
+silent memory corruption.
 
-The regset mechanism=E2=80=99s interactions with compat are awful. Let=E2=80=
-=99s please not make it worse.  One CET regret is good; two is not good.
 
->=20
-> I had a patch in the past, but did not follow up on it.
->=20
-> https://lore.kernel.org/lkml/20180717162502.32274-1-yu-cheng.yu@intel.com/=
+> 
+>>
+>>> wants mapped, and the other bytes get used for something else, or just
+>>> mapped on another DMA page.
+>>> It seems to work fine.
+>>
+>>
+>> With 4K system page and 64K IOMMU page? In practice it would take an
+>> effort or/and bad luck to see it crashing. Thanks,
+> 
+> I haven't tested it yet. On a 64k system page and 4k/64k iommu page, it
+> works as described above.
+> 
+> I am new to this, so I am trying to understand how a memory page mapped
+> as DMA, and used for something else could be a problem.
 
->=20
-> Yu-cheng
+ From the device prospective, there is PCI space and everything from 0 
+till 1<<64 is accessible and what is that mapped to - the device does 
+not know. PHB's IOMMU is the thing to notice invalid access and raise 
+EEH but PHB only knows about PCI->physical memory mapping (with IOMMU 
+pages) but nothing about the host kernel pages. Does this help? Thanks,
+
+
+> 
+> Thanks!
+> 
+>>
+>>>>
+>>>>>> Bigger pages are not the case here as I understand it.
+>>>>>
+>>>>> I did not get this part, what do you mean?
+>>>>
+>>>> Possible IOMMU page sizes are 4K, 64K, 2M, 16M, 256M, 1GB, and the
+>>>> supported set of sizes is different for P8/P9 and type of IO (PHB,
+>>>> NVLink/CAPI).
+>>>>
+>>>>
+>>>>>>> Update those functions to guarantee alignment with requested size
+>>>>>>> using IOMMU_PAGE_ALIGN() before doing iommu_alloc() / iommu_free().
+>>>>>>>
+>>>>>>> Also, on iommu_range_alloc(), replace ALIGN(n, 1 << tbl->it_page_shift)
+>>>>>>> with IOMMU_PAGE_ALIGN(n, tbl), which seems easier to read.
+>>>>>>>
+>>>>>>> Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+>>>>>>> ---
+>>>>>>>   arch/powerpc/kernel/iommu.c | 17 +++++++++--------
+>>>>>>>   1 file changed, 9 insertions(+), 8 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
+>>>>>>> index 9704f3f76e63..d7086087830f 100644
+>>>>>>> --- a/arch/powerpc/kernel/iommu.c
+>>>>>>> +++ b/arch/powerpc/kernel/iommu.c
+>>>>>>> @@ -237,10 +237,9 @@ static unsigned long iommu_range_alloc(struct device *dev,
+>>>>>>>   	}
+>>>>>>>   
+>>>>>>>   	if (dev)
+>>>>>>> -		boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
+>>>>>>> -				      1 << tbl->it_page_shift);
+>>>>>>> +		boundary_size = IOMMU_PAGE_ALIGN(dma_get_seg_boundary(dev) + 1, tbl);
+>>>>>>
+>>>>>> Run checkpatch.pl, should complain about a long line.
+>>>>>
+>>>>> It's 86 columns long, which is less than the new limit of 100 columns
+>>>>> Linus announced a few weeks ago. checkpatch.pl was updated too:
+>>>>> https://www.phoronix.com/scan.php?page=news_item&px=Linux-Kernel-Deprecates-80-Col
+>>>>
+>>>> Yay finally :) Thanks,
+>>>
+>>> :)
+>>>
+>>>>
+>>>>>>>   	else
+>>>>>>> -		boundary_size = ALIGN(1UL << 32, 1 << tbl->it_page_shift);
+>>>>>>> +		boundary_size = IOMMU_PAGE_ALIGN(1UL << 32, tbl);
+>>>>>>>   	/* 4GB boundary for iseries_hv_alloc and iseries_hv_map */
+>>>>>>>   
+>>>>>>>   	n = iommu_area_alloc(tbl->it_map, limit, start, npages, tbl->it_offset,
+>>>>>>> @@ -858,6 +857,7 @@ void *iommu_alloc_coherent(struct device *dev, struct iommu_table *tbl,
+>>>>>>>   	unsigned int order;
+>>>>>>>   	unsigned int nio_pages, io_order;
+>>>>>>>   	struct page *page;
+>>>>>>> +	size_t size_io = size;
+>>>>>>>   
+>>>>>>>   	size = PAGE_ALIGN(size);
+>>>>>>>   	order = get_order(size);
+>>>>>>> @@ -884,8 +884,9 @@ void *iommu_alloc_coherent(struct device *dev, struct iommu_table *tbl,
+>>>>>>>   	memset(ret, 0, size);
+>>>>>>>   
+>>>>>>>   	/* Set up tces to cover the allocated range */
+>>>>>>> -	nio_pages = size >> tbl->it_page_shift;
+>>>>>>> -	io_order = get_iommu_order(size, tbl);
+>>>>>>> +	size_io = IOMMU_PAGE_ALIGN(size_io, tbl);
+>>>>>>> +	nio_pages = size_io >> tbl->it_page_shift;
+>>>>>>> +	io_order = get_iommu_order(size_io, tbl);
+>>>>>>>   	mapping = iommu_alloc(dev, tbl, ret, nio_pages, DMA_BIDIRECTIONAL,
+>>>>>>>   			      mask >> tbl->it_page_shift, io_order, 0);
+>>>>>>>   	if (mapping == DMA_MAPPING_ERROR) {
+>>>>>>> @@ -900,11 +901,11 @@ void iommu_free_coherent(struct iommu_table *tbl, size_t size,
+>>>>>>>   			 void *vaddr, dma_addr_t dma_handle)
+>>>>>>>   {
+>>>>>>>   	if (tbl) {
+>>>>>>> -		unsigned int nio_pages;
+>>>>>>> +		size_t size_io = IOMMU_PAGE_ALIGN(size, tbl);
+>>>>>>> +		unsigned int nio_pages = size_io >> tbl->it_page_shift;
+>>>>>>>   
+>>>>>>> -		size = PAGE_ALIGN(size);
+>>>>>>> -		nio_pages = size >> tbl->it_page_shift;
+>>>>>>>   		iommu_free(tbl, dma_handle, nio_pages);
+>>>>>>> +
+>>>>>>
+>>>>>> Unrelated new line.
+>>>>>
+>>>>> Will be removed. Thanks!
+>>>>>
+>>>>>>>   		size = PAGE_ALIGN(size);
+>>>>>>>   		free_pages((unsigned long)vaddr, get_order(size));
+>>>>>>>   	}
+>>>>>>>
+> 
+
+-- 
+Alexey
