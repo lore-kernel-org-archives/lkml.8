@@ -2,98 +2,84 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F3AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35506C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDF4E20767
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599121705;
-	bh=JhGgBN212oQdocLFQd1GIoMAcjo2XnC8T3B/5UMegcI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Sbr3nIe8MJkMr0ZRV3NBymECcBQQ6AQXX/sEKjijQTv4WF+iZVA9w1L7b4IFphfDh
-	 CqbkdCGRbTobVpFhbzRyPaHsrkDL6fCdEpJpQFJarBDkeTuHA7hU9ISlrmh6FxprIP
-	 LOBLizVugmzML+lvJS/Mds4lIHmyL/aHwWJRof08=
+	by mail.kernel.org (Postfix) with ESMTP id 15CA720897
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:28:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgICI2Y (ORCPT
+        id S1728295AbgICI2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:28:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60906 "EHLO mail.kernel.org"
+        Thu, 3 Sep 2020 04:28:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40582 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726355AbgICI2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:28:22 -0400
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03F212100A;
-        Thu,  3 Sep 2020 08:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599121702;
-        bh=JhGgBN212oQdocLFQd1GIoMAcjo2XnC8T3B/5UMegcI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OhKL4JCKxO8wkJt3BpKgpeyR+xjKvGd+Jf6f9ApeUsNsOOd5pYsVjoWwx/MzQ3fDu
-         TxSC6OtqCCQhokskh5ao0/2qcWh1FfbNbiFsuG3Ezp+Rj7E30aFR+CslSXna1cCYUI
-         qkNEvD4QyK0JaNubUIKAvR6L2eyA0GKTQoebitHY=
-Received: by mail-ej1-f44.google.com with SMTP id a26so2659448ejc.2;
-        Thu, 03 Sep 2020 01:28:21 -0700 (PDT)
-X-Gm-Message-State: AOAM533MKmQtDqpwN25mLKbhXBqeaEuOgky9bHW65BlUw96Dzfql5Z65
-        QZJ5/T6XhlNCMSlClhR2ijPjtLx8aeII+/ULFLc=
-X-Google-Smtp-Source: ABdhPJzSfQ5TJipTleRhjOrSLdyfMN0JGOZNyUW65jvCo0Y05w2r706QOVOn6IspjV+kQPykXsQI90zE8KU4nNs6Fm8=
-X-Received: by 2002:a17:906:af53:: with SMTP id ly19mr908583ejb.503.1599121700549;
- Thu, 03 Sep 2020 01:28:20 -0700 (PDT)
+        id S1726162AbgICI2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 04:28:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 32A4BAD1A;
+        Thu,  3 Sep 2020 08:28:34 +0000 (UTC)
+Date:   Thu, 3 Sep 2020 10:28:32 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Yu Zhao <yuzhao@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] mm: use
+ add_page_to_lru_list()/page_lru()/page_off_lru()
+Message-ID: <20200903082832.GR4617@dhcp22.suse.cz>
+References: <20200831175042.3527153-1-yuzhao@google.com>
 MIME-Version: 1.0
-References: <20200902193658.20539-1-krzk@kernel.org> <CAPDyKFqBS-ws6fkirDQL8EEqh9At88K2vrG5fc8K5_JiXsmfyg@mail.gmail.com>
-In-Reply-To: <CAPDyKFqBS-ws6fkirDQL8EEqh9At88K2vrG5fc8K5_JiXsmfyg@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 3 Sep 2020 10:28:09 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPeLMvaZPvyyh+embqzhHPDRfWcDF9_LxCJn3PqMP+8mfQ@mail.gmail.com>
-Message-ID: <CAJKOXPeLMvaZPvyyh+embqzhHPDRfWcDF9_LxCJn3PqMP+8mfQ@mail.gmail.com>
-Subject: Re: [PATCH 00/11] mmc: Minor cleanups and compile test
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831175042.3527153-1-yuzhao@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 3 Sep 2020 at 10:10, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> Series applied for next, except 11, thanks!
+On Mon 31-08-20 11:50:41, Yu Zhao wrote:
+[...]
+> @@ -1860,16 +1859,11 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+>  		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+>  
+>  		SetPageLRU(page);
+> -		lru = page_lru(page);
+> -
+> -		nr_pages = thp_nr_pages(page);
+> -		update_lru_size(lruvec, lru, page_zonenum(page), nr_pages);
+> -		list_move(&page->lru, &lruvec->lists[lru]);
+> +		add_page_to_lru_list(page, lruvec, page_lru(page));
+>  
+>  		if (put_page_testzero(page)) {
+>  			__ClearPageLRU(page);
+> -			__ClearPageActive(page);
 
-Thanks. I will fix pointed compile-test issues and send later a follow
-up, also removing the MMC dependency as pointed by Micha=C5=82.
+This should go into its own patch. The rest is a mechanical and clear.
+This one needs some head scratching. E.g. Is it correct for all compound
+pages. I believe it should be but few words on why would be better.
 
-Best regards,
-Krzysztof
+> -			del_page_from_lru_list(page, lruvec, lru);
+> +			del_page_from_lru_list(page, lruvec, page_off_lru(page));
+>  
+>  			if (unlikely(PageCompound(page))) {
+>  				spin_unlock_irq(&pgdat->lru_lock);
+> @@ -1878,6 +1872,7 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+>  			} else
+>  				list_add(&page->lru, &pages_to_free);
+>  		} else {
+> +			nr_pages = thp_nr_pages(page);
+>  			nr_moved += nr_pages;
+>  			if (PageActive(page))
+>  				workingset_age_nonresident(lruvec, nr_pages);
+> -- 
+> 2.28.0.402.g5ffc5be6b7-goog
+> 
+
+-- 
+Michal Hocko
+SUSE Labs
