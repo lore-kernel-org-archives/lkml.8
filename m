@@ -2,197 +2,298 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04926C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CD6C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C16492071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D4CF2071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgICHdA (ORCPT
+        id S1727984AbgICHhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:33:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33688 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbgICHc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:32:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 25F08ADA3;
-        Thu,  3 Sep 2020 07:32:57 +0000 (UTC)
-Date:   Thu, 3 Sep 2020 09:32:54 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Zi Yan <ziy@nvidia.com>
-Cc:     linux-mm@kvack.org, Roman Gushchin <guro@fb.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
-Message-ID: <20200903073254.GP4617@dhcp22.suse.cz>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
+        Thu, 3 Sep 2020 03:37:39 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50138 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgICHhi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 03:37:38 -0400
+Received: from mail-wm1-f69.google.com ([209.85.128.69])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <chia-lin.kao@canonical.com>)
+        id 1kDjoK-0007ih-V5
+        for linux-kernel@vger.kernel.org; Thu, 03 Sep 2020 07:37:33 +0000
+Received: by mail-wm1-f69.google.com with SMTP id w3so641838wmg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 00:37:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kRT0dtyryBE1QXXJeojjJFWZBaTTGS+0c45qeRF0jaw=;
+        b=Tlg7wrQZs5kg4RrbLJq0Oq2bWpuZSEwUkmAqCy0wEmd9XR23kQ920yvK0fPc2Uk8FI
+         ixpuqcm2yHbPIcQVPR3b7VqWxu8STQhLnUCM4OCB19sEAcHhIrE8FmqVoXc2+wrl6c82
+         KTaZMfqypFLe1LCJUbo2r7Z4cHWNsQmY2zWl817yVirvBKVCBgvlnkUT/4v5flAwunth
+         kPjuGSgCsue4i5w/jn8bTSSSlSSkr8nsyfw9c/UvcDn8WVDOeP0Z7izC8LqjsWW8N3Dg
+         c1Gno0Lqz0T99ZksxDb7vut7OR0d+N2cK6gkWbopabNCsQi3r5bOaB252PBDsRjJVI3O
+         2Z2Q==
+X-Gm-Message-State: AOAM530u227IvT1yUQraJU0hv+l2qE40OLtrW7sEbrCJf1NKQrZaFhhb
+        c1XGBsyZIK4BdHIy+Z4VMI2FK4/swUrzFJg7EaHkjhmJfjM3YFVpvNmnA9JphgtcNIuh4m2QR/g
+        0PYkH5AVNf0aCrv86M1Y34Lt3Bxut6EMcBkTDWZlTmvbpcnvtB0rxuoMeeQ==
+X-Received: by 2002:a5d:644b:: with SMTP id d11mr872670wrw.373.1599118652367;
+        Thu, 03 Sep 2020 00:37:32 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwaud13HsnRKqjCXr+L8e7lST34HEY4peMc6uzhZYqZrFOET3triLmPLm6FpC1jqXDwXBMg3dsRdioaTQv3f8I=
+X-Received: by 2002:a5d:644b:: with SMTP id d11mr872638wrw.373.1599118651996;
+ Thu, 03 Sep 2020 00:37:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902180628.4052244-1-zi.yan@sent.com>
+References: <20200824054347.3805-1-william.sung@advantech.com.tw>
+ <CAHp75VeZLPR02xB2XRzec5mSBvq93XYZg56OOODxpFTPva6cXw@mail.gmail.com>
+ <CAFv23QmDwcrdxEndH=mKMAomzt9kxG_f1Z6=Fd8iuuvCoY92SA@mail.gmail.com>
+ <CAHp75Vcup9LUk0fgjW9T2FK-K5GD3=3ycPHi74Oykc8rq_tJqA@mail.gmail.com> <CAHp75VeyFTSc3AY07rFnjvXOcHt79tpRHzs_GZGALQcdqoANjA@mail.gmail.com>
+In-Reply-To: <CAHp75VeyFTSc3AY07rFnjvXOcHt79tpRHzs_GZGALQcdqoANjA@mail.gmail.com>
+From:   AceLan Kao <acelan.kao@canonical.com>
+Date:   Thu, 3 Sep 2020 15:37:20 +0800
+Message-ID: <CAFv23Qn4sqTZ1Rbr07sw76hk-769y6ra=mHi1x3L962GyorvXQ@mail.gmail.com>
+Subject: Re: [PATCH] iio: dac: ad5593r: Dynamically set AD5593R channel modes
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        William Sung <william.sung@advantech.com.tw>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Campion Kang <Campion.Kang@advantech.com.tw>
+Content-Type: multipart/mixed; boundary="00000000000034fd5c05ae63d357"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 02-09-20 14:06:12, Zi Yan wrote:
-> From: Zi Yan <ziy@nvidia.com>
-> 
-> Hi all,
-> 
-> This patchset adds support for 1GB THP on x86_64. It is on top of
-> v5.9-rc2-mmots-2020-08-25-21-13.
-> 
-> 1GB THP is more flexible for reducing translation overhead and increasing the
-> performance of applications with large memory footprint without application
-> changes compared to hugetlb.
+--00000000000034fd5c05ae63d357
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Please be more specific about usecases. This better have some strong
-ones because THP code is complex enough already to add on top solely
-based on a generic TLB pressure easing.
+Hi Andy,
 
-> Design
-> =======
-> 
-> 1GB THP implementation looks similar to exiting THP code except some new designs
-> for the additional page table level.
-> 
-> 1. Page table deposit and withdraw using a new pagechain data structure:
->    instead of one PTE page table page, 1GB THP requires 513 page table pages
->    (one PMD page table page and 512 PTE page table pages) to be deposited
->    at the page allocaiton time, so that we can split the page later. Currently,
->    the page table deposit is using ->lru, thus only one page can be deposited.
->    A new pagechain data structure is added to enable multi-page deposit.
-> 
-> 2. Triple mapped 1GB THP : 1GB THP can be mapped by a combination of PUD, PMD,
->    and PTE entries. Mixing PUD an PTE mapping can be achieved with existing
->    PageDoubleMap mechanism. To add PMD mapping, PMDPageInPUD and
->    sub_compound_mapcount are introduced. PMDPageInPUD is the 512-aligned base
->    page in a 1GB THP and sub_compound_mapcount counts the PMD mapping by using
->    page[N*512 + 3].compound_mapcount.
-> 
-> 3. Using CMA allocaiton for 1GB THP: instead of bump MAX_ORDER, it is more sane
->    to use something less intrusive. So all 1GB THPs are allocated from reserved
->    CMA areas shared with hugetlb. At page splitting time, the bitmap for the 1GB
->    THP is cleared as the resulting pages can be freed via normal page free path.
->    We can fall back to alloc_contig_pages for 1GB THP if necessary.
+I spent some time studying/reading what you wrote, but I still don't
+understand how to leverage meta-acpi.
 
-Do those pages get instantiated during the page fault or only via
-khugepaged? This is an important design detail because then we have to
-think carefully about how much automatic we want this to be. Memory
-overhead can be quite large with 2MB THPs already. Also what about the
-allocation overhead? Do you have any numbers?
+From what I understand from the following discussion in the thread,
+ADS5593 could be used,
+so we can keep using it and don't have to introduce PRP0001 in the table, r=
+ight?
 
-Maybe all these details are described in the patcheset but the cover
-letter should contain all that information. It doesn't make much sense
-to dig into details in a patchset this large without having an idea how
-feasible this is.
-
+Here is the ADS5593 asl code, but I have no idea how to re-use it
+after it's been modified,
+the only way I know is to override the ACPI tables via initrd[1].
+Could you share some examples in real cases that I can follow?
 Thanks.
- 
-> Patch Organization
-> =======
-> 
-> Patch 01 adds the new pagechain data structure.
-> 
-> Patch 02 to 13 adds 1GB THP support in variable places.
-> 
-> Patch 14 tries to use alloc_contig_pages for 1GB THP allocaiton.
-> 
-> Patch 15 moves hugetlb_cma reservation to cma.c and rename it to hugepage_cma.
-> 
-> Patch 16 use hugepage_cma reservation for 1GB THP allocation.
-> 
-> 
-> Any suggestions and comments are welcome.
-> 
-> 
-> Zi Yan (16):
->   mm: add pagechain container for storing multiple pages.
->   mm: thp: 1GB anonymous page implementation.
->   mm: proc: add 1GB THP kpageflag.
->   mm: thp: 1GB THP copy on write implementation.
->   mm: thp: handling 1GB THP reference bit.
->   mm: thp: add 1GB THP split_huge_pud_page() function.
->   mm: stats: make smap stats understand PUD THPs.
->   mm: page_vma_walk: teach it about PMD-mapped PUD THP.
->   mm: thp: 1GB THP support in try_to_unmap().
->   mm: thp: split 1GB THPs at page reclaim.
->   mm: thp: 1GB THP follow_p*d_page() support.
->   mm: support 1GB THP pagemap support.
->   mm: thp: add a knob to enable/disable 1GB THPs.
->   mm: page_alloc: >=MAX_ORDER pages allocation an deallocation.
->   hugetlb: cma: move cma reserve function to cma.c.
->   mm: thp: use cma reservation for pud thp allocation.
-> 
->  .../admin-guide/kernel-parameters.txt         |   2 +-
->  arch/arm64/mm/hugetlbpage.c                   |   2 +-
->  arch/powerpc/mm/hugetlbpage.c                 |   2 +-
->  arch/x86/include/asm/pgalloc.h                |  68 ++
->  arch/x86/include/asm/pgtable.h                |  26 +
->  arch/x86/kernel/setup.c                       |   8 +-
->  arch/x86/mm/pgtable.c                         |  38 +
->  drivers/base/node.c                           |   3 +
->  fs/proc/meminfo.c                             |   2 +
->  fs/proc/page.c                                |   2 +
->  fs/proc/task_mmu.c                            | 122 ++-
->  include/linux/cma.h                           |  18 +
->  include/linux/huge_mm.h                       |  84 +-
->  include/linux/hugetlb.h                       |  12 -
->  include/linux/memcontrol.h                    |   5 +
->  include/linux/mm.h                            |  29 +-
->  include/linux/mm_types.h                      |   1 +
->  include/linux/mmu_notifier.h                  |  13 +
->  include/linux/mmzone.h                        |   1 +
->  include/linux/page-flags.h                    |  47 +
->  include/linux/pagechain.h                     |  73 ++
->  include/linux/pgtable.h                       |  34 +
->  include/linux/rmap.h                          |  10 +-
->  include/linux/swap.h                          |   2 +
->  include/linux/vm_event_item.h                 |   7 +
->  include/uapi/linux/kernel-page-flags.h        |   2 +
->  kernel/events/uprobes.c                       |   4 +-
->  kernel/fork.c                                 |   5 +
->  mm/cma.c                                      | 119 +++
->  mm/gup.c                                      |  60 +-
->  mm/huge_memory.c                              | 939 +++++++++++++++++-
->  mm/hugetlb.c                                  | 114 +--
->  mm/internal.h                                 |   2 +
->  mm/khugepaged.c                               |   6 +-
->  mm/ksm.c                                      |   4 +-
->  mm/memcontrol.c                               |  13 +
->  mm/memory.c                                   |  51 +-
->  mm/mempolicy.c                                |  21 +-
->  mm/migrate.c                                  |  12 +-
->  mm/page_alloc.c                               |  57 +-
->  mm/page_vma_mapped.c                          | 129 ++-
->  mm/pgtable-generic.c                          |  56 ++
->  mm/rmap.c                                     | 289 ++++--
->  mm/swap.c                                     |  31 +
->  mm/swap_slots.c                               |   2 +
->  mm/swapfile.c                                 |   8 +-
->  mm/userfaultfd.c                              |   2 +-
->  mm/util.c                                     |  16 +-
->  mm/vmscan.c                                   |  58 +-
->  mm/vmstat.c                                   |   8 +
->  50 files changed, 2270 insertions(+), 349 deletions(-)
->  create mode 100644 include/linux/pagechain.h
-> 
-> --
-> 2.28.0
-> 
 
--- 
-Michal Hocko
-SUSE Labs
+1. Documentation/admin-guide/acpi/initrd_table_override.rst
+
+Andy Shevchenko <andy.shevchenko@gmail.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=
+=8831=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=888:48=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> On Mon, Aug 31, 2020 at 3:45 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Mon, Aug 31, 2020 at 2:28 PM AceLan Kao <acelan.kao@canonical.com> w=
+rote:
+> > > This patch is mainly for Advantech's UNO-420[1] which is a x86-based =
+platform.
+> > > This platform is more like a development platform for customers to
+> > > customize their products,
+> > > so, specify the channel modes in ACPI table is not generic enough,
+> > > that's why William submit this patch.
+> > >
+> > > Are there other ways to specify or pass values to the module without
+> > > using module parameters?
+> > > It's good if we can leverage sysfs, but I don't know if there is one
+> > > for this scenario.
+> >
+> > Can we provide DT bindings for that and use then in ACPI? ACPI has a
+> > possibility to reuse DT properties and compatible strings [1]. As far
+> > as I can see the driver uses fwnode API, so it supports ACPI case
+> > already [2]. So, what prevents you to utilize 'adi,mode' property?
+> >
+> > Also, we accept examples of ASL excerpt in meta-acpi project [3]. It
+> > has already plenty of examples [4] how to use PRP0001 for DIY /
+> > development boards.
+> >
+> > So, take all together I think this patch is simple redundant.
+>
+> One more useful link is SO answers on the topic:
+> https://stackoverflow.com/search?tab=3Dnewest&q=3Dprp0001
+>
+> > [1]: https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumera=
+tion.html#device-tree-namespace-link-device-id
+> > [2]: https://elixir.bootlin.com/linux/v5.9-rc3/source/Documentation/dev=
+icetree/bindings/iio/dac/ad5592r.txt
+> > [3]: https://github.com/westeri/meta-acpi
+> > [4]: https://github.com/westeri/meta-acpi/tree/master/recipes-bsp/acpi-=
+tables/samples
+> >
+> > P.S. Jonathan, it seems this driver has artificial ACPI HID. We
+> > probably have to remove it. However, ADS is indeed reserved for Analog
+> > Devices in PNP registry. Can we have AD's official answer on this?
+> > Cc'ing additional AD people.
+> >
+> > > 1. https://www.advantech.com/products/9a0cc561-8fc2-4e22-969c-9df90a3=
+952b5/uno-420/mod_2d6a546b-39e3-4bc4-bbf4-ac89e6b7667c
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+
+--00000000000034fd5c05ae63d357
+Content-Type: text/x-dsl; charset="US-ASCII"; name="ads5593.dsl"
+Content-Disposition: attachment; filename="ads5593.dsl"
+Content-Transfer-Encoding: base64
+Content-ID: <f_kemhi4hk0>
+X-Attachment-Id: f_kemhi4hk0
+
+ICAgIFNjb3BlIChfU0IuSTJDMSkKICAgIHsKICAgICAgICBEZXZpY2UgKEkyQ0cpCiAgICAgICAg
+ewogICAgICAgICAgICBOYW1lIChfSElELCAiQURTNTU5MyIpICAvLyBfSElEOiBIYXJkd2FyZSBJ
+RAogICAgICAgICAgICBEZXZpY2UgKElPUDApCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAg
+IE5hbWUgKF9BRFIsIFplcm8pICAvLyBfQURSOiBBZGRyZXNzCiAgICAgICAgICAgICAgICBOYW1l
+IChfRFNELCBQYWNrYWdlICgweDAyKSAgLy8gX0RTRDogRGV2aWNlLVNwZWNpZmljIERhdGEKICAg
+ICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBUb1VVSUQgKCJkYWZmZDgxNC02ZWJh
+LTRkOGMtOGE5MS1iYzliYmY0YWEzMDEiKSAvKiBEZXZpY2UgUHJvcGVydGllcyBmb3IgX0RTRCAq
+LywgCiAgICAgICAgICAgICAgICAgICAgUGFja2FnZSAoMHgwMykKICAgICAgICAgICAgICAgICAg
+ICB7CiAgICAgICAgICAgICAgICAgICAgICAgIFBhY2thZ2UgKDB4MDIpCiAgICAgICAgICAgICAg
+ICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJyZWciLCAKICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIFplcm8KICAgICAgICAgICAgICAgICAgICAgICAgfSwgCgogICAg
+ICAgICAgICAgICAgICAgICAgICBQYWNrYWdlICgweDAyKQogICAgICAgICAgICAgICAgICAgICAg
+ICB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYWRpLG1vZGUiLCAKICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDB4MDgKICAgICAgICAgICAgICAgICAgICAgICAgfSwgCgogICAgICAg
+ICAgICAgICAgICAgICAgICBQYWNrYWdlICgweDAyKQogICAgICAgICAgICAgICAgICAgICAgICB7
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYWRpLG9mZi1zdGF0ZSIsIAogICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgWmVybwogICAgICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAg
+ICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfSkKICAgICAgICAgICAgfQoKICAgICAgICAg
+ICAgRGV2aWNlIChJT1AxKQogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICBOYW1lIChfQURS
+LCBaZXJvKSAgLy8gX0FEUjogQWRkcmVzcwogICAgICAgICAgICAgICAgTmFtZSAoX0RTRCwgUGFj
+a2FnZSAoMHgwMikgIC8vIF9EU0Q6IERldmljZS1TcGVjaWZpYyBEYXRhCiAgICAgICAgICAgICAg
+ICB7CiAgICAgICAgICAgICAgICAgICAgVG9VVUlEICgiZGFmZmQ4MTQtNmViYS00ZDhjLThhOTEt
+YmM5YmJmNGFhMzAxIikgLyogRGV2aWNlIFByb3BlcnRpZXMgZm9yIF9EU0QgKi8sIAogICAgICAg
+ICAgICAgICAgICAgIFBhY2thZ2UgKDB4MDMpCiAgICAgICAgICAgICAgICAgICAgewogICAgICAg
+ICAgICAgICAgICAgICAgICBQYWNrYWdlICgweDAyKQogICAgICAgICAgICAgICAgICAgICAgICB7
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAicmVnIiwgCiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBPbmUKICAgICAgICAgICAgICAgICAgICAgICAgfSwgCgogICAgICAgICAgICAgICAg
+ICAgICAgICBQYWNrYWdlICgweDAyKQogICAgICAgICAgICAgICAgICAgICAgICB7CiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAiYWRpLG1vZGUiLCAKICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDB4MDMKICAgICAgICAgICAgICAgICAgICAgICAgfSwgCgogICAgICAgICAgICAgICAgICAg
+ICAgICBQYWNrYWdlICgweDAyKQogICAgICAgICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAiYWRpLG9mZi1zdGF0ZSIsIAogICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgWmVybwogICAgICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAg
+fQogICAgICAgICAgICAgICAgfSkKICAgICAgICAgICAgfQoKICAgICAgICAgICAgRGV2aWNlIChJ
+T1AyKQogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICBOYW1lIChfQURSLCAweDAyKSAgLy8g
+X0FEUjogQWRkcmVzcwogICAgICAgICAgICAgICAgTmFtZSAoX0RTRCwgUGFja2FnZSAoMHgwMikg
+IC8vIF9EU0Q6IERldmljZS1TcGVjaWZpYyBEYXRhCiAgICAgICAgICAgICAgICB7CiAgICAgICAg
+ICAgICAgICAgICAgVG9VVUlEICgiZGFmZmQ4MTQtNmViYS00ZDhjLThhOTEtYmM5YmJmNGFhMzAx
+IikgLyogRGV2aWNlIFByb3BlcnRpZXMgZm9yIF9EU0QgKi8sIAogICAgICAgICAgICAgICAgICAg
+IFBhY2thZ2UgKDB4MDMpCiAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAg
+ICAgICBQYWNrYWdlICgweDAyKQogICAgICAgICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAicmVnIiwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAy
+CiAgICAgICAgICAgICAgICAgICAgICAgIH0sIAoKICAgICAgICAgICAgICAgICAgICAgICAgUGFj
+a2FnZSAoMHgwMikKICAgICAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgImFkaSxtb2RlIiwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAyCiAg
+ICAgICAgICAgICAgICAgICAgICAgIH0sIAoKICAgICAgICAgICAgICAgICAgICAgICAgUGFja2Fn
+ZSAoMHgwMikKICAgICAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgImFkaSxvZmYtc3RhdGUiLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgIFplcm8K
+ICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAg
+ICAgICAgIH0pCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIERldmljZSAoSU9QMykKICAgICAg
+ICAgICAgewogICAgICAgICAgICAgICAgTmFtZSAoX0FEUiwgMHgwMykgIC8vIF9BRFI6IEFkZHJl
+c3MKICAgICAgICAgICAgICAgIE5hbWUgKF9EU0QsIFBhY2thZ2UgKDB4MDIpICAvLyBfRFNEOiBE
+ZXZpY2UtU3BlY2lmaWMgRGF0YQogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAg
+IFRvVVVJRCAoImRhZmZkODE0LTZlYmEtNGQ4Yy04YTkxLWJjOWJiZjRhYTMwMSIpIC8qIERldmlj
+ZSBQcm9wZXJ0aWVzIGZvciBfRFNEICovLCAKICAgICAgICAgICAgICAgICAgICBQYWNrYWdlICgw
+eDAzKQogICAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgICAgUGFja2Fn
+ZSAoMHgwMikKICAgICAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgInJlZyIsIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMwogICAgICAgICAg
+ICAgICAgICAgICAgICB9LCAKCiAgICAgICAgICAgICAgICAgICAgICAgIFBhY2thZ2UgKDB4MDIp
+CiAgICAgICAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJh
+ZGksbW9kZSIsIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgT25lCiAgICAgICAgICAgICAg
+ICAgICAgICAgIH0sIAoKICAgICAgICAgICAgICAgICAgICAgICAgUGFja2FnZSAoMHgwMikKICAg
+ICAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAgICAgICAgImFkaSxv
+ZmYtc3RhdGUiLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgIFplcm8KICAgICAgICAgICAg
+ICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIH0pCiAg
+ICAgICAgICAgIH0KCiAgICAgICAgICAgIERldmljZSAoSU9QNCkKICAgICAgICAgICAgewogICAg
+ICAgICAgICAgICAgTmFtZSAoX0FEUiwgMHgwNCkgIC8vIF9BRFI6IEFkZHJlc3MKICAgICAgICAg
+ICAgICAgIE5hbWUgKF9EU0QsIFBhY2thZ2UgKDB4MDIpICAvLyBfRFNEOiBEZXZpY2UtU3BlY2lm
+aWMgRGF0YQogICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIFRvVVVJRCAoImRh
+ZmZkODE0LTZlYmEtNGQ4Yy04YTkxLWJjOWJiZjRhYTMwMSIpIC8qIERldmljZSBQcm9wZXJ0aWVz
+IGZvciBfRFNEICovLCAKICAgICAgICAgICAgICAgICAgICBQYWNrYWdlICgweDAzKQogICAgICAg
+ICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgICAgUGFja2FnZSAoMHgwMikKICAg
+ICAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAgICAgICAgInJlZyIs
+IAogICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwNAogICAgICAgICAgICAgICAgICAgICAg
+ICB9LCAKCiAgICAgICAgICAgICAgICAgICAgICAgIFBhY2thZ2UgKDB4MDIpCiAgICAgICAgICAg
+ICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJhZGksbW9kZSIsIAog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwOAogICAgICAgICAgICAgICAgICAgICAgICB9
+LCAKCiAgICAgICAgICAgICAgICAgICAgICAgIFBhY2thZ2UgKDB4MDIpCiAgICAgICAgICAgICAg
+ICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJhZGksb2ZmLXN0YXRlIiwg
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBaZXJvCiAgICAgICAgICAgICAgICAgICAgICAg
+IH0KICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICB9KQogICAgICAgICAgICB9
+CgogICAgICAgICAgICBEZXZpY2UgKElPUDUpCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAg
+IE5hbWUgKF9BRFIsIDB4MDUpICAvLyBfQURSOiBBZGRyZXNzCiAgICAgICAgICAgICAgICBOYW1l
+IChfRFNELCBQYWNrYWdlICgweDAyKSAgLy8gX0RTRDogRGV2aWNlLVNwZWNpZmljIERhdGEKICAg
+ICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICBUb1VVSUQgKCJkYWZmZDgxNC02ZWJh
+LTRkOGMtOGE5MS1iYzliYmY0YWEzMDEiKSAvKiBEZXZpY2UgUHJvcGVydGllcyBmb3IgX0RTRCAq
+LywgCiAgICAgICAgICAgICAgICAgICAgUGFja2FnZSAoMHgwMykKICAgICAgICAgICAgICAgICAg
+ICB7CiAgICAgICAgICAgICAgICAgICAgICAgIFBhY2thZ2UgKDB4MDIpCiAgICAgICAgICAgICAg
+ICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJyZWciLCAKICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIDB4MDUKICAgICAgICAgICAgICAgICAgICAgICAgfSwgCgogICAg
+ICAgICAgICAgICAgICAgICAgICBQYWNrYWdlICgweDAyKQogICAgICAgICAgICAgICAgICAgICAg
+ICB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYWRpLG1vZGUiLCAKICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDB4MDMKICAgICAgICAgICAgICAgICAgICAgICAgfSwgCgogICAgICAg
+ICAgICAgICAgICAgICAgICBQYWNrYWdlICgweDAyKQogICAgICAgICAgICAgICAgICAgICAgICB7
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYWRpLG9mZi1zdGF0ZSIsIAogICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgWmVybwogICAgICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAg
+ICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfSkKICAgICAgICAgICAgfQoKICAgICAgICAg
+ICAgRGV2aWNlIChJT1A2KQogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICBOYW1lIChfQURS
+LCAweDA2KSAgLy8gX0FEUjogQWRkcmVzcwogICAgICAgICAgICAgICAgTmFtZSAoX0RTRCwgUGFj
+a2FnZSAoMHgwMikgIC8vIF9EU0Q6IERldmljZS1TcGVjaWZpYyBEYXRhCiAgICAgICAgICAgICAg
+ICB7CiAgICAgICAgICAgICAgICAgICAgVG9VVUlEICgiZGFmZmQ4MTQtNmViYS00ZDhjLThhOTEt
+YmM5YmJmNGFhMzAxIikgLyogRGV2aWNlIFByb3BlcnRpZXMgZm9yIF9EU0QgKi8sIAogICAgICAg
+ICAgICAgICAgICAgIFBhY2thZ2UgKDB4MDMpCiAgICAgICAgICAgICAgICAgICAgewogICAgICAg
+ICAgICAgICAgICAgICAgICBQYWNrYWdlICgweDAyKQogICAgICAgICAgICAgICAgICAgICAgICB7
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAicmVnIiwgCiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAweDA2CiAgICAgICAgICAgICAgICAgICAgICAgIH0sIAoKICAgICAgICAgICAgICAg
+ICAgICAgICAgUGFja2FnZSAoMHgwMikKICAgICAgICAgICAgICAgICAgICAgICAgewogICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgImFkaSxtb2RlIiwgCiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAweDAyCiAgICAgICAgICAgICAgICAgICAgICAgIH0sIAoKICAgICAgICAgICAgICAgICAg
+ICAgICAgUGFja2FnZSAoMHgwMikKICAgICAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgImFkaSxvZmYtc3RhdGUiLCAKICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIFplcm8KICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAg
+IH0KICAgICAgICAgICAgICAgIH0pCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIERldmljZSAo
+SU9QNykKICAgICAgICAgICAgewogICAgICAgICAgICAgICAgTmFtZSAoX0FEUiwgMHgwNykgIC8v
+IF9BRFI6IEFkZHJlc3MKICAgICAgICAgICAgICAgIE5hbWUgKF9EU0QsIFBhY2thZ2UgKDB4MDIp
+ICAvLyBfRFNEOiBEZXZpY2UtU3BlY2lmaWMgRGF0YQogICAgICAgICAgICAgICAgewogICAgICAg
+ICAgICAgICAgICAgIFRvVVVJRCAoImRhZmZkODE0LTZlYmEtNGQ4Yy04YTkxLWJjOWJiZjRhYTMw
+MSIpIC8qIERldmljZSBQcm9wZXJ0aWVzIGZvciBfRFNEICovLCAKICAgICAgICAgICAgICAgICAg
+ICBQYWNrYWdlICgweDAzKQogICAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAg
+ICAgICAgUGFja2FnZSAoMHgwMikKICAgICAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgInJlZyIsIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgw
+NwogICAgICAgICAgICAgICAgICAgICAgICB9LCAKCiAgICAgICAgICAgICAgICAgICAgICAgIFBh
+Y2thZ2UgKDB4MDIpCiAgICAgICAgICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICJhZGksbW9kZSIsIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgT25lCiAg
+ICAgICAgICAgICAgICAgICAgICAgIH0sIAoKICAgICAgICAgICAgICAgICAgICAgICAgUGFja2Fn
+ZSAoMHgwMikKICAgICAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgImFkaSxvZmYtc3RhdGUiLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgIFplcm8K
+ICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAg
+ICAgICAgIH0pCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIE1ldGhvZCAoX0NSUywgMCwgTm90
+U2VyaWFsaXplZCkgIC8vIF9DUlM6IEN1cnJlbnQgUmVzb3VyY2UgU2V0dGluZ3MKICAgICAgICAg
+ICAgewogICAgICAgICAgICAgICAgTmFtZSAoUkJVRiwgUmVzb3VyY2VUZW1wbGF0ZSAoKQogICAg
+ICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgIEkyY1NlcmlhbEJ1c1YyICgweDAwMTAs
+IENvbnRyb2xsZXJJbml0aWF0ZWQsIDB4MDAwNjFBODAsCiAgICAgICAgICAgICAgICAgICAgICAg
+IEFkZHJlc3NpbmdNb2RlN0JpdCwgIlxcX1NCLlBDSTAuRDAyMiIsCiAgICAgICAgICAgICAgICAg
+ICAgICAgIDB4MDAsIFJlc291cmNlQ29uc3VtZXIsICwgRXhjbHVzaXZlLAogICAgICAgICAgICAg
+ICAgICAgICAgICApCiAgICAgICAgICAgICAgICB9KQogICAgICAgICAgICAgICAgUmV0dXJuIChS
+QlVGKSAvKiBcX1NCXy5JMkMxLkkyQ0cuX0NSUy5SQlVGICovCiAgICAgICAgICAgIH0KICAgICAg
+ICB9CiAgICB9Cg==
+--00000000000034fd5c05ae63d357--
