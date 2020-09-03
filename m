@@ -2,176 +2,150 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02D3C2BD11
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2BBC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84BEF206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA4520684
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="RCNqeDrb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPn9PdHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgICU1R (ORCPT
+        id S1729259AbgICUaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34850 "EHLO
+        Thu, 3 Sep 2020 16:30:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729020AbgICU1N (ORCPT
+        with ESMTP id S1727065AbgICUap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:27:13 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5089FC06124F
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:27:10 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id g13so4783615ioo.9
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:27:10 -0700 (PDT)
+        Thu, 3 Sep 2020 16:30:45 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE50FC061244;
+        Thu,  3 Sep 2020 13:30:44 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z1so4612241wrt.3;
+        Thu, 03 Sep 2020 13:30:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XHoryAxbdooXqCdzEiDfBNHDRDqVJTRBeWqND7AhQWw=;
-        b=RCNqeDrberJQa8iEXoKdFFmsXmVgm0OJW7eIchkOEab4PeUqCYPXFDpEN7VrPE2Q2r
-         GUQQuiaAGbKydhEJAnnDCPiK90LXur6kCJr5L5sQ2r/ne46TMpiIdcTaCv2fHYoM6yNb
-         n/CznyFIPF9GJUXXveE7AfWdl33o/8t6SBeJ8YB3I8NVC2PqmD4/iWDqPdEI5wN78LVf
-         ncTI5ftXwXoF9V4Ax5mdMwpMg3xer78eQreGPZO8czXhtl772MKmX11X+ribr9UqcF1C
-         urDp6n8FeZvPlJlmjz8S3oOgFUFG1EujxtEbZKlxpUccJF2SFlBjkXHX8U39zQ/QDpq6
-         IUOA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bCiiLHdkyCif4lDSthP4Rue9BpevgzI0PU8h03qCRjY=;
+        b=jPn9PdHbFfQYzxWap1ICE8K6I+puU4a41hfw1FW7yTjLz1RhIsitR1DWrUfJmsjeCB
+         QuJOmJyDFQYCTkogqBoM4vrDLC/Z5EVI3XFVbh9zdKGJj77q909aTXooCxRXI7xYVuQP
+         p/1egAtosQMJUMhUYeyBm4j5pbEtexUOiRgCbw1yLNA4GMSaR9MEwQi5gIl1O4P3cr9C
+         CR146At7ZOwRhfRac+TMEc6WNIpHskIq3kk+tAK9MInIn63jVVs/EkMYpXiXfF/eZFOu
+         ipNheUsBnVEN6N3RY7iXk1t0dVkKgpWJ/IWMMJP38c+cH+r61oiAKkfz5tqa04VR4jPZ
+         ROmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XHoryAxbdooXqCdzEiDfBNHDRDqVJTRBeWqND7AhQWw=;
-        b=bH8c58FWcLPwUWwdSYTmhnO8Z0tfpBLJ+d4F1Fr9G6z/FH5apxYPtvYXrK8ITNXrL4
-         ZU0jyV5hm0yOfZRXViYetaSvmkoeO5H+CHOA8Gl2Ai83l+fYEWp5H/b+EybPrsjh8adD
-         JFy9pO27nDFNkdcBaMI/M8tjrvUSiHclGLRfEf26l+HulYQBXmy1YHUk678xQCeF6AGf
-         IDQWlLK9chrwSoejENxAcetbLyEAH+BW632biq0CnU6z++Ln/RHNZxx3BWvujVcIqobq
-         VQ08BUWomsaqcNc6mKQrG/IRk0P3quRrI4FODUsAmpND7yygJmMjTfpBl5nZIfya5zbJ
-         +8cw==
-X-Gm-Message-State: AOAM530njzxW/PUCeMxqsVFEuwZR0Koq5/AUnEf5opkW3kdb7vzH+yX+
-        bFhV++Fn6r4qwMqEJHoltZP0xmxGFB+IYGQ6EuukEg==
-X-Google-Smtp-Source: ABdhPJwmTrpk85LWcnftpfNTJtQ24c/2yXv/TkIoKUAohLkMn+MLB1sF1W3BqKfqx9SeVWLrNTgZBBPqyFF6pQr5QKA=
-X-Received: by 2002:a02:834a:: with SMTP id w10mr5122585jag.63.1599164828964;
- Thu, 03 Sep 2020 13:27:08 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bCiiLHdkyCif4lDSthP4Rue9BpevgzI0PU8h03qCRjY=;
+        b=nhkd007Kkhzp1hbu5HY9HsKrFp+cA11ly0Npz97LQK2iG4TWLfGtie+jLGKUzCoHix
+         BJShOcxCAcVtMD9yw6cOb0otrVm86TIGqtKsnXW1fKN9ecabRz2cWGQMED0c3M8zhdXJ
+         aSJSN2fG/6/uTTlKeOAWe5h0p9op8WeRW3Sx4ghr5ULMl8MUrPldO1uVMZ6jpMxGCyCu
+         Q/MlhZRa/GwQplvYNEyhow6TFXbOiuXNJPiKQDfL6wYfbU1dAJ+Qi5CCxs6NZSYNVlW6
+         0gCfu8GU5aqv9bDm1kjUGKnSMQqA0sx8DBx6ZRLRHyRDMmayIvmR5ndI9auDrLTdp5H+
+         cm6w==
+X-Gm-Message-State: AOAM533EgLLsH+F1dyjaU1+tCyX6OgAVX+e3S1ksa39molK55Vyy3hnP
+        FFuIBYpd9DTRrYBTEgJ1Bhk=
+X-Google-Smtp-Source: ABdhPJxWnW47sJQ9T2/8BdZhhOZMbOW7I2FSoB1MeYeY4KcXmQ1ajCllvvZtZlt7+JcUa4XQrMLvqw==
+X-Received: by 2002:a5d:4e0b:: with SMTP id p11mr4118026wrt.32.1599165043167;
+        Thu, 03 Sep 2020 13:30:43 -0700 (PDT)
+Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
+        by smtp.gmail.com with ESMTPSA id q186sm6818274wma.45.2020.09.03.13.30.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 13:30:42 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        Marcus Cooper <codekipper@gmail.com>,
+        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v2 00/20] Add Allwinner H3/H5/H6/A64 HDMI audio
+Date:   Thu,  3 Sep 2020 22:30:14 +0200
+Message-Id: <20200903203034.1057334-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20191221150402.13868-1-murphyt7@tcd.ie> <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
- <20200529124523.GA11817@infradead.org> <CGME20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d@eucas1p2.samsung.com>
- <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com> <ef2150d5-7b6a-df25-c10d-e43316fe7812@samsung.com>
- <b9140772-0370-a858-578c-af503a06d8e9@deltatee.com> <CALQxJuutRaeX89k2o4ffTKYRMizmMu0XbRnzpFuSSrkQR02jKg@mail.gmail.com>
- <766525c3-4da9-6db7-cd90-fb4b82cd8083@deltatee.com> <CALQxJuuS8KKUX_eWWSE81gsq5ePAETB-FoqRUSWFfqgr+B13gg@mail.gmail.com>
-In-Reply-To: <CALQxJuuS8KKUX_eWWSE81gsq5ePAETB-FoqRUSWFfqgr+B13gg@mail.gmail.com>
-From:   Tom Murphy <murphyt7@tcd.ie>
-Date:   Thu, 3 Sep 2020 21:26:57 +0100
-Message-ID: <CALQxJuuk0YR9dZWkqSmLU-kUKoOuuNj-kSikvQGq0wekijycLA@mail.gmail.com>
-Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-mediatek@lists.infradead.org,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        virtualization@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 at 00:34, Tom Murphy <murphyt7@tcd.ie> wrote:
->
-> On Thu, 27 Aug 2020 at 22:36, Logan Gunthorpe <logang@deltatee.com> wrote:
-> >
-> >
-> >
-> > On 2020-08-23 6:04 p.m., Tom Murphy wrote:
-> > > I have added a check for the sg_dma_len == 0 :
-> > > """
-> > >  } __sgt_iter(struct scatterlist *sgl, bool dma) {
-> > >         struct sgt_iter s = { .sgp = sgl };
-> > >
-> > > +       if (sgl && sg_dma_len(sgl) == 0)
-> > > +           s.sgp = NULL;
-> > >
-> > >         if (s.sgp) {
-> > >             .....
-> > > """
-> > > at location [1].
-> > > but it doens't fix the problem.
-> >
-> > Based on my read of the code, it looks like we also need to change usage
-> > of sgl->length... Something like the rough patch below, maybe?
-> >
-> > Also, Tom, do you have an updated version of the patchset to convert the
-> > Intel IOMMU to dma-iommu available? The last one I've found doesn't
-> > apply cleanly (I'm assuming parts of it have been merged in slightly
-> > modified forms).
-> >
->
-> I'll try and post one in the next 24hours
+Hi,
 
-I have just posted this now:
-The subject of the cover letter is:
-"[PATCH V2 0/5] Convert the intel iommu driver to the dma-iommu api"
+Regarding the I2S LRCK polarity, Maxime Ripard test it and found that
+the LRCK is fine: https://lkml.org/lkml/2020/7/29/581.
+So the patch introduce this modification has been reverted.
 
->
-> > Thanks,
-> >
-> > Logan
-> >
-> > --
-> >
-> > diff --git a/drivers/gpu/drm/i915/i915_scatterlist.h
-> > b/drivers/gpu/drm/i915/i915
-> > index b7b59328cb76..9367ac801f0c 100644
-> > --- a/drivers/gpu/drm/i915/i915_scatterlist.h
-> > +++ b/drivers/gpu/drm/i915/i915_scatterlist.h
-> > @@ -27,13 +27,19 @@ static __always_inline struct sgt_iter {
-> >  } __sgt_iter(struct scatterlist *sgl, bool dma) {
-> >         struct sgt_iter s = { .sgp = sgl };
-> >
-> > +       if (sgl && !sg_dma_len(s.sgp))
-> > +               s.sgp = NULL;
-> > +
-> >         if (s.sgp) {
-> >                 s.max = s.curr = s.sgp->offset;
-> > -               s.max += s.sgp->length;
-> > -               if (dma)
-> > +
-> > +               if (dma) {
-> > +                       s.max += sg_dma_len(s.sgp);
-> >                         s.dma = sg_dma_address(s.sgp);
-> > -               else
-> > +               } else {
-> > +                       s.max += s.sgp->length;
-> >                         s.pfn = page_to_pfn(sg_page(s.sgp));
-> > +               }
-> >         }
-> >
-> >         return s;
+I have tested this on Allwinner H6 but this should be tested on older
+platform like sun4i family.
+
+Regards,
+Clement
+
+Change since v1:
+- rebase on next-20200828
+- add revert LRCK polarity
+- remove all simple-audio-card,frame-inversion in dts
+- add Ondrej patches for Orange Pi board
+- Add arm64 defconfig patch
+
+Clément Péron (4):
+  Revert "ASoC: sun4i-i2s: Fix the LRCK polarity"
+  ASoC: sun4i-i2s: Fix sun8i volatile regs
+  arm64: dts: allwinner: h6: Enable HDMI sound for Beelink GS1
+  arm64: defconfig: Enable Allwinner i2s driver
+
+Jernej Skrabec (3):
+  ASoC: sun4i-i2s: Add support for H6 I2S
+  dt-bindings: ASoC: sun4i-i2s: Add H6 compatible
+  arm64: dts: allwinner: h6: Add HDMI audio node
+
+Marcus Cooper (10):
+  ASoC: sun4i-i2s: Adjust LRCLK width
+  ASoC: sun4i-i2s: Set sign extend sample
+  ASoc: sun4i-i2s: Add 20 and 24 bit support
+  arm: dts: sunxi: h3/h5: Add DAI node for HDMI
+  arm: dts: sunxi: h3/h5: Add HDMI audio
+  arm64: dts: allwinner: a64: Add DAI node for HDMI
+  arm64: dts: allwinner: a64: Add HDMI audio
+  arm: sun8i: h3: Add HDMI audio to Orange Pi 2
+  arm: sun8i: h3: Add HDMI audio to Beelink X2
+  arm64: dts: allwinner: a64: Add HDMI audio to Pine64
+
+Ondrej Jirman (3):
+  arm64: dts: allwinner: Enable HDMI audio on Orange Pi PC 2
+  ARM: dts: sun8i-h3: Enable HDMI audio on Orange Pi PC/One
+  arm64: dts: sun50i-h6-orangepi-3: Enable HDMI audio
+
+ .../sound/allwinner,sun4i-a10-i2s.yaml        |   2 +
+ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts     |   8 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts     |   8 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts   |   8 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts    |   8 +
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  32 ++
+ .../boot/dts/allwinner/sun50i-a64-pine64.dts  |   8 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  33 ++
+ .../dts/allwinner/sun50i-h5-orangepi-pc2.dts  |   8 +
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |   8 +
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    |   8 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  32 ++
+ arch/arm64/configs/defconfig                  |   1 +
+ sound/soc/sunxi/sun4i-i2s.c                   | 285 ++++++++++++++++--
+ 14 files changed, 431 insertions(+), 18 deletions(-)
+
+-- 
+2.25.1
+
