@@ -2,92 +2,117 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CFCC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B52C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 921AB20775
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D863020775
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:50:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="aL+sHYDo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgICKtD (ORCPT
+        id S1728320AbgICKuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 06:49:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:58772 "EHLO foss.arm.com"
+        Thu, 3 Sep 2020 06:50:21 -0400
+Received: from crapouillou.net ([89.234.176.41]:49158 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgICKsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:48:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10C40101E;
-        Thu,  3 Sep 2020 03:48:42 -0700 (PDT)
-Received: from [10.57.7.89] (unknown [10.57.7.89])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2F5C3F66F;
-        Thu,  3 Sep 2020 03:48:39 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] kselftests/arm64: add PAuth test for whether
- exec() changes keys
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>, boian4o1@gmail.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        amit.kachhap@arm.com, vincenzo.frascino@arm.com,
-        Shuah Khan <shuah@kernel.org>
-References: <20200831110450.30188-1-boyan.karatotev@arm.com>
- <20200831110450.30188-4-boyan.karatotev@arm.com>
- <20200902170854.GK6642@arm.com>
-From:   Boyan Karatotev <boyan.karatotev@arm.com>
-Message-ID: <926691e4-1990-207e-bcb9-40ab6d3b0fa0@arm.com>
-Date:   Thu, 3 Sep 2020 11:48:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1725984AbgICKuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 06:50:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1599130208; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YXg3aqgmFb8tKfR4TEoiu32nZCgBWfcl5v4Q44mU658=;
+        b=aL+sHYDogDi8odA19gwRz4rweOeF1jr+yCLbpS1gEROe3fA7E/jfDC5BeFmJAUnF5eryIC
+        IdxX7nQpGG7VkZGyAzxbp9xwe0eFQFIBK58dVNueyRCjIxt/lOYFswheujnU2UtA4nuHiz
+        Erg60GWs/LhPy2ysrTXzXyDxGTvSHyo=
+Date:   Thu, 03 Sep 2020 12:49:52 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 04/11] mmc: jz4740: Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-tegra@vger.kernel.org
+Message-Id: <4RW2GQ.J2DD55HCZMCH2@crapouillou.net>
+In-Reply-To: <20200902193658.20539-5-krzk@kernel.org>
+References: <20200902193658.20539-1-krzk@kernel.org>
+        <20200902193658.20539-5-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200902170854.GK6642@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/09/2020 18:08, Dave Martin wrote:
-> On Mon, Aug 31, 2020 at 12:04:49PM +0100, Boyan Karatotev wrote:
->> +/*
->> + * fork() does not change keys. Only exec() does so call a worker program.
->> + * Its only job is to sign a value and report back the resutls
->> + */
->> +TEST(exec_unique_keys)
->> +{
-> 
-> The kernel doesn't guarantee that keys are unique.
-> 
-> Can we present all the "unique keys" wording differently, say
-> 
-> 	exec_key_collision_likely()
+Hi Krzysztof,
 
-I agree that this test's name is a bit out of place. I would rather have
-it named "exec_changed_keys" though.
+Le mer. 2 sept. 2020 =E0 21:36, Krzysztof Kozlowski <krzk@kernel.org> a=20
+=E9crit :
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/mmc/host/jz4740_mmc.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/mmc/host/jz4740_mmc.c=20
+> b/drivers/mmc/host/jz4740_mmc.c
+> index 81d71010b474..0c5b52b53303 100644
+> --- a/drivers/mmc/host/jz4740_mmc.c
+> +++ b/drivers/mmc/host/jz4740_mmc.c
+> @@ -991,9 +991,8 @@ static int jz4740_mmc_probe(struct=20
+> platform_device* pdev)
+>=20
+>  	ret =3D mmc_of_parse(mmc);
+>  	if (ret) {
+> -		if (ret !=3D -EPROBE_DEFER)
+> -			dev_err(&pdev->dev,
+> -				"could not parse device properties: %d\n", ret);
+> +		dev_err_probe(&pdev->dev, ret,
+> +			      "could not parse device properties\n");
 
-> Otherwise people might infer from this test code that the keys are
-> supposed to be truly unique and start reporting bugs on the kernel.
-> 
-> I can't see an obvious security argument for unique keys (rather, the
-> keys just need to be "unique enough".  That's the job of
-> get_random_bytes().)
+I think you can put that on one line.
 
-The "exec_unique_keys" test only checks that the keys changed after an
-exec() which I think the name change would reflect.
+With that said:
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
 
-The thing with the "single_thread_unique_keys" test is that the kernel
-says the the keys will be random. Yes, there is no uniqueness guarantee
-but I'm not sure how to phrase it differently. There is some minuscule
-chance that the keys end up the same, but for this test I pretend this
-will not happen. Would changing up the comments and the failure message
-communicate this? Maybe substitute "unique" for "different" and say how
-many keys clashed?
+Cheers,
+-Paul
 
--- 
-Regards,
-Boyan
+>  		goto err_free_host;
+>  	}
+>=20
+> --
+> 2.17.1
+>=20
+
+
