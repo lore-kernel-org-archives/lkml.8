@@ -2,114 +2,201 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD369C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A41FC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97D7B2071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:43:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pq/NRTih"
+	by mail.kernel.org (Postfix) with ESMTP id 1D5F520BED
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599119203;
+	bh=TM+Crt61G+Ba31blWDvtRLfW2Z9YrFGY3wqQAum69FQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=krUGDOAx9ldtwD6LQDlNG/shH4qhUD4tYcCxd1E0f4YPLMMSbLvxz/grsIJCQqJN9
+	 kZIc/YJCcPsZvTMhzrl9JZppgh0dX3JDSfehqJ03HZqPzGZ/WWX4KYfWdJGCH3qACq
+	 2dwMOYlgxKGqi/PDl523mzp262ps0G+WynWSbLkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgICHnA (ORCPT
+        id S1728194AbgICHqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:43:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgICHm7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:42:59 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 206B2C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 00:42:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Z2zwM95IPgkBTO4Wu24eSib0PZAEqyn1hWAVi1nsOs4=; b=Pq/NRTihLN/0dCTzX1OI9MU8Qn
-        c7PIiE+l3F9wOM/AQkH8r7vCZZDIn2pgJujY8OAsPkbl1cAYeNtnzn910H5Lauzz6gK4ERMWEdN07
-        Z1Moel7PFytIenNbJXLvy/iWlmWdJdOvLgks4SThyuUvVQrWnyMZwh8jgp184HTwGeT0NTFw/rCxR
-        kTsXLip0/2mcSutpCXqraZS2RTv3bHM+Cuupd3aTw8wqqsiZdZn6foENJTufF4RmUmeyFCngbflke
-        /BtCV4Kn5ardkZlq1n3CPuas2YOegYcX94hZc+NNMtbWc7Tv3ElQfYGxqmhyLlvwmKCX2tRaIHqOf
-        ifvAjQpg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDjtB-0005Px-VY; Thu, 03 Sep 2020 07:42:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 3 Sep 2020 03:46:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726814AbgICHqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 03:46:40 -0400
+Received: from kernel.org (unknown [77.127.89.201])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D6843012DF;
-        Thu,  3 Sep 2020 09:42:32 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 39B922BA41930; Thu,  3 Sep 2020 09:42:32 +0200 (CEST)
-Date:   Thu, 3 Sep 2020 09:42:32 +0200
-From:   peterz@infradead.org
-To:     gengdongjiu <gengdongjiu@huawei.com>
-Cc:     "mingo@redhat.com" <mingo@redhat.com>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "thara.gopinath@linaro.org" <thara.gopinath@linaro.org>,
-        "pauld@redhat.com" <pauld@redhat.com>,
-        "vincent.donnefort@arm.com" <vincent.donnefort@arm.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: =?utf-8?B?UkXvvJpbUEFUQ0hdIHNjaGVk?= =?utf-8?Q?=3A?= Add trace
- for task wake up latency and leave running time
-Message-ID: <20200903074232.GW1362448@hirez.programming.kicks-ass.net>
-References: <6995260be2ca4fd18bc773fe9f50f420@huawei.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 769A5206C0;
+        Thu,  3 Sep 2020 07:46:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599119199;
+        bh=TM+Crt61G+Ba31blWDvtRLfW2Z9YrFGY3wqQAum69FQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MF0yChXGd/fYnmNaBfXMyB3f9aoO7AYFy3Yxm15OKist2YnWvIrJDv6yYYWnoUPN7
+         3KGMOlzVwUUPwq8SItaWyQl5JTjaF1oF0P/NR62dyeRpeElV7VBo1Fs+nbHyCXZR3C
+         GKujz+cNu0eyfNMXe39zrI6L+NlvvpdLt0ibHzLw=
+Date:   Thu, 3 Sep 2020 10:46:27 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v4 0/6] mm: introduce memfd_secret system call to create
+ "secret" memory areas
+Message-ID: <20200903074627.GA1213823@kernel.org>
+References: <20200818141554.13945-1-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6995260be2ca4fd18bc773fe9f50f420@huawei.com>
+In-Reply-To: <20200818141554.13945-1-rppt@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 10:35:34PM +0000, gengdongjiu wrote:
+Any updates on this?
 
-> > NAK, that tracepoint is already broken, we don't want to proliferate the broken.
->   
-> Sorry, What the meaning that tracepoint is already broken? 
-
-Just that, the tracepoint is crap. But we can't fix it because ABI. Did
-I tell you I utterly hate tracepoints?
-
-> Maybe I need to explain the reason that why I add two trace point. 
-> when using perf tool or Ftrace sysfs to capture the task wake-up latency and the task leaving running queue time, usually the trace data is too large and the CPU utilization rate is too high in the process due to a lot of disk write. Sometimes even the disk is full, the issue still does not reproduced that above two time exceed a certain threshold.  So I added two trace points, using filter we can only record the abnormal trace that includes wakeup latency and leaving running time larger than an threshold. 
-> Or do you have better solution?
-
-Learn to use a MUA and wrap your lines at 78 chars like normal people.
-
-Yes, use ftrace synthetic events, or bpf or really anything other than
-this.
-
-> > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c index
-> > > 8471a0f7eb32..b5a1928dc948 100644
-> > > --- a/kernel/sched/core.c
-> > > +++ b/kernel/sched/core.c
-> > > @@ -2464,6 +2464,8 @@ static void ttwu_do_wakeup(struct rq *rq, struct
-> > > task_struct *p, int wake_flags,  {
-> > >  	check_preempt_curr(rq, p, wake_flags);
-> > >  	p->state = TASK_RUNNING;
-> > > +	p->ts_wakeup = local_clock();
-> > > +	p->wakeup_state = true;
-> > >  	trace_sched_wakeup(p);
-> > >
-> > >  #ifdef CONFIG_SMP
-> > 
-> > NAK, userless overhead.
+On Tue, Aug 18, 2020 at 05:15:48PM +0300, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
->  When sched switch, we do not know the next task previous state and
->  wakeup timestamp, so I record the task previous state if it is waken
->  from sleep.  And then it can calculate the wakeup latency when task
->  switch.
+> Hi,
+> 
+> This is an implementation of "secret" mappings backed by a file descriptor. 
+> 
+> v4 changes:
+> * rebase on v5.9-rc1
+> * Do not redefine PMD_PAGE_ORDER in fs/dax.c, thanks Kirill
+> * Make secret mappings exclusive by default and only require flags to
+>   memfd_secret() system call for uncached mappings, thanks again Kirill :)
+> 
+> v3 changes:
+> * Squash kernel-parameters.txt update into the commit that added the
+>   command line option.
+> * Make uncached mode explicitly selectable by architectures. For now enable
+>   it only on x86.
+> 
+> v2 changes:
+> * Follow Michael's suggestion and name the new system call 'memfd_secret'
+> * Add kernel-parameters documentation about the boot option
+> * Fix i386-tinyconfig regression reported by the kbuild bot.
+>   CONFIG_SECRETMEM now depends on !EMBEDDED to disable it on small systems
+>   from one side and still make it available unconditionally on
+>   architectures that support SET_DIRECT_MAP.
+> 
+> 
+> The file descriptor backing secret memory mappings is created using a
+> dedicated memfd_secret system call The desired protection mode for the
+> memory is configured using flags parameter of the system call. The mmap()
+> of the file descriptor created with memfd_secret() will create a "secret"
+> memory mapping. The pages in that mapping will be marked as not present in
+> the direct map and will have desired protection bits set in the user page
+> table. For instance, current implementation allows uncached mappings.
+> 
+> Although normally Linux userspace mappings are protected from other users, 
+> such secret mappings are useful for environments where a hostile tenant is
+> trying to trick the kernel into giving them access to other tenants
+> mappings.
+> 
+> Additionally, the secret mappings may be used as a mean to protect guest
+> memory in a virtual machine host.
+> 
+> For demonstration of secret memory usage we've created a userspace library
+> [1] that does two things: the first is act as a preloader for openssl to
+> redirect all the OPENSSL_malloc calls to secret memory meaning any secret
+> keys get automatically protected this way and the other thing it does is
+> expose the API to the user who needs it. We anticipate that a lot of the
+> use cases would be like the openssl one: many toolkits that deal with
+> secret keys already have special handling for the memory to try to give
+> them greater protection, so this would simply be pluggable into the
+> toolkits without any need for user application modification.
+> 
+> I've hesitated whether to continue to use new flags to memfd_create() or to
+> add a new system call and I've decided to use a new system call after I've
+> started to look into man pages update. There would have been two completely
+> independent descriptions and I think it would have been very confusing.
+> 
+> Hiding secret memory mappings behind an anonymous file allows (ab)use of
+> the page cache for tracking pages allocated for the "secret" mappings as
+> well as using address_space_operations for e.g. page migration callbacks.
+> 
+> The anonymous file may be also used implicitly, like hugetlb files, to
+> implement mmap(MAP_SECRET) and use the secret memory areas with "native" mm
+> ABIs in the future.
+> 
+> As the fragmentation of the direct map was one of the major concerns raised
+> during the previous postings, I've added an amortizing cache of PMD-size
+> pages to each file descriptor and an ability to reserve large chunks of the
+> physical memory at boot time and then use this memory as an allocation pool
+> for the secret memory areas.
+> 
+> v3: https://lore.kernel.org/lkml/20200804095035.18778-1-rppt@kernel.org
+> v2: https://lore.kernel.org/lkml/20200727162935.31714-1-rppt@kernel.org
+> v1: https://lore.kernel.org/lkml/20200720092435.17469-1-rppt@kernel.org/
+> rfc-v2: https://lore.kernel.org/lkml/20200706172051.19465-1-rppt@kernel.org/
+> rfc-v1: https://lore.kernel.org/lkml/20200130162340.GA14232@rapoport-lnx/
+> 
+> Mike Rapoport (6):
+>   mm: add definition of PMD_PAGE_ORDER
+>   mmap: make mlock_future_check() global
+>   mm: introduce memfd_secret system call to create "secret" memory areas
+>   arch, mm: wire up memfd_secret system call were relevant
+>   mm: secretmem: use PMD-size pages to amortize direct map fragmentation
+>   mm: secretmem: add ability to reserve memory at boot
+> 
+>  arch/Kconfig                           |   7 +
+>  arch/arm64/include/asm/unistd.h        |   2 +-
+>  arch/arm64/include/asm/unistd32.h      |   2 +
+>  arch/arm64/include/uapi/asm/unistd.h   |   1 +
+>  arch/riscv/include/asm/unistd.h        |   1 +
+>  arch/x86/Kconfig                       |   1 +
+>  arch/x86/entry/syscalls/syscall_32.tbl |   1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl |   1 +
+>  fs/dax.c                               |  11 +-
+>  include/linux/pgtable.h                |   3 +
+>  include/linux/syscalls.h               |   1 +
+>  include/uapi/asm-generic/unistd.h      |   7 +-
+>  include/uapi/linux/magic.h             |   1 +
+>  include/uapi/linux/secretmem.h         |   8 +
+>  kernel/sys_ni.c                        |   2 +
+>  mm/Kconfig                             |   4 +
+>  mm/Makefile                            |   1 +
+>  mm/internal.h                          |   3 +
+>  mm/mmap.c                              |   5 +-
+>  mm/secretmem.c                         | 451 +++++++++++++++++++++++++
+>  20 files changed, 501 insertions(+), 12 deletions(-)
+>  create mode 100644 include/uapi/linux/secretmem.h
+>  create mode 100644 mm/secretmem.c
+> 
+> -- 
+> 2.26.2
+> 
 
-I don't care. You're making things slower.
+-- 
+Sincerely yours,
+Mike.
