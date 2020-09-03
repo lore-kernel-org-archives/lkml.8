@@ -2,180 +2,222 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E35A5C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7EEC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4DF920716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:51:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EG9FdAIs"
+	by mail.kernel.org (Postfix) with ESMTP id 2207020775
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599151899;
+	bh=9nuBsOJQA9e13A76CrPt0VR9k4EIoQQntYC/v7VbZec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cbkYL0ETkLQ20By7Dq5/WE+smQQQxL0CFiEH1d57JwpufqDxyHDkCjVlaSj1EAg2o
+	 Vv2rKgKsHdwLo38pvpHTu6B4RzW5CrcSCy1n2MYWY0rWtlgE4ZRBKSZSCV1B+DMm0D
+	 r1JjEIScubBFWdeF47eT4UBCWDnAHWbZYBuQpuLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728382AbgICQvJ (ORCPT
+        id S1728490AbgICQvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:51:09 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:39759 "EHLO nat-hk.nvidia.com"
+        Thu, 3 Sep 2020 12:51:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbgICQvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:51:01 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f511ef20000>; Fri, 04 Sep 2020 00:50:58 +0800
-Received: from HKMAIL104.nvidia.com ([10.18.16.13])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 03 Sep 2020 09:50:58 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Thu, 03 Sep 2020 09:50:58 -0700
-Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL104.nvidia.com
- (10.18.16.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 3 Sep
- 2020 16:50:55 +0000
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
- by HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Thu, 3 Sep 2020 16:50:55 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cNnxq3yXu9krli7FkarX4JaDjfv36gsk+GnuJXZ/Ap84Sze5lyQxvu952XbyqeFz4ABpiLng4LamxMAWQG67MJR+6NNNR8rjFLi7QAEBebpZMfkdApBLFSlsfXzPpJvArPgYRstWqq/6T6SClvy//na9XT3VjmGjd+8cBKGCgO1bnBeREpjBXI5U8AdffmJe0y16ZuF6S6uhXkOThIgHqbSGrmh3UHNw8Chs8FytaONaPYV/m/zz/pJUz12bxTSSWGDx6OORvAO7Ol4cBBl9LxouEedktqCgTD69TX71zKJbt7+yjCvKNsvXY/qbLh8JwZgaHY2S7q+fFENvAZx2+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VAqB/F7YFynuW/Opn3oKNGc751GDqu4WIOi0AQX8QDQ=;
- b=cM1lGLjv2+MUS7HBh0MPXF1sDRy2Sjo8rhPrg3GdIIqH+HYbIFXGHh80Z3mkQQ8Ve++lxvcYTxzF3fBFV5wfMsfjrFTyxsEuoQQsTzCGtScBTVMNQYxfAc1rkvp043Z124BxIpTgcdkJwXQ7a58TLlsPbUPGTehU28KKlPF2cuRRVqEMYsFd4pjTiFWYrUfbekDXNITLV89Utp7PFqbCOR1XIQ5Ivs1q+tGrrfSjaz/2xX0hsrYOWSgaMmmiV0Q2zya7Wei16XSvkHJh+fHV5I7DvnS76UjaPbqERLu6KEtLI5c1tJZVNeb8uTOMxWMfca7AjFdbMWxELBeqceBFlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: fb.com; dkim=none (message not signed)
- header.d=none;fb.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB4483.namprd12.prod.outlook.com (2603:10b6:5:2a2::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.24; Thu, 3 Sep
- 2020 16:50:53 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3326.025; Thu, 3 Sep 2020
- 16:50:53 +0000
-Date:   Thu, 3 Sep 2020 13:50:51 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Roman Gushchin <guro@fb.com>
-CC:     Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
-        <linux-mm@kvack.org>, Rik van Riel <riel@surriel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
-Message-ID: <20200903165051.GN24045@ziepe.ca>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200903073254.GP4617@dhcp22.suse.cz>
- <20200903162527.GF60440@carbon.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200903162527.GF60440@carbon.dhcp.thefacebook.com>
-X-ClientProxiedBy: BL0PR0102CA0007.prod.exchangelabs.com
- (2603:10b6:207:18::20) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        id S1726327AbgICQvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 12:51:36 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1B56206A5;
+        Thu,  3 Sep 2020 16:51:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599151895;
+        bh=9nuBsOJQA9e13A76CrPt0VR9k4EIoQQntYC/v7VbZec=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KmzC/r9W98mk1/1tE1v/N+bQC5PpPgZTwlYElmLe+iSwIamwDT0GI6BJKvjH2ZYhM
+         M9JwWv/HZjldCvZr+4Y2zRYP9CuP5BeomXA+bA/dG2QCfs3kOlLCkj/eJu7Ceo5WmW
+         Tkv2hHOjP79C7p99A+UPP+Py/AqWRCvJDnRNeJuM=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D07B040D3D; Thu,  3 Sep 2020 13:51:32 -0300 (-03)
+Date:   Thu, 3 Sep 2020 13:51:32 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Remi Bernon <rbernon@codeweavers.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jacek Caban <jacek@codeweavers.com>
+Subject: Re: [PATCH v3 1/3] perf dso: Use libbfd to read build_id and
+ .gnu_debuglink section
+Message-ID: <20200903165132.GA3495158@kernel.org>
+References: <20200821165238.1340315-1-rbernon@codeweavers.com>
+ <20200903002519.GA3487700@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by BL0PR0102CA0007.prod.exchangelabs.com (2603:10b6:207:18::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Thu, 3 Sep 2020 16:50:53 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kDsRn-006cqK-F0; Thu, 03 Sep 2020 13:50:51 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ae91dc40-94a1-453f-4e7d-08d850298563
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4483:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4483FE1B68A4DB97CB9E182DC22C0@DM6PR12MB4483.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Eic8y0lNbklrNx7MzUawSUDvvjlE+fViJbbPWbtaO/FXRP4B3bRZyKD7V3yY/u0cUNlbQhrsLht3sYFHaPrMIanr2/A031O+zYIeDRpTyRsXkP62f6ZzznOpLvbY4wim88o+POM8wGeMDJyFeTg4rq9heNJZey464kshNUtxypPyT0rpdnLH86s1Bu0xf9ZBzrgZbkRz8y1OSyRkyrojoaHaBE8XczQcB9KTikLnqSaivpHi4pbaBUHY073jQzoMKtKonGyv8gIY9AXpmBwlzDhhBJLiime5FwBo/3cdePIRo8MoZNd2M+1951klqnMeaqUY1t01pY2E0GDmOiL/Dg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(366004)(39860400002)(376002)(346002)(8676002)(66476007)(9686003)(5660300002)(478600001)(9746002)(86362001)(83380400001)(6916009)(8936002)(36756003)(9786002)(316002)(54906003)(426003)(66556008)(26005)(1076003)(2906002)(186003)(4326008)(33656002)(66946007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: q25V+VviRFs2Sq3EAnOfv4cWq9WFfp9ZQ71IMI22hX8izeF5cNlFGwl+tPOslTC7aXoi+9y394VLodoZ2LCvIzTPK/shwcQ4wCNFBFnB/W7/YcB85LynNK4QnJwFkGeCjPcTU5mYrSAzg2Vm535cUiVZOOSzDDbShFtUE5Gl6VoVifiihH4OovZgiXGmnQKq6eMU36rQQC/eTMJPaT28825hB6IVW2PO6DzgsnVebdRt6g2pbU1yTu4shtxNmLt3SgrgguHUQ6SiJ8UFZXmYBEJ5et41n0Auxu7LZilCqhxqk0913UcvVekXLmfNZJG1XKbP+gYD9WbPr9t7V6kzME9wIwbEzPIKqG4mnAEM93LZVo1B3VKT4/x1BRJhcVEZnl9tioQkEMKjDrEeMhXgFHMSxlivzHc6DYY5KoebmtMZGfPKDoh6gvYu+CID9vwUe0ulS/3JI6K5UGmkMUR/e/txWM4ILka8nnvrMgRuAxqtB5jMxaBaIzHoK/wuzMckwdS5dV46/Zi3yvRHM4AegV49EDIsBWgU0xtJXKI5PMnMQ6ejlv+ZCubdyTZ59TVEH1gTQL/3UQXT+DvLj/Rv7QhnNdFz2ZkNrGgZNZ2lyPFk39mGR2x0QshSoodxGk61aEbliLGm2H3lg3vSPtAouQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae91dc40-94a1-453f-4e7d-08d850298563
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2020 16:50:53.6763
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IbIcmPgetJVZSKy9790CuL0FhpUi+lQu447zYJG3+DtkXm9RSoHXjECy5cafyrZw
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4483
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599151858; bh=VAqB/F7YFynuW/Opn3oKNGc751GDqu4WIOi0AQX8QDQ=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-MS-Exchange-Transport-Forked:
-         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=EG9FdAIsQQhHGQGqm0EsHLa4rQAYDH1VJuMdHNXk4RI4ihNmNrtr3hhFbLM1hYINm
-         XWSD+QmSky1NMEyHXL1heeRBZHGeWuPt5ZIHTSSMdfAOpam2aRfpsiNX50myAQleVf
-         s/EVvp7BWdVCaEgC3T9KgmOsONGLU8X4//qAXinrNaDQVxD/dgvXkMUpgBz3F7koRV
-         u9LFkPkagJcI7X+32oVn8kA3A7rmt1eRgm6CtKGoZoC8dIGcNHUI0BC7KeMQIft2UF
-         3HriNCySylPu/8erDCHjd2BoFnuswKP1pIDRne2g4hStjzja7YymxJ1owsvB4O8MtT
-         c7HvO12/zWTdw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903002519.GA3487700@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 09:25:27AM -0700, Roman Gushchin wrote:
-> On Thu, Sep 03, 2020 at 09:32:54AM +0200, Michal Hocko wrote:
-> > On Wed 02-09-20 14:06:12, Zi Yan wrote:
-> > > From: Zi Yan <ziy@nvidia.com>
-> > > 
-> > > Hi all,
-> > > 
-> > > This patchset adds support for 1GB THP on x86_64. It is on top of
-> > > v5.9-rc2-mmots-2020-08-25-21-13.
-> > > 
-> > > 1GB THP is more flexible for reducing translation overhead and increasing the
-> > > performance of applications with large memory footprint without application
-> > > changes compared to hugetlb.
+Em Wed, Sep 02, 2020 at 09:25:19PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Aug 21, 2020 at 06:52:36PM +0200, Remi Bernon escreveu:
+> > Wine generates PE binaries for most of its modules and perf is unable
+> > to parse these files to get build_id or .gnu_debuglink section.
 > > 
-> > Please be more specific about usecases. This better have some strong
-> > ones because THP code is complex enough already to add on top solely
-> > based on a generic TLB pressure easing.
+> > Using libbfd when available, instead of libelf, makes it possible to
+> > resolve debug file location regardless of the dso binary format.
+> > 
+> > Signed-off-by: Remi Bernon <rbernon@codeweavers.com>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Jiri Olsa <jolsa@redhat.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Jacek Caban <jacek@codeweavers.com>
+> > ---
+> > 
+> > v3: Rebase and small changes to PATCH 2/3 and and PATCH 3/3.
+> > 
+> >  tools/perf/util/symbol-elf.c | 80 ++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 77 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> > index 8cc4b0059fb0..f7432c4a4154 100644
+> > --- a/tools/perf/util/symbol-elf.c
+> > +++ b/tools/perf/util/symbol-elf.c
+> > @@ -50,6 +50,10 @@ typedef Elf64_Nhdr GElf_Nhdr;
+> >  #define DMGL_ANSI        (1 << 1)       /* Include const, volatile, etc */
+> >  #endif
+> >  
+> > +#ifdef HAVE_LIBBFD_SUPPORT
 > 
-> Hello, Michal!
+> So, the feature test should also test for the buildid struct field, see
+> below:
 > 
-> We at Facebook are using 1 GB hugetlbfs pages and are getting noticeable
-> performance wins on some workloads.
+> > +#define PACKAGE 'perf'
+> > +#include <bfd.h>
+> > +#else
+> >  #ifdef HAVE_CPLUS_DEMANGLE_SUPPORT
+> >  extern char *cplus_demangle(const char *, int);
+> >  
+> > @@ -65,9 +69,7 @@ static inline char *bfd_demangle(void __maybe_unused *v,
+> >  {
+> >  	return NULL;
+> >  }
+> > -#else
+> > -#define PACKAGE 'perf'
+> > -#include <bfd.h>
+> > +#endif
+> >  #endif
+> >  #endif
+> >  
+> > @@ -530,6 +532,36 @@ static int elf_read_build_id(Elf *elf, void *bf, size_t size)
+> >  	return err;
+> >  }
+> >  
+> > +#ifdef HAVE_LIBBFD_SUPPORT
+> > +
+> > +int filename__read_build_id(const char *filename, void *bf, size_t size)
+> > +{
+> > +	int err = -1;
+> > +	bfd *abfd;
+> > +
+> > +	abfd = bfd_openr(filename, NULL);
+> > +	if (!abfd)
+> > +		return -1;
+> > +
+> > +	if (!bfd_check_format(abfd, bfd_object)) {
+> > +		pr_debug2("%s: cannot read %s bfd file.\n", __func__, filename);
+> > +		goto out_close;
+> > +	}
+> > +
+> > +	if (!abfd->build_id || abfd->build_id->size > size)
+> > +		goto out_close;
+> 
+> amazonlinux:1, centos:6, debian:8, mageia:5, oraclelinux:6, ubuntu:14.04
+> fail, its all old stuff, but adding a reference to abfd->build_id to the
+> feature test that ends up defining HAVE_LIBBFD_SUPPORT will solve that,
+> I'll do it tomorrow morning if you don't beat me to it.
+> 
+> util/symbol-elf.c: In function 'filename__read_build_id':
+> util/symbol-elf.c:551:11: error: 'bfd {aka struct bfd}' has no member named 'build_id'
+>   if (!abfd->build_id || abfd->build_id->size > size)
+>            ^~
+> util/symbol-elf.c:551:29: error: 'bfd {aka struct bfd}' has no member named 'build_id'
+>   if (!abfd->build_id || abfd->build_id->size > size)
+>                              ^~
+> util/symbol-elf.c:554:17: error: 'bfd {aka struct bfd}' has no member named 'build_id'
+>   memcpy(bf, abfd->build_id->data, abfd->build_id->size);
+>                  ^~
+> util/symbol-elf.c:554:39: error: 'bfd {aka struct bfd}' has no member named 'build_id'
+>   memcpy(bf, abfd->build_id->data, abfd->build_id->size);
+>                                        ^~
+> util/symbol-elf.c:555:18: error: 'bfd {aka struct bfd}' has no member named 'build_id'
+>   memset(bf + abfd->build_id->size, 0, size - abfd->build_id->size);
+>                   ^~
+> util/symbol-elf.c:555:50: error: 'bfd {aka struct bfd}' has no member named 'build_id'
+>   memset(bf + abfd->build_id->size, 0, size - abfd->build_id->size);
+>                                                   ^~
+> util/symbol-elf.c:556:12: error: 'bfd {aka struct bfd}' has no member named 'build_id'
+>   err = abfd->build_id->size;
+>             ^~
+>   CC       /tmp/build/perf/util/cap.o
+> make[4]: *** [/tmp/build/perf/util/symbol-elf.o] Error 1
+> make[4]: *** Waiting for unfinished jobs....
+>   LD       /tmp/build/perf/util/scripting-engines/perf-in.o
+>   LD       /tmp/build/perf/util/intel-pt-decoder/perf-in.o
+> make[3]: *** [util] Error 2
+> make[2]: *** [/tmp/build/perf/perf-in.o] Error 2
+> make[2]: *** Waiting for unfinished jobs....
+> make[1]: *** [sub-make] Error 2
+> make: *** [all] Error 2
+> make: Leaving directory `/git/linux/tools/perf'
+> + exit 1
+> [perfbuilder@five ~]$
 
-At least from a RDMA NIC perspective I've heard from a lot of users
-that higher order pages at the DMA level is giving big speed ups too.
+So, I have the cset at the end of this message in front of your series +
+the following patch applied to your patch, the debuglink part seems ok
+and can continue depending on just libbfd, having or not abfd->buildid.
 
-It is basically the same dynamic as CPU TLB, except missing a 'TLB'
-cache in a PCI-E device is dramatically more expensive to refill. With
-200G and soon 400G networking these misses are a growing problem.
+- Arnaldo
 
-With HPC nodes now pushing 1TB of actual physical RAM and single
-applications basically using all of it, there is definately some
-meaningful return - if pages can be reliably available.
-
-At least for HPC where the node returns to an idle state after each
-job and most of the 1TB memory becomes freed up again, it seems more
-believable to me that a large cache of 1G pages could be available?
-
-Even triggering some kind of cleaner between jobs to defragment could
-be a reasonable approach..
-
-Jason
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index f7432c4a4154a149..94a156df22d5a8d3 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -532,7 +532,7 @@ static int elf_read_build_id(Elf *elf, void *bf, size_t size)
+ 	return err;
+ }
+ 
+-#ifdef HAVE_LIBBFD_SUPPORT
++#ifdef HAVE_LIBBFD_BUILDID_SUPPORT
+ 
+ int filename__read_build_id(const char *filename, void *bf, size_t size)
+ {
+@@ -560,7 +560,7 @@ int filename__read_build_id(const char *filename, void *bf, size_t size)
+ 	return err;
+ }
+ 
+-#else
++#else // HAVE_LIBBFD_BUILDID_SUPPORT
+ 
+ int filename__read_build_id(const char *filename, void *bf, size_t size)
+ {
+@@ -589,7 +589,7 @@ int filename__read_build_id(const char *filename, void *bf, size_t size)
+ 	return err;
+ }
+ 
+-#endif
++#endif // HAVE_LIBBFD_BUILDID_SUPPORT
+ 
+ int sysfs__read_build_id(const char *filename, void *build_id, size_t size)
+ {
