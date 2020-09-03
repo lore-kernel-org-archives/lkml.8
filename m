@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D06C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8E2C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47C96205CB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14FA020709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:55:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbgICVzq (ORCPT
+        id S1729088AbgICVzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 17:55:46 -0400
-Received: from mga07.intel.com ([134.134.136.100]:59327 "EHLO mga07.intel.com"
+        Thu, 3 Sep 2020 17:55:45 -0400
+Received: from mga06.intel.com ([134.134.136.31]:11232 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbgICVzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 17:55:40 -0400
-IronPort-SDR: EIhyBkS60cTnn9g4/SfSyZlnDrK1posGsw6N08GBPqEmQFqRmOZn1f6wESJPPOL/jXB7vKQk1Y
- FN0EoyVAKr3g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="221873486"
+        id S1727065AbgICVzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 17:55:39 -0400
+IronPort-SDR: z4xGDIq0ktzLAjvSM7NCUNHM2QOP3oIhZORvPv+7Kn61y+dcKfM0KLqzULsyF+c0N9HEZwUsAq
+ faM/LIKaQd/g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="219217286"
 X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="221873486"
+   d="scan'208";a="219217286"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 14:55:38 -0700
-IronPort-SDR: hYCkl4ghBhUgfp49+yxxHL+uZsiQN2nVjiTh5siSpupDsjdJIyAgYU9y68qvvMgrcxBLV5LR5N
- 2eFv0YrXLP1g==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 14:55:38 -0700
+IronPort-SDR: jSghI+3LnhkT+hIFwIE3ZMrfazmo8jRckscL2RlEGF/vuwqRbK1VjfaVzKc8tX634u8pa3eTu7
+ g7zM30xT8ulA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="282819316"
+   d="scan'208";a="478215989"
 Received: from lkp-server01.sh.intel.com (HELO f1af165c0d27) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Sep 2020 14:55:37 -0700
+  by orsmga005.jf.intel.com with ESMTP; 03 Sep 2020 14:55:37 -0700
 Received: from kbuild by f1af165c0d27 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1kDxCi-0000Fx-SF; Thu, 03 Sep 2020 21:55:36 +0000
-Date:   Fri, 04 Sep 2020 05:54:53 +0800
+        id 1kDxCi-0000Fr-FP; Thu, 03 Sep 2020 21:55:36 +0000
+Date:   Fri, 04 Sep 2020 05:54:48 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- a1ff5b439d1170d843c7e7ceb0fb673239d3c6e9
-Message-ID: <5f51662d.kU24uDWOmYtCswvH%lkp@intel.com>
+Subject: [tip:locking/urgent] BUILD SUCCESS
+ 23870f1227680d2aacff6f79c3ab2222bd04e86e
+Message-ID: <5f516628.KuNJgFl8ZKt6QXIt%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -55,13 +54,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: a1ff5b439d1170d843c7e7ceb0fb673239d3c6e9  Merge branch 'x86/urgent'
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/urgent
+branch HEAD: 23870f1227680d2aacff6f79c3ab2222bd04e86e  locking/lockdep: Fix "USED" <- "IN-NMI" inversions
 
 elapsed time: 722m
 
-configs tested: 161
-configs skipped: 18
+configs tested: 171
+configs skipped: 19
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -80,6 +79,10 @@ nios2                            alldefconfig
 sh                          polaris_defconfig
 arm                          gemini_defconfig
 arc                        nsim_700_defconfig
+arm                       cns3420vb_defconfig
+arm                         vf610m4_defconfig
+ia64                         bigsur_defconfig
+xtensa                           alldefconfig
 arm                              zx_defconfig
 microblaze                          defconfig
 mips                        vocore2_defconfig
@@ -138,6 +141,12 @@ h8300                            alldefconfig
 mips                     cu1830-neo_defconfig
 mips                        omega2p_defconfig
 mips                        nlm_xlp_defconfig
+sh                   sh7724_generic_defconfig
+mips                           mtx1_defconfig
+arm                           stm32_defconfig
+arm                            hisi_defconfig
+microblaze                    nommu_defconfig
+sh                          lboxre2_defconfig
 sh                           se7724_defconfig
 arm                         mv78xx0_defconfig
 microblaze                      mmu_defconfig
