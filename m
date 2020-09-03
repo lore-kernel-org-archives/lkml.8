@@ -5,86 +5,73 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793A0C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9280C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9C12078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13B62078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fywm/KnA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gDDpJ+qo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbgICXZU (ORCPT
+        id S1729528AbgICXZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 19:25:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34208 "EHLO
+        Thu, 3 Sep 2020 19:25:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbgICXZH (ORCPT
+        with ESMTP id S1728294AbgICXZI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 19:25:07 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72426C061247
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 16:25:07 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mm21so2292195pjb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:25:07 -0700 (PDT)
+        Thu, 3 Sep 2020 19:25:08 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB787C061251
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 16:25:08 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p37so3346042pgl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:25:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=e3Silfeuvcl4kFvZfCEi0iNKtoIc6amr53FeYznXPLY=;
-        b=Fywm/KnARDujk3kviDnTvg5Pzu5ITteK2BzgBrSgWH267O/quBchd8mdypWa+2dAQ4
-         I4MfECk2zW6oL11efjvlJ9FO2XMUh/0vsq6+JEgZ9gyS/3f6tyHUkqi0P3/H1ZURF80H
-         d12vvD1zoSH6MMHXLbmg5z7NUNja90YIwXbik=
+        bh=VAUtvcHaucBqw/xKruQ8sUGNoGTZknTunbUiV4pTWE4=;
+        b=gDDpJ+qosozaMJj1Btae6p2MZQMhhZnGxFLO3kw8aeDYZAhuNuDrZAt6QpEJdyl1Bh
+         e9bDDjK9n9qUsEaDggXkEziJ4G6PWex0Z1sTvchqG+Ks8r9MQq8uaYR6wipPM7daCa0x
+         yOqVA8gm9K1D/hzBdyWum0YnxXlUF0vcVdxhA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=e3Silfeuvcl4kFvZfCEi0iNKtoIc6amr53FeYznXPLY=;
-        b=DoPzj7s8tZaE1fL6Rybm94tiozK5K3uyPIji4ZMs0tViFqX2XnzNAjLhU+btZqlOg8
-         p66yeGnkgkMnIr0htjPQ9QNS2e7Z0K3JS/PwClEiOFYss1xfiOdcvqcS5FkEQ5dnNuYd
-         IKb0iBXoDglFGLEFln2wxJ3oo/PFGGdLwA5+QLOWxmntlRj1qgi3Hb+uDQelM9nh5CTM
-         51WsWe1guUSphDoOfxyXB1uEyTBxRq8bMbYFH7NGChklq2ad7udU49tntXkM17/geKx8
-         MIhhyGlHyVtRckytjHsGS2kUkreskd+nhP5f6xWgT5ytuQsxUOAxJHRD7QQdtrWHWtPP
-         BTsw==
-X-Gm-Message-State: AOAM530NTCAvtBk8TJAvcErNiqj3Zioe4Qw3Jn5U46ZHtdw6fldjEl1i
-        y3xdrtuLljQv4HnlqailLw+dXQ==
-X-Google-Smtp-Source: ABdhPJwWfzAZ10vPfR0QJaoB8eHonW3CA+X8yz8LX3T/aJxkGo07VPL8MlU0us3e1q5HTyrCwErD2A==
-X-Received: by 2002:a17:90a:8b04:: with SMTP id y4mr5135673pjn.115.1599175507021;
-        Thu, 03 Sep 2020 16:25:07 -0700 (PDT)
+        bh=VAUtvcHaucBqw/xKruQ8sUGNoGTZknTunbUiV4pTWE4=;
+        b=EMyLeahR9QBIHYAPaziRaHRM6IXCtmq1hL0KtZfiypdlpffwj+8t7Kxw84m3ZrbUjW
+         42oxMUrfIoacti8yv6YV+Z469J0Zdv8KwPu31/8HiJTqCUKuraqJBrcpaO8KN9z4vgYX
+         478oQsP/NhX4f+AzC/lrkL6OOGrFoeWmtbo8X3qf/5ETBXVhO+jYCe19X5luAOURjll7
+         u9ehP4zNHJlNkLe/Ca8lnTjKdNJ55oKRtuSEqN5K25QNl+O/fqaWoXAKEI//HPnArkyY
+         e+aS/mGg625pbv6rfz+zbC5ZMhbYy20wYs7B9lEta0oTJ49mScxcP4cZ4CZEMIb3ckcZ
+         umnw==
+X-Gm-Message-State: AOAM531VQoW40wPCPZ8/2nVq2e7wAf+R21kDNz902LtMy3GSFgBXC+HK
+        1HOSEdOtdEi+qQeFSNahoAlIVw==
+X-Google-Smtp-Source: ABdhPJzn/88aILgq2HYbhieGtLauiT7tbZJ6vkVgfNIx/4y3oZ7eUz4kgYyWk0ioH1XoMhXU/q43PA==
+X-Received: by 2002:a62:52d6:: with SMTP id g205mr6104288pfb.144.1599175508292;
+        Thu, 03 Sep 2020 16:25:08 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id q7sm3614459pgg.10.2020.09.03.16.25.05
+        by smtp.gmail.com with ESMTPSA id q7sm3614459pgg.10.2020.09.03.16.25.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 16:25:06 -0700 (PDT)
+        Thu, 03 Sep 2020 16:25:07 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Ulf Hansson <ulf.hansson@linaro.org>
 Cc:     swboyd@chromium.org, Douglas Anderson <dianders@chromium.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hu Ziji <huziji@marvell.com>,
         Jaehoon Chung <jh80.chung@samsung.com>,
         Jerome Brunet <jbrunet@baylibre.com>,
-        Jun Nie <jun.nie@linaro.org>,
         Kevin Hilman <khilman@baylibre.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Saiyam Doshi <saiyamdoshi.in@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        bcm-kernel-feedback-list@broadcom.com,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
-Subject: [PATCH 3/6] mmc: Set PROBE_PREFER_ASYNCHRONOUS for drivers that existed in v4.14
-Date:   Thu,  3 Sep 2020 16:24:38 -0700
-Message-Id: <20200903162412.3.Id1ff21470f08f427aedd0a6535dcd83ccc56b278@changeid>
+        linux-mmc@vger.kernel.org
+Subject: [PATCH 4/6] mmc: Set PROBE_PREFER_ASYNCHRONOUS for drivers that existed in v4.19
+Date:   Thu,  3 Sep 2020 16:24:39 -0700
+Message-Id: <20200903162412.4.I84eb3e0a738635d524c90d1a688087bc295f7c32@changeid>
 X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 In-Reply-To: <20200903232441.2694866-1-dianders@chromium.org>
 References: <20200903232441.2694866-1-dianders@chromium.org>
@@ -97,117 +84,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 This is like commit 3d3451124f3d ("mmc: sdhci-msm: Prefer asynchronous
 probe") but applied to a whole pile of drivers.  This batch converts
-the drivers that appeared to be around in the v4.14 timeframe.
+the drivers that appeared to be around in the v4.19 timeframe.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- drivers/mmc/host/bcm2835.c                    | 1 +
- drivers/mmc/host/cavium-octeon.c              | 1 +
- drivers/mmc/host/dw_mmc-zx.c                  | 1 +
- drivers/mmc/host/meson-gx-mmc.c               | 1 +
- drivers/mmc/host/renesas_sdhi_internal_dmac.c | 1 +
- drivers/mmc/host/renesas_sdhi_sys_dmac.c      | 1 +
- drivers/mmc/host/sdhci-cadence.c              | 1 +
- drivers/mmc/host/sdhci-xenon.c                | 1 +
- 8 files changed, 8 insertions(+)
+ drivers/mmc/host/dw_mmc-bluefield.c   | 1 +
+ drivers/mmc/host/dw_mmc-hi3798cv200.c | 1 +
+ drivers/mmc/host/meson-mx-sdio.c      | 1 +
+ drivers/mmc/host/sdhci-of-dwcmshc.c   | 1 +
+ drivers/mmc/host/sdhci-omap.c         | 1 +
+ 5 files changed, 5 insertions(+)
 
-diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-index 35320bc9dc02..8c2361e66277 100644
---- a/drivers/mmc/host/bcm2835.c
-+++ b/drivers/mmc/host/bcm2835.c
-@@ -1474,6 +1474,7 @@ static struct platform_driver bcm2835_driver = {
- 	.remove     = bcm2835_remove,
- 	.driver     = {
- 		.name		= "sdhost-bcm2835",
-+		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table	= bcm2835_match,
- 	},
- };
-diff --git a/drivers/mmc/host/cavium-octeon.c b/drivers/mmc/host/cavium-octeon.c
-index e299cdd1e619..2c4b2df52adb 100644
---- a/drivers/mmc/host/cavium-octeon.c
-+++ b/drivers/mmc/host/cavium-octeon.c
-@@ -327,6 +327,7 @@ static struct platform_driver octeon_mmc_driver = {
- 	.remove		= octeon_mmc_remove,
- 	.driver		= {
- 		.name	= KBUILD_MODNAME,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table = octeon_mmc_match,
- 	},
- };
-diff --git a/drivers/mmc/host/dw_mmc-zx.c b/drivers/mmc/host/dw_mmc-zx.c
-index d9e483432a61..51bcc6332f3a 100644
---- a/drivers/mmc/host/dw_mmc-zx.c
-+++ b/drivers/mmc/host/dw_mmc-zx.c
-@@ -222,6 +222,7 @@ static struct platform_driver dw_mci_zx_pltfm_driver = {
+diff --git a/drivers/mmc/host/dw_mmc-bluefield.c b/drivers/mmc/host/dw_mmc-bluefield.c
+index aa38b1a8017e..10baf122bc15 100644
+--- a/drivers/mmc/host/dw_mmc-bluefield.c
++++ b/drivers/mmc/host/dw_mmc-bluefield.c
+@@ -55,6 +55,7 @@ static struct platform_driver dw_mci_bluefield_pltfm_driver = {
  	.remove		= dw_mci_pltfm_remove,
  	.driver		= {
- 		.name		= "dwmmc_zx",
+ 		.name		= "dwmmc_bluefield",
 +		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table	= dw_mci_zx_match,
- 		.pm		= &dw_mci_zx_dev_pm_ops,
+ 		.of_match_table	= dw_mci_bluefield_match,
+ 		.pm		= &dw_mci_pltfm_pmops,
  	},
-diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
-index a68b43082f61..4ec41579940a 100644
---- a/drivers/mmc/host/meson-gx-mmc.c
-+++ b/drivers/mmc/host/meson-gx-mmc.c
-@@ -1264,6 +1264,7 @@ static struct platform_driver meson_mmc_driver = {
- 	.remove		= meson_mmc_remove,
- 	.driver		= {
- 		.name = DRIVER_NAME,
+diff --git a/drivers/mmc/host/dw_mmc-hi3798cv200.c b/drivers/mmc/host/dw_mmc-hi3798cv200.c
+index 83e1bad0a008..39794f93826f 100644
+--- a/drivers/mmc/host/dw_mmc-hi3798cv200.c
++++ b/drivers/mmc/host/dw_mmc-hi3798cv200.c
+@@ -200,6 +200,7 @@ static struct platform_driver dw_mci_hi3798cv200_driver = {
+ 	.remove = dw_mci_hi3798cv200_remove,
+ 	.driver = {
+ 		.name = "dwmmc_hi3798cv200",
 +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table = of_match_ptr(meson_mmc_of_match),
+ 		.of_match_table = dw_mci_hi3798cv200_match,
  	},
  };
-diff --git a/drivers/mmc/host/renesas_sdhi_internal_dmac.c b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-index 32ab991544ef..90b395a187fa 100644
---- a/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-+++ b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-@@ -357,6 +357,7 @@ static const struct dev_pm_ops renesas_sdhi_internal_dmac_dev_pm_ops = {
- static struct platform_driver renesas_internal_dmac_sdhi_driver = {
- 	.driver		= {
- 		.name	= "renesas_sdhi_internal_dmac",
+diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
+index 9b2cf7afc246..a6ff8b4ad1a5 100644
+--- a/drivers/mmc/host/meson-mx-sdio.c
++++ b/drivers/mmc/host/meson-mx-sdio.c
+@@ -755,6 +755,7 @@ static struct platform_driver meson_mx_mmc_driver = {
+ 	.remove  = meson_mx_mmc_remove,
+ 	.driver  = {
+ 		.name = "meson-mx-sdio",
 +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.pm	= &renesas_sdhi_internal_dmac_dev_pm_ops,
- 		.of_match_table = renesas_sdhi_internal_dmac_of_match,
+ 		.of_match_table = of_match_ptr(meson_mx_mmc_of_match),
  	},
-diff --git a/drivers/mmc/host/renesas_sdhi_sys_dmac.c b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
-index 13ff023fbee9..c5f789675302 100644
---- a/drivers/mmc/host/renesas_sdhi_sys_dmac.c
-+++ b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
-@@ -463,6 +463,7 @@ static const struct dev_pm_ops renesas_sdhi_sys_dmac_dev_pm_ops = {
- static struct platform_driver renesas_sys_dmac_sdhi_driver = {
- 	.driver		= {
- 		.name	= "sh_mobile_sdhi",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.pm	= &renesas_sdhi_sys_dmac_dev_pm_ops,
- 		.of_match_table = renesas_sdhi_sys_dmac_of_match,
- 	},
-diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-index 4d9f7681817c..6f2de54a5987 100644
---- a/drivers/mmc/host/sdhci-cadence.c
-+++ b/drivers/mmc/host/sdhci-cadence.c
-@@ -463,6 +463,7 @@ MODULE_DEVICE_TABLE(of, sdhci_cdns_match);
- static struct platform_driver sdhci_cdns_driver = {
- 	.driver = {
- 		.name = "sdhci-cdns",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.pm = &sdhci_cdns_pm_ops,
- 		.of_match_table = sdhci_cdns_match,
- 	},
-diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
-index 4703cd540c7f..24c978de2a3f 100644
---- a/drivers/mmc/host/sdhci-xenon.c
-+++ b/drivers/mmc/host/sdhci-xenon.c
-@@ -677,6 +677,7 @@ MODULE_DEVICE_TABLE(of, sdhci_xenon_dt_ids);
- static struct platform_driver sdhci_xenon_driver = {
+ };
+diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
+index 64ac0dbee95c..4b673792b5a4 100644
+--- a/drivers/mmc/host/sdhci-of-dwcmshc.c
++++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+@@ -214,6 +214,7 @@ MODULE_DEVICE_TABLE(of, sdhci_dwcmshc_dt_ids);
+ static struct platform_driver sdhci_dwcmshc_driver = {
  	.driver	= {
- 		.name	= "xenon-sdhci",
+ 		.name	= "sdhci-dwcmshc",
 +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table = sdhci_xenon_dt_ids,
- 		.pm = &sdhci_xenon_dev_pm_ops,
+ 		.of_match_table = sdhci_dwcmshc_dt_ids,
+ 		.pm = &dwcmshc_pmops,
  	},
+diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+index 1ec74c2d5c17..7893fd3599b6 100644
+--- a/drivers/mmc/host/sdhci-omap.c
++++ b/drivers/mmc/host/sdhci-omap.c
+@@ -1297,6 +1297,7 @@ static struct platform_driver sdhci_omap_driver = {
+ 	.remove = sdhci_omap_remove,
+ 	.driver = {
+ 		   .name = "sdhci-omap",
++		   .probe_type = PROBE_PREFER_ASYNCHRONOUS,
+ 		   .pm = &sdhci_omap_dev_pm_ops,
+ 		   .of_match_table = omap_sdhci_match,
+ 		  },
 -- 
 2.28.0.526.ge36021eeef-goog
 
