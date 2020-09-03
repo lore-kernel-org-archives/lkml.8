@@ -2,143 +2,156 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C06CC2BBD0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C26DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC37B20758
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C30D20758
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:54:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aDfGKi27"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgICAwt (ORCPT
+        id S1727860AbgICAyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 20:52:49 -0400
-Received: from mga06.intel.com ([134.134.136.31]:3119 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgICAwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 20:52:47 -0400
-IronPort-SDR: qGDlemQJ5qO3Olpqvg138xEO7okIgIE5t/tv2JQEkM0Csm5jhSvAu/d+z05QTrPKx6wpQBZXHQ
- bzDwCZwAnU7w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="219054318"
-X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
-   d="scan'208";a="219054318"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 17:52:46 -0700
-IronPort-SDR: fR6rsbbP0eppyoZf/XqS7rhZqUYoZaA+iUqv5V1/UsAEJi2YONAezYMoj5ggx5wRzWrxCQ8LHM
- M38a9bbskKRw==
-X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
-   d="scan'208";a="326007452"
-Received: from hongjunt-mobl.ccr.corp.intel.com (HELO [10.254.210.138]) ([10.254.210.138])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 17:52:43 -0700
-Subject: Re: [RFC v2 2/2] KVM: VMX: Enable bus lock VM exit
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Chenyi Qiang <chenyi.qiang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200817014459.28782-1-chenyi.qiang@intel.com>
- <20200817014459.28782-3-chenyi.qiang@intel.com>
- <87sgc1x4yn.fsf@vitty.brq.redhat.com> <20200902224405.GK11695@sjchrist-ice>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <2e12df9d-4d56-d6c2-3470-9c990ab722c5@intel.com>
-Date:   Thu, 3 Sep 2020 08:52:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Wed, 2 Sep 2020 20:54:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgICAxy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 20:53:54 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99866C061244;
+        Wed,  2 Sep 2020 17:53:53 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id y4so1389518ljk.8;
+        Wed, 02 Sep 2020 17:53:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qylbbxDeujcNpZUTYAjA2yZlUNQWDGVnkYFR/BCLA8E=;
+        b=aDfGKi273R2hdEUH5U08izM8jrgDxe+4nXW0/YxP8seZbeemJsKDm6MJ6Y8etuOyoZ
+         89L0CeDv+diO/PPoHv2X6dNnKCqHt7MUNTZgdiAfPa/mPBkx7HM1hcO6DrUjFqFr1szj
+         70OiGIQb8/2/OrNrnd4YznCI2XcIxnSsAcz9MrSrXbSz8o2z4DD8cLcboxd6+KDXEd6b
+         uEj1ehP7T9nI6AKOCpW5jaSpyexpO/8Zf3Iw2kuL9i2vKJSbQtk8+QrbUf8SbguEAWXp
+         +ZCPOSEYgmUCfcN5g6PXxfD+1g6LtiMQLmYiObdOxdEt3LUEohnJJ5nJRJaDCpFUyb5E
+         C5+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qylbbxDeujcNpZUTYAjA2yZlUNQWDGVnkYFR/BCLA8E=;
+        b=RHeUuhvtCK7aeemT6tS34uMFKa1RzZ/UfTrVVJaIx8M/x/k+KXDjHjxvwTMkDGKl/D
+         1+TdPnbINhcJ8Vz1NgwRAh0dgHaKmzzaxFGwEZQpJ2nAlNPIWDuZdODBVlvCVB/ThaFY
+         7LxEIKyfYyQEvnXdUVl8pGvIkBtXh9SSGRTzfbtcprPQGsTMkk6CLCffvGurbIxtFg/G
+         09Soxdsau7WFN0foY4nwZIjDWoIzjI7xGD6encF5CdQCk9JWa9rl9OwgFE4Mbl156KqD
+         9J02xO9xUb3QFMFxFFSL7X5WG5F7+9n2lj87Nw/1fKSw9bhlCEBOqVUEhBnoTghEtAZe
+         H/Yw==
+X-Gm-Message-State: AOAM533sfMqouQSIqiCQBuDOTM6jZqZN6LjQ3BedaZIsfiN1sqNplNrH
+        I/fimw5bOJvGBgwTnqdzOKY=
+X-Google-Smtp-Source: ABdhPJzqcI+SEmxok8UGThkgXfQR0Kd6Eu2hoPFU41SGTwuYvYs/ZO4TkJ3aiBd7hAc6pV4llYNLWg==
+X-Received: by 2002:a2e:b0e3:: with SMTP id h3mr283482ljl.426.1599094430437;
+        Wed, 02 Sep 2020 17:53:50 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id g1sm250321ljj.56.2020.09.02.17.53.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 17:53:49 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/22] Improvements for Tegra I2C driver
+Date:   Thu,  3 Sep 2020 03:52:38 +0300
+Message-Id: <20200903005300.7894-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200902224405.GK11695@sjchrist-ice>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/2020 6:44 AM, Sean Christopherson wrote:
-> On Tue, Sep 01, 2020 at 10:43:12AM +0200, Vitaly Kuznetsov wrote:
->>> @@ -6809,6 +6824,19 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
->>>   	if (unlikely(vmx->exit_reason.failed_vmentry))
->>>   		return EXIT_FASTPATH_NONE;
->>>   
->>> +	/*
->>> +	 * check the exit_reason to see if there is a bus lock
->>> +	 * happened in guest.
->>> +	 */
->>> +	if (kvm_bus_lock_exit_enabled(vmx->vcpu.kvm)) {
->>> +		if (vmx->exit_reason.bus_lock_detected) {
->>> +			vcpu->stat.bus_locks++;
-> 
-> Why bother with stats?  Every bus lock exits to userspace, having quick
-> stats doesn't seem all that interesting.
+Hello!
 
-OK. We will remove it.
+This series performs a small refactoring of the Tegra I2C driver code and
+hardens the atomic-transfer mode.
 
->>> +			vcpu->arch.bus_lock_detected = true;
->>> +		} else {
->>> +			vcpu->arch.bus_lock_detected = false;
->>
->> This is a fast path so I'm wondering if we can move bus_lock_detected
->> clearing somewhere else.
-> 
-> Why even snapshot vmx->exit_reason.bus_lock_detected?  I don't see any
-> reason why vcpu_enter_guest() needs to handle the exit to userspace, e.g.
-> it's just as easily handled in VMX code.
+Changelog:
 
-Because we want to handle the exit to userspace only in one place, i.e., 
-after kvm_x86_ops.handle_exit(vcpu, exit_fastpath). Otherwise, we would 
-have to check vmx->exit_reason.bus_lock_detected in every other handler, 
-at least in those can preempt the bus lock VM-exit theoretically.
+v3: - Optimized "Make tegra_i2c_flush_fifos() usable in atomic transfer"
+      patch by pre-checking FIFO state before starting to poll using
+      ktime API, which may be expensive under some circumstances.
 
->>
->>> +		}
->>> +	}
->>> +
->>>   	vmx->loaded_vmcs->launched = 1;
->>>   	vmx->idt_vectoring_info = vmcs_read32(IDT_VECTORING_INFO_FIELD);
->>>   
->>> @@ -8060,6 +8088,9 @@ static __init int hardware_setup(void)
->>>   		kvm_tsc_scaling_ratio_frac_bits = 48;
->>>   	}
->>>   
->>> +	if (cpu_has_vmx_bus_lock_detection())
->>> +		kvm_has_bus_lock_exit = true;
->>> +
->>>   	set_bit(0, vmx_vpid_bitmap); /* 0 is reserved for host */
->>>   
->>>   	if (enable_ept)
-> 
-> ...
-> 
->>> @@ -4990,6 +4996,12 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->>>   		kvm->arch.exception_payload_enabled = cap->args[0];
->>>   		r = 0;
->>>   		break;
->>> +	case KVM_CAP_X86_BUS_LOCK_EXIT:
->>> +		if (!kvm_has_bus_lock_exit)
->>> +			return -EINVAL;
->>
->> ... because userspace can check for -EINVAL when enabling the cap. Or we
->> can return e.g. -EOPNOTSUPP here. I don't have a strong opinion on the matter..
->>
->>> +		kvm->arch.bus_lock_exit = cap->args[0];
-> 
-> Assuming we even want to make this per-VM, I think it'd make sense to make
-> args[0] a bit mask, e.g. to provide "off" and "exit" (this behavior) while
-> allowing for future modes, e.g. log-only.
+    - The "Clean up messages in the code" patch now makes all messages
+      to use proper capitalization of abbreviations. Thanks to Andy Shevchenko
+      and Michał Mirosław for the suggestion.
 
-Good idea, will do it in next version.
+    - The "Remove unnecessary whitespaces and newlines" patch is transformed
+      into "Clean up whitespaces and newlines", it now also adds missing
+      newlines and spaces.
 
->>> +		r = 0;
->>> +		break;
->>>   	default:
->>>   		r = -EINVAL;
->>>   		break;
->>> @@ -7732,12 +7744,23 @@ static void post_kvm_run_save(struct kvm_vcpu *vcpu)
+    - Reworked the "Clean up probe function" patch in accordance to
+      suggestion from Michał Mirosław by factoring out only parts of
+      the code that make error unwinding cleaner.
+
+    - Added r-b from Michał Mirosław.
+
+    - Added more patches:
+
+        i2c: tegra: Reorder location of functions in the code
+        i2c: tegra: Factor out packet header setup from tegra_i2c_xfer_msg()
+        i2c: tegra: Remove "dma" variable
+        i2c: tegra: Initialization div-clk rate unconditionally
+        i2c: tegra: Remove i2c_dev.clk_divisor_non_hs_mode member
+
+v2: - Cleaned more messages in the "Clean up messages in the code" patch.
+
+    - The error code of reset_control_reset() is checked now.
+
+    - Added these new patches to clean up couple more things:
+
+        i2c: tegra: Check errors for both positive and negative values
+        i2c: tegra: Improve coding style of tegra_i2c_wait_for_config_load()
+        i2c: tegra: Remove unnecessary whitespaces and newlines
+        i2c: tegra: Rename variable in tegra_i2c_issue_bus_clear()
+        i2c: tegra: Improve driver module description
+
+Dmitry Osipenko (22):
+  i2c: tegra: Make tegra_i2c_flush_fifos() usable in atomic transfer
+  i2c: tegra: Add missing newline before returns
+  i2c: tegra: Clean up messages in the code
+  i2c: tegra: Don't ignore tegra_i2c_flush_fifos() error
+  i2c: tegra: Use reset_control_reset()
+  i2c: tegra: Improve formatting of function variables
+  i2c: tegra: Use dev_err_probe()
+  i2c: tegra: Runtime PM always available on Tegra
+  i2c: tegra: Clean up probe function
+  i2c: tegra: Drop '_timeout' from wait/poll function names
+  i2c: tegra: Remove likely/unlikely from the code
+  i2c: tegra: Factor out error recovery from tegra_i2c_xfer_msg()
+  i2c: tegra: Check errors for both positive and negative values
+  i2c: tegra: Improve coding style of tegra_i2c_wait_for_config_load()
+  i2c: tegra: Clean up whitespaces and newlines
+  i2c: tegra: Rename variable in tegra_i2c_issue_bus_clear()
+  i2c: tegra: Improve driver module description
+  i2c: tegra: Reorder location of functions in the code
+  i2c: tegra: Factor out packet header setup from tegra_i2c_xfer_msg()
+  i2c: tegra: Remove "dma" variable
+  i2c: tegra: Initialization div-clk rate unconditionally
+  i2c: tegra: Remove i2c_dev.clk_divisor_non_hs_mode member
+
+ drivers/i2c/busses/i2c-tegra.c | 1327 ++++++++++++++++----------------
+ 1 file changed, 684 insertions(+), 643 deletions(-)
+
+-- 
+2.27.0
 
