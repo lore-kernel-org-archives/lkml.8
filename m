@@ -2,132 +2,109 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32EEC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A90C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B4DF206A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36A9206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:35:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/OxbLk2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ohCM+ip2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgICJb2 (ORCPT
+        id S1728084AbgICJfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 05:31:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46542 "EHLO
+        Thu, 3 Sep 2020 05:35:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgICJb0 (ORCPT
+        with ESMTP id S1726268AbgICJfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 05:31:26 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D73BC061244;
-        Thu,  3 Sep 2020 02:31:26 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u20so1874336pfn.0;
-        Thu, 03 Sep 2020 02:31:26 -0700 (PDT)
+        Thu, 3 Sep 2020 05:35:09 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC01EC061244;
+        Thu,  3 Sep 2020 02:35:08 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id v4so2163118wmj.5;
+        Thu, 03 Sep 2020 02:35:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=+sd9erymWD13Cu188GljsOgb+/pwjw6f4RPyPst8OkY=;
-        b=J/OxbLk24+mWs+zAdfKaJvLOQ/2cBymrYF8hpD4EbkzEsMAD5eZQv6+g2I1UcC4tjL
-         OQtWr/BkAtnRpcx2YvcbZcdYMP3Q4vQgJ7Vt9CN8G4h93rqrprc16hutf82PaTl9SPpC
-         MDw7cdmI2V4dV6SD11qKcESfhzmc5Ae4OGqiWqD6wied1AG9KPcTxoLFvZm6jM1jJQA+
-         qhpcJEvTOjOttnuLxEBKPnEL2KPS9lieYo3PsREIP3SoN2EcS2nH9RrhSwkZNJ6MD6hv
-         hpk9kIIVPwGdrjluOubDR4X7yWL4JNxOGutUSXOfo8mWYlpJzVXShrXGFHRlPygpm8Td
-         E+vg==
+        bh=YmN6TYlQSwbm/wl1f5Jflst3Mjgwzhs4CRceNi7GnDQ=;
+        b=ohCM+ip22BVbqXf47OCWm47Nucq2P7yWHYLgqXl6cWN4Ap17kV1B9BwEojfKVQUD3c
+         lbtr+AwWpMYU9NFOcwzSLKlFeWU51tPiCfkWTUaXuMykeDkyeYjylbLGK1W4R6I9Bo/F
+         EW8UUJcWYcF3ioXQgbhTG2tTnJweTqvwZ3x1EpGp0Fkfn/rbYLl5+5wmPGxX6br9f/pI
+         x64CmyHNRo4yZRKk1eKKy1hRoXaV/H/hjwKkUJZH/uMJsRW1EKrBh2qjFMvayxlT44l8
+         Z0FTg393wkWA6oU6rHsBI4AkSFLLf1Hv6dmsaxxnKyWiMuGehk2Gn/nkBLlQOTlvimsk
+         pzNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=+sd9erymWD13Cu188GljsOgb+/pwjw6f4RPyPst8OkY=;
-        b=sRii/9jz8v1GQITUS9qtXsUxBXkoBLTOItQt8liKYodf8XdtR1lEeDymGFv1eMh7lH
-         JnJFU1NkXeM6LfWxAVdMHUnDwRnvaa4kdCocWl5u0+U6doA2wEx6Qctl5OfLbLu6jep2
-         pY620OnKQzityVVqZd5je1B7XbGvx4EYq84mQdhoTZb2BJcdDPeH//X4IsfeJvJ0cP17
-         bgrgoNu20NRmonhFzk/+ntZeEXMpw2DA6ku/rluAZ3XPvOoHtTq7dm/vSdfL4smbKC17
-         tdgmBfK/SW/IOy0Yr2NOOnbRftTUPl5r7OjBEIM7jlf3lJNlSONT1Pay+iZmWUKj/nv3
-         dgkg==
-X-Gm-Message-State: AOAM530u/Djv34h+D+7Bplx83INfcZ3salDYOinYlhoxxQXZ7xa1CEsR
-        gqbD6kqHbqqBhhO4P2NmbK9kOn1bISo=
-X-Google-Smtp-Source: ABdhPJwgnRZElPmZmJR5LdkBVJrAiBtK8Op8FIRVjeAuifsDebTsFbK6LvC4WS6a/BKY9P8woy4Rwg==
-X-Received: by 2002:a62:7fd1:: with SMTP id a200mr2964557pfd.175.1599125485626;
-        Thu, 03 Sep 2020 02:31:25 -0700 (PDT)
-Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id d1sm1873301pjs.17.2020.09.03.02.31.22
+        bh=YmN6TYlQSwbm/wl1f5Jflst3Mjgwzhs4CRceNi7GnDQ=;
+        b=Zt1tMkWxisdKwLMudiGVN9EriYeGzyz+JdS4Tn8Zrw7DfnPPGfYYIt6PSwnALT2ZI6
+         wWBOGniFCPz5nzkj4984jjPdDsWLZGhNgLkzgW7Jt26AmNASAWQ79wVDPwbNbDAyB7VP
+         OO0j70Fd8DVSrosL46odar8X89RtG22oh/kFTpx3JxvCdlZc7S61NWCJejBneOCarfbH
+         vzrewjHSSYeCmpnJLMvFBxeoZ4wWcJc3w3R6CFPH8bhS+Jh7HzS27zIQdaAhNUJDYwfH
+         S/20IGxrTSOaEAVfOEGc79rSlwUA7GLU5S5mXvanNSYy5iZ8FTVTqPwkUkj0h+gxg9qL
+         Ixaw==
+X-Gm-Message-State: AOAM533Uddisa8GEU3WEkxBIVTk3SA8llzJA1bKUU90vKzu8fLPw3veQ
+        swrfuT5TueBxDDhDP17YYDI=
+X-Google-Smtp-Source: ABdhPJzdYF4jAWN0nANFY3nmh0Og5LZpu/SJBN4ONUwY/Hts0Uuj+rxmZuzWvbLPoOHu782HW5ZUmA==
+X-Received: by 2002:a7b:c38f:: with SMTP id s15mr521509wmj.16.1599125707468;
+        Thu, 03 Sep 2020 02:35:07 -0700 (PDT)
+Received: from medion (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id e18sm3515525wrx.50.2020.09.03.02.35.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 02:31:24 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 17:31:20 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 11/20] gpiolib: cdev: support
- GPIO_V2_LINE_SET_VALUES_IOCTL
-Message-ID: <20200903093120.GA160697@sol>
-References: <20200831032006.1019978-1-warthog618@gmail.com>
- <20200831032006.1019978-12-warthog618@gmail.com>
- <CAMpxmJWYpDQsvKCsNudb6p3zAey=6EuNpb3wQ3dpCJVCTjjBsg@mail.gmail.com>
+        Thu, 03 Sep 2020 02:35:06 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
+Date:   Thu, 3 Sep 2020 10:35:04 +0100
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RDMA/ucma: Fix resource leak on error path
+Message-ID: <20200903093504.ita7taa67a6x6k7p@medion>
+References: <20200902162454.332828-1-alex.dewar90@gmail.com>
+ <83132be0-a33b-ab7a-0da9-cc5c9398d0d4@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMpxmJWYpDQsvKCsNudb6p3zAey=6EuNpb3wQ3dpCJVCTjjBsg@mail.gmail.com>
+In-Reply-To: <83132be0-a33b-ab7a-0da9-cc5c9398d0d4@embeddedor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 09:59:17AM +0200, Bartosz Golaszewski wrote:
-> On Mon, Aug 31, 2020 at 5:23 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > Add support for the GPIO_V2_LINE_SET_VALUES_IOCTL.
-> >
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > ---
-> >  drivers/gpio/gpiolib-cdev.c | 59 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 59 insertions(+)
-> >
-> > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> > index 936b8c9958dd..9f05bbd2161e 100644
-> > --- a/drivers/gpio/gpiolib-cdev.c
-> > +++ b/drivers/gpio/gpiolib-cdev.c
-> > @@ -777,6 +777,63 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
-> >         return 0;
-> >  }
-> >
-> > +static long linereq_set_values_unlocked(struct linereq *lr,
-> > +                                       struct gpio_v2_line_values *lv)
-> > +{
-> > +       DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
-> > +       struct gpio_desc **descs;
-> > +       unsigned int i, didx, num_set;
-> > +       int ret;
-> > +
-> > +       bitmap_zero(vals, GPIO_V2_LINES_MAX);
-> > +       for (num_set = 0, i = 0; i < lr->num_lines; i++) {
-> > +               if (lv->mask & BIT_ULL(i)) {
-> > +                       if (!test_bit(FLAG_IS_OUT, &lr->lines[i].desc->flags))
-> > +                               return -EPERM;
-> > +                       if (lv->bits & BIT_ULL(i))
-> > +                               __set_bit(num_set, vals);
-> > +                       num_set++;
-> > +                       descs = &lr->lines[i].desc;
-> > +               }
-> > +       }
-> > +       if (num_set == 0)
-> > +               return -EINVAL;
-> > +
-> > +       if (num_set != 1) {
-> > +               /* build compacted desc array and values */
-> > +               descs = kmalloc_array(num_set, sizeof(*descs), GFP_KERNEL);
+On Wed, Sep 02, 2020 at 07:34:26PM -0500, Gustavo A. R. Silva wrote:
+> Hi Alex,
 > 
-> Missing retval check.
+> On 9/2/20 11:24, Alex Dewar wrote:
+> > In ucma_process_join(), if the call to xa_alloc() fails, the function
+> > will return without freeing mc. Fix this by jumping to the correct line.
+> > 
+> > In the process I renamed the jump labels to something more memorable for
+> > extra clarity.
+> > 
+> > Addresses-Coverity: ("Resource leak")
 > 
+> If you are using a public Coverity scan, please also include the Coverity ID.
+> In this case ID 1496814, something like:
+> 
+> Addresses-Coverity-ID: 1496814 ("Resource leak")
 
-Arrgh, that has been there since PATCH v2!
-And subsequently got propagated into patch 07 :-(.
-
-Kent.
+Ahh ok. Thanks for the pointer :)
+> 
+> People that don't include an CID is because they are using a private Coverity
+> scan, so it doesn't make sense for them to add an ID because no one but
+> them have access to that scan report.
+> 
+> Thanks
+> --
+> Gustavo
+> 
