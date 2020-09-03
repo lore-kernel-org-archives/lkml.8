@@ -2,207 +2,92 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C27C2D0A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56E2C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCB7220709
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:46:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G6gFOsbn"
+	by mail.kernel.org (Postfix) with ESMTP id 8032120709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:49:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599166149;
+	bh=OrFqxx96piTetoArjMGO4ar6u22RTdKYhvtEIXSaISM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hk5ViDSy2kxGzVNcDBGE6cPgpydNmwxzlp265rAxahq7WTAkPwPKAPgFCOx7lTMjB
+	 FkdlfuHec/vgSYD+SQcDMg/2s7ffSIdvtQsJBC1sY7pCXqeJmdoAF4jNGGGNklx6Vw
+	 K5onFkiuWQD2tverssA6tQji9tiuNz3Wl5BlFlPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbgICUp7 (ORCPT
+        id S1729379AbgICUtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:45:59 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54676 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728397AbgICUp6 (ORCPT
+        Thu, 3 Sep 2020 16:49:05 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39476 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728397AbgICUtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:45:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599165956;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=o5hVxkqGdg+psOvlIfXAU4TmERsy4dVZC0Gsf884zyc=;
-        b=G6gFOsbnvON+O97R26wkhQFLJ5hwkvL4AJ74NYOwj32yoLm2PjHPuWBvGNpeUKFfbSKd4m
-        cvYBbzzedKHSlvhLc13P5LTx+TRjs+U2KaIWKdKN79L5dSn/8DZsRcyfoltf0NunfwFoN5
-        3BFGc6t6E8HS7hKddHWheNC9JP7kWqI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-258-6aiBpulQOTGANZAHBa-ycA-1; Thu, 03 Sep 2020 16:45:53 -0400
-X-MC-Unique: 6aiBpulQOTGANZAHBa-ycA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D12631DE0E;
-        Thu,  3 Sep 2020 20:45:51 +0000 (UTC)
-Received: from fuller.cnet (ovpn-112-2.gru2.redhat.com [10.97.112.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E3936198B;
-        Thu,  3 Sep 2020 20:45:50 +0000 (UTC)
-Received: by fuller.cnet (Postfix, from userid 1000)
-        id C03F54168BB3; Thu,  3 Sep 2020 15:52:00 -0300 (-03)
-Date:   Thu, 3 Sep 2020 15:52:00 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Requirements to control kernel isolation/nohz_full at runtime
-Message-ID: <20200903185200.GA1029791@fuller.cnet>
-References: <20200901104640.GA13814@lenoir>
- <20200903182359.GA1016174@fuller.cnet>
- <20200903183015.GA1027417@fuller.cnet>
- <20200903183636.GB99697@lorien.usersys.redhat.com>
+        Thu, 3 Sep 2020 16:49:03 -0400
+Received: by mail-wm1-f67.google.com with SMTP id b79so4157839wmb.4;
+        Thu, 03 Sep 2020 13:49:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TTR4ZevWbBTzzWBk5Ftm+jdBL57hcsdTyw/U1bSsOcE=;
+        b=r691mwlEN1DZRFY5CzBJjooZAKjA+OIV1MMR7EI1j3jj/s+AqooIGCUEWQexXAycWg
+         FXCQkxO+osEOBsBvKDnbOxYpOU7g5g6gOM39OsWTr2xk6ZeiMMTnfFKbbnmht4dm4vad
+         zdu8v2V+/ftDGnv7v9zMxdRxSKE9u1I0M30BO05AmUk03fGsi46pWHH9mCDUSXg88fte
+         KcT42HaACAncF68B+pBsoeOBWVAQ/Z0QkVuR/pcMjuhJdp0wyJwBbruxR5EwMRXKiBwC
+         u0vZUTv14+3otg7wiA4HErum/PH+r6SxkuKXFxCb8HxFf1oXzH+b+metDE7XBBuviO3Z
+         TyIw==
+X-Gm-Message-State: AOAM533rDYF9NMRM9QwHgnpycG+ts3BpcVmuJP52CyvYhq2Y1+8qq2+v
+        wa+5mts6m6+SwACxxyllBFQ=
+X-Google-Smtp-Source: ABdhPJxbAqG+Z7hrWdt6vHYFdCHeNv0eFaCop/ZdMBXFkp4runoehm2xwhF/xenMGGhJzuf0hgPGCg==
+X-Received: by 2002:a1c:234d:: with SMTP id j74mr4123561wmj.157.1599166139821;
+        Thu, 03 Sep 2020 13:48:59 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.106])
+        by smtp.googlemail.com with ESMTPSA id j7sm6108628wrs.11.2020.09.03.13.48.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 03 Sep 2020 13:48:58 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 22:48:56 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>
+Subject: Re: [PATCH 01/13] ARM: dts: exynos: Correct compatible for Exynos5
+ GIC
+Message-ID: <20200903204856.GA20285@kozik-lap>
+References: <20200901075417.22481-1-krzk@kernel.org>
+ <20200901075417.22481-2-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200903183636.GB99697@lorien.usersys.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200901075417.22481-2-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 02:36:36PM -0400, Phil Auld wrote:
-> On Thu, Sep 03, 2020 at 03:30:15PM -0300 Marcelo Tosatti wrote:
-> > On Thu, Sep 03, 2020 at 03:23:59PM -0300, Marcelo Tosatti wrote:
-> > > On Tue, Sep 01, 2020 at 12:46:41PM +0200, Frederic Weisbecker wrote:
-> > > > Hi,
-> > > 
-> > > Hi Frederic,
-> > > 
-> > > Thanks for the summary! Looking forward to your comments...
-> > > 
-> > > > I'm currently working on making nohz_full/nohz_idle runtime toggable
-> > > > and some other people seem to be interested as well. So I've dumped
-> > > > a few thoughts about some pre-requirements to achieve that for those
-> > > > interested.
-> > > > 
-> > > > As you can see, there is a bit of hard work in the way. I'm iterating
-> > > > that in https://pad.kernel.org/p/isolation, feel free to edit:
-> > > > 
-> > > > 
-> > > > == RCU nocb ==
-> > > > 
-> > > > Currently controllable with "rcu_nocbs=" boot parameter and/or through nohz_full=/isolcpus=nohz
-> > > > We need to make it toggeable at runtime. Currently handling that:
-> > > > v1: https://lwn.net/Articles/820544/
-> > > > v2: coming soon
-> > > 
-> > > Nice.
-> > > 
-> > > > == TIF_NOHZ ==
-> > > > 
-> > > > Need to get rid of that in order not to trigger syscall slowpath on CPUs that don't want nohz_full.
-> > > > Also we don't want to iterate all threads and clear the flag when the last nohz_full CPU exits nohz_full
-> > > > mode. Prefer static keys to call context tracking on archs. x86 does that well.
-> > > > 
-> > > > == Proper entry code ==
-> > > > 
-> > > > We must make sure that a given arch never calls exception_enter() / exception_exit().
-> > > > This saves the previous state of context tracking and switch to kernel mode (from context tracking POV)
-> > > > temporarily. Since this state is saved on the stack, this prevents us from turning off context tracking
-> > > > entirely on a CPU: The tracking must be done on all CPUs and that takes some cycles.
-> > > > 
-> > > > This means that, considering early entry code (before the call to context tracking upon kernel entry,
-> > > > and after the call to context tracking upon kernel exit), we must take care of few things:
-> > > > 
-> > > > 1) Make sure early entry code can't trigger exceptions. Or if it does, the given exception can't schedule
-> > > > or use RCU (unless it calls rcu_nmi_enter()). Otherwise the exception must call exception_enter()/exception_exit()
-> > > > which we don't want.
-> > > > 
-> > > > 2) No call to schedule_user().
-> > > > 
-> > > > 3) Make sure early entry code is not interruptible or preempt_schedule_irq() would rely on
-> > > > exception_entry()/exception_exit()
-> > > > 
-> > > > 4) Make sure early entry code can't be traced (no call to preempt_schedule_notrace()), or if it does it
-> > > > can't schedule
-> > > > 
-> > > > I believe x86 does most of that well. In the end we should remove exception_enter()/exit implementations
-> > > > in x86 and replace it with a check that makes sure context_tracking state is not in USER. An arch meeting
-> > > > all the above conditions would earn a CONFIG_ARCH_HAS_SANE_CONTEXT_TRACKING. Being able to toggle nohz_full
-> > > > at runtime would depend on that.
-> > > > 
-> > > > 
-> > > > == Cputime accounting ==
-> > > > 
-> > > > Both write and read side must switch to tick based accounting and drop the use of seqlock in task_cputime(),
-> > > > task_gtime(), kcpustat_field(), kcpustat_cpu_fetch(). Special ordering/state machine is required to make that without races.
-> > > > 
-> > > > == Nohz ==
-> > > > 
-> > > > Switch from nohz_full to nohz_idle. Mind a few details:
-> > > >     
-> > > >     1) Turn off 1Hz offlined tick handled in housekeeping
-> > > >     2) Handle tick dependencies, take care of racing CPUs setting/clearing tick dependency. It's much trickier when
-> > > >     we switch from nohz_idle to nohz_full
-> > > >     
-> > > > == Unbound affinity ==
-> > > > 
-> > > > Restore kernel threads, workqueue, timers, etc... wide affinity. But take care of cpumasks that have been set through other
-> > > > interfaces: sysfs, procfs, etc...
-> > > 
-> > > We were looking at a userspace interface: what would be a proper
-> > > (unified, similar to isolcpus= interface) and its implementation:
-> > > 
-> > > The simplest idea for interface seemed to be exposing the integer list of
-> > > CPUs and isolation flags to userspace (probably via sysfs).
-> > > 
-> > > The scheme would allow flags to be separately enabled/disabled, 
-> > > with not all flags being necessary toggable (could for example
-> > > disallow nohz_full= toggling until it is implemented, but allow for
-> > > other isolation features to be toggable).
-> > > 
-> > > This would require per flag housekeeping_masks (instead of a single).
-> > > 
-> > > Back to the userspace interface, you mentioned earlier that cpusets
-> > > was a possibility for it. However:
-> > > 
-> > > "Cpusets provide a Linux kernel mechanism to constrain which CPUs and
-> > > Memory Nodes are used by a process or set of processes.
-> > > 
-> > > The Linux kernel already has a pair of mechanisms to specify on which
-> > > CPUs a task may be scheduled (sched_setaffinity) and on which Memory
-> > > Nodes it may obtain memory (mbind, set_mempolicy).
-> > > 
-> > > Cpusets extends these two mechanisms as follows:"
-> > > 
-> > > The isolation flags do not necessarily have anything to do with
-> > > tasks, but with CPUs: a given feature is disabled or enabled on a
-> > > given CPU. 
-> > > No?
-> > 
-> > One cpumask per feature, implemented separately in sysfs, also 
-> > seems OK (modulo documentation about the RCU update and users
-> > of the previous versions).
-> > 
-> > This is what is being done for rcu_nocbs= already...
-> > 
+On Tue, Sep 01, 2020 at 09:54:05AM +0200, Krzysztof Kozlowski wrote:
+> Exynos5250 and Exynso54xx SoCs have ARM GIC 400.  Correct the
+> compatibles to match dtschema and fix the dtbs_check warnings like:
 > 
-> exclusive cpusets is used now to control scheduler load balancing on
-> a group of cpus.  It seems to me that this is the same idea and is part
-> of the isolation concept.  Having a toggle for each subsystem/feature in
-> cpusets could provide the needed userspace api. 
+>   arch/arm/boot/dts/exynos5420-peach-pit.dt.yaml: interrupt-controller@10481000:
+>     compatible: ['arm,gic-400', 'arm,cortex-a15-gic', 'arm,cortex-a9-gic']
+>     is not valid under any of the given schemas
 > 
-> Under the covers it might be implemented as twiddling various cpumasks.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/exynos5.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> We need to be shifting to managing load balancing with cpusets anyway.
 
-OK, adding a new file per isolation feature:
+Applied 1-10.
 
-	- cpuset.isolation_nohz_full
-	- cpuset.isolation_kthread
-	- cpuset.isolation_time
-
-With a bool value per file, is an option.
+Best regards,
+Krzysztof
 
