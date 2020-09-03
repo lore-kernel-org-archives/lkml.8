@@ -2,305 +2,225 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E4DC10DAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AF1C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E75B20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7795B20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="malaHd5r"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jxDHCE4P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729383AbgICWSc (ORCPT
+        id S1729405AbgICWTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:18:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52018 "EHLO
+        Thu, 3 Sep 2020 18:19:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728309AbgICWSb (ORCPT
+        with ESMTP id S1728015AbgICWTr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:18:31 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E5D4C061246
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:18:31 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id d22so3459791pfn.5
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:18:31 -0700 (PDT)
+        Thu, 3 Sep 2020 18:19:47 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35125C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:19:46 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id 5so3237293pgl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:19:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Roix3RhAEEOO2V01BUd1l2dtuHebq2+iPymfTqDrfKA=;
-        b=malaHd5r4alh1HJyeDyqDu7Mey/38FwBExzCtlODrP1yv0Kp55lsKlc4p00m1kU1wz
-         06MepI8ARBeA1bjq9yyLsh5N4fIP0/VCGvrCTx/erzWdPrF7UOKJOKJ6LzRstg0tmZjj
-         85RirG/8z6BAsuLa7c24lw9eWx66QUol7PTr4=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MWNxdRC9o4O5cBaQMtBrWZaTyq9NHomAWBLJ5BXZ/Cg=;
+        b=jxDHCE4PSws5lQZxdXVDEjhRQTdgtlSfRbx8rYkpCfQICEnOWSuKZ7dWjeNOju7dHs
+         JEdGW0U96wxe5VP81V1HIKryHZ+2sUEbGwgPTUa5Or2pgLw9K4kqUUj39f1wAlZHuNJ6
+         G7nevfW8wKYTznCuyu42z91ddeu7fJXntaESc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Roix3RhAEEOO2V01BUd1l2dtuHebq2+iPymfTqDrfKA=;
-        b=N4T5PWHKrub3Hve/u4u+74zoRbaRGLAdoCMDfhKS7jN97Z5NnRvl6mI2p9X92joYwQ
-         SbTzOiGMXPL3nRmX7j9PlwhQCQjZu/MzRrSpZ7mQ4h1unqtgHKtbvoB6EWfSEjOqn3EJ
-         vxgECvAyijaJmO9gMIDVY1kpjE2x/c4YomangT6Py2+8sb6v18hAtrzbWRtjIEfIkPZT
-         mSzeqaGjN9nvKHwVKOh9pAvO8eunt1ExR+HfanQH764DOvwwKC0zzacuPHLm0H1OBnlx
-         dDgNKogtxfPiZIakR4ugLmfFRC+Yaym8bM99RfQf5LdbBU8xXkGRhFpTwM5t1Kh/gLSh
-         V04A==
-X-Gm-Message-State: AOAM532WDVsxsfaO8mHpdlJCx6TlUiodoGmgNlbxO1P9pVxmdHYhXqfi
-        yNyvccjc/CCycxNQp16QVKjvdA==
-X-Google-Smtp-Source: ABdhPJyNpfEDlgl8BoZHuF2puXp9YWnttTtYfUOHnZq7eEOWT2W+CMSH3iaOHUCZ9AjszaCRgypIcg==
-X-Received: by 2002:a65:614a:: with SMTP id o10mr4697995pgv.411.1599171509795;
-        Thu, 03 Sep 2020 15:18:29 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id p188sm4205391pfb.17.2020.09.03.15.18.28
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MWNxdRC9o4O5cBaQMtBrWZaTyq9NHomAWBLJ5BXZ/Cg=;
+        b=m2Bgb/ejdT1+pKI8BfVEiuLqy689yBEIkzoQFGVJMStr4+lf1E+Ege/BCQU5xeTU3B
+         m3MalWfm/J7WAqn9eTAxHSvvR8Falz5mvadOvbZ7YWfxl/32XcrTyvI4Flsmsm/6HR0c
+         ks7N3teaTX+DvgJjVD1xbWwHl/Ec4I9H562xXvASSVpoFwHvkl3vZGpwGUYBgt00u++i
+         ot4pVfnWFsPvxb8gAQob05f2WeQFyLBJAlrYwaXRd2XxUSWF1HawGug4scwyWZbUDlja
+         erFRunSWnb7Q4cozSJojKb5vRVSKkPDUsdbIK4i7Yhbp2tlkgIWUsUI/rwpqMKArs6Ea
+         5jRA==
+X-Gm-Message-State: AOAM532Cmsq55lrWixx88fuBpIZUftJtoFJiggTUkRpM+Qh/YDPwQBQZ
+        qh4Gxuu+S76Q+jrrXzSbQHdL1A==
+X-Google-Smtp-Source: ABdhPJyiQdJtuSv4chDGmJRkFDeKEEXRJWc13sRcliVwROf2KadwLW6WYWrupCYc5UO95rWT0iVSnQ==
+X-Received: by 2002:a05:6a00:14ce:: with SMTP id w14mr5536446pfu.119.1599171585674;
+        Thu, 03 Sep 2020 15:19:45 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c1sm4139792pfi.136.2020.09.03.15.19.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 15:18:29 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Daniel Campello <campello@chromium.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Evan Green <evgreen@chromium.org>
-Subject: [PATCH] dt-bindings: iio: sx9310: Add various settings as DT properties
-Date:   Thu,  3 Sep 2020 15:18:28 -0700
-Message-Id: <20200903221828.3657250-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+        Thu, 03 Sep 2020 15:19:44 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 15:19:43 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v2 11/28] kbuild: lto: postpone objtool
+Message-ID: <202009031513.B558594FB9@keescook>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-12-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903203053.3411268-12-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to set various bits in the hardware registers for this device to
-operate properly depending on how it is installed. Add a handful of DT
-properties to configure these things.
+On Thu, Sep 03, 2020 at 01:30:36PM -0700, Sami Tolvanen wrote:
+> With LTO, LLVM bitcode won't be compiled into native code until
+> modpost_link, or modfinal for modules. This change postpones calls
+> to objtool until after these steps.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-Cc: Daniel Campello <campello@chromium.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: <devicetree@vger.kernel.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Gwendal Grignou <gwendal@chromium.org>
-Cc: Evan Green <evgreen@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
+For a "fail fast" style of building, it makes sense to have objtool run
+as early as possible, so it makes sense to keep the current behavior in
+non-LTO mode. I do wonder, though, if there is a real benefit to having
+"fail fast" case. I imagine a lot of automated builds are using
+--keep-going with make, and actually waiting until the end to do the
+validation means more code will get build-tested before objtool rejects
+the results. *shrug*
 
-I haven't written any code to handle these properties yet. I'd rather do
-that once the binding patch is reviewed. Patch based on iio.git testing
-branch.
+> ---
+>  arch/Kconfig              |  2 +-
+>  scripts/Makefile.build    |  2 ++
+>  scripts/Makefile.modfinal | 24 ++++++++++++++++++++++--
+>  scripts/link-vmlinux.sh   | 23 ++++++++++++++++++++++-
+>  4 files changed, 47 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 71392e4a8900..7a418907e686 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -599,7 +599,7 @@ config LTO_CLANG
+>  	depends on $(success,$(NM) --help | head -n 1 | grep -qi llvm)
+>  	depends on $(success,$(AR) --help | head -n 1 | grep -qi llvm)
+>  	depends on ARCH_SUPPORTS_LTO_CLANG
+> -	depends on !FTRACE_MCOUNT_RECORD
+> +	depends on HAVE_OBJTOOL_MCOUNT || !(X86_64 && DYNAMIC_FTRACE)
+>  	depends on !KASAN
+>  	depends on !GCOV_KERNEL
+>  	select LTO
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index c348e6d6b436..b8f1f0d65a73 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -218,6 +218,7 @@ cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),
+>  endif # USE_RECORDMCOUNT
+>  
+>  ifdef CONFIG_STACK_VALIDATION
+> +ifndef CONFIG_LTO_CLANG
+>  ifneq ($(SKIP_STACK_VALIDATION),1)
+>  
+>  __objtool_obj := $(objtree)/tools/objtool/objtool
+> @@ -253,6 +254,7 @@ objtool_obj = $(if $(patsubst y%,, \
+>  	$(__objtool_obj))
+>  
+>  endif # SKIP_STACK_VALIDATION
+> +endif # CONFIG_LTO_CLANG
+>  endif # CONFIG_STACK_VALIDATION
+>  
+>  # Rebuild all objects when objtool changes, or is enabled/disabled.
+> diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+> index 1005b147abd0..909bd509edb4 100644
+> --- a/scripts/Makefile.modfinal
+> +++ b/scripts/Makefile.modfinal
+> @@ -34,10 +34,30 @@ ifdef CONFIG_LTO_CLANG
+>  # With CONFIG_LTO_CLANG, reuse the object file we compiled for modpost to
+>  # avoid a second slow LTO link
+>  prelink-ext := .lto
+> -endif
+> +
+> +# ELF processing was skipped earlier because we didn't have native code,
+> +# so let's now process the prelinked binary before we link the module.
+> +
+> +ifdef CONFIG_STACK_VALIDATION
+> +ifneq ($(SKIP_STACK_VALIDATION),1)
+> +cmd_ld_ko_o +=								\
+> +	$(objtree)/tools/objtool/objtool				\
+> +		$(if $(CONFIG_UNWINDER_ORC),orc generate,check)		\
+> +		--module						\
+> +		$(if $(CONFIG_FRAME_POINTER),,--no-fp)			\
+> +		$(if $(CONFIG_GCOV_KERNEL),--no-unreachable,)		\
+> +		$(if $(CONFIG_RETPOLINE),--retpoline,)			\
+> +		$(if $(CONFIG_X86_SMAP),--uaccess,)			\
+> +		$(if $(USE_OBJTOOL_MCOUNT),--mcount,)			\
+> +		$(@:.ko=$(prelink-ext).o);
+> +
+> +endif # SKIP_STACK_VALIDATION
+> +endif # CONFIG_STACK_VALIDATION
 
- .../iio/proximity/semtech,sx9310.yaml         | 182 ++++++++++++++++++
- 1 file changed, 182 insertions(+)
+I wonder if objtool_args could be reused here instead of having two
+places to keep in sync? It looks like that might mean moving things
+around a bit before this patch, since I can't quite see if
+Makefile.build's variables are visible to Makefile.modfinal?
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-index 5739074d3592..e74b81483c14 100644
---- a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-+++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-@@ -40,6 +40,169 @@ properties:
-   "#io-channel-cells":
-     const: 1
- 
-+  semtech,cs0-ground:
-+    description: Indicates the CS0 sensor is connected to ground.
-+    type: boolean
-+
-+  semtech,combined-sensors:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [0, 1, 2, 3]
-+    default: 0
-+    description:
-+      Which sensors are combined. 0 for CS3, 1 for CS0+CS1, 2 for CS1+CS2,
-+      and 3 for all sensors.
-+
-+  semtech,cs0-gain-factor:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [1, 2, 4, 8]
-+    default: 1
-+    description:
-+      Gain factor for CS0 (and combined if any) sensor.
-+
-+  semtech,cs1-gain-factor:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [1, 2, 4, 8]
-+    default: 1
-+    description:
-+      Gain factor for CS1 sensor.
-+
-+  semtech,cs2-gain-factor:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [1, 2, 4, 8]
-+    default: 1
-+    description:
-+      Gain factor for CS2 sensor.
-+
-+  semtech,resolution:
-+    description:
-+      Capacitance measure resolution.
-+    enum:
-+      - coarsest
-+      - very-coarse
-+      - coarse
-+      - medium-coarse
-+      - medium
-+      - fine
-+      - very-fine
-+      - finest
-+
-+  semtech,startup-sensor:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [0, 1, 2, 3]
-+    default: 0
-+    description:
-+      Sensor used for start-up proximity detection. The combined
-+      sensor is represented by 3.
-+
-+  semtech,proxraw-strength:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [0, 2, 4, 8]
-+    default: 2
-+    description:
-+      PROXRAW filter strength. A value of 0 represents off, and other values
-+      represent 1-1/N.
-+
-+  semtech,compensate-common:
-+    description: Any sensor triggers compensation of all channels.
-+    type: boolean
-+
-+  semtech,avg-pos-strength:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [0, 16, 64, 128, 256, 512, 1024, 4294967295]
-+    default: 16
-+    description:
-+      Average positive filter strength. A value of 0 represents off and
-+      UINT_MAX (4294967295) represents infinite. Other values
-+      represent 1-1/N.
-+
-+  semtech,cs0-prox-threshold:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 40,
-+               48, 56, 64, 72, 80, 88, 96, 112, 128, 144,
-+               160, 192, 224, 256, 320, 384, 512, 640,
-+               768, 1024, 1536]
-+    default: 12
-+    description:
-+      Proximity detection threshold for CS0 (and combined if any) sensor.
-+
-+  semtech,cs1-prox-threshold:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 40,
-+               48, 56, 64, 72, 80, 88, 96, 112, 128, 144,
-+               160, 192, 224, 256, 320, 384, 512, 640,
-+               768, 1024, 1536]
-+    default: 12
-+    description:
-+      Proximity detection threshold for CS1 sensor.
-+
-+  semtech,cs2-prox-threshold:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 40,
-+               48, 56, 64, 72, 80, 88, 96, 112, 128, 144,
-+               160, 192, 224, 256, 320, 384, 512, 640,
-+               768, 1024, 1536]
-+    default: 12
-+    description:
-+      Proximity detection threshold for CS2 sensor.
-+
-+  semtech,cs0-body-threshold:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [0, 300, 600, 900, 1200, 1500, 1800, 30000]
-+    default: 1800
-+    description:
-+      Body detection threshold for CS0 (and combined if any) sensor.
-+
-+  semtech,cs1-body-threshold:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [0, 300, 600, 900, 1200, 1500, 1800, 30000]
-+    default: 12
-+    description:
-+      Body detection threshold for CS1 sensor.
-+
-+  semtech,cs2-body-threshold:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [0, 300, 600, 900, 1200, 1500, 1800, 30000]
-+    default: 12
-+    description:
-+      Body detection threshold for CS2 sensor.
-+
-+  semtech,hysteresis:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [0, 6, 12, 25]
-+    default: 0
-+    description:
-+      The percentage of hysteresis +/- applied to proximity/body samples.
-+
-+  semtech,close-debounce-samples:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [0, 2, 4, 8]
-+    default: 0
-+    description:
-+      The number of close samples debounced for proximity/body thresholds.
-+
-+  semtech,far-debounce-samples:
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint32
-+      - enum: [0, 2, 4, 8]
-+    default: 0
-+    description:
-+      The number of far samples debounced for proximity/body thresholds.
-+
- required:
-   - compatible
-   - reg
-@@ -61,5 +224,24 @@ examples:
-         vdd-supply = <&pp3300_a>;
-         svdd-supply = <&pp1800_prox>;
-         #io-channel-cells = <1>;
-+        semtech,cs0-ground;
-+        semtech,combined-sensors = <0>;
-+        semtech,cs0-gain-factor = <8>;
-+        semtech,cs1-gain-factor = <8>;
-+        semtech,cs2-gain-factor = <8>;
-+        semtech,resolution = "fine";
-+        semtech,startup-sensor = <1>;
-+        semtech,proxraw-strength = <2>;
-+        semtech,compensate-common;
-+        semtech,avg-pos-strength = <64>;
-+        semtech,cs0-prox-threshold = <96>;
-+        semtech,cs1-prox-threshold = <112>;
-+        semtech,cs2-prox-threshold = <96>;
-+        semtech,cs0-body-threshold = <300>;
-+        semtech,cs1-body-threshold = <300>;
-+        semtech,cs2-body-threshold = <300>;
-+        semtech,hysteresis = <0>;
-+        semtech,close-debounce-samples = <2>;
-+        semtech,far-debounce-samples = <2>;
-       };
-     };
+> +
+> +endif # CONFIG_LTO_CLANG
+>  
+>  quiet_cmd_ld_ko_o = LD [M]  $@
+> -      cmd_ld_ko_o =                                                     \
+> +      cmd_ld_ko_o +=                                                     \
+>  	$(LD) -r $(KBUILD_LDFLAGS)					\
+>  		$(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)		\
+>  		$(addprefix -T , $(KBUILD_LDS_MODULE))			\
+> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> index 3e99a19b9195..a352a5ad9ef7 100755
+> --- a/scripts/link-vmlinux.sh
+> +++ b/scripts/link-vmlinux.sh
+> @@ -93,8 +93,29 @@ objtool_link()
+>  {
+>  	local objtoolopt;
+>  
+> +	if [ "${CONFIG_LTO_CLANG} ${CONFIG_STACK_VALIDATION}" = "y y" ]; then
+> +		# Don't perform vmlinux validation unless explicitly requested,
+> +		# but run objtool on vmlinux.o now that we have an object file.
+> +		if [ -n "${CONFIG_UNWINDER_ORC}" ]; then
+> +			objtoolopt="orc generate"
+> +		else
+> +			objtoolopt="check"
+> +		fi
+> +
+> +		if [ -n ${USE_OBJTOOL_MCOUNT} ]; then
+> +			objtoolopt="${objtoolopt} --mcount"
+> +		fi
+> +	fi
+> +
+>  	if [ -n "${CONFIG_VMLINUX_VALIDATION}" ]; then
+> -		objtoolopt="check --vmlinux"
+> +		if [ -z "${objtoolopt}" ]; then
+> +			objtoolopt="check --vmlinux"
+> +		else
+> +			objtoolopt="${objtoolopt} --vmlinux"
+> +		fi
+> +	fi
+> +
+> +	if [ -n "${objtoolopt}" ]; then
+>  		if [ -z "${CONFIG_FRAME_POINTER}" ]; then
+>  			objtoolopt="${objtoolopt} --no-fp"
+>  		fi
+> -- 
+> 2.28.0.402.g5ffc5be6b7-goog
+> 
 
-base-commit: 1bebdcb928eba880f3a119bacb8149216206958a
 -- 
-Sent by a computer, using git, on the internet
-
+Kees Cook
