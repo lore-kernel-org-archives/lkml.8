@@ -2,84 +2,75 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35506C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E7BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15CA720897
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B7B205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:30:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AurlFm8E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgICI2h (ORCPT
+        id S1728287AbgICIa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:28:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40582 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgICI2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:28:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 32A4BAD1A;
-        Thu,  3 Sep 2020 08:28:34 +0000 (UTC)
-Date:   Thu, 3 Sep 2020 10:28:32 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Yu Zhao <yuzhao@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] mm: use
- add_page_to_lru_list()/page_lru()/page_off_lru()
-Message-ID: <20200903082832.GR4617@dhcp22.suse.cz>
-References: <20200831175042.3527153-1-yuzhao@google.com>
+        Thu, 3 Sep 2020 04:30:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbgICIaY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 04:30:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B742C061244;
+        Thu,  3 Sep 2020 01:30:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=3MgBkKtO18c1EGgyVlxbiG0QwjmCjivVqUDJFotKWhw=; b=AurlFm8EevE2HbHY/aFA76ArzX
+        ZBwOIqNTzMC5qmJ7aoNTXabOe03S3PpLbHwsFeYcJEyfsRR4CuUPOAIeYECk2gJFdQWoVBD3erlJd
+        5fO2fh/liMAOffe79oXQ8i0+tRjMgEsygbC7Nb88FFmnspv7TUSVC/t0kCinBA/adAzi5pSfSnZA3
+        N7tK6PuMVpWBg0+FkW3uTJ8oRS/YCXuKgau2xHeOWeIg/FnZlxOXj8xPXTjce/Pi8DxUU+wEoO6n8
+        NL/BlxTZv5tjmH8R7WY7f1xERYuNTDMdmSUPqrSjDlg/FeyHg23ymRGqa04hgK+b8qdavg6BjG3Zs
+        t0p4y8Wg==;
+Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDkdP-0000yv-Df; Thu, 03 Sep 2020 08:30:19 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     sth@linux.ibm.com, hoeppner@linux.ibm.com
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dasd: remove the unused dasd_enable_device export
+Date:   Thu,  3 Sep 2020 10:30:18 +0200
+Message-Id: <20200903083018.507894-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831175042.3527153-1-yuzhao@google.com>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 31-08-20 11:50:41, Yu Zhao wrote:
-[...]
-> @@ -1860,16 +1859,11 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
->  		lruvec = mem_cgroup_page_lruvec(page, pgdat);
->  
->  		SetPageLRU(page);
-> -		lru = page_lru(page);
-> -
-> -		nr_pages = thp_nr_pages(page);
-> -		update_lru_size(lruvec, lru, page_zonenum(page), nr_pages);
-> -		list_move(&page->lru, &lruvec->lists[lru]);
-> +		add_page_to_lru_list(page, lruvec, page_lru(page));
->  
->  		if (put_page_testzero(page)) {
->  			__ClearPageLRU(page);
-> -			__ClearPageActive(page);
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/s390/block/dasd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-This should go into its own patch. The rest is a mechanical and clear.
-This one needs some head scratching. E.g. Is it correct for all compound
-pages. I believe it should be but few words on why would be better.
-
-> -			del_page_from_lru_list(page, lruvec, lru);
-> +			del_page_from_lru_list(page, lruvec, page_off_lru(page));
->  
->  			if (unlikely(PageCompound(page))) {
->  				spin_unlock_irq(&pgdat->lru_lock);
-> @@ -1878,6 +1872,7 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
->  			} else
->  				list_add(&page->lru, &pages_to_free);
->  		} else {
-> +			nr_pages = thp_nr_pages(page);
->  			nr_moved += nr_pages;
->  			if (PageActive(page))
->  				workingset_age_nonresident(lruvec, nr_pages);
-> -- 
-> 2.28.0.402.g5ffc5be6b7-goog
-> 
-
+diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
+index eb17fea8075c6f..6ab992b3eed004 100644
+--- a/drivers/s390/block/dasd.c
++++ b/drivers/s390/block/dasd.c
+@@ -683,7 +683,6 @@ void dasd_enable_device(struct dasd_device *device)
+ 	if (device->discipline->kick_validate)
+ 		device->discipline->kick_validate(device);
+ }
+-EXPORT_SYMBOL(dasd_enable_device);
+ 
+ /*
+  * SECTION: device operation (interrupt handler, start i/o, term i/o ...)
 -- 
-Michal Hocko
-SUSE Labs
+2.28.0
+
