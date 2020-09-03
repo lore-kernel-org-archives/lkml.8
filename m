@@ -2,83 +2,294 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDCDC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D0CC2D0A8
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E35C0206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:15:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599164140;
-	bh=n+3Wp9V3/5aQhV31y4gQSuF5aEZJ87VPqglKL2WFwV0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HXj7FnS56Xt77Us+JLE57xokG9VeFe1JGxULBIXXr+/rsIU21lINA4pnubY2dthNi
-	 q+8QN5NYaKhVfCYDyi/2fVGhl9PQmuqUQmj0XBS7kAB568bdLULJXjdryhkHy5mjfU
-	 6n/8iqrbY/+EAU2fBigjMpgimtEHsa1SUFEux0ww=
+	by mail.kernel.org (Postfix) with ESMTP id 8905B206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:15:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="akAJRBG5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbgICUPi (ORCPT
+        id S1729226AbgICUPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:15:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728975AbgICUPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:15:38 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 3 Sep 2020 16:15:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46372 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728975AbgICUPm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 16:15:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599164139;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VqFui9oj1cM5DRlG5bU+EfxWGLYe7oYtwPI4hKaTr4c=;
+        b=akAJRBG5aPBvBB2C81jfK3XkZHI/s8oicvxmTot54LiHoODSXQmOwfIGSVOLmp82i0ESK2
+        IyrW/oHf2xIeoj5Z0eJzFF6XVLLB5Kp4IxXofCE7aJUY7HjyiLpt7Kch7ZG8N2FX0IAZ0L
+        mEM2dkD5oraVnrzq04ooZJ+GI4l3V+0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-ZU22fIEkNEGmc00k0RIb2A-1; Thu, 03 Sep 2020 16:15:37 -0400
+X-MC-Unique: ZU22fIEkNEGmc00k0RIb2A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0FF1206C0;
-        Thu,  3 Sep 2020 20:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599164137;
-        bh=n+3Wp9V3/5aQhV31y4gQSuF5aEZJ87VPqglKL2WFwV0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wUFdAONfMbsiICSCwoh6ZkO/krezxjj0k6F5lF4CicUs1fqe5U2WCaWRKNmSaDE58
-         Mgpk5rox+3B6vBDXAfS/mJxPj4cJWaWclErkN5MsgYcPxQuujwPMqY6kvMh2TH9Hk3
-         kvXctSz+bzs76+ZB+DPfhrcEQbRx4tdx9Pm/fqKY=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9151A40D3D; Thu,  3 Sep 2020 17:15:35 -0300 (-03)
-Date:   Thu, 3 Sep 2020 17:15:35 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/6] perf tools: Consolidate --control option parsing
- into one function
-Message-ID: <20200903201535.GL3495158@kernel.org>
-References: <20200901093758.32293-1-adrian.hunter@intel.com>
- <20200901093758.32293-2-adrian.hunter@intel.com>
- <d4769bfe-8d5a-b510-23ae-65012889bf92@linux.intel.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DA3D801AEA;
+        Thu,  3 Sep 2020 20:15:36 +0000 (UTC)
+Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 05EC8702ED;
+        Thu,  3 Sep 2020 20:15:31 +0000 (UTC)
+Subject: Re: [PATCH v4 07/10] vfio/fsl-mc: Add irq infrastructure for fsl-mc
+ devices
+To:     Diana Craciun <diana.craciun@oss.nxp.com>,
+        alex.williamson@redhat.com, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
+        laurentiu.tudor@nxp.com, Bharat Bhushan <Bharat.Bhushan@nxp.com>
+References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
+ <20200826093315.5279-8-diana.craciun@oss.nxp.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <9dacbfc8-32a6-54c9-ce0c-50538ee588bf@redhat.com>
+Date:   Thu, 3 Sep 2020 22:15:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d4769bfe-8d5a-b510-23ae-65012889bf92@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200826093315.5279-8-diana.craciun@oss.nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Sep 02, 2020 at 07:06:51PM +0300, Alexey Budankov escreveu:
-> 
-> On 01.09.2020 12:37, Adrian Hunter wrote:
-> > Consolidate --control option parsing into one function, in preparation for
-> > adding FIFO file name options.
-> > 
-> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> > ---
-> >  tools/perf/builtin-record.c | 22 ++--------------------
-> >  tools/perf/builtin-stat.c   | 22 ++--------------------
-> >  tools/perf/util/evlist.c    | 24 ++++++++++++++++++++++++
-> >  tools/perf/util/evlist.h    |  1 +
-> >  4 files changed, 29 insertions(+), 40 deletions(-)
-> 
-> Acked-by: Alexei Budankov <alexey.budankov@linux.intel.com>
+Hi Diana,
 
-Thanks, applied.
+On 8/26/20 11:33 AM, Diana Craciun wrote:
+> This patch adds the skeleton for interrupt support
+> for fsl-mc devices. The interrupts are not yet functional,
+> the functionality will be added by subsequent patches.
+> 
+> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+> ---
+>  drivers/vfio/fsl-mc/Makefile              |  2 +-
+>  drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 75 ++++++++++++++++++++++-
+>  drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c    | 63 +++++++++++++++++++
+>  drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |  7 ++-
+>  4 files changed, 143 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
+> 
+> diff --git a/drivers/vfio/fsl-mc/Makefile b/drivers/vfio/fsl-mc/Makefile
+> index 0c6e5d2ddaae..cad6dbf0b735 100644
+> --- a/drivers/vfio/fsl-mc/Makefile
+> +++ b/drivers/vfio/fsl-mc/Makefile
+> @@ -1,4 +1,4 @@
+>  # SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+>  
+> -vfio-fsl-mc-y := vfio_fsl_mc.o
+> +vfio-fsl-mc-y := vfio_fsl_mc.o vfio_fsl_mc_intr.o
+>  obj-$(CONFIG_VFIO_FSL_MC) += vfio-fsl-mc.o
+> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> index bbd3365e877e..42014297b484 100644
+> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> @@ -209,11 +209,79 @@ static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
+>  	}
+>  	case VFIO_DEVICE_GET_IRQ_INFO:
+>  	{
+> -		return -ENOTTY;
+> +		struct vfio_irq_info info;
+> +
+> +		minsz = offsetofend(struct vfio_irq_info, count);
+> +		if (copy_from_user(&info, (void __user *)arg, minsz))
+> +			return -EFAULT;
+> +
+> +		if (info.argsz < minsz)
+> +			return -EINVAL;
+> +
+> +		if (info.index >= mc_dev->obj_desc.irq_count)
+> +			return -EINVAL;
+> +
+> +		info.flags = VFIO_IRQ_INFO_EVENTFD;
+shouldn't it be MASKABLE as well? I see skeletons for MASK.
+> +		info.count = 1;
+> +
+> +		return copy_to_user((void __user *)arg, &info, minsz);
+>  	}
+>  	case VFIO_DEVICE_SET_IRQS:
+>  	{
+> -		return -ENOTTY;
+> +		struct vfio_irq_set hdr;
+> +		u8 *data = NULL;
+> +		int ret = 0;
+> +
+> +		minsz = offsetofend(struct vfio_irq_set, count);
+> +
+> +		if (copy_from_user(&hdr, (void __user *)arg, minsz))
+> +			return -EFAULT;
+> +
+> +		if (hdr.argsz < minsz)
+> +			return -EINVAL;
+> +
+> +		if (hdr.index >= mc_dev->obj_desc.irq_count)
+> +			return -EINVAL;
+> +
+> +		if (hdr.start != 0 || hdr.count > 1)
+> +			return -EINVAL;
+> +
+> +		if (hdr.count == 0 &&
+> +		    (!(hdr.flags & VFIO_IRQ_SET_DATA_NONE) ||
+> +		    !(hdr.flags & VFIO_IRQ_SET_ACTION_TRIGGER)))
+> +			return -EINVAL;
+> +
+> +		if (hdr.flags & ~(VFIO_IRQ_SET_DATA_TYPE_MASK |
+> +				  VFIO_IRQ_SET_ACTION_TYPE_MASK))
+> +			return -EINVAL;
+> +
+> +		if (!(hdr.flags & VFIO_IRQ_SET_DATA_NONE)) {
+> +			size_t size;
+> +
+> +			if (hdr.flags & VFIO_IRQ_SET_DATA_BOOL)
+> +				size = sizeof(uint8_t);
+> +			else if (hdr.flags & VFIO_IRQ_SET_DATA_EVENTFD)
+> +				size = sizeof(int32_t);
+> +			else
+> +				return -EINVAL;
+> +
+> +			if (hdr.argsz - minsz < hdr.count * size)
+> +				return -EINVAL;
+> +
+> +			data = memdup_user((void __user *)(arg + minsz),
+> +					   hdr.count * size);
+> +			if (IS_ERR(data))
+> +				return PTR_ERR(data);
+> +		}
+can't you reuse vfio_set_irqs_validate_and_prepare()?
+> +
+> +		mutex_lock(&vdev->igate);
+> +		ret = vfio_fsl_mc_set_irqs_ioctl(vdev, hdr.flags,
+> +						 hdr.index, hdr.start,
+> +						 hdr.count, data);
+> +		mutex_unlock(&vdev->igate);
+> +		kfree(data);
+> +
+> +		return ret;
+>  	}
+>  	case VFIO_DEVICE_RESET:
+>  	{
+> @@ -413,6 +481,8 @@ static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
+>  		return ret;
+>  	}
+>  
+> +	mutex_init(&vdev->igate);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -436,6 +506,7 @@ static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
+>  	mc_dev->mc_io = NULL;
+>  
+>  	vfio_fsl_mc_reflck_put(vdev->reflck);
+> +	mutex_destroy(&vdev->igate);
+>  
+>  	vfio_iommu_group_put(mc_dev->dev.iommu_group, dev);
+>  
+> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
+> new file mode 100644
+> index 000000000000..058aa97aa54a
+> --- /dev/null
+> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
+> @@ -0,0 +1,63 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+> +/*
+> + * Copyright 2013-2016 Freescale Semiconductor Inc.
+> + * Copyright 2019 NXP
+> + */
+> +
+> +#include <linux/vfio.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+> +#include <linux/eventfd.h>
+> +#include <linux/msi.h>
+> +
+> +#include "linux/fsl/mc.h"
+> +#include "vfio_fsl_mc_private.h"
+> +
+> +static int vfio_fsl_mc_irq_mask(struct vfio_fsl_mc_device *vdev,
+> +				unsigned int index, unsigned int start,
+> +				unsigned int count, u32 flags,
+> +				void *data)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static int vfio_fsl_mc_irq_unmask(struct vfio_fsl_mc_device *vdev,
+> +				unsigned int index, unsigned int start,
+> +				unsigned int count, u32 flags,
+> +				void *data)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static int vfio_fsl_mc_set_irq_trigger(struct vfio_fsl_mc_device *vdev,
+> +				       unsigned int index, unsigned int start,
+> +				       unsigned int count, u32 flags,
+> +				       void *data)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
+> +			       u32 flags, unsigned int index,
+> +			       unsigned int start, unsigned int count,
+> +			       void *data)
+> +{
+> +	int ret = -ENOTTY;
+> +
+> +	switch (flags & VFIO_IRQ_SET_ACTION_TYPE_MASK) {
+> +	case VFIO_IRQ_SET_ACTION_MASK:
+> +		ret = vfio_fsl_mc_irq_mask(vdev, index, start, count,
+> +					   flags, data);
+> +		break;
+> +	case VFIO_IRQ_SET_ACTION_UNMASK:
+> +		ret = vfio_fsl_mc_irq_unmask(vdev, index, start, count,
+> +					     flags, data);
+> +		break;
+> +	case VFIO_IRQ_SET_ACTION_TRIGGER:
+> +		ret = vfio_fsl_mc_set_irq_trigger(vdev, index, start,
+> +						  count, flags, data);
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> index 3b85d930e060..d5b6fe891a48 100644
+> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> @@ -34,7 +34,12 @@ struct vfio_fsl_mc_device {
+>  	u32				num_regions;
+>  	struct vfio_fsl_mc_region	*regions;
+>  	struct vfio_fsl_mc_reflck   *reflck;
+> -
+> +	struct mutex         igate;
+>  };
+>  
+> +extern int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
+> +			       u32 flags, unsigned int index,
+> +			       unsigned int start, unsigned int count,
+> +			       void *data);
+> +
+>  #endif /* VFIO_FSL_MC_PRIVATE_H */
+> 
+Thanks
 
-- Arnaldo
+Eric
+
