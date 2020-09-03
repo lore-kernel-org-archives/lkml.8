@@ -2,83 +2,131 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC5EC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6492C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD8DA2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F03E2071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgICFfx (ORCPT
+        id S1727908AbgICFg0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 01:35:53 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:34292 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726994AbgICFft (ORCPT
+        Thu, 3 Sep 2020 01:36:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgICFgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 01:35:49 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0U7nAZp3_1599111342;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U7nAZp3_1599111342)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 03 Sep 2020 13:35:43 +0800
-Subject: Re: [PATCH v2 2/2] mm/pageblock: remove false sharing in
- pageblock_flags
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Vlastimil Babka <vbabka@suse.cz>
-References: <1597816075-61091-1-git-send-email-alex.shi@linux.alibaba.com>
- <1597816075-61091-2-git-send-email-alex.shi@linux.alibaba.com>
- <715f1588-9cd5-b845-51a5-ca58549c4d28@arm.com>
- <a7376a9c-82e8-7dc1-b656-9c0516738801@linux.alibaba.com>
- <CAKgT0UcXRB2HH4S+k=SmTz0Dgw9pKp=i4kT4U+yy8MFVC6_JWQ@mail.gmail.com>
- <e2bda56b-445d-f2a3-3a3c-3193d65cc743@linux.alibaba.com>
- <CAKgT0UdwOiFocPO5GtjeysPGtOPVVp3E507Wedwz69Em=ejqXw@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <8a7a698b-1d36-897d-7ef0-75ec022663c1@linux.alibaba.com>
-Date:   Thu, 3 Sep 2020 13:35:34 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Thu, 3 Sep 2020 01:36:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5017AC061245
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 22:36:25 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1kDhur-0000zh-FE; Thu, 03 Sep 2020 07:36:09 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1kDhuo-0004TH-94; Thu, 03 Sep 2020 07:36:06 +0200
+Date:   Thu, 3 Sep 2020 07:36:06 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@kernel.org>,
+        linux-i2c@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 6/9] i2c: imx: Simplify with dev_err_probe()
+Message-ID: <20200903053606.pwcqxoepj3vmlt4r@pengutronix.de>
+References: <20200902150643.14839-1-krzk@kernel.org>
+ <20200902150643.14839-6-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UdwOiFocPO5GtjeysPGtOPVVp3E507Wedwz69Em=ejqXw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200902150643.14839-6-krzk@kernel.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:34:56 up 292 days, 20:53, 274 users,  load average: 0.00, 0.02,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 02, 2020 at 05:06:40PM +0200, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-在 2020/8/31 上午4:32, Alexander Duyck 写道:
->> Right that the different level to fix this problem, but narrow the cmpxchg
->> comparsion is still needed and helpful.
-> What I was getting at though is that I am not sure that is the case.
-> Normally I believe we are always holding the zone lock when updating
-> the migrate type. The skip flag is a one-off operation that could
-> easily be addressed by changing the logic to use atomic_and or
-> atomic_or for the cases where we are updating single bit flags and
-> setting the mask value to all 1's or all 0's. So adding this extra
-> complexity which only really applies to the skip bit may not provide
-> much value, especially as there are a number of possible paths that
-> don't use the skip bit anyway.
+> ---
+>  drivers/i2c/busses/i2c-imx.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> index 0ab5381aa012..63f4367c312b 100644
+> --- a/drivers/i2c/busses/i2c-imx.c
+> +++ b/drivers/i2c/busses/i2c-imx.c
+> @@ -1159,11 +1159,9 @@ static int i2c_imx_probe(struct platform_device *pdev)
+>  
+>  	/* Get I2C clock */
+>  	i2c_imx->clk = devm_clk_get(&pdev->dev, NULL);
+> -	if (IS_ERR(i2c_imx->clk)) {
+> -		if (PTR_ERR(i2c_imx->clk) != -EPROBE_DEFER)
+> -			dev_err(&pdev->dev, "can't get I2C clock\n");
+> -		return PTR_ERR(i2c_imx->clk);
+> -	}
+> +	if (IS_ERR(i2c_imx->clk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(i2c_imx->clk),
+> +				     "can't get I2C clock\n");
+>  
+>  	ret = clk_prepare_enable(i2c_imx->clk);
+>  	if (ret) {
+> -- 
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-
-Using atomic bit set is only helpful for skip bit. but migrate bits are still
-do the false sharing sync large.
-
-And actully, for this issue on cmpxchg, it's cross arch issue which it's better
-addressed in kernel. I see much of cmpxchg is using in kernel, but no one mentioned
-the shortage on this. On this pointer, this problem should be resovled in kernel.
-
-Thanks
-Alex
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
