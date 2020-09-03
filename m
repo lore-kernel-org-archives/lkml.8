@@ -2,114 +2,87 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4F8C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73CEC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83C9E2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:43:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q0d/Y/mg"
+	by mail.kernel.org (Postfix) with ESMTP id 7FF90207D3
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599101030;
+	bh=wSdnK9EK3cn9BWVceilg/laGb14SLihQHTT+htVISis=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=V/jxD5ZoqN5bTaUjw5vo0WbG9p3d1ZpjiexwMZ6m4ZO7Zmx5kzSwkRRBPSE1j1URa
+	 pmYvi/CRiEGcHrU27zxUJBmg6f03/6llwYHnDMQ/IPm9eXDXqFC0z6Whbz7yXAeBeu
+	 A8pZh8kBF2Ns2nDAos5Krvht9cXyU59LNZ5VYIso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgICCnR (ORCPT
+        id S1728035AbgICCnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 22:43:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgICCnQ (ORCPT
+        Wed, 2 Sep 2020 22:43:49 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:17934 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbgICCns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 22:43:16 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D89FCC061244;
-        Wed,  2 Sep 2020 19:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=R9wsgh5OhpmeQRbKxOY/dzd+1XG9pkbfv3w+MHt05O0=; b=Q0d/Y/mgV4RO/6ooAH/2LXQB85
-        ZikQYl7DEhJw0JBCVSjXGIcMbVl6zsAqiApPOSzVrO1y8bK3bKKyj9OTWEA+5qMAYhsU3JZXS2eK5
-        9a7hRAU2SIdQMGbq9DDRom0iyJUHoYGUhZXS/YeZca/sFcJ73/1tB8KnKA+zc3rpv8y4UMgXfcnBK
-        jvx39XdFtkReY7yBDOHTu6qi5cjTUROqvV3hq6TweDxWDjVMfByghE+0yJm/Vyw0iKbPXUGwXR6FK
-        Bugf06xfP81L7EWL2gpauc3So1OuivWqjC4vIEy8FaELOqdfi3+mqrqmLR+WmxnGW+45sGf2H3t+I
-        m5W0id0g==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDfDT-0007N5-CZ; Thu, 03 Sep 2020 02:43:11 +0000
-Subject: Re: [PATCH 0/2] docs: Add automatic cross-reference for C types
-To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
-        <nfraprado@protonmail.com>, Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org, andrealmeid@collabora.com
-References: <20200903005747.3900333-1-nfraprado@protonmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <1a03c65e-6fbc-25f9-e553-61259a310f29@infradead.org>
-Date:   Wed, 2 Sep 2020 19:43:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 2 Sep 2020 22:43:48 -0400
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 0832hHWY027036;
+        Thu, 3 Sep 2020 11:43:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 0832hHWY027036
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1599100998;
+        bh=T86p3R1UH15ZPoKGCOPyksmepZB9QQB30q3jQAGkwRE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fV/JumyRvG8kodg5McCAZLsnkb1n5nP8xONCgYzdUr4ntano6BjPuu52cRhTcnJuN
+         1XFb0Kc1u5NqxbCunIveZs4wmdICx+N351PtrxPDUhkCBBsIq/1Mh39yCfVfVnTCfd
+         g+ZIYGRci3JLMsyAEZPU7aR7n/82eWXLsGCspzKdIv9nQXR1PmRY5LkIXTpPUm5C1P
+         GTZaxBpSarQ+0NXqiDLFQXdFpNqz56bAaQxW1Y96r6ncl4JwFSgRmVnsUjP7Tj6D8L
+         4ICJu4fa+15yMxo1w33F7s3kPMkNkLeFRZAJz5/cEZwG+jmkewwrSiswOjtoTCfufP
+         cOHFIHLalgdrg==
+X-Nifty-SrcIP: [209.85.215.177]
+Received: by mail-pg1-f177.google.com with SMTP id d19so860558pgl.10;
+        Wed, 02 Sep 2020 19:43:18 -0700 (PDT)
+X-Gm-Message-State: AOAM530OXpBLsYE0b8s7QRVhXxFx+MKfOuJ/u9KSryuAqm9BkG35cqgZ
+        odJE3HGJGty9698b1yMSGJMp4FxhYUDm7Abz4BA=
+X-Google-Smtp-Source: ABdhPJzWZumYo+YwOqw2M5VZl8AaHtf7nEfOU3fo5VFC0j5NrdhFt1CSGIFbvlah7dSMPqXRlDT8nfl8QHu77ZME7Iw=
+X-Received: by 2002:a63:541e:: with SMTP id i30mr937750pgb.47.1599100997560;
+ Wed, 02 Sep 2020 19:43:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200903005747.3900333-1-nfraprado@protonmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <be80ceda-596b-03aa-394f-166cc6388aa0@infradead.org>
+ <CAK7LNAQekh08D6=+CqRWiB7F4KCLOgSK9oof8ArVUvMc7B1YXQ@mail.gmail.com>
+ <CALaQ_hq01BCA7=sVJjm6LQrjjBFy1V79uUXcRXeLBB5g3k9M1Q@mail.gmail.com>
+ <CAK7LNARp41EXMmT+ghGVw0Ew8wgHND+Ufn_uCevaVk+OP2-UFQ@mail.gmail.com> <CALaQ_hrs8piRh2-JacEkmrHZQ=rM7yvZUStWfO0YPhNRRYiSBw@mail.gmail.com>
+In-Reply-To: <CALaQ_hrs8piRh2-JacEkmrHZQ=rM7yvZUStWfO0YPhNRRYiSBw@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 3 Sep 2020 11:42:41 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQWLbH2+01_-Z6ts899FbA0SWndXAc4mjzNT7_BNT_Uwg@mail.gmail.com>
+Message-ID: <CAK7LNAQWLbH2+01_-Z6ts899FbA0SWndXAc4mjzNT7_BNT_Uwg@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: streamline_config.pl: check defined(ENV
+ variable) before using it
+To:     Nathan Royce <nroycea+kernel@gmail.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Changbin Du <changbin.du@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 5:58 PM, Nícolas F. R. A. Prado wrote:
-> In order to cross-reference C types in the documentation, Sphinx
-> requires the syntax :c:type:`type_name`, or even :c:type:`struct
-> type_name <type_name>` in order to have the link text different from the
-> target text.
-> This patch series removes the need for that markup.
-> 
-> The first commit extends the automarkup script to enable automatic
-> cross-reference of C types by matching any "struct|union|enum|typedef type_name"
-> expression.
-> This makes the documentation's plain text cleaner and adds cross-reference to
-> types without any additional effort by the author.
-> 
-> The second commit updates the "Cross-referencing from
-> reStructuredText" section in Documentation/doc-guide/kernel-doc.rst
-> to reflect that no additional syntax is needed when cross-referencing both types
-> and functions anymore.
-> 
-> When testing this, I did find an edge-case from the output of
-> Documentation/output/scsi/scsi_mid_low_api.rst on the "typedef struct scsi_cmnd
-> Scsi_Cmnd;", where 'typedef struct' is being identified as a reference, but
-> there isn't any named 'struct', so it renders bold.
+On Thu, Sep 3, 2020 at 11:18 AM Nathan Royce <nroycea+kernel@gmail.com> wrote:
+>
+> Heard, but all the same if it isn't important (which I'm assuming),
+> I'd just as soon be left out of it. That's just the way I am in
+> general, not wanting to be seen unless I have to be seen. Thanks
+> though.
 
-There also isn't any file name scsi_typedefs.h any longer,
-so maybe we can update scsi_mid_low_api.rst as well.
-
-Thanks.
-
-> I thought of adding an ignore_names list just like there is one for functions,
-> with 'struct' in it, to workaround this edge case, but since it was the only
-> one I found, and also because it was unclear what the desired output was
-> (cross-reference 'struct scsi_cmnd' or leave the whole expression as plain text)
-> I wanted to get some feedback beforehand.
-> 
-> After getting this merged I intend to start removing the occurrences of :c:type.
-> 
-> Thanks,
-> Nícolas
-> 
-> Nícolas F. R. A. Prado (2):
->   docs: Add automatic cross-reference for C types
->   kernel-doc: Update "cross-referencing from rST" section to use
->     automarkup
-> 
->  Documentation/doc-guide/kernel-doc.rst | 33 ++++++++++++-----------
->  Documentation/sphinx/automarkup.py     | 37 +++++++++++++++++---------
->  2 files changed, 41 insertions(+), 29 deletions(-)
-> 
+OK, I will drop your tag.
 
 
 -- 
-~Randy
-
+Best Regards
+Masahiro Yamada
