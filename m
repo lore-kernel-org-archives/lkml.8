@@ -2,119 +2,244 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0530BC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9C5C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D272B2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750AB2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:02:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMzVYFt6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SHpt84o+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgICFBc (ORCPT
+        id S1726833AbgICFCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 01:01:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33426 "EHLO
+        Thu, 3 Sep 2020 01:02:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgICFBb (ORCPT
+        with ESMTP id S1725851AbgICFCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 01:01:31 -0400
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01BD4C061244;
-        Wed,  2 Sep 2020 22:01:31 -0700 (PDT)
-Received: by mail-io1-xd31.google.com with SMTP id z25so1341121iol.10;
-        Wed, 02 Sep 2020 22:01:30 -0700 (PDT)
+        Thu, 3 Sep 2020 01:02:46 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AE1EC061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 22:02:46 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id b123so1006431vsd.10
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 22:02:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VhropMQESNSMSxgIqr1ZDerfNQ9kD0plBvpn1qDMszM=;
-        b=nMzVYFt6wL+sFTiIRt+EX4YPgpv0eQNE7JufaNot1Lr+3QgrM7JZ/voUg/qQ7UbL+p
-         DQFGu5umpYZ+THfWnkJ4mXU4H4h7jITCMmeZ+hS79U8+8OwI8Z5TRXx+hMbyzC4DHb/K
-         5aNKWNw8+2M6tDNSwADL1VeJDZOaPykT8EDJepafKstZiG2xtkhfmmcVB69wrouZM7ZY
-         5am1zK3eAt82Pih+91tSc63Z+VPnOGgGbmATRryeJT17ziZG0VYHgrEabiSxD9JssVNQ
-         AFY4pFaMCvYNN1+VSpco4qt67qf/LmkFhAMXS5CLyISWgtFm7KnJu/gzO59tJ1a0ci0F
-         HsFA==
+         :cc:content-transfer-encoding;
+        bh=z7HUFQqmgdU8aA4cxSgMuOMzfLXK0ilDk0Apd5kUyh8=;
+        b=SHpt84o+XBRzfnfl7PXACuPew2iCK770L2IfH6IBn/R8rpPFYL5TD6U748C/Q7wWFs
+         +K8WIOTb+zKHcampOpiDSzBzqfeEGgIRzcjuW6TP6UxbjA7HdPc0UezGIYLO6Sw+SoyN
+         dhQ4N0xkVkkuJqWE7G7PkvZar/Xe+zaUEFjLfjgbl0yFvSiq2CmsF3gucGBoiaPnBzVa
+         Pa9TlDlTthKaM3zypFy2CYf7lBviK14HfXZ3HjLIIHj+pvXFSFfCWt5dYv9noN5493MO
+         svy5fIj1uYT6pPbSZYSltO3oNHiBPKRVNffKf+xY7/5reF3qxYCu4xHfnEBjGV4Sqllr
+         n5HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VhropMQESNSMSxgIqr1ZDerfNQ9kD0plBvpn1qDMszM=;
-        b=EbZ1jR0O475+3q6f1kCMg0ffByXo5jPjBPD45u8/INxBzOaSJfeu9YyBl+d8XDyxcW
-         mt6ZLQfo73mIJ+7CBZzk1bR/3UA0m+6GwIfdnYGFD1RuBFsnW50f+EmXf5hlhSFDtk++
-         TgKfBeuVTsU6qu+jqMKLTH0aGa/tF51jKciWGgXttqUBUaffc8ISObOUr5z6SQUxDjRu
-         xLGGnjmq5pHtV5uwh1y4bmu1I+Uz4g1cYhL6ZeLhf0R9uQ9sGCzkHWFUbfso+E4TU+NY
-         zrqlmcQ6XoK02zhS4UfxLTuvGQfihXy2e02YGWmrFI4ihkSFFKf+OpEoYHMlN8SjJaH+
-         D+cQ==
-X-Gm-Message-State: AOAM532QkEvUJOvBTa1LDoiewRCOJXWxRtOHeHYnKJfPZ5rEyTg8xgUY
-        +6z/Sr56In1s5NmF3SD9Rbey1v9/oqh2vCL1RPs=
-X-Google-Smtp-Source: ABdhPJxSLl08LwgQXvNl2k2JfN0eiQKtQpbmY5tdMgIWtI3pbR9WbDSPo++rGQCGHTg4BzBcS/f4SrxAilGknxK49gA=
-X-Received: by 2002:a05:6602:1589:: with SMTP id e9mr1576006iow.85.1599109289807;
- Wed, 02 Sep 2020 22:01:29 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=z7HUFQqmgdU8aA4cxSgMuOMzfLXK0ilDk0Apd5kUyh8=;
+        b=FGjxwsuKsgvfLvCA+DxJuamZkSdHmkcyvlU1WxWTLe0zB+UWNayHTfWylm/TW2WzCw
+         18LvZ56gUHu0fGD5mzeDwOETWyD7vMkbEnshAyXsObE3M+xL9uVsBuDZdqgzeoZVHPB2
+         G5T6ujls7LYPOO6pfaYtqlS5kEadSVu3ve0oxDfOdCNYtiIN3XHwcKfpsxosOI3fJ6fy
+         jy04D+F3tFE5KeBaDQ0FDyFqYjxH/9YPv32cCTqrfl59gOBCN6LiOJvknDPojm2NGRgF
+         ZHrbJxdDAV46MT+l0PMI1s1c48A8LqUfhOiPMgaWs14ftOImfr6G542adHdNwPxMiP5v
+         oJYg==
+X-Gm-Message-State: AOAM532BDDEt26gr6bUiyWqL9UhBs0c4Iagtl750DZGX9nKYqXT8A+YD
+        uS72VlDBpqL/2pAZRbOfz1TfsNfT+uZEObEBKztnIBdVwvvdh83z
+X-Google-Smtp-Source: ABdhPJzmz6sTvss+05sD4rC3K2xrvF2iwZDvzg+8Ejpym6/zbGwz8nJMesRTw1l7ivkFrMKNB+a7X1BgW/+nme0iAjk=
+X-Received: by 2002:a67:1204:: with SMTP id 4mr569860vss.40.1599109365380;
+ Wed, 02 Sep 2020 22:02:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
- <20200623134259.8197-1-mzhivich@akamai.com> <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
- <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
- <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
- <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com> <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
- <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com> <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
- <20200822032800.16296-1-hdanton@sina.com> <CACS=qqKhsu6waaXndO5tQL_gC9TztuUQpqQigJA2Ac0y12czMQ@mail.gmail.com>
- <20200825032312.11776-1-hdanton@sina.com> <CACS=qqK-5g-QM_vczjY+A=3fi3gChei4cAkKweZ4Sn2L537DQA@mail.gmail.com>
- <20200825162329.11292-1-hdanton@sina.com> <CACS=qqKgiwdCR_5+z-vkZ0X8DfzOPD7_ooJ_imeBnx+X1zw2qg@mail.gmail.com>
- <CACS=qqKptAQQGiMoCs1Zgs9S4ZppHhasy1AK4df2NxnCDR+vCw@mail.gmail.com>
- <5f46032e.1c69fb81.9880c.7a6cSMTPIN_ADDED_MISSING@mx.google.com>
- <CACS=qq+Yw734DWhETNAULyBZiy_zyjuzzOL-NO30AB7fd2vUOQ@mail.gmail.com>
- <20200827125747.5816-1-hdanton@sina.com> <CACS=qq+a0H=e8yLFu95aE7Hr0bQ9ytCBBn2rFx82oJnPpkBpvg@mail.gmail.com>
-In-Reply-To: <CACS=qq+a0H=e8yLFu95aE7Hr0bQ9ytCBBn2rFx82oJnPpkBpvg@mail.gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Wed, 2 Sep 2020 22:01:17 -0700
-Message-ID: <CAM_iQpV-JMURzFApp-Zhxs3QN9j=Zdf6yqwOP=E42ERDHxe6Hw@mail.gmail.com>
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-To:     Kehuan Feng <kehuan.feng@gmail.com>
-Cc:     Hillf Danton <hdanton@sina.com>, Jike Song <albcamus@gmail.com>,
-        Josh Hunt <johunt@akamai.com>, Paolo Abeni <pabeni@redhat.com>,
-        Jonas Bonn <jonas.bonn@netrounds.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        David Miller <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000002d36f305ae61a588"
+References: <20200902074814.459749499@linuxfoundation.org>
+In-Reply-To: <20200902074814.459749499@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 3 Sep 2020 10:32:33 +0530
+Message-ID: <CA+G9fYv9XKBtKDKR8POjibYN_tkdorT3TFe5fhvehji_SOQ2Rw@mail.gmail.com>
+Subject: Re: [PATCH 4.4 00/61] 4.4.235-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000002d36f305ae61a588
-Content-Type: text/plain; charset="UTF-8"
+On Wed, 2 Sep 2020 at 13:18, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.4.235 release.
+> There are 61 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 04 Sep 2020 07:47:57 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.4.235-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Hello, Kehuan
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Can you test the attached one-line fix? I think we are overthinking,
-probably all
-we need here is a busy wait.
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Thanks.
+Summary
+------------------------------------------------------------------------
 
---0000000000002d36f305ae61a588
-Content-Type: text/x-patch; charset="US-ASCII"; name="qdisc-seqlock.diff"
-Content-Disposition: attachment; filename="qdisc-seqlock.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_kemc7lqb0>
-X-Attachment-Id: f_kemc7lqb0
+kernel: 4.4.235-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.4.y
+git commit: 279089e8e4d583d11574ccfa4a5ded543cba96cd
+git describe: v4.4.234-62-g279089e8e4d5
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
+ld/v4.4.234-62-g279089e8e4d5
 
-ZGlmZiAtLWdpdCBhL2luY2x1ZGUvbmV0L3NjaF9nZW5lcmljLmggYi9pbmNsdWRlL25ldC9zY2hf
-Z2VuZXJpYy5oCmluZGV4IGQ2MGU3YzM5ZDYwYy4uZmMxYmFjZGIxMDJiIDEwMDY0NAotLS0gYS9p
-bmNsdWRlL25ldC9zY2hfZ2VuZXJpYy5oCisrKyBiL2luY2x1ZGUvbmV0L3NjaF9nZW5lcmljLmgK
-QEAgLTE1Niw4ICsxNTYsNyBAQCBzdGF0aWMgaW5saW5lIGJvb2wgcWRpc2NfaXNfZW1wdHkoY29u
-c3Qgc3RydWN0IFFkaXNjICpxZGlzYykKIHN0YXRpYyBpbmxpbmUgYm9vbCBxZGlzY19ydW5fYmVn
-aW4oc3RydWN0IFFkaXNjICpxZGlzYykKIHsKIAlpZiAocWRpc2MtPmZsYWdzICYgVENRX0ZfTk9M
-T0NLKSB7Ci0JCWlmICghc3Bpbl90cnlsb2NrKCZxZGlzYy0+c2VxbG9jaykpCi0JCQlyZXR1cm4g
-ZmFsc2U7CisJCXNwaW5fbG9jaygmcWRpc2MtPnNlcWxvY2spOwogCQlXUklURV9PTkNFKHFkaXNj
-LT5lbXB0eSwgZmFsc2UpOwogCX0gZWxzZSBpZiAocWRpc2NfaXNfcnVubmluZyhxZGlzYykpIHsK
-IAkJcmV0dXJuIGZhbHNlOwo=
---0000000000002d36f305ae61a588--
+No regressions (compared to build v4.4.234)
+
+No fixes (compared to build v4.4.234)
+
+
+Ran 17120 total tests in the following environments and test suites.
+
+Environments
+--------------
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-controllers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-tracing-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* install-android-platform-tools-r2600
+* kselftest/net
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* ssuite
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.235-rc2
+git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+git branch: 4.4.235-rc2-hikey-20200902-803
+git commit: 4e984a08e49b4aa772d7681bfaeb091bd7a7b4b9
+git describe: 4.4.235-rc2-hikey-20200902-803
+Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
+-oe/build/4.4.235-rc2-hikey-20200902-803
+
+
+No regressions (compared to build 4.4.235-rc1-hikey-20200901-802)
+
+
+No fixes (compared to build 4.4.235-rc1-hikey-20200901-802)
+
+Ran 1822 total tests in the following environments and test suites.
+
+Environments
+--------------
+- hi6220-hikey - arm64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
