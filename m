@@ -2,165 +2,260 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49ABEC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC08C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6FB2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599151015;
-	bh=vrhYPevSt11z/cQhMR2H+wze7oJ1VbX2mNSDSoxY0I4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=K2q+glhFZdppsPw75sxYstg7yJ3QN7qi0HNxu2FxgBczSJ+6a8mi3p5lsaiNyrW+w
-	 QO9h0WVLQTBZ1aR6oYRovt8ifspA9bVpaYQwWAIhN6+8AiWnN5AnaUwWKRJhlslgin
-	 K7hZYe9EN+CDTRkiKZGiaPyomT1hz1dAXwSfy0vM=
+	by mail.kernel.org (Postfix) with ESMTP id D61902072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgICQgx (ORCPT
+        id S1728806AbgICQhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:36:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728129AbgICQgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:36:51 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31F8620578;
-        Thu,  3 Sep 2020 16:36:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599151011;
-        bh=vrhYPevSt11z/cQhMR2H+wze7oJ1VbX2mNSDSoxY0I4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=2ePBIcj4J6W1l9OFj3I6TJHpFk157TRhgtvCd+h3XP8SHKzY4usGEs51A2xaDxQDI
-         cGArV6cO+Td7NSU0LA944rOnnIf5hKP3dyLXoIPhDzSC3r3clqfRFxbJGRrbW9YDV1
-         4W3k2q0PqUeTOsUf6TMGXhzJ0cyjtUcM3uR7PHdA=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kDsED-008wYU-Im; Thu, 03 Sep 2020 17:36:49 +0100
+        Thu, 3 Sep 2020 12:37:22 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:41822 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728129AbgICQhU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 12:37:20 -0400
+Received: by mail-il1-f200.google.com with SMTP id e23so2750166ill.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 09:37:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=g7LWrEEzS7K4SBthHufKEANswDJugXnsabtvbwG0OdM=;
+        b=ReDgM0z2bbqht4IIMkUs28tIESXgp7XzclFEVQ84PWCM3+Xl8IeQ44aw+d0PYOwWgH
+         40cgoVwlaxCgCdN6wEZdjqb51Gua3K8qdIRIf0qx780UhPDZnWZ5j5PCDgFfMEt54fCU
+         amm1OSw8ggy42nAQZe7l8B4r/3NQRSQTttULq5yBdqWGrwLU6ik0KS+0/O0tkRJ0mZB0
+         ykPtda02HiKueVcGEAsWNug1QPmt8ahJJ2OjhVfdDDdwNDDkr/VbFtDM5wiwpKKiGscX
+         ITCv2pd1cwB9R6K78mUXWT4QWi36ktr9stDved2MYoBm9myZ+RyGnS7wgvOeWb6K/Aqb
+         ZZ9w==
+X-Gm-Message-State: AOAM531ywlOib37QBeMHQM9l/7fykfb9jSd6Xsn3C8JFD+IdRD59I7Jd
+        lh0wQyjzo8QgBUKQqrkPxSYxbN2drFh8/egVEjQ5IPVIps+E
+X-Google-Smtp-Source: ABdhPJwTM/CPP/PUd30y5J9pwOG53XOrDzAAb58mxHQyiXBP8X3gxSmsiQSrjKbcyDRBzuSxUrChIlqlvjMQkd8Zcbs2yaXwwXIC
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 03 Sep 2020 17:36:49 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, tglx@linutronix.de,
-        jason@lakedaemon.net, julien.thierry.kdev@gmail.com,
-        dianders@chromium.org, daniel.thompson@linaro.org,
-        jason.wessel@windriver.com, kgdb-bugreport@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] arm64: smp: Introduce a new IPI as
- IPI_CALL_NMI_FUNC
-In-Reply-To: <1599134712-30923-2-git-send-email-sumit.garg@linaro.org>
-References: <1599134712-30923-1-git-send-email-sumit.garg@linaro.org>
- <1599134712-30923-2-git-send-email-sumit.garg@linaro.org>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <05a195374cc81008e95e258221fe7d2b@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: sumit.garg@linaro.org, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, jason@lakedaemon.net, julien.thierry.kdev@gmail.com, dianders@chromium.org, daniel.thompson@linaro.org, jason.wessel@windriver.com, kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Received: by 2002:a92:194b:: with SMTP id e11mr4200423ilm.133.1599151039271;
+ Thu, 03 Sep 2020 09:37:19 -0700 (PDT)
+Date:   Thu, 03 Sep 2020 09:37:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a358f905ae6b5dc6@google.com>
+Subject: KASAN: use-after-free Read in dump_schedule
+From:   syzbot <syzbot+621fd33c0b53d15ee8de@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-03 13:05, Sumit Garg wrote:
-> Introduce a new inter processor interrupt as IPI_CALL_NMI_FUNC that
-> can be invoked to run special handlers in NMI context. One such handler
-> example is kgdb_nmicallback() which is invoked in order to round up 
-> CPUs
-> to enter kgdb context.
-> 
-> As currently pseudo NMIs are supported on specific arm64 platforms 
-> which
-> incorporates GICv3 or later version of interrupt controller. In case a
-> particular platform doesn't support pseudo NMIs, IPI_CALL_NMI_FUNC will
-> act as a normal IPI which can still be used to invoke special handlers.
-> 
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> ---
->  arch/arm64/include/asm/smp.h |  1 +
->  arch/arm64/kernel/smp.c      | 11 +++++++++++
->  2 files changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/smp.h 
-> b/arch/arm64/include/asm/smp.h
-> index 2e7f529..e85f5d5 100644
-> --- a/arch/arm64/include/asm/smp.h
-> +++ b/arch/arm64/include/asm/smp.h
-> @@ -89,6 +89,7 @@ extern void secondary_entry(void);
-> 
->  extern void arch_send_call_function_single_ipi(int cpu);
->  extern void arch_send_call_function_ipi_mask(const struct cpumask 
-> *mask);
-> +extern void arch_send_call_nmi_func_ipi_mask(const struct cpumask 
-> *mask);
-> 
->  #ifdef CONFIG_ARM64_ACPI_PARKING_PROTOCOL
->  extern void arch_send_wakeup_ipi_mask(const struct cpumask *mask);
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index b6bde26..1b4c07c 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -74,6 +74,7 @@ enum ipi_msg_type {
->  	IPI_TIMER,
->  	IPI_IRQ_WORK,
->  	IPI_WAKEUP,
-> +	IPI_CALL_NMI_FUNC,
->  	NR_IPI
->  };
-> 
-> @@ -793,6 +794,7 @@ static const char *ipi_types[NR_IPI] 
-> __tracepoint_string = {
->  	S(IPI_TIMER, "Timer broadcast interrupts"),
->  	S(IPI_IRQ_WORK, "IRQ work interrupts"),
->  	S(IPI_WAKEUP, "CPU wake-up interrupts"),
-> +	S(IPI_CALL_NMI_FUNC, "NMI function call interrupts"),
->  };
-> 
->  static void smp_cross_call(const struct cpumask *target, unsigned int 
-> ipinr);
-> @@ -840,6 +842,11 @@ void arch_irq_work_raise(void)
->  }
->  #endif
-> 
-> +void arch_send_call_nmi_func_ipi_mask(const struct cpumask *mask)
-> +{
-> +	smp_cross_call(mask, IPI_CALL_NMI_FUNC);
-> +}
-> +
->  static void local_cpu_stop(void)
->  {
->  	set_cpu_online(smp_processor_id(), false);
-> @@ -932,6 +939,10 @@ static void do_handle_IPI(int ipinr)
->  		break;
->  #endif
-> 
-> +	case IPI_CALL_NMI_FUNC:
-> +		/* nop, IPI handlers for special features can be added here. */
-> +		break;
-> +
->  	default:
->  		pr_crit("CPU%u: Unknown IPI message 0x%x\n", cpu, ipinr);
->  		break;
+Hello,
 
-I'm really not keen on adding more IPIs to the SMP code. One of the
-main reasons for using these SGIs as normal IRQs was to make them
-"requestable" from non-arch code as if they were standard percpu
-interrupts.
+syzbot found the following issue on:
 
-What prevents you from moving that all the way to the kgdb code?
+HEAD commit:    fc3abb53 Merge branch 'for-linus' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17b672f5900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e1c560d0f4e121c9
+dashboard link: https://syzkaller.appspot.com/bug?extid=621fd33c0b53d15ee8de
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1129d0e9900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17fb6a25900000
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+621fd33c0b53d15ee8de@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in dump_schedule+0x4b/0x850 net/sched/sch_taprio.c:1747
+Read of size 8 at addr ffff88808f48cb40 by task syz-executor466/11250
+
+CPU: 0 PID: 11250 Comm: syz-executor466 Not tainted 5.9.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1d6/0x29e lib/dump_stack.c:118
+ print_address_description+0x66/0x620 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report+0x132/0x1d0 mm/kasan/report.c:530
+ dump_schedule+0x4b/0x850 net/sched/sch_taprio.c:1747
+ taprio_dump+0x701/0xcc0 net/sched/sch_taprio.c:1815
+ tc_fill_qdisc+0x5c5/0x1150 net/sched/sch_api.c:916
+ qdisc_notify+0x1df/0x370 net/sched/sch_api.c:983
+ tc_modify_qdisc+0x1b1a/0x1d90 net/sched/sch_api.c:1635
+ rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5563
+ netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2470
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg net/socket.c:671 [inline]
+ kernel_sendmsg+0xe2/0x120 net/socket.c:691
+ sock_no_sendpage+0xe0/0x120 net/core/sock.c:2852
+ kernel_sendpage net/socket.c:3642 [inline]
+ sock_sendpage+0xd0/0x120 net/socket.c:944
+ pipe_to_sendpage+0x208/0x2d0 fs/splice.c:448
+ splice_from_pipe_feed fs/splice.c:502 [inline]
+ __splice_from_pipe+0x351/0x8b0 fs/splice.c:626
+ splice_from_pipe fs/splice.c:661 [inline]
+ generic_splice_sendpage+0x112/0x180 fs/splice.c:834
+ do_splice_from fs/splice.c:846 [inline]
+ do_splice+0xdd1/0x1a50 fs/splice.c:1144
+ __do_sys_splice fs/splice.c:1419 [inline]
+ __se_sys_splice fs/splice.c:1401 [inline]
+ __x64_sys_splice+0x14f/0x1f0 fs/splice.c:1401
+ do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x449fa9
+Code: e8 9c e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 04 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fa469406d88 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
+RAX: ffffffffffffffda RBX: 00000000006e0c48 RCX: 0000000000449fa9
+RDX: 0000000000000004 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00000000006e0c40 R08: 0000000000010973 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e0c4c
+R13: 140b0024000000a4 R14: 0000000000000000 R15: 000000306d616574
+
+Allocated by task 11229:
+ kasan_save_stack mm/kasan/common.c:48 [inline]
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc+0x100/0x130 mm/kasan/common.c:461
+ kmem_cache_alloc_trace+0x1e4/0x2e0 mm/slab.c:3550
+ kmalloc include/linux/slab.h:554 [inline]
+ kzalloc include/linux/slab.h:666 [inline]
+ taprio_change+0x3b5/0x5200 net/sched/sch_taprio.c:1436
+ qdisc_change net/sched/sch_api.c:1331 [inline]
+ tc_modify_qdisc+0x1793/0x1d90 net/sched/sch_api.c:1633
+ rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5563
+ netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2470
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg net/socket.c:671 [inline]
+ kernel_sendmsg+0xe2/0x120 net/socket.c:691
+ sock_no_sendpage+0xe0/0x120 net/core/sock.c:2852
+ kernel_sendpage net/socket.c:3642 [inline]
+ sock_sendpage+0xd0/0x120 net/socket.c:944
+ pipe_to_sendpage+0x208/0x2d0 fs/splice.c:448
+ splice_from_pipe_feed fs/splice.c:502 [inline]
+ __splice_from_pipe+0x351/0x8b0 fs/splice.c:626
+ splice_from_pipe fs/splice.c:661 [inline]
+ generic_splice_sendpage+0x112/0x180 fs/splice.c:834
+ do_splice_from fs/splice.c:846 [inline]
+ do_splice+0xdd1/0x1a50 fs/splice.c:1144
+ __do_sys_splice fs/splice.c:1419 [inline]
+ __se_sys_splice fs/splice.c:1401 [inline]
+ __x64_sys_splice+0x14f/0x1f0 fs/splice.c:1401
+ do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 9:
+ kasan_save_stack mm/kasan/common.c:48 [inline]
+ kasan_set_track+0x3d/0x70 mm/kasan/common.c:56
+ kasan_set_free_info+0x17/0x30 mm/kasan/generic.c:355
+ __kasan_slab_free+0xdd/0x110 mm/kasan/common.c:422
+ __cache_free mm/slab.c:3418 [inline]
+ kfree+0x113/0x200 mm/slab.c:3756
+ rcu_do_batch kernel/rcu/tree.c:2428 [inline]
+ rcu_core+0x79b/0x1130 kernel/rcu/tree.c:2656
+ __do_softirq+0x256/0x6d5 kernel/softirq.c:298
+
+Last call_rcu():
+ kasan_save_stack+0x27/0x50 mm/kasan/common.c:48
+ kasan_record_aux_stack+0x7b/0xb0 mm/kasan/generic.c:346
+ __call_rcu kernel/rcu/tree.c:2894 [inline]
+ call_rcu+0x141/0x830 kernel/rcu/tree.c:2968
+ taprio_change+0x4202/0x5200 net/sched/sch_taprio.c:1554
+ qdisc_change net/sched/sch_api.c:1331 [inline]
+ tc_modify_qdisc+0x1793/0x1d90 net/sched/sch_api.c:1633
+ rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5563
+ netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2470
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg net/socket.c:671 [inline]
+ kernel_sendmsg+0xe2/0x120 net/socket.c:691
+ sock_no_sendpage+0xe0/0x120 net/core/sock.c:2852
+ kernel_sendpage net/socket.c:3642 [inline]
+ sock_sendpage+0xd0/0x120 net/socket.c:944
+ pipe_to_sendpage+0x208/0x2d0 fs/splice.c:448
+ splice_from_pipe_feed fs/splice.c:502 [inline]
+ __splice_from_pipe+0x351/0x8b0 fs/splice.c:626
+ splice_from_pipe fs/splice.c:661 [inline]
+ generic_splice_sendpage+0x112/0x180 fs/splice.c:834
+ do_splice_from fs/splice.c:846 [inline]
+ do_splice+0xdd1/0x1a50 fs/splice.c:1144
+ __do_sys_splice fs/splice.c:1419 [inline]
+ __se_sys_splice fs/splice.c:1401 [inline]
+ __x64_sys_splice+0x14f/0x1f0 fs/splice.c:1401
+ do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Second to last call_rcu():
+ kasan_save_stack+0x27/0x50 mm/kasan/common.c:48
+ kasan_record_aux_stack+0x7b/0xb0 mm/kasan/generic.c:346
+ __call_rcu kernel/rcu/tree.c:2894 [inline]
+ call_rcu+0x141/0x830 kernel/rcu/tree.c:2968
+ taprio_change+0x4202/0x5200 net/sched/sch_taprio.c:1554
+ qdisc_change net/sched/sch_api.c:1331 [inline]
+ tc_modify_qdisc+0x1793/0x1d90 net/sched/sch_api.c:1633
+ rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5563
+ netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2470
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg net/socket.c:671 [inline]
+ kernel_sendmsg+0xe2/0x120 net/socket.c:691
+ sock_no_sendpage+0xe0/0x120 net/core/sock.c:2852
+ kernel_sendpage net/socket.c:3642 [inline]
+ sock_sendpage+0xd0/0x120 net/socket.c:944
+ pipe_to_sendpage+0x208/0x2d0 fs/splice.c:448
+ splice_from_pipe_feed fs/splice.c:502 [inline]
+ __splice_from_pipe+0x351/0x8b0 fs/splice.c:626
+ splice_from_pipe fs/splice.c:661 [inline]
+ generic_splice_sendpage+0x112/0x180 fs/splice.c:834
+ do_splice_from fs/splice.c:846 [inline]
+ do_splice+0xdd1/0x1a50 fs/splice.c:1144
+ __do_sys_splice fs/splice.c:1419 [inline]
+ __se_sys_splice fs/splice.c:1401 [inline]
+ __x64_sys_splice+0x14f/0x1f0 fs/splice.c:1401
+ do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff88808f48cb00
+ which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 64 bytes inside of
+ 96-byte region [ffff88808f48cb00, ffff88808f48cb60)
+The buggy address belongs to the page:
+page:00000000cae6299d refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88808f48cd00 pfn:0x8f48c
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea0002761e08 ffffea000275d888 ffff8880aa440300
+raw: ffff88808f48cd00 ffff88808f48c000 000000010000001a 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88808f48ca00: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff88808f48ca80: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+>ffff88808f48cb00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                                           ^
+ ffff88808f48cb80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+ ffff88808f48cc00: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
