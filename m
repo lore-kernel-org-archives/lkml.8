@@ -2,151 +2,148 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DE0C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F730C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 467DF20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:04:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599145485;
-	bh=VuGxZvo9yHiaoeDqVaq0mRPlaYO1KqH47p+IwFf+LRE=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=IBC0tIltqTtOeYU6U/JuiHYtONhnBeCO60YoCe4+9Bh1XV9s43515EPB8hWRSS1W2
-	 ZWg9+ZtfL4h0RfA6M91NY8MyO1H4Eofhccb1nIwLIsb+QvcBE6teDFajz+UcQN/J3Q
-	 +zyDuD4t60b5AYK+F/j+9OWdNknfCVGAW2QpTq2A=
+	by mail.kernel.org (Postfix) with ESMTP id 533A720722
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbgICPEn (ORCPT
+        id S1729100AbgICPFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:04:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728957AbgICN6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 11:05:02 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:13316 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbgICN6Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 09:58:16 -0400
-Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2583E20BED;
-        Thu,  3 Sep 2020 13:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599141456;
-        bh=VuGxZvo9yHiaoeDqVaq0mRPlaYO1KqH47p+IwFf+LRE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fy53apnwKmHpwQAGNA6YkJVTMCvxnAVZXNIuSqARvtd3YfpRGC090ZengijZ5zkcG
-         IXsOrqPIya7+Ucd6UOsMKQsI/y3R36FSDyU3uC6ciluIUcfowbSUoXgoFVaD8toqaM
-         q9yRNrMOKXv/Md9mDgVgy4okBPGKOWQgnLJyYI5s=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kDpk6-004T6t-7O; Thu, 03 Sep 2020 15:57:34 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] media: atomisp: get rid of -Wsuggest-attribute=format warnings
-Date:   Thu,  3 Sep 2020 15:57:32 +0200
-Message-Id: <6c77d765707b1e6b2901fd23d85b4d032f1a1799.1599141140.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1599141140.git.mchehab+huawei@kernel.org>
-References: <cover.1599141140.git.mchehab+huawei@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 03 Sep 2020 06:33:53 -0700
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Sep 2020 06:33:52 -0700
+Received: from gkohli-linux.qualcomm.com ([10.204.78.26])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 03 Sep 2020 19:03:40 +0530
+Received: by gkohli-linux.qualcomm.com (Postfix, from userid 427023)
+        id 78B7B212F2; Thu,  3 Sep 2020 19:03:39 +0530 (IST)
+From:   Gaurav Kohli <gkohli@codeaurora.org>
+To:     tostedt@goodmis.org, mingo@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Gaurav Kohli <gkohli@codeaurora.org>
+Subject: [PATCH v0] trace: Fix race in trace_open and buffer resize call
+Date:   Thu,  3 Sep 2020 19:03:37 +0530
+Message-Id: <1599140017-12882-1-git-send-email-gkohli@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some warnings reported by gcc:
-	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:164:2: warning: function ‘atomisp_css2_dbg_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
-	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:170:2: warning: function ‘atomisp_css2_dbg_ftrace_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
-	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:170:2: warning: function ‘atomisp_css2_dbg_ftrace_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
-	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:176:2: warning: function ‘atomisp_css2_err_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+Below race can come, if trace_open and resize of
+cpu buffer is running parallely on different cpus
+CPUX                                CPUY
+				    ring_buffer_resize
+				    atomic_read(&buffer->resize_disabled)
+tracing_open
+tracing_reset_online_cpus
+ring_buffer_reset_cpu
+rb_reset_cpu
+				    rb_update_pages
+				    remove/insert pages
+resetting pointer
+This race can cause data abort or some times infinte loop in 
+rb_remove_pages and rb_insert_pages while checking pages 
+for sanity.
+Take ring buffer lock in trace_open to avoid resetting of cpu buffer.
 
-That are due to the usage of printf-like messages without
-enabling the error checking logic.
+Signed-off-by: Gaurav Kohli <gkohli@codeaurora.org>
 
-Add the proper attributes in order to shut up such warnings.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../media/atomisp/pci/atomisp_compat_css20.c  | 20 ++++---------------
- .../staging/media/atomisp/pci/ia_css_env.h    |  4 ++--
- 2 files changed, 6 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-index e54242dc0888..5a730e17cc6e 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-@@ -159,24 +159,13 @@ static void atomisp_css2_hw_load(hrt_address addr, void *to, uint32_t n)
- 	spin_unlock_irqrestore(&mmio_lock, flags);
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 136ea09..55f9115 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -163,6 +163,8 @@ bool ring_buffer_empty_cpu(struct trace_buffer *buffer, int cpu);
+ 
+ void ring_buffer_record_disable(struct trace_buffer *buffer);
+ void ring_buffer_record_enable(struct trace_buffer *buffer);
++void ring_buffer_mutex_acquire(struct trace_buffer *buffer);
++void ring_buffer_mutex_release(struct trace_buffer *buffer);
+ void ring_buffer_record_off(struct trace_buffer *buffer);
+ void ring_buffer_record_on(struct trace_buffer *buffer);
+ bool ring_buffer_record_is_on(struct trace_buffer *buffer);
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 93ef0ab..638ec8f 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -3632,6 +3632,25 @@ void ring_buffer_record_enable(struct trace_buffer *buffer)
+ EXPORT_SYMBOL_GPL(ring_buffer_record_enable);
+ 
+ /**
++ * ring_buffer_mutex_acquire - prevent resetting of buffer
++ * during resize
++ */
++void ring_buffer_mutex_acquire(struct trace_buffer *buffer)
++{
++	mutex_lock(&buffer->mutex);
++}
++EXPORT_SYMBOL_GPL(ring_buffer_mutex_acquire);
++
++/**
++ * ring_buffer_mutex_release - prevent resetting of buffer
++ * during resize
++ */
++void ring_buffer_mutex_release(struct trace_buffer *buffer)
++{
++	mutex_unlock(&buffer->mutex);
++}
++EXPORT_SYMBOL_GPL(ring_buffer_mutex_release);
++/**
+  * ring_buffer_record_off - stop all writes into the buffer
+  * @buffer: The ring buffer to stop writes to.
+  *
+@@ -4918,6 +4937,8 @@ void ring_buffer_reset(struct trace_buffer *buffer)
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	int cpu;
+ 
++	/* prevent another thread from changing buffer sizes */
++	mutex_lock(&buffer->mutex);
+ 	for_each_buffer_cpu(buffer, cpu) {
+ 		cpu_buffer = buffer->buffers[cpu];
+ 
+@@ -4936,6 +4957,7 @@ void ring_buffer_reset(struct trace_buffer *buffer)
+ 		atomic_dec(&cpu_buffer->record_disabled);
+ 		atomic_dec(&cpu_buffer->resize_disabled);
+ 	}
++	mutex_unlock(&buffer->mutex);
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_reset);
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index f40d850..392e9aa 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2006,6 +2006,8 @@ void tracing_reset_online_cpus(struct array_buffer *buf)
+ 	if (!buffer)
+ 		return;
+ 
++	ring_buffer_mutex_acquire(buffer);
++
+ 	ring_buffer_record_disable(buffer);
+ 
+ 	/* Make sure all commits have finished */
+@@ -2016,6 +2018,8 @@ void tracing_reset_online_cpus(struct array_buffer *buf)
+ 	ring_buffer_reset_online_cpus(buffer);
+ 
+ 	ring_buffer_record_enable(buffer);
++
++	ring_buffer_mutex_release(buffer);
  }
  
--static int atomisp_css2_dbg_print(const char *fmt, va_list args)
--{
--	vprintk(fmt, args);
--	return 0;
--}
--
--static int atomisp_css2_dbg_ftrace_print(const char *fmt, va_list args)
-+static int  __attribute__((format (printf, 1, 0)))
-+atomisp_css2_dbg_ftrace_print(const char *fmt, va_list args)
- {
- 	ftrace_vprintk(fmt, args);
- 	return 0;
- }
- 
--static int atomisp_css2_err_print(const char *fmt, va_list args)
--{
--	vprintk(fmt, args);
--	return 0;
--}
--
- void atomisp_load_uint32(hrt_address addr, uint32_t *data)
- {
- 	*data = atomisp_css2_hw_load_32(addr);
-@@ -869,8 +858,7 @@ static inline int __set_css_print_env(struct atomisp_device *isp, int opt)
- 		isp->css_env.isp_css_env.print_env.debug_print =
- 		    atomisp_css2_dbg_ftrace_print;
- 	else if (opt == 2)
--		isp->css_env.isp_css_env.print_env.debug_print =
--		    atomisp_css2_dbg_print;
-+		isp->css_env.isp_css_env.print_env.debug_print = vprintk;
- 	else
- 		ret = -EINVAL;
- 
-@@ -903,7 +891,7 @@ int atomisp_css_load_firmware(struct atomisp_device *isp)
- 
- 	__set_css_print_env(isp, dbg_func);
- 
--	isp->css_env.isp_css_env.print_env.error_print = atomisp_css2_err_print;
-+	isp->css_env.isp_css_env.print_env.error_print = vprintk;
- 
- 	/* load isp fw into ISP memory */
- 	err = ia_css_load_firmware(isp->dev, &isp->css_env.isp_css_env,
-diff --git a/drivers/staging/media/atomisp/pci/ia_css_env.h b/drivers/staging/media/atomisp/pci/ia_css_env.h
-index 8debf334c15c..9808ff9e0492 100644
---- a/drivers/staging/media/atomisp/pci/ia_css_env.h
-+++ b/drivers/staging/media/atomisp/pci/ia_css_env.h
-@@ -75,9 +75,9 @@ struct ia_css_hw_access_env {
- /* Environment with function pointers to print error and debug messages.
-  */
- struct ia_css_print_env {
--	int (*debug_print)(const char *fmt, va_list args);
-+	int (*debug_print)(const char *fmt, va_list args) __attribute__((format (printf, 1, 0)));
- 	/** Print a debug message. */
--	int (*error_print)(const char *fmt, va_list args);
-+	int (*error_print)(const char *fmt, va_list args) __attribute__((format (printf, 1, 0)));
- 	/** Print an error message.*/
- };
- 
+ /* Must have trace_types_lock held */
 -- 
-2.26.2
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
 
