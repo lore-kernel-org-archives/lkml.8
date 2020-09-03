@@ -3,107 +3,142 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6AFC10DAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975CBC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B67A2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:54:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599173686;
-	bh=UXKo8kyys7Jj/KQr45tWL3zKiNH9QtHrNfzW2RvKWt0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eW0IMeK3asiUUEiJNq3xNr4Xfl8imta19UKC5ItmYLFHi8ICHiI6hSmohIXUs/z9j
-	 jOLclRC74LVIb6tylmPG2aDna7MJy/3aoe5gRa98yl8MY8feNSjhOdhaTd9dyuej5b
-	 tmWHbIgOjWvcQTfcSUVvyeWdzvDBpSjCSdDJQKuI=
+	by mail.kernel.org (Postfix) with ESMTP id 686EE20658
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:55:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KO5qumOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgICWyo (ORCPT
+        id S1729356AbgICWzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:54:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbgICWyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:54:44 -0400
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A23022083B
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:54:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599173683;
-        bh=UXKo8kyys7Jj/KQr45tWL3zKiNH9QtHrNfzW2RvKWt0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EmXfwBYt3D5p90EF4QL4KaB9rOBoRovhKKBkFVE8uGA5dui+0P8hxZrd3FY69Wliu
-         TTk9c/A0IjU+NziYUsCaN76rxm3L/o0iaout5mKVSD5nkUgrmwzBBpATVKe/S5ftGP
-         8y9pRGpGCh2RjzS9I/QpFRr1OIiFLmH8uoXa9OuQ=
-Received: by mail-ed1-f43.google.com with SMTP id a12so4247770eds.13
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:54:43 -0700 (PDT)
-X-Gm-Message-State: AOAM533Ud/YfR6M2w0JOH6/p0oSzGFD5knbHB9gr7Tfswo1P7cnwWTjG
-        vdOJxQeRrbSDmipOVZIpzIV6bw8Q2KCGokBlbw==
-X-Google-Smtp-Source: ABdhPJxV4e9JXF8pl9lR06Tx6AQ3q1ACWUDkZvY2hawRP5jIfK2LoCgaT7r5tM+Hy5bnYViKitxKW+Li7urVLN9lTTw=
-X-Received: by 2002:aa7:dcd2:: with SMTP id w18mr5713705edu.288.1599173682230;
- Thu, 03 Sep 2020 15:54:42 -0700 (PDT)
+        Thu, 3 Sep 2020 18:55:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728288AbgICWzu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 18:55:50 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B70B9C061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:55:50 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id o20so3504082pfp.11
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:55:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=KThOpLxfiiQ/1JkMcjWmqK6Z2YygVIsJhTEGjO3bh+k=;
+        b=KO5qumOhlDyAUT7wkFufwR+SaGNVjlmgv1uzgfFg0XTcJU4o0wm8Z5ZM4/EB7Pzyf8
+         f3pRE57Ch1ziVrbEOZcoiNQZArKQ4sGfRCUgiOi0dYJwTmnHuyhatYbUJjd6Q3Mn7XVc
+         8D3M3R0BR9T4AX2MNHIHmPtfIGP7f6oGzbed4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=KThOpLxfiiQ/1JkMcjWmqK6Z2YygVIsJhTEGjO3bh+k=;
+        b=T9KnloszEtx/s/BTmveiHlu6iqgue37MpT21tmyZOsb6tHjLW3eLzjaETpvuIyewpJ
+         vBV7Q2Yrtbnsl5fEg+0sy/C2bNyj0izwrLwynuq6xcp6PZ6Mcje70Kgcs9+Ks/ejCocV
+         LPe6sPcAD1Rcbduuw4e5KP7gN2b1xKk0qzJ6GIGVjwP0adH6lyoftm7lXdBY5/A7GNxS
+         T3SY05IST/tMOs9YBmIJmFvZa4JYWGFX4h+2c7oEKK4q9sTN//GuhUp0MT7zuasLvlXN
+         vhsJo54IErlvFjbmhBmxq/k4w7Ul5rE3KAQiGIMJtbBQNCQ3Ia3PE7b160dSSbhsHqAo
+         PLSw==
+X-Gm-Message-State: AOAM533Jtj1EcnvKadsdUPSmVAG8qZkMajtTvDYJbx6p91rT+hHVrKdg
+        Jquq563BQ1xnuDF6Zg7SBO2yqlmtggZ4kA==
+X-Google-Smtp-Source: ABdhPJyXpP91L4mpWngVxy8GUyGX4M1TVrS2gDSIsc2kkLT0rveU7Vfi4YchW3pOUbvHOE/Lue2rNA==
+X-Received: by 2002:a63:1521:: with SMTP id v33mr4916302pgl.374.1599173749829;
+        Thu, 03 Sep 2020 15:55:49 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id x192sm744137pfc.142.2020.09.03.15.55.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 15:55:49 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200819081752.4805-1-linux@fw-web.de> <3B754053-BA89-4DB7-A089-665C5B6B34CC@public-files.de>
-In-Reply-To: <3B754053-BA89-4DB7-A089-665C5B6B34CC@public-files.de>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 4 Sep 2020 06:54:30 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9TYUWWNg+1zT4LwomrabBsiZQKXAS9jTHCFKiAmCm4PA@mail.gmail.com>
-Message-ID: <CAAOTY_9TYUWWNg+1zT4LwomrabBsiZQKXAS9jTHCFKiAmCm4PA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] make hdmi work on bananapi-r2
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Frank Wunderlich <linux@fw-web.de>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <62bdac87-b886-58c1-f071-095ec9945f68@linaro.org>
+References: <20200826024711.220080-1-swboyd@chromium.org> <20200826024711.220080-7-swboyd@chromium.org> <335a0660-40e1-0c1e-3f7d-87f7024de18a@linaro.org> <159900847014.334488.14041376759905055412@swboyd.mtv.corp.google.com> <62bdac87-b886-58c1-f071-095ec9945f68@linaro.org>
+Subject: Re: [PATCH v1 6/9] phy: qcom-qmp: Add support for DP in USB3+DP combo phy
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Rob Clark <robdclark@chromium.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>
+Date:   Thu, 03 Sep 2020 15:55:47 -0700
+Message-ID: <159917374772.334488.3072425606687060968@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Frank Wunderlich <frank-w@public-files.de> =E6=96=BC 2020=E5=B9=B49=E6=9C=
-=883=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:07=E5=AF=AB=E9=81=93=
-=EF=BC=9A
->
-> Hi
->
-> Any opinion about DTS Patches? Which maintainer will include it in tree? =
-Is any ack/review needed?
+Quoting Dmitry Baryshkov (2020-09-03 05:37:02)
+> On 02/09/2020 04:01, Stephen Boyd wrote:
+> > Quoting Dmitry Baryshkov (2020-09-01 06:36:34)
+> >> With these functions I'm struggling between introducing
+> >> PHY_TYPE_DP_V3/V4 and introducing callbacks into qmp_phy_cfg. What wou=
+ld
+> >> you prefer?
+> >>
+> >> What about the following struct?
+> >>
+> >> struct qmp_phy_dp_opts {
+> >>          void (*dp_aux_init)(struct qmp_phy *qphy);
+> >>          void (*dp_configure_tx)(struct qmp_phy *qphy);
+> >>          void (*dp_configure_lanes)(struct qmp_phy *qphy);
+> >> };
+> >>
+> >> I'm not sure about dp_calibrate().
+> >>
+> >=20
+> > Is there v4 code somewhere that I can see? Another level of indirection
+> > is always a solution, so it is probably fine. This driver is currently
+> > written with many conditionals instead of function tables so I'm not
+> > sure it fits in with the style of how things are done though. The
+> > alternative is to use an enum and call different functions?
+>=20
+> Downstream DP driver sources can be found here:
+> https://source.codeaurora.org/quic/la/platform/vendor/opensource/display-=
+drivers/tree/msm/dp/dp_catalog_v420.c?h=3DLA.UM.8.12.r1-13900-sm8250.0
+>=20
+> https://source.codeaurora.org/quic/la/platform/vendor/opensource/display-=
+drivers/tree/pll/dp_pll_7nm_util.c?h=3DLA.UM.8.12.r1-13900-sm8250.0
+>=20
 
-According to maintainer list [1], the maintainer is
+Awesome thanks for the pointer.
 
-ARM/Mediatek SoC support
-M: Matthias Brugger <matthias.bgg@gmail.com>
-L: linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-L: linux-mediatek@lists.infradead.org (moderated for non-subscribers)
-S: Maintained
-W: https://mtk.bcnfs.org/
-C: irc://chat.freenode.net/linux-mediatek
-F: arch/arm/boot/dts/mt6*
-F: arch/arm/boot/dts/mt7*
-F: arch/arm/boot/dts/mt8*
-F: arch/arm/mach-mediatek/
-F: arch/arm64/boot/dts/mediatek/
-F: drivers/soc/mediatek/
-N: mtk
-N: mt[678]
-K: mediatek
+> >=20
+> > The calibrate call is there to "turn the crank" on the aux settings.  I
+> > need to cycle through the different values for that aux register so that
+> > aux can be tuned properly. The AUX channel really has another phy that
+> > needs tuning so we're sort of combining the aux and DP link phy together
+> > here by letting the calibrate call tune the AUX phy and the configure
+> > call tune the DP phy. I don't see any sort of concept of an AUX phy
+> > though so this seemed ok. Does v4 need to tune more registers?
+>=20
+>=20
+> It looks like four values are written to AUX_CFG1:
+> 0x20, 0x13, 0x23, 0x1d
+>=20
 
-
-Regards,
-Chun-Kuang.
-
-[1] https://www.kernel.org/doc/linux/MAINTAINERS
-
-> regards Frank
+Ok, so still just AUX_CFG1 but now some different values. Maybe it
+should come from DT if it really differs based on board design. I don't
+know if it does though. If it does differ it would be nice to know what
+the settings are and if it doesn't just make sense to iterate through
+all 256 of them instead of targeting specific ones.
