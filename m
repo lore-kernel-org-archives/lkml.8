@@ -2,333 +2,132 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E60C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219FEC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE5A5214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBEAC2086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hKqThO0K"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="XeWABSLI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbgICJfn (ORCPT
+        id S1728297AbgICJgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 05:35:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:39855 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728251AbgICJfd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 05:35:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599125730;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=R92Upxnr3H/DS/34/IC4k818RkZNNRAZ1LE4yO3sZDw=;
-        b=hKqThO0KK+f0PCZCzmxOie3WyhulPRZvCywRZsJU7pF/5yBu1IFbb0f3UFUtT1D9Ifu5xj
-        T6vBg/RUPQTooHGEvH57Fz9ibjQo6XOaK4K06WNpzX8wNYX9grzrs56Oe7UA6/A54nzyrV
-        z3DL9Du2tZF5bedxMS66xFF0AKfP/E8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-162-71M0F2hlMaCxMb8Gyqh6hQ-1; Thu, 03 Sep 2020 05:35:29 -0400
-X-MC-Unique: 71M0F2hlMaCxMb8Gyqh6hQ-1
-Received: by mail-wm1-f70.google.com with SMTP id x6so755735wmb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 02:35:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R92Upxnr3H/DS/34/IC4k818RkZNNRAZ1LE4yO3sZDw=;
-        b=d7CoQfeqM5V5NP7u82nfqTzpfZyO8cdXE45jew2tkE8qdZn+Js2FPXti3qBKyj5EEB
-         bdi7NwZiGIlobHhcHsFp+8HuSCtPNh1VyIIKDK5vRHlO1fBnFKQJiFzjZnz/EUth3Pw4
-         5HpP+XPaQR0yWBrZmX5/z/DL24rLyJOg/EqZ5ip0WDBWIO93t5PasiH6idLFTJYiYqDh
-         F71kq5B2+eh9HdOgosH8zZlDkg55OozL/6fCy4XV5oOfijPm5HAqM4x4KepiJjdNaJzm
-         r0jInrdLOAx9tjD4QhArJZa47cZRfQa8ZRHu+LXuU1oYjI1nlGA812286hSfHkOvb2W3
-         W6GQ==
-X-Gm-Message-State: AOAM532Sxaj6+JhF5GoEw5JDpsSfp4EayXVZgQ5rxw20smpDgt5Ccm48
-        dx4C5FlQLMzwODwrmS3HWnj7ZOZcwk9mUdEK3tq6en2++XODl7jo1gNfDz8XVbX1V59O1DO2mvD
-        wC8MbMh1b6R0gymJSNtEZpSXk
-X-Received: by 2002:a5d:6343:: with SMTP id b3mr1541332wrw.179.1599125725921;
-        Thu, 03 Sep 2020 02:35:25 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx2ljXOXR9hx1S2cziAVgDhmpBaRJO12qtAtV8Bk9nU0vaAKw2kNRlwzyxo31VO+Glw6vFcOw==
-X-Received: by 2002:a5d:6343:: with SMTP id b3mr1541313wrw.179.1599125725600;
-        Thu, 03 Sep 2020 02:35:25 -0700 (PDT)
-Received: from redhat.com (bzq-79-177-107-202.red.bezeqint.net. [79.177.107.202])
-        by smtp.gmail.com with ESMTPSA id f19sm3333920wmh.44.2020.09.03.02.35.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 02:35:24 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 05:35:21 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Jones <drjones@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] KVM: x86: introduce KVM_MEM_PCI_HOLE memory
-Message-ID: <20200903053350-mutt-send-email-mst@kernel.org>
-References: <20200807141232.402895-1-vkuznets@redhat.com>
- <20200807141232.402895-3-vkuznets@redhat.com>
- <20200814023139.GB4845@linux.intel.com>
- <87h7shwoh1.fsf@vitty.brq.redhat.com>
+        Thu, 3 Sep 2020 05:36:39 -0400
+Received: from mail-bn7nam10on2070.outbound.protection.outlook.com ([40.107.92.70]:21184
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726162AbgICJgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 05:36:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c4tCgIYzRcR84b0i6qB/u5uMbNcpil/LFPsYW4xieG5KwOAaPLItB5hiJMQsmUiVjrWeh/fG1ur8EUvL4Svt1vUgRWztLIf7kdVYMpuT0UurOrNreXJEEGy8nr5nGaZ2uBoqFxfNIQe4mRc2s1TWk+mzu3UrzUfH+M/vytdjwsC4kSI5a+shjq/MspK5trK97afRQ6chTqqYniscQNJEWNokM0WAr/V7nTXirFnGYzQaX4hBKOgMO6STVfTTd6SX9kpFdVmdkf1AUMR0pwv/zIMwxRczSuuyweVeC95ueqqUUCgnDotGnjQw0+fkr/8HpF4sRuq/KBnryd5XUUupiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7Fh1IbpQbVRLr47AFj3fFcM6QwfMaWWYkpTJGi+vdeA=;
+ b=OKNegXEO9higvqgBb2DEoTgZ069f5bd1eppSowC61yM7Oce/x/ibsWeVAxpLiOWVi+O7T+VkyWNtgPH98YqYe+O/CvWBpufqMkolYS57HAXITyxvtTfOWBOvZtYFG4KwVZsMEaXvYtkIweuguX7EeE+HvNTsz4eLQh4o/KxsyHaP7Xs5UyvUoriO+GCKrO/9BW+TEmgm5W1q767aiy+bIPMMhv87CeyM0HqCgA9oiDJbql238hPtiYsyuqneBpg1lkLhKLzsMdFqlRkxgZARXcFx4FqbUYMwLAO/5hocXmQddCM5itFlIGjpWwsNf5IKZl5edl9nXDRKWSKRtrpiHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7Fh1IbpQbVRLr47AFj3fFcM6QwfMaWWYkpTJGi+vdeA=;
+ b=XeWABSLIX8SKE2ZGe1NmSq/nfHbdn9zOe1r1rdGkw4vUakj4OpqXd8qmJtXgXzwHZoCmsfIM2xNiEJFXnU+GOf6znn8r4HNb7GTPVSrvnZ6ZRlPGHZk7nS+DRewfIp4LfehtudFSqGgPezaKjerixDQY0XUHrOwEHjvdNEJ98/8=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com (10.168.240.18) by
+ DM6PR12MB4337.namprd12.prod.outlook.com (20.180.254.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3348.15; Thu, 3 Sep 2020 09:36:34 +0000
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::cc8d:7537:ec56:108e]) by DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::cc8d:7537:ec56:108e%11]) with mapi id 15.20.3326.025; Thu, 3 Sep 2020
+ 09:36:33 +0000
+From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc:     joro@8bytes.org, sean.m.osborne@oracle.com,
+        james.puthukattukaran@oracle.com, joao.m.martins@oracle.com,
+        boris.ostrovsky@oracle.com, jon.grimm@amd.com,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Subject: [PATCH 1/2 v2] iommu: amd: Restore IRTE.RemapEn bit after programming IRTE
+Date:   Thu,  3 Sep 2020 09:38:21 +0000
+Message-Id: <20200903093822.52012-2-suravee.suthikulpanit@amd.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200903093822.52012-1-suravee.suthikulpanit@amd.com>
+References: <20200903093822.52012-1-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain
+X-ClientProxiedBy: DM6PR13CA0002.namprd13.prod.outlook.com
+ (2603:10b6:5:bc::15) To DM5PR12MB1163.namprd12.prod.outlook.com
+ (2603:10b6:3:7a::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h7shwoh1.fsf@vitty.brq.redhat.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by DM6PR13CA0002.namprd13.prod.outlook.com (2603:10b6:5:bc::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.7 via Frontend Transport; Thu, 3 Sep 2020 09:36:32 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.78.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b2140b5b-da71-4022-3db6-08d84fecd860
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4337:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB4337E290E63CEBD622FE3FE3F32C0@DM6PR12MB4337.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pyRNiSbbgV+pZHGVhlakLOWZRCF79EAshACfKRkHeRSFLqFykA387lpx40QbJhBWh12DJOd56iE6ds02Zq5koyzxqOhJ8ROU0llueDevZFJAZKPtdPkMET26smfz114MTlMY/ZZRLDcotEdGcDkGdr4SseeTZLZQkefq2AcwFTaRYCke80oL5d+eaNZotb6fU6USUZeACPXWmDpJf+pWhlSONwRWOUAIV7rhIGZp2D7yys9F82hBYhr5ybs0Vwy5bEDrh8Xuv2a4SibPH+XD8xJGfeex3S2McYOSVZCHMhdKEeBw0b21k/0Tzwi8cJ7oBjlZlxFUvmL1ewLXFrEtjw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(346002)(396003)(376002)(39860400002)(83380400001)(2616005)(1076003)(36756003)(6666004)(956004)(2906002)(478600001)(52116002)(8676002)(8936002)(316002)(5660300002)(4326008)(16576012)(86362001)(6486002)(186003)(26005)(66476007)(66946007)(66556008)(44832011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 8KgalJO/MrzT9cxP8B4y3PqzbeF2FNMESIbG5t4AvV00F+l2BokGuIiWVoUYPDtMt7LIKcwU3GvLoFjxcwKQam7HET1yebiV3Dxio9i4adV7gkN4TD2G7RkPWsJCcMPrQFufYDzxI+0gLmDPetZIcXSYMTQNKjvyhc+4PhsPKNF75145l+rxeIjpnOx/+ujXaLdhPbIrE/rjCHqThM7uZjbIT0LPVQQrPkcFw2C4yJvONJ1BgGiT1iDwDODefDnn9bsagqX3TQr3C2T3wqEDQThTlZoGVdyEI4fwF3S0hdbl0RpIMzomp+L1zdzrpyv/BQ0gLXF1mokqSg+4hx7le0+FVHqIzbpMB5aPTVllRGTEh/NQKo7k9DLjK1xCnnV+LGuq3xMvCtNVwinF9xK1HQarIUTDqT3ZxlYPhnYMet7Mw6q3UhLxP/YQJG31GuS/g7Y8A7JWPeWsAr715qwgdiLinX8l7cT9mZ62r3FMKQKPHDpisWCqWJoSmuiTHo0acPqyg2k34DRcSYOSIwFqehCayNJK5sPjIfycoFQ+b302mdree7h8zEUVaHFho8ASB4svdN6orr5z+Nic5O5PBVD9+AcICt72Ym/C/Vg+blP6VJs2pKySfHAiq4gPCIYXUCIYGrE4Iaju6KwdoCS/Iw==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2140b5b-da71-4022-3db6-08d84fecd860
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1163.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2020 09:36:33.6486
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Um1iKhsueFiQFaEoVmrR2w/hWrBG8S0sbE08e4Vxkhtxmioke4MdJ4yWE62hQVixt5ggaVd7EMFiTlPbuYqF6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4337
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 04:39:22PM +0200, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> 
-> > On Fri, Aug 07, 2020 at 04:12:31PM +0200, Vitaly Kuznetsov wrote:
-> >> PCIe config space can (depending on the configuration) be quite big but
-> >> usually is sparsely populated. Guest may scan it by accessing individual
-> >> device's page which, when device is missing, is supposed to have 'pci
-> >> hole' semantics: reads return '0xff' and writes get discarded. Compared
-> >> to the already existing KVM_MEM_READONLY, VMM doesn't need to allocate
-> >> real memory and stuff it with '0xff'.
-> >> 
-> >> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
-> >> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> >> ---
-> >>  Documentation/virt/kvm/api.rst  | 18 ++++++++++-----
-> >>  arch/x86/include/uapi/asm/kvm.h |  1 +
-> >>  arch/x86/kvm/mmu/mmu.c          |  5 ++++-
-> >>  arch/x86/kvm/mmu/paging_tmpl.h  |  3 +++
-> >>  arch/x86/kvm/x86.c              | 10 ++++++---
-> >>  include/linux/kvm_host.h        |  3 +++
-> >>  include/uapi/linux/kvm.h        |  2 ++
-> >>  virt/kvm/kvm_main.c             | 39 +++++++++++++++++++++++++++------
-> >>  8 files changed, 64 insertions(+), 17 deletions(-)
-> >> 
-> >> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> >> index 644e5326aa50..dc4172352635 100644
-> >> --- a/Documentation/virt/kvm/api.rst
-> >> +++ b/Documentation/virt/kvm/api.rst
-> >> @@ -1241,6 +1241,7 @@ yet and must be cleared on entry.
-> >>    /* for kvm_memory_region::flags */
-> >>    #define KVM_MEM_LOG_DIRTY_PAGES	(1UL << 0)
-> >>    #define KVM_MEM_READONLY	(1UL << 1)
-> >> +  #define KVM_MEM_PCI_HOLE		(1UL << 2)
-> >>  
-> >>  This ioctl allows the user to create, modify or delete a guest physical
-> >>  memory slot.  Bits 0-15 of "slot" specify the slot id and this value
-> >> @@ -1268,12 +1269,17 @@ It is recommended that the lower 21 bits of guest_phys_addr and userspace_addr
-> >>  be identical.  This allows large pages in the guest to be backed by large
-> >>  pages in the host.
-> >>  
-> >> -The flags field supports two flags: KVM_MEM_LOG_DIRTY_PAGES and
-> >> -KVM_MEM_READONLY.  The former can be set to instruct KVM to keep track of
-> >> -writes to memory within the slot.  See KVM_GET_DIRTY_LOG ioctl to know how to
-> >> -use it.  The latter can be set, if KVM_CAP_READONLY_MEM capability allows it,
-> >> -to make a new slot read-only.  In this case, writes to this memory will be
-> >> -posted to userspace as KVM_EXIT_MMIO exits.
-> >> +The flags field supports the following flags: KVM_MEM_LOG_DIRTY_PAGES,
-> >> +KVM_MEM_READONLY, KVM_MEM_PCI_HOLE:
-> >> +- KVM_MEM_LOG_DIRTY_PAGES: log writes.  Use KVM_GET_DIRTY_LOG to retreive
-> >> +  the log.
-> >> +- KVM_MEM_READONLY: exit to userspace with KVM_EXIT_MMIO on writes.  Only
-> >> +  available when KVM_CAP_READONLY_MEM is present.
-> >> +- KVM_MEM_PCI_HOLE: always return 0xff on reads, exit to userspace with
-> >> +  KVM_EXIT_MMIO on writes.  Only available when KVM_CAP_PCI_HOLE_MEM is
-> >> +  present.  When setting the memory region 'userspace_addr' must be NULL.
-> >> +  This flag is mutually exclusive with KVM_MEM_LOG_DIRTY_PAGES and with
-> >> +  KVM_MEM_READONLY.
-> >>  
-> >>  When the KVM_CAP_SYNC_MMU capability is available, changes in the backing of
-> >>  the memory region are automatically reflected into the guest.  For example, an
-> >> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-> >> index 17c5a038f42d..cf80a26d74f5 100644
-> >> --- a/arch/x86/include/uapi/asm/kvm.h
-> >> +++ b/arch/x86/include/uapi/asm/kvm.h
-> >> @@ -48,6 +48,7 @@
-> >>  #define __KVM_HAVE_XSAVE
-> >>  #define __KVM_HAVE_XCRS
-> >>  #define __KVM_HAVE_READONLY_MEM
-> >> +#define __KVM_HAVE_PCI_HOLE_MEM
-> >>  
-> >>  /* Architectural interrupt line count. */
-> >>  #define KVM_NR_INTERRUPTS 256
-> >> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> >> index fef6956393f7..4a2a7fface1e 100644
-> >> --- a/arch/x86/kvm/mmu/mmu.c
-> >> +++ b/arch/x86/kvm/mmu/mmu.c
-> >> @@ -3254,7 +3254,7 @@ static int kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, gfn_t gfn,
-> >>  		return PG_LEVEL_4K;
-> >>  
-> >>  	slot = gfn_to_memslot_dirty_bitmap(vcpu, gfn, true);
-> >> -	if (!slot)
-> >> +	if (!slot || (slot->flags & KVM_MEM_PCI_HOLE))
-> >
-> > This is unnecessary since you're setting disallow_lpage in
-> > kvm_alloc_memslot_metadata().
-> >
-> 
-> Yea, redundant precaution, can be dropped.
-> 
-> >>  		return PG_LEVEL_4K;
-> >>  
-> >>  	max_level = min(max_level, max_huge_page_level);
-> >> @@ -4105,6 +4105,9 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
-> >>  
-> >>  	slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
-> >>  
-> >> +	if (!write && slot && (slot->flags & KVM_MEM_PCI_HOLE))
-> >
-> > I'm confused.  Why does this short circuit reads but not writes?
-> >
-> 
-> The idea was that guests shouldn't normally write to these regions and
-> we may want to catch them if they do. We can short circuit writes too by
-> simply ignoring them.
+Currently, the RemapEn (valid) bit is accidentally cleared when
+programming IRTE w/ guestMode=0. It should be restored to
+the prior state.
 
-Another point is that write by guests might need to set bits
-in the root port error reporting cap.
+Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Fixes: b9fc6b56f478 ("iommu/amd: Implements irq_set_vcpu_affinity() hook to setup vapic mode for pass-through devices")
+---
+ drivers/iommu/amd/iommu.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> >> +		return RET_PF_EMULATE;
-> >> +
-> >>  	if (try_async_pf(vcpu, slot, prefault, gfn, gpa, &pfn, write,
-> >>  			 &map_writable))
-> >>  		return RET_PF_RETRY;
-> >> diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-> >> index 5c6a895f67c3..27abd69e69f6 100644
-> >> --- a/arch/x86/kvm/mmu/paging_tmpl.h
-> >> +++ b/arch/x86/kvm/mmu/paging_tmpl.h
-> >> @@ -836,6 +836,9 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
-> >>  
-> >>  	slot = kvm_vcpu_gfn_to_memslot(vcpu, walker.gfn);
-> >>  
-> >> +	if (!write_fault && slot && (slot->flags & KVM_MEM_PCI_HOLE))
-> >> +		return RET_PF_EMULATE;
-> >> +
-> >>  	if (try_async_pf(vcpu, slot, prefault, walker.gfn, addr, &pfn,
-> >>  			 write_fault, &map_writable))
-> >>  		return RET_PF_RETRY;
-> >> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> >> index dc4370394ab8..538bc58a22db 100644
-> >> --- a/arch/x86/kvm/x86.c
-> >> +++ b/arch/x86/kvm/x86.c
-> >> @@ -3515,6 +3515,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
-> >>  	case KVM_CAP_EXCEPTION_PAYLOAD:
-> >>  	case KVM_CAP_SET_GUEST_DEBUG:
-> >>  	case KVM_CAP_LAST_CPU:
-> >> +	case KVM_CAP_PCI_HOLE_MEM:
-> >>  		r = 1;
-> >>  		break;
-> >>  	case KVM_CAP_SYNC_REGS:
-> >> @@ -10114,9 +10115,11 @@ static int kvm_alloc_memslot_metadata(struct kvm_memory_slot *slot,
-> >>  		ugfn = slot->userspace_addr >> PAGE_SHIFT;
-> >>  		/*
-> >>  		 * If the gfn and userspace address are not aligned wrt each
-> >> -		 * other, disable large page support for this slot.
-> >> +		 * other, disable large page support for this slot. Also,
-> >> +		 * disable large page support for KVM_MEM_PCI_HOLE slots.
-> >>  		 */
-> >> -		if ((slot->base_gfn ^ ugfn) & (KVM_PAGES_PER_HPAGE(level) - 1)) {
-> >> +		if ((slot->flags & KVM_MEM_PCI_HOLE) || ((slot->base_gfn ^ ugfn) &
-> >> +				      (KVM_PAGES_PER_HPAGE(level) - 1))) {
-> >>  			unsigned long j;
-> >>  
-> >>  			for (j = 0; j < lpages; ++j)
-> >> @@ -10178,7 +10181,8 @@ static void kvm_mmu_slot_apply_flags(struct kvm *kvm,
-> >>  	 * Nothing to do for RO slots or CREATE/MOVE/DELETE of a slot.
-> >>  	 * See comments below.
-> >>  	 */
-> >> -	if ((change != KVM_MR_FLAGS_ONLY) || (new->flags & KVM_MEM_READONLY))
-> >> +	if ((change != KVM_MR_FLAGS_ONLY) ||
-> >> +	    (new->flags & (KVM_MEM_READONLY | KVM_MEM_PCI_HOLE)))
-> >>  		return;
-> >>  
-> >>  	/*
-> >> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> >> index 989afcbe642f..de1faa64a8ef 100644
-> >> --- a/include/linux/kvm_host.h
-> >> +++ b/include/linux/kvm_host.h
-> >> @@ -1081,6 +1081,9 @@ __gfn_to_memslot(struct kvm_memslots *slots, gfn_t gfn)
-> >>  static inline unsigned long
-> >>  __gfn_to_hva_memslot(struct kvm_memory_slot *slot, gfn_t gfn)
-> >>  {
-> >> +	/* Should never be called with a KVM_MEM_PCI_HOLE slot */
-> >> +	BUG_ON(!slot->userspace_addr);
-> >
-> > So _technically_, userspace can hit this by allowing virtual address 0,
-> > which is very much non-standard, but theoretically legal.  It'd probably be
-> > better to use a value that can't possibly be a valid userspace_addr, e.g. a
-> > non-canonical value.
-> >
-> 
-> I think I had '!(slot->flags & KVM_MEM_PCI_HOLE)' check in a previous
-> version, we can restore it (if needed) or drop the thing completely.
-> 
-> >> +
-> >>  	return slot->userspace_addr + (gfn - slot->base_gfn) * PAGE_SIZE;
-> >>  }
-> >>  
-> >
-> > ...
-> >
-> >> @@ -2318,6 +2338,11 @@ static int __kvm_read_guest_page(struct kvm_memory_slot *slot, gfn_t gfn,
-> >>  	int r;
-> >>  	unsigned long addr;
-> >>  
-> >> +	if (unlikely(slot && (slot->flags & KVM_MEM_PCI_HOLE))) {
-> >> +		memset(data, 0xff, len);
-> >> +		return 0;
-> >> +	}
-> >
-> > This feels wrong, shouldn't we be treating PCI_HOLE as MMIO?  Given that
-> > this is performance oriented, I would think we'd want to leverage the
-> > GPA from the VMCS instead of doing a full translation.
-> >
-> > That brings up a potential alternative to adding a memslot flag.  What if
-> > we instead add a KVM_MMIO_BUS device similar to coalesced MMIO?  I think
-> > it'd be about the same amount of KVM code, and it would provide userspace
-> > with more flexibility, e.g. I assume it would allow handling even writes
-> > wholly within the kernel for certain ranges and/or use cases, and it'd
-> > allow stuffing a value other than 0xff (though I have no idea if there is
-> > a use case for this).
-> 
-> I was thinking about making this a bit more generic, like 'immutable'
-> memory with a userspace-supplied values, e.g. userspace would be
-> providing a region (e.g. a single page which will be mapped to by all
-> pages of the slot) but then I failed to find a use-case for that. The
-> PCI hole semantics seems to be the only one we actually need in the real
-> life.
-> 
-> Overall, makeing these PCI holes 'special' memory regions (slots) and
-> sticking to KVM_SET_USER_MEMORY_REGION feels natural to me. I also think
-> it would be much easier to consume from QEMU side as we won't need to
-> use a 'special' API when things change (e.g. a device gets added and we
-> need to [un]punch a hole in the 'PCI hole' space).
-> 
-> >
-> > Speaking of which, why do writes go to userspace in this series?
-> >
-> 
-> No particular reason actually, if there is no need to catch such
-> (stray?) writes we can simply short-circuit them to nop.  
-
-With AER we might want to handle them I think.
-
-> >> +
-> >>  	addr = gfn_to_hva_memslot_prot(slot, gfn, NULL);
-> >>  	if (kvm_is_error_hva(addr))
-> >>  		return -EFAULT;
-> >> -- 
-> >> 2.25.4
-> >> 
-> >
-> 
-> -- 
-> Vitaly
+diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+index ba9f3dbc5b94..967f4e96d1eb 100644
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -3850,6 +3850,7 @@ int amd_iommu_deactivate_guest_mode(void *data)
+ 	struct amd_ir_data *ir_data = (struct amd_ir_data *)data;
+ 	struct irte_ga *entry = (struct irte_ga *) ir_data->entry;
+ 	struct irq_cfg *cfg = ir_data->cfg;
++	u64 valid = entry->lo.fields_remap.valid;
+ 
+ 	if (!AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir) ||
+ 	    !entry || !entry->lo.fields_vapic.guest_mode)
+@@ -3858,6 +3859,7 @@ int amd_iommu_deactivate_guest_mode(void *data)
+ 	entry->lo.val = 0;
+ 	entry->hi.val = 0;
+ 
++	entry->lo.fields_remap.valid       = valid;
+ 	entry->lo.fields_remap.dm          = apic->irq_dest_mode;
+ 	entry->lo.fields_remap.int_type    = apic->irq_delivery_mode;
+ 	entry->hi.fields.vector            = cfg->vector;
+-- 
+2.17.1
 
