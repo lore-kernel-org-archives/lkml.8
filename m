@@ -2,151 +2,215 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF28AC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC565C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 684C020684
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DC9020684
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:35:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GU+PgiQ7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqH3sJyX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgICAes (ORCPT
+        id S1727825AbgICAff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 20:34:48 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.12]:28932 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726913AbgICAer (ORCPT
+        Wed, 2 Sep 2020 20:35:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgICAfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 20:34:47 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 19F89DA9C4
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 19:34:45 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id DdDBktREYLFNkDdDBkITek; Wed, 02 Sep 2020 19:34:45 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=9l0pH/+k3HZvCMGnsV6Lacu8N8aycjUoexsgCCT+iW4=; b=GU+PgiQ79chhsqfTXaK9470S7O
-        X8I1PofoIvSEW1zpkq2y8tAi/W94ZuTK8OL0V+Avehvu/cZakvJp1NlLDYhIboy9VE51UJ2XJRP77
-        PMOUlby5oMAOKo4q57qJTxJbZfrNmuJ4xHQ2C8eJoa/ehZNkY3uaC6TRe2tCYdCMN/ZYq7lVmTH5i
-        r/Afruwr+LcqsSZq9UWE5OrHH4kl8cXzVRGe1QAXUmndaVloB8nEYHxvO3c6rAaeqJHEtZOHNP4Yn
-        2rTRqBOEsb6kEPe91thDSmcZti/wpQIklD2BnyeN2B2viRZ/1vZdWJA9uszeTDa8IjI1fo6JuMNmz
-        xzgn0o0g==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:59140 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1kDdDA-0041Gg-Ko; Wed, 02 Sep 2020 19:34:44 -0500
-Subject: Re: [PATCH] RDMA/ucma: Fix resource leak on error path
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200902162454.332828-1-alex.dewar90@gmail.com>
- <83132be0-a33b-ab7a-0da9-cc5c9398d0d4@embeddedor.com>
- <20200903003242.GL24045@ziepe.ca>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Message-ID: <0204eb72-8024-e6fc-800c-bd7e6ff94da7@embeddedor.com>
-Date:   Wed, 2 Sep 2020 19:40:58 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 2 Sep 2020 20:35:33 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 306E1C061244;
+        Wed,  2 Sep 2020 17:35:33 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id b16so893765ioj.4;
+        Wed, 02 Sep 2020 17:35:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VG1rUkZYiTdT3J6cA6RCV2QZRzJ4ZmG//fRcpMw5m0k=;
+        b=EqH3sJyXtOrt2OVHcm1IM+61J0RGLDT+V43PfMVjhEyR1JM03G/gnzX37y+aYDqOZm
+         Zj+907om3fnBhTscYnatmbXcheBsrtiQ+fNmUXa9s54FMqT/7NiODwlo/LYu189GtLNr
+         J/NG3XpoVPxYqnODs2Wd6QMyJ9N4mKwfdbkisfldOh/+AzpL7lLM0yuJnjAt2OsUw/jt
+         a0geTwudU2ZolBUgvB4aDt/bkWOZLmr8vke91z+/fbcwFD679frE3ghNwxSG0p4oY7Gw
+         kpvoCEdCySQfSnsFcMQ2m74rolrARBRPTIVZRahAjrzqk4SVA4aEY/Aie3zgvv3QWhaS
+         Su2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VG1rUkZYiTdT3J6cA6RCV2QZRzJ4ZmG//fRcpMw5m0k=;
+        b=HmZSU9cSWF8gMfEcNcI4EJGr8KuCkAjMDzz7/9IoKsOdw3BxEBLQONEzU8eC7Hx3VM
+         KhcrvP5Pk0p0KCSdacEhtFSgb1wxV3HHy2cyNLYVg0uWv7UaRE0kiW/tiZh1TkVciOdi
+         u/pzSFpAbuJFG6HLnwVNXSz68uaXOu3LBz70VHwXlTGZGJETowUs4D7RMaDykDgIIqrO
+         /++36symW7b2a2hGQfoxQbbCh5Hp7qPqbRuyNN+4kEmxlEHHxSaPvZUq1lPW6CBQp/gC
+         DFOboD+TMxE6jkMxTvrlxRIHSc8Fch8DlHMGzI+gGOJvpnInxMXfBu0zRLM5ChMkf/zC
+         LZdQ==
+X-Gm-Message-State: AOAM532vNk4UEXZWzXuI8ULBxCfmq4dljYVYhdkYziOB4UN84/X3XtYj
+        h5B+KiV3e05l2cyYoMCJyvMwGR6rED2muM6yjLLwtVyyanNCgg==
+X-Google-Smtp-Source: ABdhPJyzKU2f7teTlRfsIwBk8tYrh0u6u0X//xFRi3s/Q/mV9iQHAP6SFXS6wHN/rdL7Xii2Rbz3gFn/xYzithLNJPU=
+X-Received: by 2002:a02:b199:: with SMTP id t25mr646738jah.124.1599093331024;
+ Wed, 02 Sep 2020 17:35:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200903003242.GL24045@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1kDdDA-0041Gg-Ko
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:59140
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
+ <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com>
+ <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com> <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
+ <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
+In-Reply-To: <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Wed, 2 Sep 2020 17:35:19 -0700
+Message-ID: <CAM_iQpXmpMdxF2JDOROaf+Tjk-8dASiXz53K-Ph_q7jVMe0oVw@mail.gmail.com>
+Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
+ enqueue op for lockless qdisc
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linuxarm@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 1, 2020 at 11:35 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>
+> On 2020/9/2 12:41, Cong Wang wrote:
+> > On Tue, Sep 1, 2020 at 6:42 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+> >>
+> >> On 2020/9/2 2:24, Cong Wang wrote:
+> >>> On Mon, Aug 31, 2020 at 5:59 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+> >>>>
+> >>>> Currently there is concurrent reset and enqueue operation for the
+> >>>> same lockless qdisc when there is no lock to synchronize the
+> >>>> q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
+> >>>> qdisc_deactivate() called by dev_deactivate_queue(), which may cause
+> >>>> out-of-bounds access for priv->ring[] in hns3 driver if user has
+> >>>> requested a smaller queue num when __dev_xmit_skb() still enqueue a
+> >>>> skb with a larger queue_mapping after the corresponding qdisc is
+> >>>> reset, and call hns3_nic_net_xmit() with that skb later.
+> >>>
+> >>> Can you be more specific here? Which call path requests a smaller
+> >>> tx queue num? If you mean netif_set_real_num_tx_queues(), clearly
+> >>> we already have a synchronize_net() there.
+> >>
+> >> When the netdevice is in active state, the synchronize_net() seems to
+> >> do the correct work, as below:
+> >>
+> >> CPU 0:                                       CPU1:
+> >> __dev_queue_xmit()                       netif_set_real_num_tx_queues()
+> >> rcu_read_lock_bh();
+> >> netdev_core_pick_tx(dev, skb, sb_dev);
+> >>         .
+> >>         .                               dev->real_num_tx_queues = txq;
+> >>         .                                       .
+> >>         .                                       .
+> >>         .                               synchronize_net();
+> >>         .                                       .
+> >> q->enqueue()                                    .
+> >>         .                                       .
+> >> rcu_read_unlock_bh()                            .
+> >>                                         qdisc_reset_all_tx_gt
+> >>
+> >>
+> >
+> > Right.
+> >
+> >
+> >> but dev->real_num_tx_queues is not RCU-protected, maybe that is a problem
+> >> too.
+> >>
+> >> The problem we hit is as below:
+> >> In hns3_set_channels(), hns3_reset_notify(h, HNAE3_DOWN_CLIENT) is called
+> >> to deactive the netdevice when user requested a smaller queue num, and
+> >> txq->qdisc is already changed to noop_qdisc when calling
+> >> netif_set_real_num_tx_queues(), so the synchronize_net() in the function
+> >> netif_set_real_num_tx_queues() does not help here.
+> >
+> > How could qdisc still be running after deactivating the device?
+>
+> qdisc could be running during the device deactivating process.
+>
+> The main process of changing channel number is as below:
+>
+> 1. dev_deactivate()
+> 2. hns3 handware related setup
+> 3. netif_set_real_num_tx_queues()
+> 4. netif_tx_wake_all_queues()
+> 5. dev_activate()
+>
+> During step 1, qdisc could be running while qdisc is resetting, so
+> there could be skb left in the old qdisc(which will be restored back to
+> txq->qdisc during dev_activate()), as below:
+>
+> CPU 0:                                       CPU1:
+> __dev_queue_xmit():                      dev_deactivate_many():
+> rcu_read_lock_bh();                      qdisc_deactivate(qdisc);
+> q = rcu_dereference_bh(txq->qdisc);             .
+> netdev_core_pick_tx(dev, skb, sb_dev);          .
+>         .
+>         .                               rcu_assign_pointer(dev_queue->qdisc, qdisc_default);
+>         .                                       .
+>         .                                       .
+>         .                                       .
+>         .                                       .
+> q->enqueue()                                    .
 
-On 9/2/20 19:32, Jason Gunthorpe wrote:
 
->>> Addresses-Coverity: ("Resource leak")
->>
->> If you are using a public Coverity scan, please also include the Coverity ID.
->> In this case ID 1496814, something like:
->>
->> Addresses-Coverity-ID: 1496814 ("Resource leak")
-> 
-> Thanks, I fixed it up
-> 
+Well, like I said, if the deactivated bit were tested before ->enqueue(),
+there would be no packet queued after qdisc_deactivate().
 
-Awesome. :)
 
-Thanks, Jason.
---
-Gustavo
+>         .                                       .
+> rcu_read_unlock_bh()                            .
+>
+> And During step 3, txq->qdisc is pointing to noop_qdisc, so the qdisc_reset()
+> only reset the noop_qdisc, but not the actual qdisc, which is stored in
+> txq->qdisc_sleeping, so the actual qdisc may still have skb.
+>
+> When hns3_link_status_change() call step 4 and 5, it will restore all queue's
+> qdisc using txq->qdisc_sleeping and schedule all queue with net_tx_action().
+> The skb enqueued in step 1 may be dequeued and run, which cause the problem.
+>
+> >
+> >
+> >>
+> >>>
+> >>>>
+> >>>> Avoid the above concurrent op by calling synchronize_rcu_tasks()
+> >>>> after assigning new qdisc to dev_queue->qdisc and before calling
+> >>>> qdisc_deactivate() to make sure skb with larger queue_mapping
+> >>>> enqueued to old qdisc will always be reset when qdisc_deactivate()
+> >>>> is called.
+> >>>
+> >>> Like Eric said, it is not nice to call such a blocking function when
+> >>> we have a large number of TX queues. Possibly we just need to
+> >>> add a synchronize_net() as in netif_set_real_num_tx_queues(),
+> >>> if it is missing.
+> >>
+> >> As above, the synchronize_net() in netif_set_real_num_tx_queues() seems
+> >> to work when netdevice is in active state, but does not work when in
+> >> deactive.
+> >
+> > Please explain why deactivated device still has qdisc running?
+> >
+> > At least before commit 379349e9bc3b4, we always test deactivate
+> > bit before enqueueing. Are you complaining about that commit?
+> > That commit is indeed suspicious, at least it does not precisely revert
+> > commit ba27b4cdaaa66561aaedb21 as it claims.
+>
+> I am not familiar with TCQ_F_CAN_BYPASS.
+> From my understanding, the problem is that there is no order between
+> qdisc enqueuing and qdisc reset.
+
+It has almost nothing to do with BYPASS, my point here is all about
+__QDISC_STATE_DEACTIVATED bit, clearly commit 379349e9bc3b4
+removed this bit test for lockless qdisc, whether intentionally or accidentally.
+That bit test existed prior to BYPASS test, see commit ba27b4cdaaa665.
+
+Thanks.
