@@ -2,129 +2,205 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF82C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB686C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08CD8206E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:20:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="klyZE/Bj"
+	by mail.kernel.org (Postfix) with ESMTP id BCC842080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgICBUk (ORCPT
+        id S1727915AbgICBVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 21:20:40 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:40951 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbgICBUg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 21:20:36 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id EB6A984487;
-        Thu,  3 Sep 2020 13:20:30 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1599096030;
-        bh=ZcX7TAd0fNPu0z2dBLatCyLAmXlOHgvmAtrIUZg0cdE=;
-        h=From:To:Cc:Subject:Date;
-        b=klyZE/Bjgl6xmEAD/lbHNYkNhyn3Hj4V1NjZevgr2oKO6gRKV/hE1JQdU6UJH3fDS
-         rSe3dV3xu0qKSDtlAJOvmufsBokG0EgxB1gyqfQBmEd37SnuuE0KO/2+iKwXGe4Yfh
-         X8gLZhHAmeSdEvDXhmz+awnoyze5rFoUvl6zwHXqy61bwDygUxsj0mbIPkE7AS+4l1
-         JBero81gxM+bVzuhAbmkDKGNfd+4UYOzUErfWIcE/CyEOZ17nUQmFiz96Z+iYQXnEY
-         Z0nuDGPhLqq9rxuPW2hmcpZP6yex23yTY+xmDXEKOAgc6Qt8KG6mzlqfOp7s5RWgRs
-         iNpc5CYkH5TRA==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f5044dc0000>; Thu, 03 Sep 2020 13:20:28 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id DF61D13EEB7;
-        Thu,  3 Sep 2020 13:20:29 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 9EDC0280060; Thu,  3 Sep 2020 13:20:30 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org, yinbo.zhu@nxp.com
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2] mmc: sdhci-of-esdhc: Don't walk device-tree on every interrupt
-Date:   Thu,  3 Sep 2020 13:20:29 +1200
-Message-Id: <20200903012029.25673-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.28.0
+        Wed, 2 Sep 2020 21:21:14 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10757 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726586AbgICBVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 21:21:13 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 252F644608CD59A7BDEC;
+        Thu,  3 Sep 2020 09:21:09 +0800 (CST)
+Received: from [10.74.191.121] (10.74.191.121) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 3 Sep 2020 09:21:02 +0800
+Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
+ enqueue op for lockless qdisc
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+CC:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
+        "David Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Linux Kernel Network Developers" <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
+ <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com>
+ <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com>
+ <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
+ <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
+ <CAM_iQpXmpMdxF2JDOROaf+Tjk-8dASiXz53K-Ph_q7jVMe0oVw@mail.gmail.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <cd773132-c98e-18e1-67fd-bbef6babbf0f@huawei.com>
+Date:   Thu, 3 Sep 2020 09:21:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+In-Reply-To: <CAM_iQpXmpMdxF2JDOROaf+Tjk-8dASiXz53K-Ph_q7jVMe0oVw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit b214fe592ab7 ("mmc: sdhci-of-esdhc: add erratum eSDHC7 support")
-added code to check for a specific compatible string in the device-tree
-on every esdhc interrupat. Instead of doing this record the quirk in
-struct sdhci_esdhc and lookup the struct in esdhc_irq.
+On 2020/9/3 8:35, Cong Wang wrote:
+> On Tue, Sep 1, 2020 at 11:35 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>
+>> On 2020/9/2 12:41, Cong Wang wrote:
+>>> On Tue, Sep 1, 2020 at 6:42 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>>>
+>>>> On 2020/9/2 2:24, Cong Wang wrote:
+>>>>> On Mon, Aug 31, 2020 at 5:59 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>>>>>
+>>>>>> Currently there is concurrent reset and enqueue operation for the
+>>>>>> same lockless qdisc when there is no lock to synchronize the
+>>>>>> q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
+>>>>>> qdisc_deactivate() called by dev_deactivate_queue(), which may cause
+>>>>>> out-of-bounds access for priv->ring[] in hns3 driver if user has
+>>>>>> requested a smaller queue num when __dev_xmit_skb() still enqueue a
+>>>>>> skb with a larger queue_mapping after the corresponding qdisc is
+>>>>>> reset, and call hns3_nic_net_xmit() with that skb later.
+>>>>>
+>>>>> Can you be more specific here? Which call path requests a smaller
+>>>>> tx queue num? If you mean netif_set_real_num_tx_queues(), clearly
+>>>>> we already have a synchronize_net() there.
+>>>>
+>>>> When the netdevice is in active state, the synchronize_net() seems to
+>>>> do the correct work, as below:
+>>>>
+>>>> CPU 0:                                       CPU1:
+>>>> __dev_queue_xmit()                       netif_set_real_num_tx_queues()
+>>>> rcu_read_lock_bh();
+>>>> netdev_core_pick_tx(dev, skb, sb_dev);
+>>>>         .
+>>>>         .                               dev->real_num_tx_queues = txq;
+>>>>         .                                       .
+>>>>         .                                       .
+>>>>         .                               synchronize_net();
+>>>>         .                                       .
+>>>> q->enqueue()                                    .
+>>>>         .                                       .
+>>>> rcu_read_unlock_bh()                            .
+>>>>                                         qdisc_reset_all_tx_gt
+>>>>
+>>>>
+>>>
+>>> Right.
+>>>
+>>>
+>>>> but dev->real_num_tx_queues is not RCU-protected, maybe that is a problem
+>>>> too.
+>>>>
+>>>> The problem we hit is as below:
+>>>> In hns3_set_channels(), hns3_reset_notify(h, HNAE3_DOWN_CLIENT) is called
+>>>> to deactive the netdevice when user requested a smaller queue num, and
+>>>> txq->qdisc is already changed to noop_qdisc when calling
+>>>> netif_set_real_num_tx_queues(), so the synchronize_net() in the function
+>>>> netif_set_real_num_tx_queues() does not help here.
+>>>
+>>> How could qdisc still be running after deactivating the device?
+>>
+>> qdisc could be running during the device deactivating process.
+>>
+>> The main process of changing channel number is as below:
+>>
+>> 1. dev_deactivate()
+>> 2. hns3 handware related setup
+>> 3. netif_set_real_num_tx_queues()
+>> 4. netif_tx_wake_all_queues()
+>> 5. dev_activate()
+>>
+>> During step 1, qdisc could be running while qdisc is resetting, so
+>> there could be skb left in the old qdisc(which will be restored back to
+>> txq->qdisc during dev_activate()), as below:
+>>
+>> CPU 0:                                       CPU1:
+>> __dev_queue_xmit():                      dev_deactivate_many():
+>> rcu_read_lock_bh();                      qdisc_deactivate(qdisc);
+>> q = rcu_dereference_bh(txq->qdisc);             .
+>> netdev_core_pick_tx(dev, skb, sb_dev);          .
+>>         .
+>>         .                               rcu_assign_pointer(dev_queue->qdisc, qdisc_default);
+>>         .                                       .
+>>         .                                       .
+>>         .                                       .
+>>         .                                       .
+>> q->enqueue()                                    .
+> 
+> 
+> Well, like I said, if the deactivated bit were tested before ->enqueue(),
+> there would be no packet queued after qdisc_deactivate().
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-I found this in passing while trying to track down another issue using ft=
-race.
-I found it odd that I was seeing a lot of calls to __of_device_is_compati=
-ble()
-coming from esdhc_irq() (the fact that this interrupt is going off on my =
-board
-is also odd, but that's a different story).
+Only if the deactivated bit testing is also protected by qdisc->seqlock?
+otherwise there is still window between setting and testing the deactivated bit.
 
-Changes in v2:
-- add quirk_trans_complete_erratum to struct sdhci_esdhc so all the dt ha=
-ndling
-  is taken care of in esdhc_init.
+> 
+> 
+>>         .                                       .
+>> rcu_read_unlock_bh()                            .
+>>
+>> And During step 3, txq->qdisc is pointing to noop_qdisc, so the qdisc_reset()
+>> only reset the noop_qdisc, but not the actual qdisc, which is stored in
+>> txq->qdisc_sleeping, so the actual qdisc may still have skb.
+>>
+>> When hns3_link_status_change() call step 4 and 5, it will restore all queue's
+>> qdisc using txq->qdisc_sleeping and schedule all queue with net_tx_action().
+>> The skb enqueued in step 1 may be dequeued and run, which cause the problem.
+>>
+>>>
+>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Avoid the above concurrent op by calling synchronize_rcu_tasks()
+>>>>>> after assigning new qdisc to dev_queue->qdisc and before calling
+>>>>>> qdisc_deactivate() to make sure skb with larger queue_mapping
+>>>>>> enqueued to old qdisc will always be reset when qdisc_deactivate()
+>>>>>> is called.
+>>>>>
+>>>>> Like Eric said, it is not nice to call such a blocking function when
+>>>>> we have a large number of TX queues. Possibly we just need to
+>>>>> add a synchronize_net() as in netif_set_real_num_tx_queues(),
+>>>>> if it is missing.
+>>>>
+>>>> As above, the synchronize_net() in netif_set_real_num_tx_queues() seems
+>>>> to work when netdevice is in active state, but does not work when in
+>>>> deactive.
+>>>
+>>> Please explain why deactivated device still has qdisc running?
+>>>
+>>> At least before commit 379349e9bc3b4, we always test deactivate
+>>> bit before enqueueing. Are you complaining about that commit?
+>>> That commit is indeed suspicious, at least it does not precisely revert
+>>> commit ba27b4cdaaa66561aaedb21 as it claims.
+>>
+>> I am not familiar with TCQ_F_CAN_BYPASS.
+>> From my understanding, the problem is that there is no order between
+>> qdisc enqueuing and qdisc reset.
+> 
+> It has almost nothing to do with BYPASS, my point here is all about
+> __QDISC_STATE_DEACTIVATED bit, clearly commit 379349e9bc3b4
+> removed this bit test for lockless qdisc, whether intentionally or accidentally.
+> That bit test existed prior to BYPASS test, see commit ba27b4cdaaa665.
 
- drivers/mmc/host/sdhci-of-esdhc.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+It seems there is no qdisc->seqlock or qdisc->seqlock to protect the
+deactivated bit testing in commit ba27b4cdaaa665 too?
 
-diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-o=
-f-esdhc.c
-index 7c73d243dc6c..45881b309956 100644
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -81,6 +81,7 @@ struct sdhci_esdhc {
- 	bool quirk_tuning_erratum_type2;
- 	bool quirk_ignore_data_inhibit;
- 	bool quirk_delay_before_data_reset;
-+	bool quirk_trans_complete_erratum;
- 	bool in_sw_tuning;
- 	unsigned int peripheral_clock;
- 	const struct esdhc_clk_fixup *clk_fixup;
-@@ -1177,10 +1178,11 @@ static void esdhc_set_uhs_signaling(struct sdhci_=
-host *host,
-=20
- static u32 esdhc_irq(struct sdhci_host *host, u32 intmask)
- {
-+	struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
-+	struct sdhci_esdhc *esdhc =3D sdhci_pltfm_priv(pltfm_host);
- 	u32 command;
-=20
--	if (of_find_compatible_node(NULL, NULL,
--				"fsl,p2020-esdhc")) {
-+	if (esdhc->quirk_trans_complete_erratum) {
- 		command =3D SDHCI_GET_CMD(sdhci_readw(host,
- 					SDHCI_COMMAND));
- 		if (command =3D=3D MMC_WRITE_MULTIPLE_BLOCK &&
-@@ -1334,8 +1336,10 @@ static void esdhc_init(struct platform_device *pde=
-v, struct sdhci_host *host)
- 		esdhc->clk_fixup =3D match->data;
- 	np =3D pdev->dev.of_node;
-=20
--	if (of_device_is_compatible(np, "fsl,p2020-esdhc"))
-+	if (of_device_is_compatible(np, "fsl,p2020-esdhc")) {
- 		esdhc->quirk_delay_before_data_reset =3D true;
-+		esdhc->quirk_trans_complete_erratum =3D true;
-+	}
-=20
- 	clk =3D of_clk_get(np, 0);
- 	if (!IS_ERR(clk)) {
---=20
-2.28.0
-
+> 
+> Thanks.
+> .
+> 
