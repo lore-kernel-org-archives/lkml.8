@@ -2,109 +2,129 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F873C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DB3C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CFBE2071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835FD2078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:21:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+NLN2f/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgICLSG (ORCPT
+        id S1726327AbgICLVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:18:06 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:6185 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727799AbgICLPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:15:41 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4Bhys33byhz9vCyR;
-        Thu,  3 Sep 2020 13:15:19 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id IsxfKL8rKCpI; Thu,  3 Sep 2020 13:15:19 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bhys32SNgz9vCyN;
-        Thu,  3 Sep 2020 13:15:19 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9FD558B7FA;
-        Thu,  3 Sep 2020 13:15:20 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 6OaqXtM4BBp5; Thu,  3 Sep 2020 13:15:20 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 494FF8B7B1;
-        Thu,  3 Sep 2020 13:15:20 +0200 (CEST)
-Subject: Re: watchdog start on restart
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <d2343032814705f33cd81f18f45630bf327c0ff8.camel@yadro.com>
- <1721f170-95df-2451-e3af-6369e830afad@roeck-us.net>
- <2b14920abf9f430731ec11c1df6c0253185c7ce7.camel@yadro.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <d6aa46c5-a1ac-c32e-5cc6-bf9a15a53b65@csgroup.eu>
-Date:   Thu, 3 Sep 2020 13:13:58 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 3 Sep 2020 07:21:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728444AbgICLRS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:17:18 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD5BFC061251;
+        Thu,  3 Sep 2020 04:03:05 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id v196so2053454pfc.1;
+        Thu, 03 Sep 2020 04:03:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Yc4wkCo7MeYrmmnwisSRarxaaBJAo1GNuY3VsM322Kg=;
+        b=V+NLN2f/oumXmYED9CGhvzHg1A3k7uzbduXR5eZhQX9/LB452xGmGWatlhugioh3fn
+         C2jDtT6Rc46kWS8I2VMaaQ0YJ2cUJ0sW+0WJexHovLKoPUHB35BiDayz+5LOPKPRh7jN
+         LDbNcnYH6pS9mK4fFj6e+3Ohv0X/OBTORciTRAxc+4tQXi6M5vmL49DLqUTh1O7Zc1gZ
+         TShC6BYGRuSfGHezFoj+FzbZQ7DRptRhuSXsAOWIOYn9IzCI1Vi1paFBp6LrQFxA8AKs
+         j6lwADHrIN66e/OyJTVsiNNhAn6Y0D5eGSoKsL2bPAWMUbdWHdvzKfkOF+cewY9GN8/b
+         pdTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Yc4wkCo7MeYrmmnwisSRarxaaBJAo1GNuY3VsM322Kg=;
+        b=X9EbEKKDQ7SKr3hFldkD+96BSiInMEBHd4MdeRZ14RnTstUIJ4NfcM5Y6PNBmBKyIU
+         O4EGi5hLLaCDFxjyR0FHsea/D2JeCkMwokcoBBjybz6Qm5FMpmuVOMO+Oe3RjuhwvIR9
+         /YEKSriqSn/e270yD0GvE9tZMSH03QFL/tVV2QbqcbGgtj6I2jpZBdhSGgeCJQ/Gdfze
+         PtaM3RkaYib82tbNM2Mewz+CW6jEC+MOfSLf5Wzfdp9EsCoHwdfPx3VgzyjNfSWrkrno
+         7tdUYBtBeZP5XNyCDCfHwtlrROV1oqV/X4+LcVeSqWaEYS3+G+YTp6tkZPx91MNtoyPr
+         UtxA==
+X-Gm-Message-State: AOAM530mWtu7OGKgKaLUAcg6aJTuBA2jOjorX+29sIpQ9LOhCBB7ejXc
+        1NDsQcxKzTcej4UyqihzrdoC9thx9I4DrMUO5II=
+X-Google-Smtp-Source: ABdhPJwDzelAtXwzu1AP2Sck+DOJdO2HFfZJWEguZGryUdrzqFlNyIe50UOUdMIYN72Gvo8JpjKeqGFXAeY1JyeFBFc=
+X-Received: by 2002:a63:d648:: with SMTP id d8mr2513798pgj.4.1599130985426;
+ Thu, 03 Sep 2020 04:03:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2b14920abf9f430731ec11c1df6c0253185c7ce7.camel@yadro.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20200903005300.7894-1-digetx@gmail.com> <20200903005300.7894-2-digetx@gmail.com>
+In-Reply-To: <20200903005300.7894-2-digetx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 3 Sep 2020 14:02:48 +0300
+Message-ID: <CAHp75VcLk9pVRefA7cTgVQcX3-9EgcW6c-VUSpSOut0Y1B7J5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 01/22] i2c: tegra: Make tegra_i2c_flush_fifos() usable
+ in atomic transfer
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 3, 2020 at 3:53 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> The tegra_i2c_flush_fifos() shouldn't sleep in atomic transfer and jiffies
+> are not updating if interrupts are disabled. Hence let's use proper delay
+> functions and use ktime API in order not to hang atomic transfer. Note
+> that this patch doesn't fix any known problem because normally FIFO is
+> flushed at the time of starting a new transfer.
+
+> +       /*
+> +        * ktime_get() may take up to couple milliseconds in a worst case
+> +        * and normally FIFOs are flushed, hence let's check the state before
+> +        * proceeding to polling.
+> +        */
+
+Everything, including above can be done by using macros from iopoll.h. Why not?
+
+> +       if (!(i2c_readl(i2c_dev, offset) & mask))
+> +               return 0;
+> +
+> +       ktime = ktime_get();
+> +       ktimeout = ktime_add_ms(ktime, 1000);
+> +
+>         while (i2c_readl(i2c_dev, offset) & mask) {
+> -               if (time_after(jiffies, timeout)) {
+> -                       dev_warn(i2c_dev->dev, "timeout waiting for fifo flush\n");
+> -                       return -ETIMEDOUT;
+> -               }
+> -               usleep_range(1000, 2000);
+> +               if (ktime_after(ktime, ktimeout))
+> +                       goto err_timeout;
+> +
+> +               if (i2c_dev->is_curr_atomic_xfer)
+> +                       mdelay(1);
+> +               else
+> +                       fsleep(1000);
+> +
+> +               ktime = ktime_get();
+>         }
+>         return 0;
+> +
+> +err_timeout:
+> +       dev_err(i2c_dev->dev, "FIFO flushing timed out\n");
+> +
+> +       return -ETIMEDOUT;
+>  }
 
 
-Le 03/09/2020 à 12:23, Ivan Mikhaylov a écrit :
-> On Wed, 2020-09-02 at 06:36 -0700, Guenter Roeck wrote:
->> On 9/2/20 6:02 AM, Ivan Mikhaylov wrote:
->>> Hello everyone. Currently, the watchdog interface only has "stop watchdog on
->>> restart" but lacks a "start watchdog on restart" one. Is there a way to
->>> achieve
->>> such functionality?
->>>
->>> I'd like to know why "stop watchdog on restart" wasn't implemented via ioctl
->>> interface? It would be more convenient from user perspective and you can
->>> control that behavior whenever you want from application layer.
->>>
->>
->> Because it is and always was a driver level decision. The function was added
->> to replace lots of driver level code implementing this functionality.
->> Overriding it from userspace doesn't make sense because the driver is supposed
->> to have a reason for disabling it on reboot (for example due to clock issues
->> or power issues or becasue it has a short hardware timeout).
-> 
-> If it's only driver level decision then it makes sense.
-> 
->> That functionality doesn't make much sense. It can be accomplished by not
->> stopping the watchdog on reboot in the first place. And if the watchdog
->> wasn't running before, it can be started from userspace just before the
->> reboot.
-> 
-> I understand that it can be started from userspace. As example, I want the
-> watchdog trigger with guarantee that the userspace will be properly shut on
-> reboot, how can I get it with current interface? Just start before the reboot
-> doesn't guarantee that it will be triggered or will be triggered in middle
-> of reboot/restart.
-> 
-
-I'm not sure I understand what you want to do.
-
-You want to start the watchdog just before calling 'reboot' but want to 
-make sure that the watchdog will not reset the board before all 
-userspace has shut down correctly ?
-
-But what is the purpose of the watchdog then, isn't it there to make 
-sure that the machine gets reboot within a given timeout anyway in case 
-some userspace takes too long to shut down ?
-
-Christophe
+-- 
+With Best Regards,
+Andy Shevchenko
