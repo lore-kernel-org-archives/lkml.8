@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4AAC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D089DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3C7620775
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A328020775
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:14:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KCG64kPv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="efktdWwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgICROS (ORCPT
+        id S1729095AbgICROU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 13:14:18 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43744 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729018AbgICRN7 (ORCPT
+        Thu, 3 Sep 2020 13:14:20 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57026 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729033AbgICROD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 13:13:59 -0400
+        Thu, 3 Sep 2020 13:14:03 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083HDovL115812;
-        Thu, 3 Sep 2020 12:13:50 -0500
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083HDraR090946;
+        Thu, 3 Sep 2020 12:13:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599153230;
-        bh=HfpBrrUSFCrisPfxZK3gYQfvrpeeiJuenYKBqvA+hmk=;
+        s=ti-com-17Q1; t=1599153233;
+        bh=rSnQj8ahflNauruLYYBd5GgP0QJfyShBBFBuutX+fWM=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=KCG64kPvPMd998qyxTy8kB0Qsb1bjlZhpx6wXp9IYNZj+ZsMO02x0CoVLjkNB/Y+G
-         ayFXnbkDcARVRSjb1IjJLFBkq2RQcA1+Pmj45fMtUcoDkJJ09qCN88DznduZfdmhOh
-         N8QFj5CZuRv+nVmz91pUHmzmhwQGheNbVUOmVF2g=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083HDo8J095332;
-        Thu, 3 Sep 2020 12:13:50 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+        b=efktdWwawY0w8wINQheaZBlDtImKpRwvk8hPA2TaKrO84vw8U2gLtPsWVRo4TKFPV
+         Caw0vLaW1q9CkXdZMceXHfGXQNHg3TWX2plKCMz7CMsoz3KYquA4G6AbCOu5eD0wXC
+         byYc8vy0tpHw6IfrkVfvKEAIx5D+LCYYTicFFaQw=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083HDrqR095379;
+        Thu, 3 Sep 2020 12:13:53 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
- 2020 12:13:49 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 12:13:53 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 3 Sep 2020 12:13:50 -0500
+ Frontend Transport; Thu, 3 Sep 2020 12:13:53 -0500
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083HDDQ6088669;
-        Thu, 3 Sep 2020 12:13:47 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083HDDQ7088669;
+        Thu, 3 Sep 2020 12:13:50 -0500
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -56,9 +56,9 @@ To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         open list <linux-kernel@vger.kernel.org>
 CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
         Boris Brezillon <boris.brezillon@collabora.com>
-Subject: [PATCH v12 11/14] mtd: spi-nor: core: disable Octal DTR mode on suspend.
-Date:   Thu, 3 Sep 2020 22:43:10 +0530
-Message-ID: <20200903171313.18741-12-p.yadav@ti.com>
+Subject: [PATCH v12 12/14] mtd: spi-nor: core: expose spi_nor_default_setup() in core.h
+Date:   Thu, 3 Sep 2020 22:43:11 +0530
+Message-ID: <20200903171313.18741-13-p.yadav@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200903171313.18741-1-p.yadav@ti.com>
 References: <20200903171313.18741-1-p.yadav@ti.com>
@@ -71,49 +71,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On resume, the init procedure will be run that will re-enable it.
+Flashes might want to add a custom setup hook to configure the flash in
+the proper mode for operation. But after that, they would still want to
+run the default setup hook because it selects the read, program, and
+erase operations. Since there is little point in repeating all that
+code, expose the spi_nor_default_setup() in core.h to
+manufacturer-specific files.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/mtd/spi-nor/core.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/mtd/spi-nor/core.c | 4 ++--
+ drivers/mtd/spi-nor/core.h | 3 +++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index a96d32bcc4f5..91dd8394a5ca 100644
+index 91dd8394a5ca..7f3ac20abe3e 100644
 --- a/drivers/mtd/spi-nor/core.c
 +++ b/drivers/mtd/spi-nor/core.c
-@@ -3195,6 +3195,23 @@ static void spi_nor_soft_reset(struct spi_nor *nor)
- 	usleep_range(SPI_NOR_SRST_SLEEP_MIN, SPI_NOR_SRST_SLEEP_MAX);
+@@ -2742,8 +2742,8 @@ static int spi_nor_select_erase(struct spi_nor *nor)
+ 	return 0;
  }
  
-+/* mtd suspend handler */
-+static int spi_nor_suspend(struct mtd_info *mtd)
-+{
-+	struct spi_nor *nor = mtd_to_spi_nor(mtd);
-+	struct device *dev = nor->dev;
-+	int ret;
-+
-+	/* Disable octal DTR mode if we enabled it. */
-+	ret = spi_nor_octal_dtr_enable(nor, false);
-+	if (ret) {
-+		dev_err(dev, "suspend() failed\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- /* mtd resume handler */
- static void spi_nor_resume(struct mtd_info *mtd)
+-static int spi_nor_default_setup(struct spi_nor *nor,
+-				 const struct spi_nor_hwcaps *hwcaps)
++int spi_nor_default_setup(struct spi_nor *nor,
++			  const struct spi_nor_hwcaps *hwcaps)
  {
-@@ -3389,6 +3406,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
- 	mtd->size = nor->params->size;
- 	mtd->_erase = spi_nor_erase;
- 	mtd->_read = spi_nor_read;
-+	mtd->_suspend = spi_nor_suspend;
- 	mtd->_resume = spi_nor_resume;
+ 	struct spi_nor_flash_parameter *params = nor->params;
+ 	u32 ignored_mask, shared_mask;
+diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
+index ec54ce6c5403..24cff27c51aa 100644
+--- a/drivers/mtd/spi-nor/core.h
++++ b/drivers/mtd/spi-nor/core.h
+@@ -453,6 +453,9 @@ int spi_nor_post_bfpt_fixups(struct spi_nor *nor,
+ 			     const struct sfdp_bfpt *bfpt,
+ 			     struct spi_nor_flash_parameter *params);
  
- 	if (nor->params->locking_ops) {
++int spi_nor_default_setup(struct spi_nor *nor,
++			  const struct spi_nor_hwcaps *hwcaps);
++
+ static struct spi_nor __maybe_unused *mtd_to_spi_nor(struct mtd_info *mtd)
+ {
+ 	return mtd->priv;
 -- 
 2.25.0
 
