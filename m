@@ -2,96 +2,161 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45447C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31063C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCB720773
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C1220773
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:48:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="sLw7B6tB"
+	dkim=pass (2048-bit key) header.d=dionne-riel-com.20150623.gappssmtp.com header.i=@dionne-riel-com.20150623.gappssmtp.com header.b="lgHo1ju3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgICDr7 (ORCPT
+        id S1728280AbgICDsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 23:47:59 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57905 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726776AbgICDr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 23:47:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bhmwh08jXz9sR4;
-        Thu,  3 Sep 2020 13:47:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1599104874;
-        bh=4yAcDTxLmVtFlFmBwViPiQqBxkMUq1/v+ltMjACdmTw=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=sLw7B6tBL0tYeiS7UbUp4SBXAdWw1BiuX1rzRD7UWBO4tYjHsDcRVzXhtw9LnwBSb
-         TVkfoqm3UH9AlqDYsgMpWDtdLM9KmPlrSHeDnjaQHBRgQyRaye8SGf9zquJweA35N7
-         ilN3da+kZMlwnOIFaqVvO5w2y0IGDyDnVFG1VcyDqd8GjM2NTURgLs8goa8r9z4rAX
-         bS7CaEKouymf+JkB9pMsYKQDB1pDC1x6WHKsbhAVF7YeLmzAfKXrfbmEv+zmCeShnW
-         T7ZxEkdC9W8WnKJu7u5s2wHJv1TU45hmfsmEVHLbTCR7rbxTHbwfqjSrB0uc+2ymCK
-         IggJReIsXvpLw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>, hch@lst.de
-Cc:     sfr@canb.auug.org.au, benh@kernel.crashing.org, paulus@samba.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        linux-alpha@vger.kernel.org, tony.luck@intel.com,
-        fenghua.yu@intel.com, linux-ia64@vger.kernel.org,
-        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, davem@davemloft.net,
-        sparclinux@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        James.Bottomley@HansenPartnership.com, deller@gmx.de,
-        linux-parisc@vger.kernel.org
-Subject: Re: [PATCH 1/2] dma-mapping: introduce dma_get_seg_boundary_nr_pages()
-In-Reply-To: <20200901221646.26491-2-nicoleotsuka@gmail.com>
-References: <20200901221646.26491-1-nicoleotsuka@gmail.com> <20200901221646.26491-2-nicoleotsuka@gmail.com>
-Date:   Thu, 03 Sep 2020 13:47:43 +1000
-Message-ID: <87363z1py8.fsf@mpe.ellerman.id.au>
+        Wed, 2 Sep 2020 23:48:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbgICDsE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 23:48:04 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B411C061245
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 20:48:04 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id g72so1873738qke.8
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 20:48:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dionne-riel-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ltnD3f7HjD2+w0pdmZya1OptZlkQr+uyCb04jevIv4c=;
+        b=lgHo1ju3UR6gi4QXqDYGyUrbKc1+gBfxhvCm+aXUAhzRuH6FYoAh+BAGKWsJlxQFfT
+         AplBWGM43eVPQkD6w52YfxYBje9gYrnek2/TqLITDgasLCePVqvkueoeIh/SeRmTU/q2
+         Jv8Ox/q/S0tJIOzz+hUwz3cVbenB4B5PnpdYdMZJcRiV4HrsW9cbWlK8sSLdNz2G1/ny
+         +q4uwyaGEiA6XkkslpzoYGDBmD8Vi+DfuCjCz9qm5FWFAvOl6SOyk485qbPSBC5ITCJQ
+         uEE3WPQMPUCfsKXv2gYktNc+R7yVWdTvxYhE2ua5SVEAzJRtnHXIaoLAqv8jd0zgAkTb
+         Rp1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ltnD3f7HjD2+w0pdmZya1OptZlkQr+uyCb04jevIv4c=;
+        b=K2lRsYI7HsRdb13Ka9NTxTRC3S99NnEBWEsFKXsIdGdlH0SVHyBk4bDdAjN5EjBdd2
+         LyT9LwezkRVpvwnEoRhI/HacQOtQbJW1/F8ToSbVUQqf+jy9+jD8ZSUrenINUqy4gvn9
+         W9idq2dVVG3wbifPqJ+b8lQfbM0kIkJYYZqrXBM2yaAMnVko9FXU5EBtqz7P40sWvVj5
+         HY3qtTskzIvKHwLfbqqKO9kWLR2eG5EuHK39wTu3ziy65EeLWL6HqEmeituEn4T9sDGb
+         +wGhE/xDNbyHHlAbNJjx5uTsyMenMPQci6TnojbfzVAF9msSqM3I5jAHHkznyeMZN/l3
+         f24Q==
+X-Gm-Message-State: AOAM531EvwDW/SSsZ7Wnv0BDrd6PgKwNnel4mRsiR2CrT4r+evQYaLxB
+        hiqa2ZB76PSHgqR4mc/YuDyRew==
+X-Google-Smtp-Source: ABdhPJxMCPmYqhPFNnjlNpKrmGcUQlsXZc/Tyugh4NkRtWsiEYkHpu09DB1AsLX9WA7xQi8wBLFjyQ==
+X-Received: by 2002:a37:ad08:: with SMTP id f8mr1242667qkm.207.1599104881401;
+        Wed, 02 Sep 2020 20:48:01 -0700 (PDT)
+Received: from DUFFMAN (135-23-195-85.cpe.pppoe.ca. [135.23.195.85])
+        by smtp.gmail.com with ESMTPSA id m17sm1393902qkn.45.2020.09.02.20.48.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 20:48:01 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 23:47:56 -0400
+From:   Samuel Dionne-Riel <samuel@dionne-riel.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: Boot failure on gru-scarlet-inx with 5.9-rc2
+Message-ID: <20200902234756.60e4c4f6@DUFFMAN>
+In-Reply-To: <20200902160110.GA30014@e121166-lin.cambridge.arm.com>
+References: <20200829164920.7d28e01a@DUFFMAN>
+        <65d88bdd0888a69849327501a2aad186@kernel.org>
+        <20200831031838.2d6d76d9@DUFFMAN>
+        <90731ebb54fe03003dce03bc7ec4872e@kernel.org>
+        <20200831234542.295b1275@DUFFMAN>
+        <5db50a8e5b251714cebe0a719ee9dc73@kernel.org>
+        <20200901164249.GA15045@e121166-lin.cambridge.arm.com>
+        <20200901143356.0425d9ba@DUFFMAN>
+        <20200902160110.GA30014@e121166-lin.cambridge.arm.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicolin Chen <nicoleotsuka@gmail.com> writes:
-> diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
-> index 9704f3f76e63..cbc2e62db597 100644
-> --- a/arch/powerpc/kernel/iommu.c
-> +++ b/arch/powerpc/kernel/iommu.c
-> @@ -236,15 +236,10 @@ static unsigned long iommu_range_alloc(struct device *dev,
->  		}
->  	}
->  
-> -	if (dev)
-> -		boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
-> -				      1 << tbl->it_page_shift);
-> -	else
-> -		boundary_size = ALIGN(1UL << 32, 1 << tbl->it_page_shift);
-> -	/* 4GB boundary for iseries_hv_alloc and iseries_hv_map */
-> +	boundary_size = dma_get_seg_boundary_nr_pages(dev, tbl->it_page_shift);
->  
->  	n = iommu_area_alloc(tbl->it_map, limit, start, npages, tbl->it_offset,
-> -			     boundary_size >> tbl->it_page_shift, align_mask);
-> +			     boundary_size, align_mask);
+On Wed, 2 Sep 2020 17:01:19 +0100
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
 
-This has changed the units of boundary_size, but it's unused elsewhere
-in the function so that's OK.
+> On Tue, Sep 01, 2020 at 02:33:56PM -0400, Samuel Dionne-Riel wrote:
+> 
+> Please print a pointer as a pointer and print both bus and
+> bus->parent.
 
-If you need to do a v2 for any other reason, then I'd just drop
-boundary_size and call dma_get_seg_boundary_nr_pages() directly in the
-function call.
+Hopefully pointer as a pointer is %px. Not sure what else, if that's
+wrong please tell.
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+---
+@@ -79,6 +79,8 @@ static int rockchip_pcie_valid_device(struct rockchip_pcie *rockchip,
+         * do not read more than one device on the bus directly attached
+         * to RC's downstream side.
+         */
++       printk("[!!] // bus (%px) bus->parent (%px)\n", bus, bus->parent);
++       printk("[!!] bus->primary (%d) == rockchip->root_bus_nr (%d) && dev (%d) > 0\n", bus->primary, rockchip->root_bus_nr, dev);
+        if (bus->primary == rockchip->root_bus_nr && dev > 0)
+                return 0;
+ 
+--
 
-cheers
+Again, two values, verified with a bit of set and `sort -u`.
+
+[    1.691266] [!!] // bus (ffff0000ef9ab800) bus->parent (0000000000000000)
+[    1.691271] [!!] bus->primary (0) == rockchip->root_bus_nr (0) && dev (0) > 0
+
+and
+
+[    1.697156] [!!] // bus (ffff0000ef9ac000) bus->parent (ffff0000ef9ab800)
+[    1.697160] [!!] bus->primary (0) == rockchip->root_bus_nr (0) && dev (0) > 0
+
+First instance of each shown here. Last time I don't think it was.
+
+> > +       printk("[!!] bus->primary (%d) == rockchip->root_bus_nr
+> > (%d) && dev (%d) > 0\n", bus->primary, rockchip->root_bus_nr, dev);
+> > if (bus->primary == rockchip->root_bus_nr && dev > 0) return 0;
+> > 
+> > --
+> > 
+> > I get two kind of results
+> > 
+> > [    1.692913] [!!] // bus->parent (0)
+> > [    1.692917] [!!] bus->primary (0) == rockchip->root_bus_nr (0)
+> > && dev (0) > 0
+> > 
+> > and
+> > 
+> > [    1.693055] [!!] // bus->parent (-256794624)
+> > [    1.693058] [!!] bus->primary (0) == rockchip->root_bus_nr (0)
+> > && dev (0) > 0 
+> 
+> Looks like this is the condition that pci_is_root_bus(bus->parent) is
+> not hitting.
+> 
+
+
+
+> You are accessing a resource IORESOURCE_MEM that has nothing to do
+> with bus numbers.
+> 
+> s/IORESOURCE_MEM/IORESOURCE_BUS
+> 
+> should be better ;-)
+
+At least correct, rather than luckily working.
+
+
+Thanks, as always, anything I missed, or need more precisions, do ask.
+
+-- 
+Samuel Dionne-Riel
