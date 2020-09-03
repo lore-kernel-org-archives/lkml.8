@@ -2,135 +2,90 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A80C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDABC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAA4420716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:53:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qdr1dvq7"
+	by mail.kernel.org (Postfix) with ESMTP id 0430620716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599144804;
+	bh=jcI1wB3uEmJxhTvzRxmimv0PrE1TOxCdeThQ+yqZv1U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1TVQsOcpGcTNzqo8t8IsrQj102E4/wtbL/jqQbQ6F1a/K11HNyvfHuCjRLSC5B+iB
+	 JrXzqaHjwZ2TCQ3UiJ8lcNOGZTh2SL1qCfsfZjZU2sJGJ59S3UX/dgeILOX/xnIga2
+	 z+lY3zZAO10c7e/UyQOeDtEYEJIsVzKtF5c6qft4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbgICOxO (ORCPT
+        id S1729405AbgICOxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:53:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729165AbgICOMm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:12:42 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73A81C0610E5;
-        Thu,  3 Sep 2020 06:57:05 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id o2so1338190qvk.6;
-        Thu, 03 Sep 2020 06:57:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lx7VsLoD8VC63Gr8ZZSKJBlFfCXU3C8e2HzYdq7Pt7A=;
-        b=Qdr1dvq7HlK50SUTVEW4IeGNjBI0jJHlGaEv3Oy1gC7eoZBdvBHSz6nq+gOVS5P2dd
-         qry3D8+mN5r+UOenzMKY4A4A+ft4IY71PFUizEBGXB4SPYRb6WzLLY5ZWUorQuWnPusY
-         Hg+ewfvZpfD1PjvFVSfxbdyMbQZiCqjRw0yXWkdJkC3/MKxpXIZvVavXzLvvJ0IpItmf
-         GqtBhGruKreK3wKBY25sRDhDzLZ6qezR52AZ+8rAY1AsJFCrmc9Kp+aGH3VjmSxCSNKg
-         Rqvmd365Jb6usnU0jpZedzrMubIPR81jTT+Rq/wXDd+f1es41CEsuSpiegWVFStpO59t
-         emJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lx7VsLoD8VC63Gr8ZZSKJBlFfCXU3C8e2HzYdq7Pt7A=;
-        b=rcONyDA2IRG5BfmsDFdgm2snzXwP7kZQ178dTXNVxGG0VtyMCLIMVfw0jumND0vUVW
-         yQbVTVGZXiJg5yRr8W8BHs8nt04jatZzMLxO67DeUfC9h9e2yKvJK2xvbjTAmxsuEJDW
-         2Bqb8hSbpcqP5FEx9ycKUEL4anNz/M4ipFSHvdT8Z5EfuoN+g4pDmI6YJ77kse0EdFxh
-         CFOGiLsZ9XxYs3Z1QAet015/S1pVnSu01185dFzGJwW9OgBk0oLodhgdjSkVL65pt1AM
-         Rkmkt8StzaH8jBDDn7/eJB3s2PWd+sCXIEWEhn4zgyBjpQBRZPBvgGbAk7hVUDAompXI
-         0AwA==
-X-Gm-Message-State: AOAM531k8/Ok1L+an+oh40cgebLuikO/afWF0wxP5zzNhM609q//QSq5
-        5oIqBNgYZ7eLwJsgNAoXeZQV8kYvXUevEJMglEm6PSKo
-X-Google-Smtp-Source: ABdhPJxfq4ecie6/ajqMa8tNecTHNjT1t6BdLTsjZAmur5vj3MHpkwsWLR404smqL5YCugvUq96sorgqVphGPVvDQj4=
-X-Received: by 2002:a05:6214:289:: with SMTP id l9mr3070302qvv.137.1599141424567;
- Thu, 03 Sep 2020 06:57:04 -0700 (PDT)
+        Thu, 3 Sep 2020 10:53:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729196AbgICOw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:52:57 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 317BE2145D
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 14:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599144768;
+        bh=jcI1wB3uEmJxhTvzRxmimv0PrE1TOxCdeThQ+yqZv1U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eY/nd+MMiPngAnCXlXF0YoRMhSv0LYKp0VauSpqAAY27HPu/zlGPBlgUxAh9AtDJM
+         TeHhjkpq03iNW2yj8d/81P0amZDHMr9VV23PkBK4uEjxNQjEubJ58uYwzY9umP/XKo
+         cwoYuxZZsgm7Al2wF0p9/KriRKc2SeRUkr2G8Fr4=
+Received: by mail-wr1-f41.google.com with SMTP id g4so3570339wrs.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 07:52:48 -0700 (PDT)
+X-Gm-Message-State: AOAM531au71/3LMFSx4CzFuw6PmOZCCuKnbkFfTyG7qs0FHnFHW3pDt+
+        KorlJaDubv2HX4qD+aN4LBDYD2wzRRp62DNqxmtTVw==
+X-Google-Smtp-Source: ABdhPJx3YyX1cRpc56KwXkACUYF87VTzQngvZGkcWK/fNLMxQ/No8ECF13MUK2M5YiZsCco+ja/S+ONnOgSZ+wP+L3A=
+X-Received: by 2002:a05:6000:11c5:: with SMTP id i5mr2968557wrx.18.1599144766547;
+ Thu, 03 Sep 2020 07:52:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200903130950.6274-1-nish.malpani25@gmail.com>
- <20200903130950.6274-4-nish.malpani25@gmail.com> <CAHp75VfReT-EjCV=cW8mV1MmoMPPdY9q1scoPwbD_DEHpQHd3g@mail.gmail.com>
-In-Reply-To: <CAHp75VfReT-EjCV=cW8mV1MmoMPPdY9q1scoPwbD_DEHpQHd3g@mail.gmail.com>
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-Date:   Thu, 3 Sep 2020 19:26:53 +0530
-Message-ID: <CAEtfd9ZPkyk9_GV3h-CXFT_j=PYU66SHoYaaE7tytQxb+Q5rVA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] iio: gyro: adxrs290: Add debugfs register access support
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
-        Darius <darius.berghe@analog.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
+References: <20200902155904.17544-1-joro@8bytes.org>
+In-Reply-To: <20200902155904.17544-1-joro@8bytes.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 3 Sep 2020 07:52:35 -0700
+X-Gmail-Original-Message-ID: <CALCETrWAk-zVKKjvrq+fRAX5HKhdHF36h+jY+91_tQOa67xozA@mail.gmail.com>
+Message-ID: <CALCETrWAk-zVKKjvrq+fRAX5HKhdHF36h+jY+91_tQOa67xozA@mail.gmail.com>
+Subject: Re: [PATCH] x86/mm/32: Bring back vmalloc faulting on x86_32
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     X86 ML <x86@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <jroedel@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Sep 2, 2020 at 8:59 AM Joerg Roedel <joro@8bytes.org> wrote:
+>
+> From: Joerg Roedel <jroedel@suse.de>
+>
+> One can not simply remove vmalloc faulting on x86-32. Upstream
+>
+>         commit: 7f0a002b5a21 ("x86/mm: remove vmalloc faulting")
+>
+> removed it on x86 alltogether because previously the
+> arch_sync_kernel_mappings() interface was introduced. This interface
+> added synchronization of vmalloc/ioremap page-table updates to all
+> page-tables in the system at creation time and was thought to make
+> vmalloc faulting obsolete.
+>
+> But that assumption was incredibly naive.
 
-On Thu, Sep 3, 2020 at 6:55 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, Sep 3, 2020 at 4:10 PM Nishant Malpani <nish.malpani25@gmail.com> wrote:
-> >
-> > Extend support to read/write byte data from/to the device using
-> > debugfs iio interface.
->
-> ...
->
-> > +static int adxrs290_reg_access(struct iio_dev *indio_dev, unsigned int reg,
-> > +                              unsigned int writeval, unsigned int *readval)
-> > +{
-> > +       struct adxrs290_state *st = iio_priv(indio_dev);
-> > +       int ret;
-> > +
-> > +       if (!readval)
-> > +               return adxrs290_spi_write_reg(st->spi, reg, writeval);
-> > +
-> > +       ret = spi_w8r8(st->spi, ADXRS290_READ_REG(reg));
-> > +       if (ret < 0)
-> > +               return ret;
-> > +
-> > +       *readval = ret;
-> > +
-> > +       return 0;
-> > +}
->
-> Hmm... I would suggest to have it like
->
-> adxrs290_reg_access_rw()
-> {
->  ...
->  return 0;
-> }
->
-> adxrs290_reg_access()
-> {
->  if (readval)
->   return adxrs290_reg_access_rw();
->  else // it's redundant, but someone can use for better formatting
->   return adxrs290_spi_write_reg();
-> }
+Does this mean we can get rid of arch_sync_kernel_mappings()?  Or
+should we consider adding some locking to make it non-racy again?
 
-Umm, I'm sorry, I don't see why'd it be favourable for us to do it
-this way. Also, I *think* Jonathan is fine with how it's being done
-now.
-
-With regards,
-Nishant Malpani
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+-Andy
