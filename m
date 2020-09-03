@@ -2,102 +2,129 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 193A9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0FDC10DAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEC1920722
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:23:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MDW/84QF"
+	by mail.kernel.org (Postfix) with ESMTP id 43BF620716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599171949;
+	bh=UIAXSve0SRrcUd0B8D3XS6dXgn/vQBkLbJ8pkN798Co=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=chNo8lpV7yFhU6APxo5VRRuycGoHoB3p+CFWJoz8X9ZeBE3VbiYR1ZBJqDfbyUnUC
+	 3VAKlX0cbKRA2/roipwqCUhM5YJriBhL7ZHbMCW6ToMWaDrRdIsA5+erNYo6e+lN79
+	 EHKhs+afzeQD6pe/IKlHFtoSDzydN0XcQ74MUa8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgICWXm (ORCPT
+        id S1728506AbgICWZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:23:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgICWXl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:23:41 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27E30C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:23:40 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id f18so3455687pfa.10
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:23:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=H9pa3N3N+X5kZ3hnxzvQ5nbf/nL9Hg2di+HfYCma81c=;
-        b=MDW/84QFAbUZu6t/g0TK/VAn9O+TVo4DzXtdS9Mhsj4QS/PE4e+Rn1k5NJYTcEw24e
-         tNZS2BxVn/MJcmyK/CDSaMc4ViToYo9qGsGIvo5Wk1nGGaIuLIS6ugX3FalJIhONa1De
-         fN3g8m6b4O4IAz78V2dpe1p5CqrvjqKDQ1UOY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H9pa3N3N+X5kZ3hnxzvQ5nbf/nL9Hg2di+HfYCma81c=;
-        b=aO3TtuexKHjNj5tNGzWFIe/rrYQ3W/AzRTppDGMRC7iubUvIBnJjGI7AzdNlrN6s5v
-         JEAMYNZKPfrWHYIg0FwkkqMpd4qgiK4dVPneVFEcA8qh3Kv5Li+5jA5cifIevdGvdfJF
-         Gz4xb8NJlVTUlboGgIa5d2d20k9i0835ptIpoOXURBOboUhHRDI/6qVg15ls+zR+DlV3
-         N0xJ3go8kdVT0KGY3yrAcA6IGUUgARcYpISgATTgiegdafq047P5K/hhktxFOFGh0Vit
-         dh/fJV6/fxuWjSCeu7m57ujr4sCC2r1l5HMX18uejhpLmdiaTPCLm+VMrqg2XRiQ7LWu
-         kNPQ==
-X-Gm-Message-State: AOAM530mDeXUHdGdh59OsnOyERxhFJOukgJ/KiJWI5NEKU/vPlw8G0rP
-        lX9GLXvlll4ee0Y/QiOGfEa5hg==
-X-Google-Smtp-Source: ABdhPJxcY2j2KcoBxTS2ZsNzK0y4z5+F+CWnnaOAlqa994vL2EIo7Uflbx8UD2XsOoy0qHrpZNJapg==
-X-Received: by 2002:aa7:9286:0:b029:13c:1611:66c1 with SMTP id j6-20020aa792860000b029013c161166c1mr4124056pfa.12.1599171819570;
-        Thu, 03 Sep 2020 15:23:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q3sm4361846pfb.201.2020.09.03.15.23.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 15:23:38 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 15:23:37 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v2 13/28] kbuild: lto: merge module sections
-Message-ID: <202009031522.2BA9A035@keescook>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com>
- <20200903203053.3411268-14-samitolvanen@google.com>
+        Thu, 3 Sep 2020 18:25:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727065AbgICWZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 18:25:46 -0400
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACBE820897;
+        Thu,  3 Sep 2020 22:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599171945;
+        bh=UIAXSve0SRrcUd0B8D3XS6dXgn/vQBkLbJ8pkN798Co=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qluRU6tE3yEoLU2P/PGujeCsrKHYEEuTTVUhauwotQKC7B9OoafcrZW39TyQ+RWuU
+         AOBoW9Eo44laSXkfHd3e6+DkRHt1Hu8KHa4U+OZiPVTYjSbeSWkfXmMuCDJEepbSRJ
+         qccqng13joImKSahk+j3VAVuPZWx1O5WrcMQfqtk=
+Received: by mail-oi1-f173.google.com with SMTP id 3so4765417oih.0;
+        Thu, 03 Sep 2020 15:25:45 -0700 (PDT)
+X-Gm-Message-State: AOAM530a2GkD2fS6KFhiNQVGHp3iCAWAI4y5ws74NCVzpiQTpxa8eEuD
+        LJfzLpJwfHSXX8d2klYoFG0UqAbgOW+msB0+Bw==
+X-Google-Smtp-Source: ABdhPJwrVduZhw2vlihPd2/Z7wXfAVL2xOnsNA6Q5zcbi6DAiVrLsMvntTI9GWRi9G26Rm5JgVmKH/NsVP5BMycbvEE=
+X-Received: by 2002:aca:1711:: with SMTP id j17mr3621820oii.152.1599171945008;
+ Thu, 03 Sep 2020 15:25:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903203053.3411268-14-samitolvanen@google.com>
+References: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1596795922-705-7-git-send-email-hayashi.kunihiko@socionext.com>
+ <CAL_JsqJhvpiAWfa7w4-85-GObkW+pq6PUpZUGg8Sc5p4+qsuQA@mail.gmail.com> <aadb805d-e5fb-438a-d7e1-4e1ad31ddbac@socionext.com>
+In-Reply-To: <aadb805d-e5fb-438a-d7e1-4e1ad31ddbac@socionext.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 3 Sep 2020 16:25:33 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKQ-jwgUst1PLM1jnoo8hiAap=D2jhKP-Z9YktiUgrU_g@mail.gmail.com>
+Message-ID: <CAL_JsqKQ-jwgUst1PLM1jnoo8hiAap=D2jhKP-Z9YktiUgrU_g@mail.gmail.com>
+Subject: Re: [PATCH v6 6/6] PCI: uniphier: Add error message when failed to
+ get phy
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 01:30:38PM -0700, Sami Tolvanen wrote:
-> LLD always splits sections with LTO, which increases module sizes. This
-> change adds a linker script that merges the split sections in the final
-> module.
-> 
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+On Fri, Aug 21, 2020 at 1:05 AM Kunihiko Hayashi
+<hayashi.kunihiko@socionext.com> wrote:
+>
+> On 2020/08/18 1:39, Rob Herring wrote:
+> > On Fri, Aug 7, 2020 at 4:25 AM Kunihiko Hayashi
+> > <hayashi.kunihiko@socionext.com> wrote:
+> >>
+> >> Even if phy driver doesn't probe, the error message can't be distinguished
+> >> from other errors. This displays error message caused by the phy driver
+> >> explicitly.
+> >>
+> >> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> >> ---
+> >>   drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++--
+> >>   1 file changed, 6 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> >> index 93ef608..7c8721e 100644
+> >> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> >> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> >> @@ -489,8 +489,12 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+> >>                  return PTR_ERR(priv->rst);
+> >>
+> >>          priv->phy = devm_phy_optional_get(dev, "pcie-phy");
+> >
+> > The point of the optional variant vs. devm_phy_get() is whether or not
+> > you get an error message. So shouldn't you switch to devm_phy_get
+> > instead?
+> >
+> >> -       if (IS_ERR(priv->phy))
+> >> -               return PTR_ERR(priv->phy);
+> >> +       if (IS_ERR(priv->phy)) {
+> >> +               ret = PTR_ERR(priv->phy);
+> >> +               if (ret != -EPROBE_DEFER)
+> >> +                       dev_err(dev, "Failed to get phy (%d)\n", ret);
+> >> +               return ret;
+> >> +       }
+>
+> The 'phys' property is optional, so if there isn't 'phys' in the PCIe node,
+> devm_phy_get() returns -ENODEV, and devm_phy_optional_get() returns NULL.
+>
+> When devm_phy_optional_get() replaces devm_phy_get(),
+> condition for displaying an error message changes to:
+>
+>     (ret != -EPROBE_DEFER && ret != -ENODEV)
+>
+> This won't be simple, but should it be replaced?
 
-We'll likely need to come back around to this for FGKASLR (to keep the
-.text.* sections separated), but that's no different than the existing
-concerns for FGKASLR on the main kernel.
+Nevermind. I was thinking we had some error prints for the optional
+vs. non-optional variants.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+Rob
