@@ -2,242 +2,123 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0598C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21036C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6BED2151B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2CE20709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbgICSix (ORCPT
+        id S1729226AbgICSjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 14:38:53 -0400
-Received: from mga05.intel.com ([192.55.52.43]:25513 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729186AbgICSiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 14:38:50 -0400
-IronPort-SDR: 3WDdCi2LzE4CqxAogIaR/ZqxBhmZ8fQwas1YZRLBCbMXfoNVLF/N0mazTPBXpfdMlEgol1phSR
- FHtnsyWSr3/g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="242460056"
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="242460056"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 11:38:49 -0700
-IronPort-SDR: 2UHvvDbfJiDOSc3DJDNjzo7tQ3YAuGtPbvbq0RrE27rpomaLVSGnd2aQOyH/fDx9nV1RJhHtFe
- AkuVHOXotuWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="502611661"
-Received: from lkp-server01.sh.intel.com (HELO f1af165c0d27) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Sep 2020 11:38:47 -0700
-Received: from kbuild by f1af165c0d27 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kDu8F-0000Dj-0i; Thu, 03 Sep 2020 18:38:47 +0000
-Date:   Fri, 04 Sep 2020 02:38:33 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars-linux:for-linus/kspp] BUILD SUCCESS
- 22e05690453409c96585845983fcabc6fb5eeae1
-Message-ID: <5f513829.028I6ni3M/SLsg1/%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 3 Sep 2020 14:39:01 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41253 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728525AbgICSi7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 14:38:59 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y4so4939631ljk.8;
+        Thu, 03 Sep 2020 11:38:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5iYxU30/OZKxnckXSXEWILSjZda9qorCD3gugu2wz9o=;
+        b=rB+9uoQV5w005Yj/PG0rgRN5lbud04Xc11yToJTG6ItujNdrcALV/6M7mzd8ZSve+h
+         ExQlIDqtanELe2IWnIYuluIU8qVm+1awBezYJtHmaROfwfBzJA+DHaEqYVxC+gj8Guku
+         bWZ8BRQCjC/xAaD3fKcumEQDt18sXp+8i4yLE1qE5IprEac6kz9s7aQCOIDRj4Uhrg0k
+         bFoumxxAF4gWzflss+35MY84syAGv5sztoGUn3uZ0fSykr6oMSpXjE4WweeCrec37Bgq
+         V1iZhwoCOQpcaEaGPErTT8n051AtoCBw4vym2Loy1ezWj6uFS815rh5XSTt38aj64GBE
+         adYQ==
+X-Gm-Message-State: AOAM5325ikheBNH8pl6briB7h/i8gh7kTZMTcrnVlKxcoJSOehNrJfEg
+        Uy38HgjpgCDTsYe3GsZC5fo=
+X-Google-Smtp-Source: ABdhPJy56HEYdmlDK2TJ5EjyvnQGyCdaEDgByVPVSsqW7lWVioe221WrlQi3S1QWBft8tmoV+7aqSA==
+X-Received: by 2002:a2e:9595:: with SMTP id w21mr2039373ljh.334.1599158336613;
+        Thu, 03 Sep 2020 11:38:56 -0700 (PDT)
+Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id w4sm765817ljm.50.2020.09.03.11.38.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 11:38:56 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 21:38:48 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     mazziesaccount@gmail.com
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-power@fi.rohmeurope.com
+Subject: [PATCH 3/4] dt-bindings: regulator: bd71847: add property for
+ omitting ON/OFF control
+Message-ID: <51022c60412297ad9b22501452d60ba2dce38d2e.1599029334.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1599029334.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <cover.1599029334.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git  for-linus/kspp
-branch HEAD: 22e05690453409c96585845983fcabc6fb5eeae1  include: jhash/signal: Fix fall-through warnings for Clang
+The BD718(37/47/50) regulator enable states can be controlled either by SW
+or by PMIC internal state machine.
 
-elapsed time: 720m
+On some systems mixture of SW and HW state machine controlled regulators is
+needed.
 
-configs tested: 168
-configs skipped: 17
+Specifically, some SoCs signal SUSPEND state change to PMIC via
+STBY_REQ line. Now there are setups that expect certain regulators then to
+be disabled (by PMIC state machine) while other regulators should stay
+enabled (regardless of HW state => SW control required).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Add a new device-tree property "rohm,no-regulator-enable-control" which can
+be used to leave regulator(s) under HW state machine control.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                           se7206_defconfig
-mips                     loongson1b_defconfig
-sh                          lboxre2_defconfig
-mips                         rt305x_defconfig
-nios2                            alldefconfig
-sh                          polaris_defconfig
-arm                          gemini_defconfig
-arc                        nsim_700_defconfig
-arm                       cns3420vb_defconfig
-arm                         vf610m4_defconfig
-ia64                         bigsur_defconfig
-xtensa                           alldefconfig
-arm                              zx_defconfig
-microblaze                          defconfig
-mips                        vocore2_defconfig
-mips                      maltasmvp_defconfig
-powerpc                      ppc44x_defconfig
-m68k                            q40_defconfig
-m68k                       m5475evb_defconfig
-mips                 pnx8335_stb225_defconfig
-arm                          badge4_defconfig
-arm                            zeus_defconfig
-um                             i386_defconfig
-mips                         mpc30x_defconfig
-c6x                        evmc6474_defconfig
-arm                      jornada720_defconfig
-arm                       imx_v4_v5_defconfig
-sh                           se7712_defconfig
-mips                          rb532_defconfig
-sh                            hp6xx_defconfig
-arm                           h5000_defconfig
-arm                           sunxi_defconfig
-sh                           se7721_defconfig
-powerpc                             defconfig
-arm                      tct_hammer_defconfig
-arm                        mini2440_defconfig
-powerpc                          allmodconfig
-arm                        shmobile_defconfig
-arm                           omap1_defconfig
-mips                  decstation_64_defconfig
-nds32                             allnoconfig
-arc                      axs103_smp_defconfig
-arc                              alldefconfig
-sh                      rts7751r2d1_defconfig
-arm                        mvebu_v5_defconfig
-arm                         nhk8815_defconfig
-powerpc                      tqm8xx_defconfig
-mips                           gcw0_defconfig
-arm                          moxart_defconfig
-powerpc                    adder875_defconfig
-mips                           ip28_defconfig
-openrisc                         alldefconfig
-arm                          iop32x_defconfig
-sh                        sh7785lcr_defconfig
-arm                     eseries_pxa_defconfig
-arm                           sama5_defconfig
-sparc64                             defconfig
-powerpc                      pmac32_defconfig
-sparc                            allyesconfig
-sh                         microdev_defconfig
-mips                          malta_defconfig
-powerpc                  mpc866_ads_defconfig
-arm                       netwinder_defconfig
-mips                        workpad_defconfig
-c6x                        evmc6457_defconfig
-mips                          rm200_defconfig
-h8300                            alldefconfig
-sh                   sh7724_generic_defconfig
-mips                           mtx1_defconfig
-arm                           stm32_defconfig
-arm                            hisi_defconfig
-microblaze                    nommu_defconfig
-arc                              allyesconfig
-sh                           se7724_defconfig
-arm                         mv78xx0_defconfig
-microblaze                      mmu_defconfig
-riscv                          rv32_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20200903
-x86_64               randconfig-a006-20200903
-x86_64               randconfig-a003-20200903
-x86_64               randconfig-a005-20200903
-x86_64               randconfig-a001-20200903
-x86_64               randconfig-a002-20200903
-i386                 randconfig-a004-20200902
-i386                 randconfig-a005-20200902
-i386                 randconfig-a006-20200902
-i386                 randconfig-a002-20200902
-i386                 randconfig-a001-20200902
-i386                 randconfig-a003-20200902
-i386                 randconfig-a004-20200903
-i386                 randconfig-a005-20200903
-i386                 randconfig-a006-20200903
-i386                 randconfig-a002-20200903
-i386                 randconfig-a001-20200903
-i386                 randconfig-a003-20200903
-x86_64               randconfig-a013-20200902
-x86_64               randconfig-a016-20200902
-x86_64               randconfig-a011-20200902
-x86_64               randconfig-a012-20200902
-x86_64               randconfig-a015-20200902
-x86_64               randconfig-a014-20200902
-i386                 randconfig-a016-20200902
-i386                 randconfig-a015-20200902
-i386                 randconfig-a011-20200902
-i386                 randconfig-a013-20200902
-i386                 randconfig-a014-20200902
-i386                 randconfig-a012-20200902
-i386                 randconfig-a016-20200903
-i386                 randconfig-a015-20200903
-i386                 randconfig-a011-20200903
-i386                 randconfig-a013-20200903
-i386                 randconfig-a014-20200903
-i386                 randconfig-a012-20200903
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a004-20200902
-x86_64               randconfig-a006-20200902
-x86_64               randconfig-a003-20200902
-x86_64               randconfig-a005-20200902
-x86_64               randconfig-a001-20200902
-x86_64               randconfig-a002-20200902
-x86_64               randconfig-a013-20200903
-x86_64               randconfig-a016-20200903
-x86_64               randconfig-a011-20200903
-x86_64               randconfig-a012-20200903
-x86_64               randconfig-a015-20200903
-x86_64               randconfig-a014-20200903
-
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ .../bindings/regulator/rohm,bd71847-regulator.yaml    | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
+index 07256a4b50b9..eeac32cd15d6 100644
+--- a/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
+@@ -88,6 +88,17 @@ patternProperties:
+         # ----------------------------------------------------------------
+         # rest | not supported   | not supported    | not supported
+ 
++      # BD718(47/50) power outputs can either be controlled by the PMIC internal
++      # hardware state machine or by software. If you need regulators to be
++      # turned ON/OFF for example based on PMIC_STBY_REQ line (which toggles
++      # PMIC HW state machine) - then you should set this property.
++      # Tradeoff is that then SW can't control the ON/OFF state for this
++      # regulator (other than invoking a PMIC state change).
++      rohm,no-regulator-enable-control:
++        description: |
++          Enable/Disable control of this regulator must be left to the
++          PMIC hardware state machine.
++        type: boolean
+     required:
+       - regulator-name
+ 
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
