@@ -2,140 +2,152 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538FDC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD87C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 257C1206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 562DF206EB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:11:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iQOezLnu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yR6eSeAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgICLIk (ORCPT
+        id S1728400AbgICLLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:08:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgICK67 (ORCPT
+        Thu, 3 Sep 2020 07:11:33 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35580 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbgICLFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:58:59 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F035C061244;
-        Thu,  3 Sep 2020 03:58:56 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0d7a005419317048ee0789.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:7a00:5419:3170:48ee:789])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 901D21EC04CB;
-        Thu,  3 Sep 2020 12:58:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599130732;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=jFgR8B43svgkJTAQLtPGLdTbywp8lqxgXaF2hdYHOxI=;
-        b=iQOezLnuceBdy6FP5f1e+/Ky22aTiU2sbh7poxpJvORa7KBnNk66Rcr39qYjUCfFei0Tdo
-        QYChFscC2jEOZemAyZEtVFZhEtxKsPpJ/nx0yFkwjJ+Us6VUXojXdpblNYqjeZOLxzrHRm
-        zZMkFiKoqAPbmPzSCP9I904zpWEkViY=
-Date:   Thu, 3 Sep 2020 12:58:49 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Gregor Herburger <gregor.herburger@ew.tq-group.com>
-Cc:     york.sun@nxp.com, mchehab@kernel.org, tony.luck@intel.com,
-        james.morse@arm.com, rrichter@marvell.com,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] edac: fsl_ddr_edac: fix expected data message
-Message-ID: <20200903105849.GC5462@zn.tnic>
-References: <20200817095302.GD549@zn.tnic>
- <20200827075600.22335-1-gregor.herburger@ew.tq-group.com>
+        Thu, 3 Sep 2020 07:05:43 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083B5ChD117900;
+        Thu, 3 Sep 2020 06:05:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599131112;
+        bh=j7gRaGCJZUJFnrbVSfTAo0ASYxH7elhC7M4m/dECa+M=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=yR6eSeAR5AcQBTSkGgbKjy7k6v6/0wXPhYs8yPe8RWGxq3bgOdloMLuQOf104Cq0R
+         Rs3rRyaB8dxW0iR744kb0wsfQsNJ102J+ilKMMzIS6t6Bid+j3ksFgZjk4d+m7xPpA
+         aslrQ1NTCG2kWq3YMh59V+aMB1u12SCI5z4sS+E8=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083B5CIV126003
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 3 Sep 2020 06:05:12 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
+ 2020 06:05:12 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 3 Sep 2020 06:05:12 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083B5BtX011954;
+        Thu, 3 Sep 2020 06:05:11 -0500
+Subject: Re: [PATCH net-next v2 3/3] net: dp83869: Add speed optimization
+ feature
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <hkallweit1@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200902203444.29167-1-dmurphy@ti.com>
+ <20200902203444.29167-4-dmurphy@ti.com>
+ <20200902190650.52c46eb7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <e302d45f-c928-e6a3-fe40-da3bce978048@ti.com>
+Date:   Thu, 3 Sep 2020 06:05:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200827075600.22335-1-gregor.herburger@ew.tq-group.com>
+In-Reply-To: <20200902190650.52c46eb7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 09:56:00AM +0200, Gregor Herburger wrote:
-> When a correctable single bit error occurs, the driver calculates the
-> bad_data_bit respectively the bad_ecc_bit. If there is no error in the
-> corresponding data, the value becomes -1. With this the expected data
-> message is calculated.
-> 
-> In the case of an error in the lower 32 bits or no error (-1) the right
-> side operand of the bit-shift becomes negative which is undefined
-> behavior.
-> 
-> This can result in wrong and misleading messages like this:
-> [  311.103794] EDAC FSL_DDR MC0: Faulty Data bit: 36
-> [  311.108490] EDAC FSL_DDR MC0: Expected Data / ECC:   0xffffffef_ffffffff / 0x80000059
-> [  311.116135] EDAC FSL_DDR MC0: Captured Data / ECC:   0xffffffff_ffffffef / 0x59
-> 
-> Fix this by only calculating the expected data where the error occurred.
-> 
-> With the fix the dmesg output looks like this:
-> [  311.103794] EDAC FSL_DDR MC0: Faulty Data bit: 36
-> [  311.108490] EDAC FSL_DDR MC0: Expected Data / ECC:   0xffffffef_ffffffef / 0x59
-> [  311.116135] EDAC FSL_DDR MC0: Captured Data / ECC:   0xffffffff_ffffffef / 0x59
-> 
-> Signed-off-by: Gregor Herburger <gregor.herburger@ew.tq-group.com>
-> ---
->  drivers/edac/fsl_ddr_edac.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/edac/fsl_ddr_edac.c b/drivers/edac/fsl_ddr_edac.c
-> index 6d8ea226010d..4b6989cf1947 100644
-> --- a/drivers/edac/fsl_ddr_edac.c
-> +++ b/drivers/edac/fsl_ddr_edac.c
-> @@ -343,9 +343,9 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
->  
->  		fsl_mc_printk(mci, KERN_ERR,
->  			"Expected Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
-> -			cap_high ^ (1 << (bad_data_bit - 32)),
-> -			cap_low ^ (1 << bad_data_bit),
-> -			syndrome ^ (1 << bad_ecc_bit));
-> +			(bad_data_bit > 31) ? cap_high ^ (1 << (bad_data_bit - 32)) : cap_high,
-> +			(bad_data_bit <= 31) ? cap_low ^ (1 << (bad_data_bit)) : cap_low,
+Jakub
 
-But if bad_data_bit is -1, this check above will hit and you'd still
-shift by -1, IINM.
+On 9/2/20 9:06 PM, Jakub Kicinski wrote:
+> On Wed, 2 Sep 2020 15:34:44 -0500 Dan Murphy wrote:
+>> Set the speed optimization bit on the DP83869 PHY.
+>>
+>> Speed optimization, also known as link downshift, enables fallback to 100M
+>> operation after multiple consecutive failed attempts at Gigabit link
+>> establishment. Such a case could occur if cabling with only four wires
+>> (two twisted pairs) were connected instead of the standard cabling with
+>> eight wires (four twisted pairs).
+>>
+>> The number of failed link attempts before falling back to 100M operation is
+>> configurable. By default, four failed link attempts are required before
+>> falling back to 100M.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> there seems to be lots of checkpatch warnings here:
+>
+> ERROR: switch and case should be at the same indent
+> #111: FILE: drivers/net/phy/dp83869.c:342:
+> +	switch (cnt) {
+> +		case DP83869_DOWNSHIFT_1_COUNT:
+> [...]
+> +		case DP83869_DOWNSHIFT_2_COUNT:
+> [...]
+> +		case DP83869_DOWNSHIFT_4_COUNT:
+> [...]
+> +		case DP83869_DOWNSHIFT_8_COUNT:
+> [...]
+> +		default:
+>
+> CHECK: Alignment should match open parenthesis
+> #139: FILE: drivers/net/phy/dp83869.c:370:
+> +static int dp83869_get_tunable(struct phy_device *phydev,
+> +				struct ethtool_tunable *tuna, void *data)
+>
+> CHECK: Alignment should match open parenthesis
+> #150: FILE: drivers/net/phy/dp83869.c:381:
+> +static int dp83869_set_tunable(struct phy_device *phydev,
+> +				struct ethtool_tunable *tuna, const void *data)
+>
+> WARNING: please, no spaces at the start of a line
+> #168: FILE: drivers/net/phy/dp83869.c:669:
+> +       ret = phy_modify(phydev, DP83869_CFG2, DP83869_DOWNSHIFT_EN,$
+>
+> ERROR: code indent should use tabs where possible
+> #169: FILE: drivers/net/phy/dp83869.c:670:
+> +                        DP83869_DOWNSHIFT_EN);$
+>
+> WARNING: please, no spaces at the start of a line
+> #169: FILE: drivers/net/phy/dp83869.c:670:
+> +                        DP83869_DOWNSHIFT_EN);$
+>
+> WARNING: please, no spaces at the start of a line
+> #170: FILE: drivers/net/phy/dp83869.c:671:
+> +       if (ret)$
+>
+> WARNING: suspect code indent for conditional statements (7, 15)
+> #170: FILE: drivers/net/phy/dp83869.c:671:
+> +       if (ret)
+> +               return ret;
+>
+> ERROR: code indent should use tabs where possible
+> #171: FILE: drivers/net/phy/dp83869.c:672:
+> +               return ret;$
+>
+> WARNING: please, no spaces at the start of a line
+> #171: FILE: drivers/net/phy/dp83869.c:672:
+> +               return ret;$
+>
+> total: 3 errors, 5 warnings, 2 checks, 152 lines checked
 
-How about you fix it properly, clean it up and make it more readable in
-the process (pasting the code directly instead of a diff because a diff
-is less readable):
+I will fix these.
 
-        if ((err_detect & DDR_EDE_SBE) && (bus_width == 64)) {
-                sbe_ecc_decode(cap_high, cap_low, syndrome,
-                                &bad_data_bit, &bad_ecc_bit);
+Dan
 
-                if (bad_data_bit != -1) {
-                        if (bad_data_bit > 31)
-                                cap_high ^= 1 << (bad_data_bit - 32);
-                        else
-                                cap_low  ^= 1 << bad_data_bit;
-
-                        fsl_mc_printk(mci, KERN_ERR, "Faulty Data bit: %d\n", bad_data_bit);
-                        fsl_mc_printk(mci, KERN_ERR, "Expected Data: %#8.8x_%08x\n",
-                                      cap_high, cap_low);
-                }
-
-                if (bad_ecc_bit != -1) {
-                        fsl_mc_printk(mci, KERN_ERR, "Faulty ECC bit: %d\n", bad_ecc_bit);
-                        fsl_mc_printk(mci, KERN_ERR, "Expected ECC: %#2.2x\n",
-                                      syndrome ^ (1 << bad_ecc_bit));
-                }
-        }
-
-This way you print only when the respective faulty bits have been
-properly found and not print anything otherwise.
-
-Hmm?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
