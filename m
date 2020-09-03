@@ -2,107 +2,97 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0807FC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13775C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2CDD20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D72E820716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:04:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JMwsTCzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbgICPDg convert rfc822-to-8bit (ORCPT
+        id S1729028AbgICPEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:03:36 -0400
-Received: from mga14.intel.com ([192.55.52.115]:38263 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729035AbgICN6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 09:58:51 -0400
-IronPort-SDR: YAhaW+RyLQepdox+9fTVQYjSZtPcCQjixBgP7Klj5NzQUqinJnqDcxle2o5XqL1mmg/049l9Kh
- aJY8kdcG+s5g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="156839375"
-X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="156839375"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 06:30:00 -0700
-IronPort-SDR: Ii80nP53OMhKu3YPQanI2V3JEHYHtL7FOqbXWnBxegPkQJnHeLe8iGmOnrNuw5ZytWdFKHt8+v
- PmIgzgzmD4iA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="282676539"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Sep 2020 06:30:00 -0700
-Received: from shsmsx601.ccr.corp.intel.com (10.109.6.141) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 3 Sep 2020 06:29:59 -0700
-Received: from shsmsx601.ccr.corp.intel.com (10.109.6.141) by
- SHSMSX601.ccr.corp.intel.com (10.109.6.141) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 3 Sep 2020 21:29:57 +0800
-Received: from shsmsx601.ccr.corp.intel.com ([10.109.6.141]) by
- SHSMSX601.ccr.corp.intel.com ([10.109.6.141]) with mapi id 15.01.1713.004;
- Thu, 3 Sep 2020 21:29:57 +0800
-From:   "Sang, Oliver" <oliver.sang@intel.com>
-To:     "dsterba@suse.cz" <dsterba@suse.cz>
-CC:     Goldwyn Rodrigues <rgoldwyn@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "lkp@lists.01.org" <lkp@lists.01.org>, lkp <lkp@intel.com>,
-        "ltp@lists.linux.it" <ltp@lists.linux.it>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
-Subject: RE: [btrfs] c0aaf9b7a1: ltp: stuck at diotest4
-Thread-Topic: [btrfs] c0aaf9b7a1: ltp: stuck at diotest4
-Thread-Index: AQHWgdJgTz1eQ6GVAE+fMaKAQV67JalW6OSQ
-Date:   Thu, 3 Sep 2020 13:29:57 +0000
-Message-ID: <06668b52b9ac4d4e81f945e06223d9b7@intel.com>
-References: <20200903062837.GA3654@xsang-OptiPlex-9020>
- <20200903091123.GO28318@suse.cz>
-In-Reply-To: <20200903091123.GO28318@suse.cz>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-x-originating-ip: [10.239.127.36]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 3 Sep 2020 11:04:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728604AbgICN60 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 09:58:26 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EDF7C061245;
+        Thu,  3 Sep 2020 06:09:57 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id b124so2273984pfg.13;
+        Thu, 03 Sep 2020 06:09:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7yX/ZjF2stJ6zUIzoHq+EMwZnUipKPIbfJHG6QJz9JI=;
+        b=JMwsTCzvrDQwLOmw0ccOnaZRQRTV23TxWHlyGWHxhGyNOvv90fQ59WY4fkFveHVDAe
+         sOAQy6zWgkUVpfRBNhWJNLz3p1njhOR/qhontH61eeeoafNS+jVRsV0Ftz9v5q+TO9sK
+         mcMuljRxqvLjJw4lQa0YgCsAGyQ3Mm+DDWh4SehY/Z0D91ozKvnAgoqLhGfx8q7f+51H
+         AFREE4dBDL1ndnOQuAnDfgHi+4/d7ArS4cpZ9SA1egc9P2RP9u60TwLpKeTXsYlZQBTe
+         166I4cx1yDGBlm3V7htEnicJfpUrxKJ/ZxDh0gKMmbyBZi/ngFXDCFl3Q8FPxQmcH665
+         yvFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7yX/ZjF2stJ6zUIzoHq+EMwZnUipKPIbfJHG6QJz9JI=;
+        b=MHQZlCfnwidSCEFEQYT5G82q5JeBp8eJQnzirUl8Eo9GTeh13hoVtxpBtkTCD7XRt0
+         QDXr2nKiSkKve+0BVqaw9dQGAzbHH2RJz61/Zd9S2mBlENvUZsij6zqMUOgcgeC5aF5z
+         ah99JBUHw0/W0wd2z5GKkIg4hKbN6MgrEWKeK3xwcborGnrUiIJIYvwR1z/nMgKrX59p
+         TRKdEr6mSa5eQgBt9jsKXOEANRPKIG/EBiEWSHRQUstBQ/T5K+kBs2NCzm4UHOVuXJvk
+         Qmq1SrOcAhn7B3+rDYH1F0nILTKU2X+qQBouyCtXdfbpIu2xydaM1AY6tYKqKbO/MpoD
+         fLyA==
+X-Gm-Message-State: AOAM530xfk+QIcN+cwdexuwsE1sB2YiLH6U8nyMexW1ZjlVCpZHZ9OMu
+        7fsj2nUtml7jAutcy2qLsrs=
+X-Google-Smtp-Source: ABdhPJx1bWyYPq8pBWWBnVHh8UHHaCZRjqVBVgevzkBqhZX8o6P0nKReuy0aotNxP7BMmgS8hNP1rw==
+X-Received: by 2002:a62:ea01:: with SMTP id t1mr3763933pfh.125.1599138596606;
+        Thu, 03 Sep 2020 06:09:56 -0700 (PDT)
+Received: from nish-HP-Pavilion ([2409:4072:6085:e35d:a526:a3b6:4686:f6fb])
+        by smtp.gmail.com with ESMTPSA id x22sm3145297pfn.41.2020.09.03.06.09.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 06:09:56 -0700 (PDT)
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+To:     jic23@kernel.org, robh+dt@kernel.org
+Cc:     dragos.bogdan@analog.com, darius.berghe@analog.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, andy.shevchenko@gmail.com,
+        Nishant Malpani <nish.malpani25@gmail.com>
+Subject: [PATCH v2 0/3] iio: gyro: adxrs290: Add triggered buffer & debugfs support
+Date:   Thu,  3 Sep 2020 18:39:47 +0530
+Message-Id: <20200903130950.6274-1-nish.malpani25@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: David Sterba <dsterba@suse.cz>
-> Sent: Thursday, September 3, 2020 5:11 PM
-> To: Sang, Oliver <oliver.sang@intel.com>
-> Cc: Goldwyn Rodrigues <rgoldwyn@suse.com>; David Sterba
-> <dsterba@suse.com>; LKML <linux-kernel@vger.kernel.org>; lkp@lists.01.org;
-> lkp <lkp@intel.com>; ltp@lists.linux.it; linux-btrfs@vger.kernel.org
-> Subject: Re: [btrfs] c0aaf9b7a1: ltp: stuck at diotest4
-> 
-> On Thu, Sep 03, 2020 at 02:28:37PM +0800, kernel test robot wrote:
-> > Greeting,
-> >
-> > FYI, we noticed the following commit (built with gcc-9):
-> >
-> > commit: c0aaf9b7a114f6b75e0da97be7d99c102347a751 ("btrfs: switch to
-> > iomap_dio_rw() for dio")
-> > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git
-> > master
-> 
-> That's probably the O_DIRECT + O_(D)SYNC deadlock that was found recently.
-> One of the cases in diotest4 does
-> 
-> 	open(filename, O_DIRECT | O_RDWR | O_SYNC)
-> 
-> Fix is work in progress, thanks for the report.
+Introduce DATA_RDY trigger for triggered buffer setup; this enables continuous
+data capture. Additionally, add support for direct register access using the debugfs 
+iio interface. 
 
-Thanks a lot for information!
+The device-tree bindings documentation illustrates an example of using a GPIO irq
+line to trigger a data capture.
+
+Nishant Malpani (3):
+  iio: gyro: adxrs290: Add triggered buffer support
+  dt-bindings: iio: gyro: adxrs290: Add interrupts support
+  iio: gyro: adxrs290: Add debugfs register access support
+
+ .../bindings/iio/gyroscope/adi,adxrs290.yaml  |   7 +
+ drivers/iio/gyro/Kconfig                      |   2 +
+ drivers/iio/gyro/adxrs290.c                   | 284 +++++++++++++++++-
+ 3 files changed, 279 insertions(+), 14 deletions(-)
+
+-- 
+2.20.1
+
