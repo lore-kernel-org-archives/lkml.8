@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CC6C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FE7C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97B9F20786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786D120786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="FxZYS6z3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="jYQYUggT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgICLb4 (ORCPT
+        id S1729196AbgICPSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:31:56 -0400
-Received: from crapouillou.net ([89.234.176.41]:51138 "EHLO crapouillou.net"
+        Thu, 3 Sep 2020 11:18:34 -0400
+Received: from crapouillou.net ([89.234.176.41]:51512 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728562AbgICL3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:29:06 -0400
+        id S1728376AbgICLb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:31:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599132370; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1599132381; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ruSiYGMYEYwNR6DS0j0tVkBt7LK6N4xlExna60GJosA=;
-        b=FxZYS6z3pPyZLRrUjh2dW2tB5f2tjvTCsiK/chiWBa/qXenSG+eYjMmtI66CraPCt3V2Ar
-        fu+8Mhe20Q9WGLKBy/kMAeqWTuvZ1iEf8F9CITOWigjXBmDiXsNDu9Vn6QAjG47KG6l3T6
-        VqobcZ0NBnJeO4Bg5XZ946SGd9K0G7Y=
+        bh=Q++myQyFVGc5viHm1my4fERz4BkgXBYuJlPFvw347zc=;
+        b=jYQYUggTNuQ1S6/3AD+ZmojFJNLvAFPZAu3nlpl+R3Zxjg7o0i+1ZV9A/w9OncyVirf37r
+        RDUjJo7sVHvcVRBsCymTMBSH3cp4BYuaJq2KJjp3ncoaZ+8635HCMWW3Twt/Oy+vizidMX
+        QmnPSvEHoqj0+1aIe8xKa3yGbcwpIp0=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Chen <Peter.Chen@nxp.com>,
@@ -55,9 +55,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 03/20] usb/host: ehci-npcm7xx: Use pm_ptr() macro
-Date:   Thu,  3 Sep 2020 13:25:37 +0200
-Message-Id: <20200903112554.34263-4-paul@crapouillou.net>
+Subject: [PATCH 07/20] usb/misc: usb3503: Use pm_ptr() macro
+Date:   Thu,  3 Sep 2020 13:25:41 +0200
+Message-Id: <20200903112554.34263-8-paul@crapouillou.net>
 In-Reply-To: <20200903112554.34263-1-paul@crapouillou.net>
 References: <20200903112554.34263-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -75,48 +75,85 @@ simply be discarded by the compiler.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/usb/host/ehci-npcm7xx.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/usb/misc/usb3503.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/usb/host/ehci-npcm7xx.c b/drivers/usb/host/ehci-npcm7xx.c
-index adaf8fb4b459..6b5a7a873e01 100644
---- a/drivers/usb/host/ehci-npcm7xx.c
-+++ b/drivers/usb/host/ehci-npcm7xx.c
-@@ -37,8 +37,7 @@ static const char hcd_name[] = "npcm7xx-ehci";
- 
- static struct hc_driver __read_mostly ehci_npcm7xx_hc_driver;
- 
--#ifdef CONFIG_PM_SLEEP
--static int ehci_npcm7xx_drv_suspend(struct device *dev)
-+static int __maybe_unused ehci_npcm7xx_drv_suspend(struct device *dev)
- {
- 	struct usb_hcd *hcd = dev_get_drvdata(dev);
- 	bool do_wakeup = device_may_wakeup(dev);
-@@ -46,14 +45,13 @@ static int ehci_npcm7xx_drv_suspend(struct device *dev)
- 	return ehci_suspend(hcd, do_wakeup);
- }
- 
--static int ehci_npcm7xx_drv_resume(struct device *dev)
-+static int __maybe_unused ehci_npcm7xx_drv_resume(struct device *dev)
- {
- 	struct usb_hcd *hcd = dev_get_drvdata(dev);
- 
- 	ehci_resume(hcd, false);
+diff --git a/drivers/usb/misc/usb3503.c b/drivers/usb/misc/usb3503.c
+index 116bd789e568..48099c6bf04c 100644
+--- a/drivers/usb/misc/usb3503.c
++++ b/drivers/usb/misc/usb3503.c
+@@ -322,8 +322,7 @@ static int usb3503_platform_remove(struct platform_device *pdev)
  	return 0;
  }
--#endif /* CONFIG_PM_SLEEP */
  
- static SIMPLE_DEV_PM_OPS(ehci_npcm7xx_pm_ops, ehci_npcm7xx_drv_suspend,
- 		ehci_npcm7xx_drv_resume);
-@@ -183,7 +181,7 @@ static struct platform_driver npcm7xx_ehci_hcd_driver = {
- 	.driver		= {
- 		.name = "npcm7xx-ehci",
- 		.bus = &platform_bus_type,
--		.pm = &ehci_npcm7xx_pm_ops,
-+		.pm = pm_ptr(&ehci_npcm7xx_pm_ops),
- 		.of_match_table = npcm7xx_ehci_id_table,
- 	}
- };
+-#ifdef CONFIG_PM_SLEEP
+-static int usb3503_suspend(struct usb3503 *hub)
++static int __maybe_unused usb3503_suspend(struct usb3503 *hub)
+ {
+ 	usb3503_switch_mode(hub, USB3503_MODE_STANDBY);
+ 	clk_disable_unprepare(hub->clk);
+@@ -331,7 +330,7 @@ static int usb3503_suspend(struct usb3503 *hub)
+ 	return 0;
+ }
+ 
+-static int usb3503_resume(struct usb3503 *hub)
++static int __maybe_unused usb3503_resume(struct usb3503 *hub)
+ {
+ 	clk_prepare_enable(hub->clk);
+ 	usb3503_switch_mode(hub, hub->mode);
+@@ -339,30 +338,29 @@ static int usb3503_resume(struct usb3503 *hub)
+ 	return 0;
+ }
+ 
+-static int usb3503_i2c_suspend(struct device *dev)
++static int __maybe_unused usb3503_i2c_suspend(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 
+ 	return usb3503_suspend(i2c_get_clientdata(client));
+ }
+ 
+-static int usb3503_i2c_resume(struct device *dev)
++static int __maybe_unused usb3503_i2c_resume(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 
+ 	return usb3503_resume(i2c_get_clientdata(client));
+ }
+ 
+-static int usb3503_platform_suspend(struct device *dev)
++static int __maybe_unused usb3503_platform_suspend(struct device *dev)
+ {
+ 	return usb3503_suspend(dev_get_drvdata(dev));
+ }
+ 
+-static int usb3503_platform_resume(struct device *dev)
++static int __maybe_unused usb3503_platform_resume(struct device *dev)
+ {
+ 	return usb3503_resume(dev_get_drvdata(dev));
+ }
+-#endif
+ 
+ static SIMPLE_DEV_PM_OPS(usb3503_i2c_pm_ops, usb3503_i2c_suspend,
+ 		usb3503_i2c_resume);
+@@ -388,7 +386,7 @@ MODULE_DEVICE_TABLE(of, usb3503_of_match);
+ static struct i2c_driver usb3503_i2c_driver = {
+ 	.driver = {
+ 		.name = USB3503_I2C_NAME,
+-		.pm = &usb3503_i2c_pm_ops,
++		.pm = pm_ptr(&usb3503_i2c_pm_ops),
+ 		.of_match_table = of_match_ptr(usb3503_of_match),
+ 	},
+ 	.probe		= usb3503_i2c_probe,
+@@ -400,7 +398,7 @@ static struct platform_driver usb3503_platform_driver = {
+ 	.driver = {
+ 		.name = USB3503_I2C_NAME,
+ 		.of_match_table = of_match_ptr(usb3503_of_match),
+-		.pm = &usb3503_platform_pm_ops,
++		.pm = pm_ptr(&usb3503_platform_pm_ops),
+ 	},
+ 	.probe		= usb3503_platform_probe,
+ 	.remove		= usb3503_platform_remove,
 -- 
 2.28.0
 
