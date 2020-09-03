@@ -2,153 +2,108 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9D7C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AE7C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7587520716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C788208B3
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:02:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="QVZ5G7z4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbgICPBv (ORCPT
+        id S1729481AbgICPB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:01:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:34346 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728942AbgICOFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 11:01:56 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:40555 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728852AbgICOFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 10:05:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 953441045;
-        Thu,  3 Sep 2020 06:32:05 -0700 (PDT)
-Received: from localhost (e108754-lin.cambridge.arm.com [10.1.199.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 363963F66F;
-        Thu,  3 Sep 2020 06:32:05 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 14:32:03 +0100
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        dietmar.eggemann@arm.com, catalin.marinas@arm.com,
-        sudeep.holla@arm.com, will@kernel.org, valentin.schneider@arm.com
-Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/5] cpufreq: improve frequency invariance support
-Message-ID: <20200903133203.GA29370@arm.com>
-References: <20200901205549.30096-1-ionela.voinescu@arm.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1599141945; x=1630677945;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=O+rEFbhk8/OIwaun0Fe+GDqjEHwvlb6VwpK36XQynHs=;
+  b=QVZ5G7z4R5gu0puNaf61OBQWQwnEMi77gzMR9UPquk+7042BusV8jIPt
+   PJkoChLf70BvGR4JHnrsrvZmQmAxonP47UxXykkmopmXkl/2ckTy9wXwX
+   w3snvxIlvmFZfc7Ck+Jbkl8D8T19sQnIHpRGHVHQktZ2S8AgIgA42QRji
+   wrFKSTCtyrj5N8FjsMo4lbT93oKRywitLbaTMC8lMtVdkjZ16xiEBlwYA
+   XfbYWx2jhZrj+QFlHgZD5+2oqhhRCIHnnNJeq5WbjRes3aI1Ec9TGPDEf
+   VI+reIG9t2O8m/VFyQXIPZ147LvYZZze8vatrc82mbUaC2YKZ157aOITq
+   g==;
+IronPort-SDR: j/VebqZTxI83hsfvRtHeNxv+/3YMHexVxm17Wv8NcB38a4HKuRZORuoO36hdK8OimRZLL49crm
+ AfLxiWLjx49goicAyAjFAFsPiwKGNOahPWsMaaP/x46dzddb2NldYxNot5+yg3iMgl9W2dyUqA
+ nUau2tgZPjY4I2Kgr3cnxIzNwRJTG8l4SQ120hKVeMEMkbbWNahP43M5BxZtRse0ccv8yETdbr
+ YSdq9YytQMfcPbc8EZndZBZJ9Kdp7gaxy4XF0h0juabwNVfNBUu95hwO/Lrlle1hPXAdCq8Axq
+ rTs=
+X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
+   d="scan'208";a="90391121"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Sep 2020 06:35:37 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 3 Sep 2020 06:34:57 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Thu, 3 Sep 2020 06:34:53 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 0/3] pinctrl: Adding support for Microchip/Microsemi serial GPIO controller
+Date:   Thu, 3 Sep 2020 15:35:25 +0200
+Message-ID: <20200903133528.8595-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901205549.30096-1-ionela.voinescu@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael, Viresh,
+The series add support for the serial GPIO controller used by
+Microchip Sparx5, as well as (MSCC) ocelot/jaguar2 SoCs.
 
-Would it be okay for you to apply this series, as the majority of
-changes are in cpufreq? For arch_topology and arm64 changes, they have
-been reviewed and acked-by Catalin and Sudeep.
+This is the second revision of the patch series.
 
-Also, please let me know if I should send v6 with Sudeep's Reviewed-by/s
-applied.
+v2 changes:
+- Adds both in and output modes.
+- Use direct adressing of the individual banks (#gpio-cells = <4>),
+  also osoleting need for addressing macros in bindings include file.
+- Property 'microchip,sgpio-ports' (uint32, bitmask) replaced by
+  proper range set (array of [start,end]) 'microchip,sgpio-port-ranges'.
+- Fixes whitespace issues in Kconfig file
 
-Thank you,
-Ionela.
+Lars Povlsen (3):
+  dt-bindings: pinctrl: Add bindings for pinctrl-mchp-sgpio driver
+  pinctrl: pinctrl-mchp-sgpio: Add pinctrl driver for Microsemi Serial
+    GPIO
+  arm64: dts: sparx5: Add SGPIO devices
 
+ .../pinctrl/microchip,sparx5-sgpio.yaml       |  88 +++
+ MAINTAINERS                                   |   1 +
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     |  52 ++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |   5 +
+ .../dts/microchip/sparx5_pcb134_board.dtsi    |   5 +
+ .../dts/microchip/sparx5_pcb135_board.dtsi    |   5 +
+ drivers/pinctrl/Kconfig                       |  17 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-mchp-sgpio.c          | 642 ++++++++++++++++++
+ include/dt-bindings/gpio/mchp-sgpio.h         |  19 +
+ 10 files changed, 835 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-mchp-sgpio.c
+ create mode 100644 include/dt-bindings/gpio/mchp-sgpio.h
 
-On Tuesday 01 Sep 2020 at 21:55:44 (+0100), Ionela Voinescu wrote:
-> Hi,
-> 
-> v4->v5
->  - I've applied Viresh's remaining suggestion and Acked-by/s
->  - v4 can be found at [4]
->  - v5 is based on linux-next 20200828
-> 
-> Thank you,
-> Ionela.
-> 
-> ---
-> v3->v4:
->  - addressing Viresh's comments on patches 1/5 and 3/5, and
->  - with his Acked-by applied for the rest of the patches;
->  - v3 can be found at [3], and
->  - this is based on linux-next 20200827.
-> 
-> v2->v3
->  - v2 can be found at [2]
->  - 1/5 was introduced to check input frequencies to
->    arch_set_freq_scale() as recommended by Rafael
->  - The previous 2/7 was squashed into 1/7 - now 2/5, with additions to
->    the changelog as suggested by Rafael.
->  - The previous 3/7 (BL_SWITCHER handling) was dropped to be handled
->    in a separate patch. This does not change the current functionality.
->  - The previous 4/7 - now 3/5 is simplified as suggested by Viresh.
->  - 3/5 - cpufreq_supports_freq_invariance() replaces
->    cpufreq_sets_freq_scale(). The meaning chosen for
->    cpufreq_supports_freq_invariance() is whether it can set the frequency
->    scale factor, not whether arch_set_freq_scale() actually does.
->  - 4/5 - Change after Catalin's Ack: The changes to
->    arch_set_thermal_pressure() were dropped as they were done in a separate
->    patch. Therefore this patch now has a subset of the previous changes
->    at 5/7
->  - 5/5 - Change after Catalin's Ack:
->    s/cpufreq_sets_freq_scale/cpufreq_supports_freq_invariance
->  - v3 is based on linux-next 20200814
-> 
-> 
-> v1 -> v2:
->  - v1 can be found at [1]
->  - No cpufreq flags are introduced
->  - Previous patches 2/8 and 3/8 were squashed in this series under 1/7,
->    to ensure bisection.
->  - 2/7 was introduced as a proposal for Viresh's suggestion to use
->    policy->cur in the call to arch_set_freq_scale() and is extended to
->    support drivers that implement the target() callback as well
->  - Additional commit message changes are added to 1/7 and 2/7, to
->    clarify that the definition of arch_set_freq_scale() will filter 
->    settings of the scale factor, if unwanted
->  - 3/7 disables setting of the scale factor for
->    CONFIG_BL_SWITCHER, as Dietmar suggested
->  - Small change introduced in 4/7 to disable cpufreq-based frequency
->    invariance for the users of the default arch_set_freq_scale() call
->    which will not actually set a scale factor
->  - build issue solved (reported by 0day test)
->  - v2 is based on linux-next 20200716
->  - all functional tests in v1 were repeated for v2
-> 
-> 
-> [1] https://lore.kernel.org/lkml/20200701090751.7543-1-ionela.voinescu@arm.com/
-> [2] https://lore.kernel.org/lkml/20200722093732.14297-1-ionela.voinescu@arm.com/
-> [3] https://lore.kernel.org/lkml/20200824210252.27486-1-ionela.voinescu@arm.com/
-> [4] https://lore.kernel.org/lkml/20200828173303.11939-1-ionela.voinescu@arm.com/
-> 
-> Ionela Voinescu (3):
->   arch_topology: validate input frequencies to arch_set_freq_scale()
->   cpufreq: move invariance setter calls in cpufreq core
->   cpufreq: report whether cpufreq supports Frequency Invariance (FI)
-> 
-> Valentin Schneider (2):
->   arch_topology, cpufreq: constify arch_* cpumasks
->   arch_topology, arm, arm64: define arch_scale_freq_invariant()
-> 
->  arch/arm/include/asm/topology.h        |  1 +
->  arch/arm64/include/asm/topology.h      |  1 +
->  arch/arm64/kernel/topology.c           |  9 ++++++-
->  drivers/base/arch_topology.c           | 13 ++++++++--
->  drivers/cpufreq/cpufreq-dt.c           | 10 +-------
->  drivers/cpufreq/cpufreq.c              | 33 +++++++++++++++++++++++---
->  drivers/cpufreq/qcom-cpufreq-hw.c      |  9 +------
->  drivers/cpufreq/scmi-cpufreq.c         | 12 ++--------
->  drivers/cpufreq/scpi-cpufreq.c         |  6 +----
->  drivers/cpufreq/vexpress-spc-cpufreq.c | 12 ++--------
->  include/linux/arch_topology.h          |  4 +++-
->  include/linux/cpufreq.h                |  8 ++++++-
->  12 files changed, 68 insertions(+), 50 deletions(-)
-> 
-> 
-> base-commit: b36c969764ab12faebb74711c942fa3e6eaf1e96
-> -- 
-> 2.17.1
-> 
+--
+2.27.0
