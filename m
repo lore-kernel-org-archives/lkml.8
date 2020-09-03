@@ -2,193 +2,145 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41F6C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D193EC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB09F2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:54:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599148483;
-	bh=L6Pwk1G4hd01vHxA+aaPHpUX0cbjzQBKCHd1njAkuCg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZGbNEOKKUZg0b7j8GRPATvsMPkp74ZhiKZ/QxGLWPmVJtuYOf836XXaAD4sOxBezQ
-	 tngXnBe7GIZxTrUDHwP/B0enKaf5EN7e4ANzv9yG7KIZcC3CQLYJ2Qfr0gDiQwQ12B
-	 KEeuMORqSjTfERw2nSnNqOcoiUlKyA30OgoMFmXY=
+	by mail.kernel.org (Postfix) with ESMTP id B2F782072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgICPyk (ORCPT
+        id S1728618AbgICPzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:54:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728483AbgICPyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:54:39 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5597D2072A;
-        Thu,  3 Sep 2020 15:54:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599148479;
-        bh=L6Pwk1G4hd01vHxA+aaPHpUX0cbjzQBKCHd1njAkuCg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v2tYWLMZjyeyfnNxcY0rvw0WoOSRDME9rctiBY5yhaXo5PqN+4nvpnDGdFBFriOCs
-         /LVuKJYNvGvj/ipPd7uLMMwfqEfDaRLU7K2ZNwwb5QPJYjSpUzPlaQNYcTCFrwmmK/
-         891gHvmUlvGKxTnHqvK7gpjR0/Nrlj79fz2BPDRA=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>, Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Maor Gottlieb <maorg@nvidia.com>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH rdma-next 1/4] lib/scatterlist: Refactor sg_alloc_table_from_pages
-Date:   Thu,  3 Sep 2020 18:54:34 +0300
-Message-Id: <20200903155434.1153934-1-leon@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200903121853.1145976-1-leon@kernel.org>
-References: 
+        Thu, 3 Sep 2020 11:55:22 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:64095 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728483AbgICPzW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 11:55:22 -0400
+X-Originating-IP: 2.224.242.101
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 95975240011;
+        Thu,  3 Sep 2020 15:55:16 +0000 (UTC)
+Date:   Thu, 3 Sep 2020 17:59:02 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v3 1/2] media: i2c: ov772x: Add support for BT656 mode
+Message-ID: <20200903155902.3opuzv52jdpiszuw@uno.localdomain>
+References: <20200824190406.27478-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200824190406.27478-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200824190406.27478-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maor Gottlieb <maorg@nvidia.com>
+Hi Prabhakar,
 
-Currently, sg_alloc_table_from_pages doesn't support dynamic chaining of
-SG entries. Therefore it requires from user to allocate all the pages in
-advance and hold them in a large buffer. Such a buffer consumes a lot of
-temporary memory in HPC systems which do a very large memory registration.
+On Mon, Aug 24, 2020 at 08:04:05PM +0100, Lad Prabhakar wrote:
+> Add support to read the bus-type and enable BT656 mode if needed.
+>
+> Also fail probe if unsupported bus_type is detected.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-The next patches introduce API for dynamically allocation from pages and
-it requires us to do the following:
- * Extract the code to alloc_from_pages_common.
- * Change the build of the table to iterate on the chunks and not on the
-   SGEs. It will allow dynamic allocation of more SGEs.
+Looks good to me
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
 
-Since sg_alloc_table_from_pages allocate exactly the number of chunks,
-therefore chunks are equal to the number of SG entries.
+Thanks
+  j
 
-Signed-off-by: Maor Gottlieb <maorg@nvidia.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- lib/scatterlist.c | 75 ++++++++++++++++++++++++++++-------------------
- 1 file changed, 45 insertions(+), 30 deletions(-)
-
-diff --git a/lib/scatterlist.c b/lib/scatterlist.c
-index 5d63a8857f36..292e785d21ee 100644
---- a/lib/scatterlist.c
-+++ b/lib/scatterlist.c
-@@ -365,38 +365,18 @@ int sg_alloc_table(struct sg_table *table, unsigned int nents, gfp_t gfp_mask)
- }
- EXPORT_SYMBOL(sg_alloc_table);
-
--/**
-- * __sg_alloc_table_from_pages - Allocate and initialize an sg table from
-- *			         an array of pages
-- * @sgt:	 The sg table header to use
-- * @pages:	 Pointer to an array of page pointers
-- * @n_pages:	 Number of pages in the pages array
-- * @offset:      Offset from start of the first page to the start of a buffer
-- * @size:        Number of valid bytes in the buffer (after offset)
-- * @max_segment: Maximum size of a scatterlist node in bytes (page aligned)
-- * @gfp_mask:	 GFP allocation mask
-- *
-- *  Description:
-- *    Allocate and initialize an sg table from a list of pages. Contiguous
-- *    ranges of the pages are squashed into a single scatterlist node up to the
-- *    maximum size specified in @max_segment. An user may provide an offset at a
-- *    start and a size of valid data in a buffer specified by the page array.
-- *    The returned sg table is released by sg_free_table.
-- *
-- * Returns:
-- *   0 on success, negative error on failure
-- */
--int __sg_alloc_table_from_pages(struct sg_table *sgt, struct page **pages,
--				unsigned int n_pages, unsigned int offset,
--				unsigned long size, unsigned int max_segment,
--				gfp_t gfp_mask)
-+static struct scatterlist *
-+alloc_from_pages_common(struct sg_table *sgt, struct page **pages,
-+			unsigned int n_pages, unsigned int offset,
-+			unsigned long size, unsigned int max_segment,
-+			gfp_t gfp_mask)
- {
- 	unsigned int chunks, cur_page, seg_len, i;
-+	struct scatterlist *prv, *s = NULL;
- 	int ret;
--	struct scatterlist *s;
-
- 	if (WARN_ON(!max_segment || offset_in_page(max_segment)))
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
-
- 	/* compute number of contiguous chunks */
- 	chunks = 1;
-@@ -412,11 +392,12 @@ int __sg_alloc_table_from_pages(struct sg_table *sgt, struct page **pages,
-
- 	ret = sg_alloc_table(sgt, chunks, gfp_mask);
- 	if (unlikely(ret))
--		return ret;
-+		return ERR_PTR(ret);
-
- 	/* merging chunks and putting them into the scatterlist */
- 	cur_page = 0;
--	for_each_sg(sgt->sgl, s, sgt->orig_nents, i) {
-+	s = sgt->sgl;
-+	for (i = 0; i < chunks; i++) {
- 		unsigned int j, chunk_size;
-
- 		/* look for the end of the current chunk */
-@@ -435,9 +416,43 @@ int __sg_alloc_table_from_pages(struct sg_table *sgt, struct page **pages,
- 		size -= chunk_size;
- 		offset = 0;
- 		cur_page = j;
-+		prv = s;
-+		s = sg_next(s);
- 	}
-+	return prv;
-+}
-
--	return 0;
-+/**
-+ * __sg_alloc_table_from_pages - Allocate and initialize an sg table from
-+ *			         an array of pages
-+ * @sgt:	 The sg table header to use
-+ * @pages:	 Pointer to an array of page pointers
-+ * @n_pages:	 Number of pages in the pages array
-+ * @offset:      Offset from start of the first page to the start of a buffer
-+ * @size:        Number of valid bytes in the buffer (after offset)
-+ * @max_segment: Maximum size of a scatterlist node in bytes (page aligned)
-+ * @gfp_mask:	 GFP allocation mask
-+ *
-+ *  Description:
-+ *    Allocate and initialize an sg table from a list of pages. Contiguous
-+ *    ranges of the pages are squashed into a single scatterlist node up to the
-+ *    maximum size specified in @max_segment. A user may provide an offset at a
-+ *    start and a size of valid data in a buffer specified by the page array.
-+ *    The returned sg table is released by sg_free_table.
-+ *
-+ * Returns:
-+ *   0 on success, negative error on failure
-+ */
-+int __sg_alloc_table_from_pages(struct sg_table *sgt, struct page **pages,
-+				unsigned int n_pages, unsigned int offset,
-+				unsigned long size, unsigned int max_segment,
-+				gfp_t gfp_mask)
-+{
-+	struct scatterlist *sg;
-+
-+	sg = alloc_from_pages_common(sgt, pages, n_pages, offset, size,
-+				     max_segment, gfp_mask);
-+	return PTR_ERR_OR_ZERO(sg);
- }
- EXPORT_SYMBOL(__sg_alloc_table_from_pages);
-
---
-2.26.2
-
+> ---
+>  drivers/media/i2c/ov772x.c | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>
+> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> index 2cc6a678069a..67764d647526 100644
+> --- a/drivers/media/i2c/ov772x.c
+> +++ b/drivers/media/i2c/ov772x.c
+> @@ -31,6 +31,7 @@
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-event.h>
+> +#include <media/v4l2-fwnode.h>
+>  #include <media/v4l2-image-sizes.h>
+>  #include <media/v4l2-subdev.h>
+>
+> @@ -434,6 +435,7 @@ struct ov772x_priv {
+>  #ifdef CONFIG_MEDIA_CONTROLLER
+>  	struct media_pad pad;
+>  #endif
+> +	struct v4l2_fwnode_endpoint ep;
+>  };
+>
+>  /*
+> @@ -581,6 +583,13 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
+>  	if (priv->streaming == enable)
+>  		goto done;
+>
+> +	if (priv->ep.bus_type == V4L2_MBUS_BT656) {
+> +		ret = regmap_update_bits(priv->regmap, COM7, ITU656_ON_OFF,
+> +					 enable ? ITU656_ON_OFF : ~ITU656_ON_OFF);
+> +		if (ret)
+> +			goto done;
+> +	}
+> +
+>  	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
+>  				 enable ? 0 : SOFT_SLEEP_MODE);
+>  	if (ret)
+> @@ -1354,6 +1363,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
+>
+>  static int ov772x_probe(struct i2c_client *client)
+>  {
+> +	struct fwnode_handle *endpoint;
+>  	struct ov772x_priv	*priv;
+>  	int			ret;
+>  	static const struct regmap_config ov772x_regmap_config = {
+> @@ -1415,6 +1425,28 @@ static int ov772x_probe(struct i2c_client *client)
+>  		goto error_clk_put;
+>  	}
+>
+> +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
+> +						  NULL);
+> +	if (!endpoint) {
+> +		dev_err(&client->dev, "endpoint node not found\n");
+> +		ret = -EINVAL;
+> +		goto error_clk_put;
+> +	}
+> +
+> +	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
+> +	fwnode_handle_put(endpoint);
+> +	if (ret) {
+> +		dev_err(&client->dev, "Could not parse endpoint\n");
+> +		goto error_clk_put;
+> +	}
+> +
+> +	if (priv->ep.bus_type != V4L2_MBUS_PARALLEL &&
+> +	    priv->ep.bus_type != V4L2_MBUS_BT656) {
+> +		dev_err(&client->dev, "Unsupported bus type %d\n",
+> +			priv->ep.bus_type);
+> +		goto error_clk_put;
+> +	}
+> +
+>  	ret = ov772x_video_probe(priv);
+>  	if (ret < 0)
+>  		goto error_gpio_put;
+> --
+> 2.17.1
+>
