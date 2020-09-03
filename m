@@ -2,166 +2,199 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EC3C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F01C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B4572072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:52:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ECZmdnt3"
+	by mail.kernel.org (Postfix) with ESMTP id ABB5620775
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599148445;
+	bh=Ob1d9zo9gYX8a3kMaDhup2ycEc0gaXxyO2fS5J6qg6g=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=waYQxDhESwCO4vjkdZGc8hhy8jjcgksg66dovGFBcTlpQYq6wl75srqYxMPK7Ah5M
+	 QBykw8P7l29ovQV/AWcwIjLXhxS+gFrtU2vW2VulFcY4j09HAgOhKWAaO25sa2ypoV
+	 9gWfJ/saQewp3VrwyDcSjTwszpPxTo9hAGX+awDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgICPv4 (ORCPT
+        id S1728431AbgICPyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:51:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10814 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728304AbgICPvw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:51:52 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 083FWikT008161;
-        Thu, 3 Sep 2020 11:51:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : reply-to : references : mime-version : content-type
- : in-reply-to; s=pp1; bh=Xie83cS1wBsrOlMl57haKdUq5ISpsEkLKQX01noE+uk=;
- b=ECZmdnt3PLPd32/f4NlvxBaK1RDdwz+N4qVXA3xpA2vKdRak07zVdnwS8tDrInZlUvyZ
- Z9ldOT1NVgKjTN1f6qHHab+e0yRPccpxF7MkBdUtLkbESqZUtRRJeukqWDHVx5C5m0cP
- 4e0iyyMKtqrLAI/p1SF3wMGaJYz3IMGgfYSAocgyUcy7DWNHw0QdFma+H9XKxlkfLADZ
- W8w9gIVbZa56z3PGGPHK0T1twb99u7DN/hcrK4X+zOfWudqsPWnkDRHqMETTsJNqkmqV
- NQVXcC9mlYYNHkLNVWkfDtsc5KQjIcLXLzbmff4Ogospi7Ida++Rs7WHqvzuaE+6m9cv Og== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33b2kjsq4f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 11:51:38 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 083FpZgn013347;
-        Thu, 3 Sep 2020 15:51:35 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 337en8e06x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 15:51:35 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 083FpXnc21234034
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Sep 2020 15:51:33 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 002994C058;
-        Thu,  3 Sep 2020 15:51:32 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 302D04C044;
-        Thu,  3 Sep 2020 15:51:30 +0000 (GMT)
-Received: from drishya.in.ibm.com (unknown [9.77.196.144])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  3 Sep 2020 15:51:29 +0000 (GMT)
-Date:   Thu, 3 Sep 2020 21:21:26 +0530
-From:   Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joel Stanley <joel@jms.id.au>, linux-pm@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] cpuidle-pseries: Fix CEDE latency conversion from tb
- to us
-Message-ID: <20200903155100.GA3831@drishya.in.ibm.com>
-Reply-To: svaidy@linux.ibm.com
-References: <1599125247-28488-1-git-send-email-ego@linux.vnet.ibm.com>
+        Thu, 3 Sep 2020 11:54:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbgICPyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 11:54:03 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD0632072A;
+        Thu,  3 Sep 2020 15:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599148442;
+        bh=Ob1d9zo9gYX8a3kMaDhup2ycEc0gaXxyO2fS5J6qg6g=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=ewyE9UN9bLC72XtxsKthqigt10ZOivnYHR1SkmYD6EvDWuo/GgOFakBajdIviPHhz
+         aMby4HgF3cR7fCxWuHqbkuCs+M90QP0SsAT4AMYJ60RdCTrXAGurrqBLxGOdSmRPM9
+         bHe4DfUW64vVPRfoIh1jfUL+UwoemYr9eu+O3Qqg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 5FEF53520CF9; Thu,  3 Sep 2020 08:54:02 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 08:54:02 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     peterz@infradead.org
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, will@kernel.org, npiggin@gmail.com,
+        elver@google.com, jgross@suse.com, rostedt@goodmis.org,
+        rjw@rjwysocki.net, joel@joelfernandes.org, svens@linux.ibm.com,
+        tglx@linutronix.de, ulf.hansson@linaro.org,
+        viresh.kumar@linaro.org, vincent.guittot@linaro.org
+Subject: Re: [PATCH v2 11/11] lockdep,trace: Expose tracepoints
+Message-ID: <20200903155402.GO29330@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200821084738.508092956@infradead.org>
+ <20200821085348.782688941@infradead.org>
+ <20200902035146.GA45826@roeck-us.net>
+ <20200902085636.GV1362448@hirez.programming.kicks-ass.net>
+ <e4999b75-604f-29a3-e78c-508ee6bede88@roeck-us.net>
+ <20200903140047.GD1362448@hirez.programming.kicks-ass.net>
+ <9ea73cb4-262d-d9ba-beac-e9e013f89d6e@roeck-us.net>
+ <20200903153649.GF1362448@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1599125247-28488-1-git-send-email-ego@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-03_07:2020-09-03,2020-09-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=1 priorityscore=1501 mlxlogscore=921 clxscore=1011
- adultscore=0 spamscore=0 bulkscore=0 malwarescore=0 phishscore=0
- mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009030136
+In-Reply-To: <20200903153649.GF1362448@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Gautham R Shenoy <ego@linux.vnet.ibm.com> [2020-09-03 14:57:27]:
-
-> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+On Thu, Sep 03, 2020 at 05:36:49PM +0200, peterz@infradead.org wrote:
+> On Thu, Sep 03, 2020 at 08:19:38AM -0700, Guenter Roeck wrote:
+> > This doesn't compile for me - there is no "name" parameter in __DO_TRACE().
+> > 
+> > Error log:
+> > In file included from ./include/linux/rculist.h:11,
+> >                  from ./include/linux/pid.h:5,
+> >                  from ./include/linux/sched.h:14,
+> >                  from ./include/linux/sched/numa_balancing.h:10,
+> >                  from ./include/trace/events/sched.h:8,
+> >                  from kernel/sched/core.c:10:
+> > ./include/trace/events/sched.h: In function 'trace_sched_kthread_stop':
+> > ./include/linux/tracepoint.h:175:26: error: '__tracepoint_name' undeclared
+> > 
+> > I applied your patch on top of v5.9-rc3-75-gfc3abb53250a. Are you using
+> > a different branch ?
 > 
-> commit d947fb4c965c ("cpuidle: pseries: Fixup exit latency for
-> CEDE(0)") sets the exit latency of CEDE(0) based on the latency values
-> of the Extended CEDE states advertised by the platform. The values
-> advertised by the platform are in timebase ticks. However the cpuidle
-> framework requires the latency values in microseconds.
+> Argh, I was on tip/master... easy fix though.
 > 
-> If the tb-ticks value advertised by the platform correspond to a value
-> smaller than 1us, during the conversion from tb-ticks to microseconds,
-> in the current code, the result becomes zero. This is incorrect as it
-> puts a CEDE state on par with the snooze state.
-> 
-> This patch fixes this by rounding up the result obtained while
-> converting the latency value from tb-ticks to microseconds. It also
-> prints a warning in case we discover an extended-cede state with
-> wakeup latency to be 0. In such a case, ensure that CEDE(0) has a
-> non-zero wakeup latency.
-> 
-> Fixes: commit d947fb4c965c ("cpuidle: pseries: Fixup exit latency for
-> CEDE(0)")
-> 
-> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-
-Reviewed-by: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-
 > ---
-> v1-->v2: Added a warning if a CEDE state has 0 wakeup latency (Suggested by Joel Stanley)
->          Also added code to ensure that CEDE(0) has a non-zero wakeup latency.	 
->  drivers/cpuidle/cpuidle-pseries.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cpuidle/cpuidle-pseries.c b/drivers/cpuidle/cpuidle-pseries.c
-> index ff6d99e..a2b5c6f 100644
-> --- a/drivers/cpuidle/cpuidle-pseries.c
-> +++ b/drivers/cpuidle/cpuidle-pseries.c
-> @@ -361,7 +361,10 @@ static void __init fixup_cede0_latency(void)
->  	for (i = 0; i < nr_xcede_records; i++) {
->  		struct xcede_latency_record *record = &payload->records[i];
->  		u64 latency_tb = be64_to_cpu(record->latency_ticks);
-> -		u64 latency_us = tb_to_ns(latency_tb) / NSEC_PER_USEC;
-> +		u64 latency_us = DIV_ROUND_UP_ULL(tb_to_ns(latency_tb), NSEC_PER_USEC);
-
-This would fix the issue of rounding down to zero.
-
+> diff --git a/include/linux/preempt.h b/include/linux/preempt.h
+> index 7d9c1c0e149c..878bac893e41 100644
+> --- a/include/linux/preempt.h
+> +++ b/include/linux/preempt.h
+> @@ -27,17 +27,20 @@
+>   *         SOFTIRQ_MASK:	0x0000ff00
+>   *         HARDIRQ_MASK:	0x000f0000
+>   *             NMI_MASK:	0x00f00000
+> + *         RCUIDLE_MASK:	0x01000000
+>   * PREEMPT_NEED_RESCHED:	0x80000000
+>   */
+>  #define PREEMPT_BITS	8
+>  #define SOFTIRQ_BITS	8
+>  #define HARDIRQ_BITS	4
+>  #define NMI_BITS	4
+> +#define RCUIDLE_BITS	1
+>  
+>  #define PREEMPT_SHIFT	0
+>  #define SOFTIRQ_SHIFT	(PREEMPT_SHIFT + PREEMPT_BITS)
+>  #define HARDIRQ_SHIFT	(SOFTIRQ_SHIFT + SOFTIRQ_BITS)
+>  #define NMI_SHIFT	(HARDIRQ_SHIFT + HARDIRQ_BITS)
+> +#define RCUIDLE_SHIFT	(NMI_SHIFT     + NMI_BITS)
+>  
+>  #define __IRQ_MASK(x)	((1UL << (x))-1)
+>  
+> @@ -45,11 +48,13 @@
+>  #define SOFTIRQ_MASK	(__IRQ_MASK(SOFTIRQ_BITS) << SOFTIRQ_SHIFT)
+>  #define HARDIRQ_MASK	(__IRQ_MASK(HARDIRQ_BITS) << HARDIRQ_SHIFT)
+>  #define NMI_MASK	(__IRQ_MASK(NMI_BITS)     << NMI_SHIFT)
+> +#define RCUIDLE_MASK	(__IRQ_MASK(RCUIDLE_BITS) << RCUIDLE_SHIFT)
+>  
+>  #define PREEMPT_OFFSET	(1UL << PREEMPT_SHIFT)
+>  #define SOFTIRQ_OFFSET	(1UL << SOFTIRQ_SHIFT)
+>  #define HARDIRQ_OFFSET	(1UL << HARDIRQ_SHIFT)
+>  #define NMI_OFFSET	(1UL << NMI_SHIFT)
+> +#define RCUIDLE_OFFSET	(1UL << RCUIDLE_SHIFT)
+>  
+>  #define SOFTIRQ_DISABLE_OFFSET	(2 * SOFTIRQ_OFFSET)
+>  
+> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> index 598fec9f9dbf..0469bc1c24fc 100644
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -164,12 +164,18 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>  		void *__data;						\
+>  		int __maybe_unused __idx = 0;				\
+>  									\
+> -		if (!(cond))						\
+> +		if (!(cond) || (preempt_count() & RCUIDLE_MASK))	\
+>  			return;						\
+>  									\
+>  		/* srcu can't be used from NMI */			\
+>  		WARN_ON_ONCE(rcuidle && in_nmi());			\
+>  									\
+> +		if (IS_ENABLED(CONFIG_LOCKDEP) && !(rcuidle)) {		\
+> +			rcu_read_lock_sched_notrace();			\
+> +			rcu_dereference_sched((tp)->funcs);		\
+> +			rcu_read_unlock_sched_notrace();		\
+> +		}							\
+> +									\
+>  		/* keep srcu and sched-rcu usage consistent */		\
+>  		preempt_disable_notrace();				\
+>  									\
+> @@ -235,11 +241,6 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>  				TP_PROTO(data_proto),			\
+>  				TP_ARGS(data_args),			\
+>  				TP_CONDITION(cond), 0);			\
+> -		if (IS_ENABLED(CONFIG_LOCKDEP) && (cond)) {		\
+> -			rcu_read_lock_sched_notrace();			\
+> -			rcu_dereference_sched(__tracepoint_##name.funcs);\
+> -			rcu_read_unlock_sched_notrace();		\
+> -		}							\
+>  	}								\
+>  	__DECLARE_TRACE_RCU(name, PARAMS(proto), PARAMS(args),		\
+>  		PARAMS(cond), PARAMS(data_proto), PARAMS(data_args))	\
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 8ce77d9ac716..ad9fb4f12c63 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -269,6 +269,8 @@ static noinstr void rcu_dynticks_eqs_enter(void)
+>  	/* Better not have special action (TLB flush) pending! */
+>  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+>  		     (seq & RCU_DYNTICK_CTRL_MASK));
 > +
-> +		if (latency_us == 0)
-> +			pr_warn("cpuidle: xcede record %d has an unrealistic latency of 0us.\n", i);
+> +	__preempt_count_add(RCUIDLE_OFFSET);
 
-+1  This should not happen.
+But the rcu_data structure's ->dynticks field is still to be used in cases
+where the RCU grace-period kthread must do off-CPU access to the CPU's
+RCU-idle state, correct?  (Otherwise, some memory barriers are needed.)
 
->  		if (latency_us < min_latency_us)
->  			min_latency_us = latency_us;
-> @@ -378,10 +381,14 @@ static void __init fixup_cede0_latency(void)
->  	 * Perform the fix-up.
->  	 */
->  	if (min_latency_us < dedicated_states[1].exit_latency) {
-> -		u64 cede0_latency = min_latency_us - 1;
-> +		/*
-> +		 * We set a minimum of 1us wakeup latency for cede0 to
-> +		 * distinguish it from snooze
-> +		 */
-> +		u64 cede0_latency = 1;
+							Thanx, Paul
+
+>  }
+>  
+>  /*
+> @@ -281,6 +283,8 @@ static noinstr void rcu_dynticks_eqs_exit(void)
+>  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+>  	int seq;
+>  
+> +	__preempt_count_sub(RCUIDLE_OFFSET);
+> +
+>  	/*
+>  	 * CPUs seeing atomic_add_return() must see prior idle sojourns,
+>  	 * and we also must force ordering with the next RCU read-side
 > 
-> -		if (cede0_latency <= 0)
-> -			cede0_latency = min_latency_us;
-> +		if (min_latency_us > cede0_latency)
-> +			cede0_latency = min_latency_us - 1;
-
-Good checks to expect cede latency of 1us or more.
-
->  		dedicated_states[1].exit_latency = cede0_latency;
->  		dedicated_states[1].target_residency = 10 * (cede0_latency);
-
---Vaidy
-
+> 
