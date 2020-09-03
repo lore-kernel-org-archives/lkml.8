@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28956C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A409C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E942F20897
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D9A7208B3
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:07:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Qyopi9dT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q+CCcgPf"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="aSZDAT6I";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Wg4thRAp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbgICIGz (ORCPT
+        id S1728768AbgICIH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:06:55 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:59971 "EHLO
+        Thu, 3 Sep 2020 04:07:29 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:41843 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728517AbgICIDl (ORCPT
+        by vger.kernel.org with ESMTP id S1728479AbgICIDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:03:41 -0400
+        Thu, 3 Sep 2020 04:03:17 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id C0E90968;
-        Thu,  3 Sep 2020 04:03:39 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:03:40 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id 66119C02;
+        Thu,  3 Sep 2020 04:03:16 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:03:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=W3jTdUJQ/fQ9U
-        6n9j8TV+b0Zs3VBSL0+lMyVJA7yrdw=; b=Qyopi9dTJPKjOBJeNKRFzQk5mlATa
-        I019YnX3FrmSS9RF1PfJdnASIPaYd2yJ497GFTd4lzhOrguD1v4+0bs+ze+9wuNi
-        ug1S1pKWV1Zi894bjlo3CcKQ+CE+aDcaxnKcB5hx8cwbNqkvwW938hIcb6hvFVzm
-        j6HwxRNXzLv9vCT4qOiO5vw+2CrMxbuhgs3S5Sc/Im4U0VWvRB49B0hDZzN+b0XP
-        oZJU4KO+//mDMIyQ6mV5ppAR2Xe+EKRqWoR/NwgwMfkdQ798uvejwcvU1EnWSTLn
-        cdE20aBlikrtsHHL7031vOvSt0eer8SazoQZZrNZlTL+P6mAYzV+EKGJQ==
+        :mime-version:content-transfer-encoding; s=fm3; bh=nDtwCT/GEboFZ
+        6h2FalfKwFluMDJ6O4H2K3IGSnhOgU=; b=aSZDAT6IIt7QAKKa0fxFrWzYUyVxP
+        RlF6FVPu7j7kuJVO0jYhI5UoqtUngHrP853CCqgjBvXTwMKnACN8qYUTcRefbiIB
+        3seXWGvU7CAVyZaKBl2pK9HAW6YgMydhju8f7U0kU4jctfGHRWqdiMT/x3Xuntq4
+        NEV6xmqX8cvG2424ECzzsP4ovIdZW5bhym5G78Sy4S23n+olAtrribyWr1oB7T6R
+        xcfuDobP0OWk3R4Es50e3uMuPZoS2rwR79egm5PjOqNlX92iOCyYWwjx5Ep3md+G
+        lC5fiFcJVK11kW4837wYSpzZwcPXinHwZRwRsPZsvgUixfmVgeUYcDPZQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=W3jTdUJQ/fQ9U6n9j8TV+b0Zs3VBSL0+lMyVJA7yrdw=; b=Q+CCcgPf
-        i8Q7/S3T0E3pgcnuhrPjseRnNaZbAk+CvEzHjXlESwY6LYrDfKWyuaRtDpeFHAjh
-        xShShFWXJSqF4otmabdredpK++v8QeCEfHq0eItDsgOLqlHS5FT6pefS9DDdwec/
-        8uvI71GIoxY5ddY/XTfoWfysygkxwkl2z3JnyjatWDWhFrQ1WgPA5hWdG3IsFrQA
-        3T1F3NGH52AquAs9qNMiww8A+AbWtU3ihhK5e88hoFsXarIQZJZdBBbNPZ+fwVnj
-        CZ05SZ68Ut2Syo+bqA2sAde7QxJhr8euXlBQoonm0Xn8IwXZx+yX4k4taCVeUQD8
-        3V5SZi9vN2No8w==
-X-ME-Sender: <xms:W6NQX_Kic0pccUJ1pl-b7p9Hx2M5eSNvYq0ZKQd6faTMVArrt7s_BA>
-    <xme:W6NQXzLpr_IOrkCiMUiiIBCHWIqXMn5ZEDn9YborASHNSU_X2oYFZkJclVuJum8-d
-    Lcwl-t5ZWe23QdLh6Q>
+        fm3; bh=nDtwCT/GEboFZ6h2FalfKwFluMDJ6O4H2K3IGSnhOgU=; b=Wg4thRAp
+        wWoeQ0tYAbvzXY7j6OkSI6PrrkwcDBNFsZlcu6lg00soOM0vfX7zw27/FuHj/5z/
+        e6wp1ctGGnkCA++f4r4Tj3mGmizlUbreWMrfSCkTdXXDYcQl7cSTk4vTM1H1zt6r
+        nWWE0orYiaCAGKoxl9BwkQLRgIPlYYxSEQHtOciZh9VDrtf6L0caCPdFSrNYEaGS
+        On8lJvyc37JvnpBhfYXr2imAnsYfpVUa115F8cDXBlrlfXFJAa3xn7hcsrKkmCU9
+        IubY9QQ4OTRk6OVIMvhKTfPhv+UDgRL7eKEswsx54Lcr8+e9M2IQyzT68Qpt2vDP
+        1Ng5Hw39TX5JIA==
+X-ME-Sender: <xms:Q6NQXxXrObUoGXq7WF4R0TG5nWk81IbusJz4raYQcUzM8wA6F1Q5zA>
+    <xme:Q6NQXxkSMGixEvqTiVIjoqploIs0M-_XJvHZ4nwlTvxhu1NhRf0eSgAOZfhSxf74l
+    CPltfzFoD9vApW7Yiw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihi
     mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpeejteeuleduieekgfehtefhfefgkedtgfehfeelteehffduvdelgeffkedv
-    hfdvffenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdeike
-    drjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
-    mhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:W6NQX3uO4a16W_PrsGiw0Nwv7Se9_Nr3buR5UEagLVycOHzokUqbwg>
-    <xmx:W6NQX4aYU_fyTDIFmapvcaqzaEbR4gDRC4EDr54TS6zrSbdEHAV7yQ>
-    <xmx:W6NQX2YZbHWMBbOSZv3rnqY4yPzq-FTd9UeUk_3yslssCOGB_7y0eg>
-    <xmx:W6NQX8nmN-2Rj6Chr3YszXtE3EUkRpzYP7Y48TzkvjAV0ZYvTlT6_UOckxI>
+    htthgvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveev
+    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpeehge
+    enucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:Q6NQX9aCJuHC8hn8qKQkwlZclnU0R5bZVUfj9J5hEnTnmdx6QkOpSA>
+    <xmx:Q6NQX0VlHe0CGLTgCGI7jcIDyY7Yti9-XDnEHwDobvZrMFkulcBb5A>
+    <xmx:Q6NQX7ngX8y9n0m4XSA8cW9F2HGX3jYd963WeW4J-5q4gOrw1uQ0Bw>
+    <xmx:RKNQX5cHEIEUKuBC_HQxY01eKBz0zS2nXam6HFYJV460s5LENdhEZSrUDaY>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 104153060061;
-        Thu,  3 Sep 2020 04:03:38 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id A6428328005A;
+        Thu,  3 Sep 2020 04:03:15 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -79,10 +78,12 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: [PATCH v5 75/80] drm/vc4: hdmi: Add pixel BVB clock control
-Date:   Thu,  3 Sep 2020 10:01:47 +0200
-Message-Id: <d757ddd6549da140f178563e5fd2bf1d129913fd.1599120059.git-series.maxime@cerno.tech>
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH v5 58/80] drm/vc4: hdmi: Deal with multiple debugfs files
+Date:   Thu,  3 Sep 2020 10:01:30 +0200
+Message-Id: <9505c1eb40b3ef3709277bf9e8af77917b249c32.1599120059.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
 References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
@@ -93,80 +94,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+The HDMI driver was registering a single debugfs file so far with the name
+hdmi_regs.
 
-The BCM2711 has another clock that needs to be ramped up depending on the
-pixel rate: the pixel BVB clock. Add the code to adjust that clock when
-changing the mode.
+Obviously, this is not going to work anymore when will have multiple HDMI
+controllers since we will end up trying to register two files with the same
+name.
 
-Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-[Maxime: Changed the commit log, used clk_set_min_rate]
+Let's use the variant to avoid that name conflict.
+
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://lore.kernel.org/r/20200901040759.29992-3-hoegeun.kwon@samsung.com
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 23 +++++++++++++++++++++++
- drivers/gpu/drm/vc4/vc4_hdmi.h |  1 +
- 2 files changed, 24 insertions(+)
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 5 ++++-
+ drivers/gpu/drm/vc4/vc4_hdmi.h | 3 +++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index ab7abb409de2..39508107dafd 100644
+index f6d18bdbd1bb..4d0b44a2ac61 100644
 --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
 +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -54,6 +54,7 @@
- #include "vc4_regs.h"
+@@ -1369,7 +1369,9 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
+ 	if (ret)
+ 		goto err_destroy_encoder;
  
- #define CEC_CLOCK_FREQ 40000
-+#define VC4_HSM_MID_CLOCK 149985000
+-	vc4_debugfs_add_file(drm, "hdmi_regs", vc4_hdmi_debugfs_regs, vc4_hdmi);
++	vc4_debugfs_add_file(drm, variant->debugfs_name,
++			     vc4_hdmi_debugfs_regs,
++			     vc4_hdmi);
  
- static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
- {
-@@ -344,6 +345,7 @@ static void vc4_hdmi_encoder_post_crtc_powerdown(struct drm_encoder *encoder)
- 	HDMI_WRITE(HDMI_VID_CTL,
- 		   HDMI_READ(HDMI_VID_CTL) & ~VC4_HD_VID_CTL_ENABLE);
+ 	return 0;
  
-+	clk_disable_unprepare(vc4_hdmi->pixel_bvb_clock);
- 	clk_disable_unprepare(vc4_hdmi->hsm_clock);
- 	clk_disable_unprepare(vc4_hdmi->pixel_clock);
+@@ -1447,6 +1449,7 @@ static int vc4_hdmi_dev_remove(struct platform_device *pdev)
  
-@@ -516,6 +518,27 @@ static void vc4_hdmi_encoder_pre_crtc_configure(struct drm_encoder *encoder)
- 		return;
- 	}
- 
-+	/*
-+	 * FIXME: When the pixel freq is 594MHz (4k60), this needs to be setup
-+	 * at 150MHz.
-+	 */
-+	ret = clk_set_min_rate(vc4_hdmi->pixel_bvb_clock,
-+			       (hsm_rate > VC4_HSM_MID_CLOCK ? 150000000 : 75000000));
-+	if (ret) {
-+		DRM_ERROR("Failed to set pixel bvb clock rate: %d\n", ret);
-+		clk_disable_unprepare(vc4_hdmi->hsm_clock);
-+		clk_disable_unprepare(vc4_hdmi->pixel_clock);
-+		return;
-+	}
-+
-+	ret = clk_prepare_enable(vc4_hdmi->pixel_bvb_clock);
-+	if (ret) {
-+		DRM_ERROR("Failed to turn on pixel bvb clock: %d\n", ret);
-+		clk_disable_unprepare(vc4_hdmi->hsm_clock);
-+		clk_disable_unprepare(vc4_hdmi->pixel_clock);
-+		return;
-+	}
-+
- 	if (vc4_hdmi->variant->reset)
- 		vc4_hdmi->variant->reset(vc4_hdmi);
+ static const struct vc4_hdmi_variant bcm2835_variant = {
+ 	.encoder_type		= VC4_ENCODER_TYPE_HDMI0,
++	.debugfs_name		= "hdmi_regs",
+ 	.registers		= vc4_hdmi_fields,
+ 	.num_registers		= ARRAY_SIZE(vc4_hdmi_fields),
  
 diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-index 34138e0dd4a6..59639b405b7f 100644
+index 0d529db4b3ab..794216f3228d 100644
 --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
 +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-@@ -119,6 +119,7 @@ struct vc4_hdmi {
- 	struct clk *pixel_clock;
- 	struct clk *hsm_clock;
- 	struct clk *audio_clock;
-+	struct clk *pixel_bvb_clock;
+@@ -30,6 +30,9 @@ struct vc4_hdmi_variant {
+ 	/* Encoder Type for that controller */
+ 	enum vc4_encoder_type encoder_type;
  
- 	struct debugfs_regset32 hdmi_regset;
- 	struct debugfs_regset32 hd_regset;
++	/* Filename to expose the registers in debugfs */
++	const char *debugfs_name;
++
+ 	/* List of the registers available on that variant */
+ 	const struct vc4_hdmi_register *registers;
+ 
 -- 
 git-series 0.9.1
