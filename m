@@ -2,136 +2,130 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CDCC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6D4C10DAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6587206D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1660420639
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:46:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SG5ZKBSy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EFlB8L34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbgICVpF (ORCPT
+        id S1729329AbgICVp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 17:45:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64584 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728037AbgICVpE (ORCPT
+        Thu, 3 Sep 2020 17:45:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728037AbgICVp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 17:45:04 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 083LWo9g082046;
-        Thu, 3 Sep 2020 17:44:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
- cc : subject : in-reply-to : date : message-id : mime-version :
- content-type; s=pp1; bh=AJJtyDkK71KAtXDoyagJ/qdb1oShYkeR15uEJJIJ9Qk=;
- b=SG5ZKBSyCKdVvkN9Eym4ccOJN5g1/5u2KtTUC8fvLqcIHlJX7u/hgyugadPKKoXa8wD4
- 5Vx6mEIbXFvuNkgVGZUJDRvmVNcb8mXiJGok6eAHKvy9wJt8cBShb7YNKkBBoB04MFFo
- WFWUDJs+Yq+2ju0uQ1/YtxMcdKUmOQHyHa+CqFnm3ClARnX6bFnbZ2htM/kGc4Ke2FGV
- 6Ucwm6yTvm1U3FBlArU/UVBvZfhtOfkHDxkb6B4Xp3WjIm5/W9SGBmPKUyzsQbm3B4OI
- +vjz9R5KbCWZImvU5O1SRw5k/p4FmnLCp75yDQFDaicCn/eVDQCgKTM+8xJky5PFq2IX rA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33b7cfsxv4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 17:44:09 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 083LX7j8082506;
-        Thu, 3 Sep 2020 17:44:09 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33b7cfsxur-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 17:44:09 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 083LgspW030969;
-        Thu, 3 Sep 2020 21:44:07 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma03wdc.us.ibm.com with ESMTP id 337en9tu7h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 21:44:07 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 083Li7dQ52232452
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Sep 2020 21:44:07 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5EFDAAC05B;
-        Thu,  3 Sep 2020 21:44:07 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A1774AC059;
-        Thu,  3 Sep 2020 21:43:57 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.211.155.22])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Thu,  3 Sep 2020 21:43:57 +0000 (GMT)
-References: <20200901195029.30039-1-nramas@linux.microsoft.com>
- <20200901195029.30039-2-nramas@linux.microsoft.com>
-User-agent: mu4e 1.4.10; emacs 27.1
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
-        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [PATCH v5 1/3] powerpc: Refactor kexec functions to move arch
- independent code to IMA
-In-reply-to: <20200901195029.30039-2-nramas@linux.microsoft.com>
-Date:   Thu, 03 Sep 2020 18:43:54 -0300
-Message-ID: <87y2lqy1r9.fsf@morokweng.localdomain>
+        Thu, 3 Sep 2020 17:45:56 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0CEC061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 14:45:56 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id v15so3169469pgh.6
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 14:45:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=88UAUo6RYF27MUEaYZE9R7HTuO6mGUyasahfv8EZhB8=;
+        b=EFlB8L3484X2NUQ2w9kQvBk3L+1RDvCzNz+1QFX1Nm3dCNte5YHScmXG1pqmo0J2+E
+         C6Clco3P/dWY6iT/m+OtQJLLVltMdhY68a4RYVvEYy7d7wz05uOxuTBRrPhAf9vZulwq
+         OT1t8R0KPmtqqUOLIMHdbCPWYgvYCgeGDAsFI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=88UAUo6RYF27MUEaYZE9R7HTuO6mGUyasahfv8EZhB8=;
+        b=NuyePH8R8sV4Z9KoPOZvRfTh1yV4c90CpqRZ4pHLX0vQmOLDLcrcSpAAq7WGpPU5Zc
+         pABAX0cZnY49uj41dR56kqHnRVCS44Hi9kdpiCZ+zncIjwt9W4FeXA/zRZlOqRnA5Waw
+         VCitkreAq8YskU0RrX6b6UfECNMHj8pBUaGylmYPgpAd5fsygYJGPL4nRBjW9PaG45XD
+         D0D4r1M16N3nAxI68fRa99vDXSg4dUnVG/34v8qLDBIEkJEKkm855r+H+nFMrFm189t7
+         9d5js5EhAE6KFg0sH0C6FvsR7iPkGwVpadm9fEV2hIHSGP/DIcc1RQWka0+E2VXKKN3Z
+         2utA==
+X-Gm-Message-State: AOAM530uO3ScUM+gD1ijesFt4Qm2Se8ESZiwdEjr/pVAvMss2TM0MOxO
+        QMW5xYrej2gQES5FdZtlNsQWIg==
+X-Google-Smtp-Source: ABdhPJyg0lgZlgBi8/Irq6grlvy58EaMpaSg/pdagWK+0tWzLnV3KOczUO8JKY6Ln9M1KxRZgEWLVw==
+X-Received: by 2002:a17:902:7b83:: with SMTP id w3mr6022860pll.28.1599169555661;
+        Thu, 03 Sep 2020 14:45:55 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t20sm4165589pgj.27.2020.09.03.14.45.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 14:45:54 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 14:45:54 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Arvind Sankar <nivedita@alum.mit.edu>
+Subject: Re: [PATCH v2 02/28] x86/asm: Replace __force_order with memory
+ clobber
+Message-ID: <202009031445.807B55E@keescook>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-3-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-03_14:2020-09-03,2020-09-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- mlxscore=0 phishscore=0 suspectscore=2 mlxlogscore=771 impostorscore=0
- lowpriorityscore=0 malwarescore=0 spamscore=0 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009030189
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903203053.3411268-3-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 03, 2020 at 01:30:27PM -0700, Sami Tolvanen wrote:
+> From: Arvind Sankar <nivedita@alum.mit.edu>
+> 
+> The CRn accessor functions use __force_order as a dummy operand to
+> prevent the compiler from reordering CRn reads/writes with respect to
+> each other.
+> 
+> The fact that the asm is volatile should be enough to prevent this:
+> volatile asm statements should be executed in program order. However GCC
+> 4.9.x and 5.x have a bug that might result in reordering. This was fixed
+> in 8.1, 7.3 and 6.5. Versions prior to these, including 5.x and 4.9.x,
+> may reorder volatile asm statements with respect to each other.
+> 
+> There are some issues with __force_order as implemented:
+> - It is used only as an input operand for the write functions, and hence
+>   doesn't do anything additional to prevent reordering writes.
+> - It allows memory accesses to be cached/reordered across write
+>   functions, but CRn writes affect the semantics of memory accesses, so
+>   this could be dangerous.
+> - __force_order is not actually defined in the kernel proper, but the
+>   LLVM toolchain can in some cases require a definition: LLVM (as well
+>   as GCC 4.9) requires it for PIE code, which is why the compressed
+>   kernel has a definition, but also the clang integrated assembler may
+>   consider the address of __force_order to be significant, resulting in
+>   a reference that requires a definition.
+> 
+> Fix this by:
+> - Using a memory clobber for the write functions to additionally prevent
+>   caching/reordering memory accesses across CRn writes.
+> - Using a dummy input operand with an arbitrary constant address for the
+>   read functions, instead of a global variable. This will prevent reads
+>   from being reordered across writes, while allowing memory loads to be
+>   cached/reordered across CRn reads, which should be safe.
+> 
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
+In the primary thread for this patch I sent a Reviewed tag, but for good
+measure, here it is again:
 
-> The functions ima_get_kexec_buffer() and ima_free_kexec_buffer() that
-> handle carrying forward the IMA measurement logs on kexec for powerpc
-> do not have architecture specific code, but they are currently defined
-> for powerpc only.
->
-> Move these functions to IMA subsystem so that it can be used for other
-> architectures as well. A later patch in this series will use these
-> functions for carrying forward the IMA measurement log for ARM64.
->
-> Define FDT_PROP_IMA_KEXEC_BUFFER for the chosen node, namely
-> "linux,ima-kexec-buffer", that is added to the DTB to hold
-> the address and the size of the memory reserved to carry
-> the IMA measurement log.
->
-> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-
-do_get_kexec_buffer() is still duplicated in generic code and powerpc
-code. It's a small and simple function though, so not really a problem.
-
-I think you'll need to move over remove_ima_buffer() if you agree with
-the comment I'll make on patch 3, in which case the powerpc-specific
-do_get_kexec_buffer() can be removed.
-
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Kees Cook
