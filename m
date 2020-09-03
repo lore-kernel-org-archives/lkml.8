@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963D5C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111FCC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B505206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D515B206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="EJwJy9nx";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k9iAZLRQ"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="bd8CKEZX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Jw8L1QSY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbgICIDj (ORCPT
+        id S1727065AbgICID6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:03:39 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:48447 "EHLO
+        Thu, 3 Sep 2020 04:03:58 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:36085 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728363AbgICICP (ORCPT
+        by vger.kernel.org with ESMTP id S1728365AbgICICQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:02:15 -0400
+        Thu, 3 Sep 2020 04:02:16 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id BDB4FC31;
-        Thu,  3 Sep 2020 04:02:07 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:02:08 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id C3862B0C;
+        Thu,  3 Sep 2020 04:02:11 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:02:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=wyZnkPrjeR+Sr
-        s6RkXx8kdY3RbDYufoeU6U9xNeTsbk=; b=EJwJy9nxaCRWMqFiZyMaME02+5vGt
-        oHjaDbxqBU3nnXACaH6c+mmexpj7BuZE28HaVD1lIWOTeenO+flp1l+nToDAIcOn
-        nyhAwN/TM4BwAq3B8QHEyI6PkNFvhUK2Nyuk5VjMPOpPzJ2qkDHRL/Hx3BFwyxCV
-        AC4D3sQHHmDZAkT/9aA7IQ0coItIQjAkb41hoQv0PzREZnS+1z0icZ2UaXf0/vg0
-        9u43XIdnoRNRy586EolItLisBdDhq50kjl7Ry6TUrSv3Leyb5CiozvHhRhZrxs3S
-        uHiMxdLa31IwYFx/S77p3ip+jTk1FhYujEiFKBgmjf4psK9SUBmVBA8Iw==
+        :mime-version:content-transfer-encoding; s=fm3; bh=2hvjXzd8CFbPx
+        5ytRx4X/tmO5bn6lzgqZvU0U3Sznsg=; b=bd8CKEZXF3reaS1lv6djW9V8Zln1A
+        oU5MjRr3h/p9owmjdmeoZuugfrntTGwPp3nCvW6g3pV3q3kRSHRJKxXQRaB6t3Ow
+        XhVJIycm77F4hYLK7YkTO8XhAiTAu70SZ/MIqSisGI/z9Teei4Lbs0E1yew0ewMD
+        RgV/vdXPi6Ai9DqN0ACo/JZB9MWVqRO1pHYRbnUGNzujuTP5X+Np2WCfyhDPUrlm
+        F1j7Mh5/+zoYYTyBOdfunJTKGKM4b9GADNulZWKEwS9jpmxzCdJuZAJNfeB7eSx1
+        ETK0rcodrBZpKCxDKKRJgh/FxXxgkBXKG6ngbYGaZCgniSqeXy8wW4itQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=wyZnkPrjeR+Srs6RkXx8kdY3RbDYufoeU6U9xNeTsbk=; b=k9iAZLRQ
-        qF2uoEly4rrIn21rYBopKh5EnAGW4lPUUOXUJHxI7J2XmJTvkgW8km7+pyTok/nt
-        C9YnwWBwFtp+Z5itHbkC4JmmeojEM+u20hsZvSyPeXpNYDJQlmz85OhqJOR9pLvM
-        zV45Bl4rbuv1Jg7EPyfThr1XuNLM2Y/ZoXmSPwqtQg4pIUcot30Wwz4mAllvZE6h
-        CQi3jZpjtDZGaHwHcncratKrrCSZqmMDYurb2b/3k04QlBaNEuymuQ3s4dxlfjOM
-        y9R2XuPYexGn3ZYkTylHYYwhU+udsJS4v41IlzMaCPpirZYY0y+ImWrj6AWExKDX
-        w+t9TM85Izcstg==
-X-ME-Sender: <xms:_6JQX1-Sh1MDFh8efgiMR6NQZ8-cuWt0WBOLIAr4MVlcZNduzZfTkw>
-    <xme:_6JQX5vIxPfJfsxu7mm4Y5Wr15VyZzU_9tO2WpAzCi2LbsDL5zdEbSBozFUOCQrEq
-    -0HFSMZ9PXvE9_dJ2E>
+        fm3; bh=2hvjXzd8CFbPx5ytRx4X/tmO5bn6lzgqZvU0U3Sznsg=; b=Jw8L1QSY
+        cv3UT+tsa5JQBblvFwO4c6dwAhNYGw2PR9hCR8REjGU0DPnu1oObDH+ho7QRT0WZ
+        W3hDBibq/HpwTM8xPJ6Aebb5987rKEsEljLyCidCNIAyW5DgzUWmE3TcxXBM8Dub
+        UnMoSTmztst5VN3dJllXSDPwSA8gXb10vmh2KYug66Q0sn7rkh5nDg19BedGBkvl
+        3ycX0gJDaIAiHL3QIFFL43QdEMSnVi/zWsa2jUHnyfUgHeWs6Z6ftdp1BQ3sX5Lb
+        jsZYZbSm8/RYufSmizkKVXx48ejeRbgNjUKigDinZ+QLEXNiChUZsRh1VXPJ3Gfv
+        Znbe+mCUnKAK0w==
+X-ME-Sender: <xms:A6NQX4fD2-vkL28QbqaakKXoV7aD89_AIy1w_lB540DdzW8GpqrwEw>
+    <xme:A6NQX6Omp3jN_vpgmyb24PJyAd0IZ-0OZnZ1Zhxb4eXSUBzPwNsiovM61I5fAC4lf
+    uz1HCOKfGBBp3xmiiI>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihi
     mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
     htthgvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveev
-    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpeeine
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:_6JQXzAESZvsZ1mdz60YkVhOIJMfhG86qkafde5NlSqMAMtusqofSA>
-    <xmx:_6JQX5dU_XjCUQEMYHjjM14wXPH5zXqTVblxVteVjFSc1dJyQfnJ8g>
-    <xmx:_6JQX6NyVEcZgxT9fpwLjI4FZMdmU44qmB_MFxNPm8oscnD5rG_pBw>
-    <xmx:_6JQX7nQuuBertvN1Zsq8FDJgE_B9HE_wl6W9SajexTT6Qo1UM-RZe8TRx4>
+    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedutd
+    enucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:A6NQX5i9vO5sTujzRv2Y5qzsInqkCvC-3iTXfCtmbDd_KazU1BVYlQ>
+    <xmx:A6NQX9-1thUkDpID09sqPbh7TRYqOL1NJd0LALp-UA9oGjImxKWCFA>
+    <xmx:A6NQX0uOCa4N9K634MM_3oj386Q6nfD7tDzwRllgWx7rRJJ1ntq_vA>
+    <xmx:A6NQX0E5CxgqjP55COh7CcDZV2WtdsV19AcpS95qUYA72Ua2wGarTQEBdPM>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0327A306005B;
-        Thu,  3 Sep 2020 04:02:06 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0B3DA328005A;
+        Thu,  3 Sep 2020 04:02:10 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -81,9 +81,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Hoegeun Kwon <hoegeun.kwon@samsung.com>,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH v5 09/80] drm/vc4: crtc: Move the cob allocation outside of bind
-Date:   Thu,  3 Sep 2020 10:00:41 +0200
-Message-Id: <484cbd4b00cfeee425295df438222258cc39a3dd.1599120059.git-series.maxime@cerno.tech>
+Subject: [PATCH v5 12/80] drm/vc4: crtc: Enable and disable the PV in atomic_enable / disable
+Date:   Thu,  3 Sep 2020 10:00:44 +0200
+Message-Id: <e97596f62f4df83424d994a23465463ac60f986e.1599120059.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
 References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
@@ -94,113 +94,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The COB allocation depends on the HVS channel used for a given
-pixelvalve.
+The VIDEN bit in the pixelvalve currently being used to enable or disable
+the pixelvalve seems to not be enough in some situations, which whill end
+up with the pixelvalve stalling.
 
-While the channel allocation was entirely static in vc4, vc5 changes
-that and at bind time, a pixelvalve can be assigned to multiple
-HVS channels.
+In such a case, even re-enabling VIDEN doesn't bring it back and we need to
+clear the FIFO. This can only be done if the pixelvalve is disabled though.
 
-Let's prepare that rework by allocating the COB when it's actually
-needed.
+In order to overcome this, we can configure the pixelvalve during
+mode_set_no_fb by calling vc4_crtc_config_pv, but only enable it in
+atomic_enable and flush the FIFO there, and in atomic_disable disable the
+pixelvalve again.
 
-Reviewed-by: Eric Anholt <eric@anholt.net>
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
 Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 35 +++++++++++++++++------------------
- drivers/gpu/drm/vc4/vc4_drv.h  |  2 +--
- 2 files changed, 17 insertions(+), 20 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index 9faae22cb0f8..fdecaba77836 100644
+index cdeaa0cd981f..fe2e5675aed4 100644
 --- a/drivers/gpu/drm/vc4/vc4_crtc.c
 +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -65,6 +65,20 @@ static const struct debugfs_reg32 crtc_regs[] = {
- 	VC4_REG32(PV_HACT_ACT),
- };
- 
-+static unsigned int
-+vc4_crtc_get_cob_allocation(struct vc4_dev *vc4, unsigned int channel)
-+{
-+	u32 dispbase = HVS_READ(SCALER_DISPBASEX(channel));
-+	/* Top/base are supposed to be 4-pixel aligned, but the
-+	 * Raspberry Pi firmware fills the low bits (which are
-+	 * presumably ignored).
-+	 */
-+	u32 top = VC4_GET_FIELD(dispbase, SCALER_DISPBASEX_TOP) & ~3;
-+	u32 base = VC4_GET_FIELD(dispbase, SCALER_DISPBASEX_BASE) & ~3;
-+
-+	return top - base + 4;
-+}
-+
- static bool vc4_crtc_get_scanout_position(struct drm_crtc *crtc,
- 					  bool in_vblank_irq,
- 					  int *vpos, int *hpos,
-@@ -74,6 +88,7 @@ static bool vc4_crtc_get_scanout_position(struct drm_crtc *crtc,
- 	struct drm_device *dev = crtc->dev;
- 	struct vc4_dev *vc4 = to_vc4_dev(dev);
- 	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
-+	unsigned int cob_size;
- 	u32 val;
- 	int fifo_lines;
- 	int vblank_lines;
-@@ -109,8 +124,9 @@ static bool vc4_crtc_get_scanout_position(struct drm_crtc *crtc,
- 			*hpos += mode->crtc_htotal / 2;
- 	}
- 
-+	cob_size = vc4_crtc_get_cob_allocation(vc4, vc4_crtc->channel);
- 	/* This is the offset we need for translating hvs -> pv scanout pos. */
--	fifo_lines = vc4_crtc->cob_size / mode->crtc_hdisplay;
-+	fifo_lines = cob_size / mode->crtc_hdisplay;
- 
- 	if (fifo_lines > 0)
- 		ret = true;
-@@ -823,22 +839,6 @@ static void vc4_set_crtc_possible_masks(struct drm_device *drm,
- 	}
+@@ -332,9 +332,7 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
+ 		   PV_CONTROL_TRIGGER_UNDERFLOW |
+ 		   PV_CONTROL_WAIT_HSTART |
+ 		   VC4_SET_FIELD(vc4_encoder->clock_select,
+-				 PV_CONTROL_CLK_SELECT) |
+-		   PV_CONTROL_FIFO_CLR |
+-		   PV_CONTROL_EN);
++				 PV_CONTROL_CLK_SELECT));
  }
  
--static void
--vc4_crtc_get_cob_allocation(struct vc4_crtc *vc4_crtc)
--{
--	struct drm_device *drm = vc4_crtc->base.dev;
--	struct vc4_dev *vc4 = to_vc4_dev(drm);
--	u32 dispbase = HVS_READ(SCALER_DISPBASEX(vc4_crtc->channel));
--	/* Top/base are supposed to be 4-pixel aligned, but the
--	 * Raspberry Pi firmware fills the low bits (which are
--	 * presumably ignored).
--	 */
--	u32 top = VC4_GET_FIELD(dispbase, SCALER_DISPBASEX_TOP) & ~3;
--	u32 base = VC4_GET_FIELD(dispbase, SCALER_DISPBASEX_BASE) & ~3;
--
--	vc4_crtc->cob_size = top - base + 4;
--}
--
- int vc4_crtc_init(struct drm_device *drm, struct vc4_crtc *vc4_crtc,
- 		  const struct drm_crtc_funcs *crtc_funcs,
- 		  const struct drm_crtc_helper_funcs *crtc_helper_funcs)
-@@ -870,7 +870,6 @@ int vc4_crtc_init(struct drm_device *drm, struct vc4_crtc *vc4_crtc,
- 	 * implemented as private driver state in vc4_kms, not here.
+ static void vc4_crtc_mode_set_nofb(struct drm_crtc *crtc)
+@@ -386,6 +384,8 @@ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	ret = wait_for(!(CRTC_READ(PV_V_CONTROL) & PV_VCONTROL_VIDEN), 1);
+ 	WARN_ONCE(ret, "Timeout waiting for !PV_VCONTROL_VIDEN\n");
+ 
++	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) & ~PV_CONTROL_EN);
++
+ 	vc4_hvs_atomic_disable(crtc, old_state);
+ 
+ 	/*
+@@ -410,6 +410,10 @@ static void vc4_crtc_atomic_enable(struct drm_crtc *crtc,
+ 
+ 	require_hvs_enabled(dev);
+ 
++	/* Reset the PV fifo. */
++	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) |
++		   PV_CONTROL_FIFO_CLR | PV_CONTROL_EN);
++
+ 	/* Enable vblank irq handling before crtc is started otherwise
+ 	 * drm_crtc_get_vblank() fails in vc4_crtc_update_dlist().
  	 */
- 	drm_crtc_enable_color_mgmt(crtc, 0, true, crtc->gamma_size);
--	vc4_crtc_get_cob_allocation(vc4_crtc);
- 
- 	for (i = 0; i < crtc->gamma_size; i++) {
- 		vc4_crtc->lut_r[i] = i;
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-index 0bc150daafb2..d80fc3bbb450 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.h
-+++ b/drivers/gpu/drm/vc4/vc4_drv.h
-@@ -477,8 +477,6 @@ struct vc4_crtc {
- 	u8 lut_r[256];
- 	u8 lut_g[256];
- 	u8 lut_b[256];
--	/* Size in pixels of the COB memory allocated to this CRTC. */
--	u32 cob_size;
- 
- 	struct drm_pending_vblank_event *event;
- 
 -- 
 git-series 0.9.1
