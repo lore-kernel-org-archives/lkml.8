@@ -2,95 +2,97 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9177BC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2489EC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCA720758
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:14:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aU9IX0kS"
+	by mail.kernel.org (Postfix) with ESMTP id F1F2F20786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:15:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgICCOX (ORCPT
+        id S1728027AbgICCPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 22:14:23 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41444 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgICCOV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 22:14:21 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0832Dsvs104107;
-        Thu, 3 Sep 2020 02:13:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : mime-version :
- content-type; s=corp-2020-01-29;
- bh=iRSItWPs+wa/lzIDrc+aTG06APBAan4JpcguU6mCPKo=;
- b=aU9IX0kSJQJY4LANRxzP2bJwoGHcIbjaEh22bpyeCLwwXl8fSfhaO5d6a9Ge55t/Tj4h
- NH7AEdNtKliydlMsz9G3FR8z/FlI0pAjqBCyeVBlB+r4mlPVoVBIcMS+AzBga8XPzdCm
- Sqypm6X4v1Ctx+YeHhoUg0HTV7M2FWVz+0tyTZXkp2ByuPdY2OsInz6orAG06BMmJClq
- vzPfyN9AWM0zmXY0of2r1xcAAucVy2RRk1DMkyRoOgupc7LWXNI7pIub0t7a5Rf7GZho
- Y0A4dpRWvTSg6OIGmpFoRli6T+HG34ALvFryWE/Y4qtKd7IZdY6gP6RFahmzVQIg6uH6 YA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 339dmn4grf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 03 Sep 2020 02:13:58 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0832B4AZ160620;
-        Thu, 3 Sep 2020 02:11:57 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 3380sv3uwe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Sep 2020 02:11:57 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0832BtG5020139;
-        Thu, 3 Sep 2020 02:11:55 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 02 Sep 2020 19:11:54 -0700
-To:     Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     james.bottomley@hansenpartnership.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, brking@linux.ibm.com
-Subject: Re: [PATCH v2] scsi: ibmvfc: interface updates for future FPIN and
- MQ support
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1y2lrd2ys.fsf@ca-mkp.ca.oracle.com>
-References: <20200901002420.648532-1-tyreld@linux.ibm.com>
-Date:   Wed, 02 Sep 2020 22:11:52 -0400
-In-Reply-To: <20200901002420.648532-1-tyreld@linux.ibm.com> (Tyrel Datwyler's
-        message of "Mon, 31 Aug 2020 19:24:20 -0500")
+        Wed, 2 Sep 2020 22:15:24 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10804 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726821AbgICCPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 22:15:22 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8C1F6282EE4D954215D6;
+        Thu,  3 Sep 2020 10:15:19 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 3 Sep 2020 10:15:12 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>
+Subject: [PATCH] f2fs: ignore compress mount option on image w/o compression feature
+Date:   Thu, 3 Sep 2020 10:14:41 +0800
+Message-ID: <20200903021441.100226-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009030018
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=1
- spamscore=0 clxscore=1011 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009030019
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+to keep consistent with behavior when passing compress mount option
+to kernel w/o compression feature, so that mount may not fail on
+such condition.
 
-Tyrel,
+Reported-by: Kyungmin Park <kyungmin.park@samsung.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/super.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-> 	Fixup complier errors from neglected commit --amend
-
-Bunch of formatting-related checkpatch warnings. Please fix.
-
-Thanks!
-
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index ae0b351671f4..9d4da2d13ab4 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -871,8 +871,8 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
+ #ifdef CONFIG_F2FS_FS_COMPRESSION
+ 		case Opt_compress_algorithm:
+ 			if (!f2fs_sb_has_compression(sbi)) {
+-				f2fs_err(sbi, "Compression feature if off");
+-				return -EINVAL;
++				f2fs_info(sbi, "Image doesn't support compression");
++				break;
+ 			}
+ 			name = match_strdup(&args[0]);
+ 			if (!name)
+@@ -897,8 +897,8 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
+ 			break;
+ 		case Opt_compress_log_size:
+ 			if (!f2fs_sb_has_compression(sbi)) {
+-				f2fs_err(sbi, "Compression feature is off");
+-				return -EINVAL;
++				f2fs_info(sbi, "Image doesn't support compression");
++				break;
+ 			}
+ 			if (args->from && match_int(args, &arg))
+ 				return -EINVAL;
+@@ -912,8 +912,8 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
+ 			break;
+ 		case Opt_compress_extension:
+ 			if (!f2fs_sb_has_compression(sbi)) {
+-				f2fs_err(sbi, "Compression feature is off");
+-				return -EINVAL;
++				f2fs_info(sbi, "Image doesn't support compression");
++				break;
+ 			}
+ 			name = match_strdup(&args[0]);
+ 			if (!name)
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.26.2
+
