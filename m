@@ -2,193 +2,95 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D454FC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9014C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85E5E206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uZ3jzyIg"
+	by mail.kernel.org (Postfix) with ESMTP id 9EDE52071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599125159;
+	bh=1qLuh4C0lY1AtWSacfumdAnrXtxtJ3GknJ6aSYAaKdA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AztI9x2Kr+OjPwyNpJgqDjqQVN9F1OWgtdJ8bRhmE9zjoGpzyOO4gIPfKI8R7d/0y
+	 lnXGsOBFoVncNTsMykh3k8h2Qfcixtj+oB2WBkcIS3PCjWFfipwY7AF2enUAbhpB/m
+	 0aywHhIToXI5y7iwfy4+nEm8tZwS7W452bY1HpMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgICJYH (ORCPT
+        id S1728082AbgICJZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 05:24:07 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:30076 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726268AbgICJYF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 05:24:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1599125043; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=vzyvnVN4EUQzE6hJZKmqXAP1pTaiOlGyUPxPgSRWKec=; b=uZ3jzyIgwMsrS/75iOAYebY9nl18r3NlJDnmJBKhajF5leWqaz/E//TewUZxR+hRBC+jcdRH
- IeOG2IuxYUD16B2nfQkz6/LlhArFZl9KnIF4EhdX0LJkbGbFHTd13PjIKSb+L+WTAJacWf3u
- zRlT5NpOACfCkLzC204mQA3agOs=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f50b62dcc683673f9011172 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 03 Sep 2020 09:23:57
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2F7B9C4339C; Thu,  3 Sep 2020 09:23:57 +0000 (UTC)
-Received: from [10.131.172.121] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 3 Sep 2020 05:25:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbgICJZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 05:25:58 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: srivasam)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BA6F6C433C9;
-        Thu,  3 Sep 2020 09:23:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA6F6C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=srivasam@codeaurora.org
-Subject: Re: [PATCH v3 4/5] ASoC: qcom: Add support for audio over DP
-To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
-        alsa-devel@alsa-project.org, bgoswami@codeaurora.org,
-        bjorn.andersson@linaro.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, lgirdwood@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        perex@perex.cz, plai@codeaurora.org, robh+dt@kernel.org,
-        rohitkr@codeaurora.org, srinivas.kandagatla@linaro.org,
-        tiwai@suse.com
-Cc:     V Sujith Kumar Reddy <vsujithk@codeaurora.org>
-References: <1598855964-1042-1-git-send-email-srivasam@codeaurora.org>
- <1598855964-1042-5-git-send-email-srivasam@codeaurora.org>
- <159894552988.334488.8290895362888910651@swboyd.mtv.corp.google.com>
-From:   Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
-Organization: Qualcomm India Private Limited
-Message-ID: <25a8ca32-47f9-fb04-5f76-cc9e27f4e412@codeaurora.org>
-Date:   Thu, 3 Sep 2020 14:53:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.2.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 28BA3206C0;
+        Thu,  3 Sep 2020 09:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599125157;
+        bh=1qLuh4C0lY1AtWSacfumdAnrXtxtJ3GknJ6aSYAaKdA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bSJQTasMRckHmzdu8nh3w5f525dMvfZDoPDh0NxJ8Kcv2MXugwPez/60NyBIWd4uk
+         LG59DeR31S64XHJFu25CuSIgRSFZzo9RLyo8jnDH7ktBWqzEi1KP/gs3bkKzh7MR1A
+         HmcFDvqzcrtpH0mN+1HXQCFt6H0dbIEsA/qWe+Uo=
+Date:   Thu, 3 Sep 2020 11:26:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Paul Burton <paul.burton@mips.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH 4.19 66/81] MIPS: Disable Loongson MMI instructions for
+ kernel build
+Message-ID: <20200903092621.GB2220117@kroah.com>
+References: <20191016214805.727399379@linuxfoundation.org>
+ <20191016214845.344235056@linuxfoundation.org>
+ <20200826210628.GA173536@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <159894552988.334488.8290895362888910651@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200826210628.GA173536@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Stephen, for your time for review!!!
+On Wed, Aug 26, 2020 at 02:06:28PM -0700, Guenter Roeck wrote:
+> Hi,
+> 
+> On Wed, Oct 16, 2019 at 02:51:17PM -0700, Greg Kroah-Hartman wrote:
+> > From: Paul Burton <paul.burton@mips.com>
+> > 
+> > commit 2f2b4fd674cadd8c6b40eb629e140a14db4068fd upstream.
+> > 
+> > GCC 9.x automatically enables support for Loongson MMI instructions when
+> > using some -march= flags, and then errors out when -msoft-float is
+> > specified with:
+> > 
+> >   cc1: error: ‘-mloongson-mmi’ must be used with ‘-mhard-float’
+> > 
+> > The kernel shouldn't be using these MMI instructions anyway, just as it
+> > doesn't use floating point instructions. Explicitly disable them in
+> > order to fix the build with GCC 9.x.
+> > 
+> 
+> I still see this problem when trying to compile fuloong2e_defconfig with
+> gcc 9.x or later. Reason seems to be that the patch was applied to
+> arch/mips/loongson64/Platform, but fuloong2e_defconfig uses
+> arch/mips/loongson2ef/Platform.
+> 
+> Am I missing something ?
 
-On 9/1/2020 1:02 PM, Stephen Boyd wrote:
-> Quoting Srinivasa Rao Mandadapu (2020-08-30 23:39:23)
->> diff --git a/sound/soc/qcom/lpass-sc7180.c b/sound/soc/qcom/lpass-sc7180.c
->> index 167bf2c..cea7ae7 100644
->> --- a/sound/soc/qcom/lpass-sc7180.c
->> +++ b/sound/soc/qcom/lpass-sc7180.c
->> @@ -190,15 +232,92 @@ static struct lpass_variant sc7180_data = {
->>                                     "mi2s-bit-clk0",
->>                                     "mi2s-bit-clk1",
->>                                  },
->> +       .id                             = I2S_INTERFACE,
->>          .init                   = sc7180_lpass_init,
->>          .exit                   = sc7180_lpass_exit,
->>          .alloc_dma_channel      = sc7180_lpass_alloc_dma_channel,
->>          .free_dma_channel       = sc7180_lpass_free_dma_channel,
->>   };
->>   
->> +static struct lpass_variant sc7180_hdmi_data = {
-> Can this be const?
-Yes this can be constant. will change in next patch.
->
->> +       .hdmi_tx_ctl_addr       = 0x1000,
->> +       .hdmi_legacy_addr       = 0x1008,
->> +       .hdmi_vbit_addr         = 0x610c0,
->> +       .hdmi_ch_lsb_addr       = 0x61048,
->> +       .hdmi_ch_msb_addr       = 0x6104c,
->> +       .ch_stride              = 0x8,
->> +       .hdmi_parity_addr       = 0x61034,
->> +       .hdmi_dmactl_addr       = 0x61038,
->> +       .hdmi_dma_stride        = 0x4,
->> +       .hdmi_DP_addr           = 0x610c8,
->> +       .hdmi_sstream_addr      = 0x6101c,
->> +       .irq_reg_base           = 0x63000,
->> +       .irq_ports              = 1,
->> +       .rdma_reg_base          = 0x64000,
->> +       .rdma_reg_stride        = 0x1000,
->> +       .rdma_channels          = 4,
->> +
->> +       .rdma_dyncclk           = REG_FIELD_ID(0x64000, 14, 14, 4, 0x1000),
->> +       .rdma_bursten           = REG_FIELD_ID(0x64000, 13, 13, 4, 0x1000),
->> +       .rdma_burst8            = REG_FIELD_ID(0x64000, 15, 15, 4, 0x1000),
->> +       .rdma_burst16           = REG_FIELD_ID(0x64000, 16, 16, 4, 0x1000),
->> +       .rdma_dynburst          = REG_FIELD_ID(0x64000, 18, 18, 4, 0x1000),
->> +       .rdma_wpscnt            = REG_FIELD_ID(0x64000, 10, 12, 4, 0x1000),
->> +       .rdma_fifowm            = REG_FIELD_ID(0x64000, 1, 5, 4, 0x1000),
->> +       .rdma_enable            = REG_FIELD_ID(0x64000, 0, 0, 4, 0x1000),
->> +
->> +       .sstream_en             = REG_FIELD(0x6101c, 0, 0),
->> +       .dma_sel                        = REG_FIELD(0x6101c, 1, 2),
->> +       .auto_bbit_en   = REG_FIELD(0x6101c, 3, 3),
->> +       .layout                 = REG_FIELD(0x6101c, 4, 4),
->> +       .layout_sp              = REG_FIELD(0x6101c, 5, 8),
->> +       .set_sp_on_en   = REG_FIELD(0x6101c, 10, 10),
->> +       .dp_audio               = REG_FIELD(0x6101c, 11, 11),
->> +       .dp_staffing_en = REG_FIELD(0x6101c, 12, 12),
->> +       .dp_sp_b_hw_en  = REG_FIELD(0x6101c, 13, 13),
->> +
->> +       .mute                   = REG_FIELD(0x610c8, 0, 0),
->> +       .as_sdp_cc              = REG_FIELD(0x610c8, 1, 3),
->> +       .as_sdp_ct              = REG_FIELD(0x610c8, 4, 7),
->> +       .aif_db4                        = REG_FIELD(0x610c8, 8, 15),
->> +       .frequency              = REG_FIELD(0x610c8, 16, 21),
->> +       .mst_index              = REG_FIELD(0x610c8, 28, 29),
->> +       .dptx_index             = REG_FIELD(0x610c8, 30, 31),
->> +
->> +       .soft_reset             = REG_FIELD(0x1000, 31, 31),
->> +       .force_reset    = REG_FIELD(0x1000, 30, 30),
->> +
->> +       .use_hw_chs             = REG_FIELD(0x61038, 0, 0),
->> +       .use_hw_usr             = REG_FIELD(0x61038, 1, 1),
->> +       .hw_chs_sel             = REG_FIELD(0x61038, 2, 4),
->> +       .hw_usr_sel             = REG_FIELD(0x61038, 5, 6),
->> +
->> +       .replace_vbit   = REG_FIELD(0x610c0, 0, 0),
->> +       .vbit_stream    = REG_FIELD(0x610c0, 1, 1),
->> +
->> +       .legacy_en              =  REG_FIELD(0x1008, 0, 0),
->> +       .calc_en                =  REG_FIELD(0x61034, 0, 0),
->> +       .lsb_bits               =  REG_FIELD(0x61048, 0, 31),
->> +       .msb_bits               =  REG_FIELD(0x6104c, 0, 31),
->> +
->> +       .clk_name               = (const char*[]) {
->> +                                       "pcnoc-sway-clk",
->> +                                       "audio-core",
->> +                                       "pcnoc-mport-clk",
->> +                               },
->> +       .num_clks               = 3,
->> +       .id                     = HDMI_INTERFACE,
->> +       .dai_driver             = sc7180_lpass_cpu_hdmi_dai_driver,
->> +       .num_dai                = ARRAY_SIZE(sc7180_lpass_cpu_hdmi_dai_driver),
->> +       .init                   = sc7180_lpass_init,
->> +       .exit                   = sc7180_lpass_exit,
->> +       .alloc_dma_channel = sc7180_lpass_alloc_hdmi_dma_channel,
->> +       .free_dma_channel = sc7180_lpass_free_hdmi_dma_channel,
->> +
->> +};
-> Add a newline here?
-okay
->
->>   static const struct of_device_id sc7180_lpass_cpu_device_id[] = {
->>          {.compatible = "qcom,sc7180-lpass-cpu", .data = &sc7180_data},
->> -       {}
->> +       {.compatible = "qcom,sc7180-lpass-hdmi", .data = &sc7180_hdmi_data}
-> This most likely needs to keep the sentinel around so that a match can
-> be made or stop if nothing is found.
-okay..
->
->>   };
->>
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+I don't know, sorry, that would be something that Paul understands.
+
+Paul?
+
 
