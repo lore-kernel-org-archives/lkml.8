@@ -2,91 +2,115 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B697FC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23ECCC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 957FA20775
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:40:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599154811;
-	bh=he/icALJc5nxcmM8oVZBySI9LjdCFoBo+OczlPqUxkM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0dVVZ1qfWl5Hxa2T3LWghhQZ3Ke0uCT5VrSVubuiMdCa/5z3o6iZSej/WYrAvEOvc
-	 Jq67DhR5VXmepDYcDrnJXjqgqtrtlrkAwQQoWiDpxNPL5MB4KB/RXiXLK/54GoaUp+
-	 ZPc4NgMhbReN2cZZziMKfd1AQIb5pQEktddlZ5CI=
+	by mail.kernel.org (Postfix) with ESMTP id ECC7C20737
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:43:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDIe7CF5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbgICRkK (ORCPT
+        id S1728775AbgICRnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 13:40:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726543AbgICRkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 13:40:08 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E692620722;
-        Thu,  3 Sep 2020 17:40:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599154808;
-        bh=he/icALJc5nxcmM8oVZBySI9LjdCFoBo+OczlPqUxkM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nzCsy3xVMtMVKsfdqUr58p7DNzmt/RChq1Nup4j1boBs2CpaBeZOyBPJLtypL0k0o
-         3bwHzfsh8AalyuKNtr9tOeDrjRqgFFekkbLYvHxID3SoeNcIgsTzdbqoObs1/yK3iv
-         gY6JI3E6k0uQ6RQA4DZnd2me70ySJhiuu+yKVXQk=
-Date:   Thu, 3 Sep 2020 10:40:07 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH] f2fs: Documentation edits/fixes
-Message-ID: <20200903174007.GA3619770@google.com>
-References: <96f99afb-c54e-8f46-ebac-80a62f65b876@infradead.org>
- <20200903103027.4c8d0b07@lwn.net>
+        Thu, 3 Sep 2020 13:43:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbgICRnv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 13:43:51 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14337C061244;
+        Thu,  3 Sep 2020 10:43:50 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id t16so3559401ilf.13;
+        Thu, 03 Sep 2020 10:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vYFQYSTb/+17+Uuu6516MdUuM986Y6u14DKyOKGcWYc=;
+        b=lDIe7CF5KDUMWGocKm7G/UyV8gRmhYQGDRCGTIRYgdBTWVP2fg0DSI64zyl1Yz3HkQ
+         zZWprpbGlgiLAhJ0Cj/FVEMcDQDo/2a/18ft6tpgWCivMWuEFKVIqqsQm45BWgLsVAAg
+         VO+5qHy5uw0D4m8fLee46jmvFtq4FsPhV3wicZevOT+Fylc1KSGW2ZbYn3KqWl4kQq+3
+         9zj4maCKAJ1vxn1TTIM7yKmFX9ofN+p7Rzhxc6EzLUkZLn7v7q2V5eVpCZjtggAOw8q2
+         ZJ+irFc04GnA1cr4U17yqm8gbatsuwQwuJ0F9KGkn+WPyT9+ZfB4OwLNPIFn5V1d+nXG
+         TKaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vYFQYSTb/+17+Uuu6516MdUuM986Y6u14DKyOKGcWYc=;
+        b=p4zqLcCpNrTQ8Qv8JtieTmdGvgOHxe5o8RIkhyF2yyu1tVLN4VflDpnpd8cqmurb/z
+         LEu435feT4dci3RlIH+YtniFmhthwS5ryLMBe5Uglqez+nvPg69CIx7ZWNOO9jVLxg1D
+         BIMdnJVp81SDd1znP2ZaMp6sYn8HBMOJyf8EvfQqCxrLnluabI9Iz5efepUR6sIlTQPi
+         VYqwNkHxJK7ZSsWeIvkYtH5RKaShGF0CzzRyHMpLnQHcaBfz6T1xAenvRmg2DdVppGHG
+         g4yimHJsZ/IqOt9PBYlAnEk9syZMJiMD6EC0l8iVEHKy2saH+PSrEtMAKItV93Uxfr7Y
+         urOw==
+X-Gm-Message-State: AOAM530FWGaTzbpPl+zpbpOUjPlMdHixnb/oHeGodeAc3LOrctMeD7Uc
+        JIJARrHUmMb1AFftTOCVV1oVIwcmxpnNqhceyw4=
+X-Google-Smtp-Source: ABdhPJx0zkJhJo3i54QacP+Oa+oDBL1udk+DNdAoRc0FIBWni3OthGQzgu/4UVLEGNHGQu1+46yOMMXqiGNlx9lWZKk=
+X-Received: by 2002:a92:9145:: with SMTP id t66mr4170348ild.305.1599155030104;
+ Thu, 03 Sep 2020 10:43:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903103027.4c8d0b07@lwn.net>
+References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
+ <20200623134259.8197-1-mzhivich@akamai.com> <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
+ <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
+ <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
+ <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com> <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
+ <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com> <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
+ <20200822032800.16296-1-hdanton@sina.com> <CACS=qqKhsu6waaXndO5tQL_gC9TztuUQpqQigJA2Ac0y12czMQ@mail.gmail.com>
+ <20200825032312.11776-1-hdanton@sina.com> <CACS=qqK-5g-QM_vczjY+A=3fi3gChei4cAkKweZ4Sn2L537DQA@mail.gmail.com>
+ <20200825162329.11292-1-hdanton@sina.com> <CACS=qqKgiwdCR_5+z-vkZ0X8DfzOPD7_ooJ_imeBnx+X1zw2qg@mail.gmail.com>
+ <CACS=qqKptAQQGiMoCs1Zgs9S4ZppHhasy1AK4df2NxnCDR+vCw@mail.gmail.com>
+ <5f46032e.1c69fb81.9880c.7a6cSMTPIN_ADDED_MISSING@mx.google.com>
+ <CACS=qq+Yw734DWhETNAULyBZiy_zyjuzzOL-NO30AB7fd2vUOQ@mail.gmail.com>
+ <20200827125747.5816-1-hdanton@sina.com> <CACS=qq+a0H=e8yLFu95aE7Hr0bQ9ytCBBn2rFx82oJnPpkBpvg@mail.gmail.com>
+ <CAM_iQpV-JMURzFApp-Zhxs3QN9j=Zdf6yqwOP=E42ERDHxe6Hw@mail.gmail.com> <dd73f551d1fc89e457ffabd106cbf0bf401b747b.camel@redhat.com>
+In-Reply-To: <dd73f551d1fc89e457ffabd106cbf0bf401b747b.camel@redhat.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu, 3 Sep 2020 10:43:38 -0700
+Message-ID: <CAM_iQpXZMeAGkq_=rG6KEabFNykszpRU_Hnv65Qk7yesvbRDrw@mail.gmail.com>
+Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
+To:     Paolo Abeni <pabeni@redhat.com>
+Cc:     Kehuan Feng <kehuan.feng@gmail.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Jike Song <albcamus@gmail.com>, Josh Hunt <johunt@akamai.com>,
+        Jonas Bonn <jonas.bonn@netrounds.com>,
+        Michael Zhivich <mzhivich@akamai.com>,
+        David Miller <davem@davemloft.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/03, Jonathan Corbet wrote:
-> On Wed, 2 Sep 2020 17:08:31 -0700
-> Randy Dunlap <rdunlap@infradead.org> wrote:
-> 
-> > From: Randy Dunlap <rdunlap@infradead.org>
-> > 
-> > Correct grammar and spelling.
-> > 
-> > Drop duplicate section for resize.f2fs.
-> > 
-> > Change one occurrence of F2fs to F2FS for consistency.
-> > 
-> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Jaegeuk Kim <jaegeuk@kernel.org>
-> > Cc: Chao Yu <yuchao0@huawei.com>
-> > Cc: linux-f2fs-devel@lists.sourceforge.net
-> > ---
-> >  Documentation/filesystems/f2fs.rst |   53 +++++++++++----------------
-> >  1 file changed, 23 insertions(+), 30 deletions(-)
-> 
-> So this, I guess, needs to go through the f2fs tree since it doesn't apply
-> to docs-next currently.
+On Thu, Sep 3, 2020 at 1:40 AM Paolo Abeni <pabeni@redhat.com> wrote:
+>
+> On Wed, 2020-09-02 at 22:01 -0700, Cong Wang wrote:
+> > Can you test the attached one-line fix? I think we are overthinking,
+> > probably all
+> > we need here is a busy wait.
+>
+> I think that will solve, but I also think that will kill NOLOCK
+> performances due to really increased contention.
 
-Yup, I applied in f2fs tree.
-Thanks,
+Yeah, we somehow end up with more locks (seqlock, skb array lock)
+for lockless qdisc. What an irony... ;)
 
-> 
-> Thanks,
-> 
-> jon
+>
+> At this point I fear we could consider reverting the NOLOCK stuff.
+> I personally would hate doing so, but it looks like NOLOCK benefits are
+> outweighed by its issues.
+
+I agree, NOLOCK brings more pains than gains. There are many race
+conditions hidden in generic qdisc layer, another one is enqueue vs.
+reset which is being discussed in another thread.
+
+Thanks.
