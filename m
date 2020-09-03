@@ -2,133 +2,151 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BA5C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DE0C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5A120716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:04:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="N8JPB2+7"
+	by mail.kernel.org (Postfix) with ESMTP id 467DF20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:04:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599145485;
+	bh=VuGxZvo9yHiaoeDqVaq0mRPlaYO1KqH47p+IwFf+LRE=;
+	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
+	b=IBC0tIltqTtOeYU6U/JuiHYtONhnBeCO60YoCe4+9Bh1XV9s43515EPB8hWRSS1W2
+	 ZWg9+ZtfL4h0RfA6M91NY8MyO1H4Eofhccb1nIwLIsb+QvcBE6teDFajz+UcQN/J3Q
+	 +zyDuD4t60b5AYK+F/j+9OWdNknfCVGAW2QpTq2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729257AbgICPEU (ORCPT
+        id S1729415AbgICPEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:04:20 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:9827 "EHLO mx1.tq-group.com"
+        Thu, 3 Sep 2020 11:04:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728924AbgICN6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 09:58:20 -0400
-IronPort-SDR: PwSSrpM7beoRNGtbZuYVQYarDacF81+BP6yekLAu15x7XInnZ+j5yvbR+RmcJR4SgQGfMy3QxF
- +W1I13/hf7uv7PgjkRcXItnriXG56d2qnPNvuMDwP5TT2rKbRL87qo0YrJWVdCrbqnXg6xRfzf
- doKCClYldLzMX+mQPBcJnZA6Dvz+zQ5Lr1GCrroAPKS8Mx4cGGhMgKw87yxskV3KabPuiYNNeU
- HK/iHvecc8tGVcNFPfxJ45nNmcCZWPMtDaZYSvhFb43LTmeJBpaYKI6cYWI22gusuFIG8S9n+2
- A1k=
-X-IronPort-AV: E=Sophos;i="5.76,386,1592863200"; 
-   d="scan'208";a="13721334"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 03 Sep 2020 15:40:44 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Thu, 03 Sep 2020 15:40:44 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Thu, 03 Sep 2020 15:40:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1599140444; x=1630676444;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PSRtsYjMIeQn6kkIpSqi/xNdAKBtKRUGER2IFcNijQk=;
-  b=N8JPB2+7SiBeJrScJn+KM0GUbsfIXmUgpzkMlhWMhmo/yN4YxwRQf3cI
-   HTBh2bWXK+2czsdjHkI4rSjEsXwlqaboxcmdup/N/drxkqC902yTb+js2
-   PzhqWK+fPzszJlEd0Wg6Q/zcY2gguuBaQxmEhVUJUyyT27Xe6fsWd5nu/
-   9NajEiQBmfnR/TSAaDJ020PyEaO5xl7rKZ8DkteUnsQBqF6Ic7ETDyavR
-   ZnFZwsOBGLjv2K17N+0YrJTYmf0gJTj828ci3wlmlHqctSn7GAKCwkZoT
-   Pkei9rNfLTeZ6hNJG2GAZEBNxq9lm/6C4hygxryfJbFqRpQykxDmuuwAo
-   Q==;
-IronPort-SDR: zDp6qokfh+UZ5a3ETjcvlv4kekHz7nAQLLDIdpowFcBTrgZGK7bVWsZawcpM6af3jkn2ZirSL+
- xiYF4B0FjTeQEOaqUrbDsjYDlp5zzNTt8x6A2qaU9TbnTj+m+d4F507FtMUS8rYhkK0r0FcaZ2
- 3R3juBoV0vLvMpOzGa/ATiyM1uMEndtaz8TpDz+FLFU2/ic8Szsk318uheKdvVFW6bqVK1t0m7
- S++Z/We4I3MD7SRVT8cjBv34z3oZ3hm9NGMIgVKwU7J9voCKjrdHBBdawFMa00QeAu3dx5F4qY
- xn8=
-X-IronPort-AV: E=Sophos;i="5.76,386,1592863200"; 
-   d="scan'208";a="13721333"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 03 Sep 2020 15:40:43 +0200
-Received: from schifferm-ubuntu4 (unknown [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id C88BD280065;
-        Thu,  3 Sep 2020 15:40:43 +0200 (CEST)
-Message-ID: <ce08696b6bf2b3eaa84d6f056f47a8240c7479f4.camel@ew.tq-group.com>
-Subject: Re: spi-imx: correct interpretation of num-cs DT property?
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        id S1728957AbgICN6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 09:58:16 -0400
+Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2583E20BED;
+        Thu,  3 Sep 2020 13:57:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599141456;
+        bh=VuGxZvo9yHiaoeDqVaq0mRPlaYO1KqH47p+IwFf+LRE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Fy53apnwKmHpwQAGNA6YkJVTMCvxnAVZXNIuSqARvtd3YfpRGC090ZengijZ5zkcG
+         IXsOrqPIya7+Ucd6UOsMKQsI/y3R36FSDyU3uC6ciluIUcfowbSUoXgoFVaD8toqaM
+         q9yRNrMOKXv/Md9mDgVgy4okBPGKOWQgnLJyYI5s=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kDpk6-004T6t-7O; Thu, 03 Sep 2020 15:57:34 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Date:   Thu, 03 Sep 2020 15:40:43 +0200
-In-Reply-To: <20200903132241.GB4771@sirena.org.uk>
-References: <ecfa135b7b83a31bed821ec0740ab3cf1d39da15.camel@ew.tq-group.com>
-         <20200903132241.GB4771@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH 5/5] media: atomisp: get rid of -Wsuggest-attribute=format warnings
+Date:   Thu,  3 Sep 2020 15:57:32 +0200
+Message-Id: <6c77d765707b1e6b2901fd23d85b4d032f1a1799.1599141140.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1599141140.git.mchehab+huawei@kernel.org>
+References: <cover.1599141140.git.mchehab+huawei@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-09-03 at 14:22 +0100, Mark Brown wrote:
-> * PGP Signed by an unknown key
-> 
-> On Thu, Sep 03, 2020 at 11:22:20AM +0200, Matthias Schiffer wrote:
-> 
-> > - If num-cs is set, use that
-> > - If num-cs is unset, use the number of cs-gpios
-> > - If num-cs is unset and no cs-gpios are defined, use a driver-
-> > provided 
-> > default (which is 3 for spi-imx; this matches the number of native
-> > CS
-> > pins in older implementations of this SPI controller; i.MX6 and
-> > newer
-> > support up to 4)
-> 
-> That sounds like what's expected, though we coould just skip the
-> first
-> step.
-> 
-> > Also, would it make sense to add num-cs to all DTS files for boards
-> > that actually use fewer than 3 CS pins?
-> 
-> No, it was never a good idea to have that property in the first place
-> and there should be no case where it helps anything.
+There are some warnings reported by gcc:
+	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:164:2: warning: function ‘atomisp_css2_dbg_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:170:2: warning: function ‘atomisp_css2_dbg_ftrace_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:170:2: warning: function ‘atomisp_css2_dbg_ftrace_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:176:2: warning: function ‘atomisp_css2_err_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
 
+That are due to the usage of printf-like messages without
+enabling the error checking logic.
 
-Oh, thank you for the clarification.
+Add the proper attributes in order to shut up such warnings.
 
-As currently no in-tree DTs use the num-cs property for spi-imx and
-it's not documented, should support for it be dropped from the driver
-altogether?
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../media/atomisp/pci/atomisp_compat_css20.c  | 20 ++++---------------
+ .../staging/media/atomisp/pci/ia_css_env.h    |  4 ++--
+ 2 files changed, 6 insertions(+), 18 deletions(-)
 
-
-> 
-> > At the moment, the num-cs property is not explicitly documented for
-> > the
-> > spi-imx driver, although the driver understands it. I also
-> > suggested to
-> > add this to the docs, which Fabio didn't deem a good idea (I don't
-> > quite understand the reasoning here - isn't num-cs generally a
-> > useful
-> > property to have?)
-> 
-> Could you explain what benefit you would expect having num-cs to
-> offer?
-> 
-> * Unknown Key
-> * 0x5D5487D0
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
+index e54242dc0888..5a730e17cc6e 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
+@@ -159,24 +159,13 @@ static void atomisp_css2_hw_load(hrt_address addr, void *to, uint32_t n)
+ 	spin_unlock_irqrestore(&mmio_lock, flags);
+ }
+ 
+-static int atomisp_css2_dbg_print(const char *fmt, va_list args)
+-{
+-	vprintk(fmt, args);
+-	return 0;
+-}
+-
+-static int atomisp_css2_dbg_ftrace_print(const char *fmt, va_list args)
++static int  __attribute__((format (printf, 1, 0)))
++atomisp_css2_dbg_ftrace_print(const char *fmt, va_list args)
+ {
+ 	ftrace_vprintk(fmt, args);
+ 	return 0;
+ }
+ 
+-static int atomisp_css2_err_print(const char *fmt, va_list args)
+-{
+-	vprintk(fmt, args);
+-	return 0;
+-}
+-
+ void atomisp_load_uint32(hrt_address addr, uint32_t *data)
+ {
+ 	*data = atomisp_css2_hw_load_32(addr);
+@@ -869,8 +858,7 @@ static inline int __set_css_print_env(struct atomisp_device *isp, int opt)
+ 		isp->css_env.isp_css_env.print_env.debug_print =
+ 		    atomisp_css2_dbg_ftrace_print;
+ 	else if (opt == 2)
+-		isp->css_env.isp_css_env.print_env.debug_print =
+-		    atomisp_css2_dbg_print;
++		isp->css_env.isp_css_env.print_env.debug_print = vprintk;
+ 	else
+ 		ret = -EINVAL;
+ 
+@@ -903,7 +891,7 @@ int atomisp_css_load_firmware(struct atomisp_device *isp)
+ 
+ 	__set_css_print_env(isp, dbg_func);
+ 
+-	isp->css_env.isp_css_env.print_env.error_print = atomisp_css2_err_print;
++	isp->css_env.isp_css_env.print_env.error_print = vprintk;
+ 
+ 	/* load isp fw into ISP memory */
+ 	err = ia_css_load_firmware(isp->dev, &isp->css_env.isp_css_env,
+diff --git a/drivers/staging/media/atomisp/pci/ia_css_env.h b/drivers/staging/media/atomisp/pci/ia_css_env.h
+index 8debf334c15c..9808ff9e0492 100644
+--- a/drivers/staging/media/atomisp/pci/ia_css_env.h
++++ b/drivers/staging/media/atomisp/pci/ia_css_env.h
+@@ -75,9 +75,9 @@ struct ia_css_hw_access_env {
+ /* Environment with function pointers to print error and debug messages.
+  */
+ struct ia_css_print_env {
+-	int (*debug_print)(const char *fmt, va_list args);
++	int (*debug_print)(const char *fmt, va_list args) __attribute__((format (printf, 1, 0)));
+ 	/** Print a debug message. */
+-	int (*error_print)(const char *fmt, va_list args);
++	int (*error_print)(const char *fmt, va_list args) __attribute__((format (printf, 1, 0)));
+ 	/** Print an error message.*/
+ };
+ 
+-- 
+2.26.2
 
