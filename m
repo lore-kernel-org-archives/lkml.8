@@ -2,93 +2,297 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E090FC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC00C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEF942072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D1F2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgICM4v (ORCPT
+        id S1728826AbgICM5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 08:56:51 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38988 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbgICMpD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 08:45:03 -0400
-Received: by mail-oi1-f193.google.com with SMTP id r64so2965787oib.6;
-        Thu, 03 Sep 2020 05:42:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ml+p0f4/lZUonascXc6jcxVxCdORbfnV0c6JRtVN0WI=;
-        b=HqOcrBtX2WPaNk/2BW0lQhuIhp+AHrXY0aBuF/V1qESiMtiGtdlHdE7oooXg9/hOvr
-         8+dEmiylwJ3ZU60c8NQC+UY0goW4TFFOX1gpWHAw243d+oCniLM3Wn2lHXxCGv30n5ZY
-         GCBDG0kNsRGi72+CwBE7+BQnDP2vNJfQhHP/atdFo/3I5f3iWKp0DZ4rNd2lh6/hy8Yr
-         yGwB54AkewSaDTOFAO4kL6MV2EvidQpfy/WrnacVhguLyNoM8spIbLWwz0imOKIFsSlK
-         eE03s8ScBdwWmULfiWoSJC3qGgcsefhWXV6r4f6a873w+alPosvDOidNdBfgLIV/0nPJ
-         tN3Q==
-X-Gm-Message-State: AOAM531qoEXFvVePIxy3C01uwre+PNWOjAn1xK8BHln666M7Ljf5RVFm
-        bsbO8asRW02j4Y5+MIgRKZYtE8zWnSt9MHHlVTk=
-X-Google-Smtp-Source: ABdhPJwZcz/ujowdJByh5kbHpCBfa3Mpr/OPyUnuyyZK6ceNjumcCEmczP0uPpBwRxXaF/qOFQ+eA/665+uKpJ+OxTA=
-X-Received: by 2002:aca:3402:: with SMTP id b2mr1797687oia.153.1599136958847;
- Thu, 03 Sep 2020 05:42:38 -0700 (PDT)
+        Thu, 3 Sep 2020 08:57:22 -0400
+Received: from mga17.intel.com ([192.55.52.151]:56435 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728912AbgICMpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:45:19 -0400
+IronPort-SDR: BBeuoNvJ9w02R9djUDDMzpwA3UUAxJt3eOatGhZdc7V0Kfpa/bhTjYOTrFMbdlLbSfIWeE90lq
+ ICDO6cHr/tnA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="137616398"
+X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
+   d="scan'208";a="137616398"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:42:20 -0700
+IronPort-SDR: jgWU5ydLFjw/qHedpQ12bp/VP+JAvUC1loUhjM+8g5wrPQd8UEI2yPGXOnjF1pgkYUbH/HADoL
+ ifXa9ksU7aHA==
+X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
+   d="scan'208";a="446890819"
+Received: from shsi6026.sh.intel.com (HELO localhost) ([10.239.147.135])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:42:15 -0700
+From:   shuo.a.liu@intel.com
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Shuo Liu <shuo.a.liu@intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengwei Yin <fengwei.yin@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: [PATCH v2 01/17] docs: acrn: Introduce ACRN
+Date:   Thu,  3 Sep 2020 20:41:45 +0800
+Message-Id: <20200903124201.17275-2-shuo.a.liu@intel.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200903124201.17275-1-shuo.a.liu@intel.com>
+References: <20200903124201.17275-1-shuo.a.liu@intel.com>
 MIME-Version: 1.0
-References: <20200831180312.7453-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200831180312.7453-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 3 Sep 2020 14:42:27 +0200
-Message-ID: <CAMuHMdXWxYgAZx7bCET-U2S9KUo2tAT2gqKn3W5LTTtH-oRS0Q@mail.gmail.com>
-Subject: Re: [PATCH v2] clk: renesas: r8a7742-cpg-mssr: Add clk entry for VSPR
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 8:03 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add clock entry 130 for VSPR (VSP for Resizing) module, so that this module
-> can be used on R8A7742 (RZ/G1H) SoC.
->
-> Alongside rename clock entry "vsp1-sy" to "vsps" (VSP Standard), so that
-> VSP1 clock names are in sync.
->
-> Note: The entry for VSPR clock was accidentally dropped from RZ/G manual
-> when all the information related to RT were removed.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
-> v1->v2
-> * Alongside renamed "vsp1-sy" to "vsps"
-> * Updated commit message
+From: Shuo Liu <shuo.a.liu@intel.com>
 
-Thanks for the update!
+Add documentation on the following aspects of ACRN:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in clk-renesas-for-v5.10.
+  1) A brief introduction on the architecture of ACRN.
+  2) I/O request handling in ACRN.
 
-Gr{oetje,eeting}s,
+To learn more about ACRN, please go to ACRN project website
+https://projectacrn.org, or the documentation page
+https://projectacrn.github.io/.
 
-                        Geert
+Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
+Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Sen Christopherson <sean.j.christopherson@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Fengwei Yin <fengwei.yin@intel.com>
+Cc: Zhi Wang <zhi.a.wang@intel.com>
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+Cc: Yu Wang <yu1.wang@intel.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ Documentation/virt/acrn/index.rst        | 11 +++
+ Documentation/virt/acrn/introduction.rst | 40 ++++++++++
+ Documentation/virt/acrn/io-request.rst   | 97 ++++++++++++++++++++++++
+ Documentation/virt/index.rst             |  1 +
+ MAINTAINERS                              |  7 ++
+ 5 files changed, 156 insertions(+)
+ create mode 100644 Documentation/virt/acrn/index.rst
+ create mode 100644 Documentation/virt/acrn/introduction.rst
+ create mode 100644 Documentation/virt/acrn/io-request.rst
 
+diff --git a/Documentation/virt/acrn/index.rst b/Documentation/virt/acrn/index.rst
+new file mode 100644
+index 000000000000..e3cf99033bdb
+--- /dev/null
++++ b/Documentation/virt/acrn/index.rst
+@@ -0,0 +1,11 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++===============
++ACRN Hypervisor
++===============
++
++.. toctree::
++   :maxdepth: 1
++
++   introduction
++   io-request
+diff --git a/Documentation/virt/acrn/introduction.rst b/Documentation/virt/acrn/introduction.rst
+new file mode 100644
+index 000000000000..6b44924d5c0e
+--- /dev/null
++++ b/Documentation/virt/acrn/introduction.rst
+@@ -0,0 +1,40 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++ACRN Hypervisor Introduction
++============================
++
++The ACRN Hypervisor is a Type 1 hypervisor, running directly on the bare-metal
++hardware. It has a privileged management VM, called Service VM, to manage User
++VMs and do I/O emulation.
++
++ACRN userspace is an application running in the Service VM that emulates
++devices for a User VM based on command line configurations. ACRN Hypervisor
++Service Module (HSM) is a kernel module in the Service VM which provides
++hypervisor services to the ACRN userspace.
++
++Below figure shows the architecture.
++
++::
++
++                Service VM                    User VM
++      +----------------------------+  |  +------------------+
++      |        +--------------+    |  |  |                  |
++      |        |ACRN userspace|    |  |  |                  |
++      |        +--------------+    |  |  |                  |
++      |-----------------ioctl------|  |  |                  |   ...
++      |kernel space   +----------+ |  |  |                  |
++      |               |   HSM    | |  |  | Drivers          |
++      |               +----------+ |  |  |                  |
++      +--------------------|-------+  |  +------------------+
++  +---------------------hypercall----------------------------------------+
++  |                         ACRN Hypervisor                              |
++  +----------------------------------------------------------------------+
++  |                          Hardware                                    |
++  +----------------------------------------------------------------------+
++
++ACRN userspace allocates memory for the User VM, configures and initializes the
++devices used by the User VM, loads the virtual bootloader, initializes the
++virtual CPU state and handles I/O request accesses from the User VM. It uses
++ioctls to communicate with the HSM. HSM implements hypervisor services by
++interacting with the ACRN Hypervisor via hypercalls. HSM exports a char device
++interface (/dev/acrn_hsm) to userspace.
+diff --git a/Documentation/virt/acrn/io-request.rst b/Documentation/virt/acrn/io-request.rst
+new file mode 100644
+index 000000000000..019dc5978f7c
+--- /dev/null
++++ b/Documentation/virt/acrn/io-request.rst
+@@ -0,0 +1,97 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++I/O request handling
++====================
++
++An I/O request of a User VM, which is constructed by the hypervisor, is
++distributed by the ACRN Hypervisor Service Module to an I/O client
++corresponding to the address range of the I/O request. Details of I/O request
++handling are described in the following sections.
++
++1. I/O request
++--------------
++
++For each User VM, there is a shared 4-KByte memory region used for I/O requests
++communication between the hypervisor and Service VM. An I/O request is a
++256-byte structure buffer, which is 'struct acrn_io_request', that is filled by
++an I/O handler of the hypervisor when a trapped I/O access happens in a User
++VM. ACRN userspace in the Service VM first allocates a 4-KByte page and passes
++the GPA (Guest Physical Address) of the buffer to the hypervisor. The buffer is
++used as an array of 16 I/O request slots with each I/O request slot being 256
++bytes. This array is indexed by vCPU ID.
++
++2. I/O clients
++--------------
++
++An I/O client is responsible for handling User VM I/O requests whose accessed
++GPA falls in a certain range. Multiple I/O clients can be associated with each
++User VM. There is a special client associated with each User VM, called the
++default client, that handles all I/O requests that do not fit into the range of
++any other clients. The ACRN userspace acts as the default client for each User
++VM.
++
++Below illustration shows the relationship between I/O requests shared buffer,
++I/O requests and I/O clients.
++
++::
++
++     +------------------------------------------------------+
++     |                                       Service VM     |
++     |+--------------------------------------------------+  |
++     ||      +----------------------------------------+  |  |
++     ||      | shared page            ACRN userspace  |  |  |
++     ||      |    +-----------------+  +------------+ |  |  |
++     ||   +----+->| acrn_io_request |<-+  default   | |  |  |
++     ||   |  | |  +-----------------+  | I/O client | |  |  |
++     ||   |  | |  |       ...       |  +------------+ |  |  |
++     ||   |  | |  +-----------------+                 |  |  |
++     ||   |  +-|--------------------------------------+  |  |
++     ||---|----|-----------------------------------------|  |
++     ||   |    |                             kernel      |  |
++     ||   |    |            +----------------------+     |  |
++     ||   |    |            | +-------------+  HSM |     |  |
++     ||   |    +--------------+             |      |     |  |
++     ||   |                 | | I/O clients |      |     |  |
++     ||   |                 | |             |      |     |  |
++     ||   |                 | +-------------+      |     |  |
++     ||   |                 +----------------------+     |  |
++     |+---|----------------------------------------------+  |
++     +----|-------------------------------------------------+
++          |
++     +----|-------------------------------------------------+
++     |  +-+-----------+                                     |
++     |  | I/O handler |              ACRN Hypervisor        |
++     |  +-------------+                                     |
++     +------------------------------------------------------+
++
++3. I/O request state transition
++-------------------------------
++
++The state transitions of a ACRN I/O request are as follows.
++
++::
++
++   FREE -> PENDING -> PROCESSING -> COMPLETE -> FREE -> ...
++
++- FREE: this I/O request slot is empty
++- PENDING: a valid I/O request is pending in this slot
++- PROCESSING: the I/O request is being processed
++- COMPLETE: the I/O request has been processed
++
++An I/O request in COMPLETE or FREE state is owned by the hypervisor. HSM and
++ACRN userspace are in charge of processing the others.
++
++4. Processing flow of I/O requests
++-------------------------------
++
++a. The I/O handler of the hypervisor will fill an I/O request with PENDING
++   state when a trapped I/O access happens in a User VM.
++b. The hypervisor makes an upcall, which is a notification interrupt, to
++   the Service VM.
++c. The upcall handler schedules a tasklet to dispatch I/O requests.
++d. The tasklet looks for the PENDING I/O requests, assigns them to different
++   registered clients based on the address of the I/O accesses, updates
++   their state to PROCESSING, and notifies the corresponding client to handle.
++e. The notified client handles the assigned I/O requests.
++f. The HSM updates I/O requests states to COMPLETE and notifies the hypervisor
++   of the completion via hypercalls.
+diff --git a/Documentation/virt/index.rst b/Documentation/virt/index.rst
+index de1ab81df958..c10b519507f5 100644
+--- a/Documentation/virt/index.rst
++++ b/Documentation/virt/index.rst
+@@ -11,6 +11,7 @@ Linux Virtualization Support
+    uml/user_mode_linux
+    paravirt_ops
+    guest-halt-polling
++   acrn/index
+ 
+ .. only:: html and subproject
+ 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index deaafb617361..e0fea5e464b4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -436,6 +436,13 @@ S:	Orphan
+ F:	drivers/platform/x86/wmi.c
+ F:	include/uapi/linux/wmi.h
+ 
++ACRN HYPERVISOR SERVICE MODULE
++M:	Shuo Liu <shuo.a.liu@intel.com>
++L:	acrn-dev@lists.projectacrn.org
++S:	Supported
++W:	https://projectacrn.org
++F:	Documentation/virt/acrn/
++
+ AD1889 ALSA SOUND DRIVER
+ L:	linux-parisc@vger.kernel.org
+ S:	Maintained
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.28.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
