@@ -2,129 +2,171 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91893C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0815C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A62A20897
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9584E207EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVliyIba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgICHU7 (ORCPT
+        id S1728020AbgICHXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:20:59 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:53672 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726022AbgICHU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:20:58 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BhsfY3bm4zB09Zf;
-        Thu,  3 Sep 2020 09:20:53 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id z990iF4fMPYf; Thu,  3 Sep 2020 09:20:53 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BhsfY2h7WzB09ZZ;
-        Thu,  3 Sep 2020 09:20:53 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5F8A78B7B1;
-        Thu,  3 Sep 2020 09:20:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id GoY3tY2xK-tx; Thu,  3 Sep 2020 09:20:54 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A1A698B790;
-        Thu,  3 Sep 2020 09:20:53 +0200 (CEST)
-Subject: Re: [PATCH 10/10] powerpc: remove address space overrides using
- set_fs()
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200827150030.282762-1-hch@lst.de>
- <20200827150030.282762-11-hch@lst.de>
- <8974838a-a0b1-1806-4a3a-e983deda67ca@csgroup.eu>
- <20200902123646.GA31184@lst.de>
- <d78cb4be-48a9-a7c5-d9d1-d04d2a02b4c6@csgroup.eu>
- <CAHk-=wiDCcxuHgENo3UtdFi2QW9B7yXvNpG5CtF=A6bc6PTTgA@mail.gmail.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <6a6ea160-a661-4a15-777c-e26a487829d4@csgroup.eu>
-Date:   Thu, 3 Sep 2020 09:20:35 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 3 Sep 2020 03:23:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgICHXU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 03:23:20 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E4C1C061244;
+        Thu,  3 Sep 2020 00:23:20 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id h23so565977vkn.4;
+        Thu, 03 Sep 2020 00:23:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nYtPH/AGq9Arqr6Pnj4bZq+KucnVkSWBPEySgVn+z48=;
+        b=kVliyIbaEUKHfO4xZWqE+52p0FTfiE73C1Dhz7+J11EpmW05Vb4VZ9f4Qt+b2O4RHN
+         IR+F8tMYHxguugL1aOXsWLv8yr6I7M8o2IGDxbg8NzVxaLhqOvInhfgdoNU+CO34B04p
+         6UbNDtk/pPVbYhltWMeUM5bw5lnIk5Vmyp+HBE56MA6P29Ab2sBk6o8LCbGVlCLgwa9Z
+         rDEhVIkbMKT6QqWek8lH2lC6kPXb0KhWvjfEs2AQdOEbpPjmaFtbQLSq20Tag+zYGwPo
+         kyNgK7uZboEjdcTmaC9mJ5aNksjusZgvbZxTYbPXPtcqmfnXemtqxdUmkToKhzphuLGf
+         FyoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nYtPH/AGq9Arqr6Pnj4bZq+KucnVkSWBPEySgVn+z48=;
+        b=k7EA9fcKWEe5cdq1LuPjbOkBwn8FbzJz9PrK4XOzP0GEZDg7UGa8J425o3HchL+/I3
+         tmjzPaNhoowwOsO5QjXH7WLStvDOHIBi4N2NG7MeU+B1VrBiC17gd7LZSHx2t/NpV3BX
+         aHF8fvhe5lig2HvEPzql5EZZAPJQE2Qs8n7Brud2/DQa/gOf6cfLnMVvLdHyjwwDVe2e
+         7672goqfZh+xDvP6+hNprQTK5NtevfgNeEBnh/cQxPAFgju/KQZXh26WJuUFSUZ+lRM4
+         nUNhYS6fdBWkznUje3f+2Hv3jyc3W9bIO4wUh/JeYrZgV7oNP+GJMibBH7KILi25Ab/V
+         7GuQ==
+X-Gm-Message-State: AOAM533W9u7QZw3Q4e3FWT6i69u1IiRTSm+ikNbFkuj3LFNSFO74CagB
+        1x/Nx8XGSjZ+SKsIEeMqAbwzwKfeCGqoM0iFnSVrxoGj3gs=
+X-Google-Smtp-Source: ABdhPJzkeFXIQzqDgqXC99kkdDPH3UnC8CAmw5bH+NsVf2nsqOvneLOy0x2VfmXMLS2U68g+CkWma2gKwfqEGyfNlCs=
+X-Received: by 2002:a1f:2a48:: with SMTP id q69mr774030vkq.69.1599117799327;
+ Thu, 03 Sep 2020 00:23:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiDCcxuHgENo3UtdFi2QW9B7yXvNpG5CtF=A6bc6PTTgA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20200901154200.2451899-1-robdclark@gmail.com> <20200901154200.2451899-3-robdclark@gmail.com>
+In-Reply-To: <20200901154200.2451899-3-robdclark@gmail.com>
+From:   =?UTF-8?Q?Kristian_H=C3=B8gsberg?= <hoegsberg@gmail.com>
+Date:   Thu, 3 Sep 2020 00:23:08 -0700
+Message-ID: <CAOeoa-cbQv2pkpxhXMV++NY3MbouPP077UVPnp7fu3zjFxt8Uw@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH 2/3] drm/msm: Convert shrinker msgs to tracepoints
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@chromium.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>, David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 1, 2020 at 8:41 AM Rob Clark <robdclark@gmail.com> wrote:
+>
+> From: Rob Clark <robdclark@chromium.org>
+>
+> This reduces the spam in dmesg when we start hitting the shrinker, and
+> replaces it with something we can put on a timeline while profiling or
+> debugging system issues.
 
+That is a good solution,
 
-Le 02/09/2020 à 20:02, Linus Torvalds a écrit :
-> On Wed, Sep 2, 2020 at 8:17 AM Christophe Leroy
-> <christophe.leroy@csgroup.eu> wrote:
->>
->>
->> With this fix, I get
->>
->> root@vgoippro:~# time dd if=/dev/zero of=/dev/null count=1M
->> 536870912 bytes (512.0MB) copied, 6.776327 seconds, 75.6MB/s
->>
->> That's still far from the 91.7MB/s I get with 5.9-rc2, but better than
->> the 65.8MB/s I got yesterday with your series. Still some way to go thought.
-> 
-> I don't see why this change would make any difference.
-> 
+Reviewed-by: Kristian H. Kristensen <hoegsberg@google.com>
 
-Neither do I.
-
-Looks like nowadays, CONFIG_STACKPROTECTOR has become a default.
-I rebuilt the kernel without it, I now get a throughput of 99.8MB/s both 
-without and with this series.
-
-Looking at the generated code (GCC 10.1), a small change in a function 
-seems to make large changes in the generated code when 
-CONFIG_STACKPROTECTOR is set.
-
-In addition to that, trivial functions which don't use the stack at all 
-get a stack frame anyway when CONFIG_STACKPROTECTOR is set, allthough 
-that's only -fstack-protector-strong. And there is no canary check.
-
-Without CONFIG_STACKPROTECTOR:
-
-c01572a0 <no_llseek>:
-c01572a0:	38 60 ff ff 	li      r3,-1
-c01572a4:	38 80 ff e3 	li      r4,-29
-c01572a8:	4e 80 00 20 	blr
-
-With CONFIG_STACKPROTECTOR (regardless of CONFIG_STACKPROTECTOR_STRONG 
-or not):
-
-c0164e08 <no_llseek>:
-c0164e08:	94 21 ff f0 	stwu    r1,-16(r1)
-c0164e0c:	38 60 ff ff 	li      r3,-1
-c0164e10:	38 80 ff e3 	li      r4,-29
-c0164e14:	38 21 00 10 	addi    r1,r1,16
-c0164e18:	4e 80 00 20 	blr
-
-Wondering why CONFIG_STACKPROTECTOR has become the default. It seems to 
-imply a 10% performance loss even in the best case (91.7MB/s versus 
-99.8MB/s)
-
-Note that without CONFIG_STACKPROTECTOR_STRONG, I'm at 99.3MB/s, so 
-that's really the _STRONG alternative that hurts.
-
-Christophe
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/gpu/drm/msm/msm_gem_shrinker.c |  5 +++--
+>  drivers/gpu/drm/msm/msm_gpu_trace.h    | 26 ++++++++++++++++++++++++++
+>  2 files changed, 29 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/msm_gem_shrinker.c b/drivers/gpu/drm/msm/msm_gem_shrinker.c
+> index 722d61668a97..482576d7a39a 100644
+> --- a/drivers/gpu/drm/msm/msm_gem_shrinker.c
+> +++ b/drivers/gpu/drm/msm/msm_gem_shrinker.c
+> @@ -6,6 +6,7 @@
+>
+>  #include "msm_drv.h"
+>  #include "msm_gem.h"
+> +#include "msm_gpu_trace.h"
+>
+>  static bool msm_gem_shrinker_lock(struct drm_device *dev, bool *unlock)
+>  {
+> @@ -87,7 +88,7 @@ msm_gem_shrinker_scan(struct shrinker *shrinker, struct shrink_control *sc)
+>                 mutex_unlock(&dev->struct_mutex);
+>
+>         if (freed > 0)
+> -               pr_info_ratelimited("Purging %lu bytes\n", freed << PAGE_SHIFT);
+> +               trace_msm_gem_purge(freed << PAGE_SHIFT);
+>
+>         return freed;
+>  }
+> @@ -123,7 +124,7 @@ msm_gem_shrinker_vmap(struct notifier_block *nb, unsigned long event, void *ptr)
+>         *(unsigned long *)ptr += unmapped;
+>
+>         if (unmapped > 0)
+> -               pr_info_ratelimited("Purging %u vmaps\n", unmapped);
+> +               trace_msm_gem_purge_vmaps(unmapped);
+>
+>         return NOTIFY_DONE;
+>  }
+> diff --git a/drivers/gpu/drm/msm/msm_gpu_trace.h b/drivers/gpu/drm/msm/msm_gpu_trace.h
+> index 07572ab179fa..1079fe551279 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu_trace.h
+> +++ b/drivers/gpu/drm/msm/msm_gpu_trace.h
+> @@ -114,6 +114,32 @@ TRACE_EVENT(msm_gmu_freq_change,
+>                 TP_printk("freq=%u, perf_index=%u", __entry->freq, __entry->perf_index)
+>  );
+>
+> +
+> +TRACE_EVENT(msm_gem_purge,
+> +               TP_PROTO(u32 bytes),
+> +               TP_ARGS(bytes),
+> +               TP_STRUCT__entry(
+> +                       __field(u32, bytes)
+> +                       ),
+> +               TP_fast_assign(
+> +                       __entry->bytes = bytes;
+> +                       ),
+> +               TP_printk("Purging %u bytes", __entry->bytes)
+> +);
+> +
+> +
+> +TRACE_EVENT(msm_gem_purge_vmaps,
+> +               TP_PROTO(u32 unmapped),
+> +               TP_ARGS(unmapped),
+> +               TP_STRUCT__entry(
+> +                       __field(u32, unmapped)
+> +                       ),
+> +               TP_fast_assign(
+> +                       __entry->unmapped = unmapped;
+> +                       ),
+> +               TP_printk("Purging %u vmaps", __entry->unmapped)
+> +);
+> +
+>  #endif
+>
+>  #undef TRACE_INCLUDE_PATH
+> --
+> 2.26.2
+>
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
