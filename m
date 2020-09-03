@@ -2,198 +2,193 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69704C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1062C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 307C2208B3
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:32:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599118357;
-	bh=a6NQokr4jM352XqY6vw/Xjc9tnmlUORQvxTKs8y3VmQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HwUQXztKsnGFf7+AVczAGoMt5FdtQP2kYiwX2RzMCQT0F6Mgl1sdASgodExMua0rG
-	 7YfkqIbiqbAP5LoO4m2E86IoLzWdlzOIH4eYdwzp/GXED6QcJclmFUmvQ8LF5SQLOz
-	 yaO13heU555tTgAoNdVeAFy1G91sfLUdlR6m3Ijg=
+	by mail.kernel.org (Postfix) with ESMTP id 8C75F2071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:32:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="CkKsyr5s";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="niNk61my"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgICHcf (ORCPT
+        id S1728262AbgICHcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:32:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56460 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbgICHce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:32:34 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B389420775;
-        Thu,  3 Sep 2020 07:32:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599118353;
-        bh=a6NQokr4jM352XqY6vw/Xjc9tnmlUORQvxTKs8y3VmQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lY2nENn4PyQnLe86tGBsy7BegX4EZ7tvxXVlNM7BZv6S3N+PmLZ0sqWiCET8GGqTk
-         o68zMMnRNYD7BkFKDl2ntBWB2Sy6A0ODNnz4eHdZJOHHBJgh+vXLe7u5kUJqQS+zhd
-         95RgxEBPX+1UU5R2KEx32QhMc60fTKCtZT9/LTMc=
-Date:   Thu, 3 Sep 2020 09:32:30 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     himadrispandya@gmail.com, dvyukov@google.com,
-        linux-usb@vger.kernel.org, perex@perex.cz, tiwai@suse.com,
-        linux-kernel@vger.kernel.org, marcel@holtmann.org,
-        johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Eli Billauer <eli.billauer@gmail.com>,
-        Emiliano Ingrassia <ingrassia@epigenesys.com>,
-        Alexander Tsoy <alexander@tsoy.me>,
-        "Geoffrey D. Bennett" <g@b4.vu>, Jussi Laako <jussi@sonarnerd.net>,
-        Nick Kossifidis <mickflemm@gmail.com>,
-        Dmitry Panchenko <dmitry@d-systems.ee>,
-        Chris Wulff <crwulff@gmail.com>,
-        Jesus Ramos <jesus-ramos@live.com>
-Subject: Re: [PATCH 01/10] USB: move snd_usb_pipe_sanity_check into the USB
- core
-Message-ID: <20200903073230.GA162335@kroah.com>
-References: <20200902110115.1994491-1-gregkh@linuxfoundation.org>
- <20200902110115.1994491-2-gregkh@linuxfoundation.org>
- <20200903004553.GA642955@rowland.harvard.edu>
+        Thu, 3 Sep 2020 03:32:48 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:34082 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726025AbgICHco (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 03:32:44 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0837SqOC011329;
+        Thu, 3 Sep 2020 00:32:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=QiU/FsNlbgwHQ+0mjOzySNDola4fK4n50EavepDlWoM=;
+ b=CkKsyr5sixm9INIdlBLEbUVRTpbFyUCiz0CbjOayytPkfqEfz5GFhDjeRh+hZjZNQvw4
+ /czvakGrJXGkbnx7rAskpo0slVKkxzQSNmLTSHlaRqQgA8Xv4ElTnBc9hpWXzDq3bsBY
+ RrD0jR3GSqO5MEb377PN5uG7kwGiPAG8Te2bcC5kDDhXbmdHtqrIUIN6qD+uNm8HCvLQ
+ VdpRz432wBbSc79lvhKNTaLX4Ti4RxftfzqNi3qZWrKtiev4DofNyRyJJXjHUfa2dOCx
+ t+qI9gtwohKec7PylU4gnm97xEUFA33gWooAm2g0bWMsqIbHejCDUfqfv30GDnDrDK5E Qw== 
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2108.outbound.protection.outlook.com [104.47.70.108])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 337jkwksnj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Sep 2020 00:32:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ef4ELJXVLcWFD3zsneUv7nlJFBRH1LbfSHHWJB9lYgO2y7FvuCsP7heVSw4J266abPI1pYxd8YgOfCzmVL8AIXuW30GYvfNXuwy6UjQ2vM4TJphNo2Sg6s9V3kuib6ar4ew4EGzVCYnzTdLclYHtb2mp3X5ZQHYpZX4G4M3z6GcFGKkUn3rzEXnnB1lJb8BqpA0aASmiL2y75tU9IgkoF8HSjI6KkiAEftaAQlXInm24yFpOImcBEtJafxPjOI/e8LhUBrRZyz8+lI6PnBC6Ce2qLZxoHectkSUQga4mf20SHxOAfwwCSLAykW7vfFLwo1/zqGJG9/u7FSh0rKyyXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QiU/FsNlbgwHQ+0mjOzySNDola4fK4n50EavepDlWoM=;
+ b=bZHiyb6cUb3d5NjDeG9fmz9owVQ656ZXB2xDYv5Z6M1Wj2ym8VIdVkNyneQmmRaGEvWSdLzgrdH301kEzY5o5/Rw0SMHSQOjQNJvcfriXN45PcoOXTuqGDp2vQ7z9MVOwQIbFyWZt72SJhTsMsu7981mhxbrBNJHuGGdJYKi5uanHkAvdEaK0x60RIiWO5KijIumlbO5iTy9jnJbg9VHHl6LrKjBb8mzYQYRVaVd4ONOFwacW0N4e0kjzUDaMss3YvbReVe3EZgrrkwFDMOpWnU2ZbMwWHV1iG4fiTvhnoNwR5ldTQ5HONeYYALhx3wso3xCiaeUs7XQo/mc/FHgMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QiU/FsNlbgwHQ+0mjOzySNDola4fK4n50EavepDlWoM=;
+ b=niNk61my/wahH37pyqZeqZlCyCy7xntVYBchySO8wlAadDtFiZk5XOTJal+af7n8HIRTVUn+n5OWROQuGBg1CIMlHQCRFJ+yBnN23H8gieaQfts7BaTpmpcgsn9pmZjtykJOwUpelev+m7QKnJ5tNwhZ/xgT38JcwqA4iYV7Srw=
+Received: from DM6PR07MB5531.namprd07.prod.outlook.com (2603:10b6:5:76::15) by
+ DM6PR07MB6363.namprd07.prod.outlook.com (2603:10b6:5:155::23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3326.19; Thu, 3 Sep 2020 07:32:13 +0000
+Received: from DM6PR07MB5531.namprd07.prod.outlook.com
+ ([fe80::c451:7f79:5f49:d9f2]) by DM6PR07MB5531.namprd07.prod.outlook.com
+ ([fe80::c451:7f79:5f49:d9f2%4]) with mapi id 15.20.3348.016; Thu, 3 Sep 2020
+ 07:32:13 +0000
+From:   Milind Parab <mparab@cadence.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Yuti Suresh Amonkar <yamonkar@cadence.com>,
+        "jsarha@ti.com" <jsarha@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>,
+        "praneeth@ti.com" <praneeth@ti.com>,
+        "nikhil.nd@ti.com" <nikhil.nd@ti.com>
+Subject: RE: [PATCH v9 2/3] drm: bridge: Add support for Cadence MHDP8546
+ DPI/DP bridge
+Thread-Topic: [PATCH v9 2/3] drm: bridge: Add support for Cadence MHDP8546
+ DPI/DP bridge
+Thread-Index: AQHWf3AYzpzGkoZ9706j21VgVUJ0X6lTdp2AgALthcCAACNHgIAAAR/A
+Date:   Thu, 3 Sep 2020 07:32:13 +0000
+Message-ID: <DM6PR07MB55310053A35DC754C5B27FA9D32C0@DM6PR07MB5531.namprd07.prod.outlook.com>
+References: <1598862215-10222-1-git-send-email-sjakhade@cadence.com>
+ <1598862215-10222-3-git-send-email-sjakhade@cadence.com>
+ <e53e87b0-7e0a-763f-8b8b-0dc278e1f225@ti.com>
+ <DM6PR07MB5531DF749C993423B0A3E746D32C0@DM6PR07MB5531.namprd07.prod.outlook.com>
+ <4a0d1e85-0db6-af62-a1ea-e8f0c684b4a6@ti.com>
+In-Reply-To: <4a0d1e85-0db6-af62-a1ea-e8f0c684b4a6@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=cadence.com;
+x-originating-ip: [14.142.6.124]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ae1ae9ae-4b0c-48cb-4a7e-08d84fdb79d5
+x-ms-traffictypediagnostic: DM6PR07MB6363:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR07MB63638E1178DE40A9B1BDBA36D32C0@DM6PR07MB6363.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: v9/B6u73gN42vQQroC+2xEMyz0GQ2fUxiQN9lZ7P3iuNVpGxFeMPYXMK+jPQ3XY2NeBvfTbjbc8AP0Uf2ml0bdUw7TmeHEusjIeGUXxDYxQ/7wCbU/0qrWZ2bGwQXbNcBrjn/YAlNu4+jcqaOY/EepTcjpIZ6ReM6gkLyzLrxBilhAWkg45/4dFhXefZCALlSqFXOgdw8kM24vWwBjFSesaVTe10RkwPJdDetFrFW+dpriS+rO8FYx4nfAns4Wr/8tzfUO3X9TRhk8ZkdZM0DvaBsooUmH7vXxitCXA9/vLhW3C3xvcaGYzkrQbT9pk+qAOJNDBz+N4TB9m2cYOyLj0OCCU+RVWvegcFidVlQmCz1sjY5YJ6K9rZG1EmYliwCzq815rKKYc5hCJNI8c6ZA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR07MB5531.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(136003)(376002)(396003)(39860400002)(36092001)(71200400001)(2906002)(76116006)(86362001)(8936002)(66556008)(4326008)(478600001)(64756008)(186003)(66446008)(66946007)(66476007)(52536014)(110136005)(8676002)(7416002)(26005)(316002)(6506007)(54906003)(33656002)(5660300002)(7696005)(9686003)(83380400001)(55016002)(55236004)(921003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: B4q5X7vDRK05uWNMnTI5xqxQkMBtgQh/YJy+B5xdy/ViymNkLv7PTNXV8bdXhUoFd221Ulir/TUrtn5fdQUJWG6baEN88cnkHOO66wxcMeD01HFPZMXxLGh/LwnmGB875Kv0H0UvtTADM4yJhfcw3dKskuwDm1iySNEud7e8je6iOp0IFKawkWOhTTcO/A9oOn87IGxR16mfvuzgvI5NcIEFQv0IUsKJ80Vx9+l8C/D/9pWqvR+RKXLomh8Z+Qdkllaa+sVQBDCxV6Cw9gLsbBe8cub3t10hgN/B1u/Yv8W/JEqufbZJg6clA6uh/V6RkeBcfgMvPCdj68YrhBrJHLvTm9IUDg1jgSDhipBb42lN8oqD3/jxIGcW6/io2WR6zFVbLDTSIiuWqgsFIoOHn7KlTj1pL0lZmZWX8SeFUfvajvVbEaxKppagVa2j8EPbW4yb3QSee79MtR+6cW4KpA2/CWjzbwDeN6Q8wjH91t6unF7QkzRTM/5CbsLh4rf8Sft6QOBLEdLzey2msHJrBWZMInJM4vPUUQzRyviK372EK9mNhlUUMl52j4F148Hymjr9fxc/aQGyYalQZ6mlZ8Ka9T+Rs8LUxNWObaJqABTDE9nD0cl5qNn865dR4vU6efTF4kywVzmr6bjIJ9LYZg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903004553.GA642955@rowland.harvard.edu>
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR07MB5531.namprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae1ae9ae-4b0c-48cb-4a7e-08d84fdb79d5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2020 07:32:13.1060
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CvlcpjfPFH8YBtmedT8vKMms7Y9+zUSZD+MFAfjbKVeBeIeTBN5wuz7O1J+DIIrGB2eSKEoh3iXbVrwY7B+mtq4NW8ZG9MRGH5pFKhbCsHg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB6363
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-03_04:2020-09-02,2020-09-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 spamscore=0
+ priorityscore=1501 bulkscore=0 mlxscore=0 malwarescore=0 adultscore=0
+ impostorscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
+ suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2009030067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 08:45:53PM -0400, Alan Stern wrote:
-> On Wed, Sep 02, 2020 at 01:01:03PM +0200, Greg Kroah-Hartman wrote:
-> > snd_usb_pipe_sanity_check() is a great function, so let's move it into
-> > the USB core so that other parts of the kernel, including the USB core,
-> > can call it.
-> > 
-> > Name it usb_pipe_type_check() to match the existing
-> > usb_urb_ep_type_check() call, which now uses this function.
-> > 
-> > Cc: Jaroslav Kysela <perex@perex.cz>
-> > Cc: Takashi Iwai <tiwai@suse.com>
-> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> > Cc: Eli Billauer <eli.billauer@gmail.com>
-> > Cc: Emiliano Ingrassia <ingrassia@epigenesys.com>
-> > Cc: Alan Stern <stern@rowland.harvard.edu>
-> > Cc: Alexander Tsoy <alexander@tsoy.me>
-> > Cc: "Geoffrey D. Bennett" <g@b4.vu>
-> > Cc: Jussi Laako <jussi@sonarnerd.net>
-> > Cc: Nick Kossifidis <mickflemm@gmail.com>
-> > Cc: Dmitry Panchenko <dmitry@d-systems.ee>
-> > Cc: Chris Wulff <crwulff@gmail.com>
-> > Cc: Jesus Ramos <jesus-ramos@live.com>
-> > Cc: linux-usb@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: alsa-devel@alsa-project.org
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> 
-> > diff --git a/drivers/usb/core/urb.c b/drivers/usb/core/urb.c
-> > index 27e83e55a590..45bc2914c1ba 100644
-> > --- a/drivers/usb/core/urb.c
-> > +++ b/drivers/usb/core/urb.c
-> > @@ -192,24 +192,39 @@ static const int pipetypes[4] = {
-> >  };
-> >  
-> >  /**
-> > - * usb_urb_ep_type_check - sanity check of endpoint in the given urb
-> > - * @urb: urb to be checked
-> > + * usb_pipe_type_check - sanity check of a specific pipe for a usb device
-> > + * @dev: struct usb_device to be checked
-> > + * @pipe: pipe to check
-> >   *
-> >   * This performs a light-weight sanity check for the endpoint in the
-> > - * given urb.  It returns 0 if the urb contains a valid endpoint, otherwise
-> > - * a negative error code.
-> > + * given usb device.  It returns 0 if the pipe is a valid for the specific usb
-> -----------------------------------------------------^
-> Typo.
-
-Oops, will fix, thanks.
-
-
-> 
-> > + * device, otherwise a negative error code.
-> >   */
-> > -int usb_urb_ep_type_check(const struct urb *urb)
-> > +int usb_pipe_type_check(struct usb_device *dev, unsigned int pipe)
-> >  {
-> >  	const struct usb_host_endpoint *ep;
-> >  
-> > -	ep = usb_pipe_endpoint(urb->dev, urb->pipe);
-> > +	ep = usb_pipe_endpoint(dev, pipe);
-> >  	if (!ep)
-> >  		return -EINVAL;
-> > -	if (usb_pipetype(urb->pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
-> > +	if (usb_pipetype(pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
-> >  		return -EINVAL;
-> >  	return 0;
-> >  }
-> > +EXPORT_SYMBOL_GPL(usb_pipe_type_check);
-> > +
-> > +/**
-> > + * usb_urb_ep_type_check - sanity check of endpoint in the given urb
-> > + * @urb: urb to be checked
-> > + *
-> > + * This performs a light-weight sanity check for the endpoint in the
-> > + * given urb.  It returns 0 if the urb contains a valid endpoint, otherwise
-> > + * a negative error code.
-> > + */
-> > +int usb_urb_ep_type_check(const struct urb *urb)
-> > +{
-> > +	return usb_pipe_type_check(urb->dev, urb->pipe);
-> > +}
-> >  EXPORT_SYMBOL_GPL(usb_urb_ep_type_check);
-> 
-> Since this routine is used in only one place in the entire kernel, you 
-> might as well inline the code there and get rid of the function 
-> entirely.
-
-Good idea, will do.
-
-> > diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-> > index abf99b814a0f..fc3aab04a0bc 100644
-> > --- a/sound/usb/quirks.c
-> > +++ b/sound/usb/quirks.c
-> > @@ -846,7 +846,7 @@ static int snd_usb_accessmusic_boot_quirk(struct usb_device *dev)
-> >  	static const u8 seq[] = { 0x4e, 0x73, 0x52, 0x01 };
-> >  	void *buf;
-> >  
-> > -	if (snd_usb_pipe_sanity_check(dev, usb_sndintpipe(dev, 0x05)))
-> > +	if (usb_pipe_type_check(dev, usb_sndintpipe(dev, 0x05)))
-> >  		return -EINVAL;
-> >  	buf = kmemdup(seq, ARRAY_SIZE(seq), GFP_KERNEL);
-> >  	if (!buf)
-> > @@ -875,7 +875,7 @@ static int snd_usb_nativeinstruments_boot_quirk(struct usb_device *dev)
-> >  {
-> >  	int ret;
-> >  
-> > -	if (snd_usb_pipe_sanity_check(dev, usb_sndctrlpipe(dev, 0)))
-> > +	if (usb_pipe_type_check(dev, usb_sndctrlpipe(dev, 0)))
-> >  		return -EINVAL;
-> 
-> In a few places here this check is completely unnecessary.  All it does 
-> is verify that the device does have an endpoint 0 and the the type of 
-> the endpoint matches the type of the pipe.  Well, every USB device 
-> always has an endpoint 0, and it is always a bidirectional control 
-> endpoint.
-
-I think this was probably added to handle syzbot issues.  As long as the
-USB core does ensure that a USB device has endpoint 0, I agree, these
-can be removed.  I'll go check that and add a follow-on patch to the
-series to do this, thanks.
-
-thanks,
-
-greg k-h
+SGkgVG9taSwNCg0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogVG9taSBWYWxr
+ZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4NCj5TZW50OiBUaHVyc2RheSwgU2VwdGVtYmVy
+IDMsIDIwMjAgMTI6NTQgUE0NCj5UbzogTWlsaW5kIFBhcmFiIDxtcGFyYWJAY2FkZW5jZS5jb20+
+OyBTd2FwbmlsIEthc2hpbmF0aCBKYWtoYWRlDQo+PHNqYWtoYWRlQGNhZGVuY2UuY29tPjsgYWly
+bGllZEBsaW51eC5pZTsgZGFuaWVsQGZmd2xsLmNoOw0KPkxhdXJlbnQucGluY2hhcnRAaWRlYXNv
+bmJvYXJkLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPmEuaGFqZGFAc2Ftc3VuZy5jb207IG5h
+cm1zdHJvbmdAYmF5bGlicmUuY29tOyBqb25hc0Brd2lib28uc2U7DQo+amVybmVqLnNrcmFiZWNA
+c2lvbC5uZXQ7IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc7DQo+ZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj5DYzogWXV0aSBT
+dXJlc2ggQW1vbmthciA8eWFtb25rYXJAY2FkZW5jZS5jb20+OyBqc2FyaGFAdGkuY29tOw0KPm5z
+ZWtoYXJAdGkuY29tOyBwcmFuZWV0aEB0aS5jb207IG5pa2hpbC5uZEB0aS5jb20NCj5TdWJqZWN0
+OiBSZTogW1BBVENIIHY5IDIvM10gZHJtOiBicmlkZ2U6IEFkZCBzdXBwb3J0IGZvciBDYWRlbmNl
+IE1IRFA4NTQ2DQo+RFBJL0RQIGJyaWRnZQ0KPg0KPkVYVEVSTkFMIE1BSUwNCj4NCj4NCj5IaSBN
+aWxpbmQsDQo+DQo+T24gMDMvMDkvMjAyMCAwOToyMiwgTWlsaW5kIFBhcmFiIHdyb3RlOg0KPg0K
+Pj4gQWxzbywgbm90ZSB0aGF0IENETlMgTUhEUCBpbXBsZW1lbnRzIERQX0ZSQU1FUl9UVV9wIHdo
+ZXJlIGJpdHMgNTowDQo+aXMgdHVfdmFsaWRfc3ltYm9scy4gU28gbWF4IHByb2dyYW1tYWJsZSB2
+YWx1ZSBpcyA2My4NCj4+IFJlZ2lzdGVyIGRvY3VtZW50IGdpdmVzIGZvbGxvd2luZyBleHBsYW5h
+dGlvbiAiTnVtYmVyIG9mIHZhbGlkIHN5bWJvbHMNCj4+IHBlciBUcmFuc2ZlciBVbml0IChUVSku
+IFJvdW5kZWQgZG93biB0byBsb3dlciBpbnRlZ2VyIHZhbHVlIChBbGxvd2VkDQo+dmFsdWVzIGFy
+ZSAxIHRvIChUVV9zaXplLTEpIg0KPj4NCj4+IFNvLCBpdCBzYXlzIGluIGNhc2UgdnMgY2FsY3Vs
+YXRlcyB0byA2NCAod2hlcmUgQXZhaWwgQlcgYW5kIFJlcSBCVyBhcmUNCj4+IHNhbWUpIHdlIHBy
+b2dyYW0gdHVfdmFsaWRfc3ltYm9scyA9IDYzDQo+DQo+SG1tLCBzbyAiUm91bmRlZCBkb3duIHRv
+IGxvd2VyIGludGVnZXIgdmFsdWUiIG1lYW5zDQo+DQo+Zmxvb3IoeCkgLSAxID8NCj4NCj5JZiB0
+aGF0J3MgdGhlIGNhc2UsIHdlIG5lZWQgdG8gc3VidHJhY3QgMSBpbiBhbGwgY2FzZXMsIG5vdCBv
+bmx5IHdoZW4gcmVxIGJ3ID09DQo+YXZhaWwgYncuDQo+DQpFeHBsaWNpdCBzdWJ0cmFjdGlvbiBi
+eSAxIGlzIG5vdCBtZW50aW9uZWQgYW55d2hlcmUNClRoZXJlIGlzIGEgaGludCBvZiBzdWItb3B0
+aW1hbCBwZXJmb3JtYW5jZSB3aGVuIHZzIGVxdWFscyA2NC4gSG93ZXZlciBuZWVkIHRvIGNvbmZp
+cm0gZnJvbSBzaW11bGF0aW9ucy4NCg0KPj4gVGhpcmQsIGlzIGFib3V0IHRoZSBsaW5lX3RocmVz
+aG9sZCBjYWxjdWxhdGlvbiBVbmxpa2UgVFVfU0laRSBhbmQNCj4+IFZhbGlkX1N5bWJvbHMsIGxp
+bmVfdGhyZXNob2xkIGlzIGltcGxlbWVudGF0aW9uIGRlcGVuZGVudA0KPj4NCj4+IENETlMgTUhE
+UCByZWdpc3RlciBzcGVjcyBnaXZlcyB0aGUgZGVmaW5pdGlvbiBhcyAiIFZpZGVvIEZJRk8gbGF0
+ZW5jeQ0KPnRocmVzaG9sZCINCj4+IEJpdHMgNTowLCBOYW1lICJjZmdfYWN0aXZlX2xpbmVfdHJl
+c2giLCBEZXNjcmlwdGlvbiAiVmlkZW8gRmlmbyBMYXRlbmN5DQo+dGhyZXNob2xkLiBEZWZpbmVz
+IHRoZSBudW1iZXIgb2YgRklGTyByb3dzIGJlZm9yZSByZWFkaW5nIHN0YXJ0cy4gVGhpcyBzZXR0
+aW5nDQo+ZGVwZW5kcyBvbiB0aGUgdHJhbnNtaXR0ZWQgdmlkZW8gZm9ybWF0IGFuZCBsaW5rIHJh
+dGUuIg0KPj4NCj4+IFRoaXMgcGFyYW1ldGVyIGlzIHRoZSBUaHJlc2hvbGQgb2YgdGhlIEZJRk8u
+IEZvciBvcHRpbWFsIHBlcmZvcm1hbmNlDQo+KGNvbnNpZGVyaW5nIGVxdWFsIHdyaXRlIGFuZCBy
+ZWFkIGNsb2NrKSB3ZSBub3JtYWxseSBwdXQgdGhlIHRocmVzaG9sZCBpbiB0aGUNCj5taWQgb2Yg
+dGhlIEZJRk8uDQo+PiBIZW5jZSB0aGUgcmVzZXQgdmFsdWUgaXMgZml4ZWQgYXMgMzIuDQo+PiBT
+aW5jZSBzeW1ib2wgRklGTyBpcyBhY2Nlc3NlZCBieSBQeGwgY2xvY2sgYW5kIFN5bWJvbCBMaW5r
+IENsb2NrIHRoZQ0KPj4gVGhyZXNob2xkIGlzIHNldCB0byBhIHZhbHVlIHdoaWNoIGlzIGRlcGVu
+ZGVudCBvbiB0aGUgcmF0aW8gb2YgdGhlc2UNCj4+IGNsb2Nrcw0KPj4NCj4+IGxpbmVfdGhyZXNo
+b2xkID0gZnVsbF9maWZvIC0gZmlmb19yYXRpb19kdWVfdG9fY2xvY2tfZGlmZiArIDIgd2hlcmUs
+DQo+PiBmdWxsX2ZpZm8gPSAodnMrMSkgKiAoOC9icHApIGZpZm9fcmF0aW9fZHVlX3RvX2Nsb2Nr
+X2RpZmYgPSAoKHZzKzEpICoNCj4+IHB4bGNsb2NrL21oZHAtPmxpbmsucmF0ZSAtIDEpIC8gbWhk
+cC0+bGluay5udW1fbGFuZXMNCj4+DQo+PiBOb3RlIHRoYXQgbGluZV90aHJlc2hvbGQgY2FuIHRh
+a2UgYSBtYXggdmFsdWUgb2YgNjMNCj4NCj5UaGF0IGRvZXNuJ3QgcmVzdWx0IGluIGFueXRoaW5n
+IHNlbnNpYmxlLiA4L2JwcCBpcyBhbHdheXMgMC4NCg0KQ29uc2lkZXIgYWJvdmUgc3RhdGVtZW50
+cyBhcyBwc2V1ZG9jb2RlLiBGb3IgaW50ZWdlciBkaXZpc2lvbiB3ZSBuZWVkIHNjYWxlIHVwIGxp
+a2UgaXQgd2FzIHNjYWxlZCBieSA1IGJpdHMgaW4gdGhlIG9yaWdpbmFsIGNvZGUNCkFuZCBoZXJl
+IDgvYnBwID0gMQ0KPg0KPiBUb21pDQo+DQo+LS0NCj5UZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5k
+IE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4NCj5ZLXR1bm51cy9CdXNpbmVz
+cyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQ0K
