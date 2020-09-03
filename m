@@ -6,103 +6,107 @@ X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9935C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E011CC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C161720709
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E7820709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:59:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbgICR7L (ORCPT
+        id S1728975AbgICR7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 13:59:11 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:45298 "EHLO pegase1.c-s.fr"
+        Thu, 3 Sep 2020 13:59:18 -0400
+Received: from mga18.intel.com ([134.134.136.126]:1301 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbgICR7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 13:59:08 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4Bj7pv2kRxz9vG1d;
-        Thu,  3 Sep 2020 19:59:03 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id GpPnJOAGb8-M; Thu,  3 Sep 2020 19:59:03 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bj7pv1bKMz9vG1Z;
-        Thu,  3 Sep 2020 19:59:03 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 03E038B805;
-        Thu,  3 Sep 2020 19:59:05 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id gRZ56r8LcyT0; Thu,  3 Sep 2020 19:59:04 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6AC828B803;
-        Thu,  3 Sep 2020 19:59:02 +0200 (CEST)
-Subject: Re: [PATCH 1/2] dma-mapping: introduce
- dma_get_seg_boundary_nr_pages()
-To:     Christoph Hellwig <hch@lst.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-ia64@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, sparclinux@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Helge Deller <deller@gmx.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
+        id S1726327AbgICR7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 13:59:17 -0400
+IronPort-SDR: Zey8bhnXoWmUpAaat3pVpAK6f3SZOPQBi8xZwhy83WX+eZ99nSpcrQVUuI5IJ8uZmy+pQ3cntM
+ 26sdud4xUmZg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="145329662"
+X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
+   d="scan'208";a="145329662"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 10:59:16 -0700
+IronPort-SDR: X6hOgUBXuT53zGBETVRIl8Y3udPYgeOjMvy4EgfTvR+oR8iOyOvL0gprGjnPMNJMYyxw+50upa
+ fFrRD+sU+TdQ==
+X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
+   d="scan'208";a="334548855"
+Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.209.173.133]) ([10.209.173.133])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 10:59:15 -0700
+Subject: Re: [PATCH v11 6/9] x86/cet: Add PTRACE interface for CET
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Jann Horn <jannh@google.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, schnelle@linux.ibm.com,
-        hca@linux.ibm.com, Nicolin Chen <nicoleotsuka@gmail.com>,
-        ink@jurassic.park.msu.ru, Thomas Gleixner <tglx@linutronix.de>,
-        gerald.schaefer@linux.ibm.com, rth@twiddle.net,
-        Tony Luck <tony.luck@intel.com>, linux-parisc@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-alpha@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20200901221646.26491-1-nicoleotsuka@gmail.com>
- <20200901221646.26491-2-nicoleotsuka@gmail.com>
- <CAHp75VcVJBSnPQ6NfdF8FdEDfM+oQ=Sr+cH5VGX4SrAqrgpf-g@mail.gmail.com>
- <20200903161252.GA24841@lst.de>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <7e1c3632-0917-0892-c1ca-8048674a3b05@csgroup.eu>
-Date:   Thu, 3 Sep 2020 19:53:07 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+        kernel list <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <46e42e5e-0bca-5f3f-efc9-5ab15827cc0b@intel.com>
+ <40BC093A-F430-4DCC-8DC0-2BA90A6FC3FA@amacapital.net>
+ <b3809dd7-8566-0517-2389-8089475135b7@intel.com>
+ <88261152-2de1-fe8d-7ab0-acb108e97e04@intel.com>
+ <1b51d89c-c7de-2032-df23-e138d1369ffa@intel.com>
+ <CALCETrUq3xiHV2xOZV-FD_de_P_TL-Bs91XT+F+79psBfigCSg@mail.gmail.com>
+ <21491d05-6306-0a6f-58a7-8bf29feae8c7@intel.com>
+ <CALCETrXJkXXDF=tdu3KBHgzDO+E-HhqMk9Ttixgk4WX_PLPDJw@mail.gmail.com>
+ <8fcde9bb-284f-f089-96d3-702f501a6258@intel.com>
+From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Message-ID: <2a58982b-8a69-1280-86ec-d0b70ede4453@intel.com>
+Date:   Thu, 3 Sep 2020 10:59:14 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20200903161252.GA24841@lst.de>
+In-Reply-To: <8fcde9bb-284f-f089-96d3-702f501a6258@intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 03/09/2020 à 18:12, Christoph Hellwig a écrit :
-> On Thu, Sep 03, 2020 at 01:57:39PM +0300, Andy Shevchenko wrote:
->>> +{
->>> +       if (!dev)
->>> +               return (U32_MAX >> page_shift) + 1;
->>> +       return (dma_get_seg_boundary(dev) >> page_shift) + 1;
->>
->> Can it be better to do something like
->>    unsigned long boundary = dev ? dma_get_seg_boundary(dev) : U32_MAX;
->>
->>    return (boundary >> page_shift) + 1;
->>
->> ?
+On 9/3/2020 9:42 AM, Dave Hansen wrote:
+> On 9/3/20 9:32 AM, Andy Lutomirski wrote:
+>>> Taking the config register out of the init state is illogical, as is
+>>> writing to SSP while the config register is in its init state.
+>> What's so special about the INIT state?  It's optimized by XSAVES, but
+>> it's just a number, right?  So taking the register out of the INIT
+>> state is kind of like saying "gdb wanted to set xmm0 to (0,0,0,1), but
+>> it was in the INIT state to begin with", right?
 > 
-> I don't really see what that would buy us.
+> Yeah, that's a good point.  The init state shouldn't be special, as the
+> hardware is within its right to choose not to use the init optimization
+> at any time.
 > 
+Then, I would suggest changing get_xsave_addr() to return non-null for 
+the INIT state case.  For the other two cases, it still returns NULL. 
+But this also requires any write to INIT states to set xstate_bv bits 
+properly.  This would be a pitfall for any code addition later on.
 
-I guess it would avoid the duplication of    >> page_shift) + 1
-
-Christophe
+Looking at this another way.  Would it be better for the debugger to get 
+an error and then to set the MSR directly first (vs. changing the XSAVES 
+INIT state first)?
