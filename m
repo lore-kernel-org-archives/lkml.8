@@ -2,151 +2,114 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2AAC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C43BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 209892137B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:16:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="oi4BCKxJ";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="duOw6gOr"
+	by mail.kernel.org (Postfix) with ESMTP id 626BA20767
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgICKQj (ORCPT
+        id S1726891AbgICKTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 06:16:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgICKQi (ORCPT
+        Thu, 3 Sep 2020 06:19:02 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34568 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbgICKS5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:16:38 -0400
-X-Greylist: delayed 556 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 03 Sep 2020 03:16:37 PDT
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [IPv6:2001:67c:2050::465:103])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C576C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 03:16:37 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4BhxLV20rdzKmhM;
-        Thu,  3 Sep 2020 12:07:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
-        content-disposition:content-type:content-type:mime-version
-        :message-id:subject:subject:from:from:date:date:received; s=
-        mail20150812; t=1599127631; bh=uPRu15iu9NZFBlW05yO/MFmr1prkiYcom
-        8kWWbBofgY=; b=oi4BCKxJ6h84IxGnDVzSeP32+I8N/A+HLERJoy308Gj2HDWYB
-        5aH88uxpWrchOfeVbTIkWQT+0e7gtGBW+C8QBQWtjm2BD3rz+ZZQr5JfENUwLVrl
-        QEFBAYFSYjQIDzh7CEYarmL/AzCpJap9y/Gv7HtJREf3TdIVH1mXq1xCzCSsrtWy
-        dhtNgHkMozM/X3uoUUvDXZYsUc3TbFLSK1drY+oSXzlhd8GHyNnX3wI7dbYtgtLi
-        dM5XYgZ3167Cb4vZiBT1VuWaUPZc22jPndRpV++qauCbYm7SMcsKAKHaN5LHdLGf
-        0rkVOSvuzVp80TKcEJBgPx+Oz0PwJ9nswpOJg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1599127632;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=uRunYgfPTMbFCOkTvboIdP7wPVCW0P5BS85r7326lm0=;
-        b=duOw6gOraQwlvpOMHymG+F/qxE38L2Ht8unce3RYesX29vS47pvNeLllflXinI0y8V/ZGg
-        nNplafFucsyWP2amwPS6S28RCE4LFncLs/KBPoOxV2yW2Jpv7WRmK3NYmEuRW1JrCJECvG
-        CG3hIpDwDvpRjGxki/fOUq3vfnmSa9av4GhGKNI6kMTfnQ3HCpfVQ8T1OdVdbj5/k/724Z
-        OApWFGQcrxbUYrlttflHeRt6AN+MX08+80rOzADTTU1bqTXP/BGTLyMvnIhz3TAOr3iumq
-        tBoJrNht9X/WCOOx/+ooHaLxcLkrA0rIbPJ/H40OTElRIPkfcY7UacrvuGa96g==
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id klCFu_Vvn-y3; Thu,  3 Sep 2020 12:07:11 +0200 (CEST)
-Date:   Thu, 3 Sep 2020 12:07:08 +0200
-From:   Wilken Gottwalt <wilken.gottwalt@mailbox.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH] dt-bindings: arm: sunxi: update H2+/H3 cpu clocks
-Message-ID: <20200903100708.GA466735@monster.powergraphx.local>
+        Thu, 3 Sep 2020 06:18:57 -0400
+Received: by mail-oi1-f195.google.com with SMTP id z22so2609053oid.1;
+        Thu, 03 Sep 2020 03:18:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/K2TceG+YMiMk03lA1/MkZv11rftVfSaLBq2a+jxQc8=;
+        b=qaaBS6RtHt1XYsqBC1a7I57NwwAEXblT8/S9by8t2/hUFF0xKlgoJv6z2P7QMLw7AX
+         Y0XXBb/XwDLGowjUZvpiRNjceI1s5ZWDXm0YIQKaULmI11vEXkWuoI5T8g67Bn626I6S
+         pujx5ZtFZLfR9uXLSi+EAuxNV1UCN8Q6Rb0xcbZbnEdiJJtSatq9omYuUOyodHGbtpxn
+         qLvw0ATUW6qjizwkzGp99dQpOMlVcojra82vEp/79Xp4/5CRrKda8E70ZdGLzisoRzXl
+         1zHXjtjIlu8xnQ5y3sTuBmzP2o+q2xhOSUpmbuKbQULdS5gC0+lbCArp3ayXsXoL031A
+         jjeQ==
+X-Gm-Message-State: AOAM5319hro6XSn7ACOjCMX5KEGuGI9UVKfdaqMNG5b2/dJ/JRUUhGqv
+        IPAFiLxfHdsA8xUume6SV4Hpp7DW79BRlJaUBY+rQG2fP0A=
+X-Google-Smtp-Source: ABdhPJygFHNDUkjk3+rmdBnoZmAJdF/YWtr4NhfoiZrjCH9Eq7jvuwgTPXwEDXAMPSmAWyXJS+rtQBViBj54DoQym+g=
+X-Received: by 2002:aca:52d6:: with SMTP id g205mr1540672oib.54.1599128336542;
+ Thu, 03 Sep 2020 03:18:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-MBO-SPAM-Probability: 
-X-Rspamd-Score: -2.91 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 32FD91268
-X-Rspamd-UID: 206056
+References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200825162718.5838-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200825162718.5838-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 3 Sep 2020 12:18:45 +0200
+Message-ID: <CAMuHMdVVvDEq-GSsPDrx09TCfGCWkNQvGYrNWP4gK2=63G2z1w@mail.gmail.com>
+Subject: Re: [PATCH 1/4] ARM: dts: r8a7742-iwg21d-q7: Enable PCIe Controller
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change H2+/H3 clocks to 8 steps from 528 MHz up to 1200 MHz to support a
-more fine-grained powersave setup. The SoCs are made for 1296 MHz, so
-these clocks are still in a safe range. Tested on a NanoPi Duo and
-OrangePi Zero.
+Hi Prabhakar,
 
-Signed-off-by: Wilken Gottwalt <wilken.gottwalt@mailbox.org>
----
- arch/arm/boot/dts/sun8i-h3.dtsi | 34 +++++++++++++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
+On Tue, Aug 25, 2020 at 6:28 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Enable PCIe Controller and set PCIe bus clock frequency.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 4e89701df91f..5517fcc02b7d 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -48,23 +48,53 @@ cpu0_opp_table: opp_table0 {
- 		compatible = "operating-points-v2";
- 		opp-shared;
- 
--		opp-648000000 {
--			opp-hz = /bits/ 64 <648000000>;
-+		opp-528000000 {
-+			opp-hz = /bits/ 64 <528000000>;
-+			opp-microvolt = <1020000 1020000 1300000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
-+		opp-624000000 {
-+			opp-hz = /bits/ 64 <624000000>;
- 			opp-microvolt = <1040000 1040000 1300000>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
- 
-+		opp-720000000 {
-+			opp-hz = /bits/ 64 <720000000>;
-+			opp-microvolt = <1060000 1060000 1300000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
- 		opp-816000000 {
- 			opp-hz = /bits/ 64 <816000000>;
- 			opp-microvolt = <1100000 1100000 1300000>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
- 
-+		opp-912000000 {
-+			opp-hz = /bits/ 64 <912000000>;
-+			opp-microvolt = <1140000 1140000 1300000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
- 		opp-1008000000 {
- 			opp-hz = /bits/ 64 <1008000000>;
- 			opp-microvolt = <1200000 1200000 1300000>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
-+
-+		opp-1104000000 {
-+			opp-hz = /bits/ 64 <1104000000>;
-+			opp-microvolt = <1240000 1240000 1300000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <1300000 1300000 1300000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
- 	};
- 
- 	cpus {
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.10.
+
+One thing to double-check below.
+
+> --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> @@ -238,6 +238,18 @@
+>         /* status = "okay"; */
+>  };
+>
+> +&pcie_bus_clk {
+> +       clock-frequency = <100000000>;
+> +};
+> +
+> +&pciec {
+> +       /* SW2[6] determines which connector is activated
+> +        * ON = PCIe X4 (connector-J7)
+> +        * OFF = mini-PCIe (connector-J26)
+
+The table on page 14 says it's the other way around.
+
+According to the CBTL02042ABQ datasheet, PCIe_SEL = low
+selects the first channel (PCIe x4), while PCIe_SEL = high selects the
+second channel (mini-PCIe).
+Enabling the switch ties the signal low, so the table must be wrong.
+
+> +        */
+> +       status = "okay";
+> +};
+> +
+>  &pfc {
+>         avb_pins: avb {
+>                 groups = "avb_mdio", "avb_gmii";
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.28.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
