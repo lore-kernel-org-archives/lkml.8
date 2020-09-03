@@ -2,146 +2,185 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE5FC2BC84
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FF8C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C734208C7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:12:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599171147;
-	bh=kWp2jy1cl38XtJEa2J7tj4Dfu/Rm93sjy3IsxSOhjdk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NAo7Wod6wTKFFu5zvwiRAm5mwgtSqzLA10hnIjK+ly+c2zMjpDx3ykRzkEgqdEaT6
-	 uBNSsAWyeiNt7q3wb271iroAPudxRdhkJmT4bSOmAzmfyGJhkAKQD3lyMtckX54ZjI
-	 dx4u7Ext0w1ZJv9WK+SoWRqJg/CgJ9Z+OUtDzabk=
+	by mail.kernel.org (Postfix) with ESMTP id 8344D20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:12:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ByB0e8PB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbgICWM0 (ORCPT
+        id S1729438AbgICWMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:12:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbgICWMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:12:23 -0400
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 502C020DD4;
-        Thu,  3 Sep 2020 22:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599171142;
-        bh=kWp2jy1cl38XtJEa2J7tj4Dfu/Rm93sjy3IsxSOhjdk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=q95uRIFMtQEFAq7kDesYZrFOttACnICmuo00MquGyIFu+v88cWsaya/Xhuh3DH+GX
-         lL7ZKPFBCMZkEcqsE4w2LVKmxHoz7Osz4yY4DYQIxVp5JImc0QUCuqlkdPWisfWele
-         uw1HB/bIxj3wrcIHp/vxB2i4ReLaDLwVuHmZCmQY=
-Received: by mail-ot1-f44.google.com with SMTP id g10so4150831otq.9;
-        Thu, 03 Sep 2020 15:12:22 -0700 (PDT)
-X-Gm-Message-State: AOAM533GR0M+5JyA8xDJBeucKIqlBmbpySW67xSMgfQeDSj91HB3SVts
-        7fpjJgbcI4zEckZjNCLxkjgGnq/NkOu+NqOmYg==
-X-Google-Smtp-Source: ABdhPJz61ghK3HLBNa4m7HkLBA3p58WrqZyuBgtMUBvuBzBFvzHhgwPpfLk6CFGDI1jTJPNvgjpxjr8y+wdNBfWxRPM=
-X-Received: by 2002:a05:6830:1008:: with SMTP id a8mr3111655otp.107.1599171141596;
- Thu, 03 Sep 2020 15:12:21 -0700 (PDT)
+        Thu, 3 Sep 2020 18:12:55 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22708 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728309AbgICWMy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 18:12:54 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 083M2I4g088162;
+        Thu, 3 Sep 2020 18:12:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
+ cc : subject : in-reply-to : date : message-id : mime-version :
+ content-type; s=pp1; bh=vfAxjaSURqVQkdPQBM6+/IzRa+Uk6OykdgGVzRffals=;
+ b=ByB0e8PBQLcON3bXwl5sX4lNJG76MDoMxpAGwYXt94MSuRVtHeYezYCwDwJV6hcoq4yi
+ rwJFqRrHIc9n9u5NBUwmtXNwz80TS4pnVyhJLiBvj14kFOMu+qZD9drJ/RqG7s79sJ/H
+ AZilOvUMjJCGGXTVGMcrMJZ2QQCCw7a6TBW9fZD0guQ/x+9jpJDcRZvTlsCIqj0bzacm
+ eTE2LfUfK6Fuvom08bTrrdSjtJMy9K1RN2X/j98vAymPtqwM2u7mfg6s2BfDeNyrBtlY
+ rvotHgOKnVi6w/fBIGXh99EKFWf65SV/veSSFbwG2FoHoXYeMRkhLKpUmgmOewuBd7FW ww== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33b8n60m1a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Sep 2020 18:12:01 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 083M2kT7090455;
+        Thu, 3 Sep 2020 18:12:00 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33b8n60m0y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Sep 2020 18:12:00 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 083MBYkK028762;
+        Thu, 3 Sep 2020 22:12:00 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma02wdc.us.ibm.com with ESMTP id 337ena2xht-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Sep 2020 22:11:59 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 083MBtXH30671564
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 3 Sep 2020 22:11:55 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E322A78086;
+        Thu,  3 Sep 2020 22:11:58 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6D95378083;
+        Thu,  3 Sep 2020 22:11:51 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.211.155.22])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Thu,  3 Sep 2020 22:11:51 +0000 (GMT)
+References: <20200901195029.30039-1-nramas@linux.microsoft.com>
+ <20200901195029.30039-4-nramas@linux.microsoft.com>
+User-agent: mu4e 1.4.10; emacs 27.1
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
+        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
+        vincenzo.frascino@arm.com, mark.rutland@arm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
+        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
+        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
+Subject: Re: [PATCH v5 3/3] arm64: Add IMA kexec buffer to DTB
+In-reply-to: <20200901195029.30039-4-nramas@linux.microsoft.com>
+Date:   Thu, 03 Sep 2020 19:11:48 -0300
+Message-ID: <87sgbyy0gr.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-References: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1596795922-705-6-git-send-email-hayashi.kunihiko@socionext.com>
- <CAL_Jsq+nGtrBpzNKU9+1cHYkuQ3KBHpgwZRQfDKKUMJVSx_b1A@mail.gmail.com> <ab0f7338-045c-8565-134b-757769c9235f@socionext.com>
-In-Reply-To: <ab0f7338-045c-8565-134b-757769c9235f@socionext.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 3 Sep 2020 16:12:10 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+HnaosmJgekrS-DynGvNR742m00vLN1yCiZ4YBf3T2-Q@mail.gmail.com>
-Message-ID: <CAL_Jsq+HnaosmJgekrS-DynGvNR742m00vLN1yCiZ4YBf3T2-Q@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] PCI: uniphier: Add iATU register support
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-03_14:2020-09-03,2020-09-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 malwarescore=0 impostorscore=0 spamscore=0 suspectscore=0
+ mlxscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009030189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 1:05 AM Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
+
+Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
+
+> The address and size of the current kernel's IMA measurement log
+> need to be added to the device tree's IMA kexec buffer node for
+> the log to be carried over to the next kernel on the kexec call.
 >
-> On 2020/08/18 1:48, Rob Herring wrote:
-> > On Fri, Aug 7, 2020 at 4:25 AM Kunihiko Hayashi
-> > <hayashi.kunihiko@socionext.com> wrote:
-> >>
-> >> This gets iATU register area from reg property. In Synopsys DWC version
-> >> 4.80 or later, since iATU register area is separated from core register
-> >> area, this area is necessary to get from DT independently.
-> >>
-> >> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> >> ---
-> >>   drivers/pci/controller/dwc/pcie-uniphier.c | 5 +++++
-> >>   1 file changed, 5 insertions(+)
-> >>
-> >> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> >> index 55a7166..93ef608 100644
-> >> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> >> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> >> @@ -471,6 +471,11 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
-> >>          if (IS_ERR(priv->pci.dbi_base))
-> >>                  return PTR_ERR(priv->pci.dbi_base);
-> >>
-> >> +       priv->pci.atu_base =
-> >> +               devm_platform_ioremap_resource_byname(pdev, "atu");
-> >> +       if (IS_ERR(priv->pci.atu_base))
-> >> +               priv->pci.atu_base = NULL;
-> >
-> > Keystone has the same 'atu' resource setup. Please move its code to
-> > the DW core and use that.
+> Add the IMA measurement log buffer properties to the device tree for
+> ARM64 and reserve the memory for storing the IMA log.
+> Update CONFIG_KEXEC_FILE to select CONFIG_HAVE_IMA_KEXEC to
+> indicate that the IMA measurement log information is present in
+> the device tree.
 >
-> There are some platforms that pci.atu_base is set by other way.
-> The 'atu' code shouldn't be conflicted with the following existing code.
-
-No, it's not a conflict but needless duplication.
-
->    drivers/pci/controller/dwc/pci-keystone.c:              atu_base = devm_platform_ioremap_resource_byname(pdev, "atu");
->    drivers/pci/controller/dwc/pci-keystone.c:              pci->atu_base = atu_base;
->    drivers/pci/controller/dwc/pcie-designware.c:                   pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
->    drivers/pci/controller/dwc/pcie-intel-gw.c:     pci->atu_base = pci->dbi_base + data->pcie_atu_offset;
-
-This one should have had an 'atu' region in DT.
-
->    drivers/pci/controller/dwc/pcie-tegra194.c:     pci->atu_base = devm_ioremap_resource(dev, atu_dma_res);
-
-Unfortunately, a different name was used. That is the mess which is
-the DW PCI controller.
-
+> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> ---
+>  arch/arm64/Kconfig                     |  1 +
+>  arch/arm64/kernel/machine_kexec_file.c | 15 +++++++++++++++
+>  2 files changed, 16 insertions(+)
 >
-> So I'm not sure where to move the code in the DW core.
-> Is there any idea?
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 6d232837cbee..9f03c8245e5b 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1077,6 +1077,7 @@ config KEXEC
+>  config KEXEC_FILE
+>  	bool "kexec file based system call"
+>  	select KEXEC_CORE
+> +	select HAVE_IMA_KEXEC
+>  	help
+>  	  This is new version of kexec system call. This system call is
+>  	  file based and takes file descriptors as system call argument
+> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> index 361a1143e09e..0fe3d629eefe 100644
+> --- a/arch/arm64/kernel/machine_kexec_file.c
+> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> @@ -136,6 +136,21 @@ static int setup_dtb(struct kimage *image,
+>  				FDT_PROP_KASLR_SEED);
+>  	}
+>  
+> +	/* add ima-kexec-buffer */
+> +	if (image->arch.ima_buffer_size > 0) {
+> +		ret = fdt_appendprop_addrrange(dtb, 0, off,
+> +				FDT_PROP_IMA_KEXEC_BUFFER,
+> +				image->arch.ima_buffer_addr,
+> +				image->arch.ima_buffer_size);
+> +		if (ret)
+> +			return (ret == -FDT_ERR_NOSPACE ? -ENOMEM : -EINVAL);
+> +
+> +		ret = fdt_add_mem_rsv(dtb, image->arch.ima_buffer_addr,
+> +				      image->arch.ima_buffer_size);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+>  	/* add rng-seed */
+>  	if (rng_is_initialized()) {
+>  		void *rng_seed;
 
-You just need this and then remove the keystone code:
+I just noticed one more thing this code isn't doing compared to the
+powerpc version (sorry to bring these issues piecemeal, I didn't realize
+this before):
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c
-b/drivers/pci/controller/dwc/pcie-designware.c
-index b723e0cc41fb..680084467447 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -556,6 +556,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
-                                       dw_pcie_iatu_unroll_enabled(pci))) {
-                pci->iatu_unroll_enabled = true;
-                if (!pci->atu_base)
-+                       pci->atu_base =
-devm_platform_ioremap_resource_byname(pdev, "atu");
-+               if (IS_ERR(pci->atu_base))
-                        pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
-        }
-        dev_dbg(pci->dev, "iATU unroll: %s\n", pci->iatu_unroll_enabled ?
+You're not checking whether there already is a device tree property and
+corresponding memory reservation for an IMA kexec buffer that the
+currently running kernel might have received from a previous kernel. In
+that case, this code will do the wrong thing because
+fdt_appendprop_addrrange() will append the range to the existing
+property, which is not what you want. You'll also have a memory
+reservation entry for a stale IMA kexec buffer, which just wastes
+memory.
+
+So one thing you need to do, whether or not there's an IMA kexec buffer
+to be passed to the next kernel, is to remove any existing
+FDT_PROP_IMA_KEXEC_BUFFER property and also its corresponding memory
+reservation, so that you avoid accumulating stale memory reservations
+for non-existing IMA kexec buffers from previous kexecs.
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
