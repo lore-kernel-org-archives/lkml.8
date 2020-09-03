@@ -2,116 +2,111 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFACC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7C0C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC5920716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D4EB20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgICOth (ORCPT
+        id S1729427AbgICOtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:49:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:34558 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729161AbgICOTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:19:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7BC11045;
-        Thu,  3 Sep 2020 07:19:17 -0700 (PDT)
-Received: from bogus (unknown [10.57.4.218])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDCF03F71F;
-        Thu,  3 Sep 2020 07:19:15 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 15:19:09 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        dietmar.eggemann@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        valentin.schneider@arm.com, linux-pm@vger.kernel.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/5] cpufreq: report whether cpufreq supports
- Frequency Invariance (FI)
-Message-ID: <20200903141909.GA6492@bogus>
-References: <20200901205549.30096-1-ionela.voinescu@arm.com>
- <20200901205549.30096-4-ionela.voinescu@arm.com>
- <20200902132838.GF25462@bogus>
- <20200903134508.GB29370@arm.com>
+        Thu, 3 Sep 2020 10:49:52 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3152 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729085AbgICOTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:19:03 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id A7780D5446FE09AD0058;
+        Thu,  3 Sep 2020 22:18:52 +0800 (CST)
+Received: from [10.174.61.242] (10.174.61.242) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Thu, 3 Sep 2020 22:18:52 +0800
+Subject: Re: [PATCH net 3/3] hinic: fix bug of send pkts while setting
+ channels
+To:     Eric Dumazet <eric.dumazet@gmail.com>, <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
+        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
+References: <20200902094145.12216-1-luobin9@huawei.com>
+ <20200902094145.12216-4-luobin9@huawei.com>
+ <fa78a6e8-c21e-ca4a-e40b-4109fb8a78d5@gmail.com>
+From:   "luobin (L)" <luobin9@huawei.com>
+Message-ID: <533ff752-f9eb-7afb-66aa-48e411ef6040@huawei.com>
+Date:   Thu, 3 Sep 2020 22:18:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903134508.GB29370@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <fa78a6e8-c21e-ca4a-e40b-4109fb8a78d5@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.61.242]
+X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 02:45:08PM +0100, Ionela Voinescu wrote:
-> Hi Sudeep,
+On 2020/9/2 18:16, Eric Dumazet wrote:
 > 
-> Thank you for your review here and for the other patches.
 > 
-> On Wednesday 02 Sep 2020 at 14:28:38 (+0100), Sudeep Holla wrote:
-> [..]
-> > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > index 4d5fe777184a..570bf2ebe9d4 100644
-> > > --- a/drivers/cpufreq/cpufreq.c
-> > > +++ b/drivers/cpufreq/cpufreq.c
-> > > @@ -61,6 +61,12 @@ static struct cpufreq_driver *cpufreq_driver;
-> > >  static DEFINE_PER_CPU(struct cpufreq_policy *, cpufreq_cpu_data);
-> > >  static DEFINE_RWLOCK(cpufreq_driver_lock);
-> > >  
-> > > +static DEFINE_STATIC_KEY_FALSE(cpufreq_freq_invariance);
-> > > +bool cpufreq_supports_freq_invariance(void)
-> > > +{
-> > > +	return static_branch_likely(&cpufreq_freq_invariance);
-> > > +}
-> > > +
-> > >  /* Flag to suspend/resume CPUFreq governors */
-> > >  static bool cpufreq_suspended;
-> > >  
-> > > @@ -2720,6 +2726,15 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
-> > >  	cpufreq_driver = driver_data;
-> > >  	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
-> > >  
-> > > +	/*
-> > > +	 * Mark support for the scheduler's frequency invariance engine for
-> > > +	 * drivers that implement target(), target_index() or fast_switch().
-> > > +	 */
-> > > +	if (!cpufreq_driver->setpolicy) {
-> > > +		static_branch_enable_cpuslocked(&cpufreq_freq_invariance);
-> > > +		pr_debug("supports frequency invariance");
-> > > +	}
-> > > +
-> > >  	if (driver_data->setpolicy)
-> > 
-> > [super nit] while I understand cpufreq_driver = driver_data, it looks odd
-> > if 2 consecutive statements refer it with different variables. Or am I
-> > confusing myself hugely.
-> > 
+> On 9/2/20 2:41 AM, Luo bin wrote:
+>> When calling hinic_close in hinic_set_channels, netif_carrier_off
+>> and netif_tx_disable are excuted, and TX host resources are freed
+>> after that. Core may call hinic_xmit_frame to send pkt after
+>> netif_tx_disable within a short time, so we should judge whether
+>> carrier is on before sending pkt otherwise the resources that
+>> have already been freed in hinic_close may be accessed.
+>>
+>> Fixes: 2eed5a8b614b ("hinic: add set_channels ethtool_ops support")
+>> Signed-off-by: Luo bin <luobin9@huawei.com>
+>> ---
+>>  drivers/net/ethernet/huawei/hinic/hinic_tx.c | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+>> index a97498ee6914..a0662552a39c 100644
+>> --- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+>> +++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+>> @@ -531,6 +531,11 @@ netdev_tx_t hinic_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
+>>  	struct hinic_txq *txq;
+>>  	struct hinic_qp *qp;
+>>  
+>> +	if (unlikely(!netif_carrier_ok(netdev))) {
+>> +		dev_kfree_skb_any(skb);
+>> +		return NETDEV_TX_OK;
+>> +	}
+>> +
+>>  	txq = &nic_dev->txqs[q_id];
+>>  	qp = container_of(txq->sq, struct hinic_qp, sq);
+>>  
+>>
 > 
-> No, you are right. If you look at the rest of the register function,
-> after cpufreq_driver = driver_data, both driver_data and cpufreq_driver
-> are used. For me using cpufreq_driver seemed more natural as after being
-> assigned driver_data, it will continue to be used after registration.
->
-
-Ah OK, I haven't seen the whole file/function, just looked at the patch.
-
-> If it's alright with you I won't make this change for now. It's possible
-> that a better solution is to change the other occurrences of either
-> cpufreq_driver or driver_data in a separate patch, to make things
-> consistent across the function.
+> Adding this kind of tests in fast path seems a big hammer to me.
 > 
-
-I am fine to keep it as is, hence I mentioned it as super nit. If there
-are other occurrences, then better to take it up separately.
-
--- 
-Regards,
-Sudeep
+> See https://marc.info/?l=linux-netdev&m=159903844423389&w=2   for a similar problem.
+> 
+> Normally, after hinic_close() operation, no packet should be sent by core networking stack.
+> 
+> Trying to work around some core networking issue in each driver is a dead end.
+Thanks for your review. I agree with what you said. Theoretically, core can't call ndo_start_xmit
+to send packet after netif_tx_disable called by hinic_close because __QUEUE_STATE_DRV_XOFF bit is set
+and this bit is protected by __netif_tx_lock but it does call hinic_xmit_frame after netif_tx_disable
+in my debug message. I'll try to figure out why and fix it. It seems like that the patch from
+https://marc.info/?l=linux-netdev&m=159903844423389&w=2 can't fix this problem.
+> 
+> 
+> 
+> 
+> 
+> 
+> .
+> 
