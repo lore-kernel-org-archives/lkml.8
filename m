@@ -2,98 +2,95 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7242C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A30DC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4BE2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA09720716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:52:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eJE5fFt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbgICOvy (ORCPT
+        id S1729058AbgICOwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:51:54 -0400
-Received: from jptosegrel01.sonyericsson.com ([124.215.201.71]:11712 "EHLO
-        JPTOSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729210AbgICOPQ (ORCPT
+        Thu, 3 Sep 2020 10:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729020AbgICONn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:15:16 -0400
-From:   Peter Enderborg <peter.enderborg@sony.com>
-To:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     Peter Enderborg <peter.enderborg@sony.com>
-Subject: [PATCH] crypto: Mark tfm buffer as non leak.
-Date:   Thu, 3 Sep 2020 15:40:07 +0200
-Message-ID: <20200903134007.2769-1-peter.enderborg@sony.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 3 Sep 2020 10:13:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E6DC061246
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 07:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=k1S85AjwbKHwjD2iukGj6VnkOZ5YiCsnVPYjfnzmtXg=; b=eJE5fFt5JjkgIJF1IzkfiCZYJl
+        Myfe0lwKyhTuGu8sMK1FV8Xn6HsNucoqHHNbsFcgOJk8vNvv8BmpEWSCDDELNZ8Yzp/X1NnoPV//I
+        pFV74JJ4mlZgPze4qoauoJC0HagkRAmpyLHNJbI/ysjv+ftDl+ttpbIlPw2JzEST++1SRTSCsDJfn
+        qBaVoFRR2fZrL9djLmpOjNx/cmlm6aWl7/5c8GN3mJxBs02h1oyUOmy5+8ahruf4L86TC3D7RHx0s
+        Mc7RZlcOsrLt/wzfSyK9xnvSMeobIMMaOtbXopGPP0BSoC2ZkOWh9DKNKR5A5xSkFCHI4SDtKncpS
+        pEk8l9/w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDpzC-00041T-WE; Thu, 03 Sep 2020 14:13:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2558F3011C6;
+        Thu,  3 Sep 2020 16:13:10 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 152D82BBD6A02; Thu,  3 Sep 2020 16:13:10 +0200 (CEST)
+Date:   Thu, 3 Sep 2020 16:13:10 +0200
+From:   peterz@infradead.org
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org,
+        npiggin@gmail.com, elver@google.com, jgross@suse.com,
+        paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
+        joel@joelfernandes.org, svens@linux.ibm.com, tglx@linutronix.de,
+        ulf.hansson@linaro.org, viresh.kumar@linaro.org,
+        vincent.guittot@linaro.org
+Subject: Re: [PATCH v2 11/11] lockdep,trace: Expose tracepoints
+Message-ID: <20200903141310.GY35926@hirez.programming.kicks-ass.net>
+References: <20200821084738.508092956@infradead.org>
+ <20200821085348.782688941@infradead.org>
+ <20200902035146.GA45826@roeck-us.net>
+ <20200902085636.GV1362448@hirez.programming.kicks-ass.net>
+ <e4999b75-604f-29a3-e78c-508ee6bede88@roeck-us.net>
+ <20200903140047.GD1362448@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=FfdJO626 c=1 sm=1 tr=0 a=fZcToFWbXLKijqHhjJ02CA==:117 a=reM5J-MqmosA:10 a=z6gsHLkEAAAA:8 a=L8t1L5anSuFvw26KRygA:9 a=d-OLMTCWyvARjPbQ-enb:22
-X-SEG-SpamProfiler-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903140047.GD1362448@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running kmemleak on this I got a lot of
+On Thu, Sep 03, 2020 at 04:00:47PM +0200, peterz@infradead.org wrote:
+> I stuck a tracepoint in intel_idle and had a rummage around. The below
+> seems to work for me now.
 
-unreferenced object 0xfffffff942d4ec00 (size 1024):
-  comm "init", pid 1, jiffies 4294893619 (age 17475.864s)
-  hex dump (first 32 bytes):
-    38 1d cf bd 9e ff ff ff b8 37 8b bd 9e ff ff ff  8........7......
-    78 38 8b bd 9e ff ff ff 10 00 00 00 00 00 00 00  x8..............
-  backtrace:
-    [<00000000c3c55a80>] __kmalloc+0x2cc/0x3b0
-    [<00000000c599b091>] crypto_create_tfm+0x38/0xf0
-    [<00000000d4516e51>] crypto_spawn_tfm2+0x58/0xa0
-    [<000000001bab58aa>] cryptd_skcipher_init_tfm+0x1c/0x40
-    [<0000000006748df3>] crypto_skcipher_init_tfm+0x158/0x1e0
-    [<0000000017f3270c>] crypto_create_tfm+0x54/0xf0
-    [<000000006af1de62>] crypto_alloc_tfm+0x88/0x198
-    [<000000000d8e8c03>] crypto_alloc_skcipher+0x1c/0x28
-    [<0000000085448a2a>] cryptd_alloc_skcipher+0x5c/0xb0
-    [<000000003c48c083>] simd_skcipher_init+0x24/0x68
-    [<0000000006748df3>] crypto_skcipher_init_tfm+0x158/0x1e0
-    [<0000000017f3270c>] crypto_create_tfm+0x54/0xf0
-    [<00000000d4516e51>] crypto_spawn_tfm2+0x58/0xa0
-    [<00000000b5344705>] crypto_cts_init_tfm+0x1c/0x68
-    [<0000000006748df3>] crypto_skcipher_init_tfm+0x158/0x1e0
-    [<0000000017f3270c>] crypto_create_tfm+0x54/0xf0
+Note that this will insta-kill all trace_*_rcuidle() tracepoint that are
+actually used in rcuidle.
 
-This is caused by tfm = (struct crypto_tfm *)(mem + tfmsize);
-that is keept instead of the allocated buffer in mem.
-Reference counting is done on alg.
+A git-grep seems to suggest the remaining users are:
 
-Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
----
- crypto/api.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ - arch/arm
+ - arch/arm64 -- IPI tracepoint that are ordered incorrectly in
+                 their entry code,
 
-diff --git a/crypto/api.c b/crypto/api.c
-index ed08cbd5b9d3..1a9cb6852a56 100644
---- a/crypto/api.c
-+++ b/crypto/api.c
-@@ -21,6 +21,7 @@
- #include <linux/string.h>
- #include <linux/completion.h>
- #include "internal.h"
-+#include <linux/kmemleak.h>
- 
- LIST_HEAD(crypto_alg_list);
- EXPORT_SYMBOL_GPL(crypto_alg_list);
-@@ -460,7 +461,7 @@ void *crypto_create_tfm_node(struct crypto_alg *alg,
- 
- 	if (!tfm->exit && alg->cra_init && (err = alg->cra_init(tfm)))
- 		goto cra_init_failed;
--
-+	kmemleak_not_leak(mem);
- 	goto out;
- 
- cra_init_failed:
--- 
-2.17.1
+ - runtime pm
+ - common clk -- these both need re-ordering somehow
+
+ - trace_preemptirq -- this is going to be interesting for
+                       those archs that idle with IRQs enabled
+
+ - printk -- we shouldn't be printk()-ing from idle, and if we are,
+             missing this is the least of our problems.
+
 
