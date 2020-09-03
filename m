@@ -2,93 +2,119 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B9EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0530BC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEF0820716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D272B2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:01:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qRf68gV5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMzVYFt6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbgICEok (ORCPT
+        id S1726389AbgICFBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 00:44:40 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34167 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbgICEoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 00:44:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BhpB96Z5Mz9sTC;
-        Thu,  3 Sep 2020 14:44:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599108276;
-        bh=1V5O/0020Usr89jaCP6ONufv5noCmy3GV3afK4uImmU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qRf68gV5A9ZWLDsK8V2zQIzOSRRiN1yJVLf0ZD3U96vslRaeRByM3tAS8mpJGsp3x
-         z9MsmVxAQsJgGUVxSGwz0ICxuAs+Al2dRu10ts7HSCbwBljDNl9b9OjuptmBiEHnhf
-         XdyTcpRUGyz+7p+HQXIht0R6oy3CIOtKgn7YVfZw83aqoj5OXcs/tZpcG1GWGSIL6A
-         z76td9yndL5oWIYt+tStH/V/Lu5f58N2YOakziM6HH2LRH/L861rbdQnux0HZlCXBj
-         aNC7EgnYRHyZnmioN9BDPLHWEg1Uco3WgqFYMq8xkAyD3NOhWW5opXtZEwk9bz/Gby
-         TtOS2c2vFuXOg==
-Date:   Thu, 3 Sep 2020 14:44:31 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@suse.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20200903144431.185c0d34@canb.auug.org.au>
-In-Reply-To: <20200903035108.GA3616759@gmail.com>
-References: <20200903123552.0c5d1277@canb.auug.org.au>
-        <20200903035108.GA3616759@gmail.com>
+        Thu, 3 Sep 2020 01:01:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgICFBb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 01:01:31 -0400
+Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01BD4C061244;
+        Wed,  2 Sep 2020 22:01:31 -0700 (PDT)
+Received: by mail-io1-xd31.google.com with SMTP id z25so1341121iol.10;
+        Wed, 02 Sep 2020 22:01:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VhropMQESNSMSxgIqr1ZDerfNQ9kD0plBvpn1qDMszM=;
+        b=nMzVYFt6wL+sFTiIRt+EX4YPgpv0eQNE7JufaNot1Lr+3QgrM7JZ/voUg/qQ7UbL+p
+         DQFGu5umpYZ+THfWnkJ4mXU4H4h7jITCMmeZ+hS79U8+8OwI8Z5TRXx+hMbyzC4DHb/K
+         5aNKWNw8+2M6tDNSwADL1VeJDZOaPykT8EDJepafKstZiG2xtkhfmmcVB69wrouZM7ZY
+         5am1zK3eAt82Pih+91tSc63Z+VPnOGgGbmATRryeJT17ziZG0VYHgrEabiSxD9JssVNQ
+         AFY4pFaMCvYNN1+VSpco4qt67qf/LmkFhAMXS5CLyISWgtFm7KnJu/gzO59tJ1a0ci0F
+         HsFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VhropMQESNSMSxgIqr1ZDerfNQ9kD0plBvpn1qDMszM=;
+        b=EbZ1jR0O475+3q6f1kCMg0ffByXo5jPjBPD45u8/INxBzOaSJfeu9YyBl+d8XDyxcW
+         mt6ZLQfo73mIJ+7CBZzk1bR/3UA0m+6GwIfdnYGFD1RuBFsnW50f+EmXf5hlhSFDtk++
+         TgKfBeuVTsU6qu+jqMKLTH0aGa/tF51jKciWGgXttqUBUaffc8ISObOUr5z6SQUxDjRu
+         xLGGnjmq5pHtV5uwh1y4bmu1I+Uz4g1cYhL6ZeLhf0R9uQ9sGCzkHWFUbfso+E4TU+NY
+         zrqlmcQ6XoK02zhS4UfxLTuvGQfihXy2e02YGWmrFI4ihkSFFKf+OpEoYHMlN8SjJaH+
+         D+cQ==
+X-Gm-Message-State: AOAM532QkEvUJOvBTa1LDoiewRCOJXWxRtOHeHYnKJfPZ5rEyTg8xgUY
+        +6z/Sr56In1s5NmF3SD9Rbey1v9/oqh2vCL1RPs=
+X-Google-Smtp-Source: ABdhPJxSLl08LwgQXvNl2k2JfN0eiQKtQpbmY5tdMgIWtI3pbR9WbDSPo++rGQCGHTg4BzBcS/f4SrxAilGknxK49gA=
+X-Received: by 2002:a05:6602:1589:: with SMTP id e9mr1576006iow.85.1599109289807;
+ Wed, 02 Sep 2020 22:01:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1ybp4sLvj+=6fGb+07qpFD_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
+ <20200623134259.8197-1-mzhivich@akamai.com> <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
+ <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
+ <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
+ <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com> <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
+ <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com> <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
+ <20200822032800.16296-1-hdanton@sina.com> <CACS=qqKhsu6waaXndO5tQL_gC9TztuUQpqQigJA2Ac0y12czMQ@mail.gmail.com>
+ <20200825032312.11776-1-hdanton@sina.com> <CACS=qqK-5g-QM_vczjY+A=3fi3gChei4cAkKweZ4Sn2L537DQA@mail.gmail.com>
+ <20200825162329.11292-1-hdanton@sina.com> <CACS=qqKgiwdCR_5+z-vkZ0X8DfzOPD7_ooJ_imeBnx+X1zw2qg@mail.gmail.com>
+ <CACS=qqKptAQQGiMoCs1Zgs9S4ZppHhasy1AK4df2NxnCDR+vCw@mail.gmail.com>
+ <5f46032e.1c69fb81.9880c.7a6cSMTPIN_ADDED_MISSING@mx.google.com>
+ <CACS=qq+Yw734DWhETNAULyBZiy_zyjuzzOL-NO30AB7fd2vUOQ@mail.gmail.com>
+ <20200827125747.5816-1-hdanton@sina.com> <CACS=qq+a0H=e8yLFu95aE7Hr0bQ9ytCBBn2rFx82oJnPpkBpvg@mail.gmail.com>
+In-Reply-To: <CACS=qq+a0H=e8yLFu95aE7Hr0bQ9ytCBBn2rFx82oJnPpkBpvg@mail.gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Wed, 2 Sep 2020 22:01:17 -0700
+Message-ID: <CAM_iQpV-JMURzFApp-Zhxs3QN9j=Zdf6yqwOP=E42ERDHxe6Hw@mail.gmail.com>
+Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
+To:     Kehuan Feng <kehuan.feng@gmail.com>
+Cc:     Hillf Danton <hdanton@sina.com>, Jike Song <albcamus@gmail.com>,
+        Josh Hunt <johunt@akamai.com>, Paolo Abeni <pabeni@redhat.com>,
+        Jonas Bonn <jonas.bonn@netrounds.com>,
+        Michael Zhivich <mzhivich@akamai.com>,
+        David Miller <davem@davemloft.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="0000000000002d36f305ae61a588"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1ybp4sLvj+=6fGb+07qpFD_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+--0000000000002d36f305ae61a588
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ingo,
+Hello, Kehuan
 
-On Thu, 3 Sep 2020 05:51:08 +0200 Ingo Molnar <mingo@kernel.org> wrote:
->
-> I've merged the old commit by mistake - it's removed now.
+Can you test the attached one-line fix? I think we are overthinking,
+probably all
+we need here is a busy wait.
 
-Ah, OK, thanks.
+Thanks.
 
---=20
-Cheers,
-Stephen Rothwell
+--0000000000002d36f305ae61a588
+Content-Type: text/x-patch; charset="US-ASCII"; name="qdisc-seqlock.diff"
+Content-Disposition: attachment; filename="qdisc-seqlock.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_kemc7lqb0>
+X-Attachment-Id: f_kemc7lqb0
 
---Sig_/1ybp4sLvj+=6fGb+07qpFD_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9QdK8ACgkQAVBC80lX
-0Gxq2Af+ICEIrPa/oAUr3nxWkc2JC1WBzx1cg7Do3YJm57dwoTQ2W667w45hgaFX
-yHNIYC1OxAf4x0ugIJtXmgman8HcQeQw26onbGc6wP3vZCKZTAq0HZ+4sS8oIj8y
-VwceKRfgJA22GOOWkqfWJyWTY2nIDbMNhJTpQmNoSzoIZM4CPr6ncnjAjNwjAxae
-b4rvLxjlLEvqDVTQXqfQMtBEW7xHWRxLoA0YaiTrgY7hcdDYG8JMGUyQ29TuBlgd
-CpokU6ArHPcCNh3cTQL7QqMKsxTwfqpwx9FgtvzH4EQ2nty1G3ngff2k9s6uNJqz
-AJLM/pBURMIlD/8mWkze5rdRM2/fvw==
-=Ii72
------END PGP SIGNATURE-----
-
---Sig_/1ybp4sLvj+=6fGb+07qpFD_--
+ZGlmZiAtLWdpdCBhL2luY2x1ZGUvbmV0L3NjaF9nZW5lcmljLmggYi9pbmNsdWRlL25ldC9zY2hf
+Z2VuZXJpYy5oCmluZGV4IGQ2MGU3YzM5ZDYwYy4uZmMxYmFjZGIxMDJiIDEwMDY0NAotLS0gYS9p
+bmNsdWRlL25ldC9zY2hfZ2VuZXJpYy5oCisrKyBiL2luY2x1ZGUvbmV0L3NjaF9nZW5lcmljLmgK
+QEAgLTE1Niw4ICsxNTYsNyBAQCBzdGF0aWMgaW5saW5lIGJvb2wgcWRpc2NfaXNfZW1wdHkoY29u
+c3Qgc3RydWN0IFFkaXNjICpxZGlzYykKIHN0YXRpYyBpbmxpbmUgYm9vbCBxZGlzY19ydW5fYmVn
+aW4oc3RydWN0IFFkaXNjICpxZGlzYykKIHsKIAlpZiAocWRpc2MtPmZsYWdzICYgVENRX0ZfTk9M
+T0NLKSB7Ci0JCWlmICghc3Bpbl90cnlsb2NrKCZxZGlzYy0+c2VxbG9jaykpCi0JCQlyZXR1cm4g
+ZmFsc2U7CisJCXNwaW5fbG9jaygmcWRpc2MtPnNlcWxvY2spOwogCQlXUklURV9PTkNFKHFkaXNj
+LT5lbXB0eSwgZmFsc2UpOwogCX0gZWxzZSBpZiAocWRpc2NfaXNfcnVubmluZyhxZGlzYykpIHsK
+IAkJcmV0dXJuIGZhbHNlOwo=
+--0000000000002d36f305ae61a588--
