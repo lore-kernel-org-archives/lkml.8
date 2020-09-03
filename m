@@ -2,110 +2,174 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E53C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51185C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93F01206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E01206EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:24:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="kyWZd6uS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XLwOX34M";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jc7Q/jSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728972AbgICNTv (ORCPT
+        id S1729007AbgICNUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 09:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49474 "EHLO
+        Thu, 3 Sep 2020 09:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728874AbgICMyn (ORCPT
+        with ESMTP id S1728892AbgICM5j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 08:54:43 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42DC8C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 05:54:43 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id m5so935685lfp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 05:54:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=onLl8rTDQyvNpKgJJE9dFmq94UrkQmRn/zbTPNdul+w=;
-        b=kyWZd6uSWtnkPJPjNC9/5GmYksI/3zvd739yEGMNVYRRPQ+obtq6kc0P1lySF1wLna
-         /9pVxkncaXRcO2tuJq3pvnexLY4/WEYs6tUJiejalUKE87aVDxTtE8HGZioi56/HtvGW
-         yphbM/vIdOQS1E8H5tT9vqdWIBrlZSJthYKw99V3Br+Jb4Wy1/Z14Ngc4JlLjaNb+iBN
-         xdzS5/4L9tad8h/PIo9T2VsXCmgBMNtPZPjyG+MR2avtJUVy/CwEcgRJqvxxJyZ5cc+b
-         kVEFsNzOzEK2uw81sjvtX00wvqAEmpeahxzGvmJf2FDEtGdxJK92HT48bXtJyIME/kON
-         QHxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=onLl8rTDQyvNpKgJJE9dFmq94UrkQmRn/zbTPNdul+w=;
-        b=uavog567IatFqpcP/oXG3VYq8YXiNYAypEBZb6X44YQrizrWeah7+MIHL8on2In4aC
-         c9Athof+pJzdvn/T/1GyChYRjIGcYiLqO5Rk02DNE4Xq+XtDreD3LHNAtPtFPedRag2y
-         Jvcu6DpX8k9rKtLUF3UwPC2mXSwGFazOi1hhOQkT0GA/xNIFB24rF8VZcuiyffqES4s1
-         t8HZBDF6u5DSoVo8jLO5WJ94N812L2bCmhDEr+7JZteuy1+KTEjCrdwAWMCYzhprRjEe
-         1nwCMg9fyIXMx5hZzBP3An8RuxQ5c5kuny6USejp1wRdzTGYtKBLSrX6NsAWPGXe8J78
-         xLDQ==
-X-Gm-Message-State: AOAM531ipbrGAwbaEZ+cMimhYFy2ZpNdXrWIqkTbOUThPJerexpgcsnf
-        wa0ZcgdaDIHCKDbYZRW6JQkw0g==
-X-Google-Smtp-Source: ABdhPJxLwRZ25xqjpghlAiLuT8OszHqy2R0uqqhz3VeP7cshAVmBhDNDZKmnWNKpKHq5Fjz6I8h+WA==
-X-Received: by 2002:a19:40c8:: with SMTP id n191mr1267052lfa.29.1599137681414;
-        Thu, 03 Sep 2020 05:54:41 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id l16sm595692ljb.72.2020.09.03.05.54.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 05:54:40 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 321BC102212; Thu,  3 Sep 2020 15:54:42 +0300 (+03)
-Date:   Thu, 3 Sep 2020 15:54:42 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 1/7] mm/thp: fix __split_huge_pmd_locked() for
- migration PMD
-Message-ID: <20200903125442.4no5dq7mzcdllery@box>
-References: <20200902165830.5367-1-rcampbell@nvidia.com>
- <20200902165830.5367-2-rcampbell@nvidia.com>
+        Thu, 3 Sep 2020 08:57:39 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 794DEC061244;
+        Thu,  3 Sep 2020 05:57:34 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599137845;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vuPo2hCQv8SYu4U0pyiBsvIC6jH3hb6WpU0DtzVJ3ak=;
+        b=XLwOX34MqXvN9SABiyVxcmMFknw7a5CVieo73V8pHM8SvlMKKDW1n3MX+SJRdt3It29oMP
+        BpAi8mH8pWLpe09siGZn6Wg9s7xECjKpDW1silpF8bbvwc8S8F8HmdVJf/PTMWjrr1M+ey
+        2gm6CjMJrBX3he0EyfE1o8zKHdl0WhC3DZ36nArG2JFgRv/4jwZVx1dVi+dfXLSq9pO6nJ
+        1Ah/llGOmjKaGAfsn5sqGTfG7wvZ9DGb4QQ+mvwgWMBCT0PRILm3Y6iE1z6mMtoeA5lcqS
+        mdP4Gcz0uTdD3PIJPXWcuy49In3PKaDLRsSTon1YtCTNeuIJhj6XJMRNnlHLxw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599137845;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vuPo2hCQv8SYu4U0pyiBsvIC6jH3hb6WpU0DtzVJ3ak=;
+        b=Jc7Q/jSXOOgAkG6PNMWi0mBFGibHsSx3dFMLGuGjPFT8XDC4nOu3ZiNXHdw2L/ao1y3YnZ
+        uegmYbq2bMhTXKBg==
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Maulik Shah <mkshah@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        LinusW <linus.walleij@linaro.org>, Marc Zyngier <maz@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list\:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Srinivas Rao L <lsrao@codeaurora.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v5 3/6] genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
+In-Reply-To: <CAD=FV=Ua7fLGw6JiG1rnCKpAdO1nXX4A4x1Why-LE9L_FBFe8Q@mail.gmail.com>
+References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org> <1598113021-4149-4-git-send-email-mkshah@codeaurora.org> <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com> <874koqxv6t.fsf@nanos.tec.linutronix.de> <8763521f-b121-877a-1d59-5f969dd75e51@codeaurora.org> <87y2m1vhkm.fsf@nanos.tec.linutronix.de> <CAD=FV=XXf3_tjqK14WdMuKygJptMTS+bKhH_ceiUE3wyYoCnxg@mail.gmail.com> <877dtdj042.fsf@nanos.tec.linutronix.de> <CAD=FV=Ua7fLGw6JiG1rnCKpAdO1nXX4A4x1Why-LE9L_FBFe8Q@mail.gmail.com>
+Date:   Thu, 03 Sep 2020 14:57:25 +0200
+Message-ID: <87zh67uife.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902165830.5367-2-rcampbell@nvidia.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 09:58:24AM -0700, Ralph Campbell wrote:
-> A migrating transparent huge page has to already be unmapped. Otherwise,
-> the page could be modified while it is being copied to a new page and
-> data could be lost. The function __split_huge_pmd() checks for a PMD
-> migration entry before calling __split_huge_pmd_locked() leading one to
-> think that __split_huge_pmd_locked() can handle splitting a migrating PMD.
-> However, the code always increments the page->_mapcount and adjusts the
-> memory control group accounting assuming the page is mapped.
-> Also, if the PMD entry is a migration PMD entry, the call to
-> is_huge_zero_pmd(*pmd) is incorrect because it calls pmd_pfn(pmd) instead
-> of migration_entry_to_pfn(pmd_to_swp_entry(pmd)).
-> Fix these problems by checking for a PMD migration entry.
-> 
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+On Wed, Sep 02 2020 at 13:26, Doug Anderson wrote:
+> Specifically I think it gets back to the idea that, from a device
+> driver's point of view, there isn't a separate concept of disabling an
+> IRQ (turn it off and stop tracking it) and masking an IRQ (keep track
+> of it but don't call my handler until I unmask).  As I understand it
+> drivers expect that the disable_irq() call is actually a mask and that
+> an IRQ is never fully disabled unless released by the driver.  It is a
+> little unfortunate (IMO) that the function is called disable_irq() but
+> as far as I understand that's historical.
 
-Hm. Could you remind me what codepath splits migration PMD? Maybe it
-should wait until migration is complete? We could avoid a lot of
-complexity this way.
+Yes, the naming is historical but it always meant:
 
--- 
- Kirill A. Shutemov
+Don't invoke an interrupt handler. Whether that's achieved by actually
+masking it at the interrupt chip level in hardware or by software state
+in the core does not matter from the driver perspective.
+
+>> The point is that the core suspend code disables all interrupts which
+>> are not marked as wakeup enabled automatically and reenables them after
+>> resume. So why would any driver invoke disable_irq() in the suspend
+>> function at all? Historical raisins?
+>
+> One case I can imagine: pretend that there are two power rails
+> controlling a device.  One power rail controls the communication
+> channel between the CPU and the peripheral and the other power rail
+> controls whether the peripheral is on.  At suspend time we want to
+> keep the peripheral on but we can shut down the power to the
+> communication channel.
+>
+> One way you could do this is at suspend time:
+>   disable_irq()
+>   turn_off_comm_power()
+>   enable_irq_wake()
+>
+> You'd do the disable_irq() (AKA mask your interrupt) because you'd
+> really want to make sure that your handler isn't called after you
+> turned off the communication power.  You want to leave the interrupt
+> pending/masked until you are able to turn the communications channel
+> back on and then you can query why the wakeup happened.
+
+Ok.
+
+> Now, admittedly, you could redesign the above driver to work any
+> number of different ways.  Maybe you could use the "noirq" suspend to
+> turn off your comm power or maybe you could come up with another
+> solution.  However, since the above has always worked and is quite
+> simple I guess that's what drivers use?
+
+That comm power case is a reasonable argument for having that
+sequence. So we need to make sure that the underlying interrupt chips do
+the right thing.
+
+We have the following two cases:
+
+1) irq chip does not have a irq_disable() callback and does not
+   have IRQ_DISABLE_UNLAZY set
+
+   In that case the interrupt is not masked at the hardware level. It's
+   just software state. If the interrupt fires while disabled it is
+   marked pending and actually masked at the hardware level.
+
+   Actually there is a race condition which is not handled:
+
+   disable_irq()
+   ...
+   
+   interrupt fires
+      mask and mark pending
+
+   ....
+   suspend_device_irq()
+      if (wakeup source) {
+         set_state(WAKEUP ARMED);
+         return;
+      }
+
+   That pending interrupt will not prevent the machine from going into
+   suspend and if it's an edge interrupt then an unmask in
+   suspend_device_irq() won't help. Edge interrupts are not resent in
+   hardware. They are fire and forget from the POV of the device
+   hardware.
+
+2) irq chip has a irq_disable() callback or has IRQ_DISABLE_UNLAZY set
+
+   In that case disable_irq() will mask it at the hardware level and it
+   stays that way until enable_irq() is invoked.
+
+#1 kinda works and the gap is reasonably trivial to fix in
+   suspend_device_irq() by checking the pending state and telling the PM
+   core that there is a wakeup pending.
+
+#2 Needs an indication from the chip flags that an interrupt which is
+   masked has to be unmasked when it is a enabled wakeup source.
+
+I assume your problem is #2, right? If it's #1 then UNMASK_IF_WAKEUP is
+the wrong answer.
+
+Thanks,
+
+        tglx
