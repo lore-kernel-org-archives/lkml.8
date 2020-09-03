@@ -2,67 +2,159 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91355C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC89C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6943720773
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73B92072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:59:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iZyTWfoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgICB7C (ORCPT
+        id S1727919AbgICB7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 21:59:02 -0400
-Received: from smtprelay0239.hostedemail.com ([216.40.44.239]:57856 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726177AbgICB7C (ORCPT
+        Wed, 2 Sep 2020 21:59:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgICB7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 21:59:02 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 5F42B18029587;
-        Thu,  3 Sep 2020 01:59:01 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: gun42_4f15721270a5
-X-Filterd-Recvd-Size: 1615
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  3 Sep 2020 01:59:00 +0000 (UTC)
-Message-ID: <71837114676678d44500f146a2d98bbe9e541c65.camel@perches.com>
-Subject: Re: [PATCH v2] use cpu_to_le{16,32} instead of __constant_cpu_to_*
-From:   Joe Perches <joe@perches.com>
-To:     Rene Rebe <rene@exactcode.com>, linux-kernel@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, himanshu.madhani@oracle.com
-Date:   Wed, 02 Sep 2020 18:58:59 -0700
-In-Reply-To: <20200902.232949.1343752343092794969.rene@exactcode.com>
-References: <b7719680-e451-5687-1fb7-c8c059a880d4@acm.org>
-         <2C755628-1426-4BA4-B2A3-AD059BB0F605@exactcode.com>
-         <c7daea00-410d-2073-bf52-2abda9acdf8e@acm.org>
-         <20200902.232949.1343752343092794969.rene@exactcode.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Wed, 2 Sep 2020 21:59:20 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF525C061244;
+        Wed,  2 Sep 2020 18:59:20 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id g6so681789pjl.0;
+        Wed, 02 Sep 2020 18:59:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=HvNuZt8AdbQ59bEl2yv+x8KAP+HdurnJ4QylHSI1Jw0=;
+        b=iZyTWfoL34ZD3AtkfjK4Vob+sMZOthj0FCXBVjQ69gyIn7b8LhJJhN1cTFdhFxwMmi
+         0Fab62bpQrPcLwbiD3fOqok3FDs5gE25ZwJeZ4KEAHEoZAZegu/JfeifjdKe6AsgnH1G
+         KLuzIQxuUq683FkB+bSVd422lwYW+3NU26ARFGiS4OuvOPdsk9XDo5PFQBuGd/vhyfzV
+         X4FCxLmDvvHO67KjBjXp+unjmn30XiipXoJSqM6NSGd3MuQg3QYBE8TvM9pZFmKKJICD
+         RvnH1z39804+mI71J1DFL5iWUv5vzfOwUnMh5yKONIJ3GedpOvzdfTX0Ted8bhzzAn9j
+         0IVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=HvNuZt8AdbQ59bEl2yv+x8KAP+HdurnJ4QylHSI1Jw0=;
+        b=sJdT0FEHUNsaoxwx2P7ZSfLcRCOdi/n3PMc9Zsg29MB2D5DSrPt1TsB9vwXq/MhTzd
+         whyPBt2gqCjebA1Og0me5yew1zO82YGh30RZy0YhZKIu9+BTxuUw/++mWaiZ6vtZ9eBR
+         Dq8ZVt9NReZa266Xw26w2DGxvnH2QNXBEmEJDhlgJUBnOfMZLeIajLQXtvYGibyUoxxr
+         BbRGfFF8ZJTBYryGNN4NjAbZG+SESVmNvISVapZqKmz1IoH/RJcPHOpkLw4686zW5+z4
+         AYzcsiAFfw97wY8ihLANHJ3nt21yEUtBEtwz/8mZQUCw/iAwPYYBBfaNRMJFQfnZOPlN
+         JYfw==
+X-Gm-Message-State: AOAM531vSLmScCWY5N7XllxdWuWX2qirpLN9F0QN0UigidAT8nAK6fyy
+        BTmRnHEBu7/sa0rct8TivQ==
+X-Google-Smtp-Source: ABdhPJwU2eKyicXIBEODibPKw990WbBr45xLwxtQkefF2dMzMcVA9hRRWPo2BRtt8ZjEAVe4HPZdsg==
+X-Received: by 2002:a17:90a:9307:: with SMTP id p7mr707705pjo.105.1599098359776;
+        Wed, 02 Sep 2020 18:59:19 -0700 (PDT)
+Received: from [127.0.0.1] ([103.7.29.7])
+        by smtp.gmail.com with ESMTPSA id n128sm891812pfd.29.2020.09.02.18.59.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Sep 2020 18:59:19 -0700 (PDT)
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Cc:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>, tglx@linutronix.de,
+        mingo@redhat.com, "bp@alien8.de" <bp@alien8.de>,
+        "hpa@zytor.com" <hpa@zytor.com>
+From:   Haiwei Li <lihaiwei.kernel@gmail.com>
+Subject: [PATCH v2] KVM: Check the allocation of pv cpu mask
+Message-ID: <654d8c60-49f0-e398-be25-24aed352360d@gmail.com>
+Date:   Thu, 3 Sep 2020 09:59:09 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-09-02 at 23:29 +0200, Rene Rebe wrote:
-> As per recommendation, convert a few remaining __constant_cpu_to_le{16,32}
-> instances in the qla2xxx, qla4xxx and cifs to just cpu_to_le{16,32}.
-[]
-> diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-[]
-> @@ -3583,7 +3583,7 @@ static int __qlt_send_term_imm_notif(struct scsi_qla_host *vha,
->  
->         /* terminate */
->         nack->u.isp24.flags |=
-> -               __constant_cpu_to_le16(NOTIFY_ACK_FLAGS_TERMINATE);
-> +               cpu_to_le16(NOTIFY_ACK_FLAGS_TERMINATE);
+From: Haiwei Li <lihaiwei@tencent.com>
 
-trivia: this now fits on a single line.
+check the allocation of per-cpu __pv_cpu_mask. Initialize ops only when
+successful.
 
+Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
+---
+  arch/x86/kernel/kvm.c | 24 ++++++++++++++++++++----
+  1 file changed, 20 insertions(+), 4 deletions(-)
 
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 08320b0b2b27..d3c062e551d7 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -555,7 +555,6 @@ static void kvm_send_ipi_mask_allbutself(const 
+struct cpumask *mask, int vector)
+  static void kvm_setup_pv_ipi(void)
+  {
+  	apic->send_IPI_mask = kvm_send_ipi_mask;
+-	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
+  	pr_info("setup PV IPIs\n");
+  }
+
+@@ -654,7 +653,6 @@ static void __init kvm_guest_init(void)
+  	}
+
+  	if (pv_tlb_flush_supported()) {
+-		pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
+  		pv_ops.mmu.tlb_remove_table = tlb_remove_table;
+  		pr_info("KVM setup pv remote TLB flush\n");
+  	}
+@@ -767,6 +765,14 @@ static __init int activate_jump_labels(void)
+  }
+  arch_initcall(activate_jump_labels);
+
++static void kvm_free_pv_cpu_mask(void)
++{
++	unsigned int cpu;
++
++	for_each_possible_cpu(cpu)
++		free_cpumask_var(per_cpu(__pv_cpu_mask, cpu));
++}
++
+  static __init int kvm_alloc_cpumask(void)
+  {
+  	int cpu;
+@@ -785,11 +791,21 @@ static __init int kvm_alloc_cpumask(void)
+
+  	if (alloc)
+  		for_each_possible_cpu(cpu) {
+-			zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
+-				GFP_KERNEL, cpu_to_node(cpu));
++			if (!zalloc_cpumask_var_node(
++				per_cpu_ptr(&__pv_cpu_mask, cpu),
++				GFP_KERNEL, cpu_to_node(cpu)))
++				goto zalloc_cpumask_fail;
+  		}
+
++#if defined(CONFIG_SMP)
++	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
++#endif
++	pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
+  	return 0;
++
++zalloc_cpumask_fail:
++	kvm_free_pv_cpu_mask();
++	return -ENOMEM;
+  }
+  arch_initcall(kvm_alloc_cpumask);
+
+--
+2.18.4
