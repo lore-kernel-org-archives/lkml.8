@@ -2,119 +2,197 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50887C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D73FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 212682083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 618B22083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:12:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yn1ERvJR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dsVN9RWD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CXtS4M6e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbgICSMO (ORCPT
+        id S1729096AbgICSMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 14:12:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55392 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgICSMM (ORCPT
+        Thu, 3 Sep 2020 14:12:49 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:52445 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728942AbgICSMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 14:12:12 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599156730;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kNaEs04RarZatwvnCZYp8Xyjij0m0qzMj73pUrlORw4=;
-        b=yn1ERvJRi3Ap+fUwpE6YE6QEJw75JqHwztjGLfuIu5Vhx3ylMcPaeZMvt5r7IvXcWh2dAh
-        7+z/aBykT9nJNYFo4QDegWd1mhgggaPOZ01qE8hyd4uY+QT0PBl3pkiYuzKw4KK3iGrXUr
-        14y2LCk2YypciaSpx/mGkXvE0yiU5PSMcNx6TYqrk1t9NAuNFM6JknEl8Xbx7SEbi8u2zu
-        ThkvHpDONagjoyMhBYJuQeMvMbIjXzsUhAvsaYpyYEJPejQesbQQGHFRQP2bHdcIklQKao
-        rCqIVG7cJWCK1a7UyFdTjAaJOvn/BS6CkMvwnJ9pnqFjjru6qQ8dggQ04IJkjg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599156730;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kNaEs04RarZatwvnCZYp8Xyjij0m0qzMj73pUrlORw4=;
-        b=dsVN9RWDW8rGNqnULQccYNxG7P4DgVJRNir2mvhT2bTe8IjmmCK2zcbya02NGrTVlYkNdL
-        1dML9FSRvccDMDDw==
-To:     "Raj\, Ashok" <ashok.raj@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device MSI
-In-Reply-To: <20200903163516.GA23129@araj-mobl1.jf.intel.com>
-References: <20200826111628.794979401@linutronix.de> <20200903163516.GA23129@araj-mobl1.jf.intel.com>
-Date:   Thu, 03 Sep 2020 20:12:09 +0200
-Message-ID: <87eeniybk6.fsf@nanos.tec.linutronix.de>
+        Thu, 3 Sep 2020 14:12:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1599156742; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=8/XMhamBhdcUCOmD0hfBr7ADxe7XwLTi7SF/wqJMN48=;
+ b=CXtS4M6enoQR1mhYiBE7iWQdatJ7YZeZP0nz0phBhIy1D9QaYNq6vdJpU8c9RIoSFG9saSb3
+ ipb74WnuWah2fsU1uGYPyeu+no72nluverF792z3WM5YwD9M2UxeygyBAZ8c7Zs3Y4RNBqAf
+ Vfw1iXu4yGdI+p4+NGKrBJEnoAk=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f5131e57f21d51b30e1a5ac (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 03 Sep 2020 18:11:49
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1CDFCC43387; Thu,  3 Sep 2020 18:11:49 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 34849C433C8;
+        Thu,  3 Sep 2020 18:11:48 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 03 Sep 2020 23:41:48 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCHv2] soc: qcom: llcc: Support chipsets that can write to
+ llcc registers
+In-Reply-To: <CAD=FV=Xbq6nv6t907XScJcfPDzB7B3LWtiT-f3RW3Pgg8uCAXg@mail.gmail.com>
+References: <20200817144722.6665-1-saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=VE6vCPjDvvP0e73tnd8u5rPuMUa-mwvDazrfUpXP+bKQ@mail.gmail.com>
+ <2a0c5fa189dbb2e810ba88f59621b65c@codeaurora.org>
+ <CAD=FV=X8yS1gUNhhVNyfuRPzDUheG2Rco2g16KMegCG6fKJw7Q@mail.gmail.com>
+ <d949bdfa15b133f74a47727401553c76@codeaurora.org>
+ <7714ee57f75542839d5c33b28f232aa6@codeaurora.org>
+ <CAD=FV=Xt0NTNjCEJ2USfyd2qZ+FfBz9xwctbpv+hSWvvCoAZFg@mail.gmail.com>
+ <dd60dafcea8b75b10516bf2bc4952abb@codeaurora.org>
+ <CAD=FV=WrEh9_XqOvA5mNYQRMDujOWBqeeDFDFj_C3XKy-okGVQ@mail.gmail.com>
+ <2fe7e79f4fc877eb5d488d799fbf44d6@codeaurora.org>
+ <CAD=FV=Xbq6nv6t907XScJcfPDzB7B3LWtiT-f3RW3Pgg8uCAXg@mail.gmail.com>
+Message-ID: <23d34b2a3481900ae06de89623c962ec@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ashok,
+On 2020-09-03 23:08, Doug Anderson wrote:
+> Hi,
+> 
+> On Thu, Sep 3, 2020 at 9:04 AM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> Hi,
+>> 
+>> On 2020-09-03 21:24, Doug Anderson wrote:
+>> > Hi,
+>> >
+>> > On Thu, Sep 3, 2020 at 8:47 AM Sai Prakash Ranjan
+>> > <saiprakash.ranjan@codeaurora.org> wrote:
+>> >>
+>> >> On 2020-09-03 19:16, Doug Anderson wrote:
+>> >> > Hi,
+>> >> >
+>> >> > On Thu, Sep 3, 2020 at 2:58 AM Sai Prakash Ranjan
+>> >> > <saiprakash.ranjan@codeaurora.org> wrote:
+>> >> >>
+>> >> >> Hi,
+>> >> >>
+>> >> >> On 2020-08-18 21:07, Sai Prakash Ranjan wrote:
+>> >> >> > Hi Doug,
+>> >> >> >
+>> >> >> >>
+>> >> >> >> I guess to start, it wasn't obvious (to me) that there were two
+>> >> >> >> choices and we were picking one.  Mentioning that the other
+>> >> >> >> alternative was way-based allocation would help a lot.  Even if you
+>> >> >> >> can't fully explain the differences between the two, adding something
+>> >> >> >> to the commit message indicating that this is a policy decision (in
+>> >> >> >> other words, both work but each have their tradeoffs) would help.
+>> >> >> >> Something like this, if it's correct:
+>> >> >> >>
+>> >> >> >> In general we try to enable capacity based allocation (instead of the
+>> >> >> >> default way based allocation) since that gives us better performance
+>> >> >> >> with the current software / hardware configuration.
+>> >> >> >>
+>> >> >> >
+>> >> >> > Thanks, I will add it for next version. Let me also go poke some arch
+>> >> >> > teams
+>> >> >> > to understand if we actually do gain something with this selection, who
+>> >> >> > knows
+>> >> >> > we might get some additional details as well.
+>> >> >> >
+>> >> >>
+>> >> >> I got some information from arch team today, to quote them exactly:
+>> >> >>
+>> >> >> 1) What benefits capacity based allocation brings over the default way
+>> >> >> based allocation?
+>> >> >>
+>> >> >> "Capacity based allows finer grain partition. It is not about improved
+>> >> >> performance but more flexibility in configuration."
+>> >> >>
+>> >> >> 2) Retain through power collapse, doesn’t it burn more power?
+>> >> >>
+>> >> >> "This feature is similar to the standard feature of retention. Yes,
+>> >> >> when
+>> >> >> we
+>> >> >> have cache in retention mode it burns more power but it keeps the
+>> >> >> values
+>> >> >> so
+>> >> >> that when we wake up we can get more cache hits."
+>> >> >>
+>> >> >>
+>> >> >> If its good enough, then I will add this info to the commit msg and
+>> >> >> post
+>> >> >> next version.
+>> >> >
+>> >> > Sounds fine to me.  I was mostly looking for a high level idea of what
+>> >> > was happening here.  I am at least a little curious about the
+>> >> > retention bit.  Is that retention during S3, or during some sort of
+>> >> > Runtime PM?  Any idea how much power is burned?  Unless the power is
+>> >> > miniscule it seems hard to believe that it would be a net win to keep
+>> >> > a cache powered up during S3 unless you're planning on waking up a
+>> >> > lot.
+>> >> >
+>> >>
+>> >> The retention setting is based on sub cache id(SCID), so I think its
+>> >> for
+>> >> runtime pm, the power numbers weren't provided. But I believe these
+>> >> decisions are made after solid testing and not some random
+>> >> approximations.
+>> >
+>> > Right, I believe it was tested, I just wonder if it was tested on a
+>> > phone vs. a laptop.  A phone is almost constantly waking up to deal
+>> > with stuff (which is why my phone battery barely lasts till the end of
+>> > the day).  Phones also usually have some type of self refresh on their
+>> > panels so they can be suspended even when they look awake which means
+>> > even more constant wakeups.  A laptop (especially without panel self
+>> > refresh) may have very different usage models.  I'm trying to confirm
+>> > that this setting is appropriate for both classes of devices or if it
+>> > has been only measured / optimized for the cell phone use case.
+>> >
+>> 
+>> Could be, but there are windows laptops based on QCOM SoCs where these
+>> must have also been tested (note that this setting can also be in
+>> firmware
+>> and no one would know), but I don't have numbers to quantify.
+> 
+> OK, fair enough.  Thanks for the discussion.  I'm good with a somewhat
+> broad explanation in the commit message then and if we find that this
+> somehow affects power numbers in a bad way we can track down further.
+> 
 
-On Thu, Sep 03 2020 at 09:35, Ashok Raj wrote:
-> On Wed, Aug 26, 2020 at 01:16:28PM +0200, Thomas Gleixner wrote:
->> This is the second version of providing a base to support device MSI (non
->> PCI based) and on top of that support for IMS (Interrupt Message Storm)
->
-> s/Storm/Store
->
-> maybe pun intended :-)
-
-Maybe? :)
-
->> based devices in a halfways architecture independent way.
->
-> You mean "halfways" because the message addr and data follow guidelines
-> per arch (x86 or such), but the location of the storage isn't dictated
-> by architecture? or did you have something else in mind?
-
-Yes, the actual message adress and data format are architecture
-specific, but we also have x86 specific allocation info format which
-needs an arch callback unfortunately.
-
->>    - Ensure that the necessary flags are set for device SMI
->
-> is that supposed to be MSI? 
-
-Of course, but SMI is a better match for Message Storm :)
+Thanks, I agree that we should keep an eye in case of any fluctuations 
+in power numbers.
 
 Thanks,
+Sai
 
-        tglx
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
