@@ -2,165 +2,86 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B1DC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9D3C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C82D120578
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:20:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l23jQ5rF"
+	by mail.kernel.org (Postfix) with ESMTP id 9CBBE20786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbgICPUj (ORCPT
+        id S1728711AbgICPVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:20:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728548AbgICL1B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:27:01 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB2F1C061246;
-        Thu,  3 Sep 2020 04:18:28 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id h20so1939061ybj.8;
-        Thu, 03 Sep 2020 04:18:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vSTdiuU7UW8q2OVQi9q+98jV2wni9irf58KIjeuCLZE=;
-        b=l23jQ5rFCiIyga1ZOrbBcnNyWnB9gGbwRMVitiYAhAKXGULvVU1UksrMHHDstOCrli
-         L/MsoQI3hPI1M6BSun/jbMy0j7qljuwZplYaXKFETuH7yEduLZZv3sb4nUDnWsKjqs6H
-         X+ucJJFhk96Alf4w4WeUVcsklvBI5i4mIETEx48aydiOCb4ynwBV6NUWyYQeGuMxo227
-         Ap/8BZ/yYPSnQENMXdjvelgOeIHCTYjCQdXBQU+elhlBYhd35+KaTbfJLFXOEdFf/x4U
-         vIbQ+VtBD5P1XUMM34xhXOmHVyWiEDwa5mS4w3ny/ndWa0XoO6hdDMM2TSsiorBkU9Bk
-         e9hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vSTdiuU7UW8q2OVQi9q+98jV2wni9irf58KIjeuCLZE=;
-        b=O1bMFNDhrl1tGlJJXWswytqahTBOCmk8aO50D8nxkQhomSAws7nNwn1/qGkydpzIbn
-         nUJmFM1YrigN/b1Tem+WOh5wTPEBi/f3JFlmwwX137M1vu+Fw8ckGmYReBQVcG3zM/Fk
-         +RrNfZRRDbQziAtL8dMLb9m7GIHaDSzM65K13bMzvVSSxNcAcH4cKAvmiLFSttbwExbR
-         vymOwZ/19tmOvPvGKYqpTxRca0hGdKYlTc5phqSsszGpROisgYYUZtAqzdFOZaOn5unR
-         OGphqIEqgcSqBMtZScUTWVKXutG5/C8aTeknFlKUOh4nQd4+Oaxj8ztTzkRbVsCBFNPE
-         aEWQ==
-X-Gm-Message-State: AOAM531iXyS8/WSxty0VYnxA08e4BjubYtwmXTF7pbhH/vs74OXHp3W5
-        0waupDdXQXKK6v++xa0+burKHirnM2Lu1DYv49g=
-X-Google-Smtp-Source: ABdhPJzVF1YWU0hFuTeXXBWlQUQXW13GtCNpXXV/WX/2S85bIjmuraoJzeRVrhZaoiJXYKvUCHyFvwpP1gI72OwwzXU=
-X-Received: by 2002:a25:dc0c:: with SMTP id y12mr1834334ybe.395.1599131908024;
- Thu, 03 Sep 2020 04:18:28 -0700 (PDT)
+        Thu, 3 Sep 2020 11:21:06 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10759 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728547AbgICLZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:25:11 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 41D9C69B637213C69AA1;
+        Thu,  3 Sep 2020 19:08:41 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 3 Sep 2020 19:08:32 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <minyard@acm.org>, <arnd@arndb.de>, <gregkh@linuxfoundation.org>
+CC:     <openipmi-developer@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <wangxiongfeng2@huawei.com>
+Subject: [PATCH] ipmi: add a newline when printing parameter 'panic_op' by sysfs
+Date:   Thu, 3 Sep 2020 19:01:13 +0800
+Message-ID: <1599130873-2402-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200825162718.5838-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVVvDEq-GSsPDrx09TCfGCWkNQvGYrNWP4gK2=63G2z1w@mail.gmail.com>
-In-Reply-To: <CAMuHMdVVvDEq-GSsPDrx09TCfGCWkNQvGYrNWP4gK2=63G2z1w@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 3 Sep 2020 12:18:01 +0100
-Message-ID: <CA+V-a8sqVGHHQ0ayH7CvKANyCpsFPBy6OuqoGQHPS7iOX20rCg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] ARM: dts: r8a7742-iwg21d-q7: Enable PCIe Controller
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+When I cat ipmi_msghandler parameter 'panic_op' by sysfs, it displays as
+follows. It's better to add a newline for easy reading.
 
-Thank you for the review.
+root@(none):/# cat /sys/module/ipmi_msghandler/parameters/panic_op
+noneroot@(none):/#
 
-On Thu, Sep 3, 2020 at 11:18 AM Geert Uytterhoeven <geert@linux-m68k.org> w=
-rote:
->
-> Hi Prabhakar,
->
-> On Tue, Aug 25, 2020 at 6:28 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Enable PCIe Controller and set PCIe bus clock frequency.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in renesas-devel for v5.10.
->
-> One thing to double-check below.
->
-> > --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > @@ -238,6 +238,18 @@
-> >         /* status =3D "okay"; */
-> >  };
-> >
-> > +&pcie_bus_clk {
-> > +       clock-frequency =3D <100000000>;
-> > +};
-> > +
-> > +&pciec {
-> > +       /* SW2[6] determines which connector is activated
-> > +        * ON =3D PCIe X4 (connector-J7)
-> > +        * OFF =3D mini-PCIe (connector-J26)
->
-> The table on page 14 says it's the other way around.
->
-> According to the CBTL02042ABQ datasheet, PCIe_SEL =3D low
-> selects the first channel (PCIe x4), while PCIe_SEL =3D high selects the
-> second channel (mini-PCIe).
-> Enabling the switch ties the signal low, so the table must be wrong.
->
-Referring to [1] page 3:
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+---
+ drivers/char/ipmi/ipmi_msghandler.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-SEL =3D LOW: A=E2=86=94B
-SEL =3D HIGH: A=E2=86=94C
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index 737c0b6..6ebb549 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -89,19 +89,19 @@ static int panic_op_read_handler(char *buffer, const struct kernel_param *kp)
+ {
+ 	switch (ipmi_send_panic_event) {
+ 	case IPMI_SEND_PANIC_EVENT_NONE:
+-		strcpy(buffer, "none");
++		strcpy(buffer, "none\n");
+ 		break;
+ 
+ 	case IPMI_SEND_PANIC_EVENT:
+-		strcpy(buffer, "event");
++		strcpy(buffer, "event\n");
+ 		break;
+ 
+ 	case IPMI_SEND_PANIC_EVENT_STRING:
+-		strcpy(buffer, "string");
++		strcpy(buffer, "string\n");
+ 		break;
+ 
+ 	default:
+-		strcpy(buffer, "???");
++		strcpy(buffer, "???\n");
+ 		break;
+ 	}
+ 
+-- 
+1.7.12.4
 
-And as per the schematic iW-PREJD-CS-01-R2.0-REL1.5.pdf channel B is
-J7 (PCIe X 4) and channel C is J26 (mini PCIe slot).
-
-Enabling the switch SW2[6] (ON) ties SEL to LOW -> channel B is J7 (PCIe X =
-4)
-Disabling the switch SW2[6] (OFF) ties SEL to HIGH -> channel C is J26
-(mini PCIe)
-
-Also iW-PREJD-CS-01-R2.0-REL1.5.pdf page 14 (General purpose table DIP
-Switch) mentions the above.
-
-[1] https://www.mouser.co.uk/datasheet/2/302/CBTL02042A_CBTL02042B-1126164.=
-pdf
-
-Cheers,
-Prabhakar
-
-> > +        */
-> > +       status =3D "okay";
-> > +};
-> > +
-> >  &pfc {
-> >         avb_pins: avb {
-> >                 groups =3D "avb_mdio", "avb_gmii";
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
