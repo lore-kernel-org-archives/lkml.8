@@ -2,217 +2,118 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7FCC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03E1C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAE81206EF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0592078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pp0doULk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ceo30NPe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbgICXT0 (ORCPT
+        id S1729411AbgICXZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 19:19:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33326 "EHLO
+        Thu, 3 Sep 2020 19:25:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgICXTY (ORCPT
+        with ESMTP id S1729311AbgICXZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 19:19:24 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32562C061245
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 16:19:24 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id y194so2700948vsc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:19:24 -0700 (PDT)
+        Thu, 3 Sep 2020 19:25:07 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30BF6C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 16:25:06 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 5so3345512pgl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:25:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T6WdbDtaJju8Wd5Qfl63dOMmDDWlZ9QBk+0SG3b8nzU=;
-        b=Pp0doULk3CUHBvhNlrPHW0vLZeN++8R52F0gdy12WUhRPV8Y5IL8l3vDkHODpakk9V
-         fI6WTr9tljgfFKRVAYczkefI8icYOwsr8aVIHwk7BY4WtKTWLRfyJjrrFrt5/B5AvJlc
-         vEIJ7FyNxVv35fto2vnpRtxWV0yu8IRo3R/WE=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9D90+pAFL80PupYKppeDjSMb53d09AW9uWDmD+PNvZ8=;
+        b=Ceo30NPe/3i/3NSMwH3W/JmqHwlMveG9Dbgn22rEsVDTvkKhjXSsLRfkwsSMLijOLe
+         rhLbGd6zdxIchiLENz6Q6dG/9pQceKqjgdjQDtegsa+aq3vlF44HSYgSzzq7b6VWPmHY
+         CVs5vzHFfIXNRjnsZrms8xwCwnp7nqiTY9q/I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T6WdbDtaJju8Wd5Qfl63dOMmDDWlZ9QBk+0SG3b8nzU=;
-        b=Lkopt69cKsernCpKjBfOhZj6yyXKbPvav1lZgSKlxOEUbaQL7P8Lwl05gRthd2+rv3
-         IuDmmkcu3ewB4qTt2Gblu05wFEud4L+UVxeFGvlfzMmhbyPb5yucNHFpTMJUg0PcetOQ
-         fmQW1hYa8P8TPtojzYRrq2Rctj5t246Fqp+WsIpVoX5cen1OMprenyQoo+hyevhLtyjv
-         PgG53XC97l3voN0AYYpxFWlfgMUk3r9YbWoyjfQ2jWc69Lvzi1yFjaRkZx39yXrOlXvV
-         4OcgCaD4AMFBrtnE7Koa2exlMWSl1erZ+ZebgKYNrV9nmYZqYlMEdP7ZulrRHIKILrUR
-         qrug==
-X-Gm-Message-State: AOAM531jwS+WAA4F2Lqn2JMRgXrvciCfwpTPRMdFr30+TzGN4+HP+D5L
-        zazQzuLwbobJv17TNtqsEKR7i9rirzXLTw==
-X-Google-Smtp-Source: ABdhPJxWA0pooyQ0Qbac9JMe5sZ4IDS/W1ThtfyR/xt3Ta5U/qHC1k55Denr/e/2ofwZm7QXoUchuA==
-X-Received: by 2002:a67:1603:: with SMTP id 3mr4035688vsw.81.1599175162721;
-        Thu, 03 Sep 2020 16:19:22 -0700 (PDT)
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
-        by smtp.gmail.com with ESMTPSA id k17sm635917vso.21.2020.09.03.16.19.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 16:19:21 -0700 (PDT)
-Received: by mail-vk1-f180.google.com with SMTP id n12so1212928vkk.11
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:19:21 -0700 (PDT)
-X-Received: by 2002:ac5:cd88:: with SMTP id i8mr3496396vka.4.1599175160827;
- Thu, 03 Sep 2020 16:19:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9D90+pAFL80PupYKppeDjSMb53d09AW9uWDmD+PNvZ8=;
+        b=VMyIB8jbmVM5Ui/ZgTuBQKEvE0abFbCuXnn/UfGJNM4jEBhT2kaikmOGcNNHP/TiWc
+         m3CNjSsOOG/w3U1DksZxjSRF6YXc0EkgHMJFG6ukKRIMPcdtFvQbBx0REgNpvvFuXB5u
+         SSbBMpkrT3XZMzupQ6tgOOwIjemCPK88fUojL1c55sSfAEPtChOm3m/4Dy22yHk/XM12
+         4ekuilmSHZDskTvtnsxsSqbm6RBIdOBQbKFvBR4zaCt05pGIRM/Vr9KwZw248Z4GUuj4
+         QrZSiRA1v3c5dDzqnwvazSLsZfMshBRLat/ZyS4Gfr8GyMSHUF6CXa4mnZOjxSa1KjJ1
+         ndCA==
+X-Gm-Message-State: AOAM532OiLvPa66P1OlFRo0XnQaDij5Hlk0HRnYJu5/TYq+fKQ12IgNT
+        scPyJrxuakgk58uicnAe0zocAg==
+X-Google-Smtp-Source: ABdhPJyotTnzJcV701e1rWtMf0V7HnsqMU8RXbPl7+Pw/P9r/85I6PHiwIVMdF+JrKzrzh3qyGgC5A==
+X-Received: by 2002:a17:902:be08:: with SMTP id r8mr3905651pls.103.1599175505475;
+        Thu, 03 Sep 2020 16:25:05 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id q7sm3614459pgg.10.2020.09.03.16.25.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 16:25:05 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     swboyd@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Subject: [PATCH 2/6] mmc: Set PROBE_PREFER_ASYNCHRONOUS for drivers that existed in v4.9
+Date:   Thu,  3 Sep 2020 16:24:37 -0700
+Message-Id: <20200903162412.2.I226782b43191ce367fa3bc1c907c29f571890412@changeid>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+In-Reply-To: <20200903232441.2694866-1-dianders@chromium.org>
+References: <20200903232441.2694866-1-dianders@chromium.org>
 MIME-Version: 1.0
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
- <1598113021-4149-4-git-send-email-mkshah@codeaurora.org> <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com>
- <874koqxv6t.fsf@nanos.tec.linutronix.de> <8763521f-b121-877a-1d59-5f969dd75e51@codeaurora.org>
- <87y2m1vhkm.fsf@nanos.tec.linutronix.de> <CAD=FV=XXf3_tjqK14WdMuKygJptMTS+bKhH_ceiUE3wyYoCnxg@mail.gmail.com>
- <877dtdj042.fsf@nanos.tec.linutronix.de> <CAD=FV=Ua7fLGw6JiG1rnCKpAdO1nXX4A4x1Why-LE9L_FBFe8Q@mail.gmail.com>
- <87zh67uife.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87zh67uife.fsf@nanos.tec.linutronix.de>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 3 Sep 2020 16:19:08 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U8vchyRXOjozYYroq3Mit_gt=XXADLfn0W4N4TyQzyjQ@mail.gmail.com>
-Message-ID: <CAD=FV=U8vchyRXOjozYYroq3Mit_gt=XXADLfn0W4N4TyQzyjQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/6] genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND
- flag
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        LinusW <linus.walleij@linaro.org>, Marc Zyngier <maz@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This is like commit 3d3451124f3d ("mmc: sdhci-msm: Prefer asynchronous
+probe") but applied to a whole pile of drivers.  This batch converts
+the drivers that appeared to be around in the v4.9 timeframe.
 
-On Thu, Sep 3, 2020 at 5:57 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Wed, Sep 02 2020 at 13:26, Doug Anderson wrote:
-> > Specifically I think it gets back to the idea that, from a device
-> > driver's point of view, there isn't a separate concept of disabling an
-> > IRQ (turn it off and stop tracking it) and masking an IRQ (keep track
-> > of it but don't call my handler until I unmask).  As I understand it
-> > drivers expect that the disable_irq() call is actually a mask and that
-> > an IRQ is never fully disabled unless released by the driver.  It is a
-> > little unfortunate (IMO) that the function is called disable_irq() but
-> > as far as I understand that's historical.
->
-> Yes, the naming is historical but it always meant:
->
-> Don't invoke an interrupt handler. Whether that's achieved by actually
-> masking it at the interrupt chip level in hardware or by software state
-> in the core does not matter from the driver perspective.
->
-> >> The point is that the core suspend code disables all interrupts which
-> >> are not marked as wakeup enabled automatically and reenables them after
-> >> resume. So why would any driver invoke disable_irq() in the suspend
-> >> function at all? Historical raisins?
-> >
-> > One case I can imagine: pretend that there are two power rails
-> > controlling a device.  One power rail controls the communication
-> > channel between the CPU and the peripheral and the other power rail
-> > controls whether the peripheral is on.  At suspend time we want to
-> > keep the peripheral on but we can shut down the power to the
-> > communication channel.
-> >
-> > One way you could do this is at suspend time:
-> >   disable_irq()
-> >   turn_off_comm_power()
-> >   enable_irq_wake()
-> >
-> > You'd do the disable_irq() (AKA mask your interrupt) because you'd
-> > really want to make sure that your handler isn't called after you
-> > turned off the communication power.  You want to leave the interrupt
-> > pending/masked until you are able to turn the communications channel
-> > back on and then you can query why the wakeup happened.
->
-> Ok.
->
-> > Now, admittedly, you could redesign the above driver to work any
-> > number of different ways.  Maybe you could use the "noirq" suspend to
-> > turn off your comm power or maybe you could come up with another
-> > solution.  However, since the above has always worked and is quite
-> > simple I guess that's what drivers use?
->
-> That comm power case is a reasonable argument for having that
-> sequence. So we need to make sure that the underlying interrupt chips do
-> the right thing.
->
-> We have the following two cases:
->
-> 1) irq chip does not have a irq_disable() callback and does not
->    have IRQ_DISABLE_UNLAZY set
->
->    In that case the interrupt is not masked at the hardware level. It's
->    just software state. If the interrupt fires while disabled it is
->    marked pending and actually masked at the hardware level.
->
->    Actually there is a race condition which is not handled:
->
->    disable_irq()
->    ...
->
->    interrupt fires
->       mask and mark pending
->
->    ....
->    suspend_device_irq()
->       if (wakeup source) {
->          set_state(WAKEUP ARMED);
->          return;
->       }
->
->    That pending interrupt will not prevent the machine from going into
->    suspend and if it's an edge interrupt then an unmask in
->    suspend_device_irq() won't help. Edge interrupts are not resent in
->    hardware. They are fire and forget from the POV of the device
->    hardware.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-Ah, interesting.  I didn't think about this case exactly.  I might
-have a fix for it anyway.  At some point in time I was thinking that
-the world could be solved by relying on lazily-disabled interrupts and
-I wrote up a patch to make sure that they woke things up.  If you're
-willing to check out our gerrit you can look at:
+ drivers/mmc/host/sdhci-brcmstb.c | 1 +
+ drivers/mmc/host/sdhci-pic32.c   | 1 +
+ 2 files changed, 2 insertions(+)
 
-https://crrev.com/c/2314693
+diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
+index 876668827580..bbf3496f4495 100644
+--- a/drivers/mmc/host/sdhci-brcmstb.c
++++ b/drivers/mmc/host/sdhci-brcmstb.c
+@@ -326,6 +326,7 @@ MODULE_DEVICE_TABLE(of, sdhci_brcm_of_match);
+ static struct platform_driver sdhci_brcmstb_driver = {
+ 	.driver		= {
+ 		.name	= "sdhci-brcmstb",
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+ 		.pm	= &sdhci_pltfm_pmops,
+ 		.of_match_table = of_match_ptr(sdhci_brcm_of_match),
+ 	},
+diff --git a/drivers/mmc/host/sdhci-pic32.c b/drivers/mmc/host/sdhci-pic32.c
+index a11e6397d4ff..6ce1519ae177 100644
+--- a/drivers/mmc/host/sdhci-pic32.c
++++ b/drivers/mmc/host/sdhci-pic32.c
+@@ -241,6 +241,7 @@ MODULE_DEVICE_TABLE(of, pic32_sdhci_id_table);
+ static struct platform_driver pic32_sdhci_driver = {
+ 	.driver = {
+ 		.name	= "pic32-sdhci",
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+ 		.of_match_table = of_match_ptr(pic32_sdhci_id_table),
+ 	},
+ 	.probe		= pic32_sdhci_probe,
+-- 
+2.28.0.526.ge36021eeef-goog
 
-...if not I can post it as a RFC for you.  I'm sure I've solved the
-problem in a completely incorrect and broken way, but hopefully the
-idea makes sense.  In discussion we decided not to go this way because
-it looked like IRQ clients could request an IRQ with
-IRQ_DISABLE_UNLAZY and then that'd break us.  :(  ...but even so I
-think the patch is roughly right and would address your point #1.
-
-
-> 2) irq chip has a irq_disable() callback or has IRQ_DISABLE_UNLAZY set
->
->    In that case disable_irq() will mask it at the hardware level and it
->    stays that way until enable_irq() is invoked.
->
-> #1 kinda works and the gap is reasonably trivial to fix in
->    suspend_device_irq() by checking the pending state and telling the PM
->    core that there is a wakeup pending.
->
-> #2 Needs an indication from the chip flags that an interrupt which is
->    masked has to be unmasked when it is a enabled wakeup source.
->
-> I assume your problem is #2, right? If it's #1 then UNMASK_IF_WAKEUP is
-> the wrong answer.
-
-Right, the problem is #2.  We're not in the lazy mode.
-
--Doug
