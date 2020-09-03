@@ -2,167 +2,376 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B16CC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960BBC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA36820658
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B9420684
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:31:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="FRufedUA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JbjRfjsv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgICUac (ORCPT
+        id S1729379AbgICUbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:30:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35376 "EHLO
+        Thu, 3 Sep 2020 16:31:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgICUa3 (ORCPT
+        with ESMTP id S1727065AbgICUar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:30:29 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF072C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:30:28 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id r9so4855882ioa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:30:28 -0700 (PDT)
+        Thu, 3 Sep 2020 16:30:47 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E81EC061245;
+        Thu,  3 Sep 2020 13:30:47 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u18so4110972wmc.3;
+        Thu, 03 Sep 2020 13:30:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ff1mKe8wkbtuvA1xwHqfQ9HoajECOpK14bs/Jse4OK8=;
-        b=FRufedUAqVKfHS6SBEXPpcQ5dN7ppLSyR5Q/GSkrsjd9dxcVKisj2eq7PBEUEvzbRw
-         hl8bUWtm6P6lXExDyRQ96cWkQP0wa+WzPIBsVm1Gi9VrGwNR6RFOHoqGIYD/nN2wF/+l
-         GuZ87I9hl7nvEEOx/lNGUuqXfGwARJmHn+ykw=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WFsifcAHu4a+Tm23tTPwM2qlu3Wg+NZM8nGekgcuHLc=;
+        b=JbjRfjsv0zK+hnQoKWghf6GDO8TMmhfrwcFH4Y9TaihfLaGYqX7OmruZ+WXgUFOzfg
+         UaJ8dzOPd3pv6WrqarOYZonNdYs6sk2IdJBugQImbR68INPxGodczV6Ul+y/BYqiLXgE
+         kja3FnRqlyek0LwV0tuXpukNymHZGAWkN+bf/w8olDAFA5/kF3X5FAJq1j2ymRCYp6ha
+         Qkgcf/H7DzZhJ6r7QRocX79Zjnds3mSZkLmAL2HnKRGKm/cH1/h1S3xQJs9z7UZK3BSJ
+         TmOJ6XCZdaRwPp1zSPBaN3NgvCkYi2oPxO+ALulSNjN5N0A+zW3gxrUUWxOecMeUqx/s
+         Ig7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ff1mKe8wkbtuvA1xwHqfQ9HoajECOpK14bs/Jse4OK8=;
-        b=g+gey107izkgFq9FHZt/QBdrz6BmKneU3HrfIAJdmUGiN+kCK76vxCYUFQTgGbPMFh
-         4i0cdHjYfJlD/O61jeXzVv20s2q+k5ANIP50/K05UpHOtSXvSBcESoTn7Ea8OeCsz0IY
-         /+hd6On5S5o3xl8fvxoaaLgvg3ke0owpvw1J3O8XrsXNEYwm+XDEc8GHgXU+ohpigwbr
-         gk2tcMETmdaAYbtz1ZcLacoZuiKuUVvmv5Hcm5K8D3vqEDJEAkMqlWsm24sR85h/tfRB
-         QeUZdlcO0ylKv7uK3A5Nj5+oPMQD6/ifSydXsLkceU07aJ3EipzI+LFZE/zsYuc3iHYW
-         OMdA==
-X-Gm-Message-State: AOAM530AXEZvYJso37Lybn3c7VIchGo1IEu1r5O/L/WsDXmRDS9PXJCP
-        3BUhNNtNeqcqj7UU8fKFjXMRM9cx4kE1bZ9Fv2wG2A==
-X-Google-Smtp-Source: ABdhPJwwX7WWSuXXLh6VsWo8yrbQKo6gN2faSS9yV3/MWxif323AtnCct2XXvrYRUskJkoVrKcajUf2CXT2GbTya3C8=
-X-Received: by 2002:a6b:6a01:: with SMTP id x1mr4759201iog.1.1599165027835;
- Thu, 03 Sep 2020 13:30:27 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WFsifcAHu4a+Tm23tTPwM2qlu3Wg+NZM8nGekgcuHLc=;
+        b=NWHKm0YAkhCyBqmV9YOvHbIa5gUEoJLQjti5wwPVN5eSm6K33z5V7LYlvcddMdu3qu
+         2TY5p3UUxNbRuYM5+TCqG6m90ibqJETxUfiNBCpC0nhT59rWYkWmRCxGR4tP94Fy0wiI
+         +nK5DRCNJnfa/ywiFXxON1BWKiYc+PPhQgWtKGSgqk+5N/FXB72KNcx9SoWBLc+PcOkv
+         PEvfEKMKWVQzzBjSm42K3ztD/OWRAS8Ar/+pJ1z2C4tNvc356+f0yh2v8ivtmZ9QPp//
+         zz4AhJXQw0KGRwGZ5chAbesbU6cjv75ib52qElxnuc5i0cvDJy210zMotZSJG/q8m626
+         ItNw==
+X-Gm-Message-State: AOAM530z1PVxTz0LpctukMNIJghpasw0rW0tA0R5QBWyodr0UfyeM6r1
+        1BiUx+g1F3twRNwhhctUvSg=
+X-Google-Smtp-Source: ABdhPJwTx3cnRmX6MQDYiFbRIy7xkcfjPYO9qS2Dvy9WPayvhx6a6Ic0+BbLtmgCpZTpY+wMkMsieA==
+X-Received: by 2002:a1c:105:: with SMTP id 5mr4455498wmb.83.1599165045856;
+        Thu, 03 Sep 2020 13:30:45 -0700 (PDT)
+Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
+        by smtp.gmail.com with ESMTPSA id q186sm6818274wma.45.2020.09.03.13.30.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 13:30:45 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        Marcus Cooper <codekipper@gmail.com>,
+        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v2 02/20] ASoC: sun4i-i2s: Add support for H6 I2S
+Date:   Thu,  3 Sep 2020 22:30:16 +0200
+Message-Id: <20200903203034.1057334-3-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200903203034.1057334-1-peron.clem@gmail.com>
+References: <20200903203034.1057334-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-References: <cover.1598643276.git.jdesfossez@digitalocean.com>
- <2a4398b55fe258ea53fb1fbc727063298f7eea8f.1598643276.git.jdesfossez@digitalocean.com>
- <87y2lth4qa.fsf@nanos.tec.linutronix.de> <20200901165052.GA1662854@google.com>
- <875z8xl0zh.fsf@nanos.tec.linutronix.de> <20200902012905.GB1703315@google.com>
- <87h7sgk41y.fsf@nanos.tec.linutronix.de> <a80babf130a45841e166fa155f84afc19b4257d3.camel@suse.com>
- <CAEXW_YRQiC_0edO5L2vVmL0NcfeZaRt4WYoyrcKmzbFcQP3PvA@mail.gmail.com> <87wo1buhcs.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87wo1buhcs.fsf@nanos.tec.linutronix.de>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Thu, 3 Sep 2020 16:30:14 -0400
-Message-ID: <CAEXW_YRJt_W0NNWaj4ejRjyHSOYbsSp8RPJsHL47Dw5x5ndgmA@mail.gmail.com>
-Subject: Re: [RFC PATCH v7 17/23] kernel/entry: Add support for core-wide
- protection of kernel-mode
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Dario Faggioli <dfaggioli@suse.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Dhaval Giani <dhaval.giani@oracle.com>,
-        Chris Hyser <chris.hyser@oracle.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Ingo Molnar <mingo@kernel.org>, Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, vineeth@bitbyteword.org,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Agata Gruza <agata.gruza@intel.com>,
-        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
-        graf@amazon.com, konrad.wilk@oracle.com,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Patrick Bellasi <derkling@google.com>,
-        =?UTF-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Tim Chen <tim.c.chen@intel.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 9:20 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Thu, Sep 03 2020 at 00:34, Joel Fernandes wrote:
-> > On Wed, Sep 2, 2020 at 12:57 PM Dario Faggioli <dfaggioli@suse.com> wrote:
-> >> 2) protection of the kernel from the other thread running in userspace
-> >> may be achieved in different ways. This is one, sure. ASI will probably
-> >> be another. Hence if/when we'll have both, this and ASI, it would be
-> >> cool to be able to configure the system in such a way that there is
-> >> only one active, to avoid paying the price of both! :-)
-> >
-> > Actually, no. Part of ASI will involve exactly what this patch does -
-> > IPI-pausing siblings but ASI does so when they have no choice but to
-> > switch away from the "limited kernel" mapping, into the full host
-> > kernel mapping. I am not sure if they have yet implemented that part
-> > but they do talk of it in [1] and in their pretty LPC slides.  It is
-> > just that ASI tries to avoid that scenario of kicking all siblings out
-> > of guest mode.  So, maybe this patch can be a stepping stone to ASI.
-> > At least I got the entry hooks right, and the algorithm is efficient
-> > IMO (useless IPIs are avoided).  ASI can then come in and avoid
-> > sending IPIs even more by doing their limited-kernel-mapping things if
-> > needed. So, it does not need to be this vs ASI, both may be needed.
->
-> Right. There are different parts which are seperate:
->
-> 1) Core scheduling as a best effort feature (performance for certain use
->    cases)
->
-> 2) Enforced core scheduling (utilizes #1 basics)
->
-> 3) ASI
->
-> 4) Kick sibling out of guest/host and wait mechanics
->
-> #1, #2, #3 can be used stand alone. #4 is a utility
->
-> Then you get combos:
->
-> A) #2 + #4:
->
->    core wide protection. i.e. what this series tries to achieve.  #3
->    triggers the kick at the low level VMEXIT or entry from user mode
->    boundary. The wait happens at the same level
->
-> B) #3 + #4:
->
->    ASI plus kicking the sibling/wait mechanics independent of what's
->    scheduled. #3 triggers the kick at the ASI switch to full host
->    mapping boundary and the wait is probably the same as in #A
->
-> C) #2 + #3 + #4:
->
->    The full concert, but trigger/wait wise the same as #B
->
-> So we really want to make at least #4 an independent utility.
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-Agreed! Thanks for enlisting all the cases so well. I believe this
-could be achieved by moving the calls to unsafe_enter() and
-unsafe_exit() to when ASI decides it is time to enter the unsafe
-kernel context.  I will keep it in mind when sending the next revision
-as well.
+H6 I2S is very similar to that in H3, except it supports up to 16
+channels.
 
-thanks,
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ sound/soc/sunxi/sun4i-i2s.c | 221 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 221 insertions(+)
 
-- Joel
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index fabff7bcccbc..acf24f512f2c 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -124,6 +124,21 @@
+ #define SUN8I_I2S_RX_CHAN_SEL_REG	0x54
+ #define SUN8I_I2S_RX_CHAN_MAP_REG	0x58
+ 
++/* Defines required for sun50i-h6 support */
++#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET_MASK	GENMASK(21, 20)
++#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET(offset)	((offset) << 20)
++#define SUN50I_H6_I2S_TX_CHAN_SEL_MASK		GENMASK(19, 16)
++#define SUN50I_H6_I2S_TX_CHAN_SEL(chan)		((chan - 1) << 16)
++#define SUN50I_H6_I2S_TX_CHAN_EN_MASK		GENMASK(15, 0)
++#define SUN50I_H6_I2S_TX_CHAN_EN(num_chan)	(((1 << num_chan) - 1))
++
++#define SUN50I_H6_I2S_TX_CHAN_MAP0_REG	0x44
++#define SUN50I_H6_I2S_TX_CHAN_MAP1_REG	0x48
++
++#define SUN50I_H6_I2S_RX_CHAN_SEL_REG	0x64
++#define SUN50I_H6_I2S_RX_CHAN_MAP0_REG	0x68
++#define SUN50I_H6_I2S_RX_CHAN_MAP1_REG	0x6C
++
+ struct sun4i_i2s;
+ 
+ /**
+@@ -474,6 +489,65 @@ static int sun8i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
+ 	return 0;
+ }
+ 
++static int sun50i_h6_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
++				      const struct snd_pcm_hw_params *params)
++{
++	unsigned int channels = params_channels(params);
++	unsigned int slots = channels;
++	unsigned int lrck_period;
++
++	if (i2s->slots)
++		slots = i2s->slots;
++
++	/* Map the channels for playback and capture */
++	regmap_write(i2s->regmap, SUN50I_H6_I2S_TX_CHAN_MAP1_REG, 0x76543210);
++	regmap_write(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_MAP1_REG, 0x76543210);
++
++	/* Configure the channels */
++	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
++			   SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
++			   SUN50I_H6_I2S_TX_CHAN_SEL(channels));
++	regmap_update_bits(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_SEL_REG,
++			   SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
++			   SUN50I_H6_I2S_TX_CHAN_SEL(channels));
++
++	regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
++			   SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM_MASK,
++			   SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM(channels));
++	regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
++			   SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM_MASK,
++			   SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM(channels));
++
++	switch (i2s->format & SND_SOC_DAIFMT_FORMAT_MASK) {
++	case SND_SOC_DAIFMT_DSP_A:
++	case SND_SOC_DAIFMT_DSP_B:
++	case SND_SOC_DAIFMT_LEFT_J:
++	case SND_SOC_DAIFMT_RIGHT_J:
++		lrck_period = params_physical_width(params) * slots;
++		break;
++
++	case SND_SOC_DAIFMT_I2S:
++		lrck_period = params_physical_width(params);
++		break;
++
++	default:
++		return -EINVAL;
++	}
++
++	if (i2s->slot_width)
++		lrck_period = i2s->slot_width;
++
++	regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
++			   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
++			   SUN8I_I2S_FMT0_LRCK_PERIOD(lrck_period));
++
++	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
++			   SUN50I_H6_I2S_TX_CHAN_EN_MASK,
++			   SUN50I_H6_I2S_TX_CHAN_EN(channels));
++
++	return 0;
++}
++
+ static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
+ 			       struct snd_pcm_hw_params *params,
+ 			       struct snd_soc_dai *dai)
+@@ -693,6 +767,102 @@ static int sun8i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
+ 	return 0;
+ }
+ 
++static int sun50i_h6_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
++				     unsigned int fmt)
++{
++	u32 mode, val;
++	u8 offset;
++
++	/* DAI clock polarity */
++	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
++	case SND_SOC_DAIFMT_IB_IF:
++		/* Invert both clocks */
++		val = SUN8I_I2S_FMT0_BCLK_POLARITY_INVERTED |
++		      SUN8I_I2S_FMT0_LRCLK_POLARITY_INVERTED;
++		break;
++	case SND_SOC_DAIFMT_IB_NF:
++		/* Invert bit clock */
++		val = SUN8I_I2S_FMT0_BCLK_POLARITY_INVERTED;
++		break;
++	case SND_SOC_DAIFMT_NB_IF:
++		/* Invert frame clock */
++		val = SUN8I_I2S_FMT0_LRCLK_POLARITY_INVERTED;
++		break;
++	case SND_SOC_DAIFMT_NB_NF:
++		val = 0;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
++			   SUN8I_I2S_FMT0_LRCLK_POLARITY_MASK |
++			   SUN8I_I2S_FMT0_BCLK_POLARITY_MASK,
++			   val);
++
++	/* DAI Mode */
++	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
++	case SND_SOC_DAIFMT_DSP_A:
++		mode = SUN8I_I2S_CTRL_MODE_PCM;
++		offset = 1;
++		break;
++
++	case SND_SOC_DAIFMT_DSP_B:
++		mode = SUN8I_I2S_CTRL_MODE_PCM;
++		offset = 0;
++		break;
++
++	case SND_SOC_DAIFMT_I2S:
++		mode = SUN8I_I2S_CTRL_MODE_LEFT;
++		offset = 1;
++		break;
++
++	case SND_SOC_DAIFMT_LEFT_J:
++		mode = SUN8I_I2S_CTRL_MODE_LEFT;
++		offset = 0;
++		break;
++
++	case SND_SOC_DAIFMT_RIGHT_J:
++		mode = SUN8I_I2S_CTRL_MODE_RIGHT;
++		offset = 0;
++		break;
++
++	default:
++		return -EINVAL;
++	}
++
++	regmap_update_bits(i2s->regmap, SUN4I_I2S_CTRL_REG,
++			   SUN8I_I2S_CTRL_MODE_MASK, mode);
++	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
++			   SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET_MASK,
++			   SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET(offset));
++	regmap_update_bits(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_SEL_REG,
++			   SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET_MASK,
++			   SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET(offset));
++
++	/* DAI clock master masks */
++	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
++	case SND_SOC_DAIFMT_CBS_CFS:
++		/* BCLK and LRCLK master */
++		val = SUN8I_I2S_CTRL_BCLK_OUT |	SUN8I_I2S_CTRL_LRCK_OUT;
++		break;
++
++	case SND_SOC_DAIFMT_CBM_CFM:
++		/* BCLK and LRCLK slave */
++		val = 0;
++		break;
++
++	default:
++		return -EINVAL;
++	}
++
++	regmap_update_bits(i2s->regmap, SUN4I_I2S_CTRL_REG,
++			   SUN8I_I2S_CTRL_BCLK_OUT | SUN8I_I2S_CTRL_LRCK_OUT,
++			   val);
++
++	return 0;
++}
++
+ static int sun4i_i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ {
+ 	struct sun4i_i2s *i2s = snd_soc_dai_get_drvdata(dai);
+@@ -973,6 +1143,22 @@ static const struct reg_default sun8i_i2s_reg_defaults[] = {
+ 	{ SUN8I_I2S_RX_CHAN_MAP_REG, 0x00000000 },
+ };
+ 
++static const struct reg_default sun50i_h6_i2s_reg_defaults[] = {
++	{ SUN4I_I2S_CTRL_REG, 0x00060000 },
++	{ SUN4I_I2S_FMT0_REG, 0x00000033 },
++	{ SUN4I_I2S_FMT1_REG, 0x00000030 },
++	{ SUN4I_I2S_FIFO_CTRL_REG, 0x000400f0 },
++	{ SUN4I_I2S_DMA_INT_CTRL_REG, 0x00000000 },
++	{ SUN4I_I2S_CLK_DIV_REG, 0x00000000 },
++	{ SUN8I_I2S_CHAN_CFG_REG, 0x00000000 },
++	{ SUN8I_I2S_TX_CHAN_SEL_REG, 0x00000000 },
++	{ SUN50I_H6_I2S_TX_CHAN_MAP0_REG, 0x00000000 },
++	{ SUN50I_H6_I2S_TX_CHAN_MAP1_REG, 0x00000000 },
++	{ SUN50I_H6_I2S_RX_CHAN_SEL_REG, 0x00000000 },
++	{ SUN50I_H6_I2S_RX_CHAN_MAP0_REG, 0x00000000 },
++	{ SUN50I_H6_I2S_RX_CHAN_MAP1_REG, 0x00000000 },
++};
++
+ static const struct regmap_config sun4i_i2s_regmap_config = {
+ 	.reg_bits	= 32,
+ 	.reg_stride	= 4,
+@@ -1000,6 +1186,19 @@ static const struct regmap_config sun8i_i2s_regmap_config = {
+ 	.volatile_reg	= sun8i_i2s_volatile_reg,
+ };
+ 
++static const struct regmap_config sun50i_h6_i2s_regmap_config = {
++	.reg_bits	= 32,
++	.reg_stride	= 4,
++	.val_bits	= 32,
++	.max_register	= SUN50I_H6_I2S_RX_CHAN_MAP1_REG,
++	.cache_type	= REGCACHE_FLAT,
++	.reg_defaults	= sun50i_h6_i2s_reg_defaults,
++	.num_reg_defaults	= ARRAY_SIZE(sun50i_h6_i2s_reg_defaults),
++	.writeable_reg	= sun4i_i2s_wr_reg,
++	.readable_reg	= sun8i_i2s_rd_reg,
++	.volatile_reg	= sun8i_i2s_volatile_reg,
++};
++
+ static int sun4i_i2s_runtime_resume(struct device *dev)
+ {
+ 	struct sun4i_i2s *i2s = dev_get_drvdata(dev);
+@@ -1158,6 +1357,24 @@ static const struct sun4i_i2s_quirks sun50i_a64_codec_i2s_quirks = {
+ 	.set_fmt		= sun4i_i2s_set_soc_fmt,
+ };
+ 
++static const struct sun4i_i2s_quirks sun50i_h6_i2s_quirks = {
++	.has_reset		= true,
++	.reg_offset_txdata	= SUN8I_I2S_FIFO_TX_REG,
++	.sun4i_i2s_regmap	= &sun50i_h6_i2s_regmap_config,
++	.field_clkdiv_mclk_en	= REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 8, 8),
++	.field_fmt_wss		= REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 2),
++	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 6),
++	.bclk_dividers		= sun8i_i2s_clk_div,
++	.num_bclk_dividers	= ARRAY_SIZE(sun8i_i2s_clk_div),
++	.mclk_dividers		= sun8i_i2s_clk_div,
++	.num_mclk_dividers	= ARRAY_SIZE(sun8i_i2s_clk_div),
++	.get_bclk_parent_rate	= sun8i_i2s_get_bclk_parent_rate,
++	.get_sr			= sun8i_i2s_get_sr_wss,
++	.get_wss		= sun8i_i2s_get_sr_wss,
++	.set_chan_cfg		= sun50i_h6_i2s_set_chan_cfg,
++	.set_fmt		= sun50i_h6_i2s_set_soc_fmt,
++};
++
+ static int sun4i_i2s_init_regmap_fields(struct device *dev,
+ 					struct sun4i_i2s *i2s)
+ {
+@@ -1327,6 +1544,10 @@ static const struct of_device_id sun4i_i2s_match[] = {
+ 		.compatible = "allwinner,sun50i-a64-codec-i2s",
+ 		.data = &sun50i_a64_codec_i2s_quirks,
+ 	},
++	{
++		.compatible = "allwinner,sun50i-h6-i2s",
++		.data = &sun50i_h6_i2s_quirks,
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, sun4i_i2s_match);
+-- 
+2.25.1
+
