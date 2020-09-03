@@ -2,161 +2,102 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8B7C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB23C2BC84
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2BCA20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15D4D20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:42:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a4rSyS/F"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GWCaNT3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbgICWlN (ORCPT
+        id S1729383AbgICWmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:41:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55602 "EHLO
+        Thu, 3 Sep 2020 18:42:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbgICWlM (ORCPT
+        with ESMTP id S1729348AbgICWlv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:41:12 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 503F1C061245
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:41:12 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mm21so2250552pjb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:41:12 -0700 (PDT)
+        Thu, 3 Sep 2020 18:41:51 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72162C061251
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:41:50 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id s2so2146130pjr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:41:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=iW/A8r0331OSEPLfa1loRoE5ZEDOUilW+I8kjEKtgG0=;
-        b=a4rSyS/F6YzQ9EUsbIULgRw3QPDxjY4gOShq0/DdOzbmD7EIzh6iPHqGKHFaS/s5W8
-         ZmVpbXB6SAtyUOWbY30qyKVXHIlsyjmT8Yh3QKMjhmiT0O+AfaV7AIz+zDzfNZ/ZfRqa
-         4/nsDjVtpnc3V/a0B1CY/uWgUaEkhvnff3mdk=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=t/oG9SCdq1xWr+ov4DXCG17oZgdOZVwWJcpUXXDNoEo=;
+        b=GWCaNT3nM4fn50pBeGH+priah+inHtz/+o/HSxcFKJ+9g6L+7lcpaLmH1aFDCEt3sN
+         cLNnfv5X6AEYL9NeIlpm/9yK+/MRS6sR6/uRRoPYye7RqP7/TVrQSHnggMT3tq9sR9hF
+         zOPK2FA4z7TKMCX63xaseRtM1umBgGDIijy9M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=iW/A8r0331OSEPLfa1loRoE5ZEDOUilW+I8kjEKtgG0=;
-        b=I08XgFAoTQPxUooqDJIMeTp4G2xn1027gbNtW+PYZ3MGW3pMKRYYlh/d/LcygpYGBH
-         Do/ko3gVSlHx2hxbzD6t2bi5ga/dgszLqFpfqfjhEHmVTtaNCWEmJfCTzDwWk8WrgLSa
-         QUJwEsah//2ZrSdp89AeB4CHBBEkF18iBf/7vaCuprKJwhgoJbbzdWDEspurN5c9qtZK
-         KcEf7dMN8gNMPVthfnGPqrpyZ6qc9BCQtga8AUOS0eeErEPTsTdJ9rLpogGYtLTtygEz
-         ZkPei2sP7xqUsAPh9A+5ie/aR0D7pLKtqGvprsY/g3xtDoRjfdVUdzhaBzSF5IEITzad
-         qXVg==
-X-Gm-Message-State: AOAM532/qZLvWKG0dCN9LJr/flGQowl0nl3Gd3Msbf+LKsIcFFzFSRAJ
-        3udc4PKrZUZbaAIPBEs8OiOT5ScjNXMCGg==
-X-Google-Smtp-Source: ABdhPJyr5+92LrdiO2GGYscSqgQUlNzjXw1ihZoKm1YjISqXlLNmNARfAvi4mscEk6NwDEx88hhRFA==
-X-Received: by 2002:a17:90b:611:: with SMTP id gb17mr5201366pjb.71.1599172871612;
-        Thu, 03 Sep 2020 15:41:11 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id d1sm3334390pjs.17.2020.09.03.15.41.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=t/oG9SCdq1xWr+ov4DXCG17oZgdOZVwWJcpUXXDNoEo=;
+        b=KTe0s0E/ec1+Tz3ME/XtTQrZFHiIN4peQ3peMeijFKlth08br5TRk4Pvphkf0nYjIr
+         L+uoZ7Gx+OCw+58pbH49VxJcwUS4AtNYZOuAzv8dldE3uubupovEFlk5XgUCYev7fnSC
+         wfYvEzz4IGnAsAY0BsUrFL4mV5DjBJeoA/Nf1MkGKRMOzm4ZyMdc9kSacFBPz7I78eZz
+         SnqjI5Ir0mKZzzX3hLVU/GuxF7Dnom9GWTlKrqWrz/nTyx6ntgJfN4aTU9lwyZ9MKPoU
+         WE4tbggitF6c+xD5FC+2w1OtUtuMvBrQofivCX60BYwmcXwcmVdlRZYztOVMr1DpLi/d
+         TUEA==
+X-Gm-Message-State: AOAM530rwtiXLsc/RMn3RqZB1eBUqAQhEKqHWZ3ahuOHtEj4hq0VFFoc
+        oD0IrvsecEfsliuuTPAL5fvtEA==
+X-Google-Smtp-Source: ABdhPJzys++XSMZHn3WsTh+Gbvu5ZeD0Z5uwNitWJ8c9N8vmC+r+J+StAFQG3dzO4Nx2TrB3bIJMrw==
+X-Received: by 2002:a17:90a:f298:: with SMTP id fs24mr5478610pjb.4.1599172910026;
+        Thu, 03 Sep 2020 15:41:50 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i24sm3641252pfq.38.2020.09.03.15.41.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 15:41:11 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 03 Sep 2020 15:41:48 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 15:41:47 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v2 16/28] init: lto: fix PREL32 relocations
+Message-ID: <202009031541.40B54A2E51@keescook>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-17-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <b6f80242-482d-b778-690b-8aefa4e8f23e@marek.ca>
-References: <20200902230215.3452712-1-swboyd@chromium.org> <20200902230215.3452712-8-swboyd@chromium.org> <b6f80242-482d-b778-690b-8aefa4e8f23e@marek.ca>
-Subject: Re: [PATCH v2 07/10] phy: qcom-qmp: Add support for DP in USB3+DP combo phy
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark <robdclark@chromium.org>
-To:     Jonathan Marek <jonathan@marek.ca>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Date:   Thu, 03 Sep 2020 15:41:09 -0700
-Message-ID: <159917286975.334488.16684252260287652678@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903203053.3411268-17-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jonathan Marek (2020-09-03 13:43:10)
-> On 9/2/20 7:02 PM, Stephen Boyd wrote:
-> >=20
-> > This code is based on a submission of this phy and PLL in the drm
-> > subsystem.
->=20
-> I updated my upstream-based sm8150/sm8250 displayport stack [1] to use=20
-> these patches.
+On Thu, Sep 03, 2020 at 01:30:41PM -0700, 'Sami Tolvanen' via Clang Built Linux wrote:
+> With LTO, the compiler can rename static functions to avoid global
+> naming collisions. As initcall functions are typically static,
+> renaming can break references to them in inline assembly. This
+> change adds a global stub with a stable name for each initcall to
+> fix the issue when PREL32 relocations are used.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-Great!
+This was a Delight(tm) to get right. Thanks for finding the right magic
+here. :)
 
->=20
-> This commit [2] might interest you, so that you can consider what needs=20
-> to change between v3 and v4 PHYs. Note some of the V4 registers have the =
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-> same address as V3, so the diff could be smaller.
-
-Looks like v4 will need to introduce a register indirection table for
-the differences. Also need to add a table for the aux initial table
-values and the calibration values for aux_cfg1. Seems like it won't be
-too bad.
-
-Does DP work with those patches with v4? You should make yourself the
-author of commit d3c6da6f87eedb20ea1591aaae1ea4e63d7bd777 ;-)
-
->=20
-> Do you have any plan for dealing with the SS PHY and DP PHY conflicting=20
-> with each other? For example, PHY_MODE_CTRL needs to be "DP_MODE" for=20
-> 4-lane DP, "DP_MODE | USB3_MODE" for 2-lane DP + USB3, and (AFAIK)=20
-> "USB3_MODE" for superspeedplus usb (and it seems this gates some clocks, =
-
-> so you can't read/write dp tx2 registers in 2-lane DP mode for example). =
-
-
-Right. I've seen that behavior as well.
-
->  From your cover letter it sounds like this isn't relevant to your=20
-> hardware, but it looks like both PHYs are writing to the dp_com region=20
-> which is still problematic. (in the branch I linked, I disabled the SS=20
-> PHY to test the DP PHY)
-
-Right. I mentioned in the cover letter that this needs to hook into the
-type-c subsystem somehow. I haven't done any of that work because I
-don't have a configuration that is as dynamic. As long as the type-c
-stuff can express my static configuration it will be fine. If you have
-done any work there I'm happy to review the code and test it out on my
-configuration.
-
-The driver is setup for DP_MODE | USB3_MODE (i.e. concurrent mode) so it
-is already hardcoded for the 2-lane use case that I have. If I didn't
-connect two lanes from the phy to a USB hub I could support all the
-different combinations but that isn't the case. On phones it is
-basically the only case though because the pins from the usb3+dp phy go
-straight to the type-c connector.
-
-qcom_qmp_phy_com_init() is the only place I see the driver writing to it
-and it is refcounted so basically the first phy to get initialized will
-set things up in the common area. I suppose for supporting various use
-cases like 4 lanes DP or 2 lanes DP and USB then that refcounting logic
-will need to be changed. I'm not sure what is supposed to happen though.
-I guess the USB host controller, i.e. dwc3, will have to know to stop
-trying to use the phy and then power down and let the DP controller take
-over the phy? It's a dance of three or four drivers.
-
->=20
-> Also some issues I noticed:
-> - used QSERDES_COM_RESETSM_CNTRL instead of=20
-> QSERDES_V3_COM_RESETSM_CNTRL2, which has different value
-> - in sc7180_dpphy_cfg, .regs is NULL, which results in NULL references
-
-Can you add these as inline review comments? Would help me understand
-what you're talking about. Thanks for the review!
+-- 
+Kees Cook
