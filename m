@@ -2,171 +2,316 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD4AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608DAC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97519208C7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:06:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599163603;
-	bh=BPQE+aY4Awl+whFKcdM9mAjsuebPu1tzmnWJLS/BxAw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=whEQ7CI32SepBmDl4LGP5xzt8npja9fuHswBu95pbqOu3VK9wce7BJjSqOGSMSvyr
-	 K5l+2bFAU4Kcc+c7NVtbJ410oRHBYculHBUHi/RTPIzPMS95KR4tCqaoEyz2oJUPS4
-	 kImoK4Iqc2gk0fbAFa1ra42b+BnALhyINmFqj5kE=
+	by mail.kernel.org (Postfix) with ESMTP id 407EA2071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:11:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbgICUGm (ORCPT
+        id S1729107AbgICULH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:06:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728312AbgICUGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:06:41 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07C322071B;
-        Thu,  3 Sep 2020 20:06:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599163600;
-        bh=BPQE+aY4Awl+whFKcdM9mAjsuebPu1tzmnWJLS/BxAw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=G8YpLGTc4qtFZmhkWNC5+PSkVkMdAnAb5bUUsHWy3sco0KTU+PywAoJc3HRJ7jhnu
-         02I0TeSbbFYzR2wGM4MbBAQtzDRIVz6x/q7DGXq6sXT3ekArdiuVwM887GcP5hapm8
-         qMyXtzmTdgLiA2KA6bctk0aWx/pN6eQv02TZZouw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id CEE813522636; Thu,  3 Sep 2020 13:06:39 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 13:06:39 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     peterz@infradead.org, mingo@redhat.com, will@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Question on task_blocks_on_rt_mutex()
-Message-ID: <20200903200639.GA8956@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200831224911.GA13114@paulmck-ThinkPad-P72>
- <20200831232130.GA28456@paulmck-ThinkPad-P72>
- <20200901174938.GA8158@paulmck-ThinkPad-P72>
- <20200901235821.GA8516@paulmck-ThinkPad-P72>
- <20200902015128.wsulcxhbo7dutcjz@linux-p48b>
- <20200902155410.GH29330@paulmck-ThinkPad-P72>
+        Thu, 3 Sep 2020 16:11:07 -0400
+Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:26303 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728382AbgICULC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 16:11:02 -0400
+Received: from localhost.localdomain ([93.22.39.180])
+        by mwinf5d73 with ME
+        id PYAx230093tCsMp03YAyMu; Thu, 03 Sep 2020 22:10:59 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 03 Sep 2020 22:10:59 +0200
+X-ME-IP: 93.22.39.180
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     davem@davemloft.net, kuba@kernel.org, steve.glendinning@shawell.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH RESEND] smsc9420: switch from 'pci_' to 'dma_' API
+Date:   Thu,  3 Sep 2020 22:10:55 +0200
+Message-Id: <20200903201055.296320-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902155410.GH29330@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 08:54:10AM -0700, Paul E. McKenney wrote:
-> On Tue, Sep 01, 2020 at 06:51:28PM -0700, Davidlohr Bueso wrote:
-> > On Tue, 01 Sep 2020, Paul E. McKenney wrote:
-> > 
-> > > And it appears that a default-niced CPU-bound SCHED_OTHER process is
-> > > not preempted by a newly awakened MAX_NICE SCHED_OTHER process.  OK,
-> > > OK, I never waited for more than 10 minutes, but on my 2.2GHz that is
-> > > close enough to a hang for most people.
-> > > 
-> > > Which means that the patch below prevents the hangs.  And maybe does
-> > > other things as well, firing rcutorture up on it to check.
-> > > 
-> > > But is this indefinite delay expected behavior?
-> > > 
-> > > This reproduces for me on current mainline as follows:
-> > > 
-> > > tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --torture lock --duration 3 --configs LOCK05
-> > > 
-> > > This hangs within a minute of boot on my setup.  Here "hangs" is defined
-> > > as stopping the per-15-second console output of:
-> > > 	Writes:  Total: 569906696 Max/Min: 81495031/63736508   Fail: 0
-> > 
-> > Ok this doesn't seem to be related to lockless wake_qs then. fyi there have
-> > been missed wakeups in the past where wake_q_add() fails the cmpxchg because
-> > the task is already pending a wakeup leading to the actual wakeup ocurring
-> > before its corresponding wake_up_q(). This is why we have wake_q_add_safe().
-> > But for rtmutexes, because there is no lock stealing only top-waiter is awoken
-> > as well as try_to_take_rt_mutex() is done under the lock->wait_lock I was not
-> > seeing an actual race here.
-> 
-> This problem is avoided if stutter_wait() does the occasional sleep.
-> I would have expected preemption to take effect, but even setting the
-> kthreads in stutter_wait() to MAX_NICE doesn't help.  The current fix
-> destroys intended instant-on nature of stutter_wait(), so the eventual
-> fix will need to use hrtimer-based sleeps or some such.
+The wrappers in include/linux/pci-dma-compat.h should go away.
 
-And here is my current best shot at a workaround/fix/whatever.  Thoughts?
+The patch has been generated with the coccinelle script below and has been
+hand modified to replace GFP_ with a correct flag.
+It has been compile tested.
 
-							Thanx, Paul
+When memory is allocated in 'smsc9420_probe()', GFP_KERNEL can be used
+because it is a probe function and no lock is acquired.
 
-------------------------------------------------------------------------
+While at it, rewrite the size passed to 'dma_alloc_coherent()' the same way
+as the one passed to 'dma_free_coherent()'. This form is less verbose:
+   sizeof(struct smsc9420_dma_desc) * RX_RING_SIZE +
+   sizeof(struct smsc9420_dma_desc) * TX_RING_SIZE,
+vs
+   sizeof(struct smsc9420_dma_desc) * (RX_RING_SIZE + TX_RING_SIZE)
 
-commit d93a64389f4d544ded241d0ba30b2586497f5dc0
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Tue Sep 1 16:58:41 2020 -0700
 
-    torture: Periodically pause in stutter_wait()
-    
-    Running locktorture scenario LOCK05 results in hangs:
-    
-    tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --torture lock --duration 3 --configs LOCK05
-    
-    The lock_torture_writer() kthreads set themselves to MAX_NICE while
-    running SCHED_OTHER.  Other locktorture kthreads run at default niceness,
-    also SCHED_OTHER.  This results in these other locktorture kthreads
-    indefinitely preempting the lock_torture_writer() kthreads.  Note that
-    the cond_resched() in the stutter_wait() function's loop is ineffective
-    because this scenario is built with CONFIG_PREEMPT=y.
-    
-    It is not clear that such indefinite preemption is supposed to happen, but
-    in the meantime this commit prevents kthreads running in stutter_wait()
-    from being completely CPU-bound, thus allowing the other threads to get
-    some CPU in a timely fashion.  This commit also uses hrtimers to provide
-    very short sleeps to avoid degrading the sudden-on testing that stutter
-    is supposed to provide.
-    
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
 
-diff --git a/kernel/torture.c b/kernel/torture.c
-index 1061492..5488ad2 100644
---- a/kernel/torture.c
-+++ b/kernel/torture.c
-@@ -602,8 +602,11 @@ static int stutter_gap;
-  */
- bool stutter_wait(const char *title)
- {
--	int spt;
-+	ktime_t delay;
-+	unsigned i = 0;
-+	int oldnice;
- 	bool ret = false;
-+	int spt;
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
+
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
+
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+
+RESEND because it was previously sent when the branch was closed
+---
+ drivers/net/ethernet/smsc/smsc9420.c | 51 +++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/net/ethernet/smsc/smsc9420.c b/drivers/net/ethernet/smsc/smsc9420.c
+index 42bef04d65ba..68969549a5c7 100644
+--- a/drivers/net/ethernet/smsc/smsc9420.c
++++ b/drivers/net/ethernet/smsc/smsc9420.c
+@@ -497,8 +497,9 @@ static void smsc9420_free_tx_ring(struct smsc9420_pdata *pd)
  
- 	cond_resched_tasks_rcu_qs();
- 	spt = READ_ONCE(stutter_pause_test);
-@@ -612,8 +615,17 @@ bool stutter_wait(const char *title)
- 		if (spt == 1) {
- 			schedule_timeout_interruptible(1);
- 		} else if (spt == 2) {
--			while (READ_ONCE(stutter_pause_test))
-+			oldnice = task_nice(current);
-+			set_user_nice(current, MAX_NICE);
-+			while (READ_ONCE(stutter_pause_test)) {
-+				if (!(i++ & 0xffff)) {
-+					set_current_state(TASK_INTERRUPTIBLE);
-+					delay = 10 * NSEC_PER_USEC;
-+					schedule_hrtimeout(&delay, HRTIMER_MODE_REL);
-+				}
- 				cond_resched();
-+			}
-+			set_user_nice(current, oldnice);
- 		} else {
- 			schedule_timeout_interruptible(round_jiffies_relative(HZ));
+ 		if (skb) {
+ 			BUG_ON(!pd->tx_buffers[i].mapping);
+-			pci_unmap_single(pd->pdev, pd->tx_buffers[i].mapping,
+-					 skb->len, PCI_DMA_TODEVICE);
++			dma_unmap_single(&pd->pdev->dev,
++					 pd->tx_buffers[i].mapping, skb->len,
++					 DMA_TO_DEVICE);
+ 			dev_kfree_skb_any(skb);
  		}
+ 
+@@ -530,8 +531,9 @@ static void smsc9420_free_rx_ring(struct smsc9420_pdata *pd)
+ 			dev_kfree_skb_any(pd->rx_buffers[i].skb);
+ 
+ 		if (pd->rx_buffers[i].mapping)
+-			pci_unmap_single(pd->pdev, pd->rx_buffers[i].mapping,
+-				PKT_BUF_SZ, PCI_DMA_FROMDEVICE);
++			dma_unmap_single(&pd->pdev->dev,
++					 pd->rx_buffers[i].mapping,
++					 PKT_BUF_SZ, DMA_FROM_DEVICE);
+ 
+ 		pd->rx_ring[i].status = 0;
+ 		pd->rx_ring[i].length = 0;
+@@ -749,8 +751,8 @@ static void smsc9420_rx_handoff(struct smsc9420_pdata *pd, const int index,
+ 	dev->stats.rx_packets++;
+ 	dev->stats.rx_bytes += packet_length;
+ 
+-	pci_unmap_single(pd->pdev, pd->rx_buffers[index].mapping,
+-		PKT_BUF_SZ, PCI_DMA_FROMDEVICE);
++	dma_unmap_single(&pd->pdev->dev, pd->rx_buffers[index].mapping,
++			 PKT_BUF_SZ, DMA_FROM_DEVICE);
+ 	pd->rx_buffers[index].mapping = 0;
+ 
+ 	skb = pd->rx_buffers[index].skb;
+@@ -782,9 +784,9 @@ static int smsc9420_alloc_rx_buffer(struct smsc9420_pdata *pd, int index)
+ 	if (unlikely(!skb))
+ 		return -ENOMEM;
+ 
+-	mapping = pci_map_single(pd->pdev, skb_tail_pointer(skb),
+-				 PKT_BUF_SZ, PCI_DMA_FROMDEVICE);
+-	if (pci_dma_mapping_error(pd->pdev, mapping)) {
++	mapping = dma_map_single(&pd->pdev->dev, skb_tail_pointer(skb),
++				 PKT_BUF_SZ, DMA_FROM_DEVICE);
++	if (dma_mapping_error(&pd->pdev->dev, mapping)) {
+ 		dev_kfree_skb_any(skb);
+ 		netif_warn(pd, rx_err, pd->dev, "pci_map_single failed!\n");
+ 		return -ENOMEM;
+@@ -901,8 +903,10 @@ static void smsc9420_complete_tx(struct net_device *dev)
+ 		BUG_ON(!pd->tx_buffers[index].skb);
+ 		BUG_ON(!pd->tx_buffers[index].mapping);
+ 
+-		pci_unmap_single(pd->pdev, pd->tx_buffers[index].mapping,
+-			pd->tx_buffers[index].skb->len, PCI_DMA_TODEVICE);
++		dma_unmap_single(&pd->pdev->dev,
++				 pd->tx_buffers[index].mapping,
++				 pd->tx_buffers[index].skb->len,
++				 DMA_TO_DEVICE);
+ 		pd->tx_buffers[index].mapping = 0;
+ 
+ 		dev_kfree_skb_any(pd->tx_buffers[index].skb);
+@@ -932,9 +936,9 @@ static netdev_tx_t smsc9420_hard_start_xmit(struct sk_buff *skb,
+ 	BUG_ON(pd->tx_buffers[index].skb);
+ 	BUG_ON(pd->tx_buffers[index].mapping);
+ 
+-	mapping = pci_map_single(pd->pdev, skb->data,
+-				 skb->len, PCI_DMA_TODEVICE);
+-	if (pci_dma_mapping_error(pd->pdev, mapping)) {
++	mapping = dma_map_single(&pd->pdev->dev, skb->data, skb->len,
++				 DMA_TO_DEVICE);
++	if (dma_mapping_error(&pd->pdev->dev, mapping)) {
+ 		netif_warn(pd, tx_err, pd->dev,
+ 			   "pci_map_single failed, dropping packet\n");
+ 		return NETDEV_TX_BUSY;
+@@ -1522,7 +1526,7 @@ smsc9420_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		goto out_free_netdev_2;
+ 	}
+ 
+-	if (pci_set_dma_mask(pdev, DMA_BIT_MASK(32))) {
++	if (dma_set_mask(&pdev->dev, DMA_BIT_MASK(32))) {
+ 		netdev_err(dev, "No usable DMA configuration, aborting\n");
+ 		goto out_free_regions_3;
+ 	}
+@@ -1540,10 +1544,9 @@ smsc9420_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	pd = netdev_priv(dev);
+ 
+ 	/* pci descriptors are created in the PCI consistent area */
+-	pd->rx_ring = pci_alloc_consistent(pdev,
+-		sizeof(struct smsc9420_dma_desc) * RX_RING_SIZE +
+-		sizeof(struct smsc9420_dma_desc) * TX_RING_SIZE,
+-		&pd->rx_dma_addr);
++	pd->rx_ring = dma_alloc_coherent(&pdev->dev,
++		sizeof(struct smsc9420_dma_desc) * (RX_RING_SIZE + TX_RING_SIZE),
++		&pd->rx_dma_addr, GFP_KERNEL);
+ 
+ 	if (!pd->rx_ring)
+ 		goto out_free_io_4;
+@@ -1599,8 +1602,9 @@ smsc9420_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	return 0;
+ 
+ out_free_dmadesc_5:
+-	pci_free_consistent(pdev, sizeof(struct smsc9420_dma_desc) *
+-		(RX_RING_SIZE + TX_RING_SIZE), pd->rx_ring, pd->rx_dma_addr);
++	dma_free_coherent(&pdev->dev,
++			  sizeof(struct smsc9420_dma_desc) * (RX_RING_SIZE + TX_RING_SIZE),
++			  pd->rx_ring, pd->rx_dma_addr);
+ out_free_io_4:
+ 	iounmap(virt_addr - LAN9420_CPSR_ENDIAN_OFFSET);
+ out_free_regions_3:
+@@ -1632,8 +1636,9 @@ static void smsc9420_remove(struct pci_dev *pdev)
+ 	BUG_ON(!pd->tx_ring);
+ 	BUG_ON(!pd->rx_ring);
+ 
+-	pci_free_consistent(pdev, sizeof(struct smsc9420_dma_desc) *
+-		(RX_RING_SIZE + TX_RING_SIZE), pd->rx_ring, pd->rx_dma_addr);
++	dma_free_coherent(&pdev->dev,
++			  sizeof(struct smsc9420_dma_desc) * (RX_RING_SIZE + TX_RING_SIZE),
++			  pd->rx_ring, pd->rx_dma_addr);
+ 
+ 	iounmap(pd->ioaddr - LAN9420_CPSR_ENDIAN_OFFSET);
+ 	pci_release_regions(pdev);
+-- 
+2.25.1
+
