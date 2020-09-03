@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47218C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF39C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16ADF206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4775F206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:03:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="WvkH7UnV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KoXs2PLf"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ltsavqlY";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YC5pnwgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbgICIDK (ORCPT
+        id S1728491AbgICID2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:03:10 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:44269 "EHLO
+        Thu, 3 Sep 2020 04:03:28 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:42409 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728355AbgICICC (ORCPT
+        by vger.kernel.org with ESMTP id S1728057AbgICICK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:02:02 -0400
+        Thu, 3 Sep 2020 04:02:10 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id A6F85B19;
-        Thu,  3 Sep 2020 04:02:00 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 61E0AB18;
+        Thu,  3 Sep 2020 04:02:03 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:02:01 -0400
+  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:02:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=YXxuxU9ZHEh8p
-        R9CgSs5iTltTrXj9Y+atvdh2HoAYHQ=; b=WvkH7UnVZm96cA0Lg4Fe6WtSbYjza
-        cUEM8GIzFXWhh2KPzVrVwWDV1CDUnGjo5TyG9YVSuOcnJrp93HZnhYN799uCgY0M
-        DiaTsoBKvCdBMz0/WaYYKreuShomBnsL4gOvXYsmrzw44i3MnLCb0OH1HpLLcIiQ
-        /XCVnsm/++avukKSV46Jv48fDJb9d9dim8daU98QcmJpjfPJwJAhHDRXqWrBY+z9
-        jo3PIIHbTIqrv7OEvr2nSTMi7kuy03z2vXZ9OmQ2za6WgNfwcH+L5p/Auz72A0uY
-        XcqOTg+oRasU8MRKrBWX9b9tcTKjHh7Blq1kDLlfxEvP+xXuLLSsmbIqw==
+        :mime-version:content-transfer-encoding; s=fm3; bh=XYgpM2+C6Ffr8
+        9VX+fzprB+BVWrGtQKRxGxoZZAckPk=; b=ltsavqlYBZvTzH1f7fVLT/KAFbm2l
+        5jlNBftY1TADBTtPIqUfkS4QhZPG65P2Z/LCLyBoeJrbul3OA6FwHcm2rQwDZbN9
+        uTm2hFWNPWjUJikP5DsQmsA16lrQyk2YoqIfU+BlwtEtXJ/NCaIzk1RPfEacGQIG
+        SSNtGSvXzgzfHDG8KK67NKJTD/NQp0HFaxjYZ40E0w3BV0GaVsplrlRLjtb3pS9L
+        QQXafeUAKZYvSz6J483sbk+tjT6bUIYgu6BMoXOyF00MlMG11KKnYjcJCyduswsv
+        bzPYTB9qgvMYn5Y8TZTRVEn/kGmrM/1ttYBtakH1AT0Sfd/EEx/LKLhWA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=YXxuxU9ZHEh8pR9CgSs5iTltTrXj9Y+atvdh2HoAYHQ=; b=KoXs2PLf
-        0udoKdgDiBtmFFeRdAWYuirpht06oBvnE7hHFf6NmEh1DrGC5pi07GYBP60VlYt1
-        BZ85/zYi9mLHdwYAbKt2On9KjtQGFgKh4EU/XeRHdUfvtZ5wC0MlhpqgBZwsqamK
-        0s66uf1l2EdBJQYHSHdBRgziFZpPZkxGyvZ1kAsVp815/4lVICFtn/6emXLVQan3
-        R+t2Vn7g7BGmsE+Pl7v6e5GxcLwJEG/Zav65jTOv7DZ36m5pIOACqYfl7SO7/uVy
-        BUARhrnGYdUTTctIa/v1obWTVMXHHjE87GMe5lDBMlHcgDiOdslP4GcEowB/aiNR
-        0OrH/7z8+69bwA==
-X-ME-Sender: <xms:-KJQXzUgeMiNsyaMaxPV-V0VJrOuxC5rFrrJZYJPaql07b_rBZe3YA>
-    <xme:-KJQX7lw5zYLR1Kk2kFNU2L-ZsEMlljiuH6O7wgFGo0fhhERLb_qGAOULh18afGW5
-    qrTNkorOEzThxDropU>
+        fm3; bh=XYgpM2+C6Ffr89VX+fzprB+BVWrGtQKRxGxoZZAckPk=; b=YC5pnwgP
+        0iE77UhA/R6OMJCyk3SHcrSfWe+6tUWRTriifx3PEBvslN4agTqRf8uTpx0wpF6+
+        cV22NjqH4lmXVS8RglndqAwHunSwS80btsk+f4nYOwcT85IDCTwvFh7YDSANtcsM
+        WaeaSgOP1Z4/NZOw6jNvKvdzyOrXlzN3XAY0xE8y44k3At1PorbK1gdqzEgewEkj
+        KXiWWGJXDs9Yx62Aa9lENhtNulEStuyTbflK0n7ATM081Hk5Uxo4Dp2x95siANMj
+        x38iII10u+4Zccckr64ClxyWWvIaVBP6NJiCHsTry2ikxBSl+q/f0fjNuiA5ZTTU
+        XvqRRhbAeboF5w==
+X-ME-Sender: <xms:-qJQX18LRZNEQnCDVKfnBrildVnp4KA1xYVp0XR8dvGLNhWlKERTXw>
+    <xme:-qJQX5tNJ-KuwnQlKG9BUv7nd15ZB5zyWmlzTMj_phmQpIGP9ghLGF1ffQY-YaIQr
+    AVOEFpu6CeHxFs_N30>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
@@ -60,13 +60,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetgg
     htthgvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveev
     heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedune
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:-KJQX_aMvZ-Br77jd6mauLOWuyXaOzfVQqcI9uhUB-ZGJJDv_YTVlQ>
-    <xmx:-KJQX-V0BdzIHEIUFrhpXxwTC7CzqVXSizgHUOwdROZTEs4j3Yw0Ww>
-    <xmx:-KJQX9lHuCqCGGvDfwjdmfzQQbUHSO7eVNnfA5SeHBSt_mMTJ_xJMQ>
-    <xmx:-KJQXzcYVlvU-2yqENoYvtDVMUd2o_ppmfaRC1tAUX9rXhXVCRZnGNBuopo>
+X-ME-Proxy: <xmx:-qJQXzCluYYCVZaG_J1nK7szgG-djA3KAW4pap5mMD04kml_QkwbLg>
+    <xmx:-qJQX5fhl1QY_9Nqs9SfxwjtWz_Ab96ifuX4l9IncCA-lmm8QnI1mQ>
+    <xmx:-qJQX6N70J6m8sjiKxuj1iDkJ-0DyyKKrYE6hqppflErFpwDDM7bBA>
+    <xmx:-6JQX7nlvyUk0gZMZwgGzRLXQY95h3rLktqY7hERV4eMpflD9mBFrggMc0I>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E1D0D328005E;
-        Thu,  3 Sep 2020 04:01:59 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9BF6B328005A;
+        Thu,  3 Sep 2020 04:02:02 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -81,9 +81,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Hoegeun Kwon <hoegeun.kwon@samsung.com>,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH v5 04/80] drm/vc4: plane: Change LBM alignment constraint on LBM
-Date:   Thu,  3 Sep 2020 10:00:36 +0200
-Message-Id: <6f9c4fe1eb9258a3f1d0f21af6a99c42472ac531.1599120059.git-series.maxime@cerno.tech>
+Subject: [PATCH v5 06/80] drm/vc4: plane: Create more planes
+Date:   Thu,  3 Sep 2020 10:00:38 +0200
+Message-Id: <b41003001541fc2bb23668c699c0369ff7983be8.1599120059.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
 References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
@@ -94,34 +94,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Let's now create more planes that can be affected to all the CRTCs.
 
-The HVS5 needs an alignment of 64bytes for its LBM memory, so let's reflect
-it.
+vc4 has 3 CRTCs, 1 primary and 1 cursor each, and was having 24 (8
+planes per CRTC) overlays.
 
+However, vc5 has 5 CRTCs, so keeping the same logic would put us at 50
+planes which is well above the 32 planes limit imposed by DRM.
+
+Using 16 seems like a good tradeoff between staying under 32 and yet
+providing enough planes.
+
+Reviewed-by: Eric Anholt <eric@anholt.net>
 Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
 Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_plane.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vc4/vc4_plane.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
-index 20c949b57827..d0771ebd5f75 100644
+index 23916814b4e3..1e38e603f83b 100644
 --- a/drivers/gpu/drm/vc4/vc4_plane.c
 +++ b/drivers/gpu/drm/vc4/vc4_plane.c
-@@ -578,7 +578,9 @@ static int vc4_plane_allocate_lbm(struct drm_plane_state *state)
- 		spin_lock_irqsave(&vc4->hvs->mm_lock, irqflags);
- 		ret = drm_mm_insert_node_generic(&vc4->hvs->lbm_mm,
- 						 &vc4_state->lbm,
--						 lbm_size, 32, 0, 0);
-+						 lbm_size,
-+						 vc4->hvs->hvs5 ? 64 : 32,
-+						 0, 0);
- 		spin_unlock_irqrestore(&vc4->hvs->mm_lock, irqflags);
+@@ -1384,7 +1384,7 @@ int vc4_plane_create_additional_planes(struct drm_device *drm)
+ 	 * modest number of planes to expose, that should hopefully
+ 	 * still cover any sane usecase.
+ 	 */
+-	for (i = 0; i < 8; i++) {
++	for (i = 0; i < 16; i++) {
+ 		struct drm_plane *plane =
+ 			vc4_plane_init(drm, DRM_PLANE_TYPE_OVERLAY);
  
- 		if (ret)
 -- 
 git-series 0.9.1
