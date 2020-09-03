@@ -2,96 +2,180 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EFDC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEB4C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC9F120716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:04:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599149064;
-	bh=GTA7nLGOuRGnaYqMiBhQJcR754KpBuAkgjzerzCpcWg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YyrkP7DL8ZbKolQ7lDdkYI3Nt1jkrQbZvuvpq5ZppCbFENyUAF8sy3M1Pci3gQEZc
-	 H6kTmEMKCFrT0kdaQdCGCVDTUmh8A1Wm1O8f8WWrqV7bl8uy+IdInqQ7g1SfvOTSUM
-	 qTpRfwU5Usvxfm9GITZTh5zBBnGy09+EKJQsWbwY=
+	by mail.kernel.org (Postfix) with ESMTP id BA5C220716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:04:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="C64X8/cS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgICQEW (ORCPT
+        id S1728555AbgICQE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:04:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60756 "EHLO mail.kernel.org"
+        Thu, 3 Sep 2020 12:04:57 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:39006 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbgICQET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:04:19 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728294AbgICQE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 12:04:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1599149095; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=BbRl76XIlOIFPF0/T2Fc59O0KUWyM1MMCVLAI6nX0Ok=;
+ b=C64X8/cSx0Dv+M4E+zv1ZUbShAoKbfw0HVZBAYqcrmeOBLkv592/pJ2PY0gRzpMdK35Fh7b5
+ 4XODosj9tM16g7MpY+gZvfhAXty+dHlIRrF6P7W+/mjlMghisNjHDig8lW55sgQ6ZptyPe7C
+ 69juhifnFbnDP8jm2qOKKsmszWk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
+ 5f5114124f13e63f0422c854 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 03 Sep 2020 16:04:34
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D8CF8C433CB; Thu,  3 Sep 2020 16:04:32 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 436B720829;
-        Thu,  3 Sep 2020 16:04:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599149058;
-        bh=GTA7nLGOuRGnaYqMiBhQJcR754KpBuAkgjzerzCpcWg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KmAYC9Umq1PjHaDgPe+K/fS3MPk+4Pe+PVCqDtaEaBDS5L6h4t8tzu2euja/fMWDF
-         xzSJgUpu5KlnkxlBLH1moCGPXfKCfZXMonYF1PFGZ16qCvQzZDDv7gcAlqZ+ZXctOf
-         triNkoo0PaQetAiFiB/g+98Xv9ItQlT3v0VtQHxs=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kDrii-008w85-JK; Thu, 03 Sep 2020 17:04:16 +0100
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D4223C433CB;
+        Thu,  3 Sep 2020 16:04:31 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
+Content-Type: text/plain; charset=UTF-8;
  format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 03 Sep 2020 17:04:16 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
-        David Lechner <david@lechnology.com>,
-        Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Roger Quadros <rogerq@ti.com>, kernel-team@android.com
-Subject: Re: [RESEND PATCH v2] mfd: syscon: Use a unique name with
- regmap_config
-In-Reply-To: <b378af0d-19a8-3d1b-5ca3-54ebccd77c9b@ti.com>
-References: <20200727211008.24225-1-s-anna@ti.com>
- <0c1feaf91b9d285c1bded488437705da@misterjones.org>
- <74bc1f9f-cc48-cec9-85f4-3376b66b40fc@ti.com>
- <78b465b080772b6ba867e39a623c2310@kernel.org>
- <ef1931eb-5677-d92c-732d-b67b5263425d@ti.com>
- <0d43f357983711fcffce7023ad115d13@kernel.org>
- <b378af0d-19a8-3d1b-5ca3-54ebccd77c9b@ti.com>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <80600ff6d37712d15da906c24f761bfd@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: s-anna@ti.com, broonie@kernel.org, lee.jones@linaro.org, arnd@arndb.de, grzegorz.jaszczyk@linaro.org, david@lechnology.com, tony@atomide.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rogerq@ti.com, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 03 Sep 2020 21:34:31 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCHv2] soc: qcom: llcc: Support chipsets that can write to
+ llcc registers
+In-Reply-To: <CAD=FV=WrEh9_XqOvA5mNYQRMDujOWBqeeDFDFj_C3XKy-okGVQ@mail.gmail.com>
+References: <20200817144722.6665-1-saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=VE6vCPjDvvP0e73tnd8u5rPuMUa-mwvDazrfUpXP+bKQ@mail.gmail.com>
+ <2a0c5fa189dbb2e810ba88f59621b65c@codeaurora.org>
+ <CAD=FV=X8yS1gUNhhVNyfuRPzDUheG2Rco2g16KMegCG6fKJw7Q@mail.gmail.com>
+ <d949bdfa15b133f74a47727401553c76@codeaurora.org>
+ <7714ee57f75542839d5c33b28f232aa6@codeaurora.org>
+ <CAD=FV=Xt0NTNjCEJ2USfyd2qZ+FfBz9xwctbpv+hSWvvCoAZFg@mail.gmail.com>
+ <dd60dafcea8b75b10516bf2bc4952abb@codeaurora.org>
+ <CAD=FV=WrEh9_XqOvA5mNYQRMDujOWBqeeDFDFj_C3XKy-okGVQ@mail.gmail.com>
+Message-ID: <2fe7e79f4fc877eb5d488d799fbf44d6@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-03 14:25, Suman Anna wrote:
-> On 9/3/20 3:26 AM, Marc Zyngier wrote:
+Hi,
 
-[...]
-
->> Have we reached a conclusion here? Can we get a fix in mainline?
+On 2020-09-03 21:24, Doug Anderson wrote:
+> Hi,
 > 
-> Marc, we can go with your patch based on Mark's response.
+> On Thu, Sep 3, 2020 at 8:47 AM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> On 2020-09-03 19:16, Doug Anderson wrote:
+>> > Hi,
+>> >
+>> > On Thu, Sep 3, 2020 at 2:58 AM Sai Prakash Ranjan
+>> > <saiprakash.ranjan@codeaurora.org> wrote:
+>> >>
+>> >> Hi,
+>> >>
+>> >> On 2020-08-18 21:07, Sai Prakash Ranjan wrote:
+>> >> > Hi Doug,
+>> >> >
+>> >> >>
+>> >> >> I guess to start, it wasn't obvious (to me) that there were two
+>> >> >> choices and we were picking one.  Mentioning that the other
+>> >> >> alternative was way-based allocation would help a lot.  Even if you
+>> >> >> can't fully explain the differences between the two, adding something
+>> >> >> to the commit message indicating that this is a policy decision (in
+>> >> >> other words, both work but each have their tradeoffs) would help.
+>> >> >> Something like this, if it's correct:
+>> >> >>
+>> >> >> In general we try to enable capacity based allocation (instead of the
+>> >> >> default way based allocation) since that gives us better performance
+>> >> >> with the current software / hardware configuration.
+>> >> >>
+>> >> >
+>> >> > Thanks, I will add it for next version. Let me also go poke some arch
+>> >> > teams
+>> >> > to understand if we actually do gain something with this selection, who
+>> >> > knows
+>> >> > we might get some additional details as well.
+>> >> >
+>> >>
+>> >> I got some information from arch team today, to quote them exactly:
+>> >>
+>> >> 1) What benefits capacity based allocation brings over the default way
+>> >> based allocation?
+>> >>
+>> >> "Capacity based allows finer grain partition. It is not about improved
+>> >> performance but more flexibility in configuration."
+>> >>
+>> >> 2) Retain through power collapse, doesn’t it burn more power?
+>> >>
+>> >> "This feature is similar to the standard feature of retention. Yes,
+>> >> when
+>> >> we
+>> >> have cache in retention mode it burns more power but it keeps the
+>> >> values
+>> >> so
+>> >> that when we wake up we can get more cache hits."
+>> >>
+>> >>
+>> >> If its good enough, then I will add this info to the commit msg and
+>> >> post
+>> >> next version.
+>> >
+>> > Sounds fine to me.  I was mostly looking for a high level idea of what
+>> > was happening here.  I am at least a little curious about the
+>> > retention bit.  Is that retention during S3, or during some sort of
+>> > Runtime PM?  Any idea how much power is burned?  Unless the power is
+>> > miniscule it seems hard to believe that it would be a net win to keep
+>> > a cache powered up during S3 unless you're planning on waking up a
+>> > lot.
+>> >
+>> 
+>> The retention setting is based on sub cache id(SCID), so I think its 
+>> for
+>> runtime pm, the power numbers weren't provided. But I believe these
+>> decisions are made after solid testing and not some random
+>> approximations.
+> 
+> Right, I believe it was tested, I just wonder if it was tested on a
+> phone vs. a laptop.  A phone is almost constantly waking up to deal
+> with stuff (which is why my phone battery barely lasts till the end of
+> the day).  Phones also usually have some type of self refresh on their
+> panels so they can be suspended even when they look awake which means
+> even more constant wakeups.  A laptop (especially without panel self
+> refresh) may have very different usage models.  I'm trying to confirm
+> that this setting is appropriate for both classes of devices or if it
+> has been only measured / optimized for the cell phone use case.
+> 
 
-Patch resent[1].
+Could be, but there are windows laptops based on QCOM SoCs where these
+must have also been tested (note that this setting can also be in 
+firmware
+and no one would know), but I don't have numbers to quantify.
 
-         M.
+Thanks,
+Sai
 
-[1] https://lore.kernel.org/r/20200903160237.932818-1-maz@kernel.org
 -- 
-Jazz is not dead. It just smells funny...
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
