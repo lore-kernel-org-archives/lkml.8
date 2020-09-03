@@ -2,129 +2,109 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF19C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EE0C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C04EF20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D354D20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:10:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uDQKIdW6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8mP/a6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbgICPJ5 (ORCPT
+        id S1728951AbgICPKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:09:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59164 "EHLO
+        Thu, 3 Sep 2020 11:10:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728949AbgICN6P (ORCPT
+        with ESMTP id S1728999AbgICN6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 09:58:15 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99482C061247;
-        Thu,  3 Sep 2020 06:10:09 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id gf14so1444244pjb.5;
-        Thu, 03 Sep 2020 06:10:09 -0700 (PDT)
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB295C061A1D;
+        Thu,  3 Sep 2020 06:47:13 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id t7so3069865ljo.13;
+        Thu, 03 Sep 2020 06:47:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7a9czeHx1WaehdjYOh4c7Ybw7Lr7mUZE1bLwOuZyr+k=;
-        b=uDQKIdW6nFsQhpyMvKSXhPBLoW4lNZWf3KnQPF/INyG3dnqvwClq7KFVMQUzr63bIl
-         CNiFIEBaqS6rLKVAddY6n+QUuJfvY6sUbDOIS4tuCkO6jmiEWxC3ul08yTwwSD45kq6f
-         SpVlmPDDsuZZ6YzOo9AnTnjtINWpUigZHBw3Gz4Z/30QrELWOklVZeh8m/GdtY8k1eTk
-         i0WodxY3eVSxjSfRMvhDZPe+eXSZwf/cOpuB24fTcUKUWCB/Q/iNKNIZk5qmhEkDx9eJ
-         gOF7DK5qT5h51Oh8ucSvnUG5DoP69Io2xp3tsq/vE5+Yqn8Yp8m0Xj5Z7VGpPHcR/9cM
-         YAyw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=k3qzuThp72U/KRxwqVBmH8skw7M3iKBLI2uUGRnjLys=;
+        b=L8mP/a6IrjsOnBUJNLH9gtRvDP+4OMbHI+ZwhcrchPmprm1bWwSXCF3qdpZNSLZitr
+         5vxo1+pmmZE4aqpsEmb9R44gchROZJsr06CkDcuqrYl2QZJuhGs2QZpQ3dhuJkfnkkyp
+         drHo4YDPArnj1+J49nUababBHTtwnFLT0B5m//G0fxwxB/gKJHtQtLIKtgs4CbdZfkge
+         SO1qNNzSOsZLrGVzu2UB6UkuJ/emvvSSx0zcPF5cLIJjv9LQlc5q34Erkx5cL3E46lZU
+         i+hpfnP8g/Nm4s66rEd5vhzeG+kMEWSztvvit157Lw7hGQBHSK7WWoyKqlgwaSSEWCDf
+         fqhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7a9czeHx1WaehdjYOh4c7Ybw7Lr7mUZE1bLwOuZyr+k=;
-        b=P324reEtF5wjaj3I8AjFYx7C8jybvPoHOuBc1U2id7xbe9s68ctbGjV0mJ6Gkue3Df
-         VttG5objxZfk3AlUvyqwo8HdnKEQeWLZj/ErKq1Hkl/o5Kl1QD7id7sY0Wlgyp045HKc
-         MCg1waWV6c630+xq6qWFR19lHoCgNlXUgwZAw6uYD4GnWmSXLscZYPV3l9abZoTxTKQq
-         VUPGptY5VUXTD/YjueyVTFjlU8RSdZob8HmImhzDNL0F4zsTWh2usKK7Hf+l7towcTqo
-         ThukNfkMwYdHLDCmG0NUiduS5XjuEsNGHFHVtn5STvzIR3i5rib3gNQL/Cj7pY3mwEny
-         heTw==
-X-Gm-Message-State: AOAM5329gU9AAzTKiBvOMn6B0zXunLQucCUH1iV2qc4Jcb+xLd4DOEBv
-        Bp6i/nAt+4bKRTKONKlVzy0=
-X-Google-Smtp-Source: ABdhPJzkp3rDbFqzGkkdj3P3Q5mTKZgz9MZmbQHQVVLRXloiMwmwITc8VOGi+MgiXj0Bm2my5d0pgw==
-X-Received: by 2002:a17:90a:fcc:: with SMTP id 70mr3097179pjz.220.1599138609200;
-        Thu, 03 Sep 2020 06:10:09 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:6085:e35d:a526:a3b6:4686:f6fb])
-        by smtp.gmail.com with ESMTPSA id o23sm3052249pgm.18.2020.09.03.06.10.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 06:10:08 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org, robh+dt@kernel.org
-Cc:     dragos.bogdan@analog.com, darius.berghe@analog.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, andy.shevchenko@gmail.com,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: [PATCH v2 2/3] dt-bindings: iio: gyro: adxrs290: Add interrupts support
-Date:   Thu,  3 Sep 2020 18:39:49 +0530
-Message-Id: <20200903130950.6274-3-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200903130950.6274-1-nish.malpani25@gmail.com>
-References: <20200903130950.6274-1-nish.malpani25@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=k3qzuThp72U/KRxwqVBmH8skw7M3iKBLI2uUGRnjLys=;
+        b=jwBk7gYLNiMAxzl0VacAbMtAjdcKiNqnbStDTWbvhkxd10FwezL1DXN0WTecIW/9hO
+         b+18eKz1c0EvzTrr6b1xhqVM7+bBm1LnDlLirseu48WS4nMVRPI5Ei2cHRXLt0Y41q9m
+         VnkGFnCvkG1JMHWgiavaNVCBWT6ofLZeSrfG4kewL7pKmlBECtLy5XfI8I0Ww6r8Ol3J
+         XWoVROlFrTg0+iY2yNLfnbCqYCO04kVe+ZQ04kuMqZ7IdyA0okUdljaPBiaQx6eYc07B
+         LrnxwjNhHOht5xGxBFMTLHjbKzhozeMYry3vBAi1SrTrJ4t1d6Fu4F5HYpUgFF48Ww9Z
+         mh2g==
+X-Gm-Message-State: AOAM532tFxt1LQufFJk+tHhE0suHQBsciM15Lw/2Vce1VNrvirhAIw7T
+        VCrYWC50LHKiTR531Wri0Mg=
+X-Google-Smtp-Source: ABdhPJy8eL2bmmPblOvXEyLk1+3kYW10KFUyH34uTWW02OusL+7ojvhtmrJ/zedSljYSdLAXGPWwGg==
+X-Received: by 2002:a2e:574c:: with SMTP id r12mr1398000ljd.302.1599140832286;
+        Thu, 03 Sep 2020 06:47:12 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id k12sm614296ljh.95.2020.09.03.06.47.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 06:47:11 -0700 (PDT)
+Subject: Re: [PATCH v3 05/22] i2c: tegra: Use reset_control_reset()
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>
+References: <20200903005300.7894-1-digetx@gmail.com>
+ <20200903005300.7894-6-digetx@gmail.com>
+ <CAHp75VefJMxAoGxN8muTxLUJ=bwcMyjzX4uEGvYdckE6xYJvjw@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <07e418bb-77c1-a3bc-bb8b-b930b8c723df@gmail.com>
+Date:   Thu, 3 Sep 2020 16:47:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CAHp75VefJMxAoGxN8muTxLUJ=bwcMyjzX4uEGvYdckE6xYJvjw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Include 'interrupts' property and provide a suitable example for using
-a GPIO interrupt line.
+03.09.2020 14:11, Andy Shevchenko пишет:
+> On Thu, Sep 3, 2020 at 3:53 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> Use a single reset_control_reset() instead of assert/deasset couple in
+>> order to make code cleaner a tad.
+> 
+>> Note that the reset_control_reset()
+>> uses 1 microsecond delay instead of 2 that was used previously, but this
+>> shouldn't matter.
+> 
+> What datasheet says about this delay?
 
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
----
+The public datasheet doesn't say anything specific about the I2C
+controller reset time. IIUC, controller logic runs at 200/400 MHz, so
+1us should be enough for the reset.
 
-Changes in v2:
-
-  - remove 'interrupts' property from the required properties list
-  - rewrite commit message
----
- .../devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml    | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-index 61adb2c2454b..a5f209e8bbef 100644
---- a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-@@ -28,6 +28,9 @@ properties:
- 
-   spi-cpha: true
- 
-+  interrupts:
-+    maxItems: 1
-+
- required:
-   - compatible
-   - reg
-@@ -39,6 +42,8 @@ additionalProperties: false
- 
- examples:
-   - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-     spi {
-         #address-cells = <1>;
-         #size-cells = <0>;
-@@ -48,6 +53,8 @@ examples:
-                    spi-max-frequency = <5000000>;
-                    spi-cpol;
-                    spi-cpha;
-+                   interrupt-parent = <&gpio>;
-+                   interrupts = <25 IRQ_TYPE_EDGE_RISING>;
-         };
-     };
- ...
--- 
-2.20.1
-
+I'm sure that somebody from NVIDIA should know the exact answer and will
+correct me if I'm wrong. I CC'd Peter De Schrijver who is a maintainer
+of the Tegra's clock-and-reset driver.
