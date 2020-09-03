@@ -2,116 +2,99 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5383EC2D0E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54027C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36626206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:37:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8Z56R9v"
+	by mail.kernel.org (Postfix) with ESMTP id 3173D20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:37:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599165430;
+	bh=1SAc/pkQ+YvF2FbSZWmb9yACOrCSFl+Cocz2H8qQb9s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qn1UoNjbi45YX/LqhyElkNf2cDSx2lh4jkZjyBuQLK2XqB6gPUp4pafESH6nd/42g
+	 jmSyDy9aLNI7pTA2XDaj51GyZe7KLcwRIzWn3tdyyv2aEqajl310fi1nIhGqfD7Ycn
+	 T9R0kj0N+ETHi0tyHP2cZ9kjdhV/T1TBonpLss9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbgICUhP (ORCPT
+        id S1729743AbgICUhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:37:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729729AbgICUg5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:36:57 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26802C061244;
-        Thu,  3 Sep 2020 13:36:57 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id q3so3054177ybp.7;
-        Thu, 03 Sep 2020 13:36:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2E7KS28zfC4tVsTRRkYzuj1mxceg9YfnccbGKN5EM2Y=;
-        b=b8Z56R9vFCgocfa8RWukYzYWSYA3gtr6wje77Wssz6K+yjxqD8f20ntZRZheoOVV+v
-         BDgrP0DtuIjNozxXUxj5gCg9caRvd/P+tM9finPeseB/BU1EGEVNuDDUCUhc6fRW0+nv
-         ipw4HTaUQsw0mD/UVxhcoksGGtRHcfpjSL9gdBe9rLiF683BWUicBR0v5tH9ve/YOECY
-         CRBkxBs6Drv3tPFtYRZzKysdE0NXzSFgndTRv8sHMiGEPIn/N3Hy6jz0Y1HBJtbaGfQs
-         2tl62L8jQBmWUR4YbZ+pMBird4XhD+ApWBH/laeIzawJImWgckQ8geGawy72noVBmYN7
-         2BYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2E7KS28zfC4tVsTRRkYzuj1mxceg9YfnccbGKN5EM2Y=;
-        b=F3Yb6WkV5Ht9SqyzXYDGFKnBQWJmOR0w2OhERh83PfsCB56mSjQhLx2QkGDgs+WXC3
-         a2hkwpVcjOPkGaUjadZhQYr4C3fNEejj6aYE9Q6y9j2tukXA2nqhDESGaMmNvGWfos5Q
-         xrfipchqB7H7gS4A5t1xZGXfvvPcRMRXLvtMrgQocMWBzHIXorc8WS5FHm7bJDx2shJR
-         nY1ooQk2T3yzTEYphbhLL6y5i+aezOKPRts4A5QG8u3FogP9zH0O9nLC+20Tl8+qbguP
-         p5Etq+bgxM2HN5l67lGt9U1TXOCYQim/J4WOtGaF5bQpMswMuXJcsec0/+vnZqeEbHYH
-         uI7w==
-X-Gm-Message-State: AOAM532HTyYh5kJKbsH9b59IZpJLToqbSoV5DHMjudwzLqo5KjOCFBjC
-        orA0XKfQruoENGPFoBBQILl6rgA7YPljT1itV5U=
-X-Google-Smtp-Source: ABdhPJyDQfdxjra9IKhfUae9dPcHOGQ0OPr4g2ImIt6wfz0b1j2FGZbTmo+bBtcrYt4XI6l5mjIApkQYAlXK5G6M1C4=
-X-Received: by 2002:a25:6885:: with SMTP id d127mr5150392ybc.27.1599165416443;
- Thu, 03 Sep 2020 13:36:56 -0700 (PDT)
+        Thu, 3 Sep 2020 16:37:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729406AbgICUgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 16:36:47 -0400
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D424320678;
+        Thu,  3 Sep 2020 20:36:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599165407;
+        bh=1SAc/pkQ+YvF2FbSZWmb9yACOrCSFl+Cocz2H8qQb9s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GBkpHkU2mNLKVOS/n/yqttR70A8MEzwnA9pn1u05EHDkX4XcWUSfUVZkx7ThPoXOc
+         cOmPUjFm5o0MmRK6kvTOhILNt0h3An0CEiW3YsoWfXt110ZrjP+Rf5jCjnm4Fnjs87
+         8Ex/F7hfg91BygIg8YxrY4JHq3CyVTmZXo0DMmAU=
+Received: by mail-ed1-f50.google.com with SMTP id n13so3986700edo.10;
+        Thu, 03 Sep 2020 13:36:46 -0700 (PDT)
+X-Gm-Message-State: AOAM531RyyFbMZHaVev3FRsiSj78+oZplZI5pzwkXEHdj54bfStT7xvX
+        IwnnzOI/aH30WIeGWD6dLzj7HecBOfF1rMCvpsI=
+X-Google-Smtp-Source: ABdhPJzxpPlGTe4YpW+4SBi3UyLCfVVsjl/2HCF6ABdQkyPpZO/E8Ki7WEbnMMz1NKYFTDSRsOdBqsPbQLS79oRkX0c=
+X-Received: by 2002:a05:6402:1a48:: with SMTP id bf8mr5017832edb.298.1599165405346;
+ Thu, 03 Sep 2020 13:36:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200903200528.747884-1-haoluo@google.com>
-In-Reply-To: <20200903200528.747884-1-haoluo@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 3 Sep 2020 13:36:45 -0700
-Message-ID: <CAEf4Bza6e+x8Rqy7cBzMG0F0D5WCzE7xPRoAqJgSbfyqXxtT5A@mail.gmail.com>
-Subject: Re: [PATCH] selftests/bpf: Fix check in global_data_init.
-To:     Hao Luo <haoluo@google.com>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
-        KP Singh <kpsingh@chromium.org>
+References: <20200829111800.2786-1-krzk@kernel.org> <20200829111800.2786-6-krzk@kernel.org>
+ <20200903164117.GA2922218@bogus>
+In-Reply-To: <20200903164117.GA2922218@bogus>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 3 Sep 2020 22:36:34 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPc_abP=YU9cWFfPsFLrnb9N1PBEEbaSWPLLvYHZ_GmsGQ@mail.gmail.com>
+Message-ID: <CAJKOXPc_abP=YU9cWFfPsFLrnb9N1PBEEbaSWPLLvYHZ_GmsGQ@mail.gmail.com>
+Subject: Re: [PATCH 6/7] dt-bindings: i2c: imx: Use unevaluatedProperties
+To:     Rob Herring <robh@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Wolfram Sang <wolfram@the-dreams.de>,
+        Dong Aisheng <aisheng.dong@nxp.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-i2c@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 1:06 PM Hao Luo <haoluo@google.com> wrote:
+On Thu, 3 Sep 2020 at 18:41, Rob Herring <robh@kernel.org> wrote:
 >
-> The returned value of bpf_object__open_file() should be checked with
-> libbpf_get_error() rather than NULL. This fix prevents test_progs from
-> crash when test_global_data.o is not present.
+> On Sat, Aug 29, 2020 at 01:17:59PM +0200, Krzysztof Kozlowski wrote:
+> > Additional properties actually might appear (e.g. power-domains or child
+> > nodes) so use unevaluatedProperties to fix dtbs_check warnings like:
+> >
+> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: i2c@30a20000:
+> >     '#address-cells', '#size-cells', 'pmic@25' do not match any of the regexes: 'pinctrl-[0-9]+'
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Signed-off-by: Hao Luo <haoluo@google.com>
-> ---
+> NAK. See https://lore.kernel.org/r/CAL_JsqKPXJxsHPS34_TCf9bwgKxZNSV4mvQR-WKRnknQVtGGxQ@mail.gmail.com/
 
-thanks!
+I can reference the generic i2c-controller schema and add missing
+properties but what to do with children (pmic@25 and many other)? I
+see that all of the other I2C controller dtschema files solve it by
+skipping "additionalProperties: false". Is this the way to go with I2C
+controllers?
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-
->  tools/testing/selftests/bpf/prog_tests/global_data_init.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/testing/selftests/bpf/prog_tests/global_data_init.c b/tools/testing/selftests/bpf/prog_tests/global_data_init.c
-> index 3bdaa5a40744..ee46b11f1f9a 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/global_data_init.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/global_data_init.c
-> @@ -12,7 +12,8 @@ void test_global_data_init(void)
->         size_t sz;
->
->         obj = bpf_object__open_file(file, NULL);
-> -       if (CHECK_FAIL(!obj))
-> +       err = libbpf_get_error(obj);
-> +       if (CHECK_FAIL(err))
->                 return;
->
->         map = bpf_object__find_map_by_name(obj, "test_glo.rodata");
-> --
-> 2.28.0.526.ge36021eeef-goog
->
+Best regards,
+Krzysztof
