@@ -2,91 +2,113 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9CBC32773
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB3CC3526C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26ACC20658
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:34:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599165260;
-	bh=6z3I61UrsqdEOlJteYcY9hQ+jdgGM1aWxnw3gt+fAgU=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gwRMixKmDrDS9gCvuz/kag0D9yTQtOCyUVb+dmvOEilnp3tuoAM6N379HURiXlPan
-	 kw6WpCRbQ+Y1HsNZPqwrn1JGGDD42myw9nt5/yx51N3lw88a+UfPxKpVQt+zY2Ou93
-	 PUXrphxCtZChzmNmlLKV9zUcbLoi2k30FBEzj8Ow=
+	by mail.kernel.org (Postfix) with ESMTP id 0F56D20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:34:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="iQC3MXcn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729610AbgICUeS (ORCPT
+        id S1729694AbgICUen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:34:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729621AbgICUdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:33:13 -0400
-Received: from localhost.localdomain (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FD7420678;
-        Thu,  3 Sep 2020 20:33:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599165193;
-        bh=6z3I61UrsqdEOlJteYcY9hQ+jdgGM1aWxnw3gt+fAgU=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=hL9jVygnF3BMdbkCrhqqbkhnCtKbgKYLMxqnpnapF/MU1/gThkESEQcXzOu1V05dq
-         sFTDQW7vwIUvfi610Ad/C+0SpRzBbkHs/GvT6SOj8T+TWnIvjYnzEhuRon666IxCp1
-         9uH7c96wyX9z+KX/KoBZNVTfSiWe66DJPEaUQnLM=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH 3/4] arm64: dts: exynos: Remove undocumented i2s properties in Exynos5433
-Date:   Thu,  3 Sep 2020 22:32:49 +0200
-Message-Id: <20200903203250.19830-3-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200903203250.19830-1-krzk@kernel.org>
-References: <20200903203250.19830-1-krzk@kernel.org>
+        Thu, 3 Sep 2020 16:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729603AbgICUdG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 16:33:06 -0400
+Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF45CC061A14
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:31:45 -0700 (PDT)
+Received: by mail-pj1-x1049.google.com with SMTP id e4so1101419pjd.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:31:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=2NV0P0BZEhFeVXK5NU1s/CPB7b09hharJKRKaO0KUAA=;
+        b=iQC3MXcnnX2MJeVDml9r32koVHGM9fCnhlqFyGQpI4kg6N+GAVi3eGpcReIyaQtftv
+         +8hQOVada7+yAvDv+aDU/EX2lefZWBlI9dX0gvIJ8Kui/Wbd4nfao83zED/RIwUOKlUV
+         gA5DFOuDkiclAAdzZ1/RROkyKMSuawdisMFROE1LrIYELe2IjMVIt9K4CTCeZdrJwu4h
+         7qDCOjod/u5pLmt4qqLI/ZOb622Ix0toxovXCmz8FD3st43YIbEjbKdrQpK4ZVWgCZs1
+         02Yx3hYWMaTbxLOVDZUON1042qKsUxlBQ0eLPqPtOoYsRyCMeWYMt5KLAQ1gBbndPuHD
+         TPKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=2NV0P0BZEhFeVXK5NU1s/CPB7b09hharJKRKaO0KUAA=;
+        b=MvmcHt7orDYIUEFJpWgAHSHxDOOuJExTbdMxnfGFxTe7LuyYoVCoAUUdfHVt7uTUNa
+         EWngKtCI22oYbINh7aThg5IZmcm9AqGtVfpi+1SeMDc3W6vCq51CQWqUwFpFQHqkN7rG
+         zizqsaDk5F8HmUYVSroPdGnZK+4Raj0HkxD6WRv2bYJmNZ6fH0ONGtn97Hb2zuKFe7DS
+         zTQUqj6YxGFrwFZebYAQXw4sCV2OSe3kAcG50adoZWexYx6ajncvOdqNSZBeKDHTNmjb
+         X5fXLLTKDvu61AWRlstWVEyd3jqe0kVp/ce56RO9hOnbGBCuycqCzjqIPUSwT2xL9lYu
+         Mg1A==
+X-Gm-Message-State: AOAM531su8oOoeHWOLw2M4tPBIPwIDoJy8ruhwQyC4pVjU8Wf6uq2vuF
+        6n/Irtb6BN6Cg2TQ6/KeYth3HVEAe8O/QwjYfz8=
+X-Google-Smtp-Source: ABdhPJxXEiK8iQgluE8U1P9eVcF55qIItGQI+hRRjVeMXkeZ98njIjZMcmdWbshQtzwoU58/viNSLC1erEh/riMVVr4=
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+ (user=samitolvanen job=sendgmr) by 2002:a62:e107:0:b029:13c:1611:658b with
+ SMTP id q7-20020a62e1070000b029013c1611658bmr3713577pfh.8.1599165105298; Thu,
+ 03 Sep 2020 13:31:45 -0700 (PDT)
+Date:   Thu,  3 Sep 2020 13:30:49 -0700
+In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
+Message-Id: <20200903203053.3411268-25-samitolvanen@google.com>
+Mime-Version: 1.0
+References: <20200624203200.78870-1-samitolvanen@google.com> <20200903203053.3411268-1-samitolvanen@google.com>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+Subject: [PATCH v2 24/28] KVM: arm64: disable LTO for the nVHE directory
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Few I2S device node properties were not documented and not used by any
-of the drivers.  Remove them to fix dtbs_check warning:
+We use objcopy to manipulate ELF binaries for the nvhe code,
+which fails with LTO as the compiler produces LLVM bitcode
+instead. Disable LTO for this code to allow objcopy to be used.
 
-  arch/arm64/boot/dts/exynos/exynos5433-tm2.dt.yaml: i2s@14d60000:
-    Additional properties are not allowed ('samsung,supports-rstclr', 'samsung,supports-tdm',
-    'samsung,supports-6ch', 'samsung,supports-low-rfs' were unexpected)
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm64/kvm/hyp/nvhe/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index 9651bb9fdadc..8eb4576da8f3 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -1460,10 +1460,6 @@
- 				 <&cmu_peric CLK_SCLK_I2S1>;
- 			clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
- 			#clock-cells = <1>;
--			samsung,supports-6ch;
--			samsung,supports-rstclr;
--			samsung,supports-tdm;
--			samsung,supports-low-rfs;
- 			#sound-dai-cells = <1>;
- 			status = "disabled";
- 		};
+diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
+index aef76487edc2..c903c8f31280 100644
+--- a/arch/arm64/kvm/hyp/nvhe/Makefile
++++ b/arch/arm64/kvm/hyp/nvhe/Makefile
+@@ -45,9 +45,9 @@ quiet_cmd_hypcopy = HYPCOPY $@
+ 		   --rename-section=.text=.hyp.text			\
+ 		   $< $@
+ 
+-# Remove ftrace and Shadow Call Stack CFLAGS.
++# Remove ftrace, LTO, and Shadow Call Stack CFLAGS.
+ # This is equivalent to the 'notrace' and '__noscs' annotations.
+-KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
++KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_FTRACE) $(CC_FLAGS_LTO) $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
+ 
+ # KVM nVHE code is run at a different exception code with a different map, so
+ # compiler instrumentation that inserts callbacks or checks into the code may
 -- 
-2.17.1
+2.28.0.402.g5ffc5be6b7-goog
 
