@@ -2,93 +2,116 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DA8C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65832C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E2B32065E
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:40:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599122441;
-	bh=/RhL1+Os0ZHjkfhSyZSXiOAfORqfkCbABBv7SoNeSus=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b+wHXCH24QYGqkjAEGFJKTId6dlV0PPRjGxWclrTd6yqZbncBnbUjGensFLtRJELj
-	 /EN5ZF2IAbNcbmj2cbCP3HeyvBtKnihq3jDIF5e5pDSWHhAntjmGQ+2QoHKWQmXbxy
-	 jwk6F5WWgIZNoUIaSFCx4hXB9AWrvlYGK3UF2XpI=
+	by mail.kernel.org (Postfix) with ESMTP id 3DC712065E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:40:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgICIkk (ORCPT
+        id S1728324AbgICIkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbgICIki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:40:38 -0400
-Received: from localhost (unknown [122.171.179.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A650206C0;
-        Thu,  3 Sep 2020 08:40:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599122437;
-        bh=/RhL1+Os0ZHjkfhSyZSXiOAfORqfkCbABBv7SoNeSus=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bqv3xA8ZsbL4xC45ykIHJ3xL4LxR6kgq8JH3vNz6QsLqABuwb+j0v/e8bQtPJcnO4
-         uIEC6+0nhPjNhUTiHlLZCuF18W+QHuyFLqrkKvJdff1OkX6DfTs4JFuXfaFflrpavS
-         nrDQ/cuSnGXpIB5oSpsCKMZEsQDwLNImH5lnrzM8=
-Date:   Thu, 3 Sep 2020 14:10:33 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     trix@redhat.com
-Cc:     yung-chuan.liao@linux.intel.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        natechancellor@gmail.com, ndesaulniers@google.com,
-        shreyas.nc@intel.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] soundwire: fix double free of dangling pointer
-Message-ID: <20200903084033.GN2639@vkoul-mobl>
-References: <20200902202650.14189-1-trix@redhat.com>
+        Thu, 3 Sep 2020 04:40:53 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:56252 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726479AbgICIkv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 04:40:51 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U7nxScg_1599122447;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U7nxScg_1599122447)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 03 Sep 2020 16:40:48 +0800
+Subject: Re: [PATCH v4 1/4] mm/pageblock: mitigation cmpxchg false sharing in
+ pageblock flags
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1599116482-7410-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200903072447.GB3179@techsingularity.net>
+ <8275cc70-fd35-25c8-36d4-525a10f05e41@linux.alibaba.com>
+Message-ID: <7813624a-d8af-f09f-d8c3-0d2a01fe5dd3@linux.alibaba.com>
+Date:   Thu, 3 Sep 2020 16:40:40 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902202650.14189-1-trix@redhat.com>
+In-Reply-To: <8275cc70-fd35-25c8-36d4-525a10f05e41@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02-09-20, 13:26, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
-> 
-> clang static analysis flags this problem
-> 
-> stream.c:844:9: warning: Use of memory after
->   it is freed
->         kfree(bus->defer_msg.msg->buf);
->               ^~~~~~~~~~~~~~~~~~~~~~~
-> 
-> This happens in an error handler cleaning up memory
-> allocated for elements in a list.
-> 
-> 	list_for_each_entry(m_rt, &stream->master_list, stream_node) {
-> 		bus = m_rt->bus;
-> 
-> 		kfree(bus->defer_msg.msg->buf);
-> 		kfree(bus->defer_msg.msg);
-> 	}
-> 
-> And is triggered when the call to sdw_bank_switch() fails.
-> There are a two problems.
-> 
-> First, when sdw_bank_switch() fails, though it frees memory it
-> does not clear bus's reference 'defer_msg.msg' to that memory.
-> 
-> The second problem is the freeing msg->buf. In some cases
-> msg will be NULL so this will dereference a null pointer.
-> Need to check before freeing.
 
-Applied, thanks
 
--- 
-~Vinod
+在 2020/9/3 下午4:32, Alex Shi 写道:
+>>
+> I have run thpscale with 'always' defrag setting of THP. The Amean stddev is much
+> larger than a very little average run time reducing.
+> 
+> But the left patch 4 could show the cmpxchg retry reduce from thousands to hundreds
+> or less.
+> 
+> Subject: [PATCH v4 4/4] add cmpxchg tracing
+
+
+It's a typical result with the patchset:
+
+ Performance counter stats for './run-mmtests.sh -c configs/config-workload-thpscale pageblock-c':
+
+             9,564      compaction:mm_compaction_isolate_migratepages
+             6,430      compaction:mm_compaction_isolate_freepages
+             5,287      compaction:mm_compaction_migratepages
+            45,299      compaction:mm_compaction_begin
+            45,299      compaction:mm_compaction_end
+            30,557      compaction:mm_compaction_try_to_compact_pages
+            95,540      compaction:mm_compaction_finished
+           149,379      compaction:mm_compaction_suitable
+                 0      compaction:mm_compaction_deferred
+                 0      compaction:mm_compaction_defer_compaction
+             3,949      compaction:mm_compaction_defer_reset
+                 0      compaction:mm_compaction_kcompactd_sleep
+                 0      compaction:mm_compaction_wakeup_kcompactd
+                 0      compaction:mm_compaction_kcompactd_wake
+                68      pageblock:hit_cmpxchg
+
+     113.570974583 seconds time elapsed
+
+      14.664451000 seconds user
+      96.847116000 seconds sys
+
+It's 5.9-rc2 base kernel result:
+
+ Performance counter stats for './run-mmtests.sh -c configs/config-workload-thpscale rc2-e':
+
+            15,920      compaction:mm_compaction_isolate_migratepages
+            20,523      compaction:mm_compaction_isolate_freepages
+             9,752      compaction:mm_compaction_migratepages
+            27,773      compaction:mm_compaction_begin
+            27,773      compaction:mm_compaction_end
+            16,391      compaction:mm_compaction_try_to_compact_pages
+            62,809      compaction:mm_compaction_finished
+            69,821      compaction:mm_compaction_suitable
+                 0      compaction:mm_compaction_deferred
+                 0      compaction:mm_compaction_defer_compaction
+             7,875      compaction:mm_compaction_defer_reset
+                 0      compaction:mm_compaction_kcompactd_sleep
+                 0      compaction:mm_compaction_wakeup_kcompactd
+                 0      compaction:mm_compaction_kcompactd_wake
+             1,208      pageblock:hit_cmpxchg
+
+     116.440414591 seconds time elapsed
+
+      15.326913000 seconds user
+     103.752758000 seconds sys
+
