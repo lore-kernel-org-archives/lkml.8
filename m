@@ -2,119 +2,121 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B98AC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D0C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09A15206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:56:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxzyJ4gP"
+	by mail.kernel.org (Postfix) with ESMTP id 189B920786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgICP4v (ORCPT
+        id S1728999AbgICP5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:56:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729014AbgICP4b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:56:31 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548E6C06124F;
-        Thu,  3 Sep 2020 08:56:29 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id y4so4323465ljk.8;
-        Thu, 03 Sep 2020 08:56:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Kutay0Y9gemJumzTQfyc2Ti220nlbL0Ja7cyDFdaHzY=;
-        b=KxzyJ4gPqH8AsNbbKWXKRhIR6R7hLYA493Tude4qe1gDD/UbdP82oMG4v9MXXRriAY
-         pBRd7crNp1Fxe3cSWN1HdlZugn3ogXRPBvx6CEtawLHtvLRuq0RbzsUYGihHELfVUiBD
-         MU6dsxr5y6I4ntw+yv4Aw582fDdrLGCfgp/XEqittFXTgD3ywfv/8C42nZWzuYpZfufs
-         m3SaA9NaVqfHV7vFI2xUUlsFNvFDYVE241FKfZ79sBVJRNISHKx0kRJbDLuI24+fYKy3
-         sXjSGyz1VKXBWVz2pjqOGbNsM/y9TPX//Bj9V+9YD1syr62IowLEEjWODhrV3ZkQzRvR
-         zPiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Kutay0Y9gemJumzTQfyc2Ti220nlbL0Ja7cyDFdaHzY=;
-        b=W1gaf76zj/PVrsV7zrfijQDLP3+QEVxkGp210VsrBY1Fh9dqwKuzVYehtgr4FDRrYA
-         tcR9nq6c/IPUGiE11cwkuHaSdQuioxy2zM2de28xWHwAg1nfFHdVQvMfSusr+aZoefYm
-         rIVfyEgIOKvVNLafe3iVamt4unvMMh3EhC/ywvCSCaWN1IZkSWFkppf4V+Yv5KEv4y73
-         c03T9+zJfoRO06/8hy4FHxdIUzhYoNWDSI7IUQ2EPbJghaRFMQKDUcGWY0lVSV/p9+dO
-         b7S5FIMVeZby8bcK5i0bQ0oqssJQhyWI/0eT1J0lMV+Xb8zgRr8gY9zk4f1DAL4C2cDK
-         newg==
-X-Gm-Message-State: AOAM533KxMPl5TJi810xyW6MlgM2Fz4WGOMWSfLbe0JhuQTAgbyrupZB
-        GWk77tl7JRyxQyxlECNOGT0mGtpE8tA=
-X-Google-Smtp-Source: ABdhPJyIKQMpbPJqysMxDujCjWMoMdKHr1ywPllPEP/Zava+ueKPpb7X+iqMG/s5yTddNb80yI8kyQ==
-X-Received: by 2002:a2e:71a:: with SMTP id 26mr1654291ljh.198.1599148586155;
-        Thu, 03 Sep 2020 08:56:26 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id c11sm673846lff.3.2020.09.03.08.56.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 08:56:25 -0700 (PDT)
-Subject: Re: [PATCH v3 09/22] i2c: tegra: Clean up probe function
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200903005300.7894-1-digetx@gmail.com>
- <20200903005300.7894-10-digetx@gmail.com>
- <CAHp75VdPoJFNC+MntKu-CL8jFMEe85ZT3R9DF0aaNC4KjqWXyg@mail.gmail.com>
- <4bd12095-7a29-bcb4-6b49-83eca285c897@gmail.com>
- <CAHp75VerqMmyDnbxaWN0R-DYPkOosh-R9CG970Sh+EqG21oZ8w@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <77562fdc-0314-b711-90b6-2fc90940f472@gmail.com>
-Date:   Thu, 3 Sep 2020 18:56:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 3 Sep 2020 11:57:14 -0400
+Received: from verein.lst.de ([213.95.11.211]:38410 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728354AbgICP4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 11:56:48 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 953B667357; Thu,  3 Sep 2020 17:56:44 +0200 (CEST)
+Date:   Thu, 3 Sep 2020 17:56:44 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        linux-arch@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Alexey Dobriyan <adobriyan@gmail.com>
+Subject: Re: [PATCH 14/14] powerpc: remove address space overrides using
+ set_fs()
+Message-ID: <20200903155644.GA23521@lst.de>
+References: <20200903142242.925828-1-hch@lst.de> <20200903142242.925828-15-hch@lst.de> <e7d2d231-5658-a4d3-0495-2af62f34aa34@csgroup.eu> <20200903154909.GA23023@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VerqMmyDnbxaWN0R-DYPkOosh-R9CG970Sh+EqG21oZ8w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200903154909.GA23023@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-03.09.2020 17:02, Andy Shevchenko пишет:
-> On Thu, Sep 3, 2020 at 4:48 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->> 03.09.2020 14:17, Andy Shevchenko пишет:
->>> On Thu, Sep 3, 2020 at 3:54 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+On Thu, Sep 03, 2020 at 05:49:09PM +0200, Christoph Hellwig wrote:
+> On Thu, Sep 03, 2020 at 05:43:25PM +0200, Christophe Leroy wrote:
+> >
+> >
+> > Le 03/09/2020 � 16:22, Christoph Hellwig a �crit�:
+> >> Stop providing the possibility to override the address space using
+> >> set_fs() now that there is no need for that any more.
+> >>
+> >> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> >> ---
+> >
+> >
+> >>   -static inline int __access_ok(unsigned long addr, unsigned long size,
+> >> -			mm_segment_t seg)
+> >> +static inline bool __access_ok(unsigned long addr, unsigned long size)
+> >>   {
+> >> -	if (addr > seg.seg)
+> >> -		return 0;
+> >> -	return (size == 0 || size - 1 <= seg.seg - addr);
+> >> +	if (addr >= TASK_SIZE_MAX)
+> >> +		return false;
+> >> +	return size == 0 || size <= TASK_SIZE_MAX - addr;
+> >>   }
+> >
+> > You don't need to test size == 0 anymore. It used to be necessary because 
+> > of the 'size - 1', as size is unsigned.
+> >
+> > Now you can directly do
+> >
+> > 	return size <= TASK_SIZE_MAX - addr;
+> >
+> > If size is 0, this will always be true (because you already know that addr 
+> > is not >= TASK_SIZE_MAX
 > 
-> ...
-> 
->>>> +       of_property_read_u32(np, "clock-frequency", &bus_clk_rate);
->>>> +       i2c_dev->bus_clk_rate = bus_clk_rate;
->>>
->>> Hmm... I dunno if Wolfram is going to implement a special helper
->>> exactly for this. I remember we discussed that with him during v5.8
->>> (?) times.
->>
->> I now see that there is a i2c_parse_fw_timings() which parses
->> "clock-frequency" and other common properties. I could switch to use
->> that helper, but not sure whether it would be really worthwhile because
->> only one property is needed to be parsed. I'll consider this change for
->> v4, thank you for the suggestion!
-> 
-> That's exactly why I was wondering about the current state of affairs
-> with the discussed helper which should only parse the clock-frequency
-> property.
-> 
+> True.  What do you think of Linus' comment about always using the
+> ppc32 version on ppc64 as well with this?
 
-Alright, I see that many other I2C drivers are in the same position, so
-perhaps should better to keep the current variant as-is until a common
-solution will become available.
+i.e. something like this folded in:
+
+diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+index 5363f7fc6dd06c..be070254e50943 100644
+--- a/arch/powerpc/include/asm/uaccess.h
++++ b/arch/powerpc/include/asm/uaccess.h
+@@ -11,26 +11,14 @@
+ #ifdef __powerpc64__
+ /* We use TASK_SIZE_USER64 as TASK_SIZE is not constant */
+ #define TASK_SIZE_MAX		TASK_SIZE_USER64
+-
+-/*
+- * This check is sufficient because there is a large enough gap between user
+- * addresses and the kernel addresses.
+- */
+-static inline bool __access_ok(unsigned long addr, unsigned long size)
+-{
+-	return addr < TASK_SIZE_MAX && size < TASK_SIZE_MAX;
+-}
+-
+ #else
+ #define TASK_SIZE_MAX		TASK_SIZE
++#endif
+ 
+ static inline bool __access_ok(unsigned long addr, unsigned long size)
+ {
+-	if (addr >= TASK_SIZE_MAX)
+-		return false;
+-	return size == 0 || size <= TASK_SIZE_MAX - addr;
++	return addr < TASK_SIZE_MAX && size <= TASK_SIZE_MAX - addr;
+ }
+-#endif /* __powerpc64__ */
+ 
+ #define access_ok(addr, size)		\
+ 	(__chk_user_ptr(addr),		\
