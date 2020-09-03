@@ -2,101 +2,104 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F650C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692ABC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 082B420658
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31DC220658
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:59:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qbBhVlVN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oNKNZMQ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbgICO7Q (ORCPT
+        id S1727786AbgICOHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:59:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60906 "EHLO
+        Thu, 3 Sep 2020 10:07:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729102AbgICOHw (ORCPT
+        with ESMTP id S1728991AbgICN5y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:07:52 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E46C0610E4;
-        Thu,  3 Sep 2020 06:54:53 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id y4so3790261ljk.8;
-        Thu, 03 Sep 2020 06:54:53 -0700 (PDT)
+        Thu, 3 Sep 2020 09:57:54 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FEF6C061A02
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 06:31:46 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a65so2890641wme.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 06:31:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vZF87zSk1oleEIGJMMtf9vb52AVAs8bIBPfRdsKpf5Q=;
-        b=qbBhVlVNvPmvqPx5v6F58TSakj6W9nFXHWjRE5NqtqVKAmw1K0JWbEqfA+/gd42S91
-         JXUVEaLb+Qfzk7NxCRl2cx+HjSOJu+vak0Cgh8OfdcWhhjCfgpekxBq+wRNMHQePEi8h
-         8ZwypTxHgr1tfi6Dy39W4aPoapfsvFO4PJ0dcdZlUCshhuNTCxFoTIg7Lzc//2PyTOnp
-         FKi1mTlOqecL8AFYe1fwhDp/o3pRJoPSjqrIwn/ymFoeklQRoHTQIyLu4Bql28tB2alb
-         MOodx4J/fpQLZWLDd97dtmOxL9uEb556nMBT5Yw8dgDd/R56+juVdP5ltP/5ASdyHBwT
-         ej6Q==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=dKzq9Wd5pDbV7/549EiQnkURmwLmMM//csWdIgiebW8=;
+        b=oNKNZMQ+vrelVEaKz3G2tJGNGftiIxHVRLIev4M2tPePieqANfyRxtVoH6DG1ffGPH
+         QgoHxmL89GvxQF/eyfr61LHpT0ixxjGe1jgqNqmbhgw2lVP5A8DHa8houG2AicqIWgq6
+         Ux6nx0xaWhS2ZZYDwtVlDZebBBThqipXRhbIj4LV0jK3AZf3sW5hlEndjrU+/rutAYcq
+         PkmgCeVLpiKUd//KkVCZk6VJIxWO/mpKUDpMjiH9UqrqurNMw5g/3uUIy+ofrgXqpa7w
+         RdMCCtyl5iIQi18Jvq3L6D5BkirG/fLLC0g7ZKfGfHe5kTA87i2+TINQbqwuO1forBad
+         L2WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vZF87zSk1oleEIGJMMtf9vb52AVAs8bIBPfRdsKpf5Q=;
-        b=raicgMClrd22+iH5Mo574nTj558eGHzEYvzAxyY4okrOAbUVwmf65ToIQTLtSop8e1
-         NAI61/2JM7o5U/c2rG/rI9uE//49LrZcN0xvKuKopzrO6+URUVmhKYS12/X2pD8aYSkq
-         r1wcJxs/ev5OPFCDK3IfxQrSrb9qu5WrvpcCWxqC5rnujpt88WB4UunhIRj0bnHbxmEv
-         OvNmjVMgVT+b07JLgvRgA1mrLSf3K0ikoJTTlqAuDXzitnwanFfL9Q0sKVdQASLFoX9Q
-         WaKsvWqqPwMIU2CpGhunX17GYP8psBMowLXdCGLhjx1LPCu049PnBDNHgafDuuTEfqNF
-         eQYA==
-X-Gm-Message-State: AOAM533mKuVPbLRmP5evj1nC/N9t31HGX89RgAuA+Ol2qiSxeE+5E/uq
-        tXUZkzq/mhlii8lWcKYRoTwrqhlfpG0=
-X-Google-Smtp-Source: ABdhPJxttIN1R0lpLrPnWhXTqIN++Y7J5bfgO+/vIsXA2S2Frc33+/pts+ZC/vmRHdqA6RYrchDvSA==
-X-Received: by 2002:a2e:911:: with SMTP id 17mr1452833ljj.207.1599141291562;
-        Thu, 03 Sep 2020 06:54:51 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id t16sm637505ljo.27.2020.09.03.06.54.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 06:54:50 -0700 (PDT)
-Subject: Re: [PATCH v3 04/22] i2c: tegra: Don't ignore tegra_i2c_flush_fifos()
- error
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200903005300.7894-1-digetx@gmail.com>
- <20200903005300.7894-5-digetx@gmail.com>
- <CAHp75Vf9P9L1uM+he63D5H+-V3Zwv3jRiKTrXmtB4Sxuk9SC9A@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <60b6b0c7-48fe-4cfa-2408-17b2182e1cc2@gmail.com>
-Date:   Thu, 3 Sep 2020 16:54:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dKzq9Wd5pDbV7/549EiQnkURmwLmMM//csWdIgiebW8=;
+        b=f4MBbbyH17Wt9Im6EF2xOo2Mv2QVNfqe/a1FdmWqTEvHW33hEmT8IdEnTmRGMFiqxy
+         eahZG4KNUhXghs9lce5wwoz1bz7aohdpvvu5ypGgd0zqiuFMm7B1rb2zKTIF3W45cwx2
+         qXKcZFGeJDhacnoNEAxcWrQPn4bibuOA3IMML6gvLSU42mfk3C8QNkYWa3fgMpkNVnTn
+         m3SCmcrPtJo0RMKXJIaDyoTgLzzbPC8tLAuHH3wS6uGSK9pfD+ragnFgWzX3VpGlj+7I
+         1UQrrHhP7POHgoC0GDDy6Va0/8ylE3FFvAhrHusBEA44V47Rl04faqdjN3xlHUOQJnS7
+         wojA==
+X-Gm-Message-State: AOAM530I1ni7vU0qqqZUHuHz5rom/kcB7VwyzvYOE8l0eD1O86KUyN1z
+        m03TcFVhZkyQhvmlZbZkKleKkw==
+X-Google-Smtp-Source: ABdhPJwideaMwQI0vVOO9NOjJGo+l6Etw+5ZlFofKjM7BTEhZ9Aoj2Q50gaHXWsGR97506yHtsDNMQ==
+X-Received: by 2002:a1c:e0d4:: with SMTP id x203mr2725879wmg.91.1599139904767;
+        Thu, 03 Sep 2020 06:31:44 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id b2sm4310768wmh.47.2020.09.03.06.31.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Sep 2020 06:31:44 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org, bjorn.andersson@linaro.org
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        sibis@codeaurora.org, mka@chromium.org, dianders@chromium.org,
+        georgi.djakov@linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 6/7] interconnect: qcom: sc7180: Replace xlate with xlate_extended
+Date:   Thu,  3 Sep 2020 16:31:33 +0300
+Message-Id: <20200903133134.17201-7-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200903133134.17201-1-georgi.djakov@linaro.org>
+References: <20200903133134.17201-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vf9P9L1uM+he63D5H+-V3Zwv3jRiKTrXmtB4Sxuk9SC9A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-03.09.2020 14:09, Andy Shevchenko пишет:
-> On Thu, Sep 3, 2020 at 3:53 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> The tegra_i2c_flush_fifos() may fail and transfer should be aborted in
->> this case.
-> 
-> Sounds like a fix. To add to previous comment, fixes that are likely
-> to be backported should have Fixes: tags.
+From: Sibi Sankar <sibis@codeaurora.org>
 
-I'll reword the commit title and message in order to make it not to
-sound like this is a bug fix. Thanks!
+Use the qcom_icc_xlate_extended() in order to parse tags, that are
+specified as an additional arguments to the path endpoints in DT.
+
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ drivers/interconnect/qcom/sc7180.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/interconnect/qcom/sc7180.c b/drivers/interconnect/qcom/sc7180.c
+index dcf493d07928..a6f119f363b1 100644
+--- a/drivers/interconnect/qcom/sc7180.c
++++ b/drivers/interconnect/qcom/sc7180.c
+@@ -535,7 +535,7 @@ static int qnoc_probe(struct platform_device *pdev)
+ 	provider->set = qcom_icc_set;
+ 	provider->pre_aggregate = qcom_icc_pre_aggregate;
+ 	provider->aggregate = qcom_icc_aggregate;
+-	provider->xlate = of_icc_xlate_onecell;
++	provider->xlate_extended = qcom_icc_xlate_extended;
+ 	INIT_LIST_HEAD(&provider->nodes);
+ 	provider->data = data;
+ 
