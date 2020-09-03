@@ -2,316 +2,212 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608DAC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9249C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 407EA2071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B260220897
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgICULH (ORCPT
+        id S1728988AbgICUOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:11:07 -0400
-Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:26303 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728382AbgICULC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:11:02 -0400
-Received: from localhost.localdomain ([93.22.39.180])
-        by mwinf5d73 with ME
-        id PYAx230093tCsMp03YAyMu; Thu, 03 Sep 2020 22:10:59 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 03 Sep 2020 22:10:59 +0200
-X-ME-IP: 93.22.39.180
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     davem@davemloft.net, kuba@kernel.org, steve.glendinning@shawell.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH RESEND] smsc9420: switch from 'pci_' to 'dma_' API
-Date:   Thu,  3 Sep 2020 22:10:55 +0200
-Message-Id: <20200903201055.296320-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Thu, 3 Sep 2020 16:14:18 -0400
+Received: from mail.v3.sk ([167.172.186.51]:33502 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727065AbgICUOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 16:14:16 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 847D3DF5E0;
+        Thu,  3 Sep 2020 20:13:01 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id k3_MW6DJBbf3; Thu,  3 Sep 2020 20:13:00 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id C74FBDF963;
+        Thu,  3 Sep 2020 20:13:00 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id jBGXY3EYfIlN; Thu,  3 Sep 2020 20:13:00 +0000 (UTC)
+Received: from localhost (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 0DED8DF5E0;
+        Thu,  3 Sep 2020 20:12:59 +0000 (UTC)
+Date:   Thu, 3 Sep 2020 22:14:04 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [RESEND PATCH v3 3/3] phy: Add USB HSIC PHY driver for Marvell
+ MMP3 SoC
+Message-ID: <20200903201404.GA115604@demiurge.local>
+References: <20200817223400.403505-1-lkundrak@v3.sk>
+ <20200817223400.403505-4-lkundrak@v3.sk>
+ <20200831085808.GH2639@vkoul-mobl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831085808.GH2639@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
+On Mon, Aug 31, 2020 at 02:28:08PM +0530, Vinod Koul wrote:
+> On 18-08-20, 00:34, Lubomir Rintel wrote:
+> > Add PHY driver for the HSICs found on Marvell MMP3 SoC. The driver is
+> > rather straightforward -- the PHY essentially just needs to be enabled.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > 
+> > ---
+> > Changes since v1:
+> > - Explicitely cast drvdata pointer to make sparse happy
+> > 
+> >  drivers/phy/marvell/Kconfig         | 12 +++++
+> >  drivers/phy/marvell/Makefile        |  1 +
+> >  drivers/phy/marvell/phy-mmp3-hsic.c | 82 +++++++++++++++++++++++++++++
+> >  3 files changed, 95 insertions(+)
+> >  create mode 100644 drivers/phy/marvell/phy-mmp3-hsic.c
+> > 
+> > diff --git a/drivers/phy/marvell/Kconfig b/drivers/phy/marvell/Kconfig
+> > index 8f6273c837ec3..6c96f2bf52665 100644
+> > --- a/drivers/phy/marvell/Kconfig
+> > +++ b/drivers/phy/marvell/Kconfig
+> > @@ -116,3 +116,15 @@ config PHY_MMP3_USB
+> >  	  The PHY driver will be used by Marvell udc/ehci/otg driver.
+> >  
+> >  	  To compile this driver as a module, choose M here.
+> > +
+> > +config PHY_MMP3_HSIC
+> > +	tristate "Marvell MMP3 USB HSIC PHY Driver"
+> > +	depends on MACH_MMP3_DT || COMPILE_TEST
+> > +	select GENERIC_PHY
+> > +	help
+> > +	  Enable this to support Marvell MMP3 USB HSIC PHY driver for
+> > +	  Marvell MMP3 SoC. This driver will be used my the Marvell EHCI
+> > +	  driver to initialize the interface to internal USB HSIC
+> > +	  components on MMP3-based boards.
+> > +
+> > +	  To compile this driver as a module, choose M here.
+> > diff --git a/drivers/phy/marvell/Makefile b/drivers/phy/marvell/Makefile
+> > index 5a106b1549f41..7f296ef028292 100644
+> > --- a/drivers/phy/marvell/Makefile
+> > +++ b/drivers/phy/marvell/Makefile
+> > @@ -3,6 +3,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
+> >  obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
+> >  obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
+> >  obj-$(CONFIG_PHY_MMP3_USB)		+= phy-mmp3-usb.o
+> > +obj-$(CONFIG_PHY_MMP3_HSIC)		+= phy-mmp3-hsic.o
+> >  obj-$(CONFIG_PHY_MVEBU_A3700_COMPHY)	+= phy-mvebu-a3700-comphy.o
+> >  obj-$(CONFIG_PHY_MVEBU_A3700_UTMI)	+= phy-mvebu-a3700-utmi.o
+> >  obj-$(CONFIG_PHY_MVEBU_A38X_COMPHY)	+= phy-armada38x-comphy.o
+> > diff --git a/drivers/phy/marvell/phy-mmp3-hsic.c b/drivers/phy/marvell/phy-mmp3-hsic.c
+> > new file mode 100644
+> > index 0000000000000..47c1e8894939f
+> > --- /dev/null
+> > +++ b/drivers/phy/marvell/phy-mmp3-hsic.c
+> > @@ -0,0 +1,82 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright (C) 2020 Lubomir Rintel <lkundrak@v3.sk>
+> > + */
+> > +
+> > +#include <linux/delay.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#define HSIC_CTRL	0x08
+> > +#define HSIC_ENABLE	BIT(7)
+> > +#define PLL_BYPASS	BIT(4)
+> > +
+> > +static int mmp3_hsic_phy_init(struct phy *phy)
+> > +{
+> > +	void __iomem *base = (void __iomem *)phy_get_drvdata(phy);
+> 
+> you are casting away from void * and casting to another void *,
+> something doesn't look correct!
 
-The patch has been generated with the coccinelle script below and has been
-hand modified to replace GFP_ with a correct flag.
-It has been compile tested.
+This is to make it explicit to sparse that the destination type is
+supposed to have the __iomem annotation. Otherwise it complains:
 
-When memory is allocated in 'smsc9420_probe()', GFP_KERNEL can be used
-because it is a probe function and no lock is acquired.
+  drivers/phy/marvell/phy-mmp3-hsic.c:61:31: warning: cast removes address space '__iomem' of expression
 
-While at it, rewrite the size passed to 'dma_alloc_coherent()' the same way
-as the one passed to 'dma_free_coherent()'. This form is less verbose:
-   sizeof(struct smsc9420_dma_desc) * RX_RING_SIZE +
-   sizeof(struct smsc9420_dma_desc) * TX_RING_SIZE,
-vs
-   sizeof(struct smsc9420_dma_desc) * (RX_RING_SIZE + TX_RING_SIZE)
-
-
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
-
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
-
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
-
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
-
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
-
-RESEND because it was previously sent when the branch was closed
----
- drivers/net/ethernet/smsc/smsc9420.c | 51 +++++++++++++++-------------
- 1 file changed, 28 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/net/ethernet/smsc/smsc9420.c b/drivers/net/ethernet/smsc/smsc9420.c
-index 42bef04d65ba..68969549a5c7 100644
---- a/drivers/net/ethernet/smsc/smsc9420.c
-+++ b/drivers/net/ethernet/smsc/smsc9420.c
-@@ -497,8 +497,9 @@ static void smsc9420_free_tx_ring(struct smsc9420_pdata *pd)
- 
- 		if (skb) {
- 			BUG_ON(!pd->tx_buffers[i].mapping);
--			pci_unmap_single(pd->pdev, pd->tx_buffers[i].mapping,
--					 skb->len, PCI_DMA_TODEVICE);
-+			dma_unmap_single(&pd->pdev->dev,
-+					 pd->tx_buffers[i].mapping, skb->len,
-+					 DMA_TO_DEVICE);
- 			dev_kfree_skb_any(skb);
- 		}
- 
-@@ -530,8 +531,9 @@ static void smsc9420_free_rx_ring(struct smsc9420_pdata *pd)
- 			dev_kfree_skb_any(pd->rx_buffers[i].skb);
- 
- 		if (pd->rx_buffers[i].mapping)
--			pci_unmap_single(pd->pdev, pd->rx_buffers[i].mapping,
--				PKT_BUF_SZ, PCI_DMA_FROMDEVICE);
-+			dma_unmap_single(&pd->pdev->dev,
-+					 pd->rx_buffers[i].mapping,
-+					 PKT_BUF_SZ, DMA_FROM_DEVICE);
- 
- 		pd->rx_ring[i].status = 0;
- 		pd->rx_ring[i].length = 0;
-@@ -749,8 +751,8 @@ static void smsc9420_rx_handoff(struct smsc9420_pdata *pd, const int index,
- 	dev->stats.rx_packets++;
- 	dev->stats.rx_bytes += packet_length;
- 
--	pci_unmap_single(pd->pdev, pd->rx_buffers[index].mapping,
--		PKT_BUF_SZ, PCI_DMA_FROMDEVICE);
-+	dma_unmap_single(&pd->pdev->dev, pd->rx_buffers[index].mapping,
-+			 PKT_BUF_SZ, DMA_FROM_DEVICE);
- 	pd->rx_buffers[index].mapping = 0;
- 
- 	skb = pd->rx_buffers[index].skb;
-@@ -782,9 +784,9 @@ static int smsc9420_alloc_rx_buffer(struct smsc9420_pdata *pd, int index)
- 	if (unlikely(!skb))
- 		return -ENOMEM;
- 
--	mapping = pci_map_single(pd->pdev, skb_tail_pointer(skb),
--				 PKT_BUF_SZ, PCI_DMA_FROMDEVICE);
--	if (pci_dma_mapping_error(pd->pdev, mapping)) {
-+	mapping = dma_map_single(&pd->pdev->dev, skb_tail_pointer(skb),
-+				 PKT_BUF_SZ, DMA_FROM_DEVICE);
-+	if (dma_mapping_error(&pd->pdev->dev, mapping)) {
- 		dev_kfree_skb_any(skb);
- 		netif_warn(pd, rx_err, pd->dev, "pci_map_single failed!\n");
- 		return -ENOMEM;
-@@ -901,8 +903,10 @@ static void smsc9420_complete_tx(struct net_device *dev)
- 		BUG_ON(!pd->tx_buffers[index].skb);
- 		BUG_ON(!pd->tx_buffers[index].mapping);
- 
--		pci_unmap_single(pd->pdev, pd->tx_buffers[index].mapping,
--			pd->tx_buffers[index].skb->len, PCI_DMA_TODEVICE);
-+		dma_unmap_single(&pd->pdev->dev,
-+				 pd->tx_buffers[index].mapping,
-+				 pd->tx_buffers[index].skb->len,
-+				 DMA_TO_DEVICE);
- 		pd->tx_buffers[index].mapping = 0;
- 
- 		dev_kfree_skb_any(pd->tx_buffers[index].skb);
-@@ -932,9 +936,9 @@ static netdev_tx_t smsc9420_hard_start_xmit(struct sk_buff *skb,
- 	BUG_ON(pd->tx_buffers[index].skb);
- 	BUG_ON(pd->tx_buffers[index].mapping);
- 
--	mapping = pci_map_single(pd->pdev, skb->data,
--				 skb->len, PCI_DMA_TODEVICE);
--	if (pci_dma_mapping_error(pd->pdev, mapping)) {
-+	mapping = dma_map_single(&pd->pdev->dev, skb->data, skb->len,
-+				 DMA_TO_DEVICE);
-+	if (dma_mapping_error(&pd->pdev->dev, mapping)) {
- 		netif_warn(pd, tx_err, pd->dev,
- 			   "pci_map_single failed, dropping packet\n");
- 		return NETDEV_TX_BUSY;
-@@ -1522,7 +1526,7 @@ smsc9420_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		goto out_free_netdev_2;
- 	}
- 
--	if (pci_set_dma_mask(pdev, DMA_BIT_MASK(32))) {
-+	if (dma_set_mask(&pdev->dev, DMA_BIT_MASK(32))) {
- 		netdev_err(dev, "No usable DMA configuration, aborting\n");
- 		goto out_free_regions_3;
- 	}
-@@ -1540,10 +1544,9 @@ smsc9420_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	pd = netdev_priv(dev);
- 
- 	/* pci descriptors are created in the PCI consistent area */
--	pd->rx_ring = pci_alloc_consistent(pdev,
--		sizeof(struct smsc9420_dma_desc) * RX_RING_SIZE +
--		sizeof(struct smsc9420_dma_desc) * TX_RING_SIZE,
--		&pd->rx_dma_addr);
-+	pd->rx_ring = dma_alloc_coherent(&pdev->dev,
-+		sizeof(struct smsc9420_dma_desc) * (RX_RING_SIZE + TX_RING_SIZE),
-+		&pd->rx_dma_addr, GFP_KERNEL);
- 
- 	if (!pd->rx_ring)
- 		goto out_free_io_4;
-@@ -1599,8 +1602,9 @@ smsc9420_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	return 0;
- 
- out_free_dmadesc_5:
--	pci_free_consistent(pdev, sizeof(struct smsc9420_dma_desc) *
--		(RX_RING_SIZE + TX_RING_SIZE), pd->rx_ring, pd->rx_dma_addr);
-+	dma_free_coherent(&pdev->dev,
-+			  sizeof(struct smsc9420_dma_desc) * (RX_RING_SIZE + TX_RING_SIZE),
-+			  pd->rx_ring, pd->rx_dma_addr);
- out_free_io_4:
- 	iounmap(virt_addr - LAN9420_CPSR_ENDIAN_OFFSET);
- out_free_regions_3:
-@@ -1632,8 +1636,9 @@ static void smsc9420_remove(struct pci_dev *pdev)
- 	BUG_ON(!pd->tx_ring);
- 	BUG_ON(!pd->rx_ring);
- 
--	pci_free_consistent(pdev, sizeof(struct smsc9420_dma_desc) *
--		(RX_RING_SIZE + TX_RING_SIZE), pd->rx_ring, pd->rx_dma_addr);
-+	dma_free_coherent(&pdev->dev,
-+			  sizeof(struct smsc9420_dma_desc) * (RX_RING_SIZE + TX_RING_SIZE),
-+			  pd->rx_ring, pd->rx_dma_addr);
- 
- 	iounmap(pd->ioaddr - LAN9420_CPSR_ENDIAN_OFFSET);
- 	pci_release_regions(pdev);
--- 
-2.25.1
-
+> > +	u32 hsic_ctrl;
+> > +
+> > +	hsic_ctrl = readl_relaxed(base + HSIC_CTRL);
+> > +	hsic_ctrl |= HSIC_ENABLE;
+> > +	hsic_ctrl |= PLL_BYPASS;
+> > +	writel_relaxed(hsic_ctrl, base + HSIC_CTRL);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct phy_ops mmp3_hsic_phy_ops = {
+> > +	.init		= mmp3_hsic_phy_init,
+> > +	.owner		= THIS_MODULE,
+> > +};
+> > +
+> > +static const struct of_device_id mmp3_hsic_phy_of_match[] = {
+> > +	{ .compatible = "marvell,mmp3-hsic-phy", },
+> > +	{ },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, mmp3_hsic_phy_of_match);
+> > +
+> > +static int mmp3_hsic_phy_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct phy_provider *provider;
+> > +	struct resource *resource;
+> > +	void __iomem *base;
+> > +	struct phy *phy;
+> > +
+> > +	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	base = devm_ioremap_resource(dev, resource);
+> > +	if (IS_ERR(base)) {
+> > +		dev_err(dev, "failed to remap PHY regs\n");
+> > +		return PTR_ERR(base);
+> > +	}
+> > +
+> > +	phy = devm_phy_create(dev, NULL, &mmp3_hsic_phy_ops);
+> > +	if (IS_ERR(phy)) {
+> > +		dev_err(dev, "failed to create PHY\n");
+> > +		return PTR_ERR(phy);
+> > +	}
+> > +
+> > +	phy_set_drvdata(phy, (void *)base);
+> 
+> again skip the cast
+> 
+> > +	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> > +	if (IS_ERR(provider)) {
+> > +		dev_err(dev, "failed to register PHY provider\n");
+> > +		return PTR_ERR(provider);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct platform_driver mmp3_hsic_phy_driver = {
+> > +	.probe		= mmp3_hsic_phy_probe,
+> > +	.driver		= {
+> > +		.name	= "mmp3-hsic-phy",
+> > +		.of_match_table = mmp3_hsic_phy_of_match,
+> > +	},
+> > +};
+> > +module_platform_driver(mmp3_hsic_phy_driver);
+> > +
+> > +MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
+> > +MODULE_DESCRIPTION("Marvell MMP3 USB HSIC PHY Driver");
+> > +MODULE_LICENSE("GPL");
+> > -- 
+> > 2.26.2
+> 
+> -- 
+> ~Vinod
