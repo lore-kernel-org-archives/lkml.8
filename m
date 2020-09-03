@@ -2,75 +2,109 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8C8C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C44BFC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59F0220665
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:11:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v+6dHNu8"
+	by mail.kernel.org (Postfix) with ESMTP id 8A7CC20658
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgICOLK (ORCPT
+        id S1729184AbgICOLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:11:10 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35514 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728878AbgICOJr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:09:47 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083DNn7s114942;
-        Thu, 3 Sep 2020 08:23:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599139429;
-        bh=Sv1rjptrB/D2VFs2GCeWi3Odnsbw5rU6WNrwMZKxhHs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=v+6dHNu8LnhbD273WhVSkGuVpfpGe72WGQvK3jqyxZGTrLOZTw6HpUJbBg9gFtjJC
-         L15FaEd+2TOZxGO3cgyQk3R9C07r2pUrCp71Ghq7tT/Gc3nPtz/NWQOk+VDMhZFVsU
-         gA1KZsPu96NDaitpF0SOs1px9DPBzGkyQJQy9Y8k=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083DNnsT012472;
-        Thu, 3 Sep 2020 08:23:49 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
- 2020 08:23:49 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 3 Sep 2020 08:23:49 -0500
-Received: from [10.250.71.39] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083DNnMN023770;
-        Thu, 3 Sep 2020 08:23:49 -0500
-Subject: Re: [PATCH V2 1/8] arm64: dts: ti: k3-j721e: Use lower case
- hexadecimal
-To:     Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <lokeshvutla@ti.com>,
-        <grygorii.strashko@ti.com>, <nsekhar@ti.com>
-References: <20200901223059.14801-1-nm@ti.com>
- <20200903130015.21361-2-nm@ti.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <39ebf70b-6ecb-3586-8786-fd2ce43c2e00@ti.com>
-Date:   Thu, 3 Sep 2020 08:23:48 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 3 Sep 2020 10:11:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:34436 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729015AbgICOKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:10:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66D841063;
+        Thu,  3 Sep 2020 06:45:10 -0700 (PDT)
+Received: from localhost (e108754-lin.cambridge.arm.com [10.1.199.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 067F03F66F;
+        Thu,  3 Sep 2020 06:45:09 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 14:45:08 +0100
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        dietmar.eggemann@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        valentin.schneider@arm.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] cpufreq: report whether cpufreq supports
+ Frequency Invariance (FI)
+Message-ID: <20200903134508.GB29370@arm.com>
+References: <20200901205549.30096-1-ionela.voinescu@arm.com>
+ <20200901205549.30096-4-ionela.voinescu@arm.com>
+ <20200902132838.GF25462@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20200903130015.21361-2-nm@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902132838.GF25462@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-<<< No Message Collected >>>
+Hi Sudeep,
+
+Thank you for your review here and for the other patches.
+
+On Wednesday 02 Sep 2020 at 14:28:38 (+0100), Sudeep Holla wrote:
+[..]
+> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > index 4d5fe777184a..570bf2ebe9d4 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -61,6 +61,12 @@ static struct cpufreq_driver *cpufreq_driver;
+> >  static DEFINE_PER_CPU(struct cpufreq_policy *, cpufreq_cpu_data);
+> >  static DEFINE_RWLOCK(cpufreq_driver_lock);
+> >  
+> > +static DEFINE_STATIC_KEY_FALSE(cpufreq_freq_invariance);
+> > +bool cpufreq_supports_freq_invariance(void)
+> > +{
+> > +	return static_branch_likely(&cpufreq_freq_invariance);
+> > +}
+> > +
+> >  /* Flag to suspend/resume CPUFreq governors */
+> >  static bool cpufreq_suspended;
+> >  
+> > @@ -2720,6 +2726,15 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
+> >  	cpufreq_driver = driver_data;
+> >  	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
+> >  
+> > +	/*
+> > +	 * Mark support for the scheduler's frequency invariance engine for
+> > +	 * drivers that implement target(), target_index() or fast_switch().
+> > +	 */
+> > +	if (!cpufreq_driver->setpolicy) {
+> > +		static_branch_enable_cpuslocked(&cpufreq_freq_invariance);
+> > +		pr_debug("supports frequency invariance");
+> > +	}
+> > +
+> >  	if (driver_data->setpolicy)
+> 
+> [super nit] while I understand cpufreq_driver = driver_data, it looks odd
+> if 2 consecutive statements refer it with different variables. Or am I
+> confusing myself hugely.
+> 
+
+No, you are right. If you look at the rest of the register function,
+after cpufreq_driver = driver_data, both driver_data and cpufreq_driver
+are used. For me using cpufreq_driver seemed more natural as after being
+assigned driver_data, it will continue to be used after registration.
+
+If it's alright with you I won't make this change for now. It's possible
+that a better solution is to change the other occurrences of either
+cpufreq_driver or driver_data in a separate patch, to make things
+consistent across the function.
+
+Thank you,
+Ionela.
+
+> -- 
+> Regards,
+> Sudeep
