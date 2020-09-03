@@ -2,234 +2,143 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 677B5C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEE9C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3070D20709
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9983F20709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:32:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="adPAgh9u"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jK8kOjm7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgICSbO (ORCPT
+        id S1729002AbgICScH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 14:31:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35623 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727065AbgICSbM (ORCPT
+        Thu, 3 Sep 2020 14:32:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgICSb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 14:31:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599157869;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=IkaufSngMuWTQqadTbClKbl/Nap2SqZPYOIxYesuAlU=;
-        b=adPAgh9um/RcrTe6JHj4zgjeIIIbBM3VcnPkYeFFtNGOny4wrq/BoT2vUFlvLXZJkSxAc4
-        MBxEhpF2256mg1hInh5lpcQrZmpL110y5NcgonXY+wC6M5WJ6cFpHuP/CV8PQJHhefepy1
-        pXVsheEfmldsyxKJVrrW1UrDmXE0/Ig=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-277-dWCkInDOMkqXjmgql0_Q2w-1; Thu, 03 Sep 2020 14:31:08 -0400
-X-MC-Unique: dWCkInDOMkqXjmgql0_Q2w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1EAF18C5200;
-        Thu,  3 Sep 2020 18:31:06 +0000 (UTC)
-Received: from [10.36.112.104] (ovpn-112-104.ams2.redhat.com [10.36.112.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 33B7E1C4;
-        Thu,  3 Sep 2020 18:31:05 +0000 (UTC)
-Subject: Re: [PATCH] mm/memory_hotplug: drain per-cpu pages again during
- memory offline
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>
-References: <20200901124615.137200-1-pasha.tatashin@soleen.com>
- <20200902140851.GJ4617@dhcp22.suse.cz>
- <CA+CK2bBZdN56fmsC2jyY_ju8rQfG2-9hForf1CEdcUVL1+wrrA@mail.gmail.com>
- <74f2341a-7834-3e37-0346-7fbc48d74df3@suse.cz>
- <20200902151306.GL4617@dhcp22.suse.cz>
- <e6bf05cb-044c-47a9-3c65-e41b1e42b702@suse.cz>
- <20200903063806.GM4617@dhcp22.suse.cz>
- <c6b11905-2456-52a0-3b15-d4ceae6e7f54@redhat.com>
- <CA+CK2bBTfmhTWNRrxnVKi=iknqq-iZxNZSnwNA9C9tWAJzRxmw@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <d89510b1-a6a2-a874-7ffc-ba7a37d4212d@redhat.com>
-Date:   Thu, 3 Sep 2020 20:31:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 3 Sep 2020 14:31:59 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55879C061244;
+        Thu,  3 Sep 2020 11:31:55 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a65so3819556wme.5;
+        Thu, 03 Sep 2020 11:31:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t9ZH/j53GXlXtOl/BQ9uwkwhVkecvfT9moRmFWFXpuI=;
+        b=jK8kOjm7roy6BVmdk2I0XcrgumAoHriXRTAEgOCIaT9dR3afbgSoRBjZVnmUDCrq3R
+         IIZVjTH25331ZhAQyTN130aLDIbO6PZBuA925HlsU2WLY3OK/BHhWLDBKkBAslBfose1
+         PPiaM/39Zwc99SpbyZgoP8Kc18EbUClUXly9A66ALGnHqfaQyswKoKIjWUL2yOfzUagb
+         hA7SBuYCWnOKLXhb/+I0jTK/7S25+cfXORgM8BkQZEIdpsiu9hwejBV7nxqa420fgDYp
+         FG3RtoPpGtcVj++3YHkp3gR8XejAouFJgMgZtNmJC2K+wT/N7MHOSk02vpJJ8zEaqDer
+         wuuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t9ZH/j53GXlXtOl/BQ9uwkwhVkecvfT9moRmFWFXpuI=;
+        b=s67gVzMtPKFZ6oDmQUKr7q99JXPaiLvIfeKAM4q5nCTnoIH+bAu0O2tHD+b4Ox4yYN
+         0bfxQAPoA5aVBQB23vWEYuVJ4Y6zIm81Dz+R6lxKDqxSOv6dls8YOLCTTP180sjjCNky
+         LIEX2t14QgHvyhLUC0F9vJQPiItC/ep3dX9PySvAmAwR3uUCst96C52Pu0CCwtZaYCVp
+         k3z3FRcF/SnQR4ZyIn6/KUhzHPK1SDNUmYh0CN0YDNgVyTF4qTNmg2TlwIPnQkQImp6W
+         rQoMECNjLc6DFNT2k7WjM6Wc+7102tNreUPmmvCHZmxHCTJ956qBuYvTRwTP31kiJhQh
+         0IgA==
+X-Gm-Message-State: AOAM5323ktyH5YIpIrzAuxR5pQN+1VQYtRAFqbxQOhj2wWJp8lmkf+3U
+        qQ4Zj0pMcf5p3OtsDCSHv8w=
+X-Google-Smtp-Source: ABdhPJzFLj4rL1qlEO5LjfwC8tHQ4tlonDMT7uuWHldstzL2iP6tKtqQyVv/6QQ/mqzxzfy+2TiOeg==
+X-Received: by 2002:a1c:c910:: with SMTP id f16mr3770562wmb.82.1599157913902;
+        Thu, 03 Sep 2020 11:31:53 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id v12sm5812241wri.47.2020.09.03.11.31.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 11:31:53 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] staging: media: atomisp: Don't abort on error in module exit path
+Date:   Thu,  3 Sep 2020 19:31:34 +0100
+Message-Id: <20200903183145.720727-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <CA+CK2bBTfmhTWNRrxnVKi=iknqq-iZxNZSnwNA9C9tWAJzRxmw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.09.20 20:23, Pavel Tatashin wrote:
-> On Thu, Sep 3, 2020 at 2:20 PM David Hildenbrand <david@redhat.com> wrote:
->>
->> On 03.09.20 08:38, Michal Hocko wrote:
->>> On Wed 02-09-20 19:51:45, Vlastimil Babka wrote:
->>>> On 9/2/20 5:13 PM, Michal Hocko wrote:
->>>>> On Wed 02-09-20 16:55:05, Vlastimil Babka wrote:
->>>>>> On 9/2/20 4:26 PM, Pavel Tatashin wrote:
->>>>>>> On Wed, Sep 2, 2020 at 10:08 AM Michal Hocko <mhocko@suse.com> wrote:
->>>>>>>>
->>>>>>>>>
->>>>>>>>> Thread#1 - continue
->>>>>>>>>          free_unref_page_commit
->>>>>>>>>            migratetype = get_pcppage_migratetype(page);
->>>>>>>>>               // get old migration type
->>>>>>>>>            list_add(&page->lru, &pcp->lists[migratetype]);
->>>>>>>>>               // add new page to already drained pcp list
->>>>>>>>>
->>>>>>>>> Thread#2
->>>>>>>>> Never drains pcp again, and therefore gets stuck in the loop.
->>>>>>>>>
->>>>>>>>> The fix is to try to drain per-cpu lists again after
->>>>>>>>> check_pages_isolated_cb() fails.
->>>>>>>>
->>>>>>>> But this means that the page is not isolated and so it could be reused
->>>>>>>> for something else. No?
->>>>>>>
->>>>>>> The page is in a movable zone, has zero references, and the section is
->>>>>>> isolated (i.e. set_pageblock_migratetype(page, MIGRATE_ISOLATE);) is
->>>>>>> set. The page should be offlinable, but it is lost in a pcp list as
->>>>>>> that list is never drained again after the first failure to migrate
->>>>>>> all pages in the range.
->>>>>>
->>>>>> Yeah. To answer Michal's "it could be reused for something else" - yes, somebody
->>>>>> could allocate it from the pcplist before we do the extra drain. But then it
->>>>>> becomes "visible again" and the loop in __offline_pages() should catch it by
->>>>>> scan_movable_pages() - do_migrate_range(). And this time the pageblock is
->>>>>> already marked as isolated, so the page (freed by migration) won't end up on the
->>>>>> pcplist again.
->>>>>
->>>>> So the page block is marked MIGRATE_ISOLATE but the allocation itself
->>>>> could be used for non migrateable objects. Or does anything prevent that
->>>>> from happening?
->>>>
->>>> In a movable zone, the allocation should not be used for non migrateable
->>>> objects. E.g. if the zone was not ZONE_MOVABLE, the offlining could fail
->>>> regardless of this race (analogically for migrating away from CMA pageblocks).
->>>>
->>>>> We really do depend on isolation to not allow reuse when offlining.
->>>>
->>>> This is not really different than if the page on pcplist was allocated just a
->>>> moment before the offlining, thus isolation started. We ultimately rely on being
->>>> able to migrate any allocated pages away during the isolation. This "freeing to
->>>> pcplists" race doesn't fundamentally change anything in this regard. We just
->>>> have to guarantee that pages on pcplists will be eventually flushed, to make
->>>> forward progress, and there was a bug in this aspect.
->>>
->>> You are right. I managed to confuse myself yesterday. The race is
->>> impossible for !ZONE_MOVABLE because we do PageBuddy check there. And on
->>> the movable zone we are not losing the migrateability property.
->>>
->>> Pavel I think this will be a useful information to add to the changelog.
->>> We should also document this in the code to prevent from further
->>> confusion. I would suggest something like the following:
->>>
->>> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
->>> index 242c03121d73..56d4892bceb8 100644
->>> --- a/mm/page_isolation.c
->>> +++ b/mm/page_isolation.c
->>> @@ -170,6 +170,14 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
->>>   * pageblocks we may have modified and return -EBUSY to caller. This
->>>   * prevents two threads from simultaneously working on overlapping ranges.
->>>   *
->>> + * Please note that there is no strong synchronization with the page allocator
->>> + * either. Pages might be freed while their page blocks are marked ISOLATED.
->>> + * In some cases pages might still end up on pcp lists and that would allow
->>> + * for their allocation even when they are in fact isolated already. Depending on
->>> + * how strong of a guarantee the caller needs drain_all_pages might be needed
->>> + * (e.g. __offline_pages will need to call it after check for isolated range for
->>> + * a next retry).
->>> + *
->>
->> As expressed in reply to v2, I dislike this hack. There is strong
->> synchronization, just PCP is special. Allocating from MIGRATE_ISOLATE is
->> just plain ugly.
->>
->> Can't we temporarily disable PCP (while some pageblock in the zone is
->> isolated, which we know e.g., due to the counter), so no new pages get
->> put into PCP lists after draining, and re-enable after no pageblocks are
->> isolated again? We keep draining the PCP, so it doesn't seem to be of a
->> lot of use during that period, no? It's a performance hit already.
->>
->> Then, we would only need exactly one drain. And we would only have to
->> check on the free path whether PCP is temporarily disabled.
-> 
-> Hm, we could use a static branches to disable it, that would keep
-> release code just as fast, but I am worried it will make code even
-> uglier. Let's see what others in this thread think about this idea.
+The function lm3554_remove() checks for the return code for
+lm3554_gpio_uninit() even though this is on the exit path and exits the
+function, leaving the variable flash unfreed. Print a warning instead
+and free flash unconditionally.
 
-It would at least stop this "allocate from MIOGRATE_ISOLATE" behavior
-and the "drain when you feel like it, and drain more frequently to work
-around broken PCP code" handling.
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ .../staging/media/atomisp/i2c/atomisp-lm3554.c  | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-Anyhow, I'll be offline until next Tuesday, cheers!
-
+diff --git a/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c b/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c
+index cca10a4c2db0..621555b0cf6b 100644
+--- a/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c
++++ b/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c
+@@ -783,7 +783,7 @@ static int lm3554_gpio_init(struct i2c_client *client)
+ 	return 0;
+ }
+ 
+-static int lm3554_gpio_uninit(struct i2c_client *client)
++static void lm3554_gpio_uninit(struct i2c_client *client)
+ {
+ 	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+ 	struct lm3554 *flash = to_lm3554(sd);
+@@ -792,13 +792,13 @@ static int lm3554_gpio_uninit(struct i2c_client *client)
+ 
+ 	ret = gpiod_direction_output(pdata->gpio_strobe, 0);
+ 	if (ret < 0)
+-		return ret;
++		dev_err(&client->dev,
++			"gpio request/direction_output fail for gpio_strobe");
+ 
+ 	ret = gpiod_direction_output(pdata->gpio_reset, 0);
+ 	if (ret < 0)
+-		return ret;
+-
+-	return 0;
++		dev_err(&client->dev,
++			"gpio request/direction_output fail for gpio_reset");
+ }
+ 
+ static void *lm3554_platform_data_func(struct i2c_client *client)
+@@ -918,16 +918,11 @@ static int lm3554_remove(struct i2c_client *client)
+ 
+ 	del_timer_sync(&flash->flash_off_delay);
+ 
+-	ret = lm3554_gpio_uninit(client);
+-	if (ret < 0)
+-		goto fail;
++	lm3554_gpio_uninit(client);
+ 
+ 	kfree(flash);
+ 
+ 	return 0;
+-fail:
+-	dev_err(&client->dev, "gpio request/direction_output fail");
+-	return ret;
+ }
+ 
+ static const struct dev_pm_ops lm3554_pm_ops = {
 -- 
-Thanks,
-
-David / dhildenb
+2.28.0
 
