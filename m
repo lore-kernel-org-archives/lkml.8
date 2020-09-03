@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29932C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DC0C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2643220716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B46C20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:10:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="RDmF/WtY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lnUXH2yT"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="RJT1ocml";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fYC6A0ji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbgICIKb (ORCPT
+        id S1728361AbgICIKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:10:31 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:58303 "EHLO
+        Thu, 3 Sep 2020 04:10:41 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:57209 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728401AbgICIC1 (ORCPT
+        by vger.kernel.org with ESMTP id S1728400AbgICIC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:02:27 -0400
+        Thu, 3 Sep 2020 04:02:26 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id ACBA8B18;
-        Thu,  3 Sep 2020 04:02:22 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:02:23 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id 5FF99BC0;
+        Thu,  3 Sep 2020 04:02:21 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:02:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=5NFnvP2JBLynW
-        yZwQN0upyxjvNoms0c6VxUpgb0gKqM=; b=RDmF/WtYQsjOZGJsIATppofns1tXV
-        7qVkl50tC9By2BAvGLm7ggqSFZkc3Gy5vwxiK8vWv880bKolo9+rIfNO2Mr/K68D
-        11oXHb2FVUsK3QezglqbCN7+mWyAh4rZzHJRvCpzCp5wcqLvJbzM9Euy1fHTuvjo
-        aL7EcaTPA7qVAMGAqXXJcaFX5Y3t7jLOw+9OhxC7FJG+HAuaQplykgSIqK6LNkxH
-        SLIFwVMh+lAvjeFwr/DHjFM66FKu32QGR0/MJcS2ErFTT0kciiHgYo1kF0zjA+z+
-        IOu9msuxu8rRyMTzP+5uCJqsHyuX++5/rohOdtciYSTMqZHaj912tYX3w==
+        :mime-version:content-transfer-encoding; s=fm3; bh=X+84pQ5Ji+hRE
+        qIJ2avNpvapmI/2Mjwn8Hg4UcxwJ6c=; b=RJT1ocmlxZJRWa6nMR85uPaFmxo4L
+        GNvdaviJhnBDoUvnnfja9xH6oK7cn43i6VqMd9XyP5gWZ0xbgY+1ZG4wg9ASUK6+
+        y6h191ZgVWp0JT+hARFbm/47RByirxKqdIT5FGFXxn3FbIxn9f+3Kl5kC30tyZxn
+        WPmYdViNXcvWgJeLvLkUinl8yxgbxC3NZxSd6eYzUIzj0Jrz7SAZuCqTCDPyVoBK
+        deH0ZZagh5nwjfCCGMUSWb6yGe0aag0FcwmjowEVmcL+OEMpXM82Vol8OQurB/Sf
+        WX/dWkX4YfWFGJmkop3/xEk63Fl9wvjXbwKvzQ2U4fiswDL58uiZyiWHg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=5NFnvP2JBLynWyZwQN0upyxjvNoms0c6VxUpgb0gKqM=; b=lnUXH2yT
-        usimRGSLROAKxjVehqLOcyrAe/an+ElY5dCVi+eULvH5y609vjLFVXkCN4lle1T9
-        z1KfV7WrWQncfzDEvqzRc6VPLInABCOg48IoNmR0i8gkB2u+l1IKhrjLqUKZwX5z
-        T+PEYIhVsSkw7telMQRwUiO3+rjnjVvziY5cApdqVv4f32u3VoZEdPv5uAAb8zP7
-        8vF/0cNvl5Kwr4fype5QBvYGhcrAUCj3FKNnHC2495J68yANlLkMAFqRwBow/wxB
-        auQ+7xUYOlJjXoUTWRMXa3IQj2PNJpRu1pXJXqIgHkEdAkhPYA48UYUec97ZA6z3
-        zArXm/e+UaNm8w==
-X-ME-Sender: <xms:DqNQXxQ6GXREPezwYl_c0NfGu_Pr4UgzqPiDJ-2cXcgRFNSnbwMj4A>
-    <xme:DqNQX6zOUUPqGJ9_1ygH2tQSiaVJrftVfTIYwH02tP56qzeGya-xDTeugIXfya9m7
-    k_RmJHNwL9eou9kTGA>
+        fm3; bh=X+84pQ5Ji+hREqIJ2avNpvapmI/2Mjwn8Hg4UcxwJ6c=; b=fYC6A0ji
+        xA4nzVJT6LP/au+C+tzDu8T9tRa2R2P/C8z6JMLUZEubyJ581MX/YiJ2ttuN3QF5
+        3Npa0e9DgSEE4ZLEPw5cfBBEve9on6Cy3HOOqyacGnJ047q5wHWLB2pMy2A2XV20
+        TmCHsYPevweNSfaLmC6BvxUsyUi1HMkJ1zXmsUi4R1j0mJb7zVBeF5nrTrBQ3hqm
+        tcrc3cot2HAbQmGDhcspvYRh9R9z3Jcfo21hyVc0sNP7m8tvS60b7drAFDtNKRDK
+        KXbU+Uf37agwZEGlZEiTb8QSL+uWpytRCwfrGGa5zosWWW8bq0BROlWl8Q44clfs
+        4cXF9+DJIPKMeg==
+X-ME-Sender: <xms:DKNQX4Qf7qUIT1M_10NFu4zF1lPGLz5LENKgVRUCPL1u79YeDGdEJw>
+    <xme:DKNQX1wfWmTq-sfpaEecFPnDDMNr7UK_BQfbtQVQIVUuDVDMWET-O9naNWNWktuhI
+    VKKPPvGIPSRbkULDEE>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihi
     mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
     htthgvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveev
-    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedule
+    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpeduge
     enucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:DqNQX23fc8-4EeHN3gwsL0zHX5bLKAwNNJgFWd8dVxN5ru4bNCbh9A>
-    <xmx:DqNQX5B7cTK3OomltJBj15Uh01pj1S7AvBoBdW7gUsyVe4bTjGTAGg>
-    <xmx:DqNQX6jAWHSJsdHGy_tJ5v32Ju1Qc4MOza1Cch0k0DKYubdgaQ-4DQ>
-    <xmx:DqNQXxpREgnpclm90ndi-7VclsCBTCGxT1ILdBwnxWkX3f-TwIrYnaG7eTU>
+X-ME-Proxy: <xmx:DKNQX11avFpeTIBsBtntmCDLbBPXfgbQgmsOYtCZ5qgHUE7zEG6MWA>
+    <xmx:DKNQX8BzARSg8k1DoKUs8JDt9tpEruROO63xDakL-lZkvBFWJJEtSA>
+    <xmx:DKNQXxiN4EOL17qwN4xg0SXXpu4P98ikSSeLkgqH2fBOVuCp9KLcTA>
+    <xmx:DaNQX8pIk7ek91F7LqR-j1tVyN5ZjOxSLUz9OpjKzyn_SuN9SiuQ-uhCxd0>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id EA1AF328005D;
-        Thu,  3 Sep 2020 04:02:21 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9D6423060060;
+        Thu,  3 Sep 2020 04:02:20 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -81,9 +81,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Hoegeun Kwon <hoegeun.kwon@samsung.com>,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH v5 20/80] drm/vc4: crtc: Turn pixelvalve reset into a function
-Date:   Thu,  3 Sep 2020 10:00:52 +0200
-Message-Id: <fb31003a9eee02c4b949556299ff41f0a113499a.1599120059.git-series.maxime@cerno.tech>
+Subject: [PATCH v5 19/80] drm/vc4: crtc: Disable color management for HVS5
+Date:   Thu,  3 Sep 2020 10:00:51 +0200
+Message-Id: <e528e2edf0a1be3930196d437e548114dd9fcf59.1599120059.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
 References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
@@ -94,11 +94,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver resets the pixelvalve FIFO in a number of occurences without
-always using the same sequence.
-
-Since this will be critical for BCM2711, let's move that sequence to a
-function so that we are consistent.
+The HVS5 uses different color matrices. Disable color management support
+for now.
 
 Reviewed-by: Eric Anholt <eric@anholt.net>
 Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
@@ -106,53 +103,58 @@ Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 17 +++++++++++------
+ drivers/gpu/drm/vc4/vc4_hvs.c  |  2 +-
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index 41bc61d5a61f..c2ab907611e3 100644
+index 04744223460a..41bc61d5a61f 100644
 --- a/drivers/gpu/drm/vc4/vc4_crtc.c
 +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -267,6 +267,15 @@ static struct drm_encoder *vc4_get_crtc_encoder(struct drm_crtc *crtc)
- 	return NULL;
- }
- 
-+static void vc4_crtc_pixelvalve_reset(struct drm_crtc *crtc)
-+{
-+	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
-+
-+	/* The PV needs to be disabled before it can be flushed */
-+	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) & ~PV_CONTROL_EN);
-+	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) | PV_CONTROL_FIFO_CLR);
-+}
-+
- static void vc4_crtc_config_pv(struct drm_crtc *crtc)
+@@ -874,6 +874,7 @@ int vc4_crtc_init(struct drm_device *drm, struct vc4_crtc *vc4_crtc,
+ 		  const struct drm_crtc_funcs *crtc_funcs,
+ 		  const struct drm_crtc_helper_funcs *crtc_helper_funcs)
  {
- 	struct drm_encoder *encoder = vc4_get_crtc_encoder(crtc);
-@@ -282,10 +291,7 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
- 	u32 format = is_dsi ? PV_CONTROL_FORMAT_DSIV_24 : PV_CONTROL_FORMAT_24;
- 	u8 ppc = pv_data->pixels_per_clock;
++	struct vc4_dev *vc4 = to_vc4_dev(drm);
+ 	struct drm_crtc *crtc = &vc4_crtc->base;
+ 	struct drm_plane *primary_plane;
+ 	unsigned int i;
+@@ -893,13 +894,17 @@ int vc4_crtc_init(struct drm_device *drm, struct vc4_crtc *vc4_crtc,
+ 	drm_crtc_init_with_planes(drm, crtc, primary_plane, NULL,
+ 				  crtc_funcs, NULL);
+ 	drm_crtc_helper_add(crtc, crtc_helper_funcs);
+-	drm_mode_crtc_set_gamma_size(crtc, ARRAY_SIZE(vc4_crtc->lut_r));
+-	drm_crtc_enable_color_mgmt(crtc, 0, false, crtc->gamma_size);
  
--	/* Reset the PV fifo. */
--	CRTC_WRITE(PV_CONTROL, 0);
--	CRTC_WRITE(PV_CONTROL, PV_CONTROL_FIFO_CLR | PV_CONTROL_EN);
--	CRTC_WRITE(PV_CONTROL, 0);
-+	vc4_crtc_pixelvalve_reset(crtc);
- 
- 	CRTC_WRITE(PV_HORZA,
- 		   VC4_SET_FIELD((mode->htotal - mode->hsync_end) * pixel_rep / ppc,
-@@ -430,9 +436,9 @@ static void vc4_crtc_atomic_enable(struct drm_crtc *crtc,
- 
- 	require_hvs_enabled(dev);
- 
--	/* Reset the PV fifo. */
--	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) |
--		   PV_CONTROL_FIFO_CLR | PV_CONTROL_EN);
-+	vc4_crtc_pixelvalve_reset(crtc);
+-	/* We support CTM, but only for one CRTC at a time. It's therefore
+-	 * implemented as private driver state in vc4_kms, not here.
+-	 */
+-	drm_crtc_enable_color_mgmt(crtc, 0, true, crtc->gamma_size);
++	if (!vc4->hvs->hvs5) {
++		drm_mode_crtc_set_gamma_size(crtc, ARRAY_SIZE(vc4_crtc->lut_r));
 +
-+	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) | PV_CONTROL_EN);
++		drm_crtc_enable_color_mgmt(crtc, 0, false, crtc->gamma_size);
++
++		/* We support CTM, but only for one CRTC at a time. It's therefore
++		 * implemented as private driver state in vc4_kms, not here.
++		 */
++		drm_crtc_enable_color_mgmt(crtc, 0, true, crtc->gamma_size);
++	}
  
- 	/* Enable vblank irq handling before crtc is started otherwise
- 	 * drm_crtc_get_vblank() fails in vc4_crtc_update_dlist().
+ 	for (i = 0; i < crtc->gamma_size; i++) {
+ 		vc4_crtc->lut_r[i] = i;
+diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
+index 31a9bc5ef84e..fa61cad3a53d 100644
+--- a/drivers/gpu/drm/vc4/vc4_hvs.c
++++ b/drivers/gpu/drm/vc4/vc4_hvs.c
+@@ -443,7 +443,7 @@ void vc4_hvs_mode_set_nofb(struct drm_crtc *crtc)
+ 
+ 	HVS_WRITE(SCALER_DISPBKGNDX(vc4_state->assigned_channel),
+ 		  SCALER_DISPBKGND_AUTOHS |
+-		  SCALER_DISPBKGND_GAMMA |
++		  ((!vc4->hvs->hvs5) ? SCALER_DISPBKGND_GAMMA : 0) |
+ 		  (interlace ? SCALER_DISPBKGND_INTERLACE : 0));
+ 
+ 	/* Reload the LUT, since the SRAMs would have been disabled if
 -- 
 git-series 0.9.1
