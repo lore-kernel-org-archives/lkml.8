@@ -6,123 +6,95 @@ X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC93C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2857BC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1423E20737
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E385920737
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:27:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgICH1c (ORCPT
+        id S1728193AbgICH16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:27:32 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:50426 "EHLO pegase1.c-s.fr"
+        Thu, 3 Sep 2020 03:27:58 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49043 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726022AbgICH1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:27:30 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4Bhsp66rdGzB09ZZ;
-        Thu,  3 Sep 2020 09:27:26 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id rH9lzYdCHhM9; Thu,  3 Sep 2020 09:27:26 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bhsp64yDPzB09ZW;
-        Thu,  3 Sep 2020 09:27:26 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B05F68B7B1;
-        Thu,  3 Sep 2020 09:27:27 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id EOoz4qHnxzKL; Thu,  3 Sep 2020 09:27:27 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0575E8B790;
-        Thu,  3 Sep 2020 09:27:26 +0200 (CEST)
-Subject: Re: [PATCH 10/10] powerpc: remove address space overrides using
- set_fs()
-To:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200827150030.282762-1-hch@lst.de>
- <20200827150030.282762-11-hch@lst.de>
- <8974838a-a0b1-1806-4a3a-e983deda67ca@csgroup.eu>
- <20200902123646.GA31184@lst.de>
- <d78cb4be-48a9-a7c5-d9d1-d04d2a02b4c6@csgroup.eu>
- <CAHk-=wiDCcxuHgENo3UtdFi2QW9B7yXvNpG5CtF=A6bc6PTTgA@mail.gmail.com>
- <20200903071144.GA19247@lst.de>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <e6afe576-c3b2-81af-b042-e5930a8fd4c8@csgroup.eu>
-Date:   Thu, 3 Sep 2020 09:27:04 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1726022AbgICH15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 03:27:57 -0400
+IronPort-SDR: X7wd7duZ+Wv8hmkzMBbPVQIpxCeOsRq0oGc+aa4zncE5nmlzm0nuHI+zt+jIJCWsrM1MnppAnw
+ H4yawxNk4Vdw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="221746806"
+X-IronPort-AV: E=Sophos;i="5.76,385,1592895600"; 
+   d="scan'208";a="221746806"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 00:27:56 -0700
+IronPort-SDR: Ze3ZybqgmXXV2HST0KQmgul6uR9hAPh6E6UsMzLx6EMFfvZfUTDbVKkqtQmSz+4SUv5x0FohOJ
+ g/eqXS3+PNow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,385,1592895600"; 
+   d="scan'208";a="326108998"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Sep 2020 00:27:53 -0700
+Cc:     baolu.lu@linux.intel.com, CobeChen-oc <CobeChen-oc@zhaoxin.com>,
+        RaymondPang-oc <RaymondPang-oc@zhaoxin.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiBbUEFUQ0ggdjMgMi8yXSBpb21tdS92?=
+ =?UTF-8?Q?t-d=3aAdd_support_for_probing_ACPI_device_in_RMRR?=
+To:     FelixCui-oc <FelixCui-oc@zhaoxin.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "kbuild@lists.01.org" <kbuild@lists.01.org>
+References: <20200827100217.21324-1-FelixCui-oc@zhaoxin.com>
+ <20200827100217.21324-3-FelixCui-oc@zhaoxin.com>
+ <e5b1daaf-f073-94c9-714c-832b10d284f4@linux.intel.com>
+ <cde22f0f02f94efcae8bf044e2cd9441@zhaoxin.com>
+ <7e5f2c33-c6c3-f344-9014-1f6a306c55aa@linux.intel.com>
+ <cfdd29a882d140e5aec2e8c3b77f4968@zhaoxin.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <56fc76e5-a31c-36b6-c6f0-fd8370cd7a91@linux.intel.com>
+Date:   Thu, 3 Sep 2020 15:22:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200903071144.GA19247@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cfdd29a882d140e5aec2e8c3b77f4968@zhaoxin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Felix,
 
+On 9/2/20 11:24 AM, FelixCui-oc wrote:
+> hi baolu,
+> 
+>> So you have a hidden device (invisible to host kernel). But you need to
+> 
+>>setup some identity mappings for this device, so that the firmware
+>>could keep working, right?
+> 
+>>The platform designs this by putting that range in the RMRR table and
+>>expecting the OS kernel to setup identity mappings during boot.
+> 
+>>Do I understand it right?
+> 
+> 
+> Yes. What you understand is correct.
 
-Le 03/09/2020 à 09:11, Christoph Hellwig a écrit :
-> On Wed, Sep 02, 2020 at 11:02:22AM -0700, Linus Torvalds wrote:
->> I don't see why this change would make any difference.
-> 
-> Me neither, but while looking at a different project I did spot places
-> that actually do an access_ok with len 0, that's why I wanted him to
-> try.
-> 
-> That being said: Christophe are these number stables?  Do you get
-> similar numbers with multiple runs?
+This appears to be a new usage model of RMRR. I need to discuss this
+with the VT-d spec maintainer. Do you mind telling which platform are
+you going to run this on? What is the motivation of creating such hidden
+device?
 
-Yes the numbers are similar with multiple runs and multiple reboots.
+Basically, RMRRs were added as work around for certain legacy device and
+we have been working hard to fix those legacy devices so that RMRR are
+no longer needed.
 
-> 
->> And btw, why do the 32-bit and 64-bit checks even differ? It's not
->> like the extra (single) instruction should even matter. I think the
->> main reason is that the simpler 64-bit case could stay as a macro
->> (because it only uses "addr" and "size" once), but honestly, that
->> "simplification" doesn't help when you then need to have that #ifdef
->> for the 32-bit case and an inline function anyway.
-> 
-> I'll have to leave that to the powerpc folks.  The intent was to not
-> change the behavior (and I even fucked that up for the the size == 0
-> case).
-> 
->> However, I suspect a bigger reason for the actual performance
->> degradation would be the patch that makes things use "write_iter()"
->> for writing, even when a simpler "write()" exists.
-> 
-> Except that we do not actually have such a patch.  For normal user
-> writes we only use ->write_iter if ->write is not present.  But what
-> shows up in the profile is that /dev/zero only has a read_iter op and
-> not a normal read.  I've added a patch below that implements a normal
-> read which might help a tad with this workload, but should not be part
-> of a regression.
-> 
-> Also Christophe:  can you bisect which patch starts this?  Is it really
-> this last patch in the series?
-
-5.9-rc2: 91.5MB/s
-Patch 1: 74.9MB/s
-Patch 2: 97.9MB/s
-Patch 3: 97.7MB/s
-Patch 4 to 9: 97.9MB/s
-Patch 10: 85.3MB/s
-Patch 11: 75.4MB/s
-
-See my other mail, when removing CONFIG_STACKPROTECTOR, I get a stable 
-99.8MB/s throughput.
-
-Christophe
+Best regards,
+baolu
