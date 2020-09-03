@@ -2,95 +2,157 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E6CC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E20C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2083E20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E10D92072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:48:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QMX94UFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgICOsK (ORCPT
+        id S1729385AbgICOsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:48:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38054 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729184AbgICOXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:23:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9843DAB91;
-        Thu,  3 Sep 2020 13:50:21 +0000 (UTC)
-Subject: Re: [PATCH] mm/memory_hotplug: drain per-cpu pages again during
- memory offline
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        mhocko@suse.com, linux-mm@kvack.org
-References: <20200901124615.137200-1-pasha.tatashin@soleen.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <49d977ed-549a-8810-fb71-cf47b9f81f27@suse.cz>
-Date:   Thu, 3 Sep 2020 15:50:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 3 Sep 2020 10:48:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729124AbgICOX1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:23:27 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4874C061249;
+        Thu,  3 Sep 2020 07:22:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=a0ZdxEmc4Ya6AVRsiFgEwXG4tBh4LjkqZ1uo+PU8+e4=; b=QMX94UFc9yqTHvC0XKzCDJqHCO
+        PQ2j49kyyeDnBRj5wWH5+BHFTqV0K26mV6+Nz0wDHJ6g7ucosqy0PkrqIpJf3wCRa6OziORzSMOZf
+        FV8rvubo7rcjapO3kY1PJEzFoDzvuzm+DCTVtttCazTw1Q4An3/651tpb0e1AU9cGtAhkYM5ZuSed
+        foP2WQfSsgBLwztr9Krp6bGrBynwZf/WlsXNs7asaSRyrsyQ9ucsMXmBQ0inrpFT4z8IDVqxvA0Oc
+        YQhg6fNYg5Gg4BI6aiJ8XOThTUhhCBonzONn8NOvHqhTh5acxpUgYAy9XRP0xG1fIoGY10WP8uqND
+        GwwSGXuA==;
+Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDq8T-0004a6-4P; Thu, 03 Sep 2020 14:22:45 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 01/14] proc: remove a level of indentation in proc_get_inode
+Date:   Thu,  3 Sep 2020 16:22:29 +0200
+Message-Id: <20200903142242.925828-2-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200903142242.925828-1-hch@lst.de>
+References: <20200903142242.925828-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200901124615.137200-1-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 2:46 PM, Pavel Tatashin wrote:
-> There is a race during page offline that can lead to infinite loop:
-> a page never ends up on a buddy list and __offline_pages() keeps
-> retrying infinitely or until a termination signal is received.
-> 
-> Thread#1 - a new process:
-> 
-> load_elf_binary
->  begin_new_exec
->   exec_mmap
->    mmput
->     exit_mmap
->      tlb_finish_mmu
->       tlb_flush_mmu
->        release_pages
->         free_unref_page_list
->          free_unref_page_prepare
->           set_pcppage_migratetype(page, migratetype);
->              // Set page->index migration type below  MIGRATE_PCPTYPES
-> 
-> Thread#2 - hot-removes memory
-> __offline_pages
->   start_isolate_page_range
->     set_migratetype_isolate
->       set_pageblock_migratetype(page, MIGRATE_ISOLATE);
->         Set migration type to MIGRATE_ISOLATE-> set
->         drain_all_pages(zone);
->              // drain per-cpu page lists to buddy allocator.
-> 
-> Thread#1 - continue
->          free_unref_page_commit
->            migratetype = get_pcppage_migratetype(page);
->               // get old migration type
->            list_add(&page->lru, &pcp->lists[migratetype]);
->               // add new page to already drained pcp list
-> 
-> Thread#2
-> Never drains pcp again, and therefore gets stuck in the loop.
-> 
-> The fix is to try to drain per-cpu lists again after
-> check_pages_isolated_cb() fails.
-> 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: stable@vger.kernel.org
+Just return early on inode allocation failure.
 
-Fixes: ?
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/proc/inode.c | 72 +++++++++++++++++++++++++------------------------
+ 1 file changed, 37 insertions(+), 35 deletions(-)
 
-Thanks.
+diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+index 28d6105e908e4c..016b1302cbabc0 100644
+--- a/fs/proc/inode.c
++++ b/fs/proc/inode.c
+@@ -619,42 +619,44 @@ struct inode *proc_get_inode(struct super_block *sb, struct proc_dir_entry *de)
+ {
+ 	struct inode *inode = new_inode(sb);
+ 
+-	if (inode) {
+-		inode->i_ino = de->low_ino;
+-		inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
+-		PROC_I(inode)->pde = de;
+-
+-		if (is_empty_pde(de)) {
+-			make_empty_dir_inode(inode);
+-			return inode;
+-		}
+-		if (de->mode) {
+-			inode->i_mode = de->mode;
+-			inode->i_uid = de->uid;
+-			inode->i_gid = de->gid;
+-		}
+-		if (de->size)
+-			inode->i_size = de->size;
+-		if (de->nlink)
+-			set_nlink(inode, de->nlink);
+-
+-		if (S_ISREG(inode->i_mode)) {
+-			inode->i_op = de->proc_iops;
+-			inode->i_fop = &proc_reg_file_ops;
++	if (!inode) {
++		pde_put(de);
++		return NULL;
++	}
++
++	inode->i_ino = de->low_ino;
++	inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
++	PROC_I(inode)->pde = de;
++	if (is_empty_pde(de)) {
++		make_empty_dir_inode(inode);
++		return inode;
++	}
++
++	if (de->mode) {
++		inode->i_mode = de->mode;
++		inode->i_uid = de->uid;
++		inode->i_gid = de->gid;
++	}
++	if (de->size)
++		inode->i_size = de->size;
++	if (de->nlink)
++		set_nlink(inode, de->nlink);
++
++	if (S_ISREG(inode->i_mode)) {
++		inode->i_op = de->proc_iops;
++		inode->i_fop = &proc_reg_file_ops;
+ #ifdef CONFIG_COMPAT
+-			if (!de->proc_ops->proc_compat_ioctl) {
+-				inode->i_fop = &proc_reg_file_ops_no_compat;
+-			}
++		if (!de->proc_ops->proc_compat_ioctl)
++			inode->i_fop = &proc_reg_file_ops_no_compat;
+ #endif
+-		} else if (S_ISDIR(inode->i_mode)) {
+-			inode->i_op = de->proc_iops;
+-			inode->i_fop = de->proc_dir_ops;
+-		} else if (S_ISLNK(inode->i_mode)) {
+-			inode->i_op = de->proc_iops;
+-			inode->i_fop = NULL;
+-		} else
+-			BUG();
+-	} else
+-	       pde_put(de);
++	} else if (S_ISDIR(inode->i_mode)) {
++		inode->i_op = de->proc_iops;
++		inode->i_fop = de->proc_dir_ops;
++	} else if (S_ISLNK(inode->i_mode)) {
++		inode->i_op = de->proc_iops;
++		inode->i_fop = NULL;
++	} else {
++		BUG();
++	}
+ 	return inode;
+ }
+-- 
+2.28.0
+
