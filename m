@@ -2,85 +2,83 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A210C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5138BC2BB84
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B41D2065F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0CB62065F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:51:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599123113;
+	bh=0rOXJO8v3Xk2V4JE+ff9DFNPnBObB4XSASn1EHHlVXw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kv4oWm6pjJYPtbLTV7d7VFdKciSfdMt4WWJoPm5JqgGD5ar6wJ8nSWqH4TtVOyY6b
+	 lhA6jiD22zbWke6HgIAC4IDrBwffvEcaW0L+rmiCROMyPR7wJTYr5e8WBOw00mO5/2
+	 1zz+AhvxEWhuhtItO6DScDZIx1ChTu9/HYmsrM8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgICIvF (ORCPT
+        id S1728294AbgICIvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:51:05 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:36265 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726397AbgICIvE (ORCPT
+        Thu, 3 Sep 2020 04:51:51 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33378 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbgICIvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:51:04 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R711e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U7nVX.Y_1599123058;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U7nVX.Y_1599123058)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 03 Sep 2020 16:50:58 +0800
-Subject: Re: [PATCH v4 3/4] mm/pageblock: work around multiple arch's cmpxchg
- support issue
-To:     Max Filippov <jcmvbkbc@gmail.com>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Chris Zankel <chris@zankel.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "open list:SUPERH" <linux-sh@vger.kernel.org>,
-        "open list:SPARC + UltraSPAR..." <sparclinux@vger.kernel.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>,
-        Linux Memory Management List <linux-mm@kvack.org>
-References: <1599116482-7410-1-git-send-email-alex.shi@linux.alibaba.com>
- <1599116482-7410-3-git-send-email-alex.shi@linux.alibaba.com>
- <CAMo8BfJT7JJfwT1-X3vfqKGD-E3-Dbf2xyWs-RiRyUUHmbetVA@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <21144022-cf75-5b4f-4645-a7f0746b025d@linux.alibaba.com>
-Date:   Thu, 3 Sep 2020 16:50:50 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Thu, 3 Sep 2020 04:51:48 -0400
+Received: by mail-wm1-f67.google.com with SMTP id e11so4888776wme.0;
+        Thu, 03 Sep 2020 01:51:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pkx/vNHdqQFBvx8rQoFeCp/YpLcZ1iPwGvVTv1CC2PA=;
+        b=Li9V0EpwaC7H2HFqvUGIZUtJO+McinXSgJN8YePpOeGDA41DDYfNJYSFYqwga7wozh
+         jAoXBijNtJxybvDmsIbS/NPKQWVW+6LAEdbE1sNYUEWFXAV7F3xTaPl+rShTMjSCzdBN
+         E1aljlKSUVabLo2duwnR6uBlC9Jq4MJSDG5iNeddLiFb1c7fJV9L8P/KnhRSGBTM+0gI
+         X/cH9+tF/1k33Cha8sWwt9UGWan/7Qb1RKDuk8Z0RS34GPMVXsnuqV5RmsERUhbv16nm
+         9ZVZs9L125+ffRGLGB0ToBoODMf5r3vN9Ny+EFiJrX2fbsN76N0HabDV+SZPaBM9Xa0I
+         jSqw==
+X-Gm-Message-State: AOAM5322bipR0ZLIs9IcX3/omZ4ofUbq0nMRcJ3F+f/KWWKmnnU6iuXe
+        sFF2FmvgjYuVEYbwbQ3ItTQ=
+X-Google-Smtp-Source: ABdhPJzPpcPqET8UF18b8l6TLsP6EZdrCqT0umG8b7WuORAfF0aHk+zx366xNIvqIe7k0pIC6d1V9w==
+X-Received: by 2002:a1c:2781:: with SMTP id n123mr1336045wmn.27.1599123104524;
+        Thu, 03 Sep 2020 01:51:44 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.106])
+        by smtp.googlemail.com with ESMTPSA id h6sm3153472wmb.22.2020.09.03.01.51.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 03 Sep 2020 01:51:43 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 10:51:41 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Xu Wang <vulab@iscas.ac.cn>
+Cc:     vz@mleia.com, k.konieczny@samsung.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net, linux-crypto@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: s5p-sss: remove redundant null check
+Message-ID: <20200903085141.GA30833@kozik-lap>
+References: <20200903083738.85345-1-vulab@iscas.ac.cn>
 MIME-Version: 1.0
-In-Reply-To: <CAMo8BfJT7JJfwT1-X3vfqKGD-E3-Dbf2xyWs-RiRyUUHmbetVA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20200903083738.85345-1-vulab@iscas.ac.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 03, 2020 at 08:37:38AM +0000, Xu Wang wrote:
+> Because clk_disable_unprepare already checked NULL clock
+> parameter, so the additional checks are unnecessary, just remove them.
+> 
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> ---
+>  drivers/crypto/s5p-sss.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-在 2020/9/3 下午3:29, Max Filippov 写道:
->> diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
->> index e997e0119c02..862b008ab09e 100644
->> --- a/arch/xtensa/Kconfig
->> +++ b/arch/xtensa/Kconfig
->> @@ -42,6 +42,7 @@ config XTENSA
->>         select MODULES_USE_ELF_RELA
->>         select PERF_USE_VMALLOC
->>         select VIRT_TO_BUS
->> +       select NO_CMPXCHG_BYTE
-> Please keep the lists of select statements in Kconfig files above
-> alphabetically sorted.
-
-Hi Max,
-
-Thanks for the reminder, Let's comments from Mel Gorman.
-
-Thanks!
+Best regards,
+Krzysztof
