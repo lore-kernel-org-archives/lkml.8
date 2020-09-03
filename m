@@ -2,84 +2,129 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3CAC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964F9C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9432065E
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B02020709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:58:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uDnkn4wY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgICJz0 (ORCPT
+        id S1726467AbgICJ6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 05:55:26 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34818 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgICJzZ (ORCPT
+        Thu, 3 Sep 2020 05:58:36 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:63599 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726025AbgICJ6e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 05:55:25 -0400
-Received: by mail-ot1-f66.google.com with SMTP id i4so2170784ota.2;
-        Thu, 03 Sep 2020 02:55:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mxd/4nV94gENPbWr5vineBXcIlKgMjAz5Ru6u3+1SJw=;
-        b=udVVrKLEFnOJSFTTFK3eOTARvNFUhMnnbYdTo+Fu2cVx64k9nCnhTYNWdRjjjerStU
-         mKBP5s3R6G1JTDiJSpgbTL/v4/024K0GLvwqnvCv/91KCRXrGa+TRNbsbca35rmLdWM0
-         9qPA33m+rIoOpffyQOEBSfJPjoSBL9LLm31+Rsn0UCYgvLCHjwTNmNZyJkraPz2d4K++
-         Vbs6LoIFqmGy6kcMI8GRDfY6SaKdAF+Y14B5KbgVvLCie0rGtfKHDO4x+TT/KwQiX/rU
-         9uExa3oivsGBECuP70ySd5OBa/fv0LomYDh6FD823I88ctaR6YvnILetPxyc8oFdJQCd
-         2ZUQ==
-X-Gm-Message-State: AOAM530pteMaHF8OFGJeW78KI58j5U/az4sZXa5Tgu0Ks5PJXswIZETv
-        P8ymOZFMfbHDU/wa6vlhgJe3qh9xciIJOVK/Sl8=
-X-Google-Smtp-Source: ABdhPJyeSRbUKtD7sMTdA7aGWTBEJsisVjdfNr+DMP4gt47zwDTvJkxLTdEJb/z3SByYoU7/hwDepBj6YbI2sQOaBTw=
-X-Received: by 2002:a9d:1b62:: with SMTP id l89mr948617otl.145.1599126923013;
- Thu, 03 Sep 2020 02:55:23 -0700 (PDT)
+        Thu, 3 Sep 2020 05:58:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1599127114; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=+vQ36GfnGLgIs2X805NWKEOQbCuuZfQENyzO6E3PU8E=;
+ b=uDnkn4wYeKwEqBv/43FCwnhSJSZQgYfw4aNxMY7gOXGHgUNwENp3/8nKRov+ZR5lO8JLyzfG
+ M48oHmH1547gQ2W+XpR9VF1pluj3AaV5hj+lLuw5zT42ZdofnMicJAIBEMftfpp/rqjKv1F0
+ wK/NHZl1vxVoaDcoDkQx6Dg92yQ=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f50be49380a624e4de8dc74 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 03 Sep 2020 09:58:33
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EC1FEC43391; Thu,  3 Sep 2020 09:58:32 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5441FC433C9;
+        Thu,  3 Sep 2020 09:58:32 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200825141805.27105-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200825141805.27105-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200825141805.27105-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 3 Sep 2020 11:55:11 +0200
-Message-ID: <CAMuHMdVgO+nkudF_W9oUfqD=Z5dWX2HME5jcTQqA1DsGm3+nrQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iommu: renesas,ipmmu-vmsa: Add r8a7742 support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 03 Sep 2020 15:28:32 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCHv2] soc: qcom: llcc: Support chipsets that can write to
+ llcc registers
+In-Reply-To: <d949bdfa15b133f74a47727401553c76@codeaurora.org>
+References: <20200817144722.6665-1-saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=VE6vCPjDvvP0e73tnd8u5rPuMUa-mwvDazrfUpXP+bKQ@mail.gmail.com>
+ <2a0c5fa189dbb2e810ba88f59621b65c@codeaurora.org>
+ <CAD=FV=X8yS1gUNhhVNyfuRPzDUheG2Rco2g16KMegCG6fKJw7Q@mail.gmail.com>
+ <d949bdfa15b133f74a47727401553c76@codeaurora.org>
+Message-ID: <7714ee57f75542839d5c33b28f232aa6@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 4:19 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document RZ/G1H (R8A7742) SoC bindings.
->
-> No driver change is needed due to the fallback compatible value
-> "renesas,ipmmu-vmsa".
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+Hi,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 2020-08-18 21:07, Sai Prakash Ranjan wrote:
+> Hi Doug,
+> 
+>> 
+>> I guess to start, it wasn't obvious (to me) that there were two
+>> choices and we were picking one.  Mentioning that the other
+>> alternative was way-based allocation would help a lot.  Even if you
+>> can't fully explain the differences between the two, adding something
+>> to the commit message indicating that this is a policy decision (in
+>> other words, both work but each have their tradeoffs) would help.
+>> Something like this, if it's correct:
+>> 
+>> In general we try to enable capacity based allocation (instead of the
+>> default way based allocation) since that gives us better performance
+>> with the current software / hardware configuration.
+>> 
+> 
+> Thanks, I will add it for next version. Let me also go poke some arch 
+> teams
+> to understand if we actually do gain something with this selection, who 
+> knows
+> we might get some additional details as well.
+> 
 
-Gr{oetje,eeting}s,
+I got some information from arch team today, to quote them exactly:
 
-                        Geert
+1) What benefits capacity based allocation brings over the default way
+based allocation?
+
+"Capacity based allows finer grain partition. It is not about improved
+performance but more flexibility in configuration."
+
+2) Retain through power collapse, doesn’t it burn more power?
+
+"This feature is similar to the standard feature of retention. Yes, when 
+we
+have cache in retention mode it burns more power but it keeps the values 
+so
+that when we wake up we can get more cache hits."
+
+
+If its good enough, then I will add this info to the commit msg and post
+next version.
+
+Thanks,
+Sai
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
