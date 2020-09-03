@@ -2,106 +2,113 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F12C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDA8C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1D8206A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84896206E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:00:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="PB5wpvCU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W2LChxv1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sliHzsWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgICI4o (ORCPT
+        id S1727989AbgICJA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:56:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41212 "EHLO
+        Thu, 3 Sep 2020 05:00:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgICI4n (ORCPT
+        with ESMTP id S1726268AbgICJA0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:56:43 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C80AC061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 01:56:43 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id z9so2072150wmk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 01:56:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oXnv/3I3RNjKPd3svQVgdHEHghFe6WwwdwtXUflXo84=;
-        b=PB5wpvCUWl76RLt7pM40TQUJG77WeKZVBYLnDTVgmuVyo/3WmE+MX9MLNVNJBaAcvC
-         Nx63GHZnhKhtRa3vgu8ZN57HPyJcQwBbY1xfaf3hpskoTOc9zL8ghfy93mhFFP+avL6x
-         N1pQNKvOSUEKkRn0GeeFr++TicApz6ccx6jR0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oXnv/3I3RNjKPd3svQVgdHEHghFe6WwwdwtXUflXo84=;
-        b=krEUZ4q0fZd50AS0BVOaFfH/jBJl4s7F5gEokg7q3X7pJw02/NwKUXkZ6OjkzsbyS0
-         qopYKkP+FqDM2yPeidteQk83iLycD013hCsemrupSwUI2RMK9vudDLaXxuv8eWr4AMvq
-         osTrb66udvOsiaNdr4Jq4skVLvqgzqee1c34INaIv+XKF/n/6uNSkbSr8OMvGJE4o2/V
-         I/Lm7WAK4vc/EJCHpCaxCRM6+C5LYy77TPYINxgBmhiMPO1HPoopAG/hMvyP+uaxuprr
-         yT8qxkxvsKUvRaa231gw8U2vNbQmb38G2vR7ChR7D38/M1dZxbqsOe+KszYxpWHW6PZj
-         omOw==
-X-Gm-Message-State: AOAM531pI/5JLUcFe1Qfmqq2jK0GD2UkxHwWJM40Yf7JOP1EGX8w2zsC
-        R0ZJP7B6BYpwytKN6i6KAuTkmQ==
-X-Google-Smtp-Source: ABdhPJzrsGutLlxJyzlqDyE5UjsrS4/YD+N+YvSUSIBIGm0GhcWhcqtf44P2W+xn6gde+IqEXTpcWg==
-X-Received: by 2002:a1c:e256:: with SMTP id z83mr1397695wmg.33.1599123400944;
-        Thu, 03 Sep 2020 01:56:40 -0700 (PDT)
-Received: from [172.16.11.132] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id n4sm3230442wrp.61.2020.09.03.01.56.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 01:56:40 -0700 (PDT)
-Subject: Re: [PATCH rdma-next 2/4] gcov: Use proper duplication routine for
- const pointer
-To:     Leon Romanovsky <leon@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc:     Leon Romanovsky <leonro@nvidia.com>, linux-kernel@vger.kernel.org,
-        Colin Ian King <colin.king@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200902085513.748149-1-leon@kernel.org>
- <20200902085513.748149-3-leon@kernel.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <eb874b37-3e3f-6819-78f7-bba3e684ae27@rasmusvillemoes.dk>
-Date:   Thu, 3 Sep 2020 10:56:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 3 Sep 2020 05:00:26 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE6D0C061244;
+        Thu,  3 Sep 2020 02:00:25 -0700 (PDT)
+Date:   Thu, 03 Sep 2020 09:00:22 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599123623;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rEmG++bixu9W7TmmdOMxnU6Msdk80tG/JOFts20Mdh0=;
+        b=W2LChxv12wTghU9ex5WnuJjEMgybMoy4d+kM8Tf5h0U7Z8K9U5Za8NnGugFoeo10hJtNSN
+        mdGDqAogPXcpBBXzZ+mvFWmfbJDQRRCrrF+PNKbUl5CEBXfsAOddKo3jIs46BObD65so+0
+        PtFBeTDmp8kpkmskhFp8QpEtDe57Xv1pwLl78RY9+sXFloeHYZJC/asANANBFYJ1cAPmW7
+        dQo+M6AIVwRrI/L7KESwuf59r+Scg7OFQ8Tf/xz38F2anZ7b5hMerDPh95aDwMYB6MtxTI
+        C6shn7/yEVRUKfI60Sf2Z/Z7ik2lE8AzvqEm4q5dsB5PWoqE05IfmxDl8EZ2HQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599123623;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rEmG++bixu9W7TmmdOMxnU6Msdk80tG/JOFts20Mdh0=;
+        b=sliHzsWTQQkcsGbcYS5iDuIwBVCljhXgpJp6XUlBtacYlOCuFLgd0UeZMOIOjcOeqwLPls
+        dnYPk/nUO1BCLeCA==
+From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/cmdline: Disable jump tables for cmdline.c
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200903023056.3914690-1-nivedita@alum.mit.edu>
+References: <20200903023056.3914690-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <20200902085513.748149-3-leon@kernel.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Message-ID: <159912362248.20229.4425613326323772481.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/09/2020 10.55, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
-> 
-> The filename is a const pointer, so use the proper string duplication
-> routine that takes into account const identifier.
+The following commit has been merged into the x86/urgent branch of tip:
 
-This commit log makes no sense at all.
+Commit-ID:     aef0148f3606117352053c015cb33734e9ee7397
+Gitweb:        https://git.kernel.org/tip/aef0148f3606117352053c015cb33734e9ee7397
+Author:        Arvind Sankar <nivedita@alum.mit.edu>
+AuthorDate:    Wed, 02 Sep 2020 22:30:56 -04:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 03 Sep 2020 10:59:16 +02:00
 
-kstrdup_const is merely an optimization that can be used when there's a
-good chance that the passed string lives in vmlinux' .rodata, in which
-case it is known to be immortal, and we can avoid allocating heap memory
-to contain a duplicate. [It also requires that the caller has no
-intention of modifying the returned string.]
+x86/cmdline: Disable jump tables for cmdline.c
 
-In the case of something called ->filename, I assume it's initialized
-with __FILE__ somewhere, making the above true for built-in stuff but
-not for modules. So if the gcov_info can live longer than the module,
-it's of course necessary to duplicate the string, but OTOH making an
-optimization for the built-in stuff makes sense. So this is certainly
-one of the places where kstrdup_const() seems applicable. But it has
-nothing whatsoever to do with the C-level qualifiers the argument may have.
+When CONFIG_RETPOLINE is disabled, Clang uses a jump table for the
+switch statement in cmdline_find_option (jump tables are disabled when
+CONFIG_RETPOLINE is enabled). This function is called very early in boot
+from sme_enable() if CONFIG_AMD_MEM_ENCRYPT is enabled. At this time,
+the kernel is still executing out of the identity mapping, but the jump
+table will contain virtual addresses.
 
-Rasmus
+Fix this by disabling jump tables for cmdline.c when AMD_MEM_ENCRYPT is
+enabled.
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200903023056.3914690-1-nivedita@alum.mit.edu
+---
+ arch/x86/lib/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+index d46fff1..aa06785 100644
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -24,7 +24,7 @@ ifdef CONFIG_FUNCTION_TRACER
+ CFLAGS_REMOVE_cmdline.o = -pg
+ endif
+ 
+-CFLAGS_cmdline.o := -fno-stack-protector
++CFLAGS_cmdline.o := -fno-stack-protector -fno-jump-tables
+ endif
+ 
+ inat_tables_script = $(srctree)/arch/x86/tools/gen-insn-attr-x86.awk
