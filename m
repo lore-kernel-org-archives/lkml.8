@@ -2,192 +2,132 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57130C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D32EEC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 139E820658
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4DF206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:31:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="te/lzkbF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/OxbLk2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgICJaj (ORCPT
+        id S1728301AbgICJb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 05:30:39 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:52612 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbgICJad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 05:30:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1599125432; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=V17ZsaD5D2v/6h9zbhOSana048DQtYuDfWpBwCQbkzU=; b=te/lzkbFfoaa64RKt12/xS/9mscjPZbD0C/kovK+YzOETfjuE8TSdFFaxGKzbW64fTzrpIWU
- mAXxmLtQEnCdyFvCZwZpwx0HmACTZ+tYqj9uBL8AfloJYig2NQvJm+Ut2m+HM+KOLyaacJf7
- SSrnfn8GHn+8nqP8iyHdT9OJ8sM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f50b78d698ee477d1af4192 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 03 Sep 2020 09:29:49
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3F15FC4339C; Thu,  3 Sep 2020 09:29:49 +0000 (UTC)
-Received: from [10.131.172.121] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: srivasam)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 06E20C433C9;
-        Thu,  3 Sep 2020 09:29:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 06E20C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=srivasam@codeaurora.org
-Subject: Re: [PATCH v3 3/5] ASoC: qcom: Add support for lpass hdmi driver
-To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
-        alsa-devel@alsa-project.org, bgoswami@codeaurora.org,
-        bjorn.andersson@linaro.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, lgirdwood@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        perex@perex.cz, plai@codeaurora.org, robh+dt@kernel.org,
-        rohitkr@codeaurora.org, srinivas.kandagatla@linaro.org,
-        tiwai@suse.com
-Cc:     V Sujith Kumar Reddy <vsujithk@codeaurora.org>
-References: <1598855964-1042-1-git-send-email-srivasam@codeaurora.org>
- <1598855964-1042-4-git-send-email-srivasam@codeaurora.org>
- <159894579447.334488.1604209140945740724@swboyd.mtv.corp.google.com>
-From:   Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
-Organization: Qualcomm India Private Limited
-Message-ID: <36672d15-78bf-ffe7-71a3-4a7ed8664149@codeaurora.org>
-Date:   Thu, 3 Sep 2020 14:59:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.2.1
+        Thu, 3 Sep 2020 05:31:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgICJb0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 05:31:26 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D73BC061244;
+        Thu,  3 Sep 2020 02:31:26 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u20so1874336pfn.0;
+        Thu, 03 Sep 2020 02:31:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+sd9erymWD13Cu188GljsOgb+/pwjw6f4RPyPst8OkY=;
+        b=J/OxbLk24+mWs+zAdfKaJvLOQ/2cBymrYF8hpD4EbkzEsMAD5eZQv6+g2I1UcC4tjL
+         OQtWr/BkAtnRpcx2YvcbZcdYMP3Q4vQgJ7Vt9CN8G4h93rqrprc16hutf82PaTl9SPpC
+         MDw7cdmI2V4dV6SD11qKcESfhzmc5Ae4OGqiWqD6wied1AG9KPcTxoLFvZm6jM1jJQA+
+         qhpcJEvTOjOttnuLxEBKPnEL2KPS9lieYo3PsREIP3SoN2EcS2nH9RrhSwkZNJ6MD6hv
+         hpk9kIIVPwGdrjluOubDR4X7yWL4JNxOGutUSXOfo8mWYlpJzVXShrXGFHRlPygpm8Td
+         E+vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+sd9erymWD13Cu188GljsOgb+/pwjw6f4RPyPst8OkY=;
+        b=sRii/9jz8v1GQITUS9qtXsUxBXkoBLTOItQt8liKYodf8XdtR1lEeDymGFv1eMh7lH
+         JnJFU1NkXeM6LfWxAVdMHUnDwRnvaa4kdCocWl5u0+U6doA2wEx6Qctl5OfLbLu6jep2
+         pY620OnKQzityVVqZd5je1B7XbGvx4EYq84mQdhoTZb2BJcdDPeH//X4IsfeJvJ0cP17
+         bgrgoNu20NRmonhFzk/+ntZeEXMpw2DA6ku/rluAZ3XPvOoHtTq7dm/vSdfL4smbKC17
+         tdgmBfK/SW/IOy0Yr2NOOnbRftTUPl5r7OjBEIM7jlf3lJNlSONT1Pay+iZmWUKj/nv3
+         dgkg==
+X-Gm-Message-State: AOAM530u/Djv34h+D+7Bplx83INfcZ3salDYOinYlhoxxQXZ7xa1CEsR
+        gqbD6kqHbqqBhhO4P2NmbK9kOn1bISo=
+X-Google-Smtp-Source: ABdhPJwgnRZElPmZmJR5LdkBVJrAiBtK8Op8FIRVjeAuifsDebTsFbK6LvC4WS6a/BKY9P8woy4Rwg==
+X-Received: by 2002:a62:7fd1:: with SMTP id a200mr2964557pfd.175.1599125485626;
+        Thu, 03 Sep 2020 02:31:25 -0700 (PDT)
+Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id d1sm1873301pjs.17.2020.09.03.02.31.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 02:31:24 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 17:31:20 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 11/20] gpiolib: cdev: support
+ GPIO_V2_LINE_SET_VALUES_IOCTL
+Message-ID: <20200903093120.GA160697@sol>
+References: <20200831032006.1019978-1-warthog618@gmail.com>
+ <20200831032006.1019978-12-warthog618@gmail.com>
+ <CAMpxmJWYpDQsvKCsNudb6p3zAey=6EuNpb3wQ3dpCJVCTjjBsg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <159894579447.334488.1604209140945740724@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJWYpDQsvKCsNudb6p3zAey=6EuNpb3wQ3dpCJVCTjjBsg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Stephen for your time for review!!!
+On Thu, Sep 03, 2020 at 09:59:17AM +0200, Bartosz Golaszewski wrote:
+> On Mon, Aug 31, 2020 at 5:23 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > Add support for the GPIO_V2_LINE_SET_VALUES_IOCTL.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > ---
+> >  drivers/gpio/gpiolib-cdev.c | 59 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 59 insertions(+)
+> >
+> > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> > index 936b8c9958dd..9f05bbd2161e 100644
+> > --- a/drivers/gpio/gpiolib-cdev.c
+> > +++ b/drivers/gpio/gpiolib-cdev.c
+> > @@ -777,6 +777,63 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
+> >         return 0;
+> >  }
+> >
+> > +static long linereq_set_values_unlocked(struct linereq *lr,
+> > +                                       struct gpio_v2_line_values *lv)
+> > +{
+> > +       DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
+> > +       struct gpio_desc **descs;
+> > +       unsigned int i, didx, num_set;
+> > +       int ret;
+> > +
+> > +       bitmap_zero(vals, GPIO_V2_LINES_MAX);
+> > +       for (num_set = 0, i = 0; i < lr->num_lines; i++) {
+> > +               if (lv->mask & BIT_ULL(i)) {
+> > +                       if (!test_bit(FLAG_IS_OUT, &lr->lines[i].desc->flags))
+> > +                               return -EPERM;
+> > +                       if (lv->bits & BIT_ULL(i))
+> > +                               __set_bit(num_set, vals);
+> > +                       num_set++;
+> > +                       descs = &lr->lines[i].desc;
+> > +               }
+> > +       }
+> > +       if (num_set == 0)
+> > +               return -EINVAL;
+> > +
+> > +       if (num_set != 1) {
+> > +               /* build compacted desc array and values */
+> > +               descs = kmalloc_array(num_set, sizeof(*descs), GFP_KERNEL);
+> 
+> Missing retval check.
+> 
 
-On 9/1/2020 1:06 PM, Stephen Boyd wrote:
-> Quoting Srinivasa Rao Mandadapu (2020-08-30 23:39:22)
->> diff --git a/sound/soc/qcom/lpass-hdmi.c b/sound/soc/qcom/lpass-hdmi.c
->> new file mode 100644
->> index 0000000..7e18113
->> --- /dev/null
->> +++ b/sound/soc/qcom/lpass-hdmi.c
->> @@ -0,0 +1,684 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
-> [...]
->> +
->> +static int lpass_hdmi_daiops_hw_params(struct snd_pcm_substream *substream,
->> +               struct snd_pcm_hw_params *params, struct snd_soc_dai *dai)
->> +{
-> [...]
->> +       data_format = LPASS_DATA_FORMAT_LINEAR;
->> +       ch_sts_buf0 = (((data_format << LPASS_DATA_FORMAT_SHIFT) & LPASS_DATA_FORMAT_MASK)
->> +                               | ((sampling_freq << LPASS_FREQ_BIT_SHIFT) & LPASS_FREQ_BIT_MASK));
->> +       ch_sts_buf1 = (word_length) & LPASS_WORDLENGTH_MASK;
->> +
->> +       ret = regmap_field_write(drvdata->tx_ctl->soft_reset, LPASS_TX_CTL_RESET);
->> +       if (ret) {
->> +               dev_err(dai->dev, "%s error writing to softreset enable : %d\n",
-> All of these strings bloat the kernel image. Can we just return ret
-> instead and if something goes wrong we can use a debug patch to figure
-> out which register write failed? Would a register write even fail to
-> begin with?
-Will remove wherever possible.
->
->> +                                       __func__, ret);
->> +               return ret;
->> +       }
->> +
->> +       ret = regmap_field_write(drvdata->tx_ctl->soft_reset, LPASS_TX_CTL_CLEAR);
->> +       if (ret) {
->> +               dev_err(dai->dev, "%s error writing to softreset disable : %d\n",
->> +                                       __func__, ret);
->> +               return ret;
->> +       }
->> +
->> +       ret = regmap_field_write(drvdata->legacy->legacy_en,
->> +                               LPASS_HDMITX_LEGACY_DISABLE);
->> +       if (ret) {
->> +               dev_err(dai->dev, "%s error writing to legacy_en field : %d\n",
->> +                                       __func__, ret);
->> +               return ret;
->> +       }
->> +
-> [...]
->>   #define LPAIF_DMACTL_REG(v, chan, dir) __LPAIF_DMA_REG(v, chan, dir, CTL)
->>   #define LPAIF_DMABASE_REG(v, chan, dir) __LPAIF_DMA_REG(v, chan, dir, BASE)
->> diff --git a/sound/soc/qcom/lpass-platform.c b/sound/soc/qcom/lpass-platform.c
->> index df692ed..607f4c4 100644
->> --- a/sound/soc/qcom/lpass-platform.c
->> +++ b/sound/soc/qcom/lpass-platform.c
->> @@ -553,7 +702,21 @@ static irqreturn_t lpass_platform_lpaif_irq(int irq, void *data)
->>   
->>          /* Handle per channel interrupts */
->>          for (chan = 0; chan < LPASS_MAX_DMA_CHANNELS; chan++) {
->> -               if (irqs & LPAIF_IRQ_ALL(chan) && drvdata->substream[chan]) {
->> +               switch (v->id) {
->> +               case HDMI_INTERFACE:
->> +                       val = LPAIF_IRQ_HDMI_REQ_ON_PRELOAD(chan) |
->> +                               LPAIF_IRQ_HDMI_METADONE |
->> +                               LPAIF_IRQ_HDMI_SDEEP_AUD_DIS(chan);
->> +                       break;
->> +               case I2S_INTERFACE:
->> +                       val = 0;
->> +                       break;
->> +               default:
->> +                       pr_err("%s: invalid  %d interface\n", __func__, v->id);
-> Any reason we can't use dev_err() here?
+Arrgh, that has been there since PATCH v2!
+And subsequently got propagated into patch 07 :-(.
 
-It's interrupt handler. Here dev variable is not available.
-
-So we shall remove print as per your previous comment or keep as it is.
-
->
->> +                       return -EINVAL;
->> +               }
->> +               if (irqs & (LPAIF_IRQ_ALL(chan) | val)
->> +                       && drvdata->substream[chan]) {
->>                          rv = lpass_dma_interrupt_handler(
->>                                                  drvdata->substream[chan],
->>                                                  drvdata, chan, irqs);
->> @@ -644,15 +807,15 @@ int asoc_qcom_lpass_platform_register(struct platform_device *pdev)
->>   
->>          /* ensure audio hardware is disabled */
->>          ret = regmap_write(drvdata->lpaif_map,
->> -                       LPAIF_IRQEN_REG(v, LPAIF_IRQ_PORT_HOST), 0);
->> +                       IRQ_EN(v, LPAIF_IRQ_PORT_HOST), 0);
->>          if (ret) {
->>                  dev_err(&pdev->dev, "error writing to irqen reg: %d\n", ret);
->>                  return ret;
->>          }
->>   
->>          ret = devm_request_irq(&pdev->dev, drvdata->lpaif_irq,
->> -                       lpass_platform_lpaif_irq, IRQF_TRIGGER_RISING,
->> -                       "lpass-irq-lpaif", drvdata);
->> +               lpass_platform_lpaif_irq, IRQF_TRIGGER_RISING,
-> Can we use the irq flags from the firmware, i.e. whatever the DT or ACPI
-> tables say?
-okay.
->
->> +               pdev->name, drvdata);
->>          if (ret) {
->>                  dev_err(&pdev->dev, "irq request failed: %d\n", ret);
->>                  return ret;
-
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+Kent.
