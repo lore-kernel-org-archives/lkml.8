@@ -2,71 +2,127 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396FAC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 06:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A52DC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 06:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0374D20737
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 06:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599115912;
-	bh=zFFH5ijjXx/9/g9VnmjQZzmuX1E42UObUA1luskXeVI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nh5nhWFiOWaI6uAdP+kk/dy0T50eeShkvpLccoeznqeTy8sO2BKqug3+vcNwe6osd
-	 y0SUChqpZD74W35dXBVVg6zYNyvXEMzKctNdY+AkwWehcBSUjZ4gfXianJJTjzafbH
-	 OfV108GtoHTMyzL03CdxPjMKQRWQ4YK1eO2u5LWQ=
+	by mail.kernel.org (Postfix) with ESMTP id 59CB22071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 06:53:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JNfXGJzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgICGvu (ORCPT
+        id S1727892AbgICGxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 02:51:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbgICGvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 02:51:49 -0400
-Received: from localhost (unknown [122.171.179.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3D3C2071B;
-        Thu,  3 Sep 2020 06:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599115909;
-        bh=zFFH5ijjXx/9/g9VnmjQZzmuX1E42UObUA1luskXeVI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mk2etaz+5KErHJgg8iv9HxYh97mxJCiyFiXckORgFiV1I9wrwUWey3RuE+WQEA8n7
-         HKG6wf8vrifwJ+Semcv2CbnKr0nH1PmsSrKFEZgRJE1JZEQAjlCjdwNTixibUGnnJk
-         2+zM5AHSgsgXAQN1WZ6OAfWpb8/vvwDVdTbNGnlw=
-Date:   Thu, 3 Sep 2020 12:21:45 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com
-Subject: Re: [PATCH] dmaengine: Mark dma_request_slave_channel() deprecated
-Message-ID: <20200903065145.GF2639@vkoul-mobl>
-References: <20200828110507.22407-1-peter.ujfalusi@ti.com>
+        Thu, 3 Sep 2020 02:53:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgICGxT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 02:53:19 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2449EC061245
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 23:53:19 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 5so1343773pgl.4
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 23:53:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xHx59Kc0fj+SU2ePT6xEUvz7NPe3tqHc1i2XcwEDs+Y=;
+        b=JNfXGJzozbWYeHWf2PYzDgPhBhfvYOR2UYqy7SloT/XlLEjGfapyF5snCEAO/uishI
+         CqWUNTc1vNGodba2rYLzuFAUZZCU0bCFr5/EFwsxD/1/DOaMURyfLDLB08Y/AYrAJmak
+         DFFtjkOL1Ky1yL4Vz++1SHPhp+LOKe1KZCGIORom+xB2HtJ+RgBx/9fZJH/pHFbn4GQh
+         4vPxPNFLFA6dFHYSuLJ6Hy2DRebkSATSqb40gDQTb724VcvXsrhcRSDT2dwlZbknIZqY
+         ukgoDtmQsk8rfomr7/D1MtlnKUxToBph1zKcDI956uaHVwDh3iDEeI32lp/mZQTMNq25
+         6qAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xHx59Kc0fj+SU2ePT6xEUvz7NPe3tqHc1i2XcwEDs+Y=;
+        b=c+IasIgcKMVZ9ICawU8RNva6Bg2opem+WFhH6Xd4fFZnQpku7f07d9fXAEX36Sp7oh
+         DmYmosml/CiRPj+DAv6vsV3bnBhsQfk3EF98TRbsgEoi3ccLHwfytNOn7wzF9EQf8iJm
+         LOnyaRTOvNmPfAkWVvqbo6SxAN4JH+fSOXHdvV+dmnbSPDGRCUZbPbCR3pR40lrlwHXV
+         hvHAW4/epkwO/cjT0p6ibrr6SHd6WyPtr5BML4nmSixWWG2JW4uRqGE4DcmNagcxL7VY
+         A01HPDwahg2hoE3k35ub84ceuGPC1fgfRJIGlNe+WQTewjz2x8wVoH2anN7Nc8bJBNVg
+         HqYg==
+X-Gm-Message-State: AOAM531oViqyZItV/o75yBpf2ZEDUaZA1ZIFcj/E/ZDsz8VimkLF8PoA
+        pMkfX/ajxdBjbwJtNWyOsn6hzA==
+X-Google-Smtp-Source: ABdhPJwfjYiSXMyvm2VlezoTqGO5XqHG/HH+RdLIKD5CPb5y26URaJi8etuNmI++djlaKbA7swZBbQ==
+X-Received: by 2002:a63:e010:: with SMTP id e16mr1711737pgh.202.1599115998350;
+        Wed, 02 Sep 2020 23:53:18 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id l21sm1419055pgb.35.2020.09.02.23.53.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Sep 2020 23:53:17 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 12:23:14 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     ansuelsmth@gmail.com
+Cc:     'Sibi Sankar' <sibis@codeaurora.org>, vincent.guittot@linaro.org,
+        saravanak@google.com, 'Sudeep Holla' <sudeep.holla@arm.com>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        'Rob Herring' <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: R: [RFC PATCH v3 0/2] Add Krait Cache Scaling support
+Message-ID: <20200903065314.y3ynhwydahaeg6o6@vireshk-i7>
+References: <20200821140026.19643-1-ansuelsmth@gmail.com>
+ <20200824104053.kpjpwzl2iw3lpg2m@vireshk-i7>
+ <b339e01f9d1e955137120daa06d26228@codeaurora.org>
+ <039d01d67f6a$188700d0$49950270$@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200828110507.22407-1-peter.ujfalusi@ti.com>
+In-Reply-To: <039d01d67f6a$188700d0$49950270$@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-08-20, 14:05, Peter Ujfalusi wrote:
-> New drivers should use dma_request_chan() instead
-> dma_request_slave_channel()
+On 31-08-20, 09:41, ansuelsmth@gmail.com wrote:
+> On 31-08-20, Sibi wrote:
+> > On 2020-08-24 16:10, Viresh Kumar wrote:
+> > > +Vincent/Saravana/Sibi
+> > >
+> > > On 21-08-20, 16:00, Ansuel Smith wrote:
+> > >> This adds Krait Cache scaling support using the cpufreq notifier.
+> > >> I have some doubt about where this should be actually placed (clk or
+> > >> cpufreq)?
+> > >> Also the original idea was to create a dedicated cpufreq driver (like
+> > >> it's done in
+> > >> the codeaurora qcom repo) by copying the cpufreq-dt driver and adding
+> > >> the cache
+> > >> scaling logic but i still don't know what is better. Have a very
+> > >> similar driver or
+> > >> add a dedicated driver only for the cache using the cpufreq notifier
+> > >> and do the
+> > >> scale on every freq transition.
+> > >> Thanks to everyone who will review or answer these questions.
+> > >
+> > > Saravana was doing something with devfreq to solve such issues if I
+> > > wasn't mistaken.
+> > >
+> > > Sibi ?
+> > 
+> > IIRC the final plan was to create a devfreq device
+> > and devfreq-cpufreq based governor to scale them, this
+> > way one can switch to a different governor if required.
 > 
-> dma_request_slave_channel() is a simple wrapper for dma_request_chan()
-> eating up the error code for channel request failure and makes deferred
-> probing impossible.
-> 
-> Move the dma_request_slave_channel() into the header as inline function,
-> mark it as deprecated.
+> So in this case I should convert this patch to a devfreq driver- 
 
-Applied, thanks
+I think this should happen nevertheless. You are doing DVFS for a
+device which isn't a CPU and devfreq looks to be the right place of
+doing so.
+
+> Isn't overkill to use a governor for such a task?
+> (3 range based on the cpufreq?)
+
+I am not sure about the governor part here, maybe it won't be required
+?
 
 -- 
-~Vinod
+viresh
