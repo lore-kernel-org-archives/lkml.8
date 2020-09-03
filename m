@@ -2,136 +2,126 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AB4C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF18DC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57DF920716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:54:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhQ8s42i"
+	by mail.kernel.org (Postfix) with ESMTP id 793A72072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:54:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599144868;
+	bh=mriIatmtdubimfxx6F+KYhhAQsXMp4Zfj9n/rnqEnYg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=y5VHBfR4x1G4huqUvQdJFvHF/HdDI8ZN+8NJ0wNW5XtObWVnctw1/ANo8W2VEzh5x
+	 E7+TdWyXm7uKFqiIgHDrcTuTfEfebHXRtcp80zv45JtC4twCH9TRyGeFfsP2am5KBU
+	 nPiS4iftL/xfambuPrtyiMihn1RbQJD+F/GHC7tM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729257AbgICOyU (ORCPT
+        id S1729115AbgICOyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:54:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729272AbgICOxq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:53:46 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26492C061244;
-        Thu,  3 Sep 2020 07:53:46 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id q3so2387534ybp.7;
-        Thu, 03 Sep 2020 07:53:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BUTCAz6NpTHnYSy41tDHUPK10I/ooWiW5ynjjM0xqGo=;
-        b=OhQ8s42iE3dDc5kXXKOjtj3ByKV7HNPHcTT/8BS+MTRq93ngVIXKHbgdetcF1nYstS
-         WzLJ9n1oGPeeSyqUKe9Ascrsc/Z0DKH6wDG1xw1T5ewzXHUzI6zTas600zMEUKUuPeov
-         urB/YG7EOEeEJ6MhTZhgLyDpanOwbbwsCPMx4eORDVW9pMiCanKW9uL//CprvQ6yi9PG
-         pZaLrX2BGXoND12Dw5gcq/XGR0FY9JoYFg3qhBr1pkkix/UZJJ6xid8IncCCB26XORL9
-         u/bDKaBnPpbcNDGc2WYwuOVqyvu4/fFfc5XfN1N9vr4/Cq3N8fSzgQEafkz2vFwZQSAO
-         ao7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BUTCAz6NpTHnYSy41tDHUPK10I/ooWiW5ynjjM0xqGo=;
-        b=gStFiw8gUpQAkm3YECZss+788ZzJUgX5DRGV9xKIe2ZEfiJJbyRfclkX0hIRN9lC00
-         /ASBGKiXkEIFmeQis4KY7PucsuTdubtQmZKu7kT/Mt543zSAbfZmkk9R/5jYFKbC1Ui7
-         sVd8WHAMjURNMDePxlfaMtyJoTUcR5SC8LDc066yGhYJoC+QP/K9/dOTsomY6lpH798m
-         XTKZGZqxn1Q7bP09C8wAf72gNAw2MuOrevH2HZcbtbvKy396Iv33XKhGEDEplbQyfnv2
-         fplm3yVff+ORXZpmB5OIhG1BNITwArlbis4PQzHMsdLhkCU68QMazd3JV+TAv9RL1J8M
-         L55A==
-X-Gm-Message-State: AOAM5315xAJ3bDwWbAMAJp8ComXlJrlK523xggDuY/lz3pVv7CUHFsJJ
-        y1UTbhX6WoPFKPsvTMys76aQparmo0PQHzS7FSk=
-X-Google-Smtp-Source: ABdhPJzbm+ZT1PvppuhUQJcxzBdWcarzRL8lEAPC8ShJTmlv8eKrLSJ9hvyeIWhnAF79PlsOC+1g4btwsGdYP7cA4pU=
-X-Received: by 2002:a25:86cf:: with SMTP id y15mr2953409ybm.25.1599144825202;
- Thu, 03 Sep 2020 07:53:45 -0700 (PDT)
+        Thu, 3 Sep 2020 10:54:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729308AbgICOyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:54:19 -0400
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49DEC208C7
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 14:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599144858;
+        bh=mriIatmtdubimfxx6F+KYhhAQsXMp4Zfj9n/rnqEnYg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MfmZFBjT64s2kj82dccACMNfccL3q/EDxxTceknRnn5UC3AImrGOzEffZCZJBQLHb
+         xsY0ha/O5YBHgCotpGQ0WDdqXQ8tT675l0QXQ1Xgz+E+lw7gbhM7WmZIOITJodOcZN
+         IMv6xVYpajk0/OrPonK7qnFLO3OuTIBZUFe3Lv/M=
+Received: by mail-wm1-f44.google.com with SMTP id b79so3188047wmb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 07:54:18 -0700 (PDT)
+X-Gm-Message-State: AOAM53228dX+Bg74con9Uxwyswl5RifygYalon0THJhILGW6TAyHAiDV
+        3zJZqs/jiJx2Ia8xcWXWRup2TffjduLFthErGma18g==
+X-Google-Smtp-Source: ABdhPJwZWPiuPxsfeWv1J/1dfx0Phx0Z+CR6jZc6Vth7ClO5Nnnsw9BnQ2BG0ronnM+rSbGLQcOzQkjyBYwFKrdO6uM=
+X-Received: by 2002:a1c:740c:: with SMTP id p12mr2909254wmc.176.1599144856798;
+ Thu, 03 Sep 2020 07:54:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <1596187745-31596-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200801090456.GB1379367@oden.dyn.berto.se> <CA+V-a8sOHct_JetCsug8Z2BQpMLH2p39hj2XNw_1N5gkBQp1Gg@mail.gmail.com>
- <20200803192108.GB2297236@oden.dyn.berto.se> <6d659e56-1e1f-c9c7-2e66-4ddc4e7fad15@xs4all.nl>
-In-Reply-To: <6d659e56-1e1f-c9c7-2e66-4ddc4e7fad15@xs4all.nl>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 3 Sep 2020 15:53:18 +0100
-Message-ID: <CA+V-a8uzznUvzGgZ5A4B8ASEDbmMCrQPSAcEjO7v45zmAkdGDQ@mail.gmail.com>
-Subject: Re: [PATCH] media: rcar-vin: Update crop and compose settings for
- every s_fmt call
-To:     Niklas <niklas.soderlund@ragnatech.se>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+References: <46e42e5e-0bca-5f3f-efc9-5ab15827cc0b@intel.com>
+ <40BC093A-F430-4DCC-8DC0-2BA90A6FC3FA@amacapital.net> <b3809dd7-8566-0517-2389-8089475135b7@intel.com>
+In-Reply-To: <b3809dd7-8566-0517-2389-8089475135b7@intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 3 Sep 2020 07:54:05 -0700
+X-Gmail-Original-Message-ID: <CALCETrVY6XXUkePL0D0gmGEkq_oB2Ly_uXo6QQUz1v0H7sf_-g@mail.gmail.com>
+Message-ID: <CALCETrVY6XXUkePL0D0gmGEkq_oB2Ly_uXo6QQUz1v0H7sf_-g@mail.gmail.com>
+Subject: Re: [PATCH v11 6/9] x86/cet: Add PTRACE interface for CET
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
+        Jann Horn <jannh@google.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 3:08 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+On Thu, Sep 3, 2020 at 7:27 AM Dave Hansen <dave.hansen@intel.com> wrote:
 >
-> On 03/08/2020 21:21, Niklas wrote:
-> > Hi Lad, Hans,
-> >
-> > On 2020-08-03 19:11:32 +0100, Lad, Prabhakar wrote:
-> >> Hi Hans,
-> >>
-> >> On Sat, Aug 1, 2020 at 10:04 AM Niklas <niklas.soderlund@ragnatech.se> wrote:
-> >>>
-> >>> Hi Lad,
-> >>>
-> >>> Thanks for your work.
-> >>>
-> >>> On 2020-07-31 10:29:05 +0100, Lad Prabhakar wrote:
-> >>>> The crop and compose settings for VIN in non mc mode werent updated
-> >>>> in s_fmt call this resulted in captured images being clipped.
-> >>>>
-> >>>> With the below sequence on the third capture where size is set to
-> >>>> 640x480 resulted in clipped image of size 320x240.
-> >>>>
-> >>>> high(640x480) -> low (320x240) -> high (640x480)
-> >>>>
-> >>>> This patch makes sure the VIN crop and compose settings are updated.
-> >>>
-> >>> This is clearly an inconsistency in the VIN driver that should be fixed.
-> >>> But I think the none-mc mode implements the correct behavior. That is
-> >>> that S_FMT should not modify the crop/compose rectangles other then make
-> >>> sure they don't go out of bounds. This is an area we tried to clarify in
-> >>> the past but I'm still not sure what the correct answer to.
-> >>>
-> >> What should be the exact behaviour of the bridge driver  for s_fmt
-> >> call. Should the crop/compose settings be updated for every s_fmt
-> >> callback or should they be only updated on s_selection callback.
-> >> Currently the non-mc rcar-vin doesnt update the crop/compose setting
-> >> in s_fmt callback due to which I see the above issue as mentioned.
-> >
-> > This is not entirely correct. It does update the crop and compose
-> > rectangles on s_fmt, it makes sure they are not out-of-bounds for the
-> > new format if it's accepted by s_fmt. See v4l2_rect_map_inside() calls
-> > in the snippet bellow.
+> On 9/2/20 9:35 PM, Andy Lutomirski wrote:
+> >>>>>> +       fpu__prepare_read(fpu);
+> >>>>>> +       cetregs =3D get_xsave_addr(&fpu->state.xsave, XFEATURE_CET=
+_USER);
+> >>>>>> +       if (!cetregs)
+> >>>>>> +               return -EFAULT;
+> >>>>> Can this branch ever be hit without a kernel bug? If yes, I think
+> >>>>> -EFAULT is probably a weird error code to choose here. If no, this
+> >>>>> should probably use WARN_ON(). Same thing in cetregs_set().
+> >>>> When a thread is not CET-enabled, its CET state does not exist.  I l=
+ooked at EFAULT, and it means "Bad address".  Maybe this can be ENODEV, whi=
+ch means "No such device"?
+> > Having read the code, I=E2=80=99m unconvinced. It looks like a get_xsav=
+e_addr() failure means =E2=80=9Cstate not saved; task sees INIT state=E2=80=
+=9D.  So *maybe* it=E2=80=99s reasonable -ENODEV this, but I=E2=80=99m not =
+really convinced. I tend to think we should return the actual INIT state an=
+d that we should permit writes and handle them correctly.
 >
-> For non-mc mode s_fmt must update any crop/compose rectangles to ensure that
-> they are not out-of-bounds. But for mc mode the validation is done when you
-> start streaming, so I think s_fmt won't make any changes in that mode.
+> PTRACE is asking for access to the values in the *registers*, not for
+> the value in the kernel XSAVE buffer.  We just happen to only have the
+> kernel XSAVE buffer around.
 >
-Thank you Hans.
+> If we want to really support PTRACE we have to allow the registers to be
+> get/set, regardless of what state they are in, INIT state or not.  So,
+> yeah I agree with Andy.
 
-> Double-check that with Laurent, though...
->
-Niklas/Laurent - How do we proceed on this ?
+I think the core dump code gets here, too, so the values might be in
+registers as well.  I hope that fpu__prepare_read() does the right
+thing in this case.
 
-Cheers,
-Prabhakar
+--Andy
