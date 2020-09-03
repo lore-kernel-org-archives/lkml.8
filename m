@@ -1,137 +1,98 @@
-Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABD0C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E24CC10DAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB2520758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 11:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E205B206D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgIBLLg (ORCPT
+        id S1728666AbgICVaX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 07:11:36 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:54864 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgIBLL0 (ORCPT
+        Thu, 3 Sep 2020 17:30:23 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:41315 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728484AbgICVaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 07:11:26 -0400
-Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 082B9xWe021165;
-        Wed, 2 Sep 2020 20:09:59 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav106.sakura.ne.jp);
- Wed, 02 Sep 2020 20:09:59 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav106.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 082B9tPc021145
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 2 Sep 2020 20:09:59 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: [PATCH] tipc: fix shutdown() of connectionless socket
-To:     syzbot <syzbot+e36f41d207137b5d12f7@syzkaller.appspotmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>
-References: <0000000000003feb9805a9c77128@google.com>
-Cc:     syzkaller-bugs@googlegroups.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <1eb799fb-c6e0-3eb5-f6fe-718cd2f62e92@I-love.SAKURA.ne.jp>
-Date:   Wed, 2 Sep 2020 20:09:54 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 3 Sep 2020 17:30:19 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-262-_4fCYuHMPVerwxIv1vLjVw-1; Thu, 03 Sep 2020 22:30:15 +0100
+X-MC-Unique: _4fCYuHMPVerwxIv1vLjVw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 3 Sep 2020 22:30:14 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 3 Sep 2020 22:30:14 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: RE: [PATCH 12/14] x86: remove address space overrides using set_fs()
+Thread-Topic: [PATCH 12/14] x86: remove address space overrides using set_fs()
+Thread-Index: AQHWggEOyEQXa7QqyE6TJTq6U2S8aalXbNZg
+Date:   Thu, 3 Sep 2020 21:30:14 +0000
+Message-ID: <9ab40244a2164f7db2ff0c1d23ab59a0@AcuMS.aculab.com>
+References: <20200903142242.925828-1-hch@lst.de>
+ <20200903142242.925828-13-hch@lst.de>
+In-Reply-To: <20200903142242.925828-13-hch@lst.de>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <0000000000003feb9805a9c77128@google.com>
-Content-Type: text/plain; charset=utf-8
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot is reporting hung task at nbd_ioctl() [1], for there are two
-problems regarding TIPC's connectionless socket's shutdown() operation.
-I found C reproducer for this problem (shown below) from "no output from
-test machine (2)" report.
+From: Christoph Hellwig
+> Sent: 03 September 2020 15:23
+> 
+> Stop providing the possibility to override the address space using
+> set_fs() now that there is no need for that any more.  To properly
+> handle the TASK_SIZE_MAX checking for 4 vs 5-level page tables on
+> x86 a new alternative is introduced, which just like the one in
+> entry_64.S has to use the hardcoded virtual address bits to escape
+> the fact that TASK_SIZE_MAX isn't actually a constant when 5-level
+> page tables are enabled.
 
-----------
+Why does it matter whether 4 or 5 level page tables are in use?
+Surely all access_ok() needs to do is ensure that a valid kernel
+address isn't supplied.
+A non-canonical (is that the right term) address between the highest
+valid user address and the lowest valid kernel address (7ffe to fffe?)
+will fault anyway.
+So any limit between the valid user and kernel addresses should
+work?
+So a limit of 1<<63 would seem appropriate.
 
-int main(int argc, char *argv[])
-{
-        const int fd = open("/dev/nbd0", 3);
-        ioctl(fd, NBD_SET_SOCK, socket(PF_TIPC, SOCK_DGRAM, 0));
-        ioctl(fd, NBD_DO_IT, 0);
-        return 0;
-}
-----------
+	David
 
-One problem is that wait_for_completion() from flush_workqueue() from
-nbd_start_device_ioctl() from nbd_ioctl() cannot be completed when
-nbd_start_device_ioctl() received a signal at wait_event_interruptible(),
-for tipc_shutdown() from kernel_sock_shutdown(SHUT_RDWR) from
-nbd_mark_nsock_dead() from sock_shutdown() from nbd_start_device_ioctl()
-is failing to wake up a WQ thread sleeping at wait_woken() from
-tipc_wait_for_rcvmsg() from sock_recvmsg() from sock_xmit() from
-nbd_read_stat() from recv_work() scheduled by nbd_start_device() from
-nbd_start_device_ioctl(). Fix this problem by always invoking
-sk->sk_state_change() (like inet_shutdown() does) when tipc_shutdown() is
-called.
-
-The other problem is that tipc_wait_for_rcvmsg() cannot return when
-tipc_shutdown() is called, for tipc_shutdown() sets sk->sk_shutdown to
-SEND_SHUTDOWN (despite "how" is SHUT_RDWR) while tipc_wait_for_rcvmsg()
-needs sk->sk_shutdown set to RCV_SHUTDOWN or SHUTDOWN_MASK. Fix this
-problem by setting sk->sk_shutdown to SHUTDOWN_MASK (like inet_shutdown()
-does) when the socket is connectionless.
-
-[1] https://syzkaller.appspot.com/bug?id=3fe51d307c1f0a845485cf1798aa059d12bf18b2
-
-Reported-by: syzbot <syzbot+e36f41d207137b5d12f7@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
- net/tipc/socket.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/net/tipc/socket.c b/net/tipc/socket.c
-index 2679e97e0389..ebd280e767bd 100644
---- a/net/tipc/socket.c
-+++ b/net/tipc/socket.c
-@@ -2771,18 +2771,21 @@ static int tipc_shutdown(struct socket *sock, int how)
- 
- 	trace_tipc_sk_shutdown(sk, NULL, TIPC_DUMP_ALL, " ");
- 	__tipc_shutdown(sock, TIPC_CONN_SHUTDOWN);
--	sk->sk_shutdown = SEND_SHUTDOWN;
-+	if (tipc_sk_type_connectionless(sk))
-+		sk->sk_shutdown = SHUTDOWN_MASK;
-+	else
-+		sk->sk_shutdown = SEND_SHUTDOWN;
- 
- 	if (sk->sk_state == TIPC_DISCONNECTING) {
- 		/* Discard any unreceived messages */
- 		__skb_queue_purge(&sk->sk_receive_queue);
- 
--		/* Wake up anyone sleeping in poll */
--		sk->sk_state_change(sk);
- 		res = 0;
- 	} else {
- 		res = -ENOTCONN;
- 	}
-+	/* Wake up anyone sleeping in poll. */
-+	sk->sk_state_change(sk);
- 
- 	release_sock(sk);
- 	return res;
--- 
-2.18.4
-
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
