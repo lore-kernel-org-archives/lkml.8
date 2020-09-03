@@ -4,139 +4,138 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7DBC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A80DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C263208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F191A20658
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599159671;
-	bh=4O6wT3KPGrg/7msyepJfuWPtvetcJ8fPChc5bMkiIrA=;
+	s=default; t=1599159856;
+	bh=jMsS9s3JXZ5jBcNkxMfVH5KGVdkLZBPZSBaXJ+aFf/w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qk2a9A+l0WhUieP+Wbec+kBs289vY6BaiBThy2XcskugIpdLz3kw2iVXKARrpns5l
-	 uIXc2JjIVFc2CSi3PGkTd6eQ9b7W39iLzGPRlS5PimJCgOzAERIfDQfpkKvdUmeStR
-	 oaJ5/RpHuyhj3Hz2S09dVZBMd5dfilzSps78JmQ8=
+	b=tIZfhq63tMuleDzgF4lPcm1kA8tAzmsZsEBD2yZbKPXHTctANkrPrdwQ8yakDfjC9
+	 vJXu1tAM4xNV7rIxRrbWbdugp4UgePkOQkaijwuFwnupUr5uHBLd90WHHl4kwolM4y
+	 QLQPi/S3KWKnWNkc9IEqN7ek1RMP/i7/Jy4VVG2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgICTBJ (ORCPT
+        id S1727065AbgICTEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 15:01:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58630 "EHLO mail.kernel.org"
+        Thu, 3 Sep 2020 15:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726678AbgICTBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 15:01:04 -0400
+        id S1728525AbgICTDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 15:03:54 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F26F20658;
-        Thu,  3 Sep 2020 19:01:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A92A5208FE;
+        Thu,  3 Sep 2020 19:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599159663;
-        bh=4O6wT3KPGrg/7msyepJfuWPtvetcJ8fPChc5bMkiIrA=;
+        s=default; t=1599159832;
+        bh=jMsS9s3JXZ5jBcNkxMfVH5KGVdkLZBPZSBaXJ+aFf/w=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t39wwSvXzeRu5vDYWQGxEtsdGalBK7iodUh85dwnnMd3ptYEDGhQJIoURNHoE8Bg7
-         pTgZF3w9f2sCIqisgmil4hHmRZMoXAQnAWZwtkA60wVUY34YKpRFp6zM4jpUBrgiQ3
-         zWLB6Lp8QczXH2Rn4LYdQoMIi/gykFg+lDQjt7Qk=
+        b=etuQ0TO6/MGAEYKDoC3PIED6/OTXHLxf0MyK0e1KYxPDYlMWqLmOp5pzODSi342zw
+         UfVJePa1hNAuhiKhAcHTq2MjIbqnN3gQ8ijYP8yqtCRADj4zpsi1dONOD0p6jq6140
+         3/xiULuU4YWl6WyIhfG5Xujto2nivk1G2aWpw9Do=
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5DF3540D3D; Thu,  3 Sep 2020 16:01:01 -0300 (-03)
-Date:   Thu, 3 Sep 2020 16:01:01 -0300
+        id D776240D3D; Thu,  3 Sep 2020 16:03:50 -0300 (-03)
+Date:   Thu, 3 Sep 2020 16:03:50 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Tony Jones <tonyj@suse.de>, Jin Yao <yao.jin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] perf record/stat: Explicitly call out event modifiers in
- the documentation
-Message-ID: <20200903190101.GH3495158@kernel.org>
-References: <20200901215853.276234-1-kim.phillips@amd.com>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH] tools build feature: cleanup feature files on make clean
+Message-ID: <20200903190350.GI3495158@kernel.org>
+References: <159851841661.1072907.13770213104521805592.stgit@firesoul>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200901215853.276234-1-kim.phillips@amd.com>
+In-Reply-To: <159851841661.1072907.13770213104521805592.stgit@firesoul>
 X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Sep 01, 2020 at 04:58:53PM -0500, Kim Phillips escreveu:
-> Event modifiers are not mentioned in the perf record or perf stat
-> manpages.  Add them to orient new users more effectively by pointing
-> them to the perf list manpage for details.
+Em Thu, Aug 27, 2020 at 10:53:36AM +0200, Jesper Dangaard Brouer escreveu:
+> The system for "Auto-detecting system features" located under
+> tools/build/ are (currently) used by perf, libbpf and bpftool. It can
+> contain stalled feature detection files, which are not cleaned up by
+> libbpf and bpftool on make clean (side-note: perf tool is correct).
+> 
+> Fix this by making the users invoke the make clean target.
+> 
+> Some details about the changes. The libbpf Makefile already had a
+> clean-config target (which seems to be copy-pasted from perf), but this
+> target was not "connected" (a make dependency) to clean target. Choose
+> not to rename target as someone might be using it. Did change the output
+> from "CLEAN config" to "CLEAN feature-detect", to make it more clear
+> what happens.
 
-Thanks, applied.
+Since this mostly touches BPF, should it go via the BPF tree?
 
 - Arnaldo
  
-> Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-> Fixes: 2055fdaf8703 ("perf list: Document precise event sampling for AMD IBS")
-> Cc: Peter Zijlstra <peterz@infradead.org> 
-> Cc: Ingo Molnar <mingo@redhat.com> 
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org> 
-> Cc: Mark Rutland <mark.rutland@arm.com> 
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com> 
-> Cc: Jiri Olsa <jolsa@redhat.com> 
-> Cc: Namhyung Kim <namhyung@kernel.org> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com> 
-> Cc: Stephane Eranian <eranian@google.com> 
-> Cc: Alexey Budankov <alexey.budankov@linux.intel.com> 
-> Cc: Tony Jones <tonyj@suse.de> 
-> Cc: Jin Yao <yao.jin@linux.intel.com> 
-> Cc: Ian Rogers <irogers@google.com> 
-> Cc: "Paul A. Clarke" <pc@us.ibm.com> 
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> ---
->  tools/perf/Documentation/perf-record.txt | 4 ++++
->  tools/perf/Documentation/perf-stat.txt   | 4 ++++
->  2 files changed, 8 insertions(+)
+> This is related to the complaint and troubleshooting in link:
+> Link: https://lore.kernel.org/lkml/20200818122007.2d1cfe2d@carbon/
 > 
-> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> index 3f72d8e261f3..bd50cdff08a8 100644
-> --- a/tools/perf/Documentation/perf-record.txt
-> +++ b/tools/perf/Documentation/perf-record.txt
-> @@ -33,6 +33,10 @@ OPTIONS
->          - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
->  	  hexadecimal event descriptor.
+> Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+> ---
+>  tools/build/Makefile |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+> index 8462690a039b..02c99bc95c69 100644
+> --- a/tools/bpf/bpftool/Makefile
+> +++ b/tools/bpf/bpftool/Makefile
+> @@ -176,7 +176,11 @@ $(OUTPUT)bpftool: $(OBJS) $(LIBBPF)
+>  $(OUTPUT)%.o: %.c
+>  	$(QUIET_CC)$(CC) $(CFLAGS) -c -MMD -o $@ $<
 >  
-> +        - a symbolic or raw PMU event followed by an optional colon
-> +	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-> +	  linkperf:perf-list[1] man page for details on event modifiers.
+> -clean: $(LIBBPF)-clean
+> +feature-detect-clean:
+> +	$(call QUIET_CLEAN, feature-detect)
+> +	$(Q)$(MAKE) -C $(srctree)/tools/build/feature/ clean >/dev/null
 > +
->  	- a symbolically formed PMU event like 'pmu/param1=0x3,param2/' where
->  	  'param1', 'param2', etc are defined as formats for the PMU in
->  	  /sys/bus/event_source/devices/<pmu>/format/*.
-> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-> index c9bfefc051fb..a4b1d11fefc8 100644
-> --- a/tools/perf/Documentation/perf-stat.txt
-> +++ b/tools/perf/Documentation/perf-stat.txt
-> @@ -39,6 +39,10 @@ report::
->  	- a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
->  	  hexadecimal event descriptor.
+> +clean: $(LIBBPF)-clean feature-detect-clean
+>  	$(call QUIET_CLEAN, bpftool)
+>  	$(Q)$(RM) -- $(OUTPUT)bpftool $(OUTPUT)*.o $(OUTPUT)*.d
+>  	$(Q)$(RM) -- $(BPFTOOL_BOOTSTRAP) $(OUTPUT)*.skel.h $(OUTPUT)vmlinux.h
+> diff --git a/tools/build/Makefile b/tools/build/Makefile
+> index 727050c40f09..722f1700d96a 100644
+> --- a/tools/build/Makefile
+> +++ b/tools/build/Makefile
+> @@ -38,6 +38,8 @@ clean:
+>  	$(call QUIET_CLEAN, fixdep)
+>  	$(Q)find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+>  	$(Q)rm -f $(OUTPUT)fixdep
+> +	$(call QUIET_CLEAN, feature-detect)
+> +	$(Q)$(MAKE) -C feature/ clean >/dev/null
 >  
-> +        - a symbolic or raw PMU event followed by an optional colon
-> +	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-> +	  linkperf:perf-list[1] man page for details on event modifiers.
-> +
->  	- a symbolically formed event like 'pmu/param1=0x3,param2/' where
->  	  param1 and param2 are defined as formats for the PMU in
->  	  /sys/bus/event_source/devices/<pmu>/format/*
-> -- 
-> 2.27.0
+>  $(OUTPUT)fixdep-in.o: FORCE
+>  	$(Q)$(MAKE) $(build)=fixdep
+> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+> index bf8ed134cb8a..bbb89551468a 100644
+> --- a/tools/lib/bpf/Makefile
+> +++ b/tools/lib/bpf/Makefile
+> @@ -269,10 +269,10 @@ install: install_lib install_pkgconfig install_headers
+>  ### Cleaning rules
+>  
+>  config-clean:
+> -	$(call QUIET_CLEAN, config)
+> +	$(call QUIET_CLEAN, feature-detect)
+>  	$(Q)$(MAKE) -C $(srctree)/tools/build/feature/ clean >/dev/null
+>  
+> -clean:
+> +clean: config-clean
+>  	$(call QUIET_CLEAN, libbpf) $(RM) -rf $(CMD_TARGETS)		     \
+>  		*~ .*.d .*.cmd LIBBPF-CFLAGS $(BPF_HELPER_DEFS)		     \
+>  		$(SHARED_OBJDIR) $(STATIC_OBJDIR)			     \
+> 
 > 
 
 -- 
