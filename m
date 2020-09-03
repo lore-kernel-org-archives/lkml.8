@@ -2,138 +2,132 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1B6C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E5EC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 023BF20773
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE4320773
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:08:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rPxrj2ar"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZVPNUDXf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgICAHD (ORCPT
+        id S1727800AbgICAIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 20:07:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44972 "EHLO
+        Wed, 2 Sep 2020 20:08:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgICAHC (ORCPT
+        with ESMTP id S1726377AbgICAIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 20:07:02 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA01C061244;
-        Wed,  2 Sep 2020 17:07:02 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id v15so605133pgh.6;
-        Wed, 02 Sep 2020 17:07:02 -0700 (PDT)
+        Wed, 2 Sep 2020 20:08:13 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC502C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 17:08:11 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id b16so722558vsl.6
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 17:08:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=etdQESEPzizayB9lC3xmaZESCXB50mJ00LfBR9308WE=;
-        b=rPxrj2arycz5jzRcUqZvd9oV5NCS7SThLH4FjF0dwugb9yI00Ya0L+9a27W7buNHAJ
-         tfh7jK/uCD9eyOqGmw5jNZ0TNY3ANcaNP4IDfPiokFUSjgP8e9E2DXyyLwligjBOSjAJ
-         Liz4RDJzVS9Ljx0YR++yMDsmT8Ujz8rirBuheCS3rDOv4N0rktRjV1rQSeiOdNr/6nIS
-         s95bt7F6Xo7e4zL01NmVfAv44rmrD/1Fy1LUB1IJjWv4Bp2TOqUyT9aRq2vuRTHapWax
-         9/wbs5KzcmGzYaVtNVLA35lCPtiMW1Vs+Kmmj8iuKXCN+UGB+rGw2NbDE4oVB+Qv2TE6
-         yblQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vNGK0drLoWNgYFtnyo0bGiJC6OE4+o9KPc4VANTcGUU=;
+        b=ZVPNUDXf6tQVcgw8kkHHQyjEAOsLqycSIz1ehYZm+uVXTd9CN/j5btk5vfe+0MxcpN
+         z0MpYoLoq3SETJ9XNMrcemRwFcAyZQadJmVdpxOACzSkHQKavJzwtcVAxvf6+bGo337V
+         G47Y0VYQUWmV0mr4nvMqdD/QNGIE9tI4Bw3wQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=etdQESEPzizayB9lC3xmaZESCXB50mJ00LfBR9308WE=;
-        b=BRO3Ex0vY/lVKvFlSZFGnmNOLDe7Q6zTrmIdDN4uibwFugePeVXfwibFO8oFtwKkeP
-         6mfaKn4AdUBHnc2VPy6Sg3jfUlPOVOuXkZ90x82lI7y8oQjcmZ68HJE2+637rhIZEwv3
-         VWjSRPhwDFGX47RcAno3OjfR2kzmmb67Fg4mRYkLVg7xSVoDTQ/fnjnm1bSWSRPX26QA
-         6Ry1lvtu42Wa9unussT7tZ+6l2HVWBe2ZuEFqqvmiPJypBXt/K/vEF/hFc4DrBfU5Es2
-         4AKOidCzGuEDUq7uF5xLqkhSZzjoPggEuMOnKDHf24BGhW2Xv6rVaPTayW72nfQlyjoo
-         9Eng==
-X-Gm-Message-State: AOAM533zX67KmkjHc+RQAjEoeWHJ1moXpE1lz3wYwXwWLhAXNKWCjGN2
-        c3mZNtkCCetEnwxjN2dOTwU=
-X-Google-Smtp-Source: ABdhPJxmVgijpf29mnOSEiRZy9zDo4qy31+Ai9t9Fmny9oAol2zG6JOfI4ciCTQEW9aiC2FlODBb/w==
-X-Received: by 2002:a63:9d02:: with SMTP id i2mr355802pgd.378.1599091621877;
-        Wed, 02 Sep 2020 17:07:01 -0700 (PDT)
-Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:b49f:31b6:73e2:b3d2])
-        by smtp.gmail.com with ESMTPSA id b12sm468947pgr.34.2020.09.02.17.07.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 17:07:01 -0700 (PDT)
-From:   Xie He <xie.he.0141@gmail.com>
-To:     Krzysztof Halasa <khc@pm.waw.pl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>, Martin Schiller <ms@dev.tdt.de>
-Subject: [PATCH net v2] drivers/net/wan/hdlc_fr: Add needed_headroom for PVC devices
-Date:   Wed,  2 Sep 2020 17:06:58 -0700
-Message-Id: <20200903000658.89944-1-xie.he.0141@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vNGK0drLoWNgYFtnyo0bGiJC6OE4+o9KPc4VANTcGUU=;
+        b=hAM3ept+API5EbuSzxs09gU3RW/cLf+ItKFs/ZpZYYPFaxEwjKvyi6lc/3kvjA60Jr
+         NAK7T1INMbygS7A85YjRmUVQTYm9jfIe5QYPHTke7XKRxppoBYd7Mvk58GSH4E+ynsgu
+         BLeeXgBNGcyc9gaTSvw8/GyYtgnKtJJXoMSvBYafvIr6VlSgWSZgnrY4W7bEqioLE6mS
+         ApNPW9h15IShkI/fGmkrLDZQ952e7iC5V8qVzdVINMeQgjtKFP1Xo/2DstLaNbZslhks
+         dBZW5br3MmoIHR4+NjCBv7cSiZMCW5Y+H17Rm1cnt05ug8Xp2SkeeX84lUOKgT34fZRh
+         GbLw==
+X-Gm-Message-State: AOAM532KPOfqk0SSy1goLtZSj4TE0JJU1BDMXJ8Ja/Xgai/bG+7UXGzP
+        oEQAx6LuO8bNuGobuuvG6QIcz+6AHNCwriodR4pevA==
+X-Google-Smtp-Source: ABdhPJyyh8r00V5dnzC7J663uWgsb6bIr45zqffFvMVOa7JwQMs1QHsDUIoUGvYd0l5Gb33OEKfuJA9HIJBcdXdIKco=
+X-Received: by 2002:a05:6102:3d7:: with SMTP id n23mr164533vsq.57.1599091690996;
+ Wed, 02 Sep 2020 17:08:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200902190709.v2.1.I56cf27cd59f4013bd074dc622c8b8248b034a4cc@changeid>
+ <20200902165505.GA280378@xps15>
+In-Reply-To: <20200902165505.GA280378@xps15>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 3 Sep 2020 08:08:00 +0800
+Message-ID: <CANMq1KDcYRKWxQ6+AQ=eTRcHdkiWyzH7BTahXdag5=FdnF7e1g@mail.gmail.com>
+Subject: Re: [PATCH v2] rpmsg: Avoid double-free in mtk_rpmsg_register_device
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PVC devices are virtual devices in this driver stacked on top of the
-actual HDLC device. They are the devices normal users would use.
-PVC devices have two types: normal PVC devices and Ethernet-emulating
-PVC devices.
+On Thu, Sep 3, 2020 at 12:55 AM Mathieu Poirier
+<mathieu.poirier@linaro.org> wrote:
+>
+> On Wed, Sep 02, 2020 at 07:07:15PM +0800, Nicolas Boichat wrote:
+> > If rpmsg_register_device fails, it will call
+> > mtk_rpmsg_release_device which already frees mdev.
+> >
+> > Fixes: 7017996951fde84 ("rpmsg: add rpmsg support for mt8183 SCP.")
+>
+> The SHA should be 12 characters instead of 15.  With that:
 
-When transmitting data with PVC devices, the ndo_start_xmit function
-will prepend a header of 4 or 10 bytes. Currently this driver requests
-this headroom to be reserved for normal PVC devices by setting their
-hard_header_len to 10. However, this does not work when these devices
-are used with AF_PACKET/RAW sockets. Also, this driver does not request
-this headroom for Ethernet-emulating PVC devices (but deals with this
-problem by reallocating the skb when needed, which is not optimal).
+Done in v3, thanks (and fixed my process for next time).
 
-This patch replaces hard_header_len with needed_headroom, and set
-needed_headroom for Ethernet-emulating PVC devices, too. This makes
-the driver to request headroom for all PVC devices in all cases.
-
-Cc: Krzysztof Halasa <khc@pm.waw.pl>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
----
-
-Change from v1:
-
-English language fix for the commit message.
-
-Changed "Ethernet-emulated" to "Ethernet-emulating" because the device
-is emulating an Ethernet device, rather than being emulated by an
-Ethernet device.
-
-I'm sorry for my poor English.
-
----
- drivers/net/wan/hdlc_fr.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wan/hdlc_fr.c b/drivers/net/wan/hdlc_fr.c
-index 9acad651ea1f..12b35404cd8e 100644
---- a/drivers/net/wan/hdlc_fr.c
-+++ b/drivers/net/wan/hdlc_fr.c
-@@ -1041,7 +1041,7 @@ static void pvc_setup(struct net_device *dev)
- {
- 	dev->type = ARPHRD_DLCI;
- 	dev->flags = IFF_POINTOPOINT;
--	dev->hard_header_len = 10;
-+	dev->hard_header_len = 0;
- 	dev->addr_len = 2;
- 	netif_keep_dst(dev);
- }
-@@ -1093,6 +1093,7 @@ static int fr_add_pvc(struct net_device *frad, unsigned int dlci, int type)
- 	dev->mtu = HDLC_MAX_MTU;
- 	dev->min_mtu = 68;
- 	dev->max_mtu = HDLC_MAX_MTU;
-+	dev->needed_headroom = 10;
- 	dev->priv_flags |= IFF_NO_QUEUE;
- 	dev->ml_priv = pvc;
- 
--- 
-2.25.1
-
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > ---
+> >
+> > Changes in v2:
+> >  - Drop useless if and ret variable (Markus Elfring)
+> >
+> >  drivers/rpmsg/mtk_rpmsg.c | 9 +--------
+> >  1 file changed, 1 insertion(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/rpmsg/mtk_rpmsg.c b/drivers/rpmsg/mtk_rpmsg.c
+> > index 83f2b8804ee989d..96a17ec2914011d 100644
+> > --- a/drivers/rpmsg/mtk_rpmsg.c
+> > +++ b/drivers/rpmsg/mtk_rpmsg.c
+> > @@ -200,7 +200,6 @@ static int mtk_rpmsg_register_device(struct mtk_rpmsg_rproc_subdev *mtk_subdev,
+> >       struct rpmsg_device *rpdev;
+> >       struct mtk_rpmsg_device *mdev;
+> >       struct platform_device *pdev = mtk_subdev->pdev;
+> > -     int ret;
+> >
+> >       mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);
+> >       if (!mdev)
+> > @@ -219,13 +218,7 @@ static int mtk_rpmsg_register_device(struct mtk_rpmsg_rproc_subdev *mtk_subdev,
+> >       rpdev->dev.parent = &pdev->dev;
+> >       rpdev->dev.release = mtk_rpmsg_release_device;
+> >
+> > -     ret = rpmsg_register_device(rpdev);
+> > -     if (ret) {
+> > -             kfree(mdev);
+> > -             return ret;
+> > -     }
+> > -
+> > -     return 0;
+> > +     return rpmsg_register_device(rpdev);
+> >  }
+> >
+> >  static void mtk_register_device_work_function(struct work_struct *register_work)
+> > --
+> > 2.28.0.402.g5ffc5be6b7-goog
+> >
