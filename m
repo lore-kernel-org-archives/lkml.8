@@ -7,68 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA090C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E99CC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2BEE20897
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04E06206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:08:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="asoKpVlK";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gdndLaGV"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MVxMgfrJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ar6KcPnu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgICIHt (ORCPT
+        id S1728783AbgICIID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:07:49 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:58087 "EHLO
+        Thu, 3 Sep 2020 04:08:03 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:40259 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728522AbgICIDo (ORCPT
+        by vger.kernel.org with ESMTP id S1728546AbgICIDs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:03:44 -0400
+        Thu, 3 Sep 2020 04:03:48 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 4DCA2B19;
-        Thu,  3 Sep 2020 04:03:43 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:03:44 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id 4F19AD28;
+        Thu,  3 Sep 2020 04:03:47 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:03:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=6txcLK9XS/umD
-        ai20rz0YaH0SugcRvZLRpEWcEN1jU0=; b=asoKpVlKc+1v01Yu3/H77bGv3Arpw
-        sF/yNn7NpY3xp1tR7xx9EuKR8TbhHO28ELFI7bvz/SfxJFbEfC7jI6C5WpEv/4YY
-        KCVA68GX7VXLQzID0z6n1snoHjr+OrB2hKch9S5yPBDf4iHW74sKVzLTwzG7B5H2
-        NE2FqPJUAv8iZHrLq5iam7o11z6EraaaTstPUxvpeMgk3EezG0+gjBoxvNrjTtGp
-        vzLost8f9NIE3JjD7HACcT0cz7toN1CjfrV7EBSr15T58p5qP4B6bILec27YGHzE
-        2aYTakIVzDIZnbBKRNbjZxAsodIT3NlKTSci0Xna8Imo0cF9hbHsiGYOg==
+        :mime-version:content-transfer-encoding; s=fm3; bh=7VQR+ciz8MaOr
+        8+XGEG6mS+8PtKW5q44bWQ5wfiE1po=; b=MVxMgfrJONAEQGq2FwL1fsqFkjVNm
+        mfFU98clFLeDfv//dr35qTEdE+tC2iH91eJwaD+0pLJO/cYmWDIrXGZpHgwyqFdX
+        CwCwNwBQQLNYfual72oY1WPchv0rsQDFI80JlrNj5kABj2J86oxa4ijXJeyFFUFZ
+        4W725t3ic9Yj63e1l8AmZibe7E6yo2wKWTZdFRXs/EoQ5Fk3SgaGoeMTXY1akK10
+        6bfYP81lubiL+qnhiWv40DSdC+CpYi9V0GMSyiPnFO5iBFyTb7w20gqCpxRHxqMf
+        7FfxZ8wtJZNhyuGt7cfb0Nhx+lYUbvdEDrh3+LoQAf6mArrmAmhWP4ecA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=6txcLK9XS/umDai20rz0YaH0SugcRvZLRpEWcEN1jU0=; b=gdndLaGV
-        9bjkoBpSQeY81lcl0AP/KyYs9Lkb15GPMb9yiMyN/v4F9oa7jk8JCTrP3UQtNk2N
-        DSSRYgGNdCbSS2OZwaWC5VAardemN99OzVHzv+ukwUkyzWZUsns0Z5rn8BOT6crB
-        MF3puEI69ZNADoDXq2wVy9oy25st49lV/upv5S6SF7o6J0mB9oam+6Zh29TNFgU5
-        2v2NzLs64xXxz0lW6Fir7zQ+mW2RDl5FZoyPdM2MwXYSBrBaeptF/U/GxCzVMxcf
-        LZCPEq9/AWN4JLhyn1nI06KN1sHcdJLq3JbwyLawVWGR+DYSKcvujnX9Sw0hKYAh
-        su7EGLbEujo0qg==
-X-ME-Sender: <xms:XqNQX645TScxcMwY5xPO_q0lXiSQnBN4UmJvJPx9_yIv13VaJBpN_g>
-    <xme:XqNQXz7_EXZR10-heYEQfXoXt0PF65izT-l8d9luThieRQISFI5geYd-hP4AXT56l
-    p46wXJIOw4He-o9DR4>
+        fm3; bh=7VQR+ciz8MaOr8+XGEG6mS+8PtKW5q44bWQ5wfiE1po=; b=Ar6KcPnu
+        rcE3HcHuTOU/pdacFhgrMR9sSKCfFC7FETHJ1Gatmc7XKlEMRzkejbbdxRYACdfC
+        SbWhI9gRzXDzHv4pDRGuUwz/y1mQSvLmhFggEQWU8h3B0k9/ECjt0R7eEzTLItw2
+        3Ba/lNNcFoiZfmfDCjiYWoYh9ZIz64LP5BRWUpGvyz7NsG4Lqb1Pej8+D1xOrNTi
+        uq/UFMz0TJZA4g8sRUtM6ldKYr4PqgXUSrW6oLXDSvj3Z+EXNLclCBRYCU1LCvq+
+        36OGzDgnL2RQbISemL59VC2M/xL+ejqdHuThyKgkTU+moUdmoFxB4Km0UoQf0p8A
+        JhBvUkzLSFVm4w==
+X-ME-Sender: <xms:YqNQX4ZlIsfeZ5cxsnUS02YG-4V4pTtbO5rqujbSiON7nXGf2rmHZg>
+    <xme:YqNQXza6WcRhuiKqQpsS0Uzcux63-ESGt1CQWiql5yYK4wBLiwTKQAXvOpC7iLE6e
+    Qfs3mcxReR4YxdmGJc>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enogevohgrshhtrghlqdfhgeduvddqtddvucdludehtddmnecujfgurhephffvufffkffo
-    jghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomh
-    grgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrthhtvghrnhepveejieejtdev
-    gfffgfejuefggfeutdelteekgeetueeftddutddtgfffhffgueffnecuffhomhgrihhnpe
-    guvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrieekrdejieenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestg
-    gvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:XqNQX5e5g3lAglKBbbjJkl27rRRhv0Fs4asVXSKHAu32QSqHQppdOw>
-    <xmx:XqNQX3Ib62OV-K-MDBT8fl7WGJJl8j0LQaSt3oWBRKRJR1H7LIE0-g>
-    <xmx:XqNQX-LfHituxjPI8To9ohes_ILdcd-hjFRpST5u3JFnIGFl_8BzWQ>
-    <xmx:XqNQXwDBGQWAzGdRp8EZ5npNoeVUwf0EUcq1PoSMtrX0JfAmQeVm48-PTB4>
+    enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveev
+    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpeejvd
+    enucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:YqNQXy8lqaxjzIW_oWEretu2FMpvqF53kVoquQax6DUORoT3HUkPxA>
+    <xmx:YqNQXyp7pMnT3oXalUB-qKu6WzNrfzs3jlP6lQF7jdWIFF9eoWD3kA>
+    <xmx:YqNQXzrxq9QL602L_w-B5vEB1YcUSl3YzdtX5VG9wNO0ja-_objJiw>
+    <xmx:YqNQX8QJLP_AAKEF7mphZne-mWoKQj7XsHhY6JaxohVbRmrT7hcI7QkikeU>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6B555306005E;
-        Thu,  3 Sep 2020 04:03:42 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 76549328005E;
+        Thu,  3 Sep 2020 04:03:46 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -80,13 +78,12 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh@kernel.org>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Hoegeun Kwon <hoegeun.kwon@samsung.com>,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH v5 77/80] dt-bindings: display: vc4: hdmi: Add BCM2711 HDMI controllers bindings
-Date:   Thu,  3 Sep 2020 10:01:49 +0200
-Message-Id: <ecd686e9b2335275bfb1ccfe1878305367b34bf3.1599120059.git-series.maxime@cerno.tech>
+Subject: [PATCH v5 80/80] ARM: dts: bcm2711: Enable the display pipeline
+Date:   Thu,  3 Sep 2020 10:01:52 +0200
+Message-Id: <cfce2276d172d3d9c4d34d966b58fd47f77c4e46.1599120059.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
 References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
@@ -97,142 +94,248 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The HDMI controllers found in the BCM2711 SoC need some adjustments to the
-bindings, especially since the registers have been shuffled around in more
-register ranges.
+Now that all the drivers have been adjusted for it, let's bring in the
+necessary device tree changes.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The VEC and PV3 are left out for now, since it will require a more specific
+clock setup.
+
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
 Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml | 117 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 117 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts |  48 +++++++++++-
+ arch/arm/boot/dts/bcm2711.dtsi        | 122 ++++++++++++++++++++++++++-
+ 2 files changed, 169 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-new file mode 100644
-index 000000000000..03a76729d26c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm2711-hdmi.yaml
-@@ -0,0 +1,117 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/brcm,bcm2711-hdmi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+index e94244a215af..09a1182c2936 100644
+--- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
++++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+@@ -70,6 +70,14 @@
+ 	};
+ };
+ 
++&ddc0 {
++	status = "okay";
++};
 +
-+title: Broadcom BCM2711 HDMI Controller Device Tree Bindings
++&ddc1 {
++	status = "okay";
++};
 +
-+maintainers:
-+  - Eric Anholt <eric@anholt.net>
+ &firmware {
+ 	firmware_clocks: clocks {
+ 		compatible = "raspberrypi,firmware-clocks";
+@@ -170,6 +178,38 @@
+ 			  "RGMII_TXD3";
+ };
+ 
++&hdmi0 {
++	clocks = <&firmware_clocks 13>, <&firmware_clocks 14>, <&dvp 0>, <&clk_27MHz>;
++	clock-names = "hdmi", "bvb", "audio", "cec";
++	status = "okay";
++};
 +
-+properties:
-+  compatible:
-+    enum:
-+      - brcm,bcm2711-hdmi0
-+      - brcm,bcm2711-hdmi1
++&hdmi1 {
++	clocks = <&firmware_clocks 13>, <&firmware_clocks 14>, <&dvp 1>, <&clk_27MHz>;
++	clock-names = "hdmi", "bvb", "audio", "cec";
++	status = "okay";
++};
 +
-+  reg:
-+    items:
-+      - description: HDMI controller register range
-+      - description: DVP register range
-+      - description: HDMI PHY register range
-+      - description: Rate Manager register range
-+      - description: Packet RAM register range
-+      - description: Metadata RAM register range
-+      - description: CSC register range
-+      - description: CEC register range
-+      - description: HD register range
++&hvs {
++	clocks = <&firmware_clocks 4>;
++};
 +
-+  reg-names:
-+    items:
-+      - const: hdmi
-+      - const: dvp
-+      - const: phy
-+      - const: rm
-+      - const: packet
-+      - const: metadata
-+      - const: csc
-+      - const: cec
-+      - const: hd
++&pixelvalve0 {
++	status = "okay";
++};
 +
-+  clocks:
-+    items:
-+      - description: The HDMI state machine clock
-+      - description: The Pixel BVB clock
-+      - description: The HDMI Audio parent clock
-+      - description: The HDMI CEC parent clock
++&pixelvalve1 {
++	status = "okay";
++};
 +
-+  clock-names:
-+    items:
-+      - const: hdmi
-+      - const: bvb
-+      - const: audio
-+      - const: cec
++&pixelvalve2 {
++	status = "okay";
++};
 +
-+  ddc:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+    description: >
-+      Phandle of the I2C controller used for DDC EDID probing
++&pixelvalve4 {
++	status = "okay";
++};
 +
-+  hpd-gpios:
-+    description: >
-+      The GPIO pin for the HDMI hotplug detect (if it doesn't appear
-+      as an interrupt/status bit in the HDMI controller itself)
+ &pwm1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pwm1_0_gpio40 &pwm1_1_gpio41>;
+@@ -253,3 +293,11 @@
+ &vchiq {
+ 	interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+ };
 +
-+  dmas:
-+    maxItems: 1
-+    description: >
-+      Should contain one entry pointing to the DMA channel used to
-+      transfer audio data.
++&vc4 {
++	status = "okay";
++};
 +
-+  dma-names:
-+    const: audio-rx
++&vec {
++	status = "disabled";
++};
+diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+index 00bcaed1be32..4847dd305317 100644
+--- a/arch/arm/boot/dts/bcm2711.dtsi
++++ b/arch/arm/boot/dts/bcm2711.dtsi
+@@ -12,6 +12,18 @@
+ 
+ 	interrupt-parent = <&gicv2>;
+ 
++	vc4: gpu {
++		compatible = "brcm,bcm2711-vc5";
++		status = "disabled";
++	};
 +
-+  resets:
-+    maxItems: 1
++	clk_27MHz: clk-27M {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <27000000>;
++		clock-output-names = "27MHz-clock";
++	};
 +
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - clocks
-+  - resets
-+  - ddc
+ 	clk_108MHz: clk-108M {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-clock";
+@@ -238,6 +250,27 @@
+ 			status = "disabled";
+ 		};
+ 
++		pixelvalve0: pixelvalve@7e206000 {
++			compatible = "brcm,bcm2711-pixelvalve0";
++			reg = <0x7e206000 0x100>;
++			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
 +
-+additionalProperties: false
++		pixelvalve1: pixelvalve@7e207000 {
++			compatible = "brcm,bcm2711-pixelvalve1";
++			reg = <0x7e207000 0x100>;
++			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
 +
-+examples:
-+  - |
-+    hdmi0: hdmi@7ef00700 {
-+        compatible = "brcm,bcm2711-hdmi0";
-+        reg = <0x7ef00700 0x300>,
-+              <0x7ef00300 0x200>,
-+              <0x7ef00f00 0x80>,
-+              <0x7ef00f80 0x80>,
-+              <0x7ef01b00 0x200>,
-+              <0x7ef01f00 0x400>,
-+              <0x7ef00200 0x80>,
-+              <0x7ef04300 0x100>,
-+              <0x7ef20000 0x100>;
-+        reg-names = "hdmi",
-+                    "dvp",
-+                    "phy",
-+                    "rm",
-+                    "packet",
-+                    "metadata",
-+                    "csc",
-+                    "cec",
-+                    "hd";
-+        clocks = <&firmware_clocks 13>, <&firmware_clocks 14>, <&dvp 1>, <&clk_27MHz>;
-+        clock-names = "hdmi", "bvb", "audio", "cec";
-+        resets = <&dvp 0>;
-+        ddc = <&ddc0>;
-+    };
++		pixelvalve2: pixelvalve@7e20a000 {
++			compatible = "brcm,bcm2711-pixelvalve2";
++			reg = <0x7e20a000 0x100>;
++			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
 +
-+...
+ 		pwm1: pwm@7e20c800 {
+ 			compatible = "brcm,bcm2835-pwm";
+ 			reg = <0x7e20c800 0x28>;
+@@ -248,10 +281,25 @@
+ 			status = "disabled";
+ 		};
+ 
+-		hvs@7e400000 {
++		pixelvalve4: pixelvalve@7e216000 {
++			compatible = "brcm,bcm2711-pixelvalve4";
++			reg = <0x7e216000 0x100>;
++			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		hvs: hvs@7e400000 {
++			compatible = "brcm,bcm2711-hvs";
+ 			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		pixelvalve3: pixelvalve@7ec12000 {
++			compatible = "brcm,bcm2711-pixelvalve3";
++			reg = <0x7ec12000 0x100>;
++			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
+ 		dvp: clock@7ef00000 {
+ 			compatible = "brcm,brcm2711-dvp";
+ 			reg = <0x7ef00000 0x10>;
+@@ -259,6 +307,78 @@
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 		};
++
++		hdmi0: hdmi@7ef00700 {
++			compatible = "brcm,bcm2711-hdmi0";
++			reg = <0x7ef00700 0x300>,
++			      <0x7ef00300 0x200>,
++			      <0x7ef00f00 0x80>,
++			      <0x7ef00f80 0x80>,
++			      <0x7ef01b00 0x200>,
++			      <0x7ef01f00 0x400>,
++			      <0x7ef00200 0x80>,
++			      <0x7ef04300 0x100>,
++			      <0x7ef20000 0x100>;
++			reg-names = "hdmi",
++				    "dvp",
++				    "phy",
++				    "rm",
++				    "packet",
++				    "metadata",
++				    "csc",
++				    "cec",
++				    "hd";
++			clock-names = "hdmi", "bvb", "audio", "cec";
++			resets = <&dvp 0>;
++			ddc = <&ddc0>;
++			dmas = <&dma 10>;
++			dma-names = "audio-rx";
++			status = "disabled";
++		};
++
++		ddc0: i2c@7ef04500 {
++			compatible = "brcm,bcm2711-hdmi-i2c";
++			reg = <0x7ef04500 0x100>, <0x7ef00b00 0x300>;
++			reg-names = "bsc", "auto-i2c";
++			clock-frequency = <97500>;
++			status = "disabled";
++		};
++
++		hdmi1: hdmi@7ef05700 {
++			compatible = "brcm,bcm2711-hdmi1";
++			reg = <0x7ef05700 0x300>,
++			      <0x7ef05300 0x200>,
++			      <0x7ef05f00 0x80>,
++			      <0x7ef05f80 0x80>,
++			      <0x7ef06b00 0x200>,
++			      <0x7ef06f00 0x400>,
++			      <0x7ef00280 0x80>,
++			      <0x7ef09300 0x100>,
++			      <0x7ef20000 0x100>;
++			reg-names = "hdmi",
++				    "dvp",
++				    "phy",
++				    "rm",
++				    "packet",
++				    "metadata",
++				    "csc",
++				    "cec",
++				    "hd";
++			ddc = <&ddc1>;
++			clock-names = "hdmi", "bvb", "audio", "cec";
++			resets = <&dvp 1>;
++			dmas = <&dma 17>;
++			dma-names = "audio-rx";
++			status = "disabled";
++		};
++
++		ddc1: i2c@7ef09500 {
++			compatible = "brcm,bcm2711-hdmi-i2c";
++			reg = <0x7ef09500 0x100>, <0x7ef05b00 0x300>;
++			reg-names = "bsc", "auto-i2c";
++			clock-frequency = <97500>;
++			status = "disabled";
++		};
+ 	};
+ 
+ 	/*
 -- 
 git-series 0.9.1
