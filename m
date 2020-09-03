@@ -2,92 +2,132 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FACEC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EC2C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E225920786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA85208C7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:23:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ay6T3o5V"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FjlHG+KA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgICPW4 (ORCPT
+        id S1729123AbgICPXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:22:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34936 "EHLO
+        Thu, 3 Sep 2020 11:23:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728437AbgICLWj (ORCPT
+        with ESMTP id S1728887AbgICPWe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:22:39 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF00EC06124F;
-        Thu,  3 Sep 2020 04:20:07 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u128so2067209pfb.6;
-        Thu, 03 Sep 2020 04:20:07 -0700 (PDT)
+        Thu, 3 Sep 2020 11:22:34 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C118DC061247
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 08:22:33 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id b16so1947387vsl.6
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 08:22:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jaMby09cIkH4uMnP/QGnY16JaDZOahjJy8+IAE25qQI=;
-        b=Ay6T3o5VYcusUis3uZZWyVXgWIF+mUScyEZqpgOBAkCyeAtQEi02m/lV4Zjp+2Up8b
-         P5HHxCYax2aeFuBIwfE9vkRx+6TvW+6Vm6kyHFEN+E0yPgD5XiR+0wm/OTIU0SzU/fxi
-         Ue9xgqsFhxucu35ddMNJ8f4Q6q54cRwQrjfL/k6HLl1SPz6T+fbW/FmMrOS+RK36o/yp
-         eot8QtHOU5p+dCS+zlE3nZhSqjlSVjngrXrtxqf5zpErPMvK9E0ttthZbQkeRjyeCJbP
-         /tFH53iy1swTu3Hn7XMqUQr0q0G0d7FrrluY8wXxb79FPdK7DrwvMR67Em48j4RsAzPo
-         b8vQ==
+        bh=VL9yT/iQU/7WYSyaJd+H27DFdWliWvUjL54Y+NsxJ+I=;
+        b=FjlHG+KAVM2HrA8dEJu+O7Fkw4M+FfssWQuHmE6z4ZrrUMP9sA+t5IctdZ2OkMUI6D
+         WsFfqHLiJNO/AOLF0E3cImHv/LaKx8pb1XiftmKfE/+2tByodNa6zbBzDL0AG/Rxc311
+         71Yv/0SFAwnh8tV1CPA72wjy114HMo1VfEwjc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jaMby09cIkH4uMnP/QGnY16JaDZOahjJy8+IAE25qQI=;
-        b=K4bnAdFR5RNJd4H+3kv+PiZvxbn4Oey3V1ELfQOipME9NkJKj4kvCPEeu0mcaTl3jJ
-         zLVU5K6Cqv5/v3imYm4017X7hjIIeznCGGXkOv3xKPI2N/JTmJgUu6woiaH2EOgcNDXu
-         Vh5fGiPbkMy1+KlXU9uKqqHuRXEFUnT9G0SEdZDePblkLOTJadAD78DYt8POoOnHq6vL
-         W695p60fIJEXhurFhSXpFRIWqgv13fZvcxoWysg0pD3nb1UOG3NuzW0rLKZ8d9aMXIib
-         EAdPVHzaj+HeLRE3QlpkvobFv9E4j4qVUS3/5jCQvwz/ft8kx+E8nSfRU/sF5OmI1GIn
-         2vLQ==
-X-Gm-Message-State: AOAM532E1o9B5l3UHQbUm0oVYbnsF7fa7fewayHxxUe73qc+AhqxR+3f
-        NJgjRm84i5BDPBrrHnGVEYeYtEChceptxZPyhvE=
-X-Google-Smtp-Source: ABdhPJySXMx2fPHPuW2rKM86f6gT94qFOY5VNUlJ0a6oRyW8MpyDO7nrdRSyyg9cHogg5ipMhKUgG8PyRMoTMDYaaR8=
-X-Received: by 2002:a63:c543:: with SMTP id g3mr2587849pgd.203.1599132007489;
- Thu, 03 Sep 2020 04:20:07 -0700 (PDT)
+        bh=VL9yT/iQU/7WYSyaJd+H27DFdWliWvUjL54Y+NsxJ+I=;
+        b=sXhyv3Kz+Nls3V8WVU98WUyohgFs8PqdlFftm4EaXTxqIWaJ1Ek4U+qnkNaj/z5r3+
+         yskt+uPaAPu/CF9MjbvT9zFH8aSjGx4ngYsNQIo22nsqiVTVLmG2+7eLZt2anXJ7h6Sp
+         A2E6FtZKm8ABhIr23JxvDZrx8o9gG8Yb2vuDl05z/XWO1q4SBxtXNudjMacm/7+oWHzZ
+         FGhmh8LQ/cNtEUtMkGdL2G0ajIU7OTWy+CGTM1Jy3hd/gAgC6wvjnPrbTmJoiedkJdpK
+         gq4ONwfbGoPaz84yDhSfKPVJskXI54BrMuLHJZkhSYbSIPAJv6fWUz2QhG7DRYXEoXo1
+         vrOQ==
+X-Gm-Message-State: AOAM533jOSD0t4msxDMNiTDXUIGv1u54fb9OTuFrEHe8mwYIHhFojONb
+        Q62oPmpIPWivE9+Sa0KBBU590zELda4VmA==
+X-Google-Smtp-Source: ABdhPJzi+wduIw7sHmdgpCmZoypDGwh3bvyt99AH8ucuCN+cKNVy2M7IL3iZyc3d2glM1s6JnYZ2NQ==
+X-Received: by 2002:a05:6102:35c:: with SMTP id e28mr2306015vsa.167.1599146551995;
+        Thu, 03 Sep 2020 08:22:31 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id z8sm420980vsk.32.2020.09.03.08.22.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 08:22:30 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id p185so1929539vsp.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 08:22:30 -0700 (PDT)
+X-Received: by 2002:a05:6102:3031:: with SMTP id v17mr883797vsa.10.1599146550147;
+ Thu, 03 Sep 2020 08:22:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200903005300.7894-1-digetx@gmail.com> <20200903005300.7894-14-digetx@gmail.com>
-In-Reply-To: <20200903005300.7894-14-digetx@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 3 Sep 2020 14:19:49 +0300
-Message-ID: <CAHp75VcX0=WTKWB+W2NoCzDJbL+axd9D27nJ6OMCgL_m_4=PHw@mail.gmail.com>
-Subject: Re: [PATCH v3 13/22] i2c: tegra: Check errors for both positive and
- negative values
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200902214250.1.I63d3f1c93f88cb0cda5161c42e97decb4a63a571@changeid>
+In-Reply-To: <20200902214250.1.I63d3f1c93f88cb0cda5161c42e97decb4a63a571@changeid>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 3 Sep 2020 08:22:18 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=W9H4-VD04AA7xEM-YuvXVjuOxtczkLhvQfDC5M9KR4Lw@mail.gmail.com>
+Message-ID: <CAD=FV=W9H4-VD04AA7xEM-YuvXVjuOxtczkLhvQfDC5M9KR4Lw@mail.gmail.com>
+Subject: Re: [PATCH] HID: i2c-hid: Prefer asynchronous probe
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andrea Borgia <andrea@borgia.bo.it>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Aaron Ma <aaron.ma@canonical.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Daniel Playfair Cal <daniel.playfair.cal@gmail.com>,
+        Pavel Balan <admin@kryma.net>,
+        You-Sheng Yang <vicamo.yang@canonical.com>,
+        linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 3:54 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+Hi,
+
+On Wed, Sep 2, 2020 at 9:43 PM Douglas Anderson <dianders@chromium.org> wrote:
 >
-> The driver's code is inconsistent in regards to the error values checking.
-> The correct way should be to check both positive and negative values.
-> This patch cleans up the error-checks in the code. Note that the
-> pm_runtime_get_sync() could return positive value on success, hence only
-> relevant parts of the code are changed by this patch.
+> Adding printouts to the i2c_hid_probe() function shows that it takes
+> quite some time.  It used to take about 70 ms, but after commit
+> eef4016243e9 ("HID: i2c-hid: Always sleep 60ms after I2C_HID_PWR_ON
+> commands") it takes about 190 ms.  This is not tons of time but it's
+> not trivial.  Because we haven't yet specified that we'd prefer
+> asynchronous probe for this driver then, if the driver is builtin to
+> the kernel, we'll wait for this driver to finish before we start
+> probes for more drivers.  Let's set the flag to enable asynchronous
+> for this driver so that other drivers aren't blocked from probing
+> until we finish.
+>
+> Since this driver can be configured as a module and modules are
+> always asynchronously probed this is quite a safe change and will
+> benefit anyone who has a reason to build this driver into the kernel
+> instead of using it as a module.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+>  drivers/hid/i2c-hid/i2c-hid-core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+> index 87ff93bf76ba..c898bd8617f9 100644
+> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
+> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+> @@ -1280,8 +1280,10 @@ static struct i2c_driver i2c_hid_driver = {
+>         .driver = {
+>                 .name   = "i2c_hid",
+>                 .pm     = &i2c_hid_pm,
+> +               .probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>                 .acpi_match_table = ACPI_PTR(i2c_hid_acpi_match),
+>                 .of_match_table = of_match_ptr(i2c_hid_of_match),
+> +
 
-Yeah, fix the order of the series. Now it seems like arbitrary mess.
+Boy, I'm not sure how I managed to introduce this extra whitespace
+without noticing.  Sorry!  :(  If the patch looks good I'm happy to
+re-post or I'm happy if a maintainer wants to fix my mistake when
+applying.
 
--- 
-With Best Regards,
-Andy Shevchenko
+-Doug
