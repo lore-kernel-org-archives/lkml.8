@@ -2,129 +2,123 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0FDC10DAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFF7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43BF620716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599171949;
-	bh=UIAXSve0SRrcUd0B8D3XS6dXgn/vQBkLbJ8pkN798Co=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=chNo8lpV7yFhU6APxo5VRRuycGoHoB3p+CFWJoz8X9ZeBE3VbiYR1ZBJqDfbyUnUC
-	 3VAKlX0cbKRA2/roipwqCUhM5YJriBhL7ZHbMCW6ToMWaDrRdIsA5+erNYo6e+lN79
-	 EHKhs+afzeQD6pe/IKlHFtoSDzydN0XcQ74MUa8o=
+	by mail.kernel.org (Postfix) with ESMTP id 344AA20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:27:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="vf/MIagm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgICWZs (ORCPT
+        id S1728486AbgICW1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:25:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbgICWZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:25:46 -0400
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACBE820897;
-        Thu,  3 Sep 2020 22:25:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599171945;
-        bh=UIAXSve0SRrcUd0B8D3XS6dXgn/vQBkLbJ8pkN798Co=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qluRU6tE3yEoLU2P/PGujeCsrKHYEEuTTVUhauwotQKC7B9OoafcrZW39TyQ+RWuU
-         AOBoW9Eo44laSXkfHd3e6+DkRHt1Hu8KHa4U+OZiPVTYjSbeSWkfXmMuCDJEepbSRJ
-         qccqng13joImKSahk+j3VAVuPZWx1O5WrcMQfqtk=
-Received: by mail-oi1-f173.google.com with SMTP id 3so4765417oih.0;
-        Thu, 03 Sep 2020 15:25:45 -0700 (PDT)
-X-Gm-Message-State: AOAM530a2GkD2fS6KFhiNQVGHp3iCAWAI4y5ws74NCVzpiQTpxa8eEuD
-        LJfzLpJwfHSXX8d2klYoFG0UqAbgOW+msB0+Bw==
-X-Google-Smtp-Source: ABdhPJwrVduZhw2vlihPd2/Z7wXfAVL2xOnsNA6Q5zcbi6DAiVrLsMvntTI9GWRi9G26Rm5JgVmKH/NsVP5BMycbvEE=
-X-Received: by 2002:aca:1711:: with SMTP id j17mr3621820oii.152.1599171945008;
- Thu, 03 Sep 2020 15:25:45 -0700 (PDT)
+        Thu, 3 Sep 2020 18:27:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728692AbgICW1P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 18:27:15 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F1BC061258
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:27:13 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id g72so4627076qke.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:27:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cznD9PtbdCnTuIZHnsXFM10RQkLCsdUaXijp1Kw5QfM=;
+        b=vf/MIagmSkCmoXbC7zT5cXl1xunyNvulSkn7Qy0IqdUbPghCUHeubpoVJWECF1sIcs
+         P7mTr/0TBl63h9TACLfVJzptpA7BAOWyubMGpb3p0t5x9XVrles20o0g0XKNu4Hz29WO
+         75mIyVB8Oi7dJpwjAJIdBj+/KWG13DCoNR8EnhBoQeg36/QBIpKSVGWCNKmD1/gfTRjq
+         fEMXqnuPfc491IhWkKmQc2JkhXjLMMrcRsMyXjkmiqPQ44MTR0zm61RZ0PfKoMYYCM5j
+         3ZgT5j61yIrAPg9U59zGZmBlvjyUFaUzRIHc2D7Gitvm0doutY2YhSAvONe47j8r1Xis
+         tuvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cznD9PtbdCnTuIZHnsXFM10RQkLCsdUaXijp1Kw5QfM=;
+        b=AMuvIcBAakJeB0aWVUref6GCZm1n0pnLCyx5OOX18LvFW5XlVO9Gybx8BGiMhsDEKK
+         mVVaqGeeIwhmMjeNt8psX29oA0MS/qOb2nR2cGqr/ged56DDI4ZLbHlVgf/lyzbCobSQ
+         6VqtksBvIHhbUyfUo0k/89TLTkH9d2Fd/RemYlLfrudKpnSvVodWCZzY5aL/E7hex8ke
+         dmfL1Tq1sa58khyr+gJ+DtIdgLBbRTRrMwgGz5D/gnDVesYqKOKwSpwAOQ34OGCIxJFf
+         ay+NTDfPpNrd6FKj2A5klUt1chMogSpq2hQ8BKPquIZHsvYeqSEB8sCHchEKdM/o4h7K
+         tsfA==
+X-Gm-Message-State: AOAM531TE4Rg6w7JPs3OcN947kjnsTTSFs5fpOtf5vEhK5FscXrs1m0O
+        Vi4uoAnE7maWkimrFHTRu5BREw==
+X-Google-Smtp-Source: ABdhPJzK5Ygk1x9b3HK2R+a3jvj5NQR11yba0j3jaOAHzfMoW0mdc3MTRBiB9YSbbJXnphSPvgOpiQ==
+X-Received: by 2002:a37:9f07:: with SMTP id i7mr4947081qke.440.1599172032896;
+        Thu, 03 Sep 2020 15:27:12 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id y30sm3217157qth.7.2020.09.03.15.27.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 15:27:12 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/7] dt-bindings: clock: sdm845-dispcc: same name for dp_phy clocks as sc7180
+Date:   Thu,  3 Sep 2020 18:26:09 -0400
+Message-Id: <20200903222620.27448-2-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200903222620.27448-1-jonathan@marek.ca>
+References: <20200903222620.27448-1-jonathan@marek.ca>
 MIME-Version: 1.0
-References: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1596795922-705-7-git-send-email-hayashi.kunihiko@socionext.com>
- <CAL_JsqJhvpiAWfa7w4-85-GObkW+pq6PUpZUGg8Sc5p4+qsuQA@mail.gmail.com> <aadb805d-e5fb-438a-d7e1-4e1ad31ddbac@socionext.com>
-In-Reply-To: <aadb805d-e5fb-438a-d7e1-4e1ad31ddbac@socionext.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 3 Sep 2020 16:25:33 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKQ-jwgUst1PLM1jnoo8hiAap=D2jhKP-Z9YktiUgrU_g@mail.gmail.com>
-Message-ID: <CAL_JsqKQ-jwgUst1PLM1jnoo8hiAap=D2jhKP-Z9YktiUgrU_g@mail.gmail.com>
-Subject: Re: [PATCH v6 6/6] PCI: uniphier: Add error message when failed to
- get phy
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 1:05 AM Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
->
-> On 2020/08/18 1:39, Rob Herring wrote:
-> > On Fri, Aug 7, 2020 at 4:25 AM Kunihiko Hayashi
-> > <hayashi.kunihiko@socionext.com> wrote:
-> >>
-> >> Even if phy driver doesn't probe, the error message can't be distinguished
-> >> from other errors. This displays error message caused by the phy driver
-> >> explicitly.
-> >>
-> >> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> >> ---
-> >>   drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++--
-> >>   1 file changed, 6 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> >> index 93ef608..7c8721e 100644
-> >> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> >> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> >> @@ -489,8 +489,12 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
-> >>                  return PTR_ERR(priv->rst);
-> >>
-> >>          priv->phy = devm_phy_optional_get(dev, "pcie-phy");
-> >
-> > The point of the optional variant vs. devm_phy_get() is whether or not
-> > you get an error message. So shouldn't you switch to devm_phy_get
-> > instead?
-> >
-> >> -       if (IS_ERR(priv->phy))
-> >> -               return PTR_ERR(priv->phy);
-> >> +       if (IS_ERR(priv->phy)) {
-> >> +               ret = PTR_ERR(priv->phy);
-> >> +               if (ret != -EPROBE_DEFER)
-> >> +                       dev_err(dev, "Failed to get phy (%d)\n", ret);
-> >> +               return ret;
-> >> +       }
->
-> The 'phys' property is optional, so if there isn't 'phys' in the PCIe node,
-> devm_phy_get() returns -ENODEV, and devm_phy_optional_get() returns NULL.
->
-> When devm_phy_optional_get() replaces devm_phy_get(),
-> condition for displaying an error message changes to:
->
->     (ret != -EPROBE_DEFER && ret != -ENODEV)
->
-> This won't be simple, but should it be replaced?
+This makes it easier to combine dt bindings for sdm845/sc7180 dispcc.
 
-Nevermind. I was thinking we had some error prints for the optional
-vs. non-optional variants.
+Note: nothing upstream provides these clocks and the sdm845 dispcc driver
+hasn't switched to using .fw_name for these clocks (these properties are
+ignored), so changing this shouldn't be a problem.
 
-Rob
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ .../devicetree/bindings/clock/qcom,sdm845-dispcc.yaml     | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
+index 4a3be733d042..ead44705333b 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
+@@ -43,8 +43,8 @@ properties:
+       - const: dsi0_phy_pll_out_dsiclk
+       - const: dsi1_phy_pll_out_byteclk
+       - const: dsi1_phy_pll_out_dsiclk
+-      - const: dp_link_clk_divsel_ten
+-      - const: dp_vco_divided_clk_src_mux
++      - const: dp_phy_pll_link_clk
++      - const: dp_phy_pll_vco_div_clk
+ 
+   '#clock-cells':
+     const: 1
+@@ -92,8 +92,8 @@ examples:
+                     "dsi0_phy_pll_out_dsiclk",
+                     "dsi1_phy_pll_out_byteclk",
+                     "dsi1_phy_pll_out_dsiclk",
+-                    "dp_link_clk_divsel_ten",
+-                    "dp_vco_divided_clk_src_mux";
++                    "dp_phy_pll_link_clk",
++                    "dp_phy_pll_vco_div_clk";
+       #clock-cells = <1>;
+       #reset-cells = <1>;
+       #power-domain-cells = <1>;
+-- 
+2.26.1
+
