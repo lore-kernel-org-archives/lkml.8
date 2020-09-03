@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF3CC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1EEC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD20208B3
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD8F208B3
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:56:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgICNzS (ORCPT
+        id S1728910AbgICN4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 09:55:18 -0400
-Received: from mga07.intel.com ([134.134.136.100]:7159 "EHLO mga07.intel.com"
+        Thu, 3 Sep 2020 09:56:37 -0400
+Received: from mga11.intel.com ([192.55.52.93]:9284 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbgICMpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 08:45:36 -0400
-IronPort-SDR: 1cPOsXju1Cesy+T0ylY0tB4sHHK4YQr9RHSHRkUQr+SOxpTQJKzY6XlOvGNgRSzSK/RscIrKG2
- QgEnyfndDGPQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="221778316"
+        id S1728937AbgICMpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:45:03 -0400
+IronPort-SDR: D/Zhepeai0Gy8siIYqtLJyLIgfAK5bA1Oie6xeIytFXDzjr6u3xiAIqDnImuoDZQ2A2iMmRsfd
+ 2VWVj+BP7Syw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="155069626"
 X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="221778316"
+   d="scan'208";a="155069626"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:42:38 -0700
-IronPort-SDR: DEofIp1Eg9atdh10eiBDxOGLDIYttoMTo+osfN7aOmSUr510EM+6v1gAfj2xD5C4VYIfCrTAp7
- t4tr10ouWyWQ==
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:42:26 -0700
+IronPort-SDR: 8U7te2ksI6SA/D6YLJ+p8OEJjNMIrfaO7mEANwimZkI8L+2bhg4KcEUzooY25qWnbc2pmGVYvl
+ exyj0kO3UMkg==
 X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="302194918"
+   d="scan'208";a="503049079"
 Received: from shsi6026.sh.intel.com (HELO localhost) ([10.239.147.135])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:42:33 -0700
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:42:22 -0700
 From:   shuo.a.liu@intel.com
 To:     linux-kernel@vger.kernel.org, x86@kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,14 +46,14 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Reinette Chatre <reinette.chatre@intel.com>,
         Shuo Liu <shuo.a.liu@intel.com>,
         Yakui Zhao <yakui.zhao@intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
         Dave Hansen <dave.hansen@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Fengwei Yin <fengwei.yin@intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
         Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH v2 04/17] x86/acrn: Introduce hypercall interfaces
-Date:   Thu,  3 Sep 2020 20:41:48 +0800
-Message-Id: <20200903124201.17275-5-shuo.a.liu@intel.com>
+Subject: [PATCH v2 02/17] x86/acrn: Introduce acrn_{setup, remove}_intr_handler()
+Date:   Thu,  3 Sep 2020 20:41:46 +0800
+Message-Id: <20200903124201.17275-3-shuo.a.liu@intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200903124201.17275-1-shuo.a.liu@intel.com>
 References: <20200903124201.17275-1-shuo.a.liu@intel.com>
@@ -66,40 +66,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shuo Liu <shuo.a.liu@intel.com>
 
-The Service VM communicates with the hypervisor via conventional
-hypercalls. VMCALL instruction is used to make the hypercalls.
+The ACRN Hypervisor builds an I/O request when a trapped I/O access
+happens in User VM. Then, ACRN Hypervisor issues an upcall by sending
+a notification interrupt to the Service VM. HSM in the Service VM needs
+to hook the notification interrupt to handle I/O requests.
 
-ACRN hypercall ABI:
-  * Hypercall number is in R8 register.
-  * Up to 2 parameters are in RDI and RSI registers.
-  * Return value is in RAX register.
+Notification interrupts from ACRN Hypervisor are already supported and
+a, currently uninitialized, callback called.
 
-Introduce the ACRN hypercall interfaces. Because GCC doesn't support R8
-register as direct register constraints, here are two ways to use R8 in
-extended asm:
-  1) use explicit register variable as input
-  2) use supported constraint as input with a explicit MOV to R8 in
-     beginning of asm
-
-The number of instructions of above two ways are same.
-Asm code from 1)
-  38:   41 b8 00 00 00 80       mov    $0x80000000,%r8d
-  3e:   48 89 c7                mov    %rax,%rdi
-  41:   0f 01 c1                vmcall
-Here, writes to the lower dword (%r8d) clear the upper dword of %r8 when
-the CPU is in 64-bit mode.
-
-Asm code from 2)
-  38:   48 89 c7                mov    %rax,%rdi
-  3b:   49 b8 00 00 00 80 00    movabs $0x80000000,%r8
-  42:   00 00 00
-  45:   0f 01 c1                vmcall
-
-Choose 1) for code simplicity and a little bit of code size
-optimization.
+Export two APIs for HSM to setup/remove its callback.
 
 Originally-by: Yakui Zhao <yakui.zhao@intel.com>
 Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
+Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Sean Christopherson <sean.j.christopherson@intel.com>
@@ -111,75 +90,63 @@ Cc: Yu Wang <yu1.wang@intel.com>
 Cc: Reinette Chatre <reinette.chatre@intel.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/include/asm/acrn.h | 57 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+ arch/x86/include/asm/acrn.h |  8 ++++++++
+ arch/x86/kernel/cpu/acrn.c  | 19 +++++++++++++++++++
+ 2 files changed, 27 insertions(+)
+ create mode 100644 arch/x86/include/asm/acrn.h
 
 diff --git a/arch/x86/include/asm/acrn.h b/arch/x86/include/asm/acrn.h
-index a2d4aea3a80d..23a93b87edeb 100644
---- a/arch/x86/include/asm/acrn.h
+new file mode 100644
+index 000000000000..ff259b69cde7
+--- /dev/null
 +++ b/arch/x86/include/asm/acrn.h
-@@ -14,4 +14,61 @@ void acrn_setup_intr_handler(void (*handler)(void));
- void acrn_remove_intr_handler(void);
- bool acrn_is_privileged_vm(void);
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_ACRN_H
++#define _ASM_X86_ACRN_H
++
++void acrn_setup_intr_handler(void (*handler)(void));
++void acrn_remove_intr_handler(void);
++
++#endif /* _ASM_X86_ACRN_H */
+diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
+index 0b2c03943ac6..bd1d7e759a0f 100644
+--- a/arch/x86/kernel/cpu/acrn.c
++++ b/arch/x86/kernel/cpu/acrn.c
+@@ -9,7 +9,11 @@
+  *
+  */
  
-+/*
-+ * Hypercalls for ACRN
-+ *
-+ * - VMCALL instruction is used to implement ACRN hypercalls.
-+ * - ACRN hypercall ABI:
-+ *   - Hypercall number is passed in R8 register.
-+ *   - Up to 2 arguments are passed in RDI, RSI.
-+ *   - Return value will be placed in RAX.
-+ */
-+static inline long acrn_hypercall0(unsigned long hcall_id)
++#define pr_fmt(fmt) "acrn: " fmt
++
+ #include <linux/interrupt.h>
++
++#include <asm/acrn.h>
+ #include <asm/apic.h>
+ #include <asm/cpufeatures.h>
+ #include <asm/desc.h>
+@@ -55,6 +59,21 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_acrn_hv_callback)
+ 	set_irq_regs(old_regs);
+ }
+ 
++void acrn_setup_intr_handler(void (*handler)(void))
 +{
-+	register long r8 asm("r8");
-+	long result;
++	if (acrn_intr_handler)
++		pr_warn("Overwrite the acrn_intr_handler.\n");
 +
-+	/* Nothing can come between the r8 assignment and the asm: */
-+	r8 = hcall_id;
-+	asm volatile("vmcall\n\t"
-+		     : "=a" (result)
-+		     : "r" (r8)
-+		     : );
-+
-+	return result;
++	acrn_intr_handler = handler;
 +}
++EXPORT_SYMBOL_GPL(acrn_setup_intr_handler);
 +
-+static inline long acrn_hypercall1(unsigned long hcall_id,
-+				   unsigned long param1)
++void acrn_remove_intr_handler(void)
 +{
-+	register long r8 asm("r8");
-+	long result;
-+
-+	/* Nothing can come between the r8 assignment and the asm: */
-+	r8 = hcall_id;
-+	asm volatile("vmcall\n\t"
-+		     : "=a" (result)
-+		     : "r" (r8), "D" (param1)
-+		     : );
-+
-+	return result;
++	acrn_intr_handler = NULL;
 +}
++EXPORT_SYMBOL_GPL(acrn_remove_intr_handler);
 +
-+static inline long acrn_hypercall2(unsigned long hcall_id,
-+				   unsigned long param1,
-+				   unsigned long param2)
-+{
-+	register long r8 asm("r8");
-+	long result;
-+
-+	/* Nothing can come between the r8 assignment and the asm: */
-+	r8 = hcall_id;
-+	asm volatile("vmcall\n\t"
-+		     : "=a" (result)
-+		     : "r" (r8), "D" (param1), "S" (param2)
-+		     : );
-+
-+	return result;
-+}
-+
- #endif /* _ASM_X86_ACRN_H */
+ const __initconst struct hypervisor_x86 x86_hyper_acrn = {
+ 	.name                   = "ACRN",
+ 	.detect                 = acrn_detect,
 -- 
 2.28.0
 
