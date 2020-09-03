@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6640FC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B0EC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 419512071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8642071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:41:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vb9/O451"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WNcNy8nq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgICFlS (ORCPT
+        id S1728210AbgICFlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 01:41:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39500 "EHLO
+        Thu, 3 Sep 2020 01:41:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgICFlJ (ORCPT
+        with ESMTP id S1728054AbgICFlS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 01:41:09 -0400
+        Thu, 3 Sep 2020 01:41:18 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C067FC061244;
-        Wed,  2 Sep 2020 22:41:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3939EC061244;
+        Wed,  2 Sep 2020 22:41:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=DmDdOH2GuMXK9+IF4MdnFjGWJaJyD3Fj7/WXKJYHW9U=; b=vb9/O451zA77olU1cVJYN2ZSTO
-        2Zi9qkdCcM11VPBQSa0DuIemmhHGqyBGFvr/7cV952tgFjK+BJSSS/BejgM+h1OCLziqHFb09TNFq
-        JH0eIlO4Hic4v8gIAPeme397lsJTTbGC0+eMwHsMGK2NiPa8cHzsh7KyzmYTzkhYnhivyjUx1VZTM
-        DQlsrwznsCxQVugj0bXBMI88ybgjkfq/v50PWHu3STIGvr/Yxze9dbtV88UhgbzomVmvpaWQiONJT
-        veFJDAdAaRZ6O4VfVBHWrHU6RJunJOVm9B7BO70FHnPK7UFAAwJr1Vc+pZADrKGyhnpe0kfQvxid7
-        RpbdcSAg==;
+        bh=xjOqc+Vfodq43UipqqbtBRKcpxkkULzdvtdrdqfm2Bg=; b=WNcNy8nqYOnva0Pe9CYAqbuz0u
+        fZksAXJdUo/XKD5zc/Ei+HS3lCUioMsv4CapxLfk3/U2H/3ijZdpScwG6v2iGvwCeVRFo0jML67at
+        J8W9xHgDm+AOzhKCYdFHlZefJSaWO34tgo4U3gPRppUjaoabuvs55Ylm2fyAtGXztFA8Ao7iRbznw
+        w3OHy0XuJTeco8ABry6a0qtYIeuB5sEdh6oEwNlNVqeVHrWYue1feIOAHtr/hqlf74QugzuMymdmF
+        +XVGVVD9p7cOEf39F2EhgxoT/ZWi6WrYyz9ekHwUXNlgls1hw/L63eiL2IccgB2pHAEi08hTlb7m8
+        TqWVjPPg==;
 Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDhze-0007OE-HE; Thu, 03 Sep 2020 05:41:06 +0000
+        id 1kDhzm-0007P4-AB; Thu, 03 Sep 2020 05:41:14 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     dm-devel@redhat.com, linux-doc@vger.kernel.org,
@@ -47,9 +47,9 @@ Cc:     dm-devel@redhat.com, linux-doc@vger.kernel.org,
         linux-raid@vger.kernel.org, linux-mmc@vger.kernel.org,
         linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
         target-devel@vger.kernel.org
-Subject: [PATCH 1/9] Documentation/hdio: fix up obscure bd_contains references
-Date:   Thu,  3 Sep 2020 07:40:56 +0200
-Message-Id: <20200903054104.228829-2-hch@lst.de>
+Subject: [PATCH 8/9] block: use bd_partno in bdevname
+Date:   Thu,  3 Sep 2020 07:41:03 +0200
+Message-Id: <20200903054104.228829-9-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200903054104.228829-1-hch@lst.de>
 References: <20200903054104.228829-1-hch@lst.de>
@@ -61,126 +61,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bd_contains is an implementation detail and should not be mentioned in
-a userspace API documentation.
+No need to go through the hd_struct to find the partition number.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- Documentation/userspace-api/ioctl/hdio.rst | 24 +++++++++++-----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ block/genhd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/userspace-api/ioctl/hdio.rst b/Documentation/userspace-api/ioctl/hdio.rst
-index e822e3dff1769b..817371bf94e948 100644
---- a/Documentation/userspace-api/ioctl/hdio.rst
-+++ b/Documentation/userspace-api/ioctl/hdio.rst
-@@ -181,7 +181,7 @@ HDIO_SET_UNMASKINTR
+diff --git a/block/genhd.c b/block/genhd.c
+index 081f1039d9367f..771aa56b1a8c3d 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -85,7 +85,7 @@ char *disk_name(struct gendisk *hd, int partno, char *buf)
  
+ const char *bdevname(struct block_device *bdev, char *buf)
+ {
+-	return disk_name(bdev->bd_disk, bdev->bd_part->partno, buf);
++	return disk_name(bdev->bd_disk, bdev->bd_partno, buf);
+ }
+ EXPORT_SYMBOL(bdevname);
  
- 	error return:
--	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
-+	  - EINVAL	Called on a partition instead of the whole disk device
- 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
- 	  - EINVAL	value out of range [0 1]
- 	  - EBUSY	Controller busy
-@@ -231,7 +231,7 @@ HDIO_SET_MULTCOUNT
- 
- 
- 	error return:
--	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
-+	  - EINVAL	Called on a partition instead of the whole disk device
- 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
- 	  - EINVAL	value out of range supported by disk.
- 	  - EBUSY	Controller busy or blockmode already set.
-@@ -295,7 +295,7 @@ HDIO_GET_IDENTITY
- 		the ATA specification.
- 
- 	error returns:
--	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
-+	  - EINVAL	Called on a partition instead of the whole disk device
- 	  - ENOMSG	IDENTIFY DEVICE information not available
- 
- 	notes:
-@@ -355,7 +355,7 @@ HDIO_SET_KEEPSETTINGS
- 
- 
- 	error return:
--	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
-+	  - EINVAL	Called on a partition instead of the whole disk device
- 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
- 	  - EINVAL	value out of range [0 1]
- 	  - EBUSY		Controller busy
-@@ -1055,7 +1055,7 @@ HDIO_SET_32BIT
- 
- 
- 	error return:
--	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
-+	  - EINVAL	Called on a partition instead of the whole disk device
- 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
- 	  - EINVAL	value out of range [0 3]
- 	  - EBUSY	Controller busy
-@@ -1085,7 +1085,7 @@ HDIO_SET_NOWERR
- 
- 
- 	error return:
--	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
-+	  - EINVAL	Called on a partition instead of the whole disk device
- 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
- 	  - EINVAL	value out of range [0 1]
- 	  - EBUSY		Controller busy
-@@ -1113,7 +1113,7 @@ HDIO_SET_DMA
- 
- 
- 	error return:
--	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
-+	  - EINVAL	Called on a partition instead of the whole disk device
- 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
- 	  - EINVAL	value out of range [0 1]
- 	  - EBUSY	Controller busy
-@@ -1141,7 +1141,7 @@ HDIO_SET_PIO_MODE
- 
- 
- 	error return:
--	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
-+	  - EINVAL	Called on a partition instead of the whole disk device
- 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
- 	  - EINVAL	value out of range [0 255]
- 	  - EBUSY	Controller busy
-@@ -1237,7 +1237,7 @@ HDIO_SET_WCACHE
- 
- 
- 	error return:
--	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
-+	  - EINVAL	Called on a partition instead of the whole disk device
- 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
- 	  - EINVAL	value out of range [0 1]
- 	  - EBUSY	Controller busy
-@@ -1265,7 +1265,7 @@ HDIO_SET_ACOUSTIC
- 
- 
- 	error return:
--	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
-+	  - EINVAL	Called on a partition instead of the whole disk device
- 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
- 	  - EINVAL	value out of range [0 254]
- 	  - EBUSY	Controller busy
-@@ -1305,7 +1305,7 @@ HDIO_SET_ADDRESS
- 
- 
- 	error return:
--	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
-+	  - EINVAL	Called on a partition instead of the whole disk device
- 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
- 	  - EINVAL	value out of range [0 2]
- 	  - EBUSY		Controller busy
-@@ -1331,7 +1331,7 @@ HDIO_SET_IDE_SCSI
- 
- 
- 	error return:
--	  - EINVAL	(bdev != bdev->bd_contains) (not sure what this means)
-+	  - EINVAL	Called on a partition instead of the whole disk device
- 	  - EACCES	Access denied:  requires CAP_SYS_ADMIN
- 	  - EINVAL	value out of range [0 1]
- 	  - EBUSY	Controller busy
 -- 
 2.28.0
 
