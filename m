@@ -2,254 +2,157 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3263C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A351C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE0920722
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244DD206EB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:57:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SagqXAYj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SgES9OtT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgICLz4 (ORCPT
+        id S1728768AbgICL5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:55:56 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55744 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728691AbgICLnX (ORCPT
+        Thu, 3 Sep 2020 07:57:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728651AbgICLsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:43:23 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083Bh1VY022598;
-        Thu, 3 Sep 2020 06:43:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599133381;
-        bh=ITLmzJNklqPWyaUG5IRajwAgMq3MP+y3uTnPXojVyv4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=SagqXAYjqu8VQwG6yGogW+LQpRX107s/bXCzZbgpjCVkH0GhbftyfSvQDV6SbnC/a
-         wNdKX1MYjnELzV8QZvLL3pwELMTGuezPpWQba8Yn3dK+EyhLRkhtGlUHigTajSDk+R
-         iK0YzRYt1ehwl5PObZ2HzgxgBxCephjpCQkcMrYs=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083Bh1px047309
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Sep 2020 06:43:01 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
- 2020 06:43:01 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 3 Sep 2020 06:43:01 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083Bh1C1075415;
-        Thu, 3 Sep 2020 06:43:01 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v3 3/3] net: dp83869: Add speed optimization feature
-Date:   Thu, 3 Sep 2020 06:42:59 -0500
-Message-ID: <20200903114259.14013-4-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200903114259.14013-1-dmurphy@ti.com>
-References: <20200903114259.14013-1-dmurphy@ti.com>
+        Thu, 3 Sep 2020 07:48:30 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA1B7C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 04:47:59 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id v24so798494uaj.7
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 04:47:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=lF+Kc4r9sUDwFZ8bE5xtVYQtO57AZ59ErxR5WiW/3Dw=;
+        b=SgES9OtTIMOLLR9GP0CgnxjBl8QnwGm0lnbEOFW3YZ4Umcbth07htLKrbtjPzoJrQN
+         riHsXXueEfeQzGreBEqhUgL7qnCZ622H+IqZXNhqcioGKpE1EXPctfh1eMVAndcV4Bhb
+         XyHMcTpFpYx8azbD9Jamf1pRcJZZD6V4M+4Rf4ds2nfXvcRcOuYB6EDeBvisP8w90yBY
+         drtgRLbuUdVF7V4BNcf3684BR1CPveOvuE1JSePdKmugPHvpeRaojJUAE5IutFeKrTzS
+         d32RKGZD2865aakLJfYtpDwq7Nb1hvCzLXd2UiG0wjnuPQaIQSzu2jdLcHapaRGIeRrw
+         Spdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lF+Kc4r9sUDwFZ8bE5xtVYQtO57AZ59ErxR5WiW/3Dw=;
+        b=ltO479buovRff8qdnvA6Nt7CQs8seY6yjhzgk1q0uV+z+Z18nA9NtyqJxuksh2Y92a
+         YkghPPcbIiT9eGiRRp1iv/A1H7WqhT/hmbSfZRectqXk/Ej2Ypfdqgf1PRDSWY4UIdfL
+         OTZKVP3gF7jT7LgNLa1SWVjdAqnFcOfYniuU0/bT3SFKEuFHJHv0wenI/HEZdrqih9kX
+         +1yUBiRxOVnmX/l+oMllM6EcXxvjS1gkWwKwzs73wrDrjH6SqfpqKoOm0KC9yRt/l229
+         3gnUhZhPJymdihgYPKrwb8AwqK2wZjdhEXtoBiy7mL6oYiC7H+7qi7Im+4FvjAxIh95a
+         +fcA==
+X-Gm-Message-State: AOAM532/tykcrpnmYXcN5hw3t1mdSod3w6ABXp+BqOKtOzkSFZqCHDTF
+        9fdGkSV/OfRXnKvVF7AivdTw9DzatHXLg4RBKrZXfA==
+X-Google-Smtp-Source: ABdhPJw60X++tc8veDsSpQLnhcJtb/sfDLdknN30k3JsTHwZA+kgY04b4+NZKXDv5kVrAmvgSCiWFjVFdoodQnu3vjE=
+X-Received: by 2002:ab0:5e43:: with SMTP id a3mr726376uah.19.1599133678563;
+ Thu, 03 Sep 2020 04:47:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200902193658.20539-1-krzk@kernel.org> <20200902193658.20539-5-krzk@kernel.org>
+ <4RW2GQ.J2DD55HCZMCH2@crapouillou.net>
+In-Reply-To: <4RW2GQ.J2DD55HCZMCH2@crapouillou.net>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 3 Sep 2020 13:47:22 +0200
+Message-ID: <CAPDyKFoXacPnq5Kv5QEvHjhQz+PN1jAzdGA=TR+e+MwB90Hafw@mail.gmail.com>
+Subject: Re: [PATCH 04/11] mmc: jz4740: Simplify with dev_err_probe()
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the speed optimization bit on the DP83869 PHY.
+On Thu, 3 Sep 2020 at 12:50, Paul Cercueil <paul@crapouillou.net> wrote:
+>
+> Hi Krzysztof,
+>
+> Le mer. 2 sept. 2020 =C3=A0 21:36, Krzysztof Kozlowski <krzk@kernel.org> =
+a
+> =C3=A9crit :
+> > Common pattern of handling deferred probe can be simplified with
+> > dev_err_probe().  Less code and the error value gets printed.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  drivers/mmc/host/jz4740_mmc.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/mmc/host/jz4740_mmc.c
+> > b/drivers/mmc/host/jz4740_mmc.c
+> > index 81d71010b474..0c5b52b53303 100644
+> > --- a/drivers/mmc/host/jz4740_mmc.c
+> > +++ b/drivers/mmc/host/jz4740_mmc.c
+> > @@ -991,9 +991,8 @@ static int jz4740_mmc_probe(struct
+> > platform_device* pdev)
+> >
+> >       ret =3D mmc_of_parse(mmc);
+> >       if (ret) {
+> > -             if (ret !=3D -EPROBE_DEFER)
+> > -                     dev_err(&pdev->dev,
+> > -                             "could not parse device properties: %d\n"=
+, ret);
+> > +             dev_err_probe(&pdev->dev, ret,
+> > +                           "could not parse device properties\n");
+>
+> I think you can put that on one line.
 
-Speed optimization, also known as link downshift, enables fallback to 100M
-operation after multiple consecutive failed attempts at Gigabit link
-establishment. Such a case could occur if cabling with only four wires
-(two twisted pairs) were connected instead of the standard cabling with
-eight wires (four twisted pairs).
+I can amend the patch when I rebase my branch next week, no need for a rese=
+nd.
 
-The number of failed link attempts before falling back to 100M operation is
-configurable. By default, four failed link attempts are required before
-falling back to 100M.
+>
+> With that said:
+> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
+And I add your tag as well, thanks!
 
-v3 - Fixed checkpatch format issues
+Kind regards
+Uffe
 
- drivers/net/phy/dp83869.c | 116 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 116 insertions(+)
-
-diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
-index 5045df9515a5..5d0130cf5a44 100644
---- a/drivers/net/phy/dp83869.c
-+++ b/drivers/net/phy/dp83869.c
-@@ -11,6 +11,7 @@
- #include <linux/of.h>
- #include <linux/phy.h>
- #include <linux/delay.h>
-+#include <linux/bitfield.h>
- 
- #include <dt-bindings/net/ti-dp83869.h>
- 
-@@ -20,6 +21,7 @@
- #define MII_DP83869_PHYCTRL	0x10
- #define MII_DP83869_MICR	0x12
- #define MII_DP83869_ISR		0x13
-+#define DP83869_CFG2		0x14
- #define DP83869_CTRL		0x1f
- #define DP83869_CFG4		0x1e
- 
-@@ -121,6 +123,18 @@
- #define DP83869_WOL_SEC_EN		BIT(5)
- #define DP83869_WOL_ENH_MAC		BIT(7)
- 
-+/* CFG2 bits */
-+#define DP83869_DOWNSHIFT_EN		(BIT(8) | BIT(9))
-+#define DP83869_DOWNSHIFT_ATTEMPT_MASK	(BIT(10) | BIT(11))
-+#define DP83869_DOWNSHIFT_1_COUNT_VAL	0
-+#define DP83869_DOWNSHIFT_2_COUNT_VAL	1
-+#define DP83869_DOWNSHIFT_4_COUNT_VAL	2
-+#define DP83869_DOWNSHIFT_8_COUNT_VAL	3
-+#define DP83869_DOWNSHIFT_1_COUNT	1
-+#define DP83869_DOWNSHIFT_2_COUNT	2
-+#define DP83869_DOWNSHIFT_4_COUNT	4
-+#define DP83869_DOWNSHIFT_8_COUNT	8
-+
- enum {
- 	DP83869_PORT_MIRRORING_KEEP,
- 	DP83869_PORT_MIRRORING_EN,
-@@ -281,6 +295,99 @@ static void dp83869_get_wol(struct phy_device *phydev,
- 		wol->wolopts = 0;
- }
- 
-+static int dp83869_get_downshift(struct phy_device *phydev, u8 *data)
-+{
-+	int val, cnt, enable, count;
-+
-+	val = phy_read(phydev, DP83869_CFG2);
-+	if (val < 0)
-+		return val;
-+
-+	enable = FIELD_GET(DP83869_DOWNSHIFT_EN, val);
-+	cnt = FIELD_GET(DP83869_DOWNSHIFT_ATTEMPT_MASK, val);
-+
-+	switch (cnt) {
-+	case DP83869_DOWNSHIFT_1_COUNT_VAL:
-+		count = DP83869_DOWNSHIFT_1_COUNT;
-+		break;
-+	case DP83869_DOWNSHIFT_2_COUNT_VAL:
-+		count = DP83869_DOWNSHIFT_2_COUNT;
-+		break;
-+	case DP83869_DOWNSHIFT_4_COUNT_VAL:
-+		count = DP83869_DOWNSHIFT_4_COUNT;
-+		break;
-+	case DP83869_DOWNSHIFT_8_COUNT_VAL:
-+		count = DP83869_DOWNSHIFT_8_COUNT;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	*data = enable ? count : DOWNSHIFT_DEV_DISABLE;
-+
-+	return 0;
-+}
-+
-+static int dp83869_set_downshift(struct phy_device *phydev, u8 cnt)
-+{
-+	int val, count;
-+
-+	if (cnt > DP83869_DOWNSHIFT_8_COUNT)
-+		return -E2BIG;
-+
-+	if (!cnt)
-+		return phy_clear_bits(phydev, DP83869_CFG2,
-+				      DP83869_DOWNSHIFT_EN);
-+
-+	switch (cnt) {
-+	case DP83869_DOWNSHIFT_1_COUNT:
-+		count = DP83869_DOWNSHIFT_1_COUNT_VAL;
-+		break;
-+	case DP83869_DOWNSHIFT_2_COUNT:
-+		count = DP83869_DOWNSHIFT_2_COUNT_VAL;
-+		break;
-+	case DP83869_DOWNSHIFT_4_COUNT:
-+		count = DP83869_DOWNSHIFT_4_COUNT_VAL;
-+		break;
-+	case DP83869_DOWNSHIFT_8_COUNT:
-+		count = DP83869_DOWNSHIFT_8_COUNT_VAL;
-+		break;
-+	default:
-+		phydev_err(phydev,
-+			   "Downshift count must be 1, 2, 4 or 8\n");
-+		return -EINVAL;
-+	}
-+
-+	val = DP83869_DOWNSHIFT_EN;
-+	val |= FIELD_PREP(DP83869_DOWNSHIFT_ATTEMPT_MASK, count);
-+
-+	return phy_modify(phydev, DP83869_CFG2,
-+			  DP83869_DOWNSHIFT_EN | DP83869_DOWNSHIFT_ATTEMPT_MASK,
-+			  val);
-+}
-+
-+static int dp83869_get_tunable(struct phy_device *phydev,
-+			       struct ethtool_tunable *tuna, void *data)
-+{
-+	switch (tuna->id) {
-+	case ETHTOOL_PHY_DOWNSHIFT:
-+		return dp83869_get_downshift(phydev, data);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int dp83869_set_tunable(struct phy_device *phydev,
-+			       struct ethtool_tunable *tuna, const void *data)
-+{
-+	switch (tuna->id) {
-+	case ETHTOOL_PHY_DOWNSHIFT:
-+		return dp83869_set_downshift(phydev, *(const u8 *)data);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
- static int dp83869_config_port_mirroring(struct phy_device *phydev)
- {
- 	struct dp83869_private *dp83869 = phydev->priv;
-@@ -558,6 +665,12 @@ static int dp83869_config_init(struct phy_device *phydev)
- 	struct dp83869_private *dp83869 = phydev->priv;
- 	int ret, val;
- 
-+	/* Force speed optimization for the PHY even if it strapped */
-+	ret = phy_modify(phydev, DP83869_CFG2, DP83869_DOWNSHIFT_EN,
-+			 DP83869_DOWNSHIFT_EN);
-+	if (ret)
-+		return ret;
-+
- 	ret = dp83869_configure_mode(phydev, dp83869);
- 	if (ret)
- 		return ret;
-@@ -656,6 +769,9 @@ static struct phy_driver dp83869_driver[] = {
- 		.ack_interrupt	= dp83869_ack_interrupt,
- 		.config_intr	= dp83869_config_intr,
- 
-+		.get_tunable	= dp83869_get_tunable,
-+		.set_tunable	= dp83869_set_tunable,
-+
- 		.get_wol	= dp83869_get_wol,
- 		.set_wol	= dp83869_set_wol,
- 
--- 
-2.28.0
-
+>
+> Cheers,
+> -Paul
+>
+> >               goto err_free_host;
+> >       }
+> >
+> > --
+> > 2.17.1
+> >
+>
+>
