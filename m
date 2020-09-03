@@ -2,156 +2,91 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E917C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39348C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE89206E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08984205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgICIdI (ORCPT
+        id S1726726AbgICIhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:33:08 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:50690 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726025AbgICIdH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:33:07 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U7nlKYs_1599121981;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U7nlKYs_1599121981)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 03 Sep 2020 16:33:02 +0800
-Subject: Re: [PATCH v4 1/4] mm/pageblock: mitigation cmpxchg false sharing in
- pageblock flags
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Thu, 3 Sep 2020 04:37:55 -0400
+Received: from smtp25.cstnet.cn ([159.226.251.25]:56116 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726025AbgICIhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 04:37:55 -0400
+Received: from localhost.localdomain (unknown [159.226.5.100])
+        by APP-05 (Coremail) with SMTP id zQCowAAH6SFUq1Bfy6kMAQ--.29402S2;
+        Thu, 03 Sep 2020 16:37:40 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     krzk@kernel.org, vz@mleia.com, k.konieczny@samsung.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net
+Cc:     linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <1599116482-7410-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200903072447.GB3179@techsingularity.net>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <8275cc70-fd35-25c8-36d4-525a10f05e41@linux.alibaba.com>
-Date:   Thu, 3 Sep 2020 16:32:54 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200903072447.GB3179@techsingularity.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH] crypto: s5p-sss: remove redundant null check
+Date:   Thu,  3 Sep 2020 08:37:38 +0000
+Message-Id: <20200903083738.85345-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: zQCowAAH6SFUq1Bfy6kMAQ--.29402S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF4UZF47GFy5XFW7Ar4kXrb_yoWDCFb_uF
+        1UWFZFgan8uwsayw45Kr17ArWDuF90vFWqgry0yF4rKFyUXrW3u392vw43u39rWa18A3Zx
+        Aw1DWFW8A3Z2vjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb2kYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r43MxAIw28I
+        cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+        IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI
+        42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42
+        IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
+        z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8RRRtUUUUU==
+X-Originating-IP: [159.226.5.100]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCgUIA1z4i+SzXQAAsh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Because clk_disable_unprepare already checked NULL clock
+parameter, so the additional checks are unnecessary, just remove them.
 
-
-在 2020/9/3 下午3:24, Mel Gorman 写道:
-> On Thu, Sep 03, 2020 at 03:01:20PM +0800, Alex Shi wrote:
->> pageblock_flags is used as long, since every pageblock_flags is just 4
->> bits, 'long' size will include 8(32bit machine) or 16 pageblocks' flags,
->> that flag setting has to sync in cmpxchg with 7 or 15 other pageblock
->> flags. It would cause long waiting for sync.
->>
->> If we could change the pageblock_flags variable as char, we could use
->> char size cmpxchg, which just sync up with 2 pageblock flags. it could
->> relief the false sharing in cmpxchg.
->>
->> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> 
-> Page block types were not known to change at high frequency that would
-> cause a measurable performance drop. If anything, the performance hit
-> from pageblocks is the lookup paths which is a lot more frequent.
-
-Yes, it is not hot path. But it's still a meaningful points to reduce cmpxchg
-level false sharing which isn't right on logical.
-
-
-> 
-> What was the workload you were running that altered pageblocks at a high
-> enough frequency for collisions to occur when updating adjacent
-> pageblocks?
-> 
-
-I have run thpscale with 'always' defrag setting of THP. The Amean stddev is much
-larger than a very little average run time reducing.
-
-But the left patch 4 could show the cmpxchg retry reduce from thousands to hundreds
-or less.
-
-Subject: [PATCH v4 4/4] add cmpxchg tracing
-
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 ---
- include/trace/events/pageblock.h | 30 ++++++++++++++++++++++++++++++
- mm/page_alloc.c                  |  4 ++++
- 2 files changed, 34 insertions(+)
- create mode 100644 include/trace/events/pageblock.h
+ drivers/crypto/s5p-sss.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/include/trace/events/pageblock.h b/include/trace/events/pageblock.h
-new file mode 100644
-index 000000000000..003c2d716f82
---- /dev/null
-+++ b/include/trace/events/pageblock.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM pageblock
-+
-+#if !defined(_TRACE_PAGEBLOCK_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_PAGEBLOCK_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(hit_cmpxchg,
-+
-+	TP_PROTO(char byte),
-+
-+	TP_ARGS(byte),
-+
-+	TP_STRUCT__entry(
-+		__field(char, byte)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->byte = byte;
-+	),
-+
-+	TP_printk("%d", __entry->byte)
-+);
-+
-+#endif /* _TRACE_PAGE_ISOLATION_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 8b65d83d8be6..a6d7159295bc 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -509,6 +509,9 @@ static __always_inline int get_pfnblock_migratetype(struct page *page, unsigned
-  * @pfn: The target page frame number
-  * @mask: mask of bits that the caller is interested in
-  */
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/pageblock.h>
-+
- void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
- 					unsigned long pfn,
- 					unsigned long mask)
-@@ -532,6 +535,7 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
- 		if (byte == old_byte)
- 			break;
- 		byte = old_byte;
-+		trace_hit_cmpxchg(byte);
+diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
+index 341433fbcc4a..fdcbfd45c884 100644
+--- a/drivers/crypto/s5p-sss.c
++++ b/drivers/crypto/s5p-sss.c
+@@ -2307,8 +2307,7 @@ static int s5p_aes_probe(struct platform_device *pdev)
+ 	tasklet_kill(&pdata->tasklet);
+ 
+ err_irq:
+-	if (pdata->pclk)
+-		clk_disable_unprepare(pdata->pclk);
++	clk_disable_unprepare(pdata->pclk);
+ 
+ err_clk:
+ 	clk_disable_unprepare(pdata->clk);
+@@ -2338,8 +2337,7 @@ static int s5p_aes_remove(struct platform_device *pdev)
+ 		pdata->use_hash = false;
  	}
- }
+ 
+-	if (pdata->pclk)
+-		clk_disable_unprepare(pdata->pclk);
++	clk_disable_unprepare(pdata->pclk);
+ 
+ 	clk_disable_unprepare(pdata->clk);
+ 	s5p_dev = NULL;
+-- 
+2.17.1
 
---
-1.8.3.1
