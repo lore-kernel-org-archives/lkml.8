@@ -2,110 +2,93 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A550C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6640C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3EE820716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D6020716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:07:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JgDxjdYA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnTWGDup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgICPHB (ORCPT
+        id S1729471AbgICPFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:07:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41794 "EHLO
+        Thu, 3 Sep 2020 11:05:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729094AbgICPGT (ORCPT
+        with ESMTP id S1728915AbgICN6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:06:19 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55E5AC061244;
-        Thu,  3 Sep 2020 08:06:19 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id w14so4149180ljj.4;
-        Thu, 03 Sep 2020 08:06:19 -0700 (PDT)
+        Thu, 3 Sep 2020 09:58:15 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB6D6C061A1E;
+        Thu,  3 Sep 2020 06:47:49 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id t7so3072274ljo.13;
+        Thu, 03 Sep 2020 06:47:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ra46f3mjSl5aJ0IfpF0sXUWJeJAxdmPhF+0FxDGLqmo=;
-        b=JgDxjdYApcLJWqazHlUGz+EpauRHBZ0jshOn/kECows36v5jEW/iBJPF4MTSMgEexF
-         5QQ/kig+hhhkJVQfsyRWPPhABnV5uPRosBXdyOB1mmZoWj6WjBuSUoOzo3FJ0PSCvQ1h
-         RfdSyPWUfFpkG4C7n9lhE9eGuWKqlR3TbttEo0jZ2kPw8PESHvpbKvKhzwRdK4Qu71uB
-         Vy/ff+yqoGCYU9GWp+6UYxCrEb7j60Q8JVrUf1yMW26YIX2Hkxo01GSJQ279hNMjdDtC
-         xFLaeUij+hJ4JQ3nZehjBtZN6v34GqQcfSUweDsFuP7fBvI734O01nX7sO7kL9L6uZo2
-         M9OA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5IkJp9DRjjctTj4yQaRDfSKfYFKp/SZ4X/D7aiQqs+Q=;
+        b=OnTWGDupQD64VHCo/u9bL3+tiNJ2NIkF8cEeaaUnpJtO+P5kIqiefJgSrYjSAQ5HNz
+         zeZtIlycu0wL7LRVTip4mNsbSL1hjnsVQEy3zWE+B9sY0LapBpVzZ/+6gq0+JI2rTzur
+         SBDI4jkqc1RDp0gU221csn3ICYPAs7/r3jbJJ2jCXgnk31nJa6gCUjusVXjew91854Cx
+         UC7hqH6NpMzOZjQxrwc4mz8GE38Uq+Ok+vzFLgGL+us/CIBLsKjg2VKtv61aFhhZyBso
+         EXC2FT9JfKzqZznmrEBwWWyWJzHOUy/eo74s4PB33Ikc0gU12EboYZ8LlFOb8rQad+Jn
+         bfjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ra46f3mjSl5aJ0IfpF0sXUWJeJAxdmPhF+0FxDGLqmo=;
-        b=SOTKNUrcHDCHrE2vXdGVlJkN6EctXBS2lN4iH3lWkHly36CIO9SDBXDg1ITp2p0rpF
-         +0tzETeYj5Flf51NIAIIQkssZeBMYmgyFxgo6DvzFU4/H1nzc7bQvCItjfHDOaJKE7Dk
-         avdEERrc4FQBEQFecDt7LNkg8HKU0XIBj4oNvBeSBX3m1L7PhL6++1J6qZB6KHPjANn3
-         WIml6ElIgTQrskVc5cQ81KeGT+4T+JcfTW3UNgRNoymk/WE6BPcA7/uVf6syBYYBK/cx
-         XA4skGmslxQgFsXsy/49iEeY4Py4KbWeWFqTtP96WJBpUlJ6wmsF1Ct4ypirgNE78F/X
-         Za+g==
-X-Gm-Message-State: AOAM533S0kwaednXLlYBam3IIluts6z7GA5WpT7AVdUwPU3Utmztu8TA
-        A5Zk0ik0FNBTPHofRGz9cPNyUA9UDCU=
-X-Google-Smtp-Source: ABdhPJzI5LSSLk1Pv2eMlX+j0sGBm/W8MgGYJs0VcInu7QGObglymUk7enJUnJzPeWRtjh7Z1rN7mQ==
-X-Received: by 2002:a2e:a54f:: with SMTP id e15mr1417051ljn.115.1599145575811;
-        Thu, 03 Sep 2020 08:06:15 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id z12sm641253lfj.78.2020.09.03.08.06.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 08:06:15 -0700 (PDT)
-Subject: Re: [PATCH 1/1] Input: atmel_mxt_ts - implement I2C retries
-To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
-        dmitry.torokhov@gmail.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200821082254.16661-1-jiada_wang@mentor.com>
- <64c77ff9-6d20-abcf-f549-7d5c85fba28d@gmail.com>
- <2c8ed5c8-f95b-dce4-f964-ac16f12c3f20@mentor.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8a287e4b-6ed4-dfae-fedb-da343ee40126@gmail.com>
-Date:   Thu, 3 Sep 2020 18:06:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5IkJp9DRjjctTj4yQaRDfSKfYFKp/SZ4X/D7aiQqs+Q=;
+        b=Z0ZUtXrV2MDsVBZAOhNc2YdJaVKC53nepDeDd/DF1Er8EspOsXMwGge8Rii7ocx8Mc
+         16IcBJF5L2Dg2tiuffMdNxKzoLQ+5BiRULeHFbzlskF9TkJVMeHXtvsnY3HcWYj1D6Iq
+         RrFqnLr4Jf2xsesQ2tGiwjhLZh5XO7Mqz+PyWtbZnpZ3KpaR8YDywUyriGA6MOcSCGqm
+         YpzRA3Cr/dY3iQ0oiH54i7I/IprQe3e42YbFr7hN1b8vUUwdrx0wZD1zwEdo2etFiNe3
+         wU+3/xI4gv5r+Jj8lCQ8h7X2O0UDxYBrhIqktFBj8lqhej2tux10a79eR0Gc3myc/wDL
+         t48w==
+X-Gm-Message-State: AOAM530Zz3mttMqOkfhK/C5UagCs5hF0Uiv9WibnSgaGsCpYbc5YU/mR
+        j5M+7/1mHroUXUblfNsypD29f7imqqo3RnXBtc8=
+X-Google-Smtp-Source: ABdhPJwDdx3G0+9vSDmc/QFH9b0DWyx8r/HgJprZSkOT+jjXTTPq0AkqkkBKi/OhQnVgbF2lp97G9/OB66Ez2GN9K3o=
+X-Received: by 2002:a2e:1417:: with SMTP id u23mr1438912ljd.44.1599140866369;
+ Thu, 03 Sep 2020 06:47:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2c8ed5c8-f95b-dce4-f964-ac16f12c3f20@mentor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <ecfa135b7b83a31bed821ec0740ab3cf1d39da15.camel@ew.tq-group.com>
+ <20200903132241.GB4771@sirena.org.uk> <ce08696b6bf2b3eaa84d6f056f47a8240c7479f4.camel@ew.tq-group.com>
+In-Reply-To: <ce08696b6bf2b3eaa84d6f056f47a8240c7479f4.camel@ew.tq-group.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 3 Sep 2020 10:47:34 -0300
+Message-ID: <CAOMZO5DDhSJHj_PN4ckzYedV3mvNC1=+RvNT6TM2s-rE5iHxcQ@mail.gmail.com>
+Subject: Re: spi-imx: correct interpretation of num-cs DT property?
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-03.09.2020 17:44, Wang, Jiada пишет:
-> Hi Dmitry
-> 
-...
->> Is it really possible to get a positive ret != 2 from i2c_transfer()?
->>
->> Maybe it's better to keep the old code behaviour by returning the "ret"
->> value directly if it's not equal to ARRAY_SIZE(xfer)?
->>
-> I think, theoretically i2c_transfer() may return positive value but !=
-> number to transfer,
-> original behavior is,
-> when ret >= 0, it returns -EIO, when ret < 0, it just returns ret,
-> 
-> current behavior is, when ret != 2, it returns -EIO, after retry.
-> 
-> I am OK to change the behavior exactly as same original one.
+Hi Matthias,
 
-The comment to i2c_transfer() says that it either returns a error code
-or number of executed messages. But it's not clear to me what I2C driver
-could return 0 or 1 here and why.
+On Thu, Sep 3, 2020 at 10:40 AM Matthias Schiffer
+<matthias.schiffer@ew.tq-group.com> wrote:
 
-I think it indeed should be better to keep the original behaviour by
-propagating the actual error code whenever possible. It's probably not
-critical for this particular case, but in general it's always better to
-preserve the original error code.
+> As currently no in-tree DTs use the num-cs property for spi-imx and
+> it's not documented, should support for it be dropped from the driver
+> altogether?
+
+Yes, it makes sense to drop num-cs support from the spi-imx driver.
+
+Care to send a patch?
+
+Thanks
