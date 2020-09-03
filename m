@@ -2,145 +2,136 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A14C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78735C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B494E20758
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599137276;
-	bh=7gaII+6iRrPDWY4oYtQ2Q/wK8sLcSyyW/j7PoEAKdiE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fiac4x0wK9wdR8xxjMpgVllt9uHszuMp1ZQbwtP0oLG7T021fw5edRTvYtlXu/o+7
-	 KvYEHHkfIvmnjDf3aQ5S3Ll7dR+I6y3SI17adNNQS+f7RDWUUVqCif8JTuNViJJ79U
-	 sCjJrfuGyxBqwXn1+hBLyBUKBQHXwjCaQPKmg53o=
+	by mail.kernel.org (Postfix) with ESMTP id 3C6E12072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:49:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="l+VpGWun"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgICMrq (ORCPT
+        id S1728996AbgICMth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 08:47:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728838AbgICMhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 08:37:51 -0400
-Received: from linux-8ccs (p57a236d4.dip0.t-ipconnect.de [87.162.54.212])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 807A8206EB;
-        Thu,  3 Sep 2020 12:37:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599136667;
-        bh=7gaII+6iRrPDWY4oYtQ2Q/wK8sLcSyyW/j7PoEAKdiE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zpMR8uosbiNvWvtT58vIYQb6KJYN8YwsaeMipiu3bb5uTCfi12zkPOpFgcUgq+D6w
-         gV5rDJrdCXHXEyB9MQVAZyjNy9G5eECIEou9b3kK2bx/fkEGjf5uFhbPXt4HLlr13T
-         xdnPrND6Nw8NMyVcrdpjzc29YCAg89RkEcitC9hs=
-Date:   Thu, 3 Sep 2020 14:37:40 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Mark Rutland <mark.rutland@arm.com>, nd <nd@arm.com>
-Subject: Re: [PATCH v2] module: Harden STRICT_MODULE_RWX
-Message-ID: <20200903123739.GA11683@linux-8ccs>
-References: <CAMj1kXFfSLvujJYk4Em6T+UvAUDW3VX0BibsD43z30Q_TSsehg@mail.gmail.com>
- <20200812200019.GY3982@worktop.programming.kicks-ass.net>
- <CAMj1kXEn5o_7OOqgcntOPCqBYmpY74OkGqQ_bUBJvHG6Q9GVLA@mail.gmail.com>
- <20200813130422.GA16938@linux-8ccs>
- <CAMj1kXErCQYNN9r5siGNukc+9KC=QnER8LfFXVfbHdeDivYztg@mail.gmail.com>
- <20200821121959.GC20833@willie-the-truck>
- <CAMj1kXEyLMQz7+Fmv7i0FAu4x0uDmh7aUpbfuXaqs6k6XGog7w@mail.gmail.com>
- <20200821123036.GA21158@willie-the-truck>
- <20200831094651.GA16385@linux-8ccs>
- <CAK7LNARc1vjAV5ib1D0LaQA+rNGcE7YwGnp-MrshGD34_7V4WQ@mail.gmail.com>
+        Thu, 3 Sep 2020 08:49:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728893AbgICMid (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:38:33 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5C0C061246
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 05:38:33 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id e5so1723017qth.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 05:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=C2d6QG1IblDeyroVtS3hMSNO/LsvLyKHGpkVymmB4pg=;
+        b=l+VpGWunXGi10wTShVSflV5Z/zSRT8cCTRxA819xi63BVbtXqlDpnECjBDN7GsHK7z
+         or/7Sqa1wMEMzBpsWVzrxXsFMyFqiWbufjImu+VlfgkFRZCjpHcxErVTGWkswDasZfQr
+         6yWHvRV1b8AQlYNlt89QWL9z+Q4EZpOls6QyvVy3ESS8+f+aqBaB8vcShXcMkuM19NnG
+         p7mGV8w5kiUuRNUWzqMRO4W8fA5nR9arzaRRoe75UAP/QmfNfZLu/zF1Zi5HnyFyFN/I
+         XfCL0idn3B2DF1Z7l3CRyneOXAHtA0bZYF7e2xSkOuCf2ax+VpT3DVFrFYwQFzAhADRE
+         X7wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=C2d6QG1IblDeyroVtS3hMSNO/LsvLyKHGpkVymmB4pg=;
+        b=jHMW2wkVDzhYvOIV5pwBfHUacJpmciv3GaEWF98C8ddoyTy3fnD3zy9/MxGGjGjK8s
+         iF+WqUdj5wtlGlhkvNqmzV2YO/jKA99TqbkkTDJCztcRGmaStV5puEGnODIyYYmMMB5P
+         m0rQgMXhS/i1rAD7/qOoyB7yfGB8gz/7wZWPL4vGCXA0E6bzkP5yhgm17TNcjPpJMOPb
+         ARXEr0NAiPC/JxhaI/2CipaXDAsu+VqXTSf7bmgpT4Re6XubyCX2QdiWR00DPnW2b+vG
+         +OqcI3Azk0STPiC1zvCQtJ2OQu7KVsA+v5EEFe1Cp82FbQbSy3V/9kjXveS8O8vVru9i
+         T6tQ==
+X-Gm-Message-State: AOAM5334WjrqtkXceykAeAUJc/q/5ZcnUzffBd+Ofd2j1/2lrdIftbV/
+        YKEeO4YDprkaGlIEPDk/Nfa3sg==
+X-Google-Smtp-Source: ABdhPJzk9Vn1uJfPyBefi7iCXkdsWcTrDpZZF56VRUWX7CwcPp80tVcpXoqV9sLgSyT7IGuTrTs0uA==
+X-Received: by 2002:aed:2ce7:: with SMTP id g94mr3289809qtd.184.1599136711564;
+        Thu, 03 Sep 2020 05:38:31 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id r6sm2088194qkc.43.2020.09.03.05.38.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 05:38:30 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 08:38:25 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     skhan@linuxfoundation.org, sfr@canb.auug.org.au
+Cc:     brendanhiggins@google.com, urielguajardo@google.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-next@vger.kernel.org
+Subject: Re: [PATCH 2/2] kunit: ubsan integration
+Message-ID: <20200903123824.GA4225@lca.pw>
+References: <20200806174326.3577537-1-urielguajardojr@gmail.com>
+ <20200806174326.3577537-2-urielguajardojr@gmail.com>
+ <20200902125223.GA5676@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAK7LNARc1vjAV5ib1D0LaQA+rNGcE7YwGnp-MrshGD34_7V4WQ@mail.gmail.com>
-X-OS:   Linux linux-8ccs 5.5.0-lp150.12.61-default x86_64
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200902125223.GA5676@lca.pw>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Masahiro Yamada [31/08/20 19:42 +0900]:
-[snipped for brevity]
->Sorry for the delay.
->
->Please try the attached patch.
+On Wed, Sep 02, 2020 at 08:52:24AM -0400, Qian Cai wrote:
+> On Thu, Aug 06, 2020 at 05:43:26PM +0000, Uriel Guajardo wrote:
+> > Integrates UBSAN into the KUnit testing framework. It fails KUnit tests
+> > whenever it reports undefined behavior.
+> > 
+> > Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
+> 
+> It looks like this patch had been merged into linux-next but the "[PATCH 1/2]
+> kunit: support failure from dynamic analysis tools" did not. Hence, it caused a
+> compiling failure.
+> 
+> lib/ubsan.c: In function ‘ubsan_prologue’:
+> lib/ubsan.c:141:2: error: implicit declaration of function ‘kunit_fail_current_test’; did you mean ‘kunit_init_test’? [-Werror=implicit-function-declaration]
+>   kunit_fail_current_test();
+>   ^~~~~~~~~~~~~~~~~~~~~~~
+>   kunit_init_test
+> cc1: some warnings being treated as errors
 
-Hi Masahiro,
+Stephen, Shuah, can you revert this commit or pick up its dependency as well?
 
-Thank you for the patch. Sorry for the delay, I just wanted to report back
-after briefly testing your patch. It works great, at the moment I've only
-tested with arm64.
+https://lore.kernel.org/linux-kselftest/20200813205722.1384108-1-urielguajardojr@gmail.com/
 
-I made the following change to arch/arm64/include/asm/module.lds.h:
+Still seeing this on today's linux-next build.
 
-diff --git a/arch/arm64/include/asm/module.lds.h b/arch/arm64/include/asm/module.lds.h
-index 691f15af788e..d8e786e5fcdb 100644
---- a/arch/arm64/include/asm/module.lds.h
-+++ b/arch/arm64/include/asm/module.lds.h
-@@ -2,6 +2,8 @@
- SECTIONS {
-        .plt (NOLOAD) : { BYTE(0) }
-        .init.plt (NOLOAD) : { BYTE(0) }
-+#ifdef CONFIG_DYNAMIC_FTRACE
-        .text.ftrace_trampoline (NOLOAD) : { BYTE(0) }
-+#endif
- }
- #endif
-
-Since originally we wanted to include .text.ftrace_trampoline only conditionally.
-
-The resulting scripts/module.lds looks correct with CONFIG_DYNAMIC_FTRACE=y:
-
-SECTIONS {
- /DISCARD/ : {
-  *(.discard)
-  *(.discard.*)
- }
- __ksymtab 0 : { *(SORT(___ksymtab+*)) }
- __ksymtab_gpl 0 : { *(SORT(___ksymtab_gpl+*)) }
- __ksymtab_unused 0 : { *(SORT(___ksymtab_unused+*)) }
- __ksymtab_unused_gpl 0 : { *(SORT(___ksymtab_unused_gpl+*)) }
- __ksymtab_gpl_future 0 : { *(SORT(___ksymtab_gpl_future+*)) }
- __kcrctab 0 : { *(SORT(___kcrctab+*)) }
- __kcrctab_gpl 0 : { *(SORT(___kcrctab_gpl+*)) }
- __kcrctab_unused 0 : { *(SORT(___kcrctab_unused+*)) }
- __kcrctab_unused_gpl 0 : { *(SORT(___kcrctab_unused_gpl+*)) }
- __kcrctab_gpl_future 0 : { *(SORT(___kcrctab_gpl_future+*)) }
- .init_array 0 : ALIGN(8) { *(SORT(.init_array.*)) *(.init_array) }
- __jump_table 0 : ALIGN(8) { KEEP(*(__jump_table)) }
-}
-SECTIONS {
- .plt (NOLOAD) : { BYTE(0) }
- .init.plt (NOLOAD) : { BYTE(0) }
- .text.ftrace_trampoline (NOLOAD) : { BYTE(0) }
-} 
-
-And with CONFIG_DYNAMIC_FTRACE=n as well:
-
-SECTIONS {
- .plt (NOLOAD) : { BYTE(0) }
- .init.plt (NOLOAD) : { BYTE(0) }
-}
-
-I will test on more arches in the next days but in the meantime you could add my
-
-    Tested-by: Jessica Yu <jeyu@kernel.org>
-
-Thank you for working on this!
-
+> 
+> > ---
+> >  lib/ubsan.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/lib/ubsan.c b/lib/ubsan.c
+> > index cb9af3f6b77e..1460e2c828c8 100644
+> > --- a/lib/ubsan.c
+> > +++ b/lib/ubsan.c
+> > @@ -14,6 +14,7 @@
+> >  #include <linux/types.h>
+> >  #include <linux/sched.h>
+> >  #include <linux/uaccess.h>
+> > +#include <kunit/test.h>
+> >  
+> >  #include "ubsan.h"
+> >  
+> > @@ -137,6 +138,7 @@ static void ubsan_prologue(struct source_location *loc, const char *reason)
+> >  {
+> >  	current->in_ubsan++;
+> >  
+> > +	kunit_fail_current_test();
+> >  	pr_err("========================================"
+> >  		"========================================\n");
+> >  	pr_err("UBSAN: %s in %s:%d:%d\n", reason, loc->file_name,
+> > -- 
+> > 2.28.0.163.g6104cc2f0b6-goog
+> > 
