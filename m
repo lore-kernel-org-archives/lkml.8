@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529FDC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A09C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21D3620C09
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971DF2098B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:12:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="WqelfLXD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YWjVwqtQ"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="NALMT97F";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JS6xkdwg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgICIMf (ORCPT
+        id S1728796AbgICIMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:12:35 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:39287 "EHLO
+        Thu, 3 Sep 2020 04:12:39 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:57209 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727986AbgICICK (ORCPT
+        by vger.kernel.org with ESMTP id S1728362AbgICICO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:02:10 -0400
+        Thu, 3 Sep 2020 04:02:14 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 10D9B773;
-        Thu,  3 Sep 2020 04:02:02 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 08885C12;
+        Thu,  3 Sep 2020 04:02:04 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:02:02 -0400
+  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:02:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=qWv3080+04I3x
-        tFsr6akNZMKAgFUHWpEILEWQrHaXl4=; b=WqelfLXDNznqEKCHPkckhvq7jCWQ9
-        aFfbvgK0FoOttrA1Gd1aXg4t7jDq7CMR+VUeUudWSUGY2Hkum0uRc5CL46tBUb3Q
-        nAfuyWw+JOKMcirSnQGtnell5By+WN1XRZ9u2dy8vsYOh2RYXOtOq0PKlVZdxpx/
-        kfAxmJNGOzJNlPD+zfhiuid/iCpjYfSepUovmuEVoNDwdfSxuiGkxhquqrKcUH0H
-        w4Cl2i9+I458cH/Hlez3TGxca4jUbHY7t5NGCthU808abNF5mEFUWCbZEzoTxbOC
-        WrWSx9FGekKBufkx6ALn9nSadY1k8y4VnZVlPk7wX4LySEYsTSKaIpIbQ==
+        :mime-version:content-transfer-encoding; s=fm3; bh=MbKbjZVtrPcKB
+        rPCmTyxHT8CbImTkc6PM63S2vkc9lk=; b=NALMT97FMRQ4t9jjlRdwwr1h15s+t
+        WD3zx2D+qVtwjeMzuHIQx6GxZWBdrzM9v1Dccqru8MKDChal0kLfohdQ7KpwJ1hn
+        Nh3ebMXoBq6R2v0DE3YPpO5NzQ6iRbbO5VM4gMk7HbQw1hk/9K22Za1fWYxnvS1F
+        urHI+n0dBhCw5QeqVaGN5+OG44OLZapsDJdUmxFOsPviNn/8ZyZPiCulyukiFL0p
+        bp7Rfs98Ke/2urvEQLye7+xKZWYPQ7wcJro4yOkKre2ri/4cNas6UDAuaoo/QsC4
+        Qxg+iHD+bfYZyKCvByZ3mOwIqEjojk/Z90/m30a4eFdtrUIknle9IxmBA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=qWv3080+04I3xtFsr6akNZMKAgFUHWpEILEWQrHaXl4=; b=YWjVwqtQ
-        jWrFviJNnYB7RuJv+GS869qPgEPq2nexSQ3FXIfYhby8YQ2ee2jUJ/VMMADjHnS8
-        nzJ0SqvYNIu0qVbJcTe/8Yo429xCFt7yXWCmgm6RJqoO/gXca3UEpwAwRt9Yttm5
-        wlv80BoXaxVeVtleyJL5mWD85Jo7eS6DIxl8vBaZq89ywd2H6hFzLfuFAt02ZBMi
-        H9isCtKYtGHC0EIp8/M2wdCbEKvmFSuu8pYteUBlJ05Q2op6ki/1V4UWTZ8CNM7E
-        RsJWCBYGRDEXoqe29GU1q44ZOPN3WcrtwyBOuzhoFQ5nxJjLU93jUMtPvqJqYFbM
-        BLX6jrzVUFVd3w==
-X-ME-Sender: <xms:-aJQX0YCJLx8shUnfY7K33mAhLWwqp8D8n_V4Hewd1YGl2c7C8PE0g>
-    <xme:-aJQX_b33Yn9v4HNpK-BoMALOUL7MHmKPj78UTU56Ku0dRXR9mPL6iMmv54skGooF
-    mgfTWn5CwGxPa4CJsw>
+        fm3; bh=MbKbjZVtrPcKBrPCmTyxHT8CbImTkc6PM63S2vkc9lk=; b=JS6xkdwg
+        XUaMifoOYJkzxj+Pz1EUmm0iRHhvHoqiwaga+npOUXodaMJciUluRZbvHWsuzQrx
+        Wdc93WNTGAo/1bLwqZyLCyWFAkqvhZIK1XxrJPgFSOqcjxn7XrZZNAKUGT1OfVtC
+        SjCC5S79s3GA7KlWL2wBXvqrq9CQYkNRqmrS94HfIq/zTfyA5J0gACyMJeibh7d1
+        BZUbLLogfAmwke5kB7nNBlXIt/hSHAJqcLuZwvhyoSk7bgGjCGOaZrDuIHGfGQfb
+        29VB/7cthwoT1yHLR3k2pQyZ4sfMSFYam4EU9C7D3nxUwOxPiiBhH0UaAptxscrm
+        a7quN4K/CfGpNA==
+X-ME-Sender: <xms:_KJQX_NgHuLuz-ZiJXegGseBKRtUBtR1dsOulOZGdQ2bQsim3pcsyA>
+    <xme:_KJQX5-1A_QK6gqWp_ZaOlfye5udUcgeaxA46Z9BdXvm-9OFuGxVN30TPmRhxR201
+    bco4Svcm9lNJJLn_jI>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihi
     mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
     htthgvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveev
-    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedune
+    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpeeine
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:-aJQX-_vcQK4bgcq87i_xch7_5RMrmKjmnnFM3SZEyyPT3b-PRXlQw>
-    <xmx:-aJQX-pOSx-weiKZGYZYtduejF5PrSK0LAej8J77JfNRe-CYDCpD2w>
-    <xmx:-aJQX_qZ8uPxg264JBPY_KSpHYn3AZZKfO1lCgoUHB8x-_0eJ5apTw>
-    <xmx:-aJQX4RTKIm3kTM0yEmA0zx947TpIDsDhDoJLXWifKhy9i1rZVC2_WBuIMo>
+X-ME-Proxy: <xmx:_KJQX-SGtYJkHo9LNMnWX8fZxn25eCpzzKYsKvbH5NClHtswxLMgfw>
+    <xmx:_KJQXzuzjhU35tG72w75pTkk_bQlPaUJ9Qst82GzGrDJ8Gc2RFnbQg>
+    <xmx:_KJQX3cWcQPg9Tg9xFXMXGc15S7B1r3cWGB1jeFdVyFVSYug5nLlvg>
+    <xmx:_KJQX_3iXV8xNL73wrb0SERMd4l6lHKr9KeaAjwuiLZctWzoXqdyAaETpiU>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4B9D3306005B;
-        Thu,  3 Sep 2020 04:02:01 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3A82B306005F;
+        Thu,  3 Sep 2020 04:02:04 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -81,9 +81,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Hoegeun Kwon <hoegeun.kwon@samsung.com>,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH v5 05/80] drm/vc4: plane: Optimize the LBM allocation size
-Date:   Thu,  3 Sep 2020 10:00:37 +0200
-Message-Id: <b9e091883a4f7395c5b6a4f7c6070225934293db.1599120059.git-series.maxime@cerno.tech>
+Subject: [PATCH v5 07/80] drm/vc4: crtc: Deal with different number of pixel per clock
+Date:   Thu,  3 Sep 2020 10:00:39 +0200
+Message-Id: <18a3bb079981ba820132b37e736a4bb371234d2e.1599120059.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
 References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
@@ -94,58 +94,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Some of the HDMI pixelvalves in vc5 output two pixels per clock cycle.
+Let's put the number of pixel output per clock cycle in the CRTC data and
+update the various calculations to reflect that.
 
-The current code is using the maximum of the source line size and the
-destination line size to compute the size of the LBM to allocate.
-
-While this is simpler, it starts to be an issue with modes such as 4k with
-a quite long that will consume all the available memory, so we no longer
-have that luxury.
-
+Reviewed-by: Eric Anholt <eric@anholt.net>
 Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
 Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_plane.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 18 +++++++++++-------
+ drivers/gpu/drm/vc4/vc4_drv.h  |  3 +++
+ 2 files changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
-index d0771ebd5f75..23916814b4e3 100644
---- a/drivers/gpu/drm/vc4/vc4_plane.c
-+++ b/drivers/gpu/drm/vc4/vc4_plane.c
-@@ -437,10 +437,7 @@ static void vc4_write_ppf(struct vc4_plane_state *vc4_state, u32 src, u32 dst)
- static u32 vc4_lbm_size(struct drm_plane_state *state)
- {
- 	struct vc4_plane_state *vc4_state = to_vc4_plane_state(state);
--	/* This is the worst case number.  One of the two sizes will
--	 * be used depending on the scaling configuration.
--	 */
--	u32 pix_per_line = max(vc4_state->src_w[0], (u32)vc4_state->crtc_w);
-+	u32 pix_per_line;
- 	u32 lbm;
+diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
+index 6d8fa6118fc1..e55b2208b4b7 100644
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -235,6 +235,7 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
+ 	struct drm_encoder *encoder = vc4_get_crtc_encoder(crtc);
+ 	struct vc4_encoder *vc4_encoder = to_vc4_encoder(encoder);
+ 	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
++	const struct vc4_pv_data *pv_data = vc4_crtc_to_vc4_pv_data(vc4_crtc);
+ 	struct drm_crtc_state *state = crtc->state;
+ 	struct drm_display_mode *mode = &state->adjusted_mode;
+ 	bool interlace = mode->flags & DRM_MODE_FLAG_INTERLACE;
+@@ -242,6 +243,7 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
+ 	bool is_dsi = (vc4_encoder->type == VC4_ENCODER_TYPE_DSI0 ||
+ 		       vc4_encoder->type == VC4_ENCODER_TYPE_DSI1);
+ 	u32 format = is_dsi ? PV_CONTROL_FORMAT_DSIV_24 : PV_CONTROL_FORMAT_24;
++	u8 ppc = pv_data->pixels_per_clock;
  
- 	/* LBM is not needed when there's no vertical scaling. */
-@@ -448,6 +445,18 @@ static u32 vc4_lbm_size(struct drm_plane_state *state)
- 	    vc4_state->y_scaling[1] == VC4_SCALING_NONE)
- 		return 0;
+ 	/* Reset the PV fifo. */
+ 	CRTC_WRITE(PV_CONTROL, 0);
+@@ -249,17 +251,16 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
+ 	CRTC_WRITE(PV_CONTROL, 0);
  
-+	/*
-+	 * This can be further optimized in the RGB/YUV444 case if the PPF
-+	 * decimation factor is between 0.5 and 1.0 by using crtc_w.
-+	 *
-+	 * It's not an issue though, since in that case since src_w[0] is going
-+	 * to be greater than or equal to crtc_w.
-+	 */
-+	if (vc4_state->x_scaling[0] == VC4_SCALING_TPZ)
-+		pix_per_line = vc4_state->crtc_w;
-+	else
-+		pix_per_line = vc4_state->src_w[0];
+ 	CRTC_WRITE(PV_HORZA,
+-		   VC4_SET_FIELD((mode->htotal -
+-				  mode->hsync_end) * pixel_rep,
++		   VC4_SET_FIELD((mode->htotal - mode->hsync_end) * pixel_rep / ppc,
+ 				 PV_HORZA_HBP) |
+-		   VC4_SET_FIELD((mode->hsync_end -
+-				  mode->hsync_start) * pixel_rep,
++		   VC4_SET_FIELD((mode->hsync_end - mode->hsync_start) * pixel_rep / ppc,
+ 				 PV_HORZA_HSYNC));
 +
- 	if (!vc4_state->is_yuv) {
- 		if (vc4_state->y_scaling[0] == VC4_SCALING_TPZ)
- 			lbm = pix_per_line * 8;
+ 	CRTC_WRITE(PV_HORZB,
+-		   VC4_SET_FIELD((mode->hsync_start -
+-				  mode->hdisplay) * pixel_rep,
++		   VC4_SET_FIELD((mode->hsync_start - mode->hdisplay) * pixel_rep / ppc,
+ 				 PV_HORZB_HFP) |
+-		   VC4_SET_FIELD(mode->hdisplay * pixel_rep, PV_HORZB_HACTIVE));
++		   VC4_SET_FIELD(mode->hdisplay * pixel_rep / ppc,
++				 PV_HORZB_HACTIVE));
+ 
+ 	CRTC_WRITE(PV_VERTA,
+ 		   VC4_SET_FIELD(mode->crtc_vtotal - mode->crtc_vsync_end,
+@@ -761,6 +762,7 @@ static const struct vc4_pv_data bcm2835_pv0_data = {
+ 		.hvs_channel = 0,
+ 	},
+ 	.debugfs_name = "crtc0_regs",
++	.pixels_per_clock = 1,
+ 	.encoder_types = {
+ 		[PV_CONTROL_CLK_SELECT_DSI] = VC4_ENCODER_TYPE_DSI0,
+ 		[PV_CONTROL_CLK_SELECT_DPI_SMI_HDMI] = VC4_ENCODER_TYPE_DPI,
+@@ -772,6 +774,7 @@ static const struct vc4_pv_data bcm2835_pv1_data = {
+ 		.hvs_channel = 2,
+ 	},
+ 	.debugfs_name = "crtc1_regs",
++	.pixels_per_clock = 1,
+ 	.encoder_types = {
+ 		[PV_CONTROL_CLK_SELECT_DSI] = VC4_ENCODER_TYPE_DSI1,
+ 		[PV_CONTROL_CLK_SELECT_DPI_SMI_HDMI] = VC4_ENCODER_TYPE_SMI,
+@@ -783,6 +786,7 @@ static const struct vc4_pv_data bcm2835_pv2_data = {
+ 		.hvs_channel = 1,
+ 	},
+ 	.debugfs_name = "crtc2_regs",
++	.pixels_per_clock = 1,
+ 	.encoder_types = {
+ 		[PV_CONTROL_CLK_SELECT_DPI_SMI_HDMI] = VC4_ENCODER_TYPE_HDMI,
+ 		[PV_CONTROL_CLK_SELECT_VEC] = VC4_ENCODER_TYPE_VEC,
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
+index 6358f6ca8d56..0bc150daafb2 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.h
++++ b/drivers/gpu/drm/vc4/vc4_drv.h
+@@ -454,6 +454,9 @@ struct vc4_crtc_data {
+ struct vc4_pv_data {
+ 	struct vc4_crtc_data	base;
+ 
++	/* Number of pixels output per clock period */
++	u8 pixels_per_clock;
++
+ 	enum vc4_encoder_type encoder_types[4];
+ 	const char *debugfs_name;
+ 
 -- 
 git-series 0.9.1
