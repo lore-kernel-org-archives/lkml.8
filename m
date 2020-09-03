@@ -2,125 +2,90 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA87FC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C66C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A93622072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:39:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599111556;
-	bh=jAExD5YbN4NOCVCuOzux7zGEA6oKWHOZzpnXunrpQVQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JQqqw4XDYqNy3K/Kr6RJUzmTMscJkGxIhsZJgTBUuzBnOQZ0+NL0+oKaknn9Ed447
-	 32LNjfIClyL8E8gW/yCTMg2g2B2OR+c3cL8B/DJH798QVYfJCkJIpcc8PQv1EmZlin
-	 ELAAyYH+hFODB1EFup1F5G8j359k8n1bqy+PTmtY=
+	by mail.kernel.org (Postfix) with ESMTP id A43B42072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:39:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KoZafF31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgICFjP convert rfc822-to-8bit (ORCPT
+        id S1727943AbgICFjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 01:39:15 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43331 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgICFjN (ORCPT
+        Thu, 3 Sep 2020 01:39:20 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48534 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgICFjT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 01:39:13 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k15so1688051wrn.10;
-        Wed, 02 Sep 2020 22:39:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=cjA1SpxFdTarFmkqi5x6o7EpaRfJ1ZdEWfLV8+qCoTw=;
-        b=V+e64THtvZwl6wLV93JIn1EdEkTh1VPnryR3TOQEGt4WzvLsbO6inJ2oX8a++/xoEy
-         mNQLte6fMa4OOU0yWQ63y+L1FGV7ADlhiy5IVpoQwAH4fnxrF7P4WtilxOOF3w9erxSa
-         wb7CZa03p4kCv8k/jgSTo6BB2cRFhEpYY17BoIUUuFVyCBzAiqLRmwSHhiOabh82891e
-         0mWvMOuaBv0okUxmvrllL7oOPA+yYpMbIENJv+3XtNsjL/WkRPs4FPv88ZEVxWibEDI3
-         WykMIli6GsR1VRkmAGvI0oyvmfm++ufZ4+oG93qhxnIE8Ucbr/Kwfb/go5swpALo48bY
-         sM0g==
-X-Gm-Message-State: AOAM530qPh+JIhfbPsfh7QeR38Otae1sa9q18ODD68wMuSLigSOH/cwK
-        Ar2kRi1Z7nUdfdKu3lhc/yg=
-X-Google-Smtp-Source: ABdhPJzzxouJj0AiVAoYVXd6GYxpjH3humJ0K6tdJJ+HM3g/hLmKJVkO4jJwfiALZiApJbZ3FqXwiw==
-X-Received: by 2002:a5d:540a:: with SMTP id g10mr377991wrv.138.1599111550768;
-        Wed, 02 Sep 2020 22:39:10 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.106])
-        by smtp.googlemail.com with ESMTPSA id q8sm2590564wrx.79.2020.09.02.22.39.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Sep 2020 22:39:09 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 07:39:05 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     =?utf-8?B?TWljaGHFgsKgTWlyb3PFgmF3?= <mirq-linux@rere.qmqm.pl>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 11/11] mmc: host: Enable compile testing of multiple
- drivers
-Message-ID: <20200903053905.GA14577@kozik-lap>
-References: <20200902193658.20539-1-krzk@kernel.org>
- <20200902193658.20539-12-krzk@kernel.org>
- <20200902213227.GE1624@qmqm.qmqm.pl>
+        Thu, 3 Sep 2020 01:39:19 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0835cxci027992;
+        Thu, 3 Sep 2020 00:38:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599111539;
+        bh=F9qx02drHVcB8//fdoSXuY/MsTvAOdkkagWH+aAPtM4=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=KoZafF31vnIQDWV0+uLbXwLM4PqWr1uMwedrSsTrqSWyXNs5hoxrnXxDsvCU73HAj
+         cdm5LAtcLoWBOIbipbltSRgoRaoT05JFCIIrj/v+wXDqTGBEZVwz0qtM1XOXAzNEmF
+         ukzwWnqIdL1GZLesAIbxXBWOoua+RuZIqoMznDJ8=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0835cxFO101612;
+        Thu, 3 Sep 2020 00:38:59 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
+ 2020 00:38:59 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 3 Sep 2020 00:38:58 -0500
+Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0835cugY086414;
+        Thu, 3 Sep 2020 00:38:57 -0500
+Subject: Re: [PATCH v2] ARM: davinci: use simple i2c probe function
+To:     Wolfram Sang <wsa@kernel.org>, Stephen Kitt <steve@sk2.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200809172444.16019-1-steve@sk2.org>
+ <20200810093710.GD1290@kunai>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <72fa4547-355d-4c40-6857-4a957867b81c@ti.com>
+Date:   Thu, 3 Sep 2020 11:08:55 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200902213227.GE1624@qmqm.qmqm.pl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200810093710.GD1290@kunai>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 11:32:27PM +0200, Michał Mirosław wrote:
-> On Wed, Sep 02, 2020 at 09:36:58PM +0200, Krzysztof Kozlowski wrote:
-> > Multiple MMC host controller driver can be compile tested as they do not
-> > depend on architecture specific headers.
-> [...]
-> > --- a/drivers/mmc/host/Kconfig
-> > +++ b/drivers/mmc/host/Kconfig
-> > @@ -178,7 +178,7 @@ config MMC_SDHCI_OF_AT91
-> [...]
-> >  config MMC_MESON_GX
-> >  	tristate "Amlogic S905/GX*/AXG SD/MMC Host Controller support"
-> > -	depends on ARCH_MESON && MMC
-> > +	depends on MMC
-> > +	depends on ARCH_MESON|| COMPILE_TEST
-> [...]
-> >  config MMC_MOXART
-> >  	tristate "MOXART SD/MMC Host Controller support"
-> > -	depends on ARCH_MOXART && MMC
-> > +	depends on MMC
-> > +	depends on ARCH_MOXART || COMPILE_TEST
-> [...]
+On 10/08/20 3:07 PM, Wolfram Sang wrote:
+> On Sun, Aug 09, 2020 at 07:24:44PM +0200, Stephen Kitt wrote:
+>> The i2c probe functions here don't use the id information provided in
+>> their second argument, so the single-parameter i2c probe function
+>> ("probe_new") can be used instead.
+>>
+>> This avoids scanning the identifier tables during probes.
+>>
+>> Signed-off-by: Stephen Kitt <steve@sk2.org>
 > 
-> You can drop 'MMC' from depends as the whole tree is under 'if MMC' already.
+> This is useful, helps deprecating the old probe method:
+> 
+> Acked-by: Wolfram Sang <wsa@kernel.org>
 
-Right, thanks for feedback.
+Queued for v5.10.
 
-Best regards,
-Krzysztof
-
+Thanks,
+Sekhar
