@@ -2,138 +2,317 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACBBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F04C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E83352072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F8D92072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:11:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="L4YGoE2A"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FXzaei6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgICMJm (ORCPT
+        id S1728826AbgICMLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 08:09:42 -0400
-Received: from mail-eopbgr60080.outbound.protection.outlook.com ([40.107.6.80]:19173
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728718AbgICMEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 08:04:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DJ3IiwANLQm9uDKCAGP73gFlSmi1e+EwaqNUuaH8lbcUcdHRYzIua7wdhFlV3TkP+7LNwzPYr5DLbK4x1SWHX9orjHaCF12gSpOx9DTqLvL0+HMCtn8OKYwThGScIRg/+QZLl23Vn9FIDRQKj6Dmg17cUYL109RXWUYO0CTqMFYgEedlMc6K61k7N/d7TUk4P7P7JezjT4ZNOcQjOWtsDMJGst8tRr6sDBPH+HX9Mw2g1DssdR6sjG3CLUHkaASb2cYERvdrXqx+D85KMWWRR1PESZBdKRAJWUDaxH774rB0vjB78jtgMTlueR9n7ZO4p1wRU6nQYP8RiPH2b3bcQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=44L3ATpe61KH26FqXwzmKscuEVgRB4K/DVeTP0WRvY8=;
- b=cEHTEOwkW9ElIxszeArES96Eq5axz0JpJ/+6TvH9gswggLE64eF/JlWi+R/b3FmLjOdSv6gd5GlzfJInPOxyG/lak52v2UlpEYuNKmdsDt2R4Tm7hwaXoKbn7frrrMuZgHEzlxi5Z12SXw70BrKeTye0/VQ+0srxt8e6mUSHCk9ORuZpQcxQtZY58jlgJLuF1ofI42W1dduEDfxJS6Lppw/3ZBag4hX64lvvONqxwvxsLHp9N/3jPC5iYq7Zn9lpQ7fKzCZigQ/Mu/+zYa6RYGqEVIvpVym8/Hx5PRaFDhDD4+vsf6b7xMSTDKDwQvA+1M/rI11lG+8WeXBopJoovw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=44L3ATpe61KH26FqXwzmKscuEVgRB4K/DVeTP0WRvY8=;
- b=L4YGoE2Aw0D9zLm68wwfZ2+lBzh3htSCFTbL68Mum5Xvyr76ynLKGUNywgOiVNubZMLp+uaYuJPWMfw1puENUe6Nci8wZJ86EPQjxUbj/uWlXV+gvPmHBEwn8HvgES7PYmMk8hGh7ZCgkGWjdvSACdZSFC/VnVlo4+fmmo+4Y9w=
-Authentication-Results: st-md-mailman.stormreply.com; dkim=none (message not
- signed) header.d=none;st-md-mailman.stormreply.com; dmarc=none action=none
- header.from=nxp.com;
-Received: from VI1PR0402MB3712.eurprd04.prod.outlook.com
- (2603:10a6:803:1c::25) by VI1PR04MB5341.eurprd04.prod.outlook.com
- (2603:10a6:803:3d::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Thu, 3 Sep
- 2020 12:04:32 +0000
-Received: from VI1PR0402MB3712.eurprd04.prod.outlook.com
- ([fe80::2951:31f4:4e49:9895]) by VI1PR0402MB3712.eurprd04.prod.outlook.com
- ([fe80::2951:31f4:4e49:9895%5]) with mapi id 15.20.3326.025; Thu, 3 Sep 2020
- 12:04:32 +0000
-Subject: Re: [PATCH 2/4] crypto: caam - Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Chen Zhou <chenzhou10@huawei.com>,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-References: <20200902150530.14640-1-krzk@kernel.org>
- <20200902150530.14640-2-krzk@kernel.org>
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-Message-ID: <6c56dcc0-e8f7-744f-5a0e-3834c4b14c8a@nxp.com>
-Date:   Thu, 3 Sep 2020 15:04:26 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-In-Reply-To: <20200902150530.14640-2-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR02CA0002.eurprd02.prod.outlook.com
- (2603:10a6:208:3e::15) To VI1PR0402MB3712.eurprd04.prod.outlook.com
- (2603:10a6:803:1c::25)
+        Thu, 3 Sep 2020 08:11:15 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46902 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728760AbgICMGw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:06:52 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 083C4wCw114539;
+        Thu, 3 Sep 2020 12:04:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=kUOK0z/dR2RLJNvbuKgmrFMRH/00rLzLvd4jJintzwk=;
+ b=FXzaei6CCp23GboSeEUdmoo0Se9rKd16Gn9wbORMWtf0Kj+dlZF0fhZyGqzFR3bZZG3Z
+ C62awQTOzvOHIwpLVJD+E2icDrpnBbGbvm9/OdzUBhTbNcjzgNEXJH//ra3C05hHJa2p
+ 1SXRYxtt0cXy/qBskIotbQP+swqxWnz2mwq7IFtZXKqnoKb7RPFHv1h/F0E90ZiRQ3Vu
+ HHxoCLkZ0v9CBNxH0u48DqrW3M85hWg00hhYyvNy2crLOYs8ofQYwQH6V/WOyz89hslJ
+ Q6Kj3L1czue2FWzqZf3pYuhRaINk82GXgETMQwcHalK3jkqTmapwiJqUNSbhEhPdVtFg 3w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 337eer8ayu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 03 Sep 2020 12:04:58 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 083C4g1I077397;
+        Thu, 3 Sep 2020 12:04:55 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 3380x9s81u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Sep 2020 12:04:55 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 083C4qFx005866;
+        Thu, 3 Sep 2020 12:04:53 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 03 Sep 2020 05:04:51 -0700
+Date:   Thu, 3 Sep 2020 15:04:44 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] staging: media: atomisp: fix memory leak of object
+ flash
+Message-ID: <20200903120444.GA8299@kadam>
+References: <20200902165852.201155-1-colin.king@canonical.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.13] (86.127.128.228) by AM0PR02CA0002.eurprd02.prod.outlook.com (2603:10a6:208:3e::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Thu, 3 Sep 2020 12:04:29 +0000
-X-Originating-IP: [86.127.128.228]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3ec765f8-589e-4495-19a1-08d8500183a4
-X-MS-TrafficTypeDiagnostic: VI1PR04MB5341:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB5341C1940D501C3FA85F72AD8C2C0@VI1PR04MB5341.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1247;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cjNhAy6xJEbIS+3J/CapZcWZ4kK7GO1m0c0l/58AwmSvOoiLSzG44Q+c1xKODhYvmOADZY2AZLi0KSbEwoPqaJV8/H81qBxV0Lq4GEEg3rwqV8aQ4s642KLlsvddTwpacDvToTlTRk4w0TS23GAWEMXm5R6MmAgwJGyZFlQYFzrg+aSIBs2w0x0RqeAdETDD/opYwbCbcOSKaLMvK0mCDr3R+zUTZ84Xg9cNg7BnEw+EyDxtdzXBTpxN9dGYPm4TTw/FRzYZB9QAFf8u9qFW4hT3eXTpUNHmuT38w+tnbQ6KJT3N2expoB++05biOqqKSQfwIqSyBIVJJiM9RvHKH4/wMdZnD0whX+j74zRI4XbOxN79NwocpGx/J+aWRFnUez6A7saN3yAX+9OdobUq2g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3712.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(39860400002)(396003)(376002)(136003)(53546011)(36756003)(6666004)(2906002)(6486002)(86362001)(66556008)(5660300002)(26005)(66476007)(16576012)(66946007)(16526019)(4744005)(110136005)(31686004)(186003)(316002)(2616005)(478600001)(31696002)(956004)(44832011)(8936002)(7416002)(8676002)(83380400001)(52116002)(921003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: IVJuOR2EhQESMIHbw/xx5ZvQcrbEIJr9yynO9pl5Yav6jjGR/OMNT30RGnYlTVmdwbQZy1AoMIIeW85n3mHeLh5FxckCUu15fXUQnga/wq7VeZR0BXFHQT0VIavNZKAOoiB9uDP/FCjJ+1lGxzhL0Rxh/BbZ9UazlPY8NkJUTnQxqkARfVuLIPRB5l8e/3QFE5JC/qO1uUC20Yi00lKoWTyGbz4xSt2tumjvwoS1Rfa+gMHn5oPb4nTB1p5yTo8ps8wEVXOUxZjFiRAq3SJNLnxrBNb/sdlSMnKjXkLWNISv/IzASrwxQP+y+U+TsPtJIdDjP9ThfESL+Nf0DF6Q5G8Q7MD39b9bRxiUdeS3StTIU4/SNfalfWDTYfAufJnGANVhZzQg6uhuULHDNHe9ENNh8l78Iw0TwjWLzPJ3elQd+npVO/B+jhS5jSpmHKoZgvYVRQmikvUYz9VjAUt90JjaJ3tzHVFlBHLGj2OLwGVyG11loJkpXyEJYly3dTVr/ElrRLp6phYGkaYmbbe9tY67CyBQ7ooUfKcJqb02aLnySuAt6yL7OzIAyIzrUnEtGptjupgx1wSuZlufrBBfnuvh66BRwM3LpU3BYdm9mqjJRqDtw/+QbJJXRkTMeTCJbJQk5ofP1nSwh7OqkxHmYg==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ec765f8-589e-4495-19a1-08d8500183a4
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3712.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2020 12:04:31.6988
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oHh5VJsCj3H7N3l0H3S+VUMSrJkkeJLRU0cj12wnF+e2pKb7WobeqSgpGCETiPfMBEDFU7V9dDwAYT7LytSyMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5341
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200902165852.201155-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=2 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009030114
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
+ phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=2
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009030113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/2020 6:05 PM, Krzysztof Kozlowski wrote:
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and the error value gets printed.
+On Wed, Sep 02, 2020 at 05:58:52PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+> In the case where the call to lm3554_platform_data_func returns an
+> error there is a memory leak on the error return path of object
+> flash.  Fix this by adding an error return path that will free
+> flash and rename labels fail2 to fail3 and fail1 to fail2.
 
-> ---
->   drivers/crypto/caam/caamalg_qi2.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
-> index 0441e4ff2df2..076c6b04bea9 100644
-> --- a/drivers/crypto/caam/caamalg_qi2.c
-> +++ b/drivers/crypto/caam/caamalg_qi2.c
-> @@ -5115,8 +5115,7 @@ static int dpaa2_caam_probe(struct fsl_mc_device *dpseci_dev)
->   	/* DPIO */
->   	err = dpaa2_dpseci_dpio_setup(priv);
->   	if (err) {
-> -		if (err != -EPROBE_DEFER)
-> -			dev_err(dev, "dpaa2_dpseci_dpio_setup() failed\n");
-> +		dev_err_probe(dev, err, "dpaa2_dpseci_dpio_setup() failed\n");
->   		goto err_dpio_setup;
->   	}
->   
-> 
+Colin, I know you know this and I don't want to explain things which you
+already know but this for the other people in Kernel Janitors.
+
+The error handling in this function is still pretty messed up.  Why
+does it "goto fail2" if media_entity_pads_init() fails?  There is no
+clean up if atomisp_register_i2c_module() fails.
+
+It's just better to re-write it using the "free the most recent
+allocation" system.  The key to the system is if the last allocation
+was "flash" then the goto should be something like "goto free_flash;"
+so that we know it does the right thing.
+
+One of the advantages of the this system is that it basically writes the
+->remove() for you.  All we have to do is add one more line to free the
+final allocation from the probe function.  In this driver the lm3554_remove()
+has a few things which aren't cleaned up in the probe error handling so
+it doesn't seem right.  For example, we need to delete the timer.
+
+   834  static int lm3554_probe(struct i2c_client *client)
+   835  {
+   836          int err = 0;
+   837          struct lm3554 *flash;
+   838          unsigned int i;
+   839          int ret;
+
+We have both "ret" and "err".  It causes bugs where ever "ret" is used
+below.  Let's delete "err".
+
+   840  
+   841          flash = kzalloc(sizeof(*flash), GFP_KERNEL);
+   842          if (!flash)
+   843                  return -ENOMEM;
+
+"flash" is allocated.
+
+   844  
+   845          flash->pdata = lm3554_platform_data_func(client);
+   846          if (IS_ERR(flash->pdata))
+   847                  return PTR_ERR(flash->pdata);
+
+	if (IS_ERR(flash->pdata)) {
+		ret = PTR_ERR(flash->pdata);
+		goto free_flash;
+	}
+
+The lm3554_platform_data_func() function doesn't allocate anything so
+"flash" is still the most recent allocation.
+
+   848  
+   849          v4l2_i2c_subdev_init(&flash->sd, client, &lm3554_ops);
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+I think this needs to be unwound with the v4l2_device_unregister_subdev()
+function.  I'm not totally sure.  But that's how the existing code works
+so let's keep it as-is.  Meaning that "subdev" is the most recent
+allocation.
+
+   850          flash->sd.internal_ops = &lm3554_internal_ops;
+   851          flash->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+   852          flash->mode = ATOMISP_FLASH_MODE_OFF;
+   853          flash->timeout = LM3554_MAX_TIMEOUT / LM3554_TIMEOUT_STEPSIZE - 1;
+   854          ret =
+   855              v4l2_ctrl_handler_init(&flash->ctrl_handler,
+   856                                     ARRAY_SIZE(lm3554_controls));
+   857          if (ret) {
+   858                  dev_err(&client->dev, "error initialize a ctrl_handler.\n");
+   859                  goto fail2;
+   860          }
+
+This becomes "goto unregister_subdev;".  In the original code the goto
+fail2 freed the handler, which is harmless but unnecessary.
+"flash->ctrl_handler" is now the most recent allocated.
+
+   861  
+   862          for (i = 0; i < ARRAY_SIZE(lm3554_controls); i++)
+   863                  v4l2_ctrl_new_custom(&flash->ctrl_handler, &lm3554_controls[i],
+   864                                       NULL);
+   865  
+   866          if (flash->ctrl_handler.error) {
+   867                  dev_err(&client->dev, "ctrl_handler error.\n");
+   868                  goto fail2;
+
+Missing error code.
+
+	if (flash->ctrl_handler.error) {
+		dev_err(&client->dev, "ctrl_handler error.\n");
+		ret = flash->ctrl_handler.error;
+		goto free_handler;
+	}
+
+I don't think the v4l2_ctrl_new_custom() needs to be unwound so
+"flash->ctrl_handler" is still the most recent allocation.
+
+   869          }
+   870  
+   871          flash->sd.ctrl_handler = &flash->ctrl_handler;
+   872          err = media_entity_pads_init(&flash->sd.entity, 0, NULL);
+   873          if (err) {
+   874                  dev_err(&client->dev, "error initialize a media entity.\n");
+   875                  goto fail1;
+   876          }
+
+This goto leaks handler.  I suspect the reason is that the original
+coder didn't want to call media_entity_cleanup() if media_entity_pads_init()
+failed.  The media_entity_cleanup() function doesn't do anything.  We
+added it as stub function in 2009 but have was never used it.  The
+comments say "It must be called during the cleanup phase after
+unregistering the entity and before freeing it."  We haven't
+unregistered anything here but we are freeing something.  ¯\_(ツ)_/¯
+
+Anyway calling media_entity_cleanup() is harmless:
+
+	goto free_handler;
+
+   877  
+   878          flash->sd.entity.function = MEDIA_ENT_F_FLASH;
+   879  
+   880          mutex_init(&flash->power_lock);
+   881  
+   882          timer_setup(&flash->flash_off_delay, lm3554_flash_off_delay, 0);
+
+The timer will need to be deleted in the cleanup.  It's now the most
+recent allocation.
+
+   883  
+   884          err = lm3554_gpio_init(client);
+   885          if (err) {
+   886                  dev_err(&client->dev, "gpio request/direction_output fail");
+   887                  goto fail2;
+
+goto del_timer;
+
+gpio_init is now the most recent allocation.
+
+   888          }
+   889          return atomisp_register_i2c_module(&flash->sd, NULL, LED_FLASH);
+
+
+	ret = atomisp_register_i2c_module(&flash->sd, NULL, LED_FLASH);
+	if (ret)
+		goto gpio_uninit;
+
+   890  fail2:
+   891          media_entity_cleanup(&flash->sd.entity);
+   892          v4l2_ctrl_handler_free(&flash->ctrl_handler);
+   893  fail1:
+   894          v4l2_device_unregister_subdev(&flash->sd);
+   895          kfree(flash);
+   896  
+   897          return err;
+   898  }
+
+
+Now the error handling look like:
+
+	return 0;
+
+gpio_uninit:
+	lm3554_gpio_uninit(client);
+del_timer:
+	del_timer_sync(&flash->flash_off_delay);
+free_handler:
+	media_entity_cleanup(&flash->sd.entity);
+	v4l2_ctrl_handler_free(&flash->ctrl_handler);
+unregister_subdev:
+	v4l2_device_unregister_subdev(&flash->sd);
+free_flash:
+	kfree(flash);
+
+	return ret;
+
+Then to generate the remove function we have to cleanup we would
+normally a something like atomisp_unregister_i2c_module() but there is
+no way to unregister that.  So just take the error handling code and
+remove the labels.  Done!
+
+static int lm3554_remove(struct i2c_client *client)
+{
+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+	struct lm3554 *flash = to_lm3554(sd);
+	int ret;
+
+	// FIXME: unregister i2c module
+	ret = lm3554_gpio_uninit(client);
+	if (ret)
+		dev_err(&client->dev, "gpio request/direction_output fail");
+	del_timer_sync(&flash->flash_off_delay);
+	media_entity_cleanup(&flash->sd.entity);
+	v4l2_ctrl_handler_free(&flash->ctrl_handler);
+	v4l2_device_unregister_subdev(&flash->sd);
+	kfree(flash);
+}
+
+   899  
+   900  static int lm3554_remove(struct i2c_client *client)
+   901  {
+   902          struct v4l2_subdev *sd = i2c_get_clientdata(client);
+   903          struct lm3554 *flash = to_lm3554(sd);
+   904          int ret;
+   905  
+   906          media_entity_cleanup(&flash->sd.entity);
+   907          v4l2_ctrl_handler_free(&flash->ctrl_handler);
+   908          v4l2_device_unregister_subdev(sd);
+   909  
+   910          atomisp_gmin_remove_subdev(sd);
+   911  
+   912          del_timer_sync(&flash->flash_off_delay);
+   913  
+   914          ret = lm3554_gpio_uninit(client);
+   915          if (ret < 0)
+   916                  goto fail;
+   917  
+   918          kfree(flash);
+   919  
+   920          return 0;
+   921  fail:
+   922          dev_err(&client->dev, "gpio request/direction_output fail");
+   923          return ret;
+   924  }
+
+regards,
+dan carpenter
