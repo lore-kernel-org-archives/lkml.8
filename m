@@ -2,180 +2,131 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FEEC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5E8C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2FF20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB56A2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:05:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QP5b21vA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qE6o2n8H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729430AbgICPFM (ORCPT
+        id S1729098AbgICPFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:05:12 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33950 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729002AbgICN6Q (ORCPT
+        Thu, 3 Sep 2020 11:05:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729014AbgICN6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 09:58:16 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083DPoom115466;
-        Thu, 3 Sep 2020 08:25:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599139550;
-        bh=AdVba5dvU+UA3YkUl7bYkqrAbMHpmT7cr+MbTs7OoEE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QP5b21vAK8yefGssR4I1g643HnK8rfcwR66tWhgRIgOYOEg4vOa0Na6zUNlSxHCcw
-         guwGq2XRRUU75JKwjv9G1cR4KU+3QOjbw7AWfAVXoct65kUS4nxgWz0AaTGARjnvBg
-         DWQ2PsSQUDgDd2ozfPEbT0mx8MyL2BB1hAK1j99I=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083DPnRb070019
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Sep 2020 08:25:50 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
- 2020 08:25:48 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 3 Sep 2020 08:25:48 -0500
-Received: from [10.250.71.39] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083DPlPj007255;
-        Thu, 3 Sep 2020 08:25:47 -0500
-Subject: Re: [RESEND PATCH v2] mfd: syscon: Use a unique name with
- regmap_config
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
-        David Lechner <david@lechnology.com>,
-        Tony Lindgren <tony@atomide.com>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Roger Quadros <rogerq@ti.com>, <kernel-team@android.com>
-References: <20200727211008.24225-1-s-anna@ti.com>
- <0c1feaf91b9d285c1bded488437705da@misterjones.org>
- <74bc1f9f-cc48-cec9-85f4-3376b66b40fc@ti.com>
- <78b465b080772b6ba867e39a623c2310@kernel.org>
- <ef1931eb-5677-d92c-732d-b67b5263425d@ti.com>
- <0d43f357983711fcffce7023ad115d13@kernel.org>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <b378af0d-19a8-3d1b-5ca3-54ebccd77c9b@ti.com>
-Date:   Thu, 3 Sep 2020 08:25:47 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 3 Sep 2020 09:58:15 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED08C061249;
+        Thu,  3 Sep 2020 06:10:14 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id h12so2098016pgm.7;
+        Thu, 03 Sep 2020 06:10:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/WIT3+UL+FpungvYV1D9IfW97J9W5tsesmZlOnRL4KU=;
+        b=qE6o2n8HJKYzr8LQaFzdJ57s8ECaNNIEBAKj+FvAXWdE+VE/mTIGhjc4Qg4zlvXooF
+         s7PLRYxjyADHCtuiPGQ7aryX95MmnRUj8GlEn8M+qW1Vqac7RM+TAFtNZZnjTUlILZbr
+         n9WUYcuXzPQyao1h0l7bXfN3uVvH10bfG/RxxTBugi38UTqmzBO4RkjFvJJ1ieGMrx1r
+         vEg7/JHmsKK2WQYAZumSLzZFWRFiJl+8/3eGdCa6oFziFGQkJXbAEfwMLwriWQFCnh3L
+         zHXJmVCa8f2oqPOTdWqCc7Iq8Uxf20oK56b2aUOJ6k5u/kuJQUHbub6wVWxBtp2paj92
+         pi4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/WIT3+UL+FpungvYV1D9IfW97J9W5tsesmZlOnRL4KU=;
+        b=ksqpTF44Hzu0MjGFc09TwnSDYD9rYNGrFYa8uTKdb9ecpAu/K0XX72FJfya5RttpnW
+         svI88iAicil1uQ+YO8XGYTcnZ47XIKSVjCaPDZsZoYKOUsO4JJGFzwD8Fiza5qL4y07c
+         pdBRlg/q12ZZT6Qm8h3t2eZ++TK/3BuIemOLbU52VYvktAjapNZkqGbgk60GguUjJY0u
+         CsM+OzKRcMftTOeE//3BWidTBbn+Qbodk2LNW8opjSESkH45MTLHvJqLJVcsR0lmMgUh
+         +ALKxandphQ7IFR5L8tg27QySKEh0/wNbxSBcZXh22j24AxP+ano+cWW7tUQks7rS82D
+         SPlA==
+X-Gm-Message-State: AOAM533aEEkUuWiJmgCS5VyBFf4J+dG6jGsWnzyssKrsjq2ku+m3k1zH
+        vredohjE55242g/eWfeY/u8=
+X-Google-Smtp-Source: ABdhPJwninxVNGhpsTohv0jmInMy1KARspw9LnVSe+jAaMtNOlAQj38XIlfkUm5bYScFOYFA/RnRcw==
+X-Received: by 2002:a63:fb4a:: with SMTP id w10mr2877677pgj.114.1599138614380;
+        Thu, 03 Sep 2020 06:10:14 -0700 (PDT)
+Received: from nish-HP-Pavilion ([2409:4072:6085:e35d:a526:a3b6:4686:f6fb])
+        by smtp.gmail.com with ESMTPSA id d20sm2538270pjv.39.2020.09.03.06.10.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 06:10:13 -0700 (PDT)
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+To:     jic23@kernel.org, robh+dt@kernel.org
+Cc:     dragos.bogdan@analog.com, darius.berghe@analog.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, andy.shevchenko@gmail.com,
+        Nishant Malpani <nish.malpani25@gmail.com>
+Subject: [PATCH v2 3/3] iio: gyro: adxrs290: Add debugfs register access support
+Date:   Thu,  3 Sep 2020 18:39:50 +0530
+Message-Id: <20200903130950.6274-4-nish.malpani25@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200903130950.6274-1-nish.malpani25@gmail.com>
+References: <20200903130950.6274-1-nish.malpani25@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <0d43f357983711fcffce7023ad115d13@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/20 3:26 AM, Marc Zyngier wrote:
-> On 2020-08-27 21:32, Suman Anna wrote:
->> Hi Marc,
->>
->> + Mark Brown
->>
->> On 8/27/20 3:06 PM, Marc Zyngier wrote:
->>> Hi Suman,
->>>
->>> On 2020-08-27 19:28, Suman Anna wrote:
->>>> Hi Marc,
->>>>
->>>> On 8/27/20 9:46 AM, Marc Zyngier wrote:
-> 
-> [...]
-> 
->>>>> This patch triggers some illegal memory accesses when debugfs is
->>>>> enabled, as regmap does rely on config->name to be persistent
->>>>> when the debugfs registration is deferred via regmap_debugfs_early_list
->>>>> (__regmap_init() -> regmap_attach_dev() -> regmap_debugfs_init()...),
->>>>> leading to a KASAN splat on demand.
->>>>>
->>>>
->>>> Thanks, I missed the subtlety around the debugfs registration.
->>>>
->>>>> I came up with the following patch that solves the issue for me.
->>>>>
->>>>> Thanks,
->>>>>
->>>>>         M.
->>>>>
->>>>> From fd3f5f2bf72df53be18d13914fe349a34f81f16b Mon Sep 17 00:00:00 2001
->>>>> From: Marc Zyngier <maz@kernel.org>
->>>>> Date: Thu, 27 Aug 2020 14:45:34 +0100
->>>>> Subject: [PATCH] mfd: syscon: Don't free allocated name for regmap_config
->>>>>
->>>>> The name allocated for the regmap_config structure is freed
->>>>> pretty early, right after the registration of the MMIO region.
->>>>>
->>>>> Unfortunately, that doesn't follow the life cycle that debugfs
->>>>> expects, as it can access the name field long after the free
->>>>> has occured.
->>>>>
->>>>> Move the free on the error path, and keep it forever otherwise.
->>>>
->>>> Hmm, this is exactly what I was trying to avoid. The regmap_init does duplicate
->>>> the name into map->name if config->name is given, and the regmap debugfs makes
->>>> another copy of its own into debugfs_name when actually registered. If the
->>>> rules
->>>> for regmap_init is that the config->name should be persistent, then I guess we
->>>> have no choice but to go with the below fix.
->>>>
->>>> Does something like below help?
->>>>
->>>> diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
->>>> index e93700af7e6e..96d8a0161c89 100644
->>>> --- a/drivers/base/regmap/regmap.c
->>>> +++ b/drivers/base/regmap/regmap.c
->>>> @@ -1137,7 +1137,7 @@ struct regmap *__regmap_init(struct device *dev,
->>>>                 if (ret != 0)
->>>>                         goto err_regcache;
->>>>         } else {
->>>> -               regmap_debugfs_init(map, config->name);
->>>> +               regmap_debugfs_init(map, map->name);
->>>>
->>>> But there are couple of other places in regmap code that uses config->name, but
->>>> those won't be exercised with the syscon code.
->>>
->>> Is config->name always the same as map->name? If so, why don't you just
->>> pass map once and for all? Is the lifetime of map->name the same as
->>> that of config->name?
->>
->> map->name is created (kstrdup_const) from config->name if not NULL, so above
->> replacement should be exactly equivalent, map is filled in _regmap_init. But it
->> does make the regmap_debugfs_init callsites in the file look dissimilar.
->>
->>>
->>> My worry with this approach is that we start changing stuff in a rush,
->>> and this would IMHO deserve a thorough investigation of whether this
->>> change is actually safe.
->>>
->>> I'd rather take the safe approach of either keeping the memory around
->>> until we clearly understand what the implications are (and probably
->>> this should involve the regmap maintainer), or to revert this patch
->>> until we figure out the actual life cycle of the various names.
->>
->> Yeah, agreed. Let's see what Mark suggests.
->>
->> Mark,
->> Can you clarify the lifecycle expectations on the config->name and do you have
->> any suggestions here?
-> 
-> Have we reached a conclusion here? Can we get a fix in mainline?
+Extend support to read/write byte data from/to the device using
+debugfs iio interface.
 
-Marc, we can go with your patch based on Mark's response.
+Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+---
 
-regards
-Suman
+No changes in v2
+---
+ drivers/iio/gyro/adxrs290.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/drivers/iio/gyro/adxrs290.c b/drivers/iio/gyro/adxrs290.c
+index 4099b8917d3e..132fd16789f0 100644
+--- a/drivers/iio/gyro/adxrs290.c
++++ b/drivers/iio/gyro/adxrs290.c
+@@ -434,6 +434,24 @@ static int adxrs290_read_avail(struct iio_dev *indio_dev,
+ 	}
+ }
+ 
++static int adxrs290_reg_access(struct iio_dev *indio_dev, unsigned int reg,
++			       unsigned int writeval, unsigned int *readval)
++{
++	struct adxrs290_state *st = iio_priv(indio_dev);
++	int ret;
++
++	if (!readval)
++		return adxrs290_spi_write_reg(st->spi, reg, writeval);
++
++	ret = spi_w8r8(st->spi, ADXRS290_READ_REG(reg));
++	if (ret < 0)
++		return ret;
++
++	*readval = ret;
++
++	return 0;
++}
++
+ static int adxrs290_data_rdy_trigger_set_state(struct iio_trigger *trig, bool state)
+ {
+ 	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
+@@ -546,6 +564,7 @@ static const struct iio_info adxrs290_info = {
+ 	.read_raw = &adxrs290_read_raw,
+ 	.write_raw = &adxrs290_write_raw,
+ 	.read_avail = &adxrs290_read_avail,
++	.debugfs_reg_access = &adxrs290_reg_access,
+ };
+ 
+ static int adxrs290_probe_trigger(struct iio_dev *indio_dev)
+-- 
+2.20.1
+
