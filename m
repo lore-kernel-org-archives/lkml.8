@@ -2,204 +2,154 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868B2C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1826C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51A0E215A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E62D2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbgICOEi (ORCPT
+        id S1729088AbgICOFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:04:38 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2749 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728896AbgICMj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 08:39:59 -0400
-Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 29141399132D7AEC7E2C;
-        Thu,  3 Sep 2020 13:39:58 +0100 (IST)
-Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.93.187) by
- lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Thu, 3 Sep 2020 13:39:57 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <helgaas@kernel.org>, <bp@alien8.de>, <james.morse@arm.com>,
-        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>, <lenb@kernel.org>,
-        <tony.luck@intel.com>, <dan.carpenter@oracle.com>,
-        <andriy.shevchenko@linux.intel.com>
-CC:     <yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
-        <tanxiaofei@huawei.com>, <linuxarm@huawei.com>
-Subject: [PATCH v15 1/2] ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records
-Date:   Thu, 3 Sep 2020 13:34:55 +0100
-Message-ID: <20200903123456.1823-2-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20200903123456.1823-1-shiju.jose@huawei.com>
-References: <20200903123456.1823-1-shiju.jose@huawei.com>
+        Thu, 3 Sep 2020 10:05:05 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41182 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728788AbgICMjl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:39:41 -0400
+Received: by mail-oi1-f196.google.com with SMTP id 2so2945706ois.8;
+        Thu, 03 Sep 2020 05:39:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5bmZl5dewM0LfN2Vd/uTPl9Sbm07TZQjqrLN7VKwBa0=;
+        b=dWi4D+dSE4sr0NjIrS47/WYD6RcbnT69FWqkeQsCZYHoS1/DVXl8bw5Xy5NxFGbu72
+         5msLTgmghf1qmnWqWQaqbA+ApGl6f3zgrBu7YxTlB//91muAtZU4tQCGKV/cJD1Nb5B3
+         nIPr2fJQVoFHMFxvykS/4aSAXGJPDRsTQvmbWNetQzqiHyNxv7idaTrdsaBK5inAL3gi
+         FPo8lY88GoGa9GZXCGbtoI8ewY0BQHTPcDgSK3l8TnrjibFM3ApPloTPBUlAVwbvOjIx
+         QoLWAHSzsSAgq/8XUUtVbCplQE83pOxYWJ8foPi1BxoHZ/57ltQji1RA8MJWe78iXWCy
+         uFIg==
+X-Gm-Message-State: AOAM532CKES2Ml4YLjJMnUTha3DMNourb7gOPK1SNl2M9dLYVKvqiLzz
+        /zEB8gopVgAsFtoKoTraKJ6q/RzZpGQgHMADdiA=
+X-Google-Smtp-Source: ABdhPJy1/sdSoJipDH2zAn63gAkE5ka8nPP+P8VYe40HBdY0l6jOfQEjhBLbTclJeIqB4Fw49mMpUX4/d8R3pxkt4ds=
+X-Received: by 2002:aca:b742:: with SMTP id h63mr1799607oif.148.1599136780383;
+ Thu, 03 Sep 2020 05:39:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.47.93.187]
-X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
- lhreml715-chm.china.huawei.com (10.201.108.66)
-X-CFilter-Loop: Reflected
+References: <20200827145315.26261-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200827145315.26261-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200827145315.26261-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 3 Sep 2020 14:39:29 +0200
+Message-ID: <CAMuHMdUKMr+uaXYXyRrJS+HZT93H5LiPoPRcmjNj9Pph7RVnPQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: r8a774e1: Add cpuidle support
+ for CA5x cores
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CPER records describing a firmware-first error are identified by GUID.
-The ghes driver currently logs, but ignores any unknown CPER records.
-This prevents describing errors that can't be represented by a standard
-entry, that would otherwise allow a driver to recover from an error.
-The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
-version 2.8).
+Hi Prabhakar,
 
-Add a notifier chain for these non-standard/vendor-records. Callers
-must identify their type of records by GUID.
+On Thu, Aug 27, 2020 at 4:53 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Enable cpuidle (core shutdown) support for RZ/G2H CA5x cores.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Record data is copied to memory from the ghes_estatus_pool to allow
-us to keep it until after the notifier has run.
+> --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> @@ -127,6 +127,7 @@
+>                         power-domains = <&sysc R8A774E1_PD_CA57_CPU0>;
+>                         next-level-cache = <&L2_CA57>;
+>                         enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_0>;
+>                         dynamic-power-coefficient = <854>;
+>                         clocks = <&cpg CPG_CORE R8A774E1_CLK_Z>;
+>                         operating-points-v2 = <&cluster0_opp>;
+> @@ -141,6 +142,7 @@
+>                         power-domains = <&sysc R8A774E1_PD_CA57_CPU1>;
+>                         next-level-cache = <&L2_CA57>;
+>                         enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_0>;
+>                         clocks = <&cpg CPG_CORE R8A774E1_CLK_Z>;
+>                         operating-points-v2 = <&cluster0_opp>;
+>                         capacity-dmips-mhz = <1024>;
+> @@ -154,6 +156,7 @@
+>                         power-domains = <&sysc R8A774E1_PD_CA57_CPU2>;
+>                         next-level-cache = <&L2_CA57>;
+>                         enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_0>;
+>                         clocks = <&cpg CPG_CORE R8A774E1_CLK_Z>;
+>                         operating-points-v2 = <&cluster0_opp>;
+>                         capacity-dmips-mhz = <1024>;
+> @@ -167,6 +170,7 @@
+>                         power-domains = <&sysc R8A774E1_PD_CA57_CPU3>;
+>                         next-level-cache = <&L2_CA57>;
+>                         enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_1>;
 
-Co-developed-by: James Morse <james.morse@arm.com>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- drivers/acpi/apei/ghes.c | 63 ++++++++++++++++++++++++++++++++++++++++
- include/acpi/ghes.h      | 18 ++++++++++++
- 2 files changed, 81 insertions(+)
+CPU_SLEEP_0
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 81bf71b10d44..99df00f64306 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -79,6 +79,12 @@
- 	((struct acpi_hest_generic_status *)				\
- 	 ((struct ghes_estatus_node *)(estatus_node) + 1))
- 
-+#define GHES_VENDOR_ENTRY_LEN(gdata_len)                               \
-+	(sizeof(struct ghes_vendor_record_entry) + (gdata_len))
-+#define GHES_GDATA_FROM_VENDOR_ENTRY(vendor_entry)                     \
-+	((struct acpi_hest_generic_data *)                              \
-+	((struct ghes_vendor_record_entry *)(vendor_entry) + 1))
-+
- /*
-  *  NMI-like notifications vary by architecture, before the compiler can prune
-  *  unused static functions it needs a value for these enums.
-@@ -123,6 +129,12 @@ static DEFINE_MUTEX(ghes_list_mutex);
-  */
- static DEFINE_SPINLOCK(ghes_notify_lock_irq);
- 
-+struct ghes_vendor_record_entry {
-+	struct work_struct work;
-+	int error_severity;
-+	char vendor_record[];
-+};
-+
- static struct gen_pool *ghes_estatus_pool;
- static unsigned long ghes_estatus_pool_size_request;
- 
-@@ -511,6 +523,56 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- #endif
- }
- 
-+static BLOCKING_NOTIFIER_HEAD(vendor_record_notify_list);
-+
-+int ghes_register_vendor_record_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&vendor_record_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(ghes_register_vendor_record_notifier);
-+
-+void ghes_unregister_vendor_record_notifier(struct notifier_block *nb)
-+{
-+	blocking_notifier_chain_unregister(&vendor_record_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(ghes_unregister_vendor_record_notifier);
-+
-+static void ghes_vendor_record_work_func(struct work_struct *work)
-+{
-+	struct ghes_vendor_record_entry *entry;
-+	struct acpi_hest_generic_data *gdata;
-+	u32 len;
-+
-+	entry = container_of(work, struct ghes_vendor_record_entry, work);
-+	gdata = GHES_GDATA_FROM_VENDOR_ENTRY(entry);
-+
-+	blocking_notifier_call_chain(&vendor_record_notify_list,
-+				     entry->error_severity, gdata);
-+
-+	len = GHES_VENDOR_ENTRY_LEN(acpi_hest_get_record_size(gdata));
-+	gen_pool_free(ghes_estatus_pool, (unsigned long)entry, len);
-+}
-+
-+static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
-+					  int sev)
-+{
-+	struct acpi_hest_generic_data *copied_gdata;
-+	struct ghes_vendor_record_entry *entry;
-+	u32 len;
-+
-+	len = GHES_VENDOR_ENTRY_LEN(acpi_hest_get_record_size(gdata));
-+	entry = (void *)gen_pool_alloc(ghes_estatus_pool, len);
-+	if (!entry)
-+		return;
-+
-+	copied_gdata = GHES_GDATA_FROM_VENDOR_ENTRY(entry);
-+	memcpy(copied_gdata, gdata, acpi_hest_get_record_size(gdata));
-+	entry->error_severity = sev;
-+
-+	INIT_WORK(&entry->work, ghes_vendor_record_work_func);
-+	schedule_work(&entry->work);
-+}
-+
- static bool ghes_do_proc(struct ghes *ghes,
- 			 const struct acpi_hest_generic_status *estatus)
- {
-@@ -549,6 +611,7 @@ static bool ghes_do_proc(struct ghes *ghes,
- 		} else {
- 			void *err = acpi_hest_get_payload(gdata);
- 
-+			ghes_defer_non_standard_event(gdata, sev);
- 			log_non_standard_event(sec_type, fru_id, fru_text,
- 					       sec_sev, err,
- 					       gdata->error_data_length);
-diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
-index 517a5231cc1b..34fb3431a8f3 100644
---- a/include/acpi/ghes.h
-+++ b/include/acpi/ghes.h
-@@ -53,6 +53,24 @@ enum {
- 	GHES_SEV_PANIC = 0x3,
- };
- 
-+#ifdef CONFIG_ACPI_APEI_GHES
-+/**
-+ * ghes_register_vendor_record_notifier - register a notifier for vendor
-+ * records that the kernel would otherwise ignore.
-+ * @nb: pointer to the notifier_block structure of the event handler.
-+ *
-+ * return 0 : SUCCESS, non-zero : FAIL
-+ */
-+int ghes_register_vendor_record_notifier(struct notifier_block *nb);
-+
-+/**
-+ * ghes_unregister_vendor_record_notifier - unregister the previously
-+ * registered vendor record notifier.
-+ * @nb: pointer to the notifier_block structure of the vendor record handler.
-+ */
-+void ghes_unregister_vendor_record_notifier(struct notifier_block *nb);
-+#endif
-+
- int ghes_estatus_pool_init(int num_ghes);
- 
- /* From drivers/edac/ghes_edac.c */
+>                         clocks = <&cpg CPG_CORE R8A774E1_CLK_Z>;
+>                         operating-points-v2 = <&cluster0_opp>;
+>                         capacity-dmips-mhz = <1024>;
+> @@ -180,6 +184,7 @@
+>                         power-domains = <&sysc R8A774E1_PD_CA53_CPU0>;
+>                         next-level-cache = <&L2_CA53>;
+>                         enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_1>;
+>                         #cooling-cells = <2>;
+>                         dynamic-power-coefficient = <277>;
+>                         clocks = <&cpg CPG_CORE R8A774E1_CLK_Z2>;
+> @@ -194,6 +199,7 @@
+>                         power-domains = <&sysc R8A774E1_PD_CA53_CPU1>;
+>                         next-level-cache = <&L2_CA53>;
+>                         enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_1>;
+>                         clocks = <&cpg CPG_CORE R8A774E1_CLK_Z2>;
+>                         operating-points-v2 = <&cluster1_opp>;
+>                         capacity-dmips-mhz = <535>;
+> @@ -206,6 +212,7 @@
+>                         power-domains = <&sysc R8A774E1_PD_CA53_CPU2>;
+>                         next-level-cache = <&L2_CA53>;
+>                         enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_1>;
+>                         clocks = <&cpg CPG_CORE R8A774E1_CLK_Z2>;
+>                         operating-points-v2 = <&cluster1_opp>;
+>                         capacity-dmips-mhz = <535>;
+> @@ -218,6 +225,7 @@
+>                         power-domains = <&sysc R8A774E1_PD_CA53_CPU3>;
+>                         next-level-cache = <&L2_CA53>;
+>                         enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_1>;
+>                         clocks = <&cpg CPG_CORE R8A774E1_CLK_Z2>;
+>                         operating-points-v2 = <&cluster1_opp>;
+>                         capacity-dmips-mhz = <535>;
+
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+No need to resend, will fix while queueing in renesas-devel for v5.10.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
