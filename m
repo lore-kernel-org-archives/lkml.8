@@ -2,119 +2,178 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 413EEC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80893C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 142C92087C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F7AC2065F
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:15:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qTSjE1pP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHOo/wjg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgICLO3 (ORCPT
+        id S1728407AbgICLPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:14:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33380 "EHLO
+        Thu, 3 Sep 2020 07:15:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728372AbgICLKN (ORCPT
+        with ESMTP id S1728422AbgICLOa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:10:13 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A20C061247;
-        Thu,  3 Sep 2020 04:10:11 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id u13so1875384pgh.1;
-        Thu, 03 Sep 2020 04:10:11 -0700 (PDT)
+        Thu, 3 Sep 2020 07:14:30 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506DFC061244;
+        Thu,  3 Sep 2020 04:00:35 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id m6so2767866wrn.0;
+        Thu, 03 Sep 2020 04:00:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=J1i57IRdZhg4OVu4ihUxUTPehYMdVSv4veIZG06bWXs=;
-        b=qTSjE1pPHNfO1QDYQ9Ia409UNvEpYppa854Dj58KuStsVelX/b9ITDHVNcirMfta1V
-         w9sMOaXM3THG/sQMt4q9TzrIsptXA7M7JX/2SvizD5bBgc+Dpo7k9/KKe5vUoUNuf/Q+
-         H3tVkBVFaC0fQqdMevV/2ouY7TNxI0oL8W00lK+f9B4hlyU3u+3xD65RjDjn0PwaW/pB
-         hjyIKnX1RwhSmqmIjyNhnUR1PD4T0i9JO4PhmwAh5BNp7cVe1f4DkQLRBoAt7DvFqZRK
-         AeOKT3/aCXeYvZIonJSlQ9kA9z4TaJDcKy1mh1thc46CtXdz7ky8VrSiSPFVuMUE0Vzz
-         zkag==
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=SE22zCSVEAoxI5J9vYZxU5jk2PTxW8rlRt79/vsQVMc=;
+        b=XHOo/wjgMIAcFXOEpJ8LD3JeyIS06RbRzdhJHQUNQryAsL5MqI9KCGWsJDlWGw6Hww
+         0r1qNVory+ouhS3YefBZ3bC51Wemkyd5AZ/T2v3yonZYSLyRjebFpnAJaRXEFjXiWSK/
+         DUUTknp8LIhWqVy8rhgEG9QW/cAssbuWgMFTs1OW7xUnSOUXWh1vBvG4/utmhUmshssd
+         ZolOYsiKduKgb0bRlz0wzBCTQfC/r6haJPeN3CvbPf70QjElIk39PqgeTz7KA4Ts2JVK
+         7t/MN3sATXo6IDk0wOjGSMRLimJGPLXCz3gIfStJcaNtRUWwumRdA8PcXB/BBbd6Devf
+         o0Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=J1i57IRdZhg4OVu4ihUxUTPehYMdVSv4veIZG06bWXs=;
-        b=XLMV7kxLQY61JhoSiGl264lnAdzISFNAlgUL1p8+1mdwQvQtiSpGh5M6HivYA5KUo3
-         ilTwOR+KWV8Un2ZmIkE96rXpUtKQVJhpfJmo1WcpuT1M5eOI/tIvGhLZv+P3WtOnm9Tq
-         yfIDWHo6cG8T7FKzklEwP9H5almE+7z5kfAQrey+QccuuAb0X/4ROpvMCz1m04cYuGom
-         bImZ0iJ5LbTJ6xONTIJaaqLo5EDTgGnjd19jOOXfmsWIHteKdjU/GkNzqLq6xSA/cyMk
-         aatHQR4lmykh/UsoGN+r8+k3rJNr9Vidnds07KRVuj4Awq/xDsxc6hZkbYHw7FMoY3Vv
-         QxLQ==
-X-Gm-Message-State: AOAM532lpI++sdnFLnUHDvC849l8iWlVWoQlq3xdRPFjCFkwBBG2cTox
-        GvKnPqpdQyxXTKrlMyDTF+OTxFbwkdSQB9TVurA=
-X-Google-Smtp-Source: ABdhPJyCwXKGVjz91KGqfY0UKqnCfamjPLQ+Z7zKhx0zAlE0rMJ8Yq95QIAr45mRcsOTIo66t9x+0vzxg/lDu+ElLS8=
-X-Received: by 2002:a17:902:b289:: with SMTP id u9mr3407159plr.226.1599131410681;
- Thu, 03 Sep 2020 04:10:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=SE22zCSVEAoxI5J9vYZxU5jk2PTxW8rlRt79/vsQVMc=;
+        b=QTgzdgoYHeT45eXk00gc8Bc4McewHo3odEFQSSeUJ59oYewiSQfrCgkNJ4hvgPFuff
+         C4uPqc6vlpFGWpux7uN700of+KA1UoW7IBdPaloyxi12K/e5UGmvrIoo3yteHVLFEzfD
+         9Oz8SrYHosODRAKCatImudy9W5MwZX+K+ayu7HBc7NIMTzMR9+AK+R2YQ6qmFLoH8AIR
+         HmUYSWUcwvcp3/ap+iCp2tfVNPxihflKV4Bn0/zp5dfAvC0xXKqznatWudos8aMLoTQ5
+         USgFvd01UnssCMgOr+ay/4trHbRR8vsNr00GP77ofmr+lI031xmj56wTaV8+ovLsU62Z
+         PBGg==
+X-Gm-Message-State: AOAM5314cMMjEe/AAPItmX83AERq3F8O1MXHhU0QJE8LX2RcTxD5NZgN
+        IaHmu2sQNujaRfmal91xAGXnnSKkHuxTyg==
+X-Google-Smtp-Source: ABdhPJzT2JR3cqHJJ+PeIDEiZWnus85LDjLyqQxGZLcJGgQ0N86n6iNc76LXufOFcTVgGQkidXI/BA==
+X-Received: by 2002:adf:e7ce:: with SMTP id e14mr1741534wrn.43.1599130833155;
+        Thu, 03 Sep 2020 04:00:33 -0700 (PDT)
+Received: from AnsuelXPS ([5.170.166.111])
+        by smtp.gmail.com with ESMTPSA id s5sm3876136wrm.33.2020.09.03.04.00.31
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Sep 2020 04:00:32 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Sibi Sankar'" <sibis@codeaurora.org>,
+        "'Viresh Kumar'" <viresh.kumar@linaro.org>
+Cc:     <vincent.guittot@linaro.org>, <saravanak@google.com>,
+        "'Sudeep Holla'" <sudeep.holla@arm.com>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Rob Herring'" <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200821140026.19643-1-ansuelsmth@gmail.com> <20200824104053.kpjpwzl2iw3lpg2m@vireshk-i7> <b339e01f9d1e955137120daa06d26228@codeaurora.org> <039d01d67f6a$188700d0$49950270$@gmail.com> <20200903065314.y3ynhwydahaeg6o6@vireshk-i7> <6dc62d231c776b2cdfdc36cfe36e4140@codeaurora.org>
+In-Reply-To: <6dc62d231c776b2cdfdc36cfe36e4140@codeaurora.org>
+Subject: R: R: [RFC PATCH v3 0/2] Add Krait Cache Scaling support
+Date:   Thu, 3 Sep 2020 13:00:27 +0200
+Message-ID: <01f201d681e1$70ff1bc0$52fd5340$@gmail.com>
 MIME-Version: 1.0
-References: <20200903005300.7894-1-digetx@gmail.com> <20200903005300.7894-5-digetx@gmail.com>
-In-Reply-To: <20200903005300.7894-5-digetx@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 3 Sep 2020 14:09:53 +0300
-Message-ID: <CAHp75Vf9P9L1uM+he63D5H+-V3Zwv3jRiKTrXmtB4Sxuk9SC9A@mail.gmail.com>
-Subject: Re: [PATCH v3 04/22] i2c: tegra: Don't ignore tegra_i2c_flush_fifos() error
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHE1KUT8lrzCHz2sVzN5qwVSE5wCwFurxwcAoW98xABeMrvawKX8ba/Aay9QdupLIiWEA==
+Content-Language: it
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 3:53 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> The tegra_i2c_flush_fifos() may fail and transfer should be aborted in
-> this case.
 
-Sounds like a fix. To add to previous comment, fixes that are likely
-to be backported should have Fixes: tags.
 
-> Reviewed-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegr=
-a.c
-> index 79e542cf3e59..b912a7153e3b 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -1189,7 +1189,9 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev =
-*i2c_dev,
->         bool dma;
->         u16 xfer_time =3D 100;
->
-> -       tegra_i2c_flush_fifos(i2c_dev);
-> +       err =3D tegra_i2c_flush_fifos(i2c_dev);
-> +       if (err)
-> +               return err;
->
->         i2c_dev->msg_buf =3D msg->buf;
->         i2c_dev->msg_buf_remaining =3D msg->len;
+> -----Messaggio originale-----
+> Da: sibis=3Dcodeaurora.org@mg.codeaurora.org
+> <sibis=3Dcodeaurora.org@mg.codeaurora.org> Per conto di Sibi Sankar
+> Inviato: gioved=EC 3 settembre 2020 09:13
+> A: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: ansuelsmth@gmail.com; vincent.guittot@linaro.org;
+> saravanak@google.com; 'Sudeep Holla' <sudeep.holla@arm.com>; 'Rafael =
+J.
+> Wysocki' <rjw@rjwysocki.net>; 'Rob Herring' <robh+dt@kernel.org>; =
+linux-
+> pm@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Oggetto: Re: R: [RFC PATCH v3 0/2] Add Krait Cache Scaling support
+>=20
+> On 2020-09-03 12:23, Viresh Kumar wrote:
+> > On 31-08-20, 09:41, ansuelsmth@gmail.com wrote:
+> >> On 31-08-20, Sibi wrote:
+> >> > On 2020-08-24 16:10, Viresh Kumar wrote:
+> >> > > +Vincent/Saravana/Sibi
+> >> > >
+> >> > > On 21-08-20, 16:00, Ansuel Smith wrote:
+> >> > >> This adds Krait Cache scaling support using the cpufreq =
+notifier.
+> >> > >> I have some doubt about where this should be actually placed =
+(clk
+> or
+> >> > >> cpufreq)?
+> >> > >> Also the original idea was to create a dedicated cpufreq =
+driver
+(like
+> >> > >> it's done in
+> >> > >> the codeaurora qcom repo) by copying the cpufreq-dt driver and
+> adding
+> >> > >> the cache
+> >> > >> scaling logic but i still don't know what is better. Have a =
+very
+> >> > >> similar driver or
+> >> > >> add a dedicated driver only for the cache using the cpufreq
+notifier
+> >> > >> and do the
+> >> > >> scale on every freq transition.
+> >> > >> Thanks to everyone who will review or answer these questions.
+> >> > >
+> >> > > Saravana was doing something with devfreq to solve such issues =
+if I
+> >> > > wasn't mistaken.
+> >> > >
+> >> > > Sibi ?
+> >> >
+> >> > IIRC the final plan was to create a devfreq device
+> >> > and devfreq-cpufreq based governor to scale them, this
+> >> > way one can switch to a different governor if required.
+> >>
+> >> So in this case I should convert this patch to a devfreq driver-
+> >
+> > I think this should happen nevertheless. You are doing DVFS for a
+> > device which isn't a CPU and devfreq looks to be the right place of
+> > doing so.
+> >
+> >> Isn't overkill to use a governor for such a task?
+> >> (3 range based on the cpufreq?)
+> >
+> > I am not sure about the governor part here, maybe it won't be =
+required
+> > ?
+>=20
+> Yeah I don't see it being needed in ^^
+> case as well. I just mentioned them as
+> an advantage in case you wanted to switch
+> to a different governor in the future.
+>=20
+> https://lore.kernel.org/lkml/d0bc8877-6d41-f54e-1c4c-
+> 2fadbb9dcd0b@samsung.com/
+>=20
+> A devfreq governor tracking cpufreq was
+> generally accepted but using a cpufreq
+> notifier to achieve that was discouraged.
+>=20
+
+I read the patch discussion and it looks like at the very end they
+lost interest in pushing it. That would very fit what I need here so
+I'm asking how should I proceed? Keep the cpufreq notifier?
+Introduce a dedicated governor? Ask them to resume the pushing or
+try to include the changes to the passive governor by myself?=20
+
 > --
-> 2.27.0
->
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project.
 
-
---=20
-With Best Regards,
-Andy Shevchenko
