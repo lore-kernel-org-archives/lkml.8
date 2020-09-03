@@ -2,148 +2,327 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCA9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DF8C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63DDC2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:52:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="RP2QIgV9"
+	by mail.kernel.org (Postfix) with ESMTP id 473CA2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgICMvO (ORCPT
+        id S1728651AbgICMxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 08:51:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728908AbgICMmR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 08:42:17 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E20C061245
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 05:42:01 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id 19so239051qtp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 05:42:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jBJ3+UyiPoqroyu1zjiAGjOZlBSROfuJYS4dUaf28y4=;
-        b=RP2QIgV9av5cfW4E0jEqmA7mDTpzMBwskor1FkPmpDSAFax6n63uP0gHagAKUBoLXo
-         Fb5ct+hksrD6IpdtMufs3DNRrXJocexBW5s+D7hhM320VYplwMb2gIZdEpRcomM/lCth
-         3xQa56eJUsxBsQjTtaLonw7TE+A4uMkw/gduUfRH9Z7vNXQiSdaHQkJhCxDJgb9MZqzU
-         N3AiS1VwOo/Xrbbco3rCcp7li+dxP25ZUK3tEWdlRxjbmKSHpsuP7nIWa9VoIXYg9ifc
-         KmPOt4KLx8zuhtSUs856BF8M2ysnqatk4Gctlv4MSrbnjkbHK9uCK2Q0iHSoE3zcMUfT
-         prAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jBJ3+UyiPoqroyu1zjiAGjOZlBSROfuJYS4dUaf28y4=;
-        b=D7e7YoU4cFEC4hFALJDWcJsht05WJQEeBxqWooWeOFPGC9Dusn8iI5s/q4iPuAR/6I
-         GnHvv+MuRJPJbCeGBkU0UWVG6d8K31uOZOvoDeoXvW+iQkqeR8109BMlheIeBaclpWcw
-         nnRcO6dtQVmLjbpDU8K7JPSWJHWZHK8jYtWmfTLFvltKoJNL4H9otx7ZjMYno6IYb7K5
-         M/Y46gHgNqK98dzhJ5s6pBtG3/h0WitxZF/+BrXXqlhL9GmZXO11LKWOkRDVKgjUxftt
-         HikXQPvF1PbuodRPlhkqV2UagRkoYrdKSYeJbYaHuwot/bAKAZF2PeL2HpduzAOa9PPS
-         dprQ==
-X-Gm-Message-State: AOAM532sVccwSk2P8JtoG/W4pMAsYjIO27Ih+sByzGLglgOIICYAu4yQ
-        /PZVOszurokby5K0SwZsGtbW7w==
-X-Google-Smtp-Source: ABdhPJyrJaxeh5GDMtMW9PrexCisLze+QfvJ8U+Z3y3lDDgeB//UFbLK+IEHeSxO627oS4hC+B38Ow==
-X-Received: by 2002:ac8:4e0b:: with SMTP id c11mr3199200qtw.37.1599136919515;
-        Thu, 03 Sep 2020 05:41:59 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id w59sm1941201qtd.1.2020.09.03.05.41.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 05:41:58 -0700 (PDT)
-Subject: Re: [PATCH v1 6/9] phy: qcom-qmp: Add support for DP in USB3+DP combo
- phy
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Clark <robdclark@chromium.org>
-References: <20200826024711.220080-1-swboyd@chromium.org>
- <20200826024711.220080-7-swboyd@chromium.org>
- <335a0660-40e1-0c1e-3f7d-87f7024de18a@linaro.org>
- <159900847014.334488.14041376759905055412@swboyd.mtv.corp.google.com>
- <62bdac87-b886-58c1-f071-095ec9945f68@linaro.org>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <4165cdc6-dfa6-1ff2-f317-753292a068c2@marek.ca>
-Date:   Thu, 3 Sep 2020 08:41:15 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 3 Sep 2020 08:53:45 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34819 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728936AbgICMnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:43:53 -0400
+IronPort-SDR: f1ZOjbHec4Vzk+jjZJ34XO+7VOM9HxkUgR3sVOWrJUjkzCkIVlScIArZNHCbFJqUTFvIt+1POC
+ Xx+5UvjHLt/g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="154965955"
+X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
+   d="scan'208";a="154965955"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:42:44 -0700
+IronPort-SDR: 04hcEn3Bh/N2f6tojf8jAlB1m/wgVagM4AR+L2OdNoOfU6C3IcPLyaEOWRRncvmF0mr4uY02WA
+ 63jhcbTuzABA==
+X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
+   d="scan'208";a="298025339"
+Received: from shsi6026.sh.intel.com (HELO localhost) ([10.239.147.135])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:42:40 -0700
+From:   shuo.a.liu@intel.com
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Shuo Liu <shuo.a.liu@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: [PATCH v2 05/17] virt: acrn: Introduce ACRN HSM basic driver
+Date:   Thu,  3 Sep 2020 20:41:49 +0800
+Message-Id: <20200903124201.17275-6-shuo.a.liu@intel.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200903124201.17275-1-shuo.a.liu@intel.com>
+References: <20200903124201.17275-1-shuo.a.liu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <62bdac87-b886-58c1-f071-095ec9945f68@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/20 8:37 AM, Dmitry Baryshkov wrote:
-> On 02/09/2020 04:01, Stephen Boyd wrote:
->> Quoting Dmitry Baryshkov (2020-09-01 06:36:34)
->>> With these functions I'm struggling between introducing
->>> PHY_TYPE_DP_V3/V4 and introducing callbacks into qmp_phy_cfg. What would
->>> you prefer?
->>>
->>> What about the following struct?
->>>
->>> struct qmp_phy_dp_opts {
->>>          void (*dp_aux_init)(struct qmp_phy *qphy);
->>>          void (*dp_configure_tx)(struct qmp_phy *qphy);
->>>          void (*dp_configure_lanes)(struct qmp_phy *qphy);
->>> };
->>>
->>> I'm not sure about dp_calibrate().
->>>
->>
->> Is there v4 code somewhere that I can see? Another level of indirection
->> is always a solution, so it is probably fine. This driver is currently
->> written with many conditionals instead of function tables so I'm not
->> sure it fits in with the style of how things are done though. The
->> alternative is to use an enum and call different functions?
-> 
-> Downstream DP driver sources can be found here:
-> https://source.codeaurora.org/quic/la/platform/vendor/opensource/display-drivers/tree/msm/dp/dp_catalog_v420.c?h=LA.UM.8.12.r1-13900-sm8250.0 
-> 
-> 
-> https://source.codeaurora.org/quic/la/platform/vendor/opensource/display-drivers/tree/pll/dp_pll_7nm_util.c?h=LA.UM.8.12.r1-13900-sm8250.0 
-> 
-> 
->>
->> The calibrate call is there to "turn the crank" on the aux settings.  I
->> need to cycle through the different values for that aux register so that
->> aux can be tuned properly. The AUX channel really has another phy that
->> needs tuning so we're sort of combining the aux and DP link phy together
->> here by letting the calibrate call tune the AUX phy and the configure
->> call tune the DP phy. I don't see any sort of concept of an AUX phy
->> though so this seemed ok. Does v4 need to tune more registers?
-> 
-> 
-> It looks like four values are written to AUX_CFG1:
-> 0x20, 0x13, 0x23, 0x1d
-> 
+From: Shuo Liu <shuo.a.liu@intel.com>
 
-AFAICT, it only writes 0x13 to AUX_CFG1, in dp_pll_7nm_util.c, and the 
-qcom,aux-cfg1-settings in dts only has 0x13. Same for all other 
-AUX_CFGn, which only have one value written. Am I missing something?
+ACRN Hypervisor Service Module (HSM) is a kernel module in Service VM
+which communicates with ACRN userspace through ioctls and talks to ACRN
+Hypervisor through hypercalls.
+
+Add a basic HSM driver which allows Service VM userspace to communicate
+with ACRN. The following patches will add more ioctls, guest VM memory
+mapping caching, I/O request processing, ioeventfd and irqfd into this
+module. HSM exports a char device interface (/dev/acrn_hsm) to userspace.
+
+Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Zhi Wang <zhi.a.wang@intel.com>
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+Cc: Yu Wang <yu1.wang@intel.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ .../userspace-api/ioctl/ioctl-number.rst      |  1 +
+ MAINTAINERS                                   |  2 +
+ drivers/virt/Kconfig                          |  2 +
+ drivers/virt/Makefile                         |  1 +
+ drivers/virt/acrn/Kconfig                     | 14 +++
+ drivers/virt/acrn/Makefile                    |  3 +
+ drivers/virt/acrn/acrn_drv.h                  | 19 ++++
+ drivers/virt/acrn/hsm.c                       | 98 +++++++++++++++++++
+ include/uapi/linux/acrn.h                     | 17 ++++
+ 9 files changed, 157 insertions(+)
+ create mode 100644 drivers/virt/acrn/Kconfig
+ create mode 100644 drivers/virt/acrn/Makefile
+ create mode 100644 drivers/virt/acrn/acrn_drv.h
+ create mode 100644 drivers/virt/acrn/hsm.c
+ create mode 100644 include/uapi/linux/acrn.h
+
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index 2a198838fca9..ac60efedb104 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -319,6 +319,7 @@ Code  Seq#    Include File                                           Comments
+ 0xA0  all    linux/sdp/sdp.h                                         Industrial Device Project
+                                                                      <mailto:kenji@bitgate.com>
+ 0xA1  0      linux/vtpm_proxy.h                                      TPM Emulator Proxy Driver
++0xA2  all    uapi/linux/acrn.h                                       ACRN hypervisor
+ 0xA3  80-8F                                                          Port ACL  in development:
+                                                                      <mailto:tlewis@mindspring.com>
+ 0xA3  90-9F  linux/dtlk.h
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e0fea5e464b4..d4c1ef303c2d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -442,6 +442,8 @@ L:	acrn-dev@lists.projectacrn.org
+ S:	Supported
+ W:	https://projectacrn.org
+ F:	Documentation/virt/acrn/
++F:	drivers/virt/acrn/
++F:	include/uapi/linux/acrn.h
+ 
+ AD1889 ALSA SOUND DRIVER
+ L:	linux-parisc@vger.kernel.org
+diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
+index cbc1f25c79ab..d9484a2e9b46 100644
+--- a/drivers/virt/Kconfig
++++ b/drivers/virt/Kconfig
+@@ -32,4 +32,6 @@ config FSL_HV_MANAGER
+ 	     partition shuts down.
+ 
+ source "drivers/virt/vboxguest/Kconfig"
++
++source "drivers/virt/acrn/Kconfig"
+ endif
+diff --git a/drivers/virt/Makefile b/drivers/virt/Makefile
+index fd331247c27a..f0491bbf0d4d 100644
+--- a/drivers/virt/Makefile
++++ b/drivers/virt/Makefile
+@@ -5,3 +5,4 @@
+ 
+ obj-$(CONFIG_FSL_HV_MANAGER)	+= fsl_hypervisor.o
+ obj-y				+= vboxguest/
++obj-$(CONFIG_ACRN_HSM)		+= acrn/
+diff --git a/drivers/virt/acrn/Kconfig b/drivers/virt/acrn/Kconfig
+new file mode 100644
+index 000000000000..36c80378c30c
+--- /dev/null
++++ b/drivers/virt/acrn/Kconfig
+@@ -0,0 +1,14 @@
++# SPDX-License-Identifier: GPL-2.0
++config ACRN_HSM
++	tristate "ACRN Hypervisor Service Module"
++	depends on ACRN_GUEST
++	help
++	  ACRN Hypervisor Service Module (HSM) is a kernel module which
++	  communicates with ACRN userspace through ioctls and talks to
++	  the ACRN Hypervisor through hypercalls. HSM will only run in
++	  a privileged management VM, called Service VM, to manage User
++	  VMs and do I/O emulation. Not required for simply running
++	  under ACRN as a User VM.
++
++	  To compile as a module, choose M, the module will be called
++	  acrn. If unsure, say N.
+diff --git a/drivers/virt/acrn/Makefile b/drivers/virt/acrn/Makefile
+new file mode 100644
+index 000000000000..6920ed798aaf
+--- /dev/null
++++ b/drivers/virt/acrn/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_ACRN_HSM)	:= acrn.o
++acrn-y := hsm.o
+diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
+new file mode 100644
+index 000000000000..0b8e4fdc168a
+--- /dev/null
++++ b/drivers/virt/acrn/acrn_drv.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef __ACRN_HSM_DRV_H
++#define __ACRN_HSM_DRV_H
++
++#include <linux/acrn.h>
++#include <linux/types.h>
++
++#define ACRN_INVALID_VMID (0xffffU)
++
++/**
++ * struct acrn_vm - Properties of ACRN User VM.
++ * @vmid:	User VM ID
++ */
++struct acrn_vm {
++	u16	vmid;
++};
++
++#endif /* __ACRN_HSM_DRV_H */
+diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
+new file mode 100644
+index 000000000000..549c7f8d6b5f
+--- /dev/null
++++ b/drivers/virt/acrn/hsm.c
+@@ -0,0 +1,98 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ACRN Hypervisor Service Module (HSM)
++ *
++ * Copyright (C) 2020 Intel Corporation. All rights reserved.
++ *
++ * Authors:
++ *	Fengwei Yin <fengwei.yin@intel.com>
++ *	Yakui Zhao <yakui.zhao@intel.com>
++ */
++
++#define pr_fmt(fmt) "acrn: " fmt
++
++#include <linux/miscdevice.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++
++#include <asm/acrn.h>
++#include <asm/hypervisor.h>
++
++#include "acrn_drv.h"
++
++/*
++ * When /dev/acrn_hsm is opened, a 'struct acrn_vm' object is created to
++ * represent a VM instance and continues to be associated with the opened file
++ * descriptor. All ioctl operations on this file descriptor will be targeted to
++ * the VM instance. Release of this file descriptor will destroy the object.
++ */
++static int acrn_dev_open(struct inode *inode, struct file *filp)
++{
++	struct acrn_vm *vm;
++
++	vm = kzalloc(sizeof(*vm), GFP_KERNEL);
++	if (!vm)
++		return -ENOMEM;
++
++	vm->vmid = ACRN_INVALID_VMID;
++	filp->private_data = vm;
++	return 0;
++}
++
++static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
++			   unsigned long ioctl_param)
++{
++	return 0;
++}
++
++static int acrn_dev_release(struct inode *inode, struct file *filp)
++{
++	struct acrn_vm *vm = filp->private_data;
++
++	kfree(vm);
++	return 0;
++}
++
++static const struct file_operations acrn_fops = {
++	.owner		= THIS_MODULE,
++	.open		= acrn_dev_open,
++	.release	= acrn_dev_release,
++	.unlocked_ioctl	= acrn_dev_ioctl,
++};
++
++static struct miscdevice acrn_dev = {
++	.minor	= MISC_DYNAMIC_MINOR,
++	.name	= "acrn_hsm",
++	.fops	= &acrn_fops,
++};
++
++static int __init hsm_init(void)
++{
++	int ret;
++
++	if (x86_hyper_type != X86_HYPER_ACRN)
++		return -ENODEV;
++
++	if (!acrn_is_privileged_vm())
++		return -EPERM;
++
++	ret = misc_register(&acrn_dev);
++	if (ret) {
++		pr_err("Create misc dev failed!\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static void __exit hsm_exit(void)
++{
++	misc_deregister(&acrn_dev);
++}
++module_init(hsm_init);
++module_exit(hsm_exit);
++
++MODULE_AUTHOR("Intel Corporation");
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("ACRN Hypervisor Service Module (HSM)");
+diff --git a/include/uapi/linux/acrn.h b/include/uapi/linux/acrn.h
+new file mode 100644
+index 000000000000..4ae34f86e2be
+--- /dev/null
++++ b/include/uapi/linux/acrn.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Userspace interface for /dev/acrn_hsm - ACRN Hypervisor Service Module
++ *
++ * This file can be used by applications that need to communicate with the HSM
++ * via the ioctl interface.
++ */
++
++#ifndef _UAPI_ACRN_H
++#define _UAPI_ACRN_H
++
++#include <linux/types.h>
++
++/* The ioctl type, documented in ioctl-number.rst */
++#define ACRN_IOCTL_TYPE			0xA2
++
++#endif /* _UAPI_ACRN_H */
+-- 
+2.28.0
 
