@@ -2,105 +2,109 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE54C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7149C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90C8020722
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599145748;
-	bh=0yVg4VB9wLo7/HcSqfX02PS0qyjpPXXI+/tghmjqUsw=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=n6xhxs4UJr35bllMFjeQUvGb6RAqBQZRbHeSjE9nK4hiJqE5beJxH2ZFqCS/Yib0H
-	 Z2vfGX3Pl3EUrxp8SJ1lFGoN0gV7zcMZ6ChtXkNwyl9NrPKC2IlNCR2D7wz591pz/z
-	 yj4HbLgPYfBFvPloJILl5sDe+nuBDs8QSjIIt/+o=
+	by mail.kernel.org (Postfix) with ESMTP id 7C8F720716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eQcxtvqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbgICPJE (ORCPT
+        id S1728956AbgICPJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:09:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47870 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728950AbgICN6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 11:09:16 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50186 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728947AbgICN6P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 09:58:15 -0400
-Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A8022098B;
-        Thu,  3 Sep 2020 13:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599141456;
-        bh=0yVg4VB9wLo7/HcSqfX02PS0qyjpPXXI+/tghmjqUsw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eiHTsGhtSrD4YW+TVgEhxy20fyB9O40sXdCq83+iJZ5OqFJFUtSF2LTZVgGCGGcPb
-         AdDPDkTTeF6INrEOOBBvmvuVcoX6bv8qPFj8bB1IQn6IX2QXAFiFnJyOcYdSz4bREr
-         aB17Wr4DPXm/ofqlgjURq4iPLWnZEg5qVO5W3rb8=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kDpk6-004T6n-4b; Thu, 03 Sep 2020 15:57:34 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anant Thazhemadam <anant.thazhemadam@gmail.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] media: atomisp: print a warning if error while setting downscaler
-Date:   Thu,  3 Sep 2020 15:57:29 +0200
-Message-Id: <20d420b6ccec9c8013336437781da0f0c7ffabac.1599141140.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1599141140.git.mchehab+huawei@kernel.org>
-References: <cover.1599141140.git.mchehab+huawei@kernel.org>
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083DOEAN107415;
+        Thu, 3 Sep 2020 08:24:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599139454;
+        bh=EcU5sNHWfjTOyGcbOYeypp2bM4hBc053FDywI/zCZgI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eQcxtvqnZRKreSf0Vaxnunri+IKr+JeTETEHDlG3TGHQUc0M0Mn73C+q8Vv1namqZ
+         jZ1xow4jSsm6s+OODwzn6yKM0UsJqVYz1A8eR+d0Kg1MSwmw3ayHAYGW8JOscxQtj/
+         By5Vv8GASjI1iQNpg8F4N9ttfpt3hp8vKZnKTdPU=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083DOEAr006875
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 3 Sep 2020 08:24:14 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
+ 2020 08:24:13 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 3 Sep 2020 08:24:13 -0500
+Received: from [10.250.71.39] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083DODrj004638;
+        Thu, 3 Sep 2020 08:24:13 -0500
+Subject: Re: [PATCH V2 2/8] arm64: dts: ti: k3-am65-main: Use lower case
+ hexadecimal
+To:     Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <lokeshvutla@ti.com>,
+        <grygorii.strashko@ti.com>, <nsekhar@ti.com>
+References: <20200901223059.14801-1-nm@ti.com>
+ <20200903130015.21361-3-nm@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <2875a2d5-2f1b-7579-4642-aec8dc829d5b@ti.com>
+Date:   Thu, 3 Sep 2020 08:24:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200903130015.21361-3-nm@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As warned by gcc:
+On 9/3/20 8:00 AM, Nishanth Menon wrote:
+> Device tree convention uses lower case a-f for hexadecimals. Fix the
+> same.
+> 
+> Signed-off-by: Nishanth Menon <nm@ti.com>
 
-    drivers/staging/media/atomisp//pci/isp/kernels/dvs/dvs_1.0/ia_css_dvs.host.c:237:31: warning: variable ‘isp_data_ptr’ set but not used [-Wunused-but-set-variable]
+Acked-by: Suman Anna <s-anna@ti.com>
 
-ia_css_vf_configure() logic has an error var that detects troubles
-when setting the kernel for downscaling. The driver just ignores
-it, without producing any warning. Add at least a warning message
-on such cases.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
-index 3b850bb2d39d..dd3670972936 100644
---- a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
-+++ b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
-@@ -13,6 +13,8 @@
-  * more details.
-  */
- 
-+#include "atomisp_internal.h"
-+
- #include "ia_css_vf.host.h"
- #include <assert_support.h>
- #include <ia_css_err.h>
-@@ -129,6 +131,9 @@ ia_css_vf_configure(
- 	const struct ia_css_binary_info *info = &binary->info->sp;
- 
- 	err = configure_kernel(info, out_info, vf_info, downscale_log2, &config);
-+	if (err)
-+		dev_warn(atomisp_dev, "Couldn't setup downscale\n");
-+
- 	configure_dma(&config, vf_info);
- 
- 	if (vf_info)
--- 
-2.26.2
+> ---
+> Change:
+> v2: - new
+> 
+>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> index 76e0edc4ad5c..d53d1ead4bb6 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> @@ -344,9 +344,9 @@
+>  					<0x4090 0x3>; /* SERDES1 lane select */
+>  		};
+>  
+> -		dss_oldi_io_ctrl: dss_oldi_io_ctrl@41E0 {
+> +		dss_oldi_io_ctrl: dss_oldi_io_ctrl@41e0 {
+>  			compatible = "syscon";
+> -			reg = <0x0000041E0 0x14>;
+> +			reg = <0x0000041e0 0x14>;
+>  		};
+>  
+>  		ehrpwm_tbclk: syscon@4140 {
+> 
 
