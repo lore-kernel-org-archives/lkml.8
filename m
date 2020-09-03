@@ -2,126 +2,93 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF2CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AC8C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7EFF20775
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:41:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R8L3ioD+"
+	by mail.kernel.org (Postfix) with ESMTP id 9C96E2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:41:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599151299;
+	bh=6cpdviohtv3vZjqY7LuQ3IG4O2P/Cri0vfrA28APcqQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wq2sYBEXquskyhHtPYM4COyVb3lW75veuLpHsbVI8irL9OoTZLPqdEtkCmusCT0ue
+	 dmj/SaWpCPfXdWeHoymDJeUOxLEZV2pvtHiMbdNAJ9E4Azq+ap6JaFyQiwBcaw3oRd
+	 fbXPkFEzxEGh57ovmG1iOt1wvpXDOHzX/bcVgD+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgICQlZ (ORCPT
+        id S1728951AbgICQlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:41:25 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:55516 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728085AbgICQlX (ORCPT
+        Thu, 3 Sep 2020 12:41:37 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46848 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728344AbgICQlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:41:23 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083GfGwf039935;
-        Thu, 3 Sep 2020 11:41:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599151276;
-        bh=X9QPS3a/ZCaAKG2uXIKrOUiVQHzUJ66YvXo6YsH9ZL8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=R8L3ioD+HoPVkdB1rjJnkKJrBqEImULcZjQkm5JhGEmQu2akqeA2JYZodzmzJCyJW
-         rTEIHYre8tEbf725ap1JhM13wAIj2Pw9Hu886BraPqG9RIxTNb1kORD3nnqETBwnXd
-         Sri0nr4K8NydYdEjxk6pfJ+Q2hNWQA3R1TMcWML4=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083GfGpW116922
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Sep 2020 11:41:16 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
- 2020 11:41:16 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 3 Sep 2020 11:41:16 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083GfF3K096927;
-        Thu, 3 Sep 2020 11:41:15 -0500
-Subject: Re: [PATCH net] net: phy: dp83867: Fix various styling and space
- issues
-To:     Florian Fainelli <f.fainelli@gmail.com>, <davem@davemloft.net>,
-        <andrew@lunn.ch>, <hkallweit1@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200903141510.20212-1-dmurphy@ti.com>
- <76046e32-a17d-b87c-26c7-6f48f4257916@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <4d38ac31-8646-2c4f-616c-1a1341721819@ti.com>
-Date:   Thu, 3 Sep 2020 11:41:15 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 3 Sep 2020 12:41:20 -0400
+Received: by mail-io1-f68.google.com with SMTP id d18so3558417iop.13;
+        Thu, 03 Sep 2020 09:41:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4vBaLMLY8rxge37mhzzCjC1bHRv/tkxvPHZcyC6yaGw=;
+        b=bfpp373JsCHTnLkZtTD5N0W1TVuFJgzcZTWdB5y/zs7cOzW6N6FSeOJyocLAXPDbyg
+         L5Mf01LZYNBahD080qaGAyg7av7+a0R1qvXdOLefTBiK4ooMd+fAveYzzNiGdkIT4XKF
+         IWf8ld7FCihHUBe3NL6lKGAm72T80Sp/VHYRdr1S5IUUC+JmBlMbheYdrO/GiIdBmy4o
+         5K+XsrU8VxI43m5pbcV0rbzT+X9Am6yC+qcB/oYeqKViYoilcbq6ha9icKbdOBLRJDza
+         NgtWBr2s6RwvSSE8CfBKhlOaoBmb9bwKBm/SNIHWopgarr3reDZz/SFwufxf1Heq20iF
+         6eCQ==
+X-Gm-Message-State: AOAM5315A27roasBDnza44co2GRXfV4gyXXp91l6OAOcd2W5VCsr7Yfx
+        cUtqeiiqo6PpBoOuZ6KlUQ==
+X-Google-Smtp-Source: ABdhPJyy9gHqTnOdvUDQ2CPzDzHKM8pRYtgJgzw1Dw1NrcA19Ts6CzEfhTG5AWfKYl8sUZi0hH5zHQ==
+X-Received: by 2002:a05:6602:cb:: with SMTP id z11mr3728690ioe.96.1599151279481;
+        Thu, 03 Sep 2020 09:41:19 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id m18sm1005371ilc.37.2020.09.03.09.41.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 09:41:19 -0700 (PDT)
+Received: (nullmailer pid 2922528 invoked by uid 1000);
+        Thu, 03 Sep 2020 16:41:17 -0000
+Date:   Thu, 3 Sep 2020 10:41:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Wolfram Sang <wolfram@the-dreams.de>,
+        Dong Aisheng <aisheng.dong@nxp.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH 6/7] dt-bindings: i2c: imx: Use unevaluatedProperties
+Message-ID: <20200903164117.GA2922218@bogus>
+References: <20200829111800.2786-1-krzk@kernel.org>
+ <20200829111800.2786-6-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <76046e32-a17d-b87c-26c7-6f48f4257916@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829111800.2786-6-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Florian
+On Sat, Aug 29, 2020 at 01:17:59PM +0200, Krzysztof Kozlowski wrote:
+> Additional properties actually might appear (e.g. power-domains or child
+> nodes) so use unevaluatedProperties to fix dtbs_check warnings like:
+> 
+>   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: i2c@30a20000:
+>     '#address-cells', '#size-cells', 'pmic@25' do not match any of the regexes: 'pinctrl-[0-9]+'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 9/3/20 11:34 AM, Florian Fainelli wrote:
->
->
-> On 9/3/2020 7:15 AM, Dan Murphy wrote:
->> Fix spacing issues reported for misaligned switch..case and extra new
->> lines.
->>
->> Also updated the file header to comply with networking commet style.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/net/phy/dp83867.c | 47 ++++++++++++++++++---------------------
->>   1 file changed, 22 insertions(+), 25 deletions(-)
->>
->> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
->> index cd7032628a28..f182a8d767c6 100644
->> --- a/drivers/net/phy/dp83867.c
->> +++ b/drivers/net/phy/dp83867.c
->> @@ -1,6 +1,5 @@
->>   // SPDX-License-Identifier: GPL-2.0
->> -/*
->> - * Driver for the Texas Instruments DP83867 PHY
->> +/* Driver for the Texas Instruments DP83867 PHY
->>    *
->>    * Copyright (C) 2015 Texas Instruments Inc.
->>    */
->> @@ -35,7 +34,7 @@
->>   #define DP83867_CFG4_SGMII_ANEG_MASK (BIT(5) | BIT(6))
->>   #define DP83867_CFG4_SGMII_ANEG_TIMER_11MS   (3 << 5)
->>   #define DP83867_CFG4_SGMII_ANEG_TIMER_800US  (2 << 5)
->> -#define DP83867_CFG4_SGMII_ANEG_TIMER_2US    (1 << 5)
->> +#define DP83867_CFG4_SGMII_ANEG_TIMER_2US    BIT(5)
->
-> Now the definitions are inconsistent, you would want to drop this one 
-> and stick to the existing style.
-
-OK I was a little conflicted making that change due to the reasons you 
-mentioned.  But if that is an acceptable warning I am ok with it.
-
-
->
-> The rest of the changes look good, so with that fixed, and the subject 
-> correct to "net-next" (this is no bug fix material), you can add:
->
-I will have to reapply this to the net-next to make sure it applies 
-cleanly there.  But not an issue.
-
-Dan
-
-
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+NAK. See https://lore.kernel.org/r/CAL_JsqKPXJxsHPS34_TCf9bwgKxZNSV4mvQR-WKRnknQVtGGxQ@mail.gmail.com/
