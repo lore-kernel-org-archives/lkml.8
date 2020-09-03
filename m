@@ -2,87 +2,167 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B5EC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A842C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C768B208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599156885;
-	bh=FoUFinhB1+X7U1QOSldU/PcpF+RkPzZ476IfXOyA2hc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=evTSsLVeRWZD7aS8OaDLwhIx5s/BMC+aBBDWNUuG+KjqRi22GYQYCxN2IQJi5T7UT
-	 SQS4gwFSmUKZnxChwrGum/nWiKqz/Z1kRxi0z50fVrdlwFYaKVApLX/j5juDfKEnKu
-	 oiXCAU6nitjUSv+dfSQ/6fpynWh3lkdeHTUaM7sk=
+	by mail.kernel.org (Postfix) with ESMTP id 4809420737
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:17:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgICSOj (ORCPT
+        id S1728719AbgICSRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 14:14:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbgICSOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 14:14:35 -0400
-Received: from localhost.localdomain (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FEA320C09;
-        Thu,  3 Sep 2020 18:14:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599156875;
-        bh=FoUFinhB1+X7U1QOSldU/PcpF+RkPzZ476IfXOyA2hc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p9gNwrUnZBxucQ7PrQ2ML/qTAR3bT3Wj6iTU2i76+2Z5GeIFUpEkQXViYYB/azjMh
-         No+tMNFREwI8kHmUa1nu2ZFKEKXiquCWGGotUumTsOF1lJ2/hG7BywXxv8YjrLksmN
-         V10jSMLh9UrG+jn4IOtx00y6jpVTiv/QkwoI+8J0=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: [PATCH v2 2/3] ARM: dts: exynos: Add assigned clock parent to CMU in Exynos4412 Odroid
-Date:   Thu,  3 Sep 2020 20:14:24 +0200
-Message-Id: <20200903181425.5015-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200903181425.5015-1-krzk@kernel.org>
-References: <20200903181425.5015-1-krzk@kernel.org>
+        Thu, 3 Sep 2020 14:17:23 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:10909
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727065AbgICSRT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 14:17:19 -0400
+X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
+   d="scan'208";a="358033576"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 20:17:16 +0200
+Date:   Thu, 3 Sep 2020 20:17:15 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Valentin Schneider <valentin.schneider@arm.com>
+cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Gilles Muller <Gilles.Muller@inria.fr>
+Subject: Re: SD_LOAD_BALANCE
+In-Reply-To: <jhj7dtaokxe.mognet@arm.com>
+Message-ID: <alpine.DEB.2.22.394.2009032014300.2496@hadrien>
+References: <alpine.DEB.2.22.394.2009031605190.2496@hadrien> <jhj7dtaokxe.mognet@arm.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 68605101460e ("ARM: dts: exynos: Add support for audio over HDMI
-for Odroid X/X2/U3") added assigned clocks under Clock Management Unit.
 
-However the dtschema expects "clocks" property if "assigned-clocks" are
-used.  Add reference to input clock, the parent used in
-"assigned-clock-parents" to silence the dtschema warnings:
 
-  arch/arm/boot/dts/exynos4412-odroidu3.dt.yaml: clock-controller@10030000: 'clocks' is a dependency of 'assigned-clocks'
+On Thu, 3 Sep 2020, Valentin Schneider wrote:
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+>
+> Hi Julia,
+>
+> On 03/09/20 15:09, Julia Lawall wrote:
+> > Uses of SD_LOAD_BALANCE were removed in commit e669ac8ab952 (first
+> > released in v5.8), with the comment:
+> >
+> > The SD_LOAD_BALANCE flag is set unconditionally for all domains in
+> > sd_init().
+> >
+> > I have the impression that this was not quite true.  The NUMA domain was
+> > not initialized with sd_init, and didn't have the SD_LOAD_BALANCE flag
+> > set.
+>
+> Did you check the contents of
+>
+>   /proc/sys/kernel/sched_domain/cpu*/domain*/flags
+>
+> (requires CONFIG_SCHED_DEBUG)? If the LSB is set, it would mean
+> SD_LOAD_BALANCE is set.
+>
+> The sched_domain construction flow isn't the easiest thing to follow, but
+> NUMA domains *have* to go through sd_init().
+>
+> What happens is we first go through sched_init_numa(), and there we add
+> some more topology levels on top of the default ones (or the arch-defined
+> ones if using an arch-defined topology hierarchy) by using the NUMA
+> distance table.
+>
+> We then build the actual domains in sched_init_domains(), and that goes
+> through a loop that looks like
+>
+>   for_each_cpu() {
+>       for_each_sd_topology() {
+>           build_sched_domain() -> sd_init()
+>       }
+>   }
+>
+> where the SD topology loop is going to iterate over the newly-added
+> NUMA-specific topology levels. Since that used to unconditionally set
+> SD_LOAD_BALANCE, NUMA domains really ought to have it.
+>
+> If that wasn't the case, we would have fired the (now removed) warning in
+> sched_domain_debug_one() that would do:
+>
+>        if (!(sd->flags & SD_LOAD_BALANCE)) {
+>                printk("does not load-balance\n");
+>                if (sd->parent)
+>                        printk(KERN_ERR "ERROR: !SD_LOAD_BALANCE domain has parent");
+>                return -1;
+>        }
 
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index ca3c78e0966c..9375df064076 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -120,6 +120,7 @@
- };
- 
- &clock {
-+	clocks = <&clock CLK_FOUT_EPLL>;
- 	assigned-clocks = <&clock CLK_FOUT_EPLL>;
- 	assigned-clock-rates = <45158401>;
- };
--- 
-2.17.1
+OK, I see also that in v5.7 tmp->flags does have the SD_LOAD_BALANCE bit
+set, so I will have to look further to see what the difference is.  Thanks
+for the pointers.
 
+julia
+
+
+>
+> > The effect is that in v5.8, the for_each_domain loop in
+> > select_task_rq_fair can always end up at the global NUMA domain, and thus
+> > consider any pair of waking cpu (cpu) and previous cpus of the wakee
+> > (prev_cpu) as arguments to wake_affine.  Up to v5.7, this was only
+> > possible if cpu and prev_cpu were together in some lower level domain, ie
+> > sharing the LLC.  The effect is that in v5.8 wake_affine can often end up
+> > choosing as a target a core that does not share the LLC with the core
+> > where the thread ran previously.  Threads then move around a lot between
+> > the different sockets.
+> >
+> > Was this intentional?
+> >
+>
+> AFAICT it isn't forbidden for the logic here to peek outside of the
+> previous LLC. The NUMA reclaim distance thing says we allow affine wakeups
+> and fork / exec balancing to move a task to a CPU at most RECLAIM_DISTANCE
+> away (in NUMA distance values). However, I don't remember any patch
+> changing this between v5.7 and v5.8.
+>
+> Briefly glancing over the kernel/sched log between v5.7 and v5.8, I don't
+> see any obvious culprits. Did you try to bisect this? If it indeed ends on
+> the SD_LOAD_BALANCE thing, well, I'll be off eating my keyboard.
+>
+> > The effect can be seen in the traces of the parsec vips benchmark at the
+> > following URL:
+> >
+> > https://pages.lip6.fr/Julia.Lawall/vips.pdf
+> >
+> > The first two graphs (complete run and small fragment) are Linux v5.7 and
+> > the next two are Linux v5.8.  The machine has 160 hardware threads
+> > organized in 4 sockets and the colors are by socket.  In the small
+> > fragment for v5.7 (second graph), one can see that a given pid pretty much
+> > stays on the same socket, while in the corresponding fragment for v5.8
+> > (fourth graph), the pids move around between the sockets.  The x's
+> > describe the unblocks that result in a migration.  A pink x means that the
+> > migration is in the same socket, while a blue x means that the migration
+> > is to another socket. It's not apparent from the graphs, but by adding
+> > some tracing, it seems that the new socket is always the one of the core
+> > that handles the wakeup.
+> >
+>
+> Interesting graphs, thanks for sharing!
+>
+> > I haven't yet studied the early part of the execution of vips in detail,
+> > but I suspect that the same issue causes all of the threads to be
+> > initially on the same socket in v5.7, while in v5.8 they are more quickly
+> > dispersed to other sockets.
+> >
+> > My impression from the parsec and the NAS benchmarks is that the v5.8
+> > performance is a bit better than v5.7, probably because of getting more
+> > threads to more different sockets earlier, but other benchmarks might
+> > rely more on locality and might react less well to threads moving around
+> > so much in this way.
+> >
+> > julia
+>
