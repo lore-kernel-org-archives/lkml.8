@@ -2,129 +2,118 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8FAC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4937C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73F3E20786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599139785;
-	bh=U7r+JBSfO6GSo/dvzM+GlF/c71/786sO/WzGCOHt/IQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QND+wETMTQM2Y6CB44wN7eZisM2l7DvPVa3LZ/BIf0AILth+zaFJbr5yfyzKQtoPl
-	 m4y+c3o3wxH6ubZNaMRtB0uTDVOr3sHYt6cynBXvw46R86esj8WPIG36uZglj4DfjQ
-	 OtlqMuLZC67ZYFtffQtzeC/lM30c6ZaPqnMVsuPc=
+	by mail.kernel.org (Postfix) with ESMTP id 94DCE2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:32:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIcz/v5l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbgICN3j (ORCPT
+        id S1729077AbgICNcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 09:29:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbgICNDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 09:03:32 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19CED206EF;
-        Thu,  3 Sep 2020 13:03:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599138181;
-        bh=U7r+JBSfO6GSo/dvzM+GlF/c71/786sO/WzGCOHt/IQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=POxN7cDS+w1rM1/5rZeiUIhYEJm6Ks5RElG+9VYqR+BuPbHY7BGsC9LZErVF97eJF
-         TJswrWsR6hCM/WA4O6QR7afh1VSF3S+2qzAQNGiC23F2Ww8G6VWCPJjRhqlxpolhsg
-         RvD1ZXBjnNYaB/oflmuaBqKI/Xtv1Lfwq8BsQ9As=
-Date:   Thu, 3 Sep 2020 15:03:25 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuo.a.liu@intel.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yu Wang <yu1.wang@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: Re: [PATCH v2 07/17] virt: acrn: Introduce an ioctl to set vCPU
- registers state
-Message-ID: <20200903130325.GC2778029@kroah.com>
-References: <20200903124201.17275-1-shuo.a.liu@intel.com>
- <20200903124201.17275-8-shuo.a.liu@intel.com>
+        Thu, 3 Sep 2020 09:32:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729028AbgICNNv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 09:13:51 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10935C06124F;
+        Thu,  3 Sep 2020 06:13:51 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id w16so2942317qkj.7;
+        Thu, 03 Sep 2020 06:13:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GeSELCg+76l+Qd82d5e7kNqgvSufU981JBM+QwM43w4=;
+        b=HIcz/v5l5h4krWlWHjOk7uGWLS36/gGPbD6q94mV74F+7i3WWmLJg1V0Vu3eSV1qMM
+         D6AC3+wa30Zw9q+Lrprmv+Mt9CdGj6AV1sHrvtLBp6iDxkOj2p43Q5zW6n0Kzgnkxh1o
+         1CxFZVZFU0aKHPIAUha6CvKkT4Bc7MJWyXtN4Niy++BVLUJoptZ3bL+Xqs+C60OMeeWx
+         QPe0deWpBFJPqp9TWcSbdpAiUj2ynuqjiPdtP6w8jcLghz/iHp4gm2uHSyWiYbXXvmQu
+         eL8T2H1YD8myR3SVgLI5/AXH+vkboZaLC696bficonY97jHXijITEhV6Gsj6LwoJcdom
+         ULkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GeSELCg+76l+Qd82d5e7kNqgvSufU981JBM+QwM43w4=;
+        b=KIuS8o6jrdmi95ao/ob2mSNMmiVmyWZCyzHjUDF6Bhl8lMV47rEjk77r8oNn5uRE/t
+         91urzLNvDs9kVxhPmltQmUisL/R7zTGgkcOk/xXt6VK3LrfBXq9s3UI0V5YsfhGVjp/r
+         AszYtvSSFwVqv+wO61o/D+VsCCX0TqQVKDHdgJIgmDrIcBmKtcG3961dAT/ffXZa7ijA
+         O83EQ8di/c708GlZ0A5cMHH8sv1lSlq72dUVm+YqoPCn4PmRFNha30nyH/gUNmhmD7KH
+         QwDcZA0H9psZ2tpPMMOtjTU7PYZwUC5RlQIS4lFhFJAzP++zkdW+Xybh29og9O1lzSYL
+         tcww==
+X-Gm-Message-State: AOAM530PB9VSoFGVtTxP4FNPsI2gn8xBr+oM0W7+tttnoh4IIdBFUwkh
+        +z1HumWlKVAW2gyiK3KX7WTWPX8c0LUD+w==
+X-Google-Smtp-Source: ABdhPJzz+Q2kkqpiYVDogABB+MnnbWms7aUoJFNfRihFiQ88s5NyhBrVt9veq4QvSnGraLqdKYvmGw==
+X-Received: by 2002:a37:4990:: with SMTP id w138mr3114693qka.346.1599138830265;
+        Thu, 03 Sep 2020 06:13:50 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14d:72b1:8920:da15:c0bd:33c1:e2ad])
+        by smtp.gmail.com with ESMTPSA id e63sm2127007qkf.29.2020.09.03.06.13.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 06:13:49 -0700 (PDT)
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+X-Google-Original-From: Daniel W. S. Almeida
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [v2 2/2] media: platform: vpdma.c: fix comparison to bool
+Date:   Thu,  3 Sep 2020 10:13:10 -0300
+Message-Id: <20200903131311.442255-2-dwlsalmeida@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903124201.17275-8-shuo.a.liu@intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 08:41:51PM +0800, shuo.a.liu@intel.com wrote:
-> From: Shuo Liu <shuo.a.liu@intel.com>
-> 
-> A virtual CPU of User VM has different context due to the different
-> registers state. ACRN userspace needs to set the virtual CPU
-> registers state (e.g. giving a initial registers state to a virtual
-> BSP of a User VM).
-> 
-> HSM provides an ioctl ACRN_IOCTL_SET_VCPU_REGS to do the virtual CPU
-> registers state setting. The ioctl passes the registers state from ACRN
-> userspace to the hypervisor directly.
-> 
-> Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
-> Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
-> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-> Cc: Zhi Wang <zhi.a.wang@intel.com>
-> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-> Cc: Yu Wang <yu1.wang@intel.com>
-> Cc: Reinette Chatre <reinette.chatre@intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/virt/acrn/hsm.c       | 14 +++++++
->  drivers/virt/acrn/hypercall.h | 13 +++++++
->  include/uapi/linux/acrn.h     | 71 +++++++++++++++++++++++++++++++++++
->  3 files changed, 98 insertions(+)
-> 
-> diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
-> index 6ec6aa9053d3..13df76d0206e 100644
-> --- a/drivers/virt/acrn/hsm.c
-> +++ b/drivers/virt/acrn/hsm.c
-> @@ -12,6 +12,7 @@
->  #define pr_fmt(fmt) "acrn: " fmt
->  #define dev_fmt(fmt) "acrn: " fmt
->  
-> +#include <linux/io.h>
->  #include <linux/miscdevice.h>
->  #include <linux/mm.h>
->  #include <linux/module.h>
-> @@ -49,6 +50,7 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
->  {
->  	struct acrn_vm *vm = filp->private_data;
->  	struct acrn_vm_creation *vm_param;
-> +	struct acrn_vcpu_regs *cpu_regs;
->  	int ret = 0;
->  
->  	if (vm->vmid == ACRN_INVALID_VMID && cmd != ACRN_IOCTL_CREATE_VM) {
-> @@ -96,6 +98,18 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
->  	case ACRN_IOCTL_DESTROY_VM:
->  		ret = acrn_vm_destroy(vm);
->  		break;
-> +	case ACRN_IOCTL_SET_VCPU_REGS:
-> +		cpu_regs = memdup_user((void __user *)ioctl_param,
-> +				       sizeof(struct acrn_vcpu_regs));
-> +		if (IS_ERR(cpu_regs))
-> +			return PTR_ERR(cpu_regs);
-> +
-> +		ret = hcall_set_vcpu_regs(vm->vmid, virt_to_phys(cpu_regs));
+From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
-No sanity checking of any arguments?
+Fix the following coccinelle report:
 
-Wow, fuzzers are going to have a fun time with your hypervisor, good
-luck!  :)
+drivers/media/platform/ti-vpe/vpdma.c:946:5-26: WARNING:
+Comparison to bool
+
+Found using - Coccinelle (http://coccinelle.lip6.fr)
+
+Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+---
+ drivers/media/platform/ti-vpe/vpdma.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/media/platform/ti-vpe/vpdma.c b/drivers/media/platform/ti-vpe/vpdma.c
+index 2e5148ae7a0f..5893917ce50d 100644
+--- a/drivers/media/platform/ti-vpe/vpdma.c
++++ b/drivers/media/platform/ti-vpe/vpdma.c
+@@ -942,14 +942,13 @@ int vpdma_hwlist_alloc(struct vpdma_data *vpdma, void *priv)
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&vpdma->lock, flags);
+-	for (i = 0; i < VPDMA_MAX_NUM_LIST &&
+-	    vpdma->hwlist_used[i] == true; i++)
+-		;
+-
+-	if (i < VPDMA_MAX_NUM_LIST) {
++	for (i = 0; i < VPDMA_MAX_NUM_LIST; i++) {
++		if (vpdma->hwlist_used[i])
++			continue;
+ 		list_num = i;
+ 		vpdma->hwlist_used[i] = true;
+ 		vpdma->hwlist_priv[i] = priv;
++		break;
+ 	}
+ 	spin_unlock_irqrestore(&vpdma->lock, flags);
+ 
+-- 
+2.28.0
 
