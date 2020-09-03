@@ -2,98 +2,92 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147BCC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CFCC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9DB420775
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599129927;
-	bh=+niwvcTwlWvSoZv6kAV2JhpMuJDFPstWYms2USZ7d24=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p7euPWCi0GlOMqbv6E4db36zoRHvmlHYwM4KzYjtJMywGYojHI9nGMp/WgISsVSn5
-	 nbXEZ2w4sJsrbcbeoV39ZTJ7cdQNavgTcw+AqBpP+4xFc3lLgI+xufgYXZN6Zwx5j0
-	 ybR10MQXl6Dp/vsGy+xnGY8OxxNmW/6QXSIcClNc=
+	by mail.kernel.org (Postfix) with ESMTP id 921AB20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgICKpZ (ORCPT
+        id S1728073AbgICKtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 06:45:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40294 "EHLO mail.kernel.org"
+        Thu, 3 Sep 2020 06:49:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:58772 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbgICKpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:45:00 -0400
-Received: from localhost (unknown [122.171.179.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D9F320716;
-        Thu,  3 Sep 2020 10:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599129900;
-        bh=+niwvcTwlWvSoZv6kAV2JhpMuJDFPstWYms2USZ7d24=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ny980hjyju00iDOjfOO3hsBIP++lWvh948a0EcV7re146EvnnvB0w+0AWdukZNNGJ
-         cNrxyewXQ5B+/FLfYF5pxQOoP7uc3817+kQdOkZur7UaRTNv4sYS3aX5cHXwXFzSUK
-         aVxoy9hfzbDeHwcf4pFlS2Iw6UBrcSskCz5MATJk=
-Date:   Thu, 3 Sep 2020 16:14:56 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, pierre-louis.bossart@linux.intel.com,
-        sanyog.r.kale@intel.com, mengdong.lin@intel.com,
-        bard.liao@intel.com
-Subject: Re: [PATCH v2 00/10] soundwire: intel: add multi-link support
-Message-ID: <20200903104456.GR2639@vkoul-mobl>
-References: <20200901150556.19432-1-yung-chuan.liao@linux.intel.com>
+        id S1725984AbgICKsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 06:48:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10C40101E;
+        Thu,  3 Sep 2020 03:48:42 -0700 (PDT)
+Received: from [10.57.7.89] (unknown [10.57.7.89])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2F5C3F66F;
+        Thu,  3 Sep 2020 03:48:39 -0700 (PDT)
+Subject: Re: [PATCH v2 3/4] kselftests/arm64: add PAuth test for whether
+ exec() changes keys
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>, boian4o1@gmail.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        amit.kachhap@arm.com, vincenzo.frascino@arm.com,
+        Shuah Khan <shuah@kernel.org>
+References: <20200831110450.30188-1-boyan.karatotev@arm.com>
+ <20200831110450.30188-4-boyan.karatotev@arm.com>
+ <20200902170854.GK6642@arm.com>
+From:   Boyan Karatotev <boyan.karatotev@arm.com>
+Message-ID: <926691e4-1990-207e-bcb9-40ab6d3b0fa0@arm.com>
+Date:   Thu, 3 Sep 2020 11:48:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901150556.19432-1-yung-chuan.liao@linux.intel.com>
+In-Reply-To: <20200902170854.GK6642@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-09-20, 23:05, Bard Liao wrote:
-> This series enables multi-link support for Intel platforms.
+On 02/09/2020 18:08, Dave Martin wrote:
+> On Mon, Aug 31, 2020 at 12:04:49PM +0100, Boyan Karatotev wrote:
+>> +/*
+>> + * fork() does not change keys. Only exec() does so call a worker program.
+>> + * Its only job is to sign a value and report back the resutls
+>> + */
+>> +TEST(exec_unique_keys)
+>> +{
+> 
+> The kernel doesn't guarantee that keys are unique.
+> 
+> Can we present all the "unique keys" wording differently, say
+> 
+> 	exec_key_collision_likely()
 
-Applied all, thanks
+I agree that this test's name is a bit out of place. I would rather have
+it named "exec_changed_keys" though.
 
+> Otherwise people might infer from this test code that the keys are
+> supposed to be truly unique and start reporting bugs on the kernel.
 > 
-> Changes in v2:
-> - Remove the "soundwire: intel: Only call sdw stream APIs for the first
->   cpu_dai" patch form this series. We will move the sounwdire stream
->   operations to machine driver in another series.
-> - Update the commit message and title of "soundwire: intel: add error log
->   for clock-stop invalid configs"
-> 
-> Pierre-Louis Bossart (10):
->   soundwire: intel: disable shim wake on suspend
->   soundwire: intel: ignore software command retries
->   soundwire: intel: add multi-link support
->   soundwire: intel: add missing support for all clock stop modes
->   soundwire: bus: update multi-link definition with hw sync details
->   soundwire: intel: add multi-link hw_synchronization information
->   soundwire: stream: enable hw_sync as needed by hardware
->   soundwire: intel: add error log for clock-stop invalid configs
->   soundwire: intel: pass link_mask information to each master
->   soundwire: intel: don't manage link power individually
-> 
->  drivers/soundwire/intel.c      | 264 ++++++++++++++++++++++++++++-----
->  drivers/soundwire/intel.h      |   2 +
->  drivers/soundwire/intel_init.c |   1 +
->  drivers/soundwire/stream.c     |  15 +-
->  include/linux/soundwire/sdw.h  |   6 +
->  5 files changed, 243 insertions(+), 45 deletions(-)
-> 
-> -- 
-> 2.17.1
+> I can't see an obvious security argument for unique keys (rather, the
+> keys just need to be "unique enough".  That's the job of
+> get_random_bytes().)
+
+The "exec_unique_keys" test only checks that the keys changed after an
+exec() which I think the name change would reflect.
+
+The thing with the "single_thread_unique_keys" test is that the kernel
+says the the keys will be random. Yes, there is no uniqueness guarantee
+but I'm not sure how to phrase it differently. There is some minuscule
+chance that the keys end up the same, but for this test I pretend this
+will not happen. Would changing up the comments and the failure message
+communicate this? Maybe substitute "unique" for "different" and say how
+many keys clashed?
 
 -- 
-~Vinod
+Regards,
+Boyan
