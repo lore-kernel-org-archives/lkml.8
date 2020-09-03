@@ -2,88 +2,152 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D585C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B57C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9584206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BD1F20722
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599154593;
+	bh=ZgXFwX5oAv1FQVf6yu0FMF5tmKqNX9IfmO5ac6OkoCc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Jy0YFoHAI0KJznPc8O4u2MLMG6tnAQ22drp9SrgzVUGDNNkRwWh8J2ujJAx55dNVK
+	 DfgOJQ01b2Y4TjLWEIa3xJCkKTQ4d+DfGOvrzNWlBVR6bCFHO700lZ3RUD6DCeyt5Z
+	 lY65IC7O5ji6HW/W6317ik2gLmjHu9U9sIAfx/h0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgICRfM (ORCPT
+        id S1728719AbgICRga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 13:35:12 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:40558 "EHLO albireo.enyo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbgICRfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 13:35:09 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1kDt8U-0004Wm-Jl; Thu, 03 Sep 2020 17:34:58 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1kDt8U-00087R-Fu; Thu, 03 Sep 2020 19:34:58 +0200
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
-        David Rientjes <rientjes@google.com>,
-        Arjun Roy <arjunroy@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        SeongJae Park <sjpark@amazon.de>, linux-man@vger.kernel.org
-Subject: Re: [PATCH v9 3/3] mm/madvise: introduce process_madvise() syscall: an external memory hinting API
-References: <20200901000633.1920247-1-minchan@kernel.org>
-        <20200901000633.1920247-4-minchan@kernel.org>
-        <87blippc7p.fsf@mid.deneb.enyo.de>
-        <20200903172618.GB1959033@google.com>
-Date:   Thu, 03 Sep 2020 19:34:58 +0200
-In-Reply-To: <20200903172618.GB1959033@google.com> (Minchan Kim's message of
-        "Thu, 3 Sep 2020 10:26:18 -0700")
-Message-ID: <87pn72lq65.fsf@mid.deneb.enyo.de>
+        Thu, 3 Sep 2020 13:36:30 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39140 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbgICRg1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 13:36:27 -0400
+Received: by mail-ed1-f67.google.com with SMTP id c10so3505107edk.6;
+        Thu, 03 Sep 2020 10:36:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gh69+24/Chdrnxcf6KgQPJmRC4c9fN5aU1ZFyq23BhM=;
+        b=g9uKFjziYXjDVHYf0ALrhfihIehF1nlnfyWvwi0tVgdp2nPiEFDHKbKB8v0UwBfbu+
+         XRL6EC71e0QxI2cYMQWs9CTZ1A+YwUoWUyzVNDSw+oPVtZ8goxc1f1tubY9Hivzavl/8
+         JifHXR/zKelCuYFp7ARM0IzdHP7H5wJKRsEz9Xt1WhPt/FKim4ROQsQH4dYcfiL4qQZ9
+         GIBaRmEOS8eVHplonVfiOt4aWdbUp2fdqk/pOjeLGbPL815mP46JxYVKRDN37llKXEca
+         /uHmKEWyDIcuI9IqpVew9I+kzB2YpsGN9QyH7NYzmISMi5KZkgByca3YSvWmkw/pVvl/
+         8tKA==
+X-Gm-Message-State: AOAM532X0JhBSo5wIEJH0wkxRiD7CcY4qghWKtq1np43aOUaNFv2Qm7D
+        eZI1fXTIy0tOrUbOON6WPjUqfkfxSUz2TDpPSLq/QnknSPc=
+X-Google-Smtp-Source: ABdhPJx7Im4zZcqn+QWwgAsgUOeBpXbqj93qwsM7wEGQ3Tf5TTX74jmGTxVUg7FM0dZMbsAGdWlM6dbuB0Hgkf7PjWQ=
+X-Received: by 2002:a05:6402:1495:: with SMTP id e21mr4155933edv.146.1599154585348;
+ Thu, 03 Sep 2020 10:36:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200717060849.12469-1-liwei.song@windriver.com>
+ <CAJvTdKm9WHgQuP38Y2o1zQ-VgLKMMDup4crAPrW3pexoWft+6Q@mail.gmail.com>
+ <52f16995-6d2d-fa7d-ed5e-682db3461d03@windriver.com> <CAJvTdKms0Qj3d+g_tK8oboMXebYgnPm51EdSL_UvLdw3GV6A3A@mail.gmail.com>
+ <alpine.LNX.2.20.13.2008232345570.12553@monopod.intra.ispras.ru> <cce63c40-1633-5b86-6aaf-7f9a93c63eac@windriver.com>
+In-Reply-To: <cce63c40-1633-5b86-6aaf-7f9a93c63eac@windriver.com>
+From:   Len Brown <lenb@kernel.org>
+Date:   Thu, 3 Sep 2020 13:36:14 -0400
+Message-ID: <CAJvTdKk7Gd3G4K7um=6HC3YJu48aVW+4WFvr8jVqyOKcSZc7qQ@mail.gmail.com>
+Subject: Re: [PATCH] tools/power turbostat: call pread64 in kernel directly
+To:     Liwei Song <liwei.song@windriver.com>
+Cc:     Alexander Monakov <amonakov@ispras.ru>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Minchan Kim:
+> -D_FILE_OFFSET_BITS=64
 
-> On Tue, Sep 01, 2020 at 08:46:02PM +0200, Florian Weimer wrote:
->> * Minchan Kim:
->> 
->> >       ssize_t process_madvise(int pidfd, const struct iovec *iovec,
->> >                 unsigned long vlen, int advice, unsigned int flags);
->> 
->> size_t for vlen provides a clearer hint regarding the type of special
->> treatment needed for ILP32 here (zero extension, not changing the type
->> to long long).
->> 
+Applied.
+
+thanks!
+-Len
+
+On Mon, Aug 24, 2020 at 12:09 AM Liwei Song <liwei.song@windriver.com> wrote:
 >
-> All existing system calls using iove in Linux uses unsigned long so
-> I want to be consistent with them unless process_madvise need something
-> speicial.
+>
+>
+> On 8/24/20 04:54, Alexander Monakov wrote:
+> > Hi,
+> >
+> > I am not the original submitter, but I have answers and a proper patch :)
+> >
+> > On Fri, 21 Aug 2020, Len Brown wrote:
+> >
+> >> Re: offset size
+> >>
+> >> The offsets on this file are the MSR offsets.
+> >> What MSR are you trying to access at offset 0xc0010299?
+> >
+> > This MSR is particular is part of AMD RAPL (energy measurements) interface.
+> >
+> >> Re: pread vs pread64
+> >>
+> >> If I take on faith that you have some kind of 32-bit execution
+> >> environment that makes pread into pread32 instead of pread64, and that
+> >> truncates an off_t to 32-bits from 64-bits, and it actually makes
+> >> sense to request a read at this large offset...
+> >
+> > The problem here stems from the backward compatibility in Glibc: off_t is
+> > 32-bit on 32-bit x86, unless compiled with -D_FILE_OFFSET_BITS=64. This
+> > macro should be used for all new code. Distros should enable it for all
+> > builds, but when one builds turbostat 'by hand', they hit the issue.
+> >
+> >> would we really have to invoke syscall() directly -- couldn't we
+> >> invoke pread64() directly? (eg. below)
+> >
+> > No, the proper fix is to pass -D_FILE_OFFSET_BITS=64 to the compiler.
+> >
+> > Here's the patch:
+>
+> This path works with my case.
+>
+> Thanks,
+> Liwei.
+>
+>
+> >
+> > ---8<---
+> >
+> > From: Alexander Monakov <amonakov@ispras.ru>
+> > Date: Sun, 23 Aug 2020 23:27:02 +0300
+> > Subject: [PATCH] turbostat: build with _FILE_OFFSET_BITS=64
+> >
+> > For compatibility reasons, Glibc off_t is a 32-bit type on 32-bit x86
+> > unless _FILE_OFFSET_BITS=64 is defined. Add this define, as otherwise
+> > reading MSRs with index 0x80000000 and above attempts a pread with a
+> > negative offset, which fails.
+> >
+> > Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+> > ---
+> >  tools/power/x86/turbostat/Makefile | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/tools/power/x86/turbostat/Makefile b/tools/power/x86/turbostat/Makefile
+> > index 2b6551269e43..40ae44402eec 100644
+> > --- a/tools/power/x86/turbostat/Makefile
+> > +++ b/tools/power/x86/turbostat/Makefile
+> > @@ -12,6 +12,7 @@ turbostat : turbostat.c
+> >  override CFLAGS +=   -O2 -Wall -I../../../include
+> >  override CFLAGS +=   -DMSRHEADER='"../../../../arch/x86/include/asm/msr-index.h"'
+> >  override CFLAGS +=   -DINTEL_FAMILY_HEADER='"../../../../arch/x86/include/asm/intel-family.h"'
+> > +override CFLAGS +=   -D_FILE_OFFSET_BITS=64
+> >  override CFLAGS +=   -D_FORTIFY_SOURCE=2
+> >
+> >  %: %.c
+> >
 
-Userspace uses int, following POSIX (where applicable).  There is no
-consistency to be had here.
+
+
+-- 
+Len Brown, Intel Open Source Technology Center
