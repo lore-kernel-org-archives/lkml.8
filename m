@@ -2,117 +2,96 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A456C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFA3C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0611320716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:47:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DrefXjNN"
+	by mail.kernel.org (Postfix) with ESMTP id 3EBE920716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:47:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599151663;
+	bh=fgvrvS59jSgN+YToxsj2Nbt2XMbpHPk1z7zm+qtKIT8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=12dd1fHDsEb3FDCzUZJeLhqfYspQlcBuYDPhdCeNPax+0wiQupAFOGPl6sAyJ/mOH
+	 +/+PxcLI+lvNCMgnfFjkxjLT3Pf+lvsg/X/ylx6GQ44FNxWGNw6Bk9Z+qsj9fjAymo
+	 lorbHq2gd146iV67rQBhIDFCd4TE0yp4LBAttrEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbgICQrZ (ORCPT
+        id S1728965AbgICQrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:47:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728902AbgICQrT (ORCPT
+        Thu, 3 Sep 2020 12:47:42 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:38691 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbgICQrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:47:19 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 999CCC061245
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 09:47:18 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id i1so3219203edv.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 09:47:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BoOsmQ2rBW+EbnUHAzVo+1cABtO0sjJmNcwrCxNVF/A=;
-        b=DrefXjNN8klAxwkDEtDXlFK8vggfcZ/C/CRF+LX12Ix1TZ08f0o81Izumvko0Z2jVF
-         LycY29rD0Pxs+7jbEPJZloKwDB2Uc4g/PH8c5khbTdNmIPWrx8dHYNHOeJMvQMQQB1qJ
-         HwAKRNQ2jz9daw1E8VUsyq24UC6Mcxb74XxIs=
+        Thu, 3 Sep 2020 12:47:40 -0400
+Received: by mail-il1-f195.google.com with SMTP id w3so3328486ilh.5;
+        Thu, 03 Sep 2020 09:47:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BoOsmQ2rBW+EbnUHAzVo+1cABtO0sjJmNcwrCxNVF/A=;
-        b=hDVX/w8B3v1x2gDMmRjgC6QEFpku7Mq9B/NNU9U6vUZ7VGx9oMPspQ7zRkF+5uthQ1
-         n1iueRJdqJC0CIqaTfySZm6Trz9qhD4Vw53lan/izQOT/aFpwPHC8r9BPkhGo1J2SNyI
-         u0NY1FKQ4DIrG7ZcjPRkte4Lq9jLUMi1s/GgK9LQcxZtU/Ptqz7LQec2kotVLJgNfG3N
-         +pH668CRYQtKb9Xqp3PiREF/8mOVyjXNHKjT+f3vjc6jp7OawV5BYP6PdDBM0j+5/+cJ
-         R1RUnPJa9ZPxAC7pjBTMw3GFkoXFiR8DqjNEyphiOTbVoNPQ7SP9IuACHEbZD0aX190R
-         rQ7g==
-X-Gm-Message-State: AOAM531GAGC/Y7ZUxWMOwt5RGbR0zVodNrphfaKidOyyIY7F+1blh51u
-        b9tm4gQU+lK16h6j+5Q2I+Tci4TuCQIW58Fn1KidnA==
-X-Google-Smtp-Source: ABdhPJxMeFogkFas77zemMlntf263DD9ilLv7Qd6K+YljkScZccbQgYQDbdCP80JMCHM2uxPrdDdTxdUYKasre4/cYA=
-X-Received: by 2002:aa7:d750:: with SMTP id a16mr4221514eds.362.1599151637185;
- Thu, 03 Sep 2020 09:47:17 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cpkYtO3goB70S5Zk4sLb1vXO3uhYcLt8YvepwZ1oACw=;
+        b=YhOvgh9GUlJ31ev23FwHMOSkG5sMDgKj173r4dK1BpcU7BlAXM9NZQjEUupL/zfgXT
+         Oc0/0NK/6FGUX9Nd/twieRzVjjoMpPREzNLPIZ9cWNXTuozWZJUV7nwE2ZQOxYrD0x2p
+         X8LKdjGtZXV1TgknlrJIsxCCPV9hD5d7VY9eMoSRBSUimVx5KoLerDd+wVvuYRu47XWU
+         dDrBHF+b0R94CROFFPpMItWmI0laIywY/+DkNKC/V91njpa8q+jkcjFWmjXKmGy5E4to
+         4LBwcnbv9ChFR3HS3RpzZTk+79jd1o6X9pXGxhQ5z1ZtK8Lnm3eV/7vkVyJXJQz/FbCq
+         BhFw==
+X-Gm-Message-State: AOAM533KiD/kqumW8kz2uzDZKFrSfty2M9Mg1eHHqp9he0XZFyXQIssA
+        AeqiojjGvR8kywvf7TPRYA==
+X-Google-Smtp-Source: ABdhPJzm0dZgqusi1IwGj/t8TXXA2VCoB4/ojBoVS5J1+GJ8RiWXpDpcvKXVi0SJpK3PWvduyYrVUA==
+X-Received: by 2002:a92:60b:: with SMTP id x11mr3795331ilg.179.1599151659642;
+        Thu, 03 Sep 2020 09:47:39 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id h15sm1614283ils.74.2020.09.03.09.47.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 09:47:39 -0700 (PDT)
+Received: (nullmailer pid 2931399 invoked by uid 1000);
+        Thu, 03 Sep 2020 16:47:38 -0000
+Date:   Thu, 3 Sep 2020 10:47:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        alsa-devel@alsa-project.org, Sangbeom Kim <sbkim73@samsung.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: sound: midas-audio: Correct parsing
+ sound-dai phandles
+Message-ID: <20200903164738.GA2929052@bogus>
+References: <20200830112633.6732-1-krzk@kernel.org>
+ <159897179515.47719.6003518135515395142.b4-ty@kernel.org>
 MIME-Version: 1.0
-References: <20200831082917.17117-1-jagan@amarulasolutions.com>
- <20200831082917.17117-6-jagan@amarulasolutions.com> <20200903162550.GA2896127@bogus>
-In-Reply-To: <20200903162550.GA2896127@bogus>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 3 Sep 2020 22:17:05 +0530
-Message-ID: <CAMty3ZCXV9=VzVKiKJ740RcR+uYA7CHUzjrDL0vwQ1NOw9n4FQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] dt-bindings: arm: rockchip: Add Engicam PX30.Core
- C.TOUCH 2.0
-To:     Rob Herring <robh@kernel.org>
-Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159897179515.47719.6003518135515395142.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 9:55 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, 31 Aug 2020 13:59:15 +0530, Jagan Teki wrote:
-> > PX30.Core is an EDIMM SOM based on Rockchip PX30 from Engicam.
-> >
-> > C.TOUCH 2.0 is a general purpose carrier board with capacitive
-> > touch interface support.
-> >
-> > PX30.Core needs to mount on top of this Carrier board for creating
-> > complete PX30.Core C.TOUCH 2.0 board.
-> >
-> > Add bindings for it.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> > Changes for v3:
-> > - none
-> > Changes for v2:
-> > - new patch
-> >
-> >  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
->
->
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
->
-> If a tag was not added on purpose, please state why and what changed.
+On Tue, Sep 01, 2020 at 03:50:05PM +0100, Mark Brown wrote:
+> On Sun, 30 Aug 2020 13:26:32 +0200, Krzysztof Kozlowski wrote:
+> > The "sound-dai" property has cells therefore phandle-array should be
+> > used, even if it is just one phandle.  This fixes dtbs_check warnings
+> > like:
+> > 
+> >   arch/arm/boot/dts/exynos4412-trats2.dt.yaml: sound: cpu:sound-dai:0:1: missing phandle tag in 0
+> >   arch/arm/boot/dts/exynos4412-trats2.dt.yaml: sound: cpu:sound-dai:0: [158, 0] is too long
+> 
+> Applied to
+> 
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> 
+> Thanks!
+> 
+> [1/2] ASoC: midas-audio: Correct parsing sound-dai phandles
+>       commit: 3e7ba1c0432ef9a792b9c77d36f78037626303b0
+> [2/2] ASoC: odroid: Use unevaluatedProperties
+>       commit: a57307ca6b661e16f9435a25f376ac277c3de697
 
-Yes, it's on purpose. The previous binding was about C.TOUCH with LVDS
-board and this one is C.TOUCH carrier only. ie the main reason I have
-not included. I did mention in the cover-letter saying previous one
-dropped and the C.TOUCH carrier added.
+This one should be reverted/dropped too. Patch 1 is fine.
 
-Hope this answers your query.
-
-Jagan.
