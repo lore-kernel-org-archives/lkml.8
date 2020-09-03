@@ -2,185 +2,188 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8E3C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3726FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1E682071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:37:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599133067;
-	bh=V5y+y4ckj5wtg1W1CTDEuywzLwbESPco3MLGZI3/DcI=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=sFpa8aN5LuKS32H2/lmVcQPZ/4D2VltwAq12+l+w7Bb3sIdYE4bVLNNQ5mLDcn/Fc
-	 rzA3XJ6TqFNBICijRHGM0u3ACmBHpUmXJkMfnrz4vJWPJZS+kjiY+hrEq7MyrXbSNg
-	 nYIio5NXGSz4TZzz4boxGuYJoy/oYJSIsbcn1PP4=
+	by mail.kernel.org (Postfix) with ESMTP id F08552071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:38:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="FOTskssg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgICLhl (ORCPT
+        id S1728343AbgICLig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:37:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37708 "EHLO mail.kernel.org"
+        Thu, 3 Sep 2020 07:38:36 -0400
+Received: from crapouillou.net ([89.234.176.41]:51414 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728591AbgICLa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:30:28 -0400
-Received: from [192.168.0.50] (89-70-52-201.dynamic.chello.pl [89.70.52.201])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 696A02071B;
-        Thu,  3 Sep 2020 11:18:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599131928;
-        bh=V5y+y4ckj5wtg1W1CTDEuywzLwbESPco3MLGZI3/DcI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=1gkRkIIKuv1Nfmp9tk1EMA/CHfjflnxAq84fYOIoDaeIye7wTy1JurkbZ+xyf5Uoi
-         /7XXpWTtQ2h9oD+uqtuRmdtZhyUK6IU3AjFT9qMNc7eFrie2wcPQqixQMzZpO8Ryb5
-         Ldgvp/H03/Tx3h/URe8JveHvTCZNx3jfN/VGnY2U=
-Subject: Re: [PATCH v2 6/9] spi: spi-s3c64xx: Check return values
-To:     Lukasz Stelmach <l.stelmach@samsung.com>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
-        linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-References: <fa403451-5f61-8edf-c696-2d020ec5b920@kernel.org>
- <CGME20200903084555eucas1p2f40375edb325107b68966fd52198b220@eucas1p2.samsung.com>
- <dleftjmu27s0y8.fsf%l.stelmach@samsung.com>
-From:   Sylwester Nawrocki <snawrocki@kernel.org>
-Message-ID: <a3e1e8d8-8ad8-6807-6317-caf79f44e91d@kernel.org>
-Date:   Thu, 3 Sep 2020 13:18:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728596AbgICLbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:31:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1599132378; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VitADMM0fnVC5UEnlJQqBbjbeuxkosY7PKciS9JCWhQ=;
+        b=FOTskssgTXu613ZyXQFH73GPSn4sAH4YrP0JV6oEP+WsASxewPFIop8x6uA55dH2X0sPIU
+        nYurhrftzHdBnJRaCPCA6k8tDEyO3YMnmeLEyHvxrjcjUS+VBt6Ymr6jWUZnVt/N1mci+7
+        cxpnf7I+HG5vzL5cT8vb59uEQPISUYA=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Tony Prisk <linux@prisktech.co.nz>, Bin Liu <b-liu@ti.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 06/20] usb/chipidea: core: Use pm_ptr() macro
+Date:   Thu,  3 Sep 2020 13:25:40 +0200
+Message-Id: <20200903112554.34263-7-paul@crapouillou.net>
+In-Reply-To: <20200903112554.34263-1-paul@crapouillou.net>
+References: <20200903112554.34263-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <dleftjmu27s0y8.fsf%l.stelmach@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/20 10:45, Lukasz Stelmach wrote:
-> It was <2020-09-02 śro 10:14>, when Sylwester Nawrocki wrote:
->> On 9/1/20 17:21, Lukasz Stelmach wrote:
->>> It was <2020-08-25 wto 21:06>, when Sylwester Nawrocki wrote:
->>>> On 8/21/20 18:13, Łukasz Stelmach wrote:
->>>>> Check return values in prepare_dma() and s3c64xx_spi_config() and
->>>>> propagate errors upwards.
->>>>>
->>>>> Signed-off-by: Łukasz Stelmach<l.stelmach@samsung.com>
->>>>> ---
->>>>>     drivers/spi/spi-s3c64xx.c | 47 ++++++++++++++++++++++++++++++++-------
->>>>>     1 file changed, 39 insertions(+), 8 deletions(-)
->>>>
->>>>> @@ -298,12 +299,24 @@ static void prepare_dma(struct s3c64xx_spi_dma_data *dma,
->>>>>       	desc = dmaengine_prep_slave_sg(dma->ch, sgt->sgl, sgt->nents,
->>>>>     				       dma->direction, DMA_PREP_INTERRUPT);
->>>>> +	if (!desc) {
->>>>> +		dev_err(&sdd->pdev->dev, "unable to prepare %s scatterlist",
->>>>> +			dma->direction == DMA_DEV_TO_MEM ? "rx" : "tx");
->>>>> +		return -ENOMEM;
->>>>> +	}
->>>>>       	desc->callback = s3c64xx_spi_dmacb;
->>>>>     	desc->callback_param = dma;
->>>>>       	dma->cookie = dmaengine_submit(desc);
->>>>> +	ret = dma_submit_error(dma->cookie);
->>>>> +	if (ret) {
->>>>> +		dev_err(&sdd->pdev->dev, "DMA submission failed");
->>>>> +		return -EIO;
->>>>
->>>> Just return the error value from dma_submit_error() here?
->>>>
->>>
->>> --8<---------------cut here---------------start------------->8---
->>> static inline int dma_submit_error(dma_cookie_t cookie)
->>> {
->>>           return cookie < 0 ? cookie : 0;
->>>
->>> }
->>> --8<---------------cut here---------------end--------------->8---
->>>
->>> Not quite meaningful IMHO, is it?
->>
->> dma_submit_error() returns 0 or an error code, I think it makes sense
->> to propagate that error code rather than replacing it with -EIO.
-> 
-> It is not an error code that d_s_e() returns it is a value returned by
-> dma_cookie_assign() called from within the tx_submit() operation of a
-> DMA driver.
-> 
-> --8<---------------cut here---------------start------------->8---
-> static inline dma_cookie_t dma_cookie_assign(struct
-> dma_async_tx_descriptor *tx)
-> {
->          struct dma_chan *chan = tx->chan;
->          dma_cookie_t cookie;
-> 
->          cookie = chan->cookie + 1;
->          if (cookie < DMA_MIN_COOKIE)
->                  cookie = DMA_MIN_COOKIE;
->          tx->cookie = chan->cookie = cookie;
-> 
->          return cookie;
-> }
-> --8<---------------cut here---------------end--------------->8---
-> 
-> Yes, a non-zero value returned by d_s_e() indicates an error but it
-> definitely isn't one of error codes from errno*.h.
+Use the newly introduced pm_ptr() macro, and mark the suspend/resume
+functions __maybe_unused. These functions can then be moved outside the
+CONFIG_PM_SUSPEND block, and the compiler can then process them and
+detect build failures independently of the config. If unused, they will
+simply be discarded by the compiler.
 
-I guess we can end that discussion at this point and keep your patch
-as is, I just followed comment at the dma_submit_error() function:
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/usb/chipidea/core.c | 26 +++++++++++---------------
+ 1 file changed, 11 insertions(+), 15 deletions(-)
 
-"if dma_cookie_t is >0 it's a DMA request cookie, <0 it's an error code"
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index aa40e510b806..af64ab98fb56 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -1231,9 +1231,8 @@ static int ci_hdrc_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
-AFAICS dma_cookie_assign() always returns value > 0 and dma_submit_error()
-only returns the cookie if its value is < 0 so in consequence d_s_e() will 
-be always returning 0 in your case (PL330 DMAC)?
-
-The below commit, likely a result of static code analysis, might be 
-a confirmation. It could also explain why some drivers overwrite the return
-value of d_s_e() and some just pass it up to the callers.
-
---------------------------------8<------------------------------------
-commit 71ea148370f8b6c745a8a42f6fd983cf5ebade18
-Author: Dan Carpenter <dan.carpenter@oracle.com>
-Date:   Sat Aug 10 10:46:50 2013 +0300
-
-    dmaengine: make dma_submit_error() return an error code
-    
-    The problem here is that the dma_xfer() functions in
-    drivers/ata/pata_arasan_cf.c and drivers/mtd/nand/fsmc_nand.c expect
-    dma_submit_error() to return an error code so they return 1 when they
-    intended to return a negative.
-    
-    So far as I can tell, none of the ->tx_submit() functions ever do
-    return error codes so this patch should have no effect in the current
-    code.
-    
-    I also changed it from a define to an inline.
-    
-    Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-    Signed-off-by: Dan Williams <djbw@fb.com>
-
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index cb286b1a..b3ba7e4 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -38,7 +38,10 @@ typedef s32 dma_cookie_t;
- #define DMA_MIN_COOKIE 1
- #define DMA_MAX_COOKIE INT_MAX
+-#ifdef CONFIG_PM
+ /* Prepare wakeup by SRP before suspend */
+-static void ci_otg_fsm_suspend_for_srp(struct ci_hdrc *ci)
++static void __maybe_unused ci_otg_fsm_suspend_for_srp(struct ci_hdrc *ci)
+ {
+ 	if ((ci->fsm.otg->state == OTG_STATE_A_IDLE) &&
+ 				!hw_read_otgsc(ci, OTGSC_ID)) {
+@@ -1245,7 +1244,7 @@ static void ci_otg_fsm_suspend_for_srp(struct ci_hdrc *ci)
+ }
  
--#define dma_submit_error(cookie) ((cookie) < 0 ? 1 : 0)
-+static inline int dma_submit_error(dma_cookie_t cookie)
-+{
-+       return cookie < 0 ? cookie : 0;
-+}
---------------------------------8<------------------------------------
-
-
+ /* Handle SRP when wakeup by data pulse */
+-static void ci_otg_fsm_wakeup_by_srp(struct ci_hdrc *ci)
++static void __maybe_unused ci_otg_fsm_wakeup_by_srp(struct ci_hdrc *ci)
+ {
+ 	if ((ci->fsm.otg->state == OTG_STATE_A_IDLE) &&
+ 		(ci->fsm.a_bus_drop == 1) && (ci->fsm.a_bus_req == 0)) {
+@@ -1259,7 +1258,7 @@ static void ci_otg_fsm_wakeup_by_srp(struct ci_hdrc *ci)
+ 	}
+ }
+ 
+-static void ci_controller_suspend(struct ci_hdrc *ci)
++static void __maybe_unused ci_controller_suspend(struct ci_hdrc *ci)
+ {
+ 	disable_irq(ci->irq);
+ 	ci_hdrc_enter_lpm(ci, true);
+@@ -1277,7 +1276,7 @@ static void ci_controller_suspend(struct ci_hdrc *ci)
+  * interrupt (wakeup int) only let the controller be out of
+  * low power mode, but not handle any interrupts.
+  */
+-static void ci_extcon_wakeup_int(struct ci_hdrc *ci)
++static void __maybe_unused ci_extcon_wakeup_int(struct ci_hdrc *ci)
+ {
+ 	struct ci_hdrc_cable *cable_id, *cable_vbus;
+ 	u32 otgsc = hw_read_otgsc(ci, ~0);
+@@ -1294,7 +1293,7 @@ static void ci_extcon_wakeup_int(struct ci_hdrc *ci)
+ 		ci_irq(ci->irq, ci);
+ }
+ 
+-static int ci_controller_resume(struct device *dev)
++static int __maybe_unused ci_controller_resume(struct device *dev)
+ {
+ 	struct ci_hdrc *ci = dev_get_drvdata(dev);
+ 	int ret;
+@@ -1332,8 +1331,7 @@ static int ci_controller_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM_SLEEP
+-static int ci_suspend(struct device *dev)
++static int __maybe_unused ci_suspend(struct device *dev)
+ {
+ 	struct ci_hdrc *ci = dev_get_drvdata(dev);
+ 
+@@ -1366,7 +1364,7 @@ static int ci_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int ci_resume(struct device *dev)
++static int __maybe_unused ci_resume(struct device *dev)
+ {
+ 	struct ci_hdrc *ci = dev_get_drvdata(dev);
+ 	int ret;
+@@ -1386,9 +1384,8 @@ static int ci_resume(struct device *dev)
+ 
+ 	return ret;
+ }
+-#endif /* CONFIG_PM_SLEEP */
+ 
+-static int ci_runtime_suspend(struct device *dev)
++static int __maybe_unused ci_runtime_suspend(struct device *dev)
+ {
+ 	struct ci_hdrc *ci = dev_get_drvdata(dev);
+ 
+@@ -1408,13 +1405,12 @@ static int ci_runtime_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int ci_runtime_resume(struct device *dev)
++static int __maybe_unused ci_runtime_resume(struct device *dev)
+ {
+ 	return ci_controller_resume(dev);
+ }
+ 
+-#endif /* CONFIG_PM */
+-static const struct dev_pm_ops ci_pm_ops = {
++static const struct dev_pm_ops __maybe_unused ci_pm_ops = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(ci_suspend, ci_resume)
+ 	SET_RUNTIME_PM_OPS(ci_runtime_suspend, ci_runtime_resume, NULL)
+ };
+@@ -1424,7 +1420,7 @@ static struct platform_driver ci_hdrc_driver = {
+ 	.remove	= ci_hdrc_remove,
+ 	.driver	= {
+ 		.name	= "ci_hdrc",
+-		.pm	= &ci_pm_ops,
++		.pm	= pm_ptr(&ci_pm_ops),
+ 		.dev_groups = ci_groups,
+ 	},
+ };
+-- 
+2.28.0
 
