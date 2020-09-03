@@ -2,207 +2,292 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD54C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D8EC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4BA206E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE14205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:39:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g4apFT53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgICIiU (ORCPT
+        id S1728300AbgICIjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:38:20 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:34973 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbgICIiR (ORCPT
+        Thu, 3 Sep 2020 04:39:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgICIjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:38:17 -0400
-Received: by mail-io1-f69.google.com with SMTP id k20so1566080iog.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 01:38:16 -0700 (PDT)
+        Thu, 3 Sep 2020 04:39:23 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 554EDC061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 01:39:23 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id w3so2626436ljo.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 01:39:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l1+KprXhZGef8Rb9ieczG1W+XIS9ueb9SQhC8QB/pgQ=;
+        b=g4apFT53/TlrASHvU155PZHQSjzc/2KcFYVpuIBgS28H+m6xbha7JuJrAWilvSLhhs
+         c5wSDr83xDt8lJGUHmCoQJyOdmAFedbGDSBlvHHp7SBzm/uRUxNfqTXF9ieiqNSUEvyo
+         M3p76IrRTLweF8bqDjJYysCGlleyQGkyWFQje+k9w2a1D6A85pkbTueEvMOOM3cITNM2
+         cJJ/nJDtWArhnKdN1aGLo68yIQQmCu9IjXzSHIE1wlr9EU4q541cW+FKFmZsLMnqZSq4
+         2zq87PdQo7wWPqVnl28xt/r3lngHOAUicLA5OwdhueiiOEJXt3yDVraXp4GZt/SIVExz
+         cw5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5yw+y/EAY0aiRQYm9hBim6HKvGmLNcAx4clfWQsIHgE=;
-        b=nbEeHftYeHpwLLGvLpzwosZkmDCyf+3Yff9BiqmWPF3s7ZoaSsXJ5z6DdfK5W1lD88
-         cW+HfFTyUjujL8oyklrfmR+zuaXIrY8ta71haMZCc/tJZum0sFyK3C8Dxi2TdSrGqlnr
-         FRovWE8qmgnk9cxtjgFL6jsJ0mrWgLRycjfqTLuOdWUk+mjWOsRUvyIy4XtjWaj4L4qD
-         5Ggt6/8HarbMwxUqWKxTEwn1ZBuxUuq+IiwFVgbhL+tgc2vMVfXoEwRms4Y2ASDjFIFK
-         EdD/Lyb8PLh84cre5zVsDOgORGREhqYjNzr7Zyn1iUqmw2pKFUBmxOBlIFKUIiM92y5q
-         1SYg==
-X-Gm-Message-State: AOAM531RWXI37pPlQjTbLg0r3sf0q4P68y2XZbP5LYtCY3CpmsIrS+sl
-        AjkloPqK/mR66By7LZxiin5lUO8xupKMLuFTfwUgOwicUNDx
-X-Google-Smtp-Source: ABdhPJw6WQeufeQh83+sV6fGkHpyJB8wn8PnwvD6to4WUJfFBFLpsQtw4s+3wcdJpx0YDy0dc+1e6CrZpHLMUk+v5WYOreBCOlKc
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l1+KprXhZGef8Rb9ieczG1W+XIS9ueb9SQhC8QB/pgQ=;
+        b=MjN7PCMe3sru/R0U96muTh1s+cXmaUQVvOap7bl7xboVjvMoW2n3YqcEtbcH/SFyCz
+         9eEbAWwu6MCu9rkdK09enioHxsFMFfcgZ+ERNVmESyAOCjhUlSASuiK0V3jvwVqchACu
+         gZ6BV01dVhUqJIU2GucPoXfSXJey4hELbk6y738Tbd7GUsvHO8l8lwIEK7k4NlC/KiCz
+         8ciqG6G2lxWJ7lFiGDdVnFj6KqS4DRmIOQSvspnG1ttPB0+2DGy+qHFjYEpJ+hKpk70e
+         Wf6kHTrPI2yr8ZjQCClzGVbtSwIBal5OPP45OLoAQiqyTug3NqYMMdeckQ9cwO2xFeYi
+         DdVw==
+X-Gm-Message-State: AOAM532StTp5CRQQl747kIyTu+pXetYJo+7UWBNlXw0kpIgIpyNtzF+R
+        M62ScC/jnoFb3K4ZblJDZBblYm8KYUxgD1A/2WCpoA==
+X-Google-Smtp-Source: ABdhPJzBx+3tQPSuQMsVopqCQy9jrCe/s4ReQDru6xvy7nycD4kku5cNJy3EI9wZYFBKB901wY0FZmOmDw/MqzoXHZ0=
+X-Received: by 2002:a2e:548:: with SMTP id 69mr729042ljf.386.1599122361514;
+ Thu, 03 Sep 2020 01:39:21 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:f301:: with SMTP id m1mr2102963ioh.162.1599122295497;
- Thu, 03 Sep 2020 01:38:15 -0700 (PDT)
-Date:   Thu, 03 Sep 2020 01:38:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000602d0405ae64aca3@google.com>
-Subject: INFO: task hung in io_uring_setup
-From:   syzbot <syzbot+107dd59d1efcaf3ffca4@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sgarzare@redhat.com, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
+References: <20200826163330.16e5b0d4@canb.auug.org.au> <CADYN=9KQcdLH=BfXZ2riuH0icw7d+2HbfPxvww7fiJG2G=8ALQ@mail.gmail.com>
+ <20200826193945.GT2855@paulmck-ThinkPad-P72> <CADYN=9+XRhPOkds36JdHU-h2h3va=JJj6aeDHmNUzrpCHWEJ0A@mail.gmail.com>
+ <20200828132944.GN2855@paulmck-ThinkPad-P72> <CADYN=9JBB6EntswRtVuUezoOzqCai2PkFP-7FDpYmAUU1+SYJA@mail.gmail.com>
+ <20200828225914.GQ2855@paulmck-ThinkPad-P72>
+In-Reply-To: <20200828225914.GQ2855@paulmck-ThinkPad-P72>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Thu, 3 Sep 2020 10:39:10 +0200
+Message-ID: <CADYN=9K+g430cJZ_ay4o3ivDKdpTSTSnJMDPsEq0uDTQ7LMvSA@mail.gmail.com>
+Subject: Re: linux-next: Tree for Aug 26
+To:     paulmck@kernel.org
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Paul,
 
-syzbot found the following issue on:
+On Sat, 29 Aug 2020 at 00:59, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Fri, Aug 28, 2020 at 09:24:19PM +0200, Anders Roxell wrote:
+> > On Fri, 28 Aug 2020 at 15:29, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > >
+> > > On Fri, Aug 28, 2020 at 09:37:17AM +0200, Anders Roxell wrote:
+> > > > On Wed, 26 Aug 2020 at 21:39, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > > >
+> > > > > On Wed, Aug 26, 2020 at 08:19:01PM +0200, Anders Roxell wrote:
+> > > > > > On Wed, 26 Aug 2020 at 08:33, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > > > >
+> > > > > [ . . . ]
+> > > > >
+> > > > > > I've built and run an arm64 allmodconfig kernel where I use the
+> > > > > > defconfig as the base, I do this for testing purposes.
+> > > > > > I can see the following call trace [1]:
+> > > > > >
+> > > > > > [ 2595.811453][    T1] Running tests on all trace events:
+> > > > > > [ 2595.860933][    T1] Testing all events:
+> > > > > > [ 4316.066072][    T8] kworker/dying (8) used greatest stack depth:
+> > > > > > 27056 bytes left
+> > > > > > [ 8561.924871][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for
+> > > > > > 22s! [migration/0:14]
+> > > > > > [ 8561.934498][    C0] Modules linked in:
+> > > > > > [ 8561.942303][    C0] irq event stamp: 4044
+> > > > > > [ 8561.949044][    C0] hardirqs last  enabled at (4043):
+> > > > > > [<ffffa000126b530c>] _raw_spin_unlock_irqrestore+0xac/0x138
+> > > > > > [ 8561.960848][    C0] hardirqs last disabled at (4044):
+> > > > > > [<ffffa000126a89f8>] __schedule+0xf8/0x7e0
+> > > > > > [ 8561.971418][    C0] softirqs last  enabled at (3698):
+> > > > > > [<ffffa00010001b04>] __do_softirq+0x524/0x5f8
+> > > > > > [ 8561.982191][    C0] softirqs last disabled at (3689):
+> > > > > > [<ffffa000101216c8>] __irq_exit_rcu+0x128/0x1a0
+> > > > > > [ 8561.993068][    C0] CPU: 0 PID: 14 Comm: migration/0 Tainted: G
+> > > > > >    W         5.9.0-rc2-next-20200826-00005-g24628bb4c0bf #1
+> > > > > > [ 8562.005684][    C0] Hardware name: linux,dummy-virt (DT)
+> > > > > > [ 8562.013247][    C0] pstate: 80400005 (Nzcv daif +PAN -UAO BTYPE=--)
+> > > > > > [ 8562.021657][    C0] pc : arch_local_irq_enable+0x58/0x80
+> > > > > > [ 8562.029323][    C0] lr : _raw_spin_unlock_irq+0x84/0xc0
+> > > > > > [ 8562.036739][    C0] sp : ffff0000698efaa0
+> > > > > > [ 8562.042984][    C0] x29: ffff0000698efaa0 x28: ffff00006ad0f270
+> > > > > > [ 8562.053814][    C0] x27: ffff00006ad0f248 x26: ffff0000698d4718
+> > > > > > [ 8562.064687][    C0] x25: ffff00006ad0e798 x24: ffffa000139e3a40
+> > > > > > [ 8562.075506][    C0] x23: 0000000000000001 x22: ffffa000154f5000
+> > > > > > [ 8562.086425][    C0] x21: ffff00006ad0e798 x20: ffff00006ad0e780
+> > > > > > [ 8562.097255][    C0] x19: ffffa000126a905c x18: 00000000000014c0
+> > > > > > [ 8562.108071][    C0] x17: 0000000000001500 x16: 0000000000001440
+> > > > > > [ 8562.118918][    C0] x15: 00000000f1f1f1f1 x14: 003d090000000000
+> > > > > > [ 8562.129739][    C0] x13: 00003d0900000000 x12: ffff80000d31df41
+> > > > > > [ 8562.140544][    C0] x11: 1fffe0000d31df40 x10: ffff80000d31df40
+> > > > > > [ 8562.151366][    C0] x9 : dfffa00000000000 x8 : ffff0000698efa07
+> > > > > > [ 8562.162247][    C0] x7 : 0000000000000001 x6 : 00007ffff2ce20c0
+> > > > > > [ 8562.173072][    C0] x5 : ffff0000698d4040 x4 : dfffa00000000000
+> > > > > > [ 8562.183954][    C0] x3 : ffffa0001040f904 x2 : 0000000000000007
+> > > > > > [ 8562.194811][    C0] x1 : ffffa00014080000 x0 : 00000000000000e0
+> > > > > > [ 8562.205858][    C0] Call trace:
+> > > > > > [ 8562.211739][    C0]  arch_local_irq_enable+0x58/0x80
+> > > > > > [ 8562.219076][    C0]  _raw_spin_unlock_irq+0x84/0xc0
+> > > > > > [ 8562.226394][    C0]  __schedule+0x75c/0x7e0
+> > > > > > [ 8562.233074][    C0]  preempt_schedule_notrace+0x64/0xc0
+> > > > > > [ 8562.268210][    C0]  ftrace_ops_list_func+0x494/0x4e0
+> > > > > > [ 8562.275735][    C0]  ftrace_graph_call+0x0/0x4
+> > > > > > [ 8562.282647][    C0]  preempt_count_add+0xc/0x240
+> > > > > > [ 8562.289686][    C0]  schedule+0xe4/0x160
+> > > > > > [ 8562.296187][    C0]  smpboot_thread_fn+0x47c/0x540
+> > > > > > [ 8562.303377][    C0]  kthread+0x23c/0x260
+> > > > > > [ 8562.309906][    C0]  ret_from_fork+0x10/0x18
+> > > > > > [ 8562.316604][    C0] Kernel panic - not syncing: softlockup: hung tasks
+> > > > > > [ 8562.325230][    C0] CPU: 0 PID: 14 Comm: migration/0 Tainted: G
+> > > > > >    W    L    5.9.0-rc2-next-20200826-00005-g24628bb4c0bf #1
+> > > > > > [ 8562.337861][    C0] Hardware name: linux,dummy-virt (DT)
+> > > > > > [ 8562.345374][    C0] Call trace:
+> > > > > > [ 8562.351228][    C0]  dump_backtrace+0x0/0x320
+> > > > > > [ 8562.358070][    C0]  show_stack+0x38/0x60
+> > > > > > [ 8562.364728][    C0]  dump_stack+0x1c0/0x280
+> > > > > > [ 8562.371447][    C0]  panic+0x32c/0x614
+> > > > > > [ 8562.377868][    C0]  watchdog_timer_fn+0x49c/0x560
+> > > > > > [ 8562.385076][    C0]  __run_hrtimer+0x1cc/0x360
+> > > > > > [ 8562.392021][    C0]  __hrtimer_run_queues+0x1a0/0x220
+> > > > > > [ 8562.399500][    C0]  hrtimer_interrupt+0x1f8/0x440
+> > > > > > [ 8562.406807][    C0]  arch_timer_handler_virt+0x68/0xa0
+> > > > > > [ 8562.414338][    C0]  handle_percpu_devid_irq+0x118/0x2a0
+> > > > > > [ 8562.421992][    C0]  __handle_domain_irq+0x150/0x1c0
+> > > > > > [ 8562.429315][    C0]  gic_handle_irq+0x98/0x120
+> > > > > > [ 8562.436297][    C0]  el1_irq+0xd4/0x1c0
+> > > > >
+> > > > > We appear to have taken an interrupt here, just after releasing
+> > > > > an irq-disabled lock and enabling interrupts.
+> > > > >
+> > > > > > [ 8562.442748][    C0]  arch_local_irq_enable+0x58/0x80
+> > > > > > [ 8562.450116][    C0]  _raw_spin_unlock_irq+0x84/0xc0
+> > > > > > [ 8562.457360][    C0]  __schedule+0x75c/0x7e0
+> > > > > > [ 8562.464142][    C0]  preempt_schedule_notrace+0x64/0xc0
+> > > > > > [ 8562.471745][    C0]  ftrace_ops_list_func+0x494/0x4e0
+> > > > > > [ 8562.479195][    C0]  ftrace_graph_call+0x0/0x4
+> > > > > > [ 8562.486159][    C0]  preempt_count_add+0xc/0x240
+> > > > > > [ 8562.493210][    C0]  schedule+0xe4/0x160
+> > > > >
+> > > > > We are trying to sleep, so we took a pass through the scheduler and
+> > > > > did some tracing.
+> > > > >
+> > > > > > [ 8562.499737][    C0]  smpboot_thread_fn+0x47c/0x540
+> > > > >
+> > > > > Here we might be bringing up a CPU?  Except that according to your
+> > > > > dmesg, there is only one CPU.  ("RCU restricting CPUs from NR_CPUS=256
+> > > > > to nr_cpu_ids=1").  So this seems unlikely.
+> > > > >
+> > > > > Huh.  The first dmesg in output-next-20200826.log is instead a
+> > > > > DEBUG_LOCKS_WARN_ON() from lockdep.  Might this be related?  Or do you
+> > > > > also see this warning when boot happens quickly?
+> > > > >
+> > > > > (I do see the soft lockup later on.)
+> > > > >
+> > > > > > [ 8562.506960][    C0]  kthread+0x23c/0x260
+> > > > > > [ 8562.513496][    C0]  ret_from_fork+0x10/0x18
+> > > > > > [ 8562.521052][    C0] Kernel Offset: disabled
+> > > > > > [ 8562.527725][    C0] CPU features: 0x0240002,20002004
+> > > > > > [ 8562.534950][    C0] Memory Limit: none
+> > > > > > [ 8562.543830][    C0] ---[ end Kernel panic - not syncing:
+> > > > > > softlockup: hung tasks ]---
+> > > > > >
+> > > > > > When I tested to checkout and build e6df9766894d ("Merge remote-tracking branch
+> > > > > > 'irqchip/irq/irqchip-next' into master") that was merged into today's
+> > > > > > tag I was able to
+> > > > > > boot [2]. When I checked out 25e6e115dd1d ("Merge remote-tracking
+> > > > > > branch 'rcu/rcu/next' into master") and built and tested that I was
+> > > > > > able to boot [3] after a
+> > > > > > looong time. To clarify, the rcu merge comes after the irqchip merge.
+> > > > > >
+> > > > > > I also tried to only revert the rcu tree from todays next tag like this:
+> > > > > > "git diff e6df9766894d..25e6e115dd1d | patch -Rp1". When I built that
+> > > > > > I was able to
+> > > > > > boot [4] too.
+> > > > > >
+> > > > > > Any idea what's going on here?
+> > > > >
+> > > > > Could you please try bisecting the RCU commits?
+> > > >
+> > > > I did a bisect and found:
+> > > > 3c8e1e3eca23 ("rcu: Always set .need_qs from __rcu_read_lock() for strict GPs")
+> > > >
+> > > > When I reverted that on next-20200826 and on next-20200827 the
+> > > > allmodconfig kernel boots [1], there's other issues that I can see in
+> > > > the log but not this one.
+> > >
+> > > Thank you for bisecting!
+> > >
+> > > I take it that you have CONFIG_RCU_STRICT_GRACE_PERIOD=y in your .config?
+> >
+> > Correct.
+> >
+> > > Ah, you do, according to this line in your dmesg:
+> > >
+> > >         rcu:    RCU strict (and thus non-scalable) grace periods enabled.
+> >
+> > Yup.
+> >
+> > >
+> > > And much else besides, serious debugging enabled!  ;-)
+> >
+> > as you can see from the time it takes to boot it is alot =)
+> >
+> > >
+> > > Does this reproduce with CONFIG_RCU_STRICT_GRACE_PERIOD=n?
+> >
+> > I trying that now.
+> >
+> > > My guess,
+> > > given the commit that your bisection converged on, is that it will not
+> > > reproduce in that case.
+> >
+> > Your guess was correct, it worked =)
+>
+> I cannot reproduce this.  I would suggest enabling KASAN, but you have
+> already enabled it.  At this point, I suggest clearing up the other
+> issues.  If this issue remains, please let me know and I will see what
+> additional diagnostics I can provide.
 
-HEAD commit:    4442749a Add linux-next specific files for 20200902
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12f9e915900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=39134fcec6c78e33
-dashboard link: https://syzkaller.appspot.com/bug?extid=107dd59d1efcaf3ffca4
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11594671900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=111ca835900000
+On tag next-20200902 I see this workqueue lockup [1], does that give
+you any ideas?
+when I disable CONFIG_RCU_STRICT_GRACE_PERIOD it works.
 
-The issue was bisected to:
+Cheers,
+Anders
+[1] http://ix.io/2w0B
 
-commit dfe127799f8e663c7e3e48b5275ca538b278177b
-Author: Stefano Garzarella <sgarzare@redhat.com>
-Date:   Thu Aug 27 14:58:31 2020 +0000
-
-    io_uring: allow disabling rings during the creation
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11bc66c1900000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=13bc66c1900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15bc66c1900000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+107dd59d1efcaf3ffca4@syzkaller.appspotmail.com
-Fixes: dfe127799f8e ("io_uring: allow disabling rings during the creation")
-
-INFO: task syz-executor047:6853 blocked for more than 143 seconds.
-      Not tainted 5.9.0-rc3-next-20200902-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor047 state:D stack:28104 pid: 6853 ppid:  6847 flags:0x00004000
-Call Trace:
- context_switch kernel/sched/core.c:3777 [inline]
- __schedule+0xea9/0x2230 kernel/sched/core.c:4526
- schedule+0xd0/0x2a0 kernel/sched/core.c:4601
- schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1855
- do_wait_for_common kernel/sched/completion.c:85 [inline]
- __wait_for_common kernel/sched/completion.c:106 [inline]
- wait_for_common kernel/sched/completion.c:117 [inline]
- wait_for_completion+0x163/0x260 kernel/sched/completion.c:138
- io_sq_thread_stop fs/io_uring.c:6906 [inline]
- io_finish_async fs/io_uring.c:6920 [inline]
- io_sq_offload_create fs/io_uring.c:7595 [inline]
- io_uring_create fs/io_uring.c:8671 [inline]
- io_uring_setup+0x1495/0x29a0 fs/io_uring.c:8744
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x440299
-Code: Bad RIP value.
-RSP: 002b:00007ffc57cff668 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440299
-RDX: 0000000000400b40 RSI: 0000000020000100 RDI: 0000000000003ffe
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000401aa0
-R13: 0000000000401b30 R14: 0000000000000000 R15: 0000000000000000
-INFO: task io_uring-sq:6854 blocked for more than 143 seconds.
-      Not tainted 5.9.0-rc3-next-20200902-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:io_uring-sq     state:D stack:31200 pid: 6854 ppid:     2 flags:0x00004000
-Call Trace:
- context_switch kernel/sched/core.c:3777 [inline]
- __schedule+0xea9/0x2230 kernel/sched/core.c:4526
- schedule+0xd0/0x2a0 kernel/sched/core.c:4601
- schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4660
- kthread+0x2ac/0x4a0 kernel/kthread.c:285
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/1174:
- #0: ffffffff89c67980 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5829
-3 locks held by in:imklog/6525:
- #0: ffff8880a3de2df0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:930
- #1: ffff8880907d8968 (&mm->mmap_lock#2){++++}-{3:3}, at: rq_lock kernel/sched/sched.h:1292 [inline]
- #1: ffff8880907d8968 (&mm->mmap_lock#2){++++}-{3:3}, at: ttwu_queue kernel/sched/core.c:2698 [inline]
- #1: ffff8880907d8968 (&mm->mmap_lock#2){++++}-{3:3}, at: try_to_wake_up+0x52b/0x12b0 kernel/sched/core.c:2978
- #2: ffff8880ae620ec8 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x2fb/0x400 kernel/sched/psi.c:833
-
-=============================================
-
-NMI backtrace for cpu 1
-CPU: 1 PID: 1174 Comm: khungtaskd Not tainted 5.9.0-rc3-next-20200902-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x198/0x1fd lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x44/0xd7 lib/nmi_backtrace.c:105
- nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:147 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:253 [inline]
- watchdog+0xd89/0xf30 kernel/hung_task.c:339
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 PID: 3901 Comm: systemd-journal Not tainted 5.9.0-rc3-next-20200902-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:unwind_next_frame+0x139a/0x1f90 arch/x86/kernel/unwind_orc.c:607
-Code: 49 39 47 28 0f 85 3e f0 ff ff 80 3d df 2c 84 09 00 0f 85 31 f0 ff ff e9 06 18 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b 14 24 <48> c1 ea 03 80 3c 02 00 0f 85 02 08 00 00 49 8d 7f 08 49 8b 6f 38
-RSP: 0018:ffffc900040475f8 EFLAGS: 00000246
-RAX: dffffc0000000000 RBX: 1ffff92000808ec7 RCX: 1ffff92000808ee2
-RDX: ffffc90004047708 RSI: ffffc90004047aa8 RDI: ffffc90004047aa8
-RBP: 0000000000000001 R08: ffffffff8b32a670 R09: 0000000000000001
-R10: 000000000007201e R11: 0000000000000001 R12: ffffc90004047ac8
-R13: ffffc90004047705 R14: ffffc90004047720 R15: ffffc900040476d0
-FS:  00007efc659ac8c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007efc62d51000 CR3: 0000000093d6a000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- arch_stack_walk+0x81/0xf0 arch/x86/kernel/stacktrace.c:25
- stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
- slab_post_alloc_hook mm/slab.h:517 [inline]
- slab_alloc mm/slab.c:3312 [inline]
- kmem_cache_alloc+0x13a/0x3a0 mm/slab.c:3482
- kmem_cache_zalloc include/linux/slab.h:656 [inline]
- __alloc_file+0x21/0x350 fs/file_table.c:101
- alloc_empty_file+0x6d/0x170 fs/file_table.c:151
- path_openat+0xe3/0x2730 fs/namei.c:3354
- do_filp_open+0x17e/0x3c0 fs/namei.c:3395
- do_sys_openat2+0x16d/0x420 fs/open.c:1168
- do_sys_open fs/open.c:1184 [inline]
- __do_sys_open fs/open.c:1192 [inline]
- __se_sys_open fs/open.c:1188 [inline]
- __x64_sys_open+0x119/0x1c0 fs/open.c:1188
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7efc64f3c840
-Code: 73 01 c3 48 8b 0d 68 77 20 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 89 bb 20 00 00 75 10 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 1e f6 ff ff 48 89 04 24
-RSP: 002b:00007ffc45e60f18 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007ffc45e61220 RCX: 00007efc64f3c840
-RDX: 00000000000001a0 RSI: 0000000000080042 RDI: 00005626d683e6d0
-RBP: 000000000000000d R08: 000000000000c0ff R09: 00000000ffffffff
-R10: 0000000000000069 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00005626d6831040 R14: 00007ffc45e611e0 R15: 00005626d683e720
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+>
+>                                                         Thanx, Paul
+>
+> > Cheers,
+> > Anders
+> >
+> > >
+> > >                                                         Thanx, Paul
+> > >
+> > > > Cheers,
+> > > > Anders
+> > > > [1] https://people.linaro.org/~anders.roxell/output-next-20200827-3c8e1e3eca23.log
+> > > >
+> > > > >  They are linear,
+> > > > > extending from 0d23eddbe5d4 ("rcu: Remove KCSAN stubs") to 72cc80705122
+> > > > > ("rcu: Remove unused "cpu" parameter from rcu_report_qs_rdp()".
+> > > > >
+> > > > > I do regularly test single-CPU premptible RCU, but not on ARM.  Nor do
+> > > > > I normally enable quite this much debug, so I might have missed something.
+> > > > >
+> > > > >                                                         Thanx, Paul
+> > > > >
+> > > > > > Cheers,
+> > > > > > Anders
+> > > > > > [1] https://people.linaro.org/~anders.roxell/output-next-20200826.log
+> > > > > > [2] https://people.linaro.org/~anders.roxell/output-next-20200826-bisect-e6df9766894d.log
+> > > > > > [3] https://people.linaro.org/~anders.roxell/output-next-20200826-bisect-25e6e115dd1d.log
+> > > > > > [4] https://people.linaro.org/~anders.roxell/output-next-20200826-bisect-revert-e6df9766894d-25e6e115dd1d.log
