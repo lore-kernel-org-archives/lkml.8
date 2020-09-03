@@ -2,116 +2,201 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F1EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B3BC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4E62078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:26:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599175582;
-	bh=YN64hnHu+sspWvZwzTcYjF6KKEJjiaTwL+xMgbaoqpM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=i04XrhJAckE11ekD/LUnidZ77LIuTBYoserE7UAPUtSI4KH8YccCWtsjDkHZJqUXJ
-	 J41NUaWO3L/gf9Qlk2LEQooOs9JVVr2fGpK45N1V2bJd0Pp6jaZ7jZv/KqGOnCvhUl
-	 iWWTxQuh2R3ueiZZ2WQUClSSP6nctoFY2ONrQu5g=
+	by mail.kernel.org (Postfix) with ESMTP id A399D2078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:27:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="PQpRbvDv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbgICX0T (ORCPT
+        id S1729473AbgICX10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 19:26:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34394 "EHLO
+        Thu, 3 Sep 2020 19:27:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729558AbgICX0Q (ORCPT
+        with ESMTP id S1728015AbgICX1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 19:26:16 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72592C061246
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 16:26:15 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id r13so5823753ljm.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:26:15 -0700 (PDT)
+        Thu, 3 Sep 2020 19:27:24 -0400
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70699C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 16:27:24 -0700 (PDT)
+Received: by mail-qv1-xf2b.google.com with SMTP id di5so2169436qvb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:27:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eoc+5mie1+ZuNTuaPcGzSI2qJ6owz7A4Ofr10ghZJJ4=;
-        b=gWGJKo5xiJNWPTtwqGkQlOlOwg3GjNMHWAbbLf6G2umLeN+ziH7HLU4o7mqfu6xrQX
-         0nqy/1qDWFPlTHlbUl4hIrosGA73uytx27UrMGezo0ol7EOlqSXT8KqCo6mWmcDs1cwA
-         at576v5S6IW6A1SwuGUswjPYeT1mwL3S6Pfko=
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lG+5k/ucCXHZk2lezM5uaUGaROvX5Yi5cBSwHgAwezI=;
+        b=PQpRbvDvCw6/6duT1k5F2LBbPEblSaAM1LCTUSjl6fYNEkEEfm96DoJjo7MsP7t3wG
+         3gkBIJ8UJdvVLF6atkgTzMh4D+phD7L/BbuvzEQNL2aWCfziXrIBRZjp9z9zhDkq5mlL
+         T8sIlnaSMEplmvaznRvvdEyey4nAnD5xT7Iqm2Reh6nULNq5KuYrx4wB2or6Q6adk2no
+         EuaAdoYHGulrSYWEnpfo32guu/uURVkJYTM4W9E8X5osHi+w7EWCgGTnZJRoRGhDpPn7
+         rytYFjUt+dOX8W9qrwGxnnc4i1DOW1FbxQW7sggvBQ0AjCPo0dfAFyqd9B+D9LrFCio0
+         2X9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eoc+5mie1+ZuNTuaPcGzSI2qJ6owz7A4Ofr10ghZJJ4=;
-        b=QiwGeQv9ATBy5dkILFj95qidpKHCUQvpklrqKTbITx89DYjH1UkL0eA3shTPe8frNG
-         mHIAIUsiUk+msnZjrgl38XKYydIya+s4N8fAHzGPcvW4UyQfi7O6vtCdNuH09eGqpP2K
-         hEUYjWFzqPRvHdysCcvw/ezumMHc7YnfP4z0YDzQ1bTDyIwlUHQ0kcs2Fjk6zMIwCu7k
-         stbzaMVNKGNnuak53iLGu/n6zySCEbivvnzPo+mTPgV7nGupOTqPe3pdeOP55KJyk9AW
-         wsZd/eCxjMwkylQGYiR45MVQSd4h+3UjuJAfK7uUvjlrLYFotH39KIx/I2a3idxsjP2t
-         CpSw==
-X-Gm-Message-State: AOAM532sV01KNeIPhaEeL8OYTS8h94LYmlZSuYZctEPitgNVzbxKDM5a
-        ltmMyjle0GF1A+NEyvgA5KNZrjHuNKG7jA==
-X-Google-Smtp-Source: ABdhPJxd4U7iZ5C4dc/7Li9mZ0PgdHKvOue3oPpnJrD7a1k5kPqUgLpOHYZcFW9hHqD0+Pg4NDIS6A==
-X-Received: by 2002:a2e:7615:: with SMTP id r21mr2312830ljc.371.1599175573240;
-        Thu, 03 Sep 2020 16:26:13 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id l16sm901224ljb.72.2020.09.03.16.26.11
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lG+5k/ucCXHZk2lezM5uaUGaROvX5Yi5cBSwHgAwezI=;
+        b=Lq8tAdcTVWZiVP6TnS0eIe5klt9FkIj/uMPReXskQ+f2Cr79eSTyvA9YN2Q+UD9cAL
+         1I+aEonPlkTWz13O0evLoC6JxZQ0m6DHuch/L+U00PSPqsFC9OxUCTlXxPqM14T4NDbg
+         f9GK0acT4wWsjQEcFI2uOg+pCqgLmtFgT7R1iArK7DuG0VmLP1wYav3xiBRD8OIJrELP
+         OjlWFE09lFDTRFdkCbXkDLE19VhhRpYkG6v/GCYM6FfmlKGaO53R+UFYVFmUy4Y11exx
+         g0DCVLl35CvOZl1TYX4Gi08CT6sbg6tmkbi/s9kVD8H9rXv8onCRTs5WF6q2aNRalO++
+         3KsQ==
+X-Gm-Message-State: AOAM533FCzc5P5AeRKPSxgIi2/JhIoGfEDbmC6of9ixclr9458/A81oy
+        F0H+4XW/lBSxXYrrWFe10Fp/tENfspVTQqC2pSLvPA==
+X-Google-Smtp-Source: ABdhPJx4mieNykswI5USCngqgasqeKfEZg9G6q2zTdTNHe7oMVbLOb4iFQEmlbQq7ifV6ZNNjvAHDA==
+X-Received: by 2002:a0c:eac5:: with SMTP id y5mr4335692qvp.2.1599175643564;
+        Thu, 03 Sep 2020 16:27:23 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id j8sm3253090qth.90.2020.09.03.16.27.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 16:26:11 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id y17so2853200lfa.8
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:26:11 -0700 (PDT)
-X-Received: by 2002:a19:4a88:: with SMTP id x130mr2429205lfa.31.1599175570612;
- Thu, 03 Sep 2020 16:26:10 -0700 (PDT)
+        Thu, 03 Sep 2020 16:27:23 -0700 (PDT)
+Subject: Re: [PATCH v2 07/10] phy: qcom-qmp: Add support for DP in USB3+DP
+ combo phy
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark <robdclark@chromium.org>
+References: <20200902230215.3452712-1-swboyd@chromium.org>
+ <20200902230215.3452712-8-swboyd@chromium.org>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <990b9edf-055d-6ecf-ee39-5a252b4c8859@marek.ca>
+Date:   Thu, 3 Sep 2020 19:26:39 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200903142242.925828-1-hch@lst.de> <20200903142242.925828-13-hch@lst.de>
- <9ab40244a2164f7db2ff0c1d23ab59a0@AcuMS.aculab.com>
-In-Reply-To: <9ab40244a2164f7db2ff0c1d23ab59a0@AcuMS.aculab.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 3 Sep 2020 16:25:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whDtnudkbZ8-hR8HiDE7zog0dv+Gu9Sx5i6SPakrDtajQ@mail.gmail.com>
-Message-ID: <CAHk-=whDtnudkbZ8-hR8HiDE7zog0dv+Gu9Sx5i6SPakrDtajQ@mail.gmail.com>
-Subject: Re: [PATCH 12/14] x86: remove address space overrides using set_fs()
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200902230215.3452712-8-swboyd@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 2:30 PM David Laight <David.Laight@aculab.com> wrote:
->
-> A non-canonical (is that the right term) address between the highest
-> valid user address and the lowest valid kernel address (7ffe to fffe?)
-> will fault anyway.
+On 9/2/20 7:02 PM, Stephen Boyd wrote:
 
-Yes.
+...
 
-But we actually warn against that fault, because it's been a good way
-to catch places that didn't use the proper "access_ok()" pattern.
+> +static int qcom_qmp_phy_configure_dp_phy(struct qmp_phy *qphy)
+> +{
+> +	const struct qmp_phy_dp_clks *dp_clks = qphy->dp_clks;
+> +	const struct phy_configure_opts_dp *dp_opts = &qphy->dp_opts;
+> +	u32 val, phy_vco_div, status;
+> +	unsigned long pixel_freq;
+> +
+> +	val = DP_PHY_PD_CTL_PWRDN | DP_PHY_PD_CTL_AUX_PWRDN |
+> +	      DP_PHY_PD_CTL_PLL_PWRDN | DP_PHY_PD_CTL_DP_CLAMP_EN;
+> +
+> +	/*
+> +	if (lane_cnt == 4 || orientation == ORIENTATION_CC2)
+> +		val |= DP_PHY_PD_CTL_LANE_0_1_PWRDN;
+> +	if (lane_cnt == 4 || orientation == ORIENTATION_CC1)
+> +		val |= DP_PHY_PD_CTL_LANE_2_3_PWRDN;
+> +	*/
+> +	/*
+> +	 * TODO: Assume orientation is CC1 for now and two lanes, need to
+> +	 * use type-c connector to understand orientation and lanes
+> +	 */
+> +	val |= DP_PHY_PD_CTL_LANE_2_3_PWRDN;
+> +
+> +	writel(val, qphy->pcs + QSERDES_V3_DP_PHY_PD_CTL);
+> +
+> +	/*
+> +	if (orientation == ORIENTATION_CC2)
+> +		writel(0x4c, qphy->pcs + QSERDES_V3_DP_PHY_MODE);
+> +	else
+> +	*/
+> +	/* does this do anything? link_clock_sel_mux isn't set (bit 5) */
+> +	writel(0x5c, qphy->pcs + QSERDES_V3_DP_PHY_MODE);
+> +
+> +	writel(0x05, qphy->pcs + QSERDES_V3_DP_PHY_TX0_TX1_LANE_CTL);
+> +	writel(0x05, qphy->pcs + QSERDES_V3_DP_PHY_TX2_TX3_LANE_CTL);
+> +
+> +	switch (dp_opts->link_rate) {
+> +	case 1620:
+> +		phy_vco_div = 0x1;
+> +		pixel_freq = 1620000000UL / 2;
+> +		break;
+> +	case 2700:
+> +		phy_vco_div = 0x1;
+> +		pixel_freq = 2700000000UL / 2;
+> +		break;
+> +	case 5400:
+> +		phy_vco_div = 0x2;
+> +		pixel_freq = 5400000000UL / 4;
+> +		break;
+> +	case 8100:
+> +		phy_vco_div = 0x0;
+> +		pixel_freq = 8100000000UL / 6;
+> +		break;
+> +	default:
+> +		/* Other link rates aren't supported */
+> +		return -EINVAL;
+> +	}
+> +	writel(phy_vco_div, qphy->pcs + QSERDES_V3_DP_PHY_VCO_DIV);
+> +
+> +	clk_set_rate(dp_clks->dp_link_hw.clk, dp_opts->link_rate * 100000);
+> +	clk_set_rate(dp_clks->dp_pixel_hw.clk, pixel_freq);
+> +
+> +	writel(0x04, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG2);
+> +	writel(0x01, qphy->pcs + QSERDES_V3_DP_PHY_CFG);
+> +	writel(0x05, qphy->pcs + QSERDES_V3_DP_PHY_CFG);
+> +	writel(0x01, qphy->pcs + QSERDES_V3_DP_PHY_CFG);
+> +	writel(0x09, qphy->pcs + QSERDES_V3_DP_PHY_CFG);
+> +
+> +	writel(0x20, qphy->serdes + QSERDES_COM_RESETSM_CNTRL);
 
-See ex_handler_uaccess() and the
+Should be QSERDES_V3_COM_RESETSM_CNTRL and not 
+QSERDES_COM_RESETSM_CNTRL, which is for older PHY versions.
 
-        WARN_ONCE(trapnr == X86_TRAP_GP, "General protection fault in
-user access. Non-canonical address?");
+> +
+> +	if (readl_poll_timeout(qphy->serdes + QSERDES_V3_COM_C_READY_STATUS,
+> +			status,
+> +			((status & BIT(0)) > 0),
+> +			500,
+> +			10000))
+> +		return -ETIMEDOUT;
+> +
+> +	writel(0x19, qphy->pcs + QSERDES_V3_DP_PHY_CFG);
+> +
+> +	if (readl_poll_timeout(qphy->pcs + QSERDES_V3_DP_PHY_STATUS,
+> +			status,
+> +			((status & BIT(1)) > 0),
+> +			500,
+> +			10000))
+> +		return -ETIMEDOUT;
+> +
+> +	writel(0x18, qphy->pcs + QSERDES_V3_DP_PHY_CFG);
+> +	udelay(2000);
+> +	writel(0x19, qphy->pcs + QSERDES_V3_DP_PHY_CFG);
+> +
+> +	return readl_poll_timeout(qphy->pcs + QSERDES_V3_DP_PHY_STATUS,
+> +			status,
+> +			((status & BIT(1)) > 0),
+> +			500,
+> +			10000);
+> +}
 
-warning. It's been good for randomized testing - a missing range check
-on a user address will often hit this.
-
-Of course, you should never see it in real life (and hopefully not in
-testing either any more). But belt-and-suspenders..
-
-              Linus
+...
