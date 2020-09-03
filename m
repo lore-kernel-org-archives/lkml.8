@@ -2,126 +2,95 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C600C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE8EC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 646062071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1F22071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599117148;
+	bh=rPR2h65NIq58EsscVdBt569FU+eXj+sgSo+2rsPr7Xo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Be4kS6un6DLhK9M2Ah5tjyWR85ZJvphcPeEv2Eq8GBKflc9Bftn2CBO1m5wFTEy7g
+	 Im5G51Dlr0A7uhm7Ojr3aouIAfSYAte0/DEXybX1ZR70+W2RX+SiKxqtv31Q8K9hbb
+	 jHbEqkmD2oJHZdBILfYSFXEWsBqhqoSn2hhkrWsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgICHLt (ORCPT
+        id S1728043AbgICHM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:11:49 -0400
-Received: from verein.lst.de ([213.95.11.211]:36619 "EHLO verein.lst.de"
+        Thu, 3 Sep 2020 03:12:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbgICHLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:11:49 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0164568BEB; Thu,  3 Sep 2020 09:11:44 +0200 (CEST)
-Date:   Thu, 3 Sep 2020 09:11:44 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 10/10] powerpc: remove address space overrides using
- set_fs()
-Message-ID: <20200903071144.GA19247@lst.de>
-References: <20200827150030.282762-1-hch@lst.de> <20200827150030.282762-11-hch@lst.de> <8974838a-a0b1-1806-4a3a-e983deda67ca@csgroup.eu> <20200902123646.GA31184@lst.de> <d78cb4be-48a9-a7c5-d9d1-d04d2a02b4c6@csgroup.eu> <CAHk-=wiDCcxuHgENo3UtdFi2QW9B7yXvNpG5CtF=A6bc6PTTgA@mail.gmail.com>
+        id S1725919AbgICHMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 03:12:24 -0400
+Received: from localhost (unknown [122.171.179.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CD0F2071B;
+        Thu,  3 Sep 2020 07:12:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599117144;
+        bh=rPR2h65NIq58EsscVdBt569FU+eXj+sgSo+2rsPr7Xo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xFCu1WKxCw5FoYN5y1JnlmwiLnwQc+1eNLpBVmxWTe+nJAWAVvjqlGJiLuCDfvy0r
+         vM4t4hrvNyJqR//KT5KQlVH54S1lRrLCdtV1n5QRl1Y+M4u9cDRF7q+AyArIzuCP3Y
+         uMkofjLWZiFPmRB3lL/Z7CPk7Q69SrsotAiJeBho=
+Date:   Thu, 3 Sep 2020 12:42:20 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Subject: Re: [PATCH v2 05/10] dt-bindings: renesas,rcar-dmac: Document
+ r8a7742 support
+Message-ID: <20200903071220.GK2639@vkoul-mobl>
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CA+V-a8v5CtxJQxjSWcvJrPtf9JyYKZeACdc3as_hjM710pk1AQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiDCcxuHgENo3UtdFi2QW9B7yXvNpG5CtF=A6bc6PTTgA@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CA+V-a8v5CtxJQxjSWcvJrPtf9JyYKZeACdc3as_hjM710pk1AQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 11:02:22AM -0700, Linus Torvalds wrote:
-> I don't see why this change would make any difference.
+On 27-08-20, 12:08, Lad, Prabhakar wrote:
+> Hi Vinod,
+> 
+> On Sun, May 3, 2020 at 10:47 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> >
+> > Renesas RZ/G SoC also have the R-Car gen2/3 compatible DMA controllers.
+> > Document RZ/G1H (also known as R8A7742) SoC bindings.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> >  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> This patch is not present in linux-next yet, could you please take care of it.
 
-Me neither, but while looking at a different project I did spot places
-that actually do an access_ok with len 0, that's why I wanted him to
-try.
+Can you please resend
 
-That being said: Christophe are these number stables?  Do you get
-similar numbers with multiple runs?
 
-> And btw, why do the 32-bit and 64-bit checks even differ? It's not
-> like the extra (single) instruction should even matter. I think the
-> main reason is that the simpler 64-bit case could stay as a macro
-> (because it only uses "addr" and "size" once), but honestly, that
-> "simplification" doesn't help when you then need to have that #ifdef
-> for the 32-bit case and an inline function anyway.
-
-I'll have to leave that to the powerpc folks.  The intent was to not
-change the behavior (and I even fucked that up for the the size == 0
-case).
-
-> However, I suspect a bigger reason for the actual performance
-> degradation would be the patch that makes things use "write_iter()"
-> for writing, even when a simpler "write()" exists.
-
-Except that we do not actually have such a patch.  For normal user
-writes we only use ->write_iter if ->write is not present.  But what
-shows up in the profile is that /dev/zero only has a read_iter op and
-not a normal read.  I've added a patch below that implements a normal
-read which might help a tad with this workload, but should not be part
-of a regression.
-
-Also Christophe:  can you bisect which patch starts this?  Is it really
-this last patch in the series?
-
----
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index abd4ffdc8cdebc..1dc99ab158457a 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -726,6 +726,27 @@ static ssize_t read_iter_zero(struct kiocb *iocb, struct iov_iter *iter)
- 	return written;
- }
- 
-+static ssize_t read_zero(struct file *file, char __user *buf,
-+			 size_t count, loff_t *ppos)
-+{
-+	size_t cleared = 0;
-+
-+	while (count) {
-+		size_t chunk = min_t(size_t, count, PAGE_SIZE);
-+
-+		if (clear_user(buf + cleared, chunk))
-+			return cleared ? cleared : -EFAULT;
-+		cleared += chunk;
-+		count -= chunk;
-+
-+		if (signal_pending(current))
-+			return cleared ? cleared : -ERESTARTSYS;
-+		cond_resched();
-+	}
-+
-+	return cleared;
-+}
-+
- static int mmap_zero(struct file *file, struct vm_area_struct *vma)
- {
- #ifndef CONFIG_MMU
-@@ -921,6 +942,7 @@ static const struct file_operations zero_fops = {
- 	.llseek		= zero_lseek,
- 	.write		= write_zero,
- 	.read_iter	= read_iter_zero,
-+	.read		= read_zero,
- 	.write_iter	= write_iter_zero,
- 	.mmap		= mmap_zero,
- 	.get_unmapped_area = get_unmapped_area_zero,
+-- 
+~Vinod
