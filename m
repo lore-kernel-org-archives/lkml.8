@@ -2,122 +2,177 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AF6C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B52C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B877D20709
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F0E20709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X94xHdmw"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kQkSzzz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbgICSdD (ORCPT
+        id S1729270AbgICSdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 14:33:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729235AbgICScr (ORCPT
+        Thu, 3 Sep 2020 14:33:14 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17604 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgICSch (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 14:32:47 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 462F5C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 11:32:47 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id u25so3618636otq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 11:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=82HbmK1MEBIFmpgC+4ObPuGeXfJ8JE9e+JzzYbyM3tE=;
-        b=X94xHdmwtOXvMxEcdgfpcX4mJtVehcidGAiYCw1Vog/RSDUzgYyod31XsjIavxEQbY
-         4xEewzsKjrW3iUx+Y62sBhEBrAdv/m7FZfXszs7J7ppNdjEgwUkM6mJRiP3O1DtVpTWz
-         HYV1nQfMyT8IsbhYIy4jmpPqZo/OUsUycK75ro178LPy5svxyfJL9XJsdw0ajeIHttQt
-         C/uOGw/OcqNlCn9lsGsA0E1TMvN2xL+9eXVwwVdA17l/A3hey850rNFp+jSw/F4L9k/r
-         4P4TRpf8O4VTdBIJ/wIa60c8xQlAi+UZFXizgBr/WhHOwMtMS62EqI0d/HCF1tA20oaO
-         ylpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=82HbmK1MEBIFmpgC+4ObPuGeXfJ8JE9e+JzzYbyM3tE=;
-        b=Ass/kNg4HrSk42fzF2mLlhmXB5A/rUfgcNpHcrEKEaA92vX0ZFch/lN1Are1E6bIeu
-         0wZu1kt5mruVOGEGKDqu+//zqpLxwUpajnkvp/8FgJz7EXKIGG2OUqjzfmGMLoTjqufR
-         FVSB0K7DT3Y6oI0yKsF8TJsdmZRlyjbhNe/kd+pbNfDNmtxr3SYDS2+vRDBIO7687Z6J
-         45T/xSPiSvDJddilczLJbFLbAgGOfnWmaHB1PysW11c6/nBnk4BSrdo9Led/b/tO0JnB
-         K2xLZGXi3KcHgN3lLDPFgm6JcjU6r9mhFGAexNIHqEz12Svbhbz1cawgbHWjyRxsVlPa
-         KwZg==
-X-Gm-Message-State: AOAM5322GYrIgvSxRLx6FrjbBd8dpGGvOg0ibKPw5PCqT7TjCsvrIqUt
-        I7x9rIAEwAPj8jUXO/osN0IRyJdUdv6mA+fBvtJvlg==
-X-Google-Smtp-Source: ABdhPJx4FulqrTQ3lfTEcpEmm4pBJFjbKkKsoNqSqromwGpcbyaKjofyMNw2dD4agncvN2jgU3ZkvPOHjE/BxR0dyUo=
-X-Received: by 2002:a9d:1c8f:: with SMTP id l15mr2563980ota.241.1599157966243;
- Thu, 03 Sep 2020 11:32:46 -0700 (PDT)
+        Thu, 3 Sep 2020 14:32:37 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f5136b50002>; Thu, 03 Sep 2020 11:32:21 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 03 Sep 2020 11:32:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 03 Sep 2020 11:32:35 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 3 Sep
+ 2020 18:32:34 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 3 Sep 2020 18:32:34 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f5136c20001>; Thu, 03 Sep 2020 11:32:34 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Jason Gunthorpe" <jgg@nvidia.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        <stable@vger.kernel.org>, Yang Shi <shy828301@gmail.com>,
+        Zi Yan <ziy@nvidia.com>
+Subject: [PATCH v3] mm/thp: fix __split_huge_pmd_locked() for migration PMD
+Date:   Thu, 3 Sep 2020 11:31:40 -0700
+Message-ID: <20200903183140.19055-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200903141122.72908-1-mgamal@redhat.com> <CALMp9eTrc8_z3pKBtLVmbnMvC+KtzXMYbYTXZPPz5F0UWW8oNQ@mail.gmail.com>
- <00b0f9eb-286b-72e8-40b5-02f9576f2ce3@redhat.com>
-In-Reply-To: <00b0f9eb-286b-72e8-40b5-02f9576f2ce3@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Thu, 3 Sep 2020 11:32:34 -0700
-Message-ID: <CALMp9eS6O18WcEyw8b6npRSazsyKiGtBjV+coZVGxDNU1JEOsQ@mail.gmail.com>
-Subject: Re: [PATCH] KVM: x86: VMX: Make smaller physical guest address space
- support user-configurable
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Mohammed Gamal <mgamal@redhat.com>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>
+X-NVConfidentiality: public
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599157941; bh=7zznCtZjQxXg4R9UxK0DP2/ItNxobmt3cvTtuXZ9tDw=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Type:
+         Content-Transfer-Encoding;
+        b=kQkSzzz56spCoiUMRfWZxXMXZ+w8kLW0MWfK0XIBCWkopz/baY0XkLc8Bk8PNHgiX
+         6AsHFjObxmg8rhEKKPHKu2cg1o5hsj2G4NUJr5wlWf1jlTxUyoCArFdhlo6J4wTUDA
+         8NlMBkgTKMTRkV+RdVwvJ5WPCHFQHEkNRqT9emPfLOpBvDiALNTqOqhHCSGbdAEcZc
+         Qtz5NLypSNn/NpKNSgMarMK2nA5GB/fSwFnhDNO45DNLY0grwNex/ixT4tlxNwp6si
+         Y1RiAjsXqNPz4ITslaueky4TELu1YTy5U7w2m3Uap/jtiNc5nAQ1V8AaaOkPboVDol
+         YC7JWXLIIEkZw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 11:03 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 03/09/20 19:57, Jim Mattson wrote:
-> > On Thu, Sep 3, 2020 at 7:12 AM Mohammed Gamal <mgamal@redhat.com> wrote:
-> >> This patch exposes allow_smaller_maxphyaddr to the user as a module parameter.
-> >>
-> >> Since smaller physical address spaces are only supported on VMX, the parameter
-> >> is only exposed in the kvm_intel module.
-> >> Modifications to VMX page fault and EPT violation handling will depend on whether
-> >> that parameter is enabled.
-> >>
-> >> Also disable support by default, and let the user decide if they want to enable
-> >> it.
-> >
-> > I think a smaller guest physical address width *should* be allowed.
-> > However, perhaps the pedantic adherence to the architectural
-> > specification could be turned on or off per-VM? And, if we're going to
-> > be pedantic, I think we should go all the way and get MOV-to-CR3
-> > correct.
->
-> That would be way too slow.  Even the current trapping of present #PF
-> can introduce some slowdown depending on the workload.
+A migrating transparent huge page has to already be unmapped. Otherwise,
+the page could be modified while it is being copied to a new page and
+data could be lost. The function __split_huge_pmd() checks for a PMD
+migration entry before calling __split_huge_pmd_locked() leading one to
+think that __split_huge_pmd_locked() can handle splitting a migrating PMD.
+However, the code always increments the page->_mapcount and adjusts the
+memory control group accounting assuming the page is mapped.
+Also, if the PMD entry is a migration PMD entry, the call to
+is_huge_zero_pmd(*pmd) is incorrect because it calls pmd_pfn(pmd) instead
+of migration_entry_to_pfn(pmd_to_swp_entry(pmd)).
+Fix these problems by checking for a PMD migration entry.
 
-Yes, I was concerned about that...which is why I would not want to
-enable pedantic mode. But if you're going to be pedantic, why go
-halfway?
+Fixes: 84c3fc4e9c56 ("mm: thp: check pmd migration entry in common path")
+cc: stable@vger.kernel.org # 4.14+
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Reviewed-by: Yang Shi <shy828301@gmail.com>
+Reviewed-by: Zi Yan <ziy@nvidia.com>
+---
 
-> > Does the typical guest care about whether or not setting any of the
-> > bits 51:46 in a PFN results in a fault?
->
-> At least KVM with shadow pages does, which is a bit niche but it shows
-> that you cannot really rely on no one doing it.  As you guessed, the
-> main usage of the feature is for machines with 5-level page tables where
-> there are no reserved bits; emulating smaller MAXPHYADDR allows
-> migrating VMs from 4-level page-table hosts.
->
-> Enabling per-VM would not be particularly useful IMO because if you want
-> to disable this code you can just set host MAXPHYADDR = guest
-> MAXPHYADDR, which should be the common case unless you want to do that
-> kind of Skylake to Icelake (or similar) migration.
+No changes in v3 to this patch, just added reviewed-by and fixes to the
+change log and sending this as a separate patch from the rest of the
+series ("mm/hmm/nouveau: add THP migration to migrate_vma_*").
+I'll hold off resending the series without this patch unless there are
+changes needed.
 
-I expect that it will be quite common to run 46-bit wide legacy VMs on
-Ice Lake hardware, as Ice Lake machines start showing up in
-heterogeneous data centers.
+ mm/huge_memory.c | 42 +++++++++++++++++++++++-------------------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
+
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 2a468a4acb0a..606d712d9505 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2023,7 +2023,7 @@ static void __split_huge_pmd_locked(struct vm_area_st=
+ruct *vma, pmd_t *pmd,
+ 		put_page(page);
+ 		add_mm_counter(mm, mm_counter_file(page), -HPAGE_PMD_NR);
+ 		return;
+-	} else if (is_huge_zero_pmd(*pmd)) {
++	} else if (pmd_trans_huge(*pmd) && is_huge_zero_pmd(*pmd)) {
+ 		/*
+ 		 * FIXME: Do we want to invalidate secondary mmu by calling
+ 		 * mmu_notifier_invalidate_range() see comments below inside
+@@ -2117,30 +2117,34 @@ static void __split_huge_pmd_locked(struct vm_area_=
+struct *vma, pmd_t *pmd,
+ 		pte =3D pte_offset_map(&_pmd, addr);
+ 		BUG_ON(!pte_none(*pte));
+ 		set_pte_at(mm, addr, pte, entry);
+-		atomic_inc(&page[i]._mapcount);
+-		pte_unmap(pte);
+-	}
+-
+-	/*
+-	 * Set PG_double_map before dropping compound_mapcount to avoid
+-	 * false-negative page_mapped().
+-	 */
+-	if (compound_mapcount(page) > 1 && !TestSetPageDoubleMap(page)) {
+-		for (i =3D 0; i < HPAGE_PMD_NR; i++)
++		if (!pmd_migration)
+ 			atomic_inc(&page[i]._mapcount);
++		pte_unmap(pte);
+ 	}
+=20
+-	lock_page_memcg(page);
+-	if (atomic_add_negative(-1, compound_mapcount_ptr(page))) {
+-		/* Last compound_mapcount is gone. */
+-		__dec_lruvec_page_state(page, NR_ANON_THPS);
+-		if (TestClearPageDoubleMap(page)) {
+-			/* No need in mapcount reference anymore */
++	if (!pmd_migration) {
++		/*
++		 * Set PG_double_map before dropping compound_mapcount to avoid
++		 * false-negative page_mapped().
++		 */
++		if (compound_mapcount(page) > 1 &&
++		    !TestSetPageDoubleMap(page)) {
+ 			for (i =3D 0; i < HPAGE_PMD_NR; i++)
+-				atomic_dec(&page[i]._mapcount);
++				atomic_inc(&page[i]._mapcount);
++		}
++
++		lock_page_memcg(page);
++		if (atomic_add_negative(-1, compound_mapcount_ptr(page))) {
++			/* Last compound_mapcount is gone. */
++			__dec_lruvec_page_state(page, NR_ANON_THPS);
++			if (TestClearPageDoubleMap(page)) {
++				/* No need in mapcount reference anymore */
++				for (i =3D 0; i < HPAGE_PMD_NR; i++)
++					atomic_dec(&page[i]._mapcount);
++			}
+ 		}
++		unlock_page_memcg(page);
+ 	}
+-	unlock_page_memcg(page);
+=20
+ 	smp_wmb(); /* make pte visible before pmd */
+ 	pmd_populate(mm, pmd, pgtable);
+--=20
+2.20.1
+
