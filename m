@@ -2,119 +2,198 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5B6C2D0A6
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA68AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE1320684
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9146420684
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WyrthnaZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="BNgE/Ex9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgICUjy (ORCPT
+        id S1729378AbgICUjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:39:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35458 "EHLO
+        Thu, 3 Sep 2020 16:39:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729390AbgICUbI (ORCPT
+        with ESMTP id S1729393AbgICUbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:31:08 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC38C061233;
-        Thu,  3 Sep 2020 13:31:01 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a17so4567558wrn.6;
-        Thu, 03 Sep 2020 13:31:00 -0700 (PDT)
+        Thu, 3 Sep 2020 16:31:09 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA1EC061237
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:31:01 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id u128so3992450ybg.17
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:31:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4HdI15SBEuyVNQNB+e23d+K5pgBDpyUoqfbF257aXR4=;
-        b=WyrthnaZYSFEr7XddYF7H50hOI5GPE+Pd6cDfZvu4PnQF0Psq5EF8p+RpdbuBXkK+/
-         ia3x8aYxZm6VnrBWzUiTkhyelVCLcQW3ICV9JNF8XvdMaiJwwHeUBWuBZxOJuJyXQIVn
-         HhvWKkZ5sWEyp98yw1kWt3E/1d0jRChRYpYnldSHC+UnvXRdQ/I4wol3ON/0QxcN94TY
-         dyWN2ySMCsNUQW7ZFFHhOcReTI+ZP8TrNDygFxNr3QQiEKQ15O0+x7qaxJsPfuU2T5/0
-         3FuDrAg/+zCRQcmevfiqKs+bir8srVfRPxrJeSaYahVPrXe5JLRwdukunX2sHHpszb16
-         b3zQ==
+        d=google.com; s=20161025;
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=Zc5fOwGj6FL/BwQcVTQqN8jM5Y1jCC9q7imUTY2UKoE=;
+        b=BNgE/Ex9wBp4RTaOYT8mdtmEp7DyxnUyA64Gm9ruatFkrcdqc2eXDv2SBkpzV/SseI
+         Ki3DuyZGJhALAJwszdk0ZBZ1pQ8vmCyKnoTFNknw5SoXwls+Es/Yr+2jbtbvBVnoGnj8
+         wb51PO0riE7ubBDGPD3WVLD53IIwK8xSSBTHkIL/vRbXOKemRUASuxtn86yFiw7uwgyu
+         VdRwxCfj2fp7s1clcD1U+wOiTo5zcL2Qy4YStNGcFrXmpSLzJE/QCYFNgoi8suDp+DYi
+         IqApOtPKmt3CggpahQVRrrVTxOaPmT0JNkLKvsP/fv2bcPHB6DRWdPx80LxodGa3iCNs
+         flmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4HdI15SBEuyVNQNB+e23d+K5pgBDpyUoqfbF257aXR4=;
-        b=jR06hg6ZUXfObAYDGz4HXsg8GSjkI6LFsDISht6Jaoiyyx9VI0ml4sA3MPn74PQLAK
-         OomA6U6Sw5GqIY5fVfggZNVbefQyIQaKjyE4Y4+AZ9fqLhCnq88spoofbYvCuvWyYvdZ
-         mudVwX+phoP9UbWZQnmToGZI0XUsgcQDSQOGC/U0Z8W9WSZjCBtlkmT74N/wSEvzD6YG
-         lja+E7jFS9hvpuAr7gb3BBsB0rB/PjICLYs68a6xT0f9Cg3WI/nPj7nr30o2dm0JtlG/
-         TLl8Bc9Y+tuo7Zl+5APxlvLNXe1xuufUpzCpS8qk7RNNvLvjkXpBfGJVWGgOKOZTlqNH
-         yFOQ==
-X-Gm-Message-State: AOAM533aCgD6Sc0jtntN9RS9dkpMEurRZsEjurmpczAY/77scl6/1tI4
-        s83ToEJPHXqGqCgMxRXBep8=
-X-Google-Smtp-Source: ABdhPJyRYKqLTYuj65U35HowZN4mMgwJQgbTH6FKusmQCLCKBfVDNA7p4bBA6gxOvKQPOqkec1Ho9w==
-X-Received: by 2002:a5d:4ccb:: with SMTP id c11mr4175622wrt.159.1599165059655;
-        Thu, 03 Sep 2020 13:30:59 -0700 (PDT)
-Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id q186sm6818274wma.45.2020.09.03.13.30.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 13:30:58 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     devicetree@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 14/20] arm: sun8i: h3: Add HDMI audio to Orange Pi 2
-Date:   Thu,  3 Sep 2020 22:30:28 +0200
-Message-Id: <20200903203034.1057334-15-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200903203034.1057334-1-peron.clem@gmail.com>
-References: <20200903203034.1057334-1-peron.clem@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=Zc5fOwGj6FL/BwQcVTQqN8jM5Y1jCC9q7imUTY2UKoE=;
+        b=RrogaY4OCcZHzeU+EP7E1VK9P5ByANyDI08cQ+rm3HId8N9/YgPdqnRsw16bcH/X1t
+         lgcKrUesEJIt+0yhkySBku2VLaRk376HUrvoH3niJDWaSVHEIFjuOlbRGtgG8NeOWM/D
+         dXRhNBsy+3eLxRnT2jGzjlCgzHYf3BjQ96mv6yeZrm7sF5aLuuDyT2aZ3PsOvHpUhd06
+         FvLEqm7pZV9zlPcjJA+oguDyRLOKJ/Pq8jqJbA0QPXSCD6sbQ1R4jUip5pgv3KQAyucq
+         xTCiZTH+F76LI+YSJ2Eyr4nrY7NjyZRLyL2TKsAl4dfqZe1b7fXeQvt/KO96zlPzyZ5j
+         uOcw==
+X-Gm-Message-State: AOAM531agiKDZKk71jm9zdbT3oIoLU1DAC+mfRWd7cyJe4WuU5aWusFK
+        4IbfcFOBHL1Sc6BIUc+K4cFTM0VmyoRHCzIQIc8=
+X-Google-Smtp-Source: ABdhPJwOs38+ji6mAOwxoH65cFtoyaDjS9TPKHuyLwiR1Gojf0+6KETd30w6tAaklsU6u1xgAxbmUkeOrgiUoBMDkZ4=
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+ (user=samitolvanen job=sendgmr) by 2002:a5b:30b:: with SMTP id
+ j11mr5537716ybp.483.1599165060985; Thu, 03 Sep 2020 13:31:00 -0700 (PDT)
+Date:   Thu,  3 Sep 2020 13:30:28 -0700
+In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
+Message-Id: <20200903203053.3411268-4-samitolvanen@google.com>
+Mime-Version: 1.0
+References: <20200624203200.78870-1-samitolvanen@google.com> <20200903203053.3411268-1-samitolvanen@google.com>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+Subject: [PATCH v2 03/28] lib/string.c: implement stpcpy
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcus Cooper <codekipper@gmail.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-Enable HDMI audio on the Orange Pi 2.
+LLVM implemented a recent "libcall optimization" that lowers calls to
+`sprintf(dest, "%s", str)` where the return value is used to
+`stpcpy(dest, str) - dest`. This generally avoids the machinery involved
+in parsing format strings.  `stpcpy` is just like `strcpy` except it
+returns the pointer to the new tail of `dest`.  This optimization was
+introduced into clang-12.
 
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Implement this so that we don't observe linkage failures due to missing
+symbol definitions for `stpcpy`.
+
+Similar to last year's fire drill with:
+commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
+
+The kernel is somewhere between a "freestanding" environment (no full libc)
+and "hosted" environment (many symbols from libc exist with the same
+type, function signature, and semantics).
+
+As H. Peter Anvin notes, there's not really a great way to inform the
+compiler that you're targeting a freestanding environment but would like
+to opt-in to some libcall optimizations (see pr/47280 below), rather than
+opt-out.
+
+Arvind notes, -fno-builtin-* behaves slightly differently between GCC
+and Clang, and Clang is missing many __builtin_* definitions, which I
+consider a bug in Clang and am working on fixing.
+
+Masahiro summarizes the subtle distinction between compilers justly:
+  To prevent transformation from foo() into bar(), there are two ways in
+  Clang to do that; -fno-builtin-foo, and -fno-builtin-bar.  There is
+  only one in GCC; -fno-buitin-foo.
+
+(Any difference in that behavior in Clang is likely a bug from a missing
+__builtin_* definition.)
+
+Masahiro also notes:
+  We want to disable optimization from foo() to bar(),
+  but we may still benefit from the optimization from
+  foo() into something else. If GCC implements the same transform, we
+  would run into a problem because it is not -fno-builtin-bar, but
+  -fno-builtin-foo that disables that optimization.
+
+  In this regard, -fno-builtin-foo would be more future-proof than
+  -fno-built-bar, but -fno-builtin-foo is still potentially overkill. We
+  may want to prevent calls from foo() being optimized into calls to
+  bar(), but we still may want other optimization on calls to foo().
+
+It seems that compilers today don't quite provide the fine grain control
+over which libcall optimizations pseudo-freestanding environments would
+prefer.
+
+Finally, Kees notes that this interface is unsafe, so we should not
+encourage its use.  As such, I've removed the declaration from any
+header, but it still needs to be exported to avoid linkage errors in
+modules.
+
+Reported-by: Sami Tolvanen <samitolvanen@google.com>
+Suggested-by: Andy Lavr <andy.lavr@gmail.com>
+Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
+Suggested-by: Joe Perches <joe@perches.com>
+Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
+Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: stable@vger.kernel.org
+Link: https://bugs.llvm.org/show_bug.cgi?id=47162
+Link: https://bugs.llvm.org/show_bug.cgi?id=47280
+Link: https://github.com/ClangBuiltLinux/linux/issues/1126
+Link: https://man7.org/linux/man-pages/man3/stpcpy.3.html
+Link: https://pubs.opengroup.org/onlinepubs/9699919799/functions/stpcpy.html
+Link: https://reviews.llvm.org/D85963
 ---
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ lib/string.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-index 597c425d08ec..64e8e2829f27 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-@@ -144,6 +144,14 @@ hdmi_out_con: endpoint {
- 	};
- };
+diff --git a/lib/string.c b/lib/string.c
+index 6012c385fb31..6bd0cf0fb009 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -272,6 +272,30 @@ ssize_t strscpy_pad(char *dest, const char *src, size_t count)
+ }
+ EXPORT_SYMBOL(strscpy_pad);
  
-+&hdmi_sound {
-+	status = "okay";
-+};
++/**
++ * stpcpy - copy a string from src to dest returning a pointer to the new end
++ *          of dest, including src's %NUL-terminator. May overrun dest.
++ * @dest: pointer to end of string being copied into. Must be large enough
++ *        to receive copy.
++ * @src: pointer to the beginning of string being copied from. Must not overlap
++ *       dest.
++ *
++ * stpcpy differs from strcpy in a key way: the return value is the new
++ * %NUL-terminated character. (for strcpy, the return value is a pointer to
++ * src. This interface is considered unsafe as it doesn't perform bounds
++ * checking of the inputs. As such it's not recommended for usage. Instead,
++ * its definition is provided in case the compiler lowers other libcalls to
++ * stpcpy.
++ */
++char *stpcpy(char *__restrict__ dest, const char *__restrict__ src);
++char *stpcpy(char *__restrict__ dest, const char *__restrict__ src)
++{
++	while ((*dest++ = *src++) != '\0')
++		/* nothing */;
++	return --dest;
++}
++EXPORT_SYMBOL(stpcpy);
 +
-+&i2s2 {
-+	status = "okay";
-+};
-+
- &ir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&r_ir_rx_pin>;
+ #ifndef __HAVE_ARCH_STRCAT
+ /**
+  * strcat - Append one %NUL-terminated string to another
 -- 
-2.25.1
+2.28.0.402.g5ffc5be6b7-goog
 
