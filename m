@@ -2,241 +2,147 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87B4C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49008C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 822C820709
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEC0420709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:54:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gdJD32nw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N7Mf58JI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="daq4GzOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgICJxO (ORCPT
+        id S1728223AbgICJy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 05:53:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49846 "EHLO
+        Thu, 3 Sep 2020 05:54:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgICJxJ (ORCPT
+        with ESMTP id S1726025AbgICJyY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 05:53:09 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E1B3C061244;
-        Thu,  3 Sep 2020 02:53:09 -0700 (PDT)
-Date:   Thu, 03 Sep 2020 09:53:06 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599126787;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sR04Y4IpiX64/MhLdtGb3m3Fr95dmhVOP7w/M40vkn8=;
-        b=gdJD32nwrWxw3DNG3jc9zm4gbZqu3IMlV5qYawA+sOpuKjCKASWFevs/0JOURAGVyUIDxz
-        C3jjk77m6VqM3N2qD/GZrvK/LUvYSF6BZCBslIxn6D+aVlLWR2A1Qwxp2ciCR9cc2m2091
-        U0P0/K7GUs5hkhicAmp+9Xvh4VN406BY27/B//yhuUWZy6xoQtqvW7x9WjDleFeX/2SFvh
-        Zikpdm5d3YoBeOEw42pnBAslJib6NK7Xi5ezwTOftE38CjXzr0r4IpuIo84584Tl6p0yI5
-        qLuzHpnkkLJDwepT5eeO3+yDVqi8pVErn3+VQ7NPgn+KacNqM6JN3G/JrY22iA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599126787;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sR04Y4IpiX64/MhLdtGb3m3Fr95dmhVOP7w/M40vkn8=;
-        b=N7Mf58JITBVRGT0yK4VqcfW5gdeaPuJkTdpLcH/GKWsR1RWdoYmECmq0bRE6rpPfNxB1vm
-        CrCcr0tER5eZCDBw==
-From:   "tip-bot2 for Joerg Roedel" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/mm/32: Bring back vmalloc faulting on x86_32
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Joerg Roedel <jroedel@suse.de>, Ingo Molnar <mingo@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200902155904.17544-1-joro@8bytes.org>
-References: <20200902155904.17544-1-joro@8bytes.org>
+        Thu, 3 Sep 2020 05:54:24 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8BFC061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 02:54:24 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id np15so3501956pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 02:54:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wjC0tbIDPPDTdCpRz9F+/eEg4mMonLjJNrNCC1I0r9s=;
+        b=daq4GzOXr0Z4qXadeIiXFl0GoIQv5p5aWjjn8L4bzFstMV1iXf6T1eOyAb29z/63DH
+         901cv/i9bSMfhV6ZJaoa4quAW1mkxH62dAvWCKGMCNUH4GT5aOfskc9OvOX63vlFbmIQ
+         cnFAV8hrGatz5otidu+w6Glv1cDOWC0dSR2rE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wjC0tbIDPPDTdCpRz9F+/eEg4mMonLjJNrNCC1I0r9s=;
+        b=hxTxe3KSI3hzyrijOBwQ4rhIAau4rCeDY0GecCpnWViwAV0MRMvMyxnpII+cDuWWrm
+         mY5g6wkXRI3qt8H46DtDb8mzEpwOWHosdIXgpjGtqoqJBuGaHG8c9f56A4dNc1JvbxgQ
+         /k/Not0nSvNN9daJKbiPu+Mxo/88A73zp4WGpkpMJea7/IfC61HVZG5/Mafh5Wo1ozzH
+         wWXGM1fWtPI0B43a7uy1iaa8BeSaIRrqYsH/tXlbYQABKEfzrMhJ9rk6xwlKGspeURpm
+         e8PApGK96Ppfcp34AB07UkXaeYvt2U3GqdD5HEuSM1g127SpLlr/5Uig2AwdF5IIl84e
+         pTcg==
+X-Gm-Message-State: AOAM532r4RKe9G9GHsBxEuN8JN8wqQl2wUSfLjPW2uNRrSZJBA2h5T1F
+        GUN7eDVcQQ4J2x0ZZ8VCb7Bvz9xXIRhvQQ==
+X-Google-Smtp-Source: ABdhPJx5dCHM8X+wC1wiwFYO5IQ2Q8oOzLpB2grWDJbWV1PLV2uAzP2C48iuuoKRTrtU/SPCHDBGrQ==
+X-Received: by 2002:a17:90a:86c2:: with SMTP id y2mr2565470pjv.3.1599126863608;
+        Thu, 03 Sep 2020 02:54:23 -0700 (PDT)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:a28c:fdff:fef0:49dd])
+        by smtp.gmail.com with ESMTPSA id y7sm2094475pgk.73.2020.09.03.02.54.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 02:54:23 -0700 (PDT)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     gwendal@chromium.org, Prashant Malani <pmalani@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH 1/2] platform/chrome: cros_ec_proto: Update cros_ec_cmd_xfer() call-sites
+Date:   Thu,  3 Sep 2020 02:54:14 -0700
+Message-Id: <20200903095415.2572049-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 MIME-Version: 1.0
-Message-ID: <159912678646.20229.14512202252477216460.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+Since all the other call-sites of cros_ec_cmd_xfer() have been converted
+to use cros_ec_cmd_xfer_status() instead, update the remaining
+call-sites to prepare for the merge of cros_ec_cmd_xfer() into
+cros_ec_cmd_xfer_status().
 
-Commit-ID:     4819e15f740ec884a50bdc431d7f1e7638b6f7d9
-Gitweb:        https://git.kernel.org/tip/4819e15f740ec884a50bdc431d7f1e7638b6f7d9
-Author:        Joerg Roedel <jroedel@suse.de>
-AuthorDate:    Wed, 02 Sep 2020 17:59:04 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 03 Sep 2020 11:23:35 +02:00
+As part of this update, change the error handling inside
+cros_ec_get_sensor_count() such that the legacy LPC interface is tried
+on all error values, not just when msg->result != EC_RESULT_SUCCESS.
 
-x86/mm/32: Bring back vmalloc faulting on x86_32
-
-One can not simply remove vmalloc faulting on x86-32. Upstream
-
-	commit: 7f0a002b5a21 ("x86/mm: remove vmalloc faulting")
-
-removed it on x86 alltogether because previously the
-arch_sync_kernel_mappings() interface was introduced. This interface
-added synchronization of vmalloc/ioremap page-table updates to all
-page-tables in the system at creation time and was thought to make
-vmalloc faulting obsolete.
-
-But that assumption was incredibly naive.
-
-It turned out that there is a race window between the time the vmalloc
-or ioremap code establishes a mapping and the time it synchronizes
-this change to other page-tables in the system.
-
-During this race window another CPU or thread can establish a vmalloc
-mapping which uses the same intermediate page-table entries (e.g. PMD
-or PUD) and does no synchronization in the end, because it found all
-necessary mappings already present in the kernel reference page-table.
-
-But when these intermediate page-table entries are not yet
-synchronized, the other CPU or thread will continue with a vmalloc
-address that is not yet mapped in the page-table it currently uses,
-causing an unhandled page fault and oops like below:
-
-	BUG: unable to handle page fault for address: fe80c000
-	#PF: supervisor write access in kernel mode
-	#PF: error_code(0x0002) - not-present page
-	*pde = 33183067 *pte = a8648163
-	Oops: 0002 [#1] SMP
-	CPU: 1 PID: 13514 Comm: cve-2017-17053 Tainted: G
-	...
-	Call Trace:
-	 ldt_dup_context+0x66/0x80
-	 dup_mm+0x2b3/0x480
-	 copy_process+0x133b/0x15c0
-	 _do_fork+0x94/0x3e0
-	 __ia32_sys_clone+0x67/0x80
-	 __do_fast_syscall_32+0x3f/0x70
-	 do_fast_syscall_32+0x29/0x60
-	 do_SYSENTER_32+0x15/0x20
-	 entry_SYSENTER_32+0x9f/0xf2
-	EIP: 0xb7eef549
-
-So the arch_sync_kernel_mappings() interface is racy, but removing it
-would mean to re-introduce the vmalloc_sync_all() interface, which is
-even more awful. Keep arch_sync_kernel_mappings() in place and catch
-the race condition in the page-fault handler instead.
-
-Do a partial revert of above commit to get vmalloc faulting on x86-32
-back in place.
-
-Fixes: 7f0a002b5a21 ("x86/mm: remove vmalloc faulting")
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200902155904.17544-1-joro@8bytes.org
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
 ---
- arch/x86/mm/fault.c | 78 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 78 insertions(+)
+ drivers/platform/chrome/cros_ec_proto.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 35f1498..6e3e8a1 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -190,6 +190,53 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
- 	return pmd_k;
- }
+diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+index dda182132a6a..2cb1defcdd13 100644
+--- a/drivers/platform/chrome/cros_ec_proto.c
++++ b/drivers/platform/chrome/cros_ec_proto.c
+@@ -650,7 +650,7 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
+ 	msg->insize = size;
+ 	msg->outsize = 0;
  
-+/*
-+ *   Handle a fault on the vmalloc or module mapping area
-+ *
-+ *   This is needed because there is a race condition between the time
-+ *   when the vmalloc mapping code updates the PMD to the point in time
-+ *   where it synchronizes this update with the other page-tables in the
-+ *   system.
-+ *
-+ *   In this race window another thread/CPU can map an area on the same
-+ *   PMD, finds it already present and does not synchronize it with the
-+ *   rest of the system yet. As a result v[mz]alloc might return areas
-+ *   which are not mapped in every page-table in the system, causing an
-+ *   unhandled page-fault when they are accessed.
-+ */
-+static noinline int vmalloc_fault(unsigned long address)
-+{
-+	unsigned long pgd_paddr;
-+	pmd_t *pmd_k;
-+	pte_t *pte_k;
-+
-+	/* Make sure we are in vmalloc area: */
-+	if (!(address >= VMALLOC_START && address < VMALLOC_END))
-+		return -1;
-+
-+	/*
-+	 * Synchronize this task's top level page-table
-+	 * with the 'reference' page table.
-+	 *
-+	 * Do _not_ use "current" here. We might be inside
-+	 * an interrupt in the middle of a task switch..
-+	 */
-+	pgd_paddr = read_cr3_pa();
-+	pmd_k = vmalloc_sync_one(__va(pgd_paddr), address);
-+	if (!pmd_k)
-+		return -1;
-+
-+	if (pmd_large(*pmd_k))
-+		return 0;
-+
-+	pte_k = pte_offset_kernel(pmd_k, address);
-+	if (!pte_present(*pte_k))
-+		return -1;
-+
-+	return 0;
-+}
-+NOKPROBE_SYMBOL(vmalloc_fault);
-+
- void arch_sync_kernel_mappings(unsigned long start, unsigned long end)
- {
- 	unsigned long addr;
-@@ -1110,6 +1157,37 @@ do_kern_addr_fault(struct pt_regs *regs, unsigned long hw_error_code,
+-	ret = cros_ec_cmd_xfer(ec_dev, msg);
++	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
+ 	if (ret > 0) {
+ 		ec_dev->event_size = ret - 1;
+ 		ec_dev->event_data = *event;
+@@ -694,7 +694,7 @@ static int get_keyboard_state_event(struct cros_ec_device *ec_dev)
+ 	msg->insize = sizeof(ec_dev->event_data.data);
+ 	msg->outsize = 0;
+ 
+-	ec_dev->event_size = cros_ec_cmd_xfer(ec_dev, msg);
++	ec_dev->event_size = cros_ec_cmd_xfer_status(ec_dev, msg);
+ 	ec_dev->event_data.event_type = EC_MKBP_EVENT_KEY_MATRIX;
+ 	memcpy(&ec_dev->event_data.data, msg->data,
+ 	       sizeof(ec_dev->event_data.data));
+@@ -883,11 +883,9 @@ int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
+ 	params = (struct ec_params_motion_sense *)msg->data;
+ 	params->cmd = MOTIONSENSE_CMD_DUMP;
+ 
+-	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
++	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+ 	if (ret < 0) {
+ 		sensor_count = ret;
+-	} else if (msg->result != EC_RES_SUCCESS) {
+-		sensor_count = -EPROTO;
+ 	} else {
+ 		resp = (struct ec_response_motion_sense *)msg->data;
+ 		sensor_count = resp->dump.sensor_count;
+@@ -898,9 +896,7 @@ int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
+ 	 * Check legacy mode: Let's find out if sensors are accessible
+ 	 * via LPC interface.
  	 */
- 	WARN_ON_ONCE(hw_error_code & X86_PF_PK);
- 
-+#ifdef CONFIG_X86_32
-+	/*
-+	 * We can fault-in kernel-space virtual memory on-demand. The
-+	 * 'reference' page table is init_mm.pgd.
-+	 *
-+	 * NOTE! We MUST NOT take any locks for this case. We may
-+	 * be in an interrupt or a critical region, and should
-+	 * only copy the information from the master page table,
-+	 * nothing more.
-+	 *
-+	 * Before doing this on-demand faulting, ensure that the
-+	 * fault is not any of the following:
-+	 * 1. A fault on a PTE with a reserved bit set.
-+	 * 2. A fault caused by a user-mode access.  (Do not demand-
-+	 *    fault kernel memory due to user-mode accesses).
-+	 * 3. A fault caused by a page-level protection violation.
-+	 *    (A demand fault would be on a non-present page which
-+	 *     would have X86_PF_PROT==0).
-+	 *
-+	 * This is only needed to close a race condition on x86-32 in
-+	 * the vmalloc mapping/unmapping code. See the comment above
-+	 * vmalloc_fault() for details. On x86-64 the race does not
-+	 * exist as the vmalloc mappings don't need to be synchronized
-+	 * there.
-+	 */
-+	if (!(hw_error_code & (X86_PF_RSVD | X86_PF_USER | X86_PF_PROT))) {
-+		if (vmalloc_fault(address) >= 0)
-+			return;
-+	}
-+#endif
-+
- 	/* Was the fault spurious, caused by lazy TLB invalidation? */
- 	if (spurious_kernel_fault(hw_error_code, address))
- 		return;
+-	if (sensor_count == -EPROTO &&
+-	    ec->cmd_offset == 0 &&
+-	    ec_dev->cmd_readmem) {
++	if (sensor_count < 0 && ec->cmd_offset == 0 && ec_dev->cmd_readmem) {
+ 		ret = ec_dev->cmd_readmem(ec_dev, EC_MEMMAP_ACC_STATUS,
+ 				1, &status);
+ 		if (ret >= 0 &&
+@@ -915,9 +911,6 @@ int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
+ 			 */
+ 			sensor_count = 0;
+ 		}
+-	} else if (sensor_count == -EPROTO) {
+-		/* EC responded, but does not understand DUMP command. */
+-		sensor_count = 0;
+ 	}
+ 	return sensor_count;
+ }
+-- 
+2.28.0.526.ge36021eeef-goog
+
