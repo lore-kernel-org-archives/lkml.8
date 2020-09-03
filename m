@@ -2,163 +2,158 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F92C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A7EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7D820897
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3DD12071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="BAqToBhe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrcUCU2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgICUkf (ORCPT
+        id S1729776AbgICUkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:40:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35450 "EHLO
+        Thu, 3 Sep 2020 16:40:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729356AbgICUbD (ORCPT
+        with ESMTP id S1729318AbgICUa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:31:03 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7314CC061261
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:30:57 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id q4so2502969qvr.10
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:30:57 -0700 (PDT)
+        Thu, 3 Sep 2020 16:30:56 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58C19C06124F;
+        Thu,  3 Sep 2020 13:30:54 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id m6so4619172wrn.0;
+        Thu, 03 Sep 2020 13:30:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=mDVvkNnwHRt+Li8nefuHvmgwU3VCsthhxmclA+Biet0=;
-        b=BAqToBhePk+irZIVVLAwecMp1XW9+Ks/f/sHbDKoGAGhsn6UE+3DQRUDeqOb8say/o
-         QxpBeEZ6aAX0zEfibyHBFmhzl0Vw+o0mHntVCknw3JFLb1KRs5PinJ6tHxAOk5MN5EYA
-         AfgwLGhevAbhgMH2td9x/PyO+G3DTP7s1GxaKtrd39cb0JzoBHskqiAq/LJEw/gMn8iA
-         XT4V4BL0iYhatzNnu1bXuTQZJGInDJpEfjNk2sRcKcORI1v3DBYhfh8RDI2LHTVrDtsI
-         V29No/TKC195kYLq9pmO7w16CLGuBlaDY8z5c/lcwnflHFClTnlapgui3DYxttVqDUEE
-         tSLQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=61amrDy5MhVE+L2rXjmfQqPe1Fgk9roDotW+tBGquxU=;
+        b=ZrcUCU2rzfGPrkL3bbQNF8DE7OpIgaYNnar8j2g9wWhP4VdZntrKae6ZQ0ZPazUjRM
+         eFKhK66OIFB0nuIv4ASSdj5MzMNz3W0ULtFiLyIJU9J3/q277LYB4JgN8B2vsKwQQrFd
+         mYoSScXD6VEwvIo3oHEqlHeDJ8QzMtKvTQu/XVd6/K+uFbJ40L5ylAuoXUVazQsrJlZ5
+         2KgSu9557Xiq5rDvPrtGAlRn2xQGjuwPxEEa7zG/xNBtInUASSPTzrgYHoeVXIzmVWxj
+         JTC07EtAPJCbNkUMp5aoMXDbK5uS1lJlVTpL1t5kRkuB1DmqVabf/VcfFGTXYbWOYeKA
+         zqSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=mDVvkNnwHRt+Li8nefuHvmgwU3VCsthhxmclA+Biet0=;
-        b=Z9a6d9SmohNL6/hAVnEwFwhLAPksGdDmtus2SMgDSvQ+YJVQVXSKQlJuylW3LV4SQ2
-         swxIos5lKLRHmlEvOkeLrItQ6rl1/4xJBB8UVszP8qDy4QOh1FU2wE1+3kimKDkRdZUs
-         uEu+7rU+RS34GcjZPDJ+29498tMLo0zkrVkNh0PTrFWSVLbbsVUIr/fTpV7MuuvQpUUX
-         u3531onBVZLV1hze3A6MjatUuwZTtdn0hV2wFAg5/tWNZRMZIxPeBkDGN6gj6ykev3NH
-         ikMbOZqu0yRWQUyg8zIjUiHafZ13M3qj0rRUONsh/y4swukeMRYcRXw4fUEa11yioJJU
-         HwTw==
-X-Gm-Message-State: AOAM533B7l1wP2iNvoL1XOWYLFUb8ZN3Nl/ZY1pNI5/UAVf0sFJwni5o
-        6GUuPEgpgelWTNX3Ff/78/DK5nW3mu7pQ1BmCQ8=
-X-Google-Smtp-Source: ABdhPJyUnW2qSfmEzLjPskwcMhWUurVS5skiaBz/vWVhXl7N7pyUdqZoSu6Ssyc74PFkWqrXo2ggCEF9Y0h+Jfi/JHo=
-X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
- (user=samitolvanen job=sendgmr) by 2002:a05:6214:292:: with SMTP id
- l18mr3616010qvv.3.1599165056576; Thu, 03 Sep 2020 13:30:56 -0700 (PDT)
-Date:   Thu,  3 Sep 2020 13:30:26 -0700
-In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
-Message-Id: <20200903203053.3411268-2-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com> <20200903203053.3411268-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH v2 01/28] x86/boot/compressed: Disable relocation relaxation
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, Arvind Sankar <nivedita@alum.mit.edu>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=61amrDy5MhVE+L2rXjmfQqPe1Fgk9roDotW+tBGquxU=;
+        b=booxX5kZZmJ1425KTpEszEwGTVppiKYxWU1fHdiAmB2A8xqJVnbT3U0+MhBzY018LO
+         QdJijcVEC56THLEXlLitF9WKqMHXryT8bH2AynGDnOunq3Rhk423sEe1SrMeJcx1ronU
+         8BHNYR7mOPk7EGHiMDVHiGs0ViQdNybCt41W6y0FS8zKzudSM+hvEMOXHbP37a0ym1P7
+         20cPC+x9PVVKKasfhlwPsl8Dw3nk86k3ceAMSN2kxmlpnCivXtCFGZh91Bae19hNZnNg
+         a9wnVumIESZ8clrHdMMxejOLSoX74/dGKGWwzcEsolSyUPBd/XTCOrPeiRLGsyLW0JAh
+         XN/w==
+X-Gm-Message-State: AOAM530P93E5H9Yb2A0UpdKzQ8uMaZv4LwrqtnrG1PNUXdNtWlhu0b9S
+        HAcyf4drd2INiw8pURXac5U=
+X-Google-Smtp-Source: ABdhPJyTLPXx1dlhvyfiiXcGUGwjig79KiFo40tbRDlZq1pHE3VShxvp2x4u4kvSkE/SLK6496JQwg==
+X-Received: by 2002:a5d:6111:: with SMTP id v17mr4249734wrt.265.1599165052954;
+        Thu, 03 Sep 2020 13:30:52 -0700 (PDT)
+Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
+        by smtp.gmail.com with ESMTPSA id q186sm6818274wma.45.2020.09.03.13.30.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 13:30:52 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>,
+        Marcus Cooper <codekipper@gmail.com>,
+        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v2 08/20] arm64: dts: allwinner: h6: Add HDMI audio node
+Date:   Thu,  3 Sep 2020 22:30:22 +0200
+Message-Id: <20200903203034.1057334-9-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200903203034.1057334-1-peron.clem@gmail.com>
+References: <20200903203034.1057334-1-peron.clem@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-The x86-64 psABI [0] specifies special relocation types
-(R_X86_64_[REX_]GOTPCRELX) for indirection through the Global Offset
-Table, semantically equivalent to R_X86_64_GOTPCREL, which the linker
-can take advantage of for optimization (relaxation) at link time. This
-is supported by LLD and binutils versions 2.26 onwards.
+Add a simple-soundcard to link audio between HDMI and I2S.
 
-The compressed kernel is position-independent code, however, when using
-LLD or binutils versions before 2.27, it must be linked without the -pie
-option. In this case, the linker may optimize certain instructions into
-a non-position-independent form, by converting foo@GOTPCREL(%rip) to $foo.
-
-This potential issue has been present with LLD and binutils-2.26 for a
-long time, but it has never manifested itself before now:
-- LLD and binutils-2.26 only relax
-	movq	foo@GOTPCREL(%rip), %reg
-  to
-	leaq	foo(%rip), %reg
-  which is still position-independent, rather than
-	mov	$foo, %reg
-  which is permitted by the psABI when -pie is not enabled.
-- gcc happens to only generate GOTPCREL relocations on mov instructions.
-- clang does generate GOTPCREL relocations on non-mov instructions, but
-  when building the compressed kernel, it uses its integrated assembler
-  (due to the redefinition of KBUILD_CFLAGS dropping -no-integrated-as),
-  which has so far defaulted to not generating the GOTPCRELX
-  relocations.
-
-Nick Desaulniers reports [1,2]:
-  A recent change [3] to a default value of configuration variable
-  (ENABLE_X86_RELAX_RELOCATIONS OFF -> ON) in LLVM now causes Clang's
-  integrated assembler to emit R_X86_64_GOTPCRELX/R_X86_64_REX_GOTPCRELX
-  relocations. LLD will relax instructions with these relocations based
-  on whether the image is being linked as position independent or not.
-  When not, then LLD will relax these instructions to use absolute
-  addressing mode (R_RELAX_GOT_PC_NOPIC). This causes kernels built with
-  Clang and linked with LLD to fail to boot.
-
-Patch series [4] is a solution to allow the compressed kernel to be
-linked with -pie unconditionally, but even if merged is unlikely to be
-backported. As a simple solution that can be applied to stable as well,
-prevent the assembler from generating the relaxed relocation types using
-the -mrelax-relocations=no option. For ease of backporting, do this
-unconditionally.
-
-[0] https://gitlab.com/x86-psABIs/x86-64-ABI/-/blob/master/x86-64-ABI/linker-optimization.tex#L65
-[1] https://lore.kernel.org/lkml/20200807194100.3570838-1-ndesaulniers@google.com/
-[2] https://github.com/ClangBuiltLinux/linux/issues/1121
-[3] https://reviews.llvm.org/rGc41a18cf61790fc898dcda1055c3efbf442c14c0
-[4] https://lore.kernel.org/lkml/20200731202738.2577854-1-nivedita@alum.mit.edu/
-
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/x86/boot/compressed/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 32 ++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 3962f592633d..ff7894f39e0e 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -43,6 +43,8 @@ KBUILD_CFLAGS += -Wno-pointer-sign
- KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
- KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
- KBUILD_CFLAGS += -D__DISABLE_EXPORTS
-+# Disable relocation relaxation in case the link is not PIE.
-+KBUILD_CFLAGS += $(call as-option,-Wa$(comma)-mrelax-relocations=no)
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 9ce78a7b117d..9597f40b25a9 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -67,6 +67,24 @@ de: display-engine {
+ 		status = "disabled";
+ 	};
  
- KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
- GCOV_PROFILE := n
++	hdmi_sound: hdmi-sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,name = "sun50i-h6-hdmi";
++		simple-audio-card,mclk-fs = <128>;
++		status = "disabled";
++
++		simple-audio-card,codec {
++			sound-dai = <&hdmi>;
++		};
++
++		simple-audio-card,cpu {
++			sound-dai = <&i2s1>;
++			dai-tdm-slot-num = <2>;
++			dai-tdm-slot-width = <32>;
++		};
++	};
++
+ 	osc24M: osc24M_clk {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-clock";
+@@ -608,6 +626,19 @@ mdio: mdio {
+ 			};
+ 		};
+ 
++		i2s1: i2s@5091000 {
++			#sound-dai-cells = <0>;
++			compatible = "allwinner,sun50i-h6-i2s";
++			reg = <0x05091000 0x1000>;
++			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_I2S1>, <&ccu CLK_I2S1>;
++			clock-names = "apb", "mod";
++			dmas = <&dma 4>, <&dma 4>;
++			resets = <&ccu RST_BUS_I2S1>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
+ 		spdif: spdif@5093000 {
+ 			#sound-dai-cells = <0>;
+ 			compatible = "allwinner,sun50i-h6-spdif";
+@@ -738,6 +769,7 @@ ohci3: usb@5311400 {
+ 		};
+ 
+ 		hdmi: hdmi@6000000 {
++			#sound-dai-cells = <0>;
+ 			compatible = "allwinner,sun50i-h6-dw-hdmi";
+ 			reg = <0x06000000 0x10000>;
+ 			reg-io-width = <1>;
 -- 
-2.28.0.402.g5ffc5be6b7-goog
+2.25.1
 
