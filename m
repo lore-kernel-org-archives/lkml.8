@@ -2,172 +2,192 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9B4C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7DAC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 772FB20767
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520C820716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:51:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NSoQszJN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dVJ4WqXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbgICTv0 (ORCPT
+        id S1729142AbgICTvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 15:51:26 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35518 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgICTvZ (ORCPT
+        Thu, 3 Sep 2020 15:51:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbgICTvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 15:51:25 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083JpJcZ027525;
-        Thu, 3 Sep 2020 14:51:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599162679;
-        bh=VY4y6pKM0zD2i2DSBknAWDMhJZ1BGlyUBh7Kj5LzBHI=;
-        h=From:To:CC:Subject:Date;
-        b=NSoQszJNHq1/vdEhmurPVoX9ylotd7D2XQdWtt9KXt8jzSff04Lky6V4//m+eYCmW
-         TmCqehxlO6zdjRWKKWZUa4MmjYY1Rifkhy65Ig5sCL0ZEaQJywinMzUUD1ge5ygi23
-         nBDkDhu3U3sQ19NVZC91Gsnv4DDlkAr0eOfdtzIU=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083JpJLF059269
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Sep 2020 14:51:19 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
- 2020 14:51:18 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 3 Sep 2020 14:51:18 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083JpIMV106935;
-        Thu, 3 Sep 2020 14:51:18 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v2] net: phy: dp83867: Fix various styling and space issues
-Date:   Thu, 3 Sep 2020 14:51:12 -0500
-Message-ID: <20200903195112.18868-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 3 Sep 2020 15:51:53 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80D3C061244;
+        Thu,  3 Sep 2020 12:51:52 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id g4so4485194wrs.5;
+        Thu, 03 Sep 2020 12:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UJXkuGnmcBOgj+bnSd2ENQnkJY+HuqruxJn1a8ox8ZU=;
+        b=dVJ4WqXKgwqsuWswxxUvPuOq4sVszIzMmm9k4Vboij0EDdTJgWIn7HBG2fOcFd9usX
+         EiGhwfvM5BOWtMUmr+MOousCLUhgH3yii4JZE5vKkkSQpYjBccsRuJ7vBUq2erR613F5
+         I+yo7SPC3TVaRb57dHI3efCiIXHC4D0tRCA0quceAJwE61I5e7pdMw3e1ly4t+83S2vT
+         LtGpG5OonGQ6C5Dukrljj4vZzBxUew+VZ5plIblr6hiTnutxF6Ex1hL5FdHd4V81tA4l
+         /V2OdsQN88dhcNY3y7H45y6c6xn2/b2tBMlmTLgIwnRZJBo386OAsj3bfDerDGzki7zR
+         4iRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UJXkuGnmcBOgj+bnSd2ENQnkJY+HuqruxJn1a8ox8ZU=;
+        b=nBEkY0TDJQniLcPRq0aVVmT0UKGOvkiPzY/a86jEwcO+H6NgaWzGjF1cGlmeAuKE0p
+         8gSgq2aWpLV6FK7+kG6A5BpVPRBUbQFaW1q/u6dLSQowuv0joBsCCmYDMs+c9I6bYUv7
+         E/+2x9WILP9y4ZsCu9PXYLKq08HeuhmxKRF8f1tJopmnZI167FgcZgs974QSXEyRrRku
+         8WcVGQpb7k+3wfuvW5ec7ZkW0Hm8Qnh+UjuxEVLpg+UHUVe7AH6yKBoBKHLT+Q/0j+Tw
+         qfry/+dkyj71XfGvFq2zqT9FWup/gc1L/UM0DXTPNCisw4IBo7SxE33GpoSfNEA0FePX
+         V2RQ==
+X-Gm-Message-State: AOAM532g38NpkV0bfkHbbN7zSL9f6yMrI7u35KRpciy50DO2ifxcKtjk
+        rbqIJ+MgqvLyTqjaNsKxiSvbgGPUc7HEjOCkX3MZKS2GkWMvyNF1
+X-Google-Smtp-Source: ABdhPJxNwAz9QDKbLTzH13VmNQpjqfEC0r/8i75sdOOflICkdzE8RpNfhAf75QFw08wOd95a3E8ThxWBGRz2HUJkZOQ=
+X-Received: by 2002:a05:6000:110b:: with SMTP id z11mr4234815wrw.426.1599162711516;
+ Thu, 03 Sep 2020 12:51:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200831220601.20794-1-santiagohssl@gmail.com>
+ <20200831220601.20794-3-santiagohssl@gmail.com> <6b225c10b6c71ffbc79c236b64dcc83fc33cc21b.camel@perches.com>
+In-Reply-To: <6b225c10b6c71ffbc79c236b64dcc83fc33cc21b.camel@perches.com>
+From:   Santiago Hormazabal <santiagohssl@gmail.com>
+Date:   Thu, 3 Sep 2020 16:51:13 -0300
+Message-ID: <CAHkAS4ZME-iFCuqTOkZT8r7UUEaB-Wp49Btq5HEWtS4pFGFD2Q@mail.gmail.com>
+Subject: Re: [PATCH 2/3] media: Add support for the AM/FM radio chip KT0913
+ from KT Micro.
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix spacing issues reported for misaligned switch..case and extra new
-lines.
+Hi Joe,
+Thanks for the feedback.
 
-Also updated the file header to comply with networking commet style.
+On Thu, 3 Sep 2020 at 13:45, Joe Perches <joe@perches.com> wrote:
+>
+> On Mon, 2020-08-31 at 19:06 -0300, Santiago Hormazabal wrote:
+> > This chip requires almost no support components and can used over I2C.
+> > The driver uses the I2C bus and exposes the controls as a V4L2 radio.
+> > Tested with a module that contains this chip (from SZZSJDZ.com,
+> > part number ZJ-801B, even tho the company seems defunct now), and an H2+
+> > AllWinner SoC running a kernel built off 07d999f of the media_tree.
+>
+> Thanks.
+>
+> style trivia:
+>
+> []
+> > diff --git a/drivers/media/radio/radio-kt0913.c b/drivers/media/radio/radio-kt0913.c
+> []
+> > +static const struct reg_sequence kt0913_init_regs_to_defaults[] = {
+> > +     /* Standby disabled, volume 0dB */
+> > +     { KT0913_REG_RXCFG, 0x881f },
+>
+> These might be more legible on single lines,
+> ignoring the 80 column limits.
+>
+> > +     /* FM Channel spacing = 50kHz, Right & Left unmuted */
+> > +     { KT0913_REG_SEEK, 0x000b },
+>
+> etc...
+>
+I agree, didn't know I could exceed the limit in these situations.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/net/phy/dp83867.c | 45 ++++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 24 deletions(-)
+> []
+>
+> > +static int __kt0913_set_fm_frequency(struct kt0913_device *radio,
+> > +                                  unsigned int frequency)
+> > +{
+> > +     return regmap_write(radio->regmap, KT0913_REG_TUNE,
+> > +             KT0913_TUNE_FMTUNE_ON | (frequency / KT0913_FMCHAN_MUL));
+>
+> It might be nicer to align multi-line statements to the
+> open parenthesis.
+>
+Yes, that's totally true. What about these cases where the other part
+of the lines would exceed 80 chars? For instance, if I align the
+second line to the open parenthesis of the first line, I'll be past
+the 80 chars limit. Splitting it back again to fit that would make the
+code not so much readable.
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index f3c04981b8da..ca26ccc6dfa4 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -1,6 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
--/*
-- * Driver for the Texas Instruments DP83867 PHY
-+/* Driver for the Texas Instruments DP83867 PHY
-  *
-  * Copyright (C) 2015 Texas Instruments Inc.
-  */
-@@ -113,7 +112,6 @@
- #define DP83867_RGMII_RX_CLK_DELAY_SHIFT	0
- #define DP83867_RGMII_RX_CLK_DELAY_INV	(DP83867_RGMII_RX_CLK_DELAY_MAX + 1)
- 
--
- /* IO_MUX_CFG bits */
- #define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MASK	0x1f
- #define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MAX	0x0
-@@ -384,22 +382,22 @@ static int dp83867_set_downshift(struct phy_device *phydev, u8 cnt)
- 				      DP83867_DOWNSHIFT_EN);
- 
- 	switch (cnt) {
--		case DP83867_DOWNSHIFT_1_COUNT:
--			count = DP83867_DOWNSHIFT_1_COUNT_VAL;
--			break;
--		case DP83867_DOWNSHIFT_2_COUNT:
--			count = DP83867_DOWNSHIFT_2_COUNT_VAL;
--			break;
--		case DP83867_DOWNSHIFT_4_COUNT:
--			count = DP83867_DOWNSHIFT_4_COUNT_VAL;
--			break;
--		case DP83867_DOWNSHIFT_8_COUNT:
--			count = DP83867_DOWNSHIFT_8_COUNT_VAL;
--			break;
--		default:
--			phydev_err(phydev,
--				   "Downshift count must be 1, 2, 4 or 8\n");
--			return -EINVAL;
-+	case DP83867_DOWNSHIFT_1_COUNT:
-+		count = DP83867_DOWNSHIFT_1_COUNT_VAL;
-+		break;
-+	case DP83867_DOWNSHIFT_2_COUNT:
-+		count = DP83867_DOWNSHIFT_2_COUNT_VAL;
-+		break;
-+	case DP83867_DOWNSHIFT_4_COUNT:
-+		count = DP83867_DOWNSHIFT_4_COUNT_VAL;
-+		break;
-+	case DP83867_DOWNSHIFT_8_COUNT:
-+		count = DP83867_DOWNSHIFT_8_COUNT_VAL;
-+		break;
-+	default:
-+		phydev_err(phydev,
-+			   "Downshift count must be 1, 2, 4 or 8\n");
-+		return -EINVAL;
- 	}
- 
- 	val = DP83867_DOWNSHIFT_EN;
-@@ -411,7 +409,7 @@ static int dp83867_set_downshift(struct phy_device *phydev, u8 cnt)
- }
- 
- static int dp83867_get_tunable(struct phy_device *phydev,
--				struct ethtool_tunable *tuna, void *data)
-+			       struct ethtool_tunable *tuna, void *data)
- {
- 	switch (tuna->id) {
- 	case ETHTOOL_PHY_DOWNSHIFT:
-@@ -422,7 +420,7 @@ static int dp83867_get_tunable(struct phy_device *phydev,
- }
- 
- static int dp83867_set_tunable(struct phy_device *phydev,
--				struct ethtool_tunable *tuna, const void *data)
-+			       struct ethtool_tunable *tuna, const void *data)
- {
- 	switch (tuna->id) {
- 	case ETHTOOL_PHY_DOWNSHIFT:
-@@ -524,11 +522,10 @@ static int dp83867_of_init(struct phy_device *phydev)
- 		dp83867->io_impedance = -1; /* leave at default */
- 
- 	dp83867->rxctrl_strap_quirk = of_property_read_bool(of_node,
--					"ti,dp83867-rxctrl-strap-quirk");
-+							    "ti,dp83867-rxctrl-strap-quirk");
- 
- 	dp83867->sgmii_ref_clk_en = of_property_read_bool(of_node,
--					"ti,sgmii-ref-clock-output-enable");
--
-+							  "ti,sgmii-ref-clock-output-enable");
- 
- 	dp83867->rx_id_delay = DP83867_RGMII_RX_CLK_DELAY_INV;
- 	ret = of_property_read_u32(of_node, "ti,rx-internal-delay",
--- 
-2.28.0
+> []
+>
+> > +static int __kt0913_set_au_gain(struct kt0913_device *radio, s32 gain)
+> > +{
+> > +     switch (gain) {
+> > +     case 6:
+> > +             return regmap_update_bits(radio->regmap,
+> > +                     KT0913_REG_AMSYSCFG, KT0913_AMSYSCFG_AU_GAIN_MASK,
+> > +                     KT0913_AMSYSCFG_AU_GAIN_6DB);
+> > +     case 3:
+> > +             return regmap_update_bits(radio->regmap,
+> > +                     KT0913_REG_AMSYSCFG, KT0913_AMSYSCFG_AU_GAIN_MASK,
+> > +                     KT0913_AMSYSCFG_AU_GAIN_3DB);
+> > +     case 0:
+> > +             return regmap_update_bits(radio->regmap,
+> > +                     KT0913_REG_AMSYSCFG, KT0913_AMSYSCFG_AU_GAIN_MASK,
+> > +                     KT0913_AMSYSCFG_AU_GAIN_0DB);
+> > +     case -3:
+> > +             return regmap_update_bits(radio->regmap,
+> > +                     KT0913_REG_AMSYSCFG, KT0913_AMSYSCFG_AU_GAIN_MASK,
+> > +                     KT0913_AMSYSCFG_AU_GAIN_MIN_3DB);
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +}
+>
+> It's generally more legible to write this with an intermediate
+> variable holding the changed value.  It's also most commonly
+> smaller object code.
+>
+> static int __kt0913_set_au_gain(struct kt0913_device *radio, s32 gain)
+> {
+>         int val;
+>
+>         switch (gain) {
+>         case 6:
+>                 val = KT0913_AMSYSCFG_AU_GAIN_6DB;
+>                 break;
+>         case 3:
+>                 val = KT0913_AMSYSCFG_AU_GAIN_3DB;
+>                 break;
+>         case 0:
+>                 val = KT0913_AMSYSCFG_AU_GAIN_0DB;
+>                 break;
+>         case -3:
+>                 val = KT0913_AMSYSCFG_AU_GAIN_MIN_3DB;
+>                 break;
+>         default:
+>                 return -EINVAL;
+>         }
+>
+>         return regmap_update_bits(radio->regmap, KT0913_REG_AMSYSCFG,
+>                                   KT0913_AMSYSCFG_AU_GAIN_MASK, val);
+> }
+>
+>
+I agree, thanks for your feedback.
 
+I'll wait for your reply to fix the other issue you've mentioned, and
+I'll fix the others in the meantime.
+
+Thanks!
+
+- Santiago H.
