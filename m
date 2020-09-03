@@ -2,39 +2,38 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08039C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DDAC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1F53208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8E820C09
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbgICN5P (ORCPT
+        id S1729007AbgICN6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 09:57:15 -0400
-Received: from mga03.intel.com ([134.134.136.65]:32640 "EHLO mga03.intel.com"
+        Thu, 3 Sep 2020 09:58:07 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34919 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728917AbgICMpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 08:45:03 -0400
-IronPort-SDR: TYESReYTxbxJ7DRFlMfOqSj3owcceFUJPNGAXzY9EE++0H9vd2zsxNuPMECgJ9Q/NJdTaDA/Ds
- xS99T6NF74ew==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="157568358"
+        id S1728210AbgICMo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:44:59 -0400
+IronPort-SDR: OVaScigQrdfEfn5EiHWtDyNKq//AcC+l3RIEonSKFh2zCcq2fk1k168/So4yvkBZB6ELbegFui
+ B4+Hg7BuWEow==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="154965886"
 X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="157568358"
+   d="scan'208";a="154965886"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:42:31 -0700
-IronPort-SDR: fG3ZVucVSrURUgMCzDOadMcNvdlWN6e07wd94vzp4rLI+qL+grQQ2U/xtylJKclJGhOSA7Lpum
- dOSKCXSEN2WA==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:42:13 -0700
+IronPort-SDR: mmNtBk3skIs2Ek2y0a4q1HlKImu/UADjwjKkL81WCxzOaqFs2z5GYRX73ee+omBmNRabeG8SdX
+ wRm12j528CEA==
 X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="326207068"
+   d="scan'208";a="478039405"
 Received: from shsi6026.sh.intel.com (HELO localhost) ([10.239.147.135])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:42:28 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:42:10 -0700
 From:   shuo.a.liu@intel.com
 To:     linux-kernel@vger.kernel.org, x86@kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -44,18 +43,11 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Yu Wang <yu1.wang@intel.com>,
         Reinette Chatre <reinette.chatre@intel.com>,
-        Yin Fengwei <fengwei.yin@intel.com>,
-        Shuo Liu <shuo.a.liu@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH v2 03/17] x86/acrn: Introduce an API to check if a VM is privileged
-Date:   Thu,  3 Sep 2020 20:41:47 +0800
-Message-Id: <20200903124201.17275-4-shuo.a.liu@intel.com>
+        Shuo Liu <shuo.a.liu@intel.com>
+Subject: [PATCH v2 00/17] HSM driver for ACRN hypervisor
+Date:   Thu,  3 Sep 2020 20:41:44 +0800
+Message-Id: <20200903124201.17275-1-shuo.a.liu@intel.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200903124201.17275-1-shuo.a.liu@intel.com>
-References: <20200903124201.17275-1-shuo.a.liu@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,82 +55,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yin Fengwei <fengwei.yin@intel.com>
+From: Shuo Liu <shuo.a.liu@intel.com>
 
-ACRN Hypervisor reports hypervisor features via CPUID leaf 0x40000001
-which is similar to KVM. A VM can check if it's the privileged VM using
-the feature bits. The Service VM is the only privileged VM by design.
+ACRN is a Type 1 reference hypervisor stack, running directly on the bare-metal
+hardware, and is suitable for a variety of IoT and embedded device solutions.
 
-Signed-off-by: Yin Fengwei <fengwei.yin@intel.com>
-Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Fengwei Yin <fengwei.yin@intel.com>
-Cc: Zhi Wang <zhi.a.wang@intel.com>
-Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-Cc: Yu Wang <yu1.wang@intel.com>
-Cc: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/include/asm/acrn.h |  9 +++++++++
- arch/x86/kernel/cpu/acrn.c  | 19 ++++++++++++++++++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+ACRN implements a hybrid VMM architecture, using a privileged Service VM. The
+Service VM manages the system resources (CPU, memory, etc.) and I/O devices of
+User VMs. Multiple User VMs are supported, with each of them running Linux,
+Android OS or Windows. Both Service VM and User VMs are guest VM.
 
-diff --git a/arch/x86/include/asm/acrn.h b/arch/x86/include/asm/acrn.h
-index ff259b69cde7..a2d4aea3a80d 100644
---- a/arch/x86/include/asm/acrn.h
-+++ b/arch/x86/include/asm/acrn.h
-@@ -2,7 +2,16 @@
- #ifndef _ASM_X86_ACRN_H
- #define _ASM_X86_ACRN_H
- 
-+/*
-+ * This CPUID returns feature bitmaps in EAX.
-+ * Guest VM uses this to detect the appropriate feature bit.
-+ */
-+#define	ACRN_CPUID_FEATURES		0x40000001
-+/* Bit 0 indicates whether guest VM is privileged */
-+#define	ACRN_FEATURE_PRIVILEGED_VM	BIT(0)
-+
- void acrn_setup_intr_handler(void (*handler)(void));
- void acrn_remove_intr_handler(void);
-+bool acrn_is_privileged_vm(void);
- 
- #endif /* _ASM_X86_ACRN_H */
-diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
-index bd1d7e759a0f..6f0a00cbbf7e 100644
---- a/arch/x86/kernel/cpu/acrn.c
-+++ b/arch/x86/kernel/cpu/acrn.c
-@@ -21,9 +21,26 @@
- #include <asm/idtentry.h>
- #include <asm/irq_regs.h>
- 
-+static u32 acrn_cpuid_base(void)
-+{
-+	static u32 acrn_cpuid_base;
-+
-+	if (!acrn_cpuid_base && boot_cpu_has(X86_FEATURE_HYPERVISOR))
-+		acrn_cpuid_base = hypervisor_cpuid_base("ACRNACRNACRN", 0);
-+
-+	return acrn_cpuid_base;
-+}
-+
-+bool acrn_is_privileged_vm(void)
-+{
-+	return cpuid_eax(acrn_cpuid_base() | ACRN_CPUID_FEATURES) &
-+			 ACRN_FEATURE_PRIVILEGED_VM;
-+}
-+EXPORT_SYMBOL_GPL(acrn_is_privileged_vm);
-+
- static u32 __init acrn_detect(void)
- {
--	return hypervisor_cpuid_base("ACRNACRNACRN", 0);
-+	return acrn_cpuid_base();
- }
- 
- static void __init acrn_init_platform(void)
+Below figure shows the architecture.
+
+                Service VM                    User VM
+      +----------------------------+  |  +------------------+
+      |        +--------------+    |  |  |                  |
+      |        |ACRN userspace|    |  |  |                  |
+      |        +--------------+    |  |  |                  |
+      |-----------------ioctl------|  |  |                  |   ...
+      |kernel space   +----------+ |  |  |                  |
+      |               |   HSM    | |  |  | Drivers          |
+      |               +----------+ |  |  |                  |
+      +--------------------|-------+  |  +------------------+
+  +---------------------hypercall----------------------------------------+
+  |                       ACRN Hypervisor                                |
+  +----------------------------------------------------------------------+
+  |                          Hardware                                    |
+  +----------------------------------------------------------------------+
+
+There is only one Service VM which could run Linux as OS.
+
+In a typical case, the Service VM will be auto started when ACRN Hypervisor is
+booted. Then the ACRN userspace (an application running in Service VM) could be
+used to start/stop User VMs by communicating with ACRN Hypervisor Service
+Module (HSM).
+
+ACRN Hypervisor Service Module (HSM) is a middle layer that allows the ACRN
+userspace and Service VM OS kernel to communicate with ACRN Hypervisor
+and manage different User VMs. This middle layer provides the following
+functionalities,
+  - Issues hypercalls to the hypervisor to manage User VMs:
+      * VM/vCPU management
+      * Memory management
+      * Device passthrough
+      * Interrupts injection
+  - I/O requests handling from User VMs.
+  - Exports ioctl through HSM char device.
+  - Exports function calls for other kernel modules
+
+ACRN is focused on embedded system. So it doesn't support some features.
+E.g.,
+  - ACRN doesn't support VM migration.
+  - ACRN doesn't support vCPU migration.
+
+This patch set adds the HSM to the Linux kernel.
+
+The basic ARCN support was merged to upstream already.
+https://lore.kernel.org/lkml/1559108037-18813-3-git-send-email-yakui.zhao@intel.com/
+
+ChangeLog:
+v2:
+  - Removed API version related code. (Dave)
+  - Replaced pr_*() by dev_*(). (Greg)
+  - Used -ENOTTY as the error code of unsupported ioctl. (Greg)
+
+Shuo Liu (16):
+  docs: acrn: Introduce ACRN
+  x86/acrn: Introduce acrn_{setup, remove}_intr_handler()
+  x86/acrn: Introduce hypercall interfaces
+  virt: acrn: Introduce ACRN HSM basic driver
+  virt: acrn: Introduce VM management interfaces
+  virt: acrn: Introduce an ioctl to set vCPU registers state
+  virt: acrn: Introduce EPT mapping management
+  virt: acrn: Introduce I/O request management
+  virt: acrn: Introduce PCI configuration space PIO accesses combiner
+  virt: acrn: Introduce interfaces for PCI device passthrough
+  virt: acrn: Introduce interrupt injection interfaces
+  virt: acrn: Introduce interfaces to query C-states and P-states
+    allowed by hypervisor
+  virt: acrn: Introduce I/O ranges operation interfaces
+  virt: acrn: Introduce ioeventfd
+  virt: acrn: Introduce irqfd
+  virt: acrn: Introduce an interface for Service VM to control vCPU
+
+Yin Fengwei (1):
+  x86/acrn: Introduce an API to check if a VM is privileged
+
+ .../userspace-api/ioctl/ioctl-number.rst      |   1 +
+ Documentation/virt/acrn/index.rst             |  11 +
+ Documentation/virt/acrn/introduction.rst      |  40 ++
+ Documentation/virt/acrn/io-request.rst        |  97 +++
+ Documentation/virt/index.rst                  |   1 +
+ MAINTAINERS                                   |   9 +
+ arch/x86/include/asm/acrn.h                   |  74 ++
+ arch/x86/kernel/cpu/acrn.c                    |  38 +-
+ drivers/virt/Kconfig                          |   2 +
+ drivers/virt/Makefile                         |   1 +
+ drivers/virt/acrn/Kconfig                     |  15 +
+ drivers/virt/acrn/Makefile                    |   3 +
+ drivers/virt/acrn/acrn_drv.h                  | 228 +++++++
+ drivers/virt/acrn/hsm.c                       | 427 ++++++++++++
+ drivers/virt/acrn/hypercall.h                 | 254 +++++++
+ drivers/virt/acrn/ioeventfd.c                 | 276 ++++++++
+ drivers/virt/acrn/ioreq.c                     | 645 ++++++++++++++++++
+ drivers/virt/acrn/irqfd.c                     | 236 +++++++
+ drivers/virt/acrn/mm.c                        | 303 ++++++++
+ drivers/virt/acrn/vm.c                        | 121 ++++
+ include/uapi/linux/acrn.h                     | 486 +++++++++++++
+ 21 files changed, 3267 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/virt/acrn/index.rst
+ create mode 100644 Documentation/virt/acrn/introduction.rst
+ create mode 100644 Documentation/virt/acrn/io-request.rst
+ create mode 100644 arch/x86/include/asm/acrn.h
+ create mode 100644 drivers/virt/acrn/Kconfig
+ create mode 100644 drivers/virt/acrn/Makefile
+ create mode 100644 drivers/virt/acrn/acrn_drv.h
+ create mode 100644 drivers/virt/acrn/hsm.c
+ create mode 100644 drivers/virt/acrn/hypercall.h
+ create mode 100644 drivers/virt/acrn/ioeventfd.c
+ create mode 100644 drivers/virt/acrn/ioreq.c
+ create mode 100644 drivers/virt/acrn/irqfd.c
+ create mode 100644 drivers/virt/acrn/mm.c
+ create mode 100644 drivers/virt/acrn/vm.c
+ create mode 100644 include/uapi/linux/acrn.h
+
+
+base-commit: 18445bf405cb331117bc98427b1ba6f12418ad17
 -- 
 2.28.0
 
