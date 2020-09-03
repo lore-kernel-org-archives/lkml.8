@@ -2,96 +2,129 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA47C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF82C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3A0E20709
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08CD8206E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:20:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eFr3ju4Z"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="klyZE/Bj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgICBU2 (ORCPT
+        id S1727892AbgICBUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 21:20:28 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:40902 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgICBU1 (ORCPT
+        Wed, 2 Sep 2020 21:20:40 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:40951 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbgICBUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 21:20:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0831DdNG017482;
-        Thu, 3 Sep 2020 01:20:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : mime-version :
- content-type; s=corp-2020-01-29;
- bh=j0ertZsCwM1/ANvNsjalQbfqejdQR6X4/FoFM0pUEic=;
- b=eFr3ju4ZuQHJaBnhRyJ4TILuPXvGQmp1KY0EzOzyWM9pNTELIq9dW5T5SnF6dIEyMneH
- CEAV51kaXU3RSLdi9RT/w2RaJuSQGbFkBud+D/QBqrOGMwhKleJqYJSu1R3wiOtgxWPr
- KEcFKE8dbn8Z3ZAi1fDYdOr2GG97CSj9Gn9g2jUJ+4gNusirE5YQLOTuMLEqFCL6Ykh0
- Uz/34aSweloEL0Pw1f/u4dzvhYDQf+yCgM5jwnOuDPTpPbfB4AENE2n174+t/I7RNAuB
- 3Ok11amXxDfbPVWlguuDy9OtMbJU3EhrXeukdzuXo/1UhouCTwlUkIzGz0S9vwBV+Vvh zA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 339dmn4cmw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 03 Sep 2020 01:20:22 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0831FFio151098;
-        Thu, 3 Sep 2020 01:20:21 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 3380kqxttr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Sep 2020 01:20:21 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0831KKrk032662;
-        Thu, 3 Sep 2020 01:20:20 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 02 Sep 2020 18:20:19 -0700
-To:     Alex Dewar <alex.dewar90@gmail.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        GR-QLogic-Storage-Upstream@marvell.com, jejb@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        njavali@marvell.com
-Subject: Re: [PATCH v2] scsi: Don't call memset after dma_alloc_coherent()
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq14kofejwh.fsf@ca-mkp.ca.oracle.com>
-References: <20200820185149.932178-1-alex.dewar90@gmail.com>
-        <20200820234952.317313-1-alex.dewar90@gmail.com>
-        <yq1eenlezwf.fsf@ca-mkp.ca.oracle.com>
-        <20200902160337.kvuujxodeokrbn4d@medion>
-Date:   Wed, 02 Sep 2020 21:20:17 -0400
-In-Reply-To: <20200902160337.kvuujxodeokrbn4d@medion> (Alex Dewar's message of
-        "Wed, 2 Sep 2020 17:03:37 +0100")
+        Wed, 2 Sep 2020 21:20:36 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id EB6A984487;
+        Thu,  3 Sep 2020 13:20:30 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1599096030;
+        bh=ZcX7TAd0fNPu0z2dBLatCyLAmXlOHgvmAtrIUZg0cdE=;
+        h=From:To:Cc:Subject:Date;
+        b=klyZE/Bjgl6xmEAD/lbHNYkNhyn3Hj4V1NjZevgr2oKO6gRKV/hE1JQdU6UJH3fDS
+         rSe3dV3xu0qKSDtlAJOvmufsBokG0EgxB1gyqfQBmEd37SnuuE0KO/2+iKwXGe4Yfh
+         X8gLZhHAmeSdEvDXhmz+awnoyze5rFoUvl6zwHXqy61bwDygUxsj0mbIPkE7AS+4l1
+         JBero81gxM+bVzuhAbmkDKGNfd+4UYOzUErfWIcE/CyEOZ17nUQmFiz96Z+iYQXnEY
+         Z0nuDGPhLqq9rxuPW2hmcpZP6yex23yTY+xmDXEKOAgc6Qt8KG6mzlqfOp7s5RWgRs
+         iNpc5CYkH5TRA==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f5044dc0000>; Thu, 03 Sep 2020 13:20:28 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id DF61D13EEB7;
+        Thu,  3 Sep 2020 13:20:29 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 9EDC0280060; Thu,  3 Sep 2020 13:20:30 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org, yinbo.zhu@nxp.com
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2] mmc: sdhci-of-esdhc: Don't walk device-tree on every interrupt
+Date:   Thu,  3 Sep 2020 13:20:29 +1200
+Message-Id: <20200903012029.25673-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- mlxscore=0 suspectscore=1 malwarescore=0 mlxlogscore=956 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009030008
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
- mlxlogscore=976 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=1
- spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009030008
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit b214fe592ab7 ("mmc: sdhci-of-esdhc: add erratum eSDHC7 support")
+added code to check for a specific compatible string in the device-tree
+on every esdhc interrupat. Instead of doing this record the quirk in
+struct sdhci_esdhc and lookup the struct in esdhc_irq.
 
-Alex,
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+I found this in passing while trying to track down another issue using ft=
+race.
+I found it odd that I was seeing a lot of calls to __of_device_is_compati=
+ble()
+coming from esdhc_irq() (the fact that this interrupt is going off on my =
+board
+is also odd, but that's a different story).
 
-> Nvm, someone's already beaten me to the punch!
+Changes in v2:
+- add quirk_trans_complete_erratum to struct sdhci_esdhc so all the dt ha=
+ndling
+  is taken care of in esdhc_init.
 
-Yep, that one was already fixed up. Thanks!
+ drivers/mmc/host/sdhci-of-esdhc.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-o=
+f-esdhc.c
+index 7c73d243dc6c..45881b309956 100644
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -81,6 +81,7 @@ struct sdhci_esdhc {
+ 	bool quirk_tuning_erratum_type2;
+ 	bool quirk_ignore_data_inhibit;
+ 	bool quirk_delay_before_data_reset;
++	bool quirk_trans_complete_erratum;
+ 	bool in_sw_tuning;
+ 	unsigned int peripheral_clock;
+ 	const struct esdhc_clk_fixup *clk_fixup;
+@@ -1177,10 +1178,11 @@ static void esdhc_set_uhs_signaling(struct sdhci_=
+host *host,
+=20
+ static u32 esdhc_irq(struct sdhci_host *host, u32 intmask)
+ {
++	struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
++	struct sdhci_esdhc *esdhc =3D sdhci_pltfm_priv(pltfm_host);
+ 	u32 command;
+=20
+-	if (of_find_compatible_node(NULL, NULL,
+-				"fsl,p2020-esdhc")) {
++	if (esdhc->quirk_trans_complete_erratum) {
+ 		command =3D SDHCI_GET_CMD(sdhci_readw(host,
+ 					SDHCI_COMMAND));
+ 		if (command =3D=3D MMC_WRITE_MULTIPLE_BLOCK &&
+@@ -1334,8 +1336,10 @@ static void esdhc_init(struct platform_device *pde=
+v, struct sdhci_host *host)
+ 		esdhc->clk_fixup =3D match->data;
+ 	np =3D pdev->dev.of_node;
+=20
+-	if (of_device_is_compatible(np, "fsl,p2020-esdhc"))
++	if (of_device_is_compatible(np, "fsl,p2020-esdhc")) {
+ 		esdhc->quirk_delay_before_data_reset =3D true;
++		esdhc->quirk_trans_complete_erratum =3D true;
++	}
+=20
+ 	clk =3D of_clk_get(np, 0);
+ 	if (!IS_ERR(clk)) {
+--=20
+2.28.0
+
