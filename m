@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D63C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF62C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A19DC20709
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6C4F20709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:41:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="tnYD6IS4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="NT6bXm22"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgICLkM (ORCPT
+        id S1726292AbgICLlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:40:12 -0400
-Received: from crapouillou.net ([89.234.176.41]:51548 "EHLO crapouillou.net"
+        Thu, 3 Sep 2020 07:41:10 -0400
+Received: from crapouillou.net ([89.234.176.41]:51632 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728633AbgICLcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:32:13 -0400
+        id S1728565AbgICLdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:33:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599132384; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1599132386; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2TQYLxc3aHxXcFDX5qciZlfYToGuHk7NHkGdcnudwus=;
-        b=tnYD6IS4snnHJrlJyjB0BhU2Y/BNORywG/8Sfqgkjf31/Cy4M08Lt84RUw4tdSFSBZEYNu
-        wfXt8hsktCQiQYAsXl8BVqtqjHbOxuVdH6NI4gHmY0iUyY4RsQ8r0fjQOY9a19Cqpxz/T3
-        yUCZWhbC7JHjcKvR2k1SabcdznHa1ig=
+        bh=/HT6v/AkQG8sNb82MyIxu+857/MGP3ynerDd+/QF+M4=;
+        b=NT6bXm22K1zaV5clRMxCKg0SUnoSS/HP14SzgmhrY2C0oCtaBdBnHyiki5RSoxo9YMg0wc
+        VlGjjQNZqrqrIJsvppR7x/8r1X5Y/XgECewG8x/W00M9fiWcXDUwxobiKfMfJ366wNUM4I
+        PtqmGeqLYhAmU8Cr/zkWSrTKKfrsUI4=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Chen <Peter.Chen@nxp.com>,
@@ -55,9 +55,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 08/20] usb/misc: usb4604: Use pm_ptr() macro
-Date:   Thu,  3 Sep 2020 13:25:42 +0200
-Message-Id: <20200903112554.34263-9-paul@crapouillou.net>
+Subject: [PATCH 09/20] usb/musb: am35x: Use pm_ptr() macro
+Date:   Thu,  3 Sep 2020 13:25:43 +0200
+Message-Id: <20200903112554.34263-10-paul@crapouillou.net>
 In-Reply-To: <20200903112554.34263-1-paul@crapouillou.net>
 References: <20200903112554.34263-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -75,49 +75,49 @@ simply be discarded by the compiler.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/usb/misc/usb4604.c | 8 +++-----
+ drivers/usb/musb/am35x.c | 8 +++-----
  1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/misc/usb4604.c b/drivers/usb/misc/usb4604.c
-index 1b4de651e697..2142af9bbdec 100644
---- a/drivers/usb/misc/usb4604.c
-+++ b/drivers/usb/misc/usb4604.c
-@@ -112,8 +112,7 @@ static int usb4604_i2c_probe(struct i2c_client *i2c,
- 	return usb4604_probe(hub);
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int usb4604_i2c_suspend(struct device *dev)
-+static int __maybe_unused usb4604_i2c_suspend(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct usb4604 *hub = i2c_get_clientdata(client);
-@@ -123,7 +122,7 @@ static int usb4604_i2c_suspend(struct device *dev)
+diff --git a/drivers/usb/musb/am35x.c b/drivers/usb/musb/am35x.c
+index 660641ab1545..6162111f4cae 100644
+--- a/drivers/usb/musb/am35x.c
++++ b/drivers/usb/musb/am35x.c
+@@ -547,8 +547,7 @@ static int am35x_remove(struct platform_device *pdev)
  	return 0;
  }
  
--static int usb4604_i2c_resume(struct device *dev)
-+static int __maybe_unused usb4604_i2c_resume(struct device *dev)
+-#ifdef CONFIG_PM_SLEEP
+-static int am35x_suspend(struct device *dev)
++static int __maybe_unused am35x_suspend(struct device *dev)
  {
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct usb4604 *hub = i2c_get_clientdata(client);
-@@ -132,7 +131,6 @@ static int usb4604_i2c_resume(struct device *dev)
+ 	struct am35x_glue	*glue = dev_get_drvdata(dev);
+ 	struct musb_hdrc_platform_data *plat = dev_get_platdata(dev);
+@@ -564,7 +563,7 @@ static int am35x_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int am35x_resume(struct device *dev)
++static int __maybe_unused am35x_resume(struct device *dev)
+ {
+ 	struct am35x_glue	*glue = dev_get_drvdata(dev);
+ 	struct musb_hdrc_platform_data *plat = dev_get_platdata(dev);
+@@ -589,7 +588,6 @@ static int am35x_resume(struct device *dev)
  
  	return 0;
  }
 -#endif
  
- static SIMPLE_DEV_PM_OPS(usb4604_i2c_pm_ops, usb4604_i2c_suspend,
- 		usb4604_i2c_resume);
-@@ -154,7 +152,7 @@ MODULE_DEVICE_TABLE(of, usb4604_of_match);
- static struct i2c_driver usb4604_i2c_driver = {
- 	.driver = {
- 		.name = "usb4604",
--		.pm = &usb4604_i2c_pm_ops,
-+		.pm = pm_ptr(&usb4604_i2c_pm_ops),
- 		.of_match_table = of_match_ptr(usb4604_of_match),
+ static SIMPLE_DEV_PM_OPS(am35x_pm_ops, am35x_suspend, am35x_resume);
+ 
+@@ -598,7 +596,7 @@ static struct platform_driver am35x_driver = {
+ 	.remove		= am35x_remove,
+ 	.driver		= {
+ 		.name	= "musb-am35x",
+-		.pm	= &am35x_pm_ops,
++		.pm	= pm_ptr(&am35x_pm_ops),
  	},
- 	.probe		= usb4604_i2c_probe,
+ };
+ 
 -- 
 2.28.0
 
