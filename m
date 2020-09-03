@@ -2,67 +2,129 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D255C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF5EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA3420786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB8C20786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgICPSC (ORCPT
+        id S1728598AbgICLdc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:18:02 -0400
-Received: from 8bytes.org ([81.169.241.247]:40720 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728810AbgICPRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:17:46 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id C4746847; Thu,  3 Sep 2020 17:17:40 +0200 (CEST)
-Date:   Thu, 3 Sep 2020 17:17:39 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <jroedel@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH] x86/mm/32: Bring back vmalloc faulting on x86_32
-Message-ID: <20200903151739.GA28508@8bytes.org>
-References: <20200902155904.17544-1-joro@8bytes.org>
- <CALCETrWAk-zVKKjvrq+fRAX5HKhdHF36h+jY+91_tQOa67xozA@mail.gmail.com>
+        Thu, 3 Sep 2020 07:33:32 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35416 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728480AbgICL34 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:29:56 -0400
+Received: by mail-ot1-f68.google.com with SMTP id i4so2384106ota.2;
+        Thu, 03 Sep 2020 04:29:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wtryLyCP/92BUYkFWZmJhsJCVcQxjl0iR9C8GWL/It8=;
+        b=uAvLTw7YyFkrpWozAnFJu3DySggPIhtiTRYcLiPAxNYYmohgUimeDgTm2DSPqTQbUt
+         o4XTArVbiKALxi295LCXR7nVSa/3LWg/tsgET+/2Vi7tBRtTss3RajVSaDnFEeYeYbzb
+         pN3SedK9Q2u5/5mkJrfwdus8DYhNhwjFUw89I47uGtnHFNrB8DXftn3X4R5+Yn95nq8S
+         yFMum5sk/PzMbRmpu3n90g1eke5qHFtcaiUZU1Qx484lqweUHzjAuATm1tq0HKITonDJ
+         fMXGhUwg011jHouEMvh0wHjytpoXYsKNKWkKxZfdw7o6mrN8DqQQ2/BZD1gx6gBV6wUT
+         cZrQ==
+X-Gm-Message-State: AOAM533xkP2pZdyqtNZvR7Jv1401vPiB2J6Kb+OZ8Qy9RH+hQ1kW9UJZ
+        XeTECuGy7LfND8PSBghXy2xp52LQMFJvfPwWV3Q=
+X-Google-Smtp-Source: ABdhPJzzuTSaYdIsnjPYCU0FIyHFDgPSktyUp4zTrC7K//wdWR2qY9Pjq6aHqvfTunNgQ3ArrHzx1UfMR87mxLw9BCk=
+X-Received: by 2002:a9d:1b62:: with SMTP id l89mr1203878otl.145.1599132594627;
+ Thu, 03 Sep 2020 04:29:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrWAk-zVKKjvrq+fRAX5HKhdHF36h+jY+91_tQOa67xozA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200825162718.5838-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVVvDEq-GSsPDrx09TCfGCWkNQvGYrNWP4gK2=63G2z1w@mail.gmail.com> <CA+V-a8sqVGHHQ0ayH7CvKANyCpsFPBy6OuqoGQHPS7iOX20rCg@mail.gmail.com>
+In-Reply-To: <CA+V-a8sqVGHHQ0ayH7CvKANyCpsFPBy6OuqoGQHPS7iOX20rCg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 3 Sep 2020 13:29:43 +0200
+Message-ID: <CAMuHMdUAKeXWD=G0ifNkMehtdvZATyyiudPL103gp5nY-XMufA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] ARM: dts: r8a7742-iwg21d-q7: Enable PCIe Controller
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Hi Prabhakar,
 
-On Thu, Sep 03, 2020 at 07:52:35AM -0700, Andy Lutomirski wrote:
-> Does this mean we can get rid of arch_sync_kernel_mappings()?  Or
-> should we consider adding some locking to make it non-racy again?
+On Thu, Sep 3, 2020 at 1:18 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Thu, Sep 3, 2020 at 11:18 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, Aug 25, 2020 at 6:28 PM Lad Prabhakar
+> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > Enable PCIe Controller and set PCIe bus clock frequency.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> >
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > i.e. will queue in renesas-devel for v5.10.
+> >
+> > One thing to double-check below.
+> >
+> > > --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > > @@ -238,6 +238,18 @@
+> > >         /* status = "okay"; */
+> > >  };
+> > >
+> > > +&pcie_bus_clk {
+> > > +       clock-frequency = <100000000>;
+> > > +};
+> > > +
+> > > +&pciec {
+> > > +       /* SW2[6] determines which connector is activated
+> > > +        * ON = PCIe X4 (connector-J7)
+> > > +        * OFF = mini-PCIe (connector-J26)
+> >
+> > The table on page 14 says it's the other way around.
+> >
+> > According to the CBTL02042ABQ datasheet, PCIe_SEL = low
+> > selects the first channel (PCIe x4), while PCIe_SEL = high selects the
+> > second channel (mini-PCIe).
+> > Enabling the switch ties the signal low, so the table must be wrong.
+> >
+> Referring to [1] page 3:
+>
+> SEL = LOW: A↔B
+> SEL = HIGH: A↔C
+>
+> And as per the schematic iW-PREJD-CS-01-R2.0-REL1.5.pdf channel B is
+> J7 (PCIe X 4) and channel C is J26 (mini PCIe slot).
+>
+> Enabling the switch SW2[6] (ON) ties SEL to LOW -> channel B is J7 (PCIe X 4)
+> Disabling the switch SW2[6] (OFF) ties SEL to HIGH -> channel C is J26
+> (mini PCIe)
+>
+> Also iW-PREJD-CS-01-R2.0-REL1.5.pdf page 14 (General purpose table DIP
+> Switch) mentions the above.
 
-Well, removing arch_sync_kernel_mappings() would mean to re-introduce
-vmalloc_sync_all() calls all over the place, I am not in favour for
-that.
+Oh right, I looked at the old document, and they fixed it in the newer one.
 
-I also thought about locking, but that is not easily doable without
-destroying performance/scalability of the vmalloc alloc/free path for
-other architectures too. It _could_ be done, but the effort is large and
-touches a lot of generic page-table allocation code just for x86-32.
-This seemed not worth it while thinking about it.
+Gr{oetje,eeting}s,
 
-Regards,
+                        Geert
 
-	Joerg
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
