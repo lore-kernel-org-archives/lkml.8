@@ -2,172 +2,132 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F5AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797CDC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66BF120773
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5684A20786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:24:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r3C8iJa/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgICCW5 (ORCPT
+        id S1728022AbgICCYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 22:22:57 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52700 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726177AbgICCW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 22:22:56 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 85459CA9E8ACE50B898F;
-        Thu,  3 Sep 2020 10:22:54 +0800 (CST)
-Received: from [10.74.191.121] (10.74.191.121) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 3 Sep 2020 10:22:45 +0800
-Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
- enqueue op for lockless qdisc
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-CC:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        "David Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Linux Kernel Network Developers" <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
- <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com>
- <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com>
- <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
- <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
- <CAM_iQpXmpMdxF2JDOROaf+Tjk-8dASiXz53K-Ph_q7jVMe0oVw@mail.gmail.com>
- <cd773132-c98e-18e1-67fd-bbef6babbf0f@huawei.com>
- <CAM_iQpWbZdh5-UGBi6PM19EBgV+Bq7vmifgJPdak6X=R9yztnw@mail.gmail.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <c0543793-11fa-6ef1-f8ea-6a724ab2de8f@huawei.com>
-Date:   Thu, 3 Sep 2020 10:22:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Wed, 2 Sep 2020 22:24:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37692 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgICCYK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 22:24:10 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD12C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 19:24:09 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id m5so832117pgj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 19:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+ci7Fc8hANsIQl3UJ1FDEFNu8O8UW/KCOsl06HsUOVg=;
+        b=r3C8iJa/LztMiNjFMz00NaLYxph+jZTflE3JatK63I0JgzZ+CHDMK/MEzY5njHH0IU
+         5TTifFqY4S0I6bSeTydCnT2v2vzhxQDSKMU5ZeHJIVwQV54Nl30CGrdwnBXt+3RR/cK/
+         Jo2nB+1/wFjxp2ELqshU2DTX71Bm4BKaPei5QuQp2XNhHpTN9bXBSVHU5UBF87/z5CMM
+         LH+8hp3PJywM3nBiSoLTxOyyOJMiA8Duq+b9uYfi7/SsgvHI5fV0lX05fJTaBqO2GyfC
+         DMlZrd9j+PNgA510LnIRcWVmAYPbhzvoojpPnW1IlSl7CW7tSgCOiR657K0JY2ltXDak
+         Ibvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+ci7Fc8hANsIQl3UJ1FDEFNu8O8UW/KCOsl06HsUOVg=;
+        b=CG99hWAyuZHKGgra2Tp9CAZQ4fnKnSVxYJKWwjeA90rd+i0Cjnwzb3K5MFB8Mmi+8R
+         c/1i/IYsFLuWeiL7+El+NXhUhnPquJncH2Spi+l9c7xeC49D1I9O+3QR4q374wGKO/Al
+         5InXvhJ/lP1Y0DgLy2Wx2ZZzbSRYys3C6xsvcW/6ZHvmcTxmpQ8YA1fWXiHHNlxS+mcV
+         O+JXcca1ibDEcLNNuriacwp7ssD8tGdcBz+seXMXhodRuUETPvdkv0aV9kXspBPH6ITl
+         b5EmNTJMDHUEYr5xksg0MTM0GzKl96uXFxRBhSmC0CJCzmmn0LAgGjv8Zt/qifdaYB51
+         O4sg==
+X-Gm-Message-State: AOAM5335jR2l9tj46uSo/3UUkk8yKdy5yAFeCePUuT3MxQo16MUEvw+i
+        6yRNRpU9GHg0ma5pRMP7kAVM9Q==
+X-Google-Smtp-Source: ABdhPJz2IKRiAksQzIZvOPytb1hJAgyVqSzSqfcq62V8UteQFaCDtXg+u960o+qng6UXYQhxCVLBBw==
+X-Received: by 2002:a62:6dc1:: with SMTP id i184mr1420075pfc.57.1599099848759;
+        Wed, 02 Sep 2020 19:24:08 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
+        by smtp.gmail.com with ESMTPSA id 194sm907586pfy.44.2020.09.02.19.23.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 02 Sep 2020 19:24:08 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 10:23:54 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     peterz@infradead.org
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, Wei Li <liwei391@huawei.com>,
+        Al Grant <al.grant@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kemeng Shi <shikemeng@huawei.com>,
+        Ian Rogers <irogers@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Stephane Eranian <eranian@google.com>,
+        Nick Gasson <nick.gasson@arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Steve MacLean <Steve.MacLean@Microsoft.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] perf tsc: Add rdtsc() for Arm64
+Message-ID: <20200903022354.GA1583@leoy-ThinkPad-X240s>
+References: <20200902132131.36304-1-leo.yan@linaro.org>
+ <20200902132131.36304-3-leo.yan@linaro.org>
+ <20200902134805.GI1362448@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <CAM_iQpWbZdh5-UGBi6PM19EBgV+Bq7vmifgJPdak6X=R9yztnw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902134805.GI1362448@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/9/3 9:48, Cong Wang wrote:
-> On Wed, Sep 2, 2020 at 6:22 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>
->> On 2020/9/3 8:35, Cong Wang wrote:
->>> On Tue, Sep 1, 2020 at 11:35 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>>>
->>>> On 2020/9/2 12:41, Cong Wang wrote:
->>>>> On Tue, Sep 1, 2020 at 6:42 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>>>>>
->>>>>> On 2020/9/2 2:24, Cong Wang wrote:
->>>>>>> On Mon, Aug 31, 2020 at 5:59 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>>>>>>>
->>>>>>>> Currently there is concurrent reset and enqueue operation for the
->>>>>>>> same lockless qdisc when there is no lock to synchronize the
->>>>>>>> q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
->>>>>>>> qdisc_deactivate() called by dev_deactivate_queue(), which may cause
->>>>>>>> out-of-bounds access for priv->ring[] in hns3 driver if user has
->>>>>>>> requested a smaller queue num when __dev_xmit_skb() still enqueue a
->>>>>>>> skb with a larger queue_mapping after the corresponding qdisc is
->>>>>>>> reset, and call hns3_nic_net_xmit() with that skb later.
->>>>>>>
->>>>>>> Can you be more specific here? Which call path requests a smaller
->>>>>>> tx queue num? If you mean netif_set_real_num_tx_queues(), clearly
->>>>>>> we already have a synchronize_net() there.
->>>>>>
->>>>>> When the netdevice is in active state, the synchronize_net() seems to
->>>>>> do the correct work, as below:
->>>>>>
->>>>>> CPU 0:                                       CPU1:
->>>>>> __dev_queue_xmit()                       netif_set_real_num_tx_queues()
->>>>>> rcu_read_lock_bh();
->>>>>> netdev_core_pick_tx(dev, skb, sb_dev);
->>>>>>         .
->>>>>>         .                               dev->real_num_tx_queues = txq;
->>>>>>         .                                       .
->>>>>>         .                                       .
->>>>>>         .                               synchronize_net();
->>>>>>         .                                       .
->>>>>> q->enqueue()                                    .
->>>>>>         .                                       .
->>>>>> rcu_read_unlock_bh()                            .
->>>>>>                                         qdisc_reset_all_tx_gt
->>>>>>
->>>>>>
->>>>>
->>>>> Right.
->>>>>
->>>>>
->>>>>> but dev->real_num_tx_queues is not RCU-protected, maybe that is a problem
->>>>>> too.
->>>>>>
->>>>>> The problem we hit is as below:
->>>>>> In hns3_set_channels(), hns3_reset_notify(h, HNAE3_DOWN_CLIENT) is called
->>>>>> to deactive the netdevice when user requested a smaller queue num, and
->>>>>> txq->qdisc is already changed to noop_qdisc when calling
->>>>>> netif_set_real_num_tx_queues(), so the synchronize_net() in the function
->>>>>> netif_set_real_num_tx_queues() does not help here.
->>>>>
->>>>> How could qdisc still be running after deactivating the device?
->>>>
->>>> qdisc could be running during the device deactivating process.
->>>>
->>>> The main process of changing channel number is as below:
->>>>
->>>> 1. dev_deactivate()
->>>> 2. hns3 handware related setup
->>>> 3. netif_set_real_num_tx_queues()
->>>> 4. netif_tx_wake_all_queues()
->>>> 5. dev_activate()
->>>>
->>>> During step 1, qdisc could be running while qdisc is resetting, so
->>>> there could be skb left in the old qdisc(which will be restored back to
->>>> txq->qdisc during dev_activate()), as below:
->>>>
->>>> CPU 0:                                       CPU1:
->>>> __dev_queue_xmit():                      dev_deactivate_many():
->>>> rcu_read_lock_bh();                      qdisc_deactivate(qdisc);
->>>> q = rcu_dereference_bh(txq->qdisc);             .
->>>> netdev_core_pick_tx(dev, skb, sb_dev);          .
->>>>         .
->>>>         .                               rcu_assign_pointer(dev_queue->qdisc, qdisc_default);
->>>>         .                                       .
->>>>         .                                       .
->>>>         .                                       .
->>>>         .                                       .
->>>> q->enqueue()                                    .
->>>
->>>
->>> Well, like I said, if the deactivated bit were tested before ->enqueue(),
->>> there would be no packet queued after qdisc_deactivate().
->>
->> Only if the deactivated bit testing is also protected by qdisc->seqlock?
->> otherwise there is still window between setting and testing the deactivated bit.
+Hi Peter,
+
+On Wed, Sep 02, 2020 at 03:48:05PM +0200, Peter Zijlstra wrote:
+> On Wed, Sep 02, 2020 at 02:21:27PM +0100, Leo Yan wrote:
+> > The system register CNTVCT_EL0 can be used to retrieve the counter from
+> > user space.  Add rdtsc() for Arm64.
 > 
-> Can you be more specific here? Why testing or setting a bit is not atomic?
+> > +u64 rdtsc(void)
+> > +{
+> > +	u64 val;
+> 
+> Would it make sense to put a comment in that this counter is/could-be
+> 'short' ? Because unlike x86-TSC, this thing isn't architecturally
+> specified to be 64bits wide.
 
-testing a bit or setting a bit separately is atomic.
-But testing a bit and setting a bit is not atomic, right?
+Will add below comments:
 
-  cpu0:                   cpu1:
-                        testing A bit
-setting A bit                .
-       .                     .
-       .               qdisc enqueuing
-qdisc reset
+According to ARM DDI 0487F.c, from Armv8.0 to Armv8.5 inclusive, the
+system counter is at least 56 bits wide; from Armv8.6, the counter must
+be 64 bits wide.  So the system counter could be less than 64 bits wide
+and it is attributed with the flag 'cap_user_time_short' is true.
+
+Thanks for reviewing,
+Leo
 
 > 
-> AFAIU, qdisc->seqlock is an optimization to replace
-> __QDISC_STATE_RUNNING, which has nothing to do with deactivate bit.
-> 
-> Thanks.
-> .
-> 
+> > +	asm volatile("mrs %0, cntvct_el0" : "=r" (val));
+> > +
+> > +	return val;
+> > +}
+> > -- 
+> > 2.17.1
+> > 
