@@ -2,119 +2,128 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F84C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA2BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3502078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599156120;
-	bh=g/zK/ClT1m5soG/tnXSY+wGtMX3SLoeeyKDXpcFFi+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nwol6Ym07Qz6xI1D0jPipmJ6gawlHARBXBb8ZthwBD1S1+XkSaXWKM5WlTWSDafNL
-	 mqCUAgbFldUFxHjUSgua1reWDgYsMdNA5zKFGCnPop7vzapH2wnDOLzG2rK6/BGip4
-	 uJb4tUUavOQ0fzhtL7k4BpIkF1P24cauzKEc9i0E=
+	by mail.kernel.org (Postfix) with ESMTP id 5A82F20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:03:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="et4ooAbP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgICSB5 (ORCPT
+        id S1728852AbgICSDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 14:01:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbgICSB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 14:01:56 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE81520716;
-        Thu,  3 Sep 2020 18:01:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599156115;
-        bh=g/zK/ClT1m5soG/tnXSY+wGtMX3SLoeeyKDXpcFFi+8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ELauOPuUtZVMDFEfwjDgxAIBXYDHvYmSzCpUf2Grzewy1io84bdEPRClmezPdJ+Tc
-         8VayzXho4//0jrpJPwObQ/+LiUOL+aJux/rm7O/0TD93UAHCwrs3UM6Co7DGWhEmoN
-         DPk1GRp2dVdFN8RC2KJ4Tgf4nV7LC/C5/2hmZnJk=
-Date:   Thu, 3 Sep 2020 20:02:17 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Christoph Hellwig <hch@lst.de>, arnd@arndb.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] /dev/zero: also implement ->read
-Message-ID: <20200903180217.GA2038804@kroah.com>
-References: <20200903155922.1111551-1-hch@lst.de>
- <1bc34841-f1a3-8a9b-cb48-10930ec55d71@csgroup.eu>
+        Thu, 3 Sep 2020 14:03:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:36326 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727065AbgICSDe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 14:03:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599156212;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sIYywuI+5zo+5SpQBzc44V+N7rc22duk7DoIeCwwY34=;
+        b=et4ooAbPr5cg9tQacWsbPmRB0NFLUz3rYf3WB4rmuieE4BNDSXzkUh+w4ZEZEcLF0saB+B
+        RKJhqieqdvZNMh0U2oJ1H2DVUiqYvpnirEgS/vWVJgc5qFIdxhQtGe0SNf7FKuoV0ykt1t
+        K+9hgT9DkVVs4WG02m0QdOtcNDkQ3GQ=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-84-9aeL0gecNOuJafzUkRXZqA-1; Thu, 03 Sep 2020 14:03:30 -0400
+X-MC-Unique: 9aeL0gecNOuJafzUkRXZqA-1
+Received: by mail-wm1-f70.google.com with SMTP id 23so1202889wmk.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 11:03:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sIYywuI+5zo+5SpQBzc44V+N7rc22duk7DoIeCwwY34=;
+        b=bLw0z9oKyxiCmPT32sBGfs8h+zBpieJ+htnBArp3YgWIGtJO11BUL4FmZqUdfS9FhV
+         yIjFlhnXZ454u38tkXtuf6zQdI7w+sd1Ftod/f/rjoj+sYmf2US3ilp/gQamQo1nAxgI
+         5yGvpThmxLsaMNx2NslmjgoNc6uGDNLJgUuweZygEr3Er0iqaU6Mi2kO67eaN/zP66Tl
+         KnK0886c7E0eSCB3XebGe6IOWUuE8grZEA1G/fhkqskXI3WQWxSnwReL8c6COZ5v0WhV
+         3ZIMXmeL4rP1NpaHkk2PziQkcrMJGiUUYo+4B/HnqSIf5RFwiq7SqrZTfxKy7b9h6pgy
+         KiiQ==
+X-Gm-Message-State: AOAM5326EKNKvBl433bpOgDx4Va0GZoYXenCzJTSemGS2m2XMvUX+GWw
+        2qmkOmWzHECjFaAd6fa1ASTJlLGoExOoX5eHuThxwv66+Ag4AuFLVioN/WtKlF8eaFT3x5bh7b0
+        worvb+XAFp431SPksBbdXWqtT
+X-Received: by 2002:a5d:60cc:: with SMTP id x12mr3614741wrt.84.1599156209609;
+        Thu, 03 Sep 2020 11:03:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJywzVzvNoipx7UCAuCRf8BdHygTvcKAX8HtMdA2pAN3MK/J16WybvdgXkklbxMMCzuSooHB+Q==
+X-Received: by 2002:a5d:60cc:: with SMTP id x12mr3614713wrt.84.1599156209243;
+        Thu, 03 Sep 2020 11:03:29 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:197c:daa0:48d1:20b2? ([2001:b07:6468:f312:197c:daa0:48d1:20b2])
+        by smtp.gmail.com with ESMTPSA id o2sm6331216wrh.70.2020.09.03.11.03.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 11:03:28 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86: VMX: Make smaller physical guest address space
+ support user-configurable
+To:     Jim Mattson <jmattson@google.com>,
+        Mohammed Gamal <mgamal@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200903141122.72908-1-mgamal@redhat.com>
+ <CALMp9eTrc8_z3pKBtLVmbnMvC+KtzXMYbYTXZPPz5F0UWW8oNQ@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <00b0f9eb-286b-72e8-40b5-02f9576f2ce3@redhat.com>
+Date:   Thu, 3 Sep 2020 20:03:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1bc34841-f1a3-8a9b-cb48-10930ec55d71@csgroup.eu>
+In-Reply-To: <CALMp9eTrc8_z3pKBtLVmbnMvC+KtzXMYbYTXZPPz5F0UWW8oNQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 07:51:07PM +0200, Christophe Leroy wrote:
-> 
-> 
-> Le 03/09/2020 à 17:59, Christoph Hellwig a écrit :
-> > Christophe reported a major speedup due to avoiding the iov_iter
-> > overhead, so just add this trivial function.  Note that /dev/zero
-> > already implements both an iter and non-iter writes so this just
-> > makes it more symmetric.
-> > 
-> > Christophe Leroy <christophe.leroy@csgroup.eu>
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >   drivers/char/mem.c | 22 ++++++++++++++++++++++
-> >   1 file changed, 22 insertions(+)
-> > 
-> > diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-> > index abd4ffdc8cdebc..1dc99ab158457a 100644
-> > --- a/drivers/char/mem.c
-> > +++ b/drivers/char/mem.c
-> > @@ -726,6 +726,27 @@ static ssize_t read_iter_zero(struct kiocb *iocb, struct iov_iter *iter)
-> >   	return written;
-> >   }
-> > +static ssize_t read_zero(struct file *file, char __user *buf,
-> > +			 size_t count, loff_t *ppos)
-> > +{
-> > +	size_t cleared = 0;
-> > +
-> > +	while (count) {
-> > +		size_t chunk = min_t(size_t, count, PAGE_SIZE);
-> > +
-> > +		if (clear_user(buf + cleared, chunk))
-> > +			return cleared ? cleared : -EFAULT;
-> > +		cleared += chunk;
-> > +		count -= chunk;
-> > +
-> > +		if (signal_pending(current))
-> > +			return cleared ? cleared : -ERESTARTSYS;
-> > +		cond_resched();
-> > +	}
-> > +
-> > +	return cleared;
-> > +}
-> > +
-> >   static int mmap_zero(struct file *file, struct vm_area_struct *vma)
-> >   {
-> >   #ifndef CONFIG_MMU
-> > @@ -921,6 +942,7 @@ static const struct file_operations zero_fops = {
-> >   	.llseek		= zero_lseek,
-> >   	.write		= write_zero,
-> >   	.read_iter	= read_iter_zero,
-> > +	.read		= read_zero,
-> 
-> Wondering if .read should be before .write, so that we get in order read,
-> write, read_iter, write_iter.
+On 03/09/20 19:57, Jim Mattson wrote:
+> On Thu, Sep 3, 2020 at 7:12 AM Mohammed Gamal <mgamal@redhat.com> wrote:
+>> This patch exposes allow_smaller_maxphyaddr to the user as a module parameter.
+>>
+>> Since smaller physical address spaces are only supported on VMX, the parameter
+>> is only exposed in the kvm_intel module.
+>> Modifications to VMX page fault and EPT violation handling will depend on whether
+>> that parameter is enabled.
+>>
+>> Also disable support by default, and let the user decide if they want to enable
+>> it.
+>
+> I think a smaller guest physical address width *should* be allowed.
+> However, perhaps the pedantic adherence to the architectural
+> specification could be turned on or off per-VM? And, if we're going to
+> be pedantic, I think we should go all the way and get MOV-to-CR3
+> correct.
 
-It really does not matter :)
+That would be way too slow.  Even the current trapping of present #PF
+can introduce some slowdown depending on the workload.
 
-thanks,
+> Does the typical guest care about whether or not setting any of the
+> bits 51:46 in a PFN results in a fault?
 
-greg k-h
+At least KVM with shadow pages does, which is a bit niche but it shows
+that you cannot really rely on no one doing it.  As you guessed, the
+main usage of the feature is for machines with 5-level page tables where
+there are no reserved bits; emulating smaller MAXPHYADDR allows
+migrating VMs from 4-level page-table hosts.
+
+Enabling per-VM would not be particularly useful IMO because if you want
+to disable this code you can just set host MAXPHYADDR = guest
+MAXPHYADDR, which should be the common case unless you want to do that
+kind of Skylake to Icelake (or similar) migration.
+
+Paolo
+
