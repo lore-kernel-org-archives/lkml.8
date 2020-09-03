@@ -2,136 +2,176 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5065CC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFDAC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1A2206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF72C206EB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Do2UNsHQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tb4u650/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbgICOlo (ORCPT
+        id S1729307AbgICOl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:41:44 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:59778 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729406AbgICOk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:40:58 -0400
-IronPort-SDR: tWkSgVr7tIYKC56ZI0vAC5S6vowOnHNZItcy5v/nmVsG5m55D0RE/PAU/7L4IXCqgFLBzgZusl
- X0Hoca4espLj6q9/0IahoMH/DceBW+9qBKPkM62H3n6DxSbf+KHphVB9EtVdWNWzETWOILZwdL
- KaW17BZH1NnfKT9XhyD+edGGCeiwqeWiXfJQ07FlXtJTrSasWFne3zz6z69bhHlrNtIRoHjN9m
- S1kkgepTqbtfS2O0QmB+YyTB8fPa2LjZ65yQOKPms05CpDbrfLlmbhGZwP73ICRXz6N8BaXJUw
- N3A=
-X-IronPort-AV: E=Sophos;i="5.76,387,1592863200"; 
-   d="scan'208";a="13722541"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 03 Sep 2020 16:40:55 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Thu, 03 Sep 2020 16:40:56 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Thu, 03 Sep 2020 16:40:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1599144055; x=1630680055;
-  h=from:to:cc:subject:date:message-id;
-  bh=HuVYZMdnTpuIAbGh0AO6RRdKYESqvMwuJdvjWZtOvjo=;
-  b=Do2UNsHQnUT/s8dV31uR/dqFZMJ0xeIqnnjx9XugtpgdbAo4c269TE2J
-   rEX080JtplHQK1JFnlsuWdnOnZkIGrm8I3kmrQb1Ks3dGncJ2RJ+ArM1P
-   ga5xXoBjC4erbzhpy0GJcDLCXJwNpq520V2FZRcDECKWj+ZVQHS9tui/z
-   Tzn9bVVOdxk3LF3nd3FnoDiOtTyBvoogM3/yu2FKs2t5+t5HBXeezk2dB
-   cdQkNbrOD1PUB/RuR9ZdHo24gDzwOD/DMzdUL+m5UIua88Wqr1eB4zX2I
-   HXwlYbvq9VMZsTVjfbnmANg7ov6llvVDjfPjlU97HkebzH2ZIRRuS8SS3
-   w==;
-IronPort-SDR: pPiXbxI+FQucBUSsBtjmOTxuJGtkJ19sEQBeNapq3BL3fx7uw5P/ny0rX1JV6Y3DiZHBPbi0Za
- P35/aGAwImZUVYkaXU9xYpbOyddZIBghPduttFnEYEpgh+jpvzmnmwXIU6XGKXUGxmh8nQbGxS
- x30kT87vBo33Ddhk8iX/UniQ1R3tCusCs2OCkUk1ipomAT7VxNsb99HkiOuyW2HHiQw7EUh8qx
- ZcZnI8LVMME2YGdeU/R5R6xCUd7NgTV9swfnfw73/7xSMyxIAhfo+6JJbwwEDYReL+oSKkccvp
- gYE=
-X-IronPort-AV: E=Sophos;i="5.76,387,1592863200"; 
-   d="scan'208";a="13722540"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 03 Sep 2020 16:40:55 +0200
-Received: from schifferm-ubuntu4.tq-net.de (unknown [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id BE6D5280065;
-        Thu,  3 Sep 2020 16:40:55 +0200 (CEST)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH] spi-imx: remove num-cs support, set num_chipselect to 4
-Date:   Thu,  3 Sep 2020 16:40:28 +0200
-Message-Id: <20200903144028.20416-1-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 3 Sep 2020 10:41:59 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59448 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728918AbgICOlh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:41:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599144094;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dlXSpmpAiY7YS5kYtaeWA3wo80DV7Gum6Jwj3vtpgjg=;
+        b=Tb4u650/EhrjifM8zHaSmMqai3pNgctiuE+sArtWYkPv0tXJjq8Q+5tYaNpfgFkYkhi9av
+        Mz2zf0Uva5qADVd4ap88wtfgYy1GKeLvNccz2lrVxOwXsYzEVeBdvBEOVP9LPucO9UrFV8
+        q0UNh5Ab8R55tjnoHjXDYJNC3mcQeIY=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-167-uT69CP2lMYKvBuRTGEBTJw-1; Thu, 03 Sep 2020 10:41:31 -0400
+X-MC-Unique: uT69CP2lMYKvBuRTGEBTJw-1
+Received: by mail-io1-f70.google.com with SMTP id j4so2169786iob.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 07:41:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=dlXSpmpAiY7YS5kYtaeWA3wo80DV7Gum6Jwj3vtpgjg=;
+        b=SwpJYeHdZ9o9RdPhiRIPLMbCK/3LbcCKZ1J/pSrEZ4VRcUggWYPyeArZNRIipkJa2q
+         lJYqPF6UlD/zEdpDRInUJzNyeX5w7qsPPdWAlujV+i4UFDejFxR8bfJFz2N/VjuFVIh6
+         YLDjB4WKwZgp1TgqegfuyeESbVPFWqucmE2faPfovDjp/X9Aa54WApVz27Ymq6rLzH9X
+         2YtAbHLqu1x/M9vBV+SYL/av7zZBPcr0+UoN5FnMQZKt6lrs5DzXR03t7fIrMBEyXi8F
+         K1VpaYfXmF8rGrZiwsKT5koddfHt+8zVO3Gvet+PKg4ysUaCKFmHO2MwypQaLhE27kO4
+         oMZQ==
+X-Gm-Message-State: AOAM530qz/N7p2voBbujHhVZeg29OfPlxA8H5deMr2vCYYdSJjnU4vr+
+        bbbsbhnO2STn/O5mcFQCn9SooVnaZlSDkeCN8L99rVPOlpcurivEXCZZdE1WLfYGbmx/ye2iEjj
+        5VS2maQNCuR/VkOu4oy2RZtN6
+X-Received: by 2002:a92:c78e:: with SMTP id c14mr3385275ilk.3.1599144090427;
+        Thu, 03 Sep 2020 07:41:30 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxCAl5Mf+O6dLNF91Wu0iMCa8KPqD4EBuQd+O1BKyeEB3KAYW3jsrXGYwXNu2cuFkUA/BFcLw==
+X-Received: by 2002:a92:c78e:: with SMTP id c14mr3385251ilk.3.1599144090118;
+        Thu, 03 Sep 2020 07:41:30 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id s16sm1403323iow.47.2020.09.03.07.41.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 07:41:29 -0700 (PDT)
+Subject: Re: [PATCH] media: dvb-frontends/cxd2099: report errors
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     jasmin@anw.at, o.endriss@gmx.de, rjkm@metzlerbros.de,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200722134126.31191-1-trix@redhat.com>
+ <20200903161328.62378992@coco.lan>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <b274b6b1-e2ac-2b68-9fb8-502255ca6982@redhat.com>
+Date:   Thu, 3 Sep 2020 07:41:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200903161328.62378992@coco.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The num-cs property is not considered useful, and no in-tree Device
-Trees define it for spi-imx.
 
-The default value to be used when no cs-gpios are defined is set to 4 to
-give access to all native CS pins of modern i.MX SoCs (i.MX6 and newer).
+On 9/3/20 7:13 AM, Mauro Carvalho Chehab wrote:
+> Em Wed, 22 Jul 2020 06:41:26 -0700
+> trix@redhat.com escreveu:
+>
+>> From: Tom Rix <trix@redhat.com>
+>>
+>> Clang static analysis reports this error
+>>
+>> drivers/media/dvb-frontends/cxd2099.c:420:2: warning: Undefined
+>>   or garbage value returned to caller
+>>         return val;
+>>         ^~~~~~~~~~
+>>
+>> In read_cam_control, the call to read_io can fail.
+>> When it fails val is not set.
+>>
+>> The failure status should be returned to the caller,
+>> not the unset val.
+>>
+>> Similar problem with read_attribute_mem
+>>
+>> Fixes: 0f0b270f905b ("[media] ngene: CXD2099AR Common Interface driver")
+>>
+>> Signed-off-by: Tom Rix <trix@redhat.com>
+>> ---
+>>  drivers/media/dvb-frontends/cxd2099.c | 14 ++++++++++----
+>>  1 file changed, 10 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/media/dvb-frontends/cxd2099.c b/drivers/media/dvb-frontends/cxd2099.c
+>> index f88b5355493e..9dfaf18fc4b4 100644
+>> --- a/drivers/media/dvb-frontends/cxd2099.c
+>> +++ b/drivers/media/dvb-frontends/cxd2099.c
+>> @@ -387,12 +387,15 @@ static int read_attribute_mem(struct dvb_ca_en50221 *ca,
+>>  {
+>>  	struct cxd *ci = ca->data;
+>>  	u8 val;
+>> +	int ret;
+>>  
+>>  	mutex_lock(&ci->lock);
+>>  	set_mode(ci, 1);
+>> -	read_pccard(ci, address, &val, 1);
+>> +	ret = read_pccard(ci, address, &val, 1);
+>> +	if (!ret)
+>> +		ret = val;
+>>  	mutex_unlock(&ci->lock);
+>> -	return val;
+>> +	return ret;
+>>  }
+>>  
+>>  static int write_attribute_mem(struct dvb_ca_en50221 *ca, int slot,
+>> @@ -412,12 +415,15 @@ static int read_cam_control(struct dvb_ca_en50221 *ca,
+>>  {
+>>  	struct cxd *ci = ca->data;
+>>  	unsigned int val;
+>> +	int ret;
+>>  
+>>  	mutex_lock(&ci->lock);
+>>  	set_mode(ci, 0);
+>> -	read_io(ci, address, &val);
+>> +	ret = read_io(ci, address, &val);
+>> +	if (!ret)
+>> +		ret = val;
+>>  	mutex_unlock(&ci->lock);
+>> -	return val;
+>> +	return ret;
+>>  }
+>>  
+>>  static int write_cam_control(struct dvb_ca_en50221 *ca, int slot,
+> Hmm... Had you test this one on a real hardware? It is not
+> uncommon to have some DVB devices that would fail reading
+> when the firmware is on cold state.
+>
+> Without testing a patch like that at a real hardware, there's
+> no way to know if this is intentional or if the original
+> developer forgot to add a check for the error.
 
-In older SoCs, the number of CS pins varies (for example the i.MX27 has 3
-CS pins on CSPI1 and CSPI2, and only a single CS on CSPI3). Attempting
-to use the nonexisting CS pin would be an easy to notice DT
-misconfiguration; making the driver catch this doesn't seem worthwhile.
+No, I do not have hw.  I understand your concerns, it is ok if you want to drop this patch, else i'll beef up the warnings.
 
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
- drivers/spi/spi-imx.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+Tom
 
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index 197f60632072..aece8482739b 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -1581,7 +1581,6 @@ static int spi_imx_probe(struct platform_device *pdev)
- 	const struct spi_imx_devtype_data *devtype_data = of_id ? of_id->data :
- 		(struct spi_imx_devtype_data *)pdev->id_entry->driver_data;
- 	bool slave_mode;
--	u32 val;
- 
- 	slave_mode = devtype_data->has_slavemode &&
- 			of_property_read_bool(np, "spi-slave");
-@@ -1605,6 +1604,7 @@ static int spi_imx_probe(struct platform_device *pdev)
- 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(1, 32);
- 	master->bus_num = np ? -1 : pdev->id;
- 	master->use_gpio_descriptors = true;
-+	master->num_chipselect = 4;
- 
- 	spi_imx = spi_master_get_devdata(master);
- 	spi_imx->bitbang.master = master;
-@@ -1613,17 +1613,6 @@ static int spi_imx_probe(struct platform_device *pdev)
- 
- 	spi_imx->devtype_data = devtype_data;
- 
--	/*
--	 * Get number of chip selects from device properties. This can be
--	 * coming from device tree or boardfiles, if it is not defined,
--	 * a default value of 3 chip selects will be used, as all the legacy
--	 * board files have <= 3 chip selects.
--	 */
--	if (!device_property_read_u32(&pdev->dev, "num-cs", &val))
--		master->num_chipselect = val;
--	else
--		master->num_chipselect = 3;
--
- 	spi_imx->bitbang.setup_transfer = spi_imx_setupxfer;
- 	spi_imx->bitbang.txrx_bufs = spi_imx_transfer;
- 	spi_imx->bitbang.master->setup = spi_imx_setup;
--- 
-2.17.1
+>
+> So, at most, it could print some warning message for
+> non-zero return codes.
+>
+>
+> Thanks,
+> Mauro
+>
 
