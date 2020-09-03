@@ -4,62 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C886C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860B5C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7606520897
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F7320767
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgICI0P (ORCPT
+        id S1728216AbgICI1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:26:15 -0400
-Received: from verein.lst.de ([213.95.11.211]:36890 "EHLO verein.lst.de"
+        Thu, 3 Sep 2020 04:27:12 -0400
+Received: from elvis.franken.de ([193.175.24.41]:50506 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgICI0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:26:13 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 727D868BEB; Thu,  3 Sep 2020 10:26:09 +0200 (CEST)
-Date:   Thu, 3 Sep 2020 10:26:09 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        dm-devel@redhat.com,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        drbd-dev@lists.linbit.com, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-s390@vger.kernel.org,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        target-devel@vger.kernel.org
-Subject: Re: [PATCH 2/9] block: add a bdev_is_partition helper
-Message-ID: <20200903082609.GA23498@lst.de>
-References: <20200903054104.228829-1-hch@lst.de> <20200903054104.228829-3-hch@lst.de> <CAPDyKFrkcpziGFPmSd8Kx4bzhoN6zxF1E8MagLQSa4sBmnicOg@mail.gmail.com>
+        id S1725984AbgICI1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 04:27:11 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1kDkaL-0000I1-03; Thu, 03 Sep 2020 10:27:09 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 5556CC0E86; Thu,  3 Sep 2020 10:21:14 +0200 (CEST)
+Date:   Thu, 3 Sep 2020 10:21:14 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: SNI: Fix SCSI interrupt
+Message-ID: <20200903082114.GD6220@alpha.franken.de>
+References: <20200902213214.108514-1-tsbogend@alpha.franken.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFrkcpziGFPmSd8Kx4bzhoN6zxF1E8MagLQSa4sBmnicOg@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200902213214.108514-1-tsbogend@alpha.franken.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 10:19:34AM +0200, Ulf Hansson wrote:
-> On Thu, 3 Sep 2020 at 07:42, Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > Add a littler helper to make the somewhat arcane bd_contains checks a
-> > little more obvious.
-> >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Wed, Sep 02, 2020 at 11:32:14PM +0200, Thomas Bogendoerfer wrote:
+> On RM400(a20r) machines ISA and SCSI interrupts share the same interrupt
+> line. Commit 49e6e07e3c80 ("MIPS: pass non-NULL dev_id on shared
+> request_irq()") accidently dropped the IRQF_SHARED bit, which breaks
+> registering SCSI interrupt. Put back IRQF_SHARED and add dev_id for
+> ISA interrupt.
 > 
-> Not sure why we have both "bd_contains" and "bd_partno", nevertheless,
-> feel free to add:
+> Fixes: 49e6e07e3c80 ("MIPS: pass non-NULL dev_id on shared request_irq()")
+> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> ---
+>  arch/mips/sni/a20r.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Right now both are needed for how blkdev_get/put work.  But I plan to
-eventual kill off bd_contains after some major surgery to that code.
+applied ti mips-fixes.
 
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
