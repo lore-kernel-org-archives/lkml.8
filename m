@@ -2,242 +2,141 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B5EC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34015C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E50620722
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA3820722
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:39:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ijE76QU1"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qtfigfxt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgICRgk (ORCPT
+        id S1728896AbgICRjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 13:36:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41301 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726025AbgICRgj (ORCPT
+        Thu, 3 Sep 2020 13:39:14 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33726 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbgICRjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 13:36:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599154594;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=P4EL1Ed5M7h9y/U1JlJUoe7knenGFwJERtgcsTUbVg0=;
-        b=ijE76QU17gdWpFiecmbmmaau9KD7nzn0++AOzQOIkWHsLRqUX1uoMSk/mXA5xf5L1q3qLO
-        1QX8v7vcLSgTO3ICgiq8rKd0wfq83hG1BJlUXtq4KmgDCl1Swc7e6eLaT/rRbme0sHUpm5
-        Z6g2EFQq8gEdv9PpCzialgeP1srTvjk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-477-7sldQzWFPtGzJ8I1Hd1yNQ-1; Thu, 03 Sep 2020 13:36:31 -0400
-X-MC-Unique: 7sldQzWFPtGzJ8I1Hd1yNQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 118302FD05;
-        Thu,  3 Sep 2020 17:36:29 +0000 (UTC)
-Received: from [10.36.112.104] (ovpn-112-104.ams2.redhat.com [10.36.112.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EE5F97E40C;
-        Thu,  3 Sep 2020 17:36:26 +0000 (UTC)
-Subject: Re: [PATCH v2] mm/memory_hotplug: drain per-cpu pages again during
- memory offline
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        mhocko@suse.com, linux-mm@kvack.org, osalvador@suse.de,
-        richard.weiyang@gmail.com, vbabka@suse.cz, rientjes@google.com
-References: <20200903140032.380431-1-pasha.tatashin@soleen.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <6ec66eb9-eeba-5076-af97-cef59ed5cbaa@redhat.com>
-Date:   Thu, 3 Sep 2020 19:36:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 3 Sep 2020 13:39:09 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 083HcwAO111441;
+        Thu, 3 Sep 2020 17:38:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=bo1e34Z7Nb7zD1md32835Hg6Pxb+3lvBG7pK4do84lo=;
+ b=qtfigfxtiOf6EcrHjwxeQ1YAxY5/zzMFlX8omYUu5se7i0df6wEMYAm3giDfuLMkd9hc
+ owY6DVs/AdcFRHKX8TtXiIFb4YrSpaDFxwWMCMIudk9qpnUWgqreqwY02Ujw+cdEaeqE
+ llrC1YgVV82MA1qZ0ucdvxzrOiCqfczHBKxx/jJe1baxwLMsAmFx2pRETwEGnUWGckF1
+ PsEchOlDFUcwr41fxmf6KXxuuf4kpWEw7g0y3dglGS66LJDFlDxULWj1g4/DPc5LEfxS
+ pbKZWFoK0XZpGFe554pRDFPMmJRIoFmKS0elqMb5B6ufGSlOBMmA4yytB76MZOKxpeQ/ Wg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 337eera8ua-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 03 Sep 2020 17:38:58 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 083HVojn014675;
+        Thu, 3 Sep 2020 17:38:53 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 3380y2b7us-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Sep 2020 17:38:53 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 083HcqMR007784;
+        Thu, 3 Sep 2020 17:38:52 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 03 Sep 2020 10:38:51 -0700
+Date:   Thu, 3 Sep 2020 20:38:44 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Alex Dewar <alex.dewar90@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Alan Cox <alan@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH] staging: media: atomisp: Fix error path in lm3554_probe()
+Message-ID: <20200903173843.GF8299@kadam>
+References: <20200902184207.479525-1-alex.dewar90@gmail.com>
+ <20200903121134.GB8299@kadam>
+ <20200903154841.w5rppm325jobimud@medion>
 MIME-Version: 1.0
-In-Reply-To: <20200903140032.380431-1-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903154841.w5rppm325jobimud@medion>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9733 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009030163
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9733 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
+ phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009030164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.09.20 16:00, Pavel Tatashin wrote:
-> There is a race during page offline that can lead to infinite loop:
-> a page never ends up on a buddy list and __offline_pages() keeps
-> retrying infinitely or until a termination signal is received.
+On Thu, Sep 03, 2020 at 04:48:41PM +0100, Alex Dewar wrote:
+> Good point about the timer!
 > 
-> Thread#1 - a new process:
+> > >  
+> > > -	err = lm3554_gpio_init(client);
+> > > -	if (err) {
+> > > +	ret = lm3554_gpio_init(client);
+> > > +	if (ret) {
+> > >  		dev_err(&client->dev, "gpio request/direction_output fail");
+> > > -		goto fail2;
+> > > +		goto err_cleanup_entity;
+> > >  	}
+> > >  	return atomisp_register_i2c_module(&flash->sd, NULL, LED_FLASH);
+> > 
+> > If atomisp_register_i2c_module() fails then we need to call
+> > lm3554_gpio_uninit(client) and do other cleanup.
 > 
-> load_elf_binary
->  begin_new_exec
->   exec_mmap
->    mmput
->     exit_mmap
->      tlb_finish_mmu
->       tlb_flush_mmu
->        release_pages
->         free_unref_page_list
->          free_unref_page_prepare
->           set_pcppage_migratetype(page, migratetype);
->              // Set page->index migration type below  MIGRATE_PCPTYPES
+> I'm probably showing my ignorance here, but I can't see what cleanup we
+> need. Inside lm3554_gpio_init we have:
 > 
-> Thread#2 - hot-removes memory
-> __offline_pages
->   start_isolate_page_range
->     set_migratetype_isolate
->       set_pageblock_migratetype(page, MIGRATE_ISOLATE);
->         Set migration type to MIGRATE_ISOLATE-> set
->         drain_all_pages(zone);
->              // drain per-cpu page lists to buddy allocator.
+> 	ret = gpiod_direction_output(pdata->gpio_reset, 0);
+> 	if (ret < 0)
+> 		return ret;
+> 	dev_info(&client->dev, "flash led reset successfully\n");
 > 
-> Thread#1 - continue
->          free_unref_page_commit
->            migratetype = get_pcppage_migratetype(page);
->               // get old migration type
->            list_add(&page->lru, &pcp->lists[migratetype]);
->               // add new page to already drained pcp list
+> 	if (!pdata->gpio_strobe)
+> 		return -EINVAL;
 > 
-> Thread#2
-> Never drains pcp again, and therefore gets stuck in the loop.
+> 	ret = gpiod_direction_output(pdata->gpio_strobe, 0);
+> 	if (ret < 0)
+> 		return ret;
 > 
-> The fix is to try to drain per-cpu lists again after
-> check_pages_isolated_cb() fails.
-> 
-> Fixes: c52e75935f8d ("mm: remove extra drain pages on pcp list")
-> 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: stable@vger.kernel.org
-> Acked-by: David Rientjes <rientjes@google.com>
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  mm/memory_hotplug.c | 14 ++++++++++++++
->  mm/page_isolation.c |  8 ++++++++
->  2 files changed, 22 insertions(+)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index e9d5ab5d3ca0..b11a269e2356 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1575,6 +1575,20 @@ static int __ref __offline_pages(unsigned long start_pfn,
->  		/* check again */
->  		ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
->  					    NULL, check_pages_isolated_cb);
-> +		/*
-> +		 * per-cpu pages are drained in start_isolate_page_range, but if
-> +		 * there are still pages that are not free, make sure that we
-> +		 * drain again, because when we isolated range we might
-> +		 * have raced with another thread that was adding pages to pcp
-> +		 * list.
-> +		 *
-> +		 * Forward progress should be still guaranteed because
-> +		 * pages on the pcp list can only belong to MOVABLE_ZONE
-> +		 * because has_unmovable_pages explicitly checks for
-> +		 * PageBuddy on freed pages on other zones.
-> +		 */
-> +		if (ret)
-> +			drain_all_pages(zone);
->  	} while (ret);
->  
->  	/* Ok, all of our target is isolated.
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index 242c03121d73..63a3db10a8c0 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -170,6 +170,14 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
->   * pageblocks we may have modified and return -EBUSY to caller. This
->   * prevents two threads from simultaneously working on overlapping ranges.
->   *
-> + * Please note that there is no strong synchronization with the page allocator
-> + * either. Pages might be freed while their page blocks are marked ISOLATED.
-> + * In some cases pages might still end up on pcp lists and that would allow
-> + * for their allocation even when they are in fact isolated already. Depending
-> + * on how strong of a guarantee the caller needs drain_all_pages might be needed
-> + * (e.g. __offline_pages will need to call it after check for isolated range for
-> + * a next retry).
-> + *
->   * Return: the number of isolated pageblocks on success and -EBUSY if any part
->   * of range cannot be isolated.
->   */
-> 
+> I'm not sure how you "undo" a call to gpiod_direction_output, but I'm
+> thinking you won't need to do anything because it should be ok to leave
+> a gpio to output 0... right?
 
-(still on vacation, back next week on Tuesday)
+You're right.  I wonder if there is really any need for the
+lm3554_gpio_uninit() function at all?  It's basically the same as
+lm3554_gpio_init() except for the order of function calls.  Probably
+we could just rename lm3554_gpio_init() to something like
+lm3554_gpio_set_default() and use it in both the probe() and remove
+functions()...
 
-I didn't look into discussions in v1, but to me this looks like we are
-trying to hide an actual bug by implementing hacks in the caller
-(repeated calls to drain_all_pages()). What about alloc_contig_range()
-users - you get more allocation errors just because PCP code doesn't
-play along.
+But I don't know the code and can't test it so let's leave that for
+another day.
 
-There *is* strong synchronization with the page allocator - however,
-there seems to be one corner case race where we allow to allocate pages
-from isolated pageblocks.
+We still do need to clean up if atomisp_register_i2c_module() fails
+though, and the timer as well so could you resend a v2?
 
-I want that fixed instead if possible, otherwise this is just an ugly
-hack to make the obvious symptoms (offlining looping forever) disappear.
-
-If that is not possible easily, I'd much rather want to see all
-drain_all_pages() calls being moved to the caller and have the expected
-behavior documented instead of specifying "there is no strong
-synchronization with the page allocator" - which is wrong in all but PCP
-cases (and there only in one possible race?).
-
-I do wonder why we hit this issue now and not before - I suspect
-something in PCP code changed that made this race possible.
-
--- 
-Thanks,
-
-David / dhildenb
+regards,
+dan carpenter
 
