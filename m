@@ -2,126 +2,126 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9A3C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF2CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCE6E20775
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:41:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599151282;
-	bh=3KX20nfc0qP69OxAQSYdNpjTUWYh1Rv29qTyzvJYDL0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=rzApH55F5gYICHKyb8ivcmPBvOvBxUtpbRpIhkgAsgH76mZs0+IUyJkehhfoAh2rQ
-	 mqyLx1NeAiFnt2fL9yTOOPIMMwjnRQlFtu6hpThfWVvS5YwdEqrYp8g3C1R0rRoZtE
-	 GMcbQzYYk9NEb8v8NvjkDQ9gai3cxj32ag2kK6zk=
+	by mail.kernel.org (Postfix) with ESMTP id C7EFF20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:41:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R8L3ioD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbgICQlV (ORCPT
+        id S1728918AbgICQlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:41:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbgICQlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:41:20 -0400
-Received: from localhost (55.sub-174-234-138.myvzw.com [174.234.138.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7EBF206A5;
-        Thu,  3 Sep 2020 16:41:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599151279;
-        bh=3KX20nfc0qP69OxAQSYdNpjTUWYh1Rv29qTyzvJYDL0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KZxkOU9JUDbmO+/OsJ3lmIQLP6hIK33UDQ99BF9SD8/2BjE64nCL39abZUgtv6vbM
-         4Jh+wGAdtLOxyIASaZKwqOHV7HkBiesmlVCRJTL0+lA5k6ZM7x6DgaI6keks35TUKj
-         nyhreDGJhc+G1U4mxvSMdwOYdD6eBKOIQgVmRG+w=
-Date:   Thu, 3 Sep 2020 11:41:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     alex.williamson@redhat.com, bhelgaas@google.com,
-        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] PCI/IOV: Mark VFs as not implementing MSE bit
-Message-ID: <20200903164117.GA312152@bjorn-Precision-5520>
+        Thu, 3 Sep 2020 12:41:25 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55516 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbgICQlX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 12:41:23 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083GfGwf039935;
+        Thu, 3 Sep 2020 11:41:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599151276;
+        bh=X9QPS3a/ZCaAKG2uXIKrOUiVQHzUJ66YvXo6YsH9ZL8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=R8L3ioD+HoPVkdB1rjJnkKJrBqEImULcZjQkm5JhGEmQu2akqeA2JYZodzmzJCyJW
+         rTEIHYre8tEbf725ap1JhM13wAIj2Pw9Hu886BraPqG9RIxTNb1kORD3nnqETBwnXd
+         Sri0nr4K8NydYdEjxk6pfJ+Q2hNWQA3R1TMcWML4=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083GfGpW116922
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 3 Sep 2020 11:41:16 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
+ 2020 11:41:16 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 3 Sep 2020 11:41:16 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083GfF3K096927;
+        Thu, 3 Sep 2020 11:41:15 -0500
+Subject: Re: [PATCH net] net: phy: dp83867: Fix various styling and space
+ issues
+To:     Florian Fainelli <f.fainelli@gmail.com>, <davem@davemloft.net>,
+        <andrew@lunn.ch>, <hkallweit1@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200903141510.20212-1-dmurphy@ti.com>
+ <76046e32-a17d-b87c-26c7-6f48f4257916@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <4d38ac31-8646-2c4f-616c-1a1341721819@ti.com>
+Date:   Thu, 3 Sep 2020 11:41:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1599075996-9826-2-git-send-email-mjrosato@linux.ibm.com>
+In-Reply-To: <76046e32-a17d-b87c-26c7-6f48f4257916@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 03:46:34PM -0400, Matthew Rosato wrote:
-> Per the PCIe spec, VFs cannot implement the MSE bit
-> AKA PCI_COMMAND_MEMORY, and it must be hard-wired to 0.
-> Use a dev_flags bit to signify this requirement.
+Florian
 
-This approach seems sensible to me, but
+On 9/3/20 11:34 AM, Florian Fainelli wrote:
+>
+>
+> On 9/3/2020 7:15 AM, Dan Murphy wrote:
+>> Fix spacing issues reported for misaligned switch..case and extra new
+>> lines.
+>>
+>> Also updated the file header to comply with networking commet style.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/net/phy/dp83867.c | 47 ++++++++++++++++++---------------------
+>>   1 file changed, 22 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+>> index cd7032628a28..f182a8d767c6 100644
+>> --- a/drivers/net/phy/dp83867.c
+>> +++ b/drivers/net/phy/dp83867.c
+>> @@ -1,6 +1,5 @@
+>>   // SPDX-License-Identifier: GPL-2.0
+>> -/*
+>> - * Driver for the Texas Instruments DP83867 PHY
+>> +/* Driver for the Texas Instruments DP83867 PHY
+>>    *
+>>    * Copyright (C) 2015 Texas Instruments Inc.
+>>    */
+>> @@ -35,7 +34,7 @@
+>>   #define DP83867_CFG4_SGMII_ANEG_MASK (BIT(5) | BIT(6))
+>>   #define DP83867_CFG4_SGMII_ANEG_TIMER_11MS   (3 << 5)
+>>   #define DP83867_CFG4_SGMII_ANEG_TIMER_800US  (2 << 5)
+>> -#define DP83867_CFG4_SGMII_ANEG_TIMER_2US    (1 << 5)
+>> +#define DP83867_CFG4_SGMII_ANEG_TIMER_2US    BIT(5)
+>
+> Now the definitions are inconsistent, you would want to drop this one 
+> and stick to the existing style.
 
-  - This is confusing because while the spec does not use "MSE" to
-    refer to the Command Register "Memory Space Enable" bit
-    (PCI_COMMAND_MEMORY), it *does* use "MSE" in the context of the
-    "VF MSE" bit, which is in the PF SR-IOV Capability.  But of
-    course, you're not talking about that here.  Maybe something like
-    this?
+OK I was a little conflicted making that change due to the reasons you 
+mentioned.  But if that is an acceptable warning I am ok with it.
 
-      For VFs, the Memory Space Enable bit in the Command Register is
-      hard-wired to 0.
 
-      Add a dev_flags bit to signify devices where the Command
-      Register Memory Space Enable bit does not control the device's
-      response to MMIO accesses.
+>
+> The rest of the changes look good, so with that fixed, and the subject 
+> correct to "net-next" (this is no bug fix material), you can add:
+>
+I will have to reapply this to the net-next to make sure it applies 
+cleanly there.  But not an issue.
 
-  - "PCI_DEV_FLAGS_FORCE_COMMAND_MEM" says something about how you
-    plan to *use* this, but I'd rather use a term that describes the
-    hardware, e.g., "PCI_DEV_FLAGS_NO_COMMAND_MEMORY".
+Dan
 
-  - How do we decide whether to use dev_flags vs a bitfield like
-    dev->is_virtfn?  The latter seems simpler unless there's a reason
-    to use dev_flags.  If there's a reason, maybe we could add a
-    comment at pci_dev_flags for future reference.
 
-  - Wrap the commit log to fill a 75-char line.  It's arbitrary, but
-    that's what I use for consistency.
-
-> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> ---
->  drivers/pci/iov.c   | 1 +
->  include/linux/pci.h | 2 ++
->  2 files changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index b37e08c..2bec77c 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -180,6 +180,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->  	virtfn->device = iov->vf_device;
->  	virtfn->is_virtfn = 1;
->  	virtfn->physfn = pci_dev_get(dev);
-> +	virtfn->dev_flags |= PCI_DEV_FLAGS_FORCE_COMMAND_MEM;
->  
->  	if (id == 0)
->  		pci_read_vf_config_common(virtfn);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 8355306..9316cce 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -227,6 +227,8 @@ enum pci_dev_flags {
->  	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
->  	/* Don't use Relaxed Ordering for TLPs directed at this device */
->  	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-> +	/* Device does not implement PCI_COMMAND_MEMORY (e.g. a VF) */
-> +	PCI_DEV_FLAGS_FORCE_COMMAND_MEM = (__force pci_dev_flags_t) (1 << 12),
->  };
->  
->  enum pci_irq_reroute_variant {
-> -- 
-> 1.8.3.1
-> 
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
