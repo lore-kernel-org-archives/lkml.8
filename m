@@ -2,119 +2,107 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 446DFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9966FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD022080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5A12072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:31:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uk2NZA9Y"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="P/1oVpN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgICF3J (ORCPT
+        id S1726855AbgICFbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 01:29:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbgICF3H (ORCPT
+        Thu, 3 Sep 2020 01:31:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33074 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725851AbgICFbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 01:29:07 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55433C061244;
-        Wed,  2 Sep 2020 22:29:07 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id s92so1333342ybi.2;
-        Wed, 02 Sep 2020 22:29:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aqSzJ+G6e3sItDAMEGO8323I5vOUOvMlVHBhDl0yekQ=;
-        b=Uk2NZA9Y6bbWDzHmEYkTzTD/xekG9voY1J+n9mxwJ4+ALoTFqBDICwWpq6/R+8d+vI
-         yKCWrlEc+RcRxR3jzOIM+5iVImoeONAuAtwQ886mTRXRSKLTxi72QVmk+Z2XiPbs5h1h
-         VXZv6V43lZAjfsmo6SLg07Ny7wUmdid/vL6t1QPmvUUb+WxS6lAYMrBZ13TanFWpqCvb
-         5xJzdmSdqh4ImXo7ktkMBsD0h+baSJC807sNKiYPjnq0MpaEO61VfpQf63jxb5Ay2D8e
-         D16buykU7kxpt9LOprHiTIn4btydJJnTm+gVRCjI9YGkhQHG2r5PzJD3oDZAa3earEbs
-         V4gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aqSzJ+G6e3sItDAMEGO8323I5vOUOvMlVHBhDl0yekQ=;
-        b=Dh7lL/axoK5opqXooztNcw6KbnAQavckdRF3StNaMHzrV7qgGliFvE/N/Kz0LjbkCK
-         gKDHVWsR+Ri5UuOIFvlREzxT2LaKdPn13efzoVAFuws/Y4yk4c81ndrllhaWqn+5BUcu
-         3JSgmLDdqN+9bA6/qlV+uSo8QrixFqbVdPfX/w4Hg9d7BTi5WPL4CTM6PH3Z/9Ee62QP
-         lSVHWuw7YegQtjfEOCgiZSrte6Y8r9UHQPgS/GoZPxDbhsKktVYlyUBBjD8cTIMndWrI
-         jzBOzPX1iwj6VazuMJ4cG8gQPJORPFb/go50c39rFJ9N90So2AbpDxOtq9AE8fvwIY/k
-         4dFg==
-X-Gm-Message-State: AOAM530R0u3kvkeHoRbk6uCFNAhbuPCkPl5q14YO3Ntl4f+2H9XcWwod
-        lZIJRBcT1q6hZW5UJ91XEP5lQidHEEQ1f9NX0Uw=
-X-Google-Smtp-Source: ABdhPJwyqZJvbDAyTq+F1ByuHXoZFOv7/Zgl1IH0ZUPttHP9J3S/Wq8QCE9p5aRb7dcXCiRDjcSSkakeTBxoLKQ0Ma8=
-X-Received: by 2002:a25:824a:: with SMTP id d10mr442313ybn.260.1599110946446;
- Wed, 02 Sep 2020 22:29:06 -0700 (PDT)
+        Thu, 3 Sep 2020 01:31:36 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08352OFG053557;
+        Thu, 3 Sep 2020 01:31:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=4HGc7/6+Pw+aIlehXfflhn1TuMbzH3zeJUxuQa5CQaE=;
+ b=P/1oVpN+XIULm43HcP2/i56HkLqraf+8hhOq+RhppUR7w608E83av0w1QuErodbyDu7g
+ HsYoQUzYMtQopLWsvf9AmGGhezqig+UP7oSG4ZEHhxb+TnHU6WLkZgETnRc0mHlWxtlx
+ 8kmPut7cPoLhvKs4te2A1feiCVjudwFC4KWTX5zt1ZqK/Oj1hxbPqh7R7XZrPOdU/fu2
+ YRF0+E8eWOwntx4gkxjHBqocmbWRBMQmHR8v25VLTu7jPevH1jIP740MONg1Jr02Fuw+
+ TDFW+7BQ6gQAK1RRdY9dppIIG0/sHM0wFvmUKPE2MH4gKF4o8cTWpCnFO/a9qQWyF5dT 6g== 
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33ahswv4bh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Sep 2020 01:31:24 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0835RTXg015452;
+        Thu, 3 Sep 2020 05:31:23 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01dal.us.ibm.com with ESMTP id 337en9xnd5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Sep 2020 05:31:23 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0835VMwQ41681180
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 3 Sep 2020 05:31:23 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC015AE060;
+        Thu,  3 Sep 2020 05:31:22 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 021E3AE068;
+        Thu,  3 Sep 2020 05:31:21 +0000 (GMT)
+Received: from oc6857751186.ibm.com (unknown [9.65.215.230])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  3 Sep 2020 05:31:21 +0000 (GMT)
+Subject: Re: [PATCH v2] scsi: ibmvfc: interface updates for future FPIN and MQ
+ support
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     james.bottomley@hansenpartnership.com, linux-scsi@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        brking@linux.ibm.com
+References: <20200901002420.648532-1-tyreld@linux.ibm.com>
+ <yq1y2lrd2ys.fsf@ca-mkp.ca.oracle.com>
+From:   Tyrel Datwyler <tyreld@linux.ibm.com>
+Message-ID: <3fe3e9be-9671-aa0a-b18b-10f77433ab56@linux.ibm.com>
+Date:   Wed, 2 Sep 2020 22:31:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200831224933.2129891-1-brho@google.com>
-In-Reply-To: <20200831224933.2129891-1-brho@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 2 Sep 2020 22:28:55 -0700
-Message-ID: <CAEf4BzauvG-1ED3jtgsYdjNULq5O3pVbO7GCakZR9tP5_6zUzQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] libbpf: Support setting map max_entries at runtime
-To:     Barret Rhoden <brho@google.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <yq1y2lrd2ys.fsf@ca-mkp.ca.oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-02_17:2020-09-02,2020-09-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ priorityscore=1501 suspectscore=0 bulkscore=0 phishscore=0 malwarescore=0
+ impostorscore=0 mlxlogscore=999 mlxscore=0 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009030042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 4:03 PM Barret Rhoden <brho@google.com> wrote:
->
-> The max_entries for a BPF map may depend on runtime parameters.
-> Currently, we need to know the maximum value at BPF compile time.  For
-> instance, if you want an array map with NR_CPUS entries, you would hard
-> code your architecture's largest value for CONFIG_NR_CPUS.  This wastes
-> memory at runtime.
->
-> For the NR_CPU case, one could use a PERCPU map type, but those maps are
-> limited in functionality.  For instance, BPF programs can only access
-> their own PERCPU part of the map, and the maps are not mmappable.
->
-> This commit allows the use of sentinel values in BPF map definitions,
-> which libbpf patches at runtime.
->
-> For starters, we support NUM_POSSIBLE_CPUS: e.g.
->
-> struct {
->         __uint(type, BPF_MAP_TYPE_ARRAY);
->         __uint(max_entries, NUM_POSSIBLE_CPUS);
->         __type(key, u32);
->         __type(value, struct cpu_data);
-> } cpu_blobs SEC(".maps");
->
-> This can be extended to other runtime dependent values, such as the
-> maximum number of threads (/proc/sys/kernel/threads-max).
->
-> Signed-off-by: Barret Rhoden <brho@google.com>
-> ---
+On 9/2/20 7:11 PM, Martin K. Petersen wrote:
+> 
+> Tyrel,
+> 
+>> 	Fixup complier errors from neglected commit --amend
+> 
+> Bunch of formatting-related checkpatch warnings. Please fix.
+> 
+> Thanks!
+> 
 
-libbpf provides bpf_map__set_max_entries() API exactly for such use
-cases, please use that.
+So, I stuck to the existing style already in that header. If I'm going to fixup
+to make checkpatch happy I imagine it makes sense to send a prerequisite patch
+that fixes up the rest of the header.
 
->  tools/lib/bpf/bpf_helpers.h |  4 ++++
->  tools/lib/bpf/libbpf.c      | 40 ++++++++++++++++++++++++++++++-------
->  tools/lib/bpf/libbpf.h      |  4 ++++
->  3 files changed, 41 insertions(+), 7 deletions(-)
->
-
-[...]
+-Tyrel
