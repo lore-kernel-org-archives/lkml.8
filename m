@@ -2,119 +2,119 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FF8C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D47C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3BF20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7AB20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkmzOxWi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NT8UDCqL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgICPDR (ORCPT
+        id S1729150AbgICPDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:03:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59166 "EHLO
+        Thu, 3 Sep 2020 11:03:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728927AbgICN66 (ORCPT
+        with ESMTP id S1729047AbgICPCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 09:58:58 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE529C061A17;
-        Thu,  3 Sep 2020 06:44:42 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id k25so3729746ljg.9;
-        Thu, 03 Sep 2020 06:44:42 -0700 (PDT)
+        Thu, 3 Sep 2020 11:02:54 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F49BC061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 08:02:54 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id i22so4330161eja.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 08:02:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LLcfLa3jT9VCX7RwE0dDUcAeziaCYPyIo1qnxZ7SIOw=;
-        b=GkmzOxWiAOcSoEKeOaq7PHvTvKu0i0MK1dDNNjyPgwybZgb2UXACJiPvcc2jz0oyzk
-         0lcYO2+V2fy36TNsxrXdx/5px2LKO6+5q2+Rm8WVBpzfxw04qQJ+OCscZYg84bWU1fz7
-         ldaYQ8xsy6RqXXHtvLyQG1Az2juEdwWD7D+neZp7oMkN4CJ1ADEpdwnlXLwRVD1JhIui
-         Go4ZKcXXtPGvXRlvtmC1kOCSHiG3CU2UY00/6+Nnw1wWqOl5yH2vbNIPOSmKgkbdc2Nd
-         mSDZj8hHj2AQOYiPRF9l8VL+kQGYx4QUt4kXmGAHhlIXoTcpiKXwezhKY0CVtHBFVrpW
-         M82g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OEZULZGUnrJd5MA6uBgxW8EAcWqrbiDc+CTyDki6MEk=;
+        b=NT8UDCqL1GZXqiJGvRF6IDS1DP0g+AYdwg+RDanVz+rq5KIg51wcdy3qDEQjr6tplJ
+         CT+RKKs2ucwpAY90xooram4d0h6xZleCf4HROeppkHL1u2cDUfGTNsa1rVP0fSAdhNSx
+         XdhJwv3iA0DlkNZBTfR59JoHeMkFecuvnus7ihbs3t2C3OpdUxWk4JN/FfpuMnOTuByB
+         TGzcEN82k2KxvFXWE9Si/I1fsq5+0uRIW5kajA3SJdO232CPeLaXXJZtqQ+5zQwIM1PU
+         HXW/zn/dK46dlU5StP8CD/TmlXL5MEOv7qRbJMxlqBfeo0HQJ6dQnRx0fIib9dLJyy0j
+         0bVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LLcfLa3jT9VCX7RwE0dDUcAeziaCYPyIo1qnxZ7SIOw=;
-        b=c5zi5/wquh/NjMKVUvIL6kOkNFtHpqXHx/ff1KoN/l4wdzH2dK2OURVp9UKu2OtsK1
-         PHFToQOj20x87PZSinKU2MFyjj6phBPBlLGBhMt1sbhOMVIBXAD7QAjX+TFzgWI68zjP
-         0I/5MT6jD5EvuiJbe3m/TtCP9JLMNMdySF+fm7ChYYDdSyWR2mOiX2bAXk2xL9SN/+rt
-         d6PoV75YaDLV8M6I0HgbxoUiUmnd27JuaVN84XljusIgoELUieb94bOPuuJW1BFaJDOd
-         fzILjKnd6GBSfx0LzL2CmI1CECR1j1ICPLGliWIyntycxQOu5vg8sAPFbEx5zeT4jnu1
-         2ctw==
-X-Gm-Message-State: AOAM533Kgc3tn0cSVU1ELyyVp+7U3DWdEJuhpPpGZY9EyVtq7QdCMxf2
-        ZzB+loVxv0uACzqnFflNHjiU//TKWOA=
-X-Google-Smtp-Source: ABdhPJxGmrB2gV5oToqqcL2Lc1GBuuGegYSbf4toI7NGmoFajWRCUk17/vK/Z5QBgbrJ2TEEcYanWw==
-X-Received: by 2002:a2e:b81a:: with SMTP id u26mr1422295ljo.241.1599140680897;
-        Thu, 03 Sep 2020 06:44:40 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id y17sm630318ljc.18.2020.09.03.06.44.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 06:44:40 -0700 (PDT)
-Subject: Re: [PATCH v3 03/22] i2c: tegra: Clean up messages in the code
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200903005300.7894-1-digetx@gmail.com>
- <20200903005300.7894-4-digetx@gmail.com>
- <CAHp75VfFZ2bgEqS7cbTfYzxtXk3T5VaoJpum5aiNMpfvhfbuqw@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <2b6d99a0-0913-6c55-7c13-8a2a1524488d@gmail.com>
-Date:   Thu, 3 Sep 2020 16:44:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OEZULZGUnrJd5MA6uBgxW8EAcWqrbiDc+CTyDki6MEk=;
+        b=ung41FT0VBL868leBAuN/bG5zrKBL8xTL7lNb6StNRKYUA7I/GeMey8qcMlWnwRHSY
+         w4orMJ0ROf/b0A/pPPBTzmQBu17XCP1YzM0mF9EjR7fk7eXyi4jwMD34kS6cd+e5vDGS
+         qlogKll63aPFeTUb7yQ3g9zGZTI7b+wyGHiPcbiUaZOkTyPuhFRVvILVAXnnE+GIaVfZ
+         nAIULp0WCJiE0UH2YpSMjVGonkArGWAAD7EJfGjZpljMWHmBGHx6HOx1HjveKZhFiQ18
+         umT+hMLL4oAZhbRZGv9IIXbnhxVzgbgEsxWHdsALvsCfG3GPRMLRJKnZcvzLHhxxC9HP
+         VO9Q==
+X-Gm-Message-State: AOAM530R0vqcWkwj+um0duE9VYy7PidV4+EkB4uI3bBcs5Bqh4eu0caZ
+        fsK25F+/GvK8838xrbzTyVhA5bqzqVWY/2noUoyyVQ==
+X-Google-Smtp-Source: ABdhPJyPS/HR9MNGYvLkqlJ+L/rJ9ZPBwb3yDUrFpkR3P7YeKQO0QT//nQv8xIL7sNSS2YePXN0JUKxCBy5MvCzJBX4=
+X-Received: by 2002:a17:906:1e11:: with SMTP id g17mr2447258ejj.298.1599145372527;
+ Thu, 03 Sep 2020 08:02:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfFZ2bgEqS7cbTfYzxtXk3T5VaoJpum5aiNMpfvhfbuqw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200903141746.996974-1-enric.balletbo@collabora.com>
+In-Reply-To: <20200903141746.996974-1-enric.balletbo@collabora.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Thu, 3 Sep 2020 08:02:41 -0700
+Message-ID: <CABXOdTeHZ52HzghkS85rRs92gG-mPe6JEfUx9uz3vMrxXYjpaQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: Kconfig: Remove the transitional
+ MFD_CROS_EC config
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-03.09.2020 14:06, Andy Shevchenko пишет:
-> On Thu, Sep 3, 2020 at 3:53 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> This patch unifies style of all messages in the driver by starting them
->> with a lowercase letter and using consistent capitalization and wording
->> for all messages.
-> 
-> I didn't look at the rest (yet) but this series has a patch ordering issue.
-> Why do we first do some little, non-critical clean ups?
-> 
-> The preferred way is to arrange like:
->  - fixes that may be backported
->  - fixes that are likely not going to be backported
->  - features
->  - cleanups
-> 
-> In its turn cleanups go by severity:
->  - code affected ones (and maybe logical changers)
->  - ...
->  - commentary / indentation fixes
-> 
+On Thu, Sep 3, 2020 at 7:17 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> The MFD_CROS_EC config was a transitional Kconfig option to not break
+> current defconfigs in the kernel. Now, this is not required anymore
+> because all the defconfigs have been removed this option and migrated to
+> enable the CrOS EC parts individually.
+>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-That's a good suggestion! All patches in this version are ordered by the
-time they were created ans since none of these patches should be
-worthwhile to backport (IMO) and because majority of patches do minor
-changes, it appeared to me that it should be okay as-is.
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
 
-I agree that it should be worthwhile to reorder the patches now, after
-the series grew up a tad in regards to amount of patches. I'll change
-the order in the next version, thanks!
+> ---
+>
+>  drivers/platform/chrome/Kconfig | 10 ----------
+>  1 file changed, 10 deletions(-)
+>
+> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+> index a056031dee81..ccc23d8686e8 100644
+> --- a/drivers/platform/chrome/Kconfig
+> +++ b/drivers/platform/chrome/Kconfig
+> @@ -3,16 +3,6 @@
+>  # Platform support for Chrome OS hardware (Chromebooks and Chromeboxes)
+>  #
+>
+> -config MFD_CROS_EC
+> -       tristate "Platform support for Chrome hardware (transitional)"
+> -       select CHROME_PLATFORMS
+> -       select CROS_EC
+> -       select MFD_CROS_EC_DEV
+> -       depends on X86 || ARM || ARM64 || COMPILE_TEST
+> -       help
+> -         This is a transitional Kconfig option and will be removed after
+> -         everyone enables the parts individually.
+> -
+>  menuconfig CHROME_PLATFORMS
+>         bool "Platform support for Chrome hardware"
+>         depends on X86 || ARM || ARM64 || COMPILE_TEST
+> --
+> 2.28.0
+>
