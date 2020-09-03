@@ -2,160 +2,109 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BA1C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3669C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2649C2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7316120786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S0hCOLQ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728785AbgICP7N (ORCPT
+        id S1728501AbgICP7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:59:13 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:32257 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728210AbgICP7I (ORCPT
+        Thu, 3 Sep 2020 11:59:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbgICP73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:59:08 -0400
-IronPort-SDR: sQuBkVyHqn/Ig2AcWPmZw4NPMF5YIpMiFd9eh+DCF5gSxavyUk7Ij8sQRm8JabM9oD+n2iPbus
- Va2nNkmWngDJLytdKZonUWsUTAaYSDYmp1YuElkiaAY5ITFB0dy6CESo1aMZl0dS737tUimu4b
- 4s5d9CT8U7MLWPkCNMl6nOqBdohDsaBEbi93ADVO0pa5URhbcKaZC8oBSjeTxoCVv87F/kUf/h
- aisqRvz57yMWtHT47KHJY6ZSC1NBL/1F2vyTka8gbWwZXsKa7tolnoWk93As7d2u0nTM+7mOWT
- ypk=
-X-IronPort-AV: E=Sophos;i="5.76,387,1592899200"; 
-   d="scan'208";a="54733292"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 03 Sep 2020 07:59:07 -0800
-IronPort-SDR: tmMqlO4tN+aNPQnDfhjouRSCXhR9zxcoA5+Cd7M7kEk8lv7ZoHl5jjrxtWO8u0ZE9xGAyt5K+I
- bEEk2UzTNOMIzw23ULrJDgjZIKn6pPP2/0pVkbIRqgRzBFBYUlQ5T0JExpSt9X5s6Yv9WlalVz
- /FJa2B9Qyv4++JqDNI/xnxGddm4ybkPr7zhEXxsPenCE0glOo1ipsTAKvnQMf1KYTwu8ViMaQF
- llfotMJLS9BDBmFRe6wU+48deTY3yqeHu+ygbD+MMsDE6Ocp/7Kqer6H4JdsBPjf2x9u/zhj5G
- 18I=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <Andrew_Gabbasov@mentor.com>, <erosca@de.adit-jv.com>,
-        <digetx@gmail.com>, <jiada_wang@mentor.com>
-Subject: [PATCH v2 1/1] Input: atmel_mxt_ts - implement I2C retries
-Date:   Fri, 4 Sep 2020 00:59:04 +0900
-Message-ID: <20200903155904.17454-1-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 3 Sep 2020 11:59:29 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18641C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 08:59:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=988CY6B1yy7GRnNZ5PKCVmB7hu3+qSzVzJgqP0YBJhY=; b=S0hCOLQ+xifH2ZdFBT5u3HrSRk
+        +gUkY3pWQAL6FRRPiN/OIRCwMHyxAee0EcMJQaLJxzZdU0WHFV2/jGuNbcGeYJxW6ouj9tc8jooPO
+        r6Kw1FV2vAVcPDn1pHXqPnd4SA12xYuFj5kN2oXXQjvQoAGeY9NBaaCZM6d2iYwRY8EeZfp/O4oLF
+        UN7RNSgZlJfnsVCi8nEDYoYOuWFSMYUWF1MBzWslnDwOkvR/jbH8EFar+kAiRcKadi5/wzRwdZ/2o
+        VhjIdWooYqK3kiQntyLboAKCE7IBLHk9JjSdMeM/rj3Jy5susO4ivwW2zIfTDl/kj8f1m+PIqcv1e
+        wV+HpXBw==;
+Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDrdz-0002uE-Di; Thu, 03 Sep 2020 15:59:23 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org
+Subject: [PATCH] /dev/zero: also implement ->read
+Date:   Thu,  3 Sep 2020 17:59:22 +0200
+Message-Id: <20200903155922.1111551-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+Christophe reported a major speedup due to avoiding the iov_iter
+overhead, so just add this trivial function.  Note that /dev/zero
+already implements both an iter and non-iter writes so this just
+makes it more symmetric.
 
-Some maXTouch chips (eg mXT1386) will not respond on the first I2C request
-when they are in a sleep state. It must be retried after a delay for the
-chip to wake up.
-
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-Acked-by: Yufeng Shen <miletus@chromium.org>
-(cherry picked from ndyer/linux/for-upstream commit 63fd7a2cd03c3a572a5db39c52f4856819e1835d)
-[gdavis: Forward port and fix conflicts.]
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: return exact errno when i2c_transfer & i2c_master_send fails]
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 45 ++++++++++++++++--------
- 1 file changed, 30 insertions(+), 15 deletions(-)
+ drivers/char/mem.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index a2189739e30f..5d4cb15d21dc 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -196,6 +196,7 @@ enum t100_type {
- #define MXT_CRC_TIMEOUT		1000	/* msec */
- #define MXT_FW_RESET_TIME	3000	/* msec */
- #define MXT_FW_CHG_TIMEOUT	300	/* msec */
-+#define MXT_WAKEUP_TIME		25	/* msec */
- 
- /* Command to unlock bootloader */
- #define MXT_UNLOCK_CMD_MSB	0xaa
-@@ -626,6 +627,7 @@ static int __mxt_read_reg(struct i2c_client *client,
- 	struct i2c_msg xfer[2];
- 	u8 buf[2];
- 	int ret;
-+	bool retry = false;
- 
- 	buf[0] = reg & 0xff;
- 	buf[1] = (reg >> 8) & 0xff;
-@@ -642,17 +644,22 @@ static int __mxt_read_reg(struct i2c_client *client,
- 	xfer[1].len = len;
- 	xfer[1].buf = val;
- 
--	ret = i2c_transfer(client->adapter, xfer, 2);
--	if (ret == 2) {
--		ret = 0;
--	} else {
--		if (ret >= 0)
--			ret = -EIO;
--		dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
--			__func__, ret);
-+retry_read:
-+	ret = i2c_transfer(client->adapter, xfer, ARRAY_SIZE(xfer));
-+	if (ret != ARRAY_SIZE(xfer)) {
-+		if (!retry) {
-+			dev_dbg(&client->dev, "%s: i2c retry\n", __func__);
-+			msleep(MXT_WAKEUP_TIME);
-+			retry = true;
-+			goto retry_read;
-+		} else {
-+			dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
-+				__func__, ret);
-+			return ret < 0 ? ret : -EIO;
-+		}
- 	}
- 
--	return ret;
-+	return 0;
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index abd4ffdc8cdebc..1dc99ab158457a 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -726,6 +726,27 @@ static ssize_t read_iter_zero(struct kiocb *iocb, struct iov_iter *iter)
+ 	return written;
  }
  
- static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
-@@ -661,6 +668,7 @@ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
- 	u8 *buf;
- 	size_t count;
- 	int ret;
-+	bool retry = false;
- 
- 	count = len + 2;
- 	buf = kmalloc(count, GFP_KERNEL);
-@@ -671,14 +679,21 @@ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
- 	buf[1] = (reg >> 8) & 0xff;
- 	memcpy(&buf[2], val, len);
- 
-+retry_write:
- 	ret = i2c_master_send(client, buf, count);
--	if (ret == count) {
--		ret = 0;
-+	if (ret != count) {
-+		if (!retry) {
-+			dev_dbg(&client->dev, "%s: i2c retry\n", __func__);
-+			msleep(MXT_WAKEUP_TIME);
-+			retry = true;
-+			goto retry_write;
-+		} else {
-+			dev_err(&client->dev, "%s: i2c send failed (%d)\n",
-+				__func__, ret);
-+			ret = ret < 0 ? ret : -EIO;
-+		}
- 	} else {
--		if (ret >= 0)
--			ret = -EIO;
--		dev_err(&client->dev, "%s: i2c send failed (%d)\n",
--			__func__, ret);
-+		ret = 0;
- 	}
- 
- 	kfree(buf);
++static ssize_t read_zero(struct file *file, char __user *buf,
++			 size_t count, loff_t *ppos)
++{
++	size_t cleared = 0;
++
++	while (count) {
++		size_t chunk = min_t(size_t, count, PAGE_SIZE);
++
++		if (clear_user(buf + cleared, chunk))
++			return cleared ? cleared : -EFAULT;
++		cleared += chunk;
++		count -= chunk;
++
++		if (signal_pending(current))
++			return cleared ? cleared : -ERESTARTSYS;
++		cond_resched();
++	}
++
++	return cleared;
++}
++
+ static int mmap_zero(struct file *file, struct vm_area_struct *vma)
+ {
+ #ifndef CONFIG_MMU
+@@ -921,6 +942,7 @@ static const struct file_operations zero_fops = {
+ 	.llseek		= zero_lseek,
+ 	.write		= write_zero,
+ 	.read_iter	= read_iter_zero,
++	.read		= read_zero,
+ 	.write_iter	= write_iter_zero,
+ 	.mmap		= mmap_zero,
+ 	.get_unmapped_area = get_unmapped_area_zero,
 -- 
-2.17.1
+2.28.0
 
