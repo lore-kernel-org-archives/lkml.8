@@ -5,65 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945D2C2D0E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52103C2D0E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 716BC20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3110A20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:38:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="eZp0Qn5M"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="d3WTta76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbgICUiF (ORCPT
+        id S1729329AbgICUiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:38:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35526 "EHLO
+        Thu, 3 Sep 2020 16:38:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729521AbgICUcE (ORCPT
+        with ESMTP id S1729522AbgICUcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 16:32:04 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F04C8C0619CD
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:31:17 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id a14so2921737qtp.15
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:31:17 -0700 (PDT)
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 083DAC061265
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:31:20 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id a5so4011838ybh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:31:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=68EGgksazPQQWa43NBSs0j4GgDFQhp/Me0oPJzuOsN8=;
-        b=eZp0Qn5Mm2ShJ/tgYPaRj85Z8VUBs6dHqTbSeVpz2aQ8IT+Uz4kserb5rwYgZd+Cwn
-         k2U+ck7Y8IZ7th793kOmXJc6g2Scr4a/vKCka7ANnMO/AT2KQRxNxsShvwTyA6E/o15O
-         8XCzrDDKDRTJp06/9WX1NT36pZOKiIAYs8XK258isaAUZqWQPMWg3npOPIjN8aYcapWI
-         WU48aFUbK0L92YPeWiJOPtw+mesK+nnkKQOrrHUndl452ziz+R2DMO5rDIQ6Y/Qeev2g
-         D8xzJzY5mttEMiic8gwiUfR2vdI8Fq8Jp2U+kdDYpIEFsu+h2dtY2vP50lgzUL6pYFDU
-         IdPw==
+        bh=v4aEDtr6bLZLPmR/ra6D5NVXgPqHTR+q2+p+53rP8YU=;
+        b=d3WTta769MJh+Bo0VzFx1dIubRn1F3/0OsgdvpRIABs/0F8aoQ0QxN6GC6ogiN8YAt
+         1n2fy7ycG6neE8i4JP6mcoL5+gOWppxCnH2U8kbhGmk3Ke0U/7qP7lute7a6H0uDoYhQ
+         dWVIqp9Xjw2Q1WEklB8eqrGPTTy0VYDaAb7Vj5vkDxGtzwmgFWOj15UwJBAbJ05tl1sN
+         Q4rZl0DzGVRAuAw5PJyrACjWBxr1NbGCE0oN5TR+pUi+Dq3TH5paoF63RYX5l7QEOrpB
+         +a+BflxQgXchm/xsTBNIInkXUZW2NMgvFiHC7w8tScjlytwkaK3yal7TbaDvFzX+VZKt
+         2LRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=68EGgksazPQQWa43NBSs0j4GgDFQhp/Me0oPJzuOsN8=;
-        b=qpOFDmYCnSGqI1Vpud9jQsKreCIK9vpfx4syDmov6ZFE1/JWOa4Q71eNKSmtEP8L1r
-         xLtfLGfpbAPEbVmj1epBMBy33ue31PCbBlaDkKORNqjQ8aI+Irt3j9CotuYfC5JpZn/F
-         9GawG7wRlP5XnXyK5vEFxwApUoAlDO/jRAngWycHitbOUeZnk124u6XtC5C+O56gOHli
-         747maIST0gnSzN5BoI4gGbS+mTAvW70vr/lv+aSqU3MZk2SKShYZbrzcNBddYCKPzxV2
-         kqIudi8OjzHyQklUQZ8uHSoMkSb/J0+fZn0M2p0Rsd0MIP1ScfTmPLFmnzJfBGK1snho
-         RPxQ==
-X-Gm-Message-State: AOAM533Iu7n3OBLQ47x9omKa0qyagFQvJ+Dhty8O8gpqS6Hzb8hymcy9
-        FXueYDU0sQ1Ozydvko+tSyEoQM+zFzGbYuhmWo8=
-X-Google-Smtp-Source: ABdhPJwx0iA2/+FKVoOyHKkwFqQMq9Y1dKXGtr+TJBEQ96YIr3ynGB1QxnludpQgb3sJv844+nrU8x6OIjTFKfziaBI=
+        bh=v4aEDtr6bLZLPmR/ra6D5NVXgPqHTR+q2+p+53rP8YU=;
+        b=eKr0pKxk8kbhW4fDl6/pfpSIie3Dw081SftsrphRqAUbSBRRUM+eFNTVtELIjyNhOr
+         nvTl1oNMh4Rjr9eSL8msSEyP271OKqAvowBnuaV4bFJ3hpN8gWVzwqjcpVo8i3VSssXO
+         wrqWCZUuiGYj1ilbvnHRiCdCgohN5cSXtSpLgV5HtDYcaMIK0B3kNlaycP/gOL3ZmCwu
+         Jb0afcMOlcbp5t3Cu/dowPWXgueCtu+P7o5zTupsnIcz9L+Nj4CFrEnOqdwh5E1I8hhK
+         gt9PYe6cLSR6hAlXG8+QhGt11t0MQP9b9v3IYfuJDXPIVmXVZbENu9sqfwahl+QQsZ2k
+         Kjxg==
+X-Gm-Message-State: AOAM530tm5xUuflZFXb6Ct/7rZvvFWTsk55pMDVdbf36kTC1neUn1E3i
+        vzCerzUfQQvQ4h5G1hB9e70SehjZtgfOKOHIUWQ=
+X-Google-Smtp-Source: ABdhPJxLcteMiXx6yxIAtF7C6LDsd43v+S+v/BljrbTvv0EuuMtNnvGzhvJa2qGTBh5Tw0uOlOWuvZqeImKd2fr7SwI=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
- (user=samitolvanen job=sendgmr) by 2002:a0c:e543:: with SMTP id
- n3mr3539594qvm.11.1599165077148; Thu, 03 Sep 2020 13:31:17 -0700 (PDT)
-Date:   Thu,  3 Sep 2020 13:30:36 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a25:a366:: with SMTP id
+ d93mr5081717ybi.415.1599165079173; Thu, 03 Sep 2020 13:31:19 -0700 (PDT)
+Date:   Thu,  3 Sep 2020 13:30:37 -0700
 In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
-Message-Id: <20200903203053.3411268-12-samitolvanen@google.com>
+Message-Id: <20200903203053.3411268-13-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20200624203200.78870-1-samitolvanen@google.com> <20200903203053.3411268-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH v2 11/28] kbuild: lto: postpone objtool
+Subject: [PATCH v2 12/28] kbuild: lto: limit inlining
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Masahiro Yamada <masahiroy@kernel.org>,
         Will Deacon <will@kernel.org>
@@ -84,123 +83,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With LTO, LLVM bitcode won't be compiled into native code until
-modpost_link, or modfinal for modules. This change postpones calls
-to objtool until after these steps.
+This change limits function inlining across translation unit boundaries
+in order to reduce the binary size with LTO. The -import-instr-limit
+flag defines a size limit, as the number of LLVM IR instructions, for
+importing functions from other TUs, defaulting to 100.
 
+Based on testing with arm64 defconfig, we found that a limit of 5 is a
+reasonable compromise between performance and binary size, reducing the
+size of a stripped vmlinux by 11%.
+
+Suggested-by: George Burgess IV <gbiv@google.com>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/Kconfig              |  2 +-
- scripts/Makefile.build    |  2 ++
- scripts/Makefile.modfinal | 24 ++++++++++++++++++++++--
- scripts/link-vmlinux.sh   | 23 ++++++++++++++++++++++-
- 4 files changed, 47 insertions(+), 4 deletions(-)
+ Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 71392e4a8900..7a418907e686 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -599,7 +599,7 @@ config LTO_CLANG
- 	depends on $(success,$(NM) --help | head -n 1 | grep -qi llvm)
- 	depends on $(success,$(AR) --help | head -n 1 | grep -qi llvm)
- 	depends on ARCH_SUPPORTS_LTO_CLANG
--	depends on !FTRACE_MCOUNT_RECORD
-+	depends on HAVE_OBJTOOL_MCOUNT || !(X86_64 && DYNAMIC_FTRACE)
- 	depends on !KASAN
- 	depends on !GCOV_KERNEL
- 	select LTO
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index c348e6d6b436..b8f1f0d65a73 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -218,6 +218,7 @@ cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),
- endif # USE_RECORDMCOUNT
+diff --git a/Makefile b/Makefile
+index 2752be67b460..c69e07bd506a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -917,6 +917,10 @@ else
+ CC_FLAGS_LTO_CLANG := -flto
+ endif
+ CC_FLAGS_LTO_CLANG += -fvisibility=default
++
++# Limit inlining across translation units to reduce binary size
++LD_FLAGS_LTO_CLANG := -mllvm -import-instr-limit=5
++KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
+ endif
  
- ifdef CONFIG_STACK_VALIDATION
-+ifndef CONFIG_LTO_CLANG
- ifneq ($(SKIP_STACK_VALIDATION),1)
- 
- __objtool_obj := $(objtree)/tools/objtool/objtool
-@@ -253,6 +254,7 @@ objtool_obj = $(if $(patsubst y%,, \
- 	$(__objtool_obj))
- 
- endif # SKIP_STACK_VALIDATION
-+endif # CONFIG_LTO_CLANG
- endif # CONFIG_STACK_VALIDATION
- 
- # Rebuild all objects when objtool changes, or is enabled/disabled.
-diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-index 1005b147abd0..909bd509edb4 100644
---- a/scripts/Makefile.modfinal
-+++ b/scripts/Makefile.modfinal
-@@ -34,10 +34,30 @@ ifdef CONFIG_LTO_CLANG
- # With CONFIG_LTO_CLANG, reuse the object file we compiled for modpost to
- # avoid a second slow LTO link
- prelink-ext := .lto
--endif
-+
-+# ELF processing was skipped earlier because we didn't have native code,
-+# so let's now process the prelinked binary before we link the module.
-+
-+ifdef CONFIG_STACK_VALIDATION
-+ifneq ($(SKIP_STACK_VALIDATION),1)
-+cmd_ld_ko_o +=								\
-+	$(objtree)/tools/objtool/objtool				\
-+		$(if $(CONFIG_UNWINDER_ORC),orc generate,check)		\
-+		--module						\
-+		$(if $(CONFIG_FRAME_POINTER),,--no-fp)			\
-+		$(if $(CONFIG_GCOV_KERNEL),--no-unreachable,)		\
-+		$(if $(CONFIG_RETPOLINE),--retpoline,)			\
-+		$(if $(CONFIG_X86_SMAP),--uaccess,)			\
-+		$(if $(USE_OBJTOOL_MCOUNT),--mcount,)			\
-+		$(@:.ko=$(prelink-ext).o);
-+
-+endif # SKIP_STACK_VALIDATION
-+endif # CONFIG_STACK_VALIDATION
-+
-+endif # CONFIG_LTO_CLANG
- 
- quiet_cmd_ld_ko_o = LD [M]  $@
--      cmd_ld_ko_o =                                                     \
-+      cmd_ld_ko_o +=                                                     \
- 	$(LD) -r $(KBUILD_LDFLAGS)					\
- 		$(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)		\
- 		$(addprefix -T , $(KBUILD_LDS_MODULE))			\
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 3e99a19b9195..a352a5ad9ef7 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -93,8 +93,29 @@ objtool_link()
- {
- 	local objtoolopt;
- 
-+	if [ "${CONFIG_LTO_CLANG} ${CONFIG_STACK_VALIDATION}" = "y y" ]; then
-+		# Don't perform vmlinux validation unless explicitly requested,
-+		# but run objtool on vmlinux.o now that we have an object file.
-+		if [ -n "${CONFIG_UNWINDER_ORC}" ]; then
-+			objtoolopt="orc generate"
-+		else
-+			objtoolopt="check"
-+		fi
-+
-+		if [ -n ${USE_OBJTOOL_MCOUNT} ]; then
-+			objtoolopt="${objtoolopt} --mcount"
-+		fi
-+	fi
-+
- 	if [ -n "${CONFIG_VMLINUX_VALIDATION}" ]; then
--		objtoolopt="check --vmlinux"
-+		if [ -z "${objtoolopt}" ]; then
-+			objtoolopt="check --vmlinux"
-+		else
-+			objtoolopt="${objtoolopt} --vmlinux"
-+		fi
-+	fi
-+
-+	if [ -n "${objtoolopt}" ]; then
- 		if [ -z "${CONFIG_FRAME_POINTER}" ]; then
- 			objtoolopt="${objtoolopt} --no-fp"
- 		fi
+ ifdef CONFIG_LTO
 -- 
 2.28.0.402.g5ffc5be6b7-goog
 
