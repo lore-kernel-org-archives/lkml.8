@@ -2,102 +2,132 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06F9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E87C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84C3A20775
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78DA208B3
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:48:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fv+ELy+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgICPry (ORCPT
+        id S1728655AbgICPsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:47:54 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:26991 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728494AbgICPrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:47:47 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4Bj4vL0kzwzB09ZF;
-        Thu,  3 Sep 2020 17:47:42 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id UBMjKOF82pyz; Thu,  3 Sep 2020 17:47:41 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bj4vK623nzB09ZD;
-        Thu,  3 Sep 2020 17:47:41 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D6B978B80B;
-        Thu,  3 Sep 2020 17:47:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 8kHWzQ3JESNL; Thu,  3 Sep 2020 17:47:39 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 79F9B8B803;
-        Thu,  3 Sep 2020 17:47:34 +0200 (CEST)
-Subject: Re: [PATCH 14/14] powerpc: remove address space overrides using
- set_fs()
-To:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org
-Cc:     linux-arch@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Alexey Dobriyan <adobriyan@gmail.com>
-References: <20200903142242.925828-1-hch@lst.de>
- <20200903142242.925828-15-hch@lst.de>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <e7d2d231-5658-a4d3-0495-2af62f34aa34@csgroup.eu>
-Date:   Thu, 3 Sep 2020 17:43:25 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 3 Sep 2020 11:48:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbgICPsp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 11:48:45 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20549C061244;
+        Thu,  3 Sep 2020 08:48:45 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id w5so3761098wrp.8;
+        Thu, 03 Sep 2020 08:48:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OPj9d30CAARqGx+bikPSsEnUWXOcRX7Mxe5aMa8ahCE=;
+        b=Fv+ELy+K8p1TzkuFzHURU8ULrabjLy/GA+gzrVslyT9VOYD/zzcxlCRarBUx24WKrr
+         j5Zr67a5zMLy7bfYFOfwlVMhz0E9e2ZT1vbriU7KZwnmIfrI+Vvgk/eBjxqJ5U60a7n8
+         8qXKrhUyNu+W5a3GLvwkqwPEcZoFmGBsfTsLAVqsgZS0j4L2k9ovbYqObZHMpPMoDAYG
+         bxUfk47jrPQJXDXj//x4zgv++hYgtm05jEFuPueuVK4kNvaM8ywNZyeWHHhRnP7ji5oW
+         Gy4tjKcYBr1v93ZJTIKinzVU8XXLMKlP2jGlJ2JLd3wPZMjg1lyL3vvEmGRB9/0ZM7C2
+         5w3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OPj9d30CAARqGx+bikPSsEnUWXOcRX7Mxe5aMa8ahCE=;
+        b=pyMrYsylGaximgyfSuMKHOn0tuQubyOhOTd8Cj+UV1UkMTgqZuNZugeko+v7q7nr7e
+         W0Sehy9DP8gqkZwp1ui9EAI1/OlAMBb++lUqaOGG80sDY62fdo4LNzsLDFZiDY5g58AW
+         OZaR4hA+6xqZQ9qBiYSUam055fQQxPx2Vqhf0gpcoMwO+5aEiHdsj7qJJ1Em7mFOQwDz
+         ujRWKJEw4QiObvFsYh5YhDb9C97ZMtmwc8KN4lQJyvKLG7InRwMYI+cV37nF3OXMeDEM
+         72ZIZ9RMtu0PilRiyx4rCBAkN8i6T3YkOEwnnmaUEpvXBtq+rzM/QFJ/D8wEdY+yePAt
+         o9vQ==
+X-Gm-Message-State: AOAM532IGRibxczIFO6RSQ7JnptE4SP+eSm6DHaaasL2Rzh672/y57CR
+        J6ACyea/j168Qxdvgng6Tc0=
+X-Google-Smtp-Source: ABdhPJzoUWMY/x3nAOJw9Pgg2IVnTKHb2nEiyUuAELHzrPUZ4WLFr/xkMOPobcmcW7xqeTvOZwlHsA==
+X-Received: by 2002:adf:f78c:: with SMTP id q12mr3157273wrp.6.1599148123691;
+        Thu, 03 Sep 2020 08:48:43 -0700 (PDT)
+Received: from medion (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id x24sm5546173wrd.53.2020.09.03.08.48.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 08:48:42 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
+Date:   Thu, 3 Sep 2020 16:48:41 +0100
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>, devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alan Cox <alan@linux.intel.com>
+Subject: Re: [PATCH] staging: media: atomisp: Fix error path in lm3554_probe()
+Message-ID: <20200903154841.w5rppm325jobimud@medion>
+References: <20200902184207.479525-1-alex.dewar90@gmail.com>
+ <20200903121134.GB8299@kadam>
 MIME-Version: 1.0
-In-Reply-To: <20200903142242.925828-15-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903121134.GB8299@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Good point about the timer!
 
-
-Le 03/09/2020 à 16:22, Christoph Hellwig a écrit :
-> Stop providing the possibility to override the address space using
-> set_fs() now that there is no need for that any more.
+> >  
+> > -	err = lm3554_gpio_init(client);
+> > -	if (err) {
+> > +	ret = lm3554_gpio_init(client);
+> > +	if (ret) {
+> >  		dev_err(&client->dev, "gpio request/direction_output fail");
+> > -		goto fail2;
+> > +		goto err_cleanup_entity;
+> >  	}
+> >  	return atomisp_register_i2c_module(&flash->sd, NULL, LED_FLASH);
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
+> If atomisp_register_i2c_module() fails then we need to call
+> lm3554_gpio_uninit(client) and do other cleanup.
 
+I'm probably showing my ignorance here, but I can't see what cleanup we
+need. Inside lm3554_gpio_init we have:
 
->   
-> -static inline int __access_ok(unsigned long addr, unsigned long size,
-> -			mm_segment_t seg)
-> +static inline bool __access_ok(unsigned long addr, unsigned long size)
->   {
-> -	if (addr > seg.seg)
-> -		return 0;
-> -	return (size == 0 || size - 1 <= seg.seg - addr);
-> +	if (addr >= TASK_SIZE_MAX)
-> +		return false;
-> +	return size == 0 || size <= TASK_SIZE_MAX - addr;
->   }
+	ret = gpiod_direction_output(pdata->gpio_reset, 0);
+	if (ret < 0)
+		return ret;
+	dev_info(&client->dev, "flash led reset successfully\n");
 
-You don't need to test size == 0 anymore. It used to be necessary 
-because of the 'size - 1', as size is unsigned.
+	if (!pdata->gpio_strobe)
+		return -EINVAL;
 
-Now you can directly do
+	ret = gpiod_direction_output(pdata->gpio_strobe, 0);
+	if (ret < 0)
+		return ret;
 
-	return size <= TASK_SIZE_MAX - addr;
+I'm not sure how you "undo" a call to gpiod_direction_output, but I'm
+thinking you won't need to do anything because it should be ok to leave
+a gpio to output 0... right?
 
-If size is 0, this will always be true (because you already know that 
-addr is not >= TASK_SIZE_MAX
+Alex
 
-Christophe
+> 
+> > -fail2:
+> > +
+> > +err_cleanup_entity:
+> >  	media_entity_cleanup(&flash->sd.entity);
+> > +err_free_ctrl_handler:
+> >  	v4l2_ctrl_handler_free(&flash->ctrl_handler);
+> 
+> regards,
+> dan carpenter
+> 
