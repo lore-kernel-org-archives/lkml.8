@@ -2,132 +2,285 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 797CDC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4991C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5684A20786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:24:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r3C8iJa/"
+	by mail.kernel.org (Postfix) with ESMTP id 67AB920773
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgICCYM (ORCPT
+        id S1728034AbgICCZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 22:24:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgICCYK (ORCPT
+        Wed, 2 Sep 2020 22:25:32 -0400
+Received: from labrats.qualcomm.com ([199.106.110.90]:3836 "EHLO
+        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgICCZb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 22:24:10 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD12C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 19:24:09 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id m5so832117pgj.9
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 19:24:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+ci7Fc8hANsIQl3UJ1FDEFNu8O8UW/KCOsl06HsUOVg=;
-        b=r3C8iJa/LztMiNjFMz00NaLYxph+jZTflE3JatK63I0JgzZ+CHDMK/MEzY5njHH0IU
-         5TTifFqY4S0I6bSeTydCnT2v2vzhxQDSKMU5ZeHJIVwQV54Nl30CGrdwnBXt+3RR/cK/
-         Jo2nB+1/wFjxp2ELqshU2DTX71Bm4BKaPei5QuQp2XNhHpTN9bXBSVHU5UBF87/z5CMM
-         LH+8hp3PJywM3nBiSoLTxOyyOJMiA8Duq+b9uYfi7/SsgvHI5fV0lX05fJTaBqO2GyfC
-         DMlZrd9j+PNgA510LnIRcWVmAYPbhzvoojpPnW1IlSl7CW7tSgCOiR657K0JY2ltXDak
-         Ibvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+ci7Fc8hANsIQl3UJ1FDEFNu8O8UW/KCOsl06HsUOVg=;
-        b=CG99hWAyuZHKGgra2Tp9CAZQ4fnKnSVxYJKWwjeA90rd+i0Cjnwzb3K5MFB8Mmi+8R
-         c/1i/IYsFLuWeiL7+El+NXhUhnPquJncH2Spi+l9c7xeC49D1I9O+3QR4q374wGKO/Al
-         5InXvhJ/lP1Y0DgLy2Wx2ZZzbSRYys3C6xsvcW/6ZHvmcTxmpQ8YA1fWXiHHNlxS+mcV
-         O+JXcca1ibDEcLNNuriacwp7ssD8tGdcBz+seXMXhodRuUETPvdkv0aV9kXspBPH6ITl
-         b5EmNTJMDHUEYr5xksg0MTM0GzKl96uXFxRBhSmC0CJCzmmn0LAgGjv8Zt/qifdaYB51
-         O4sg==
-X-Gm-Message-State: AOAM5335jR2l9tj46uSo/3UUkk8yKdy5yAFeCePUuT3MxQo16MUEvw+i
-        6yRNRpU9GHg0ma5pRMP7kAVM9Q==
-X-Google-Smtp-Source: ABdhPJz2IKRiAksQzIZvOPytb1hJAgyVqSzSqfcq62V8UteQFaCDtXg+u960o+qng6UXYQhxCVLBBw==
-X-Received: by 2002:a62:6dc1:: with SMTP id i184mr1420075pfc.57.1599099848759;
-        Wed, 02 Sep 2020 19:24:08 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id 194sm907586pfy.44.2020.09.02.19.23.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Sep 2020 19:24:08 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 10:23:54 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     peterz@infradead.org
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ingo Molnar <mingo@redhat.com>, Wei Li <liwei391@huawei.com>,
-        Al Grant <al.grant@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kemeng Shi <shikemeng@huawei.com>,
-        Ian Rogers <irogers@google.com>,
-        John Garry <john.garry@huawei.com>,
-        Stephane Eranian <eranian@google.com>,
-        Nick Gasson <nick.gasson@arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Steve MacLean <Steve.MacLean@Microsoft.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] perf tsc: Add rdtsc() for Arm64
-Message-ID: <20200903022354.GA1583@leoy-ThinkPad-X240s>
-References: <20200902132131.36304-1-leo.yan@linaro.org>
- <20200902132131.36304-3-leo.yan@linaro.org>
- <20200902134805.GI1362448@hirez.programming.kicks-ass.net>
+        Wed, 2 Sep 2020 22:25:31 -0400
+IronPort-SDR: 1BTrOD9lwhZFNhGA64FlbLP0y+SZAaM7K94QcUAw5i20PXwBaBUiBiiconrwOTGG6t2M3fe6wa
+ tu70AKMZ1uwA3jtQSRSCZ4Pd+Ce3iygcQ1ewuczduDLJ3u7q2+2q2se9xwiyVRsNdMtPkfUoxA
+ ddk+aF6VlG4IoAgDZosgdbFtKRwMQZoY/vYrDIEZksDwkjQAvofMRUbZO9f5PFGf43RCQXGKR5
+ 4z/xHRyZ+A/E0on9LAsGKNVu1AfkMHb3HZFBM1lB1qIq6Catchq7BwS570n6WmxKi8YL/KTtka
+ XAw=
+X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
+   d="scan'208";a="29130859"
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by labrats.qualcomm.com with ESMTP; 02 Sep 2020 19:24:40 -0700
+Received: from wsp769891wss.qualcomm.com (HELO stor-presley.qualcomm.com) ([192.168.140.85])
+  by ironmsg04-sd.qualcomm.com with ESMTP; 02 Sep 2020 19:24:39 -0700
+Received: by stor-presley.qualcomm.com (Postfix, from userid 359480)
+        id 44EB4215EA; Wed,  2 Sep 2020 19:24:39 -0700 (PDT)
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, ziqichen@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support),
+        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support)
+Subject: [PATCH v2 1/2] scsi: ufs: Abort tasks before clear them from doorbell
+Date:   Wed,  2 Sep 2020 19:24:31 -0700
+Message-Id: <1599099873-32579-2-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599099873-32579-1-git-send-email-cang@codeaurora.org>
+References: <1599099873-32579-1-git-send-email-cang@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902134805.GI1362448@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+To recovery non-fatal errors, no full reset is required, err_handler only
+clears those pending TRs/TMRs so that scsi layer can re-issue them. In
+current err_handler, TRs are directly cleared from UFS host's doorbell but
+not aborted from device side. However, according to the UFSHCI JEDEC spec,
+the host software shall use UTP Transfer Request List CLear Register to
+clear a task from UFS host's doorbell only when a UTP Transfer Request is
+expected to not be completed, e.g. when the host software receives a
+“FUNCTION COMPLETE” Task Management response which means a Transfer Request
+was aborted. To follow the UFSHCI JEDEC spec, in err_handler, aborts one TR
+before clearing it from doorbell.
 
-On Wed, Sep 02, 2020 at 03:48:05PM +0200, Peter Zijlstra wrote:
-> On Wed, Sep 02, 2020 at 02:21:27PM +0100, Leo Yan wrote:
-> > The system register CNTVCT_EL0 can be used to retrieve the counter from
-> > user space.  Add rdtsc() for Arm64.
-> 
-> > +u64 rdtsc(void)
-> > +{
-> > +	u64 val;
-> 
-> Would it make sense to put a comment in that this counter is/could-be
-> 'short' ? Because unlike x86-TSC, this thing isn't architecturally
-> specified to be 64bits wide.
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Acked-by: Stanley Chu <stanley.chu@mediatek.com>
+---
+ drivers/scsi/ufs/ufshcd.c | 143 ++++++++++++++++++++++++++--------------------
+ 1 file changed, 81 insertions(+), 62 deletions(-)
 
-Will add below comments:
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 06e2439..72afe12 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -238,6 +238,7 @@ static int ufshcd_setup_hba_vreg(struct ufs_hba *hba, bool on);
+ static int ufshcd_setup_vreg(struct ufs_hba *hba, bool on);
+ static inline int ufshcd_config_vreg_hpm(struct ufs_hba *hba,
+ 					 struct ufs_vreg *vreg);
++static int ufshcd_try_to_abort_task(struct ufs_hba *hba, int tag);
+ static int ufshcd_wb_buf_flush_enable(struct ufs_hba *hba);
+ static int ufshcd_wb_buf_flush_disable(struct ufs_hba *hba);
+ static int ufshcd_wb_ctrl(struct ufs_hba *hba, bool enable);
+@@ -5666,8 +5667,8 @@ static void ufshcd_err_handler(struct work_struct *work)
+ {
+ 	struct ufs_hba *hba;
+ 	unsigned long flags;
+-	u32 err_xfer = 0;
+-	u32 err_tm = 0;
++	bool err_xfer = false;
++	bool err_tm = false;
+ 	int err = 0;
+ 	int tag;
+ 	bool needs_reset = false;
+@@ -5743,7 +5744,7 @@ static void ufshcd_err_handler(struct work_struct *work)
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 	/* Clear pending transfer requests */
+ 	for_each_set_bit(tag, &hba->outstanding_reqs, hba->nutrs) {
+-		if (ufshcd_clear_cmd(hba, tag)) {
++		if (ufshcd_try_to_abort_task(hba, tag)) {
+ 			err_xfer = true;
+ 			goto lock_skip_pending_xfer_clear;
+ 		}
+@@ -6495,7 +6496,7 @@ static void ufshcd_set_req_abort_skip(struct ufs_hba *hba, unsigned long bitmap)
+ }
+ 
+ /**
+- * ufshcd_abort - abort a specific command
++ * ufshcd_try_to_abort_task - abort a specific task
+  * @cmd: SCSI command pointer
+  *
+  * Abort the pending command in device by sending UFS_ABORT_TASK task management
+@@ -6504,6 +6505,80 @@ static void ufshcd_set_req_abort_skip(struct ufs_hba *hba, unsigned long bitmap)
+  * issued. To avoid that, first issue UFS_QUERY_TASK to check if the command is
+  * really issued and then try to abort it.
+  *
++ * Returns zero on success, non-zero on failure
++ */
++static int ufshcd_try_to_abort_task(struct ufs_hba *hba, int tag)
++{
++	struct ufshcd_lrb *lrbp = &hba->lrb[tag];
++	int err = 0;
++	int poll_cnt;
++	u8 resp = 0xF;
++	u32 reg;
++
++	for (poll_cnt = 100; poll_cnt; poll_cnt--) {
++		err = ufshcd_issue_tm_cmd(hba, lrbp->lun, lrbp->task_tag,
++				UFS_QUERY_TASK, &resp);
++		if (!err && resp == UPIU_TASK_MANAGEMENT_FUNC_SUCCEEDED) {
++			/* cmd pending in the device */
++			dev_err(hba->dev, "%s: cmd pending in the device. tag = %d\n",
++				__func__, tag);
++			break;
++		} else if (!err && resp == UPIU_TASK_MANAGEMENT_FUNC_COMPL) {
++			/*
++			 * cmd not pending in the device, check if it is
++			 * in transition.
++			 */
++			dev_err(hba->dev, "%s: cmd at tag %d not pending in the device.\n",
++				__func__, tag);
++			reg = ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
++			if (reg & (1 << tag)) {
++				/* sleep for max. 200us to stabilize */
++				usleep_range(100, 200);
++				continue;
++			}
++			/* command completed already */
++			dev_err(hba->dev, "%s: cmd at tag %d successfully cleared from DB.\n",
++				__func__, tag);
++			goto out;
++		} else {
++			dev_err(hba->dev,
++				"%s: no response from device. tag = %d, err %d\n",
++				__func__, tag, err);
++			if (!err)
++				err = resp; /* service response error */
++			goto out;
++		}
++	}
++
++	if (!poll_cnt) {
++		err = -EBUSY;
++		goto out;
++	}
++
++	err = ufshcd_issue_tm_cmd(hba, lrbp->lun, lrbp->task_tag,
++			UFS_ABORT_TASK, &resp);
++	if (err || resp != UPIU_TASK_MANAGEMENT_FUNC_COMPL) {
++		if (!err) {
++			err = resp; /* service response error */
++			dev_err(hba->dev, "%s: issued. tag = %d, err %d\n",
++				__func__, tag, err);
++		}
++		goto out;
++	}
++
++	err = ufshcd_clear_cmd(hba, tag);
++	if (err)
++		dev_err(hba->dev, "%s: Failed clearing cmd at tag %d, err %d\n",
++			__func__, tag, err);
++
++out:
++	return err;
++}
++
++/**
++ * ufshcd_abort - scsi host template eh_abort_handler callback
++ * @cmd: SCSI command pointer
++ *
+  * Returns SUCCESS/FAILED
+  */
+ static int ufshcd_abort(struct scsi_cmnd *cmd)
+@@ -6513,8 +6588,6 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
+ 	unsigned long flags;
+ 	unsigned int tag;
+ 	int err = 0;
+-	int poll_cnt;
+-	u8 resp = 0xF;
+ 	struct ufshcd_lrb *lrbp;
+ 	u32 reg;
+ 
+@@ -6583,63 +6656,9 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
+ 		goto out;
+ 	}
+ 
+-	for (poll_cnt = 100; poll_cnt; poll_cnt--) {
+-		err = ufshcd_issue_tm_cmd(hba, lrbp->lun, lrbp->task_tag,
+-				UFS_QUERY_TASK, &resp);
+-		if (!err && resp == UPIU_TASK_MANAGEMENT_FUNC_SUCCEEDED) {
+-			/* cmd pending in the device */
+-			dev_err(hba->dev, "%s: cmd pending in the device. tag = %d\n",
+-				__func__, tag);
+-			break;
+-		} else if (!err && resp == UPIU_TASK_MANAGEMENT_FUNC_COMPL) {
+-			/*
+-			 * cmd not pending in the device, check if it is
+-			 * in transition.
+-			 */
+-			dev_err(hba->dev, "%s: cmd at tag %d not pending in the device.\n",
+-				__func__, tag);
+-			reg = ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
+-			if (reg & (1 << tag)) {
+-				/* sleep for max. 200us to stabilize */
+-				usleep_range(100, 200);
+-				continue;
+-			}
+-			/* command completed already */
+-			dev_err(hba->dev, "%s: cmd at tag %d successfully cleared from DB.\n",
+-				__func__, tag);
+-			goto out;
+-		} else {
+-			dev_err(hba->dev,
+-				"%s: no response from device. tag = %d, err %d\n",
+-				__func__, tag, err);
+-			if (!err)
+-				err = resp; /* service response error */
+-			goto out;
+-		}
+-	}
+-
+-	if (!poll_cnt) {
+-		err = -EBUSY;
+-		goto out;
+-	}
+-
+-	err = ufshcd_issue_tm_cmd(hba, lrbp->lun, lrbp->task_tag,
+-			UFS_ABORT_TASK, &resp);
+-	if (err || resp != UPIU_TASK_MANAGEMENT_FUNC_COMPL) {
+-		if (!err) {
+-			err = resp; /* service response error */
+-			dev_err(hba->dev, "%s: issued. tag = %d, err %d\n",
+-				__func__, tag, err);
+-		}
+-		goto out;
+-	}
+-
+-	err = ufshcd_clear_cmd(hba, tag);
+-	if (err) {
+-		dev_err(hba->dev, "%s: Failed clearing cmd at tag %d, err %d\n",
+-			__func__, tag, err);
++	err = ufshcd_try_to_abort_task(hba, tag);
++	if (err)
+ 		goto out;
+-	}
+ 
+ 	spin_lock_irqsave(host->host_lock, flags);
+ 	__ufshcd_transfer_req_compl(hba, (1UL << tag));
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-According to ARM DDI 0487F.c, from Armv8.0 to Armv8.5 inclusive, the
-system counter is at least 56 bits wide; from Armv8.6, the counter must
-be 64 bits wide.  So the system counter could be less than 64 bits wide
-and it is attributed with the flag 'cap_user_time_short' is true.
-
-Thanks for reviewing,
-Leo
-
-> 
-> > +	asm volatile("mrs %0, cntvct_el0" : "=r" (val));
-> > +
-> > +	return val;
-> > +}
-> > -- 
-> > 2.17.1
-> > 
