@@ -2,391 +2,138 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F80FC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C0FC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4828620716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7541E20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:47:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SeV7+tdh"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Hld+nvYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbgICOqn (ORCPT
+        id S1729323AbgICOrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:46:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35486 "EHLO
+        Thu, 3 Sep 2020 10:47:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729312AbgICOZk (ORCPT
+        with ESMTP id S1729308AbgICOZh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:25:40 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 893C0C0619C1;
-        Thu,  3 Sep 2020 07:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=H9LiSk3VW66BJvk8MGYUzX7IDxBQyB4GAu79K5qvsYw=; b=SeV7+tdh51fSsA/VycSsm7I2ka
-        gr2sXoBJ/TcoePUZIzl7WlCelcoejzYRVEEJ0zdayO66MXIoy2lt5tLCAETU4I4rxF5t4tz6KMpLs
-        rk0EC6GQSaG767I9c9lqN8e/+VCwzxGkfmPtfP8bdr/x2jJwDrmrUNyDF8/uNrTK2es0A1gahorO1
-        on9nC6XQQA24Jf+LRPyH/6qRVbdp4zYnSYooAAf6qcZubUdcEMjeLlfQoH2La0+cv6XOcaRW9FnUZ
-        lifwJiQTQyfweYsdoq3s5yoQ+bY2ujWa0s83YMDLAFp+yA/DXeII+Sg2uNUA2XznmrGfxyqWLqqCw
-        7BlZjkEg==;
-Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDq8h-0004cA-3m; Thu, 03 Sep 2020 14:22:59 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 12/14] x86: remove address space overrides using set_fs()
-Date:   Thu,  3 Sep 2020 16:22:40 +0200
-Message-Id: <20200903142242.925828-13-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200903142242.925828-1-hch@lst.de>
-References: <20200903142242.925828-1-hch@lst.de>
+        Thu, 3 Sep 2020 10:25:37 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3450BC0611E1
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 07:23:01 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y17so2004804lfa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 07:23:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=O/z6sRcm/w3Gq8tyci41HnHcIsT/GCvCxeftWXJE3ZM=;
+        b=Hld+nvYkZKgt0X3+OpEeMXJhLN4SNaQYMvUr7kv8tw+aY0UpEhoAwv4V8pgi4SSJ2H
+         MS0NMaV+HXyKOyijf8Jfnzzt+XnwgGnbRVdaDBTnnuCb94tTx6mpw46euxE22JBBvwGw
+         bX5kmq9SSzO2dMF9YyvSoS2iNRHFGTjTpHnwQH9Tny80Y/wTWeDwaBjazfnVp62L1PZY
+         d1ffElPpl1Gzi1F2mSu59qmoYxS/BO7YWQp+Duj3mHgBaOmDqmtd3kDSD9vgGhT7PuOT
+         pByXoVovDnxO+xK3Ai3jNII0arq5wBAMfabJzQ3mViHkzqHkHjsfLv4rgizikRXBrkia
+         evgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=O/z6sRcm/w3Gq8tyci41HnHcIsT/GCvCxeftWXJE3ZM=;
+        b=IJlm3oC2Wgo8qz7qfvst6TSJZTey9F8EtE2yqimr5ob8QoDMtnMhmE6ibL83MWL9tU
+         Wi2EERmHA0hKripUQtKpKzvCmJDTUSH7F0rU+bK0MdtSFGy/Zzvjv/Ly2zVUbJMwE9am
+         K1KTJQx9P7zZ88QF+BkuOuBkAMICRWwuvPPrVYv0mn0YKRkRe4wvBNvIm0BEisulc78Y
+         cC8hTvq6CQiWX6ipzZDtR/Q9aZJ417J0uxBdFh3C53yiR0d/W+GF9ZL7g01j1Zm4/fhG
+         hZJwLS0kK9sWr+ZNldGWfa3YpDaZ9/MOqmcFR+qDXHcskuEC1CILpcxwRH1h9oCW4dV6
+         vbYQ==
+X-Gm-Message-State: AOAM5321+0BNErgXAB1rp7AlhQ23c5x72agNnKu270U+uzSq6rvsyfMl
+        bHBKYkZViW9BzziuEIvD/z3A/Q==
+X-Google-Smtp-Source: ABdhPJzpabZDHSmsRn/rqjHHltKbK/pr+mbWx6JJtKMzY8LLajUTdLpQxTCqAr5ypxTd8fG0IK1lpg==
+X-Received: by 2002:a19:8142:: with SMTP id c63mr1407517lfd.175.1599142979609;
+        Thu, 03 Sep 2020 07:22:59 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id k12sm632952ljh.95.2020.09.03.07.22.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 07:22:59 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id BE37E102212; Thu,  3 Sep 2020 17:23:00 +0300 (+03)
+Date:   Thu, 3 Sep 2020 17:23:00 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Zi Yan <ziy@nvidia.com>
+Cc:     linux-mm@kvack.org, Roman Gushchin <guro@fb.com>,
+        Rik van Riel <riel@surriel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Nellans <dnellans@nvidia.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
+Message-ID: <20200903142300.bjq2um5y5nwocvar@box>
+References: <20200902180628.4052244-1-zi.yan@sent.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902180628.4052244-1-zi.yan@sent.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stop providing the possibility to override the address space using
-set_fs() now that there is no need for that any more.  To properly
-handle the TASK_SIZE_MAX checking for 4 vs 5-level page tables on
-x86 a new alternative is introduced, which just like the one in
-entry_64.S has to use the hardcoded virtual address bits to escape
-the fact that TASK_SIZE_MAX isn't actually a constant when 5-level
-page tables are enabled.
+On Wed, Sep 02, 2020 at 02:06:12PM -0400, Zi Yan wrote:
+> From: Zi Yan <ziy@nvidia.com>
+> 
+> Hi all,
+> 
+> This patchset adds support for 1GB THP on x86_64. It is on top of
+> v5.9-rc2-mmots-2020-08-25-21-13.
+> 
+> 1GB THP is more flexible for reducing translation overhead and increasing the
+> performance of applications with large memory footprint without application
+> changes compared to hugetlb.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- arch/x86/Kconfig                   |  1 -
- arch/x86/ia32/ia32_aout.c          |  1 -
- arch/x86/include/asm/processor.h   | 11 +------
- arch/x86/include/asm/thread_info.h |  2 --
- arch/x86/include/asm/uaccess.h     | 26 +----------------
- arch/x86/kernel/asm-offsets.c      |  3 --
- arch/x86/lib/getuser.S             | 47 +++++++++++++++---------------
- arch/x86/lib/putuser.S             | 25 ++++++++--------
- 8 files changed, 39 insertions(+), 77 deletions(-)
+This statement needs a lot of justification. I don't see 1GB THP as viable
+for any workload. Opportunistic 1GB allocation is very questionable
+strategy.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index f85c13355732fe..7101ac64bb209d 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -237,7 +237,6 @@ config X86
- 	select HAVE_ARCH_KCSAN			if X86_64
- 	select X86_FEATURE_NAMES		if PROC_FS
- 	select PROC_PID_ARCH_STATUS		if PROC_FS
--	select SET_FS
- 	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
- 
- config INSTRUCTION_DECODER
-diff --git a/arch/x86/ia32/ia32_aout.c b/arch/x86/ia32/ia32_aout.c
-index ca8a657edf5977..a09fc37ead9d47 100644
---- a/arch/x86/ia32/ia32_aout.c
-+++ b/arch/x86/ia32/ia32_aout.c
-@@ -239,7 +239,6 @@ static int load_aout_binary(struct linux_binprm *bprm)
- 	(regs)->ss = __USER32_DS;
- 	regs->r8 = regs->r9 = regs->r10 = regs->r11 =
- 	regs->r12 = regs->r13 = regs->r14 = regs->r15 = 0;
--	set_fs(USER_DS);
- 	return 0;
- }
- 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 1618eeb08361a9..189573d95c3af6 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -482,10 +482,6 @@ extern unsigned int fpu_user_xstate_size;
- 
- struct perf_event;
- 
--typedef struct {
--	unsigned long		seg;
--} mm_segment_t;
--
- struct thread_struct {
- 	/* Cached TLS descriptors: */
- 	struct desc_struct	tls_array[GDT_ENTRY_TLS_ENTRIES];
-@@ -538,8 +534,6 @@ struct thread_struct {
- 	 */
- 	unsigned long		iopl_emul;
- 
--	mm_segment_t		addr_limit;
--
- 	unsigned int		sig_on_uaccess_err:1;
- 
- 	/* Floating point and extended processor state */
-@@ -785,15 +779,12 @@ static inline void spin_lock_prefetch(const void *x)
- #define INIT_THREAD  {							  \
- 	.sp0			= TOP_OF_INIT_STACK,			  \
- 	.sysenter_cs		= __KERNEL_CS,				  \
--	.addr_limit		= KERNEL_DS,				  \
- }
- 
- #define KSTK_ESP(task)		(task_pt_regs(task)->sp)
- 
- #else
--#define INIT_THREAD  {						\
--	.addr_limit		= KERNEL_DS,			\
--}
-+#define INIT_THREAD { }
- 
- extern unsigned long KSTK_ESP(struct task_struct *task);
- 
-diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-index 267701ae3d86dd..44733a4bfc4294 100644
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -102,7 +102,6 @@ struct thread_info {
- #define TIF_SYSCALL_TRACEPOINT	28	/* syscall tracepoint instrumentation */
- #define TIF_ADDR32		29	/* 32-bit address space on 64 bits */
- #define TIF_X32			30	/* 32-bit native x86-64 binary */
--#define TIF_FSCHECK		31	/* Check FS is USER_DS on return */
- 
- #define _TIF_SYSCALL_TRACE	(1 << TIF_SYSCALL_TRACE)
- #define _TIF_NOTIFY_RESUME	(1 << TIF_NOTIFY_RESUME)
-@@ -131,7 +130,6 @@ struct thread_info {
- #define _TIF_SYSCALL_TRACEPOINT	(1 << TIF_SYSCALL_TRACEPOINT)
- #define _TIF_ADDR32		(1 << TIF_ADDR32)
- #define _TIF_X32		(1 << TIF_X32)
--#define _TIF_FSCHECK		(1 << TIF_FSCHECK)
- 
- /* flags to check in __switch_to() */
- #define _TIF_WORK_CTXSW_BASE					\
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index ecefaffd15d4c8..a4ceda0510ea87 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -12,30 +12,6 @@
- #include <asm/smap.h>
- #include <asm/extable.h>
- 
--/*
-- * The fs value determines whether argument validity checking should be
-- * performed or not.  If get_fs() == USER_DS, checking is performed, with
-- * get_fs() == KERNEL_DS, checking is bypassed.
-- *
-- * For historical reasons, these macros are grossly misnamed.
-- */
--
--#define MAKE_MM_SEG(s)	((mm_segment_t) { (s) })
--
--#define KERNEL_DS	MAKE_MM_SEG(-1UL)
--#define USER_DS 	MAKE_MM_SEG(TASK_SIZE_MAX)
--
--#define get_fs()	(current->thread.addr_limit)
--static inline void set_fs(mm_segment_t fs)
--{
--	current->thread.addr_limit = fs;
--	/* On user-mode return, check fs is correct */
--	set_thread_flag(TIF_FSCHECK);
--}
--
--#define uaccess_kernel() (get_fs().seg == KERNEL_DS.seg)
--#define user_addr_max() (current->thread.addr_limit.seg)
--
- /*
-  * Test whether a block of memory is a valid user space address.
-  * Returns 0 if the range is valid, nonzero otherwise.
-@@ -93,7 +69,7 @@ static inline bool pagefault_disabled(void);
- #define access_ok(addr, size)					\
- ({									\
- 	WARN_ON_IN_IRQ();						\
--	likely(!__range_not_ok(addr, size, user_addr_max()));		\
-+	likely(!__range_not_ok(addr, size, TASK_SIZE_MAX));		\
- })
- 
- /*
-diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
-index 3ca07ad552ae0c..70b7154f4bdd62 100644
---- a/arch/x86/kernel/asm-offsets.c
-+++ b/arch/x86/kernel/asm-offsets.c
-@@ -37,9 +37,6 @@ static void __used common(void)
- 	OFFSET(TASK_stack_canary, task_struct, stack_canary);
- #endif
- 
--	BLANK();
--	OFFSET(TASK_addr_limit, task_struct, thread.addr_limit);
--
- 	BLANK();
- 	OFFSET(crypto_tfm_ctx_offset, crypto_tfm, __crt_ctx);
- 
-diff --git a/arch/x86/lib/getuser.S b/arch/x86/lib/getuser.S
-index c8a85b512796e1..94f7be4971ed04 100644
---- a/arch/x86/lib/getuser.S
-+++ b/arch/x86/lib/getuser.S
-@@ -35,10 +35,19 @@
- #include <asm/smap.h>
- #include <asm/export.h>
- 
-+#ifdef CONFIG_X86_5LEVEL
-+#define LOAD_TASK_SIZE_MINUS_N(n) \
-+	ALTERNATIVE "mov $((1 << 47) - 4096 - (n)),%rdx", \
-+		    "mov $((1 << 56) - 4096 - (n)),%rdx", X86_FEATURE_LA57
-+#else
-+#define LOAD_TASK_SIZE_MINUS_N(n) \
-+	mov $(TASK_SIZE_MAX - (n)),%_ASM_DX
-+#endif
-+
- 	.text
- SYM_FUNC_START(__get_user_1)
--	mov PER_CPU_VAR(current_task), %_ASM_DX
--	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
-+	LOAD_TASK_SIZE_MINUS_N(0)
-+	cmp %_ASM_DX,%_ASM_AX
- 	jae bad_get_user
- 	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
- 	and %_ASM_DX, %_ASM_AX
-@@ -51,15 +60,13 @@ SYM_FUNC_END(__get_user_1)
- EXPORT_SYMBOL(__get_user_1)
- 
- SYM_FUNC_START(__get_user_2)
--	add $1,%_ASM_AX
--	jc bad_get_user
--	mov PER_CPU_VAR(current_task), %_ASM_DX
--	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
-+	LOAD_TASK_SIZE_MINUS_N(1)
-+	cmp %_ASM_DX,%_ASM_AX
- 	jae bad_get_user
- 	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
--2:	movzwl -1(%_ASM_AX),%edx
-+2:	movzwl (%_ASM_AX),%edx
- 	xor %eax,%eax
- 	ASM_CLAC
- 	ret
-@@ -67,15 +74,13 @@ SYM_FUNC_END(__get_user_2)
- EXPORT_SYMBOL(__get_user_2)
- 
- SYM_FUNC_START(__get_user_4)
--	add $3,%_ASM_AX
--	jc bad_get_user
--	mov PER_CPU_VAR(current_task), %_ASM_DX
--	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
-+	LOAD_TASK_SIZE_MINUS_N(3)
-+	cmp %_ASM_DX,%_ASM_AX
- 	jae bad_get_user
- 	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
--3:	movl -3(%_ASM_AX),%edx
-+3:	movl (%_ASM_AX),%edx
- 	xor %eax,%eax
- 	ASM_CLAC
- 	ret
-@@ -84,29 +89,25 @@ EXPORT_SYMBOL(__get_user_4)
- 
- SYM_FUNC_START(__get_user_8)
- #ifdef CONFIG_X86_64
--	add $7,%_ASM_AX
--	jc bad_get_user
--	mov PER_CPU_VAR(current_task), %_ASM_DX
--	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
-+	LOAD_TASK_SIZE_MINUS_N(7)
-+	cmp %_ASM_DX,%_ASM_AX
- 	jae bad_get_user
- 	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
--4:	movq -7(%_ASM_AX),%rdx
-+4:	movq (%_ASM_AX),%rdx
- 	xor %eax,%eax
- 	ASM_CLAC
- 	ret
- #else
--	add $7,%_ASM_AX
--	jc bad_get_user_8
--	mov PER_CPU_VAR(current_task), %_ASM_DX
--	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
-+	LOAD_TASK_SIZE_MINUS_N(7)
-+	cmp %_ASM_DX,%_ASM_AX
- 	jae bad_get_user_8
- 	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
--4:	movl -7(%_ASM_AX),%edx
--5:	movl -3(%_ASM_AX),%ecx
-+4:	movl (%_ASM_AX),%edx
-+5:	movl 4(%_ASM_AX),%ecx
- 	xor %eax,%eax
- 	ASM_CLAC
- 	ret
-diff --git a/arch/x86/lib/putuser.S b/arch/x86/lib/putuser.S
-index 7c7c92db8497af..445374885153bf 100644
---- a/arch/x86/lib/putuser.S
-+++ b/arch/x86/lib/putuser.S
-@@ -31,12 +31,19 @@
-  * as they get called from within inline assembly.
-  */
- 
--#define ENTER	mov PER_CPU_VAR(current_task), %_ASM_BX
-+#ifdef CONFIG_X86_5LEVEL
-+#define LOAD_TASK_SIZE_MINUS_N(n) \
-+	ALTERNATIVE "mov $((1 << 47) - 4096 - (n)),%rbx", \
-+		    "mov $((1 << 56) - 4096 - (n)),%rbx", X86_FEATURE_LA57
-+#else
-+#define LOAD_TASK_SIZE_MINUS_N(n) \
-+	mov $(TASK_SIZE_MAX - (n)),%_ASM_BX
-+#endif
- 
- .text
- SYM_FUNC_START(__put_user_1)
--	ENTER
--	cmp TASK_addr_limit(%_ASM_BX),%_ASM_CX
-+	LOAD_TASK_SIZE_MINUS_N(0)
-+	cmp %_ASM_BX,%_ASM_CX
- 	jae .Lbad_put_user
- 	ASM_STAC
- 1:	movb %al,(%_ASM_CX)
-@@ -47,9 +54,7 @@ SYM_FUNC_END(__put_user_1)
- EXPORT_SYMBOL(__put_user_1)
- 
- SYM_FUNC_START(__put_user_2)
--	ENTER
--	mov TASK_addr_limit(%_ASM_BX),%_ASM_BX
--	sub $1,%_ASM_BX
-+	LOAD_TASK_SIZE_MINUS_N(1)
- 	cmp %_ASM_BX,%_ASM_CX
- 	jae .Lbad_put_user
- 	ASM_STAC
-@@ -61,9 +66,7 @@ SYM_FUNC_END(__put_user_2)
- EXPORT_SYMBOL(__put_user_2)
- 
- SYM_FUNC_START(__put_user_4)
--	ENTER
--	mov TASK_addr_limit(%_ASM_BX),%_ASM_BX
--	sub $3,%_ASM_BX
-+	LOAD_TASK_SIZE_MINUS_N(3)
- 	cmp %_ASM_BX,%_ASM_CX
- 	jae .Lbad_put_user
- 	ASM_STAC
-@@ -75,9 +78,7 @@ SYM_FUNC_END(__put_user_4)
- EXPORT_SYMBOL(__put_user_4)
- 
- SYM_FUNC_START(__put_user_8)
--	ENTER
--	mov TASK_addr_limit(%_ASM_BX),%_ASM_BX
--	sub $7,%_ASM_BX
-+	LOAD_TASK_SIZE_MINUS_N(7)
- 	cmp %_ASM_BX,%_ASM_CX
- 	jae .Lbad_put_user
- 	ASM_STAC
+> Design
+> =======
+> 
+> 1GB THP implementation looks similar to exiting THP code except some new designs
+> for the additional page table level.
+> 
+> 1. Page table deposit and withdraw using a new pagechain data structure:
+>    instead of one PTE page table page, 1GB THP requires 513 page table pages
+>    (one PMD page table page and 512 PTE page table pages) to be deposited
+>    at the page allocaiton time, so that we can split the page later. Currently,
+>    the page table deposit is using ->lru, thus only one page can be deposited.
+
+False. Current code can deposit arbitrary number of page tables.
+
+What can be problem to you is that these page tables tied to struct page
+of PMD page table.
+
+>    A new pagechain data structure is added to enable multi-page deposit.
+> 
+> 2. Triple mapped 1GB THP : 1GB THP can be mapped by a combination of PUD, PMD,
+>    and PTE entries. Mixing PUD an PTE mapping can be achieved with existing
+>    PageDoubleMap mechanism. To add PMD mapping, PMDPageInPUD and
+>    sub_compound_mapcount are introduced. PMDPageInPUD is the 512-aligned base
+>    page in a 1GB THP and sub_compound_mapcount counts the PMD mapping by using
+>    page[N*512 + 3].compound_mapcount.
+
+I had hard time reasoning about DoubleMap vs. rmap. Good for you if you
+get it right.
+
+> 3. Using CMA allocaiton for 1GB THP: instead of bump MAX_ORDER, it is more sane
+>    to use something less intrusive. So all 1GB THPs are allocated from reserved
+>    CMA areas shared with hugetlb. At page splitting time, the bitmap for the 1GB
+>    THP is cleared as the resulting pages can be freed via normal page free path.
+>    We can fall back to alloc_contig_pages for 1GB THP if necessary.
+> 
+
 -- 
-2.28.0
-
+ Kirill A. Shutemov
