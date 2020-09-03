@@ -2,140 +2,216 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B2DC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491BBC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 709B520767
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:09:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZIftqY/c"
+	by mail.kernel.org (Postfix) with ESMTP id 010F1207EA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:10:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgICKJV (ORCPT
+        id S1728320AbgICKKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 06:09:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgICKJQ (ORCPT
+        Thu, 3 Sep 2020 06:10:08 -0400
+Received: from regular1.263xmail.com ([211.150.70.198]:54170 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbgICKKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:09:16 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A80C061244;
-        Thu,  3 Sep 2020 03:09:15 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k15so2519479wrn.10;
-        Thu, 03 Sep 2020 03:09:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7ns1zVlmF+pwrGH9GOZCksJLi0dT9SO4rihgWhgyS68=;
-        b=ZIftqY/cOwubsKafsp3NW2i/rOoNtGD2RFfTOSEM8SHZyTef5VCKOJOUZaczY0oV9q
-         nqgYFXGgPwTXZvKjpzcWB4bdH3gFOj1gMkJoMF5uIXnot13uQH3e4nZWv9tvSRNOh83h
-         6OJizdH/oW72cYRucpa5jxu6ysQiMn2rq7ApdMnMcQTFARhyQxrjt6VdZn4TuhZDttfY
-         WGJyoITTTu0ILEjsItIEzEjAzMtwUr2kQEWxLM8uUyQ22Q55UReKnfM30ZBfElZBVNYr
-         2Jowy0eiRgZSDLBEutYJa2c+sEL4g5+qFYuBI5xIhteHzq1/J6Nf56H+Ib4NsUhDhoXk
-         MHcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7ns1zVlmF+pwrGH9GOZCksJLi0dT9SO4rihgWhgyS68=;
-        b=i5F8sce92/LtgiSaYx4pPwX5Jt0xDWazQ1uyvz4sXQUmq27xYE6G1H333rtXpsg1Tf
-         5FTvFkee5scJvghAh1P7tYSU82KczkwGXgeZAZWLr8wqGP1Sa3L3fZR+w2LC5wj99vvw
-         k541Htf6Bag88Nt98ALwxA4H4ip2HcjUcLO+o8A9W6j7bJ0zseaAAmHP8sP9w//N/5G8
-         l4uQ4xxYFswblzrDwwV1pmeNeDNyj1wxpN/XXd7bHL6CGGjy5iDn3sU2qqDr13gaANZ+
-         EFoCQN7OQpYmChWosc4sPxrahWZ9E9uwaJ2N0ecBptlGZqKucZ0l/hnaOV9tMX7jv2+7
-         v3/Q==
-X-Gm-Message-State: AOAM530bukb0mQYc8fo3Chr1+hVu2fB20gFXjSfUgsV0jRZ58T0HYma4
-        ZxY4xIvEdMwg8aC3O6Jxu4A=
-X-Google-Smtp-Source: ABdhPJz3K6K7Mh0RG8NoX33E1Z7xGzqMyQLSI0aRwAKMj2ItiAA+GRzRJtUu7nyxcAZQTy56yoJWEw==
-X-Received: by 2002:adf:f042:: with SMTP id t2mr1529695wro.385.1599127754478;
-        Thu, 03 Sep 2020 03:09:14 -0700 (PDT)
-Received: from medion (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id v3sm3541805wmh.6.2020.09.03.03.09.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 03:09:14 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
-Date:   Thu, 3 Sep 2020 11:09:12 +0100
-To:     Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] remoteproc: core: Free rvdev on error path
-Message-ID: <20200903100912.6op2fs6olrtlckr2@medion>
-References: <20200903100142.57117-1-alex.dewar90@gmail.com>
+        Thu, 3 Sep 2020 06:10:05 -0400
+Received: from localhost (unknown [192.168.167.235])
+        by regular1.263xmail.com (Postfix) with ESMTP id 2421469D;
+        Thu,  3 Sep 2020 18:02:56 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.12.120] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P22906T140608907769600S1599127375479297_;
+        Thu, 03 Sep 2020 18:02:56 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <6bb291034bbe847a99370295b139c33b>
+X-RL-SENDER: kever.yang@rock-chips.com
+X-SENDER: yk@rock-chips.com
+X-LOGIN-NAME: kever.yang@rock-chips.com
+X-FST-TO: huangtao@rock-chips.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+Subject: Re: [PATCH v2 4/6] clk: rockchip: Export some clock common APIs for
+ module drivers
+To:     Elaine Zhang <zhangqing@rock-chips.com>, heiko@sntech.de
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org, xxx@rock-chips.com,
+        xf@rock-chips.com, huangtao@rock-chips.com
+References: <20200903063147.10237-1-zhangqing@rock-chips.com>
+ <20200903063147.10237-5-zhangqing@rock-chips.com>
+From:   Kever Yang <kever.yang@rock-chips.com>
+Message-ID: <ee161596-0e21-63a6-8ed9-4ef85f237bfa@rock-chips.com>
+Date:   Thu, 3 Sep 2020 18:02:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903100142.57117-1-alex.dewar90@gmail.com>
+In-Reply-To: <20200903063147.10237-5-zhangqing@rock-chips.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 11:01:42AM +0100, Alex Dewar wrote:
-> In rpoc_handle_vdev(), rvdev is not freed properly on the error path and
-> one of the labels is misnamed. Fix this up.
 
-Actually, don't apply this. I didn't realise that device_unregister
-already frees memory. Sorry for the noise!
-
-> 
-> Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
-> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+On 2020/9/3 下午2:31, Elaine Zhang wrote:
+> This is used by the Rockchip clk driver, export it to allow that
+> driver to be compiled as a module.
+>
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 > ---
->  drivers/remoteproc/remoteproc_core.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index d4bd71f87b03..84dea43d196e 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -531,7 +531,7 @@ static int rproc_handle_vdev(struct rproc *rproc, struct fw_rsc_vdev *rsc,
->  	rvdev->dev.parent = &rproc->dev;
->  	ret = dma_copy_dma_range_map(&rvdev->dev, rproc->dev.parent);
->  	if (ret)
-> -		return ret;
-> +		goto free_rvdev;
->  	rvdev->dev.release = rproc_rvdev_release;
->  	dev_set_name(&rvdev->dev, "%s#%s", dev_name(rvdev->dev.parent), name);
->  	dev_set_drvdata(&rvdev->dev, rvdev);
-> @@ -539,7 +539,7 @@ static int rproc_handle_vdev(struct rproc *rproc, struct fw_rsc_vdev *rsc,
->  	ret = device_register(&rvdev->dev);
->  	if (ret) {
->  		put_device(&rvdev->dev);
-> -		return ret;
-> +		goto free_rvdev;
->  	}
->  	/* Make device dma capable by inheriting from parent's capabilities */
->  	set_dma_ops(&rvdev->dev, get_dma_ops(rproc->dev.parent));
-> @@ -556,7 +556,7 @@ static int rproc_handle_vdev(struct rproc *rproc, struct fw_rsc_vdev *rsc,
->  	for (i = 0; i < rsc->num_of_vrings; i++) {
->  		ret = rproc_parse_vring(rvdev, rsc, i);
->  		if (ret)
-> -			goto free_rvdev;
-> +			goto unregister_dev;
->  	}
->  
->  	/* remember the resource offset*/
-> @@ -581,8 +581,10 @@ static int rproc_handle_vdev(struct rproc *rproc, struct fw_rsc_vdev *rsc,
->  unwind_vring_allocations:
->  	for (i--; i >= 0; i--)
->  		rproc_free_vring(&rvdev->vring[i]);
-> -free_rvdev:
-> +unregister_dev:
->  	device_unregister(&rvdev->dev);
-> +free_rvdev:
-> +	kfree(rvdev);
->  	return ret;
->  }
->  
-> -- 
-> 2.28.0
-> 
+>   drivers/clk/rockchip/clk.c | 52 ++++++++++++++++++++++----------------
+>   1 file changed, 30 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
+> index b51f320e5733..b7664224e64a 100644
+> --- a/drivers/clk/rockchip/clk.c
+> +++ b/drivers/clk/rockchip/clk.c
+> @@ -359,8 +359,9 @@ static struct clk *rockchip_clk_register_factor_branch(const char *name,
+>   	return hw->clk;
+>   }
+>   
+> -struct rockchip_clk_provider * __init rockchip_clk_init(struct device_node *np,
+> -			void __iomem *base, unsigned long nr_clks)
+> +struct rockchip_clk_provider *rockchip_clk_init(struct device_node *np,
+> +						void __iomem *base,
+> +						unsigned long nr_clks)
+>   {
+>   	struct rockchip_clk_provider *ctx;
+>   	struct clk **clk_table;
+> @@ -392,14 +393,16 @@ struct rockchip_clk_provider * __init rockchip_clk_init(struct device_node *np,
+>   	kfree(ctx);
+>   	return ERR_PTR(-ENOMEM);
+>   }
+> +EXPORT_SYMBOL(rockchip_clk_init);
+>   
+> -void __init rockchip_clk_of_add_provider(struct device_node *np,
+> -				struct rockchip_clk_provider *ctx)
+> +void rockchip_clk_of_add_provider(struct device_node *np,
+> +				  struct rockchip_clk_provider *ctx)
+>   {
+>   	if (of_clk_add_provider(np, of_clk_src_onecell_get,
+>   				&ctx->clk_data))
+>   		pr_err("%s: could not register clk provider\n", __func__);
+>   }
+> +EXPORT_SYMBOL(rockchip_clk_of_add_provider);
+>   
+>   void rockchip_clk_add_lookup(struct rockchip_clk_provider *ctx,
+>   			     struct clk *clk, unsigned int id)
+> @@ -407,8 +410,9 @@ void rockchip_clk_add_lookup(struct rockchip_clk_provider *ctx,
+>   	if (ctx->clk_data.clks && id)
+>   		ctx->clk_data.clks[id] = clk;
+>   }
+> +EXPORT_SYMBOL(rockchip_clk_add_lookup);
+>   
+> -void __init rockchip_clk_register_plls(struct rockchip_clk_provider *ctx,
+> +void rockchip_clk_register_plls(struct rockchip_clk_provider *ctx,
+>   				struct rockchip_pll_clock *list,
+>   				unsigned int nr_pll, int grf_lock_offset)
+>   {
+> @@ -431,11 +435,11 @@ void __init rockchip_clk_register_plls(struct rockchip_clk_provider *ctx,
+>   		rockchip_clk_add_lookup(ctx, clk, list->id);
+>   	}
+>   }
+> +EXPORT_SYMBOL(rockchip_clk_register_plls);
+>   
+> -void __init rockchip_clk_register_branches(
+> -				      struct rockchip_clk_provider *ctx,
+> -				      struct rockchip_clk_branch *list,
+> -				      unsigned int nr_clk)
+> +void rockchip_clk_register_branches(struct rockchip_clk_provider *ctx,
+> +				    struct rockchip_clk_branch *list,
+> +				    unsigned int nr_clk)
+>   {
+>   	struct clk *clk = NULL;
+>   	unsigned int idx;
+> @@ -564,14 +568,15 @@ void __init rockchip_clk_register_branches(
+>   		rockchip_clk_add_lookup(ctx, clk, list->id);
+>   	}
+>   }
+> -
+> -void __init rockchip_clk_register_armclk(struct rockchip_clk_provider *ctx,
+> -			unsigned int lookup_id,
+> -			const char *name, const char *const *parent_names,
+> -			u8 num_parents,
+> -			const struct rockchip_cpuclk_reg_data *reg_data,
+> -			const struct rockchip_cpuclk_rate_table *rates,
+> -			int nrates)
+> +EXPORT_SYMBOL(rockchip_clk_register_branches);
+> +
+> +void rockchip_clk_register_armclk(struct rockchip_clk_provider *ctx,
+> +				  unsigned int lookup_id,
+> +				  const char *name, const char *const *parent_names,
+> +				  u8 num_parents,
+> +				  const struct rockchip_cpuclk_reg_data *reg_data,
+> +				  const struct rockchip_cpuclk_rate_table *rates,
+> +				  int nrates)
+>   {
+>   	struct clk *clk;
+>   
+> @@ -586,9 +591,10 @@ void __init rockchip_clk_register_armclk(struct rockchip_clk_provider *ctx,
+>   
+>   	rockchip_clk_add_lookup(ctx, clk, lookup_id);
+>   }
+> +EXPORT_SYMBOL(rockchip_clk_register_armclk);
+>   
+> -void __init rockchip_clk_protect_critical(const char *const clocks[],
+> -					  int nclocks)
+> +void rockchip_clk_protect_critical(const char *const clocks[],
+> +				   int nclocks)
+>   {
+>   	int i;
+>   
+> @@ -600,6 +606,7 @@ void __init rockchip_clk_protect_critical(const char *const clocks[],
+>   			clk_prepare_enable(clk);
+>   	}
+>   }
+> +EXPORT_SYMBOL(rockchip_clk_protect_critical);
+>   
+>   static void __iomem *rst_base;
+>   static unsigned int reg_restart;
+> @@ -619,10 +626,10 @@ static struct notifier_block rockchip_restart_handler = {
+>   	.priority = 128,
+>   };
+>   
+> -void __init
+> +void
+>   rockchip_register_restart_notifier(struct rockchip_clk_provider *ctx,
+> -					       unsigned int reg,
+> -					       void (*cb)(void))
+> +				   unsigned int reg,
+> +				   void (*cb)(void))
+>   {
+>   	int ret;
+>   
+> @@ -634,3 +641,4 @@ rockchip_register_restart_notifier(struct rockchip_clk_provider *ctx,
+>   		pr_err("%s: cannot register restart handler, %d\n",
+>   		       __func__, ret);
+>   }
+> +EXPORT_SYMBOL(rockchip_register_restart_notifier);
+
+
+This looks good to me, so
+
+Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
+
+Thanks,
+
+- Kever
+
+
+
