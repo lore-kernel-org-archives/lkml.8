@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F27C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CC6C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 881D720786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B9F20786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="u8iCRRQv"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="FxZYS6z3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgICPST (ORCPT
+        id S1728583AbgICLb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:18:19 -0400
-Received: from crapouillou.net ([89.234.176.41]:51696 "EHLO crapouillou.net"
+        Thu, 3 Sep 2020 07:31:56 -0400
+Received: from crapouillou.net ([89.234.176.41]:51138 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728458AbgICLdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:33:32 -0400
+        id S1728562AbgICL3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:29:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599132389; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1599132370; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MzaZBt+Vyi1bRqVISe2Fhrcj5nalR7mOXK01fT+I730=;
-        b=u8iCRRQvzhTJetNnCDlzS4aOGpt9kMtxOzQtSUhUSS2708Uf/R1hUN9yNoUEzxH9j8Wurs
-        bP70nLXTelzEqs3l15brpmwIMzH8VMQP0sGzQ5B44n0Af2Kziq6zlHcFO9bbroNYRUbjcc
-        aOcSVghkpsh25/9qc43DoY6iNOOh1tM=
+        bh=ruSiYGMYEYwNR6DS0j0tVkBt7LK6N4xlExna60GJosA=;
+        b=FxZYS6z3pPyZLRrUjh2dW2tB5f2tjvTCsiK/chiWBa/qXenSG+eYjMmtI66CraPCt3V2Ar
+        fu+8Mhe20Q9WGLKBy/kMAeqWTuvZ1iEf8F9CITOWigjXBmDiXsNDu9Vn6QAjG47KG6l3T6
+        VqobcZ0NBnJeO4Bg5XZ946SGd9K0G7Y=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Chen <Peter.Chen@nxp.com>,
@@ -55,9 +55,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 10/20] usb/musb: da8xx: Use pm_ptr() macro
-Date:   Thu,  3 Sep 2020 13:25:44 +0200
-Message-Id: <20200903112554.34263-11-paul@crapouillou.net>
+Subject: [PATCH 03/20] usb/host: ehci-npcm7xx: Use pm_ptr() macro
+Date:   Thu,  3 Sep 2020 13:25:37 +0200
+Message-Id: <20200903112554.34263-4-paul@crapouillou.net>
 In-Reply-To: <20200903112554.34263-1-paul@crapouillou.net>
 References: <20200903112554.34263-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -75,48 +75,47 @@ simply be discarded by the compiler.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/usb/musb/da8xx.c | 8 +++-----
+ drivers/usb/host/ehci-npcm7xx.c | 8 +++-----
  1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
-index 1c023c0091c4..7a13463006e3 100644
---- a/drivers/usb/musb/da8xx.c
-+++ b/drivers/usb/musb/da8xx.c
-@@ -598,8 +598,7 @@ static int da8xx_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/drivers/usb/host/ehci-npcm7xx.c b/drivers/usb/host/ehci-npcm7xx.c
+index adaf8fb4b459..6b5a7a873e01 100644
+--- a/drivers/usb/host/ehci-npcm7xx.c
++++ b/drivers/usb/host/ehci-npcm7xx.c
+@@ -37,8 +37,7 @@ static const char hcd_name[] = "npcm7xx-ehci";
+ 
+ static struct hc_driver __read_mostly ehci_npcm7xx_hc_driver;
  
 -#ifdef CONFIG_PM_SLEEP
--static int da8xx_suspend(struct device *dev)
-+static int __maybe_unused da8xx_suspend(struct device *dev)
+-static int ehci_npcm7xx_drv_suspend(struct device *dev)
++static int __maybe_unused ehci_npcm7xx_drv_suspend(struct device *dev)
  {
- 	int ret;
- 	struct da8xx_glue *glue = dev_get_drvdata(dev);
-@@ -612,7 +611,7 @@ static int da8xx_suspend(struct device *dev)
+ 	struct usb_hcd *hcd = dev_get_drvdata(dev);
+ 	bool do_wakeup = device_may_wakeup(dev);
+@@ -46,14 +45,13 @@ static int ehci_npcm7xx_drv_suspend(struct device *dev)
+ 	return ehci_suspend(hcd, do_wakeup);
+ }
+ 
+-static int ehci_npcm7xx_drv_resume(struct device *dev)
++static int __maybe_unused ehci_npcm7xx_drv_resume(struct device *dev)
+ {
+ 	struct usb_hcd *hcd = dev_get_drvdata(dev);
+ 
+ 	ehci_resume(hcd, false);
  	return 0;
  }
+-#endif /* CONFIG_PM_SLEEP */
  
--static int da8xx_resume(struct device *dev)
-+static int __maybe_unused da8xx_resume(struct device *dev)
- {
- 	int ret;
- 	struct da8xx_glue *glue = dev_get_drvdata(dev);
-@@ -622,7 +621,6 @@ static int da8xx_resume(struct device *dev)
- 		return ret;
- 	return phy_power_on(glue->phy);
- }
--#endif
- 
- static SIMPLE_DEV_PM_OPS(da8xx_pm_ops, da8xx_suspend, da8xx_resume);
- 
-@@ -641,7 +639,7 @@ static struct platform_driver da8xx_driver = {
- 	.remove		= da8xx_remove,
+ static SIMPLE_DEV_PM_OPS(ehci_npcm7xx_pm_ops, ehci_npcm7xx_drv_suspend,
+ 		ehci_npcm7xx_drv_resume);
+@@ -183,7 +181,7 @@ static struct platform_driver npcm7xx_ehci_hcd_driver = {
  	.driver		= {
- 		.name	= "musb-da8xx",
--		.pm = &da8xx_pm_ops,
-+		.pm = pm_ptr(&da8xx_pm_ops),
- 		.of_match_table = of_match_ptr(da8xx_id_table),
- 	},
+ 		.name = "npcm7xx-ehci",
+ 		.bus = &platform_bus_type,
+-		.pm = &ehci_npcm7xx_pm_ops,
++		.pm = pm_ptr(&ehci_npcm7xx_pm_ops),
+ 		.of_match_table = npcm7xx_ehci_id_table,
+ 	}
  };
 -- 
 2.28.0
