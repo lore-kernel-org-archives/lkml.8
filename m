@@ -2,232 +2,209 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8CAC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A82C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA49320684
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 400F3206C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:10:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kfQszv74"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgICVE0 (ORCPT
+        id S1728129AbgICVKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 17:04:26 -0400
-Received: from mga14.intel.com ([192.55.52.115]:12271 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbgICVEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 17:04:25 -0400
-IronPort-SDR: db38x+bCUr5c+xoVQ+YWvJSmymmuJWlUrJNamWeHYVEoP52cGp0m6V1HLYtiEiskIIiaGuv1f3
- WUVlF1mCBAGg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="156921410"
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="156921410"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 14:04:24 -0700
-IronPort-SDR: n5jqvCzCUHPRKYHcF5qCF3VDmpG2jioUHIXRbYpiJuWE5Hhb2fnaOY3PcYRLr44pM+1Ek1to95
- CKVlLVTnoWuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="502651305"
-Received: from lkp-server01.sh.intel.com (HELO f1af165c0d27) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Sep 2020 14:04:23 -0700
-Received: from kbuild by f1af165c0d27 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kDwP8-0000FH-NZ; Thu, 03 Sep 2020 21:04:22 +0000
-Date:   Fri, 04 Sep 2020 05:04:03 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:WIP.core/build] BUILD SUCCESS
- 6e0bf0e0e55000742a53c5f3b58f8669e0091a11
-Message-ID: <5f515a43.iWctgx0ppP53T7FS%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 3 Sep 2020 17:10:51 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:20350 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726323AbgICVKt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 17:10:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1599167447; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=+92L8rCs5Qj2hNgiOrOiCHxci4B2giXkbMRgaJdNbaU=; b=kfQszv74oVn0zCNr7Z4CWZJvOLeDvq5XbDSAuyKUzwDiO3St3AEN566BpLjShI95+GFtZpiJ
+ 6q2pc90WVL+9KmGu/IeG26EYHb5lJ28q2IiBqk5g9GkZm6nMBsyy8QrJv9OcCdSMa1rOG17B
+ ObNvod5cLFZLvQjP2dMUPcZzQ9c=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5f515bad25e1ee7586dd7e56 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 03 Sep 2020 21:10:05
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D405AC43391; Thu,  3 Sep 2020 21:10:03 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 87CC8C433C8;
+        Thu,  3 Sep 2020 21:10:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 87CC8C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     balbi@kernel.org, gregkh@linuxfoundation.org,
+        Thinh.Nguyen@synopsys.com
+Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v3] usb: dwc3: Stop active transfers before halting the controller
+Date:   Thu,  3 Sep 2020 14:09:54 -0700
+Message-Id: <20200903210954.24504-1-wcheng@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  WIP.core/build
-branch HEAD: 6e0bf0e0e55000742a53c5f3b58f8669e0091a11  x86/boot/compressed: Warn on orphan section placement
+In the DWC3 databook, for a device initiated disconnect or bus reset, the
+driver is required to send dependxfer commands for any pending transfers.
+In addition, before the controller can move to the halted state, the SW
+needs to acknowledge any pending events.  If the controller is not halted
+properly, there is a chance the controller will continue accessing stale or
+freed TRBs and buffers.
 
-elapsed time: 720m
-
-configs tested: 158
-configs skipped: 17
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                           se7206_defconfig
-mips                     loongson1b_defconfig
-sh                          lboxre2_defconfig
-mips                         rt305x_defconfig
-nios2                            alldefconfig
-sh                          polaris_defconfig
-arm                          gemini_defconfig
-arc                        nsim_700_defconfig
-arm                       cns3420vb_defconfig
-arm                         vf610m4_defconfig
-ia64                         bigsur_defconfig
-xtensa                           alldefconfig
-arm                              zx_defconfig
-microblaze                          defconfig
-mips                        vocore2_defconfig
-mips                      maltasmvp_defconfig
-powerpc                      ppc44x_defconfig
-m68k                            q40_defconfig
-m68k                       m5475evb_defconfig
-mips                 pnx8335_stb225_defconfig
-mips                             allyesconfig
-arm                          badge4_defconfig
-arm                            zeus_defconfig
-um                             i386_defconfig
-mips                         mpc30x_defconfig
-c6x                        evmc6474_defconfig
-arm                      jornada720_defconfig
-arm                       imx_v4_v5_defconfig
-sh                           se7712_defconfig
-mips                          rb532_defconfig
-sh                            hp6xx_defconfig
-arm                           h5000_defconfig
-arm                           sunxi_defconfig
-sh                           se7721_defconfig
-arm                        shmobile_defconfig
-nds32                             allnoconfig
-arm                           omap1_defconfig
-mips                  decstation_64_defconfig
-powerpc                      tqm8xx_defconfig
-mips                           gcw0_defconfig
-arm                          moxart_defconfig
-powerpc                    adder875_defconfig
-mips                           ip28_defconfig
-openrisc                         alldefconfig
-arm                          iop32x_defconfig
-sh                        sh7785lcr_defconfig
-arm                     eseries_pxa_defconfig
-arm                           sama5_defconfig
-sparc64                             defconfig
-powerpc                      pmac32_defconfig
-sh                         microdev_defconfig
-mips                          malta_defconfig
-powerpc                  mpc866_ads_defconfig
-arm                       netwinder_defconfig
-mips                            gpr_defconfig
-sh                   sh7724_generic_defconfig
-mips                           mtx1_defconfig
-arm                           stm32_defconfig
-arm                            hisi_defconfig
-microblaze                    nommu_defconfig
-arc                              allyesconfig
-sh                           se7724_defconfig
-arm                         mv78xx0_defconfig
-microblaze                      mmu_defconfig
-riscv                          rv32_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20200903
-x86_64               randconfig-a006-20200903
-x86_64               randconfig-a003-20200903
-x86_64               randconfig-a005-20200903
-x86_64               randconfig-a001-20200903
-x86_64               randconfig-a002-20200903
-i386                 randconfig-a004-20200902
-i386                 randconfig-a005-20200902
-i386                 randconfig-a006-20200902
-i386                 randconfig-a002-20200902
-i386                 randconfig-a001-20200902
-i386                 randconfig-a003-20200902
-i386                 randconfig-a004-20200903
-i386                 randconfig-a005-20200903
-i386                 randconfig-a006-20200903
-i386                 randconfig-a002-20200903
-i386                 randconfig-a001-20200903
-i386                 randconfig-a003-20200903
-x86_64               randconfig-a013-20200902
-x86_64               randconfig-a016-20200902
-x86_64               randconfig-a011-20200902
-x86_64               randconfig-a012-20200902
-x86_64               randconfig-a015-20200902
-x86_64               randconfig-a014-20200902
-i386                 randconfig-a016-20200902
-i386                 randconfig-a015-20200902
-i386                 randconfig-a011-20200902
-i386                 randconfig-a013-20200902
-i386                 randconfig-a014-20200902
-i386                 randconfig-a012-20200902
-i386                 randconfig-a016-20200903
-i386                 randconfig-a015-20200903
-i386                 randconfig-a011-20200903
-i386                 randconfig-a013-20200903
-i386                 randconfig-a014-20200903
-i386                 randconfig-a012-20200903
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a004-20200902
-x86_64               randconfig-a006-20200902
-x86_64               randconfig-a003-20200902
-x86_64               randconfig-a005-20200902
-x86_64               randconfig-a001-20200902
-x86_64               randconfig-a002-20200902
-x86_64               randconfig-a013-20200903
-x86_64               randconfig-a016-20200903
-x86_64               randconfig-a011-20200903
-x86_64               randconfig-a012-20200903
-x86_64               randconfig-a015-20200903
-x86_64               randconfig-a014-20200903
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
 
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Changes in v3:
+ - Removed DWC3_EP_ENABLED check from dwc3_gadget_stop_active_transfers()
+   as dwc3_stop_active_transfer() has a check already in place.
+ - Calling __dwc3_gadget_stop() which ensures that DWC3 interrupt events
+   are cleared, and ep0 eps are cleared for the pullup disabled case.  Not
+   required to call __dwc3_gadget_start() on pullup enable, as the
+   composite driver will execute udc_start() before calling pullup().
+
+Changes in v2:
+ - Moved cleanup code to the pullup() API to differentiate between device
+   disconnect and hibernation.
+ - Added cleanup code to the bus reset case as well.
+ - Verified the move to pullup() did not reproduce the problen using the
+   same test sequence.
+
+Verified fix by adding a check for ETIMEDOUT during the run stop call.
+Shell script writing to the configfs UDC file to trigger disconnect and
+connect.  Batch script to have PC execute data transfers over adb (ie adb
+push)  After a few iterations, we'd run into a scenario where the
+controller wasn't halted.  With the following change, no failed halts after
+many iterations.
+---
+ drivers/usb/dwc3/ep0.c    |  2 +-
+ drivers/usb/dwc3/gadget.c | 49 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 49 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
+index 59f2e8c31bd1..456aa87e8778 100644
+--- a/drivers/usb/dwc3/ep0.c
++++ b/drivers/usb/dwc3/ep0.c
+@@ -197,7 +197,7 @@ int dwc3_gadget_ep0_queue(struct usb_ep *ep, struct usb_request *request,
+ 	int				ret;
+ 
+ 	spin_lock_irqsave(&dwc->lock, flags);
+-	if (!dep->endpoint.desc) {
++	if (!dep->endpoint.desc || !dwc->pullups_connected) {
+ 		dev_err(dwc->dev, "%s: can't queue to disabled endpoint\n",
+ 				dep->name);
+ 		ret = -ESHUTDOWN;
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 3ab6f118c508..73bda7eaa773 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1516,7 +1516,7 @@ static int __dwc3_gadget_ep_queue(struct dwc3_ep *dep, struct dwc3_request *req)
+ {
+ 	struct dwc3		*dwc = dep->dwc;
+ 
+-	if (!dep->endpoint.desc) {
++	if (!dep->endpoint.desc || !dwc->pullups_connected) {
+ 		dev_err(dwc->dev, "%s: can't queue to disabled endpoint\n",
+ 				dep->name);
+ 		return -ESHUTDOWN;
+@@ -1926,6 +1926,21 @@ static int dwc3_gadget_set_selfpowered(struct usb_gadget *g,
+ 	return 0;
+ }
+ 
++static void dwc3_stop_active_transfers(struct dwc3 *dwc)
++{
++	u32 epnum;
++
++	for (epnum = 2; epnum < DWC3_ENDPOINTS_NUM; epnum++) {
++		struct dwc3_ep *dep;
++
++		dep = dwc->eps[epnum];
++		if (!dep)
++			continue;
++
++		dwc3_remove_requests(dwc, dep);
++	}
++}
++
+ static int dwc3_gadget_run_stop(struct dwc3 *dwc, int is_on, int suspend)
+ {
+ 	u32			reg;
+@@ -1971,6 +1986,8 @@ static int dwc3_gadget_run_stop(struct dwc3 *dwc, int is_on, int suspend)
+ 	return 0;
+ }
+ 
++static void __dwc3_gadget_stop(struct dwc3 *dwc);
++
+ static int dwc3_gadget_pullup(struct usb_gadget *g, int is_on)
+ {
+ 	struct dwc3		*dwc = gadget_to_dwc(g);
+@@ -1994,9 +2011,37 @@ static int dwc3_gadget_pullup(struct usb_gadget *g, int is_on)
+ 		}
+ 	}
+ 
++	/*
++	 * Synchronize and disable any further event handling while controller
++	 * is being enabled/disabled.
++	 */
++	disable_irq(dwc->irq_gadget);
+ 	spin_lock_irqsave(&dwc->lock, flags);
++
++	/* Controller is not halted until pending events are acknowledged */
++	if (!is_on) {
++		u32 count;
++
++		/*
++		 * The databook explicitly mentions for a device-initiated
++		 * disconnect sequence, the SW needs to ensure that it ends any
++		 * active transfers.
++		 */
++		dwc3_stop_active_transfers(dwc);
++		__dwc3_gadget_stop(dwc);
++
++		count = dwc3_readl(dwc->regs, DWC3_GEVNTCOUNT(0));
++		count &= DWC3_GEVNTCOUNT_MASK;
++		if (count > 0) {
++			dwc3_writel(dwc->regs, DWC3_GEVNTCOUNT(0), count);
++			dwc->ev_buf->lpos = (dwc->ev_buf->lpos + count) %
++						dwc->ev_buf->length;
++		}
++	}
++
+ 	ret = dwc3_gadget_run_stop(dwc, is_on, false);
+ 	spin_unlock_irqrestore(&dwc->lock, flags);
++	enable_irq(dwc->irq_gadget);
+ 
+ 	return ret;
+ }
+@@ -3100,6 +3145,8 @@ static void dwc3_gadget_reset_interrupt(struct dwc3 *dwc)
+ 	}
+ 
+ 	dwc3_reset_gadget(dwc);
++	/* Stop any active/pending transfers when receiving bus reset */
++	dwc3_stop_active_transfers(dwc);
+ 
+ 	reg = dwc3_readl(dwc->regs, DWC3_DCTL);
+ 	reg &= ~DWC3_DCTL_TSTCTRL_MASK;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
