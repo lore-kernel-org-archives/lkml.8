@@ -5,23 +5,23 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44578C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FD0C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2315F20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA722071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:01:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgICHBk (ORCPT
+        id S1727965AbgICHBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:01:40 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:10421 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725919AbgICHBj (ORCPT
+        Thu, 3 Sep 2020 03:01:45 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:56979 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726054AbgICHBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:01:39 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U7n-ifu_1599116494;
+        Thu, 3 Sep 2020 03:01:42 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U7n-ifu_1599116494;
 Received: from aliy80.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U7n-ifu_1599116494)
           by smtp.aliyun-inc.com(127.0.0.1);
           Thu, 03 Sep 2020 15:01:35 +0800
@@ -32,165 +32,102 @@ To:     Anshuman Khandual <anshuman.khandual@arm.com>,
         Vlastimil Babka <vbabka@suse.cz>,
         Alexander Duyck <alexander.duyck@gmail.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/4] mm/pageblock: mitigation cmpxchg false sharing in pageblock flags
-Date:   Thu,  3 Sep 2020 15:01:20 +0800
-Message-Id: <1599116482-7410-1-git-send-email-alex.shi@linux.alibaba.com>
+        Mel Gorman <mgorman@techsingularity.net>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH v4 2/4] mm/pageblock: remove false sharing in pageblock_flags
+Date:   Thu,  3 Sep 2020 15:01:21 +0800
+Message-Id: <1599116482-7410-2-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1599116482-7410-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1599116482-7410-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pageblock_flags is used as long, since every pageblock_flags is just 4
-bits, 'long' size will include 8(32bit machine) or 16 pageblocks' flags,
-that flag setting has to sync in cmpxchg with 7 or 15 other pageblock
-flags. It would cause long waiting for sync.
+Current pageblock_flags is only 4 bits, so it has to share a char size
+in cmpxchg when get set, the false sharing cause perf drop.
 
-If we could change the pageblock_flags variable as char, we could use
-char size cmpxchg, which just sync up with 2 pageblock flags. it could
-relief the false sharing in cmpxchg.
+If we incrase the bits up to 8, false sharing would gone in cmpxchg. and
+the only cost is half char per pageblock, which is half char per 128MB
+on x86, 4 chars in 1 GB.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
 ---
- include/linux/mmzone.h          |  6 +++---
+ include/linux/page-isolation.h  |  2 +-
  include/linux/pageblock-flags.h |  2 +-
- mm/page_alloc.c                 | 38 +++++++++++++++++++-------------------
- 3 files changed, 23 insertions(+), 23 deletions(-)
+ mm/page_alloc.c                 | 10 +++-------
+ 3 files changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 8379432f4f2f..be676e659fb7 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -437,7 +437,7 @@ struct zone {
- 	 * Flags for a pageblock_nr_pages block. See pageblock-flags.h.
- 	 * In SPARSEMEM, this map is stored in struct mem_section
- 	 */
--	unsigned long		*pageblock_flags;
-+	unsigned char		*pageblock_flags;
- #endif /* CONFIG_SPARSEMEM */
+diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
+index 572458016331..baa2e1ecc134 100644
+--- a/include/linux/page-isolation.h
++++ b/include/linux/page-isolation.h
+@@ -35,7 +35,7 @@ static inline bool is_migrate_isolate(int migratetype)
  
- 	/* zone_start_pfn == zone_start_paddr >> PAGE_SHIFT */
-@@ -1159,7 +1159,7 @@ struct mem_section_usage {
- 	DECLARE_BITMAP(subsection_map, SUBSECTIONS_PER_SECTION);
- #endif
- 	/* See declaration of similar field in struct zone */
--	unsigned long pageblock_flags[0];
-+	unsigned char	pageblock_flags[0];
- };
+ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+ 				 int migratetype, int flags);
+-void set_pageblock_migratetype(struct page *page, int migratetype);
++void set_pageblock_migratetype(struct page *page, unsigned char migratetype);
+ int move_freepages_block(struct zone *zone, struct page *page,
+ 				int migratetype, int *num_movable);
  
- void subsection_map_init(unsigned long pfn, unsigned long nr_pages);
-@@ -1212,7 +1212,7 @@ struct mem_section {
- extern struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
- #endif
- 
--static inline unsigned long *section_to_usemap(struct mem_section *ms)
-+static inline unsigned char *section_to_usemap(struct mem_section *ms)
- {
- 	return ms->usage->pageblock_flags;
- }
 diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
-index fff52ad370c1..d189441568eb 100644
+index d189441568eb..f785c9d6d68c 100644
 --- a/include/linux/pageblock-flags.h
 +++ b/include/linux/pageblock-flags.h
-@@ -54,7 +54,7 @@ enum pageblock_bits {
- /* Forward declaration */
- struct page;
+@@ -25,7 +25,7 @@ enum pageblock_bits {
+ 	 * Assume the bits will always align on a word. If this assumption
+ 	 * changes then get/set pageblock needs updating.
+ 	 */
+-	NR_PAGEBLOCK_BITS
++	NR_PAGEBLOCK_BITS = BITS_PER_BYTE
+ };
  
--unsigned long get_pfnblock_flags_mask(struct page *page,
-+unsigned char get_pfnblock_flags_mask(struct page *page,
- 				unsigned long pfn,
- 				unsigned long mask);
- 
+ #ifdef CONFIG_HUGETLB_PAGE
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index fab5e97dc9ca..81e96d4d9c42 100644
+index 81e96d4d9c42..3688e6b83318 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -445,7 +445,7 @@ static inline bool defer_init(int nid, unsigned long pfn, unsigned long end_pfn)
- #endif
+@@ -517,19 +517,15 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
+ 	unsigned long bitidx, byte_bitidx;
+ 	unsigned char old_byte, byte;
  
- /* Return a pointer to the bitmap storing bits affecting a block of pages */
--static inline unsigned long *get_pageblock_bitmap(struct page *page,
-+static inline unsigned char *get_pageblock_bitmap(struct page *page,
- 							unsigned long pfn)
- {
- #ifdef CONFIG_SPARSEMEM
-@@ -474,24 +474,24 @@ static inline int pfn_to_bitidx(struct page *page, unsigned long pfn)
-  * Return: pageblock_bits flags
-  */
- static __always_inline
--unsigned long __get_pfnblock_flags_mask(struct page *page,
-+unsigned char __get_pfnblock_flags_mask(struct page *page,
- 					unsigned long pfn,
- 					unsigned long mask)
- {
--	unsigned long *bitmap;
--	unsigned long bitidx, word_bitidx;
--	unsigned long word;
-+	unsigned char *bitmap;
-+	unsigned long bitidx, byte_bitidx;
-+	unsigned char byte;
- 
- 	bitmap = get_pageblock_bitmap(page, pfn);
- 	bitidx = pfn_to_bitidx(page, pfn);
--	word_bitidx = bitidx / BITS_PER_LONG;
--	bitidx &= (BITS_PER_LONG-1);
-+	byte_bitidx = bitidx / BITS_PER_BYTE;
-+	bitidx &= (BITS_PER_BYTE-1);
- 
--	word = bitmap[word_bitidx];
--	return (word >> bitidx) & mask;
-+	byte = bitmap[byte_bitidx];
-+	return (byte >> bitidx) & mask;
- }
- 
--unsigned long get_pfnblock_flags_mask(struct page *page, unsigned long pfn,
-+unsigned char get_pfnblock_flags_mask(struct page *page, unsigned long pfn,
- 					unsigned long mask)
- {
- 	return __get_pfnblock_flags_mask(page, pfn, mask);
-@@ -513,29 +513,29 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
- 					unsigned long pfn,
- 					unsigned long mask)
- {
--	unsigned long *bitmap;
--	unsigned long bitidx, word_bitidx;
--	unsigned long old_word, word;
-+	unsigned char *bitmap;
-+	unsigned long bitidx, byte_bitidx;
-+	unsigned char old_byte, byte;
- 
- 	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != 4);
+-	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != 4);
++	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != BITS_PER_BYTE);
  	BUILD_BUG_ON(MIGRATE_TYPES > (1 << PB_migratetype_bits));
  
  	bitmap = get_pageblock_bitmap(page, pfn);
  	bitidx = pfn_to_bitidx(page, pfn);
--	word_bitidx = bitidx / BITS_PER_LONG;
--	bitidx &= (BITS_PER_LONG-1);
-+	byte_bitidx = bitidx / BITS_PER_BYTE;
-+	bitidx &= (BITS_PER_BYTE-1);
+ 	byte_bitidx = bitidx / BITS_PER_BYTE;
+-	bitidx &= (BITS_PER_BYTE-1);
  
  	VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn), page);
  
- 	mask <<= bitidx;
- 	flags <<= bitidx;
- 
--	word = READ_ONCE(bitmap[word_bitidx]);
-+	byte = READ_ONCE(bitmap[byte_bitidx]);
+-	mask <<= bitidx;
+-	flags <<= bitidx;
+-
+ 	byte = READ_ONCE(bitmap[byte_bitidx]);
  	for (;;) {
--		old_word = cmpxchg(&bitmap[word_bitidx], word, (word & ~mask) | flags);
--		if (word == old_word)
-+		old_byte = cmpxchg(&bitmap[byte_bitidx], byte, (byte & ~mask) | flags);
-+		if (byte == old_byte)
- 			break;
--		word = old_word;
-+		byte = old_byte;
+ 		old_byte = cmpxchg(&bitmap[byte_bitidx], byte, (byte & ~mask) | flags);
+@@ -539,13 +535,13 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
  	}
+ }
+ 
+-void set_pageblock_migratetype(struct page *page, int migratetype)
++void set_pageblock_migratetype(struct page *page, unsigned char migratetype)
+ {
+ 	if (unlikely(page_group_by_mobility_disabled &&
+ 		     migratetype < MIGRATE_PCPTYPES))
+ 		migratetype = MIGRATE_UNMOVABLE;
+ 
+-	set_pfnblock_flags_mask(page, (unsigned long)migratetype,
++	set_pfnblock_flags_mask(page, migratetype,
+ 				page_to_pfn(page), MIGRATETYPE_MASK);
  }
  
 -- 
