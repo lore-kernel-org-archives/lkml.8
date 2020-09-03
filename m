@@ -2,159 +2,316 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB5CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC680C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26EF621527
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1CA2145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:20:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EdgePVwq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RoUq46ul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgICITv (ORCPT
+        id S1728219AbgICIUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:19:51 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53807 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725984AbgICITs (ORCPT
+        Thu, 3 Sep 2020 04:20:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgICIUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:19:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599121185;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=q764/w79QAwpfObnp5NniOdeMDqZSScA1lWzENM9RlQ=;
-        b=EdgePVwqOvozEkVAfIVXy5MigE/OK82tXvHQqo3/RQX+SUUOta6ashoIqzSKr6FwVrAjSU
-        wd+s1rFPP+UI/6DmXoYIzbi/PqCa3tPg1IJmHgJ1ptXmiBFwMPq0POAqVz52F0zWeZ3+iC
-        ZEVPt05tOBu24vi6oJet4fNLD5G4h7o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-90-EWM2E_SvNGuat0V7jAa2zA-1; Thu, 03 Sep 2020 04:19:41 -0400
-X-MC-Unique: EWM2E_SvNGuat0V7jAa2zA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B6A61DDE2;
-        Thu,  3 Sep 2020 08:19:39 +0000 (UTC)
-Received: from [10.36.114.210] (ovpn-114-210.ams2.redhat.com [10.36.114.210])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 233B081197;
-        Thu,  3 Sep 2020 08:19:34 +0000 (UTC)
-Subject: Re: [PATCH v4 1/4] mm/pageblock: mitigation cmpxchg false sharing in
- pageblock flags
-To:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1599116482-7410-1-git-send-email-alex.shi@linux.alibaba.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <fb8ae5e8-1480-fe22-6872-f2484bcadbed@redhat.com>
-Date:   Thu, 3 Sep 2020 10:19:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 3 Sep 2020 04:20:12 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C034C061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 01:20:12 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id q200so591881vke.6
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 01:20:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kIOKgbobCAauivLjjD3+5H4D5uI6eOXaqQyNwWMzaro=;
+        b=RoUq46ulZfpZ3paDBrOfHAcAMJ15GQITaSjDmtoXsPqSrrimdeqw0GpvJFItoGcvFb
+         DN3wSTWA+C16s3z582YgsfunvLAxRZDsTr7GOPi0wCItVvqXppqiaopIUqFT+5bXl9sd
+         NkA+MMJ3XTJ1YlmzoiZSSsVTJtcYmB/DDfVyCaACd0470zyZM8lVLen6FBuOPvoqkM18
+         oTXDKFLQokjO0x7S4utPI6uaxClWtFTXDqZKKH6MGw4UoXBCv/Vmgt7u9DnMt43MZ7vb
+         tDE1ikGwPpETwpaBATLHw5RLqWeWExa5U8OQfv9hnryx1WaZHqTAbZRRoASZUwwFq8hy
+         InLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kIOKgbobCAauivLjjD3+5H4D5uI6eOXaqQyNwWMzaro=;
+        b=pEmxN1oLKldevcEDrb2ykV5VfC+m27XNi2fgMNU250WMk1qF+Ylr3MjhkEb5xAUGrx
+         Q8TcugCnmgqUyiS1AJsDK9th8Q6zSA+w2/8SLnmAuGvTxZvlIKn06/yjxQbH13J7qXqg
+         dBAaJ9kULt1sBA1oUaftmD0NEoU+WBdq3jiQRRGi0OIhEHkFUyZbmlwd6AGyOnJRcfx0
+         hiPSSHoNJEPEro0bTI1dXbmJt89YYvQawnk4AmoWnMXYTMYrbhi6nyE9aCoEWG7uvNYi
+         ziZoq3u45EBX5n223DQsPF0HRhmOoo2lHbmD833HHcVDxlSNOBiuocIRUENsPqSMyWOy
+         wk8A==
+X-Gm-Message-State: AOAM532tCG094N23WRMDBsslvfq7JUqIq5McuO3RkjqTwo3rLjqNJRLt
+        eJgpVPyWW77OczskPk/m7GAg7pbyeAZGzvbcXTRlqw==
+X-Google-Smtp-Source: ABdhPJygatPCTgngzA8BfCoD0l3nfEZ9seGBOFA3kGWjYO2vX4zcfDvdTtVrBTHFloSlsoY7V3JH6u4jQTlBSAJOSyQ=
+X-Received: by 2002:a1f:e443:: with SMTP id b64mr859520vkh.17.1599121210936;
+ Thu, 03 Sep 2020 01:20:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1599116482-7410-1-git-send-email-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200903054104.228829-1-hch@lst.de> <20200903054104.228829-3-hch@lst.de>
+In-Reply-To: <20200903054104.228829-3-hch@lst.de>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 3 Sep 2020 10:19:34 +0200
+Message-ID: <CAPDyKFrkcpziGFPmSd8Kx4bzhoN6zxF1E8MagLQSa4sBmnicOg@mail.gmail.com>
+Subject: Re: [PATCH 2/9] block: add a bdev_is_partition helper
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, dm-devel@redhat.com,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        drbd-dev@lists.linbit.com, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-s390@vger.kernel.org,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        target-devel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.09.20 09:01, Alex Shi wrote:
-> pageblock_flags is used as long, since every pageblock_flags is just 4
-> bits, 'long' size will include 8(32bit machine) or 16 pageblocks' flags,
-> that flag setting has to sync in cmpxchg with 7 or 15 other pageblock
-> flags. It would cause long waiting for sync.
-> 
-> If we could change the pageblock_flags variable as char, we could use
-> char size cmpxchg, which just sync up with 2 pageblock flags. it could
-> relief the false sharing in cmpxchg.
-> 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
+On Thu, 3 Sep 2020 at 07:42, Christoph Hellwig <hch@lst.de> wrote:
+>
+> Add a littler helper to make the somewhat arcane bd_contains checks a
+> little more obvious.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Could you please
+Not sure why we have both "bd_contains" and "bd_partno", nevertheless,
+feel free to add:
 
-1. Send a cover letter and indicate the changees between versions. I
-cannot find any in my mailbox or on -mm - is there any? (also, is there
-a patch 4 ?)
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-2. Report proper performance numbers as requested, especially, over
-multiple runs. This should go into patch 1/2. Are they buried somewhere?
+Kind regards
+Uffe
 
-3. Clarify what patch 3 does: Do we actually waste 8*sizeof(long) where
-we only need 4 bits?
-
-Also, breaking stuff in patch 1 and fixing it in patch 3 is not
-acceptable. This breaks git bisect. Skimming over the patches I think
-this is the case.
-
-I am not convinced yet that we need and want this. As Alex mentioned, we
-touch pageblock flags while holding the zone lock already in most cases
--  and as Mel mentiones, updates should be rare.
-
--- 
-Thanks,
-
-David / dhildenb
-
+> ---
+>  block/blk-lib.c                 | 2 +-
+>  block/ioctl.c                   | 4 ++--
+>  block/scsi_ioctl.c              | 2 +-
+>  drivers/ide/ide-ioctls.c        | 4 ++--
+>  drivers/md/dm-table.c           | 2 +-
+>  drivers/mmc/core/block.c        | 2 +-
+>  drivers/s390/block/dasd_ioctl.c | 8 ++++----
+>  fs/nfsd/blocklayout.c           | 4 ++--
+>  include/linux/blkdev.h          | 9 +++++++--
+>  kernel/trace/blktrace.c         | 2 +-
+>  10 files changed, 22 insertions(+), 17 deletions(-)
+>
+> diff --git a/block/blk-lib.c b/block/blk-lib.c
+> index 0d1811e57ac704..e90614fd8d6a42 100644
+> --- a/block/blk-lib.c
+> +++ b/block/blk-lib.c
+> @@ -64,7 +64,7 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
+>                 return -EINVAL;
+>
+>         /* In case the discard request is in a partition */
+> -       if (bdev->bd_partno)
+> +       if (bdev_is_partition(bdev))
+>                 part_offset = bdev->bd_part->start_sect;
+>
+>         while (nr_sects) {
+> diff --git a/block/ioctl.c b/block/ioctl.c
+> index bdb3bbb253d9f8..e4af3df9d28a68 100644
+> --- a/block/ioctl.c
+> +++ b/block/ioctl.c
+> @@ -23,7 +23,7 @@ static int blkpg_do_ioctl(struct block_device *bdev,
+>                 return -EACCES;
+>         if (copy_from_user(&p, upart, sizeof(struct blkpg_partition)))
+>                 return -EFAULT;
+> -       if (bdev != bdev->bd_contains)
+> +       if (bdev_is_partition(bdev))
+>                 return -EINVAL;
+>
+>         if (p.pno <= 0)
+> @@ -94,7 +94,7 @@ static int blkdev_reread_part(struct block_device *bdev)
+>  {
+>         int ret;
+>
+> -       if (!disk_part_scan_enabled(bdev->bd_disk) || bdev != bdev->bd_contains)
+> +       if (!disk_part_scan_enabled(bdev->bd_disk) || bdev_is_partition(bdev))
+>                 return -EINVAL;
+>         if (!capable(CAP_SYS_ADMIN))
+>                 return -EACCES;
+> diff --git a/block/scsi_ioctl.c b/block/scsi_ioctl.c
+> index ef722f04f88a93..3bb4571385ce21 100644
+> --- a/block/scsi_ioctl.c
+> +++ b/block/scsi_ioctl.c
+> @@ -854,7 +854,7 @@ EXPORT_SYMBOL(scsi_cmd_ioctl);
+>
+>  int scsi_verify_blk_ioctl(struct block_device *bd, unsigned int cmd)
+>  {
+> -       if (bd && bd == bd->bd_contains)
+> +       if (bd && !bdev_is_partition(bd))
+>                 return 0;
+>
+>         if (capable(CAP_SYS_RAWIO))
+> diff --git a/drivers/ide/ide-ioctls.c b/drivers/ide/ide-ioctls.c
+> index 09491098047bff..58994da10c0664 100644
+> --- a/drivers/ide/ide-ioctls.c
+> +++ b/drivers/ide/ide-ioctls.c
+> @@ -49,7 +49,7 @@ int ide_setting_ioctl(ide_drive_t *drive, struct block_device *bdev,
+>         return err >= 0 ? put_user_long(err, arg) : err;
+>
+>  set_val:
+> -       if (bdev != bdev->bd_contains)
+> +       if (bdev_is_partition(bdev))
+>                 err = -EINVAL;
+>         else {
+>                 if (!capable(CAP_SYS_ADMIN))
+> @@ -257,7 +257,7 @@ int generic_ide_ioctl(ide_drive_t *drive, struct block_device *bdev,
+>         switch (cmd) {
+>         case HDIO_OBSOLETE_IDENTITY:
+>         case HDIO_GET_IDENTITY:
+> -               if (bdev != bdev->bd_contains)
+> +               if (bdev_is_partition(bdev))
+>                         return -EINVAL;
+>                 return ide_get_identity_ioctl(drive, cmd, argp);
+>         case HDIO_GET_NICE:
+> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> index 5edc3079e7c199..af156256e511ff 100644
+> --- a/drivers/md/dm-table.c
+> +++ b/drivers/md/dm-table.c
+> @@ -903,7 +903,7 @@ static int device_is_rq_stackable(struct dm_target *ti, struct dm_dev *dev,
+>         struct request_queue *q = bdev_get_queue(bdev);
+>
+>         /* request-based cannot stack on partitions! */
+> -       if (bdev != bdev->bd_contains)
+> +       if (bdev_is_partition(bdev))
+>                 return false;
+>
+>         return queue_is_mq(q);
+> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+> index fa313b63413547..8d3df0be0355ce 100644
+> --- a/drivers/mmc/core/block.c
+> +++ b/drivers/mmc/core/block.c
+> @@ -723,7 +723,7 @@ static int mmc_blk_check_blkdev(struct block_device *bdev)
+>          * whole block device, not on a partition.  This prevents overspray
+>          * between sibling partitions.
+>          */
+> -       if ((!capable(CAP_SYS_RAWIO)) || (bdev != bdev->bd_contains))
+> +       if (!capable(CAP_SYS_RAWIO) || bdev_is_partition(bdev))
+>                 return -EPERM;
+>         return 0;
+>  }
+> diff --git a/drivers/s390/block/dasd_ioctl.c b/drivers/s390/block/dasd_ioctl.c
+> index faaf5596e31c12..cb6427fb9f3d16 100644
+> --- a/drivers/s390/block/dasd_ioctl.c
+> +++ b/drivers/s390/block/dasd_ioctl.c
+> @@ -277,7 +277,7 @@ dasd_ioctl_format(struct block_device *bdev, void __user *argp)
+>                 dasd_put_device(base);
+>                 return -EFAULT;
+>         }
+> -       if (bdev != bdev->bd_contains) {
+> +       if (bdev_is_partition(bdev)) {
+>                 pr_warn("%s: The specified DASD is a partition and cannot be formatted\n",
+>                         dev_name(&base->cdev->dev));
+>                 dasd_put_device(base);
+> @@ -304,7 +304,7 @@ static int dasd_ioctl_check_format(struct block_device *bdev, void __user *argp)
+>         base = dasd_device_from_gendisk(bdev->bd_disk);
+>         if (!base)
+>                 return -ENODEV;
+> -       if (bdev != bdev->bd_contains) {
+> +       if (bdev_is_partition(bdev)) {
+>                 pr_warn("%s: The specified DASD is a partition and cannot be checked\n",
+>                         dev_name(&base->cdev->dev));
+>                 rc = -EINVAL;
+> @@ -362,7 +362,7 @@ static int dasd_ioctl_release_space(struct block_device *bdev, void __user *argp
+>                 rc = -EROFS;
+>                 goto out_err;
+>         }
+> -       if (bdev != bdev->bd_contains) {
+> +       if (bdev_is_partition(bdev)) {
+>                 pr_warn("%s: The specified DASD is a partition and tracks cannot be released\n",
+>                         dev_name(&base->cdev->dev));
+>                 rc = -EINVAL;
+> @@ -540,7 +540,7 @@ dasd_ioctl_set_ro(struct block_device *bdev, void __user *argp)
+>
+>         if (!capable(CAP_SYS_ADMIN))
+>                 return -EACCES;
+> -       if (bdev != bdev->bd_contains)
+> +       if (bdev_is_partition(bdev))
+>                 // ro setting is not allowed for partitions
+>                 return -EINVAL;
+>         if (get_user(intval, (int __user *)argp))
+> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+> index 311e5ce80cfc27..a07c39c94bbd03 100644
+> --- a/fs/nfsd/blocklayout.c
+> +++ b/fs/nfsd/blocklayout.c
+> @@ -170,7 +170,7 @@ nfsd4_block_proc_getdeviceinfo(struct super_block *sb,
+>                 struct nfs4_client *clp,
+>                 struct nfsd4_getdeviceinfo *gdp)
+>  {
+> -       if (sb->s_bdev != sb->s_bdev->bd_contains)
+> +       if (bdev_is_partition(sb->s_bdev))
+>                 return nfserr_inval;
+>         return nfserrno(nfsd4_block_get_device_info_simple(sb, gdp));
+>  }
+> @@ -382,7 +382,7 @@ nfsd4_scsi_proc_getdeviceinfo(struct super_block *sb,
+>                 struct nfs4_client *clp,
+>                 struct nfsd4_getdeviceinfo *gdp)
+>  {
+> -       if (sb->s_bdev != sb->s_bdev->bd_contains)
+> +       if (bdev_is_partition(sb->s_bdev))
+>                 return nfserr_inval;
+>         return nfserrno(nfsd4_block_get_device_info_scsi(sb, clp, gdp));
+>  }
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index 7575fa0aae6e5c..0006a78ebc5dde 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -1341,6 +1341,11 @@ static inline int sb_issue_zeroout(struct super_block *sb, sector_t block,
+>
+>  extern int blk_verify_command(unsigned char *cmd, fmode_t mode);
+>
+> +static inline bool bdev_is_partition(struct block_device *bdev)
+> +{
+> +       return bdev->bd_partno;
+> +}
+> +
+>  enum blk_default_limits {
+>         BLK_MAX_SEGMENTS        = 128,
+>         BLK_SAFE_MAX_SECTORS    = 255,
+> @@ -1457,7 +1462,7 @@ static inline int bdev_alignment_offset(struct block_device *bdev)
+>
+>         if (q->limits.misaligned)
+>                 return -1;
+> -       if (bdev != bdev->bd_contains)
+> +       if (bdev_is_partition(bdev))
+>                 return queue_limit_alignment_offset(&q->limits,
+>                                 bdev->bd_part->start_sect);
+>         return q->limits.alignment_offset;
+> @@ -1498,7 +1503,7 @@ static inline int bdev_discard_alignment(struct block_device *bdev)
+>  {
+>         struct request_queue *q = bdev_get_queue(bdev);
+>
+> -       if (bdev != bdev->bd_contains)
+> +       if (bdev_is_partition(bdev))
+>                 return queue_limit_discard_alignment(&q->limits,
+>                                 bdev->bd_part->start_sect);
+>         return q->limits.discard_alignment;
+> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> index 4b3a42fc3b24f1..157758a88773b9 100644
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+> @@ -527,7 +527,7 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+>          * and scsi-generic block devices we create a temporary new debugfs
+>          * directory that will be removed once the trace ends.
+>          */
+> -       if (bdev && bdev == bdev->bd_contains)
+> +       if (bdev && !bdev_is_partition(bdev))
+>                 dir = q->debugfs_dir;
+>         else
+>                 bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+> --
+> 2.28.0
+>
