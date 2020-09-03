@@ -2,217 +2,254 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BE0C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E67C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4210A2080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B7A2080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgICBCH (ORCPT
+        id S1726913AbgICBIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 21:02:07 -0400
-Received: from mga09.intel.com ([134.134.136.24]:28323 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbgICBCF (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 21:02:05 -0400
-IronPort-SDR: BBBM3Gtyuvagn/1fGo+YMVvzYTOT60+c/6si9wIg4m3jnM8eQ1JZ8GGHFYMms+PdaqzLtsvTFx
- 8L4ozkMZwdnQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="158488272"
-X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
-   d="scan'208";a="158488272"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 18:02:04 -0700
-IronPort-SDR: CK9Le5pdTXpzh6+1EFmiV27W/e1+nwzMR0KtPkhoRFmAjh8/faaW9Hk6KaMxerQYU9k218AWf9
- jMWd4325LETw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
-   d="scan'208";a="405328931"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.55])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Sep 2020 18:02:01 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH] perf stat: Turn off summary for interval mode by default
-Date:   Thu,  3 Sep 2020 09:01:13 +0800
-Message-Id: <20200903010113.32232-1-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 2 Sep 2020 21:08:16 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59724 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726312AbgICBIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 21:08:15 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3AD4555C5E467FA82849;
+        Thu,  3 Sep 2020 09:08:11 +0800 (CST)
+Received: from [10.136.114.67] (10.136.114.67) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 3 Sep 2020
+ 09:08:05 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: change i_compr_blocks of inode to atomic
+ value
+To:     Daeho Jeong <daeho43@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
+CC:     Daeho Jeong <daehojeong@google.com>
+References: <20200902062910.4061083-1-daeho43@gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <822bd3b7-4354-1c61-07c4-6a57b3616ea8@huawei.com>
+Date:   Thu, 3 Sep 2020 09:08:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200902062910.4061083-1-daeho43@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.136.114.67]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's a risk that outputting interval mode summaries by default
-breaks CSV consumers. It already broke pmu-tools/toplev.
+On 2020/9/2 14:29, Daeho Jeong wrote:
+> From: Daeho Jeong <daehojeong@google.com>
+> 
+> writepages() can be concurrently invoked for the same file by different
+> threads such as a thread fsyncing the file and a kworker kernel thread.
+> So, changing i_compr_blocks without protection is racy and we need to
+> protect it by changing it with atomic type value.
+> 
+> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+> ---
+>   fs/f2fs/f2fs.h  | 15 +++++++++------
+>   fs/f2fs/file.c  | 18 ++++++++++--------
+>   fs/f2fs/inode.c | 11 +++++++----
+>   fs/f2fs/super.c |  1 +
+>   4 files changed, 27 insertions(+), 18 deletions(-)
+> 
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index f60414805e05..633957e14944 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -801,7 +801,7 @@ struct f2fs_inode_info {
+>   	struct timespec64 i_disk_time[4];/* inode disk times */
+>   
+>   	/* for file compress */
+> -	u64 i_compr_blocks;			/* # of compressed blocks */
+> +	atomic64_t i_compr_blocks;		/* # of compressed blocks */
+>   	unsigned char i_compress_algorithm;	/* algorithm type */
+>   	unsigned char i_log_cluster_size;	/* log of cluster size */
+>   	unsigned int i_cluster_size;		/* cluster size */
+> @@ -3933,14 +3933,16 @@ static inline void set_compress_context(struct inode *inode)
+>   static inline u64 f2fs_disable_compressed_file(struct inode *inode)
+>   {
+>   	struct f2fs_inode_info *fi = F2FS_I(inode);
+> +	u64 i_compr_blocks;
+>   
+>   	if (!f2fs_compressed_file(inode))
+>   		return 0;
+>   	if (S_ISREG(inode->i_mode)) {
+>   		if (get_dirty_pages(inode))
+>   			return 1;
+> -		if (fi->i_compr_blocks)
+> -			return fi->i_compr_blocks;
+Caller doesn't care how many compr_blocks this inode has saved, so we can just
+return 1 here.
 
-So now we turn off the summary by default but we create a new
-option '--summary' to enable the summary. This is active even
-when not using CSV mode.
-
-Before:
-
-  root@kbl-ppc:~# perf stat -I1000 --interval-count 2
-  #           time             counts unit events
-       1.000265904           8,005.73 msec cpu-clock                 #    8.006 CPUs utilized
-       1.000265904                601      context-switches          #    0.075 K/sec
-       1.000265904                 10      cpu-migrations            #    0.001 K/sec
-       1.000265904                  0      page-faults               #    0.000 K/sec
-       1.000265904         66,746,521      cycles                    #    0.008 GHz
-       1.000265904         71,874,398      instructions              #    1.08  insn per cycle
-       1.000265904         13,356,781      branches                  #    1.668 M/sec
-       1.000265904            298,756      branch-misses             #    2.24% of all branches
-       2.001857667           8,012.52 msec cpu-clock                 #    8.013 CPUs utilized
-       2.001857667                164      context-switches          #    0.020 K/sec
-       2.001857667                 10      cpu-migrations            #    0.001 K/sec
-       2.001857667                  2      page-faults               #    0.000 K/sec
-       2.001857667          5,822,188      cycles                    #    0.001 GHz
-       2.001857667          2,186,170      instructions              #    0.38  insn per cycle
-       2.001857667            442,378      branches                  #    0.055 M/sec
-       2.001857667             44,750      branch-misses             #   10.12% of all branches
-
-   Performance counter stats for 'system wide':
-
-           16,018.25 msec cpu-clock                 #    7.993 CPUs utilized
-                 765      context-switches          #    0.048 K/sec
-                  20      cpu-migrations            #    0.001 K/sec
-                   2      page-faults               #    0.000 K/sec
-          72,568,709      cycles                    #    0.005 GHz
-          74,060,568      instructions              #    1.02  insn per cycle
-          13,799,159      branches                  #    0.861 M/sec
-             343,506      branch-misses             #    2.49% of all branches
-
-         2.004118489 seconds time elapsed
-
-After:
-
-  root@kbl-ppc:~# perf stat -I1000 --interval-count 2
-  #           time             counts unit events
-       1.001336393           8,013.28 msec cpu-clock                 #    8.013 CPUs utilized
-       1.001336393                 82      context-switches          #    0.010 K/sec
-       1.001336393                  8      cpu-migrations            #    0.001 K/sec
-       1.001336393                  0      page-faults               #    0.000 K/sec
-       1.001336393          4,199,121      cycles                    #    0.001 GHz
-       1.001336393          1,373,991      instructions              #    0.33  insn per cycle
-       1.001336393            270,681      branches                  #    0.034 M/sec
-       1.001336393             31,659      branch-misses             #   11.70% of all branches
-       2.003905006           8,020.52 msec cpu-clock                 #    8.021 CPUs utilized
-       2.003905006                184      context-switches          #    0.023 K/sec
-       2.003905006                  8      cpu-migrations            #    0.001 K/sec
-       2.003905006                  2      page-faults               #    0.000 K/sec
-       2.003905006          5,446,190      cycles                    #    0.001 GHz
-       2.003905006          2,312,547      instructions              #    0.42  insn per cycle
-       2.003905006            451,691      branches                  #    0.056 M/sec
-       2.003905006             37,925      branch-misses             #    8.40% of all branches
-
-  root@kbl-ppc:~# perf stat -I1000 --interval-count 2 --summary
-  #           time             counts unit events
-       1.001313128           8,013.20 msec cpu-clock                 #    8.013 CPUs utilized
-       1.001313128                 83      context-switches          #    0.010 K/sec
-       1.001313128                  8      cpu-migrations            #    0.001 K/sec
-       1.001313128                  0      page-faults               #    0.000 K/sec
-       1.001313128          4,470,950      cycles                    #    0.001 GHz
-       1.001313128          1,440,045      instructions              #    0.32  insn per cycle
-       1.001313128            283,222      branches                  #    0.035 M/sec
-       1.001313128             33,576      branch-misses             #   11.86% of all branches
-       2.003857385           8,020.34 msec cpu-clock                 #    8.020 CPUs utilized
-       2.003857385                154      context-switches          #    0.019 K/sec
-       2.003857385                  8      cpu-migrations            #    0.001 K/sec
-       2.003857385                  2      page-faults               #    0.000 K/sec
-       2.003857385          4,515,676      cycles                    #    0.001 GHz
-       2.003857385          2,180,449      instructions              #    0.48  insn per cycle
-       2.003857385            435,254      branches                  #    0.054 M/sec
-       2.003857385             31,179      branch-misses             #    7.16% of all branches
-
-   Performance counter stats for 'system wide':
-
-           16,033.53 msec cpu-clock                 #    7.992 CPUs utilized
-                 237      context-switches          #    0.015 K/sec
-                  16      cpu-migrations            #    0.001 K/sec
-                   2      page-faults               #    0.000 K/sec
-           8,986,626      cycles                    #    0.001 GHz
-           3,620,494      instructions              #    0.40  insn per cycle
-             718,476      branches                  #    0.045 M/sec
-              64,755      branch-misses             #    9.01% of all branches
-
-         2.006124542 seconds time elapsed
-
-Fixes: c7e5b328a8d4 ("perf stat: Report summary for interval mode")
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/Documentation/perf-stat.txt | 3 +++
- tools/perf/builtin-stat.c              | 8 +++++---
- tools/perf/util/stat.h                 | 1 +
- 3 files changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index c9bfefc051fb..947672fd9c70 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -416,6 +416,9 @@ counts for all hardware threads in a core but show the sum counts per
- hardware thread. This is essentially a replacement for the any bit and
- convenient for post processing.
- 
-+--summary::
-+Print summary for interval mode (-I).
-+
- EXAMPLES
- --------
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 483a28ef4ec4..fddc97cac984 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -404,7 +404,7 @@ static void read_counters(struct timespec *rs)
- {
- 	struct evsel *counter;
- 
--	if (!stat_config.summary && (read_affinity_counters(rs) < 0))
-+	if (!stat_config.stop_read_counter && (read_affinity_counters(rs) < 0))
- 		return;
- 
- 	evlist__for_each_entry(evsel_list, counter) {
-@@ -897,9 +897,9 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	if (stat_config.walltime_run_table)
- 		stat_config.walltime_run[run_idx] = t1 - t0;
- 
--	if (interval) {
-+	if (interval && stat_config.summary) {
- 		stat_config.interval = 0;
--		stat_config.summary = true;
-+		stat_config.stop_read_counter = true;
- 		init_stats(&walltime_nsecs_stats);
- 		update_stats(&walltime_nsecs_stats, t1 - t0);
- 
-@@ -1164,6 +1164,8 @@ static struct option stat_options[] = {
- 		    "Use with 'percore' event qualifier to show the event "
- 		    "counts of one hardware thread by sum up total hardware "
- 		    "threads of same physical core"),
-+	OPT_BOOLEAN(0, "summary", &stat_config.summary,
-+		       "print summary for interval mode"),
- #ifdef HAVE_LIBPFM
- 	OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
- 		"libpfm4 event selector. use 'perf list' to list available events",
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index f8778cffd941..aa3bed48511b 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -113,6 +113,7 @@ struct perf_stat_config {
- 	bool			 summary;
- 	bool			 metric_no_group;
- 	bool			 metric_no_merge;
-+	bool			 stop_read_counter;
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
--- 
-2.17.1
-
+> +		i_compr_blocks = atomic64_read(&fi->i_compr_blocks);
+> +		if (i_compr_blocks)
+> +			return i_compr_blocks;
+>   	}
+>   
+>   	fi->i_flags &= ~F2FS_COMPR_FL;
+> @@ -4057,16 +4059,17 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
+>   						u64 blocks, bool add)
+>   {
+>   	int diff = F2FS_I(inode)->i_cluster_size - blocks;
+> +	struct f2fs_inode_info *fi = F2FS_I(inode);
+>   
+>   	/* don't update i_compr_blocks if saved blocks were released */
+> -	if (!add && !F2FS_I(inode)->i_compr_blocks)
+> +	if (!add && !atomic64_read(&fi->i_compr_blocks))
+>   		return;
+>   
+>   	if (add) {
+> -		F2FS_I(inode)->i_compr_blocks += diff;
+> +		atomic64_add(diff, &fi->i_compr_blocks);
+>   		stat_add_compr_blocks(inode, diff);
+>   	} else {
+> -		F2FS_I(inode)->i_compr_blocks -= diff;
+> +		atomic64_sub(diff, &fi->i_compr_blocks);
+>   		stat_sub_compr_blocks(inode, diff);
+>   	}
+>   	f2fs_mark_inode_dirty_sync(inode, true);
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index cc7f5670390f..4e4e369b97e5 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -564,7 +564,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+>   	bool compressed_cluster = false;
+>   	int cluster_index = 0, valid_blocks = 0;
+>   	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+> -	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
+> +	bool released = !atomic64_read(&F2FS_I(dn->inode)->i_compr_blocks);
+>   
+>   	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
+>   		base = get_extra_isize(dn->inode);
+> @@ -3436,7 +3436,7 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
+>   	if (!f2fs_compressed_file(inode))
+>   		return -EINVAL;
+>   
+> -	blocks = F2FS_I(inode)->i_compr_blocks;
+> +	blocks = atomic64_read(&F2FS_I(inode)->i_compr_blocks);
+>   	return put_user(blocks, (u64 __user *)arg);
+>   }
+>   
+> @@ -3535,7 +3535,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+>   	if (ret)
+>   		goto out;
+>   
+> -	if (!F2FS_I(inode)->i_compr_blocks)
+> +	if (!atomic64_read(&F2FS_I(inode)->i_compr_blocks))
+>   		goto out;
+>   
+>   	F2FS_I(inode)->i_flags |= F2FS_IMMUTABLE_FL;
+> @@ -3588,14 +3588,15 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+>   
+>   	if (ret >= 0) {
+>   		ret = put_user(released_blocks, (u64 __user *)arg);
+> -	} else if (released_blocks && F2FS_I(inode)->i_compr_blocks) {
+> +	} else if (released_blocks &&
+> +			atomic64_read(&F2FS_I(inode)->i_compr_blocks)) {
+>   		set_sbi_flag(sbi, SBI_NEED_FSCK);
+>   		f2fs_warn(sbi, "%s: partial blocks were released i_ino=%lx "
+>   			"iblocks=%llu, released=%u, compr_blocks=%llu, "
+>   			"run fsck to fix.",
+>   			__func__, inode->i_ino, inode->i_blocks,
+>   			released_blocks,
+> -			F2FS_I(inode)->i_compr_blocks);
+> +			atomic64_read(&F2FS_I(inode)->i_compr_blocks));
+>   	}
+>   
+>   	return ret;
+> @@ -3683,7 +3684,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+>   	if (ret)
+>   		return ret;
+>   
+> -	if (F2FS_I(inode)->i_compr_blocks)
+> +	if (atomic64_read(&F2FS_I(inode)->i_compr_blocks))
+>   		goto out;
+>   
+>   	f2fs_balance_fs(F2FS_I_SB(inode), true);
+> @@ -3747,14 +3748,15 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+>   
+>   	if (ret >= 0) {
+>   		ret = put_user(reserved_blocks, (u64 __user *)arg);
+> -	} else if (reserved_blocks && F2FS_I(inode)->i_compr_blocks) {
+> +	} else if (reserved_blocks &&
+> +			atomic64_read(&F2FS_I(inode)->i_compr_blocks)) {
+>   		set_sbi_flag(sbi, SBI_NEED_FSCK);
+>   		f2fs_warn(sbi, "%s: partial blocks were released i_ino=%lx "
+>   			"iblocks=%llu, reserved=%u, compr_blocks=%llu, "
+>   			"run fsck to fix.",
+>   			__func__, inode->i_ino, inode->i_blocks,
+>   			reserved_blocks,
+> -			F2FS_I(inode)->i_compr_blocks);
+> +			atomic64_read(&F2FS_I(inode)->i_compr_blocks));
+>   	}
+>   
+>   	return ret;
+> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+> index 66969ae852b9..e86857af9699 100644
+> --- a/fs/f2fs/inode.c
+> +++ b/fs/f2fs/inode.c
+> @@ -442,7 +442,8 @@ static int do_read_inode(struct inode *inode)
+>   					(fi->i_flags & F2FS_COMPR_FL)) {
+>   		if (F2FS_FITS_IN_INODE(ri, fi->i_extra_isize,
+>   					i_log_cluster_size)) {
+> -			fi->i_compr_blocks = le64_to_cpu(ri->i_compr_blocks);
+> +			atomic64_set(&fi->i_compr_blocks,
+> +					le64_to_cpu(ri->i_compr_blocks));
+>   			fi->i_compress_algorithm = ri->i_compress_algorithm;
+>   			fi->i_log_cluster_size = ri->i_log_cluster_size;
+>   			fi->i_cluster_size = 1 << fi->i_log_cluster_size;
+> @@ -460,7 +461,7 @@ static int do_read_inode(struct inode *inode)
+>   	stat_inc_inline_inode(inode);
+>   	stat_inc_inline_dir(inode);
+>   	stat_inc_compr_inode(inode);
+> -	stat_add_compr_blocks(inode, F2FS_I(inode)->i_compr_blocks);
+> +	stat_add_compr_blocks(inode, atomic64_read(&fi->i_compr_blocks));
+>   
+>   	return 0;
+>   }
+> @@ -619,7 +620,8 @@ void f2fs_update_inode(struct inode *inode, struct page *node_page)
+>   			F2FS_FITS_IN_INODE(ri, F2FS_I(inode)->i_extra_isize,
+>   							i_log_cluster_size)) {
+>   			ri->i_compr_blocks =
+> -				cpu_to_le64(F2FS_I(inode)->i_compr_blocks);
+> +				cpu_to_le64(atomic64_read(
+> +					&F2FS_I(inode)->i_compr_blocks));
+>   			ri->i_compress_algorithm =
+>   				F2FS_I(inode)->i_compress_algorithm;
+>   			ri->i_log_cluster_size =
+> @@ -768,7 +770,8 @@ void f2fs_evict_inode(struct inode *inode)
+>   	stat_dec_inline_dir(inode);
+>   	stat_dec_inline_inode(inode);
+>   	stat_dec_compr_inode(inode);
+> -	stat_sub_compr_blocks(inode, F2FS_I(inode)->i_compr_blocks);
+> +	stat_sub_compr_blocks(inode,
+> +			atomic64_read(&F2FS_I(inode)->i_compr_blocks));
+>   
+>   	if (likely(!f2fs_cp_error(sbi) &&
+>   				!is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 83bf9a02f83f..65613500e1ab 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -1011,6 +1011,7 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
+>   
+>   	/* Initialize f2fs-specific inode info */
+>   	atomic_set(&fi->dirty_pages, 0);
+> +	atomic64_set(&fi->i_compr_blocks, 0);
+>   	init_rwsem(&fi->i_sem);
+>   	spin_lock_init(&fi->i_size_lock);
+>   	INIT_LIST_HEAD(&fi->dirty_list);
+> 
