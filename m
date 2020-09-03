@@ -2,88 +2,127 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FCAC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC93C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 599E720737
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:26:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zpge4Rik"
+	by mail.kernel.org (Postfix) with ESMTP id 1423E20737
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:27:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgICH0L (ORCPT
+        id S1728115AbgICH1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:26:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbgICH0J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:26:09 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E7DDC061244;
-        Thu,  3 Sep 2020 00:26:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=EWWIQsf92AsnU1wPkPRiPneOKZo+tZ8XWBgHZRi0+Tg=; b=Zpge4Rik4xQ8PHD/H81Z0KUgus
-        e6iZwR6i/7TybtEAEIH+7NNGUShuxwdggzsRJoQjpoZDU4MeNGGqYF2TnAGbOAuirvU0SbWopPC44
-        GvXR5IjCczpB0uhrz69i46kykSlWOstwDDfWIPgZMuLYTrbDQCjm8hHt9t1KxvWQFhSX69Nh/YtBH
-        JU6bIF5VTZoRTArjnz1zP/kiUL1lN9dur4YTjbJyQkK7BkeXl6Sre6O+0mraPXZiTkFJriDg4G0oB
-        i35oLQLO+6Jow0moGRyeCb1krvNt9DRYhhZRkNlFr9ETsx8Z8SUkiKzTvLCIUq8VWSo4AcrBfibPG
-        xgYuu1dw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDjdG-0000U9-7I; Thu, 03 Sep 2020 07:26:06 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DD4D9300F7A;
-        Thu,  3 Sep 2020 09:26:04 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C799F2007E86C; Thu,  3 Sep 2020 09:26:04 +0200 (CEST)
-Date:   Thu, 3 Sep 2020 09:26:04 +0200
-From:   peterz@infradead.org
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Subject: Re: [PATCH -v2] scipts/tags.sh: Add custom sort order
-Message-ID: <20200903072604.GT1362448@hirez.programming.kicks-ass.net>
-References: <20200805102550.GO2674@hirez.programming.kicks-ass.net>
- <20200806120438.GG35926@hirez.programming.kicks-ass.net>
- <CAK7LNAQE2jPUQJUa1yi7+=w--Jj-wwnGVR2hyPQZxR7Yp9odBA@mail.gmail.com>
- <20200902162649.GL1362448@hirez.programming.kicks-ass.net>
- <CAK7LNAS+0QtvgX1b77Y51cuMQ-eK4cKb8rebTQ=Ug3F2rkjP2g@mail.gmail.com>
+        Thu, 3 Sep 2020 03:27:32 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:50426 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726022AbgICH1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 03:27:30 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4Bhsp66rdGzB09ZZ;
+        Thu,  3 Sep 2020 09:27:26 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id rH9lzYdCHhM9; Thu,  3 Sep 2020 09:27:26 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bhsp64yDPzB09ZW;
+        Thu,  3 Sep 2020 09:27:26 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B05F68B7B1;
+        Thu,  3 Sep 2020 09:27:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id EOoz4qHnxzKL; Thu,  3 Sep 2020 09:27:27 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0575E8B790;
+        Thu,  3 Sep 2020 09:27:26 +0200 (CEST)
+Subject: Re: [PATCH 10/10] powerpc: remove address space overrides using
+ set_fs()
+To:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200827150030.282762-1-hch@lst.de>
+ <20200827150030.282762-11-hch@lst.de>
+ <8974838a-a0b1-1806-4a3a-e983deda67ca@csgroup.eu>
+ <20200902123646.GA31184@lst.de>
+ <d78cb4be-48a9-a7c5-d9d1-d04d2a02b4c6@csgroup.eu>
+ <CAHk-=wiDCcxuHgENo3UtdFi2QW9B7yXvNpG5CtF=A6bc6PTTgA@mail.gmail.com>
+ <20200903071144.GA19247@lst.de>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <e6afe576-c3b2-81af-b042-e5930a8fd4c8@csgroup.eu>
+Date:   Thu, 3 Sep 2020 09:27:04 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAS+0QtvgX1b77Y51cuMQ-eK4cKb8rebTQ=Ug3F2rkjP2g@mail.gmail.com>
+In-Reply-To: <20200903071144.GA19247@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 11:07:28AM +0900, Masahiro Yamada wrote:
 
-> Contributors stop caring after their code is merged,
-> but maintaining it is tiring.
 
-This seems to hold in general :/
+Le 03/09/2020 à 09:11, Christoph Hellwig a écrit :
+> On Wed, Sep 02, 2020 at 11:02:22AM -0700, Linus Torvalds wrote:
+>> I don't see why this change would make any difference.
+> 
+> Me neither, but while looking at a different project I did spot places
+> that actually do an access_ok with len 0, that's why I wanted him to
+> try.
+> 
+> That being said: Christophe are these number stables?  Do you get
+> similar numbers with multiple runs?
 
-> Will re-implementing your sorting logic
-> in bash look cleaner?
+Yes the numbers are similar with multiple runs and multiple reboots.
 
-Possibly, I can try, we'll see.
+> 
+>> And btw, why do the 32-bit and 64-bit checks even differ? It's not
+>> like the extra (single) instruction should even matter. I think the
+>> main reason is that the simpler 64-bit case could stay as a macro
+>> (because it only uses "addr" and "size" once), but honestly, that
+>> "simplification" doesn't help when you then need to have that #ifdef
+>> for the 32-bit case and an inline function anyway.
+> 
+> I'll have to leave that to the powerpc folks.  The intent was to not
+> change the behavior (and I even fucked that up for the the size == 0
+> case).
+> 
+>> However, I suspect a bigger reason for the actual performance
+>> degradation would be the patch that makes things use "write_iter()"
+>> for writing, even when a simpler "write()" exists.
+> 
+> Except that we do not actually have such a patch.  For normal user
+> writes we only use ->write_iter if ->write is not present.  But what
+> shows up in the profile is that /dev/zero only has a read_iter op and
+> not a normal read.  I've added a patch below that implements a normal
+> read which might help a tad with this workload, but should not be part
+> of a regression.
+> 
+> Also Christophe:  can you bisect which patch starts this?  Is it really
+> this last patch in the series?
 
-> Or, in hindsight, we should have used python or perl?
+5.9-rc2: 91.5MB/s
+Patch 1: 74.9MB/s
+Patch 2: 97.9MB/s
+Patch 3: 97.7MB/s
+Patch 4 to 9: 97.9MB/s
+Patch 10: 85.3MB/s
+Patch 11: 75.4MB/s
 
-I don't speak either :-/.
+See my other mail, when removing CONFIG_STACKPROTECTOR, I get a stable 
+99.8MB/s throughput.
 
-I googled to see if there is a python/perl ctags implementation we can
-'borrow' and found https://github.com/universal-ctags/ctags instead.
-That seems to be a continuation of exhuberant ctags, I can also try if
-they're interested in --sort-kinds or something like that.
+Christophe
