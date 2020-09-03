@@ -2,165 +2,114 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E6CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EA9C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B44ED20775
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C587F206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:01:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="OhuY/LJ9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wWWW6aYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgICH7i (ORCPT
+        id S1728283AbgICIBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:59:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60600 "EHLO
+        Thu, 3 Sep 2020 04:01:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgICH7b (ORCPT
+        with ESMTP id S1727065AbgICIBc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:59:31 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5FFBC061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 00:59:29 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id q13so2471626ejo.9
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 00:59:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=631Dyyj+5J1i4PyIFclIjVjOc2aZH6fWRoROHrNThkE=;
-        b=OhuY/LJ9ZXiJdh/h6zxSJ7jWF4WBeWwm7oxf2Bj21hgqvOBHdqyMY3NiFHrYE3jkzq
-         cv2PJwXOQ+YuU+W/SvVq3zWMeX+Q+UL3Lb09KAdxxeDEG66pNKXz7svZrTC18ODLIF/m
-         u5kI9UIUAkgJfs02/EvDhkayPfxIytG7rbkZzkjgcMDUFu8LqLYuMdWk3ewU967PVUBe
-         8QeRiXzsYZOYozH55E1xmt6INtDYVWVR3TEAY9jvqYURMIrq8Kcgbb7sCW6AqEts2mV9
-         5/BymYtNy1syz2I/scALDYE7FGXnK/tIKtOK2uHGP7L1HhtquFy+Qd9vOA1sr3nhfysG
-         ngPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=631Dyyj+5J1i4PyIFclIjVjOc2aZH6fWRoROHrNThkE=;
-        b=sP88qTVQeJ8pSmcym4dM1Darm/DLjVBIAr0sYpbg/0/QQatRs0untHNrjQLgJkkRAk
-         BMzHhv4n/GpmPb04PwDZPU5KULM7Io7kGbxHtf6FoXSKdtqu2glnwKvmKrZe3cz1ElqU
-         BAPXbjUU5yHAWOLuGAgGYdWA9PZXjxH2wPz3qmrkd3zZUWpEbyWYfMHc+EUi8fzsSn8m
-         fm7yVy2iswU67tCnqnaO8Dn5dPyf1sfAJ3fiUtvEV5vbVnd+GKk76kJoPSINOxHbfgPk
-         R3Tl2/xSn1lSVAGJoMAX9ull/3ysBULO2CMtaZkQAlZbSnHQmFi5RFlJ35VWJWAV7i5r
-         oKkg==
-X-Gm-Message-State: AOAM532dMlUwS/IFb4cYW1ZNii+92+JOohAjbeYBwJHq0RMWeWZQmdHN
-        RZ9jkbeUBcgWiDR+qfuK0Pc3c/vq8bOHa9i8sND4Jw==
-X-Google-Smtp-Source: ABdhPJyBbIUChvvzLiPQLdiZrhe2BSGEnj5NkfhqnqgNeWvbZ7O/IYUicka8eALd6ofrbKtaeTxzOpCHys3x0cJUdSo=
-X-Received: by 2002:a17:906:d8ca:: with SMTP id re10mr852855ejb.382.1599119968510;
- Thu, 03 Sep 2020 00:59:28 -0700 (PDT)
+        Thu, 3 Sep 2020 04:01:32 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE2A3C061244;
+        Thu,  3 Sep 2020 01:01:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=cU305cxFBo6tm5/dcumAYM77XH5iQN9l01UIc+MQ8ms=; b=wWWW6aYY0aagDmpZ1bPiSvTpQw
+        hJm4tzGwj6/QUrIm6ZDBPRuSbs+oSQf3GZeEe/T3oMzvl2i2cvcS8HU0gIeJExqwloJMuvqD+tyUm
+        /5CWj/mQRXnLWL5bbRHRR7Gi9/gFtwkcOHZ3GHFxXuEpkeqayyIaBuePt7xW9LIgNzgw5Nins47i/
+        BsLowowCTOTKIIDe5AHHnQPXyuGTLG+TkeO/7krX6/GSvGxLHKw2GijdhXLkTHKMxfpZWQrLqDvzM
+        osFtIVQYGnxEdZK6JbWvEPOOyuMeoSfkEwcWm+DIPXHs7xcLJi5qnAJIEjerenE5BSTQzTmGTqMiy
+        bNvKvSow==;
+Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDkBL-0006Zq-V2; Thu, 03 Sep 2020 08:01:20 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: simplify gendisk lookup and remove struct block_device aliases v3
+Date:   Thu,  3 Sep 2020 10:01:00 +0200
+Message-Id: <20200903080119.441674-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20200831032006.1019978-1-warthog618@gmail.com> <20200831032006.1019978-12-warthog618@gmail.com>
-In-Reply-To: <20200831032006.1019978-12-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 3 Sep 2020 09:59:17 +0200
-Message-ID: <CAMpxmJWYpDQsvKCsNudb6p3zAey=6EuNpb3wQ3dpCJVCTjjBsg@mail.gmail.com>
-Subject: Re: [PATCH v6 11/20] gpiolib: cdev: support GPIO_V2_LINE_SET_VALUES_IOCTL
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 5:23 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> Add support for the GPIO_V2_LINE_SET_VALUES_IOCTL.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->  drivers/gpio/gpiolib-cdev.c | 59 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index 936b8c9958dd..9f05bbd2161e 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -777,6 +777,63 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
->         return 0;
->  }
->
-> +static long linereq_set_values_unlocked(struct linereq *lr,
-> +                                       struct gpio_v2_line_values *lv)
-> +{
-> +       DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
-> +       struct gpio_desc **descs;
-> +       unsigned int i, didx, num_set;
-> +       int ret;
-> +
-> +       bitmap_zero(vals, GPIO_V2_LINES_MAX);
-> +       for (num_set = 0, i = 0; i < lr->num_lines; i++) {
-> +               if (lv->mask & BIT_ULL(i)) {
-> +                       if (!test_bit(FLAG_IS_OUT, &lr->lines[i].desc->flags))
-> +                               return -EPERM;
-> +                       if (lv->bits & BIT_ULL(i))
-> +                               __set_bit(num_set, vals);
-> +                       num_set++;
-> +                       descs = &lr->lines[i].desc;
-> +               }
-> +       }
-> +       if (num_set == 0)
-> +               return -EINVAL;
-> +
-> +       if (num_set != 1) {
-> +               /* build compacted desc array and values */
-> +               descs = kmalloc_array(num_set, sizeof(*descs), GFP_KERNEL);
+Hi all,
 
-Missing retval check.
+this series removes the annoying struct block_device aliases, which can
+happen for a bunch of old floppy drivers (and z2ram).  In that case
+multiple struct block device instances for different dev_t's can point
+to the same gendisk, without being partitions.  The cause for that
+is the probe/get callback registered through blk_register_regions.
 
-> +               for (didx = 0, i = 0; i < lr->num_lines; i++) {
-> +                       if (lv->mask & BIT_ULL(i)) {
-> +                               descs[didx] = lr->lines[i].desc;
-> +                               didx++;
-> +                       }
-> +               }
-> +       }
-> +       ret = gpiod_set_array_value_complex(false, true, num_set,
-> +                                           descs, NULL, vals);
-> +
-> +       if (num_set != 1)
-> +               kfree(descs);
-> +       return ret;
-> +}
-> +
-> +static long linereq_set_values(struct linereq *lr, void __user *ip)
-> +{
-> +       struct gpio_v2_line_values lv;
-> +       int ret;
-> +
-> +       if (copy_from_user(&lv, ip, sizeof(lv)))
-> +               return -EFAULT;
-> +
-> +       mutex_lock(&lr->config_mutex);
-> +
-> +       ret = linereq_set_values_unlocked(lr, &lv);
-> +
-> +       mutex_unlock(&lr->config_mutex);
-> +
-> +       return ret;
-> +}
-> +
->  static long linereq_set_config_unlocked(struct linereq *lr,
->                                         struct gpio_v2_line_config *lc)
->  {
-> @@ -853,6 +910,8 @@ static long linereq_ioctl(struct file *file, unsigned int cmd,
->
->         if (cmd == GPIO_V2_LINE_GET_VALUES_IOCTL)
->                 return linereq_get_values(lr, ip);
-> +       else if (cmd == GPIO_V2_LINE_SET_VALUES_IOCTL)
-> +               return linereq_set_values(lr, ip);
->         else if (cmd == GPIO_V2_LINE_SET_CONFIG_IOCTL)
->                 return linereq_set_config(lr, ip);
->
-> --
-> 2.28.0
->
+This series removes blk_register_region entirely, splitting it it into
+a simple xarray lookup of registered gendisks, and a probe callback
+stored in the major_names array that can be used for modprobe overrides
+or creating devices on demands when no gendisk is found.  The old
+remapping is gone entirely, and instead the 4 remaining drivers just
+register a gendisk for each operating mode.  In case of the two drivers
+that have lots of aliases that is done on-demand using the new probe
+callback, while for the other two I simply register all at probe time
+to keep things simple.
+
+Note that the m68k drivers are compile tested only.
+
+Changes since v2:
+ - fix a wrong variable passed to ERR_PTR in the floppy driver
+ - slightly adjust the del_gendisk cleanups to prepare for the next
+   series touching this area
+
+Changes since v1:
+ - add back a missing kobject_put in the cdev code
+ - improve the xarray delete loops
+
+Diffstat:
+ b/block/genhd.c           |  183 +++++++--------
+ b/drivers/base/Makefile   |    2 
+ b/drivers/block/amiflop.c |   98 ++++----
+ b/drivers/block/ataflop.c |  135 +++++++----
+ b/drivers/block/brd.c     |   39 ---
+ b/drivers/block/floppy.c  |  154 ++++++++----
+ b/drivers/block/loop.c    |   30 --
+ b/drivers/block/swim.c    |   17 -
+ b/drivers/block/z2ram.c   |  547 ++++++++++++++++++++++------------------------
+ b/drivers/ide/ide-probe.c |   66 -----
+ b/drivers/ide/ide-tape.c  |    2 
+ b/drivers/md/md.c         |   21 -
+ b/drivers/scsi/sd.c       |   19 -
+ b/fs/char_dev.c           |   94 +++----
+ b/fs/dcache.c             |    1 
+ b/fs/internal.h           |    5 
+ b/include/linux/genhd.h   |   12 -
+ b/include/linux/ide.h     |    3 
+ drivers/base/map.c        |  154 ------------
+ include/linux/kobj_map.h  |   20 -
+ 20 files changed, 686 insertions(+), 916 deletions(-)
