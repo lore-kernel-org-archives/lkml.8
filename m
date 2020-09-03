@@ -2,155 +2,100 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8162C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91143C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B21F020758
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:54:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IEUXwMWc"
+	by mail.kernel.org (Postfix) with ESMTP id 6EB7720758
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:54:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599144893;
+	bh=v33Xb9X9GvxmPN3+NOHcqHGJjgQqmZYSA04xdjzeNUQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=dxYV2G+jZIA4NRe/T1T0kkybTMJ1lPSI9dJE8w4PcyG9fRfL+LpIDhNHbOmK/Zl5C
+	 h+Ln/SvXxLWF4aqQoBlEa4uzMRxpufyoyhmjl4aSwLtaOt+lnvLyKO4LggQDGsDmQj
+	 i6yo2Jb2CTTXeSxyp+XoP7ojD6t7PzCvhXiKk2bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbgICOyu (ORCPT
+        id S1729372AbgICOyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:54:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45856 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729197AbgICOMD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:12:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599142317;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=CT+BTbU04vXEyP9pdcH57nOtkyvU1kgH7PF3bGLUJr8=;
-        b=IEUXwMWcXiIqHYPAIxe4CJSi7Eovn2LhMucfZrlKnWkjidGEHHygsX0Oln7ATTQj9qN+wZ
-        qiqTPK0MWmY6IXIfoYdSQlQEmFiqys1I/T9PnrGjPLoPc4ryef2ioUCCIOUwGsqHLSbIxF
-        3dGKMbnc5lBBG9Qe413Is9dsnynEsIw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-92-gECEWAk0PASqH66S4LxuRQ-1; Thu, 03 Sep 2020 10:11:56 -0400
-X-MC-Unique: gECEWAk0PASqH66S4LxuRQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 3 Sep 2020 10:54:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729296AbgICOyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:54:45 -0400
+Received: from kernel.org (unknown [77.127.89.201])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61C0510051D3;
-        Thu,  3 Sep 2020 14:11:54 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-114-36.ams2.redhat.com [10.36.114.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3160319C78;
-        Thu,  3 Sep 2020 14:11:43 +0000 (UTC)
-From:   Mohammed Gamal <mgamal@redhat.com>
-To:     kvm@vger.kernel.org, pbonzini@redhat.com
-Cc:     linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, Mohammed Gamal <mgamal@redhat.com>
-Subject: [PATCH] KVM: x86: VMX: Make smaller physical guest address space support user-configurable
-Date:   Thu,  3 Sep 2020 16:11:22 +0200
-Message-Id: <20200903141122.72908-1-mgamal@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id D8D952072A;
+        Thu,  3 Sep 2020 14:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599144884;
+        bh=v33Xb9X9GvxmPN3+NOHcqHGJjgQqmZYSA04xdjzeNUQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nsU7mWRmhR/Pfl4Z4+2/xdN0yMWkKeMDLx6U+5rYeeuL0CrLRaCprjNkhF8mHEYv9
+         52vD0bWQeoz+j7GgbkZSg1U0OoMY5/Y2gnwvTMaaSgryB6zAjoYwm8Zd5Q/muX3eIe
+         WmLBizF+TvgLJfs43bVRd6eCDeQdUL7H6JrMb1zU=
+Date:   Thu, 3 Sep 2020 17:54:38 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Tony Luck <tony.luck@intel.com>,
+        kernel test robot <lkp@intel.com>,
+        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [GIT PULL] Fix min_low_pfn/max_low_pfn build errors on ia64 and
+ microblaze
+Message-ID: <20200903145438.GA1781636@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch exposes allow_smaller_maxphyaddr to the user as a module parameter.
+Hi Linus,
 
-Since smaller physical address spaces are only supported on VMX, the parameter
-is only exposed in the kvm_intel module.
-Modifications to VMX page fault and EPT violation handling will depend on whether
-that parameter is enabled.
+The following changes since commit f75aef392f869018f78cfedf3c320a6b3fcfda6b:
 
-Also disable support by default, and let the user decide if they want to enable
-it.
+  Linux 5.9-rc3 (2020-08-30 16:01:54 -0700)
 
-Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
----
- arch/x86/kvm/vmx/vmx.c | 15 ++++++---------
- arch/x86/kvm/vmx/vmx.h |  3 +++
- arch/x86/kvm/x86.c     |  2 +-
- 3 files changed, 10 insertions(+), 10 deletions(-)
+are available in the Git repository at:
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 819c185adf09..dc778c7b5a06 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -129,6 +129,9 @@ static bool __read_mostly enable_preemption_timer = 1;
- module_param_named(preemption_timer, enable_preemption_timer, bool, S_IRUGO);
- #endif
- 
-+extern bool __read_mostly allow_smaller_maxphyaddr;
-+module_param(allow_smaller_maxphyaddr, bool, S_IRUGO | S_IWUSR);
-+
- #define KVM_VM_CR0_ALWAYS_OFF (X86_CR0_NW | X86_CR0_CD)
- #define KVM_VM_CR0_ALWAYS_ON_UNRESTRICTED_GUEST X86_CR0_NE
- #define KVM_VM_CR0_ALWAYS_ON				\
-@@ -4798,7 +4801,8 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 
- 	if (is_page_fault(intr_info)) {
- 		cr2 = vmx_get_exit_qual(vcpu);
--		if (enable_ept && !vcpu->arch.apf.host_apf_flags) {
-+		if (enable_ept && !vcpu->arch.apf.host_apf_flags
-+			&& allow_smaller_maxphyaddr) {
- 			/*
- 			 * EPT will cause page fault only if we need to
- 			 * detect illegal GPAs.
-@@ -5331,7 +5335,7 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
- 	 * would also use advanced VM-exit information for EPT violations to
- 	 * reconstruct the page fault error code.
- 	 */
--	if (unlikely(kvm_mmu_is_illegal_gpa(vcpu, gpa)))
-+	if (unlikely(kvm_mmu_is_illegal_gpa(vcpu, gpa)) && allow_smaller_maxphyaddr)
- 		return kvm_emulate_instruction(vcpu, 0);
- 
- 	return kvm_mmu_page_fault(vcpu, gpa, error_code, NULL, 0);
-@@ -8303,13 +8307,6 @@ static int __init vmx_init(void)
- #endif
- 	vmx_check_vmcs12_offsets();
- 
--	/*
--	 * Intel processors don't have problems with
--	 * GUEST_MAXPHYADDR < HOST_MAXPHYADDR so enable
--	 * it for VMX by default
--	 */
--	allow_smaller_maxphyaddr = true;
--
- 	return 0;
- }
- module_init(vmx_init);
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 26175a4759fa..b859435efa2e 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -551,6 +551,9 @@ static inline bool vmx_has_waitpkg(struct vcpu_vmx *vmx)
- 
- static inline bool vmx_need_pf_intercept(struct kvm_vcpu *vcpu)
- {
-+	if (!allow_smaller_maxphyaddr)
-+		return false;
-+
- 	return !enable_ept || cpuid_maxphyaddr(vcpu) < boot_cpu_data.x86_phys_bits;
- }
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index d39d6cf1d473..982f1d73a884 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -188,7 +188,7 @@ static struct kvm_shared_msrs __percpu *shared_msrs;
- u64 __read_mostly host_efer;
- EXPORT_SYMBOL_GPL(host_efer);
- 
--bool __read_mostly allow_smaller_maxphyaddr;
-+bool __read_mostly allow_smaller_maxphyaddr = 0;
- EXPORT_SYMBOL_GPL(allow_smaller_maxphyaddr);
- 
- static u64 __read_mostly host_xss;
+  https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git tags/fixes-2020-09-03
+
+for you to fetch changes up to 5f7b81c18366c38446f6eedab570b98dbdc07cff:
+
+  ia64: fix min_low_pfn/max_low_pfn build errors (2020-09-01 19:34:11 +0300)
+
+----------------------------------------------------------------
+Fix min_low_pfn/max_low_pfn build errors on ia64 and microblaze
+
+Some configurations of ia64 and microblaze use min_low_pfn and
+max_low_pfn in pfn_valid(). This causes build failures for modules that
+use pfn_valid().
+
+The fix is to add EXPORT_SYMBOL() for these variables on ia64 and
+microblaze.
+
+----------------------------------------------------------------
+Randy Dunlap (2):
+      microblaze: fix min_low_pfn/max_low_pfn build errors
+      ia64: fix min_low_pfn/max_low_pfn build errors
+
+ arch/ia64/kernel/ia64_ksyms.c | 2 +-
+ arch/microblaze/mm/init.c     | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
 -- 
-2.26.2
-
+Sincerely yours,
+Mike.
