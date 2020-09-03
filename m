@@ -2,128 +2,122 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MIME_QP_LONG_LINE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BCAC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19B3C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A95220722
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CBA20722
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:42:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P4nlWGsb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ksSWkAtG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbgICTfq (ORCPT
+        id S1728975AbgICTmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 15:35:46 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21107 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728304AbgICTfo (ORCPT
+        Thu, 3 Sep 2020 15:42:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbgICTmK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 15:35:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599161743;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HCyBRNagum+nnv7ajU0MzZ+M38TwovtYpjuUsvYy9UI=;
-        b=P4nlWGsbPFBoCBP14+cwlDLex/Non/0gk6878vb0fvG/U9HO+W+ecm4Q7kIUFcINxPTYMz
-        hup5ez/VoC3g2Y438VLNEOKLiX4qIARbMvIJ6IrS3o3qHAzzyDLq1L8Ws0Qv5SXm2Po734
-        xPmyDmi8P6SelKJYhrt1j9tEzNooVR4=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-239-omXMNlVLN_62Bsbb_o91OQ-1; Thu, 03 Sep 2020 15:35:39 -0400
-X-MC-Unique: omXMNlVLN_62Bsbb_o91OQ-1
-Received: by mail-ej1-f72.google.com with SMTP id dr9so1618136ejc.19
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 12:35:39 -0700 (PDT)
+        Thu, 3 Sep 2020 15:42:10 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3908C061244;
+        Thu,  3 Sep 2020 12:42:08 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e33so2958681pgm.0;
+        Thu, 03 Sep 2020 12:42:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=64wdOe+m4X3LlgmhQ/Anjpyk3DyuY0i8xhdssKAxr9o=;
+        b=ksSWkAtGUD9gN1y6I26GOinjjVHtHTzjudrp5b0/y3/MzYYTqSNhx5Q0lxITHCSsTw
+         Peed0e8+DjVU/M5rPRHXyqe+Wipy1nawo/ItJK1dMG+KBXm8fRRbgyKRvdTL0Rp0AB4g
+         0s/+Y34KIyzk4g0XppagwedewNf44kYN2DHRYqqg1uxI/8oK17NL4zOQmRrf8aNNT6hn
+         gxN8dkuiRFmbtOBwE0sMZPrtboHadYIs7UdTR61gQCxts0GMjOnlYqhE0C/IFxFWg8yy
+         mEvUfShepn0iYGzTxRVjkdyxyoJgZO6Y0H8Cp/Ez0hDylcxikHpkX3KKwm2zJnRGJuY3
+         Zn2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=HCyBRNagum+nnv7ajU0MzZ+M38TwovtYpjuUsvYy9UI=;
-        b=OubqZZeWPtqen7tGccnjNdnYCTff44e5ugyaG1b1mPJzuoejDkTJndM0jNBcqzhBb6
-         gjhijaXt5FYOU+gYIueN5k8KkEh/YmE/LElyCiK4VCsKhSKxj6Y6dt6aX+em5FXx1VHG
-         FMggrxHT5m2OvPC6FOhbPCYwAN9fHoyCFKlLq7RadGqRk0bKNbmPT7wmuutoncSutCWc
-         Xf5sf7/W/DB/TpWoLFz+CE61s2/KbwFps4sTbrrRV7IZpw/mCgErYTtpLjWyRbSAFxPL
-         G3S3io5HziDsayzJcuOZCns9VWfARGRJcv/B4GYxCpZy7bzMBuQnYG8rs3fBIgFgRz7S
-         RYZw==
-X-Gm-Message-State: AOAM531LuaeQhYdISZumnG5Vc9XjDkeE1ZeWPZ3Z8Fk+cBvOGeOUGJuf
-        OY3AFgE+tGa//gReG2S9/Xq2Bg9A7cQFEJDc9eUv2EuNW7XZBInQ1/qeqrpSa2YlKm6BtKh9/6J
-        xczPPjEKu8/z2o32DSeKoYsih
-X-Received: by 2002:a17:907:72c5:: with SMTP id du5mr3943333ejc.469.1599161738347;
-        Thu, 03 Sep 2020 12:35:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxVJXCj6u9zMSZeQq1jRBH6YJG3dd5tBUSi08e2VQGu1JA8wnnzfa+aGyb9qQTLE9nTibaNNg==
-X-Received: by 2002:a17:907:72c5:: with SMTP id du5mr3943319ejc.469.1599161738112;
-        Thu, 03 Sep 2020 12:35:38 -0700 (PDT)
-Received: from [192.168.3.122] (p4ff23bcb.dip0.t-ipconnect.de. [79.242.59.203])
-        by smtp.gmail.com with ESMTPSA id d13sm3024664edl.68.2020.09.03.12.35.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 12:35:37 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2] mm/memory_hotplug: drain per-cpu pages again during memory offline
-Date:   Thu, 3 Sep 2020 21:35:35 +0200
-Message-Id: <C6941572-4380-4E07-A622-1BB63AE30622@redhat.com>
-References: <20200903123136.1fa50e773eb58c6200801e65@linux-foundation.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-kernel@vger.kernel.org, mhocko@suse.com, linux-mm@kvack.org,
-        osalvador@suse.de, richard.weiyang@gmail.com, vbabka@suse.cz,
-        rientjes@google.com
-In-Reply-To: <20200903123136.1fa50e773eb58c6200801e65@linux-foundation.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-X-Mailer: iPhone Mail (17G68)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=64wdOe+m4X3LlgmhQ/Anjpyk3DyuY0i8xhdssKAxr9o=;
+        b=stTQXVEgSbp3BndVZ+tUnlzESd8DFKTnrneDy/2e07Ba2NXdbXJ8JchfFeICWV+DWn
+         9NsPZwIMT/R1ifudMdKZFawgUv95FYKIrXhwGCwOu1FmEy97pRBQnWZH5Bn7tLmArDBz
+         TTZdRf1GW5qLXbwyHx940MeUMk0mPZB2xYBnpDk399cE0vPS+7rxKf4mPUS8F4pv56C9
+         mZoaxJkTCNT+QNDAANfeuUHeSaNQ97ZZmbElMhCOZ5U5aDIxqoiTW/kC8YU3eovlJGrG
+         hA/sixEgc+BqOsPPppJPTzlltWzcVBXSazHrnyLLGULp9jAVVQdJePq82yCaAEztvTRI
+         g4HA==
+X-Gm-Message-State: AOAM532/SHM9debiFUHEFKLYnrmGotH3tslYAA8LcJfZQaNqtwpUQbXz
+        HqjnAayvBcpY2dbtF8WgdwT/QNN2tegUUAyqIUc/i3+g5x7hBA==
+X-Google-Smtp-Source: ABdhPJwNokACHFpiiIHxqrP8z9dSRKkN3pBN5Alt7WQLCuezH78+g6OAHrqAaD2MTv2upvQoRQ7wt17tPMdaKLfz2mU=
+X-Received: by 2002:a62:6083:0:b029:13c:1611:66c4 with SMTP id
+ u125-20020a6260830000b029013c161166c4mr3646465pfb.15.1599162128118; Thu, 03
+ Sep 2020 12:42:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200903181926.5606-1-krzk@kernel.org>
+In-Reply-To: <20200903181926.5606-1-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 3 Sep 2020 22:41:51 +0300
+Message-ID: <CAHp75VeXTN5gTv2Pj33N9EB9i2U7R+uvgZ-Ad4_SMgKkrB0F3g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] MAINTAINERS: Consolidate Analog Devices IIO
+ entries and remove Beniamin Bia
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 3, 2020 at 9:19 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Emails to Beniamin Bia bounce with no such address so remove him from
+> maintainers.  After this removal, many entries for Analog Devices Inc
+> IIO drivers look exactly the same so consolidate them.
+>
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: linux-iio <linux-iio@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
+...
 
-> Am 03.09.2020 um 21:31 schrieb Andrew Morton <akpm@linux-foundation.org>:
->=20
-> =EF=BB=BFOn Thu, 3 Sep 2020 19:36:26 +0200 David Hildenbrand <david@redhat=
-.com> wrote:
->=20
->> (still on vacation, back next week on Tuesday)
->>=20
->> I didn't look into discussions in v1, but to me this looks like we are
->> trying to hide an actual bug by implementing hacks in the caller
->> (repeated calls to drain_all_pages()). What about alloc_contig_range()
->> users - you get more allocation errors just because PCP code doesn't
->> play along.
->>=20
->> There *is* strong synchronization with the page allocator - however,
->> there seems to be one corner case race where we allow to allocate pages
->> from isolated pageblocks.
->>=20
->> I want that fixed instead if possible, otherwise this is just an ugly
->> hack to make the obvious symptoms (offlining looping forever) disappear.
->>=20
->> If that is not possible easily, I'd much rather want to see all
->> drain_all_pages() calls being moved to the caller and have the expected
->> behavior documented instead of specifying "there is no strong
->> synchronization with the page allocator" - which is wrong in all but PCP
->> cases (and there only in one possible race?).
->>=20
->=20
-> It's a two-line hack which fixes a bug in -stable kernels, so I'm
-> inclined to proceed with it anyway.  We can undo it later on as part of
-> a better fix, OK?
+>  ANALOG DEVICES INC IIO DRIVERS
+>  M:     Lars-Peter Clausen <lars@metafoo.de>
+>  M:     Michael Hennerich <Michael.Hennerich@analog.com>
+> @@ -1152,8 +1101,11 @@ W:       http://wiki.analog.com/
+>  W:     http://ez.analog.com/community/linux-device-drivers
+>  F:     Documentation/ABI/testing/sysfs-bus-iio-frequency-ad9523
+>  F:     Documentation/ABI/testing/sysfs-bus-iio-frequency-adf4350
+> +F:     Documentation/devicetree/bindings/iio/*/adi,*
+> +F:     Documentation/devicetree/bindings/iio/dac/ad5758.txt
+>  F:     drivers/iio/*/ad*
+>  F:     drivers/iio/adc/ltc249*
+> +F:     drivers/iio/amplifiers/hmc425a.c
+>  F:     drivers/staging/iio/*/ad*
+>  X:     drivers/iio/*/adjd*
 
-Agreed as a stable fix, but I really want to see a proper fix (e.g., disabli=
-ng PCP while having isolated pageblocks) on top.
+>  STAGING - SEPS525 LCD CONTROLLER DRIVERS
+>  M:     Michael Hennerich <michael.hennerich@analog.com>
+> -M:     Beniamin Bia <beniamin.bia@analog.com>
+>  L:     linux-fbdev@vger.kernel.org
+>  S:     Supported
+>  F:     Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
 
->=20
-> Unless you think there's some new misbehaviour which we might see as a
-> result of this approach?
->=20
+It's not related to this series, but I'm wondering why the above
+binding is attached to a staging driver...
 
-We basically disable PCP by keeping to flush it. But performance shouldn=E2=80=
-=98t matter.=
-
+-- 
+With Best Regards,
+Andy Shevchenko
