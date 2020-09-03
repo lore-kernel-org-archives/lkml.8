@@ -2,119 +2,105 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FACC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D46C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5FA520716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFADE20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599149429;
+	bh=W32TLOkU1RN84JrGJ5PYMhalY4FOPtwlWcdZfX/Gyk4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LeFLkPt8/6FNyKZauY4c1/yBRU6fcK2DE5vehDDXCeKMQ6fAq0LcNDzBIKU87oHs5
+	 Xz+QUMp5z27+Xm+eRYrF7nz7JAoaCs4SS9NBlkMa9xf8/JTfEkYN1CFWPWVr2S9Oi5
+	 eGW32mtnbhCx0nn+E5/RD+MUSStGI9PLl4RCh6yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgICQKQ (ORCPT
+        id S1728755AbgICQK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:10:16 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:37149 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbgICQKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:10:15 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4Bj5PG5Yv8zB09ZM;
-        Thu,  3 Sep 2020 18:10:10 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id O-5sjIVtz4zX; Thu,  3 Sep 2020 18:10:10 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bj5PG4nykzB09ZK;
-        Thu,  3 Sep 2020 18:10:10 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 02F3D8B807;
-        Thu,  3 Sep 2020 18:10:10 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 1FKxObY2whfQ; Thu,  3 Sep 2020 18:10:10 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7AECE8B801;
-        Thu,  3 Sep 2020 18:10:07 +0200 (CEST)
-Subject: Re: [PATCH] /dev/zero: also implement ->read
-To:     Christoph Hellwig <hch@lst.de>, arnd@arndb.de,
-        gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200903155922.1111551-1-hch@lst.de>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <55d1ecb8-4a0c-fa58-d3cf-bf6796eea7bd@csgroup.eu>
-Date:   Thu, 3 Sep 2020 18:05:41 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 3 Sep 2020 12:10:28 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35034 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbgICQK1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 12:10:27 -0400
+Received: by mail-il1-f194.google.com with SMTP id l4so3157741ilq.2;
+        Thu, 03 Sep 2020 09:10:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ub/YDXcxHDsGS0dDuXZfKNg7N1487AgGtWs2ISNYV0w=;
+        b=KO3s42VYbzabC5gmMd9r54DJ0SZxApw7havc6vUUF8c+m0HBQkdS9PSyAKB1PvDkhH
+         xPVchF6YkwfTjUy2QW+KIRmp26MfNammQVt8hiqwWeqax2zvOH/ZH0XEAPFjKbSUtZWr
+         AOpUEc4c6F6JWeM+1A2MLCuAxyxhmEV2KGkFrMvNduXNfnbwFsfx6Gc60eAgd/wkj91M
+         rE371is2dFvMLtLDT3LCfU5Su/RIXy0cKVOq4qJJu2ahtsSYg6UW3K+lCPCM9AP84OqA
+         G3zYj5tkqP/XuTz53YdQMGFYXpUyzDiACbiWAYHPWJs5RXXGISbcMRlFcdmuGF11Xijv
+         VHJQ==
+X-Gm-Message-State: AOAM531ISQGDoCUQVwcz0dk4IVQUZ5k0hjqgIIeLmvaXVlw+sIZktbYE
+        YW4NaVXWeok470OX/Zxf6Q==
+X-Google-Smtp-Source: ABdhPJxLZ9ZiPkSL+rOvAxAf3g+LEBXr7Jjhv24bCXU19LypWZMrwzhwOhCFPx9l8w9NZ9RW+7oU5Q==
+X-Received: by 2002:a92:7991:: with SMTP id u139mr3437463ilc.62.1599149426172;
+        Thu, 03 Sep 2020 09:10:26 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id c7sm1610386ilk.49.2020.09.03.09.10.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 09:10:25 -0700 (PDT)
+Received: (nullmailer pid 2870752 invoked by uid 1000);
+        Thu, 03 Sep 2020 16:10:22 -0000
+Date:   Thu, 3 Sep 2020 10:10:22 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
+        linux-tegra@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: Add ENE KB930 Embedded
+ Controller binding
+Message-ID: <20200903161022.GA2707794@bogus>
+References: <20200830185356.5365-1-digetx@gmail.com>
+ <20200830185356.5365-2-digetx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200903155922.1111551-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200830185356.5365-2-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 03/09/2020 à 17:59, Christoph Hellwig a écrit :
-> Christophe reported a major speedup due to avoiding the iov_iter
-> overhead, so just add this trivial function.  Note that /dev/zero
-> already implements both an iter and non-iter writes so this just
-> makes it more symmetric.
+On Sun, 30 Aug 2020 21:53:51 +0300, Dmitry Osipenko wrote:
+> Add binding document for the ENE KB930 Embedded Controller.
 > 
-> Christophe Leroy <christophe.leroy@csgroup.eu>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-Tested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->   drivers/char/mem.c | 22 ++++++++++++++++++++++
->   1 file changed, 22 insertions(+)
+>  .../devicetree/bindings/mfd/ene-kb930.yaml    | 66 +++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb930.yaml
 > 
-> diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-> index abd4ffdc8cdebc..1dc99ab158457a 100644
-> --- a/drivers/char/mem.c
-> +++ b/drivers/char/mem.c
-> @@ -726,6 +726,27 @@ static ssize_t read_iter_zero(struct kiocb *iocb, struct iov_iter *iter)
->   	return written;
->   }
->   
-> +static ssize_t read_zero(struct file *file, char __user *buf,
-> +			 size_t count, loff_t *ppos)
-> +{
-> +	size_t cleared = 0;
-> +
-> +	while (count) {
-> +		size_t chunk = min_t(size_t, count, PAGE_SIZE);
-> +
-> +		if (clear_user(buf + cleared, chunk))
-> +			return cleared ? cleared : -EFAULT;
-> +		cleared += chunk;
-> +		count -= chunk;
-> +
-> +		if (signal_pending(current))
-> +			return cleared ? cleared : -ERESTARTSYS;
-> +		cond_resched();
-> +	}
-> +
-> +	return cleared;
-> +}
-> +
->   static int mmap_zero(struct file *file, struct vm_area_struct *vma)
->   {
->   #ifndef CONFIG_MMU
-> @@ -921,6 +942,7 @@ static const struct file_operations zero_fops = {
->   	.llseek		= zero_lseek,
->   	.write		= write_zero,
->   	.read_iter	= read_iter_zero,
-> +	.read		= read_zero,
->   	.write_iter	= write_iter_zero,
->   	.mmap		= mmap_zero,
->   	.get_unmapped_area = get_unmapped_area_zero,
-> 
+
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/ene-kb930.example.dt.yaml: battery-cell: 'operating-range-celsius' does not match any of the regexes: '^ocv-capacity-table-[0-9]+$', 'pinctrl-[0-9]+'
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/battery.yaml
+
+
+See https://patchwork.ozlabs.org/patch/1354004
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
