@@ -7,173 +7,116 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80893C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A559DC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7AC2065F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A5362071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:17:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHOo/wjg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DgUFp7W4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgICLPo (ORCPT
+        id S1728354AbgICLQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:15:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33766 "EHLO
+        Thu, 3 Sep 2020 07:16:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728422AbgICLOa (ORCPT
+        with ESMTP id S1728409AbgICLLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:14:30 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506DFC061244;
-        Thu,  3 Sep 2020 04:00:35 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id m6so2767866wrn.0;
-        Thu, 03 Sep 2020 04:00:35 -0700 (PDT)
+        Thu, 3 Sep 2020 07:11:53 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00F5CC061249;
+        Thu,  3 Sep 2020 04:01:26 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id h12so1836308pgm.7;
+        Thu, 03 Sep 2020 04:01:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=SE22zCSVEAoxI5J9vYZxU5jk2PTxW8rlRt79/vsQVMc=;
-        b=XHOo/wjgMIAcFXOEpJ8LD3JeyIS06RbRzdhJHQUNQryAsL5MqI9KCGWsJDlWGw6Hww
-         0r1qNVory+ouhS3YefBZ3bC51Wemkyd5AZ/T2v3yonZYSLyRjebFpnAJaRXEFjXiWSK/
-         DUUTknp8LIhWqVy8rhgEG9QW/cAssbuWgMFTs1OW7xUnSOUXWh1vBvG4/utmhUmshssd
-         ZolOYsiKduKgb0bRlz0wzBCTQfC/r6haJPeN3CvbPf70QjElIk39PqgeTz7KA4Ts2JVK
-         7t/MN3sATXo6IDk0wOjGSMRLimJGPLXCz3gIfStJcaNtRUWwumRdA8PcXB/BBbd6Devf
-         o0Mw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+DEgrL1WqdyDp96QHpOBjswHW12HsyAvByI+w5af+1I=;
+        b=DgUFp7W4BHAzcm7/LgTX2Fc1BO1sq9gKqpjsC2I/9qSrQExgNfPuGBXIRSxOWXozme
+         ySmh3YYVU5QFZ+VFFuwoxF+P/k05Jt9mgxmmSzEyV3mwl8+8ylfaSmCuw0YLLeYDRI32
+         9GdussqBn8kHj8gNLSZKL132p4vck8rhSER4R+KEFSlBzNv5ARgwyKd0oB8iBIT8eq+R
+         JzEDWHPbo8ar9HvrRF1xogLTK0hfmYFd1EBtgKuRVl2WexthE/y40zYBqrdoAK2sOZKG
+         C7Hkkp9W4d4CgY8K0MX8qvn77cDs5WBmHPfkB3ukSITD+gbjDKNZTWxCY/Q0FteWNhXz
+         cOfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=SE22zCSVEAoxI5J9vYZxU5jk2PTxW8rlRt79/vsQVMc=;
-        b=QTgzdgoYHeT45eXk00gc8Bc4McewHo3odEFQSSeUJ59oYewiSQfrCgkNJ4hvgPFuff
-         C4uPqc6vlpFGWpux7uN700of+KA1UoW7IBdPaloyxi12K/e5UGmvrIoo3yteHVLFEzfD
-         9Oz8SrYHosODRAKCatImudy9W5MwZX+K+ayu7HBc7NIMTzMR9+AK+R2YQ6qmFLoH8AIR
-         HmUYSWUcwvcp3/ap+iCp2tfVNPxihflKV4Bn0/zp5dfAvC0xXKqznatWudos8aMLoTQ5
-         USgFvd01UnssCMgOr+ay/4trHbRR8vsNr00GP77ofmr+lI031xmj56wTaV8+ovLsU62Z
-         PBGg==
-X-Gm-Message-State: AOAM5314cMMjEe/AAPItmX83AERq3F8O1MXHhU0QJE8LX2RcTxD5NZgN
-        IaHmu2sQNujaRfmal91xAGXnnSKkHuxTyg==
-X-Google-Smtp-Source: ABdhPJzT2JR3cqHJJ+PeIDEiZWnus85LDjLyqQxGZLcJGgQ0N86n6iNc76LXufOFcTVgGQkidXI/BA==
-X-Received: by 2002:adf:e7ce:: with SMTP id e14mr1741534wrn.43.1599130833155;
-        Thu, 03 Sep 2020 04:00:33 -0700 (PDT)
-Received: from AnsuelXPS ([5.170.166.111])
-        by smtp.gmail.com with ESMTPSA id s5sm3876136wrm.33.2020.09.03.04.00.31
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Sep 2020 04:00:32 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Sibi Sankar'" <sibis@codeaurora.org>,
-        "'Viresh Kumar'" <viresh.kumar@linaro.org>
-Cc:     <vincent.guittot@linaro.org>, <saravanak@google.com>,
-        "'Sudeep Holla'" <sudeep.holla@arm.com>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
-        "'Rob Herring'" <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200821140026.19643-1-ansuelsmth@gmail.com> <20200824104053.kpjpwzl2iw3lpg2m@vireshk-i7> <b339e01f9d1e955137120daa06d26228@codeaurora.org> <039d01d67f6a$188700d0$49950270$@gmail.com> <20200903065314.y3ynhwydahaeg6o6@vireshk-i7> <6dc62d231c776b2cdfdc36cfe36e4140@codeaurora.org>
-In-Reply-To: <6dc62d231c776b2cdfdc36cfe36e4140@codeaurora.org>
-Subject: R: R: [RFC PATCH v3 0/2] Add Krait Cache Scaling support
-Date:   Thu, 3 Sep 2020 13:00:27 +0200
-Message-ID: <01f201d681e1$70ff1bc0$52fd5340$@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+DEgrL1WqdyDp96QHpOBjswHW12HsyAvByI+w5af+1I=;
+        b=QjghZg8F4JHoa/rs4KQFwLC6mTbhIyZNXbbisCZuYdmAN9WR8tQrXRLbsvxkwJCk5z
+         mWk74A9+VzTnCAYGk3HposoYmK7A2USUMJGd4BKCs1pbhxjjIJrE07K3yyVRuIpe/rRb
+         adcdq2wVqY8n89REdnnNRvO6fmxk2WQ3zhBZU2b4ZFVNOzN1b2wLU4pCMsXvRkczzMuG
+         vX4BU7QZAcI9P/vF/dUO8hhjjhGSU108BRCvfPT1Lcen9pmBZmAA218xF8+PVe8Hqx95
+         wevBQ1VmaB/CuOq7Xk+8D6u+R+Kl56Lm9Wk7RI4NmW0l3gc/rHEUDvFrEZ3RsC8VCeMG
+         yK5A==
+X-Gm-Message-State: AOAM533Mw8xpwH3l9WFD5NnPo0rI4b6ndX43M4K+wqgqbvLbcFBgUCin
+        M5YpfhumBik2e4ZRAsriGpPpZI2vCvJoZ93Zfs4=
+X-Google-Smtp-Source: ABdhPJzWB8HoVy5iFsB5Op5vyLrnbRcI/Ap8Gp+5ZFJ0NzzhtqGslGDMIN9czc9ATfqg7sEcE+oUtEC2yQtpuLRRVv8=
+X-Received: by 2002:a63:d648:: with SMTP id d8mr2507713pgj.4.1599130885521;
+ Thu, 03 Sep 2020 04:01:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHE1KUT8lrzCHz2sVzN5qwVSE5wCwFurxwcAoW98xABeMrvawKX8ba/Aay9QdupLIiWEA==
-Content-Language: it
+References: <20200831212606.1718-1-shiju.jose@huawei.com> <20200831212606.1718-3-shiju.jose@huawei.com>
+ <20200901082607.GP1891694@smile.fi.intel.com> <7f5146dba8ac4ac0a258742551f204fb@huawei.com>
+In-Reply-To: <7f5146dba8ac4ac0a258742551f204fb@huawei.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 3 Sep 2020 14:01:08 +0300
+Message-ID: <CAHp75Vd3wjNHdYC_A1EVV+kzN=6SGqP2qQ0Wb6pdZWWt9qMMLw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v14 2/2] PCI: hip: Add handling of HiSilicon HIP
+ PCIe controller errors
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        yangyicong <yangyicong@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 3, 2020 at 1:43 PM Shiju Jose <shiju.jose@huawei.com> wrote:
+> >From: Andy Shevchenko [mailto:andriy.shevchenko@linux.intel.com]
+> >Sent: 01 September 2020 09:26
+> >On Mon, Aug 31, 2020 at 10:26:06PM +0100, Shiju Jose wrote:
+> >> From: Yicong Yang <yangyicong@hisilicon.com>
 
+...
 
-> -----Messaggio originale-----
-> Da: sibis=3Dcodeaurora.org@mg.codeaurora.org
-> <sibis=3Dcodeaurora.org@mg.codeaurora.org> Per conto di Sibi Sankar
-> Inviato: gioved=EC 3 settembre 2020 09:13
-> A: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: ansuelsmth@gmail.com; vincent.guittot@linaro.org;
-> saravanak@google.com; 'Sudeep Holla' <sudeep.holla@arm.com>; 'Rafael =
-J.
-> Wysocki' <rjw@rjwysocki.net>; 'Rob Herring' <robh+dt@kernel.org>; =
-linux-
-> pm@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Oggetto: Re: R: [RFC PATCH v3 0/2] Add Krait Cache Scaling support
->=20
-> On 2020-09-03 12:23, Viresh Kumar wrote:
-> > On 31-08-20, 09:41, ansuelsmth@gmail.com wrote:
-> >> On 31-08-20, Sibi wrote:
-> >> > On 2020-08-24 16:10, Viresh Kumar wrote:
-> >> > > +Vincent/Saravana/Sibi
-> >> > >
-> >> > > On 21-08-20, 16:00, Ansuel Smith wrote:
-> >> > >> This adds Krait Cache scaling support using the cpufreq =
-notifier.
-> >> > >> I have some doubt about where this should be actually placed =
-(clk
-> or
-> >> > >> cpufreq)?
-> >> > >> Also the original idea was to create a dedicated cpufreq =
-driver
-(like
-> >> > >> it's done in
-> >> > >> the codeaurora qcom repo) by copying the cpufreq-dt driver and
-> adding
-> >> > >> the cache
-> >> > >> scaling logic but i still don't know what is better. Have a =
-very
-> >> > >> similar driver or
-> >> > >> add a dedicated driver only for the cache using the cpufreq
-notifier
-> >> > >> and do the
-> >> > >> scale on every freq transition.
-> >> > >> Thanks to everyone who will review or answer these questions.
-> >> > >
-> >> > > Saravana was doing something with devfreq to solve such issues =
-if I
-> >> > > wasn't mistaken.
-> >> > >
-> >> > > Sibi ?
-> >> >
-> >> > IIRC the final plan was to create a devfreq device
-> >> > and devfreq-cpufreq based governor to scale them, this
-> >> > way one can switch to a different governor if required.
-> >>
-> >> So in this case I should convert this patch to a devfreq driver-
+> >> +config PCIE_HISI_ERR
+> >> +    depends on ACPI_APEI_GHES && (ARM64 || COMPILE_TEST)
 > >
-> > I think this should happen nevertheless. You are doing DVFS for a
-> > device which isn't a CPU and devfreq looks to be the right place of
-> > doing so.
+> >> +    depends on ACPI
 > >
-> >> Isn't overkill to use a governor for such a task?
-> >> (3 range based on the cpufreq?)
-> >
-> > I am not sure about the governor part here, maybe it won't be =
-required
-> > ?
->=20
-> Yeah I don't see it being needed in ^^
-> case as well. I just mentioned them as
-> an advantage in case you wanted to switch
-> to a different governor in the future.
->=20
-> https://lore.kernel.org/lkml/d0bc8877-6d41-f54e-1c4c-
-> 2fadbb9dcd0b@samsung.com/
->=20
-> A devfreq governor tracking cpufreq was
-> generally accepted but using a cpufreq
-> notifier to achieve that was discouraged.
->=20
+> >Isn't this implied by
+> >       drivers/acpi/Kconfig:45:if ACPI
+> >?
+>
+> This can be removed as  ACPI_APEI_GHES depends on ACPI.
+>
+> Do you have any other comments on this patch?
 
-I read the patch discussion and it looks like at the very end they
-lost interest in pushing it. That would very fit what I need here so
-I'm asking how should I proceed? Keep the cpufreq notifier?
-Introduce a dedicated governor? Ask them to resume the pushing or
-try to include the changes to the passive governor by myself?=20
+Nope. The rest is fine to me.
 
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project.
+> >> +    bool "HiSilicon HIP PCIe controller error handling driver"
+> >> +    help
+> >> +      Say Y here if you want error handling support
+> >> +      for the PCIe controller's errors on HiSilicon HIP SoCs
 
+-- 
+With Best Regards,
+Andy Shevchenko
