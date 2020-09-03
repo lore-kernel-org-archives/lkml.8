@@ -4,85 +4,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0258EC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE68C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDB4F20897
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7518E2145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:11:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F8cahaKl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BGahHi6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728908AbgICILO (ORCPT
+        id S1728917AbgICILP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:11:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
+        Thu, 3 Sep 2020 04:11:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728223AbgICIKk (ORCPT
+        with ESMTP id S1728633AbgICILH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:10:40 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A909C061246
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 01:10:40 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id b16so1246701vsl.6
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 01:10:40 -0700 (PDT)
+        Thu, 3 Sep 2020 04:11:07 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EF55C061258
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 01:10:55 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id y3so1268552vsn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 01:10:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9LSujuKc0BRpFIUlAoG3t4WRDvr3ggsu3MS/qx+gqZg=;
-        b=F8cahaKlXlYymZy1vM9/LjOB55QfYqrKFz+jtu996q05elSZiM4NT/N2FUhqENkdDS
-         p/z6Naq+t4p4sOjc9rOWCu2u1NigD8yO+JXlMBuBZtyBCdEfDOOMwtk9YeAi0BiRMh37
-         0cNizsSvb4/1gqjnVsWXsFsjVuFrCowgJeOMM9oaX3pnRyKPZ4Pw2wqwbzAEAQEBr3aZ
-         YzFzqehpPSEHkPysCEhZXHec2zTgFZjTY7WcaPzMmME8TmM85odYmBTJfYnaQ0Y8Scg9
-         2dCn4+yr0AdNuw9EU4HFZWjjYLsm5OwcnOMYXb2MfuQcwzW0b4yz0P2Hx8XlmGPD+8UG
-         kp7Q==
+        bh=2vKxy+BrmTM4erbpnPuK1egVjffH6omXH5GzoO/2vE8=;
+        b=BGahHi6rbzLUYAczxpoLOJeX76V5ePq6YWfzkIwa5saJL7xUSVSICFCjkHep3epSJu
+         rj+jUuLnHYK32M8oSkW8+gX+3ldm76XAHBm8ucUvrdnKGglYNa8HHMNqFlbogIUcaI5C
+         Z6mB9DQo/5HjX8TIrJ2syEftgA4yQiLeMWsrlVPiSP5j/0WyJ8PymoCJ9t4j6+cIPlZa
+         3WUJJDOAAlQlq/jZGMpLJM7nkpB29yPtyG5zqbB9yGNGQp3bHkZbUs9sosiPXKECiMiv
+         qf9fXJiTMt+Pk0ox4OVvfUoSGijk9thIg1ULv6G0vF1x9q5e3mhfcikygDNoODWOpTxC
+         sEHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9LSujuKc0BRpFIUlAoG3t4WRDvr3ggsu3MS/qx+gqZg=;
-        b=IB0H0A5wbvyt6cOBhmiswHGU0bIpa0R927NYOAL4xmCnSfcBTsiB+p3BRwxJ9etdpr
-         NiKXQkyxdntLviwfLBcoe+3/VtY9N3ektql0ZrajtLpIQ/7yz/7C6p6/Hi53yrN39Pc9
-         TnwyGnGLEoJ3MMdDJw2VvqKHegtN54QFECixtSzZ8Y9HwStTn9IUxwn0ZzzG74RzugYL
-         /l1vEYVPGJLfgc4ReUOqKW27VZIzZJlVMiospQOlWODDhGoZRc2AN7GIPC/3aML3Z6Vv
-         43qdlsdIEFqCKAKQLypAgYJfdkj75ndNWFRQzWz0Ez9PBvzI2SJOGYs402p/evdunh8q
-         y9CA==
-X-Gm-Message-State: AOAM532+qS25yNda2VMtHOacx+49vNzUbEs+7X7XOlR70T5KiPnN9Fl5
-        LZUUhbjCWcmyqAZlT4uRdv+SzjKj3mL4j9cC+9eW0w==
-X-Google-Smtp-Source: ABdhPJyI6yM9cYgRxLstCkc5xLwEf5PvN5GPJ1sq3T0dsqBj666zrIWnBAGaIL6c1jHKd+VdnV6KQIQh4y5v/9ZPk8s=
-X-Received: by 2002:a67:8b47:: with SMTP id n68mr837341vsd.50.1599120638807;
- Thu, 03 Sep 2020 01:10:38 -0700 (PDT)
+        bh=2vKxy+BrmTM4erbpnPuK1egVjffH6omXH5GzoO/2vE8=;
+        b=ip1QBULBs/0SSqUZAgWNNX1RMougcCCpKYIbgxOeKm6X99nm7WPT8sTN52XvCVFrpe
+         jZiYgwd46sQE32tNfiGCGc5tYsGXOPX8L1SDxa+O2eEo3+yt9EARKkCdu0m9TkqQGobQ
+         0pzXJincaJ+guQnDZOq3xkamOO1wYzBVS1rGhgCbsr1PSgYz0x665JESyJTsRUhDHwfP
+         qPZaqw/14tqHKMCnwPVA6JwDHuRA68Af3JPWT48tssA3PWMMb8AOZ3IU4rDB+lzOffOG
+         ifOyX1hywth6TbrdgKbn7FeOBiTrVDRjgDEy9xg75mG8OiVVs85EL2Xmd/PU6LAxYLSc
+         JiDA==
+X-Gm-Message-State: AOAM530VmexX1+o49x6zjwjnrZbknpC9qTPVx1bcqycHwVV70+r/o2Cb
+        sap3tB/3n4IZT3t3ZUS32UrrRdrkRtbWknrI6EVRGw==
+X-Google-Smtp-Source: ABdhPJxfYTnSYJGxu7eCAxgLLa9ss8++NvwiXEVkjxbE5o6nKhbHft/MCQxM3aY3B+PhB/1QvL5Twv2LkkutkBBczpQ=
+X-Received: by 2002:a67:f947:: with SMTP id u7mr841916vsq.135.1599120654486;
+ Thu, 03 Sep 2020 01:10:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200902204847.2764-1-krzk@kernel.org> <20200902204847.2764-2-krzk@kernel.org>
-In-Reply-To: <20200902204847.2764-2-krzk@kernel.org>
+References: <20200902164303.1.I5e598a25222b4534c0083b61dbfa4e0e76f66171@changeid>
+In-Reply-To: <20200902164303.1.I5e598a25222b4534c0083b61dbfa4e0e76f66171@changeid>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 3 Sep 2020 10:10:02 +0200
-Message-ID: <CAPDyKFpQxJ29Rhv=LNzJf8LkpV01EY2Z5-wLPs2fTsraUM=XWQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] mmc: s3cmci: Use proper printk format for iomem pointer
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Ben Dooks <ben-linux@fluff.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+Date:   Thu, 3 Sep 2020 10:10:17 +0200
+Message-ID: <CAPDyKFoyKjKhwKGtLMtEyDSeSiBU6wasc=jt6c=sHnhN8jqqjg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-msm: Prefer asynchronous probe
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Sep 2020 at 22:49, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Thu, 3 Sep 2020 at 01:43, Douglas Anderson <dianders@chromium.org> wrote:
 >
-> iomem pointers should be printed with pointer format to hide the
-> actual value and fix warnings when compile testing for 64-bit
-> architecture:
+> Turning on initcall debug on one system showed this:
+>   initcall sdhci_msm_driver_init+0x0/0x28 returned 0 after 34782 usecs
 >
->   drivers/mmc/host/s3cmci.c:1355:46: warning:
->     cast from pointer to integer of different size [-Wpointer-to-int-cast]
+> The lion's share of this time (~33 ms) was in mmc_power_up().  This
+> shouldn't be terribly surprising since there are a few calls to delay
+> based on "power_delay_ms" and the default delay there is 10 ms.
 >
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Because we haven't specified that we'd prefer asynchronous probe for
+> this driver then we'll wait for this driver to finish before we start
+> probes for more drivers.  While 33 ms doesn't sound like tons, every
+> little bit counts.
+>
+> There should be little problem with turning on asynchronous probe for
+> this driver.  It's already possible that previous drivers may have
+> turned on asynchronous probe so we might already have other things
+> (that probed before us) probing at the same time we are anyway.  This
+> driver isn't really providing resources (clocks, regulators, etc) that
+> other drivers need to probe and even if it was they should be handling
+> -EPROBE_DEFER.
+>
+> Let's turn this on and get a bit of boot speed back.
+
+Thanks for a very well written commit message!
+
+Indeed, I am sure many mmc host drivers could benefit from a similar
+change. At least regular platform drivers and amba drivers are pretty
+sure to work, but who knows.
+
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
 Applied for next, thanks!
 
@@ -91,22 +116,22 @@ Uffe
 
 
 > ---
->  drivers/mmc/host/s3cmci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/mmc/host/s3cmci.c b/drivers/mmc/host/s3cmci.c
-> index dcd458649338..3fb597095079 100644
-> --- a/drivers/mmc/host/s3cmci.c
-> +++ b/drivers/mmc/host/s3cmci.c
-> @@ -1352,7 +1352,7 @@ static int s3cmci_state_show(struct seq_file *seq, void *v)
->  {
->         struct s3cmci_host *host = seq->private;
+>  drivers/mmc/host/sdhci-msm.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> -       seq_printf(seq, "Register base = 0x%08x\n", (u32)host->base);
-> +       seq_printf(seq, "Register base = 0x%p\n", host->base);
->         seq_printf(seq, "Clock rate = %ld\n", host->clk_rate);
->         seq_printf(seq, "Prescale = %d\n", host->prescaler);
->         seq_printf(seq, "is2440 = %d\n", host->is2440);
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index d4c02884cca8..9dd0dbb65382 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -2542,6 +2542,7 @@ static struct platform_driver sdhci_msm_driver = {
+>                    .name = "sdhci_msm",
+>                    .of_match_table = sdhci_msm_dt_match,
+>                    .pm = &sdhci_msm_pm_ops,
+> +                  .probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>         },
+>  };
+>
 > --
-> 2.17.1
+> 2.28.0.402.g5ffc5be6b7-goog
 >
