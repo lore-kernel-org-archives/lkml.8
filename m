@@ -2,97 +2,139 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13775C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11BFC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D72E820716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A419120716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:04:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JMwsTCzv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pFqpNhWN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgICPEB (ORCPT
+        id S1729018AbgICPEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:04:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59174 "EHLO
+        Thu, 3 Sep 2020 11:04:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728604AbgICN60 (ORCPT
+        with ESMTP id S1728984AbgICN60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 09:58:26 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EDF7C061245;
-        Thu,  3 Sep 2020 06:09:57 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id b124so2273984pfg.13;
-        Thu, 03 Sep 2020 06:09:57 -0700 (PDT)
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE185C061A20;
+        Thu,  3 Sep 2020 06:48:37 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id s205so3789984lja.7;
+        Thu, 03 Sep 2020 06:48:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7yX/ZjF2stJ6zUIzoHq+EMwZnUipKPIbfJHG6QJz9JI=;
-        b=JMwsTCzvrDQwLOmw0ccOnaZRQRTV23TxWHlyGWHxhGyNOvv90fQ59WY4fkFveHVDAe
-         sOAQy6zWgkUVpfRBNhWJNLz3p1njhOR/qhontH61eeeoafNS+jVRsV0Ftz9v5q+TO9sK
-         mcMuljRxqvLjJw4lQa0YgCsAGyQ3Mm+DDWh4SehY/Z0D91ozKvnAgoqLhGfx8q7f+51H
-         AFREE4dBDL1ndnOQuAnDfgHi+4/d7ArS4cpZ9SA1egc9P2RP9u60TwLpKeTXsYlZQBTe
-         166I4cx1yDGBlm3V7htEnicJfpUrxKJ/ZxDh0gKMmbyBZi/ngFXDCFl3Q8FPxQmcH665
-         yvFw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LaqCbRyYwj+hXeNs4Rfcy15/efkgJqt2Cesa41CCq68=;
+        b=pFqpNhWNj4qz5FszdeKCO0DovSJF9igdv0sKaSivGNh1VvmDLPOJ2rVuVtDSOn9zZV
+         5tbik1hIIgqy04EDMRQ3NMuHvhu7FlLQz+wUAjmVDBFSFkR9PgVZOFJONMHTxo84I43H
+         K5VhgNgMdds6pfYJBoww/b+eiYOTiOhK1ZOTnzv+BveFKlyUOolamDkKm2blJbO6uPfw
+         ypekU/Bx1o85t+RyeTWpkAKnz+WZVog0AaReHQ7kjKsS01R+LztnFevJCwHFwPUwxxZg
+         TtKboFvpMlSXgqH/9owS8ConHNcYoX72N3imv6VsGCoDB+cDklcIQGCzaECSADbrMNEq
+         vsxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=7yX/ZjF2stJ6zUIzoHq+EMwZnUipKPIbfJHG6QJz9JI=;
-        b=MHQZlCfnwidSCEFEQYT5G82q5JeBp8eJQnzirUl8Eo9GTeh13hoVtxpBtkTCD7XRt0
-         QDXr2nKiSkKve+0BVqaw9dQGAzbHH2RJz61/Zd9S2mBlENvUZsij6zqMUOgcgeC5aF5z
-         ah99JBUHw0/W0wd2z5GKkIg4hKbN6MgrEWKeK3xwcborGnrUiIJIYvwR1z/nMgKrX59p
-         TRKdEr6mSa5eQgBt9jsKXOEANRPKIG/EBiEWSHRQUstBQ/T5K+kBs2NCzm4UHOVuXJvk
-         Qmq1SrOcAhn7B3+rDYH1F0nILTKU2X+qQBouyCtXdfbpIu2xydaM1AY6tYKqKbO/MpoD
-         fLyA==
-X-Gm-Message-State: AOAM530xfk+QIcN+cwdexuwsE1sB2YiLH6U8nyMexW1ZjlVCpZHZ9OMu
-        7fsj2nUtml7jAutcy2qLsrs=
-X-Google-Smtp-Source: ABdhPJx1bWyYPq8pBWWBnVHh8UHHaCZRjqVBVgevzkBqhZX8o6P0nKReuy0aotNxP7BMmgS8hNP1rw==
-X-Received: by 2002:a62:ea01:: with SMTP id t1mr3763933pfh.125.1599138596606;
-        Thu, 03 Sep 2020 06:09:56 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:6085:e35d:a526:a3b6:4686:f6fb])
-        by smtp.gmail.com with ESMTPSA id x22sm3145297pfn.41.2020.09.03.06.09.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 06:09:56 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org, robh+dt@kernel.org
-Cc:     dragos.bogdan@analog.com, darius.berghe@analog.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, andy.shevchenko@gmail.com,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: [PATCH v2 0/3] iio: gyro: adxrs290: Add triggered buffer & debugfs support
-Date:   Thu,  3 Sep 2020 18:39:47 +0530
-Message-Id: <20200903130950.6274-1-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        bh=LaqCbRyYwj+hXeNs4Rfcy15/efkgJqt2Cesa41CCq68=;
+        b=TtBuX/cypAOqiOQ4VPqLSyF393UE3zGZeD2Dq9ZBA3Yv/jRBzHP8r560EapfwtZwvQ
+         wuUVQONSum0vFXwhiGZHWbQrwGJsQ/gSWktCq5n365vt5kRc4ha/CR5uLrDwZWMfJ4FR
+         trLwEHcKTDipfeRuqrxZ0VtdPh03vndoK88l5SWI066oX3Cc500iYORE4WQ5ItEmUKgk
+         +xUgD+TXMFvS3JWso412bXUKCU6KvSZZYW7G2zBPuFl28IEenBbkt/LkWxBPcOtmCHVg
+         NJi8RcIam+67F+Qu3BuZWT5kvRNR1hpytjv+XigS13mPP05Q0duUbXBSX7zqd6x9sMnW
+         4piA==
+X-Gm-Message-State: AOAM531iOOltLwk5qalkv3kaEKALR3Mmp1C7hQKaRaGq6Q2EqP0s1Bu/
+        sa3x4oFHgKwF3gLjjJ5KMOnsE54qrO8=
+X-Google-Smtp-Source: ABdhPJysBNIOjzHtL+VhmNkg+NelDDnocAgSZYpjvcLtfIhQVLeWlsH5s72PcLFzEMhLzr7ci/8TXw==
+X-Received: by 2002:a2e:a0d5:: with SMTP id f21mr1448443ljm.364.1599140916133;
+        Thu, 03 Sep 2020 06:48:36 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id k205sm605178lfk.19.2020.09.03.06.48.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 06:48:35 -0700 (PDT)
+Subject: Re: [PATCH v3 09/22] i2c: tegra: Clean up probe function
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200903005300.7894-1-digetx@gmail.com>
+ <20200903005300.7894-10-digetx@gmail.com>
+ <CAHp75VdPoJFNC+MntKu-CL8jFMEe85ZT3R9DF0aaNC4KjqWXyg@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4bd12095-7a29-bcb4-6b49-83eca285c897@gmail.com>
+Date:   Thu, 3 Sep 2020 16:48:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CAHp75VdPoJFNC+MntKu-CL8jFMEe85ZT3R9DF0aaNC4KjqWXyg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce DATA_RDY trigger for triggered buffer setup; this enables continuous
-data capture. Additionally, add support for direct register access using the debugfs 
-iio interface. 
+03.09.2020 14:17, Andy Shevchenko пишет:
+> On Thu, Sep 3, 2020 at 3:54 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> The driver's probe function code is difficult to read and follow. This
+>> patch reorders code of the probe function, forming logical groups that are
+>> easy to work with. The clock and hardware initializations are factored
+>> out into separate functions in order to keep code clean and ease error
+>> unwinding.
+>>
+>> Driver now makes use of devm_platform_get_and_ioremap_resource() and
+>> platform_get_irq() which are replacing boilerplate parts of the code.
+>>
+>> The dev_err_probe() is now used for reset control retrieval because reset
+>> is now requested before clocks, and thus, BPMP driver that provides reset
+>> controls for newer SoCs may cause the probe defer.
+> 
+>> The error message of devm_request_irq() is removed because this function
+>> takes care of printing the message by itself.
+> 
+> I see no evidence of this.
 
-The device-tree bindings documentation illustrates an example of using a GPIO irq
-line to trigger a data capture.
+Good catch! I confused it with the platform_get_irq() which prints the
+message! I'll correct it in v4, thanks!
 
-Nishant Malpani (3):
-  iio: gyro: adxrs290: Add triggered buffer support
-  dt-bindings: iio: gyro: adxrs290: Add interrupts support
-  iio: gyro: adxrs290: Add debugfs register access support
+Anyways, the message of devm_request_irq() needs a correction since it
+prints the number of vIRQ instead of the error code.
 
- .../bindings/iio/gyroscope/adi,adxrs290.yaml  |   7 +
- drivers/iio/gyro/Kconfig                      |   2 +
- drivers/iio/gyro/adxrs290.c                   | 284 +++++++++++++++++-
- 3 files changed, 279 insertions(+), 14 deletions(-)
+> ...
+> 
+>> +       of_property_read_u32(np, "clock-frequency", &bus_clk_rate);
+>> +       i2c_dev->bus_clk_rate = bus_clk_rate;
+> 
+> Hmm... I dunno if Wolfram is going to implement a special helper
+> exactly for this. I remember we discussed that with him during v5.8
+> (?) times.
 
--- 
-2.20.1
+I now see that there is a i2c_parse_fw_timings() which parses
+"clock-frequency" and other common properties. I could switch to use
+that helper, but not sure whether it would be really worthwhile because
+only one property is needed to be parsed. I'll consider this change for
+v4, thank you for the suggestion!
 
+> ...
+> 
+>> +static int tegra_i2c_init_clocks(struct tegra_i2c_dev *i2c_dev)
+> 
+> Hmm... Don't we have something like devm_clk_bulk_get_all() or so?
+> 
+
+Sounds like a good suggestion! I'll consider it for the v4, thanks!
