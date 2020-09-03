@@ -2,116 +2,225 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9D6C433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A679C433E9
 	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E96320786
+	by mail.kernel.org (Postfix) with ESMTP id 5986720BED
 	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTmj5Nx/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yAdaap5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbgICPTi (ORCPT
+        id S1728996AbgICPTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:19:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36070 "EHLO
+        Thu, 3 Sep 2020 11:19:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbgICL1b (ORCPT
+        with ESMTP id S1728557AbgICL1b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 07:27:31 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A597C061245;
-        Thu,  3 Sep 2020 04:18:11 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id w7so2075460pfi.4;
-        Thu, 03 Sep 2020 04:18:11 -0700 (PDT)
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB47C061247
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 04:18:45 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id e16so2811231wrm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 04:18:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dYHgOYFkdCbGZWuPZrhfEhLKQCW87nGOndt8XY8lTCE=;
-        b=YTmj5Nx/rxPJZhk7d9yLcM2eIv4s0d3h/2ZR84Em9iBxXXU+6fm3Z5kcFOSLY+Gsu+
-         rnb+mSPFr38Rfgetp+MVqEa0Y5Z88781pr3jGwxI9aW9uIc2OIfhdOiAuEMz8ZwWRwrv
-         Xtky8ninIqNZ1+nE5/RIr2SDFhktx6FZoCwZ/+NltoqGD8aKYsjsqajhIyssbPj2x/+N
-         cNlWAUKA1jars5Ol/hlBfegnT3XpElC5fPQaZ/dSLZTKwBcP23I4SpXHLO0gD4BDMDd4
-         TOjqdW4p/n2T6IddPecArk4zZSzmYuWcymqQTKaBEo+10kylkPek6mgPXylU1suF/uhb
-         Dt2g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CQ15tirZpKA58Rq11JF7jkdfBFgYHMCtFMxo14MKJgM=;
+        b=yAdaap5PB+hSEk2DOwQJho56yttfPUEvELhdmmRyS1aWA6/G07iA1d7B1Aiag5yyRb
+         HBGOzpOR+7eQ1duXllObstGDJ2QrVCfgjTKWh/B5vovtTRM8OkuIkQUL9AhBTOrjZa+k
+         pHHXVEAAZgVR65CNlQhE3F4r74LGaJi72lU8XEOKQ+t+i/pI85BoWmmvEPFkjWMSoLYw
+         Y0zToNSt3UUvWnoGvHkaTgDQDdqPmMhmbOWHsrcJMzCrxqwLEpy6tjCD/6Qvz2ccy9K2
+         zUijigOpVuxEOqKwN7rrTA89Q0657lSLVrciP+dal70DXma2u0aUNkHoQd9jyF+xtZjs
+         bM1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dYHgOYFkdCbGZWuPZrhfEhLKQCW87nGOndt8XY8lTCE=;
-        b=I3u4r+FcqjlHj7nPPkNEwEWzHmvcf8EjDtN304Quv9b4+WZ/ITteW9LgnX+XcAi6SQ
-         v86HrdHW4Xxf7sLS8cYb8wwmG2AsQT26IjJfL9mrk0XQcyIdTaBiO6bEyesrubXaR5tL
-         x2dG2118VIj6nHVxqfm6NaqjCvaYO8Eh6Tepkuz4ft6lWMYZPhgOxAuuUss25IUB04/c
-         NgSLaPVRN+coCYviqo2XdrxgPHd6SRVfIorG2QyIL6Nj3P7DXmFJg0X3pzi1piA30muN
-         6p/iKzX4Oxe4/rxsGE8PG4jjCT7yJ6gUrYzaJ2Zjo7+bYHTPRWQGssnJcZUYHqpVPOAp
-         KdCA==
-X-Gm-Message-State: AOAM532V1JSvji1X/vvCNY1hzml2LzMOi8IE78Ui7eLiF3Ubmf6j+X+a
-        nT0uj65eLsHwZQqkltWgLM3mT+NR74GB01HoBLKxrtJGX34=
-X-Google-Smtp-Source: ABdhPJwb3eyvijxdRfrW78iIFLm79zpgRsDNv/ojUM5mIhB1AodbO4N0A4ueSIU1v6GyeE3AMG04UUsRMgbbuwovn94=
-X-Received: by 2002:a17:902:56a:: with SMTP id 97mr3479518plf.130.1599131890968;
- Thu, 03 Sep 2020 04:18:10 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CQ15tirZpKA58Rq11JF7jkdfBFgYHMCtFMxo14MKJgM=;
+        b=c0UDi7bT6XWrJaU3qEfP9QZp0gs0CcikY98r6z0PnD94/MGkfcfpjwMchE4Bo7tpgG
+         BwQYl7PLvYfXwIPSWizGHfRdZQqIdjX2hkxAdDGjkWysCc8XnlqFlhQPUeNQYTXgw8ud
+         E3d5NuImr+qzZ2g6MnXd2SPD4H+KPeEGO74gUGLID0It6Kmsy6CrC0mMbN+WSmxGJLLT
+         EX+1drNpg+hdZeOwg0CidWb5VouVc8c/+W3V1PnCfPfyt4O5ORZpc+C1hF1yYFvQfkec
+         6dJTUuSdGQ2M0Eq2obVZiJO52QkqpcrxL/bvEAMl5w2AJ3wK/t/E25HOOCWLL0B3i1Uy
+         bkCQ==
+X-Gm-Message-State: AOAM531DPGys0il6IXpK8H/vuEnEB1Rs/Z79C8OXgj7C0ChWlvvy+wES
+        JpaeYHaS1ZrFmd+1FYovccEzYg==
+X-Google-Smtp-Source: ABdhPJzuiRVyOaDLzC9V5jdoMTdPgH3/zYN54my371UhAdkbgzHKgI9i0auo3zIk0dt7BttnIX+osg==
+X-Received: by 2002:adf:e7ca:: with SMTP id e10mr1860353wrn.236.1599131923615;
+        Thu, 03 Sep 2020 04:18:43 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id z14sm3706113wrh.14.2020.09.03.04.18.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 04:18:42 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 12:18:40 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Pascal Roeleven <dev@pascalroeleven.nl>
+Cc:     Andrey Lebedev <andrey@lebedev.lt>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Emil Lenngren <emil.lenngren@gmail.com>
+Subject: Re: pwm-sun4i: PWM backlight is not turned off on shutdown
+Message-ID: <20200903111840.vkjevwmwarx2txhe@holly.lan>
+References: <ae58976c-a8d7-0d00-fe72-d21579b37240@lebedev.lt>
+ <20200902095402.pombrirqqjdew34b@holly.lan>
+ <913a5324-a7d2-f1d5-701e-1c28359286f2@lebedev.lt>
+ <5302741318a28e39239db08a1f05ecb7@pascalroeleven.nl>
 MIME-Version: 1.0
-References: <20200903005300.7894-1-digetx@gmail.com> <20200903005300.7894-10-digetx@gmail.com>
-In-Reply-To: <20200903005300.7894-10-digetx@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 3 Sep 2020 14:17:53 +0300
-Message-ID: <CAHp75VdPoJFNC+MntKu-CL8jFMEe85ZT3R9DF0aaNC4KjqWXyg@mail.gmail.com>
-Subject: Re: [PATCH v3 09/22] i2c: tegra: Clean up probe function
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5302741318a28e39239db08a1f05ecb7@pascalroeleven.nl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 3:54 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> The driver's probe function code is difficult to read and follow. This
-> patch reorders code of the probe function, forming logical groups that are
-> easy to work with. The clock and hardware initializations are factored
-> out into separate functions in order to keep code clean and ease error
-> unwinding.
->
-> Driver now makes use of devm_platform_get_and_ioremap_resource() and
-> platform_get_irq() which are replacing boilerplate parts of the code.
->
-> The dev_err_probe() is now used for reset control retrieval because reset
-> is now requested before clocks, and thus, BPMP driver that provides reset
-> controls for newer SoCs may cause the probe defer.
+On Wed, Sep 02, 2020 at 09:42:49PM +0200, Pascal Roeleven wrote:
+> Thank you for adding me. Emil (also added now) and I spent a while on trying
+> to figure out how to solve this. The Allwinner PWM controller has some
+> quirks.
+> 
+> Unfortunately I never got around to perform some more tests and fix it
+> indefinitely. It's still on my todo list..
+> 
+> > On 9/2/20 12:54 PM, Daniel Thompson wrote:
+> > > There's some rather odd logic in sun4i_pwm_apply() that results in the
+> > > PWM being disabled twice... once when it applies the initial config
+> > > and again after waiting for a duty_cycle.
+> 
+> That's true. To properly turn off the controller you have to turn the
+> controller off first and keep the gate on for at least two full clock
+> cycles. Then the gate must be turned off. Otherwise it might get stuck.
+> That's probably what is trying to be done here.
+> 
+> On 2020-09-02 21:05, Andrey Lebedev wrote:
+> > Indeed, this fixes the issue for me. The display goes dark reliably on
+> > writing 4 to "/sys/.../bl_power" as well as when system is halted. I did
+> > not notice any negative side effects so far.
+> 
+> Problems start to arise when combining bl_power and brightness setting in a
+> particular order or at the same time (with for example a backlight driver
+> which sets both bl_power and brightness). I can't recall exactly what caused
+> problems and when, but one thing I was sure of is that timing was of the
+> essence. Once I added some delays here and there it started to work.
+> 
+> If this patch works for you then that's great, but unfortunately it isn't a
+> complete solution.
 
-> The error message of devm_request_irq() is removed because this function
-> takes care of printing the message by itself.
+Forgive my poking but it does look to me like Andrey may have a point
+about d3817a647059 ("pwm: sun4i: Remove redundant needs_delay").
 
-I see no evidence of this.
+I've not got this hardware so I can't comment on whether the current
+code is correct or not. However, after reviewing d3817a647059, it is
+certainly looks like the patch does not actually implement what the
+patch description says it does. In fact, by activating previously
+unreachable code, it appears to introduces exactly the regression
+described by Andrey.
 
-...
 
-> +       of_property_read_u32(np, "clock-frequency", &bus_clk_rate);
-> +       i2c_dev->bus_clk_rate = bus_clk_rate;
+> From d3817a647059a3e5f8791e9b7225d194985aa75f Mon Sep 17 00:00:00 2001
+> From: Pascal Roeleven <dev@pascalroeleven.nl>
+> Date: Tue, 17 Mar 2020 16:59:03 +0100
+> Subject: [PATCH] pwm: sun4i: Remove redundant needs_delay
+> 
+> 'needs_delay' does now always evaluate to true, so remove all
+> occurrences.
 
-Hmm... I dunno if Wolfram is going to implement a special helper
-exactly for this. I remember we discussed that with him during v5.8
-(?) times.
+In other words, all paths that test !needs_delay[pwm->hwpwm] are
+unreachable...
 
-...
 
-> +static int tegra_i2c_init_clocks(struct tegra_i2c_dev *i2c_dev)
+> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
+> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> ---
+>  drivers/pwm/pwm-sun4i.c | 13 ++-----------
+>  1 file changed, 2 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index 3e3efa6c768f..5c677c563349 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+> @@ -90,7 +90,6 @@ struct sun4i_pwm_chip {
+>  	spinlock_t ctrl_lock;
+>  	const struct sun4i_pwm_data *data;
+>  	unsigned long next_period[2];
+> -	bool needs_delay[2];
+>  };
+>  
+>  static inline struct sun4i_pwm_chip *to_sun4i_pwm_chip(struct pwm_chip *chip)
+> @@ -287,7 +286,6 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
+>  	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
+>  		usecs_to_jiffies(cstate.period / 1000 + 1);
+> -	sun4i_pwm->needs_delay[pwm->hwpwm] = true;
+>  
+>  	if (state->polarity != PWM_POLARITY_NORMAL)
+>  		ctrl &= ~BIT_CH(PWM_ACT_STATE, pwm->hwpwm);
+> @@ -298,7 +296,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  
+>  	if (state->enabled) {
+>  		ctrl |= BIT_CH(PWM_EN, pwm->hwpwm);
+> -	} else if (!sun4i_pwm->needs_delay[pwm->hwpwm]) {
+> +	} else {
 
-Hmm... Don't we have something like devm_clk_bulk_get_all() or so?
+... but this previously unreachable path will now be executed
+if state->enabled is false.
 
--- 
-With Best Regards,
-Andy Shevchenko
+>  		ctrl &= ~BIT_CH(PWM_EN, pwm->hwpwm);
+>  		ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+>  	}
+> @@ -310,15 +308,9 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	if (state->enabled)
+>  		return 0;
+>  
+> -	if (!sun4i_pwm->needs_delay[pwm->hwpwm]) {
+> -		clk_disable_unprepare(sun4i_pwm->clk);
+> -		return 0;
+> -	}
+> -
+
+This unreachable path is correctly removed.
+
+>  	/* We need a full period to elapse before disabling the channel. */
+>  	now = jiffies;
+> -	if (sun4i_pwm->needs_delay[pwm->hwpwm] &&
+
+This unconditionally true expression is also correctly removed.
+
+In short this patch changes behaviour in a manner that could not be
+predicted from the patch description.
+
+
+Daniel.
+
+
+> -	    time_before(now, sun4i_pwm->next_period[pwm->hwpwm])) {
+> +	if (time_before(now, sun4i_pwm->next_period[pwm->hwpwm])) {
+
+>  		delay_us = jiffies_to_usecs(sun4i_pwm->next_period[pwm->hwpwm] -
+>  					   now);
+>  		if ((delay_us / 500) > MAX_UDELAY_MS)
+> @@ -326,7 +318,6 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  		else
+>  			usleep_range(delay_us, delay_us * 2);
+>  	}
+> -	sun4i_pwm->needs_delay[pwm->hwpwm] = false;
+>  
+>  	spin_lock(&sun4i_pwm->ctrl_lock);
+>  	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+
