@@ -2,290 +2,155 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2CBC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8162C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCFD20758
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B21F020758
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:54:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="YD/eG8h/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IEUXwMWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbgICOyk (ORCPT
+        id S1729070AbgICOyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:54:40 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:28900 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729438AbgICOyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:54:35 -0400
-IronPort-SDR: sVEDqzfl0w0g4Q/DM5sgqLfNBoYtaF6yAhlSOV/Ff6L2ml0FRRMXMFtkY4R5or3fBKMMy7O8Sg
- l/aKu+E5kr3F3Ot78thJpPIAHYCWTocqWuINEmbY+CyiJ8LMwFTApSVEJdbyALEOtNnxYtLijx
- YRlmAp1mMXz7MYzXQeHKtwGx8ZslIjdPRoOi+NcBLGkP7K69XAQjq6TSWR781K72u+So9GmOJi
- 3paVqsrVO9WcHP8J980608fG1Gs7f+9xTsbIcdUiZmbNiims4S+wSeOgTciPQKAICmV2adUgvk
- 38Y=
-X-IronPort-AV: E=Sophos;i="5.76,387,1592863200"; 
-   d="scan'208";a="13722702"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 03 Sep 2020 16:54:28 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Thu, 03 Sep 2020 16:54:28 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Thu, 03 Sep 2020 16:54:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1599144868; x=1630680868;
-  h=from:to:cc:subject:date:message-id;
-  bh=c6CREVq+CJypLfkfehiTiKALj8q9n1fuSRM/zOS0M3Q=;
-  b=YD/eG8h/lH+qAq5E6t6SQIA0ZQMHq5rgM+4Qz1lmVfIiUduGZ0jclTqE
-   YktPNbZtMayhHrPkCQ0sSR8V75G9VBNPKSAnIvBEk03Ba6xjycCUU6oQ/
-   jsHoUTgg1FcMMDVE8k7HvOsYBDWnyPGPWEU8iecY28Hzj2R/7aDNEbvZh
-   lWU1eBTJmDDwIM5WMfBEdQGzr/9XrNNfTL2naSwnPe9BUalsFwS5HIlvD
-   RC9PxTWfkRCyarrGySm6rBOAGwrYigdaCC6lF2Uadov2TyEqcqSjxXp8u
-   AZA+caBoKezEbeBpmOhnUGicG5B7n7zxucJhsKgCbl+2e1gFwY9Bkg4aq
-   A==;
-IronPort-SDR: HwNqwT3/Z4+PQ2C9chM6hcXnNJqES7qLluH+GZj98Ndv00vv9NfP1Ltesyg2Miuat+qoQUblqo
- b7SDL8WaazH6MatSQ/I2VWVUjjGzir8+kQptkjRjweMBR0g03w8VUoCQSXORRF7OGHnDJ7NTMB
- XBzS+uXI+2JBA0rSpfo2zcyW7g5S8nWt5hrb6mTz+zuhAKlEPPVzR/4+ji+4MWMVb313dskCbu
- jDJjRC78sJxbl0yVtyiw7esYaugfOV4OTpOZ02ynxWb4p8tNexzJtrbbr9qyqtOzqlsW28M+mK
- Img=
-X-IronPort-AV: E=Sophos;i="5.76,387,1592863200"; 
-   d="scan'208";a="13722701"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 03 Sep 2020 16:54:28 +0200
-Received: from schifferm-ubuntu4.tq-net.de (unknown [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 649D9280065;
-        Thu,  3 Sep 2020 16:54:28 +0200 (CEST)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH v2 1/2] ARM: dts: imx6qdl: tqma6: fix indentation
-Date:   Thu,  3 Sep 2020 16:53:46 +0200
-Message-Id: <20200903145347.17830-1-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 3 Sep 2020 10:54:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45856 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729197AbgICOMD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:12:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599142317;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=CT+BTbU04vXEyP9pdcH57nOtkyvU1kgH7PF3bGLUJr8=;
+        b=IEUXwMWcXiIqHYPAIxe4CJSi7Eovn2LhMucfZrlKnWkjidGEHHygsX0Oln7ATTQj9qN+wZ
+        qiqTPK0MWmY6IXIfoYdSQlQEmFiqys1I/T9PnrGjPLoPc4ryef2ioUCCIOUwGsqHLSbIxF
+        3dGKMbnc5lBBG9Qe413Is9dsnynEsIw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-92-gECEWAk0PASqH66S4LxuRQ-1; Thu, 03 Sep 2020 10:11:56 -0400
+X-MC-Unique: gECEWAk0PASqH66S4LxuRQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61C0510051D3;
+        Thu,  3 Sep 2020 14:11:54 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-114-36.ams2.redhat.com [10.36.114.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3160319C78;
+        Thu,  3 Sep 2020 14:11:43 +0000 (UTC)
+From:   Mohammed Gamal <mgamal@redhat.com>
+To:     kvm@vger.kernel.org, pbonzini@redhat.com
+Cc:     linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, Mohammed Gamal <mgamal@redhat.com>
+Subject: [PATCH] KVM: x86: VMX: Make smaller physical guest address space support user-configurable
+Date:   Thu,  3 Sep 2020 16:11:22 +0200
+Message-Id: <20200903141122.72908-1-mgamal@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes: cac849e9bbc8 ("ARM: dts: imx6qdl: add TQMa6{S,Q,QP} SoM")
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+This patch exposes allow_smaller_maxphyaddr to the user as a module parameter.
+
+Since smaller physical address spaces are only supported on VMX, the parameter
+is only exposed in the kvm_intel module.
+Modifications to VMX page fault and EPT violation handling will depend on whether
+that parameter is enabled.
+
+Also disable support by default, and let the user decide if they want to enable
+it.
+
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
 ---
+ arch/x86/kvm/vmx/vmx.c | 15 ++++++---------
+ arch/x86/kvm/vmx/vmx.h |  3 +++
+ arch/x86/kvm/x86.c     |  2 +-
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-v2: no changes
-
- arch/arm/boot/dts/imx6qdl-tqma6.dtsi | 188 +++++++++++++--------------
- 1 file changed, 94 insertions(+), 94 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-tqma6.dtsi b/arch/arm/boot/dts/imx6qdl-tqma6.dtsi
-index 29bcce20f5f3..9513020ddd1a 100644
---- a/arch/arm/boot/dts/imx6qdl-tqma6.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-tqma6.dtsi
-@@ -83,101 +83,101 @@
- };
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 819c185adf09..dc778c7b5a06 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -129,6 +129,9 @@ static bool __read_mostly enable_preemption_timer = 1;
+ module_param_named(preemption_timer, enable_preemption_timer, bool, S_IRUGO);
+ #endif
  
- &pmic {
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_pmic>;
--		interrupt-parent = <&gpio6>;
--		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
--
--		regulators {
--			reg_vddcore: sw1ab {
--				regulator-min-microvolt = <300000>;
--				regulator-max-microvolt = <1875000>;
--				regulator-always-on;
--			};
--
--			reg_vddsoc: sw1c {
--				regulator-min-microvolt = <300000>;
--				regulator-max-microvolt = <1875000>;
--				regulator-always-on;
--			};
--
--			reg_gen_3v3: sw2 {
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--
--			reg_ddr_1v5a: sw3a {
--				regulator-min-microvolt = <400000>;
--				regulator-max-microvolt = <1975000>;
--				regulator-always-on;
--			};
--
--			reg_ddr_1v5b: sw3b {
--				regulator-min-microvolt = <400000>;
--				regulator-max-microvolt = <1975000>;
--				regulator-always-on;
--			};
--
--			sw4_reg: sw4 {
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--
--			reg_5v_600mA: swbst {
--				regulator-min-microvolt = <5000000>;
--				regulator-max-microvolt = <5150000>;
--				regulator-always-on;
--			};
--
--			reg_snvs_3v: vsnvs {
--				regulator-min-microvolt = <1500000>;
--				regulator-max-microvolt = <3000000>;
--				regulator-always-on;
--			};
--
--			reg_vrefddr: vrefddr {
--				regulator-boot-on;
--				regulator-always-on;
--			};
--
--			reg_vgen1_1v5: vgen1 {
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1550000>;
--				/* not used */
--			};
--
--			reg_vgen2_1v2_eth: vgen2 {
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1550000>;
--				regulator-always-on;
--			};
--
--			reg_vgen3_2v8: vgen3 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--
--			reg_vgen4_1v8: vgen4 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--
--			reg_vgen5_1v8_eth: vgen5 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--
--			reg_vgen6_3v3: vgen6 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pmic>;
-+	interrupt-parent = <&gpio6>;
-+	interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
++extern bool __read_mostly allow_smaller_maxphyaddr;
++module_param(allow_smaller_maxphyaddr, bool, S_IRUGO | S_IWUSR);
 +
-+	regulators {
-+		reg_vddcore: sw1ab {
-+			regulator-min-microvolt = <300000>;
-+			regulator-max-microvolt = <1875000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_vddsoc: sw1c {
-+			regulator-min-microvolt = <300000>;
-+			regulator-max-microvolt = <1875000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_gen_3v3: sw2 {
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_ddr_1v5a: sw3a {
-+			regulator-min-microvolt = <400000>;
-+			regulator-max-microvolt = <1975000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_ddr_1v5b: sw3b {
-+			regulator-min-microvolt = <400000>;
-+			regulator-max-microvolt = <1975000>;
-+			regulator-always-on;
-+		};
-+
-+		sw4_reg: sw4 {
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_5v_600mA: swbst {
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5150000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_snvs_3v: vsnvs {
-+			regulator-min-microvolt = <1500000>;
-+			regulator-max-microvolt = <3000000>;
-+			regulator-always-on;
- 		};
-+
-+		reg_vrefddr: vrefddr {
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		reg_vgen1_1v5: vgen1 {
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <1550000>;
-+			/* not used */
-+		};
-+
-+		reg_vgen2_1v2_eth: vgen2 {
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <1550000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_vgen3_2v8: vgen3 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_vgen4_1v8: vgen4 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_vgen5_1v8_eth: vgen5 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		reg_vgen6_3v3: vgen6 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+	};
- };
+ #define KVM_VM_CR0_ALWAYS_OFF (X86_CR0_NW | X86_CR0_CD)
+ #define KVM_VM_CR0_ALWAYS_ON_UNRESTRICTED_GUEST X86_CR0_NE
+ #define KVM_VM_CR0_ALWAYS_ON				\
+@@ -4798,7 +4801,8 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
  
- /* eMMC */
+ 	if (is_page_fault(intr_info)) {
+ 		cr2 = vmx_get_exit_qual(vcpu);
+-		if (enable_ept && !vcpu->arch.apf.host_apf_flags) {
++		if (enable_ept && !vcpu->arch.apf.host_apf_flags
++			&& allow_smaller_maxphyaddr) {
+ 			/*
+ 			 * EPT will cause page fault only if we need to
+ 			 * detect illegal GPAs.
+@@ -5331,7 +5335,7 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
+ 	 * would also use advanced VM-exit information for EPT violations to
+ 	 * reconstruct the page fault error code.
+ 	 */
+-	if (unlikely(kvm_mmu_is_illegal_gpa(vcpu, gpa)))
++	if (unlikely(kvm_mmu_is_illegal_gpa(vcpu, gpa)) && allow_smaller_maxphyaddr)
+ 		return kvm_emulate_instruction(vcpu, 0);
+ 
+ 	return kvm_mmu_page_fault(vcpu, gpa, error_code, NULL, 0);
+@@ -8303,13 +8307,6 @@ static int __init vmx_init(void)
+ #endif
+ 	vmx_check_vmcs12_offsets();
+ 
+-	/*
+-	 * Intel processors don't have problems with
+-	 * GUEST_MAXPHYADDR < HOST_MAXPHYADDR so enable
+-	 * it for VMX by default
+-	 */
+-	allow_smaller_maxphyaddr = true;
+-
+ 	return 0;
+ }
+ module_init(vmx_init);
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 26175a4759fa..b859435efa2e 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -551,6 +551,9 @@ static inline bool vmx_has_waitpkg(struct vcpu_vmx *vmx)
+ 
+ static inline bool vmx_need_pf_intercept(struct kvm_vcpu *vcpu)
+ {
++	if (!allow_smaller_maxphyaddr)
++		return false;
++
+ 	return !enable_ept || cpuid_maxphyaddr(vcpu) < boot_cpu_data.x86_phys_bits;
+ }
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index d39d6cf1d473..982f1d73a884 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -188,7 +188,7 @@ static struct kvm_shared_msrs __percpu *shared_msrs;
+ u64 __read_mostly host_efer;
+ EXPORT_SYMBOL_GPL(host_efer);
+ 
+-bool __read_mostly allow_smaller_maxphyaddr;
++bool __read_mostly allow_smaller_maxphyaddr = 0;
+ EXPORT_SYMBOL_GPL(allow_smaller_maxphyaddr);
+ 
+ static u64 __read_mostly host_xss;
 -- 
-2.17.1
+2.26.2
 
