@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A409C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4535C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9A7208B3
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DCE120897
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:07:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="aSZDAT6I";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Wg4thRAp"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="RmogQZqC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Kg4HJyMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgICIH3 (ORCPT
+        id S1728354AbgICIHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:07:29 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:41843 "EHLO
+        Thu, 3 Sep 2020 04:07:39 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:44757 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728479AbgICIDR (ORCPT
+        by vger.kernel.org with ESMTP id S1728535AbgICIDr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:03:17 -0400
+        Thu, 3 Sep 2020 04:03:47 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 66119C02;
-        Thu,  3 Sep 2020 04:03:16 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 83CD0C29;
+        Thu,  3 Sep 2020 04:03:44 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:03:17 -0400
+  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:03:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=nDtwCT/GEboFZ
-        6h2FalfKwFluMDJ6O4H2K3IGSnhOgU=; b=aSZDAT6IIt7QAKKa0fxFrWzYUyVxP
-        RlF6FVPu7j7kuJVO0jYhI5UoqtUngHrP853CCqgjBvXTwMKnACN8qYUTcRefbiIB
-        3seXWGvU7CAVyZaKBl2pK9HAW6YgMydhju8f7U0kU4jctfGHRWqdiMT/x3Xuntq4
-        NEV6xmqX8cvG2424ECzzsP4ovIdZW5bhym5G78Sy4S23n+olAtrribyWr1oB7T6R
-        xcfuDobP0OWk3R4Es50e3uMuPZoS2rwR79egm5PjOqNlX92iOCyYWwjx5Ep3md+G
-        lC5fiFcJVK11kW4837wYSpzZwcPXinHwZRwRsPZsvgUixfmVgeUYcDPZQ==
+        :mime-version:content-transfer-encoding; s=fm3; bh=+3b/zq/nS3RmW
+        eMoQfDhOObDiP0bYzhAeWlwMkvfu4Q=; b=RmogQZqCV+jBIpU9QM+sD8s78ZPJj
+        JD4CUEx7IhnVFPX9or0Fjq9GS/Y86o/8JTkXfPBJ4AKEsFyH2p7C6nrkBtF6e2SH
+        AoBFKQH4PFdTyjJpIoSKQf7BIC2JUWHf4KerShXDFQQoZEFw498GzUn1rYXxS/Zt
+        0LVNNOb6YvSveIJs6ktexzcBW0IOT0TzaQWeMuW1x4SQ7bRAvsSUyYqFrD4pF3+k
+        jikgyuDg3V0yr7RxJc9rXdj3/so98CB2MleEEmfP4X72D6y8/Fo5RKPT93Ob/Cer
+        RkJeAcHzdxlpxECne8yc7D94lFW3YWQeXMzawO2FeZafOL/GmMlHSTxTQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=nDtwCT/GEboFZ6h2FalfKwFluMDJ6O4H2K3IGSnhOgU=; b=Wg4thRAp
-        wWoeQ0tYAbvzXY7j6OkSI6PrrkwcDBNFsZlcu6lg00soOM0vfX7zw27/FuHj/5z/
-        e6wp1ctGGnkCA++f4r4Tj3mGmizlUbreWMrfSCkTdXXDYcQl7cSTk4vTM1H1zt6r
-        nWWE0orYiaCAGKoxl9BwkQLRgIPlYYxSEQHtOciZh9VDrtf6L0caCPdFSrNYEaGS
-        On8lJvyc37JvnpBhfYXr2imAnsYfpVUa115F8cDXBlrlfXFJAa3xn7hcsrKkmCU9
-        IubY9QQ4OTRk6OVIMvhKTfPhv+UDgRL7eKEswsx54Lcr8+e9M2IQyzT68Qpt2vDP
-        1Ng5Hw39TX5JIA==
-X-ME-Sender: <xms:Q6NQXxXrObUoGXq7WF4R0TG5nWk81IbusJz4raYQcUzM8wA6F1Q5zA>
-    <xme:Q6NQXxkSMGixEvqTiVIjoqploIs0M-_XJvHZ4nwlTvxhu1NhRf0eSgAOZfhSxf74l
-    CPltfzFoD9vApW7Yiw>
+        fm3; bh=+3b/zq/nS3RmWeMoQfDhOObDiP0bYzhAeWlwMkvfu4Q=; b=Kg4HJyMz
+        jkSLY4M9XB6twxzgsFwVSx1foRKcxzwXvmxboaPbF/7gn7wOIgmQ/Df6B0lM4NDI
+        uGwYjglUohDAksAMxc1E1De/2AefwIeLHnB13fIZtMKAJIsJWgXdo2WeaYrcH2w9
+        sEmnB+PbZHsjnyeq0kPu2FOQli5ykqBmFa+x8NWRudyYaMa2HoNT6kfESU8EgD5T
+        w7xYfr7TQ2vysbwTzmBLU+G+Q5jrAZNEpIDOzhWQtKgei4qwNgfDO2MKGEfsthZn
+        xO71/k+7M0swYyES4SdP2950K3VXgrCjYO3zgLyJqBqBiUZKJW99rWOWSXvCSlRB
+        Zp5is37L8kOyKw==
+X-ME-Sender: <xms:YKNQX4oZ6QQcFNyH6NaytuUCt35M5vHKNgquev4OwAQk_YQsyEvmiw>
+    <xme:YKNQX-r3XwOpJ9F2yv7FNgEcxrKkq0zQYzaiYRXhbhKRRnMGQxQVDQ_qpXlK85kBN
+    DPFli-llyN42_Xk9bc>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihi
     mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
     htthgvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveev
-    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpeehge
+    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpeejtd
     enucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:Q6NQX9aCJuHC8hn8qKQkwlZclnU0R5bZVUfj9J5hEnTnmdx6QkOpSA>
-    <xmx:Q6NQX0VlHe0CGLTgCGI7jcIDyY7Yti9-XDnEHwDobvZrMFkulcBb5A>
-    <xmx:Q6NQX7ngX8y9n0m4XSA8cW9F2HGX3jYd963WeW4J-5q4gOrw1uQ0Bw>
-    <xmx:RKNQX5cHEIEUKuBC_HQxY01eKBz0zS2nXam6HFYJV460s5LENdhEZSrUDaY>
+X-ME-Proxy: <xmx:YKNQX9MisRfjvofGxU1wqE6_E8rSQu14hniM4RNAhH2Zi3g5oV05Lg>
+    <xmx:YKNQX_7RHJVKZ9qpnPuXRIawwKwwnszI_bFWiVk0N0t-H1lbxphKhQ>
+    <xmx:YKNQX35hW3jc4RmZmtJ5BsgIocZ1uCSJs4nEVGG9I3LbboPbcOpIVA>
+    <xmx:YKNQX_w4fWfd64vEqsgGvJJyL3Q-n6TOE6GoK06ksZCu1Z9gYWkh7Xt96dI>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A6428328005A;
-        Thu,  3 Sep 2020 04:03:15 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id C3F22328005A;
+        Thu,  3 Sep 2020 04:03:43 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -78,12 +78,13 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>,
+        Rob Herring <robh+dt@kernel.org>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Hoegeun Kwon <hoegeun.kwon@samsung.com>,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH v5 58/80] drm/vc4: hdmi: Deal with multiple debugfs files
-Date:   Thu,  3 Sep 2020 10:01:30 +0200
-Message-Id: <9505c1eb40b3ef3709277bf9e8af77917b249c32.1599120059.git-series.maxime@cerno.tech>
+Subject: [PATCH v5 78/80] dt-bindings: display: vc4: Document BCM2711 VC5
+Date:   Thu,  3 Sep 2020 10:01:50 +0200
+Message-Id: <1075091c50b378505a9a89f760af11f0e1e26e5b.1599120059.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
 References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
@@ -94,61 +95,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The HDMI driver was registering a single debugfs file so far with the name
-hdmi_regs.
+The BCM2711 comes with a new VideoCore. Add a compatible for it.
 
-Obviously, this is not going to work anymore when will have multiple HDMI
-controllers since we will end up trying to register two files with the same
-name.
-
-Let's use the variant to avoid that name conflict.
-
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Reviewed-by: Rob Herring <robh+dt@kernel.org>
+Reviewed-by: Eric Anholt <eric@anholt.net>
 Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
 Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 5 ++++-
- drivers/gpu/drm/vc4/vc4_hdmi.h | 3 +++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index f6d18bdbd1bb..4d0b44a2ac61 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -1369,7 +1369,9 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	if (ret)
- 		goto err_destroy_encoder;
- 
--	vc4_debugfs_add_file(drm, "hdmi_regs", vc4_hdmi_debugfs_regs, vc4_hdmi);
-+	vc4_debugfs_add_file(drm, variant->debugfs_name,
-+			     vc4_hdmi_debugfs_regs,
-+			     vc4_hdmi);
- 
- 	return 0;
- 
-@@ -1447,6 +1449,7 @@ static int vc4_hdmi_dev_remove(struct platform_device *pdev)
- 
- static const struct vc4_hdmi_variant bcm2835_variant = {
- 	.encoder_type		= VC4_ENCODER_TYPE_HDMI0,
-+	.debugfs_name		= "hdmi_regs",
- 	.registers		= vc4_hdmi_fields,
- 	.num_registers		= ARRAY_SIZE(vc4_hdmi_fields),
- 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-index 0d529db4b3ab..794216f3228d 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-@@ -30,6 +30,9 @@ struct vc4_hdmi_variant {
- 	/* Encoder Type for that controller */
- 	enum vc4_encoder_type encoder_type;
- 
-+	/* Filename to expose the registers in debugfs */
-+	const char *debugfs_name;
-+
- 	/* List of the registers available on that variant */
- 	const struct vc4_hdmi_register *registers;
+diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
+index 0dcf0c397375..49a5e041aa49 100644
+--- a/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
++++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
+@@ -17,6 +17,7 @@ description: >
+ properties:
+   compatible:
+     enum:
++      - brcm,bcm2711-vc5
+       - brcm,bcm2835-vc4
+       - brcm,cygnus-vc4
  
 -- 
 git-series 0.9.1
