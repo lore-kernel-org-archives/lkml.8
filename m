@@ -2,277 +2,64 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	TVD_SUBJ_WIPE_DEBT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6D1C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C53C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5852B206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:27:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="popZrL8P"
+	by mail.kernel.org (Postfix) with ESMTP id F2645206EB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgICO1t (ORCPT
+        id S1728790AbgICO3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:27:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35312 "EHLO
+        Thu, 3 Sep 2020 10:29:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729248AbgICOYg (ORCPT
+        with ESMTP id S1729262AbgICO2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:24:36 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF134C06123D;
-        Thu,  3 Sep 2020 07:22:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=SQdHM2VLoZetKqW2OYcNprtrCZT26+7Z4k+2D4WNncE=; b=popZrL8PCblOIFRTKHvMUBBNSp
-        ZCEAoKC4hHQXQ8WsMz/WgnelztBwRBbSWbZHevz3hxSFXqeTedGT4SDDD1YgTbTaAEr6V5lGWQg8a
-        HVtyugUOZKnSjmEExUTr7SXbzDmaJEAJf56QWd/JMBsJ8BQ/4x79ZFtIBKRs+Jc/iPJZE5sgtOPlP
-        7+72C+iGX0glUPQjpqNvi3+m4hRvm+yv1MfMaehTQ2M5ez45nq/6BBdv7UKe7SNOW4M0TgHFEHDPC
-        QvGRf6aLWoPga1Wv6BiYziRkJ/4mN9dwOlkDH0xH2f6RiGRbERDwBog/M7Goi1Bz2hSsBPejUnB3G
-        sE+Tog0Q==;
-Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDq8Z-0004az-6M; Thu, 03 Sep 2020 14:22:51 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Thu, 3 Sep 2020 10:28:24 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DDBC061246;
+        Thu,  3 Sep 2020 07:28:17 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDqDb-009r2h-BF; Thu, 03 Sep 2020 14:28:03 +0000
+Date:   Thu, 3 Sep 2020 15:28:03 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 06/14] fs: don't allow splice read/write without explicit ops
-Date:   Thu,  3 Sep 2020 16:22:34 +0200
-Message-Id: <20200903142242.925828-7-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200903142242.925828-1-hch@lst.de>
+Subject: Re: remove the last set_fs() in common code, and remove it for x86
+ and powerpc v3
+Message-ID: <20200903142803.GM1236603@ZenIV.linux.org.uk>
 References: <20200903142242.925828-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903142242.925828-1-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-default_file_splice_write is the last piece of generic code that uses
-set_fs to make the uaccess routines operate on kernel pointers.  It
-implements a "fallback loop" for splicing from files that do not actually
-provide a proper splice_read method.  The usual file systems and other
-high bandwidth instances all provide a ->splice_read, so this just removes
-support for various device drivers and procfs/debugfs files.  If splice
-support for any of those turns out to be important it can be added back
-by switching them to the iter ops and using generic_file_splice_read.
+On Thu, Sep 03, 2020 at 04:22:28PM +0200, Christoph Hellwig wrote:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- fs/read_write.c    |   2 +-
- fs/splice.c        | 130 +++++----------------------------------------
- include/linux/fs.h |   2 -
- 3 files changed, 15 insertions(+), 119 deletions(-)
+> Besides x86 and powerpc I plan to eventually convert all other
+> architectures, although this will be a slow process, starting with the
+> easier ones once the infrastructure is merged.  The process to convert
+> architectures is roughtly:
+> 
+>  (1) ensure there is no set_fs(KERNEL_DS) left in arch specific code
+>  (2) implement __get_kernel_nofault and __put_kernel_nofault
+>  (3) remove the arch specific address limitation functionality
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 702c4301d9eb6b..8c61f67453e3d3 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1077,7 +1077,7 @@ ssize_t vfs_iter_write(struct file *file, struct iov_iter *iter, loff_t *ppos,
- }
- EXPORT_SYMBOL(vfs_iter_write);
- 
--ssize_t vfs_readv(struct file *file, const struct iovec __user *vec,
-+static ssize_t vfs_readv(struct file *file, const struct iovec __user *vec,
- 		  unsigned long vlen, loff_t *pos, rwf_t flags)
- {
- 	struct iovec iovstack[UIO_FASTIOV];
-diff --git a/fs/splice.c b/fs/splice.c
-index d7c8a7c4db07ff..412df7b48f9eb7 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -342,89 +342,6 @@ const struct pipe_buf_operations nosteal_pipe_buf_ops = {
- };
- EXPORT_SYMBOL(nosteal_pipe_buf_ops);
- 
--static ssize_t kernel_readv(struct file *file, const struct kvec *vec,
--			    unsigned long vlen, loff_t offset)
--{
--	mm_segment_t old_fs;
--	loff_t pos = offset;
--	ssize_t res;
--
--	old_fs = get_fs();
--	set_fs(KERNEL_DS);
--	/* The cast to a user pointer is valid due to the set_fs() */
--	res = vfs_readv(file, (const struct iovec __user *)vec, vlen, &pos, 0);
--	set_fs(old_fs);
--
--	return res;
--}
--
--static ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
--				 struct pipe_inode_info *pipe, size_t len,
--				 unsigned int flags)
--{
--	struct kvec *vec, __vec[PIPE_DEF_BUFFERS];
--	struct iov_iter to;
--	struct page **pages;
--	unsigned int nr_pages;
--	unsigned int mask;
--	size_t offset, base, copied = 0;
--	ssize_t res;
--	int i;
--
--	if (pipe_full(pipe->head, pipe->tail, pipe->max_usage))
--		return -EAGAIN;
--
--	/*
--	 * Try to keep page boundaries matching to source pagecache ones -
--	 * it probably won't be much help, but...
--	 */
--	offset = *ppos & ~PAGE_MASK;
--
--	iov_iter_pipe(&to, READ, pipe, len + offset);
--
--	res = iov_iter_get_pages_alloc(&to, &pages, len + offset, &base);
--	if (res <= 0)
--		return -ENOMEM;
--
--	nr_pages = DIV_ROUND_UP(res + base, PAGE_SIZE);
--
--	vec = __vec;
--	if (nr_pages > PIPE_DEF_BUFFERS) {
--		vec = kmalloc_array(nr_pages, sizeof(struct kvec), GFP_KERNEL);
--		if (unlikely(!vec)) {
--			res = -ENOMEM;
--			goto out;
--		}
--	}
--
--	mask = pipe->ring_size - 1;
--	pipe->bufs[to.head & mask].offset = offset;
--	pipe->bufs[to.head & mask].len -= offset;
--
--	for (i = 0; i < nr_pages; i++) {
--		size_t this_len = min_t(size_t, len, PAGE_SIZE - offset);
--		vec[i].iov_base = page_address(pages[i]) + offset;
--		vec[i].iov_len = this_len;
--		len -= this_len;
--		offset = 0;
--	}
--
--	res = kernel_readv(in, vec, nr_pages, *ppos);
--	if (res > 0) {
--		copied = res;
--		*ppos += res;
--	}
--
--	if (vec != __vec)
--		kfree(vec);
--out:
--	for (i = 0; i < nr_pages; i++)
--		put_page(pages[i]);
--	kvfree(pages);
--	iov_iter_advance(&to, copied);	/* truncates and discards */
--	return res;
--}
--
- /*
-  * Send 'sd->len' bytes to socket from 'sd->file' at position 'sd->pos'
-  * using sendpage(). Return the number of bytes sent.
-@@ -788,33 +705,6 @@ iter_file_splice_write(struct pipe_inode_info *pipe, struct file *out,
- 
- EXPORT_SYMBOL(iter_file_splice_write);
- 
--static int write_pipe_buf(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
--			  struct splice_desc *sd)
--{
--	int ret;
--	void *data;
--	loff_t tmp = sd->pos;
--
--	data = kmap(buf->page);
--	ret = __kernel_write(sd->u.file, data + buf->offset, sd->len, &tmp);
--	kunmap(buf->page);
--
--	return ret;
--}
--
--static ssize_t default_file_splice_write(struct pipe_inode_info *pipe,
--					 struct file *out, loff_t *ppos,
--					 size_t len, unsigned int flags)
--{
--	ssize_t ret;
--
--	ret = splice_from_pipe(pipe, out, ppos, len, flags, write_pipe_buf);
--	if (ret > 0)
--		*ppos += ret;
--
--	return ret;
--}
--
- /**
-  * generic_splice_sendpage - splice data from a pipe to a socket
-  * @pipe:	pipe to splice from
-@@ -836,15 +726,23 @@ ssize_t generic_splice_sendpage(struct pipe_inode_info *pipe, struct file *out,
- 
- EXPORT_SYMBOL(generic_splice_sendpage);
- 
-+static int warn_unsupported(struct file *file, const char *op)
-+{
-+	pr_debug_ratelimited(
-+		"splice %s not supported for file %pD4 (pid: %d comm: %.20s)\n",
-+		op, file, current->pid, current->comm);
-+	return -EINVAL;
-+}
-+
- /*
-  * Attempt to initiate a splice from pipe to file.
-  */
- static long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
- 			   loff_t *ppos, size_t len, unsigned int flags)
- {
--	if (out->f_op->splice_write)
--		return out->f_op->splice_write(pipe, out, ppos, len, flags);
--	return default_file_splice_write(pipe, out, ppos, len, flags);
-+	if (unlikely(!out->f_op->splice_write))
-+		return warn_unsupported(out, "write");
-+	return out->f_op->splice_write(pipe, out, ppos, len, flags);
- }
- 
- /*
-@@ -866,9 +764,9 @@ static long do_splice_to(struct file *in, loff_t *ppos,
- 	if (unlikely(len > MAX_RW_COUNT))
- 		len = MAX_RW_COUNT;
- 
--	if (in->f_op->splice_read)
--		return in->f_op->splice_read(in, ppos, pipe, len, flags);
--	return default_file_splice_read(in, ppos, pipe, len, flags);
-+	if (unlikely(!in->f_op->splice_read))
-+		return warn_unsupported(in, "read");
-+	return in->f_op->splice_read(in, ppos, pipe, len, flags);
- }
- 
- /**
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 7519ae003a082c..839eeccf10174b 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1894,8 +1894,6 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
- 
- extern ssize_t vfs_read(struct file *, char __user *, size_t, loff_t *);
- extern ssize_t vfs_write(struct file *, const char __user *, size_t, loff_t *);
--extern ssize_t vfs_readv(struct file *, const struct iovec __user *,
--		unsigned long, loff_t *, rwf_t);
- extern ssize_t vfs_copy_file_range(struct file *, loff_t , struct file *,
- 				   loff_t, size_t, unsigned int);
- extern ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
--- 
-2.28.0
+The one to really watch out for is sparc; I have something in that
+direction, will resurrect as soon as I'm done with eventpoll analysis...
 
+I can live with this series; do you want that in vfs.git#for-next?
