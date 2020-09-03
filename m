@@ -2,141 +2,209 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34015C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E622C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA3820722
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F09920722
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:39:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qtfigfxt"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nok5vnFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgICRjO (ORCPT
+        id S1728965AbgICRjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 13:39:14 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33726 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgICRjJ (ORCPT
+        Thu, 3 Sep 2020 13:39:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728885AbgICRjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 13:39:09 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 083HcwAO111441;
-        Thu, 3 Sep 2020 17:38:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=bo1e34Z7Nb7zD1md32835Hg6Pxb+3lvBG7pK4do84lo=;
- b=qtfigfxtiOf6EcrHjwxeQ1YAxY5/zzMFlX8omYUu5se7i0df6wEMYAm3giDfuLMkd9hc
- owY6DVs/AdcFRHKX8TtXiIFb4YrSpaDFxwWMCMIudk9qpnUWgqreqwY02Ujw+cdEaeqE
- llrC1YgVV82MA1qZ0ucdvxzrOiCqfczHBKxx/jJe1baxwLMsAmFx2pRETwEGnUWGckF1
- PsEchOlDFUcwr41fxmf6KXxuuf4kpWEw7g0y3dglGS66LJDFlDxULWj1g4/DPc5LEfxS
- pbKZWFoK0XZpGFe554pRDFPMmJRIoFmKS0elqMb5B6ufGSlOBMmA4yytB76MZOKxpeQ/ Wg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 337eera8ua-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 03 Sep 2020 17:38:58 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 083HVojn014675;
-        Thu, 3 Sep 2020 17:38:53 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 3380y2b7us-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Sep 2020 17:38:53 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 083HcqMR007784;
-        Thu, 3 Sep 2020 17:38:52 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 03 Sep 2020 10:38:51 -0700
-Date:   Thu, 3 Sep 2020 20:38:44 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alex Dewar <alex.dewar90@gmail.com>
-Cc:     devel@driverdev.osuosl.org, Alan Cox <alan@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] staging: media: atomisp: Fix error path in lm3554_probe()
-Message-ID: <20200903173843.GF8299@kadam>
-References: <20200902184207.479525-1-alex.dewar90@gmail.com>
- <20200903121134.GB8299@kadam>
- <20200903154841.w5rppm325jobimud@medion>
+        Thu, 3 Sep 2020 13:39:13 -0400
+Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F73BC061246
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 10:39:13 -0700 (PDT)
+Received: by mail-vs1-xe2c.google.com with SMTP id j188so2211252vsd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 10:39:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/CByT7kL2sciaOOTriM7Zuvl3yPAvDtzu36GjCZRW7A=;
+        b=nok5vnFxkOP6s8+UOfVXBTxuEmKlGR/JJ0HOPPboWdedSdDQakkJ78Kz00j7Msafdt
+         6V7nnuz5wqvTM9g/6kY2/J7HBCwJsAsY29ANtjl4mWRXPENKhMmQ9VCaWKm8Mo9iOSWi
+         pCOVf0jhM19Y8Aa57obSXGvOKSYxFmYt7SywE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/CByT7kL2sciaOOTriM7Zuvl3yPAvDtzu36GjCZRW7A=;
+        b=HYC9InTT94Ew0+OTKWDnFZbL00vtcbcODIaVo7SBvRMIGbSNoM637Prstp0YU/EiIN
+         ddvkrH7O1ddXEzIvFRpfGfYK4HLxNFW3nPJdCe6wseOC79i+DXDSJLLo8Ofzj/52Wa9Z
+         SeYJR8E6rjqLq3RwgjEmVXHLOoaj4jZry8Qt0Dq4ZAKk0vPmJ4Si1QzC2hn3zvSmZbP0
+         A/d2Ft5Ml8CdbvJ9eH92zI0A6lR4dMTuwgxzTRtbTNjPLAZ11NpXPETqkHzLW4erwfHo
+         TKLbvafJ6JJ45XWtKnWailk3bsmB0KhOocdKEQh8OmAz1VUa8TSsDVXzYJnRKu6hi1rY
+         xsLg==
+X-Gm-Message-State: AOAM532SFDXwAiLQIrsg8G/UQL0vmwRlByg0D29CjvxDb0z+VYYv7hov
+        29OUsecjEFi2r0fEVTBD5p0TuWXhnwVtgQ==
+X-Google-Smtp-Source: ABdhPJz5lu6ar8uWtYOjH1rQA40wsWnLE03QpOnOVEJ5Jr2JzYRc7hjfixMwWJLf5co1xIqwhIcZwQ==
+X-Received: by 2002:a05:6102:453:: with SMTP id e19mr2943911vsq.120.1599154752135;
+        Thu, 03 Sep 2020 10:39:12 -0700 (PDT)
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
+        by smtp.gmail.com with ESMTPSA id u1sm488944vsc.29.2020.09.03.10.39.11
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 10:39:11 -0700 (PDT)
+Received: by mail-ua1-f47.google.com with SMTP id y15so1168784uan.9
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 10:39:11 -0700 (PDT)
+X-Received: by 2002:a9f:2b89:: with SMTP id y9mr2304956uai.0.1599154750697;
+ Thu, 03 Sep 2020 10:39:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903154841.w5rppm325jobimud@medion>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9733 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009030163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9733 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009030164
+References: <20200817144722.6665-1-saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=VE6vCPjDvvP0e73tnd8u5rPuMUa-mwvDazrfUpXP+bKQ@mail.gmail.com>
+ <2a0c5fa189dbb2e810ba88f59621b65c@codeaurora.org> <CAD=FV=X8yS1gUNhhVNyfuRPzDUheG2Rco2g16KMegCG6fKJw7Q@mail.gmail.com>
+ <d949bdfa15b133f74a47727401553c76@codeaurora.org> <7714ee57f75542839d5c33b28f232aa6@codeaurora.org>
+ <CAD=FV=Xt0NTNjCEJ2USfyd2qZ+FfBz9xwctbpv+hSWvvCoAZFg@mail.gmail.com>
+ <dd60dafcea8b75b10516bf2bc4952abb@codeaurora.org> <CAD=FV=WrEh9_XqOvA5mNYQRMDujOWBqeeDFDFj_C3XKy-okGVQ@mail.gmail.com>
+ <2fe7e79f4fc877eb5d488d799fbf44d6@codeaurora.org>
+In-Reply-To: <2fe7e79f4fc877eb5d488d799fbf44d6@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 3 Sep 2020 10:38:58 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Xbq6nv6t907XScJcfPDzB7B3LWtiT-f3RW3Pgg8uCAXg@mail.gmail.com>
+Message-ID: <CAD=FV=Xbq6nv6t907XScJcfPDzB7B3LWtiT-f3RW3Pgg8uCAXg@mail.gmail.com>
+Subject: Re: [PATCHv2] soc: qcom: llcc: Support chipsets that can write to
+ llcc registers
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 04:48:41PM +0100, Alex Dewar wrote:
-> Good point about the timer!
-> 
-> > >  
-> > > -	err = lm3554_gpio_init(client);
-> > > -	if (err) {
-> > > +	ret = lm3554_gpio_init(client);
-> > > +	if (ret) {
-> > >  		dev_err(&client->dev, "gpio request/direction_output fail");
-> > > -		goto fail2;
-> > > +		goto err_cleanup_entity;
-> > >  	}
-> > >  	return atomisp_register_i2c_module(&flash->sd, NULL, LED_FLASH);
-> > 
-> > If atomisp_register_i2c_module() fails then we need to call
-> > lm3554_gpio_uninit(client) and do other cleanup.
-> 
-> I'm probably showing my ignorance here, but I can't see what cleanup we
-> need. Inside lm3554_gpio_init we have:
-> 
-> 	ret = gpiod_direction_output(pdata->gpio_reset, 0);
-> 	if (ret < 0)
-> 		return ret;
-> 	dev_info(&client->dev, "flash led reset successfully\n");
-> 
-> 	if (!pdata->gpio_strobe)
-> 		return -EINVAL;
-> 
-> 	ret = gpiod_direction_output(pdata->gpio_strobe, 0);
-> 	if (ret < 0)
-> 		return ret;
-> 
-> I'm not sure how you "undo" a call to gpiod_direction_output, but I'm
-> thinking you won't need to do anything because it should be ok to leave
-> a gpio to output 0... right?
+Hi,
 
-You're right.  I wonder if there is really any need for the
-lm3554_gpio_uninit() function at all?  It's basically the same as
-lm3554_gpio_init() except for the order of function calls.  Probably
-we could just rename lm3554_gpio_init() to something like
-lm3554_gpio_set_default() and use it in both the probe() and remove
-functions()...
+On Thu, Sep 3, 2020 at 9:04 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Hi,
+>
+> On 2020-09-03 21:24, Doug Anderson wrote:
+> > Hi,
+> >
+> > On Thu, Sep 3, 2020 at 8:47 AM Sai Prakash Ranjan
+> > <saiprakash.ranjan@codeaurora.org> wrote:
+> >>
+> >> On 2020-09-03 19:16, Doug Anderson wrote:
+> >> > Hi,
+> >> >
+> >> > On Thu, Sep 3, 2020 at 2:58 AM Sai Prakash Ranjan
+> >> > <saiprakash.ranjan@codeaurora.org> wrote:
+> >> >>
+> >> >> Hi,
+> >> >>
+> >> >> On 2020-08-18 21:07, Sai Prakash Ranjan wrote:
+> >> >> > Hi Doug,
+> >> >> >
+> >> >> >>
+> >> >> >> I guess to start, it wasn't obvious (to me) that there were two
+> >> >> >> choices and we were picking one.  Mentioning that the other
+> >> >> >> alternative was way-based allocation would help a lot.  Even if =
+you
+> >> >> >> can't fully explain the differences between the two, adding some=
+thing
+> >> >> >> to the commit message indicating that this is a policy decision =
+(in
+> >> >> >> other words, both work but each have their tradeoffs) would help=
+.
+> >> >> >> Something like this, if it's correct:
+> >> >> >>
+> >> >> >> In general we try to enable capacity based allocation (instead o=
+f the
+> >> >> >> default way based allocation) since that gives us better perform=
+ance
+> >> >> >> with the current software / hardware configuration.
+> >> >> >>
+> >> >> >
+> >> >> > Thanks, I will add it for next version. Let me also go poke some =
+arch
+> >> >> > teams
+> >> >> > to understand if we actually do gain something with this selectio=
+n, who
+> >> >> > knows
+> >> >> > we might get some additional details as well.
+> >> >> >
+> >> >>
+> >> >> I got some information from arch team today, to quote them exactly:
+> >> >>
+> >> >> 1) What benefits capacity based allocation brings over the default =
+way
+> >> >> based allocation?
+> >> >>
+> >> >> "Capacity based allows finer grain partition. It is not about impro=
+ved
+> >> >> performance but more flexibility in configuration."
+> >> >>
+> >> >> 2) Retain through power collapse, doesn=E2=80=99t it burn more powe=
+r?
+> >> >>
+> >> >> "This feature is similar to the standard feature of retention. Yes,
+> >> >> when
+> >> >> we
+> >> >> have cache in retention mode it burns more power but it keeps the
+> >> >> values
+> >> >> so
+> >> >> that when we wake up we can get more cache hits."
+> >> >>
+> >> >>
+> >> >> If its good enough, then I will add this info to the commit msg and
+> >> >> post
+> >> >> next version.
+> >> >
+> >> > Sounds fine to me.  I was mostly looking for a high level idea of wh=
+at
+> >> > was happening here.  I am at least a little curious about the
+> >> > retention bit.  Is that retention during S3, or during some sort of
+> >> > Runtime PM?  Any idea how much power is burned?  Unless the power is
+> >> > miniscule it seems hard to believe that it would be a net win to kee=
+p
+> >> > a cache powered up during S3 unless you're planning on waking up a
+> >> > lot.
+> >> >
+> >>
+> >> The retention setting is based on sub cache id(SCID), so I think its
+> >> for
+> >> runtime pm, the power numbers weren't provided. But I believe these
+> >> decisions are made after solid testing and not some random
+> >> approximations.
+> >
+> > Right, I believe it was tested, I just wonder if it was tested on a
+> > phone vs. a laptop.  A phone is almost constantly waking up to deal
+> > with stuff (which is why my phone battery barely lasts till the end of
+> > the day).  Phones also usually have some type of self refresh on their
+> > panels so they can be suspended even when they look awake which means
+> > even more constant wakeups.  A laptop (especially without panel self
+> > refresh) may have very different usage models.  I'm trying to confirm
+> > that this setting is appropriate for both classes of devices or if it
+> > has been only measured / optimized for the cell phone use case.
+> >
+>
+> Could be, but there are windows laptops based on QCOM SoCs where these
+> must have also been tested (note that this setting can also be in
+> firmware
+> and no one would know), but I don't have numbers to quantify.
 
-But I don't know the code and can't test it so let's leave that for
-another day.
+OK, fair enough.  Thanks for the discussion.  I'm good with a somewhat
+broad explanation in the commit message then and if we find that this
+somehow affects power numbers in a bad way we can track down further.
 
-We still do need to clean up if atomisp_register_i2c_module() fails
-though, and the timer as well so could you resend a v2?
-
-regards,
-dan carpenter
-
+-Doug
