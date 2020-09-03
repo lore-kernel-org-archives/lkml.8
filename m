@@ -2,129 +2,67 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DB3C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B25C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 835FD2078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:21:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+NLN2f/"
+	by mail.kernel.org (Postfix) with ESMTP id 565EF2078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgICLVF (ORCPT
+        id S1728397AbgICLZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:21:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728444AbgICLRS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:17:18 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD5BFC061251;
-        Thu,  3 Sep 2020 04:03:05 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id v196so2053454pfc.1;
-        Thu, 03 Sep 2020 04:03:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yc4wkCo7MeYrmmnwisSRarxaaBJAo1GNuY3VsM322Kg=;
-        b=V+NLN2f/oumXmYED9CGhvzHg1A3k7uzbduXR5eZhQX9/LB452xGmGWatlhugioh3fn
-         C2jDtT6Rc46kWS8I2VMaaQ0YJ2cUJ0sW+0WJexHovLKoPUHB35BiDayz+5LOPKPRh7jN
-         LDbNcnYH6pS9mK4fFj6e+3Ohv0X/OBTORciTRAxc+4tQXi6M5vmL49DLqUTh1O7Zc1gZ
-         TShC6BYGRuSfGHezFoj+FzbZQ7DRptRhuSXsAOWIOYn9IzCI1Vi1paFBp6LrQFxA8AKs
-         j6lwADHrIN66e/OyJTVsiNNhAn6Y0D5eGSoKsL2bPAWMUbdWHdvzKfkOF+cewY9GN8/b
-         pdTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yc4wkCo7MeYrmmnwisSRarxaaBJAo1GNuY3VsM322Kg=;
-        b=X9EbEKKDQ7SKr3hFldkD+96BSiInMEBHd4MdeRZ14RnTstUIJ4NfcM5Y6PNBmBKyIU
-         O4EGi5hLLaCDFxjyR0FHsea/D2JeCkMwokcoBBjybz6Qm5FMpmuVOMO+Oe3RjuhwvIR9
-         /YEKSriqSn/e270yD0GvE9tZMSH03QFL/tVV2QbqcbGgtj6I2jpZBdhSGgeCJQ/Gdfze
-         PtaM3RkaYib82tbNM2Mewz+CW6jEC+MOfSLf5Wzfdp9EsCoHwdfPx3VgzyjNfSWrkrno
-         7tdUYBtBeZP5XNyCDCfHwtlrROV1oqV/X4+LcVeSqWaEYS3+G+YTp6tkZPx91MNtoyPr
-         UtxA==
-X-Gm-Message-State: AOAM530mWtu7OGKgKaLUAcg6aJTuBA2jOjorX+29sIpQ9LOhCBB7ejXc
-        1NDsQcxKzTcej4UyqihzrdoC9thx9I4DrMUO5II=
-X-Google-Smtp-Source: ABdhPJwDzelAtXwzu1AP2Sck+DOJdO2HFfZJWEguZGryUdrzqFlNyIe50UOUdMIYN72Gvo8JpjKeqGFXAeY1JyeFBFc=
-X-Received: by 2002:a63:d648:: with SMTP id d8mr2513798pgj.4.1599130985426;
- Thu, 03 Sep 2020 04:03:05 -0700 (PDT)
+        Thu, 3 Sep 2020 07:25:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56254 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728376AbgICLLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:11:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id BCD61B6C7;
+        Thu,  3 Sep 2020 11:11:04 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 2231ADA6E0; Thu,  3 Sep 2020 13:09:51 +0200 (CEST)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] AFFS fix for 5.9
+Date:   Thu,  3 Sep 2020 13:09:46 +0200
+Message-Id: <cover.1599130324.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200903005300.7894-1-digetx@gmail.com> <20200903005300.7894-2-digetx@gmail.com>
-In-Reply-To: <20200903005300.7894-2-digetx@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 3 Sep 2020 14:02:48 +0300
-Message-ID: <CAHp75VcLk9pVRefA7cTgVQcX3-9EgcW6c-VUSpSOut0Y1B7J5Q@mail.gmail.com>
-Subject: Re: [PATCH v3 01/22] i2c: tegra: Make tegra_i2c_flush_fifos() usable
- in atomic transfer
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 3:53 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> The tegra_i2c_flush_fifos() shouldn't sleep in atomic transfer and jiffies
-> are not updating if interrupts are disabled. Hence let's use proper delay
-> functions and use ktime API in order not to hang atomic transfer. Note
-> that this patch doesn't fix any known problem because normally FIFO is
-> flushed at the time of starting a new transfer.
+Hi,
 
-> +       /*
-> +        * ktime_get() may take up to couple milliseconds in a worst case
-> +        * and normally FIFOs are flushed, hence let's check the state before
-> +        * proceeding to polling.
-> +        */
+there's one fix to make permissions work the same way as on AmigaOS.
+Please pull, thanks.
 
-Everything, including above can be done by using macros from iopoll.h. Why not?
+----------------------------------------------------------------
+The following changes since commit f75aef392f869018f78cfedf3c320a6b3fcfda6b:
 
-> +       if (!(i2c_readl(i2c_dev, offset) & mask))
-> +               return 0;
-> +
-> +       ktime = ktime_get();
-> +       ktimeout = ktime_add_ms(ktime, 1000);
-> +
->         while (i2c_readl(i2c_dev, offset) & mask) {
-> -               if (time_after(jiffies, timeout)) {
-> -                       dev_warn(i2c_dev->dev, "timeout waiting for fifo flush\n");
-> -                       return -ETIMEDOUT;
-> -               }
-> -               usleep_range(1000, 2000);
-> +               if (ktime_after(ktime, ktimeout))
-> +                       goto err_timeout;
-> +
-> +               if (i2c_dev->is_curr_atomic_xfer)
-> +                       mdelay(1);
-> +               else
-> +                       fsleep(1000);
-> +
-> +               ktime = ktime_get();
->         }
->         return 0;
-> +
-> +err_timeout:
-> +       dev_err(i2c_dev->dev, "FIFO flushing timed out\n");
-> +
-> +       return -ETIMEDOUT;
->  }
+  Linux 5.9-rc3 (2020-08-30 16:01:54 -0700)
 
+are available in the Git repository at:
 
--- 
-With Best Regards,
-Andy Shevchenko
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git affs-for-5.9-tag
+
+for you to fetch changes up to d3a84a8d0dde4e26bc084b36ffcbdc5932ac85e2:
+
+  affs: fix basic permission bits to actually work (2020-08-31 12:20:31 +0200)
+
+----------------------------------------------------------------
+Max Staudt (1):
+      affs: fix basic permission bits to actually work
+
+ Documentation/filesystems/affs.rst | 16 ++++++++++------
+ fs/affs/amigaffs.c                 | 27 +++++++++++++++++++++++++++
+ fs/affs/file.c                     | 26 +++++++++++++++++++++++++-
+ 3 files changed, 62 insertions(+), 7 deletions(-)
