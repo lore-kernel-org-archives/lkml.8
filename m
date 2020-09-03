@@ -5,25 +5,26 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8F0C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C493DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C437206E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 952BF206E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgICKK3 (ORCPT
+        id S1728387AbgICKKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 06:10:29 -0400
-Received: from regular1.263xmail.com ([211.150.70.199]:38748 "EHLO
+        Thu, 3 Sep 2020 06:10:36 -0400
+Received: from regular1.263xmail.com ([211.150.70.202]:51722 "EHLO
         regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgICKKE (ORCPT
+        with ESMTP id S1725984AbgICKKD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:10:04 -0400
-Received: from localhost (unknown [192.168.167.235])
-        by regular1.263xmail.com (Postfix) with ESMTP id 8116DF03;
-        Thu,  3 Sep 2020 18:03:09 +0800 (CST)
+        Thu, 3 Sep 2020 06:10:03 -0400
+X-Greylist: delayed 460 seconds by postgrey-1.27 at vger.kernel.org; Thu, 03 Sep 2020 06:10:02 EDT
+Received: from localhost (unknown [192.168.167.16])
+        by regular1.263xmail.com (Postfix) with ESMTP id D451046E;
+        Thu,  3 Sep 2020 18:02:37 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
@@ -31,10 +32,10 @@ X-ANTISPAM-LEVEL: 2
 X-SKE-CHECKED: 1
 X-ABS-CHECKED: 1
 Received: from [172.16.12.120] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P22906T140608763062016S1599127388444849_;
-        Thu, 03 Sep 2020 18:03:09 +0800 (CST)
+        by smtp.263.net (postfix) whith ESMTP id P23637T140495628007168S1599127357353308_;
+        Thu, 03 Sep 2020 18:02:38 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <d3018c1042ed8c5abd5c98892315d0c2>
+X-UNIQUE-TAG: <9d5d9546b9483c57ae5a220dcf1449de>
 X-RL-SENDER: kever.yang@rock-chips.com
 X-SENDER: yk@rock-chips.com
 X-LOGIN-NAME: kever.yang@rock-chips.com
@@ -43,22 +44,21 @@ X-SENDER-IP: 58.22.7.114
 X-ATTACHMENT-NUM: 0
 X-DNS-TYPE: 0
 X-System-Flag: 0
-Subject: Re: [PATCH v2 5/6] clk: rockchip: fix the clk config to support
- module build
+Subject: Re: [PATCH v2 3/6] clk: rockchip: Export rockchip_register_softrst()
 To:     Elaine Zhang <zhangqing@rock-chips.com>, heiko@sntech.de
 Cc:     mturquette@baylibre.com, sboyd@kernel.org,
         linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-kernel@vger.kernel.org, xxx@rock-chips.com,
         xf@rock-chips.com, huangtao@rock-chips.com
 References: <20200903063147.10237-1-zhangqing@rock-chips.com>
- <20200903063221.10500-1-zhangqing@rock-chips.com>
+ <20200903063147.10237-4-zhangqing@rock-chips.com>
 From:   Kever Yang <kever.yang@rock-chips.com>
-Message-ID: <2ee0e288-ae7f-5c6a-a5d4-5cee33a05e9e@rock-chips.com>
-Date:   Thu, 3 Sep 2020 18:03:08 +0800
+Message-ID: <44699e71-1b08-919f-ddf3-187aee67b8a0@rock-chips.com>
+Date:   Thu, 3 Sep 2020 18:02:36 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200903063221.10500-1-zhangqing@rock-chips.com>
+In-Reply-To: <20200903063147.10237-4-zhangqing@rock-chips.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
@@ -68,167 +68,37 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020/9/3 下午2:32, Elaine Zhang wrote:
-> use CONFIG_COMMON_CLK_ROCKCHIP for Rk common clk drivers.
-> use CONFIG_CLK_RKXX for Rk soc clk driver.
-> Mark configuration to "tristate",
-> to support building Rk SoCs clock driver as module.
+On 2020/9/3 下午2:31, Elaine Zhang wrote:
+> This is used by the Rockchip clk driver, export it to allow that
+> driver to be compiled as a module..
 >
 > Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 > ---
->   drivers/clk/Kconfig           |  1 +
->   drivers/clk/rockchip/Kconfig  | 78 +++++++++++++++++++++++++++++++++++
->   drivers/clk/rockchip/Makefile | 42 ++++++++++---------
->   3 files changed, 101 insertions(+), 20 deletions(-)
->   create mode 100644 drivers/clk/rockchip/Kconfig
+>   drivers/clk/rockchip/softrst.c | 7 ++++---
+>   1 file changed, 4 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 4026fac9fac3..b41aaed9bd51 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -373,6 +373,7 @@ source "drivers/clk/meson/Kconfig"
->   source "drivers/clk/mvebu/Kconfig"
->   source "drivers/clk/qcom/Kconfig"
->   source "drivers/clk/renesas/Kconfig"
-> +source "drivers/clk/rockchip/Kconfig"
->   source "drivers/clk/samsung/Kconfig"
->   source "drivers/clk/sifive/Kconfig"
->   source "drivers/clk/sprd/Kconfig"
-> diff --git a/drivers/clk/rockchip/Kconfig b/drivers/clk/rockchip/Kconfig
-> new file mode 100644
-> index 000000000000..53a44396bc35
-> --- /dev/null
-> +++ b/drivers/clk/rockchip/Kconfig
-> @@ -0,0 +1,78 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# common clock support for ROCKCHIP SoC family.
-> +
-> +config COMMON_CLK_ROCKCHIP
-> +	tristate "Rockchip clock controller common support"
-> +	depends on ARCH_ROCKCHIP
-> +	default ARCH_ROCKCHIP
-> +	help
-> +	  Say y here to enable common clock controller.
-> +
-> +if COMMON_CLK_ROCKCHIP
-> +config CLK_PX30
-> +	tristate "Rockchip Px30 clock controller support"
-> +	default y
-> +	help
-> +	  Build the driver for Px30 Clock Driver.
-> +
-> +config CLK_RV110X
-> +	tristate "Rockchip Rv110x clock controller support"
-> +	default y
-> +	help
-> +	  Build the driver for Rv110x Clock Driver.
-> +
-> +config CLK_RK3036
-> +	tristate "Rockchip Rk3036 clock controller support"
-> +	default y
-> +	help
-> +	  Build the driver for Rk3036 Clock Driver.
-> +
-> +config CLK_RK312X
-> +	tristate "Rockchip Rk312x clock controller support"
-> +	default y
-> +	help
-> +	  Build the driver for Rk312x Clock Driver.
-> +
-> +config CLK_RK3188
-> +	tristate "Rockchip Rk3188 clock controller support"
-> +	default y
-> +	help
-> +	  Build the driver for Rk3188 Clock Driver.
-> +
-> +config CLK_RK322X
-> +	tristate "Rockchip Rk322x clock controller support"
-> +	default y
-> +	help
-> +	  Build the driver for Rk322x Clock Driver.
-> +
-> +config CLK_RK3288
-> +	tristate "Rockchip Rk3288 clock controller support"
-> +	depends on ARM
-> +	default y
-> +	help
-> +	  Build the driver for Rk3288 Clock Driver.
-> +
-> +config CLK_RK3308
-> +	tristate "Rockchip Rk3308 clock controller support"
-> +	default y
-> +	help
-> +	  Build the driver for Rk3308 Clock Driver.
-> +
-> +config CLK_RK3328
-> +	tristate "Rockchip Rk3328 clock controller support"
-> +	default y
-> +	help
-> +	  Build the driver for Rk3328 Clock Driver.
-> +
-> +config CLK_RK3368
-> +	tristate "Rockchip Rk3368 clock controller support"
-> +	default y
-> +	help
-> +	  Build the driver for Rk3368 Clock Driver.
-> +
-> +config CLK_RK3399
-> +	tristate "Rockchip Rk3399 clock controller support"
-> +	default y
-> +	help
-> +	  Build the driver for Rk3399 Clock Driver.
-> +endif
-> diff --git a/drivers/clk/rockchip/Makefile b/drivers/clk/rockchip/Makefile
-> index 7c5b5813a87c..a99e4d9bbae1 100644
-> --- a/drivers/clk/rockchip/Makefile
-> +++ b/drivers/clk/rockchip/Makefile
-> @@ -3,24 +3,26 @@
->   # Rockchip Clock specific Makefile
->   #
+> diff --git a/drivers/clk/rockchip/softrst.c b/drivers/clk/rockchip/softrst.c
+> index 5f1ff5e47c4f..caba9055090b 100644
+> --- a/drivers/clk/rockchip/softrst.c
+> +++ b/drivers/clk/rockchip/softrst.c
+> @@ -77,9 +77,9 @@ static const struct reset_control_ops rockchip_softrst_ops = {
+>   	.deassert	= rockchip_softrst_deassert,
+>   };
 >   
-> -obj-y	+= clk.o
-> -obj-y	+= clk-pll.o
-> -obj-y	+= clk-cpu.o
-> -obj-y	+= clk-half-divider.o
-> -obj-y	+= clk-inverter.o
-> -obj-y	+= clk-mmc-phase.o
-> -obj-y	+= clk-muxgrf.o
-> -obj-y	+= clk-ddr.o
-> -obj-$(CONFIG_RESET_CONTROLLER)	+= softrst.o
-> +obj-$(CONFIG_COMMON_CLK_ROCKCHIP) += clk-rockchip.o
->   
-> -obj-y	+= clk-px30.o
-> -obj-y	+= clk-rv1108.o
-> -obj-y	+= clk-rk3036.o
-> -obj-y	+= clk-rk3128.o
-> -obj-y	+= clk-rk3188.o
-> -obj-y	+= clk-rk3228.o
-> -obj-y	+= clk-rk3288.o
-> -obj-y	+= clk-rk3308.o
-> -obj-y	+= clk-rk3328.o
-> -obj-y	+= clk-rk3368.o
-> -obj-y	+= clk-rk3399.o
-> +clk-rockchip-y += clk.o
-> +clk-rockchip-y += clk-pll.o
-> +clk-rockchip-y += clk-cpu.o
-> +clk-rockchip-y += clk-half-divider.o
-> +clk-rockchip-y += clk-inverter.o
-> +clk-rockchip-y += clk-mmc-phase.o
-> +clk-rockchip-y += clk-muxgrf.o
-> +clk-rockchip-y += clk-ddr.o
-> +clk-rockchip-$(CONFIG_RESET_CONTROLLER) += softrst.o
-> +
-> +obj-$(CONFIG_CLK_PX30)          += clk-px30.o
-> +obj-$(CONFIG_CLK_RV110X)        += clk-rv1108.o
-> +obj-$(CONFIG_CLK_RK3036)        += clk-rk3036.o
-> +obj-$(CONFIG_CLK_RK312X)        += clk-rk3128.o
-> +obj-$(CONFIG_CLK_RK3188)        += clk-rk3188.o
-> +obj-$(CONFIG_CLK_RK322X)        += clk-rk3228.o
-> +obj-$(CONFIG_CLK_RK3288)        += clk-rk3288.o
-> +obj-$(CONFIG_CLK_RK3308)        += clk-rk3308.o
-> +obj-$(CONFIG_CLK_RK3328)        += clk-rk3328.o
-> +obj-$(CONFIG_CLK_RK3368)        += clk-rk3368.o
-> +obj-$(CONFIG_CLK_RK3399)        += clk-rk3399.o
+> -void __init rockchip_register_softrst(struct device_node *np,
+> -				      unsigned int num_regs,
+> -				      void __iomem *base, u8 flags)
+> +void rockchip_register_softrst(struct device_node *np,
+> +			       unsigned int num_regs,
+> +			       void __iomem *base, u8 flags)
+>   {
+>   	struct rockchip_softrst *softrst;
+>   	int ret;
+> @@ -107,3 +107,4 @@ void __init rockchip_register_softrst(struct device_node *np,
+>   		kfree(softrst);
+>   	}
+>   };
+> +EXPORT_SYMBOL(rockchip_register_softrst);
 
 This looks good to me, so
 
