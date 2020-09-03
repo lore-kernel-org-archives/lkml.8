@@ -2,185 +2,234 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E10AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 677B5C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B08F20709
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3070D20709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ka9OnETU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="adPAgh9u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbgICSar (ORCPT
+        id S1729031AbgICSbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 14:30:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27776 "EHLO
+        Thu, 3 Sep 2020 14:31:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35623 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727065AbgICSap (ORCPT
+        with ESMTP id S1727065AbgICSbM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 14:30:45 -0400
+        Thu, 3 Sep 2020 14:31:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599157843;
+        s=mimecast20190719; t=1599157869;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zJbk2K6+pCV68bFCa4baP2HQg3BY5d7akosXwLiLy00=;
-        b=Ka9OnETUc2P+RX34283AxSzsn380u6ALA2UbdWzOc5DEMJriNoyvy+1RSFPYetQGTAO5Zv
-        4yhLLIUlixtDTV5x0Odl86LhoQfy4Kzx2Wn82dL/GtBcbefPd0erfugvfftlZ/0GM+EZRR
-        oz4dVNuAWAumOfZr8vunBlEW6Q7KgI4=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=IkaufSngMuWTQqadTbClKbl/Nap2SqZPYOIxYesuAlU=;
+        b=adPAgh9um/RcrTe6JHj4zgjeIIIbBM3VcnPkYeFFtNGOny4wrq/BoT2vUFlvLXZJkSxAc4
+        MBxEhpF2256mg1hInh5lpcQrZmpL110y5NcgonXY+wC6M5WJ6cFpHuP/CV8PQJHhefepy1
+        pXVsheEfmldsyxKJVrrW1UrDmXE0/Ig=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-361-wgmA4WdrPoWG-w3vINI_QA-1; Thu, 03 Sep 2020 14:30:41 -0400
-X-MC-Unique: wgmA4WdrPoWG-w3vINI_QA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-277-dWCkInDOMkqXjmgql0_Q2w-1; Thu, 03 Sep 2020 14:31:08 -0400
+X-MC-Unique: dWCkInDOMkqXjmgql0_Q2w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5EE5081F00B;
-        Thu,  3 Sep 2020 18:30:40 +0000 (UTC)
-Received: from fuller.cnet (ovpn-112-7.gru2.redhat.com [10.97.112.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8CC7510013C4;
-        Thu,  3 Sep 2020 18:30:39 +0000 (UTC)
-Received: by fuller.cnet (Postfix, from userid 1000)
-        id DCE744168BB3; Thu,  3 Sep 2020 15:30:15 -0300 (-03)
-Date:   Thu, 3 Sep 2020 15:30:15 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Requirements to control kernel isolation/nohz_full at runtime
-Message-ID: <20200903183015.GA1027417@fuller.cnet>
-References: <20200901104640.GA13814@lenoir>
- <20200903182359.GA1016174@fuller.cnet>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1EAF18C5200;
+        Thu,  3 Sep 2020 18:31:06 +0000 (UTC)
+Received: from [10.36.112.104] (ovpn-112-104.ams2.redhat.com [10.36.112.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 33B7E1C4;
+        Thu,  3 Sep 2020 18:31:05 +0000 (UTC)
+Subject: Re: [PATCH] mm/memory_hotplug: drain per-cpu pages again during
+ memory offline
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>
+References: <20200901124615.137200-1-pasha.tatashin@soleen.com>
+ <20200902140851.GJ4617@dhcp22.suse.cz>
+ <CA+CK2bBZdN56fmsC2jyY_ju8rQfG2-9hForf1CEdcUVL1+wrrA@mail.gmail.com>
+ <74f2341a-7834-3e37-0346-7fbc48d74df3@suse.cz>
+ <20200902151306.GL4617@dhcp22.suse.cz>
+ <e6bf05cb-044c-47a9-3c65-e41b1e42b702@suse.cz>
+ <20200903063806.GM4617@dhcp22.suse.cz>
+ <c6b11905-2456-52a0-3b15-d4ceae6e7f54@redhat.com>
+ <CA+CK2bBTfmhTWNRrxnVKi=iknqq-iZxNZSnwNA9C9tWAJzRxmw@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63W5Ag0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAGJAjwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <d89510b1-a6a2-a874-7ffc-ba7a37d4212d@redhat.com>
+Date:   Thu, 3 Sep 2020 20:31:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903182359.GA1016174@fuller.cnet>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <CA+CK2bBTfmhTWNRrxnVKi=iknqq-iZxNZSnwNA9C9tWAJzRxmw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 03:23:59PM -0300, Marcelo Tosatti wrote:
-> On Tue, Sep 01, 2020 at 12:46:41PM +0200, Frederic Weisbecker wrote:
-> > Hi,
+On 03.09.20 20:23, Pavel Tatashin wrote:
+> On Thu, Sep 3, 2020 at 2:20 PM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 03.09.20 08:38, Michal Hocko wrote:
+>>> On Wed 02-09-20 19:51:45, Vlastimil Babka wrote:
+>>>> On 9/2/20 5:13 PM, Michal Hocko wrote:
+>>>>> On Wed 02-09-20 16:55:05, Vlastimil Babka wrote:
+>>>>>> On 9/2/20 4:26 PM, Pavel Tatashin wrote:
+>>>>>>> On Wed, Sep 2, 2020 at 10:08 AM Michal Hocko <mhocko@suse.com> wrote:
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Thread#1 - continue
+>>>>>>>>>          free_unref_page_commit
+>>>>>>>>>            migratetype = get_pcppage_migratetype(page);
+>>>>>>>>>               // get old migration type
+>>>>>>>>>            list_add(&page->lru, &pcp->lists[migratetype]);
+>>>>>>>>>               // add new page to already drained pcp list
+>>>>>>>>>
+>>>>>>>>> Thread#2
+>>>>>>>>> Never drains pcp again, and therefore gets stuck in the loop.
+>>>>>>>>>
+>>>>>>>>> The fix is to try to drain per-cpu lists again after
+>>>>>>>>> check_pages_isolated_cb() fails.
+>>>>>>>>
+>>>>>>>> But this means that the page is not isolated and so it could be reused
+>>>>>>>> for something else. No?
+>>>>>>>
+>>>>>>> The page is in a movable zone, has zero references, and the section is
+>>>>>>> isolated (i.e. set_pageblock_migratetype(page, MIGRATE_ISOLATE);) is
+>>>>>>> set. The page should be offlinable, but it is lost in a pcp list as
+>>>>>>> that list is never drained again after the first failure to migrate
+>>>>>>> all pages in the range.
+>>>>>>
+>>>>>> Yeah. To answer Michal's "it could be reused for something else" - yes, somebody
+>>>>>> could allocate it from the pcplist before we do the extra drain. But then it
+>>>>>> becomes "visible again" and the loop in __offline_pages() should catch it by
+>>>>>> scan_movable_pages() - do_migrate_range(). And this time the pageblock is
+>>>>>> already marked as isolated, so the page (freed by migration) won't end up on the
+>>>>>> pcplist again.
+>>>>>
+>>>>> So the page block is marked MIGRATE_ISOLATE but the allocation itself
+>>>>> could be used for non migrateable objects. Or does anything prevent that
+>>>>> from happening?
+>>>>
+>>>> In a movable zone, the allocation should not be used for non migrateable
+>>>> objects. E.g. if the zone was not ZONE_MOVABLE, the offlining could fail
+>>>> regardless of this race (analogically for migrating away from CMA pageblocks).
+>>>>
+>>>>> We really do depend on isolation to not allow reuse when offlining.
+>>>>
+>>>> This is not really different than if the page on pcplist was allocated just a
+>>>> moment before the offlining, thus isolation started. We ultimately rely on being
+>>>> able to migrate any allocated pages away during the isolation. This "freeing to
+>>>> pcplists" race doesn't fundamentally change anything in this regard. We just
+>>>> have to guarantee that pages on pcplists will be eventually flushed, to make
+>>>> forward progress, and there was a bug in this aspect.
+>>>
+>>> You are right. I managed to confuse myself yesterday. The race is
+>>> impossible for !ZONE_MOVABLE because we do PageBuddy check there. And on
+>>> the movable zone we are not losing the migrateability property.
+>>>
+>>> Pavel I think this will be a useful information to add to the changelog.
+>>> We should also document this in the code to prevent from further
+>>> confusion. I would suggest something like the following:
+>>>
+>>> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+>>> index 242c03121d73..56d4892bceb8 100644
+>>> --- a/mm/page_isolation.c
+>>> +++ b/mm/page_isolation.c
+>>> @@ -170,6 +170,14 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
+>>>   * pageblocks we may have modified and return -EBUSY to caller. This
+>>>   * prevents two threads from simultaneously working on overlapping ranges.
+>>>   *
+>>> + * Please note that there is no strong synchronization with the page allocator
+>>> + * either. Pages might be freed while their page blocks are marked ISOLATED.
+>>> + * In some cases pages might still end up on pcp lists and that would allow
+>>> + * for their allocation even when they are in fact isolated already. Depending on
+>>> + * how strong of a guarantee the caller needs drain_all_pages might be needed
+>>> + * (e.g. __offline_pages will need to call it after check for isolated range for
+>>> + * a next retry).
+>>> + *
+>>
+>> As expressed in reply to v2, I dislike this hack. There is strong
+>> synchronization, just PCP is special. Allocating from MIGRATE_ISOLATE is
+>> just plain ugly.
+>>
+>> Can't we temporarily disable PCP (while some pageblock in the zone is
+>> isolated, which we know e.g., due to the counter), so no new pages get
+>> put into PCP lists after draining, and re-enable after no pageblocks are
+>> isolated again? We keep draining the PCP, so it doesn't seem to be of a
+>> lot of use during that period, no? It's a performance hit already.
+>>
+>> Then, we would only need exactly one drain. And we would only have to
+>> check on the free path whether PCP is temporarily disabled.
 > 
-> Hi Frederic,
-> 
-> Thanks for the summary! Looking forward to your comments...
-> 
-> > I'm currently working on making nohz_full/nohz_idle runtime toggable
-> > and some other people seem to be interested as well. So I've dumped
-> > a few thoughts about some pre-requirements to achieve that for those
-> > interested.
-> > 
-> > As you can see, there is a bit of hard work in the way. I'm iterating
-> > that in https://pad.kernel.org/p/isolation, feel free to edit:
-> > 
-> > 
-> > == RCU nocb ==
-> > 
-> > Currently controllable with "rcu_nocbs=" boot parameter and/or through nohz_full=/isolcpus=nohz
-> > We need to make it toggeable at runtime. Currently handling that:
-> > v1: https://lwn.net/Articles/820544/
-> > v2: coming soon
-> 
-> Nice.
-> 
-> > == TIF_NOHZ ==
-> > 
-> > Need to get rid of that in order not to trigger syscall slowpath on CPUs that don't want nohz_full.
-> > Also we don't want to iterate all threads and clear the flag when the last nohz_full CPU exits nohz_full
-> > mode. Prefer static keys to call context tracking on archs. x86 does that well.
-> > 
-> > == Proper entry code ==
-> > 
-> > We must make sure that a given arch never calls exception_enter() / exception_exit().
-> > This saves the previous state of context tracking and switch to kernel mode (from context tracking POV)
-> > temporarily. Since this state is saved on the stack, this prevents us from turning off context tracking
-> > entirely on a CPU: The tracking must be done on all CPUs and that takes some cycles.
-> > 
-> > This means that, considering early entry code (before the call to context tracking upon kernel entry,
-> > and after the call to context tracking upon kernel exit), we must take care of few things:
-> > 
-> > 1) Make sure early entry code can't trigger exceptions. Or if it does, the given exception can't schedule
-> > or use RCU (unless it calls rcu_nmi_enter()). Otherwise the exception must call exception_enter()/exception_exit()
-> > which we don't want.
-> > 
-> > 2) No call to schedule_user().
-> > 
-> > 3) Make sure early entry code is not interruptible or preempt_schedule_irq() would rely on
-> > exception_entry()/exception_exit()
-> > 
-> > 4) Make sure early entry code can't be traced (no call to preempt_schedule_notrace()), or if it does it
-> > can't schedule
-> > 
-> > I believe x86 does most of that well. In the end we should remove exception_enter()/exit implementations
-> > in x86 and replace it with a check that makes sure context_tracking state is not in USER. An arch meeting
-> > all the above conditions would earn a CONFIG_ARCH_HAS_SANE_CONTEXT_TRACKING. Being able to toggle nohz_full
-> > at runtime would depend on that.
-> > 
-> > 
-> > == Cputime accounting ==
-> > 
-> > Both write and read side must switch to tick based accounting and drop the use of seqlock in task_cputime(),
-> > task_gtime(), kcpustat_field(), kcpustat_cpu_fetch(). Special ordering/state machine is required to make that without races.
-> > 
-> > == Nohz ==
-> > 
-> > Switch from nohz_full to nohz_idle. Mind a few details:
-> >     
-> >     1) Turn off 1Hz offlined tick handled in housekeeping
-> >     2) Handle tick dependencies, take care of racing CPUs setting/clearing tick dependency. It's much trickier when
-> >     we switch from nohz_idle to nohz_full
-> >     
-> > == Unbound affinity ==
-> > 
-> > Restore kernel threads, workqueue, timers, etc... wide affinity. But take care of cpumasks that have been set through other
-> > interfaces: sysfs, procfs, etc...
-> 
-> We were looking at a userspace interface: what would be a proper
-> (unified, similar to isolcpus= interface) and its implementation:
-> 
-> The simplest idea for interface seemed to be exposing the integer list of
-> CPUs and isolation flags to userspace (probably via sysfs).
-> 
-> The scheme would allow flags to be separately enabled/disabled, 
-> with not all flags being necessary toggable (could for example
-> disallow nohz_full= toggling until it is implemented, but allow for
-> other isolation features to be toggable).
-> 
-> This would require per flag housekeeping_masks (instead of a single).
-> 
-> Back to the userspace interface, you mentioned earlier that cpusets
-> was a possibility for it. However:
-> 
-> "Cpusets provide a Linux kernel mechanism to constrain which CPUs and
-> Memory Nodes are used by a process or set of processes.
-> 
-> The Linux kernel already has a pair of mechanisms to specify on which
-> CPUs a task may be scheduled (sched_setaffinity) and on which Memory
-> Nodes it may obtain memory (mbind, set_mempolicy).
-> 
-> Cpusets extends these two mechanisms as follows:"
-> 
-> The isolation flags do not necessarily have anything to do with
-> tasks, but with CPUs: a given feature is disabled or enabled on a
-> given CPU. 
-> No?
+> Hm, we could use a static branches to disable it, that would keep
+> release code just as fast, but I am worried it will make code even
+> uglier. Let's see what others in this thread think about this idea.
 
-One cpumask per feature, implemented separately in sysfs, also 
-seems OK (modulo documentation about the RCU update and users
-of the previous versions).
+It would at least stop this "allocate from MIOGRATE_ISOLATE" behavior
+and the "drain when you feel like it, and drain more frequently to work
+around broken PCP code" handling.
 
-This is what is being done for rcu_nocbs= already...
+Anyhow, I'll be offline until next Tuesday, cheers!
+
+-- 
+Thanks,
+
+David / dhildenb
 
