@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFE5C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDF2C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81522206EF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB28206EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbgICNBn (ORCPT
+        id S1728915AbgICNDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 09:01:43 -0400
-Received: from mga09.intel.com ([134.134.136.24]:15200 "EHLO mga09.intel.com"
+        Thu, 3 Sep 2020 09:03:32 -0400
+Received: from mga04.intel.com ([192.55.52.120]:35050 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728970AbgICMqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 08:46:06 -0400
-IronPort-SDR: vl2FFEdSesjYSXjTTy8FLPrlTs0aGhUlAePD1LfdLrImuNoPC3R078sR3A8zsssrv6UNk+5jj2
- 3qDSPN+ia+pQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="158549508"
+        id S1728900AbgICMpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:45:54 -0400
+IronPort-SDR: jDm1yosuA+p3inGMCKgx4X/MgL2sZugGP1X2eSo2PMxcCKEEikY+zzEgj76cxDaB6sZFQSbVQT
+ zOYU0gxzerqQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="154966011"
 X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="158549508"
+   d="scan'208";a="154966011"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:43:55 -0700
-IronPort-SDR: DHOVffJCmlL9Lk6lAZIA/b/JYLLzq4+vkdWXAVnrkBi/kEJ0p2BaTWwoSItEeZGYciS6zTc0hG
- Qq+4y2ol3eqg==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:43:24 -0700
+IronPort-SDR: FNUpIiXhSPozTPNhl5BXHE4gZLjf0Fzi9vWvLPM93bQxz8l3ANTUN7zwjy1fsLPj/gIZYXyCXi
+ fBfp3ISTYg3Q==
 X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="478039742"
+   d="scan'208";a="326207301"
 Received: from shsi6026.sh.intel.com (HELO localhost) ([10.239.147.135])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:43:50 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:43:20 -0700
 From:   shuo.a.liu@intel.com
 To:     linux-kernel@vger.kernel.org, x86@kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Shuo Liu <shuo.a.liu@intel.com>,
         Zhi Wang <zhi.a.wang@intel.com>,
         Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH v2 16/17] virt: acrn: Introduce irqfd
-Date:   Thu,  3 Sep 2020 20:42:00 +0800
-Message-Id: <20200903124201.17275-17-shuo.a.liu@intel.com>
+Subject: [PATCH v2 11/17] virt: acrn: Introduce interfaces for PCI device passthrough
+Date:   Thu,  3 Sep 2020 20:41:55 +0800
+Message-Id: <20200903124201.17275-12-shuo.a.liu@intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200903124201.17275-1-shuo.a.liu@intel.com>
 References: <20200903124201.17275-1-shuo.a.liu@intel.com>
@@ -62,15 +62,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shuo Liu <shuo.a.liu@intel.com>
 
-irqfd is a mechanism to inject a specific interrupt to a User VM using a
-decoupled eventfd mechanism.
+PCI device passthrough enables an OS in a virtual machine to directly
+access a PCI device in the host. It promises almost the native
+performance, which is required in performance-critical scenarios of
+ACRN.
 
-Vhost is a kernel-level virtio server which uses eventfd for interrupt
-injection. To support vhost on ACRN, irqfd is introduced in HSM.
+HSM provides the following ioctls:
+ - Assign - ACRN_IOCTL_ASSIGN_PCIDEV
+   Pass data struct acrn_pcidev from userspace to the hypervisor, and
+   inform the hypervisor to assign a PCI device to a User VM.
 
-HSM provides ioctls to associate a virtual Message Signaled Interrupt
-(MSI) with an eventfd. The corresponding virtual MSI will be injected
-into a User VM once the eventfd got signal.
+ - De-assign - ACRN_IOCTL_DEASSIGN_PCIDEV
+   Pass data struct acrn_pcidev from userspace to the hypervisor, and
+   inform the hypervisor to de-assign a PCI device from a User VM.
+
+ - Set a interrupt of a passthrough device - ACRN_IOCTL_SET_PTDEV_INTR
+   Pass data struct acrn_ptdev_irq from userspace to the hypervisor,
+   and inform the hypervisor to map a INTx interrupt of passthrough
+   device of User VM.
+
+ - Reset passthrough device interrupt - ACRN_IOCTL_RESET_PTDEV_INTR
+   Pass data struct acrn_ptdev_irq from userspace to the hypervisor,
+   and inform the hypervisor to unmap a INTx interrupt of passthrough
+   device of User VM.
 
 Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
 Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
@@ -81,377 +95,224 @@ Cc: Yu Wang <yu1.wang@intel.com>
 Cc: Reinette Chatre <reinette.chatre@intel.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/virt/acrn/Makefile   |   2 +-
- drivers/virt/acrn/acrn_drv.h |  10 ++
- drivers/virt/acrn/hsm.c      |   7 ++
- drivers/virt/acrn/irqfd.c    | 236 +++++++++++++++++++++++++++++++++++
- drivers/virt/acrn/vm.c       |   3 +
- include/uapi/linux/acrn.h    |  15 +++
- 6 files changed, 272 insertions(+), 1 deletion(-)
- create mode 100644 drivers/virt/acrn/irqfd.c
+ drivers/virt/acrn/hsm.c       | 46 +++++++++++++++++++++++++
+ drivers/virt/acrn/hypercall.h | 54 ++++++++++++++++++++++++++++++
+ include/uapi/linux/acrn.h     | 63 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 163 insertions(+)
 
-diff --git a/drivers/virt/acrn/Makefile b/drivers/virt/acrn/Makefile
-index 755b583b32ca..08ce641dcfa1 100644
---- a/drivers/virt/acrn/Makefile
-+++ b/drivers/virt/acrn/Makefile
-@@ -1,3 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_ACRN_HSM)	:= acrn.o
--acrn-y := hsm.o vm.o mm.o ioreq.o ioeventfd.o
-+acrn-y := hsm.o vm.o mm.o ioreq.o ioeventfd.o irqfd.o
-diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
-index 4cb8a61d4ccd..3495f529574a 100644
---- a/drivers/virt/acrn/acrn_drv.h
-+++ b/drivers/virt/acrn/acrn_drv.h
-@@ -159,6 +159,9 @@ extern rwlock_t acrn_vm_list_lock;
-  * @ioeventfds_lock:		Lock to protect ioeventfds list
-  * @ioeventfds:			List to link all hsm_ioeventfd
-  * @ioeventfd_client:		I/O client for ioeventfds of the VM
-+ * @irqfds_lock:		Lock to protect irqfds list
-+ * @irqfds:			List to link all hsm_irqfd
-+ * @irqfd_wq:			Workqueue for irqfd async shutdown
-  */
- struct acrn_vm {
- 	struct device			*dev;
-@@ -179,6 +182,9 @@ struct acrn_vm {
- 	struct mutex			ioeventfds_lock;
- 	struct list_head		ioeventfds;
- 	struct acrn_ioreq_client	*ioeventfd_client;
-+	struct mutex			irqfds_lock;
-+	struct list_head		irqfds;
-+	struct workqueue_struct		*irqfd_wq;
- };
- 
- struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
-@@ -215,4 +221,8 @@ int acrn_ioeventfd_init(struct acrn_vm *vm);
- int acrn_ioeventfd_config(struct acrn_vm *vm, struct acrn_ioeventfd *args);
- void acrn_ioeventfd_deinit(struct acrn_vm *vm);
- 
-+int acrn_irqfd_init(struct acrn_vm *vm);
-+int acrn_irqfd_config(struct acrn_vm *vm, struct acrn_irqfd *args);
-+void acrn_irqfd_deinit(struct acrn_vm *vm);
-+
- #endif /* __ACRN_HSM_DRV_H */
 diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
-index 7290c67fca15..f5bb7ae34001 100644
+index cb0824b6e5bd..b2ec029ebb47 100644
 --- a/drivers/virt/acrn/hsm.c
 +++ b/drivers/virt/acrn/hsm.c
-@@ -118,6 +118,7 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+@@ -52,7 +52,9 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+ 	struct acrn_vm_creation *vm_param;
+ 	struct acrn_vcpu_regs *cpu_regs;
+ 	struct acrn_ioreq_notify notify;
++	struct acrn_ptdev_irq *irq_info;
  	struct acrn_vm_memmap memmap;
- 	struct acrn_msi_entry *msi;
- 	struct acrn_pcidev *pcidev;
-+	struct acrn_irqfd irqfd;
- 	struct page *page;
- 	u64 cstate_cmd;
++	struct acrn_pcidev *pcidev;
  	int ret = 0;
-@@ -307,6 +308,12 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
  
- 		ret = acrn_ioeventfd_config(vm, &ioeventfd);
+ 	if (vm->vmid == ACRN_INVALID_VMID && cmd != ACRN_IOCTL_CREATE_VM) {
+@@ -126,6 +128,50 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+ 
+ 		ret = acrn_vm_memseg_unmap(vm, &memmap);
  		break;
-+	case ACRN_IOCTL_IRQFD:
-+		if (copy_from_user(&irqfd, (void __user *)ioctl_param,
-+				   sizeof(irqfd)))
-+			return -EFAULT;
-+		ret = acrn_irqfd_config(vm, &irqfd);
++	case ACRN_IOCTL_ASSIGN_PCIDEV:
++		pcidev = memdup_user((void __user *)ioctl_param,
++				     sizeof(struct acrn_pcidev));
++		if (IS_ERR(pcidev))
++			return PTR_ERR(pcidev);
++
++		ret = hcall_assign_pcidev(vm->vmid, virt_to_phys(pcidev));
++		if (ret < 0)
++			dev_err(dev, "Failed to assign pci device!\n");
++		kfree(pcidev);
 +		break;
- 	default:
- 		dev_warn(dev, "Unknown IOCTL 0x%x!\n", cmd);
- 		ret = -ENOTTY;
-diff --git a/drivers/virt/acrn/irqfd.c b/drivers/virt/acrn/irqfd.c
-new file mode 100644
-index 000000000000..0538464ca851
---- /dev/null
-+++ b/drivers/virt/acrn/irqfd.c
-@@ -0,0 +1,236 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ACRN HSM irqfd: use eventfd objects to inject virtual interrupts
++	case ACRN_IOCTL_DEASSIGN_PCIDEV:
++		pcidev = memdup_user((void __user *)ioctl_param,
++				     sizeof(struct acrn_pcidev));
++		if (IS_ERR(pcidev))
++			return PTR_ERR(pcidev);
++
++		ret = hcall_deassign_pcidev(vm->vmid, virt_to_phys(pcidev));
++		if (ret < 0)
++			dev_err(dev, "Failed to deassign pci device!\n");
++		kfree(pcidev);
++		break;
++	case ACRN_IOCTL_SET_PTDEV_INTR:
++		irq_info = memdup_user((void __user *)ioctl_param,
++				       sizeof(struct acrn_ptdev_irq));
++		if (IS_ERR(irq_info))
++			return PTR_ERR(irq_info);
++
++		ret = hcall_set_ptdev_intr(vm->vmid, virt_to_phys(irq_info));
++		if (ret < 0)
++			dev_err(dev, "Failed to configure intr for ptdev!\n");
++		kfree(irq_info);
++		break;
++	case ACRN_IOCTL_RESET_PTDEV_INTR:
++		irq_info = memdup_user((void __user *)ioctl_param,
++				       sizeof(struct acrn_ptdev_irq));
++		if (IS_ERR(irq_info))
++			return PTR_ERR(irq_info);
++
++		ret = hcall_reset_ptdev_intr(vm->vmid, virt_to_phys(irq_info));
++		if (ret < 0)
++			dev_err(dev, "Failed to reset intr for ptdev!\n");
++		kfree(irq_info);
++		break;
+ 	case ACRN_IOCTL_CREATE_IOREQ_CLIENT:
+ 		if (vm->default_client)
+ 			return -EEXIST;
+diff --git a/drivers/virt/acrn/hypercall.h b/drivers/virt/acrn/hypercall.h
+index 5eba29e3ed38..f448301832cf 100644
+--- a/drivers/virt/acrn/hypercall.h
++++ b/drivers/virt/acrn/hypercall.h
+@@ -28,6 +28,12 @@
+ #define HC_ID_MEM_BASE			0x40UL
+ #define HC_VM_SET_MEMORY_REGIONS	_HC_ID(HC_ID, HC_ID_MEM_BASE + 0x02)
+ 
++#define HC_ID_PCI_BASE			0x50UL
++#define HC_SET_PTDEV_INTR		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x03)
++#define HC_RESET_PTDEV_INTR		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x04)
++#define HC_ASSIGN_PCIDEV		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x05)
++#define HC_DEASSIGN_PCIDEV		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x06)
++
+ /**
+  * hcall_create_vm() - Create a User VM
+  * @vminfo:	Service VM GPA of info of User VM creation
+@@ -130,4 +136,52 @@ static inline long hcall_set_memory_regions(u64 regions_pa)
+ 	return acrn_hypercall1(HC_VM_SET_MEMORY_REGIONS, regions_pa);
+ }
+ 
++/**
++ * hcall_assign_pcidev() - Assign a PCI device to a User VM
++ * @vmid:	User VM ID
++ * @addr:	Service VM GPA of the &struct acrn_pcidev
 + *
-+ * Copyright (C) 2020 Intel Corporation. All rights reserved.
-+ *
-+ * Authors:
-+ *	Shuo Liu <shuo.a.liu@intel.com>
-+ *	Yakui Zhao <yakui.zhao@intel.com>
++ * Return: 0 on success, <0 on failure
 + */
-+#define pr_fmt(fmt) "acrn: " fmt
-+
-+#include <linux/eventfd.h>
-+#include <linux/file.h>
-+#include <linux/poll.h>
-+#include <linux/slab.h>
-+
-+#include "acrn_drv.h"
-+
-+static LIST_HEAD(acrn_irqfd_clients);
-+static DEFINE_MUTEX(acrn_irqfds_mutex);
++static inline long hcall_assign_pcidev(u64 vmid, u64 addr)
++{
++	return acrn_hypercall2(HC_ASSIGN_PCIDEV, vmid, addr);
++}
 +
 +/**
-+ * struct hsm_irqfd - Properties of HSM irqfd
-+ * @vm:		Associated VM pointer
-+ * @wait:	Entry of wait-queue
-+ * @shutdown:	Async shutdown work
-+ * @eventfd:	Associated eventfd
-+ * @list:	Entry within &acrn_vm.irqfds of irqfds of a VM
-+ * @pt:		Structure for select/poll on the associated eventfd
-+ * @msi:	MSI data
++ * hcall_deassign_pcidev() - De-assign a PCI device from a User VM
++ * @vmid:	User VM ID
++ * @addr:	Service VM GPA of the &struct acrn_pcidev
++ *
++ * Return: 0 on success, <0 on failure
 + */
-+struct hsm_irqfd {
-+	struct acrn_vm		*vm;
-+	wait_queue_entry_t	wait;
-+	struct work_struct	shutdown;
-+	struct eventfd_ctx	*eventfd;
-+	struct list_head	list;
-+	poll_table		pt;
-+	struct acrn_msi_entry	msi;
-+};
-+
-+static void acrn_irqfd_inject(struct hsm_irqfd *irqfd)
++static inline long hcall_deassign_pcidev(u64 vmid, u64 addr)
 +{
-+	struct acrn_vm *vm = irqfd->vm;
-+
-+	acrn_msi_inject(vm, irqfd->msi.msi_addr,
-+			irqfd->msi.msi_data);
++	return acrn_hypercall2(HC_DEASSIGN_PCIDEV, vmid, addr);
 +}
 +
-+static void hsm_irqfd_shutdown(struct hsm_irqfd *irqfd)
-+{
-+	u64 cnt;
-+
-+	lockdep_assert_held(&irqfd->vm->irqfds_lock);
-+
-+	/* remove from wait queue */
-+	list_del_init(&irqfd->list);
-+	eventfd_ctx_remove_wait_queue(irqfd->eventfd, &irqfd->wait, &cnt);
-+	eventfd_ctx_put(irqfd->eventfd);
-+	kfree(irqfd);
-+}
-+
-+static void hsm_irqfd_shutdown_work(struct work_struct *work)
-+{
-+	struct hsm_irqfd *irqfd;
-+	struct acrn_vm *vm;
-+
-+	irqfd = container_of(work, struct hsm_irqfd, shutdown);
-+	vm = irqfd->vm;
-+	mutex_lock(&vm->irqfds_lock);
-+	if (!list_empty(&irqfd->list))
-+		hsm_irqfd_shutdown(irqfd);
-+	mutex_unlock(&vm->irqfds_lock);
-+}
-+
-+/* Called with wqh->lock held and interrupts disabled */
-+static int hsm_irqfd_wakeup(wait_queue_entry_t *wait, unsigned int mode,
-+			    int sync, void *key)
-+{
-+	unsigned long poll_bits = (unsigned long)key;
-+	struct hsm_irqfd *irqfd;
-+	struct acrn_vm *vm;
-+
-+	irqfd = container_of(wait, struct hsm_irqfd, wait);
-+	vm = irqfd->vm;
-+	if (poll_bits & POLLIN)
-+		/* An event has been signaled, inject an interrupt */
-+		acrn_irqfd_inject(irqfd);
-+
-+	if (poll_bits & POLLHUP)
-+		/* Do shutdown work in thread to hold wqh->lock */
-+		queue_work(vm->irqfd_wq, &irqfd->shutdown);
-+
-+	return 0;
-+}
-+
-+static void hsm_irqfd_poll_func(struct file *file, wait_queue_head_t *wqh,
-+				poll_table *pt)
-+{
-+	struct hsm_irqfd *irqfd;
-+
-+	irqfd = container_of(pt, struct hsm_irqfd, pt);
-+	add_wait_queue(wqh, &irqfd->wait);
-+}
-+
-+/*
-+ * Assign an eventfd to a VM and create a HSM irqfd associated with the
-+ * eventfd. The properties of the HSM irqfd are built from a &struct
-+ * acrn_irqfd.
++/**
++ * hcall_set_ptdev_intr() - Configure an interrupt for an assigned PCI device.
++ * @vmid:	User VM ID
++ * @irq:	Service VM GPA of the &struct acrn_ptdev_irq
++ *
++ * Return: 0 on success, <0 on failure
 + */
-+static int acrn_irqfd_assign(struct acrn_vm *vm, struct acrn_irqfd *args)
++static inline long hcall_set_ptdev_intr(u64 vmid, u64 irq)
 +{
-+	struct eventfd_ctx *eventfd = NULL;
-+	struct hsm_irqfd *irqfd, *tmp;
-+	unsigned int events;
-+	struct fd f;
-+	int ret = 0;
-+
-+	irqfd = kzalloc(sizeof(*irqfd), GFP_KERNEL);
-+	if (!irqfd)
-+		return -ENOMEM;
-+
-+	irqfd->vm = vm;
-+	memcpy(&irqfd->msi, &args->msi, sizeof(args->msi));
-+	INIT_LIST_HEAD(&irqfd->list);
-+	INIT_WORK(&irqfd->shutdown, hsm_irqfd_shutdown_work);
-+
-+	f = fdget(args->fd);
-+	if (!f.file) {
-+		ret = -EBADF;
-+		goto out;
-+	}
-+
-+	eventfd = eventfd_ctx_fileget(f.file);
-+	if (IS_ERR(eventfd)) {
-+		ret = PTR_ERR(eventfd);
-+		goto fail;
-+	}
-+
-+	irqfd->eventfd = eventfd;
-+
-+	/*
-+	 * Install custom wake-up handling to be notified whenever underlying
-+	 * eventfd is signaled.
-+	 */
-+	init_waitqueue_func_entry(&irqfd->wait, hsm_irqfd_wakeup);
-+	init_poll_funcptr(&irqfd->pt, hsm_irqfd_poll_func);
-+
-+	mutex_lock(&vm->irqfds_lock);
-+	list_for_each_entry(tmp, &vm->irqfds, list) {
-+		if (irqfd->eventfd != tmp->eventfd)
-+			continue;
-+		ret = -EBUSY;
-+		mutex_unlock(&vm->irqfds_lock);
-+		goto fail;
-+	}
-+	list_add_tail(&irqfd->list, &vm->irqfds);
-+	mutex_unlock(&vm->irqfds_lock);
-+
-+	/* Check the pending event in this stage */
-+	events = f.file->f_op->poll(f.file, &irqfd->pt);
-+
-+	if (events & POLLIN)
-+		acrn_irqfd_inject(irqfd);
-+
-+	fdput(f);
-+	return 0;
-+fail:
-+	if (eventfd && !IS_ERR(eventfd))
-+		eventfd_ctx_put(eventfd);
-+
-+	fdput(f);
-+out:
-+	kfree(irqfd);
-+	return ret;
++	return acrn_hypercall2(HC_SET_PTDEV_INTR, vmid, irq);
 +}
 +
-+static int acrn_irqfd_deassign(struct acrn_vm *vm,
-+			       struct acrn_irqfd *args)
++/**
++ * hcall_reset_ptdev_intr() - Reset an interrupt for an assigned PCI device.
++ * @vmid:	User VM ID
++ * @irq:	Service VM GPA of the &struct acrn_ptdev_irq
++ *
++ * Return: 0 on success, <0 on failure
++ */
++static inline long hcall_reset_ptdev_intr(u64 vmid, u64 irq)
 +{
-+	struct hsm_irqfd *irqfd, *tmp;
-+	struct eventfd_ctx *eventfd;
-+
-+	eventfd = eventfd_ctx_fdget(args->fd);
-+	if (IS_ERR(eventfd))
-+		return PTR_ERR(eventfd);
-+
-+	mutex_lock(&vm->irqfds_lock);
-+	list_for_each_entry_safe(irqfd, tmp, &vm->irqfds, list) {
-+		if (irqfd->eventfd == eventfd) {
-+			hsm_irqfd_shutdown(irqfd);
-+			break;
-+		}
-+	}
-+	mutex_unlock(&vm->irqfds_lock);
-+	eventfd_ctx_put(eventfd);
-+
-+	return 0;
++	return acrn_hypercall2(HC_RESET_PTDEV_INTR, vmid, irq);
 +}
 +
-+int acrn_irqfd_config(struct acrn_vm *vm, struct acrn_irqfd *args)
-+{
-+	int ret;
-+
-+	if (args->flags & ACRN_IRQFD_FLAG_DEASSIGN)
-+		ret = acrn_irqfd_deassign(vm, args);
-+	else
-+		ret = acrn_irqfd_assign(vm, args);
-+
-+	return ret;
-+}
-+
-+int acrn_irqfd_init(struct acrn_vm *vm)
-+{
-+	INIT_LIST_HEAD(&vm->irqfds);
-+	mutex_init(&vm->irqfds_lock);
-+	vm->irqfd_wq = alloc_workqueue("acrn_irqfd-%u", 0, 0, vm->vmid);
-+	if (!vm->irqfd_wq)
-+		return -ENOMEM;
-+
-+	dev_dbg(vm->dev, "VM %u irqfd init.\n", vm->vmid);
-+	return 0;
-+}
-+
-+void acrn_irqfd_deinit(struct acrn_vm *vm)
-+{
-+	struct hsm_irqfd *irqfd, *next;
-+
-+	dev_dbg(vm->dev, "VM %u irqfd deinit.\n", vm->vmid);
-+	destroy_workqueue(vm->irqfd_wq);
-+	mutex_lock(&vm->irqfds_lock);
-+	list_for_each_entry_safe(irqfd, next, &vm->irqfds, list)
-+		hsm_irqfd_shutdown(irqfd);
-+	mutex_unlock(&vm->irqfds_lock);
-+}
-diff --git a/drivers/virt/acrn/vm.c b/drivers/virt/acrn/vm.c
-index 53d504e26803..bd3dab5eee92 100644
---- a/drivers/virt/acrn/vm.c
-+++ b/drivers/virt/acrn/vm.c
-@@ -48,6 +48,7 @@ struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
- 	write_unlock_bh(&acrn_vm_list_lock);
- 
- 	acrn_ioeventfd_init(vm);
-+	acrn_irqfd_init(vm);
- 	dev_dbg(vm->dev, "VM %u created.\n", vm->vmid);
- 	return vm;
- }
-@@ -66,7 +67,9 @@ int acrn_vm_destroy(struct acrn_vm *vm)
- 	write_unlock_bh(&acrn_vm_list_lock);
- 
- 	acrn_ioeventfd_deinit(vm);
-+	acrn_irqfd_deinit(vm);
- 	acrn_ioreq_deinit(vm);
-+
- 	if (vm->monitor_page) {
- 		put_page(vm->monitor_page);
- 		vm->monitor_page = NULL;
+ #endif /* __ACRN_HSM_HYPERCALL_H */
 diff --git a/include/uapi/linux/acrn.h b/include/uapi/linux/acrn.h
-index 7a99124c7d4d..75a687838a43 100644
+index 31cf0fd73bcc..893389babbcb 100644
 --- a/include/uapi/linux/acrn.h
 +++ b/include/uapi/linux/acrn.h
-@@ -411,6 +411,19 @@ struct acrn_ioeventfd {
- 	__u64	data;
- };
+@@ -289,6 +289,60 @@ struct acrn_vm_memmap {
+ 	__u32	attr;
+ } __attribute__((aligned(8)));
  
-+#define ACRN_IRQFD_FLAG_DEASSIGN	0x01
++/* Type of interrupt of a passthrough device */
++#define ACRN_PTDEV_IRQ_INTX	0
++#define ACRN_PTDEV_IRQ_MSI	1
++#define ACRN_PTDEV_IRQ_MSIX	2
 +/**
-+ * struct acrn_irqfd - Data to operate a &struct hsm_irqfd
-+ * @fd:		The fd of eventfd associated with a hsm_irqfd
-+ * @flags:	Logical-OR of ACRN_IRQFD_FLAG_*
-+ * @msi:	Info of MSI associated with the irqfd
++ * struct acrn_ptdev_irq - Interrupt data of a passthrough device.
++ * @type:		Type (ACRN_PTDEV_IRQ_*)
++ * @virt_bdf:		Virtual Bus/Device/Function
++ * @phys_bdf:		Physical Bus/Device/Function
++ * @intx:		Info of interrupt
++ * @intx.virt_pin:	Virtual IOAPIC pin
++ * @intx.phys_pin:	Physical IOAPIC pin
++ * @intx.is_pic_pin:	Is PIC pin or not
++ *
++ * This structure will be passed to hypervisor directly.
 + */
-+struct acrn_irqfd {
-+	__s32			fd;
-+	__u32			flags;
-+	struct acrn_msi_entry	msi;
-+};
++struct acrn_ptdev_irq {
++	__u32	type;
++	__u16	virt_bdf;
++	__u16	phys_bdf;
++
++	struct {
++		__u32	virt_pin;
++		__u32	phys_pin;
++		__u32	is_pic_pin;
++	} intx;
++} __attribute__((aligned(8)));
++
++/* Type of PCI device assignment */
++#define ACRN_PTDEV_QUIRK_ASSIGN	(1U << 0)
++
++#define ACRN_PCI_NUM_BARS	6
++/**
++ * struct acrn_pcidev - Info for assigning or de-assigning a PCI device
++ * @type:	Type of the assignment
++ * @virt_bdf:	Virtual Bus/Device/Function
++ * @phys_bdf:	Physical Bus/Device/Function
++ * @intr_line:	PCI interrupt line
++ * @intr_pin:	PCI interrupt pin
++ * @bar:	PCI BARs.
++ * @reserved:	Reserved.
++ *
++ * This structure will be passed to hypervisor directly.
++ */
++struct acrn_pcidev {
++	__u32	type;
++	__u16	virt_bdf;
++	__u16	phys_bdf;
++	__u8	intr_line;
++	__u8	intr_pin;
++	__u32	bar[ACRN_PCI_NUM_BARS];
++	__u32	reserved[6];
++} __attribute__((aligned(8)));
 +
  /* The ioctl type, documented in ioctl-number.rst */
  #define ACRN_IOCTL_TYPE			0xA2
  
-@@ -467,5 +480,7 @@ struct acrn_ioeventfd {
+@@ -324,4 +378,13 @@ struct acrn_vm_memmap {
+ #define ACRN_IOCTL_UNSET_MEMSEG		\
+ 	_IOW(ACRN_IOCTL_TYPE, 0x42, struct acrn_vm_memmap)
  
- #define ACRN_IOCTL_IOEVENTFD		\
- 	_IOW(ACRN_IOCTL_TYPE, 0x70, struct acrn_ioeventfd)
-+#define ACRN_IOCTL_IRQFD		\
-+	_IOW(ACRN_IOCTL_TYPE, 0x71, struct acrn_irqfd)
- 
++#define ACRN_IOCTL_SET_PTDEV_INTR	\
++	_IOW(ACRN_IOCTL_TYPE, 0x53, struct acrn_ptdev_irq)
++#define ACRN_IOCTL_RESET_PTDEV_INTR	\
++	_IOW(ACRN_IOCTL_TYPE, 0x54, struct acrn_ptdev_irq)
++#define ACRN_IOCTL_ASSIGN_PCIDEV	\
++	_IOW(ACRN_IOCTL_TYPE, 0x55, struct acrn_pcidev)
++#define ACRN_IOCTL_DEASSIGN_PCIDEV	\
++	_IOW(ACRN_IOCTL_TYPE, 0x56, struct acrn_pcidev)
++
  #endif /* _UAPI_ACRN_H */
 -- 
 2.28.0
