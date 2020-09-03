@@ -2,88 +2,147 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461E5C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8184C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE7120665
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F590206E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:44:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="SExMy0z8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O5o59mUd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbgICVjG (ORCPT
+        id S1729148AbgICVor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 17:39:06 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:41924 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgICVjG (ORCPT
+        Thu, 3 Sep 2020 17:44:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbgICVoo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 17:39:06 -0400
-Received: from [192.168.1.17] (50-47-107-221.evrt.wa.frontiernet.net [50.47.107.221])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8E42720B7178;
-        Thu,  3 Sep 2020 14:39:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8E42720B7178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1599169145;
-        bh=X8Rl+pt4VyViVuY1iqvZwrKvgNYzoNtbk1C/H/rtsqg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SExMy0z8l+hDET7uI+Q/LNihF/CkCSNZ8/8iWyTqCJFtunIbCKQmGIlnxcQQoSEw9
-         wTLpR6SMvrJNUoIQeSmNFde5tb81gNlLJAMBZKnx87bD/JKDYMXi9ndvXvHHM3XkW5
-         U0L+cGCVCwZ2IZFT7EOH8m4VX+zfBoqxo46/U+lQ=
-Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, iourit@microsoft.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        spronovo@microsoft.com
-References: <20200814123856.3880009-1-sashal@kernel.org>
- <20200814123856.3880009-2-sashal@kernel.org> <20200821135340.GA4067@bug>
- <054abab3-748e-c56b-526a-1b1734a9eaf7@linux.microsoft.com>
- <20200828061840.GE56396@kroah.com>
-From:   Iouri Tarassov <iourit@linux.microsoft.com>
-Message-ID: <f68415b4-f76d-680a-cc4f-2647fe54e538@linux.microsoft.com>
-Date:   Thu, 3 Sep 2020 14:39:05 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 3 Sep 2020 17:44:44 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5213C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 14:44:43 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id w186so3162621pgb.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 14:44:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Wkni4eXx9E7Yx63VN0+vnviLhaoHNM+yB8xZjp7w5hM=;
+        b=O5o59mUdRprA27/bBNjMETG5FChmb/k7jW6G/CEqPxqkNExuhCDFNEGkwkwsAAOk9B
+         S/ND1TkN2Kb21Yt+dermQ1eJzMamhppfZcA/5BLAHvK0xooF6lH1S7/GgEK+o+mFn5sC
+         Q+9Q6xNOHekU+wFfZY8e2e5GVn6y3TV0ytjI0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Wkni4eXx9E7Yx63VN0+vnviLhaoHNM+yB8xZjp7w5hM=;
+        b=iXJOjSnckWDCzw18yicXkQWRidFNlPsYRkd2uyB0fTZkxda+CSSUY/DTabveWXBDcB
+         3L2+BCyaOsdZOBV4FBCo2XeS7po0vO7Ap4RqFxpQs8+QPxQq9wKMqBcsEMS3DBncnViT
+         coz+r5ixqHob9OoaVLAGI/TolT3mNTiY+NwDLPMcuOjMqT7V7k2LLdGiwvMYCeb/7FP+
+         oX4O7/lpAtm/Pn0T3ApI9Tqn/XowM8LLKPW+QdXJlB2op79zc5fMPdGbzwvnNX6BAEGx
+         jSna9dZ3DhR+TFBq59SwsQpjouJKiNnyjnOQ6o0hhGweZKSW7vTfzP7Yb85xb3iQdd6u
+         fdCw==
+X-Gm-Message-State: AOAM531nUIcUPzIlgCXHNNTiwdL6v2HmkmVfyZv4fuNSSR00CxmUEMIu
+        uA9y37ilDNMoNjgL/KEioQRYaQ==
+X-Google-Smtp-Source: ABdhPJzAv2fIwHx5fjsh6FyQ4DUXacQqnpd1HrcO3mYGfEva7Q9zQka0PVlCAE3Ap8Ww7DWt19mfFg==
+X-Received: by 2002:a62:1809:: with SMTP id 9mr5726960pfy.217.1599169483379;
+        Thu, 03 Sep 2020 14:44:43 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d77sm4259177pfd.121.2020.09.03.14.44.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 14:44:42 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 14:44:41 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Arvind Sankar <nivedita@alum.mit.edu>
+Subject: Re: [PATCH v2 01/28] x86/boot/compressed: Disable relocation
+ relaxation
+Message-ID: <202009031444.F2ECA89E@keescook>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-2-samitolvanen@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200828061840.GE56396@kroah.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903203053.3411268-2-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Thu, Sep 03, 2020 at 01:30:26PM -0700, Sami Tolvanen wrote:
+> From: Arvind Sankar <nivedita@alum.mit.edu>
+> 
+> The x86-64 psABI [0] specifies special relocation types
+> (R_X86_64_[REX_]GOTPCRELX) for indirection through the Global Offset
+> Table, semantically equivalent to R_X86_64_GOTPCREL, which the linker
+> can take advantage of for optimization (relaxation) at link time. This
+> is supported by LLD and binutils versions 2.26 onwards.
+> 
+> The compressed kernel is position-independent code, however, when using
+> LLD or binutils versions before 2.27, it must be linked without the -pie
+> option. In this case, the linker may optimize certain instructions into
+> a non-position-independent form, by converting foo@GOTPCREL(%rip) to $foo.
+> 
+> This potential issue has been present with LLD and binutils-2.26 for a
+> long time, but it has never manifested itself before now:
+> - LLD and binutils-2.26 only relax
+> 	movq	foo@GOTPCREL(%rip), %reg
+>   to
+> 	leaq	foo(%rip), %reg
+>   which is still position-independent, rather than
+> 	mov	$foo, %reg
+>   which is permitted by the psABI when -pie is not enabled.
+> - gcc happens to only generate GOTPCREL relocations on mov instructions.
+> - clang does generate GOTPCREL relocations on non-mov instructions, but
+>   when building the compressed kernel, it uses its integrated assembler
+>   (due to the redefinition of KBUILD_CFLAGS dropping -no-integrated-as),
+>   which has so far defaulted to not generating the GOTPCRELX
+>   relocations.
+> 
+> Nick Desaulniers reports [1,2]:
+>   A recent change [3] to a default value of configuration variable
+>   (ENABLE_X86_RELAX_RELOCATIONS OFF -> ON) in LLVM now causes Clang's
+>   integrated assembler to emit R_X86_64_GOTPCRELX/R_X86_64_REX_GOTPCRELX
+>   relocations. LLD will relax instructions with these relocations based
+>   on whether the image is being linked as position independent or not.
+>   When not, then LLD will relax these instructions to use absolute
+>   addressing mode (R_RELAX_GOT_PC_NOPIC). This causes kernels built with
+>   Clang and linked with LLD to fail to boot.
+> 
+> Patch series [4] is a solution to allow the compressed kernel to be
+> linked with -pie unconditionally, but even if merged is unlikely to be
+> backported. As a simple solution that can be applied to stable as well,
+> prevent the assembler from generating the relaxed relocation types using
+> the -mrelax-relocations=no option. For ease of backporting, do this
+> unconditionally.
+> 
+> [0] https://gitlab.com/x86-psABIs/x86-64-ABI/-/blob/master/x86-64-ABI/linker-optimization.tex#L65
+> [1] https://lore.kernel.org/lkml/20200807194100.3570838-1-ndesaulniers@google.com/
+> [2] https://github.com/ClangBuiltLinux/linux/issues/1121
+> [3] https://reviews.llvm.org/rGc41a18cf61790fc898dcda1055c3efbf442c14c0
+> [4] https://lore.kernel.org/lkml/20200731202738.2577854-1-nivedita@alum.mit.edu/
+> 
+> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-On 8/27/2020 11:18 PM, Greg KH wrote:
-> On Thu, Aug 27, 2020 at 05:25:23PM -0700, Iouri Tarassov wrote:
-> > > > +bool dxghwqueue_acquire_reference(struct dxghwqueue *hwqueue)
-> > > > +{
-> > > > +	return refcount_inc_not_zero(&hwqueue->refcount);
-> > > > +}
-> > > 
-> > > Midlayers are evil.
-> > I strongly agree in general, but think that in our case the layers are very
-> > small. It allows to quickly find all places where a reference/dereference on
-> > an object is done and addition of debug tracing to catch errors.
->
-> Again, no, please remove all layers like this.  They just make it
-> impossible for others to review and understand the code over time.
->
-> Also, in this specific case, it would have allowed me to easily realize
-> that you are doing this type of call incorrectly and should be using a
-> different data structure :)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Are you suggesting that the current code is incorrect? Could you comment 
-what changes need to be done?
-
-Thanks
-Iouri
-
+-- 
+Kees Cook
