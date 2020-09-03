@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
 	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
 	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 899E0C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DBAC2D0E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69DBC206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E63206EB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNB7LFuL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CSzV1aYj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbgICUkP (ORCPT
+        id S1729616AbgICUkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:40:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35460 "EHLO
+        Thu, 3 Sep 2020 16:40:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729369AbgICUbG (ORCPT
+        with ESMTP id S1729312AbgICUbE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:31:06 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894BEC061265;
-        Thu,  3 Sep 2020 13:30:58 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id m6so4619323wrn.0;
-        Thu, 03 Sep 2020 13:30:58 -0700 (PDT)
+        Thu, 3 Sep 2020 16:31:04 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 983BAC061264;
+        Thu,  3 Sep 2020 13:30:57 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id w2so4134286wmi.1;
+        Thu, 03 Sep 2020 13:30:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WQf32lRefYlvWpNqVHDN0Q4olqQ7nkdPDH05d5Mwk20=;
-        b=mNB7LFuLunsa59ryEWxxPyempqYxfpwPFhvUy2WMjgyrvy+hAVWipxmu70QL6d0l5L
-         5U0RC71ib7EWr2tCGMvXAL73SjOOJgsvX7ZwiKaPtXmgmS/AT/8bZr5OyFVX5jlzpANp
-         v6GbgeFbYfMDLT2RYz4PSMIcx9l8spVWX8QWgvKXF77emPd+rjdvAIXpeQIojnuFlnQF
-         T8w3IJow0iwOPLTa8vhnvuodhrZyfAVtcrb/hdW3MrX7nS6AuUuGp4+GSnyv4fxBDxHe
-         8FKou8Pjy7PLpNCJ7OPPbBdLjvBC4xWGXgX4S4CprZdrYF2vQWVo2DWKd8ViHemZIINr
-         JGKg==
+        bh=I49qX4p3R5f0D/cfuMt37KBf23v3/L+E2eSH2MZxqyM=;
+        b=CSzV1aYjyXMA+ThlgRn7cci8rIEX5STM39i8LXl6eAR1hk+g6v2+sjurymyzXj24DW
+         DAlAXhSTKhhRfJzIiXxpCm3+liwUA9WU2Hlt0wgo8zpCJuHYz0CMp6A1zdqNttc8/hxP
+         TC7NSVfH/eC07z5O8fcYwYCHDth71yq4Rna0Mr43QWesC6z/jxHcThvh8ZNOfPHdFBxm
+         f3ZtZO+ZMLeaJXgLwePVuL3xqfrGlU5MrexfNI/5uUylzH4svGhmVzCGJ8jVSalB4UDJ
+         koiSWTLUhBf6IWMBM5kMUiZtolpSDuhuk1nBMCgU5CaLLCfktoxw7ShE0dGCNGvLZ9Dk
+         cpqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WQf32lRefYlvWpNqVHDN0Q4olqQ7nkdPDH05d5Mwk20=;
-        b=r17xeFZbUTh8qynxzT66WGdX7Arb2Gk0AtLlNqQD7ohhx1kBnsM+cqVcPooSaA5Xky
-         7L7UyA7mFjWGhwg3PleeN0qT7aXD8Vsko1SdKEz3oObyqN3LjVeYTuO7pNQS2O04X9sA
-         eLC6KaeS+sQGrlIOWm9+S56z7WeZRBqveFfRwtGFCCg0U0F+yJl2C85DzaLjaMfXt6Cw
-         7qYQGnOQlXKydXu7mlj11ABXRMzfowfKxhaBwlR3d3VpH+uLUAmRRf6bGGCS9Id3P12E
-         ZDiNolqQgQVqRwiUPOiUgta0+T+ACqXApl3MWjNfIaJiG3XkaaVLm5MkWO8CzSSDPdQu
-         Smbw==
-X-Gm-Message-State: AOAM5313QiLZZ8m7sFudI+TCmy+c+96uHDzYWONSB0IAn3DYqnuu08w2
-        IeGrlNSugZDtYWA9k7yQ+7M=
-X-Google-Smtp-Source: ABdhPJwV/D5vEOt7HiGayfYHGwvmD+WzmO5fqpG1aehEipiDZFdrGd3VaUCsTXMp0iDFlDyazWYq2Q==
-X-Received: by 2002:adf:dd0b:: with SMTP id a11mr4159015wrm.422.1599165057172;
-        Thu, 03 Sep 2020 13:30:57 -0700 (PDT)
-Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id q186sm6818274wma.45.2020.09.03.13.30.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=I49qX4p3R5f0D/cfuMt37KBf23v3/L+E2eSH2MZxqyM=;
+        b=NkMl+JxuF0uAUlxMr1gP9jAAOuZaFdK5Qmy+qKVJ08MOX98Oo9a8+RgjvheO+7PQFM
+         Bg/YKVnszP3mAwfjLUOS+UBv07T+cRUi52MCYD5B00ABp9sz8kSsAtv5zJZQj8b7J1gy
+         v/MQ/UXuZGxEBq7omVUUTpU7P3DaTMJ1E0rRBR44QNL9fiGXf2SvXbM1Or9wPXDM8KWt
+         wROUcZYvXrDST4EaYU2uN61hst+FnKJvbO3xDc7bNJBf5eyC622MrEh8IlQScA9aklVM
+         dBlUWWYMJS2W4MoP0VqcagX3Picx7vv/j7tAJGg9Tn+ozFI4+8IZho5VLp7ublmYtFNG
+         se1g==
+X-Gm-Message-State: AOAM531HM9IdIZRUEflUVFoPqfcXLtMo66nGI9OSvpPiYOvNhUq5k2FM
+        PMcTg6Grrz2WVjYMVU+ja74=
+X-Google-Smtp-Source: ABdhPJy5CGi5+Z8rjupOyEJsdtu5n4tI7FD43iDEcopKLSxFhEJ+qzOIV5ZHmtekurdvtvJycDajQw==
+X-Received: by 2002:a05:600c:2053:: with SMTP id p19mr4214447wmg.50.1599165056187;
         Thu, 03 Sep 2020 13:30:56 -0700 (PDT)
+Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
+        by smtp.gmail.com with ESMTPSA id q186sm6818274wma.45.2020.09.03.13.30.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 13:30:55 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -72,9 +72,9 @@ Cc:     devicetree@vger.kernel.org,
         Marcus Cooper <codekipper@gmail.com>,
         linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 12/20] arm64: dts: allwinner: a64: Add DAI node for HDMI
-Date:   Thu,  3 Sep 2020 22:30:26 +0200
-Message-Id: <20200903203034.1057334-13-peron.clem@gmail.com>
+Subject: [PATCH v2 11/20] arm: dts: sunxi: h3/h5: Add HDMI audio
+Date:   Thu,  3 Sep 2020 22:30:25 +0200
+Message-Id: <20200903203034.1057334-12-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200903203034.1057334-1-peron.clem@gmail.com>
 References: <20200903203034.1057334-1-peron.clem@gmail.com>
@@ -88,39 +88,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marcus Cooper <codekipper@gmail.com>
 
-Add the new DAI block for I2S2 which is used for HDMI audio.
+Add a simple-soundcard to link audio between HDMI and I2S.
 
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Marcus Cooper <codekipper@gmail.com>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 8dfbcd144072..bcf808459edf 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -845,6 +845,20 @@ i2s1: i2s@1c22400 {
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index 3dca6d89cab9..ebb109c828d9 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -105,6 +105,24 @@ de: display-engine {
+ 		status = "disabled";
+ 	};
  
-+		i2s2: i2s@1c22800 {
-+			#sound-dai-cells = <0>;
-+			compatible = "allwinner,sun50i-a64-i2s",
-+				     "allwinner,sun8i-h3-i2s";
-+			reg = <0x01c22800 0x400>;
-+			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2S2>, <&ccu CLK_I2S2>;
-+			clock-names = "apb", "mod";
-+			resets = <&ccu RST_BUS_I2S2>;
-+			dma-names = "rx", "tx";
-+			dmas = <&dma 27>, <&dma 27>;
-+			status = "disabled";
++	hdmi_sound: hdmi-sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,name = "sun8i-h3-hdmi";
++		simple-audio-card,mclk-fs = <128>;
++		status = "disabled";
++
++		simple-audio-card,codec {
++			sound-dai = <&hdmi>;
 +		};
 +
- 		dai: dai@1c22c00 {
- 			#sound-dai-cells = <0>;
- 			compatible = "allwinner,sun50i-a64-codec-i2s";
++		simple-audio-card,cpu {
++			sound-dai = <&i2s2>;
++			dai-tdm-slot-num = <2>;
++			dai-tdm-slot-width = <32>;
++		};
++	};
++
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -806,6 +824,7 @@ csi: camera@1cb0000 {
+ 		};
+ 
+ 		hdmi: hdmi@1ee0000 {
++			#sound-dai-cells = <0>;
+ 			compatible = "allwinner,sun8i-h3-dw-hdmi",
+ 				     "allwinner,sun8i-a83t-dw-hdmi";
+ 			reg = <0x01ee0000 0x10000>;
 -- 
 2.25.1
 
