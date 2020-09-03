@@ -2,205 +2,142 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8877CC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E209DC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5600B20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B2B320716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:27:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AFN00XH7"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ngCqnQ4S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgICSZQ (ORCPT
+        id S1729066AbgICS1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 14:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbgICSZN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 14:25:13 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E810C061244;
-        Thu,  3 Sep 2020 11:25:13 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id e11so5912164wme.0;
-        Thu, 03 Sep 2020 11:25:12 -0700 (PDT)
+        Thu, 3 Sep 2020 14:27:13 -0400
+Received: from mail-bn8nam08on2081.outbound.protection.outlook.com ([40.107.100.81]:20769
+        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726543AbgICS1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 14:27:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DIYarHYgc4I8jYTmtXnfvKRuRFnvDpnLvxYXgRUJI9zoGHrbM/TQ+iYewBnUA9K+kqWsXvg4FimK8ugc275luj8UsC8eon4gM/4oIzG270sTUl426x2M/eksnD/hsKXwbtI6RqesIQydQhpxXjbo4UwYa1EIhdBwWUMLCmzDeXPC6yIWJKFtY2AXlSiPEwI4fKWLVEfCLWbVaWLfDLSv7OzSXLKSZL0Hj3BIsmon6Kn72bunsWpjN+GbH4Q7NPCB3GLgQPXEypAV31m5jfrdbPwdQx75ywrGdjlsiROSshqwjSrc0rXBU7+ntmzwNxljt4PqcwwhZ31m4j1kSSvu7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mDM+k9rR/4+t5cz6TEAD5cQ5cocM9g9KBWe/1Xe00o0=;
+ b=iKwZach0w24ijuEUqhGfclT2ubAd0Y/Nr6QAESqmyPjl1PGKT/ab3WjcsNppMhCpH7pQGf3uvVYqUnjDXENbSV6zzILDS5K9BMaRK6p2fsBtSJ/dNohEjyDryiKCDf+YHZ7klrpoR5rgUedE/KjT3DxkGUA2MXkXbPjP2F58/KP0JsDhSrzPEgKzlf1EV1smxhIizkf2bEcx8wgPgSRzWkjEO/p3X7aPf+REPR6bLC/id6+xM9gvUKhFJ2VUpl+LAMRQ+wOxR858dM7WUkWzY7d3pmR0zydu9GcdsGavJh8VdLgJiSn0rupv2rwI72DX9KJW7KmOeuj/hdidnBlaDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6TVg2OK2hGXGilOiMGa+DpJ5GeGbwsjFfDrzSkVbuKA=;
-        b=AFN00XH7Eyre4NtFnj/KspJyhAtPGJ+unKamFXaWYl4W7R0xuq165WAyA44dz2PkSG
-         uaBTPh/8ZiE6cKelB20/Rl48ewJvSG/W7L72LpWbKvJRjm7KZmCNWA1hmBcIkHZK1sry
-         nrTb8bAixxow+1xSsZc+pziPclegbq7lI3l586tL9+Ft6p8RArmBfOPF+tUDbaO4+Id5
-         eKHWls2Nm2iOa+tXaBkzi32/kBrYl6JkQ3f+0sCghxijLN7AXFR5SN65lUuOv37PmSpq
-         5iSxbQnfMUvBhWkWxq91brfYFQYNN3aXVjUmKcJIwyfHkbCBVbHuEXtzDwTAv2as3JPH
-         msyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6TVg2OK2hGXGilOiMGa+DpJ5GeGbwsjFfDrzSkVbuKA=;
-        b=eTrtuOx6fD4VNeHX8nvZ2uWVNva/7Ah1y5xt3hhpM2OGewTnHx2vWNwtA7jEBZ54oA
-         JDmYgyAXEk6C96+2TLJja5hJzGeV4pG2xm+2Gn79n7XeF8BUdjFosDKsWeJYbgCk2Wow
-         1l5NMP1j5wdgVIRtbpjJBMgYW+IFTtJijBfZwuNpvEqoClm9fxAljfmBr9DPa21VtIp3
-         u9LvVVecG9GGPyyNgXAexpH1wZb3U963u0NR+hdzZDChKdPhA7jJe3Hu6NPy1d5YfkZa
-         rWl8hVOOrpbYzFs9lUrAJIlp704EfcakDvz6jk7YYKqPEOkDmuMhA0jj6xhL41XI+Qa1
-         765A==
-X-Gm-Message-State: AOAM5329cAo50zZTYAzBrBluCHWfk5kItiP7mmoOA81jcWN6K9OXtNxc
-        wAuMHG4Wluf/iDr+juGof7k=
-X-Google-Smtp-Source: ABdhPJztywUNWH4/E1kT1grqFBh/pHdE0KJ7zZ7jV/fTHF+EGgdPn57L6Zqc5Z1pGybImTyxd/7nPw==
-X-Received: by 2002:a1c:b3c6:: with SMTP id c189mr3744522wmf.27.1599157511706;
-        Thu, 03 Sep 2020 11:25:11 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id c205sm5691139wmd.33.2020.09.03.11.25.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 11:25:11 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-To:     dan.carpenter@oracle.com
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alan Cox <alan@linux.intel.com>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] staging: media: atomisp: Fix error path in lm3554_probe()
-Date:   Thu,  3 Sep 2020 19:24:51 +0100
-Message-Id: <20200903182502.709300-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200903173843.GF8299@kadam>
-References: <20200903173843.GF8299@kadam>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mDM+k9rR/4+t5cz6TEAD5cQ5cocM9g9KBWe/1Xe00o0=;
+ b=ngCqnQ4SRy7l9WPOxhZDa15RakBLKQpZLMBonibvd0S5hPdNGILsC+8K7yhUSdxpekGkcmiqoYYFXup00IKtaabxtHN8OHKQU3fAH3PsO9LyYSUstJtTNy6LrSH8ikbvR9HzjbU/hG9sCA4qifE10/hUo3azZWPtppSCJhoTxRU=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB2946.namprd12.prod.outlook.com (2603:10b6:408:9d::13)
+ by BN8PR12MB3220.namprd12.prod.outlook.com (2603:10b6:408:9e::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Thu, 3 Sep
+ 2020 18:27:02 +0000
+Received: from BN8PR12MB2946.namprd12.prod.outlook.com
+ ([fe80::a92d:18c0:971b:48e6]) by BN8PR12MB2946.namprd12.prod.outlook.com
+ ([fe80::a92d:18c0:971b:48e6%6]) with mapi id 15.20.3326.025; Thu, 3 Sep 2020
+ 18:27:02 +0000
+Subject: Re: [PATCH 3/4] perf vendor events amd: Add recommended events
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vijay Thakkar <vijaythakkar@me.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Yunfeng Ye <yeyunfeng@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
+        Borislav Petkov <bp@suse.de>, Jon Grimm <jon.grimm@amd.com>,
+        Martin Jambor <mjambor@suse.cz>,
+        Michael Petlan <mpetlan@redhat.com>,
+        William Cohen <wcohen@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200901220944.277505-1-kim.phillips@amd.com>
+ <20200901220944.277505-3-kim.phillips@amd.com>
+ <CAP-5=fVwuKOACD++6UyBVW_fgbTXrOwuOJHSYenD87dwVJk0OA@mail.gmail.com>
+From:   Kim Phillips <kim.phillips@amd.com>
+Message-ID: <7a0b893d-8f65-6423-3818-5dafc880dca1@amd.com>
+Date:   Thu, 3 Sep 2020 13:26:58 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <CAP-5=fVwuKOACD++6UyBVW_fgbTXrOwuOJHSYenD87dwVJk0OA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN1PR12CA0104.namprd12.prod.outlook.com
+ (2603:10b6:802:21::39) To BN8PR12MB2946.namprd12.prod.outlook.com
+ (2603:10b6:408:9d::13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by SN1PR12CA0104.namprd12.prod.outlook.com (2603:10b6:802:21::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16 via Frontend Transport; Thu, 3 Sep 2020 18:27:00 +0000
+X-Originating-IP: [70.114.200.6]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ac98c11f-372c-4ddc-b929-08d85036f39f
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3220:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR12MB32203EDDA89327BF949C30C5872C0@BN8PR12MB3220.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Uy54WwDruELvjubcr7UxbBsJseyIqkeTuC8GDR96pdeVdhTwzcyLUV/fSlmpU3SodDqlccTA7FzamQ/Y0l/rOXdTp+1+6IWzPo6sgMxe4o8ai6IS3xsR5pHlSsdioKFFB+V0PGBHwbcbtGf8b3wOtc1ExjbJn97sRKR6+43J9Ek9lEtieQr2l8M8ciAKf1EZq0nHcB3cEgqCFlDfz6cTAWrTGWbChCyww5n8CureF4iLqgZ11zQVe+uJe5xPeWBmk4D9MPpgGLZx87hvqrJC5AA8j9Ypc5GJfDDP9rxuPnHyEZh0f7/0gr53aUOGWGDVRQTy3TYBl5nf6k2nOot9SSEmhdff7Bw5SEJdA25Yv5Xkm0Xx+z7ZeRN/o66Ahxij
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2946.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(39860400002)(346002)(396003)(376002)(136003)(4744005)(31696002)(52116002)(4326008)(6486002)(16576012)(36756003)(478600001)(54906003)(44832011)(8676002)(6916009)(316002)(31686004)(2906002)(86362001)(66556008)(53546011)(26005)(66476007)(5660300002)(8936002)(2616005)(956004)(186003)(66946007)(7416002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 0l5TMJ+KMhh6lS98QC4eR1DdLeiqX81uESA7bB9d577Sglnf8WlxgwydJQvYRzmiRO1V9sLsDGBX35bL2r+97+mecXJMw/g+4rZLN7hqIwofSogWRbxVGk/v6neLvSUPa0/sN+bxaE7m6JfWJ/tMSiWe5QhZgXr2+Hf4I+1xQUcLglqBpSwoOHAHnZXAbHGz7xu9fU7fUIg1gkIgC+tIPZeXKoP7bas0BKCAM43fquLOdTILbl/ukRJgEs0kGKE61qgBuEMf8yiXS6pzOY061fvxQd2ktx9XyNCxA2mFVZ+xLL+KKCYuQDQGRtXYdAF9x+jk7jkj5UynFkAE82znLSjD45v6jiPuSMrIpIzLDxlN2xEFVMxGR9DnXsIWShYH96QtiOcBJaYPW1g2E5PNfieTzAAhIxxo2liMxDB1+Ysxq0R9t8o/gyuTMwWchJ8v1uQOFfKPF10gnkyZB80R7i2RCSiOxWVpuGO9SfXUO9QaeCRTjKgafLzgbBugmssCrvEQ6Z07jKqoD/ZBYE2DZ5RIKhVE3SgAwd44iOzpMxX8PL3QuiObFyRfuLg5QpcEgIRYtfhCNofFbipQ+l900EId0t/+CmpyXxdYnveC1YQbaArII1vfQMz70KZH8/xM9YSoxAfuV9CVNPsvhWIPYQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac98c11f-372c-4ddc-b929-08d85036f39f
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2946.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2020 18:27:02.1930
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AewgHEH7rONib5Lz48kUjOlGb605QcB51xd9HxkuISam4efVg0gIftSOYTyApAXJpm+h+fUQuGu3HyUyM/CXJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3220
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The error path for lm3554_probe() contains a number of bugs, including:
- * resource leaks
- * jumping to error labels out of sequence
- * not setting the return value appropriately
+On 9/3/20 1:19 AM, Ian Rogers wrote:
+> On Tue, Sep 1, 2020 at 3:10 PM Kim Phillips <kim.phillips@amd.com> wrote:
+>> The nps1_die_to_dram event may need perf stat's --metric-no-group
+>> switch if the number of available data fabric counters is less
+>> than the number it uses (8).
+> 
+> These are really excellent additions! Does:
+> "MetricConstraint": "NO_NMI_WATCHDOG"
+> solve the grouping issue? Perhaps the MetricConstraint needs to be
+> named more generically to cover this case as it seems sub-optimal to
+> require the use of --metric-no-group.
 
-Fix it up and give the labels more memorable names.
+That metric uses data fabric (DFPMC/amd_df) events, not Core PMC
+events, which the watchdog uses, so NO_NMI_WATCHDOG wouldn't have
+an effect.  The event is defined as an approximation anyway.
 
-This issue has existed since the code was originally contributed in
-commit a49d25364dfb ("staging/atomisp: Add support for the Intel IPU v2"),
-although the code was subsequently removed altogether and then
-reinstated with commit ad85094b293e ("Revert "media: staging: atomisp: Remove driver"").
+I'll have to get back to you on the other items.
 
-Addresses-Coverity: 1496802 ("Resource leaks")
-Fixes: a49d25364dfb ("staging/atomisp: Add support for the Intel IPU v2")
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- .../media/atomisp/i2c/atomisp-lm3554.c        | 53 +++++++++++--------
- 1 file changed, 30 insertions(+), 23 deletions(-)
+Thanks for your review!
 
-diff --git a/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c b/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c
-index 7ca7378b1859..cca10a4c2db0 100644
---- a/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c
-+++ b/drivers/staging/media/atomisp/i2c/atomisp-lm3554.c
-@@ -833,7 +833,6 @@ static void *lm3554_platform_data_func(struct i2c_client *client)
- 
- static int lm3554_probe(struct i2c_client *client)
- {
--	int err = 0;
- 	struct lm3554 *flash;
- 	unsigned int i;
- 	int ret;
-@@ -843,36 +842,38 @@ static int lm3554_probe(struct i2c_client *client)
- 		return -ENOMEM;
- 
- 	flash->pdata = lm3554_platform_data_func(client);
--	if (IS_ERR(flash->pdata))
--		return PTR_ERR(flash->pdata);
-+	if (IS_ERR(flash->pdata)) {
-+		ret = PTR_ERR(flash->pdata);
-+		goto err_free_flash;
-+	}
- 
- 	v4l2_i2c_subdev_init(&flash->sd, client, &lm3554_ops);
- 	flash->sd.internal_ops = &lm3554_internal_ops;
- 	flash->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
- 	flash->mode = ATOMISP_FLASH_MODE_OFF;
- 	flash->timeout = LM3554_MAX_TIMEOUT / LM3554_TIMEOUT_STEPSIZE - 1;
--	ret =
--	    v4l2_ctrl_handler_init(&flash->ctrl_handler,
--				   ARRAY_SIZE(lm3554_controls));
-+	ret = v4l2_ctrl_handler_init(&flash->ctrl_handler,
-+				     ARRAY_SIZE(lm3554_controls));
- 	if (ret) {
--		dev_err(&client->dev, "error initialize a ctrl_handler.\n");
--		goto fail2;
-+		dev_err(&client->dev, "error initializing ctrl_handler");
-+		goto err_unregister_sd;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(lm3554_controls); i++)
- 		v4l2_ctrl_new_custom(&flash->ctrl_handler, &lm3554_controls[i],
- 				     NULL);
- 
--	if (flash->ctrl_handler.error) {
--		dev_err(&client->dev, "ctrl_handler error.\n");
--		goto fail2;
-+	ret = flash->ctrl_handler.error;
-+	if (ret) {
-+		dev_err(&client->dev, "ctrl_handler error");
-+		goto err_free_ctrl_handler;
- 	}
- 
- 	flash->sd.ctrl_handler = &flash->ctrl_handler;
--	err = media_entity_pads_init(&flash->sd.entity, 0, NULL);
--	if (err) {
--		dev_err(&client->dev, "error initialize a media entity.\n");
--		goto fail1;
-+	ret = media_entity_pads_init(&flash->sd.entity, 0, NULL);
-+	if (ret) {
-+		dev_err(&client->dev, "error initializing media entity");
-+		goto err_free_ctrl_handler;
- 	}
- 
- 	flash->sd.entity.function = MEDIA_ENT_F_FLASH;
-@@ -881,20 +882,26 @@ static int lm3554_probe(struct i2c_client *client)
- 
- 	timer_setup(&flash->flash_off_delay, lm3554_flash_off_delay, 0);
- 
--	err = lm3554_gpio_init(client);
--	if (err) {
-+	ret = lm3554_gpio_init(client);
-+	if (ret) {
- 		dev_err(&client->dev, "gpio request/direction_output fail");
--		goto fail2;
-+		goto err_del_timer;
- 	}
--	return atomisp_register_i2c_module(&flash->sd, NULL, LED_FLASH);
--fail2:
-+
-+	ret = atomisp_register_i2c_module(&flash->sd, NULL, LED_FLASH);
-+	if (!ret)
-+		return 0;
-+
-+err_del_timer:
-+	del_timer_sync(&flash->flash_off_delay);
- 	media_entity_cleanup(&flash->sd.entity);
-+err_free_ctrl_handler:
- 	v4l2_ctrl_handler_free(&flash->ctrl_handler);
--fail1:
-+err_unregister_sd:
- 	v4l2_device_unregister_subdev(&flash->sd);
-+err_free_flash:
- 	kfree(flash);
--
--	return err;
-+	return ret;
- }
- 
- static int lm3554_remove(struct i2c_client *client)
--- 
-2.28.0
-
+Kim
