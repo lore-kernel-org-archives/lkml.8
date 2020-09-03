@@ -2,131 +2,121 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A95C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33BEC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6A45206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02D02071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgICIsl (ORCPT
+        id S1728266AbgICItb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:48:41 -0400
-Received: from smtp25.cstnet.cn ([159.226.251.25]:36030 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725984AbgICIsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:48:38 -0400
-Received: from localhost.localdomain (unknown [159.226.5.100])
-        by APP-05 (Coremail) with SMTP id zQCowAD3H1jbrVBf+u8MAQ--.28886S2;
-        Thu, 03 Sep 2020 16:48:28 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     ulf.hansson@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        hns@goldelico.com, linus.walleij@linaro.org, rmfrfs@gmail.com
-Cc:     linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: host: omap-hsmmc: remove redundant null check
-Date:   Thu,  3 Sep 2020 08:48:25 +0000
-Message-Id: <20200903084825.85616-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: zQCowAD3H1jbrVBf+u8MAQ--.28886S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ur48KF43ZrWkZr4DKF47XFb_yoW5Jr1xpF
-        97Xa9Fkw47XrZ0vF4kJa1qqFyrtr4rtas5KrW8Ga4xGw15ArZ5ta4DGa4SvFsYk3s3C3WS
-        qF48tFy8Cw15GaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r43MxAIw28I
-        cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
-        IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI
-        42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42
-        IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
-        z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU5LZ2DUUUUU==
-X-Originating-IP: [159.226.5.100]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCAwIA18J9nTQWAAAsT
+        Thu, 3 Sep 2020 04:49:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54858 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbgICItb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 04:49:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 3A648AE09;
+        Thu,  3 Sep 2020 08:49:30 +0000 (UTC)
+Date:   Thu, 3 Sep 2020 09:49:25 +0100
+From:   Mel Gorman <mgorman@suse.de>
+To:     peterz@infradead.org
+Cc:     gengdongjiu <gengdongjiu@huawei.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "thara.gopinath@linaro.org" <thara.gopinath@linaro.org>,
+        "pauld@redhat.com" <pauld@redhat.com>,
+        "vincent.donnefort@arm.com" <vincent.donnefort@arm.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: RE???[PATCH] sched: Add trace for task wake up latency and leave
+ running time
+Message-ID: <20200903084925.GB3117@suse.de>
+References: <6995260be2ca4fd18bc773fe9f50f420@huawei.com>
+ <20200903074232.GW1362448@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200903074232.GW1362448@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because clk_disable_unprepare already checked NULL clock
-parameter, so the additional checks are unnecessary, just remove them.
+On Thu, Sep 03, 2020 at 09:42:32AM +0200, peterz@infradead.org wrote:
+> > Maybe I need to explain the reason that why I add two trace point. 
+> > when using perf tool or Ftrace sysfs to capture the task wake-up latency and the task leaving running queue time, usually the trace data is too large and the CPU utilization rate is too high in the process due to a lot of disk write. Sometimes even the disk is full, the issue still does not reproduced that above two time exceed a certain threshold.  So I added two trace points, using filter we can only record the abnormal trace that includes wakeup latency and leaving running time larger than an threshold. 
+> > Or do you have better solution?
+> 
+> <SNIP>
+> 
+> Yes, use ftrace synthetic events, or bpf or really anything other than
+> this.
+> 
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- drivers/mmc/host/omap_hsmmc.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+In practice, this is what ends up being required. FYI, perf probe is handy
+for creating a tracepoint in an arbitrary location. If BPF is not an option
+(e.g. older kernel where BPF cannot do what you want or newer kernel
+where BPF has regressed in some way) then systemtap is the other option.
 
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index 37b8740513f5..d02983e23ed1 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -1114,8 +1114,7 @@ static int omap_hsmmc_switch_opcond(struct omap_hsmmc_host *host, int vdd)
- 	int ret;
- 
- 	/* Disable the clocks */
--	if (host->dbclk)
--		clk_disable_unprepare(host->dbclk);
-+	clk_disable_unprepare(host->dbclk);
- 
- 	/* Turn the power off */
- 	ret = omap_hsmmc_set_power(host, 0);
-@@ -1123,8 +1122,7 @@ static int omap_hsmmc_switch_opcond(struct omap_hsmmc_host *host, int vdd)
- 	/* Turn the power ON with given VDD 1.8 or 3.0v */
- 	if (!ret)
- 		ret = omap_hsmmc_set_power(host, 1);
--	if (host->dbclk)
--		clk_prepare_enable(host->dbclk);
-+	clk_prepare_enable(host->dbclk);
- 
- 	if (ret != 0)
- 		goto err;
-@@ -2014,8 +2012,7 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
- 	pm_runtime_dont_use_autosuspend(host->dev);
- 	pm_runtime_put_sync(host->dev);
- 	pm_runtime_disable(host->dev);
--	if (host->dbclk)
--		clk_disable_unprepare(host->dbclk);
-+	clk_disable_unprepare(host->dbclk);
- err1:
- 	mmc_free_host(mmc);
- err:
-@@ -2037,8 +2034,7 @@ static int omap_hsmmc_remove(struct platform_device *pdev)
- 	pm_runtime_put_sync(host->dev);
- 	pm_runtime_disable(host->dev);
- 	device_init_wakeup(&pdev->dev, false);
--	if (host->dbclk)
--		clk_disable_unprepare(host->dbclk);
-+	clk_disable_unprepare(host->dbclk);
- 
- 	mmc_free_host(host->mmc);
- 
-@@ -2063,8 +2059,7 @@ static int omap_hsmmc_suspend(struct device *dev)
- 				OMAP_HSMMC_READ(host->base, HCTL) & ~SDBP);
- 	}
- 
--	if (host->dbclk)
--		clk_disable_unprepare(host->dbclk);
-+	clk_disable_unprepare(host->dbclk);
- 
- 	pm_runtime_put_sync(host->dev);
- 	return 0;
-@@ -2080,8 +2075,7 @@ static int omap_hsmmc_resume(struct device *dev)
- 
- 	pm_runtime_get_sync(host->dev);
- 
--	if (host->dbclk)
--		clk_prepare_enable(host->dbclk);
-+	clk_prepare_enable(host->dbclk);
- 
- 	if (!(host->mmc->pm_flags & MMC_PM_KEEP_POWER))
- 		omap_hsmmc_conf_bus_power(host);
+> > > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c index
+> > > > 8471a0f7eb32..b5a1928dc948 100644
+> > > > --- a/kernel/sched/core.c
+> > > > +++ b/kernel/sched/core.c
+> > > > @@ -2464,6 +2464,8 @@ static void ttwu_do_wakeup(struct rq *rq, struct
+> > > > task_struct *p, int wake_flags,  {
+> > > >  	check_preempt_curr(rq, p, wake_flags);
+> > > >  	p->state = TASK_RUNNING;
+> > > > +	p->ts_wakeup = local_clock();
+> > > > +	p->wakeup_state = true;
+> > > >  	trace_sched_wakeup(p);
+> > > >
+> > > >  #ifdef CONFIG_SMP
+> > > 
+> > > NAK, userless overhead.
+> > 
+> >  When sched switch, we do not know the next task previous state and
+> >  wakeup timestamp, so I record the task previous state if it is waken
+> >  from sleep.  And then it can calculate the wakeup latency when task
+> >  switch.
+> 
+> I don't care. You're making things slower.
+
+Which sucks on its own. The other problem is that you cannot trace older
+kernels that do not have the updated tracepoints so it's worth at least
+pointing out what the options are. In general, trying to accumulate
+state inside a tracepoint is a curse because changes in the internal
+implementation can render the tracepoint redundant, or worse, misleading.
+It *can* be an option when developing a patch and you want detailed
+trace information to guide development but be prepared to throw away the
+tracepoints before submitting.
+
+If state is to be accumulated between multiple tracepoints then the
+primary options are BPF, systemtap, trace-cmd for offline analysis or
+opening trace_pipe with a script, parsing the events and accumulate the
+state that way. This can lead to a concern that the script must be running
+from system start to track the data and yes, this is exactly what you
+have to do.  It's not that different to having to monitor /proc/vmstat
+over time to get some interesting vm stats as the accumulated state since
+the system started is often useless.
+
+Online analysis of trace_pipe is the most expensive for a lot of reasons
+but it has the advantage of almost always working regardless of kernel
+version as long as the script interprets the tracepoints correctly. It
+may be too expensive for production but it's useful when figuring out
+what tracepoints are needed and how that state should be accumulated.
+
 -- 
-2.17.1
-
+Mel Gorman
+SUSE Labs
