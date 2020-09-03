@@ -2,153 +2,124 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AE9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63883C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51B4520578
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338662072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:32:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599150774;
+	bh=ccAhlXDIqzUfCS53Ih6BJ5ZMtmY6cQaap0Ayu6dveG0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KGJAcOv/c+8yR4UINm9BEDke9zZR2CJ6UsxgkquY3q7LKkBEaBcSw6W5xFo0O397y
+	 8ZqyvjVmNvOQl5pudAKPEIG5fYUAFEkycyBBmCW1dy3d+3GWrWB0TuhbwGuLNlmzz5
+	 k14FBcNrFr15zSjQvMGvojQ/E/ZA0ZVhtlWqrc5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbgICQbs (ORCPT
+        id S1728856AbgICQcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:31:48 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:33289 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgICQbp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:31:45 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id BC3CD60002;
-        Thu,  3 Sep 2020 16:31:39 +0000 (UTC)
-Date:   Thu, 3 Sep 2020 18:35:25 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        sakari.ailus@iki.fi, hverkuil@xs4all.nl, jacopo+renesas@jmondi.org,
-        luca@lucaceresoli.net, leonl@leopardimaging.com,
-        robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] dt-bindings: media: imx274: Add optional input
- clock and supplies
-Message-ID: <20200903163525.p5z2adhp4wq453bs@uno.localdomain>
-References: <1599012278-10203-1-git-send-email-skomatineni@nvidia.com>
- <1599012278-10203-3-git-send-email-skomatineni@nvidia.com>
- <20200903125542.nxiafnysatoexken@uno.localdomain>
- <d3a1843c-5d73-cfa6-9611-405b905ddcd1@nvidia.com>
+        Thu, 3 Sep 2020 12:32:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726327AbgICQcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 12:32:50 -0400
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9879B208B3
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 16:32:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599150769;
+        bh=ccAhlXDIqzUfCS53Ih6BJ5ZMtmY6cQaap0Ayu6dveG0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Az/MpPSlsSfqamSllDS7ZNWPhfS4KgkXOA3gryVz+eAyhYeE+aMjmDr7ofkeHByrx
+         zuMUDT2GigowU+B95JFfh5cfn4WwTn8bqgEtfkHWHr/NPVjktIUvZ966hfd2QwKrgW
+         PuuvmJSICVCp9UZCLkw74xyp4iJIeGS5prLzJ+O0=
+Received: by mail-wr1-f46.google.com with SMTP id k15so3887695wrn.10
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 09:32:49 -0700 (PDT)
+X-Gm-Message-State: AOAM532dEAMa4H3GikLwoXvE9YzjEOQnDMB5qFxH9wsWBfv/X3IYGp4v
+        9YhlzfLNwJjrtaT0FCCPs4Cen53k2RgH46is+q2NPQ==
+X-Google-Smtp-Source: ABdhPJwexd+tr/hjHpRJA3we13WyoCWohcGyKWMy9veXqwsBVx3FM7oAvkjCkAPLwTEoGEPDPidQEf6bR2x3xEpbm7E=
+X-Received: by 2002:a05:6000:11c5:: with SMTP id i5mr3428679wrx.18.1599150768256;
+ Thu, 03 Sep 2020 09:32:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d3a1843c-5d73-cfa6-9611-405b905ddcd1@nvidia.com>
+References: <46e42e5e-0bca-5f3f-efc9-5ab15827cc0b@intel.com>
+ <40BC093A-F430-4DCC-8DC0-2BA90A6FC3FA@amacapital.net> <b3809dd7-8566-0517-2389-8089475135b7@intel.com>
+ <88261152-2de1-fe8d-7ab0-acb108e97e04@intel.com> <1b51d89c-c7de-2032-df23-e138d1369ffa@intel.com>
+ <CALCETrUq3xiHV2xOZV-FD_de_P_TL-Bs91XT+F+79psBfigCSg@mail.gmail.com> <21491d05-6306-0a6f-58a7-8bf29feae8c7@intel.com>
+In-Reply-To: <21491d05-6306-0a6f-58a7-8bf29feae8c7@intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 3 Sep 2020 09:32:36 -0700
+X-Gmail-Original-Message-ID: <CALCETrXJkXXDF=tdu3KBHgzDO+E-HhqMk9Ttixgk4WX_PLPDJw@mail.gmail.com>
+Message-ID: <CALCETrXJkXXDF=tdu3KBHgzDO+E-HhqMk9Ttixgk4WX_PLPDJw@mail.gmail.com>
+Subject: Re: [PATCH v11 6/9] x86/cet: Add PTRACE interface for CET
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
+        Jann Horn <jannh@google.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sowjanya,
-
-On Thu, Sep 03, 2020 at 09:05:27AM -0700, Sowjanya Komatineni wrote:
+On Thu, Sep 3, 2020 at 9:25 AM Dave Hansen <dave.hansen@intel.com> wrote:
 >
-> On 9/3/20 5:55 AM, Jacopo Mondi wrote:
-> > Hello Sowjanya,
+> On 9/3/20 9:15 AM, Andy Lutomirski wrote:
+> > On Thu, Sep 3, 2020 at 9:12 AM Dave Hansen <dave.hansen@intel.com> wrote:
+> >>
+> >> On 9/3/20 9:09 AM, Yu, Yu-cheng wrote:
+> >>> If the debugger is going to write an MSR, only in the third case would
+> >>> this make a slight sense.  For example, if the system has CET enabled,
+> >>> but the task does not have CET enabled, and GDB is writing to a CET MSR.
+> >>>  But still, this is strange to me.
+> >>
+> >> If this is strange, then why do we even _implement_ writes?
 > >
-> > On Tue, Sep 01, 2020 at 07:04:37PM -0700, Sowjanya Komatineni wrote:
-> > > This patch adds IMX274 optional external clock input and voltage
-> > > supplies to device tree bindings.
-> > >
-> > > Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
-> > > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> > > ---
-> > >   .../devicetree/bindings/media/i2c/sony,imx274.yaml  | 21 +++++++++++++++++++++
-> > >   1 file changed, 21 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml
-> > > index 7ae47a6..57e7176 100644
-> > > --- a/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml
-> > > @@ -25,6 +25,27 @@ properties:
-> > >     reset-gpios:
-> > >       maxItems: 1
-> > >
-> > I just sent an update to my json-schema conversion of this bindings
-> > document (not yet on patchwork, sorry) and Sakari pointed me to the
-> > fact in between my v2 and my v4 this patch from you went in:
-> > 4ea3273d24b ("dt-bindings: media: imx274: Add optional input clock and supplies")
-> >
-> > I should probably now update my bindings conversion patch, basically
-> > taking in what you've done here, but I would have one question.
-> >
-> > > +  clocks:
-> > > +    maxItems: 1
-> > > +    description: Reference to the sensor input clock
-> > > +
-> > > +  clock-names:
-> > > +    maxItems: 1
-> > > +    items:
-> > > +      - const: inck
-> > > +
-> > > +  vana-supply:
-> > > +    description:
-> > > +      Analog voltage supply, 2.8 volts
-> > > +
-> > > +  vdig-supply:
-> > > +    description:
-> > > +      Digital IO voltage supply, 1.8 volts
-> > > +
-> > > +  vddl-supply:
-> > > +    description:
-> > > +      Digital core voltage supply, 1.2 volts
-> > 4ea3273d24b introduced these regulators as VANA-supply, VDIG-supply
-> > and VDDL-supply (please note the upper-case names). This version uses
-> > lower-case ones instead. Is this intentional ? The driver currently
-> > does not parse any of these if I'm not mistaken, but as the bindings
-> > in textual form defines an ABI which should be preserved during the
-> > conversion to json-schema, should these be kept in upper-case ?
-> >
-> > Thanks
-> >     j
+> > Well, if gdb wants to force a tracee to return early from a function,
+> > wouldn't it want the ability to modify SSP?
 >
-> Yes, based on feedback lower case was recommended. So, changed to use
-> lower-case names.
+> That's true.
 >
-> These properties were not used by driver currently and from my prior series
-> only dt-binding got merged as  no feedback was received on it for all prior
-> versions.
+> Yu-cheng, can you take a look through and see for the other setregs
+> users what they do for logically crazy, strange things?  Is there
+> precedent for refusing a write which is possible but illogical or
+> strange?  If so, which error code do they use?
 >
-> So, should be ok to change to lower-case as there properties are introduced
-> now and driver update using these properties is under review
->
+> Taking the config register out of the init state is illogical, as is
+> writing to SSP while the config register is in its init state.
 
-Well, I see that patch went in v5.9-rc1, so it will be part of v5.9.
-
-If the bindings update goes in in v5.10 (or whatever comes after v5.9)
-then we have a problem, as the DTB created for v5.9 won't work anymore
-on any later version, and that should not happen. Alternatively, a fix
-for the next -rc release could be fast-tracked, but you would
-need to synchronize with the dt maintainers for that and make a patch
-for the existing .txt bindings file.
-
-If the name change happens in the yaml file and one release is made
-with the old names, then we're stuck with those forever and ever, if I
-got the situation right.
-
-Please check with the dt and media maintainers, or they can comment
-here if they glance through these lines.
-
-Thanks
-  j
-
-> > > +
-> > >     port:
-> > >       type: object
-> > >       description: |
-> > > --
-> > > 2.7.4
-> > >
+What's so special about the INIT state?  It's optimized by XSAVES, but
+it's just a number, right?  So taking the register out of the INIT
+state is kind of like saying "gdb wanted to set xmm0 to (0,0,0,1), but
+it was in the INIT state to begin with", right?
