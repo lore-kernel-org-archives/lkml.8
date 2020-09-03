@@ -2,62 +2,98 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F98C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F3AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C71F620897
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF4E20767
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599121705;
+	bh=JhGgBN212oQdocLFQd1GIoMAcjo2XnC8T3B/5UMegcI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Sbr3nIe8MJkMr0ZRV3NBymECcBQQ6AQXX/sEKjijQTv4WF+iZVA9w1L7b4IFphfDh
+	 CqbkdCGRbTobVpFhbzRyPaHsrkDL6fCdEpJpQFJarBDkeTuHA7hU9ISlrmh6FxprIP
+	 LOBLizVugmzML+lvJS/Mds4lIHmyL/aHwWJRof08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbgICI12 (ORCPT
+        id S1727020AbgICI2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:27:28 -0400
-Received: from elvis.franken.de ([193.175.24.41]:50522 "EHLO elvis.franken.de"
+        Thu, 3 Sep 2020 04:28:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbgICI1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:27:12 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1kDkaL-0000I1-07; Thu, 03 Sep 2020 10:27:09 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 4DDD5C0E86; Thu,  3 Sep 2020 10:24:40 +0200 (CEST)
-Date:   Thu, 3 Sep 2020 10:24:40 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     oleg@redhat.com, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH] MIPS: Use rcu to lookup a task in
- mipsmt_sys_sched_setaffinity()
-Message-ID: <20200903082440.GH6220@alpha.franken.de>
-References: <20200831201402.2837-1-dave@stgolabs.net>
+        id S1726355AbgICI2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 04:28:22 -0400
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03F212100A;
+        Thu,  3 Sep 2020 08:28:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599121702;
+        bh=JhGgBN212oQdocLFQd1GIoMAcjo2XnC8T3B/5UMegcI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OhKL4JCKxO8wkJt3BpKgpeyR+xjKvGd+Jf6f9ApeUsNsOOd5pYsVjoWwx/MzQ3fDu
+         TxSC6OtqCCQhokskh5ao0/2qcWh1FfbNbiFsuG3Ezp+Rj7E30aFR+CslSXna1cCYUI
+         qkNEvD4QyK0JaNubUIKAvR6L2eyA0GKTQoebitHY=
+Received: by mail-ej1-f44.google.com with SMTP id a26so2659448ejc.2;
+        Thu, 03 Sep 2020 01:28:21 -0700 (PDT)
+X-Gm-Message-State: AOAM533MKmQtDqpwN25mLKbhXBqeaEuOgky9bHW65BlUw96Dzfql5Z65
+        QZJ5/T6XhlNCMSlClhR2ijPjtLx8aeII+/ULFLc=
+X-Google-Smtp-Source: ABdhPJzSfQ5TJipTleRhjOrSLdyfMN0JGOZNyUW65jvCo0Y05w2r706QOVOn6IspjV+kQPykXsQI90zE8KU4nNs6Fm8=
+X-Received: by 2002:a17:906:af53:: with SMTP id ly19mr908583ejb.503.1599121700549;
+ Thu, 03 Sep 2020 01:28:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831201402.2837-1-dave@stgolabs.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200902193658.20539-1-krzk@kernel.org> <CAPDyKFqBS-ws6fkirDQL8EEqh9At88K2vrG5fc8K5_JiXsmfyg@mail.gmail.com>
+In-Reply-To: <CAPDyKFqBS-ws6fkirDQL8EEqh9At88K2vrG5fc8K5_JiXsmfyg@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 3 Sep 2020 10:28:09 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPeLMvaZPvyyh+embqzhHPDRfWcDF9_LxCJn3PqMP+8mfQ@mail.gmail.com>
+Message-ID: <CAJKOXPeLMvaZPvyyh+embqzhHPDRfWcDF9_LxCJn3PqMP+8mfQ@mail.gmail.com>
+Subject: Re: [PATCH 00/11] mmc: Minor cleanups and compile test
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 01:14:02PM -0700, Davidlohr Bueso wrote:
-> The call simply looks up the corresponding task (without iterating
-> the tasklist), which is safe under rcu instead of the tasklist_lock.
-> In addition, the setaffinity counter part already does this.
-> 
-> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
-> ---
->  arch/mips/kernel/mips-mt-fpaff.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, 3 Sep 2020 at 10:10, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> Series applied for next, except 11, thanks!
 
-applied to mips-next.
+Thanks. I will fix pointed compile-test issues and send later a follow
+up, also removing the MMC dependency as pointed by Micha=C5=82.
 
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Best regards,
+Krzysztof
