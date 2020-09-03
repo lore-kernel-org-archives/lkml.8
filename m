@@ -2,136 +2,257 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D9EC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566C6C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AEE420786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CBF3214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:22:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QVRg6ZG3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eXzV6ZK/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgICPWJ (ORCPT
+        id S1728646AbgICPW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:22:09 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:43169 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728431AbgICLXw (ORCPT
+        Thu, 3 Sep 2020 11:22:27 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50197 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729112AbgICPWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:23:52 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200903111301epoutp02d35e33356e1b941da3304bd9da4eaf87~xQbNexIHV3114731147epoutp02J
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 11:13:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200903111301epoutp02d35e33356e1b941da3304bd9da4eaf87~xQbNexIHV3114731147epoutp02J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599131581;
-        bh=ciQYrD3Tn+9WjZa6amZbj5BAhCek31MGMXV8HcEB6Dk=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=QVRg6ZG3UDKjyF1t4nYZv3TRRgzXPulY5OfgzfNU+XC/u2AUxA2pB4mT+eCw4AdXn
-         p7aN1zvIrBdamKS4Nq8/2hV4B+NdJ4ZlW8TEJOBce/J9jFrqj3QGYu1efV1CqIGwZI
-         FyL5FevFLznUP4DJy8Xm9pUYtws6gh2dGlvwKUEU=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200903111300epcas1p4d2a6b5e162679cb00ee0d5a282243d02~xQbM1EBXR0956509565epcas1p4H;
-        Thu,  3 Sep 2020 11:13:00 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.159]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4BhypM4tcGzMqYkf; Thu,  3 Sep
-        2020 11:12:59 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        99.C7.19033.BBFC05F5; Thu,  3 Sep 2020 20:12:59 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200903111259epcas1p2564a6a8f400eea1390d1cf2e344dd4a5~xQbLV-X8f1369513695epcas1p2T;
-        Thu,  3 Sep 2020 11:12:59 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200903111259epsmtrp2f93c85e5e351761e763754501f9e1ade~xQbLVS9Bq2006820068epsmtrp2q;
-        Thu,  3 Sep 2020 11:12:59 +0000 (GMT)
-X-AuditID: b6c32a36-16fff70000004a59-7d-5f50cfbbf41d
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DB.6E.08382.ABFC05F5; Thu,  3 Sep 2020 20:12:58 +0900 (KST)
-Received: from W10PB11329 (unknown [10.253.152.129]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200903111258epsmtip112ea102f652e62b79d1a8f01c5c7fed4~xQbLH37AA1455414554epsmtip1J;
-        Thu,  3 Sep 2020 11:12:58 +0000 (GMT)
-From:   "Sungjong Seo" <sj1557.seo@samsung.com>
-To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
-Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
-        <mori.takahiro@ab.mitsubishielectric.co.jp>,
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        "'Namjae Jeon'" <namjae.jeon@samsung.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200902075306.8439-1-kohada.t2@gmail.com>
-Subject: RE: [PATCH] exfat: eliminate dead code in exfat_find()
-Date:   Thu, 3 Sep 2020 20:12:57 +0900
-Message-ID: <000001d681e3$2da33bc0$88e9b340$@samsung.com>
+        Thu, 3 Sep 2020 11:22:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599146538;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0HzlZIPywbFcx466Q8/W+zmFpS4jLc5rFIES8a+z/v4=;
+        b=eXzV6ZK/CMYhx5eVt5KC7RuDRk82uqQEkEj70vPD30bpiAtTnLCplhsE3B8xyDJitZHRbr
+        ZMwzJipnHPO5/q3pCWyfM7durPOeUoR3lBHy31txx9VD3lUjqo3ht0EMUAFXpg6Kc/brqd
+        PCH8RmVPB8b+dnBJsludbg66iyjS23Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-215-98tZJrasMY29zEJNBUFsDw-1; Thu, 03 Sep 2020 11:22:09 -0400
+X-MC-Unique: 98tZJrasMY29zEJNBUFsDw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2201425DA;
+        Thu,  3 Sep 2020 15:22:07 +0000 (UTC)
+Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3A7887EEC4;
+        Thu,  3 Sep 2020 15:22:03 +0000 (UTC)
+Subject: Re: [PATCH v4 04/10] vfio/fsl-mc: Implement
+ VFIO_DEVICE_GET_REGION_INFO ioctl call
+From:   Auger Eric <eric.auger@redhat.com>
+To:     Diana Craciun <diana.craciun@oss.nxp.com>,
+        alex.williamson@redhat.com, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
+        laurentiu.tudor@nxp.com, Bharat Bhushan <Bharat.Bhushan@nxp.com>
+References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
+ <20200826093315.5279-5-diana.craciun@oss.nxp.com>
+ <d17469ad-9041-9b1c-64e4-f406888262b7@redhat.com>
+Message-ID: <d22338d0-449b-a3f7-d8e6-be1e4620aa5c@redhat.com>
+Date:   Thu, 3 Sep 2020 17:22:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <d17469ad-9041-9b1c-64e4-f406888262b7@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQHi/AdGy7WFjhE0CTAe/r6eZnJXbwGnddttqTCKrAA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNJsWRmVeSWpSXmKPExsWy7bCmru7u8wHxBr8/Kln8mHubxeLNyaks
-        Fnv2nmSxuLxrDpvF5f+fWCyWfZnMYvFjer0Du8eXOcfZPdom/2P3aD62ks1j56y77B59W1Yx
-        enzeJBfAFpVjk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuW
-        mQN0ipJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwNCgQK84Mbe4NC9dLzk/18rQ
-        wMDIFKgyISdjzruzbAUrmSs6Z65mbWB8xNTFyMkhIWAi0fB7C5DNxSEksINRYkNfHwuE84lR
-        4vruLmaQKiGBb4wSM9dmw3RsOPaYDaJoL6PEjQO3WCCKXjJKPLwnDmKzCehKPLnxE6xZREBP
-        4uTJ62wgNrNAI5PEiZdggzgFLCQmLz4F1issYC8xo3kXWA2LgIrE3TPvWUFsXgFLiW3/l7FD
-        2IISJ2c+YYGYIy+x/e0cZoiDFCR2fzrKCrHLSuL6jnXMEDUiErM725hBDpUQWMghMWH/IlaI
-        BheJ9y/nMULYwhKvjm9hh7ClJD6/28sGYddL/J+/lh2iuQXosU/bgIHEAeTYS7y/ZAFiMgto
-        SqzfpQ9Rriix8/dcRoi9fBLvvvawQlTzSnS0CUGUqEh8/7CTBWbTlR9XmSYwKs1C8tksJJ/N
-        QvLBLIRlCxhZVjGKpRYU56anFhsWGCHH9SZGcCrVMtvBOOntB71DjEwcjIcYJTiYlUR4Z97w
-        jRfiTUmsrEotyo8vKs1JLT7EaAoM64nMUqLJ+cBknlcSb2hqZGxsbGFiZm5maqwkzvvwlkK8
-        kEB6YklqdmpqQWoRTB8TB6dUA5OV0s5pgd/K1b7NPjbFSac+QLNe4UrTXFa/b4FcH6Ksm6QX
-        hOg/rP5fv2+144W8tqXG/kHVN7L3NM45H3zywqpXuVdWXJWJWLY2R+Y4i/93QW1z8VbPNq/f
-        uzpT85ZJv9mfdsVQ4vKXNe7pjO9drAVdF4ZHBDxcbPJxo+xR9oW35OQP7jTeaHnjetGnh8om
-        xseUOpRvR9x7dOgSS7ZGY3pgzKz0Td9i001s+LZUbn/556Ry3PTl0nIH2t49ijrVs4n506EX
-        HvKTT05w/5i9NLqtu6Q7lGPdEoGeBxy/1x78WbDtyzlz9ZZONu81pvL/jy3p/rgla/K3+9kp
-        gX1XpR3+PnIWDVx9cNoU5eVNvxWUWIozEg21mIuKEwHgvIgwLgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplkeLIzCtJLcpLzFFi42LZdlhJTnfX+YB4gx9vLC1+zL3NYvHm5FQW
-        iz17T7JYXN41h83i8v9PLBbLvkxmsfgxvd6B3ePLnOPsHm2T/7F7NB9byeaxc9Zddo++LasY
-        PT5vkgtgi+KySUnNySxLLdK3S+DKmPPuLFvBSuaKzpmrWRsYHzF1MXJySAiYSGw49piti5GL
-        Q0hgN6PEkpsbmLsYOYASUhIH92lCmMIShw8XQ5Q8Z5R4NmUSG0gvm4CuxJMbP5lBbBEBPYmT
-        J6+DzWEWaGaSaP3SzATR0cko8WbOeRaQKk4BC4nJi0+B2cIC9hIzmneBTWIRUJG4e+Y9K4jN
-        K2Apse3/MnYIW1Di5MwnLCBXMANtaNvICBJmFpCX2P52DjPEAwoSuz8dZYU4wkri+o51zBA1
-        IhKzO9uYJzAKz0IyaRbCpFlIJs1C0rGAkWUVo2RqQXFuem6xYYFhXmq5XnFibnFpXrpecn7u
-        JkZwTGlp7mDcvuqD3iFGJg7GQ4wSHMxKIrwzb/jGC/GmJFZWpRblxxeV5qQWH2KU5mBREue9
-        UbgwTkggPbEkNTs1tSC1CCbLxMEp1cDke+L4FT3NK7x3gzf3LkpYtuOR2NbIv6GiLxsf6Cbt
-        rNwmbWIRty814K4C927j11XfIxM+vFMJ4hRmVY9XnTvx4uelkdfa7J/etuG8WLSqZI9JdNxb
-        Yw9nhb9Jfl8V6jWONGqrJrSFhUQaiSze2dB5VWnv6wThD3whL1WVhD6rFoZteLV3Ef+8uh99
-        c4OO+M97H1Moeel7U9ivogqjs+pGS3iWxc2dvD7llU/CnfQJZgrKLzeedJ3dZ8aQ0CZ7cEO1
-        22rBllfR2znqEzfsPMw7e1fok0X/1l5/y2bbYHtO6vnuuCg9zc0nzy9MF7V13n6rNGq/u8iu
-        rxPf73W8/VZ5b+WCLpXfS2RXXUpW1chSYinOSDTUYi4qTgQA2AccExgDAAA=
-X-CMS-MailID: 20200903111259epcas1p2564a6a8f400eea1390d1cf2e344dd4a5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200902075318epcas1p3c35299366ec32bb4947362f73b50b56f
-References: <CGME20200902075318epcas1p3c35299366ec32bb4947362f73b50b56f@epcas1p3.samsung.com>
-        <20200902075306.8439-1-kohada.t2@gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The exfat_find_dir_entry() called by exfat_find() doesn't return -EEXIST.
-> Therefore, the root-dir information setting is never executed.
+Hi Diana,
+
+On 9/3/20 5:16 PM, Auger Eric wrote:
+> Hi Diana,
 > 
-> Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+> On 8/26/20 11:33 AM, Diana Craciun wrote:
+>> Expose to userspace information about the memory regions.
+>>
+>> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+>> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+>> ---
+>>  drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 79 ++++++++++++++++++++++-
+>>  drivers/vfio/fsl-mc/vfio_fsl_mc_private.h | 19 ++++++
+>>  2 files changed, 97 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+>> index 5a5460d01f00..093b8d68496c 100644
+>> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+>> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+>> @@ -17,16 +17,72 @@
+>>  
+>>  static struct fsl_mc_driver vfio_fsl_mc_driver;
+>>  
+>> +static int vfio_fsl_mc_regions_init(struct vfio_fsl_mc_device *vdev)
+>> +{
+>> +	struct fsl_mc_device *mc_dev = vdev->mc_dev;
+>> +	int count = mc_dev->obj_desc.region_count;
+>> +	int i;
+>> +
+>> +	vdev->regions = kcalloc(count, sizeof(struct vfio_fsl_mc_region),
+>> +				GFP_KERNEL);
+>> +	if (!vdev->regions)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < count; i++) {
+>> +		struct resource *res = &mc_dev->regions[i];
+>> +
+>> +		vdev->regions[i].addr = res->start;
+>> +		vdev->regions[i].size = resource_size(res);
+>> +		vdev->regions[i].flags = 0;
+> why 0? I see in
+>> +	}
+>> +
+>> +	vdev->num_regions = mc_dev->obj_desc.region_count;
+> nit: you can use count directly fsl-mc-bus.c that flags can take
+> meaningful values
+Sorry I missed flags and types. So you may set the type in this patch
+instead of in next patch?
 
-Acked-by: Sungjong Seo <sj1557.seo@samsung.com>
+vdev->regions[i].type = mc_dev->regions[i].flags & IORESOURCE_BITS;
 
-> ---
->  fs/exfat/dir.c   |   1 -
->  fs/exfat/namei.c | 120 +++++++++++++++++++----------------------------
->  2 files changed, 47 insertions(+), 74 deletions(-)
+Eric
+>> +	return 0;
+>> +}
+>> +
+>> +static void vfio_fsl_mc_regions_cleanup(struct vfio_fsl_mc_device *vdev)
+>> +{
+>> +	vdev->num_regions = 0;
+>> +	kfree(vdev->regions);
+>> +}
+>> +
+>>  static int vfio_fsl_mc_open(void *device_data)
+>>  {
+>> +	struct vfio_fsl_mc_device *vdev = device_data;
+>> +	int ret;
+>> +
+>>  	if (!try_module_get(THIS_MODULE))
+>>  		return -ENODEV;
+>>  
+>> +	mutex_lock(&vdev->driver_lock);
+>> +	if (!vdev->refcnt) {
+>> +		ret = vfio_fsl_mc_regions_init(vdev);
+>> +		if (ret)
+>> +			goto err_reg_init;
+>> +	}
+>> +	vdev->refcnt++;
+>> +
+>> +	mutex_unlock(&vdev->driver_lock);
+>> +
+>>  	return 0;
+>> +
+>> +err_reg_init:
+>> +	mutex_unlock(&vdev->driver_lock);
+>> +	module_put(THIS_MODULE);
+>> +	return ret;
+>>  }
+>>  
+>>  static void vfio_fsl_mc_release(void *device_data)
+>>  {
+>> +	struct vfio_fsl_mc_device *vdev = device_data;
+>> +
+>> +	mutex_lock(&vdev->driver_lock);
+>> +
+>> +	if (!(--vdev->refcnt))
+>> +		vfio_fsl_mc_regions_cleanup(vdev);
+>> +
+>> +	mutex_unlock(&vdev->driver_lock);
+>> +
+>>  	module_put(THIS_MODULE);
+>>  }
+>>  
+>> @@ -59,7 +115,25 @@ static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
+>>  	}
+>>  	case VFIO_DEVICE_GET_REGION_INFO:
+>>  	{
+>> -		return -ENOTTY;
+>> +		struct vfio_region_info info;
+>> +
+>> +		minsz = offsetofend(struct vfio_region_info, offset);
+>> +
+>> +		if (copy_from_user(&info, (void __user *)arg, minsz))
+>> +			return -EFAULT;
+>> +
+>> +		if (info.argsz < minsz)
+>> +			return -EINVAL;
+>> +
+>> +		if (info.index >= vdev->num_regions)
+>> +			return -EINVAL;
+>> +
+>> +		/* map offset to the physical address  */
+>> +		info.offset = VFIO_FSL_MC_INDEX_TO_OFFSET(info.index);
+>> +		info.size = vdev->regions[info.index].size;
+>> +		info.flags = vdev->regions[info.index].flags;
+>> +
+>> +		return copy_to_user((void __user *)arg, &info, minsz);
+>>  	}
+>>  	case VFIO_DEVICE_GET_IRQ_INFO:
+>>  	{
+>> @@ -204,6 +278,7 @@ static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
+>>  		vfio_iommu_group_put(group, dev);
+>>  		return ret;
+>>  	}
+>> +	mutex_init(&vdev->driver_lock);
+>>  
+>>  	return ret;
+>>  }
+>> @@ -227,6 +302,8 @@ static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
+>>  
+>>  	mc_dev->mc_io = NULL;
+>>  
+>> +	mutex_destroy(&vdev->driver_lock);
+>> +
+>>  	vfio_iommu_group_put(mc_dev->dev.iommu_group, dev);
+>>  
+>>  	return 0;
+>> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+>> index 37d61eaa58c8..818dfd3df4db 100644
+>> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+>> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+>> @@ -7,9 +7,28 @@
+>>  #ifndef VFIO_FSL_MC_PRIVATE_H
+>>  #define VFIO_FSL_MC_PRIVATE_H
+>>  
+>> +#define VFIO_FSL_MC_OFFSET_SHIFT    40
+>> +#define VFIO_FSL_MC_OFFSET_MASK (((u64)(1) << VFIO_FSL_MC_OFFSET_SHIFT) - 1)
+>> +
+>> +#define VFIO_FSL_MC_OFFSET_TO_INDEX(off) ((off) >> VFIO_FSL_MC_OFFSET_SHIFT)
+>> +
+>> +#define VFIO_FSL_MC_INDEX_TO_OFFSET(index)	\
+>> +	((u64)(index) << VFIO_FSL_MC_OFFSET_SHIFT)
+>> +
+>> +struct vfio_fsl_mc_region {
+>> +	u32			flags;
+>> +	u32			type;
+>> +	u64			addr;
+>> +	resource_size_t		size;
+>> +};
+>> +
+>>  struct vfio_fsl_mc_device {
+>>  	struct fsl_mc_device		*mc_dev;
+>>  	struct notifier_block        nb;
+>> +	int				refcnt;
+>> +	u32				num_regions;
+>> +	struct vfio_fsl_mc_region	*regions;
+>> +	struct mutex driver_lock;
+>>  };
+>>  
+>>  #endif /* VFIO_FSL_MC_PRIVATE_H */
+>>
+> Otherwise looks good to me
+> 
+> Thanks
+> 
+> Eric
+> 
 
