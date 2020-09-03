@@ -2,209 +2,133 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D603C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F60C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64A3F2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599100372;
-	bh=WDcgb4OPfW9oJCLvkpEf5XVytpZGc7C+Vnhov/lxzCc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kHRc1i8vZhDHAc2OnGMA30n6TDv0DuE1oaA9HAaILcxneAjJMBTtmSqdOgoT+LBS2
-	 LP7Zrsq5DXa2ZVqBh9msqHDUzbvMoVBmS/NGdGgvNdpdS8GSu//09kYZNJhLfAAvBc
-	 BDWuqJBQbHP89L1OHYAIQHq6v0YVW8uSwWvQirgk=
+	by mail.kernel.org (Postfix) with ESMTP id 6B81E20786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:36:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mQIlxUyo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgICCcv (ORCPT
+        id S1727965AbgICCgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 22:32:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33450 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbgICCcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 22:32:46 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 2 Sep 2020 22:36:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgICCgB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 22:36:01 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7485AC061244;
+        Wed,  2 Sep 2020 19:36:01 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD56D2072A;
-        Thu,  3 Sep 2020 02:32:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599100365;
-        bh=WDcgb4OPfW9oJCLvkpEf5XVytpZGc7C+Vnhov/lxzCc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ynaIw1jaGGh4H7WLA0k2sndB56R659F5OcHwNf4M5hg05lOFC86D34RDvPGVtBjbs
-         r7K3isMFz/cF08hR90pASAkZdxzpH/x1fqPJ4WWluzIdW44flv6ym4mVmW1+n42ATw
-         Z72QtMrr+wsaKVPC+t6V3IC6TpsVrSKF1Eq8DAWw=
-Date:   Thu, 3 Sep 2020 11:32:41 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     peterz@infradead.org
-Cc:     mingo@kernel.org, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Paul McKenney <paulmck@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>, frederic@kernel.org,
-        joel@joelfernandes.org
-Subject: Re: [PATCH] lockdep: Fix "USED" <- "IN-NMI" inversions
-Message-Id: <20200903113241.6770aa3b531509153fde3673@kernel.org>
-In-Reply-To: <20200902160323.GK1362448@hirez.programming.kicks-ass.net>
-References: <20200902160323.GK1362448@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BhlKj1VkPz9sTS;
+        Thu,  3 Sep 2020 12:35:53 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599100555;
+        bh=cURnmHEF5OCE3wHPfmuJVfdtp3KvF7NBHs8Is7up7Zk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mQIlxUyooEDyVEpcYWVDhFtPALw5w5iWn9aA72HM118NKtN1nmuVZ7FhDQ4dUphE1
+         woXpSSFpfwwZKWWLcqbkFXruMuGYi2rsXemsBdadidOSJSgTlq54GTRJLHoTLs7CUz
+         BzKU9kmlPPV2dtD1qyFZMt91ZY78bmGNujWVSXG43kY+cw1diZm0WRofq3c3WaAWsw
+         bvJPE8lV+B9AGgESU7rbdxY6fphkOZJ11ZrU2vzbAlD+HWoJHweh8fEGoYdZqcx14n
+         b0KPXprnwWzKbQ8QaEg2+qCF5h6EokkybRhmo1Mt9jSWGLSYPcrnGFWaJFqxIkjlMM
+         U1JK85kAz6SLw==
+Date:   Thu, 3 Sep 2020 12:35:52 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Borislav Petkov <bp@suse.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the tip tree
+Message-ID: <20200903123552.0c5d1277@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/iK+q8_5r/YfNVEVLof7b3+d";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Sep 2020 18:03:23 +0200
-peterz@infradead.org wrote:
+--Sig_/iK+q8_5r/YfNVEVLof7b3+d
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> During the LPC RCU BoF Paul asked how come the "USED" <- "IN-NMI"
-> detector doesn't trip over rcu_read_lock()'s lockdep annotation.
-> 
-> Looking into this I found a very embarrasing typo in
-> verify_lock_unused():
-> 
-> -	if (!(class->usage_mask & LOCK_USED))
-> +	if (!(class->usage_mask & LOCKF_USED))
-> 
-> fixing that will indeed cause rcu_read_lock() to insta-splat :/
-> 
-> The above typo means that instead of testing for: 0x100 (1 <<
-> LOCK_USED), we test for 8 (LOCK_USED), which corresponds to (1 <<
-> LOCK_ENABLED_HARDIRQ).
-> 
-> So instead of testing for _any_ used lock, it will only match any lock
-> used with interrupts enabled.
-> 
-> The rcu_read_lock() annotation uses .check=0, which means it will not
-> set any of the interrupt bits and will thus never match.
-> 
-> In order to properly fix the situation and allow rcu_read_lock() to
-> correctly work, split LOCK_USED into LOCK_USED and LOCK_USED_READ and by
-> having .read users set USED_READ and test USED, pure read-recursive
-> locks are permitted.
+Hi all,
 
-Confirmed this makes lockdep warnings on kretprobes spinlocks correctly.
-
-Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Note, if we backport this, we need to backport kretprobe lockless series too.
-
-Thank you,
-
-> 
-> Fixes: f6f48e180404 ("lockdep: Teach lockdep about "USED" <- "IN-NMI" inversions")
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index cccf4bc759c6..454355c033d2 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -4324,13 +4324,18 @@ static int separate_irq_context(struct task_struct *curr,
->  static int mark_lock(struct task_struct *curr, struct held_lock *this,
->  			     enum lock_usage_bit new_bit)
->  {
-> -	unsigned int new_mask = 1 << new_bit, ret = 1;
-> +	unsigned int old_mask, new_mask, ret = 1;
->  
->  	if (new_bit >= LOCK_USAGE_STATES) {
->  		DEBUG_LOCKS_WARN_ON(1);
->  		return 0;
->  	}
->  
-> +	if (new_bit == LOCK_USED && this->read)
-> +		new_bit = LOCK_USED_READ;
-> +
-> +	new_mask = 1 << new_bit;
-> +
->  	/*
->  	 * If already set then do not dirty the cacheline,
->  	 * nor do any checks:
-> @@ -4343,13 +4348,22 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
->  	/*
->  	 * Make sure we didn't race:
->  	 */
-> -	if (unlikely(hlock_class(this)->usage_mask & new_mask)) {
-> -		graph_unlock();
-> -		return 1;
-> -	}
-> +	if (unlikely(hlock_class(this)->usage_mask & new_mask))
-> +		goto unlock;
->  
-> +	old_mask = hlock_class(this)->usage_mask;
->  	hlock_class(this)->usage_mask |= new_mask;
->  
-> +	/*
-> +	 * Save one usage_traces[] entry and map both LOCK_USED and
-> +	 * LOCK_USED_READ onto the same entry.
-> +	 */
-> +	if (new_bit == LOCK_USED || new_bit == LOCK_USED_READ) {
-> +		if (old_mask & (LOCKF_USED | LOCKF_USED_READ))
-> +			goto unlock;
-> +		new_bit = LOCK_USED;
-> +	}
-> +
->  	if (!(hlock_class(this)->usage_traces[new_bit] = save_trace()))
->  		return 0;
->  
-> @@ -4363,6 +4377,7 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
->  			return 0;
->  	}
->  
-> +unlock:
->  	graph_unlock();
->  
->  	/*
-> @@ -5297,12 +5312,20 @@ static void verify_lock_unused(struct lockdep_map *lock, struct held_lock *hlock
->  {
->  #ifdef CONFIG_PROVE_LOCKING
->  	struct lock_class *class = look_up_lock_class(lock, subclass);
-> +	unsigned long mask = LOCKF_USED;
->  
->  	/* if it doesn't have a class (yet), it certainly hasn't been used yet */
->  	if (!class)
->  		return;
->  
-> -	if (!(class->usage_mask & LOCK_USED))
-> +	/*
-> +	 * READ locks only conflict with USED, such that if we only ever use
-> +	 * READ locks, there is no deadlock possible -- RCU.
-> +	 */
-> +	if (!hlock->read)
-> +		mask |= LOCKF_USED_READ;
-> +
-> +	if (!(class->usage_mask & mask))
->  		return;
->  
->  	hlock->class_idx = class - lock_classes;
-> diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-> index baca699b94e9..b0be1560ed17 100644
-> --- a/kernel/locking/lockdep_internals.h
-> +++ b/kernel/locking/lockdep_internals.h
-> @@ -19,6 +19,7 @@ enum lock_usage_bit {
->  #include "lockdep_states.h"
->  #undef LOCKDEP_STATE
->  	LOCK_USED,
-> +	LOCK_USED_READ,
->  	LOCK_USAGE_STATES
->  };
->  
-> @@ -40,6 +41,7 @@ enum {
->  #include "lockdep_states.h"
->  #undef LOCKDEP_STATE
->  	__LOCKF(USED)
-> +	__LOCKF(USED_READ)
->  };
->  
->  #define LOCKDEP_STATE(__STATE)	LOCKF_ENABLED_##__STATE |
+After merging the tip tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Caused by commit
+
+  f670269a42bf ("x86: Fix early boot crash on gcc-10, next try")
+
+interacting with commit
+
+  a9a3ed1eff36 ("x86: Fix early boot crash on gcc-10, third try")
+
+from Linus' tree (v5.7-rc6) - the automatic merge did not go well.
+
+I have added this patch for today (it removes the older version).
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 3 Sep 2020 12:31:13 +1000
+Subject: [PATCH] merge fix for compiler.h
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ include/linux/compiler.h | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index d60365d4fb56..b78233fb1af7 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -223,12 +223,6 @@ static inline void *offset_to_ptr(const int *off)
+ /* &a[0] degrades to a pointer: a different type from an array */
+ #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
+=20
+-/*
+- * This is needed in functions which generate the stack canary, see
+- * arch/x86/kernel/smpboot.c::start_secondary() for an example.
+- */
+-#define prevent_tail_call_optimization()	mb()
+-
+ #include <asm/rwonce.h>
+=20
+ /*
+--=20
+2.28.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/iK+q8_5r/YfNVEVLof7b3+d
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9QVogACgkQAVBC80lX
+0GwbcQf+KAZjlj5H/RiH7Q4R8SgiK/xfVy0ZD/LKtJviMmP8XhZRsdy3XvkGf8Sa
+mhTUpRxvD3ofrQUZN+p/qW+E1gX6stvgiQWGbhDDsNG6yT9Nvdvf9aavH4iASgPT
+IjylyJfGOhlj5iRWU1YzD5dFi7b4kP7nUHeRtrfWjUw37kqGCJQCYS1/0v2O1moO
+xiQufp91APpPfHoS3ZDf3iadIVFjIHVlR/CezuqbwGktNzVJJlPEAVWcUPKtPopW
+GmawLPUXbMtiTvADTbyYLgYa7WPxoUUD5soYsuGpXpo1Lw2PzjKhzIIpzYguyhwr
+z5OfdhlUIYocLMKOY5HW/K4v3A1pdw==
+=7RH1
+-----END PGP SIGNATURE-----
+
+--Sig_/iK+q8_5r/YfNVEVLof7b3+d--
