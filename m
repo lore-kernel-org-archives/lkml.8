@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF62C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA918C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6C4F20709
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F5EF20709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:41:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="NT6bXm22"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="p43itBv7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgICLlK (ORCPT
+        id S1728755AbgICLlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:41:10 -0400
-Received: from crapouillou.net ([89.234.176.41]:51632 "EHLO crapouillou.net"
+        Thu, 3 Sep 2020 07:41:25 -0400
+Received: from crapouillou.net ([89.234.176.41]:51770 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728565AbgICLdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:33:00 -0400
+        id S1728644AbgICLdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:33:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599132386; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1599132392; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/HT6v/AkQG8sNb82MyIxu+857/MGP3ynerDd+/QF+M4=;
-        b=NT6bXm22K1zaV5clRMxCKg0SUnoSS/HP14SzgmhrY2C0oCtaBdBnHyiki5RSoxo9YMg0wc
-        VlGjjQNZqrqrIJsvppR7x/8r1X5Y/XgECewG8x/W00M9fiWcXDUwxobiKfMfJ366wNUM4I
-        PtqmGeqLYhAmU8Cr/zkWSrTKKfrsUI4=
+        bh=9XW0R3A7h61kqVO9LHIfPbKDh6AHGGvcxGKCBLPMwEw=;
+        b=p43itBv7pIcpgpQk29PzyvPKV0bvvqU7w2NCQtGv28IZlDXG/g383913UyPEdgcZy94ccQ
+        wWQOhhbDp8JG5qUeiMANp5kO0L3OYfS3eVJPL5lXk2mG+o/wGUWDI+myv9l6KgdOj40ue3
+        KU6GbN4Ags8dJ5BehODyZ4GCKabfjO4=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Chen <Peter.Chen@nxp.com>,
@@ -55,9 +55,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 09/20] usb/musb: am35x: Use pm_ptr() macro
-Date:   Thu,  3 Sep 2020 13:25:43 +0200
-Message-Id: <20200903112554.34263-10-paul@crapouillou.net>
+Subject: [PATCH 11/20] usb/musb: musb_dsps: Use pm_ptr() macro
+Date:   Thu,  3 Sep 2020 13:25:45 +0200
+Message-Id: <20200903112554.34263-12-paul@crapouillou.net>
 In-Reply-To: <20200903112554.34263-1-paul@crapouillou.net>
 References: <20200903112554.34263-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -75,49 +75,80 @@ simply be discarded by the compiler.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/usb/musb/am35x.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/usb/musb/musb_dsps.c | 20 +++++++-------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/usb/musb/am35x.c b/drivers/usb/musb/am35x.c
-index 660641ab1545..6162111f4cae 100644
---- a/drivers/usb/musb/am35x.c
-+++ b/drivers/usb/musb/am35x.c
-@@ -547,8 +547,7 @@ static int am35x_remove(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/usb/musb/musb_dsps.c b/drivers/usb/musb/musb_dsps.c
+index 30085b2be7b9..cb196bb6661d 100644
+--- a/drivers/usb/musb/musb_dsps.c
++++ b/drivers/usb/musb/musb_dsps.c
+@@ -665,26 +665,22 @@ dsps_dma_controller_create(struct musb *musb, void __iomem *base)
+ 	return controller;
  }
  
 -#ifdef CONFIG_PM_SLEEP
--static int am35x_suspend(struct device *dev)
-+static int __maybe_unused am35x_suspend(struct device *dev)
+-static void dsps_dma_controller_suspend(struct dsps_glue *glue)
++static void __maybe_unused dsps_dma_controller_suspend(struct dsps_glue *glue)
  {
- 	struct am35x_glue	*glue = dev_get_drvdata(dev);
- 	struct musb_hdrc_platform_data *plat = dev_get_platdata(dev);
-@@ -564,7 +563,7 @@ static int am35x_suspend(struct device *dev)
+ 	void __iomem *usbss_base = glue->usbss_base;
+ 
+ 	musb_writel(usbss_base, USBSS_IRQ_CLEARR, USBSS_IRQ_PD_COMP);
+ }
+ 
+-static void dsps_dma_controller_resume(struct dsps_glue *glue)
++static void __maybe_unused dsps_dma_controller_resume(struct dsps_glue *glue)
+ {
+ 	void __iomem *usbss_base = glue->usbss_base;
+ 
+ 	musb_writel(usbss_base, USBSS_IRQ_ENABLER, USBSS_IRQ_PD_COMP);
+ }
+-#endif
+ #else /* CONFIG_USB_TI_CPPI41_DMA */
+-#ifdef CONFIG_PM_SLEEP
+-static void dsps_dma_controller_suspend(struct dsps_glue *glue) {}
+-static void dsps_dma_controller_resume(struct dsps_glue *glue) {}
+-#endif
++static void __maybe_unused dsps_dma_controller_suspend(struct dsps_glue *glue) {}
++static void __maybe_unused dsps_dma_controller_resume(struct dsps_glue *glue) {}
+ #endif /* CONFIG_USB_TI_CPPI41_DMA */
+ 
+ static struct musb_platform_ops dsps_ops = {
+@@ -961,8 +957,7 @@ static const struct of_device_id musb_dsps_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, musb_dsps_of_match);
+ 
+-#ifdef CONFIG_PM_SLEEP
+-static int dsps_suspend(struct device *dev)
++static int __maybe_unused dsps_suspend(struct device *dev)
+ {
+ 	struct dsps_glue *glue = dev_get_drvdata(dev);
+ 	const struct dsps_musb_wrapper *wrp = glue->wrp;
+@@ -996,7 +991,7 @@ static int dsps_suspend(struct device *dev)
  	return 0;
  }
  
--static int am35x_resume(struct device *dev)
-+static int __maybe_unused am35x_resume(struct device *dev)
+-static int dsps_resume(struct device *dev)
++static int __maybe_unused dsps_resume(struct device *dev)
  {
- 	struct am35x_glue	*glue = dev_get_drvdata(dev);
- 	struct musb_hdrc_platform_data *plat = dev_get_platdata(dev);
-@@ -589,7 +588,6 @@ static int am35x_resume(struct device *dev)
+ 	struct dsps_glue *glue = dev_get_drvdata(dev);
+ 	const struct dsps_musb_wrapper *wrp = glue->wrp;
+@@ -1024,7 +1019,6 @@ static int dsps_resume(struct device *dev)
  
  	return 0;
  }
 -#endif
  
- static SIMPLE_DEV_PM_OPS(am35x_pm_ops, am35x_suspend, am35x_resume);
+ static SIMPLE_DEV_PM_OPS(dsps_pm_ops, dsps_suspend, dsps_resume);
  
-@@ -598,7 +596,7 @@ static struct platform_driver am35x_driver = {
- 	.remove		= am35x_remove,
- 	.driver		= {
- 		.name	= "musb-am35x",
--		.pm	= &am35x_pm_ops,
-+		.pm	= pm_ptr(&am35x_pm_ops),
+@@ -1033,7 +1027,7 @@ static struct platform_driver dsps_usbss_driver = {
+ 	.remove         = dsps_remove,
+ 	.driver         = {
+ 		.name   = "musb-dsps",
+-		.pm	= &dsps_pm_ops,
++		.pm	= pm_ptr(&dsps_pm_ops),
+ 		.of_match_table	= musb_dsps_of_match,
  	},
  };
- 
 -- 
 2.28.0
 
