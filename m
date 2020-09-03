@@ -2,137 +2,221 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25D6C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48975C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D33A20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:12:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZrKBu1Jh"
+	by mail.kernel.org (Postfix) with ESMTP id 1557520716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:12:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599145944;
+	bh=+cqm82p4iiF8vpY35ibkg76jII4BWrBq5/GuWJZ1IY8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=btPKhUNaDH8yZKhPizpEGx37ofQNq6k5Php/7QEUfY0yQn92mpnagWJVeuHGBX+k4
+	 Dq/U15uSW1+z/3awhTKDRn4goKiWiCQvaTy1/zKI9/gsQK8S29Bt2CILbRe+ZADBQp
+	 98CRKZo3SktQdX0GFXti5D6j21cs28avDvNF18lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgICPMR (ORCPT
+        id S1729492AbgICPMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:12:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728827AbgICM0r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 08:26:47 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 720B4C061247
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 05:05:56 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id o68so2173857pfg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 05:05:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kqVh90gZA+Jv+sQxaZ1mzbNqmtA+iD77lIe6xdCdvDA=;
-        b=ZrKBu1JhDqa2E6DWCiORaYi2MHc650K/DlmYKis/qZYjWXXy6O+yn0bP6TzIzsFBSm
-         euxbxOw6IhVyzcAW8Vg3CiZLCvCk3y+3OPvMHWw5RBKjrPdfM6xu/rqNc8R2NLafIsih
-         PAvlVMhgYWUB6A0ZSUT/CM7hHt+s3sfhx0dBkWYjvktZgVl+5nkLfmMY8VKHP4DnGpQ2
-         sK/R6N2wlyYaKb/BxxT0IkjO9QEoKIQ4C72kgiwS2cWKnj7odSv2/WeCxtlsxpyaiDih
-         3IrOJGvYyomi7nArQs1weOdsUN/13cCauS5AEJoB5Sximm3RWvnsUGOUrGAHd+Zh0Mc7
-         9wNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=kqVh90gZA+Jv+sQxaZ1mzbNqmtA+iD77lIe6xdCdvDA=;
-        b=KVVdX4jedEi44PZcUvkH9O0qjAKpW2Nz6ND9zAAWYw0bDfJplitRxLjyZQUWR32cxf
-         8e9ZWYE6ZDOBAqb94P/mAE98Y8CeZeBoinFLAYqPSBX3wxFzQ1oqfejS8rB5d3PaSAXe
-         +MSO4GsAeY8pJXcVGO7YDFhUpbHCIyf2FLNy4S/TnSh8cBR77QOI2AsZq0vJQWFnep7o
-         YsVdyPPkVB8JVLkNfbQCPEss8xK55Y4CH6E9D6w5vFx0q5yq/AD8SbSRMifiV6P3dlkr
-         d2XBSXDRUTcjxZ311yS3+3GThYukogY2ElaJMXIlHBFOPM5qsc76t5WffU+52d8qXyko
-         VciQ==
-X-Gm-Message-State: AOAM530bJP7ZY3X459gBvWKaZT/9qr2Mxdun1+IcxRuQjiTmbWYZY70r
-        J9XA6T+f7wN4kGwiTF91mBkz8A==
-X-Google-Smtp-Source: ABdhPJxdTtirKYDBW9CeUl6CQDwTBIH7Lx0gi0PsvFrbdxpYkigdH3s+GR3erecKM5HMZcA9+JJmag==
-X-Received: by 2002:aa7:90c4:: with SMTP id k4mr3398751pfk.79.1599134755991;
-        Thu, 03 Sep 2020 05:05:55 -0700 (PDT)
-Received: from localhost.localdomain ([117.210.209.248])
-        by smtp.gmail.com with ESMTPSA id s1sm2922022pgh.47.2020.09.03.05.05.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Sep 2020 05:05:55 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     maz@kernel.org, catalin.marinas@arm.com, will@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, tglx@linutronix.de,
-        jason@lakedaemon.net, julien.thierry.kdev@gmail.com,
-        dianders@chromium.org, daniel.thompson@linaro.org,
-        jason.wessel@windriver.com, kgdb-bugreport@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH v3 2/4] irqchip/gic-v3: Enable support for SGIs to act as NMIs
-Date:   Thu,  3 Sep 2020 17:35:10 +0530
-Message-Id: <1599134712-30923-3-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599134712-30923-1-git-send-email-sumit.garg@linaro.org>
-References: <1599134712-30923-1-git-send-email-sumit.garg@linaro.org>
+        Thu, 3 Sep 2020 11:12:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728785AbgICMTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:19:15 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA2A6208B3;
+        Thu,  3 Sep 2020 12:19:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599135554;
+        bh=+cqm82p4iiF8vpY35ibkg76jII4BWrBq5/GuWJZ1IY8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bwCTh40/5BUeuPBBaAzgC30W1HQqKwjiFtuI5MCC7hpuPTX+kDNC40GGdxQirpsin
+         2NDOBw7C6gIRBXTj2ZtTXlTOLAn9j3Qsy/YxJ9naYPS/JETR8ZmvrjJEzwdmEwu3Gk
+         y18rdwP3q8d2qGhezN6ufFsw8gkNX7wll0V4+pig=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>, Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Maor Gottlieb <maorg@nvidia.com>, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH rdma-next 4/4] RDMA/umem: Move to allocate SG table from pages
+Date:   Thu,  3 Sep 2020 15:18:53 +0300
+Message-Id: <20200903121853.1145976-5-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200903121853.1145976-1-leon@kernel.org>
+References: <20200903121853.1145976-1-leon@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to handle SGIs as regular NMIs. As SGIs or IPIs defaults to a
-special flow handler: handle_percpu_devid_fasteoi_ipi(), so skip NMI
-handler update in case of SGIs.
+From: Maor Gottlieb <maorg@nvidia.com>
 
-Also, enable NMI support prior to gic_smp_init() as allocation of SGIs
-as IRQs/NMIs happen as part of this routine.
+Remove the implementation of ib_umem_add_sg_table and instead
+call to sg_alloc_table_append which already has the logic to
+merge contiguous pages.
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+Besides that it removes duplicated functionality, it reduces the
+memory consumption of the SG table significantly. Prior to this
+patch, the SG table was allocated in advance regardless consideration
+of contiguous pages.
+
+In huge pages system of 2MB page size, without this change, the SG table
+would contain x512 SG entries.
+E.g. for 100GB memory registration:
+
+	 Number of entries	Size
+Before 	      26214400          600.0MB
+After            51200		  1.2MB
+
+Signed-off-by: Maor Gottlieb <maorg@nvidia.com>
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 ---
- drivers/irqchip/irq-gic-v3.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/infiniband/core/umem.c | 93 +++++-----------------------------
+ 1 file changed, 14 insertions(+), 79 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 7170645..dfd8e03 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -476,6 +476,11 @@ static int gic_irq_nmi_setup(struct irq_data *d)
- 	if (WARN_ON(gic_irq(d) >= 8192))
- 		return -EINVAL;
- 
-+	if (get_intid_range(d) == SGI_RANGE) {
-+		gic_irq_set_prio(d, GICD_INT_NMI_PRI);
-+		return 0;
-+	}
-+
- 	/* desc lock should already be held */
- 	if (gic_irq_in_rdist(d)) {
- 		u32 idx = gic_get_ppi_index(d);
-@@ -513,6 +518,11 @@ static void gic_irq_nmi_teardown(struct irq_data *d)
- 	if (WARN_ON(gic_irq(d) >= 8192))
- 		return;
- 
-+	if (get_intid_range(d) == SGI_RANGE) {
-+		gic_irq_set_prio(d, GICD_INT_DEF_PRI);
-+		return;
-+	}
-+
- 	/* desc lock should already be held */
- 	if (gic_irq_in_rdist(d)) {
- 		u32 idx = gic_get_ppi_index(d);
-@@ -1666,6 +1676,7 @@ static int __init gic_init_bases(void __iomem *dist_base,
- 
- 	gic_dist_init();
- 	gic_cpu_init();
-+	gic_enable_nmi_support();
- 	gic_smp_init();
- 	gic_cpu_pm_init();
- 
-@@ -1677,8 +1688,6 @@ static int __init gic_init_bases(void __iomem *dist_base,
- 			gicv2m_init(handle, gic_data.domain);
- 	}
- 
--	gic_enable_nmi_support();
+diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.c
+index be889e99cfac..9eb946f665ec 100644
+--- a/drivers/infiniband/core/umem.c
++++ b/drivers/infiniband/core/umem.c
+@@ -62,73 +62,6 @@ static void __ib_umem_release(struct ib_device *dev, struct ib_umem *umem, int d
+ 	sg_free_table(&umem->sg_head);
+ }
+
+-/* ib_umem_add_sg_table - Add N contiguous pages to scatter table
+- *
+- * sg: current scatterlist entry
+- * page_list: array of npage struct page pointers
+- * npages: number of pages in page_list
+- * max_seg_sz: maximum segment size in bytes
+- * nents: [out] number of entries in the scatterlist
+- *
+- * Return new end of scatterlist
+- */
+-static struct scatterlist *ib_umem_add_sg_table(struct scatterlist *sg,
+-						struct page **page_list,
+-						unsigned long npages,
+-						unsigned int max_seg_sz,
+-						int *nents)
+-{
+-	unsigned long first_pfn;
+-	unsigned long i = 0;
+-	bool update_cur_sg = false;
+-	bool first = !sg_page(sg);
 -
- 	return 0;
- 
- out_free:
--- 
-2.7.4
+-	/* Check if new page_list is contiguous with end of previous page_list.
+-	 * sg->length here is a multiple of PAGE_SIZE and sg->offset is 0.
+-	 */
+-	if (!first && (page_to_pfn(sg_page(sg)) + (sg->length >> PAGE_SHIFT) ==
+-		       page_to_pfn(page_list[0])))
+-		update_cur_sg = true;
+-
+-	while (i != npages) {
+-		unsigned long len;
+-		struct page *first_page = page_list[i];
+-
+-		first_pfn = page_to_pfn(first_page);
+-
+-		/* Compute the number of contiguous pages we have starting
+-		 * at i
+-		 */
+-		for (len = 0; i != npages &&
+-			      first_pfn + len == page_to_pfn(page_list[i]) &&
+-			      len < (max_seg_sz >> PAGE_SHIFT);
+-		     len++)
+-			i++;
+-
+-		/* Squash N contiguous pages from page_list into current sge */
+-		if (update_cur_sg) {
+-			if ((max_seg_sz - sg->length) >= (len << PAGE_SHIFT)) {
+-				sg_set_page(sg, sg_page(sg),
+-					    sg->length + (len << PAGE_SHIFT),
+-					    0);
+-				update_cur_sg = false;
+-				continue;
+-			}
+-			update_cur_sg = false;
+-		}
+-
+-		/* Squash N contiguous pages into next sge or first sge */
+-		if (!first)
+-			sg = sg_next(sg);
+-
+-		(*nents)++;
+-		sg_set_page(sg, first_page, len << PAGE_SHIFT, 0);
+-		first = false;
+-	}
+-
+-	return sg;
+-}
+-
+ /**
+  * ib_umem_find_best_pgsz - Find best HW page size to use for this MR
+  *
+@@ -205,7 +138,8 @@ static struct ib_umem *__ib_umem_get(struct ib_device *device,
+ 	struct mm_struct *mm;
+ 	unsigned long npages;
+ 	int ret;
+-	struct scatterlist *sg;
++	struct scatterlist *sg = NULL;
++	struct sg_append append = {};
+ 	unsigned int gup_flags = FOLL_WRITE;
+
+ 	/*
+@@ -255,15 +189,9 @@ static struct ib_umem *__ib_umem_get(struct ib_device *device,
+
+ 	cur_base = addr & PAGE_MASK;
+
+-	ret = sg_alloc_table(&umem->sg_head, npages, GFP_KERNEL);
+-	if (ret)
+-		goto vma;
+-
+ 	if (!umem->writable)
+ 		gup_flags |= FOLL_FORCE;
+
+-	sg = umem->sg_head.sgl;
+-
+ 	while (npages) {
+ 		cond_resched();
+ 		ret = pin_user_pages_fast(cur_base,
+@@ -276,10 +204,18 @@ static struct ib_umem *__ib_umem_get(struct ib_device *device,
+
+ 		cur_base += ret * PAGE_SIZE;
+ 		npages   -= ret;
+-
+-		sg = ib_umem_add_sg_table(sg, page_list, ret,
+-			dma_get_max_seg_size(device->dma_device),
+-			&umem->sg_nents);
++		append.left_pages = npages;
++		append.prv = sg;
++		sg = sg_alloc_table_append(&umem->sg_head, page_list, ret, 0,
++					   ret << PAGE_SHIFT,
++					   dma_get_max_seg_size(device->dma_device),
++					   GFP_KERNEL, &append);
++		umem->sg_nents = umem->sg_head.nents;
++		if (IS_ERR(sg)) {
++			unpin_user_pages_dirty_lock(page_list, ret, 0);
++			ret = PTR_ERR(sg);
++			goto umem_release;
++		}
+ 	}
+
+ 	sg_mark_end(sg);
+@@ -301,7 +237,6 @@ static struct ib_umem *__ib_umem_get(struct ib_device *device,
+
+ umem_release:
+ 	__ib_umem_release(device, umem, 0);
+-vma:
+ 	atomic64_sub(ib_umem_num_pages(umem), &mm->pinned_vm);
+ out:
+ 	free_page((unsigned long) page_list);
+--
+2.26.2
 
