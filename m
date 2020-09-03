@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBD7C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B25D6C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4286E2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D33A20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:12:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vWyyppW7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZrKBu1Jh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729466AbgICPMJ (ORCPT
+        id S1729094AbgICPMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:12:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45140 "EHLO
+        Thu, 3 Sep 2020 11:12:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728831AbgICM0r (ORCPT
+        with ESMTP id S1728827AbgICM0r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 08:26:47 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43127C06124F
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 05:06:11 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 17so2153914pfw.9
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 05:06:11 -0700 (PDT)
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 720B4C061247
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 05:05:56 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id o68so2173857pfg.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 05:05:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=6rT3Oq3fCAt3C31zNixC41u1K5vlck9GLS8EDOYTmew=;
-        b=vWyyppW7hpygvE/IkGGf/gUhETTigprQq6UV1DJ8NWDb0v+mRfJtrPiVVREDvTmBLE
-         9wbVYxBwL7yziCp3zIGYydYwRUYaBmUoWla/7w6E6i7WekurGkRwFVOgFAzuX4EsdWK7
-         SgBKTIy7EM9aXrk2pWefgyzvaHDSHZqiySbVvBukeOU9l09HsqE+QVe9pa2IW5Gd3RcA
-         0N9szfLficZOOZaiT0Qzu0ekzkT7ttJz62H81vng9XHHjh762SLxUQzRLjfuQmZEa+mw
-         v01MFTpWgVsZStU4//S/zrx2uL8iDLqzxfbPuBGKVITP0EfjiLk7cxCHzzs/rYzrKLm5
-         mAbw==
+        bh=kqVh90gZA+Jv+sQxaZ1mzbNqmtA+iD77lIe6xdCdvDA=;
+        b=ZrKBu1JhDqa2E6DWCiORaYi2MHc650K/DlmYKis/qZYjWXXy6O+yn0bP6TzIzsFBSm
+         euxbxOw6IhVyzcAW8Vg3CiZLCvCk3y+3OPvMHWw5RBKjrPdfM6xu/rqNc8R2NLafIsih
+         PAvlVMhgYWUB6A0ZSUT/CM7hHt+s3sfhx0dBkWYjvktZgVl+5nkLfmMY8VKHP4DnGpQ2
+         sK/R6N2wlyYaKb/BxxT0IkjO9QEoKIQ4C72kgiwS2cWKnj7odSv2/WeCxtlsxpyaiDih
+         3IrOJGvYyomi7nArQs1weOdsUN/13cCauS5AEJoB5Sximm3RWvnsUGOUrGAHd+Zh0Mc7
+         9wNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=6rT3Oq3fCAt3C31zNixC41u1K5vlck9GLS8EDOYTmew=;
-        b=kwmyHl1QqRUDfeIW5yI8q5abJmPFNs2apQK1ZGt7NbRNK0dc1AenmweFk/Y/b8zsPz
-         6v0BMY44QJKd0F/a8Ve8CjAgKCy1rn++Wl191uYGgbe3JP5WhzL7slklvqcBvyGOuJxy
-         X5bw+kacrXAUlJRvdlTUeb1VMW3yUckwKVlfECTj6gJWhFwcxMYmu2HEItnBC4jOXvLT
-         cSP4r7f1Yq5Npl87O8ycAc4S53FP192NB7/jN5njpzyY/uX7YuMTGhwnlmQcWEwjufIw
-         a5P7VnuhEMiHeILEW6MAKH7G8pFW7gM6ghh+SNMYiH2B/S81WPt9wZvR1RAG9MzkXW4s
-         Inrg==
-X-Gm-Message-State: AOAM532N0kvVSadaLr1piQHEdqS7vl4pHSAfjpOI5UafrYfhmT3bxBrw
-        /0Y9QoNNafTVtdOIC3pp0Cxqmw==
-X-Google-Smtp-Source: ABdhPJxmXC2UZJ7VbILNUGeZ4ZMRSdONwYc1dH1QIufwvZKqDdpG8ds3OWY7AMUfJZYq3qtbgunWWw==
-X-Received: by 2002:a63:4503:: with SMTP id s3mr2696201pga.119.1599134770782;
-        Thu, 03 Sep 2020 05:06:10 -0700 (PDT)
+        bh=kqVh90gZA+Jv+sQxaZ1mzbNqmtA+iD77lIe6xdCdvDA=;
+        b=KVVdX4jedEi44PZcUvkH9O0qjAKpW2Nz6ND9zAAWYw0bDfJplitRxLjyZQUWR32cxf
+         8e9ZWYE6ZDOBAqb94P/mAE98Y8CeZeBoinFLAYqPSBX3wxFzQ1oqfejS8rB5d3PaSAXe
+         +MSO4GsAeY8pJXcVGO7YDFhUpbHCIyf2FLNy4S/TnSh8cBR77QOI2AsZq0vJQWFnep7o
+         YsVdyPPkVB8JVLkNfbQCPEss8xK55Y4CH6E9D6w5vFx0q5yq/AD8SbSRMifiV6P3dlkr
+         d2XBSXDRUTcjxZ311yS3+3GThYukogY2ElaJMXIlHBFOPM5qsc76t5WffU+52d8qXyko
+         VciQ==
+X-Gm-Message-State: AOAM530bJP7ZY3X459gBvWKaZT/9qr2Mxdun1+IcxRuQjiTmbWYZY70r
+        J9XA6T+f7wN4kGwiTF91mBkz8A==
+X-Google-Smtp-Source: ABdhPJxdTtirKYDBW9CeUl6CQDwTBIH7Lx0gi0PsvFrbdxpYkigdH3s+GR3erecKM5HMZcA9+JJmag==
+X-Received: by 2002:aa7:90c4:: with SMTP id k4mr3398751pfk.79.1599134755991;
+        Thu, 03 Sep 2020 05:05:55 -0700 (PDT)
 Received: from localhost.localdomain ([117.210.209.248])
-        by smtp.gmail.com with ESMTPSA id s1sm2922022pgh.47.2020.09.03.05.06.03
+        by smtp.gmail.com with ESMTPSA id s1sm2922022pgh.47.2020.09.03.05.05.48
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Sep 2020 05:06:10 -0700 (PDT)
+        Thu, 03 Sep 2020 05:05:55 -0700 (PDT)
 From:   Sumit Garg <sumit.garg@linaro.org>
 To:     maz@kernel.org, catalin.marinas@arm.com, will@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, tglx@linutronix.de,
@@ -65,9 +65,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, tglx@linutronix.de,
         dianders@chromium.org, daniel.thompson@linaro.org,
         jason.wessel@windriver.com, kgdb-bugreport@lists.sourceforge.net,
         linux-kernel@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH v3 4/4] arm64: kgdb: Round up cpus using IPI_CALL_NMI_FUNC
-Date:   Thu,  3 Sep 2020 17:35:12 +0530
-Message-Id: <1599134712-30923-5-git-send-email-sumit.garg@linaro.org>
+Subject: [PATCH v3 2/4] irqchip/gic-v3: Enable support for SGIs to act as NMIs
+Date:   Thu,  3 Sep 2020 17:35:10 +0530
+Message-Id: <1599134712-30923-3-git-send-email-sumit.garg@linaro.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1599134712-30923-1-git-send-email-sumit.garg@linaro.org>
 References: <1599134712-30923-1-git-send-email-sumit.garg@linaro.org>
@@ -76,98 +76,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arm64 platforms with GICv3 or later supports pseudo NMIs which can be
-leveraged to round up CPUs which are stuck in hard lockup state with
-interrupts disabled that wouldn't be possible with a normal IPI.
+Add support to handle SGIs as regular NMIs. As SGIs or IPIs defaults to a
+special flow handler: handle_percpu_devid_fasteoi_ipi(), so skip NMI
+handler update in case of SGIs.
 
-So instead switch to round up CPUs using IPI_CALL_NMI_FUNC. And in
-case a particular arm64 platform doesn't supports pseudo NMIs,
-IPI_CALL_NMI_FUNC will act as a normal IPI which maintains existing
-kgdb functionality.
+Also, enable NMI support prior to gic_smp_init() as allocation of SGIs
+as IRQs/NMIs happen as part of this routine.
 
 Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
- arch/arm64/include/asm/kgdb.h |  8 ++++++++
- arch/arm64/kernel/kgdb.c      | 21 +++++++++++++++++++++
- arch/arm64/kernel/smp.c       |  3 ++-
- 3 files changed, 31 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kgdb.h b/arch/arm64/include/asm/kgdb.h
-index 21fc85e..6f3d3af 100644
---- a/arch/arm64/include/asm/kgdb.h
-+++ b/arch/arm64/include/asm/kgdb.h
-@@ -24,6 +24,14 @@ static inline void arch_kgdb_breakpoint(void)
- extern void kgdb_handle_bus_error(void);
- extern int kgdb_fault_expected;
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 7170645..dfd8e03 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -476,6 +476,11 @@ static int gic_irq_nmi_setup(struct irq_data *d)
+ 	if (WARN_ON(gic_irq(d) >= 8192))
+ 		return -EINVAL;
  
-+#ifdef CONFIG_KGDB
-+extern void ipi_kgdb_nmicallback(int cpu, void *regs);
-+#else
-+static inline void ipi_kgdb_nmicallback(int cpu, void *regs)
-+{
-+}
-+#endif
++	if (get_intid_range(d) == SGI_RANGE) {
++		gic_irq_set_prio(d, GICD_INT_NMI_PRI);
++		return 0;
++	}
 +
- #endif /* !__ASSEMBLY__ */
+ 	/* desc lock should already be held */
+ 	if (gic_irq_in_rdist(d)) {
+ 		u32 idx = gic_get_ppi_index(d);
+@@ -513,6 +518,11 @@ static void gic_irq_nmi_teardown(struct irq_data *d)
+ 	if (WARN_ON(gic_irq(d) >= 8192))
+ 		return;
  
- /*
-diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index 1a157ca3..3a8ed97 100644
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -14,6 +14,7 @@
- #include <linux/kgdb.h>
- #include <linux/kprobes.h>
- #include <linux/sched/task_stack.h>
-+#include <linux/smp.h>
- 
- #include <asm/debug-monitors.h>
- #include <asm/insn.h>
-@@ -353,3 +354,23 @@ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
- 	return aarch64_insn_write((void *)bpt->bpt_addr,
- 			*(u32 *)bpt->saved_instr);
- }
-+
-+void ipi_kgdb_nmicallback(int cpu, void *regs)
-+{
-+	if (atomic_read(&kgdb_active) != -1)
-+		kgdb_nmicallback(cpu, regs);
-+}
-+
-+#ifdef CONFIG_SMP
-+void kgdb_roundup_cpus(void)
-+{
-+	struct cpumask mask;
-+
-+	cpumask_copy(&mask, cpu_online_mask);
-+	cpumask_clear_cpu(raw_smp_processor_id(), &mask);
-+	if (cpumask_empty(&mask))
++	if (get_intid_range(d) == SGI_RANGE) {
++		gic_irq_set_prio(d, GICD_INT_DEF_PRI);
 +		return;
++	}
 +
-+	arch_send_call_nmi_func_ipi_mask(&mask);
-+}
-+#endif
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 572f8f5..b4760d3 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -32,6 +32,7 @@
- #include <linux/irq_work.h>
- #include <linux/kernel_stat.h>
- #include <linux/kexec.h>
-+#include <linux/kgdb.h>
- #include <linux/kvm_host.h>
+ 	/* desc lock should already be held */
+ 	if (gic_irq_in_rdist(d)) {
+ 		u32 idx = gic_get_ppi_index(d);
+@@ -1666,6 +1676,7 @@ static int __init gic_init_bases(void __iomem *dist_base,
  
- #include <asm/alternative.h>
-@@ -941,7 +942,7 @@ static void do_handle_IPI(int ipinr)
- #endif
+ 	gic_dist_init();
+ 	gic_cpu_init();
++	gic_enable_nmi_support();
+ 	gic_smp_init();
+ 	gic_cpu_pm_init();
  
- 	case IPI_CALL_NMI_FUNC:
--		/* nop, IPI handlers for special features can be added here. */
-+		ipi_kgdb_nmicallback(cpu, get_irq_regs());
- 		break;
+@@ -1677,8 +1688,6 @@ static int __init gic_init_bases(void __iomem *dist_base,
+ 			gicv2m_init(handle, gic_data.domain);
+ 	}
  
- 	default:
+-	gic_enable_nmi_support();
+-
+ 	return 0;
+ 
+ out_free:
 -- 
 2.7.4
 
