@@ -2,114 +2,127 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A424C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21273C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2282C20709
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:14:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sr/AQZ5L"
+	by mail.kernel.org (Postfix) with ESMTP id DE53A206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgICJON (ORCPT
+        id S1728027AbgICJPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 05:14:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgICJOL (ORCPT
+        Thu, 3 Sep 2020 05:15:14 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:55682 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726770AbgICJPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 05:14:11 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E9FC061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 02:14:11 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id o16so1217737pjr.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 02:14:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4afLgUe1cUkVRP69nTr5da9z39FDawbQG5TycdOn8JY=;
-        b=Sr/AQZ5LBkyS4/m/pvaWuGKg255C7W/jwT6mmfv67FngAC3NvOEEXUyaJe3TMkFMBu
-         IPCRUcEsFZTRoZWKfMHX7PcvafWTofRrRuZMy23mWgNCpIGvTCoArTK+glMkpedkMhuJ
-         fx7BgG0SQ6MRRkRxapNNmrerz9E5rKRwy7cvBCXazKBDG4wBX5yNbewTUYw/pE+YQP4G
-         FJbG0hNSF4lapwKvVDg7GVJ48lDnpqiY7vWzyPV6cAnyCBQ+huDV3KkUeq8SKT837XO3
-         JnefJo+ZOp+y1HeKd5kXKs/h6zVhrz49ozhofIkwsLzEZQR2RDCqTQ6We7V7dLSd2jIa
-         N9uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4afLgUe1cUkVRP69nTr5da9z39FDawbQG5TycdOn8JY=;
-        b=ON9cACCrYSVkUefZ6Cgc/g1dpVPyxzcschjVOT+yMuHZFr+cISlx9C15v/oLaOhW1R
-         Rv7URhlIm7SlKB+wn2lnQP6uO9NanBSn6Uc3f4zJ/jUeED6kIXNIGedozYzumx/DcOBC
-         FI7s1U9QDKcCsTE+QwUmo53+U/NXA7Spz1Xo2JyCYwlj6pfXkNypUV1mMK45NtVJjNp2
-         +gdQmsjHPs1osM/2QfziQJFqVSgsNWSXZO6ksK9i7HXT5jfI8bOJWprvIQh/VQhJPuaZ
-         0x9kxomLs6JLXx4/AspvhnEGQI12gP2FD8npCkKrhTI2XHbV8N1UTeD/zvG85Y09Zdf1
-         IWfA==
-X-Gm-Message-State: AOAM533RzGAhKjmi+mnUPC08NOWlMoug/kwFkkYBBmekLi9FXzWMJPsd
-        rVml67Yj1dp4cpwN+ol+OTUS4w==
-X-Google-Smtp-Source: ABdhPJwNxm0867FCHT/ZOCka2bLgCkXIxhUiDvCTty8Hi2oKdLE122ssJmVXYKzgmIcdmGWVK69Akw==
-X-Received: by 2002:a17:90a:d904:: with SMTP id c4mr2292255pjv.145.1599124444493;
-        Thu, 03 Sep 2020 02:14:04 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id x185sm2363995pfc.188.2020.09.03.02.13.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 03 Sep 2020 02:14:04 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 17:13:55 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Kemeng Shi <shikemeng@huawei.com>,
-        Wei Li <liwei391@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Al Grant <Al.Grant@arm.com>, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>, nd <nd@arm.com>
-Subject: Re: [PATCH RESEND v1 00/11] perf mem: Support AUX trace and Arm SPE
-Message-ID: <20200903091355.GC1583@leoy-ThinkPad-X240s>
-References: <20200806030727.30267-1-leo.yan@linaro.org>
- <df08fad6-eec9-12a2-3d88-0d863fb42325@arm.com>
+        Thu, 3 Sep 2020 05:15:14 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U7nf1cO_1599124504;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U7nf1cO_1599124504)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 03 Sep 2020 17:15:05 +0800
+Subject: Re: [PATCH v4 1/4] mm/pageblock: mitigation cmpxchg false sharing in
+ pageblock flags
+To:     David Hildenbrand <david@redhat.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1599116482-7410-1-git-send-email-alex.shi@linux.alibaba.com>
+ <fb8ae5e8-1480-fe22-6872-f2484bcadbed@redhat.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <7b68847f-89c2-5470-5cf0-fc2e225176bc@linux.alibaba.com>
+Date:   Thu, 3 Sep 2020 17:14:57 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <df08fad6-eec9-12a2-3d88-0d863fb42325@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <fb8ae5e8-1480-fe22-6872-f2484bcadbed@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 05:36:50PM +0100, James Clark wrote:
-> On 06/08/2020 04:07, Leo Yan wrote:
-> > This patch set is to support AUX trace and Arm SPE as the first enabled
-> > hardware tracing for Perf memory tool.
-> > 
+
+
+在 2020/9/3 下午4:19, David Hildenbrand 写道:
+> On 03.09.20 09:01, Alex Shi wrote:
+>> pageblock_flags is used as long, since every pageblock_flags is just 4
+>> bits, 'long' size will include 8(32bit machine) or 16 pageblocks' flags,
+>> that flag setting has to sync in cmpxchg with 7 or 15 other pageblock
+>> flags. It would cause long waiting for sync.
+>>
+>> If we could change the pageblock_flags variable as char, we could use
+>> char size cmpxchg, which just sync up with 2 pageblock flags. it could
+>> relief the false sharing in cmpxchg.
+>>
+>> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
 > 
-> Hi Leo,
+> Could you please
 > 
-> I've tested this patchset with "./perf mem record -e spe-store ./a.out" on N1 and it's working for me.
-> Thanks for submitting this!
+> 1. Send a cover letter and indicate the changees between versions. I
+> cannot find any in my mailbox or on -mm - is there any? (also, is there
+> a patch 4 ?)
 
-Thanks a lot for your testing!  I will add your testing tag for the
-patches which have not been changed in later patch set.
+Hi David,
 
-P.s. I have sent patch set v2 [1] for the reviewing, a brief change
-comparing to v1 is it introduces 'memory' event so can allow all memory
-operations to display in the same view.  You are welcome to review and
-give comments, thanks!
+Thanks for comments!
+I thought a short patchset don't need a cover. Here it's:
 
-Leo
+cmpxchg is a lockless way to update data by check and compare the target
+data after updated and retry if target data is changed during that action.
 
-[1] https://lore.kernel.org/lkml/20200901083815.13755-1-leo.yan@linaro.org/
+So we should just compare the exact size of target data. If the data is only
+byte, but cmpxchg compare a long word, that leads to a cmpxchg level flase
+sharing, cause more try which lock memory more times. That's a clearly
+logical error and should be fixed.
+
+v1, the initial version
+v2, fix the armv6 cmpxchgb missing issue.
+v3, fix more arch cmpxchg missing issue on armv6, sh2, sparc32, xtensa
+v4, redo cmpxchgb fix by NO_CMPXCHG_BYTE into arch/Kconfig 
+
+> 
+> 2. Report proper performance numbers as requested, especially, over
+> multiple runs. This should go into patch 1/2. Are they buried somewhere?
+
+There are some result sent on
+https://lkml.org/lkml/2020/8/30/95
+
+> 
+> 3. Clarify what patch 3 does: Do we actually waste 8*sizeof(long) where
+> we only need 4 bits?
+
+No, no waste, current kernel pack the 4 bits into long, that cause cmpxchg
+compare 8 pageblock flags which 7 of them are not needed.
+
+> 
+> Also, breaking stuff in patch 1 and fixing it in patch 3 is not
+> acceptable. This breaks git bisect. Skimming over the patches I think
+> this is the case.
+
+Got it, thanks!
+> 
+> I am not convinced yet that we need and want this. As Alex mentioned, we
+> touch pageblock flags while holding the zone lock already in most cases
+> -  and as Mel mentiones, updates should be rare.
+> 
+
+yes, not too much, but there are still a few. and cmpxchg retry will lock memory
+ which I believe the less the better.
+
+Thanks
+Alex
+
