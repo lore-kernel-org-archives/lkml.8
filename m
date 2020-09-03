@@ -2,111 +2,93 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7C0C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3457C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4EB20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEEF220716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:49:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="QJK0LQ9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgICOtw (ORCPT
+        id S1729400AbgICOtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:49:52 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:3152 "EHLO huawei.com"
+        Thu, 3 Sep 2020 10:49:50 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:49518 "EHLO mta-01.yadro.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729085AbgICOTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:19:03 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id A7780D5446FE09AD0058;
-        Thu,  3 Sep 2020 22:18:52 +0800 (CST)
-Received: from [10.174.61.242] (10.174.61.242) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 3 Sep 2020 22:18:52 +0800
-Subject: Re: [PATCH net 3/3] hinic: fix bug of send pkts while setting
- channels
-To:     Eric Dumazet <eric.dumazet@gmail.com>, <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
-References: <20200902094145.12216-1-luobin9@huawei.com>
- <20200902094145.12216-4-luobin9@huawei.com>
- <fa78a6e8-c21e-ca4a-e40b-4109fb8a78d5@gmail.com>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <533ff752-f9eb-7afb-66aa-48e411ef6040@huawei.com>
-Date:   Thu, 3 Sep 2020 22:18:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1729081AbgICOtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:49:32 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id EEB8E52195;
+        Thu,  3 Sep 2020 13:22:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1599139370; x=1600953771; bh=maYMfRPvJLxeRFZ0FdSIdjuGM
+        4Bq3KUCafttH82y2bE=; b=QJK0LQ9v4Ikk9Epnuzf4HAoEjyr7yY5rGvshmE63J
+        X/hzFwVZy3h57HSJ0jEMzNFfghfXldG5qo9zm8Kahd/vPS7i7DabhfMZOIpr+Lm5
+        TJr5gEOWpvSdIRFMscOV9p8G/wYFU2kNaH45ez42TAKwlnfYb5nKHPeDR6h8J8Ri
+        L8=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id OWFpNQ-Y-vQ3; Thu,  3 Sep 2020 16:22:50 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id DA97E5141E;
+        Thu,  3 Sep 2020 16:22:50 +0300 (MSK)
+Received: from localhost.localdomain (10.199.2.130) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Thu, 3 Sep 2020 16:22:50 +0300
+Message-ID: <7a58bc3f80783170ecc38371aad7addc04397787.camel@yadro.com>
+Subject: Re: watchdog start on restart
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Guenter Roeck <linux@roeck-us.net>
+CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Date:   Thu, 3 Sep 2020 16:26:18 +0300
+In-Reply-To: <d6aa46c5-a1ac-c32e-5cc6-bf9a15a53b65@csgroup.eu>
+References: <d2343032814705f33cd81f18f45630bf327c0ff8.camel@yadro.com>
+         <1721f170-95df-2451-e3af-6369e830afad@roeck-us.net>
+         <2b14920abf9f430731ec11c1df6c0253185c7ce7.camel@yadro.com>
+         <d6aa46c5-a1ac-c32e-5cc6-bf9a15a53b65@csgroup.eu>
+Organization: YADRO
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <fa78a6e8-c21e-ca4a-e40b-4109fb8a78d5@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.61.242]
-X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+X-Originating-IP: [10.199.2.130]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/9/2 18:16, Eric Dumazet wrote:
-> 
-> 
-> On 9/2/20 2:41 AM, Luo bin wrote:
->> When calling hinic_close in hinic_set_channels, netif_carrier_off
->> and netif_tx_disable are excuted, and TX host resources are freed
->> after that. Core may call hinic_xmit_frame to send pkt after
->> netif_tx_disable within a short time, so we should judge whether
->> carrier is on before sending pkt otherwise the resources that
->> have already been freed in hinic_close may be accessed.
->>
->> Fixes: 2eed5a8b614b ("hinic: add set_channels ethtool_ops support")
->> Signed-off-by: Luo bin <luobin9@huawei.com>
->> ---
->>  drivers/net/ethernet/huawei/hinic/hinic_tx.c | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
->> index a97498ee6914..a0662552a39c 100644
->> --- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
->> +++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
->> @@ -531,6 +531,11 @@ netdev_tx_t hinic_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
->>  	struct hinic_txq *txq;
->>  	struct hinic_qp *qp;
->>  
->> +	if (unlikely(!netif_carrier_ok(netdev))) {
->> +		dev_kfree_skb_any(skb);
->> +		return NETDEV_TX_OK;
->> +	}
->> +
->>  	txq = &nic_dev->txqs[q_id];
->>  	qp = container_of(txq->sq, struct hinic_qp, sq);
->>  
->>
-> 
-> Adding this kind of tests in fast path seems a big hammer to me.
-> 
-> See https://marc.info/?l=linux-netdev&m=159903844423389&w=2   for a similar problem.
-> 
-> Normally, after hinic_close() operation, no packet should be sent by core networking stack.
-> 
-> Trying to work around some core networking issue in each driver is a dead end.
-Thanks for your review. I agree with what you said. Theoretically, core can't call ndo_start_xmit
-to send packet after netif_tx_disable called by hinic_close because __QUEUE_STATE_DRV_XOFF bit is set
-and this bit is protected by __netif_tx_lock but it does call hinic_xmit_frame after netif_tx_disable
-in my debug message. I'll try to figure out why and fix it. It seems like that the patch from
-https://marc.info/?l=linux-netdev&m=159903844423389&w=2 can't fix this problem.
-> 
-> 
-> 
-> 
-> 
-> 
-> .
-> 
+On Thu, 2020-09-03 at 13:13 +0200, Christophe Leroy wrote:
+
+> You want to start the watchdog just before calling 'reboot' but want to 
+> make sure that the watchdog will not reset the board before all 
+> userspace has shut down correctly ?
+
+Yes, just for an example, in the nature exists some aspeed2400/2500 board which
+has 2 watchdog devices and 2 spi flash memories. By default it starts from 1 spi
+flash. When watchdog triggers, on next boot, it's automatically starts from 2
+flash, also you can manually switch from 1 spi flash to 2 with 2 watchdog device
+by trigger of it, like transparent reload from 1 spi flash side to 2.
+
+> But what is the purpose of the watchdog then, isn't it there to make 
+> sure that the machine gets reboot within a given timeout anyway in case 
+> some userspace takes too long to shut down ?
+
+Usually, yes.
+
+Thanks.
+
