@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17746C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33907C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D186D206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC1E206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:08:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="DxKlLvhD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="O52egfUU"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Nu8D74RI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LQ1zPpCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgICIGZ (ORCPT
+        id S1728383AbgICIEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:06:25 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:39273 "EHLO
+        Thu, 3 Sep 2020 04:04:54 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:36545 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728500AbgICIDd (ORCPT
+        by vger.kernel.org with ESMTP id S1728228AbgICICv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:03:33 -0400
+        Thu, 3 Sep 2020 04:02:51 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id B624BCC2;
-        Thu,  3 Sep 2020 04:03:31 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 08195C02;
+        Thu,  3 Sep 2020 04:02:42 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:03:32 -0400
+  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:02:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=7rnBr1+HBTR6I
-        D0qO9UoDa4eFgTUzpRiQzquC7LzyC4=; b=DxKlLvhD3eILzK86KElE+GXRaOzzE
-        9rsUjawR8ovNWZtgdCzXcIE/8VgFarr9vjkeSIobuR/bQG8Mutk9kIwU8VPAwHZZ
-        EsHxjWaTSnhmMJECMGk7vKloGEO76wQ+KfQmAatTvWmTREO5xbu1vr7ZfjUt72db
-        nkA3HYP/BLJ9c6pucOmm81QC93QD8xALIyTNfmO2UaKvXPSG28Ra0Lm25zwWIfD3
-        BFvg66+8zRUUv71Rpcblry/hatZeZJRVGxSbr4IkMGpC9tDCO0xkJenU6cahtmkX
-        fUK4wlLDX8sumAF1EWr06hro0/PqStQYGHhkzdPDian254o229FZ/NWNA==
+        :mime-version:content-transfer-encoding; s=fm3; bh=6fdwtjKwmETNW
+        XeSJaFFIb/jsDXXZpglybcolLFXiBk=; b=Nu8D74RIVhfQt4NDlBDVxLjnZVYsK
+        HCKGGoMFLjCtE1Y4qbPm18raT9TnVWXdk4Uu+yjkk3Ne+++TksUrOvAquHbS9p6e
+        QLX1zky/YdIrsOAXEpjgyfxdhlRf5sCYolv++FZzCOolU5MbvRmRQAVJgwvh8US5
+        RTP1mRGu8PBR1vq/o+MoYXP/6x4ZiS/x2J0BFsuUp0dtABoVgZu9DJi9k0KkgQjy
+        hg4RYbx5w/+MGq72kEMtKT98RBorBfB2SZVtC02xNnbUIsT0vKGZazGfQ4si//e7
+        USkrTMW4V/BGMjAh7maOuPrFTL495Dei2+8ZDT61ktHGJgyjSfceYSC0A==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=7rnBr1+HBTR6ID0qO9UoDa4eFgTUzpRiQzquC7LzyC4=; b=O52egfUU
-        OBLVtdPpHT9g7DwSTsrszWHONBVB2ortOxVhE18ycMhCPCrCucpBKvvTDEpttDfs
-        XX9ZutP0C0Hm+cCoWBmNYw6hYmn9oUcPvDpQY9KVufM7x2xY2kY1zyC0gtOlINYu
-        ChE5gtqgutzsmqYjehMyRjGKnDF8HxhqTrsPsmnx9RpuL9AFLqYGjAX/FwGxuvV3
-        cq4xFJ/Ng9/IVyvfLP7rDGo15idQ+lNP1NGe2SfAy+VpwLx5VPl7x1xDHagjk5sO
-        MCuH+eSeOSGDs6pkOnjnd3r53sGFLly85NwmQRNbOUciTxA5ZXJBqSpQYv8OffDf
-        4xrm9+l5NG/b5g==
-X-ME-Sender: <xms:U6NQXzHZHkB9kvF4FJdB5SP6UF3HqUeEUYZZ9R6ueZudZ8DzIdr4ww>
-    <xme:U6NQXwWcZgMvBO9zynnI45LL8TLXGoAQzTg3JsO_WAkAwYsqTbpuZO60RPmm5OE5S
-    aTJzAlnV1VIsYku6MQ>
+        fm3; bh=6fdwtjKwmETNWXeSJaFFIb/jsDXXZpglybcolLFXiBk=; b=LQ1zPpCm
+        yxmdLCiPSzV9bqcJH2js9agp0qZCTfj5gymSgSnKs/cgSTVQ+fy0k2fTwdj3wV5z
+        ICnrcDfwbcEZKNqhroOy1quY6VvslneACioE7gu1F9Y1jLGwfZBkHa+l2QiA47p7
+        4s4DjPMhOgdNpKoLBMAOGrDHyIzZ+uP7Te9rGN8LGhXHZDS2gYMimh8PPbswul1T
+        rShx2MxK1xyO2PXFa1GPHWayVnZ/xvDGB7jK8sXz3Q+cyhCMjh8wEzs0wGZpGOnM
+        d07qMfBkn2XlBNNKlbGRWJj2r6EskanXfTZ3SbCki6WtghB0BVL5v3DDABacJe5c
+        9z/uP4whvf4LJw==
+X-ME-Sender: <xms:IqNQX3oIIR0Bo0X7KTqz6dYf7too4u1JK8xvellgijNEahjEhGOgGw>
+    <xme:IqNQXxpUHPlzhMqGfyX1HRzM2E0383aIIbdfgWyWuTWmOhbraCuNy6TlfSHnRiJl9
+    uykjWpb-P_u_LSrff0>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihi
     mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
     htthgvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveev
-    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpeeivd
+    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpeefvd
     enucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:U6NQX1JE2cR9snU_6TICaocLspNUmvNkXwNLlqNze_yzzXk6hg3L9g>
-    <xmx:U6NQXxEvX2Bosboh9t7ZoBGE3oxdZVDYYANgubjQdMSyAB03_HW6Tw>
-    <xmx:U6NQX5UUwOqzIQqzIb7itKlvBFb_wL4endJJeizvu2jzpIAY6PWJfw>
-    <xmx:U6NQX0NHRkZyUxU6bGDNHoFkB6o7r5FRKPOKpAV818P099GhvpBDs6xxm5g>
+X-ME-Proxy: <xmx:IqNQX0OD94_Bx--SB3-_LobX8kj9IqWj5yUOlS3ZcjoJNUaDz8OFYg>
+    <xmx:IqNQX66B-Axp1AB81ei-INIdmwySiXO4PTC7YYzsqLGLUpjmryAZJQ>
+    <xmx:IqNQX25P_XbDa4b3DdIDBmMQ0Jk-pvP8cK0rOA6tfXit-W2iKsccFw>
+    <xmx:IqNQX-guUQT7yjDBizhDC-9DZ_FomyWcetk2WOa_Gm-pDpbuEVm1GpLrGKQ>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E5910306005E;
-        Thu,  3 Sep 2020 04:03:30 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5411D306005F;
+        Thu,  3 Sep 2020 04:02:42 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -81,9 +81,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Hoegeun Kwon <hoegeun.kwon@samsung.com>,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH v5 69/80] drm/vc4: hdmi: Deal with multiple ALSA cards
-Date:   Thu,  3 Sep 2020 10:01:41 +0200
-Message-Id: <e60a37444e848a384a45707a21d6df8883115f86.1599120059.git-series.maxime@cerno.tech>
+Subject: [PATCH v5 35/80] drm/vc4: drv: Disable the CRTC at boot time
+Date:   Thu,  3 Sep 2020 10:01:07 +0200
+Message-Id: <ad57f1bdeae7a99631713b0fc193c86f223de042.1599120059.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
 References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
@@ -94,59 +94,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The HDMI driver was registering a single ALSA card so far with the name
-vc4-hdmi.
+In order to prevent issues during the firmware to KMS transition, we need
+to make sure the pixelvalve are disabled at boot time so that the DRM state
+matches the hardware state.
 
-Obviously, this is not going to work anymore when we will have multiple
-HDMI controllers since we will end up trying to register two files with the
-same name.
-
-Let's use the variant to avoid that name conflict.
-
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Reviewed-by: Eric Anholt <eric@anholt.net>
 Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
 Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 3 ++-
- drivers/gpu/drm/vc4/vc4_hdmi.h | 3 +++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 25 +++++++++++++++++++++++++
+ drivers/gpu/drm/vc4/vc4_drv.c  |  4 ++++
+ drivers/gpu/drm/vc4/vc4_drv.h  |  1 +
+ 3 files changed, 30 insertions(+)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 20cfc85449ca..5e479647559f 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -1043,7 +1043,7 @@ static int vc4_hdmi_audio_init(struct vc4_hdmi *vc4_hdmi)
+diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
+index 4156c5f66877..dfac304fe2b0 100644
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -427,6 +427,31 @@ static int vc4_crtc_disable(struct drm_crtc *crtc, unsigned int channel)
+ 	return 0;
+ }
  
- 	card->dai_link = dai_link;
- 	card->num_links = 1;
--	card->name = "vc4-hdmi";
-+	card->name = vc4_hdmi->variant->card_name;
- 	card->dev = dev;
- 
- 	/*
-@@ -1502,6 +1502,7 @@ static int vc4_hdmi_dev_remove(struct platform_device *pdev)
- static const struct vc4_hdmi_variant bcm2835_variant = {
- 	.encoder_type		= VC4_ENCODER_TYPE_HDMI0,
- 	.debugfs_name		= "hdmi_regs",
-+	.card_name		= "vc4-hdmi",
- 	.max_pixel_clock	= 162000000,
- 	.cec_available		= true,
- 	.registers		= vc4_hdmi_fields,
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-index 4aea5ee8a91d..34138e0dd4a6 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-@@ -30,6 +30,9 @@ struct vc4_hdmi_variant {
- 	/* Encoder Type for that controller */
- 	enum vc4_encoder_type encoder_type;
- 
-+	/* ALSA card name */
-+	const char *card_name;
++int vc4_crtc_disable_at_boot(struct drm_crtc *crtc)
++{
++	struct drm_device *drm = crtc->dev;
++	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
++	int channel;
 +
- 	/* Filename to expose the registers in debugfs */
- 	const char *debugfs_name;
++	if (!(of_device_is_compatible(vc4_crtc->pdev->dev.of_node,
++				      "brcm,bcm2711-pixelvalve2") ||
++	      of_device_is_compatible(vc4_crtc->pdev->dev.of_node,
++				      "brcm,bcm2711-pixelvalve4")))
++		return 0;
++
++	if (!(CRTC_READ(PV_CONTROL) & PV_CONTROL_EN))
++		return 0;
++
++	if (!(CRTC_READ(PV_V_CONTROL) & PV_VCONTROL_VIDEN))
++		return 0;
++
++	channel = vc4_hvs_get_fifo_from_output(drm, vc4_crtc->data->hvs_output);
++	if (channel < 0)
++		return 0;
++
++	return vc4_crtc_disable(crtc, channel);
++}
++
+ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
+ 				    struct drm_crtc_state *old_state)
+ {
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
+index 38343d2fb4fb..9567d1019212 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.c
++++ b/drivers/gpu/drm/vc4/vc4_drv.c
+@@ -252,6 +252,7 @@ static int vc4_drm_bind(struct device *dev)
+ 	struct drm_device *drm;
+ 	struct vc4_dev *vc4;
+ 	struct device_node *node;
++	struct drm_crtc *crtc;
+ 	int ret = 0;
  
+ 	dev->coherent_dma_mask = DMA_BIT_MASK(32);
+@@ -298,6 +299,9 @@ static int vc4_drm_bind(struct device *dev)
+ 	if (ret < 0)
+ 		goto unbind_all;
+ 
++	drm_for_each_crtc(crtc, drm)
++		vc4_crtc_disable_at_boot(crtc);
++
+ 	ret = drm_dev_register(drm, 0);
+ 	if (ret < 0)
+ 		goto unbind_all;
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
+index 860be019d8e3..1a97545b9244 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.h
++++ b/drivers/gpu/drm/vc4/vc4_drv.h
+@@ -813,6 +813,7 @@ void vc4_bo_remove_from_purgeable_pool(struct vc4_bo *bo);
+ 
+ /* vc4_crtc.c */
+ extern struct platform_driver vc4_crtc_driver;
++int vc4_crtc_disable_at_boot(struct drm_crtc *crtc);
+ int vc4_crtc_init(struct drm_device *drm, struct vc4_crtc *vc4_crtc,
+ 		  const struct drm_crtc_funcs *crtc_funcs,
+ 		  const struct drm_crtc_helper_funcs *crtc_helper_funcs);
 -- 
 git-series 0.9.1
