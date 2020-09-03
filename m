@@ -2,150 +2,93 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01660C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B9EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1B19207EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF0820716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:44:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="X/3zMa+M"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qRf68gV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgICEod (ORCPT
+        id S1726686AbgICEok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 00:44:33 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:28627 "EHLO m43-7.mailgun.net"
+        Thu, 3 Sep 2020 00:44:40 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34167 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbgICEod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 00:44:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1599108272; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=ftkGbh57Ihlyx7nnlZm+CHZ5OqaLFHhzv7H1SqWL91w=; b=X/3zMa+Mh/faJ/IJDD0133EVwqnpOzXnP7gVaUBy9AeOZzGpKDhKJL4RK8oxWMxzv0s4qI5H
- nI6aCJkfrhiMBJBDEqc4e90OCrX3B1BnOPSqY2+tfqoYaYBeNGL3NA8vSV5sZ01DxtJbEIU4
- d9kjGn65TSAmoVGsjR66chmUMXE=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5f5074a373afa3417e0a90ad (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 03 Sep 2020 04:44:19
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 54F24C433CA; Thu,  3 Sep 2020 04:44:18 +0000 (UTC)
-Received: from [192.168.1.16] (unknown [61.3.23.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725943AbgICEoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 00:44:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 109F8C433C9;
-        Thu,  3 Sep 2020 04:44:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 109F8C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add 'sustainable_power' for CPU
- thermal zones
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-References: <20200813113030.1.I89c33c4119eaffb986b1e8c1bc6f0e30267089cd@changeid>
- <20200901170745.GA3419728@google.com>
- <CAD=FV=Xv0FLtWWcQcRy7p2LPNdDtSjdarsvNHRHaLkWwABnwJw@mail.gmail.com>
- <8ad0589e-102d-7523-899f-0ebe85b7d2b8@codeaurora.org>
- <CAD=FV=XKUEQP3gyE8E2UOE12qKYwzgMp0eNeYjCp0DxPDACSMQ@mail.gmail.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <6693eed6-9a6b-48c8-e56e-acdde9cf9ffe@codeaurora.org>
-Date:   Thu, 3 Sep 2020 10:14:10 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BhpB96Z5Mz9sTC;
+        Thu,  3 Sep 2020 14:44:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599108276;
+        bh=1V5O/0020Usr89jaCP6ONufv5noCmy3GV3afK4uImmU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qRf68gV5A9ZWLDsK8V2zQIzOSRRiN1yJVLf0ZD3U96vslRaeRByM3tAS8mpJGsp3x
+         z9MsmVxAQsJgGUVxSGwz0ICxuAs+Al2dRu10ts7HSCbwBljDNl9b9OjuptmBiEHnhf
+         XdyTcpRUGyz+7p+HQXIht0R6oy3CIOtKgn7YVfZw83aqoj5OXcs/tZpcG1GWGSIL6A
+         z76td9yndL5oWIYt+tStH/V/Lu5f58N2YOakziM6HH2LRH/L861rbdQnux0HZlCXBj
+         aNC7EgnYRHyZnmioN9BDPLHWEg1Uco3WgqFYMq8xkAyD3NOhWW5opXtZEwk9bz/Gby
+         TtOS2c2vFuXOg==
+Date:   Thu, 3 Sep 2020 14:44:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@suse.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20200903144431.185c0d34@canb.auug.org.au>
+In-Reply-To: <20200903035108.GA3616759@gmail.com>
+References: <20200903123552.0c5d1277@canb.auug.org.au>
+        <20200903035108.GA3616759@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=XKUEQP3gyE8E2UOE12qKYwzgMp0eNeYjCp0DxPDACSMQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/1ybp4sLvj+=6fGb+07qpFD_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/1ybp4sLvj+=6fGb+07qpFD_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 9/2/2020 9:02 PM, Doug Anderson wrote:
-> Hi,
-> 
-> On Tue, Sep 1, 2020 at 10:36 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
->>
->>
->>> * In terms of the numbers here, I believe that you're claiming that we
->>> can dissipate 768 mW * 6 + 1202 mW * 2 = ~7 Watts of power.  My memory
->>> of how much power we could dissipate in previous laptops I worked on
->>> is a little fuzzy, but that doesn't seem insane for a passively-cooled
->>> laptop.  However, I think someone could conceivably put this chip in a
->>> smaller form factor.  In such a case, it seems like we'd want these
->>> things to sum up to ~2000 (if it would ever make sense for someone to
->>> put this chip in a phone) or ~4000 (if it would ever make sense for
->>> someone to put this chip in a small tablet).  It seems possible that,
->>> to achieve this, we might have to tweak the
->>> "dynamic-power-coefficient".
->>
->> DPC values are calculated (at a SoC) by actually measuring max power at various
->> frequency/voltage combinations by running things like dhrystone.
->> How would the max power a SoC can generate depend on form factors?
->> How much it can dissipate sure is, but then I am not super familiar how
->> thermal frameworks end up using DPC for calculating power dissipated,
->> I am guessing they don't.
->>
->>> I don't know how much thought was put
->>> into those numbers, but the fact that the little cores have a super
->>> round 100 for their dynamic-power-coefficient makes me feel like they
->>> might have been more schwags than anything.  Rajendra maybe knows?
->>
->> FWIK, the values are always scaled and normalized to 100 for silver and
->> then used to derive the relative DPC number for gold. If you see the DPC
->> for silver cores even on sdm845 is a 100.
->> Again these are not estimations but based on actual power measurements.
-> 
-> The scaling to 100 doesn't seem to match how the thermal framework is
-> using them.  Take a look at of_cpufreq_cooling_register().  It takes
-> the "dynamic-power-coefficient" and passes it as "capacitance" into
-> __cpufreq_cooling_register().  That's eventually used to compute
-> power, which is documented in the code to be in mW.
-> 
-> power = (u64)capacitance * freq_mhz * voltage_mv * voltage_mv;
-> do_div(power, 1000000000);
-> 
-> /* power is stored in mW */
-> freq_table[i].power = power;
-> 
-> That's used together with "sustainable-power", which is the attribute
-> that Matthias is trying to set.  That value is documented to be in mW
-> as well.
-> 
-> ...so if the silver cores are always scaled to 100 regardless of how
-> much power they actually draw then it'll be impossible to actually
-> think about "sustainable-power" as a mW value.  Presumably we either
-> need to accept that fact (and ideally document it) or we need to
-> change the values for silver / gold cores (we could still keep the
-> relative values the same and just scale them).
+Hi Ingo,
 
-That sounds reasonable (still keep the relative values and scale them)
-I'll get back on what those scaled numbers would look like, and try to
-get some sense of why this scaling to 100 was done (like you said
-I don't see any documentation on this), but I see atleast a few other non-qcom
-SoCs doing this too in mainline (like rockchip/rk3399)
+On Thu, 3 Sep 2020 05:51:08 +0200 Ingo Molnar <mingo@kernel.org> wrote:
+>
+> I've merged the old commit by mistake - it's removed now.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Ah, OK, thanks.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/1ybp4sLvj+=6fGb+07qpFD_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9QdK8ACgkQAVBC80lX
+0Gxq2Af+ICEIrPa/oAUr3nxWkc2JC1WBzx1cg7Do3YJm57dwoTQ2W667w45hgaFX
+yHNIYC1OxAf4x0ugIJtXmgman8HcQeQw26onbGc6wP3vZCKZTAq0HZ+4sS8oIj8y
+VwceKRfgJA22GOOWkqfWJyWTY2nIDbMNhJTpQmNoSzoIZM4CPr6ncnjAjNwjAxae
+b4rvLxjlLEvqDVTQXqfQMtBEW7xHWRxLoA0YaiTrgY7hcdDYG8JMGUyQ29TuBlgd
+CpokU6ArHPcCNh3cTQL7QqMKsxTwfqpwx9FgtvzH4EQ2nty1G3ngff2k9s6uNJqz
+AJLM/pBURMIlD/8mWkze5rdRM2/fvw==
+=Ii72
+-----END PGP SIGNATURE-----
+
+--Sig_/1ybp4sLvj+=6fGb+07qpFD_--
