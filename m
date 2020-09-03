@@ -3,101 +3,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAF2C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9177BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCD8720758
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599099252;
-	bh=KapfF2g/gmwFHVoogGD3wBw3ta7pclWX8fcKnqyIy/8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ppmvg+EDFO2yVWRXvFcYrBaomXdoVSQ/Fd/sWO1iDk5h1ru4hI3X7rT1zbpf4tad3
-	 TKWLlkUqjjudG4+duoL9QeM0oJai+hCUSz6/RKo/SGrup6R0B0Y8LxefGAzHpaLXUd
-	 4gsP4lBABPTK7nU+FTEBcwQUiutpNyx7kc+IzHxA=
+	by mail.kernel.org (Postfix) with ESMTP id 6CCA720758
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:14:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aU9IX0kS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgICCOL (ORCPT
+        id S1727995AbgICCOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 22:14:11 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:27186 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgICCOK (ORCPT
+        Wed, 2 Sep 2020 22:14:23 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41444 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbgICCOV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 22:14:10 -0400
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 0832DuG2030422;
-        Thu, 3 Sep 2020 11:13:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 0832DuG2030422
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1599099237;
-        bh=RIRTFKRxNzN4uC6qgVUYSAZOSYK/QYlVF4TMuKR0o20=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bf7GqFOCyFgO5BjGOjRLVQWL2XFSnQHJpSR1+dWVmiNd2HN/PxucVOmoezPGgMW2J
-         N6nRKann3H7bwYep6sSpjQ8YK6zlboHSQo5CM4bcw8H5CMsd3VwhfRxfzANC3oA/gU
-         O+ybYid4FgHgbJtZTtR7QfziMicMlqaeDt2FF9wLeqDwxwijuCuvEciONyeVzQhvvu
-         VacSH/6Zz0wcnzmK6Y9gBJYNNrpQgRo3xpAdIZnYFqOGs/tnw26EHy3tNpdThtcaAx
-         wbGk3cMJ3nSDBvdKpeT9xYo3ix0P3sSlSPlrVB+PUeRm+pVk7jw9QA9vc41J7ifdyl
-         Tli5ZrRfre/Fw==
-X-Nifty-SrcIP: [209.85.215.182]
-Received: by mail-pg1-f182.google.com with SMTP id h12so819492pgm.7;
-        Wed, 02 Sep 2020 19:13:57 -0700 (PDT)
-X-Gm-Message-State: AOAM531qWfL0kTcP6mazLnHO1/RPt3/8DWn6PAXJJDpNKOJtQ35cPiw/
-        bG7VZ+gIN6+USGqp52zXYdByC6KHwUEIzvdO6Fk=
-X-Google-Smtp-Source: ABdhPJzAB/luh8X6zbVcb8e/cepI0eEyPNNpawO9Frtc/rpyonCNzHgkw3t0KImJJKqBBPpTNS9BesGm2WhaUxeWnoA=
-X-Received: by 2002:a17:902:864c:: with SMTP id y12mr1296231plt.155.1599099236203;
- Wed, 02 Sep 2020 19:13:56 -0700 (PDT)
+        Wed, 2 Sep 2020 22:14:21 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0832Dsvs104107;
+        Thu, 3 Sep 2020 02:13:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=iRSItWPs+wa/lzIDrc+aTG06APBAan4JpcguU6mCPKo=;
+ b=aU9IX0kSJQJY4LANRxzP2bJwoGHcIbjaEh22bpyeCLwwXl8fSfhaO5d6a9Ge55t/Tj4h
+ NH7AEdNtKliydlMsz9G3FR8z/FlI0pAjqBCyeVBlB+r4mlPVoVBIcMS+AzBga8XPzdCm
+ Sqypm6X4v1Ctx+YeHhoUg0HTV7M2FWVz+0tyTZXkp2ByuPdY2OsInz6orAG06BMmJClq
+ vzPfyN9AWM0zmXY0of2r1xcAAucVy2RRk1DMkyRoOgupc7LWXNI7pIub0t7a5Rf7GZho
+ Y0A4dpRWvTSg6OIGmpFoRli6T+HG34ALvFryWE/Y4qtKd7IZdY6gP6RFahmzVQIg6uH6 YA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 339dmn4grf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 03 Sep 2020 02:13:58 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0832B4AZ160620;
+        Thu, 3 Sep 2020 02:11:57 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 3380sv3uwe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Sep 2020 02:11:57 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0832BtG5020139;
+        Thu, 3 Sep 2020 02:11:55 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 02 Sep 2020 19:11:54 -0700
+To:     Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc:     james.bottomley@hansenpartnership.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, brking@linux.ibm.com
+Subject: Re: [PATCH v2] scsi: ibmvfc: interface updates for future FPIN and
+ MQ support
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1y2lrd2ys.fsf@ca-mkp.ca.oracle.com>
+References: <20200901002420.648532-1-tyreld@linux.ibm.com>
+Date:   Wed, 02 Sep 2020 22:11:52 -0400
+In-Reply-To: <20200901002420.648532-1-tyreld@linux.ibm.com> (Tyrel Datwyler's
+        message of "Mon, 31 Aug 2020 19:24:20 -0500")
 MIME-Version: 1.0
-References: <be80ceda-596b-03aa-394f-166cc6388aa0@infradead.org>
- <CAK7LNAQekh08D6=+CqRWiB7F4KCLOgSK9oof8ArVUvMc7B1YXQ@mail.gmail.com> <CALaQ_hq01BCA7=sVJjm6LQrjjBFy1V79uUXcRXeLBB5g3k9M1Q@mail.gmail.com>
-In-Reply-To: <CALaQ_hq01BCA7=sVJjm6LQrjjBFy1V79uUXcRXeLBB5g3k9M1Q@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 3 Sep 2020 11:13:19 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARp41EXMmT+ghGVw0Ew8wgHND+Ufn_uCevaVk+OP2-UFQ@mail.gmail.com>
-Message-ID: <CAK7LNARp41EXMmT+ghGVw0Ew8wgHND+Ufn_uCevaVk+OP2-UFQ@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: streamline_config.pl: check defined(ENV
- variable) before using it
-To:     Nathan Royce <nroycea+kernel@gmail.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Changbin Du <changbin.du@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009030018
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=1
+ spamscore=0 clxscore=1011 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009030019
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 3:22 AM Nathan Royce <nroycea+kernel@gmail.com> wrote:
->
-> Thanks, but I'd just as soon not be acknowledged/credited. All I did
-> was submit a report.
->
-> On Wed, Sep 2, 2020 at 11:47 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > Applied to linux-kbuild/fixes with Nathan's tag
-> >
-> > Reported-by: Nathan Royce <nroycea+kernel@gmail.com>
-> >
-> >
-> >
-> > Nathan,
-> > I think adding your tag is OK to credit your contribution.
-> > Please let me know if you do not have it in
-> > the commit log.
 
+Tyrel,
 
-Even if you do not write the code,
-reporting bugs is a great contribution,
-and the Reported-by exists for that, I think.
+> 	Fixup complier errors from neglected commit --amend
 
-So, I just want to add your Reported-by tag
-(if you do not mind).
+Bunch of formatting-related checkpatch warnings. Please fix.
 
+Thanks!
 
 -- 
-Best Regards
-Masahiro Yamada
+Martin K. Petersen	Oracle Linux Engineering
