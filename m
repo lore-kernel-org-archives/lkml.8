@@ -2,99 +2,205 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54027C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945D2C2D0E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3173D20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599165430;
-	bh=1SAc/pkQ+YvF2FbSZWmb9yACOrCSFl+Cocz2H8qQb9s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qn1UoNjbi45YX/LqhyElkNf2cDSx2lh4jkZjyBuQLK2XqB6gPUp4pafESH6nd/42g
-	 jmSyDy9aLNI7pTA2XDaj51GyZe7KLcwRIzWn3tdyyv2aEqajl310fi1nIhGqfD7Ycn
-	 T9R0kj0N+ETHi0tyHP2cZ9kjdhV/T1TBonpLss9A=
+	by mail.kernel.org (Postfix) with ESMTP id 716BC20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:38:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="eZp0Qn5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbgICUhF (ORCPT
+        id S1729617AbgICUiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:37:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729406AbgICUgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:36:47 -0400
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D424320678;
-        Thu,  3 Sep 2020 20:36:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599165407;
-        bh=1SAc/pkQ+YvF2FbSZWmb9yACOrCSFl+Cocz2H8qQb9s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GBkpHkU2mNLKVOS/n/yqttR70A8MEzwnA9pn1u05EHDkX4XcWUSfUVZkx7ThPoXOc
-         cOmPUjFm5o0MmRK6kvTOhILNt0h3An0CEiW3YsoWfXt110ZrjP+Rf5jCjnm4Fnjs87
-         8Ex/F7hfg91BygIg8YxrY4JHq3CyVTmZXo0DMmAU=
-Received: by mail-ed1-f50.google.com with SMTP id n13so3986700edo.10;
-        Thu, 03 Sep 2020 13:36:46 -0700 (PDT)
-X-Gm-Message-State: AOAM531RyyFbMZHaVev3FRsiSj78+oZplZI5pzwkXEHdj54bfStT7xvX
-        IwnnzOI/aH30WIeGWD6dLzj7HecBOfF1rMCvpsI=
-X-Google-Smtp-Source: ABdhPJzxpPlGTe4YpW+4SBi3UyLCfVVsjl/2HCF6ABdQkyPpZO/E8Ki7WEbnMMz1NKYFTDSRsOdBqsPbQLS79oRkX0c=
-X-Received: by 2002:a05:6402:1a48:: with SMTP id bf8mr5017832edb.298.1599165405346;
- Thu, 03 Sep 2020 13:36:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200829111800.2786-1-krzk@kernel.org> <20200829111800.2786-6-krzk@kernel.org>
- <20200903164117.GA2922218@bogus>
-In-Reply-To: <20200903164117.GA2922218@bogus>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 3 Sep 2020 22:36:34 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPc_abP=YU9cWFfPsFLrnb9N1PBEEbaSWPLLvYHZ_GmsGQ@mail.gmail.com>
-Message-ID: <CAJKOXPc_abP=YU9cWFfPsFLrnb9N1PBEEbaSWPLLvYHZ_GmsGQ@mail.gmail.com>
-Subject: Re: [PATCH 6/7] dt-bindings: i2c: imx: Use unevaluatedProperties
-To:     Rob Herring <robh@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Wolfram Sang <wolfram@the-dreams.de>,
-        Dong Aisheng <aisheng.dong@nxp.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-i2c@vger.kernel.org
+        Thu, 3 Sep 2020 16:38:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729521AbgICUcE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 16:32:04 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F04C8C0619CD
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:31:17 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id a14so2921737qtp.15
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=68EGgksazPQQWa43NBSs0j4GgDFQhp/Me0oPJzuOsN8=;
+        b=eZp0Qn5Mm2ShJ/tgYPaRj85Z8VUBs6dHqTbSeVpz2aQ8IT+Uz4kserb5rwYgZd+Cwn
+         k2U+ck7Y8IZ7th793kOmXJc6g2Scr4a/vKCka7ANnMO/AT2KQRxNxsShvwTyA6E/o15O
+         8XCzrDDKDRTJp06/9WX1NT36pZOKiIAYs8XK258isaAUZqWQPMWg3npOPIjN8aYcapWI
+         WU48aFUbK0L92YPeWiJOPtw+mesK+nnkKQOrrHUndl452ziz+R2DMO5rDIQ6Y/Qeev2g
+         D8xzJzY5mttEMiic8gwiUfR2vdI8Fq8Jp2U+kdDYpIEFsu+h2dtY2vP50lgzUL6pYFDU
+         IdPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=68EGgksazPQQWa43NBSs0j4GgDFQhp/Me0oPJzuOsN8=;
+        b=qpOFDmYCnSGqI1Vpud9jQsKreCIK9vpfx4syDmov6ZFE1/JWOa4Q71eNKSmtEP8L1r
+         xLtfLGfpbAPEbVmj1epBMBy33ue31PCbBlaDkKORNqjQ8aI+Irt3j9CotuYfC5JpZn/F
+         9GawG7wRlP5XnXyK5vEFxwApUoAlDO/jRAngWycHitbOUeZnk124u6XtC5C+O56gOHli
+         747maIST0gnSzN5BoI4gGbS+mTAvW70vr/lv+aSqU3MZk2SKShYZbrzcNBddYCKPzxV2
+         kqIudi8OjzHyQklUQZ8uHSoMkSb/J0+fZn0M2p0Rsd0MIP1ScfTmPLFmnzJfBGK1snho
+         RPxQ==
+X-Gm-Message-State: AOAM533Iu7n3OBLQ47x9omKa0qyagFQvJ+Dhty8O8gpqS6Hzb8hymcy9
+        FXueYDU0sQ1Ozydvko+tSyEoQM+zFzGbYuhmWo8=
+X-Google-Smtp-Source: ABdhPJwx0iA2/+FKVoOyHKkwFqQMq9Y1dKXGtr+TJBEQ96YIr3ynGB1QxnludpQgb3sJv844+nrU8x6OIjTFKfziaBI=
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+ (user=samitolvanen job=sendgmr) by 2002:a0c:e543:: with SMTP id
+ n3mr3539594qvm.11.1599165077148; Thu, 03 Sep 2020 13:31:17 -0700 (PDT)
+Date:   Thu,  3 Sep 2020 13:30:36 -0700
+In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
+Message-Id: <20200903203053.3411268-12-samitolvanen@google.com>
+Mime-Version: 1.0
+References: <20200624203200.78870-1-samitolvanen@google.com> <20200903203053.3411268-1-samitolvanen@google.com>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+Subject: [PATCH v2 11/28] kbuild: lto: postpone objtool
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 3 Sep 2020 at 18:41, Rob Herring <robh@kernel.org> wrote:
->
-> On Sat, Aug 29, 2020 at 01:17:59PM +0200, Krzysztof Kozlowski wrote:
-> > Additional properties actually might appear (e.g. power-domains or child
-> > nodes) so use unevaluatedProperties to fix dtbs_check warnings like:
-> >
-> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: i2c@30a20000:
-> >     '#address-cells', '#size-cells', 'pmic@25' do not match any of the regexes: 'pinctrl-[0-9]+'
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> NAK. See https://lore.kernel.org/r/CAL_JsqKPXJxsHPS34_TCf9bwgKxZNSV4mvQR-WKRnknQVtGGxQ@mail.gmail.com/
+With LTO, LLVM bitcode won't be compiled into native code until
+modpost_link, or modfinal for modules. This change postpones calls
+to objtool until after these steps.
 
-I can reference the generic i2c-controller schema and add missing
-properties but what to do with children (pmic@25 and many other)? I
-see that all of the other I2C controller dtschema files solve it by
-skipping "additionalProperties: false". Is this the way to go with I2C
-controllers?
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+---
+ arch/Kconfig              |  2 +-
+ scripts/Makefile.build    |  2 ++
+ scripts/Makefile.modfinal | 24 ++++++++++++++++++++++--
+ scripts/link-vmlinux.sh   | 23 ++++++++++++++++++++++-
+ 4 files changed, 47 insertions(+), 4 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 71392e4a8900..7a418907e686 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -599,7 +599,7 @@ config LTO_CLANG
+ 	depends on $(success,$(NM) --help | head -n 1 | grep -qi llvm)
+ 	depends on $(success,$(AR) --help | head -n 1 | grep -qi llvm)
+ 	depends on ARCH_SUPPORTS_LTO_CLANG
+-	depends on !FTRACE_MCOUNT_RECORD
++	depends on HAVE_OBJTOOL_MCOUNT || !(X86_64 && DYNAMIC_FTRACE)
+ 	depends on !KASAN
+ 	depends on !GCOV_KERNEL
+ 	select LTO
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index c348e6d6b436..b8f1f0d65a73 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -218,6 +218,7 @@ cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),
+ endif # USE_RECORDMCOUNT
+ 
+ ifdef CONFIG_STACK_VALIDATION
++ifndef CONFIG_LTO_CLANG
+ ifneq ($(SKIP_STACK_VALIDATION),1)
+ 
+ __objtool_obj := $(objtree)/tools/objtool/objtool
+@@ -253,6 +254,7 @@ objtool_obj = $(if $(patsubst y%,, \
+ 	$(__objtool_obj))
+ 
+ endif # SKIP_STACK_VALIDATION
++endif # CONFIG_LTO_CLANG
+ endif # CONFIG_STACK_VALIDATION
+ 
+ # Rebuild all objects when objtool changes, or is enabled/disabled.
+diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+index 1005b147abd0..909bd509edb4 100644
+--- a/scripts/Makefile.modfinal
++++ b/scripts/Makefile.modfinal
+@@ -34,10 +34,30 @@ ifdef CONFIG_LTO_CLANG
+ # With CONFIG_LTO_CLANG, reuse the object file we compiled for modpost to
+ # avoid a second slow LTO link
+ prelink-ext := .lto
+-endif
++
++# ELF processing was skipped earlier because we didn't have native code,
++# so let's now process the prelinked binary before we link the module.
++
++ifdef CONFIG_STACK_VALIDATION
++ifneq ($(SKIP_STACK_VALIDATION),1)
++cmd_ld_ko_o +=								\
++	$(objtree)/tools/objtool/objtool				\
++		$(if $(CONFIG_UNWINDER_ORC),orc generate,check)		\
++		--module						\
++		$(if $(CONFIG_FRAME_POINTER),,--no-fp)			\
++		$(if $(CONFIG_GCOV_KERNEL),--no-unreachable,)		\
++		$(if $(CONFIG_RETPOLINE),--retpoline,)			\
++		$(if $(CONFIG_X86_SMAP),--uaccess,)			\
++		$(if $(USE_OBJTOOL_MCOUNT),--mcount,)			\
++		$(@:.ko=$(prelink-ext).o);
++
++endif # SKIP_STACK_VALIDATION
++endif # CONFIG_STACK_VALIDATION
++
++endif # CONFIG_LTO_CLANG
+ 
+ quiet_cmd_ld_ko_o = LD [M]  $@
+-      cmd_ld_ko_o =                                                     \
++      cmd_ld_ko_o +=                                                     \
+ 	$(LD) -r $(KBUILD_LDFLAGS)					\
+ 		$(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)		\
+ 		$(addprefix -T , $(KBUILD_LDS_MODULE))			\
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index 3e99a19b9195..a352a5ad9ef7 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -93,8 +93,29 @@ objtool_link()
+ {
+ 	local objtoolopt;
+ 
++	if [ "${CONFIG_LTO_CLANG} ${CONFIG_STACK_VALIDATION}" = "y y" ]; then
++		# Don't perform vmlinux validation unless explicitly requested,
++		# but run objtool on vmlinux.o now that we have an object file.
++		if [ -n "${CONFIG_UNWINDER_ORC}" ]; then
++			objtoolopt="orc generate"
++		else
++			objtoolopt="check"
++		fi
++
++		if [ -n ${USE_OBJTOOL_MCOUNT} ]; then
++			objtoolopt="${objtoolopt} --mcount"
++		fi
++	fi
++
+ 	if [ -n "${CONFIG_VMLINUX_VALIDATION}" ]; then
+-		objtoolopt="check --vmlinux"
++		if [ -z "${objtoolopt}" ]; then
++			objtoolopt="check --vmlinux"
++		else
++			objtoolopt="${objtoolopt} --vmlinux"
++		fi
++	fi
++
++	if [ -n "${objtoolopt}" ]; then
+ 		if [ -z "${CONFIG_FRAME_POINTER}" ]; then
+ 			objtoolopt="${objtoolopt} --no-fp"
+ 		fi
+-- 
+2.28.0.402.g5ffc5be6b7-goog
+
