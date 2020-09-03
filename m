@@ -2,152 +2,242 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B57C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B5EC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD1F20722
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599154593;
-	bh=ZgXFwX5oAv1FQVf6yu0FMF5tmKqNX9IfmO5ac6OkoCc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Jy0YFoHAI0KJznPc8O4u2MLMG6tnAQ22drp9SrgzVUGDNNkRwWh8J2ujJAx55dNVK
-	 DfgOJQ01b2Y4TjLWEIa3xJCkKTQ4d+DfGOvrzNWlBVR6bCFHO700lZ3RUD6DCeyt5Z
-	 lY65IC7O5ji6HW/W6317ik2gLmjHu9U9sIAfx/h0=
+	by mail.kernel.org (Postfix) with ESMTP id 4E50620722
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:36:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ijE76QU1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgICRga (ORCPT
+        id S1728850AbgICRgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 13:36:30 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39140 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgICRg1 (ORCPT
+        Thu, 3 Sep 2020 13:36:40 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41301 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726025AbgICRgj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 13:36:27 -0400
-Received: by mail-ed1-f67.google.com with SMTP id c10so3505107edk.6;
-        Thu, 03 Sep 2020 10:36:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gh69+24/Chdrnxcf6KgQPJmRC4c9fN5aU1ZFyq23BhM=;
-        b=g9uKFjziYXjDVHYf0ALrhfihIehF1nlnfyWvwi0tVgdp2nPiEFDHKbKB8v0UwBfbu+
-         XRL6EC71e0QxI2cYMQWs9CTZ1A+YwUoWUyzVNDSw+oPVtZ8goxc1f1tubY9Hivzavl/8
-         JifHXR/zKelCuYFp7ARM0IzdHP7H5wJKRsEz9Xt1WhPt/FKim4ROQsQH4dYcfiL4qQZ9
-         GIBaRmEOS8eVHplonVfiOt4aWdbUp2fdqk/pOjeLGbPL815mP46JxYVKRDN37llKXEca
-         /uHmKEWyDIcuI9IqpVew9I+kzB2YpsGN9QyH7NYzmISMi5KZkgByca3YSvWmkw/pVvl/
-         8tKA==
-X-Gm-Message-State: AOAM532X0JhBSo5wIEJH0wkxRiD7CcY4qghWKtq1np43aOUaNFv2Qm7D
-        eZI1fXTIy0tOrUbOON6WPjUqfkfxSUz2TDpPSLq/QnknSPc=
-X-Google-Smtp-Source: ABdhPJx7Im4zZcqn+QWwgAsgUOeBpXbqj93qwsM7wEGQ3Tf5TTX74jmGTxVUg7FM0dZMbsAGdWlM6dbuB0Hgkf7PjWQ=
-X-Received: by 2002:a05:6402:1495:: with SMTP id e21mr4155933edv.146.1599154585348;
- Thu, 03 Sep 2020 10:36:25 -0700 (PDT)
+        Thu, 3 Sep 2020 13:36:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599154594;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=P4EL1Ed5M7h9y/U1JlJUoe7knenGFwJERtgcsTUbVg0=;
+        b=ijE76QU17gdWpFiecmbmmaau9KD7nzn0++AOzQOIkWHsLRqUX1uoMSk/mXA5xf5L1q3qLO
+        1QX8v7vcLSgTO3ICgiq8rKd0wfq83hG1BJlUXtq4KmgDCl1Swc7e6eLaT/rRbme0sHUpm5
+        Z6g2EFQq8gEdv9PpCzialgeP1srTvjk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-477-7sldQzWFPtGzJ8I1Hd1yNQ-1; Thu, 03 Sep 2020 13:36:31 -0400
+X-MC-Unique: 7sldQzWFPtGzJ8I1Hd1yNQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 118302FD05;
+        Thu,  3 Sep 2020 17:36:29 +0000 (UTC)
+Received: from [10.36.112.104] (ovpn-112-104.ams2.redhat.com [10.36.112.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EE5F97E40C;
+        Thu,  3 Sep 2020 17:36:26 +0000 (UTC)
+Subject: Re: [PATCH v2] mm/memory_hotplug: drain per-cpu pages again during
+ memory offline
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        mhocko@suse.com, linux-mm@kvack.org, osalvador@suse.de,
+        richard.weiyang@gmail.com, vbabka@suse.cz, rientjes@google.com
+References: <20200903140032.380431-1-pasha.tatashin@soleen.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <6ec66eb9-eeba-5076-af97-cef59ed5cbaa@redhat.com>
+Date:   Thu, 3 Sep 2020 19:36:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200717060849.12469-1-liwei.song@windriver.com>
- <CAJvTdKm9WHgQuP38Y2o1zQ-VgLKMMDup4crAPrW3pexoWft+6Q@mail.gmail.com>
- <52f16995-6d2d-fa7d-ed5e-682db3461d03@windriver.com> <CAJvTdKms0Qj3d+g_tK8oboMXebYgnPm51EdSL_UvLdw3GV6A3A@mail.gmail.com>
- <alpine.LNX.2.20.13.2008232345570.12553@monopod.intra.ispras.ru> <cce63c40-1633-5b86-6aaf-7f9a93c63eac@windriver.com>
-In-Reply-To: <cce63c40-1633-5b86-6aaf-7f9a93c63eac@windriver.com>
-From:   Len Brown <lenb@kernel.org>
-Date:   Thu, 3 Sep 2020 13:36:14 -0400
-Message-ID: <CAJvTdKk7Gd3G4K7um=6HC3YJu48aVW+4WFvr8jVqyOKcSZc7qQ@mail.gmail.com>
-Subject: Re: [PATCH] tools/power turbostat: call pread64 in kernel directly
-To:     Liwei Song <liwei.song@windriver.com>
-Cc:     Alexander Monakov <amonakov@ispras.ru>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200903140032.380431-1-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -D_FILE_OFFSET_BITS=64
+On 03.09.20 16:00, Pavel Tatashin wrote:
+> There is a race during page offline that can lead to infinite loop:
+> a page never ends up on a buddy list and __offline_pages() keeps
+> retrying infinitely or until a termination signal is received.
+> 
+> Thread#1 - a new process:
+> 
+> load_elf_binary
+>  begin_new_exec
+>   exec_mmap
+>    mmput
+>     exit_mmap
+>      tlb_finish_mmu
+>       tlb_flush_mmu
+>        release_pages
+>         free_unref_page_list
+>          free_unref_page_prepare
+>           set_pcppage_migratetype(page, migratetype);
+>              // Set page->index migration type below  MIGRATE_PCPTYPES
+> 
+> Thread#2 - hot-removes memory
+> __offline_pages
+>   start_isolate_page_range
+>     set_migratetype_isolate
+>       set_pageblock_migratetype(page, MIGRATE_ISOLATE);
+>         Set migration type to MIGRATE_ISOLATE-> set
+>         drain_all_pages(zone);
+>              // drain per-cpu page lists to buddy allocator.
+> 
+> Thread#1 - continue
+>          free_unref_page_commit
+>            migratetype = get_pcppage_migratetype(page);
+>               // get old migration type
+>            list_add(&page->lru, &pcp->lists[migratetype]);
+>               // add new page to already drained pcp list
+> 
+> Thread#2
+> Never drains pcp again, and therefore gets stuck in the loop.
+> 
+> The fix is to try to drain per-cpu lists again after
+> check_pages_isolated_cb() fails.
+> 
+> Fixes: c52e75935f8d ("mm: remove extra drain pages on pcp list")
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: stable@vger.kernel.org
+> Acked-by: David Rientjes <rientjes@google.com>
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  mm/memory_hotplug.c | 14 ++++++++++++++
+>  mm/page_isolation.c |  8 ++++++++
+>  2 files changed, 22 insertions(+)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index e9d5ab5d3ca0..b11a269e2356 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1575,6 +1575,20 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  		/* check again */
+>  		ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
+>  					    NULL, check_pages_isolated_cb);
+> +		/*
+> +		 * per-cpu pages are drained in start_isolate_page_range, but if
+> +		 * there are still pages that are not free, make sure that we
+> +		 * drain again, because when we isolated range we might
+> +		 * have raced with another thread that was adding pages to pcp
+> +		 * list.
+> +		 *
+> +		 * Forward progress should be still guaranteed because
+> +		 * pages on the pcp list can only belong to MOVABLE_ZONE
+> +		 * because has_unmovable_pages explicitly checks for
+> +		 * PageBuddy on freed pages on other zones.
+> +		 */
+> +		if (ret)
+> +			drain_all_pages(zone);
+>  	} while (ret);
+>  
+>  	/* Ok, all of our target is isolated.
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index 242c03121d73..63a3db10a8c0 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -170,6 +170,14 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
+>   * pageblocks we may have modified and return -EBUSY to caller. This
+>   * prevents two threads from simultaneously working on overlapping ranges.
+>   *
+> + * Please note that there is no strong synchronization with the page allocator
+> + * either. Pages might be freed while their page blocks are marked ISOLATED.
+> + * In some cases pages might still end up on pcp lists and that would allow
+> + * for their allocation even when they are in fact isolated already. Depending
+> + * on how strong of a guarantee the caller needs drain_all_pages might be needed
+> + * (e.g. __offline_pages will need to call it after check for isolated range for
+> + * a next retry).
+> + *
+>   * Return: the number of isolated pageblocks on success and -EBUSY if any part
+>   * of range cannot be isolated.
+>   */
+> 
 
-Applied.
+(still on vacation, back next week on Tuesday)
 
-thanks!
--Len
+I didn't look into discussions in v1, but to me this looks like we are
+trying to hide an actual bug by implementing hacks in the caller
+(repeated calls to drain_all_pages()). What about alloc_contig_range()
+users - you get more allocation errors just because PCP code doesn't
+play along.
 
-On Mon, Aug 24, 2020 at 12:09 AM Liwei Song <liwei.song@windriver.com> wrote:
->
->
->
-> On 8/24/20 04:54, Alexander Monakov wrote:
-> > Hi,
-> >
-> > I am not the original submitter, but I have answers and a proper patch :)
-> >
-> > On Fri, 21 Aug 2020, Len Brown wrote:
-> >
-> >> Re: offset size
-> >>
-> >> The offsets on this file are the MSR offsets.
-> >> What MSR are you trying to access at offset 0xc0010299?
-> >
-> > This MSR is particular is part of AMD RAPL (energy measurements) interface.
-> >
-> >> Re: pread vs pread64
-> >>
-> >> If I take on faith that you have some kind of 32-bit execution
-> >> environment that makes pread into pread32 instead of pread64, and that
-> >> truncates an off_t to 32-bits from 64-bits, and it actually makes
-> >> sense to request a read at this large offset...
-> >
-> > The problem here stems from the backward compatibility in Glibc: off_t is
-> > 32-bit on 32-bit x86, unless compiled with -D_FILE_OFFSET_BITS=64. This
-> > macro should be used for all new code. Distros should enable it for all
-> > builds, but when one builds turbostat 'by hand', they hit the issue.
-> >
-> >> would we really have to invoke syscall() directly -- couldn't we
-> >> invoke pread64() directly? (eg. below)
-> >
-> > No, the proper fix is to pass -D_FILE_OFFSET_BITS=64 to the compiler.
-> >
-> > Here's the patch:
->
-> This path works with my case.
->
-> Thanks,
-> Liwei.
->
->
-> >
-> > ---8<---
-> >
-> > From: Alexander Monakov <amonakov@ispras.ru>
-> > Date: Sun, 23 Aug 2020 23:27:02 +0300
-> > Subject: [PATCH] turbostat: build with _FILE_OFFSET_BITS=64
-> >
-> > For compatibility reasons, Glibc off_t is a 32-bit type on 32-bit x86
-> > unless _FILE_OFFSET_BITS=64 is defined. Add this define, as otherwise
-> > reading MSRs with index 0x80000000 and above attempts a pread with a
-> > negative offset, which fails.
-> >
-> > Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
-> > ---
-> >  tools/power/x86/turbostat/Makefile | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/tools/power/x86/turbostat/Makefile b/tools/power/x86/turbostat/Makefile
-> > index 2b6551269e43..40ae44402eec 100644
-> > --- a/tools/power/x86/turbostat/Makefile
-> > +++ b/tools/power/x86/turbostat/Makefile
-> > @@ -12,6 +12,7 @@ turbostat : turbostat.c
-> >  override CFLAGS +=   -O2 -Wall -I../../../include
-> >  override CFLAGS +=   -DMSRHEADER='"../../../../arch/x86/include/asm/msr-index.h"'
-> >  override CFLAGS +=   -DINTEL_FAMILY_HEADER='"../../../../arch/x86/include/asm/intel-family.h"'
-> > +override CFLAGS +=   -D_FILE_OFFSET_BITS=64
-> >  override CFLAGS +=   -D_FORTIFY_SOURCE=2
-> >
-> >  %: %.c
-> >
+There *is* strong synchronization with the page allocator - however,
+there seems to be one corner case race where we allow to allocate pages
+from isolated pageblocks.
 
+I want that fixed instead if possible, otherwise this is just an ugly
+hack to make the obvious symptoms (offlining looping forever) disappear.
 
+If that is not possible easily, I'd much rather want to see all
+drain_all_pages() calls being moved to the caller and have the expected
+behavior documented instead of specifying "there is no strong
+synchronization with the page allocator" - which is wrong in all but PCP
+cases (and there only in one possible race?).
+
+I do wonder why we hit this issue now and not before - I suspect
+something in PCP code changed that made this race possible.
 
 -- 
-Len Brown, Intel Open Source Technology Center
+Thanks,
+
+David / dhildenb
+
