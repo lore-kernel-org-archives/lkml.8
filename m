@@ -2,78 +2,76 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAC1C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F90C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D71320716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB11A20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:27:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="PqLGbKMp"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="mRrR9ilY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbgICW1j (ORCPT
+        id S1729486AbgICW1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:27:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53386 "EHLO
+        Thu, 3 Sep 2020 18:27:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728678AbgICW1O (ORCPT
+        with ESMTP id S1728697AbgICW1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:27:14 -0400
+        Thu, 3 Sep 2020 18:27:15 -0400
 Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0106C061251
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:27:13 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id p65so3260809qtd.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:27:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDE13C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:27:14 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id e5so3229175qth.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:27:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9SpSwMIgy/0uDv9Hc0PvSjCztNMgh+f4IT2tkCaQkW4=;
-        b=PqLGbKMp2gjiffHSrlocu7l+Z3ajwgMd1X3CxsA+yNf4pwuW1nDh2A5P+x5XtNvX1h
-         goUHuIX34yVxPumhBEKDfmhGjy0yCNAqzPU3XzE8c25pUQZE5R3WWiYaTzaE8MayTTwN
-         d+bw8tnnyR7Gu/EeVMxOJW0QzuHADNhxpJuynXH9pod1M04KRFjIgXdO+L6app7bNmPF
-         oQNDI9cQQwz1Xa1kxrpNhmoTnt7kDoavfajq6JcBKsCUx+XOVrmi0gY1PyVd2+gNVtDO
-         IkaY/TD90aNvonnCrlZIeyI4+su8YfM8rG8CWTeF5lgVbdb+hJJlNmvIFmiJQh844a1G
-         EPWQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Eg1t9In0g5b7CTs/tQIaFcuTzs3vfJs/vuWLC07Pzgc=;
+        b=mRrR9ilYMg1OOegUka41qYoRCU25laiyVARX4xxF6J+7i+DZLSjHl+zoXxDIXk55Pn
+         Ul8wFONEb6KtDQ30kaWNmGgZaCd0N0ZTEDKKV1X8aTMzyh2HWxPAoZcLtuLEOQiyt36P
+         34g2IRyVVcKKr4irRKmfiI8en3pPyt8uVu9IXzE3fBH/7VjoX4cGq9JE/DaK2z+gTBZa
+         w5ErxbUjsIqY5YPVmcUcp7CUtwt7PqtBf/atz4Ito2/N5GEfK20gj1vCawafwOzomCtb
+         OnqX5UdP2lntdOUAUYL59uwl9Y3EsvJMnc/2JChHAWPMmPgVwaBaMBLQuIMHTEekRGqT
+         3Quw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9SpSwMIgy/0uDv9Hc0PvSjCztNMgh+f4IT2tkCaQkW4=;
-        b=m4FzngIHatAg0IkAlhaYiolSUrJ0f4xsvK84bgBsoAk1bmHIXgGYxKdOMqxShgLcoG
-         eetFyNppV89IKEPkwpfP2+JZm0cf9iXcdYNDCVrEfuqlILDP9dYFkT9V7qsftSskxgmA
-         aoRp4FuPkjzJFsiUtdC4u/dZXzyxskx9+CkhQGvVHk/Avkk/URIeqn/Ff2kbSMIEDr7X
-         op7riYLSOLPVbnoaengfWCj0PCcaL5oud+Nf9Caw4fFq7c/XVJdkdmxOnstdcRjTrn53
-         +8OYCggadyo6CPStmkO5runfUhcJ21+MFKsA1B5w18rPoyK0Q2gAdUDZetSLHVgIs6iB
-         IBiQ==
-X-Gm-Message-State: AOAM530Aqp5DcxlfICZgFoamswSDL3NzgOgxLkVnmwIoICWE1aFW+QPS
-        +PX2AVgviTGTJeOLPZezOnHMZA==
-X-Google-Smtp-Source: ABdhPJyX2L6/vlPMY77nburHLozkIx336EIl0ufaIwZ6yu03grC4E5axYN4yguWf2gLAO+aUHM6K/g==
-X-Received: by 2002:ac8:b46:: with SMTP id m6mr5741737qti.72.1599172031736;
-        Thu, 03 Sep 2020 15:27:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Eg1t9In0g5b7CTs/tQIaFcuTzs3vfJs/vuWLC07Pzgc=;
+        b=iB2iZsvGC4HPxX2e2Oid59VRArG8NQdeO3DMwjjmKbrH4RvYPQCG9RcPxmqQDXkuVX
+         InalBH9aKc0Sn0eahmEN9+y9GqNWQPdD+6hgXuA16Bv/QfRwJAESgff4jPQfMcl5Kl1r
+         bwi4/D66wL53uKW0DavmcOOs9fA/XPHemzlpL31OoDwja5TX2zp75MNaESUXsFXtyMFk
+         bTH4ZK/E2DnLacuZH/v+IC+CyfQGE8FexjXzFE7b0uN/SwVfDxYQRXDlkzijUd/jeF8Y
+         xUqrx1E5te9yHe3mAvN+tCCls1j3iMaQFe/1KGDW30TO9nNBnrVHhPb47Z25skmQ6fAo
+         htYA==
+X-Gm-Message-State: AOAM5315yVrHMFOpdqLYIFp5LrIAU1terZCgsJCmppfUx2iNjfsHWrUC
+        jdvBaBT/okGCGQGYseg9mBpURNKbbppD9+hFIEU=
+X-Google-Smtp-Source: ABdhPJyLV2eb86Nsfbw+iM3w6ebemM6ZYJF5/tgw4W/oNcN66sgd2w6vSHOiDqWGb4G67oUcPY0A8w==
+X-Received: by 2002:ac8:748c:: with SMTP id v12mr5697566qtq.200.1599172033997;
+        Thu, 03 Sep 2020 15:27:13 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id y30sm3217157qth.7.2020.09.03.15.27.10
+        by smtp.gmail.com with ESMTPSA id y30sm3217157qth.7.2020.09.03.15.27.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 15:27:11 -0700 (PDT)
+        Thu, 03 Sep 2020 15:27:13 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
-        linux-kernel@vger.kernel.org (open list),
-        Michael Turquette <mturquette@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v2 0/7] SM8150 and SM8250 dispcc drivers
-Date:   Thu,  3 Sep 2020 18:26:08 -0400
-Message-Id: <20200903222620.27448-1-jonathan@marek.ca>
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 2/7] arm64: dts: qcom: sdm845-dispcc: same name for dp_phy clocks as sc7180
+Date:   Thu,  3 Sep 2020 18:26:10 -0400
+Message-Id: <20200903222620.27448-3-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200903222620.27448-1-jonathan@marek.ca>
+References: <20200903222620.27448-1-jonathan@marek.ca>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,44 +79,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add display clock drivers required to get DSI and DP displays working on
-SM8150 and SM8250 SoCs.
+This makes it easier to combine dt bindings for sdm845/sc7180 dispcc.
 
-Derived from downstream drivers. Notable changes compared to downstream:
- - EDP clks removed (nothing uses these even in downstream it seems)
- - freq_tbl values for dp_link clk is in Hz and not kHz
+Note: nothing upstream provides these clocks and the sdm845 dispcc driver
+hasn't switched to using .fw_name for these clocks (these properties are
+ignored), so changing this shouldn't be a problem.
 
-v2:
- - updated dts example to reflect the change (first patch)
- - updated config_ctl_hi1_val in sm8250 dispcc to latest downstream
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Jonathan Marek (7):
-  dt-bindings: clock: sdm845-dispcc: same name for dp_phy clocks as
-    sc7180
-  arm64: dts: qcom: sdm845-dispcc: same name for dp_phy clocks as sc7180
-  dt-bindings: clock: combine qcom,sdm845-dispcc and qcom,sc7180-dispcc
-  dt-bindings: clock: Introduce QCOM SM8150 display clock bindings
-  dt-bindings: clock: Introduce QCOM SM8250 display clock bindings
-  clk: qcom: Add display clock controller driver for SM8150
-  clk: qcom: Add display clock controller driver for SM8250
-
- ...om,sdm845-dispcc.yaml => qcom,dispcc.yaml} |   30 +-
- .../bindings/clock/qcom,sc7180-dispcc.yaml    |   86 --
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |    4 +-
- drivers/clk/qcom/Kconfig                      |   18 +
- drivers/clk/qcom/Makefile                     |    2 +
- drivers/clk/qcom/dispcc-sm8150.c              | 1152 +++++++++++++++++
- drivers/clk/qcom/dispcc-sm8250.c              | 1100 ++++++++++++++++
- .../dt-bindings/clock/qcom,dispcc-sm8150.h    |   69 +
- .../dt-bindings/clock/qcom,dispcc-sm8250.h    |   66 +
- 9 files changed, 2428 insertions(+), 99 deletions(-)
- rename Documentation/devicetree/bindings/clock/{qcom,sdm845-dispcc.yaml => qcom,dispcc.yaml} (75%)
- delete mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
- create mode 100644 drivers/clk/qcom/dispcc-sm8150.c
- create mode 100644 drivers/clk/qcom/dispcc-sm8250.c
- create mode 100644 include/dt-bindings/clock/qcom,dispcc-sm8150.h
- create mode 100644 include/dt-bindings/clock/qcom,dispcc-sm8250.h
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 2884577dcb77..8184d6204b33 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -4139,8 +4139,8 @@ dispcc: clock-controller@af00000 {
+ 				      "dsi0_phy_pll_out_dsiclk",
+ 				      "dsi1_phy_pll_out_byteclk",
+ 				      "dsi1_phy_pll_out_dsiclk",
+-				      "dp_link_clk_divsel_ten",
+-				      "dp_vco_divided_clk_src_mux";
++				      "dp_phy_pll_link_clk",
++				      "dp_phy_pll_vco_div_clk";
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 			#power-domain-cells = <1>;
 -- 
 2.26.1
 
