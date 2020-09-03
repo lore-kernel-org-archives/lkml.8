@@ -2,90 +2,151 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E734C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2AAC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F37AE20767
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209892137B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:16:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="bbycdTpB"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="oi4BCKxJ";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="duOw6gOr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgICKQN (ORCPT
+        id S1728343AbgICKQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 06:16:13 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:56630 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726162AbgICKQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:16:09 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 8FB6C542D3;
-        Thu,  3 Sep 2020 10:16:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:references:in-reply-to:date:date:from
-        :from:subject:subject:message-id:received:received:received; s=
-        mta-01; t=1599128166; x=1600942567; bh=hG/MCAQyYQhX01WN0uxqTRhm0
-        5X7D7VyvjKq75g9WDY=; b=bbycdTpBLRJu2pBDE9tj07vJLkIu/5VPMjpUdbpK6
-        BJOg11EHh9Tr2TBwfXc0eCRJR9H6IVPys8U/tE6hwQxAOgzO1cU8YpMF1vXq4LPb
-        edqCyE2gFqfE1BiV6Yz9Es/gTmEbi6JCI6FGDNS6wbxcSZJ923vuAV3KCmxAN07b
-        cI=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aH_ZQYl4KLGb; Thu,  3 Sep 2020 13:16:06 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Thu, 3 Sep 2020 06:16:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgICKQi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 06:16:38 -0400
+X-Greylist: delayed 556 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 03 Sep 2020 03:16:37 PDT
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [IPv6:2001:67c:2050::465:103])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C576C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 03:16:37 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id C8DB350242;
-        Thu,  3 Sep 2020 13:16:05 +0300 (MSK)
-Received: from localhost.localdomain (10.199.2.130) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Thu, 3 Sep 2020 13:16:05 +0300
-Message-ID: <6dd97c08809d576136d474f4b3f3b045a03634bb.camel@yadro.com>
-Subject: Re: watchdog start on restart
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Date:   Thu, 3 Sep 2020 13:19:28 +0300
-In-Reply-To: <e04bc12d-4520-89db-699c-ad89fcdbf76e@csgroup.eu>
-References: <d2343032814705f33cd81f18f45630bf327c0ff8.camel@yadro.com>
-         <e04bc12d-4520-89db-699c-ad89fcdbf76e@csgroup.eu>
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4BhxLV20rdzKmhM;
+        Thu,  3 Sep 2020 12:07:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
+        content-disposition:content-type:content-type:mime-version
+        :message-id:subject:subject:from:from:date:date:received; s=
+        mail20150812; t=1599127631; bh=uPRu15iu9NZFBlW05yO/MFmr1prkiYcom
+        8kWWbBofgY=; b=oi4BCKxJ6h84IxGnDVzSeP32+I8N/A+HLERJoy308Gj2HDWYB
+        5aH88uxpWrchOfeVbTIkWQT+0e7gtGBW+C8QBQWtjm2BD3rz+ZZQr5JfENUwLVrl
+        QEFBAYFSYjQIDzh7CEYarmL/AzCpJap9y/Gv7HtJREf3TdIVH1mXq1xCzCSsrtWy
+        dhtNgHkMozM/X3uoUUvDXZYsUc3TbFLSK1drY+oSXzlhd8GHyNnX3wI7dbYtgtLi
+        dM5XYgZ3167Cb4vZiBT1VuWaUPZc22jPndRpV++qauCbYm7SMcsKAKHaN5LHdLGf
+        0rkVOSvuzVp80TKcEJBgPx+Oz0PwJ9nswpOJg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+        t=1599127632;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=uRunYgfPTMbFCOkTvboIdP7wPVCW0P5BS85r7326lm0=;
+        b=duOw6gOraQwlvpOMHymG+F/qxE38L2Ht8unce3RYesX29vS47pvNeLllflXinI0y8V/ZGg
+        nNplafFucsyWP2amwPS6S28RCE4LFncLs/KBPoOxV2yW2Jpv7WRmK3NYmEuRW1JrCJECvG
+        CG3hIpDwDvpRjGxki/fOUq3vfnmSa9av4GhGKNI6kMTfnQ3HCpfVQ8T1OdVdbj5/k/724Z
+        OApWFGQcrxbUYrlttflHeRt6AN+MX08+80rOzADTTU1bqTXP/BGTLyMvnIhz3TAOr3iumq
+        tBoJrNht9X/WCOOx/+ooHaLxcLkrA0rIbPJ/H40OTElRIPkfcY7UacrvuGa96g==
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id klCFu_Vvn-y3; Thu,  3 Sep 2020 12:07:11 +0200 (CEST)
+Date:   Thu, 3 Sep 2020 12:07:08 +0200
+From:   Wilken Gottwalt <wilken.gottwalt@mailbox.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH] dt-bindings: arm: sunxi: update H2+/H3 cpu clocks
+Message-ID: <20200903100708.GA466735@monster.powergraphx.local>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.199.2.130]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -2.91 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 32FD91268
+X-Rspamd-UID: 206056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-09-02 at 15:19 +0200, Christophe Leroy wrote:
+Change H2+/H3 clocks to 8 steps from 528 MHz up to 1200 MHz to support a
+more fine-grained powersave setup. The SoCs are made for 1296 MHz, so
+these clocks are still in a safe range. Tested on a NanoPi Duo and
+OrangePi Zero.
+
+Signed-off-by: Wilken Gottwalt <wilken.gottwalt@mailbox.org>
+---
+ arch/arm/boot/dts/sun8i-h3.dtsi | 34 +++++++++++++++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 4e89701df91f..5517fcc02b7d 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -48,23 +48,53 @@ cpu0_opp_table: opp_table0 {
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
  
-> Isn't it the default expected behaviour for a watchdog ?
-
-It depends on hardware and system requirements. You may have not just one
-watchdog device.
-
-> "stop watchdog on restart" is there to keep things under control during 
-> a wanted machine reboot/restart, while still having the watchdog do its 
-> job on an unexpected restart.
-
-Yes, that's correct.
-
-> What would be the advantage of an ioctl() compared to the existing way ?
-
-You can control stop/start at any moment for any number of watchdog devices.
-
-Thanks.
+-		opp-648000000 {
+-			opp-hz = /bits/ 64 <648000000>;
++		opp-528000000 {
++			opp-hz = /bits/ 64 <528000000>;
++			opp-microvolt = <1020000 1020000 1300000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp-624000000 {
++			opp-hz = /bits/ 64 <624000000>;
+ 			opp-microvolt = <1040000 1040000 1300000>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
++		opp-720000000 {
++			opp-hz = /bits/ 64 <720000000>;
++			opp-microvolt = <1060000 1060000 1300000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
+ 		opp-816000000 {
+ 			opp-hz = /bits/ 64 <816000000>;
+ 			opp-microvolt = <1100000 1100000 1300000>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
++		opp-912000000 {
++			opp-hz = /bits/ 64 <912000000>;
++			opp-microvolt = <1140000 1140000 1300000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
+ 		opp-1008000000 {
+ 			opp-hz = /bits/ 64 <1008000000>;
+ 			opp-microvolt = <1200000 1200000 1300000>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
++
++		opp-1104000000 {
++			opp-hz = /bits/ 64 <1104000000>;
++			opp-microvolt = <1240000 1240000 1300000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp-1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <1300000 1300000 1300000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
+ 	};
+ 
+ 	cpus {
+-- 
+2.28.0
 
