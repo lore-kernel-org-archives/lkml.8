@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FE2C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5D7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A54520758
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB4DB20758
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:54:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cL8gaMkP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0Og/p/F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgICAyq (ORCPT
+        id S1728033AbgICAys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 20:54:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52140 "EHLO
+        Wed, 2 Sep 2020 20:54:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727929AbgICAyO (ORCPT
+        with ESMTP id S1727923AbgICAyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 20:54:14 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D66C061260;
-        Wed,  2 Sep 2020 17:54:13 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id 12so816845lfb.11;
-        Wed, 02 Sep 2020 17:54:13 -0700 (PDT)
+        Wed, 2 Sep 2020 20:54:13 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0686C06125F;
+        Wed,  2 Sep 2020 17:54:12 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id t7so697617ljo.13;
+        Wed, 02 Sep 2020 17:54:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9WNZAy5d8w/2aZQaSppgQxzu4NzUo1Ls4jIsDPeeyAE=;
-        b=cL8gaMkP/qIe5jIburqRzxHjDtaEvXk8r00yeDxJLi4kosFKKTgwGthfIhpsYFwzU9
-         LuznNryaNMV/wQ/F1EiFPzwYKBtalDbhJCMBUwkXLxX6h2ZZw/yXOjtj1v2XeZfzEkLa
-         rV+qh7U11K05I9+6kRgsQf+0sOoDegZbzjQ57z0NWZczIUn4reQn/8sGL2b7t9NNHozO
-         hBzRVnNRn1RCt8JkhsqAxg2KEnU9V68tM2dw2h3EKXsWYVlLNOPCzgX8IaELUMQXtRQ4
-         Y8w0+3Y/dOW1yPwFUBGke6+373ERELzT3ExVvVFjgp+v+yL0T+EhjoC7cnnyUa9piu5P
-         phSA==
+        bh=Mzbf4DuflBeTQLxzGK/w5XUYkKbYVKcRiZ4UXxyN0qs=;
+        b=R0Og/p/F+WZmlFbPxpOkoj84ltut7sniDMl7815ihQKSQeV0g4N3aQzRBAvEjjrx1V
+         EOCpYZCEj9M5LTYl+LwBbWvYvJMdWNP7fTecVHiuy52EqX/zQFlQgxi2t0KlXiTz1sq/
+         K2iDD95lcXoMGq5oxz98xfke3V/43K7sAFPXdWPXshMnbwmaGl+VZ/5OvL8UWLgzNzul
+         wMvhFVNg3XV92bQ7+IB1IAE69By/990pf8ZkTURiTFYzmo7/586lG4OirQyJahxBykJ6
+         p6p02eT1w0ug01gq0lm4v8HYH8viik3d1lNUBmzEokaCFw68lnpCgfxhC35e3K8XyXNV
+         mkJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9WNZAy5d8w/2aZQaSppgQxzu4NzUo1Ls4jIsDPeeyAE=;
-        b=A24ABjlzTQpvTd3xNTYAL2LURaW6UA5NDyr262uQ0PzWCDCrxRZIgvcFyc0tFjNnWo
-         hzRFBbjoMPfvU/gO81CxNAH2nl/IdYTcixT9W+MLHjeypqvM4vy2V+Abq4mEDY5nlKnn
-         DioUhbcJmVi1MhwN2XK8dSb0DIV7+5wUsANuhplbquTXGr4dN1gfJeAVkiTHGvEeVMV/
-         wOPQdNuIrI23r5pL0TUCTqirvPGsD1Sa2VIMHZTIDjHyB66Qjw7/ijTknweTPMRE/mo7
-         DK95iWNb6oYLyp40eh2CPefuCTdC8nd9G17h+OBYiFz9I78hs7af7sFkqaVwIL6g6Nig
-         x9gg==
-X-Gm-Message-State: AOAM532ilD9EDjpMSH6z+G4GJW+YAlfUiRFyvHekKo0OgYjZ72KaR9ps
-        AAhehkxkpNic+ZUBuUNuwrE=
-X-Google-Smtp-Source: ABdhPJw5rTqeH77amUjG22ecDVv57oKV7/8lxjbux8BAiymEhT0sZROtLoCrIiuaF9YtBFkOdMY4OQ==
-X-Received: by 2002:a19:6e45:: with SMTP id q5mr292110lfk.104.1599094452095;
-        Wed, 02 Sep 2020 17:54:12 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id g1sm250321ljj.56.2020.09.02.17.54.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=Mzbf4DuflBeTQLxzGK/w5XUYkKbYVKcRiZ4UXxyN0qs=;
+        b=Ik1ePwbeunMK93Mlb4IlmRIVYWE+xOkpS7HLuxjHRJfQXqvPSQc0RayZZI53GwkPfV
+         dUhjlPHenKyaDyVSqku36DCWbEm5926yCLnCmYfzBGSyYLsHUGtUekJdht61FFy8o3Ey
+         eOYuwYzw2ZqMoQLOQeEKZ1YfUSBQS+FFJCjNCGmfOnUoHE0HZ2NWMRZa0ACNz/zaAGqX
+         uSHDhfoKUtwnkr6YKpM47Jgu1Qez+zzIj77UwFqw3+gvi/IamkJAhYHnt3WIho+2zAfB
+         op0v8CU3hidU6hLtCIgsMzAbkEPAi+oKRma/zIdgNmHfVH3sVzn7y7wNvKtuWPdpvoT8
+         v84A==
+X-Gm-Message-State: AOAM531l83jzyJks0xGSek3OCfb1fiCBkb/d+jWNt4fCEUn1287+Mc57
+        2Q779Xw9vo6bpftfFipvId8=
+X-Google-Smtp-Source: ABdhPJwpvEajxxrLAgt1Refmaoy+hMxGz2srOTIk8FRzEIeoDsxo8FaovKwljc6m8/lPht2hqFCk2Q==
+X-Received: by 2002:a2e:865a:: with SMTP id i26mr249186ljj.246.1599094451145;
         Wed, 02 Sep 2020 17:54:11 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id g1sm250321ljj.56.2020.09.02.17.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 17:54:10 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -69,9 +69,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 22/22] i2c: tegra: Remove i2c_dev.clk_divisor_non_hs_mode member
-Date:   Thu,  3 Sep 2020 03:53:00 +0300
-Message-Id: <20200903005300.7894-23-digetx@gmail.com>
+Subject: [PATCH v3 21/22] i2c: tegra: Initialization div-clk rate unconditionally
+Date:   Thu,  3 Sep 2020 03:52:59 +0300
+Message-Id: <20200903005300.7894-22-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200903005300.7894-1-digetx@gmail.com>
 References: <20200903005300.7894-1-digetx@gmail.com>
@@ -82,129 +82,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "non_hs_mode" divisor value is fixed, thus there is no need to have
-the variable i2c_dev.clk_divisor_non_hs_mode struct member. Let's remove
-it and move the mode selection into tegra_i2c_init() where it can be
-united with the timing selection.
+It doesn't make sense to conditionalize the div-clk rate changes because
+rate is fixed and it won't ever change once it's set at the driver's probe
+time. All further changes are NO-OPs because CCF caches rate and skips
+rate-change if rate is unchanged.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 52 ++++++++++++++--------------------
- 1 file changed, 21 insertions(+), 31 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c | 32 +++++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index bc7954c8a5a0..f3540dcb0e06 100644
+index 79caf87bb4c0..bc7954c8a5a0 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -250,7 +250,6 @@ struct tegra_i2c_hw_feature {
-  * @msg_buf_remaining: size of unsent data in the message buffer
-  * @msg_read: identifies read transfers
-  * @bus_clk_rate: current I2C bus clock rate
-- * @clk_divisor_non_hs_mode: clock divider for non-high-speed modes
-  * @is_multimaster_mode: track if I2C controller is in multi-master mode
-  * @tx_dma_chan: DMA transmit channel
-  * @rx_dma_chan: DMA receive channel
-@@ -281,7 +280,6 @@ struct tegra_i2c_dev {
- 	size_t msg_buf_remaining;
- 	int msg_read;
- 	u32 bus_clk_rate;
--	u16 clk_divisor_non_hs_mode;
- 	bool is_multimaster_mode;
- 	struct dma_chan *tx_dma_chan;
- 	struct dma_chan *rx_dma_chan;
-@@ -603,7 +601,7 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+@@ -601,7 +601,7 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+ 	return -ETIMEDOUT;
+ }
  
- static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev)
+-static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reinit)
++static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev)
  {
--	u32 val, clk_divisor, clk_multiplier, tsu_thd, tlow, thigh;
-+	u32 val, clk_divisor, clk_multiplier, tsu_thd, tlow, thigh, non_hs_mode;
+ 	u32 val, clk_divisor, clk_multiplier, tsu_thd, tlow, thigh;
  	int err;
- 
- 	err = reset_control_reset(i2c_dev->rst);
-@@ -625,24 +623,32 @@ static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev)
- 	if (i2c_dev->is_vi)
- 		tegra_i2c_vi_init(i2c_dev);
- 
--	/* Make sure clock divisor programmed correctly */
--	clk_divisor = FIELD_PREP(I2C_CLK_DIVISOR_HSMODE,
--				 i2c_dev->hw->clk_divisor_hs_mode) |
--		      FIELD_PREP(I2C_CLK_DIVISOR_STD_FAST_MODE,
--				 i2c_dev->clk_divisor_non_hs_mode);
--	i2c_writel(i2c_dev, clk_divisor, I2C_CLK_DIVISOR);
--
--	if (i2c_dev->bus_clk_rate > I2C_MAX_STANDARD_MODE_FREQ &&
--	    i2c_dev->bus_clk_rate <= I2C_MAX_FAST_MODE_PLUS_FREQ) {
-+	switch (i2c_dev->bus_clk_rate) {
-+	case I2C_MAX_STANDARD_MODE_FREQ + 1 ... I2C_MAX_FAST_MODE_PLUS_FREQ:
- 		tlow = i2c_dev->hw->tlow_fast_fastplus_mode;
- 		thigh = i2c_dev->hw->thigh_fast_fastplus_mode;
- 		tsu_thd = i2c_dev->hw->setup_hold_time_fast_fast_plus_mode;
--	} else {
-+
-+		if (i2c_dev->bus_clk_rate > I2C_MAX_FAST_MODE_FREQ)
-+			non_hs_mode = i2c_dev->hw->clk_divisor_fast_plus_mode;
-+		else
-+			non_hs_mode = i2c_dev->hw->clk_divisor_fast_mode;
-+		break;
-+
-+	default:
- 		tlow = i2c_dev->hw->tlow_std_mode;
- 		thigh = i2c_dev->hw->thigh_std_mode;
- 		tsu_thd = i2c_dev->hw->setup_hold_time_std_mode;
-+		non_hs_mode = i2c_dev->hw->clk_divisor_std_mode;
-+		break;
- 	}
- 
-+	/* Make sure clock divisor programmed correctly */
-+	clk_divisor = FIELD_PREP(I2C_CLK_DIVISOR_HSMODE,
-+				 i2c_dev->hw->clk_divisor_hs_mode) |
-+		      FIELD_PREP(I2C_CLK_DIVISOR_STD_FAST_MODE, non_hs_mode);
-+	i2c_writel(i2c_dev, clk_divisor, I2C_CLK_DIVISOR);
-+
- 	if (i2c_dev->hw->has_interface_timing_reg) {
- 		val = FIELD_PREP(I2C_INTERFACE_TIMING_THIGH, thigh) |
- 		      FIELD_PREP(I2C_INTERFACE_TIMING_TLOW, tlow);
-@@ -657,7 +663,7 @@ static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev)
+@@ -656,16 +656,14 @@ static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reinit)
+ 	if (i2c_dev->hw->has_interface_timing_reg && tsu_thd)
  		i2c_writel(i2c_dev, tsu_thd, I2C_INTERFACE_TIMING_1);
  
- 	clk_multiplier  = tlow + thigh + 2;
--	clk_multiplier *= i2c_dev->clk_divisor_non_hs_mode + 1;
-+	clk_multiplier *= non_hs_mode + 1;
- 
- 	err = clk_set_rate(i2c_dev->div_clk,
- 			   i2c_dev->bus_clk_rate * clk_multiplier);
-@@ -1633,7 +1639,7 @@ static int tegra_i2c_init_clocks(struct tegra_i2c_dev *i2c_dev)
- 	const struct tegra_i2c_hw_feature *hw = i2c_dev->hw;
- 	struct device *dev = i2c_dev->dev;
- 	struct clk *clk;
--	int err, mode;
-+	int err;
- 
- 	clk = devm_clk_get(dev, "div-clk");
- 	if (IS_ERR(clk))
-@@ -1686,22 +1692,6 @@ static int tegra_i2c_init_clocks(struct tegra_i2c_dev *i2c_dev)
- 		}
+-	if (!clk_reinit) {
+-		clk_multiplier = (tlow + thigh + 2);
+-		clk_multiplier *= (i2c_dev->clk_divisor_non_hs_mode + 1);
+-		err = clk_set_rate(i2c_dev->div_clk,
+-				   i2c_dev->bus_clk_rate * clk_multiplier);
+-		if (err) {
+-			dev_err(i2c_dev->dev,
+-				"failed to set div-clk rate: %d\n", err);
+-			return err;
+-		}
++	clk_multiplier  = tlow + thigh + 2;
++	clk_multiplier *= i2c_dev->clk_divisor_non_hs_mode + 1;
++
++	err = clk_set_rate(i2c_dev->div_clk,
++			   i2c_dev->bus_clk_rate * clk_multiplier);
++	if (err) {
++		dev_err(i2c_dev->dev, "failed to set div-clk rate: %d\n", err);
++		return err;
  	}
  
--	switch (i2c_dev->bus_clk_rate) {
--	case I2C_MAX_FAST_MODE_FREQ + 1 ... I2C_MAX_FAST_MODE_PLUS_FREQ:
--		mode = hw->clk_divisor_fast_plus_mode;
--		break;
--
--	case I2C_MAX_STANDARD_MODE_FREQ + 1 ... I2C_MAX_FAST_MODE_FREQ:
--		mode = hw->clk_divisor_fast_mode;
--		break;
--
--	default:
--		mode = hw->clk_divisor_std_mode;
--		break;
--	}
--
--	i2c_dev->clk_divisor_non_hs_mode = mode;
--
- 	return 0;
+ 	if (!i2c_dev->is_dvc && !i2c_dev->is_vi) {
+@@ -1163,7 +1161,7 @@ static int tegra_i2c_error_recover(struct tegra_i2c_dev *i2c_dev,
+ 	if (i2c_dev->msg_err == I2C_ERR_NONE)
+ 		return 0;
  
- unprepare_div_clk:
+-	tegra_i2c_init(i2c_dev, true);
++	tegra_i2c_init(i2c_dev);
+ 
+ 	/* start recovery upon arbitration loss in single master mode */
+ 	if (i2c_dev->msg_err == I2C_ERR_ARBITRATION_LOST) {
+@@ -1303,7 +1301,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 
+ 		if (!time_left && !completion_done(&i2c_dev->dma_complete)) {
+ 			dev_err(i2c_dev->dev, "DMA transfer timeout\n");
+-			tegra_i2c_init(i2c_dev, true);
++			tegra_i2c_init(i2c_dev);
+ 			return -ETIMEDOUT;
+ 		}
+ 
+@@ -1324,7 +1322,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 
+ 	if (time_left == 0) {
+ 		dev_err(i2c_dev->dev, "I2C transfer timed out\n");
+-		tegra_i2c_init(i2c_dev, true);
++		tegra_i2c_init(i2c_dev);
+ 		return -ETIMEDOUT;
+ 	}
+ 
+@@ -1752,7 +1750,7 @@ static int tegra_i2c_init_runtime_pm_and_hardware(struct tegra_i2c_dev *i2c_dev)
+ 	}
+ 
+ 	/* initialize hardware state */
+-	ret = tegra_i2c_init(i2c_dev, false);
++	ret = tegra_i2c_init(i2c_dev);
+ 
+ 	pm_runtime_put(i2c_dev->dev);
+ 
+@@ -1907,7 +1905,7 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
+ 	 * domain ON.
+ 	 */
+ 	if (i2c_dev->is_vi) {
+-		ret = tegra_i2c_init(i2c_dev, true);
++		ret = tegra_i2c_init(i2c_dev);
+ 		if (ret)
+ 			goto disable_div_clk;
+ 	}
+@@ -1961,7 +1959,7 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
+ 	if (err)
+ 		return err;
+ 
+-	err = tegra_i2c_init(i2c_dev, false);
++	err = tegra_i2c_init(i2c_dev);
+ 	if (err)
+ 		return err;
+ 
 -- 
 2.27.0
 
