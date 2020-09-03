@@ -2,175 +2,198 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3756FC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69704C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0F5020775
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:32:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="YSLoqCN2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tO4wJ5f0"
+	by mail.kernel.org (Postfix) with ESMTP id 307C2208B3
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599118357;
+	bh=a6NQokr4jM352XqY6vw/Xjc9tnmlUORQvxTKs8y3VmQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HwUQXztKsnGFf7+AVczAGoMt5FdtQP2kYiwX2RzMCQT0F6Mgl1sdASgodExMua0rG
+	 7YfkqIbiqbAP5LoO4m2E86IoLzWdlzOIH4eYdwzp/GXED6QcJclmFUmvQ8LF5SQLOz
+	 yaO13heU555tTgAoNdVeAFy1G91sfLUdlR6m3Ijg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbgICHcF (ORCPT
+        id S1728249AbgICHcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:32:05 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:56755 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726025AbgICHcE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:32:04 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 58E55866;
-        Thu,  3 Sep 2020 03:32:02 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 03 Sep 2020 03:32:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=BmfEZSuMhgdkNo0EUR9JKdgI2ZD
-        uXSSCMmUk8VD6KTs=; b=YSLoqCN2z7hKgLDbrz/BgETbrovs9eoYHK/CXkv6Cts
-        CozKRyB69WNLEnP3L6wjnpPojh1zDFbr3WZbj87sL6SOmr5JVrRE12vE+ySl5/gS
-        ImdFUSMrFBj9xSmYchyyuv9n1iEHN/bSxxwsB1BcO9aNAcLd4Rc9yU2wHCOnw+Ls
-        IwFl5l0Md3e24yLVxaDDgV78a6ighJtmeDEFObG3yguw6Ym3sUbb+T/36uO05UQS
-        zx+ROCcMvxQeW/Kebh1bVj4UCnZhgpQI25/1WBQCgiBvUzV9xsUccj4cSVAsgea9
-        CDrNPgKG3e5nJdVC5nxXc2+SV9nyozhhCxR/CFjlIpg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=BmfEZS
-        uMhgdkNo0EUR9JKdgI2ZDuXSSCMmUk8VD6KTs=; b=tO4wJ5f0RO+AEKDwF4GarD
-        LOcf8n9MjY/EA8Uocxjt3YRfYL3Vqs/d8azDRYEO2pna+wcY3leeu7lacszWak9X
-        tJnrYdVXaKwTnaFhXkc5m78eFK7qNDgtDAwE/oh/ViUvJQxPRCDcLfFWj+cAA3Hn
-        zqoYE4i94kNdFI0WwZTUZYUm5UH4erCdX2wF2ipebjgQnOwHE9H3jRzU7KTVOqQI
-        zrVzvgb6uIpxwoIZKaSH7xLE/Lcab7uO5Jp8C29Hwrp203cPPt0G+wifGtw9+LyO
-        Pc2c+h2WofH6K3AcM55qWZT1MogfEGbHZvHyceADoDE4f+CTWwSyZmS1MJvBSTZg
-        ==
-X-ME-Sender: <xms:8ZtQX5mjPzKoJIfwfyNmpe6EbhlijpY_S0CpC5gW_x4yNXg1H0cxCw>
-    <xme:8ZtQX006FllbjjzFB0JvaoxfbbRYYs8FZf0eW_91NQ7gNeMnaZrxRqnGl_BNs6Ddk
-    M7mbnNw7LDCFf3--Mg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddvudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheei
-    heegudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedune
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:8ZtQX_pYNGOnQcGCKqHoZ1R-9bu7heOb9Tyw-U1LERaFZ6c1ilTT0Q>
-    <xmx:8ZtQX5nqlVyduZaUIUwi_ytfy47E4kvwSLH85kwmfKBClt2_5WYmfg>
-    <xmx:8ZtQX30d6ktT-NWzcjq7JczwKnNwl4gE1dJxdrow2ZoptBTXfQ3otQ>
-    <xmx:8ZtQX3-oXUojqevSMjMndRpfTXl-1XImuIgPOlTcCAvhbaiMujV-Vw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2355D306005B;
-        Thu,  3 Sep 2020 03:32:01 -0400 (EDT)
-Date:   Thu, 3 Sep 2020 09:31:59 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 1/2] clk: Implement protected-clocks for all OF
- clock providers
-Message-ID: <20200903073159.2tabexowuo7wgdnh@gilmour.lan>
-References: <20200903040015.5627-1-samuel@sholland.org>
- <20200903040015.5627-2-samuel@sholland.org>
+        Thu, 3 Sep 2020 03:32:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbgICHce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 03:32:34 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B389420775;
+        Thu,  3 Sep 2020 07:32:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599118353;
+        bh=a6NQokr4jM352XqY6vw/Xjc9tnmlUORQvxTKs8y3VmQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lY2nENn4PyQnLe86tGBsy7BegX4EZ7tvxXVlNM7BZv6S3N+PmLZ0sqWiCET8GGqTk
+         o68zMMnRNYD7BkFKDl2ntBWB2Sy6A0ODNnz4eHdZJOHHBJgh+vXLe7u5kUJqQS+zhd
+         95RgxEBPX+1UU5R2KEx32QhMc60fTKCtZT9/LTMc=
+Date:   Thu, 3 Sep 2020 09:32:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     himadrispandya@gmail.com, dvyukov@google.com,
+        linux-usb@vger.kernel.org, perex@perex.cz, tiwai@suse.com,
+        linux-kernel@vger.kernel.org, marcel@holtmann.org,
+        johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Eli Billauer <eli.billauer@gmail.com>,
+        Emiliano Ingrassia <ingrassia@epigenesys.com>,
+        Alexander Tsoy <alexander@tsoy.me>,
+        "Geoffrey D. Bennett" <g@b4.vu>, Jussi Laako <jussi@sonarnerd.net>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Dmitry Panchenko <dmitry@d-systems.ee>,
+        Chris Wulff <crwulff@gmail.com>,
+        Jesus Ramos <jesus-ramos@live.com>
+Subject: Re: [PATCH 01/10] USB: move snd_usb_pipe_sanity_check into the USB
+ core
+Message-ID: <20200903073230.GA162335@kroah.com>
+References: <20200902110115.1994491-1-gregkh@linuxfoundation.org>
+ <20200902110115.1994491-2-gregkh@linuxfoundation.org>
+ <20200903004553.GA642955@rowland.harvard.edu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="e5pau4qoc3zkqthf"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200903040015.5627-2-samuel@sholland.org>
+In-Reply-To: <20200903004553.GA642955@rowland.harvard.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 02, 2020 at 08:45:53PM -0400, Alan Stern wrote:
+> On Wed, Sep 02, 2020 at 01:01:03PM +0200, Greg Kroah-Hartman wrote:
+> > snd_usb_pipe_sanity_check() is a great function, so let's move it into
+> > the USB core so that other parts of the kernel, including the USB core,
+> > can call it.
+> > 
+> > Name it usb_pipe_type_check() to match the existing
+> > usb_urb_ep_type_check() call, which now uses this function.
+> > 
+> > Cc: Jaroslav Kysela <perex@perex.cz>
+> > Cc: Takashi Iwai <tiwai@suse.com>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Cc: Eli Billauer <eli.billauer@gmail.com>
+> > Cc: Emiliano Ingrassia <ingrassia@epigenesys.com>
+> > Cc: Alan Stern <stern@rowland.harvard.edu>
+> > Cc: Alexander Tsoy <alexander@tsoy.me>
+> > Cc: "Geoffrey D. Bennett" <g@b4.vu>
+> > Cc: Jussi Laako <jussi@sonarnerd.net>
+> > Cc: Nick Kossifidis <mickflemm@gmail.com>
+> > Cc: Dmitry Panchenko <dmitry@d-systems.ee>
+> > Cc: Chris Wulff <crwulff@gmail.com>
+> > Cc: Jesus Ramos <jesus-ramos@live.com>
+> > Cc: linux-usb@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: alsa-devel@alsa-project.org
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> 
+> > diff --git a/drivers/usb/core/urb.c b/drivers/usb/core/urb.c
+> > index 27e83e55a590..45bc2914c1ba 100644
+> > --- a/drivers/usb/core/urb.c
+> > +++ b/drivers/usb/core/urb.c
+> > @@ -192,24 +192,39 @@ static const int pipetypes[4] = {
+> >  };
+> >  
+> >  /**
+> > - * usb_urb_ep_type_check - sanity check of endpoint in the given urb
+> > - * @urb: urb to be checked
+> > + * usb_pipe_type_check - sanity check of a specific pipe for a usb device
+> > + * @dev: struct usb_device to be checked
+> > + * @pipe: pipe to check
+> >   *
+> >   * This performs a light-weight sanity check for the endpoint in the
+> > - * given urb.  It returns 0 if the urb contains a valid endpoint, otherwise
+> > - * a negative error code.
+> > + * given usb device.  It returns 0 if the pipe is a valid for the specific usb
+> -----------------------------------------------------^
+> Typo.
 
---e5pau4qoc3zkqthf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oops, will fix, thanks.
 
-On Wed, Sep 02, 2020 at 11:00:14PM -0500, Samuel Holland wrote:
-> This is a generic implementation of the "protected-clocks" property from
-> the common clock binding. It allows firmware to inform the OS about
-> clocks that must not be disabled while the OS is running.
->=20
-> This implementation comes with some caveats:
->=20
-> 1) Clocks that have CLK_IS_CRITICAL in their init data are prepared/
-> enabled before they are attached to the clock tree. protected-clocks are
-> only protected once the clock provider is added, which is generally
-> after all of the clocks it provides have been registered. This leaves a
-> window of opportunity where something could disable or modify the clock,
-> such as a driver running on another CPU, or the clock core itself. There
-> is a comment to this effect in __clk_core_init():
->=20
->   /*
->    * Enable CLK_IS_CRITICAL clocks so newly added critical clocks
->    * don't get accidentally disabled when walking the orphan tree and
->    * reparenting clocks
->    */
->=20
-> Similarly, these clocks will be enabled after they are first reparented,
-> unlike other CLK_IS_CRITICAL clocks. See the comment in
-> clk_core_reparent_orphans_nolock():
->=20
->   /*
->    * We need to use __clk_set_parent_before() and _after() to
->    * to properly migrate any prepare/enable count of the orphan
->    * clock. This is important for CLK_IS_CRITICAL clocks, which
->    * are enabled during init but might not have a parent yet.
->    */
->=20
-> Ideally we could detect protected clocks before they are reparented, but
-> there are two problems with that:
->=20
->   a) From the clock core's perspective, hw->init is const.
->=20
->   b) The clock core doesn't see the device_node until __clk_register is
->      called on the first clock.
->=20
-> So the only "race-free" way to detect protected-clocks is to do it in
-> the middle of __clk_register, between when core->flags is initialized
-> and calling __clk_core_init(). That requires scanning the device tree
-> again for each clock, which is part of why I didn't do it that way.
->=20
-> 2) __clk_protect needs to be idempotent, for two reasons:
->=20
->   a) Clocks with CLK_IS_CRITICAL in their init data are already
->      prepared/enabled, and we don't want to prepare/enable them again.
->=20
->   b) of_clk_set_defaults() is called twice for (at least some) clock
->      controllers registered with CLK_OF_DECLARE. It is called first in
->      of_clk_add_provider()/of_clk_add_hw_provider() inside clk_init_cb,
->      and again afterward in of_clk_init(). The second call in
->      of_clk_init() may be unnecessary, but verifying that would require
->      auditing all users of CLK_OF_DECLARE to ensure they called one of
->      the of_clk_add{,_hw}_provider functions.
->=20
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
+> 
+> > + * device, otherwise a negative error code.
+> >   */
+> > -int usb_urb_ep_type_check(const struct urb *urb)
+> > +int usb_pipe_type_check(struct usb_device *dev, unsigned int pipe)
+> >  {
+> >  	const struct usb_host_endpoint *ep;
+> >  
+> > -	ep = usb_pipe_endpoint(urb->dev, urb->pipe);
+> > +	ep = usb_pipe_endpoint(dev, pipe);
+> >  	if (!ep)
+> >  		return -EINVAL;
+> > -	if (usb_pipetype(urb->pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
+> > +	if (usb_pipetype(pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
+> >  		return -EINVAL;
+> >  	return 0;
+> >  }
+> > +EXPORT_SYMBOL_GPL(usb_pipe_type_check);
+> > +
+> > +/**
+> > + * usb_urb_ep_type_check - sanity check of endpoint in the given urb
+> > + * @urb: urb to be checked
+> > + *
+> > + * This performs a light-weight sanity check for the endpoint in the
+> > + * given urb.  It returns 0 if the urb contains a valid endpoint, otherwise
+> > + * a negative error code.
+> > + */
+> > +int usb_urb_ep_type_check(const struct urb *urb)
+> > +{
+> > +	return usb_pipe_type_check(urb->dev, urb->pipe);
+> > +}
+> >  EXPORT_SYMBOL_GPL(usb_urb_ep_type_check);
+> 
+> Since this routine is used in only one place in the entire kernel, you 
+> might as well inline the code there and get rid of the function 
+> entirely.
 
-Thanks!
-Maxime
+Good idea, will do.
 
---e5pau4qoc3zkqthf
-Content-Type: application/pgp-signature; name="signature.asc"
+> > diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+> > index abf99b814a0f..fc3aab04a0bc 100644
+> > --- a/sound/usb/quirks.c
+> > +++ b/sound/usb/quirks.c
+> > @@ -846,7 +846,7 @@ static int snd_usb_accessmusic_boot_quirk(struct usb_device *dev)
+> >  	static const u8 seq[] = { 0x4e, 0x73, 0x52, 0x01 };
+> >  	void *buf;
+> >  
+> > -	if (snd_usb_pipe_sanity_check(dev, usb_sndintpipe(dev, 0x05)))
+> > +	if (usb_pipe_type_check(dev, usb_sndintpipe(dev, 0x05)))
+> >  		return -EINVAL;
+> >  	buf = kmemdup(seq, ARRAY_SIZE(seq), GFP_KERNEL);
+> >  	if (!buf)
+> > @@ -875,7 +875,7 @@ static int snd_usb_nativeinstruments_boot_quirk(struct usb_device *dev)
+> >  {
+> >  	int ret;
+> >  
+> > -	if (snd_usb_pipe_sanity_check(dev, usb_sndctrlpipe(dev, 0)))
+> > +	if (usb_pipe_type_check(dev, usb_sndctrlpipe(dev, 0)))
+> >  		return -EINVAL;
+> 
+> In a few places here this check is completely unnecessary.  All it does 
+> is verify that the device does have an endpoint 0 and the the type of 
+> the endpoint matches the type of the pipe.  Well, every USB device 
+> always has an endpoint 0, and it is always a bidirectional control 
+> endpoint.
 
------BEGIN PGP SIGNATURE-----
+I think this was probably added to handle syzbot issues.  As long as the
+USB core does ensure that a USB device has endpoint 0, I agree, these
+can be removed.  I'll go check that and add a follow-on patch to the
+series to do this, thanks.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX1Cb7wAKCRDj7w1vZxhR
-xWRjAPwJhMhdNSP5qbTflANlMD0Xd7lTe6EF9wl0yjLhICGfvQEA6ltIk+FhoKyo
-k62U6tP7k+gbDnsIlZzcIcSLR4de7gU=
-=qMJN
------END PGP SIGNATURE-----
+thanks,
 
---e5pau4qoc3zkqthf--
+greg k-h
