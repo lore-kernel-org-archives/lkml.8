@@ -2,121 +2,107 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C923C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F422C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72C7220639
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B36D20658
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:56:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gi+okfXZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQtt7SzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbgICOzp (ORCPT
+        id S1729223AbgICO4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:55:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40066 "EHLO
+        Thu, 3 Sep 2020 10:56:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729272AbgICOzH (ORCPT
+        with ESMTP id S1729188AbgICOLy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:55:07 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09737C061244;
-        Thu,  3 Sep 2020 07:55:04 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id z9so3214666wmk.1;
-        Thu, 03 Sep 2020 07:55:03 -0700 (PDT)
+        Thu, 3 Sep 2020 10:11:54 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C862C061249;
+        Thu,  3 Sep 2020 07:02:36 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id o16so1585564pjr.2;
+        Thu, 03 Sep 2020 07:02:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qe0IUMor49oE5XMAhnvv6mSoLAEeSax8zKoliUVr2L0=;
-        b=gi+okfXZCeX/IlzkMiCpZlg//ifHFRP21IdCT++z0wG14P5iGcFqn7N8v7NoUbSfOj
-         0tdSg6dbh5QAllC9EGec1pc7B/9FgTuraemtgTRnFf+4tTch2YhAKIi4AaoCdrkMGHUI
-         vtZiL8FY/zNy00AWcclqs/KmK4dauPB3Xo+R2RSXE6STv35I00R7K2tTlJ7hxXccITUs
-         7DlcgbQ1xpJDGNM8xywp06F0rPGou/oUqllkktUpn481sIWoZgMGmwGbuNZXXCKmo6/Y
-         c9rZ8SABVtYrhgbttUHtmrgS6QFCitd0Gkg//8buqscEJJdLWCSSjn29g5mXQtE5xe2n
-         iOdQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=49A9aeIFdmHDcRIkQHriMpz6lE3JWxr0PldhLtC8qt0=;
+        b=SQtt7SzKrG6DaNEyGfxX5XwoHo4i/dcT7LKhKfbmdlABg0wik2erYixTDgLZZifEtT
+         lTWm34bIVf9bUCSATFdNaqWG9AVnQw9WMCtdTmUIY7punEno0HlE9nnZWgUP9HXBscDC
+         uPdXWKZf6HL87EULVYTwckDAVO0uQbTSVR/mtsl2worIExzxv1wtSiGvWFx2XiagGNd6
+         ZjlE2ItUxUCvlujUnF0W1k4HAv3+4fI8yvYjrevnO47xbB++Wuzh2Nqsxs50kLacDuwT
+         lXckxwmX/+nN5gG0Ok0HxlpfiJpuO/EO8mNmpZu2AbYTWHPg+HmIIK3oVfqVcynrQBSq
+         ugAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qe0IUMor49oE5XMAhnvv6mSoLAEeSax8zKoliUVr2L0=;
-        b=qmdXksnIQsqLy64i+weItKbYF5QJjr3W3zIqvZYV80uw47K7leVTUqIiD06OoicH8Z
-         9tY/ZsjtBqTyc61K9NLij+jAesbDDY5S0exHdBWViVVb5Ix0isHTgI/coDyFh8gj+Ay/
-         n7AZvC39NrTJQIrU0aZUR4VxOAm1YdnMqsz7akR+NhC8n9f3tTSdCJRDDNv9DIy4Ydeq
-         Iiz1iEZ50ePwo7IauJp4zukDE4zy9XLQLmnqrJe5qcHTrGeY2vq8DoYRFx/pNegvW/o5
-         UMYbzYuEjJKw+bZeFuoUGcbpGVniit/FBe0xd/cJFVd1w5/lYISSIGhGxjR9kybIivhd
-         B0og==
-X-Gm-Message-State: AOAM533+kMh4IYIP+qv4KXHPkLG7jgh5lci7q3vkmFtliYlCyCkbVcUv
-        uBEt30V3cU0QK2UcQbH3TOQ=
-X-Google-Smtp-Source: ABdhPJzp7FadRwfFn2uumKx32iCq68f9e/8XCNGw/dcsrbaamHNjyN/I4Ew0UOBPtpUZdHtUwQk7ig==
-X-Received: by 2002:a1c:2983:: with SMTP id p125mr2887798wmp.21.1599144900930;
-        Thu, 03 Sep 2020 07:55:00 -0700 (PDT)
-Received: from Red.localdomain ([2a01:cb1d:3d5:a100:264b:feff:fe03:2806])
-        by smtp.googlemail.com with ESMTPSA id l8sm5124266wrx.22.2020.09.03.07.54.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 07:55:00 -0700 (PDT)
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mripard@kernel.org, robh+dt@kernel.org, robh@kernel.org,
-        wens@csie.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, m.cerveny@computer.org,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v2] dt-bindings: crypto: Specify that allwinner,sun8i-a33-crypto needs reset
-Date:   Thu,  3 Sep 2020 16:54:45 +0200
-Message-Id: <20200903145445.31779-1-clabbe.montjoie@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=49A9aeIFdmHDcRIkQHriMpz6lE3JWxr0PldhLtC8qt0=;
+        b=WThqJp19wnNYy431ucOQoHQO7ttLpVS3kBoq7q+Ipy+G/EPseIobbZ/MfSgU0Vi6Lq
+         JfgZvJYrEKmOPGRERtNzw44cmKK5AZFmjyBSvK802A5pGUlNU+l/3Qud7oQowf6bXJJW
+         B0Lod57fzAzMEFdTe7U/Coinkgk6eOQ485NGAW1bFvwxoRy+DycGNTuny5NTzyE86l4o
+         48rXupPdOlDUPk2gvzRcE9t0Z5chJZcP8roQh+kov4xEsUQXqK/w6dzE7e4a3Um5V4PH
+         UkuUwmOMaBVx1y/c8VnbytJA6YDDVhd86mVGbRj87+UNNBiZSvNhFPs3/FIUUPAyggxj
+         TuTw==
+X-Gm-Message-State: AOAM531DnVQoqVmhz6FNANiDVTcYntRI0lcpQ3vzI1ILBuhb4gpv3Ihk
+        yDwAb0a7ANUyWT6/CH6x3Dgg9ZZthPVES8n0V+U=
+X-Google-Smtp-Source: ABdhPJwFgSljebq/SNlzE73+hLRfPqfCH28CvG+u4ut4f0+IKxAQOiTd2OW6REn+/uM8F8LH7Cs3l5w88lmhp1SSd4k=
+X-Received: by 2002:a17:90a:b387:: with SMTP id e7mr3543210pjr.228.1599141755915;
+ Thu, 03 Sep 2020 07:02:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200903005300.7894-1-digetx@gmail.com> <20200903005300.7894-10-digetx@gmail.com>
+ <CAHp75VdPoJFNC+MntKu-CL8jFMEe85ZT3R9DF0aaNC4KjqWXyg@mail.gmail.com> <4bd12095-7a29-bcb4-6b49-83eca285c897@gmail.com>
+In-Reply-To: <4bd12095-7a29-bcb4-6b49-83eca285c897@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 3 Sep 2020 17:02:18 +0300
+Message-ID: <CAHp75VerqMmyDnbxaWN0R-DYPkOosh-R9CG970Sh+EqG21oZ8w@mail.gmail.com>
+Subject: Re: [PATCH v3 09/22] i2c: tegra: Clean up probe function
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When adding allwinner,sun8i-a33-crypto, I forgot to add that it needs reset.
-Furthermore, there are no need to use items to list only one compatible
-in compatible list.
+On Thu, Sep 3, 2020 at 4:48 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+> 03.09.2020 14:17, Andy Shevchenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Thu, Sep 3, 2020 at 3:54 AM Dmitry Osipenko <digetx@gmail.com> wrote=
+:
 
-Fixes: f81547ba7a98 ("dt-bindings: crypto: add new compatible for A33 SS")
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
----
-Change since v1:
-- use an enum for adding allwinner,sun8i-a33-crypto to "reset list"
+...
 
- .../bindings/crypto/allwinner,sun4i-a10-crypto.yaml        | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+> >> +       of_property_read_u32(np, "clock-frequency", &bus_clk_rate);
+> >> +       i2c_dev->bus_clk_rate =3D bus_clk_rate;
+> >
+> > Hmm... I dunno if Wolfram is going to implement a special helper
+> > exactly for this. I remember we discussed that with him during v5.8
+> > (?) times.
+>
+> I now see that there is a i2c_parse_fw_timings() which parses
+> "clock-frequency" and other common properties. I could switch to use
+> that helper, but not sure whether it would be really worthwhile because
+> only one property is needed to be parsed. I'll consider this change for
+> v4, thank you for the suggestion!
 
-diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
-index fc823572bcff..279f4a2e1dd7 100644
---- a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
-+++ b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
-@@ -23,8 +23,7 @@ properties:
-       - items:
-           - const: allwinner,sun7i-a20-crypto
-           - const: allwinner,sun4i-a10-crypto
--      - items:
--          - const: allwinner,sun8i-a33-crypto
-+      - const: allwinner,sun8i-a33-crypto
- 
-   reg:
-     maxItems: 1
-@@ -59,7 +58,9 @@ if:
-   properties:
-     compatible:
-       contains:
--        const: allwinner,sun6i-a31-crypto
-+        enum:
-+          - const: allwinner,sun6i-a31-crypto
-+          - const: allwinner,sun8i-a33-crypto
- 
- then:
-   required:
--- 
-2.26.2
+That's exactly why I was wondering about the current state of affairs
+with the discussed helper which should only parse the clock-frequency
+property.
 
+--=20
+With Best Regards,
+Andy Shevchenko
