@@ -2,229 +2,136 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B66AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17739C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 613CD208C7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54ED208B3
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:23:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rEqNHiOw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HaXeOZLH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729063AbgICPXS (ORCPT
+        id S1729035AbgICPXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:23:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44412 "EHLO
+        Thu, 3 Sep 2020 11:23:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729070AbgICPXH (ORCPT
+        with ESMTP id S1728642AbgICPWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:23:07 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B9FC061245
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 08:23:05 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id j188so1958181vsd.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 08:23:05 -0700 (PDT)
+        Thu, 3 Sep 2020 11:22:43 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EE35C061249;
+        Thu,  3 Sep 2020 08:22:43 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id gf14so1628174pjb.5;
+        Thu, 03 Sep 2020 08:22:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Joe7bJxFvjhQ7PFpcfdBrDyWM8om/PRVTMRPGum9AiA=;
-        b=rEqNHiOw8u46b6Z6/wsQzrmXcn6qbwSQp6vFILV8eNXL4YI9HvX2LIdfq+9eYrPyMU
-         MZ8MZGKO/8MwIkMSX5QePW1p/3cpjdE6ToP6ar4lpWqtFL/VIxOhFHSpLzbqDreaGUjv
-         UuPq5Tr37QGU8YozIZVPxnAjbqr0fCPKh5klkqsd3G6Lyx3d1TWO3gCMf2CK2UOt4FCu
-         YtnPZZXxp8YVqB6bBDuwXkio1RDCKyuZ1o7omSRnc7gtoCaUfawN49aEN+kCGRLudwVT
-         W0f4ljMLH0rlCEZn9TEGabz6/iTlKPHCljVvToCtll8LCmpHH/PJpEIFKA6fnVpwgKAD
-         uOGg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lcQkM04dJjt5Getpu5T9KGprYqJgTjrGD05xLf6xlJY=;
+        b=HaXeOZLHfdo/16NXDGDjO2lPxZWwj3Gm71jwz7RJg0LmPWXx1HctW+SxkT+x414sG2
+         Eh/K3t3iCT1WhPoGSaNeeHmBFEpuN35q5PIH2vAYis8yGGEbIQwwqjQWU5ur9Lzt/T84
+         DEXIvfLsHMKOA0hAJUlzU1gvKDt0/NvJbCguB3Oe6EIV9sQe0mVBkAP8/LjcPP3gCzeg
+         wGG60AJRk4vXLW8vEuLltOvZ6C2DM7noqXm6eGzF4XByEbtsXlVixBCFCVMApOTqS0q0
+         fy/fAliMHrRsUpwzzbfH7RVhI+oybNwDZ8sXwg+l39JTGxvS2+SafN9nadJM8n2TEa4k
+         +Bog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Joe7bJxFvjhQ7PFpcfdBrDyWM8om/PRVTMRPGum9AiA=;
-        b=X7DA//uM3yFBKAuseqKDfPv0GcudMh4hGdVbhKGQq6U1SRj7bwdb5Exc6wmR5X2cdf
-         8I0n9wSQWGRdo48hf4795HK4sriWJM28kkowLqzVn6c9G1yYdkgPCHlgy3xvfiw3PkWB
-         rz/jw9A2qOzveBBXSqYKtACxa80spM/n2kf2Bvmjb5aNZGL//Jk+I9eGbaOD1NxzpaSA
-         adEF7DmgPnCMOSWWOBBd6PNt4uZlxGyS5+G9KEbOGfS6l2dzS7U4ABG8wxCbECe0IBgc
-         0m5AApWOWZmc0d7Azj/HraH7Kxo3JbKPhytMjffFna+2Umn8lkxDyL3txLhznjZbT6PO
-         q27A==
-X-Gm-Message-State: AOAM533vaXGjoPKIOmGMmXS1gwkmfA3rQD5ESJkml0zQu0Ug3K32LoZE
-        HND5mS8G5MyoeAmGUYSiOXdpL26RaHn0HA==
-X-Google-Smtp-Source: ABdhPJx9I58u1/xGs17tYFzOmU0allDsECl1NcbZ8gFeD++UBAVT4rVY+wfx148QJX5lMV8DJFnhRw==
-X-Received: by 2002:a67:fd01:: with SMTP id f1mr1648752vsr.46.1599146583791;
-        Thu, 03 Sep 2020 08:23:03 -0700 (PDT)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id l17sm455602uab.1.2020.09.03.08.23.01
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 08:23:02 -0700 (PDT)
-Received: by mail-vs1-f54.google.com with SMTP id y3so1964250vsn.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 08:23:01 -0700 (PDT)
-X-Received: by 2002:a05:6102:150:: with SMTP id a16mr2136712vsr.99.1599146581291;
- Thu, 03 Sep 2020 08:23:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lcQkM04dJjt5Getpu5T9KGprYqJgTjrGD05xLf6xlJY=;
+        b=ZFdp3p63AD6i64k3GiZP7xbKhXiVWeRDLwsi6q++VEpTeHfA/sS5jFSUBqEWGFhGj7
+         S/rvpiCTA82yuCQnv2xRrzsxMdTvufQ29BUNBCd2TqXgGBFEMhd0kH7DzfuzTcMWoPWx
+         Ws/og+tyWZSgOWL4fWNFVHSmVnCgtiIQf00roQz9Qgp2/qGrwzjQCK37lxn5umP5pqbD
+         ARjeF9ysMD6EifPKmYvF5fVrtN4HBcU1o4Uh4ik4Pk74rt17wpz2r7GvphWVwpB4m/XV
+         SkE1axlyRSOIr44/rExwGZwGbz3Q2a0pfII/KlnsKyZiMS0fVKh7TRSmHEIM8gJ/DKST
+         KxOg==
+X-Gm-Message-State: AOAM530OvLHvvDBtK7JqJovHp7fe5z4krneGqqOjvoXUMoQh5cb7ywF2
+        J8pg4+pIMnmT2AVkO/l2gdLGNd+FY0e87g==
+X-Google-Smtp-Source: ABdhPJzLGpBfCgsWkYgtmAGFFuFFR16B4JeChVvuPseDTtA690faOIHaTtrsUsn6q+I26JJE/5ffTA==
+X-Received: by 2002:a17:90b:4a51:: with SMTP id lb17mr3634586pjb.235.1599146562303;
+        Thu, 03 Sep 2020 08:22:42 -0700 (PDT)
+Received: from localhost ([121.0.29.56])
+        by smtp.gmail.com with ESMTPSA id o15sm3140855pgi.74.2020.09.03.08.22.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Sep 2020 08:22:41 -0700 (PDT)
+From:   Lai Jiangshan <jiangshanlai@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        kvm@vger.kernel.org
+Subject: [PATCH V3] kvm x86/mmu: use KVM_REQ_MMU_SYNC to sync when needed
+Date:   Fri,  4 Sep 2020 00:23:04 +0800
+Message-Id: <20200903162304.19694-1-jiangshanlai@gmail.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
+In-Reply-To: <20200903012224.GL11695@sjchrist-ice>
+References: <20200903012224.GL11695@sjchrist-ice>
 MIME-Version: 1.0
-References: <20200902150442.2779-1-vadym.kochan@plvision.eu> <20200902150442.2779-2-vadym.kochan@plvision.eu>
-In-Reply-To: <20200902150442.2779-2-vadym.kochan@plvision.eu>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Thu, 3 Sep 2020 17:22:24 +0200
-X-Gmail-Original-Message-ID: <CA+FuTSfMRhEZ5c2CWaN_F3ASDgvV7eQ4q6zVuY-FvgLqsqYecw@mail.gmail.com>
-Message-ID: <CA+FuTSfMRhEZ5c2CWaN_F3ASDgvV7eQ4q6zVuY-FvgLqsqYecw@mail.gmail.com>
-Subject: Re: [PATCH net v6 1/6] net: marvell: prestera: Add driver for
- Prestera family ASIC devices
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mickey Rachamim <mickeyr@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 5:37 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
->
-> Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
-> ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
-> wireless SMB deployment.
->
-> The current implementation supports only boards designed for the Marvell
-> Switchdev solution and requires special firmware.
->
-> The core Prestera switching logic is implemented in prestera_main.c,
-> there is an intermediate hw layer between core logic and firmware. It is
-> implemented in prestera_hw.c, the purpose of it is to encapsulate hw
-> related logic, in future there is a plan to support more devices with
-> different HW related configurations.
->
-> This patch contains only basic switch initialization and RX/TX support
-> over SDMA mechanism.
->
-> Currently supported devices have DMA access range <= 32bit and require
-> ZONE_DMA to be enabled, for such cases SDMA driver checks if the skb
-> allocated in proper range supported by the Prestera device.
->
-> Also meanwhile there is no TX interrupt support in current firmware
-> version so recycling work is scheduled on each xmit.
->
-> Port's mac address is generated from the switch base mac which may be
-> provided via device-tree (static one or as nvme cell), or randomly
-> generated.
->
-> Co-developed-by: Andrii Savka <andrii.savka@plvision.eu>
-> Signed-off-by: Andrii Savka <andrii.savka@plvision.eu>
-> Co-developed-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
-> Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
-> Co-developed-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
-> Signed-off-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
-> Co-developed-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
-> Signed-off-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
-> Co-developed-by: Taras Chornyi <taras.chornyi@plvision.eu>
-> Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
-> Co-developed-by: Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
-> Signed-off-by: Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
-> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+From: Lai Jiangshan <laijs@linux.alibaba.com>
 
-> +int prestera_hw_port_cap_get(const struct prestera_port *port,
-> +                            struct prestera_port_caps *caps)
-> +{
-> +       struct prestera_msg_port_attr_resp resp;
-> +       struct prestera_msg_port_attr_req req = {
-> +               .attr = PRESTERA_CMD_PORT_ATTR_CAPABILITY,
-> +               .port = port->hw_id,
-> +               .dev = port->dev_id
-> +       };
-> +       int err;
-> +
-> +       err = prestera_cmd_ret(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_GET,
-> +                              &req.cmd, sizeof(req), &resp.ret, sizeof(resp));
+When kvm_mmu_get_page() gets a page with unsynced children, the spt
+pagetable is unsynchronized with the guest pagetable. But the
+guest might not issue a "flush" operation on it when the pagetable
+entry is changed from zero or other cases. The hypervisor has the 
+responsibility to synchronize the pagetables.
 
-Here and elsewhere, why use a pointer to the first field in the struct
-vs the struct itself?
+The linux kernel behaves correctly as above for many years, but a recent
+commit 8c8560b83390 ("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for
+MMU specific flushes") inadvertently included a line of code to change it
+without giving any reason in the changelog. It is clear that the commit's
+intention was to change KVM_REQ_TLB_FLUSH -> KVM_REQ_TLB_FLUSH_CURRENT,
+so we don't unneedlesly flush other contexts but one of the hunks changed
+nearby KVM_REQ_MMU_SYNC instead.
 
-They are the same address, so it's fine, just a bit confusing as the
-size argument makes clear that the entire struct is to be copied.
+This patch changes it back.
 
-> +static int prestera_is_valid_mac_addr(struct prestera_port *port, u8 *addr)
-> +{
-> +       if (!is_valid_ether_addr(addr))
-> +               return -EADDRNOTAVAIL;
-> +
-> +       if (memcmp(port->sw->base_mac, addr, ETH_ALEN - 1))
+Fixes: 8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
+Link: https://lore.kernel.org/lkml/20200320212833.3507-26-sean.j.christopherson@intel.com/
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+---
+Changed from v1:
+	update patch description
 
-Why ETH_ALEN - 1?
+Changed form v2:
+	update patch description
 
-> +               return -EINVAL;
-> +
-> +       return 0;
-> +}
-> +
-> +static int prestera_port_set_mac_address(struct net_device *dev, void *p)
-> +{
-> +       struct prestera_port *port = netdev_priv(dev);
-> +       struct sockaddr *addr = p;
-> +       int err;
-> +
-> +       err = prestera_is_valid_mac_addr(port, addr->sa_data);
-> +       if (err)
-> +               return err;
-> +
-> +       err = prestera_hw_port_mac_set(port, addr->sa_data);
-> +       if (err)
-> +               return err;
-> +
-> +       memcpy(dev->dev_addr, addr->sa_data, dev->addr_len);
+ arch/x86/kvm/mmu/mmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Is addr_len ever not ETH_ALEN for this device?
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 4e03841f053d..9a93de921f2b 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -2468,7 +2468,7 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
+ 		}
+ 
+ 		if (sp->unsync_children)
+-			kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
++			kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
+ 
+ 		__clear_sp_write_flooding_count(sp);
+ 
+-- 
+2.19.1.6.gb485710b
 
-> +static int prestera_sdma_buf_init(struct prestera_sdma *sdma,
-> +                                 struct prestera_sdma_buf *buf)
-> +{
-> +       struct device *dma_dev = sdma->sw->dev->dev;
-> +       struct prestera_sdma_desc *desc;
-> +       dma_addr_t dma;
-> +
-> +       desc = dma_pool_alloc(sdma->desc_pool, GFP_DMA | GFP_KERNEL, &dma);
-> +       if (!desc)
-> +               return -ENOMEM;
-> +
-> +       if (dma + sizeof(struct prestera_sdma_desc) > sdma->dma_mask) {
-
-Can this happen? The DMA API should take care of dev->dma_mask constraints.
-
-> +               dma_pool_free(sdma->desc_pool, desc, dma);
-> +               dev_err(dma_dev, "failed to alloc desc\n");
-> +               return -ENOMEM;
-> +       }
-
-> +static int prestera_sdma_rx_skb_alloc(struct prestera_sdma *sdma,
-> +                                     struct prestera_sdma_buf *buf)
-> +{
-> +       struct device *dev = sdma->sw->dev->dev;
-> +       struct sk_buff *skb;
-> +       dma_addr_t dma;
-> +
-> +       skb = alloc_skb(PRESTERA_SDMA_BUFF_SIZE_MAX, GFP_DMA | GFP_ATOMIC);
-> +       if (!skb)
-> +               return -ENOMEM;
-> +
-> +       dma = dma_map_single(dev, skb->data, skb->len, DMA_FROM_DEVICE);
-> +       if (dma_mapping_error(dev, dma))
-> +               goto err_dma_map;
-> +       if (dma + skb->len > sdma->dma_mask)
-> +               goto err_dma_range;
-
-Same here
