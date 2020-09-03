@@ -5,26 +5,26 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FD0C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF81CC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDA722071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 910F520716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgICHBp (ORCPT
+        id S1728012AbgICHBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:01:45 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:56979 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726054AbgICHBm (ORCPT
+        Thu, 3 Sep 2020 03:01:49 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:45840 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726109AbgICHBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:01:42 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U7n-ifu_1599116494;
+        Thu, 3 Sep 2020 03:01:44 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U7n-ifu_1599116494;
 Received: from aliy80.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U7n-ifu_1599116494)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 03 Sep 2020 15:01:35 +0800
+          Thu, 03 Sep 2020 15:01:36 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     Anshuman Khandual <anshuman.khandual@arm.com>,
         David Hildenbrand <david@redhat.com>,
@@ -32,11 +32,19 @@ To:     Anshuman Khandual <anshuman.khandual@arm.com>,
         Vlastimil Babka <vbabka@suse.cz>,
         Alexander Duyck <alexander.duyck@gmail.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH v4 2/4] mm/pageblock: remove false sharing in pageblock_flags
-Date:   Thu,  3 Sep 2020 15:01:21 +0800
-Message-Id: <1599116482-7410-2-git-send-email-alex.shi@linux.alibaba.com>
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-mm@kvack.org
+Subject: [PATCH v4 3/4] mm/pageblock: work around multiple arch's cmpxchg support issue
+Date:   Thu,  3 Sep 2020 15:01:22 +0800
+Message-Id: <1599116482-7410-3-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1599116482-7410-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1599116482-7410-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -45,90 +53,215 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current pageblock_flags is only 4 bits, so it has to share a char size
-in cmpxchg when get set, the false sharing cause perf drop.
+Armv6, sh2, sparc32 and xtensa can not do cmpxchg1, so we have to use
+cmpxchg4 on it.
 
-If we incrase the bits up to 8, false sharing would gone in cmpxchg. and
-the only cost is half char per pageblock, which is half char per 128MB
-on x86, 4 chars in 1 GB.
+Here we mark above 4 arch's NO_CMPXCHG_BYTE, and would add more if we
+found.
 
+This is the first usages of cmpxchg flase sharing change. We'd better
+check more cmpxchg usages in current kernel...
+
+Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Chris Zankel <chris@zankel.net>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-xtensa@linux-xtensa.org
 Cc: linux-mm@kvack.org
 ---
- include/linux/page-isolation.h  |  2 +-
- include/linux/pageblock-flags.h |  2 +-
- mm/page_alloc.c                 | 10 +++-------
- 3 files changed, 5 insertions(+), 9 deletions(-)
+ arch/Kconfig           |  3 +++
+ arch/arm/Kconfig       |  1 +
+ arch/sh/Kconfig        |  1 +
+ arch/sparc/Kconfig     |  1 +
+ arch/xtensa/Kconfig    |  1 +
+ include/linux/mmzone.h | 15 ++++++++++++---
+ mm/page_alloc.c        | 22 +++++++++++-----------
+ 7 files changed, 30 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
-index 572458016331..baa2e1ecc134 100644
---- a/include/linux/page-isolation.h
-+++ b/include/linux/page-isolation.h
-@@ -35,7 +35,7 @@ static inline bool is_migrate_isolate(int migratetype)
+diff --git a/arch/Kconfig b/arch/Kconfig
+index af14a567b493..3514570c0f5f 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -431,6 +431,9 @@ config HAVE_CMPXCHG_LOCAL
+ config HAVE_CMPXCHG_DOUBLE
+ 	bool
  
- struct page *has_unmovable_pages(struct zone *zone, struct page *page,
- 				 int migratetype, int flags);
--void set_pageblock_migratetype(struct page *page, int migratetype);
-+void set_pageblock_migratetype(struct page *page, unsigned char migratetype);
- int move_freepages_block(struct zone *zone, struct page *page,
- 				int migratetype, int *num_movable);
++config NO_CMPXCHG_BYTE
++	bool
++
+ config ARCH_WEAK_RELEASE_ACQUIRE
+ 	bool
  
-diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
-index d189441568eb..f785c9d6d68c 100644
---- a/include/linux/pageblock-flags.h
-+++ b/include/linux/pageblock-flags.h
-@@ -25,7 +25,7 @@ enum pageblock_bits {
- 	 * Assume the bits will always align on a word. If this assumption
- 	 * changes then get/set pageblock needs updating.
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index e00d94b16658..03a6c7fd999d 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -48,6 +48,7 @@ config ARM
+ 	select GENERIC_ALLOCATOR
+ 	select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
+ 	select GENERIC_ATOMIC64 if CPU_V7M || CPU_V6 || !CPU_32v6K || !AEABI
++	select NO_CMPXCHG_BYTE if CPU_V6
+ 	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
+ 	select GENERIC_CPU_AUTOPROBE
+ 	select GENERIC_EARLY_IOREMAP
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index d20927128fce..4c7f0ad5b93f 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -155,6 +155,7 @@ menu "System type"
+ config CPU_SH2
+ 	bool
+ 	select SH_INTC
++	select NO_CMPXCHG_BYTE
+ 
+ config CPU_SH2A
+ 	bool
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index efeff2c896a5..51ae5c8ede87 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -58,6 +58,7 @@ config SPARC32
+ 	select CLZ_TAB
+ 	select HAVE_UID16
+ 	select OLD_SIGACTION
++	select NO_CMPXCHG_BYTE
+ 
+ config SPARC64
+ 	def_bool 64BIT
+diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
+index e997e0119c02..862b008ab09e 100644
+--- a/arch/xtensa/Kconfig
++++ b/arch/xtensa/Kconfig
+@@ -42,6 +42,7 @@ config XTENSA
+ 	select MODULES_USE_ELF_RELA
+ 	select PERF_USE_VMALLOC
+ 	select VIRT_TO_BUS
++	select NO_CMPXCHG_BYTE
+ 	help
+ 	  Xtensa processors are 32-bit RISC machines designed by Tensilica
+ 	  primarily for embedded systems.  These processors are both
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index be676e659fb7..0bc5ac0f8cd7 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -406,6 +406,15 @@ enum zone_type {
+ 
+ #ifndef __GENERATING_BOUNDS_H
+ 
++/* cmpxchg only support 32-bits operands on ARMv6, SPARC32, sh2, XTENSA.*/
++#ifdef CONFIG_NO_CMPXCHG_BYTE
++#define BITS_PER_FLAGS	BITS_PER_LONG
++typedef unsigned long pageblockflags_t;
++#else
++#define BITS_PER_FLAGS	BITS_PER_BYTE
++typedef unsigned char pageblockflags_t;
++#endif
++
+ struct zone {
+ 	/* Read-mostly fields */
+ 
+@@ -437,7 +446,7 @@ struct zone {
+ 	 * Flags for a pageblock_nr_pages block. See pageblock-flags.h.
+ 	 * In SPARSEMEM, this map is stored in struct mem_section
  	 */
--	NR_PAGEBLOCK_BITS
-+	NR_PAGEBLOCK_BITS = BITS_PER_BYTE
+-	unsigned char		*pageblock_flags;
++	pageblockflags_t	*pageblock_flags;
+ #endif /* CONFIG_SPARSEMEM */
+ 
+ 	/* zone_start_pfn == zone_start_paddr >> PAGE_SHIFT */
+@@ -1159,7 +1168,7 @@ struct mem_section_usage {
+ 	DECLARE_BITMAP(subsection_map, SUBSECTIONS_PER_SECTION);
+ #endif
+ 	/* See declaration of similar field in struct zone */
+-	unsigned char	pageblock_flags[0];
++	pageblockflags_t	pageblock_flags[0];
  };
  
- #ifdef CONFIG_HUGETLB_PAGE
+ void subsection_map_init(unsigned long pfn, unsigned long nr_pages);
+@@ -1212,7 +1221,7 @@ struct mem_section {
+ extern struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
+ #endif
+ 
+-static inline unsigned char *section_to_usemap(struct mem_section *ms)
++static inline pageblockflags_t *section_to_usemap(struct mem_section *ms)
+ {
+ 	return ms->usage->pageblock_flags;
+ }
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 81e96d4d9c42..3688e6b83318 100644
+index 3688e6b83318..8b65d83d8be6 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -517,19 +517,15 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
- 	unsigned long bitidx, byte_bitidx;
- 	unsigned char old_byte, byte;
+@@ -445,7 +445,7 @@ static inline bool defer_init(int nid, unsigned long pfn, unsigned long end_pfn)
+ #endif
  
--	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != 4);
-+	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != BITS_PER_BYTE);
+ /* Return a pointer to the bitmap storing bits affecting a block of pages */
+-static inline unsigned char *get_pageblock_bitmap(struct page *page,
++static inline pageblockflags_t *get_pageblock_bitmap(struct page *page,
+ 							unsigned long pfn)
+ {
+ #ifdef CONFIG_SPARSEMEM
+@@ -474,24 +474,24 @@ static inline int pfn_to_bitidx(struct page *page, unsigned long pfn)
+  * Return: pageblock_bits flags
+  */
+ static __always_inline
+-unsigned char __get_pfnblock_flags_mask(struct page *page,
++pageblockflags_t __get_pfnblock_flags_mask(struct page *page,
+ 					unsigned long pfn,
+ 					unsigned long mask)
+ {
+-	unsigned char *bitmap;
++	pageblockflags_t *bitmap;
+ 	unsigned long bitidx, byte_bitidx;
+-	unsigned char byte;
++	pageblockflags_t byte;
+ 
+ 	bitmap = get_pageblock_bitmap(page, pfn);
+ 	bitidx = pfn_to_bitidx(page, pfn);
+-	byte_bitidx = bitidx / BITS_PER_BYTE;
+-	bitidx &= (BITS_PER_BYTE-1);
++	byte_bitidx = bitidx / BITS_PER_FLAGS;
++	bitidx &= (BITS_PER_FLAGS - 1);
+ 
+ 	byte = bitmap[byte_bitidx];
+ 	return (byte >> bitidx) & mask;
+ }
+ 
+-unsigned char get_pfnblock_flags_mask(struct page *page, unsigned long pfn,
++pageblockflags_t get_pfnblock_flags_mask(struct page *page, unsigned long pfn,
+ 					unsigned long mask)
+ {
+ 	return __get_pfnblock_flags_mask(page, pfn, mask);
+@@ -513,16 +513,16 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
+ 					unsigned long pfn,
+ 					unsigned long mask)
+ {
+-	unsigned char *bitmap;
++	pageblockflags_t *bitmap;
+ 	unsigned long bitidx, byte_bitidx;
+-	unsigned char old_byte, byte;
++	pageblockflags_t old_byte, byte;
+ 
+-	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != BITS_PER_BYTE);
++	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != BITS_PER_FLAGS);
  	BUILD_BUG_ON(MIGRATE_TYPES > (1 << PB_migratetype_bits));
  
  	bitmap = get_pageblock_bitmap(page, pfn);
  	bitidx = pfn_to_bitidx(page, pfn);
- 	byte_bitidx = bitidx / BITS_PER_BYTE;
--	bitidx &= (BITS_PER_BYTE-1);
+-	byte_bitidx = bitidx / BITS_PER_BYTE;
++	byte_bitidx = bitidx / BITS_PER_FLAGS;
  
  	VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn), page);
- 
--	mask <<= bitidx;
--	flags <<= bitidx;
--
- 	byte = READ_ONCE(bitmap[byte_bitidx]);
- 	for (;;) {
- 		old_byte = cmpxchg(&bitmap[byte_bitidx], byte, (byte & ~mask) | flags);
-@@ -539,13 +535,13 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
- 	}
- }
- 
--void set_pageblock_migratetype(struct page *page, int migratetype)
-+void set_pageblock_migratetype(struct page *page, unsigned char migratetype)
- {
- 	if (unlikely(page_group_by_mobility_disabled &&
- 		     migratetype < MIGRATE_PCPTYPES))
- 		migratetype = MIGRATE_UNMOVABLE;
- 
--	set_pfnblock_flags_mask(page, (unsigned long)migratetype,
-+	set_pfnblock_flags_mask(page, migratetype,
- 				page_to_pfn(page), MIGRATETYPE_MASK);
- }
  
 -- 
 1.8.3.1
