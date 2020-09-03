@@ -2,182 +2,128 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C28C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC486C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44EAF2071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9494206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:35:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="b+pvUnRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgICLem (ORCPT
+        id S1728685AbgICLfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:34:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:59500 "EHLO foss.arm.com"
+        Thu, 3 Sep 2020 07:35:30 -0400
+Received: from crapouillou.net ([89.234.176.41]:51336 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728501AbgICL3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:29:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4A14101E;
-        Thu,  3 Sep 2020 04:20:51 -0700 (PDT)
-Received: from e108754-lin.cambridge.arm.com (unknown [10.1.199.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EC4E23F66F;
-        Thu,  3 Sep 2020 04:20:50 -0700 (PDT)
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org, sudeep.holla@arm.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ionela.voinescu@arm.com
-Subject: [PATCH] cpufreq,cppc: fix issue when hotplugging out policy->cpu
-Date:   Thu,  3 Sep 2020 12:19:55 +0100
-Message-Id: <20200903111955.31029-1-ionela.voinescu@arm.com>
-X-Mailer: git-send-email 2.17.1
+        id S1728589AbgICLaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:30:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1599132376; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LJlqqFXg/MOSyVPsBSEVTxCBPa0T4MkeyfIM49qM1g0=;
+        b=b+pvUnRtEmJmpiSgtZPGUBj4jbeHQi4WsVy7CavoSjIUC28Cc4MpspoqZpIKRfwIrkBLBs
+        RZkLN2dTM0yjA5rbk4otHIJt/lwY0is9oymHiRp5Mtl0pDgiVY5erZzlOwmsrH4ojxsLZ8
+        ct0D39tVUdLlv8sq6t7DbOx5TANfc3Q=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Tony Prisk <linux@prisktech.co.nz>, Bin Liu <b-liu@ti.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 05/20] usb/cdns3: core: Use pm_ptr() macro
+Date:   Thu,  3 Sep 2020 13:25:39 +0200
+Message-Id: <20200903112554.34263-6-paul@crapouillou.net>
+In-Reply-To: <20200903112554.34263-1-paul@crapouillou.net>
+References: <20200903112554.34263-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An issue is observed in the cpufreq CPPC driver when having dependency
-domains (PSD) and the policy->cpu is hotplugged out.
+Use the newly introduced pm_ptr() macro, and mark the suspend/resume
+functions __maybe_unused. These functions can then be moved outside the
+CONFIG_PM_SUSPEND block, and the compiler can then process them and
+detect build failures independently of the config. If unused, they will
+simply be discarded by the compiler.
 
-Considering a platform with 4 CPUs and 2 PSD domains (CPUs 0 and 1 in
-PSD-1, CPUs 2 and 3 in PSD-2), cppc_cpufreq_cpu_init() will be called
-for the two cpufreq policies that are created and it will set
-all_cpu_data[policy->cpu]->cpu = policy->cpu.
-
-Therefore all_cpu_data[0]->cpu=0, and all_cpu_data[2]->cpu=2. But for
-CPUs 1 and 3, all_cpu_data[{1,3}]->cpu will remain 0 from the structure
-allocation.
-
-If CPU 2 is hotplugged out, CPU 3 will become policy->cpu. But its
-all_cpu_data[3]->cpu will remain 0. Later, when the .target() function
-is called for policy2, the cpu argument to cppc_set_perf() will be 0 and
-therefore it will use the performance controls of CPU 0, which will
-result in a performance level change for the wrong domain.
-
-While the possibility of setting a correct CPU value in the per-cpu
-cppc_cpudata structure is available, it can be noticed that this cpu value
-is not used at all outside the .target() function, where it's not actually
-necessary. Therefore, remove the cpu variable from the cppc_cpudata
-structure and use policy->cpu in the .target() function as done for the
-other CPPC cpufreq functions.
-
-Fixes: 5477fb3bd1e8  ("ACPI / CPPC: Add a CPUFreq driver for use with CPPC")
-Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
+ drivers/usb/cdns3/core.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-Testing was done on a Juno R2 platform (with the proper ACPI/CPPC setup):
-CPUs 0, 1, 2, 3 are in PSD-0 (policy0), CPUs 4 and 5 are in PSD-4
-(policy4).
-
-Before the fix:
-
-root@sqwt-ubuntu:~# dmesg | grep address
-[    2.165177] ACPI CPPC: ACPI desired perf address 0: - ffff80001004d200
-[    2.174226] ACPI CPPC: ACPI desired perf address 1: - ffff800010055200
-[    2.183231] ACPI CPPC: ACPI desired perf address 2: - ffff80001005d200
-[    2.192234] ACPI CPPC: ACPI desired perf address 3: - ffff800010065200
-[    2.201245] ACPI CPPC: ACPI desired perf address 4: - ffff80001006d218
-[    2.210256] ACPI CPPC: ACPI desired perf address 5: - ffff800011ff1218
-[..]
-[    2.801940] ACPI CPPC: Writing to address for CPU 0:ffff80001004d200: 38300
-[    2.835286] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 102400
-[..]
-root@sqwt-ubuntu:~# cd /sys/devices/system/cpu/cpufreq/
-root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 600000 > policy4/scaling_setspeed
-[   72.098758] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 51200
-root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 1200000 > policy4/scaling_setspeed
-[   85.430645] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 102400
-root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 0 > ../cpu4/online
-[  102.606380] CPPC Cpufreq:CPPC: Calculate: (6285/261)*4266=102727.
-[  102.612491] CPPC Cpufreq:CPPC: Core rate = 1203832, arch timer rate: 50000000
-[  102.619659] ACPI CPPC: Writing to address for CPU 0:ffff80001004d200: 102400
-[  102.626898] CPU4: shutdown
-root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 600000 > policy4/scaling_setspeed
-[  141.116882] ACPI CPPC: Writing to address for CPU 0:ffff80001004d200: 51200
-root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 1200000 > policy4/scaling_setspeed
-[  159.288273] ACPI CPPC: Writing to address for CPU 0:ffff80001004d200: 102400
-
-
-After the fix:
-
-root@sqwt-ubuntu:~# cd /sys/devices/system/cpu/cpufreq/
-root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 600000 > policy4/scaling_setspeed
-[  139.903322] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 51200
-root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 1200000 > policy4/scaling_setspeed
-[  147.279040] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 102400
-root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 0 > ../cpu4/online
-[  153.598686] CPPC Cpufreq:CPPC: Calculate: (6171/253)*4266=104053.
-[  153.604797] CPPC Cpufreq:CPPC: Core rate = 1219371, arch timer rate: 50000000
-[  153.611960] ACPI CPPC: Writing to address for CPU 5:ffff800011ff1218: 102400
-[  153.619190] CPU4: shutdown
-[  153.621911] psci: CPU4 killed (polled 0 ms)
-root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 600000 > policy4/scaling_setspeed
-[  170.122495] ACPI CPPC: Writing to address for CPU 5:ffff800011ff1218: 51200
-root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 1200000 > policy4/scaling_setspeed
-[  177.206342] ACPI CPPC: Writing to address for CPU 5:ffff800011ff1218: 102400
-
-Thanks,
-Ionela.
-
- drivers/cpufreq/cppc_cpufreq.c | 8 ++++----
- include/acpi/cppc_acpi.h       | 1 -
- 2 files changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
-index f29e8d0553a8..54457f5fe49e 100644
---- a/drivers/cpufreq/cppc_cpufreq.c
-+++ b/drivers/cpufreq/cppc_cpufreq.c
-@@ -149,8 +149,9 @@ static int cppc_cpufreq_set_target(struct cpufreq_policy *policy,
- 		unsigned int target_freq,
- 		unsigned int relation)
- {
--	struct cppc_cpudata *cpu;
- 	struct cpufreq_freqs freqs;
-+	int cpu_num = policy->cpu;
-+	struct cppc_cpudata *cpu;
- 	u32 desired_perf;
- 	int ret = 0;
- 
-@@ -166,12 +167,12 @@ static int cppc_cpufreq_set_target(struct cpufreq_policy *policy,
- 	freqs.new = target_freq;
- 
- 	cpufreq_freq_transition_begin(policy, &freqs);
--	ret = cppc_set_perf(cpu->cpu, &cpu->perf_ctrls);
-+	ret = cppc_set_perf(cpu_num, &cpu->perf_ctrls);
- 	cpufreq_freq_transition_end(policy, &freqs, ret != 0);
- 
- 	if (ret)
- 		pr_debug("Failed to set target on CPU:%d. ret:%d\n",
--				cpu->cpu, ret);
-+				cpu_num, ret);
- 
- 	return ret;
+diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
+index 5c1586ec7824..dacab9e9ef92 100644
+--- a/drivers/usb/cdns3/core.c
++++ b/drivers/usb/cdns3/core.c
+@@ -546,9 +546,7 @@ static int cdns3_remove(struct platform_device *pdev)
+ 	return 0;
  }
-@@ -247,7 +248,6 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
  
- 	cpu = all_cpu_data[policy->cpu];
+-#ifdef CONFIG_PM_SLEEP
+-
+-static int cdns3_suspend(struct device *dev)
++static int __maybe_unused cdns3_suspend(struct device *dev)
+ {
+ 	struct cdns3 *cdns = dev_get_drvdata(dev);
+ 	unsigned long flags;
+@@ -568,7 +566,7 @@ static int cdns3_suspend(struct device *dev)
+ 	return 0;
+ }
  
--	cpu->cpu = cpu_num;
- 	ret = cppc_get_perf_caps(policy->cpu, &cpu->perf_caps);
+-static int cdns3_resume(struct device *dev)
++static int __maybe_unused cdns3_resume(struct device *dev)
+ {
+ 	struct cdns3 *cdns = dev_get_drvdata(dev);
+ 	unsigned long flags;
+@@ -588,11 +586,8 @@ static int cdns3_resume(struct device *dev)
  
- 	if (ret) {
-diff --git a/include/acpi/cppc_acpi.h b/include/acpi/cppc_acpi.h
-index a6a9373ab863..451132ec83c9 100644
---- a/include/acpi/cppc_acpi.h
-+++ b/include/acpi/cppc_acpi.h
-@@ -124,7 +124,6 @@ struct cppc_perf_fb_ctrs {
+ 	return 0;
+ }
+-#endif
  
- /* Per CPU container for runtime CPPC management. */
- struct cppc_cpudata {
--	int cpu;
- 	struct cppc_perf_caps perf_caps;
- 	struct cppc_perf_ctrls perf_ctrls;
- 	struct cppc_perf_fb_ctrs perf_fb_ctrs;
+-static const struct dev_pm_ops cdns3_pm_ops = {
+-	SET_SYSTEM_SLEEP_PM_OPS(cdns3_suspend, cdns3_resume)
+-};
++static SIMPLE_DEV_PM_OPS(cdns3_pm_ops, cdns3_suspend, cdns3_resume);
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id of_cdns3_match[] = {
+@@ -608,7 +603,7 @@ static struct platform_driver cdns3_driver = {
+ 	.driver		= {
+ 		.name	= "cdns-usb3",
+ 		.of_match_table	= of_match_ptr(of_cdns3_match),
+-		.pm	= &cdns3_pm_ops,
++		.pm	= pm_ptr(&cdns3_pm_ops),
+ 	},
+ };
+ 
 -- 
-2.17.1
+2.28.0
 
