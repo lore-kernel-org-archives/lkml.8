@@ -2,165 +2,193 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD74C10DAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0362C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6F720797
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E2F20797
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VhBq0Pd1"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="hjMrVcf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbgICXZk (ORCPT
+        id S1729538AbgICXZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 19:25:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34208 "EHLO
+        Thu, 3 Sep 2020 19:25:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbgICXZL (ORCPT
+        with ESMTP id S1729336AbgICXZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 19:25:11 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A66C061245
+        Thu, 3 Sep 2020 19:25:12 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72794C06125C
         for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 16:25:11 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id g29so3349356pgl.2
+Received: by mail-qt1-x844.google.com with SMTP id e7so3300182qtj.11
         for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:25:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ak7sgXD1yUS+b4yneXUgmseigL5T/tHURONnrfZ0LI4=;
-        b=VhBq0Pd1fQUl41cTBulPJPpdxGflwL0G7Gqg1UwnWwh7hC3EHSfa7oPF3xPReYY4jn
-         BAWM7qrieI6Kba9y15jYXktkL7ZlLYJjFqbAHH+2+qgP7TtD6dXZkTSM/dM7KV4y/BQ2
-         YfsUkkK/A9E3N0HUpkt7fYZBAsf2ixttwmFIU=
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CpIM1vivLGzOLkg2coJ9MKu5jBPaDdQiymauIKRU90I=;
+        b=hjMrVcf/HWZjuosu4QG0j6BBgJS51vZoP3ffeIvYP7UxIzFTjjobvv7VJIYz+YDMgf
+         YehgtUxoeLnY6L5a76UvY3QrdjGFjp3iorJxhkmXxrRV9hk8QyLMqSCDahkorhyEfkVz
+         JMRC594IihbkmbpshO7AocOKJco3HWgK9TGPvgc9HV9s62TurLnTaJsk/qDNPOWhTJ/t
+         YNblHOM95DB9wXQnyHHWxyJGw/9S9A7WIdYh5ILo6vf37cTOphuuK9eR3E+vBiZXYQgC
+         3w46PkP+1jkJo8Uwv7NRP2d2ttY0RLAejlkt/7mAVlDeYreoSkK4fIaA+u0A18W1QDNg
+         NpXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ak7sgXD1yUS+b4yneXUgmseigL5T/tHURONnrfZ0LI4=;
-        b=c/UKbjOf7QPd3ZtDgrATvvOIM2aQrqKii+jgVDJzgvyFIJezAlyn7Q3Ko+ePCxs5EV
-         7MqUMfa1Yh8EKajQE5GcKIOVB1kS/M023iFSiT1EYuSEFflvnCtlcmmU/OohlhxSendk
-         qccBlutMXDdHWi9WBdXWfRiyXWCQrDgKo1D6NjH8mEPwyuSPEf8YV0HMH9cObc3G9SGB
-         1qb/SAk9CSB7lmSNjrk0D9d8/hKDzdG8gPT2Ysr5AiZ8ZcTQFj4yyS+OFk1EYfa0n3bO
-         eaPCfk6A99fZqHllnQa9WNWnlOS6SBt6jThU6R2gEZzrFHel9cGMgx2FhEI3pMI3TvlC
-         Uo7w==
-X-Gm-Message-State: AOAM531S64erQcJHhRWBFRuN0nOSeZHfF+CrXVYq5iC9eSjjR4TW6/TT
-        JZ6DpHdccXW3HyGuHpYr1OOMBQ==
-X-Google-Smtp-Source: ABdhPJzWCp1ofM9pNblsz3oLmRdRBFRUQauHQjSC92yoCjre8k5Y3NiZEW1Bbb485EaunCczoEjv5Q==
-X-Received: by 2002:a62:ea01:: with SMTP id t1mr6001343pfh.125.1599175510807;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CpIM1vivLGzOLkg2coJ9MKu5jBPaDdQiymauIKRU90I=;
+        b=PWDk25VIDHmJsPNO9RrECcys4LJ11JXGZZ3nn82T4iwwegfS6mG4noJHhlhm3Thpqm
+         bcOztndirXmKZXqbs9mhxNOQB7ETedyd3iBilw5CT9oY+R8nNoOc9uiAa+6xLlAVQHaL
+         FSHh2GHcsLyCwfAzxiCYoVa30uNwo0MXUfx4fJaAnvO70DGm/227usZbYrulIi/D3F/a
+         LfyI1XiUuYK5m76HwVt8eJUwVKjAppfX9QngFqTi03wumdGtb2sf8FOQWj9qmAi0jJeb
+         cAEMo7Zj8Rq3QSkJXmtGzDP2W3IWlyoUInk25MARrmhbQovHgENzhLbvKuzMesTzSEum
+         fSEg==
+X-Gm-Message-State: AOAM531EkXxhlRWa9qGzU1vL+nVxNzsYnext4fyvRLPqfMOb1wt0N54I
+        Y6Qkl1siddD9tBVHw6kI1XQrOA==
+X-Google-Smtp-Source: ABdhPJyy8QS6W7hRKA79lufueRD9aNPrALoyUJvwiGtauVl1gDdogpQGhbfPM37w2mYIENqhEa69oA==
+X-Received: by 2002:aed:3e2e:: with SMTP id l43mr6217308qtf.392.1599175510429;
         Thu, 03 Sep 2020 16:25:10 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id q7sm3614459pgg.10.2020.09.03.16.25.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id v202sm3397009qka.5.2020.09.03.16.25.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
         Thu, 03 Sep 2020 16:25:10 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     swboyd@chromium.org, Douglas Anderson <dianders@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Angelo Dureghello <angelo.dureghello@timesys.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Subject: [PATCH 6/6] mmc: Set PROBE_PREFER_ASYNCHRONOUS for drivers that are newer than 5.4
-Date:   Thu,  3 Sep 2020 16:24:41 -0700
-Message-Id: <20200903162412.6.Ib121debfb18e5f923a3cd38fe9c36aa086c650c5@changeid>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-In-Reply-To: <20200903232441.2694866-1-dianders@chromium.org>
-References: <20200903232441.2694866-1-dianders@chromium.org>
+Subject: Re: [PATCH v2 07/10] phy: qcom-qmp: Add support for DP in USB3+DP
+ combo phy
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Wesley Cheng <wcheng@codeaurora.org>
+References: <20200902230215.3452712-1-swboyd@chromium.org>
+ <20200902230215.3452712-8-swboyd@chromium.org>
+ <b6f80242-482d-b778-690b-8aefa4e8f23e@marek.ca>
+ <159917286975.334488.16684252260287652678@swboyd.mtv.corp.google.com>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <7cf46574-569d-c69d-cfed-0fa20057b4d5@marek.ca>
+Date:   Thu, 3 Sep 2020 19:24:26 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <159917286975.334488.16684252260287652678@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is like commit 3d3451124f3d ("mmc: sdhci-msm: Prefer asynchronous
-probe") but applied to a whole pile of drivers.  This batch converts
-the drivers that appeared to have been added after kernel 5.4.
+On 9/3/20 6:41 PM, Stephen Boyd wrote:
+> Quoting Jonathan Marek (2020-09-03 13:43:10)
+>> On 9/2/20 7:02 PM, Stephen Boyd wrote:
+>>>
+>>> This code is based on a submission of this phy and PLL in the drm
+>>> subsystem.
+>>
+>> I updated my upstream-based sm8150/sm8250 displayport stack [1] to use
+>> these patches.
+> 
+> Great!
+> 
+>>
+>> This commit [2] might interest you, so that you can consider what needs
+>> to change between v3 and v4 PHYs. Note some of the V4 registers have the
+>> same address as V3, so the diff could be smaller.
+> 
+> Looks like v4 will need to introduce a register indirection table for
+> the differences. Also need to add a table for the aux initial table
+> values and the calibration values for aux_cfg1. Seems like it won't be
+> too bad.
+> 
+> Does DP work with those patches with v4? You should make yourself the
+> author of commit d3c6da6f87eedb20ea1591aaae1ea4e63d7bd777 ;-)
+> 
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+Yes, it works, although the PHY is hardcoded to CC2 orientation and 4 
+lanes, SS PHY disabled, and hotplugging/TCPM doesn't work in all cases.
 
- drivers/mmc/host/meson-mx-sdhc-mmc.c | 1 +
- drivers/mmc/host/owl-mmc.c           | 1 +
- drivers/mmc/host/sdhci-esdhc-mcf.c   | 1 +
- drivers/mmc/host/sdhci-milbeaut.c    | 1 +
- drivers/mmc/host/sdhci-of-sparx5.c   | 1 +
- 5 files changed, 5 insertions(+)
+>>
+>> Do you have any plan for dealing with the SS PHY and DP PHY conflicting
+>> with each other? For example, PHY_MODE_CTRL needs to be "DP_MODE" for
+>> 4-lane DP, "DP_MODE | USB3_MODE" for 2-lane DP + USB3, and (AFAIK)
+>> "USB3_MODE" for superspeedplus usb (and it seems this gates some clocks,
+>> so you can't read/write dp tx2 registers in 2-lane DP mode for example).
+> 
+> Right. I've seen that behavior as well.
+> 
+>>   From your cover letter it sounds like this isn't relevant to your
+>> hardware, but it looks like both PHYs are writing to the dp_com region
+>> which is still problematic. (in the branch I linked, I disabled the SS
+>> PHY to test the DP PHY)
+> 
+> Right. I mentioned in the cover letter that this needs to hook into the
+> type-c subsystem somehow. I haven't done any of that work because I
+> don't have a configuration that is as dynamic. As long as the type-c
+> stuff can express my static configuration it will be fine. If you have
+> done any work there I'm happy to review the code and test it out on my
+> configuration.
+> 
+> The driver is setup for DP_MODE | USB3_MODE (i.e. concurrent mode) so it
+> is already hardcoded for the 2-lane use case that I have. If I didn't
+> connect two lanes from the phy to a USB hub I could support all the
+> different combinations but that isn't the case. On phones it is
+> basically the only case though because the pins from the usb3+dp phy go
+> straight to the type-c connector.
+> 
+> qcom_qmp_phy_com_init() is the only place I see the driver writing to it
+> and it is refcounted so basically the first phy to get initialized will
+> set things up in the common area. I suppose for supporting various use
+> cases like 4 lanes DP or 2 lanes DP and USB then that refcounting logic
+> will need to be changed. I'm not sure what is supposed to happen though.
+> I guess the USB host controller, i.e. dwc3, will have to know to stop
+> trying to use the phy and then power down and let the DP controller take
+> over the phy? It's a dance of three or four drivers.
+> 
+The solution could be that the DP PHY has priority over the SS PHY. If 
+the DP PHY is enabled with 4 lanes then it should go into DP_MODE, 1-2 
+lanes it goes into concurrent mode, and USB3_MODE if disabled. The 
+problem then is that the SS PHY can't be enabled while the DP PHY is 
+enabled (since it will be clock gated), so enabling the SS PHY needs to 
+be deferred to when the DP PHY is disabled. I think that is reasonable?
 
-diff --git a/drivers/mmc/host/meson-mx-sdhc-mmc.c b/drivers/mmc/host/meson-mx-sdhc-mmc.c
-index 53e3f6a4245a..7cd9c0ec2fcf 100644
---- a/drivers/mmc/host/meson-mx-sdhc-mmc.c
-+++ b/drivers/mmc/host/meson-mx-sdhc-mmc.c
-@@ -903,6 +903,7 @@ static struct platform_driver meson_mx_sdhc_driver = {
- 	.remove  = meson_mx_sdhc_remove,
- 	.driver  = {
- 		.name = "meson-mx-sdhc",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table = of_match_ptr(meson_mx_sdhc_of_match),
- 	},
- };
-diff --git a/drivers/mmc/host/owl-mmc.c b/drivers/mmc/host/owl-mmc.c
-index df43f42855e2..ccf214a89eda 100644
---- a/drivers/mmc/host/owl-mmc.c
-+++ b/drivers/mmc/host/owl-mmc.c
-@@ -689,6 +689,7 @@ MODULE_DEVICE_TABLE(of, owl_mmc_of_match);
- static struct platform_driver owl_mmc_driver = {
- 	.driver = {
- 		.name	= "owl_mmc",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table = owl_mmc_of_match,
- 	},
- 	.probe		= owl_mmc_probe,
-diff --git a/drivers/mmc/host/sdhci-esdhc-mcf.c b/drivers/mmc/host/sdhci-esdhc-mcf.c
-index 71bf086a9812..ca7a1690b2a8 100644
---- a/drivers/mmc/host/sdhci-esdhc-mcf.c
-+++ b/drivers/mmc/host/sdhci-esdhc-mcf.c
-@@ -509,6 +509,7 @@ static int sdhci_esdhc_mcf_remove(struct platform_device *pdev)
- static struct platform_driver sdhci_esdhc_mcf_driver = {
- 	.driver	= {
- 		.name = "sdhci-esdhc-mcf",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
- 	.probe = sdhci_esdhc_mcf_probe,
- 	.remove = sdhci_esdhc_mcf_remove,
-diff --git a/drivers/mmc/host/sdhci-milbeaut.c b/drivers/mmc/host/sdhci-milbeaut.c
-index 4e7cc0680f94..148b37ac6564 100644
---- a/drivers/mmc/host/sdhci-milbeaut.c
-+++ b/drivers/mmc/host/sdhci-milbeaut.c
-@@ -333,6 +333,7 @@ static int sdhci_milbeaut_remove(struct platform_device *pdev)
- static struct platform_driver sdhci_milbeaut_driver = {
- 	.driver = {
- 		.name = "sdhci-milbeaut",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table = of_match_ptr(mlb_dt_ids),
- 	},
- 	.probe	= sdhci_milbeaut_probe,
-diff --git a/drivers/mmc/host/sdhci-of-sparx5.c b/drivers/mmc/host/sdhci-of-sparx5.c
-index 747f108a0ace..28e4ee69e100 100644
---- a/drivers/mmc/host/sdhci-of-sparx5.c
-+++ b/drivers/mmc/host/sdhci-of-sparx5.c
-@@ -255,6 +255,7 @@ MODULE_DEVICE_TABLE(of, sdhci_sparx5_of_match);
- static struct platform_driver sdhci_sparx5_driver = {
- 	.driver = {
- 		.name = "sdhci-sparx5",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table = sdhci_sparx5_of_match,
- 		.pm = &sdhci_pltfm_pmops,
- 	},
--- 
-2.28.0.526.ge36021eeef-goog
+Note I have a TCPM (typec + USB PD) driver [1] which is required to 
+negotiate the DP altmode (and provides altmode events to the DP driver 
+so it can enable/disable the PHY). My problem is the qcom PMIC doesn't 
+provide exactly what TCPM wants, and I don't have access to PMIC 
+documentation, so its difficult for me to make a fully working TCPM 
+driver. Also conflicts with [2] since both drivers use the typec PMIC 
+block...
 
+[1] 
+https://github.com/flto/linux/commit/820265ce8535c6396083c5a884870f0f44603a72
+[2] https://patchwork.kernel.org/cover/11710371/
+
+>>
+>> Also some issues I noticed:
+>> - used QSERDES_COM_RESETSM_CNTRL instead of
+>> QSERDES_V3_COM_RESETSM_CNTRL2, which has different value
+>> - in sc7180_dpphy_cfg, .regs is NULL, which results in NULL references
+> 
+> Can you add these as inline review comments? Would help me understand
+> what you're talking about. Thanks for the review!
+>
