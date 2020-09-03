@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2753C10DAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 189F0C10DAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9700820716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9D4E20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:43:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gv/ffUiV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lJIfcDz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbgICWnZ (ORCPT
+        id S1729521AbgICWnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:43:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55968 "EHLO
+        Thu, 3 Sep 2020 18:43:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728486AbgICWnU (ORCPT
+        with ESMTP id S1728294AbgICWnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:43:20 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0799EC061245
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:43:20 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id c142so3496798pfb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:43:20 -0700 (PDT)
+        Thu, 3 Sep 2020 18:43:39 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11154C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:43:39 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id m5so3265600pgj.9
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:43:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=JQ91+76gyHMY3xv40LcJfL22rVwnSHEWIrs+JY61Lfw=;
-        b=Gv/ffUiV4cHAcDklljNvHcMHuBcglanuZNKtn6NOLTMdAobfJFLi4S3XUK/VF0cMoa
-         YCSlZMjLzO+hSp1mb2H+OVfbR2yXR8wtEPXnlt5uMI360+iCnjR0H3cIuzPcnksebXGK
-         d93lpCoPbskfIrQ+gg8nraNFnKZGq6Pjaz6ts=
+        bh=x2xuRKyyLJWi/1UackWdCkMB4cqQZJ4+/7t+T3jGKh8=;
+        b=lJIfcDz7WioC0cxPF2mcu4r4CpHJqN+NQMfhDVOZMDBJjVlbujjOIztvgAAg+FLLZl
+         OQLArQHvfuAUFWnT+Br9hn0eKYi/T1OqGrNfJkgbHQQkXC6PnVXOP14VrZKCoiAx6sGj
+         N08DlYuf2tSmgQZcy/X6jmQw8+vZKntUZzYMc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=JQ91+76gyHMY3xv40LcJfL22rVwnSHEWIrs+JY61Lfw=;
-        b=O9w4kJ7pXvNIwlIJObopW3PqIt0BRTPHww4due9Q/I/c79gKarpBTzp1t5dt/7/OoV
-         WnjgtGir3JmmNAj+opshsj6q3jl0v4G0uPvHX2c8Yp2EzXxBYUC4S9ieOaM2MbG2o1an
-         K1jPi7RHIRjXQC08H3q2weLbjgPOPl++hDzzE5U8A/Cuv0leQVcsBNUxK1VQmBUX45D6
-         5FopzcFpqAkrYmfr3F8sbzq0BwnbswOPMla3LZedwJnvkfMGM/j1CtgON2rfsOsEUTCI
-         lFSEXKYnbMa0bZLkxknvoGNE12ri2GLg1mh8dP6o953e5Hsl2Y+9uMOkxXkzxsmAmw8z
-         b5hA==
-X-Gm-Message-State: AOAM5320nvHa7xCR9wyzhASsbKMF151rUfwrMbZVSdFXB3wwNH5IZQEX
-        C44L0AxhW7bjbRET9h1pE1abQA==
-X-Google-Smtp-Source: ABdhPJzsDxL6JJKJu36vJnlttgHabnBSHn20nTl7ZGP5hdybfETsgZLi8FgY6Utuj7Ord6vXDPO70Q==
-X-Received: by 2002:a62:4e49:: with SMTP id c70mr5965062pfb.100.1599172999617;
-        Thu, 03 Sep 2020 15:43:19 -0700 (PDT)
+        bh=x2xuRKyyLJWi/1UackWdCkMB4cqQZJ4+/7t+T3jGKh8=;
+        b=uV8fJ58DGJlkognzen5m4YHaHjrTCc/K9eACDgABnSXHTpaqLqm/EoAXsDOG4u49tG
+         Oyi+CzvbeknTURJX/kqwTPwxvLIWdnMp8QRlL+8fGz0ERgJcuu/tAnb9yHzys7aQXIWb
+         Xw9mtUHdQzp1weWxE7TrFg/G/r1zfGMJI3CiM93ITEbBn2c7ggkk4hYn5a1XF9cbapoZ
+         Ut2coUfJB3BkvyZQkvIBRbiYbowb9tmb9D5i/hLIPlq1brJ/PqKqfc04ED1dN35VK7L5
+         xbCNyR8FXuRkJkuBi6ZEIib56Fm5I6JjxSS95PNa8vu8tZkchHbevn5QOzbVno2mq2j/
+         7+iQ==
+X-Gm-Message-State: AOAM530lUJ3RPsZYgEzWazb1KpWPvsl9tjS+LqyVOIO0UGL8FjwMiqKO
+        dH/qOhFUsK6ZweJrQiOHJQEfOw==
+X-Google-Smtp-Source: ABdhPJxsKeiM9lZAcQ/0JJhv0k/hyo346z/156yZaTdrOqzHtGfq/qkV1ZHNDgZ+unL1v+eZfT0LrA==
+X-Received: by 2002:a17:902:326:: with SMTP id 35mr6096909pld.1.1599173018675;
+        Thu, 03 Sep 2020 15:43:38 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 141sm4425163pfb.50.2020.09.03.15.43.18
+        by smtp.gmail.com with ESMTPSA id w16sm4354057pfq.13.2020.09.03.15.43.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 15:43:18 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 15:43:18 -0700
+        Thu, 03 Sep 2020 15:43:37 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 15:43:37 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Sami Tolvanen <samitolvanen@google.com>
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
@@ -71,24 +71,24 @@ Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         x86@kernel.org
-Subject: Re: [PATCH v2 19/28] scripts/mod: disable LTO for empty.c
-Message-ID: <202009031543.A239909B@keescook>
+Subject: Re: [PATCH v2 20/28] efi/libstub: disable LTO
+Message-ID: <202009031543.47CF616F@keescook>
 References: <20200624203200.78870-1-samitolvanen@google.com>
  <20200903203053.3411268-1-samitolvanen@google.com>
- <20200903203053.3411268-20-samitolvanen@google.com>
+ <20200903203053.3411268-21-samitolvanen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200903203053.3411268-20-samitolvanen@google.com>
+In-Reply-To: <20200903203053.3411268-21-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 01:30:44PM -0700, Sami Tolvanen wrote:
-> With CONFIG_LTO_CLANG, clang generates LLVM IR instead of ELF object
-> files. As empty.o is used for probing target properties, disable LTO
-> for it to produce an object file instead.
+On Thu, Sep 03, 2020 at 01:30:45PM -0700, Sami Tolvanen wrote:
+> With CONFIG_LTO_CLANG, we produce LLVM bitcode instead of ELF object
+> files. Since LTO is not really needed here and the Makefile assumes we
+> produce an object file, disable LTO for libstub.
 > 
 > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
