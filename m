@@ -2,134 +2,109 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D270C35256
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD33CC2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0070F20658
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599165265;
-	bh=jQf1YvOOi6qqOrdkJa0hlJPeE/VEjcP4wOVbLqeX3js=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wtaXNmND5O1y1pB5CHwhWGvbEXh/Cv6ZtYjjlFNoG0V+g76N93TDkXjGGbYTCpEMG
-	 LF6iKrwjfUszEwUPX4cWcHd/9HVnVf9ejXCq8uFjCURkikLcu1NhVk5nNhrZaFvYzn
-	 Jk9XiamNWeL7oezSumBO3AJDtRmgelCu4fLWAb/s=
+	by mail.kernel.org (Postfix) with ESMTP id A871520678
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:35:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="npSffdai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbgICUeX (ORCPT
+        id S1729686AbgICUfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:34:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729607AbgICUdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:33:10 -0400
-Received: from localhost.localdomain (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 845F120684;
-        Thu,  3 Sep 2020 20:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599165189;
-        bh=jQf1YvOOi6qqOrdkJa0hlJPeE/VEjcP4wOVbLqeX3js=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=unymFlAvsxJBHZVuoj7ah2m390fM5UKAcnYHWW0rts3GWScaOIKpbm2URLteZPJUJ
-         WRns507l8M+gsoxxfUDPPoUvtH2rv/h8ExKajWoGGjthpBUZ8FzcXz68IZs86uDZs+
-         z1Cbyp/c1zl3H9L9ySoci4NKJTxtpnBjlWigdCGE=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH 2/4] ASoC: samsung-i2s: Add missing properties
-Date:   Thu,  3 Sep 2020 22:32:48 +0200
-Message-Id: <20200903203250.19830-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200903203250.19830-1-krzk@kernel.org>
-References: <20200903203250.19830-1-krzk@kernel.org>
+        Thu, 3 Sep 2020 16:35:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729563AbgICUct (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 16:32:49 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 780FBC0619EF
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:31:37 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id b127so3981030ybh.21
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:31:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=iN3GbBjTX25viV6xW68a9oo3MkQJYWkKKPfs1TkAluY=;
+        b=npSffdaieWFucXHDLr4mY6XgP2tHJEoOTVV6csT96vPOxvouZbo+xOm04baMS0+EN+
+         ILt6v3wDsnQiQY1Dfffcie0xZpTFWaLYK6BzUM04xdyHxieJIvNOg6LNdFOj/3y0mBnH
+         Jte3FAnXYcPxQddxr87OOvJEZ6dUuX9sLqI5aXpeyk3Ki59e1OAR1zKEEXG4Ifc9lR1Z
+         LmZi20QOngtk5w17q0wIZkw3ahIXVLzoXpdRB96sntn1liwbbCydI+aZqLJTRszyPkgg
+         aLXX8AB5Ds1j4EtaGcnjmp8w24YNv7D+M1DcDJJ9VXF0l9BS/QNTX03Rsdsi7XuPq2av
+         wZUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=iN3GbBjTX25viV6xW68a9oo3MkQJYWkKKPfs1TkAluY=;
+        b=RzIENBI0/UJW6IsN2/qpFWdJYsYDQ9jEmnTyf8Nmg2HuNwOVE9oTFIvOI6wD4/WZWj
+         KMtM4+Gqxu9O4FgZRjCA1EFOKT0pdXN+n7ZVKfLAs9Cfo+uDe64DTmiSt3HzHUta/5/m
+         vJGZ3HuXwTBWLVzlRbO669yIxmIMw9ISdojAnvkgk6JIGoFTI4vkDoJroRJRJXSQzud7
+         uvm6JAxFY86c0jgu98pxmPInmePfZDUHGODJNtusMACL4lX7J5Xn13L8NU1/waOComBL
+         ZrCTxOnbUY1DRW9ZldP6urWqLESbmiHBB2DjcvpcwKMPpy1m5q3m+dQlipHs3p2RF4Rx
+         PCfw==
+X-Gm-Message-State: AOAM531dx644FGkOXEYiq3TbsHKnwQKOT+xh3xcYDdHA3g6VYiL1+x3Y
+        lUY68lxwcIMG7/CShw+rH8bfY82G3r8Ind17oww=
+X-Google-Smtp-Source: ABdhPJyiG0zEVlMgXVpb6Zi8eshehY9Qj0OKZzrDehRr0ot1IUkMHErjz4cB8zqJtzXVoh7q4DtUcBhjwy1qLdSHusA=
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+ (user=samitolvanen job=sendgmr) by 2002:a25:1455:: with SMTP id
+ 82mr5771395ybu.274.1599165096721; Thu, 03 Sep 2020 13:31:36 -0700 (PDT)
+Date:   Thu,  3 Sep 2020 13:30:45 -0700
+In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
+Message-Id: <20200903203053.3411268-21-samitolvanen@google.com>
+Mime-Version: 1.0
+References: <20200624203200.78870-1-samitolvanen@google.com> <20200903203053.3411268-1-samitolvanen@google.com>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+Subject: [PATCH v2 20/28] efi/libstub: disable LTO
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Usage of "unevaluatedProperties: false" is not correct as it suppresses
-warnings about all undocumented properties.  Instead, add all missing
-properties.
+With CONFIG_LTO_CLANG, we produce LLVM bitcode instead of ELF object
+files. Since LTO is not really needed here and the Makefile assumes we
+produce an object file, disable LTO for libstub.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
+ drivers/firmware/efi/libstub/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Fixup for:
-https://lore.kernel.org/linux-samsung-soc/20200829142501.31478-6-krzk@kernel.org/T/#m7476a34a33a443d05d2f05988e43d6a34c6fb227
----
- .../devicetree/bindings/sound/samsung-i2s.yaml  | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-index 16dc81288115..2e3628ef48df 100644
---- a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-+++ b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-@@ -41,6 +41,12 @@ properties:
-       - samsung,exynos7-i2s
-       - samsung,exynos7-i2s1
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index 296b18fbd7a2..0ea5aa52c7fa 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -35,6 +35,8 @@ KBUILD_CFLAGS			:= $(cflags-y) -Os -DDISABLE_BRANCH_PROFILING \
  
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-   reg:
-     maxItems: 1
+ # remove SCS flags from all objects in this directory
+ KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
++# disable LTO
++KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_LTO), $(KBUILD_CFLAGS))
  
-@@ -58,6 +64,9 @@ properties:
-           - const: rx
-           - const: tx-sec
- 
-+  assigned-clock-parents: true
-+  assigned-clocks: true
-+
-   clocks:
-     minItems: 1
-     maxItems: 3
-@@ -92,6 +101,9 @@ properties:
-           - const: i2s_cdclk2
-     description: Names of the CDCLK I2S output clocks.
- 
-+  interrupts:
-+    maxItems: 1
-+
-   samsung,idma-addr:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description: |
-@@ -104,6 +116,9 @@ properties:
-   pinctrl-names:
-     const: default
- 
-+  power-domains:
-+    maxItems: 1
-+
-   "#sound-dai-cells":
-     const: 1
- 
-@@ -115,7 +130,7 @@ required:
-   - clocks
-   - clock-names
- 
--unevaluatedProperties: false
-+additionalProperties: false
- 
- examples:
-   - |
+ GCOV_PROFILE			:= n
+ # Sanitizer runtimes are unavailable and cannot be linked here.
 -- 
-2.17.1
+2.28.0.402.g5ffc5be6b7-goog
 
