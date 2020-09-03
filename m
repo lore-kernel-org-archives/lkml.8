@@ -2,95 +2,105 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A847C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCB3C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6324A2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243492072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:31:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lh3AakFc"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="A1hKaZmt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgICDbp (ORCPT
+        id S1728251AbgICDbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 23:31:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgICDbn (ORCPT
+        Wed, 2 Sep 2020 23:31:51 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:5703 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726821AbgICDb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 23:31:43 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F80EC061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 20:31:42 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id w7so1104184pfi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 20:31:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jVbQJV7FQRWnjXc4WFRtSyL4necLOFwK41hOpTt0Y3c=;
-        b=Lh3AakFc2ktTayAXJ3pnozs/7S5cR9pjcLsMH65p4Oypa4yVlDrB9sxuRsvs1ZqnJf
-         m4Q0T8KEeVSiLJk58AEEWBzSDM22WlwCsu4r4uQ95h9GjGMNX3XSWrqAFEsSskncgFZM
-         ZThvCDfsFIa0zcXzx+ihAjyoiDVREI78q1NU113ynXd6tHcph1oO0oWBDRxpkBAdG/Ed
-         5wvVArnBumGOdJcZFzgCNkqry+qjE/zQjZv0i8Sk4f7qiZfT39t+qUXyf/Dcy/UONlin
-         L/2zLZHpqboem355bgN5gcnEYmbfmbqBCBe+GU/vMmSTFIbKgsK/Nl4Z+5Utskgx5iic
-         D6DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jVbQJV7FQRWnjXc4WFRtSyL4necLOFwK41hOpTt0Y3c=;
-        b=ly6n0s94BV626NaevRovlEd44hoPyJLBsaFY4NpjXSl9FGPrg/fzn9zCKi8Mbq+W+K
-         poxyJMKPPvk8nBiCI5QznHwrtwdBtRxUYS/4p/3TvoKYWJOXnN/NNJMtTbug44IhHBNL
-         omrKS8gDSHmI7rqZRWmiNqtbKBwDU7E9tGIb2x4XzL5bVwJGNmNvmHAbFVKhx7fddtdb
-         fkogtRzMk9hchHk/iJJbSx5ipm7fy5GQnpCYwIqtgyJCsiNuGkt8km0SIMnD2LJ8P2tA
-         sohnt6XPLEMPseRMdXw3bjQJY1/uwlfuI/SH6NQErTD495am78h8PwKsN23K1S8tpQMz
-         z1aQ==
-X-Gm-Message-State: AOAM533650s9RYe6NfkfqWxdxE/MpVAI7vZpFr4W+omLhUWRmU1lQCBd
-        TykkE2CuVBeNCMJyTMtC8+M=
-X-Google-Smtp-Source: ABdhPJyeeNghFiK0krO7HS3KViJMyxOmRd6O6x+am6iTWrNYXrgGQ1ZUoP1V6uOaTIiWadIkyIrllw==
-X-Received: by 2002:a62:ea01:: with SMTP id t1mr1699823pfh.125.1599103901928;
-        Wed, 02 Sep 2020 20:31:41 -0700 (PDT)
-Received: from Asurada-Nvidia (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id x22sm1047250pfn.41.2020.09.02.20.31.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 02 Sep 2020 20:31:41 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 20:30:57 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: fsl_sai: Support multiple data channel enable bits
-Message-ID: <20200903033057.GB4517@Asurada-Nvidia>
-References: <1598958068-10552-1-git-send-email-shengjiu.wang@nxp.com>
+        Wed, 2 Sep 2020 23:31:26 -0400
+X-UUID: baf6f1abbe9c439f8b49170cf5ea3b28-20200903
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=G+l2nCRr0+/8nka2nngFFVIR8XrakSr3N56sAqsrVVs=;
+        b=A1hKaZmtmRmjMY2wjjyNJ8HgS7IRd0EGI1MN2d+SFo3qiS9wMOgUpFRV/qrwBpm/1wRJywDK3A1N/yJVzqvakaRfFtSZHkvGfY34/2x0CtKK7lMnRBnsRXq4FGeNsTMQV1MRb5/q2j/+GRrImFj76KnqmQSqhaW3niL4r2uQ6hk=;
+X-UUID: baf6f1abbe9c439f8b49170cf5ea3b28-20200903
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1915563420; Thu, 03 Sep 2020 11:31:20 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 3 Sep 2020 11:31:17 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 3 Sep 2020 11:31:17 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Zhanyong Wang <zhanyong.wang@mediatek.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [RFC PATCH 4/4] arm64: dts: mt8192: add SSUSB related nodes
+Date:   Thu, 3 Sep 2020 11:28:59 +0800
+Message-ID: <1599103739-7873-4-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1599103739-7873-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1599103739-7873-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1598958068-10552-1-git-send-email-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 555095332610F26608A183E1336A0372661BB41058C02440A34D47EEA584F1BA2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 07:01:08PM +0800, Shengjiu Wang wrote:
-> One data channel is one data line. From imx7ulp, the SAI IP is
-> enhanced to support multiple data channels.
-> 
-> If there is only two channels input and slots is 2, then enable one
-> data channel is enough for data transfer. So enable the TCE/RCE and
-> transmit/receive mask register according to the input channels and
-> slots configuration.
-> 
-> Move the data channel enablement from startup() to hw_params().
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+RnJvbTogWmhhbnlvbmcgV2FuZyA8emhhbnlvbmcud2FuZ0BtZWRpYXRlay5jb20+DQoNCkFkZCBT
+U1VTQiByZWxhdGVkIG5vZGVzIGZvciBtdDgxOTINCg0KU2lnbmVkLW9mZi1ieTogWmhhbnlvbmcg
+V2FuZyA8emhhbnlvbmcud2FuZ0BtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBDaHVuZmVu
+ZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQotLS0NCkRlcGVuZHMgb246DQpodHRw
+czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExNzEzNTU5Lw0KW3Y0LDEvM10gYXJtNjQ6
+IGR0czogQWRkIE1lZGlhdGVrIFNvQyBNVDgxOTIgYW5kIGV2YWx1YXRpb24gYm9hcmQgZHRzIGFu
+ZCBNYWtlZmlsZQ0KLS0tDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxOTIuZHRz
+aSB8IDQ4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQs
+IDQ4IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
+aWF0ZWsvbXQ4MTkyLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE5Mi5k
+dHNpDQppbmRleCA4ODcxYzJmLi43NTVmMTUyIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm02NC9ib290
+L2R0cy9tZWRpYXRlay9tdDgxOTIuZHRzaQ0KKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRp
+YXRlay9tdDgxOTIuZHRzaQ0KQEAgLTQzNCw2ICs0MzQsNTQgQEANCiAJCQlzdGF0dXMgPSAiZGlz
+YWJsZWQiOw0KIAkJfTsNCiANCisJCXhoY2k6IHhoY2lAMTEyMDAwMDAgew0KKwkJCWNvbXBhdGli
+bGUgPSAibWVkaWF0ZWssbXQ4MTkyLXhoY2kiLA0KKwkJCQkgICAgICJtZWRpYXRlayxtdGsteGhj
+aSI7DQorCQkJcmVnID0gPDAgMHgxMTIwMDAwMCAwIDB4MTAwMD4sDQorCQkJICAgICAgPDAgMHgx
+MTIwM2UwMCAwIDB4MDEwMD47DQorCQkJcmVnLW5hbWVzID0gIm1hYyIsICJpcHBjIjsNCisJCQlp
+bnRlcnJ1cHRzLWV4dGVuZGVkID0gPCZnaWMgR0lDX1NQSSA5NyBJUlFfVFlQRV9MRVZFTF9ISUdI
+IDA+LA0KKwkJCQkJICAgICAgPCZwaW8gMjExIElSUV9UWVBFX0xFVkVMX0xPVz47DQorCQkJcGh5
+cyA9IDwmdTJwb3J0MCBQSFlfVFlQRV9VU0IyPiwNCisJCQkgICAgICAgPCZ1M3BvcnQwIFBIWV9U
+WVBFX1VTQjM+Ow0KKwkJCWFzc2lnbmVkLWNsb2NrcyA9IDwmdG9wY2tnZW4gQ0xLX1RPUF9VU0Jf
+VE9QX1NFTD4sDQorCQkJCQkgIDwmdG9wY2tnZW4gQ0xLX1RPUF9TU1VTQl9YSENJX1NFTD47DQor
+CQkJYXNzaWduZWQtY2xvY2stcGFyZW50cyA9IDwmdG9wY2tnZW4gQ0xLX1RPUF9VTklWUExMX0Q1
+X0Q0PiwNCisJCQkJCQkgPCZ0b3Bja2dlbiBDTEtfVE9QX1VOSVZQTExfRDVfRDQ+Ow0KKwkJCWNs
+b2NrcyA9IDwmaW5mcmFjZmcgQ0xLX0lORlJBX1NTVVNCPiwNCisJCQkJIDwmaW5mcmFjZmcgQ0xL
+X0lORlJBX1NTVVNCX1hIQ0k+LA0KKwkJCQkgPCZhcG1peGVkc3lzIENMS19BUE1JWEVEX1VTQlBM
+TD47DQorCQkJY2xvY2stbmFtZXMgPSAic3lzX2NrIiwgInhoY2lfY2siLCAicmVmX2NrIjsNCisJ
+CQltZWRpYXRlayxzeXNjb24td2FrZXVwID0gPCZwZXJpY2ZnIDB4NDIwIDM+Ow0KKwkJCSNhZGRy
+ZXNzLWNlbGxzID0gPDI+Ow0KKwkJCSNzaXplLWNlbGxzID0gPDI+Ow0KKwkJfTsNCisNCisJCXUz
+cGh5MDogdXNiLXBoeUAxMWU0MDAwMCB7DQorCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgx
+OTItdHBoeSIsDQorCQkJCSAgICAgIm1lZGlhdGVrLGdlbmVyaWMtdHBoeS12MiI7DQorCQkJI2Fk
+ZHJlc3MtY2VsbHMgPSA8Mj47DQorCQkJI3NpemUtY2VsbHMgPSA8Mj47DQorCQkJcmFuZ2VzOw0K
+KwkJCXN0YXR1cyA9ICJva2F5IjsNCisNCisJCQl1MnBvcnQwOiB1c2ItcGh5QDExZTQwMDAwIHsN
+CisJCQkJcmVnID0gPDAgMHgxMWU0MDAwMCAwIDB4NzAwPjsNCisJCQkJY2xvY2tzID0gPCZjbGsy
+Nm0+Ow0KKwkJCQljbG9jay1uYW1lcyA9ICJyZWYiOw0KKwkJCQkjcGh5LWNlbGxzID0gPDE+Ow0K
+KwkJCQlzdGF0dXMgPSAib2theSI7DQorCQkJfTsNCisNCisJCQl1M3BvcnQwOiB1c2ItcGh5QDEx
+ZTQwNzAwIHsNCisJCQkJcmVnID0gPDAgMHgxMWU0MDcwMCAwIDB4OTAwPjsNCisJCQkJY2xvY2tz
+ID0gPCZjbGsyNm0+Ow0KKwkJCQljbG9jay1uYW1lcyA9ICJyZWYiOw0KKwkJCQkjcGh5LWNlbGxz
+ID0gPDE+Ow0KKwkJCQlzdGF0dXMgPSAib2theSI7DQorCQkJfTsNCisJCX07DQorDQogCQlhdWRz
+eXM6IHN5c2NvbkAxMTIxMDAwMCB7DQogCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxOTIt
+YXVkc3lzIiwgInN5c2NvbiI7DQogCQkJcmVnID0gPDAgMHgxMTIxMDAwMCAwIDB4MTAwMD47DQot
+LSANCjEuOS4xDQo=
 
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
