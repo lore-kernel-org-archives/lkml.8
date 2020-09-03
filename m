@@ -2,115 +2,193 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801BDC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D454FC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44582206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E5E206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:24:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="lajE3Og9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uZ3jzyIg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgICJWa (ORCPT
+        id S1728058AbgICJYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 05:22:30 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:25027 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbgICJW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 05:22:26 -0400
-IronPort-SDR: pdeeloJ54OPb7Op3vser7vOX1+rTJtZZ1GuyM3nNgDq5DaI15qbA+VrXhJb6CcD2CzAnmnsr2Q
- kbXeIK/NpCuD0PeqRv0C1RRTeBv9Q4/Nto7p7Jsu1A0ClqPZ8yZBE8wu3gEUcqk819zASpMaaM
- jw3pbW1m5y/HAXOdsBgSzuGHIrH0arCFBgOQIvZKafKlMvjFi1k7yqQ4a/SuZAgWsswIp9AAUR
- bca/oTL1izsyZHhymZHBejCnyZ25MkrBeqUl+uNj+Ctf/Pdh6AyYk/DJJjKRyIt9cCf6CqG8/9
- Khg=
-X-IronPort-AV: E=Sophos;i="5.76,386,1592863200"; 
-   d="scan'208";a="13715495"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 03 Sep 2020 11:22:22 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Thu, 03 Sep 2020 11:22:22 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Thu, 03 Sep 2020 11:22:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1599124942; x=1630660942;
-  h=message-id:subject:from:to:cc:date:mime-version:
-   content-transfer-encoding;
-  bh=s8a9bCwMLw0I2Lg6Q5nlLZokrFRZUgY6ANn6+w/KaeA=;
-  b=lajE3Og93UGjbXpnM9WypLlNFCG3yMsuJso67FGdphE/DOqY+wLhfFZw
-   va0UPc2q4auSq1gg2QoXIQf+PuJXT2/3ldbswl3qFVaeqqg0N3tiYt9eA
-   VSGmvow3ZcZLlPTTWdKhgVapz4nWpMFHxovI0bZTrTsADj6+0h+6JxdEU
-   JwV4UCbn6YlAbANiTzokSfjppVcFuoS7e1eiMS/xqA8+ymB49nFc28aAe
-   9ORN/oQeKQMHtn+XBhwoZaUxoJG7s0CZOWEBOeCcJZqGUuCruc4oCa74E
-   yDBXaXW792SxYmlV1VmHwIUSDBvttiG4UksIduTh+GgoJ+oJKc6mGsAap
-   Q==;
-IronPort-SDR: 5ZZ9GdricVMGj1PMBUoT8p4cMdUvNIAt2jbwWyvvaFmU+0w65okwpOLTfL2GYrRiYEI4NPufU1
- +e4pnUfmgRLxs/CR9I7+7k2Jt9G+Tae5lc6WgK6JH/l9+uoQGMVbx8Qk6dZFw1amQ+n6ZgD9jb
- t8WWe7/VvtN9SIBdSpsgjLA5s78mByhb24WDrEsDOXXdguMO3hGJdBDyNLZlfTsu5zQIJcwvTt
- DM6OOwKdjB2mk5HFvuINQ0HrN9/amRdyJXHi6bXE+h5hLtWqvt9KOjDsUh9E0SBTaz9Lbda7fj
- eII=
-X-IronPort-AV: E=Sophos;i="5.76,386,1592863200"; 
-   d="scan'208";a="13715494"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 03 Sep 2020 11:22:22 +0200
-Received: from schifferm-ubuntu4 (unknown [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 5344C280065;
-        Thu,  3 Sep 2020 11:22:22 +0200 (CEST)
-Message-ID: <ecfa135b7b83a31bed821ec0740ab3cf1d39da15.camel@ew.tq-group.com>
-Subject: spi-imx: correct interpretation of num-cs DT property?
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 03 Sep 2020 11:22:20 +0200
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
+        Thu, 3 Sep 2020 05:24:07 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:30076 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726268AbgICJYF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 05:24:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1599125043; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=vzyvnVN4EUQzE6hJZKmqXAP1pTaiOlGyUPxPgSRWKec=; b=uZ3jzyIgwMsrS/75iOAYebY9nl18r3NlJDnmJBKhajF5leWqaz/E//TewUZxR+hRBC+jcdRH
+ IeOG2IuxYUD16B2nfQkz6/LlhArFZl9KnIF4EhdX0LJkbGbFHTd13PjIKSb+L+WTAJacWf3u
+ zRlT5NpOACfCkLzC204mQA3agOs=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5f50b62dcc683673f9011172 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 03 Sep 2020 09:23:57
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2F7B9C4339C; Thu,  3 Sep 2020 09:23:57 +0000 (UTC)
+Received: from [10.131.172.121] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: srivasam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BA6F6C433C9;
+        Thu,  3 Sep 2020 09:23:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA6F6C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=srivasam@codeaurora.org
+Subject: Re: [PATCH v3 4/5] ASoC: qcom: Add support for audio over DP
+To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
+        alsa-devel@alsa-project.org, bgoswami@codeaurora.org,
+        bjorn.andersson@linaro.org, broonie@kernel.org,
+        devicetree@vger.kernel.org, lgirdwood@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        perex@perex.cz, plai@codeaurora.org, robh+dt@kernel.org,
+        rohitkr@codeaurora.org, srinivas.kandagatla@linaro.org,
+        tiwai@suse.com
+Cc:     V Sujith Kumar Reddy <vsujithk@codeaurora.org>
+References: <1598855964-1042-1-git-send-email-srivasam@codeaurora.org>
+ <1598855964-1042-5-git-send-email-srivasam@codeaurora.org>
+ <159894552988.334488.8290895362888910651@swboyd.mtv.corp.google.com>
+From:   Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
+Organization: Qualcomm India Private Limited
+Message-ID: <25a8ca32-47f9-fb04-5f76-cc9e27f4e412@codeaurora.org>
+Date:   Thu, 3 Sep 2020 14:53:49 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.2.1
+MIME-Version: 1.0
+In-Reply-To: <159894552988.334488.8290895362888910651@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Thanks Stephen, for your time for review!!!
 
-I've recently had a discussion about the correct way for an SPI driver
-to handle the num-cs property: https://lkml.org/lkml/2020/8/25/184
-
-Since 8cdcd8aeee281 ("spi: imx/fsl-lpspi: Convert to GPIO
-descriptors"), the logic of the spi-imx driver is somewhat confusing:
-If fewer than 3 cs-gpios are defined, and no explicit num-cs property
-exists, the driver will set num_chipselect to 3 by default, instead of
-the number of cs-gpios entries.
-
-To avoid having to specify num-cs when the number cs-gpios would
-suffice, I suggested to modify the logic to the following:
-
-- If num-cs is set, use that
-- If num-cs is unset, use the number of cs-gpios
-- If num-cs is unset and no cs-gpios are defined, use a driver-provided 
-default (which is 3 for spi-imx; this matches the number of native CS
-pins in older implementations of this SPI controller; i.MX6 and newer
-support up to 4)
-
-Also, would it make sense to add num-cs to all DTS files for boards
-that actually use fewer than 3 CS pins?
-
-At the moment, the num-cs property is not explicitly documented for the
-spi-imx driver, although the driver understands it. I also suggested to
-add this to the docs, which Fabio didn't deem a good idea (I don't
-quite understand the reasoning here - isn't num-cs generally a useful
-property to have?)
-
-Kind regards,
-Matthias
+On 9/1/2020 1:02 PM, Stephen Boyd wrote:
+> Quoting Srinivasa Rao Mandadapu (2020-08-30 23:39:23)
+>> diff --git a/sound/soc/qcom/lpass-sc7180.c b/sound/soc/qcom/lpass-sc7180.c
+>> index 167bf2c..cea7ae7 100644
+>> --- a/sound/soc/qcom/lpass-sc7180.c
+>> +++ b/sound/soc/qcom/lpass-sc7180.c
+>> @@ -190,15 +232,92 @@ static struct lpass_variant sc7180_data = {
+>>                                     "mi2s-bit-clk0",
+>>                                     "mi2s-bit-clk1",
+>>                                  },
+>> +       .id                             = I2S_INTERFACE,
+>>          .init                   = sc7180_lpass_init,
+>>          .exit                   = sc7180_lpass_exit,
+>>          .alloc_dma_channel      = sc7180_lpass_alloc_dma_channel,
+>>          .free_dma_channel       = sc7180_lpass_free_dma_channel,
+>>   };
+>>   
+>> +static struct lpass_variant sc7180_hdmi_data = {
+> Can this be const?
+Yes this can be constant. will change in next patch.
+>
+>> +       .hdmi_tx_ctl_addr       = 0x1000,
+>> +       .hdmi_legacy_addr       = 0x1008,
+>> +       .hdmi_vbit_addr         = 0x610c0,
+>> +       .hdmi_ch_lsb_addr       = 0x61048,
+>> +       .hdmi_ch_msb_addr       = 0x6104c,
+>> +       .ch_stride              = 0x8,
+>> +       .hdmi_parity_addr       = 0x61034,
+>> +       .hdmi_dmactl_addr       = 0x61038,
+>> +       .hdmi_dma_stride        = 0x4,
+>> +       .hdmi_DP_addr           = 0x610c8,
+>> +       .hdmi_sstream_addr      = 0x6101c,
+>> +       .irq_reg_base           = 0x63000,
+>> +       .irq_ports              = 1,
+>> +       .rdma_reg_base          = 0x64000,
+>> +       .rdma_reg_stride        = 0x1000,
+>> +       .rdma_channels          = 4,
+>> +
+>> +       .rdma_dyncclk           = REG_FIELD_ID(0x64000, 14, 14, 4, 0x1000),
+>> +       .rdma_bursten           = REG_FIELD_ID(0x64000, 13, 13, 4, 0x1000),
+>> +       .rdma_burst8            = REG_FIELD_ID(0x64000, 15, 15, 4, 0x1000),
+>> +       .rdma_burst16           = REG_FIELD_ID(0x64000, 16, 16, 4, 0x1000),
+>> +       .rdma_dynburst          = REG_FIELD_ID(0x64000, 18, 18, 4, 0x1000),
+>> +       .rdma_wpscnt            = REG_FIELD_ID(0x64000, 10, 12, 4, 0x1000),
+>> +       .rdma_fifowm            = REG_FIELD_ID(0x64000, 1, 5, 4, 0x1000),
+>> +       .rdma_enable            = REG_FIELD_ID(0x64000, 0, 0, 4, 0x1000),
+>> +
+>> +       .sstream_en             = REG_FIELD(0x6101c, 0, 0),
+>> +       .dma_sel                        = REG_FIELD(0x6101c, 1, 2),
+>> +       .auto_bbit_en   = REG_FIELD(0x6101c, 3, 3),
+>> +       .layout                 = REG_FIELD(0x6101c, 4, 4),
+>> +       .layout_sp              = REG_FIELD(0x6101c, 5, 8),
+>> +       .set_sp_on_en   = REG_FIELD(0x6101c, 10, 10),
+>> +       .dp_audio               = REG_FIELD(0x6101c, 11, 11),
+>> +       .dp_staffing_en = REG_FIELD(0x6101c, 12, 12),
+>> +       .dp_sp_b_hw_en  = REG_FIELD(0x6101c, 13, 13),
+>> +
+>> +       .mute                   = REG_FIELD(0x610c8, 0, 0),
+>> +       .as_sdp_cc              = REG_FIELD(0x610c8, 1, 3),
+>> +       .as_sdp_ct              = REG_FIELD(0x610c8, 4, 7),
+>> +       .aif_db4                        = REG_FIELD(0x610c8, 8, 15),
+>> +       .frequency              = REG_FIELD(0x610c8, 16, 21),
+>> +       .mst_index              = REG_FIELD(0x610c8, 28, 29),
+>> +       .dptx_index             = REG_FIELD(0x610c8, 30, 31),
+>> +
+>> +       .soft_reset             = REG_FIELD(0x1000, 31, 31),
+>> +       .force_reset    = REG_FIELD(0x1000, 30, 30),
+>> +
+>> +       .use_hw_chs             = REG_FIELD(0x61038, 0, 0),
+>> +       .use_hw_usr             = REG_FIELD(0x61038, 1, 1),
+>> +       .hw_chs_sel             = REG_FIELD(0x61038, 2, 4),
+>> +       .hw_usr_sel             = REG_FIELD(0x61038, 5, 6),
+>> +
+>> +       .replace_vbit   = REG_FIELD(0x610c0, 0, 0),
+>> +       .vbit_stream    = REG_FIELD(0x610c0, 1, 1),
+>> +
+>> +       .legacy_en              =  REG_FIELD(0x1008, 0, 0),
+>> +       .calc_en                =  REG_FIELD(0x61034, 0, 0),
+>> +       .lsb_bits               =  REG_FIELD(0x61048, 0, 31),
+>> +       .msb_bits               =  REG_FIELD(0x6104c, 0, 31),
+>> +
+>> +       .clk_name               = (const char*[]) {
+>> +                                       "pcnoc-sway-clk",
+>> +                                       "audio-core",
+>> +                                       "pcnoc-mport-clk",
+>> +                               },
+>> +       .num_clks               = 3,
+>> +       .id                     = HDMI_INTERFACE,
+>> +       .dai_driver             = sc7180_lpass_cpu_hdmi_dai_driver,
+>> +       .num_dai                = ARRAY_SIZE(sc7180_lpass_cpu_hdmi_dai_driver),
+>> +       .init                   = sc7180_lpass_init,
+>> +       .exit                   = sc7180_lpass_exit,
+>> +       .alloc_dma_channel = sc7180_lpass_alloc_hdmi_dma_channel,
+>> +       .free_dma_channel = sc7180_lpass_free_hdmi_dma_channel,
+>> +
+>> +};
+> Add a newline here?
+okay
+>
+>>   static const struct of_device_id sc7180_lpass_cpu_device_id[] = {
+>>          {.compatible = "qcom,sc7180-lpass-cpu", .data = &sc7180_data},
+>> -       {}
+>> +       {.compatible = "qcom,sc7180-lpass-hdmi", .data = &sc7180_hdmi_data}
+> This most likely needs to keep the sentinel around so that a match can
+> be made or stop if nothing is found.
+okay..
+>
+>>   };
+>>
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
