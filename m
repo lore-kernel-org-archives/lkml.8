@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4523CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996E8C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CB22206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B97206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:06:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="pskCT+/x";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mVDrpWUY"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="biOQSpMF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ExF7blSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgICIF7 (ORCPT
+        id S1728452AbgICIGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:05:59 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:50659 "EHLO
+        Thu, 3 Sep 2020 04:06:07 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:57303 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728465AbgICIDO (ORCPT
+        by vger.kernel.org with ESMTP id S1728458AbgICIDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:03:14 -0400
+        Thu, 3 Sep 2020 04:03:11 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 5FE7DB66;
-        Thu,  3 Sep 2020 04:03:12 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 8E891C26;
+        Thu,  3 Sep 2020 04:03:09 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:03:13 -0400
+  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:03:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=HU8H5gGsrcRTb
-        FysH3oF2DX+CTcMF3UKI1bxBtxQt/k=; b=pskCT+/xyE/4uuZrx5nzvpji8M5mp
-        lFsmKbZuh2kvtP9erSI+41HNEkfTZOPVYeF0UfjUercMLqX5sIxc3ZFHN41YgVD5
-        Kb8+zLC3IAIwcJ61hDnsskMDlE/C8PPbeV2VrApgBgi27h9s8fynba4CggsrBp3u
-        kjxYJR5YvsTLD0P/we0/EH4HjxPvdj/+LnRGFBZ87bQmMn7JujobWbLyuJr9CAPh
-        EP2N0tTVT3kuFyiQ6/4Ba9VcgSVpA3CmegiV5mxYPL6r4Z5bSAhtNmzGtxHs6Ddq
-        3XFi2MpGsTt6TtOE052Ag0AsG8OTwPXASICBIkGUivwT9ezrRGMV0my0A==
+        :mime-version:content-transfer-encoding; s=fm3; bh=lnavGDEu9qJ8d
+        Unj7a0+SeE7q+9KTyl2L5IC3q0ICww=; b=biOQSpMFSvW4qc4hqXAYCTQDpEL7Z
+        ldiV3fxne6RGeSONViROuXXfaclpMLJta1OCuzvnwY/rqHEOe3aBZJX5FAqwN483
+        JIAowHQcpCBqKRCHQ6r9LItgfdSCqsuoeJeB6qqEO9sRvMO/n56tpUdfqSk/SFnY
+        NZa+eDzMKKIfmtGSJFnkLbAZ9SHeNMCN/HboNdpK7pHfRZUbNaOmxW4Upy1w1M+E
+        FiGbx3mdJVdSzrLPR8b+ptWfTjsM7DD/Ce0BNlpR/B1NH3+M4khoxxfEJY42TtT8
+        FItw7anYvmuB4IcJ28Wuk5DQ+X47ibsbr+isCsseyu6rbjFp9illvAyMg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=HU8H5gGsrcRTbFysH3oF2DX+CTcMF3UKI1bxBtxQt/k=; b=mVDrpWUY
-        sB03y47dEL/PalDRiGfKv3RYX1odVS5cCfeYdmGzramxJAJPHptUIrRwJaUBJHbn
-        eMpyRUu2Pm1vIoIb5GkfwAo/mNLnSAZXtDRkgEyOqWFb2lHpNH5qdo1AWkSSLpXq
-        Fy938y/QxICEFav1Q7fWmxGOZilXhAgGltW7ah4wBpccJZu6UCTu6+WxksEoS6lS
-        TykJ1aaIy4OcGvU6nEf72MkiOoL1q5s5JWDwgHi7wm7MyJA7eJDbSqqDUUSLcGiF
-        Q0+7QzTPWXu4adecCrSBLW75Lt5C5DEgVHBq+JcHKVPUIQTKwHzfXDnErePPOKxd
-        84tQKdpwSxcwGQ==
-X-ME-Sender: <xms:P6NQX_yLdoEWIZSwpdwVY0ksbai8aKaCbFy-MEfAfRRbqJTf6XasCA>
-    <xme:P6NQX3QehH2eT5TqFkjNhUd9l5hHfhPBsvnJJfuoAOoygXnzWCp6iOcGRfpGkdW_T
-    bRBXdRydknZH0scuWw>
+        fm3; bh=lnavGDEu9qJ8dUnj7a0+SeE7q+9KTyl2L5IC3q0ICww=; b=ExF7blSQ
+        B3BBNaxjF7OyqY/TYsxaMpT50r7pP49nuX8I8S8XBU83mXHOgQfATIz0kNRzGHA9
+        L4TF1WQbVP5mxC2TFFClS1LEcwtfSrqMU1XAUDzogEbC43g4pNFTQKfgedI4qrns
+        75P3Givyh2HG3XwkorIp9/0khhaIEZ6C89O4Fs/Nl1I7Z+/3a5mvLelRFpIZGABZ
+        K83XLgBzInRHSLza10EjEWiXvzwdZBCgDpfSoR4kFHTOWCqrQLmFioERZ2qxlWuM
+        qBHBxCZolZ4xUTEAmgW1PSxXqXh5CGZD7XUKRNfgnpVMqdI80XRUw6UHqC0o+VF9
+        1BU/XqLtpXTplQ==
+X-ME-Sender: <xms:PaNQX2orrpzZkkpe0IRnwlYJzXf3IPPOiZpEarDbaMZ2gUO9aD1mUw>
+    <xme:PaNQX0rU12rv_RBGAM_-1VXYgw8QqZUquUoTzTKSvrWYdRUb_hf1FxuSGiD2b432x
+    adoRQil5DvCRhM55OE>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
@@ -60,13 +60,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetgg
     htthgvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveev
     heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpeegle
     enucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:P6NQX5WH7cZBO0zQIcSUfYJ4xAa0_XKngep-IzM3Rv1QOgIQmZui5w>
-    <xmx:P6NQX5gEMpO_XzbC-PWUTXwPsvgSuCjosgTaw96atgPnrcXMjq2o6A>
-    <xmx:P6NQXxBJ0OT0GeejAKrIk5Qa83K3jbMVJ-iAuPf6lpK7ChYxdvzwqA>
-    <xmx:QKNQX2J3rqpXFaFVqH4sSdCHXcy_HBvx7AJcmhRW-MUDdm-qybeG7vXLe6Q>
+X-ME-Proxy: <xmx:PaNQX7M3OD6OTwm9i1LXoxTvvCM-yKOHzPPM7YuOUNWPG-b3k3OP8w>
+    <xmx:PaNQX1714dc3JVVlGeIRLEUFeABdfOlYSsxeJEppZFZpxhJOKVdEdw>
+    <xmx:PaNQX16xk-DTuCarmPa2vnkDDvU-ATsvxxBAy-rIB89sOSyQmuqmRw>
+    <xmx:PaNQXxiuUUx0nXMIPEAcvx8ePwRFgD9x88U-6XE5BhdjuJbScAwktpgaED8>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9EFEA306005B;
-        Thu,  3 Sep 2020 04:03:11 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id D161C3060061;
+        Thu,  3 Sep 2020 04:03:08 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -81,9 +81,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Hoegeun Kwon <hoegeun.kwon@samsung.com>,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH v5 55/80] drm/vc4: hdmi: Add a CSC setup callback
-Date:   Thu,  3 Sep 2020 10:01:27 +0200
-Message-Id: <5c19bbf10153cb42ca0fb67e08606c8295c17236.1599120059.git-series.maxime@cerno.tech>
+Subject: [PATCH v5 53/80] drm/vc4: hdmi: Add PHY init and disable function
+Date:   Thu,  3 Sep 2020 10:01:25 +0200
+Message-Id: <7216826284dbc60a58bdacd662805d20699e5c80.1599120059.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
 References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
@@ -94,141 +94,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similarly to the previous patches, the CSC setup is slightly different in
-the BCM2711 than in the previous generations. Let's add a callback for it.
+The HDMI PHY in the BCM2711 HDMI controller is significantly more
+complicated to setup than in the older BCM283x SoCs.
 
+Let's add hooks to enable and disable the PHY.
+
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
 Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 70 +++++++++++++++++++++--------------
- drivers/gpu/drm/vc4/vc4_hdmi.h |  3 ++-
- 2 files changed, 45 insertions(+), 28 deletions(-)
+ drivers/gpu/drm/vc4/Makefile       |  1 +
+ drivers/gpu/drm/vc4/vc4_hdmi.c     | 14 +++++++-------
+ drivers/gpu/drm/vc4/vc4_hdmi.h     | 13 +++++++++++++
+ drivers/gpu/drm/vc4/vc4_hdmi_phy.c | 25 +++++++++++++++++++++++++
+ 4 files changed, 46 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/gpu/drm/vc4/vc4_hdmi_phy.c
 
+diff --git a/drivers/gpu/drm/vc4/Makefile b/drivers/gpu/drm/vc4/Makefile
+index b303703bc7f3..d0163e18e9ca 100644
+--- a/drivers/gpu/drm/vc4/Makefile
++++ b/drivers/gpu/drm/vc4/Makefile
+@@ -12,6 +12,7 @@ vc4-y := \
+ 	vc4_kms.o \
+ 	vc4_gem.o \
+ 	vc4_hdmi.o \
++	vc4_hdmi_phy.o \
+ 	vc4_vec.o \
+ 	vc4_hvs.o \
+ 	vc4_irq.o \
 diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index c29376c3fd8a..532618e02399 100644
+index 77971be075ec..f3cc612f6a0b 100644
 --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
 +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -334,6 +334,41 @@ static void vc4_hdmi_encoder_disable(struct drm_encoder *encoder)
- 		DRM_ERROR("Failed to release power domain: %d\n", ret);
- }
+@@ -321,7 +321,9 @@ static void vc4_hdmi_encoder_disable(struct drm_encoder *encoder)
  
-+static void vc4_hdmi_csc_setup(struct vc4_hdmi *vc4_hdmi, bool enable)
-+{
-+	u32 csc_ctl;
-+
-+	csc_ctl = VC4_SET_FIELD(VC4_HD_CSC_CTL_ORDER_BGR,
-+				VC4_HD_CSC_CTL_ORDER);
-+
-+	if (enable) {
-+		/* CEA VICs other than #1 requre limited range RGB
-+		 * output unless overridden by an AVI infoframe.
-+		 * Apply a colorspace conversion to squash 0-255 down
-+		 * to 16-235.  The matrix here is:
-+		 *
-+		 * [ 0      0      0.8594 16]
-+		 * [ 0      0.8594 0      16]
-+		 * [ 0.8594 0      0      16]
-+		 * [ 0      0      0       1]
-+		 */
-+		csc_ctl |= VC4_HD_CSC_CTL_ENABLE;
-+		csc_ctl |= VC4_HD_CSC_CTL_RGB2YCC;
-+		csc_ctl |= VC4_SET_FIELD(VC4_HD_CSC_CTL_MODE_CUSTOM,
-+					 VC4_HD_CSC_CTL_MODE);
-+
-+		HDMI_WRITE(HDMI_CSC_12_11, (0x000 << 16) | 0x000);
-+		HDMI_WRITE(HDMI_CSC_14_13, (0x100 << 16) | 0x6e0);
-+		HDMI_WRITE(HDMI_CSC_22_21, (0x6e0 << 16) | 0x000);
-+		HDMI_WRITE(HDMI_CSC_24_23, (0x100 << 16) | 0x000);
-+		HDMI_WRITE(HDMI_CSC_32_31, (0x000 << 16) | 0x6e0);
-+		HDMI_WRITE(HDMI_CSC_34_33, (0x100 << 16) | 0x000);
-+	}
-+
-+	/* The RGB order applies even when CSC is disabled. */
-+	HDMI_WRITE(HDMI_CSC_CTL, csc_ctl);
-+}
-+
- static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
- {
- 	struct drm_display_mode *mode = &encoder->crtc->state->adjusted_mode;
-@@ -357,7 +392,6 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
- 					mode->crtc_vsync_end -
- 					interlaced,
- 					VC4_HDMI_VERTB_VBP));
--	u32 csc_ctl;
- 	int ret;
+ 	HDMI_WRITE(HDMI_RAM_PACKET_CONFIG, 0);
  
- 	ret = pm_runtime_get_sync(&vc4_hdmi->pdev->dev);
-@@ -428,41 +462,20 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
- 		   (vsync_pos ? 0 : VC4_HD_VID_CTL_VSYNC_LOW) |
- 		   (hsync_pos ? 0 : VC4_HD_VID_CTL_HSYNC_LOW));
- 
--	csc_ctl = VC4_SET_FIELD(VC4_HD_CSC_CTL_ORDER_BGR,
--				VC4_HD_CSC_CTL_ORDER);
- 
- 	if (vc4_encoder->hdmi_monitor &&
--	    drm_default_rgb_quant_range(mode) ==
--	    HDMI_QUANTIZATION_RANGE_LIMITED) {
--		/* CEA VICs other than #1 requre limited range RGB
--		 * output unless overridden by an AVI infoframe.
--		 * Apply a colorspace conversion to squash 0-255 down
--		 * to 16-235.  The matrix here is:
--		 *
--		 * [ 0      0      0.8594 16]
--		 * [ 0      0.8594 0      16]
--		 * [ 0.8594 0      0      16]
--		 * [ 0      0      0       1]
--		 */
--		csc_ctl |= VC4_HD_CSC_CTL_ENABLE;
--		csc_ctl |= VC4_HD_CSC_CTL_RGB2YCC;
--		csc_ctl |= VC4_SET_FIELD(VC4_HD_CSC_CTL_MODE_CUSTOM,
--					 VC4_HD_CSC_CTL_MODE);
-+	    drm_default_rgb_quant_range(mode) == HDMI_QUANTIZATION_RANGE_LIMITED) {
-+		if (vc4_hdmi->variant->csc_setup)
-+			vc4_hdmi->variant->csc_setup(vc4_hdmi, true);
- 
--		HDMI_WRITE(HDMI_CSC_12_11, (0x000 << 16) | 0x000);
--		HDMI_WRITE(HDMI_CSC_14_13, (0x100 << 16) | 0x6e0);
--		HDMI_WRITE(HDMI_CSC_22_21, (0x6e0 << 16) | 0x000);
--		HDMI_WRITE(HDMI_CSC_24_23, (0x100 << 16) | 0x000);
--		HDMI_WRITE(HDMI_CSC_32_31, (0x000 << 16) | 0x6e0);
--		HDMI_WRITE(HDMI_CSC_34_33, (0x100 << 16) | 0x000);
- 		vc4_encoder->limited_rgb_range = true;
- 	} else {
-+		if (vc4_hdmi->variant->csc_setup)
-+			vc4_hdmi->variant->csc_setup(vc4_hdmi, false);
+-	HDMI_WRITE(HDMI_TX_PHY_RESET_CTL, 0xf << 16);
++	if (vc4_hdmi->variant->phy_disable)
++		vc4_hdmi->variant->phy_disable(vc4_hdmi);
 +
- 		vc4_encoder->limited_rgb_range = false;
- 	}
+ 	HDMI_WRITE(HDMI_VID_CTL,
+ 		   HDMI_READ(HDMI_VID_CTL) & ~VC4_HD_VID_CTL_ENABLE);
  
--	/* The RGB order applies even when CSC is disabled. */
--	HDMI_WRITE(HDMI_CSC_CTL, csc_ctl);
+@@ -381,12 +383,8 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+ 	if (vc4_hdmi->variant->reset)
+ 		vc4_hdmi->variant->reset(vc4_hdmi);
+ 
+-	/* PHY should be in reset, like
+-	 * vc4_hdmi_encoder_disable() does.
+-	 */
+-	HDMI_WRITE(HDMI_TX_PHY_RESET_CTL, 0xf << 16);
 -
- 	HDMI_WRITE(HDMI_FIFO_CTL, VC4_HDMI_FIFO_CTL_MASTER_SLAVE_N);
+-	HDMI_WRITE(HDMI_TX_PHY_RESET_CTL, 0);
++	if (vc4_hdmi->variant->phy_init)
++		vc4_hdmi->variant->phy_init(vc4_hdmi, mode);
  
  	if (debug_dump_regs) {
-@@ -1430,6 +1443,7 @@ static const struct vc4_hdmi_variant bcm2835_variant = {
- 	.num_registers		= ARRAY_SIZE(vc4_hdmi_fields),
+ 		struct drm_printer p = drm_info_printer(&vc4_hdmi->pdev->dev);
+@@ -1432,6 +1430,8 @@ static const struct vc4_hdmi_variant bcm2835_variant = {
  
  	.init_resources		= vc4_hdmi_init_resources,
-+	.csc_setup		= vc4_hdmi_csc_setup,
  	.reset			= vc4_hdmi_reset,
- 	.phy_init		= vc4_hdmi_phy_init,
- 	.phy_disable		= vc4_hdmi_phy_disable,
++	.phy_init		= vc4_hdmi_phy_init,
++	.phy_disable		= vc4_hdmi_phy_disable,
+ };
+ 
+ static const struct of_device_id vc4_hdmi_dt_match[] = {
 diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-index 950accbc44e4..c8fd58548ea2 100644
+index 17a30589f39c..32c80161c786 100644
 --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
 +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-@@ -41,6 +41,9 @@ struct vc4_hdmi_variant {
+@@ -21,6 +21,8 @@ to_vc4_hdmi_encoder(struct drm_encoder *encoder)
+ 	return container_of(encoder, struct vc4_hdmi_encoder, base.base);
+ }
+ 
++struct drm_display_mode;
++
+ struct vc4_hdmi;
+ struct vc4_hdmi_register;
+ 
+@@ -38,6 +40,13 @@ struct vc4_hdmi_variant {
+ 
  	/* Callback to reset the HDMI block */
  	void (*reset)(struct vc4_hdmi *vc4_hdmi);
- 
-+	/* Callback to enable / disable the CSC */
-+	void (*csc_setup)(struct vc4_hdmi *vc4_hdmi, bool enable);
 +
- 	/* Callback to initialize the PHY according to the mode */
- 	void (*phy_init)(struct vc4_hdmi *vc4_hdmi,
- 			 struct drm_display_mode *mode);
++	/* Callback to initialize the PHY according to the mode */
++	void (*phy_init)(struct vc4_hdmi *vc4_hdmi,
++			 struct drm_display_mode *mode);
++
++	/* Callback to disable the PHY */
++	void (*phy_disable)(struct vc4_hdmi *vc4_hdmi);
+ };
+ 
+ /* HDMI audio information */
+@@ -95,4 +104,8 @@ encoder_to_vc4_hdmi(struct drm_encoder *encoder)
+ 	return container_of(_encoder, struct vc4_hdmi, encoder);
+ }
+ 
++void vc4_hdmi_phy_init(struct vc4_hdmi *vc4_hdmi,
++		       struct drm_display_mode *mode);
++void vc4_hdmi_phy_disable(struct vc4_hdmi *vc4_hdmi);
++
+ #endif /* _VC4_HDMI_H_ */
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi_phy.c b/drivers/gpu/drm/vc4/vc4_hdmi_phy.c
+new file mode 100644
+index 000000000000..5a1746877bb5
+--- /dev/null
++++ b/drivers/gpu/drm/vc4/vc4_hdmi_phy.c
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2015 Broadcom
++ * Copyright (c) 2014 The Linux Foundation. All rights reserved.
++ * Copyright (C) 2013 Red Hat
++ * Author: Rob Clark <robdclark@gmail.com>
++ */
++
++#include "vc4_hdmi.h"
++#include "vc4_hdmi_regs.h"
++
++void vc4_hdmi_phy_init(struct vc4_hdmi *vc4_hdmi, struct drm_display_mode *mode)
++{
++	/* PHY should be in reset, like
++	 * vc4_hdmi_encoder_disable() does.
++	 */
++
++	HDMI_WRITE(HDMI_TX_PHY_RESET_CTL, 0xf << 16);
++	HDMI_WRITE(HDMI_TX_PHY_RESET_CTL, 0);
++}
++
++void vc4_hdmi_phy_disable(struct vc4_hdmi *vc4_hdmi)
++{
++	HDMI_WRITE(HDMI_TX_PHY_RESET_CTL, 0xf << 16);
++}
 -- 
 git-series 0.9.1
