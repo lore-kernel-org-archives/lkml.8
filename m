@@ -2,100 +2,89 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B678FC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 805DCC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D95920767
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A181206D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599167885;
+	bh=H+zisSn0FrInHXhGoTyvgsvnRNCUi468hEUisSJ0ngg=;
+	h=Subject:From:To:Date:List-ID:From;
+	b=R+1rGaA2rdNkZ1Dplyk+1ulxO/43jrR78Z4XNyLPVib+ChNUBv9CoK01CWeeqgEBJ
+	 vssOpu4wWhM6Sa2Uep1NjOwgsA+uF4Vx6wOfsYd4JaLjri1s5SsMKAjTM7zjovjqgW
+	 Obv/FYt/w8ZJjqnCBgwWszeAMUNlq/O3WVGJLFNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgICVMg (ORCPT
+        id S1728484AbgICVSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 17:12:36 -0400
-Received: from sandeen.net ([63.231.237.45]:41628 "EHLO sandeen.net"
+        Thu, 3 Sep 2020 17:18:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbgICVMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 17:12:35 -0400
-Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726323AbgICVSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 17:18:03 -0400
+Received: from tzanussi-mobl (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id D94902ACC;
-        Thu,  3 Sep 2020 16:12:09 -0500 (CDT)
-To:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cluster-devel@redhat.com,
-        linux-ext4@vger.kernel.org
-References: <20200903165632.1338996-1-agruenba@redhat.com>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH] iomap: Fix direct I/O write consistency check
-Message-ID: <695a418c-ba6d-d3e9-f521-7dfa059764db@sandeen.net>
-Date:   Thu, 3 Sep 2020 16:12:33 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.2.1
-MIME-Version: 1.0
-In-Reply-To: <20200903165632.1338996-1-agruenba@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        by mail.kernel.org (Postfix) with ESMTPSA id 816C0206CA;
+        Thu,  3 Sep 2020 21:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599167883;
+        bh=H+zisSn0FrInHXhGoTyvgsvnRNCUi468hEUisSJ0ngg=;
+        h=Subject:From:To:Date:From;
+        b=soemoY/r1RNQiVg/7DIajZG1+z+Iy97Jw9sRT2KzXXm0R6fpLxhAyncNFC3Nzxy66
+         /prLiORA3GCXtVWLhP0hRLEQNpMAqZf55dECJaYU6v3aFE/0sTk63YvWCxBnMlqMXX
+         DJpuMwsO3zNZkO8zAnXU5yGs06miFynCXPVmJp1E=
+Message-ID: <e717ef103955ba2aea8ab58a0a53d12ef7b1a1c8.camel@kernel.org>
+Subject: [ANNOUNCE] 4.19.142-rt63
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Clark Williams <williams@redhat.com>,
+        Pavel Machek <pavel@denx.de>, Tom Zanussi <zanussi@kernel.org>
+Date:   Thu, 03 Sep 2020 16:18:01 -0500
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/20 11:56 AM, Andreas Gruenbacher wrote:
-> When a direct I/O write falls back to buffered I/O entirely, dio->size
-> will be 0 in iomap_dio_complete.  Function invalidate_inode_pages2_range
-> will try to invalidate the rest of the address space.
+Hello RT Folks!
 
-(Because if ->size == 0 and offset == 0, then invalidating up to (0+0-1) will
-invalidate the entire range.)
+I'm pleased to announce the 4.19.142-rt63 stable release.
 
+This release is just an update to the new stable 4.19.142
+version and no RT specific changes have been made.
 
-                err = invalidate_inode_pages2_range(inode->i_mapping,
-                                offset >> PAGE_SHIFT,
-                                (offset + dio->size - 1) >> PAGE_SHIFT);
+You can get this release via the git tree at:
 
-so I guess this behavior is unique to writing to a hole at offset 0?
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-FWIW, this same test yields the same results on ext3 when it falls back to
-buffered.
+  branch: v4.19-rt
+  Head SHA1: ea94598e25b40fa394519bf9ece3f0032c6f3301
 
--Eric
+Or to build 4.19.142-rt63 directly, the following patches should be applied:
 
-> If there are any
-> dirty pages in that range, the write will fail and a "Page cache
-> invalidation failure on direct I/O" error will be logged.
-> 
-> On gfs2, this can be reproduced as follows:
-> 
->   xfs_io \
->     -c "open -ft foo" -c "pwrite 4k 4k" -c "close" \
->     -c "open -d foo" -c "pwrite 0 4k"
-> 
-> Fix this by recognizing 0-length writes.
-> 
-> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-> ---
->  fs/iomap/direct-io.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-> index c1aafb2ab990..c9d6b4eecdb7 100644
-> --- a/fs/iomap/direct-io.c
-> +++ b/fs/iomap/direct-io.c
-> @@ -108,7 +108,7 @@ static ssize_t iomap_dio_complete(struct iomap_dio *dio)
->  	 * ->end_io() when necessary, otherwise a racing buffer read would cache
->  	 * zeros from unwritten extents.
->  	 */
-> -	if (!dio->error &&
-> +	if (!dio->error && dio->size &&
->  	    (dio->flags & IOMAP_DIO_WRITE) && inode->i_mapping->nrpages) {
->  		int err;
->  		err = invalidate_inode_pages2_range(inode->i_mapping,
-> 
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.142.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/patch-4.19.142-rt63.patch.xz
+
+Enjoy!
+
+   Tom
+
