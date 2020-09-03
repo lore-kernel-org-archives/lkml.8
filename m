@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C31C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58186C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5078220716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35A3620767
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbgICM0E (ORCPT
+        id S1728826AbgICM1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 08:26:04 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:32929 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728755AbgICMZQ (ORCPT
+        Thu, 3 Sep 2020 08:27:55 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35156 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728756AbgICMZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 08:25:16 -0400
-Received: by mail-oi1-f196.google.com with SMTP id 3so2953484oih.0;
+Received: by mail-ot1-f65.google.com with SMTP id i4so2526229ota.2;
         Thu, 03 Sep 2020 05:25:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6fdiDQ044x0vFJq3djzG9dmCS4th8L19ANmzylfbIFg=;
-        b=QohUmFPbxpD6VSaZA/7xFPJUY1xwdCMpiKS8CRu6kD/hfyQl2FEhWuLMB3h8dyvGwK
-         Y1c7pPb0PkdXCPfKn3Z/y6BbnKRs5Ehlxbteipm0W/c8NAXit0HaMOZEXqpSE3FNkyNK
-         iP7ce93s+TFjDGGNBEhF5Aoj8KbawBtKlyvr1p/JLhJQWVzR+Tjw+GTbiF1GFDw0jZCm
-         KFiroafgymdn5B2kAaq1BhW5iNSGDSTxe/jtYraluasBs+0u0zPgAmLBl1lUOCIh2Alr
-         zgJomu5mTtSoHNQDvDxKUTrHbFAKK1gBq4xTLZEaRK4C97hUuWjzFZa3iRrO3+LZwN9x
-         29yQ==
-X-Gm-Message-State: AOAM532fXvt/Xq6e9UOb/HwfFf0N+zuuNqZa4Y5YRNcI4qD4oWiqahRL
-        8vg9AxvjqIpIjFmq9rhHNUu4SgLhs221OIsA56s=
-X-Google-Smtp-Source: ABdhPJxz33wMGk9Uweyb02G5HCp+d5T+GZaH717OptZV2P94WaqTxkGbbHY5A0ZqsFEaJnttExTdw3uQxmt0cPDXy/Y=
-X-Received: by 2002:aca:3402:: with SMTP id b2mr1757404oia.153.1599135915254;
- Thu, 03 Sep 2020 05:25:15 -0700 (PDT)
+        bh=yoH8otJKneHhR+opHL4Qe3/H5myYYwGysCvobqpQrFU=;
+        b=qNuPrdImKETtHEhctvhPOLQv3LzCc1JEWOBIulpHGKUcGGBbTaadJ5kJT0HrJVkeQL
+         RM4iLwqrLubl33Q5LTHZYEh3sPVKS1DvfJpL1MTvrK/6ZF99xitJy3rrtC+NgPKCcz6I
+         SUcHDNWIXE2Cj6KWNx6PfuWaTkPRrASdtPmJPQRAuTvC8u8MF5Tsuuo8iWW+CcqMPIil
+         aKUOP1z8yIhM9av/R9dj6LDSV0bCLorNoC84vMqufqCPV6u3gDR1tdbdE3ZY4PzdGrTR
+         qXCq+5/oEfnzCTtQl/SQKaqeIS+VA0wJVrG+gr5O6E0s0nlqYtPKgZrk/add/yhcHd37
+         N2gQ==
+X-Gm-Message-State: AOAM531SThgdb9mwXJ/39HtCR+9cMifM6jzAuLG5BFSMQsDYLlpVFIzU
+        31cYS4tQDe9cd1uxtjOQfp5fUvlvnsrGpLLnRQt9d90JplY=
+X-Google-Smtp-Source: ABdhPJx6avH3C2TKsyCvh/3I9dhPX40IElmyXMkGAOAO9ix8cDNZKHbE66NR+61my3IRjdnIpw+n+bSrWEBHgpegwSk=
+X-Received: by 2002:a9d:1b62:: with SMTP id l89mr1331699otl.145.1599135265698;
+ Thu, 03 Sep 2020 05:14:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827181918.30130-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200827181918.30130-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200825162718.5838-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200825162718.5838-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 3 Sep 2020 14:25:03 +0200
-Message-ID: <CAMuHMdUkKGA+=zkke3RtV5pwCYEiB8i8ujwtKr2QQrSSezxNtA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: renesas: Add HiHope RZ/G2H board with
- idk-1110wr display
+Date:   Thu, 3 Sep 2020 14:14:14 +0200
+Message-ID: <CAMuHMdUbxtb+Yg=3dgRXWXn2k2tGYcmVzbS-n6rLM0QAJrfo-A@mail.gmail.com>
+Subject: Re: [PATCH 3/4] ARM: dts: r8a7742-iwg21d-q7: Add can0 support to
+ carrier board
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -60,16 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 8:20 PM Lad Prabhakar
+Hi Prabhakar,
+
+On Tue, Aug 25, 2020 at 6:28 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> The HiHope RZ/G2H is advertised as compatible with panel idk-1110wr from
-> Advantech, however the panel isn't sold alongside the board. New dts,
-> enabling the lvds node to get the panel to work with HiHope RZ/G2H.
+> This patch enables CAN0 interface exposed through connector J20 on the
+> carrier board.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
+According to my schematics, the CAN port on J20 has its signals named
+CAN0_[RT]XD on the carrier board, but connected to CAN1[RT]X (GP4_[67])
+on the SoM.
+
+Or am I looking at the wrong file?
+
+> --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> @@ -198,6 +198,13 @@
+>         };
+>  };
+>
+> +&can0 {
+
+can1
+
+> +       pinctrl-0 = <&can0_pins>;
+
+can1_pins
+
+> +       pinctrl-names = "default";
+> +
+> +       status = "okay";
+> +};
+> +
+>  &cmt0 {
+>         status = "okay";
+>  };
+
+> @@ -287,6 +303,11 @@
+>                 function = "tpu0";
+>         };
+>
+> +       can0_pins: can0 {
+> +               groups = "can0_data_d";
+
+can1_data_b
+
+> +               function = "can0";
+> +       };
+> +
+>         i2c2_pins: i2c2 {
+>                 groups = "i2c2_b";
+>                 function = "i2c2";
 
 Gr{oetje,eeting}s,
 
