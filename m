@@ -2,79 +2,130 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA81CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDA5C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A88A020722
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A81C2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbgICL7G (ORCPT
+        id S1728809AbgICMCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:59:06 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50722 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728725AbgICLtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:49:43 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E6620A509112187F4BE1;
-        Thu,  3 Sep 2020 19:49:36 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 3 Sep 2020 19:49:27 +0800
-From:   Wei Xu <xuwei5@hisilicon.com>
-To:     <netdev@vger.kernel.org>
-CC:     <davem@davemloft.net>, <saeedm@mellanox.com>, <leon@kernel.org>,
-        <xuwei5@hisilicon.com>, <linuxarm@huawei.com>,
-        <shameerali.kolothum.thodi@huawei.com>,
-        <jonathan.cameron@huawei.com>, <john.garry@huawei.com>,
-        <salil.mehta@huawei.com>, <shiju.jose@huawei.com>,
-        <jinying@hisilicon.com>, <zhangyi.ac@huawei.com>,
-        <liguozhu@hisilicon.com>, <tangkunshan@huawei.com>,
-        <huangdaode@hisilicon.com>, Boris Pismenny <borisp@nvidia.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] net/mlx5e: kTLS, Fix GFP_KERNEL in spinlock context
-Date:   Thu, 3 Sep 2020 19:45:34 +0800
-Message-ID: <1599133539-175203-1-git-send-email-xuwei5@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+        Thu, 3 Sep 2020 08:02:12 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37790 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728646AbgICL7Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:59:16 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 37so2442294oto.4;
+        Thu, 03 Sep 2020 04:59:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9ImNPfe7CCahb0OVlVwJzlrDCDsuxJrxvrkCtfeRX6E=;
+        b=cdqMLjRA/mbdU6rkFPcQBa/Z+1kkBpUc0pXWz+wutZb4q6pzTx+dPxD48ZAqN1SvXA
+         /RDUh5t61SDy8hSNragnrhBlWqzLLag9HrIs1ojuXaI1z6757v5OqUO+4Yh+mXl6jB3k
+         XdbmyR0ltogzORZshcWLu/FPki0Dkk2cuhV4pD7pmrQs/B15jPhFJRx9OWZtb6firV/s
+         2Is66E/9nKFQkeApRs1uH3EIUTI/E+R7a/sqVSErf0oBPUgDkXRy8CYyAIg3uVMQe1Me
+         35chlc5JZugrW6qiBHcja5k0cZrExRGa/QLQvFoG19bIt5y0Uq89y59drTH1FU7T7mU8
+         QrAw==
+X-Gm-Message-State: AOAM532Gk0X431ImfwteHN0d4JYYvZYNA0TB428DUVOs+N/TaIp7Lt1h
+        JZVITaPYoLdvNsTkM0BN2yBy0jGb3pKwSCtFWi4AMvOOa3A=
+X-Google-Smtp-Source: ABdhPJxVMGiJTBSxcKTjbAnuB4JjiObB+hMYFGLmWixYQnn1WNtT3AEXJ9StsQu0r70/kt1B0UdLSv0+rEtB5Fin9K4=
+X-Received: by 2002:a9d:162:: with SMTP id 89mr1340662otu.250.1599134355136;
+ Thu, 03 Sep 2020 04:59:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200825162718.5838-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200825162718.5838-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 3 Sep 2020 13:59:04 +0200
+Message-ID: <CAMuHMdXm9D8-bg3XdGqD7AKe2vMiZLNWENH3A0w-b7j=qZS=pA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] ARM: dts: r8a7742-iwg21d-q7: Add SPI NOR support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace GFP_KERNEL with GFP_ATOMIC while resync_post_get_progress_params
-is invoked in a spinlock context.
-This code was detected with the help of Coccinelle.
+Hi Prabhakar,
 
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_rx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Aug 25, 2020 at 6:28 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add support for the SPI NOR device which is connected to MSIOF0 interface
+> on the iWave RainboW-G21d-q7 board.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_rx.c
-index acf6d80..1a32435 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_rx.c
-@@ -247,7 +247,7 @@ resync_post_get_progress_params(struct mlx5e_icosq *sq,
- 	int err;
- 	u16 pi;
- 
--	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
-+	buf = kzalloc(sizeof(*buf), GFP_ATOMIC);
- 	if (unlikely(!buf)) {
- 		err = -ENOMEM;
- 		goto err_out;
+> --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> @@ -220,6 +220,32 @@
+>         status = "okay";
+>  };
+>
+> +&msiof0 {
+> +       pinctrl-0 = <&msiof0_pins>;
+> +       pinctrl-names = "default";
+> +       cs-gpios = <&gpio5 13 GPIO_ACTIVE_LOW>;
+> +
+> +       status = "okay";
+> +
+> +       flash1: flash@0 {
+> +               compatible = "sst,sst25vf016b", "jedec,spi-nor";
+> +               reg = <0>;
+> +               spi-max-frequency = <50000000>;
+> +               m25p,fast-read;
+> +
+> +               partitions {
+> +                       compatible = "fixed-partitions";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +
+> +                       partition@0 {
+> +                               label = "user";
+> +                               reg = <0x00000000 0x00200000>;
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+>  &pci0 {
+>         pinctrl-0 = <&usb0_pins>;
+>         pinctrl-names = "default";
+> @@ -266,6 +292,11 @@
+>                 function = "i2c2";
+>         };
+>
+> +       msiof0_pins: msiof0 {
+> +               groups = "msiof0_clk", "msiof0_tx", "msiof0_rx";
+
+I think you're missing "msiof0_sync", connected to SPI_CS0#?
+
+With that fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> +               function = "msiof0";
+> +       };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.8.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
