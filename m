@@ -5,64 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52103C2D0E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9699C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3110A20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E1E20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="d3WTta76"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="U4ImwICE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbgICUiM (ORCPT
+        id S1729602AbgICUiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:38:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35484 "EHLO
+        Thu, 3 Sep 2020 16:38:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729522AbgICUcE (ORCPT
+        with ESMTP id S1729503AbgICUbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:32:04 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 083DAC061265
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:31:20 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id a5so4011838ybh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:31:19 -0700 (PDT)
+        Thu, 3 Sep 2020 16:31:47 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B3DC0619C7
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:31:16 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id 139so2303560qkl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:31:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=v4aEDtr6bLZLPmR/ra6D5NVXgPqHTR+q2+p+53rP8YU=;
-        b=d3WTta769MJh+Bo0VzFx1dIubRn1F3/0OsgdvpRIABs/0F8aoQ0QxN6GC6ogiN8YAt
-         1n2fy7ycG6neE8i4JP6mcoL5+gOWppxCnH2U8kbhGmk3Ke0U/7qP7lute7a6H0uDoYhQ
-         dWVIqp9Xjw2Q1WEklB8eqrGPTTy0VYDaAb7Vj5vkDxGtzwmgFWOj15UwJBAbJ05tl1sN
-         Q4rZl0DzGVRAuAw5PJyrACjWBxr1NbGCE0oN5TR+pUi+Dq3TH5paoF63RYX5l7QEOrpB
-         +a+BflxQgXchm/xsTBNIInkXUZW2NMgvFiHC7w8tScjlytwkaK3yal7TbaDvFzX+VZKt
-         2LRg==
+        bh=LIPIlpem17zgU4dqkoYs+mU8v2ON9dEQqlQffjFpd2g=;
+        b=U4ImwICEFBq2oFmNCINYdH0F9HYGmqQ3UN6AytIDExw8upDRXh9Ix/GvPYcxLnHuju
+         9UTLnpJ98fdkotKWLguXsBoVvPoAqDS7O4xf6Go646tJFpPkh1vQI423uv4kjMzUeqzr
+         NWrbgDl++pGaJxpZCWVqElkHeOVzIUNLgCK2UWuSiwcSQGj2pfVFzBRmxXXI1BUXRl+7
+         Ju0vfjaDaoIR0UsUTfn0sHidLpf3qUkfPm9doFl52D1yRDeqrjU35dLcVrrBj4JG1eYv
+         y/8O8ygKSLIOZxEwwSS479fp/4ePp+GZhtY3mcL5TmGxtCVb4XBFZ/97s3PvmBJIHir+
+         GFxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=v4aEDtr6bLZLPmR/ra6D5NVXgPqHTR+q2+p+53rP8YU=;
-        b=eKr0pKxk8kbhW4fDl6/pfpSIie3Dw081SftsrphRqAUbSBRRUM+eFNTVtELIjyNhOr
-         nvTl1oNMh4Rjr9eSL8msSEyP271OKqAvowBnuaV4bFJ3hpN8gWVzwqjcpVo8i3VSssXO
-         wrqWCZUuiGYj1ilbvnHRiCdCgohN5cSXtSpLgV5HtDYcaMIK0B3kNlaycP/gOL3ZmCwu
-         Jb0afcMOlcbp5t3Cu/dowPWXgueCtu+P7o5zTupsnIcz9L+Nj4CFrEnOqdwh5E1I8hhK
-         gt9PYe6cLSR6hAlXG8+QhGt11t0MQP9b9v3IYfuJDXPIVmXVZbENu9sqfwahl+QQsZ2k
-         Kjxg==
-X-Gm-Message-State: AOAM530tm5xUuflZFXb6Ct/7rZvvFWTsk55pMDVdbf36kTC1neUn1E3i
-        vzCerzUfQQvQ4h5G1hB9e70SehjZtgfOKOHIUWQ=
-X-Google-Smtp-Source: ABdhPJxLcteMiXx6yxIAtF7C6LDsd43v+S+v/BljrbTvv0EuuMtNnvGzhvJa2qGTBh5Tw0uOlOWuvZqeImKd2fr7SwI=
+        bh=LIPIlpem17zgU4dqkoYs+mU8v2ON9dEQqlQffjFpd2g=;
+        b=DpbqtyyGhDOt/bUJEwrXcKx8PxVe2GEIoHzVE5NA4o17gPINQDnNCmcYjXQ41STPy/
+         aZq3B9MSDaIuC/Bix536Fd1gcMsTCB4s7h+K3ZNnykOBMzqhTOPb+EfDRA7CN2vycSIE
+         kZbV18ivnD79zjEAOFGPYdLcykGRehquK9fM/ctp/y5Fin3CBB7dherfqasO6Xx6kDwY
+         Yl4VzHKsH5EmdQ8qojmarsj9cR4tQAS+AX9/XcNgDIYLcSdr6AI3jquI83s5kN6OA5Ls
+         +4AiOLln9N6ZJCckGmp5my7g2lVjc+FcsE+yhGqwobovzSXD06ceaWFbEqOwc1fvihiu
+         jtdA==
+X-Gm-Message-State: AOAM533lqGliuBNXgwS6WR73Tx5my4c/Ao/EapP2NV2vPq5k2rDvQKpq
+        S7w5QoVDgEjniehptnLC5BDfWkdVW5eoXWTf04w=
+X-Google-Smtp-Source: ABdhPJw9de2LNzKwdf2geUU36TsETNvofuiC1pIa8fKhxrhhm9sAzktGq1uX0m6ta07g36kYHSBpcNCRixPOU97/hr4=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
- (user=samitolvanen job=sendgmr) by 2002:a25:a366:: with SMTP id
- d93mr5081717ybi.415.1599165079173; Thu, 03 Sep 2020 13:31:19 -0700 (PDT)
-Date:   Thu,  3 Sep 2020 13:30:37 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a0c:e892:: with SMTP id
+ b18mr3645531qvo.4.1599165075210; Thu, 03 Sep 2020 13:31:15 -0700 (PDT)
+Date:   Thu,  3 Sep 2020 13:30:35 -0700
 In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
-Message-Id: <20200903203053.3411268-13-samitolvanen@google.com>
+Message-Id: <20200903203053.3411268-11-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20200624203200.78870-1-samitolvanen@google.com> <20200903203053.3411268-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH v2 12/28] kbuild: lto: limit inlining
+Subject: [PATCH v2 10/28] kbuild: lto: fix module versioning
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Masahiro Yamada <masahiroy@kernel.org>,
         Will Deacon <will@kernel.org>
@@ -83,36 +84,217 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change limits function inlining across translation unit boundaries
-in order to reduce the binary size with LTO. The -import-instr-limit
-flag defines a size limit, as the number of LLVM IR instructions, for
-importing functions from other TUs, defaulting to 100.
+With CONFIG_MODVERSIONS, version information is linked into each
+compilation unit that exports symbols. With LTO, we cannot use this
+method as all C code is compiled into LLVM bitcode instead. This
+change collects symbol versions into .symversions files and merges
+them in link-vmlinux.sh where they are all linked into vmlinux.o at
+the same time.
 
-Based on testing with arm64 defconfig, we found that a limit of 5 is a
-reasonable compromise between performance and binary size, reducing the
-size of a stripped vmlinux by 11%.
-
-Suggested-by: George Burgess IV <gbiv@google.com>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+ .gitignore               |  1 +
+ Makefile                 |  3 ++-
+ arch/Kconfig             |  1 -
+ scripts/Makefile.build   | 33 +++++++++++++++++++++++++++++++--
+ scripts/Makefile.modpost |  2 ++
+ scripts/link-vmlinux.sh  | 25 ++++++++++++++++++++++++-
+ 6 files changed, 60 insertions(+), 5 deletions(-)
 
+diff --git a/.gitignore b/.gitignore
+index 162bd2b67bdf..06e76dc39ffe 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -41,6 +41,7 @@
+ *.so.dbg
+ *.su
+ *.symtypes
++*.symversions
+ *.tab.[ch]
+ *.tar
+ *.xz
 diff --git a/Makefile b/Makefile
-index 2752be67b460..c69e07bd506a 100644
+index dd49eaea7c25..2752be67b460 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -917,6 +917,10 @@ else
- CC_FLAGS_LTO_CLANG := -flto
- endif
- CC_FLAGS_LTO_CLANG += -fvisibility=default
-+
-+# Limit inlining across translation units to reduce binary size
-+LD_FLAGS_LTO_CLANG := -mllvm -import-instr-limit=5
-+KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
- endif
+@@ -1847,7 +1847,8 @@ clean: $(clean-dirs)
+ 		-o -name '.tmp_*.o.*' \
+ 		-o -name '*.c.[012]*.*' \
+ 		-o -name '*.ll' \
+-		-o -name '*.gcno' \) -type f -print | xargs rm -f
++		-o -name '*.gcno' \
++		-o -name '*.*.symversions' \) -type f -print | xargs rm -f
  
- ifdef CONFIG_LTO
+ # Generate tags for editors
+ # ---------------------------------------------------------------------------
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 11bb2f48dfe8..71392e4a8900 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -602,7 +602,6 @@ config LTO_CLANG
+ 	depends on !FTRACE_MCOUNT_RECORD
+ 	depends on !KASAN
+ 	depends on !GCOV_KERNEL
+-	depends on !MODVERSIONS
+ 	select LTO
+ 	help
+           This option enables Clang's Link Time Optimization (LTO), which
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index a5f4b5d407e6..c348e6d6b436 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -166,6 +166,15 @@ ifdef CONFIG_MODVERSIONS
+ #   the actual value of the checksum generated by genksyms
+ # o remove .tmp_<file>.o to <file>.o
+ 
++ifdef CONFIG_LTO_CLANG
++# Generate .o.symversions files for each .o with exported symbols, and link these
++# to the kernel and/or modules at the end.
++cmd_modversions_c =								\
++	if $(NM) $@ 2>/dev/null | grep -q __ksymtab; then			\
++		$(call cmd_gensymtypes_c,$(KBUILD_SYMTYPES),$(@:.o=.symtypes))	\
++		    > $@.symversions;						\
++	fi;
++else
+ cmd_modversions_c =								\
+ 	if $(OBJDUMP) -h $@ | grep -q __ksymtab; then				\
+ 		$(call cmd_gensymtypes_c,$(KBUILD_SYMTYPES),$(@:.o=.symtypes))	\
+@@ -177,6 +186,7 @@ cmd_modversions_c =								\
+ 		rm -f $(@D)/.tmp_$(@F:.o=.ver);					\
+ 	fi
+ endif
++endif
+ 
+ ifdef USE_RECORDMCOUNT
+ # compiler will not generate __mcount_loc use recordmcount or recordmcount.pl
+@@ -393,6 +403,18 @@ $(obj)/%.asn1.c $(obj)/%.asn1.h: $(src)/%.asn1 $(objtree)/scripts/asn1_compiler
+ $(subdir-builtin): $(obj)/%/built-in.a: $(obj)/% ;
+ $(subdir-modorder): $(obj)/%/modules.order: $(obj)/% ;
+ 
++# combine symversions for later processing
++quiet_cmd_update_lto_symversions = SYMVER  $@
++ifeq ($(CONFIG_LTO_CLANG) $(CONFIG_MODVERSIONS),y y)
++      cmd_update_lto_symversions =					\
++	rm -f $@.symversions						\
++	$(foreach n, $(filter-out FORCE,$^),				\
++		$(if $(wildcard $(n).symversions),			\
++			; cat $(n).symversions >> $@.symversions))
++else
++      cmd_update_lto_symversions = echo >/dev/null
++endif
++
+ #
+ # Rule to compile a set of .o files into one .a file (without symbol table)
+ #
+@@ -400,8 +422,11 @@ $(subdir-modorder): $(obj)/%/modules.order: $(obj)/% ;
+ quiet_cmd_ar_builtin = AR      $@
+       cmd_ar_builtin = rm -f $@; $(AR) cDPrST $@ $(real-prereqs)
+ 
++quiet_cmd_ar_and_symver = AR      $@
++      cmd_ar_and_symver = $(cmd_update_lto_symversions); $(cmd_ar_builtin)
++
+ $(obj)/built-in.a: $(real-obj-y) FORCE
+-	$(call if_changed,ar_builtin)
++	$(call if_changed,ar_and_symver)
+ 
+ #
+ # Rule to create modules.order file
+@@ -421,8 +446,11 @@ $(obj)/modules.order: $(obj-m) FORCE
+ #
+ # Rule to compile a set of .o files into one .a file (with symbol table)
+ #
++quiet_cmd_ar_lib = AR      $@
++      cmd_ar_lib = $(cmd_update_lto_symversions); $(cmd_ar)
++
+ $(obj)/lib.a: $(lib-y) FORCE
+-	$(call if_changed,ar)
++	$(call if_changed,ar_lib)
+ 
+ # NOTE:
+ # Do not replace $(filter %.o,^) with $(real-prereqs). When a single object
+@@ -431,6 +459,7 @@ $(obj)/lib.a: $(lib-y) FORCE
+ ifdef CONFIG_LTO_CLANG
+ quiet_cmd_link_multi-m = AR [M]  $@
+ cmd_link_multi-m =						\
++	$(cmd_update_lto_symversions);				\
+ 	rm -f $@; 						\
+ 	$(AR) rcsTP$(KBUILD_ARFLAGS) $@ $(filter %.o,$^)
+ else
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index a70f1f7da6aa..f9718bf4172d 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -110,6 +110,8 @@ prelink-ext = .lto
+ quiet_cmd_cc_lto_link_modules = LTO [M] $@
+ cmd_cc_lto_link_modules =						\
+ 	$(LD) $(ld_flags) -r -o $@					\
++		$(shell [ -s $(@:.lto.o=.o.symversions) ] &&		\
++			echo -T $(@:.lto.o=.o.symversions))		\
+ 		--whole-archive $(filter-out FORCE,$^)
+ 
+ %.lto.o: %.o FORCE
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index ebb9f912aab6..3e99a19b9195 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -43,11 +43,28 @@ info()
+ 	fi
+ }
+ 
++# If CONFIG_LTO_CLANG is selected, collect generated symbol versions into
++# .tmp_symversions.lds
++gen_symversions()
++{
++	info GEN .tmp_symversions.lds
++	rm -f .tmp_symversions.lds
++
++	for a in ${KBUILD_VMLINUX_OBJS} ${KBUILD_VMLINUX_LIBS}; do
++		for o in $(${AR} t $a 2>/dev/null); do
++			if [ -f ${o}.symversions ]; then
++				cat ${o}.symversions >> .tmp_symversions.lds
++			fi
++		done
++	done
++}
++
+ # Link of vmlinux.o used for section mismatch analysis
+ # ${1} output file
+ modpost_link()
+ {
+ 	local objects
++	local lds=""
+ 
+ 	objects="--whole-archive				\
+ 		${KBUILD_VMLINUX_OBJS}				\
+@@ -57,6 +74,11 @@ modpost_link()
+ 		--end-group"
+ 
+ 	if [ -n "${CONFIG_LTO_CLANG}" ]; then
++		if [ -n "${CONFIG_MODVERSIONS}" ]; then
++			gen_symversions
++			lds="${lds} -T .tmp_symversions.lds"
++		fi
++
+ 		# This might take a while, so indicate that we're doing
+ 		# an LTO link
+ 		info LTO ${1}
+@@ -64,7 +86,7 @@ modpost_link()
+ 		info LD ${1}
+ 	fi
+ 
+-	${LD} ${KBUILD_LDFLAGS} -r -o ${1} ${objects}
++	${LD} ${KBUILD_LDFLAGS} -r -o ${1} ${lds} ${objects}
+ }
+ 
+ objtool_link()
+@@ -242,6 +264,7 @@ cleanup()
+ {
+ 	rm -f .btf.*
+ 	rm -f .tmp_System.map
++	rm -f .tmp_symversions.lds
+ 	rm -f .tmp_vmlinux*
+ 	rm -f System.map
+ 	rm -f vmlinux
 -- 
 2.28.0.402.g5ffc5be6b7-goog
 
