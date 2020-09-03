@@ -2,107 +2,101 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9966FC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE3BC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5A12072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1225B2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:35:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="P/1oVpN+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVRTaNTr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgICFbh (ORCPT
+        id S1726319AbgICFfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 01:31:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33074 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725851AbgICFbg (ORCPT
+        Thu, 3 Sep 2020 01:35:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgICFfI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 01:31:36 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08352OFG053557;
-        Thu, 3 Sep 2020 01:31:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=4HGc7/6+Pw+aIlehXfflhn1TuMbzH3zeJUxuQa5CQaE=;
- b=P/1oVpN+XIULm43HcP2/i56HkLqraf+8hhOq+RhppUR7w608E83av0w1QuErodbyDu7g
- HsYoQUzYMtQopLWsvf9AmGGhezqig+UP7oSG4ZEHhxb+TnHU6WLkZgETnRc0mHlWxtlx
- 8kmPut7cPoLhvKs4te2A1feiCVjudwFC4KWTX5zt1ZqK/Oj1hxbPqh7R7XZrPOdU/fu2
- YRF0+E8eWOwntx4gkxjHBqocmbWRBMQmHR8v25VLTu7jPevH1jIP740MONg1Jr02Fuw+
- TDFW+7BQ6gQAK1RRdY9dppIIG0/sHM0wFvmUKPE2MH4gKF4o8cTWpCnFO/a9qQWyF5dT 6g== 
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33ahswv4bh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 01:31:24 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0835RTXg015452;
-        Thu, 3 Sep 2020 05:31:23 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma01dal.us.ibm.com with ESMTP id 337en9xnd5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 05:31:23 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0835VMwQ41681180
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Sep 2020 05:31:23 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC015AE060;
-        Thu,  3 Sep 2020 05:31:22 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 021E3AE068;
-        Thu,  3 Sep 2020 05:31:21 +0000 (GMT)
-Received: from oc6857751186.ibm.com (unknown [9.65.215.230])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  3 Sep 2020 05:31:21 +0000 (GMT)
-Subject: Re: [PATCH v2] scsi: ibmvfc: interface updates for future FPIN and MQ
- support
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     james.bottomley@hansenpartnership.com, linux-scsi@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        brking@linux.ibm.com
-References: <20200901002420.648532-1-tyreld@linux.ibm.com>
- <yq1y2lrd2ys.fsf@ca-mkp.ca.oracle.com>
-From:   Tyrel Datwyler <tyreld@linux.ibm.com>
-Message-ID: <3fe3e9be-9671-aa0a-b18b-10f77433ab56@linux.ibm.com>
-Date:   Wed, 2 Sep 2020 22:31:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 3 Sep 2020 01:35:08 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9A61C061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 22:35:07 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id w3so2053491ljo.5
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 22:35:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KvfRDr9m7GFxF53fVORc45Jz6EFpqNAlUtbFuBE05q0=;
+        b=nVRTaNTrShblWXsxOqNK0W6rz6j88SE8Qnvhy+mAfd7s4ieqEXDF9qx66ny63Ei4FI
+         ccsbd69Q27Avy+5ZhZpeSPHiCi3NsZ9Hd6j93MDkzlgwSPj9EgjFk7+hrGwUW8S4uzb6
+         u7Tol+CCLby4U7ueP6n2vZW+k82JJ4G8FGr2mLDlQUtObTZEXFYvOkxie3B7K25/tJ7J
+         T+W4qOEPo0OAjgk28A3UQgHjYPndKZKDAZJa/EAaeAp8ilLMN4BynEZ+oXzRo10Wt/d5
+         TUe5Youak8nRWQhZwt/lyrXy4eHdFy5kudluCE9SAGgKoOBsaAoRV3XZ6wTTo/59N3uP
+         rFHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KvfRDr9m7GFxF53fVORc45Jz6EFpqNAlUtbFuBE05q0=;
+        b=UQwcfEzuk/glp65LChagDaNcyU5llV6FJ34F0IJzygplGpLZbxyjL98Qj74W6zKGoe
+         S+xVpDjPo5VamHgJ8mLSwqSFFwpk/2DjAq5qT2Q2Wa6Rwq0ujwWGKu0gwpW+AQ6zSFH7
+         eKNKzFj/NXrzRReOtVWfEL8+6XChT3be2eo5JaenCNd93XDU9/Kyv+Ty9pRRrjys+4g5
+         gkKZBCjyWK0qqvNPC+K87EebLqtUQyHWwBXkymI5iLrRUnI1H24+pln5faW9s0naivA6
+         phgFSuoOneBgMOwc8CvyS/i+kXmaVgWSn/gUwruLKvzhYojKtKdHKGFMGHurH1AMfKFY
+         2ypw==
+X-Gm-Message-State: AOAM5314EEeL8Im25qe6YK/ZYBoImWHScI3wjLWgXFJ8rGPSSyTp8/P7
+        knzh0r1KH9zxTNSxgHCwPxTRw/2BT7GS/z9D3cE=
+X-Google-Smtp-Source: ABdhPJx6vZNoorqKRJ95PX8u/didMEXIfHfhVMvxYh6YzQP3K9nfDJgSZk9/qnOYm7symMReaenNfQZZjcix6V+9YEY=
+X-Received: by 2002:a2e:9b59:: with SMTP id o25mr299127ljj.264.1599111306283;
+ Wed, 02 Sep 2020 22:35:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <yq1y2lrd2ys.fsf@ca-mkp.ca.oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-02_17:2020-09-02,2020-09-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- priorityscore=1501 suspectscore=0 bulkscore=0 phishscore=0 malwarescore=0
- impostorscore=0 mlxlogscore=999 mlxscore=0 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009030042
+References: <20200823212550.3377591-1-nivedita@alum.mit.edu> <20200902232152.3709896-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200902232152.3709896-1-nivedita@alum.mit.edu>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 3 Sep 2020 07:34:55 +0200
+Message-ID: <CANiq72=u33tiyp38WnxyyKOy4b5XSsw3JY6-ECWZvduHb4zqdQ@mail.gmail.com>
+Subject: Re: [PATCH v3] x86/asm: Replace __force_order with memory clobber
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Will Deacon <will@kernel.org>, nadav.amit@gmail.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 7:11 PM, Martin K. Petersen wrote:
-> 
-> Tyrel,
-> 
->> 	Fixup complier errors from neglected commit --amend
-> 
-> Bunch of formatting-related checkpatch warnings. Please fix.
-> 
-> Thanks!
-> 
+On Thu, Sep 3, 2020 at 1:21 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> Changes from v2:
+> - Clarify commit log and source comment some more
 
-So, I stuck to the existing style already in that header. If I'm going to fixup
-to make checkpatch happy I imagine it makes sense to send a prerequisite patch
-that fixes up the rest of the header.
+Much better now, thanks!
 
--Tyrel
+Reviewed-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+
+Cheers,
+Miguel
