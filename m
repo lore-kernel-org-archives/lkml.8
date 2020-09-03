@@ -2,113 +2,124 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDA8C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FDAC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84896206E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:00:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W2LChxv1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sliHzsWT"
+	by mail.kernel.org (Postfix) with ESMTP id 8B0B120709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgICJA3 (ORCPT
+        id S1727095AbgICJA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 3 Sep 2020 05:00:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgICJA0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 05:00:26 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE6D0C061244;
-        Thu,  3 Sep 2020 02:00:25 -0700 (PDT)
-Date:   Thu, 03 Sep 2020 09:00:22 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599123623;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rEmG++bixu9W7TmmdOMxnU6Msdk80tG/JOFts20Mdh0=;
-        b=W2LChxv12wTghU9ex5WnuJjEMgybMoy4d+kM8Tf5h0U7Z8K9U5Za8NnGugFoeo10hJtNSN
-        mdGDqAogPXcpBBXzZ+mvFWmfbJDQRRCrrF+PNKbUl5CEBXfsAOddKo3jIs46BObD65so+0
-        PtFBeTDmp8kpkmskhFp8QpEtDe57Xv1pwLl78RY9+sXFloeHYZJC/asANANBFYJ1cAPmW7
-        dQo+M6AIVwRrI/L7KESwuf59r+Scg7OFQ8Tf/xz38F2anZ7b5hMerDPh95aDwMYB6MtxTI
-        C6shn7/yEVRUKfI60Sf2Z/Z7ik2lE8AzvqEm4q5dsB5PWoqE05IfmxDl8EZ2HQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599123623;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rEmG++bixu9W7TmmdOMxnU6Msdk80tG/JOFts20Mdh0=;
-        b=sliHzsWTQQkcsGbcYS5iDuIwBVCljhXgpJp6XUlBtacYlOCuFLgd0UeZMOIOjcOeqwLPls
-        dnYPk/nUO1BCLeCA==
-From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/cmdline: Disable jump tables for cmdline.c
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200903023056.3914690-1-nivedita@alum.mit.edu>
-References: <20200903023056.3914690-1-nivedita@alum.mit.edu>
+Received: from mx2.suse.de ([195.135.220.15]:36674 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbgICJA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 05:00:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 70374AC4C;
+        Thu,  3 Sep 2020 09:00:27 +0000 (UTC)
+Subject: Re: [PATCH v4 1/4] mm/pageblock: mitigation cmpxchg false sharing in
+ pageblock flags
+To:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Mel Gorman <mgorman@techsingularity.net>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1599116482-7410-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200903072447.GB3179@techsingularity.net>
+ <8275cc70-fd35-25c8-36d4-525a10f05e41@linux.alibaba.com>
+ <7813624a-d8af-f09f-d8c3-0d2a01fe5dd3@linux.alibaba.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <e4c95bf8-508a-3743-4547-1782938670a0@suse.cz>
+Date:   Thu, 3 Sep 2020 11:00:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Message-ID: <159912362248.20229.4425613326323772481.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <7813624a-d8af-f09f-d8c3-0d2a01fe5dd3@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On 9/3/20 10:40 AM, Alex Shi wrote:
+> 
+> 
+> 在 2020/9/3 下午4:32, Alex Shi 写道:
+>>>
+>> I have run thpscale with 'always' defrag setting of THP. The Amean stddev is much
+>> larger than a very little average run time reducing.
+>> 
+>> But the left patch 4 could show the cmpxchg retry reduce from thousands to hundreds
+>> or less.
+>> 
+>> Subject: [PATCH v4 4/4] add cmpxchg tracing
+> 
+> 
+> It's a typical result with the patchset:
+> 
+>  Performance counter stats for './run-mmtests.sh -c configs/config-workload-thpscale pageblock-c':
+> 
+>              9,564      compaction:mm_compaction_isolate_migratepages
+>              6,430      compaction:mm_compaction_isolate_freepages
+>              5,287      compaction:mm_compaction_migratepages
+>             45,299      compaction:mm_compaction_begin
+>             45,299      compaction:mm_compaction_end
+>             30,557      compaction:mm_compaction_try_to_compact_pages
+>             95,540      compaction:mm_compaction_finished
+>            149,379      compaction:mm_compaction_suitable
+>                  0      compaction:mm_compaction_deferred
+>                  0      compaction:mm_compaction_defer_compaction
+>              3,949      compaction:mm_compaction_defer_reset
+>                  0      compaction:mm_compaction_kcompactd_sleep
+>                  0      compaction:mm_compaction_wakeup_kcompactd
+>                  0      compaction:mm_compaction_kcompactd_wake
+>                 68      pageblock:hit_cmpxchg
+> 
+>      113.570974583 seconds time elapsed
+> 
+>       14.664451000 seconds user
+>       96.847116000 seconds sys
+> 
+> It's 5.9-rc2 base kernel result:
+> 
+>  Performance counter stats for './run-mmtests.sh -c configs/config-workload-thpscale rc2-e':
+> 
+>             15,920      compaction:mm_compaction_isolate_migratepages
+>             20,523      compaction:mm_compaction_isolate_freepages
+>              9,752      compaction:mm_compaction_migratepages
+>             27,773      compaction:mm_compaction_begin
+>             27,773      compaction:mm_compaction_end
+>             16,391      compaction:mm_compaction_try_to_compact_pages
+>             62,809      compaction:mm_compaction_finished
+>             69,821      compaction:mm_compaction_suitable
+>                  0      compaction:mm_compaction_deferred
+>                  0      compaction:mm_compaction_defer_compaction
+>              7,875      compaction:mm_compaction_defer_reset
+>                  0      compaction:mm_compaction_kcompactd_sleep
+>                  0      compaction:mm_compaction_wakeup_kcompactd
+>                  0      compaction:mm_compaction_kcompactd_wake
+>              1,208      pageblock:hit_cmpxchg
+> 
+>      116.440414591 seconds time elapsed
+> 
+>       15.326913000 seconds user
+>      103.752758000 seconds sys
 
-Commit-ID:     aef0148f3606117352053c015cb33734e9ee7397
-Gitweb:        https://git.kernel.org/tip/aef0148f3606117352053c015cb33734e9ee7397
-Author:        Arvind Sankar <nivedita@alum.mit.edu>
-AuthorDate:    Wed, 02 Sep 2020 22:30:56 -04:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 03 Sep 2020 10:59:16 +02:00
+The runs wildly differ in many of other stats, so I'm not sure they are really
+comparable. I guess you could show the fraction of hit_cmpxchg to all cmpxchg.
+But there's also danger of tracepoints widening the race window.
 
-x86/cmdline: Disable jump tables for cmdline.c
-
-When CONFIG_RETPOLINE is disabled, Clang uses a jump table for the
-switch statement in cmdline_find_option (jump tables are disabled when
-CONFIG_RETPOLINE is enabled). This function is called very early in boot
-from sme_enable() if CONFIG_AMD_MEM_ENCRYPT is enabled. At this time,
-the kernel is still executing out of the identity mapping, but the jump
-table will contain virtual addresses.
-
-Fix this by disabling jump tables for cmdline.c when AMD_MEM_ENCRYPT is
-enabled.
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200903023056.3914690-1-nivedita@alum.mit.edu
----
- arch/x86/lib/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index d46fff1..aa06785 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -24,7 +24,7 @@ ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_cmdline.o = -pg
- endif
- 
--CFLAGS_cmdline.o := -fno-stack-protector
-+CFLAGS_cmdline.o := -fno-stack-protector -fno-jump-tables
- endif
- 
- inat_tables_script = $(srctree)/arch/x86/tools/gen-insn-attr-x86.awk
+In the end what matters is how these 1208 retries contribute to runtime. I doubt
+they could be really visible in a 100+ seconds run though.
