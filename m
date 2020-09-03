@@ -2,96 +2,84 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD1BC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3CAC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B997720709
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:55:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599126910;
-	bh=wGGOlIPEQZMs6G4FyfRkt319cMrz0ughZmzT6itrP6E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NVFVRlto9tsHhN4M6DBCZuQB0yrxPaAPZAdyJFJj8NCohoGA74l2+6id5qTOkTDrr
-	 2Myl02Rb58ati82UgE4O6b3ZGLXyVyXs5Rk/sVJL/bRPqpBlsLjg6f2u5ufg5v2cBk
-	 iZ8Zowk6zmtVGIMilZ6oHnQV7zhvpo/YKumo1xtc=
+	by mail.kernel.org (Postfix) with ESMTP id 8A9432065E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgICJzJ (ORCPT
+        id S1728329AbgICJz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 05:55:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50112 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbgICJzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 05:55:08 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B60BB20709;
-        Thu,  3 Sep 2020 09:55:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599126907;
-        bh=wGGOlIPEQZMs6G4FyfRkt319cMrz0ughZmzT6itrP6E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WELnOw3/IIMCBxlcl08e5d8AMglTsbW8Opp+VYi7/jIj4PpwCqMxwAIuM5DXsUQWG
-         /EJnZxA2TzWL1jDuYYhid8kytedNP9X7yrpxRM30BbAY2ICNBn44T1+Y2CXtrlpQMH
-         BeHEE72pO5qNy9xy/VBT8iEcC+XInu4I2jSGZ3bs=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kDlxR-008r8X-SA; Thu, 03 Sep 2020 10:55:06 +0100
+        Thu, 3 Sep 2020 05:55:26 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34818 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbgICJzZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 05:55:25 -0400
+Received: by mail-ot1-f66.google.com with SMTP id i4so2170784ota.2;
+        Thu, 03 Sep 2020 02:55:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mxd/4nV94gENPbWr5vineBXcIlKgMjAz5Ru6u3+1SJw=;
+        b=udVVrKLEFnOJSFTTFK3eOTARvNFUhMnnbYdTo+Fu2cVx64k9nCnhTYNWdRjjjerStU
+         mKBP5s3R6G1JTDiJSpgbTL/v4/024K0GLvwqnvCv/91KCRXrGa+TRNbsbca35rmLdWM0
+         9qPA33m+rIoOpffyQOEBSfJPjoSBL9LLm31+Rsn0UCYgvLCHjwTNmNZyJkraPz2d4K++
+         Vbs6LoIFqmGy6kcMI8GRDfY6SaKdAF+Y14B5KbgVvLCie0rGtfKHDO4x+TT/KwQiX/rU
+         9uExa3oivsGBECuP70ySd5OBa/fv0LomYDh6FD823I88ctaR6YvnILetPxyc8oFdJQCd
+         2ZUQ==
+X-Gm-Message-State: AOAM530pteMaHF8OFGJeW78KI58j5U/az4sZXa5Tgu0Ks5PJXswIZETv
+        P8ymOZFMfbHDU/wa6vlhgJe3qh9xciIJOVK/Sl8=
+X-Google-Smtp-Source: ABdhPJyeSRbUKtD7sMTdA7aGWTBEJsisVjdfNr+DMP4gt47zwDTvJkxLTdEJb/z3SByYoU7/hwDepBj6YbI2sQOaBTw=
+X-Received: by 2002:a9d:1b62:: with SMTP id l89mr948617otl.145.1599126923013;
+ Thu, 03 Sep 2020 02:55:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 03 Sep 2020 10:55:05 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zou Cao <zoucao@linux.alibaba.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net
-Subject: Re: [PATCH] irqchip/gic-v3: change gic_data into gic_v3_data
-In-Reply-To: <1599124088-80231-1-git-send-email-zoucao@linux.alibaba.com>
-References: <1599124088-80231-1-git-send-email-zoucao@linux.alibaba.com>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <c6eacce9e0990239ee12bfc5826fe2c6@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: zoucao@linux.alibaba.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200825141805.27105-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200825141805.27105-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200825141805.27105-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 3 Sep 2020 11:55:11 +0200
+Message-ID: <CAMuHMdVgO+nkudF_W9oUfqD=Z5dWX2HME5jcTQqA1DsGm3+nrQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: iommu: renesas,ipmmu-vmsa: Add r8a7742 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-03 10:08, Zou Cao wrote:
-> There are multiple gic_data symbol between irq_gic.c and irq_gic_v3.c,
-> we can see the same symbol name:
-> 
-> 	cat /proc/kallsyms | grep gic_data
-> ------>
-> 	ffff80001138f1d0 d gic_data
-> 	ffff80001138f940 d gic_data
-> 
-> Normally CONFIG_ARM_GIC and CONFIG_ARM_GIC_V3 are all enabled, move
-> the gic_data symbol into different name, it will be friend for
-> kallsyms_lookup_name to get addr easily.
-> 
-> Signed-off-by: Zou Cao <zoucao@linux.alibaba.com>
+On Tue, Aug 25, 2020 at 4:19 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document RZ/G1H (R8A7742) SoC bindings.
+>
+> No driver change is needed due to the fallback compatible value
+> "renesas,ipmmu-vmsa".
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
-I'm sorry, but this kind of change is not acceptable.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-It is pure churn, for zero benefit. As an example, give the following
-script a go:
+Gr{oetje,eeting}s,
 
-awk '{ print $3 }' /proc/kallsyms | sort | uniq -c| awk '$1 > 1 
-{print}'| sort -n
+                        Geert
 
-Are you going to repaint all these symbols?
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
