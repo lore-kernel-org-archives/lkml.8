@@ -2,102 +2,92 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B345C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DC9C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1387620716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599145599;
-	bh=vW65TbwI8SwZiwFXgxSf5xZsxuSUgeC5F1theLDAloE=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=FRPQM2pqlHF0+SbBubSnL/fNrwppi8m4O7sSEgZdACqJmKfdLXvVEFKOab6BUOZnz
-	 zEKYm/9foryMBju11HlP4UOw/leL5MHd0XURM3PtUJXEDCXdgMnldkpocPt6vgSdK2
-	 WTnP8Kc/h2JuSC/dvq+Mlk3an84Wegu9JRN90Big=
+	by mail.kernel.org (Postfix) with ESMTP id CFD2320716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgICPGc (ORCPT
+        id S1729021AbgICPGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:06:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728887AbgICN6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 09:58:15 -0400
-Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03E83208B3;
-        Thu,  3 Sep 2020 13:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599141456;
-        bh=vW65TbwI8SwZiwFXgxSf5xZsxuSUgeC5F1theLDAloE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Lzx3zaoCsj75yzLW9jkI2nPXSTigMstiL8oNfRDjv3Z0+nkd4F0lxvL9zq75A8YQ
-         w1GUEsDptIgb10tYVHYa5/OGUWAW17s4imCRSq/PpCMKZQskhwlGW77+GUwshrNv8s
-         NVh1qsa8D/KeZL9AjG+m0xVhd84AzUxh7fgCn18o=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kDpk6-004T6l-3r; Thu, 03 Sep 2020 15:57:34 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] media: atomisp: get rid of some cleanup leftovers
-Date:   Thu,  3 Sep 2020 15:57:28 +0200
-Message-Id: <1e7968e715e23b90ab4994b32301a6cf4faffca8.1599141140.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1599141140.git.mchehab+huawei@kernel.org>
-References: <cover.1599141140.git.mchehab+huawei@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 3 Sep 2020 11:06:48 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:45300 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729357AbgICPFt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 11:05:49 -0400
+Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
+  by alexa-out.qualcomm.com with ESMTP; 03 Sep 2020 08:05:36 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 03 Sep 2020 08:05:34 -0700
+Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 03 Sep 2020 20:35:05 +0530
+Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
+        id E50A244AB; Thu,  3 Sep 2020 20:35:04 +0530 (IST)
+From:   satya priya <skakit@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>, gregkh@linuxfoundation.org,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
+        satya priya <skakit@codeaurora.org>
+Subject: [PATCH V4 4/4] tty: serial: qcom_geni_serial: Fix the UART wakeup issue
+Date:   Thu,  3 Sep 2020 20:34:58 +0530
+Message-Id: <1599145498-20707-5-git-send-email-skakit@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
+References: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code that used to check for ISP2400/2401 version were
-using the revision number in order to decide wheather
-version should be used. With the new version, the code
-doesn't need to check anymore for ISP version.
+As a part of system suspend uart_port_suspend is called from the
+Serial driver, which calls set_mctrl passing mctrl as NULL. This
+makes RFR high(NOT_READY) during suspend.
 
-Fixes: ca133c395f2f ("media: atomisp: improve device detection code")
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Due to this BT SoC is not able to send wakeup bytes to UART during
+suspend. Include if check for non-suspend case to keep RFR low
+during suspend.
+
+Signed-off-by: satya priya <skakit@codeaurora.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Akash Asthana <akashast@codeaurora.org>
 ---
- drivers/staging/media/atomisp/pci/atomisp_v4l2.c | 3 ---
- 1 file changed, 3 deletions(-)
+Changes in V2:
+ - This patch fixes the UART flow control issue during suspend.
+   Newly added in V2.
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-index 8c1d5a3b8f45..304857bffc6a 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-@@ -1429,7 +1429,6 @@ atomisp_load_firmware(struct atomisp_device *isp)
-  */
- static bool is_valid_device(struct pci_dev *pdev, const struct pci_device_id *id)
- {
--	unsigned int a0_max_id = 0;
- 	const char *name;
- 	const char *product;
+Changes in V3:
+ - As per Matthias's comment removed the extra parentheses.
+
+Changes in V4:
+ - No change.
+
+ drivers/tty/serial/qcom_geni_serial.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index 07b7b6b..2aad9d7 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -242,7 +242,7 @@ static void qcom_geni_serial_set_mctrl(struct uart_port *uport,
+ 	if (mctrl & TIOCM_LOOP)
+ 		port->loopback = RX_TX_CTS_RTS_SORTED;
  
-@@ -1437,11 +1436,9 @@ static bool is_valid_device(struct pci_dev *pdev, const struct pci_device_id *id
- 
- 	switch (id->device & ATOMISP_PCI_DEVICE_SOC_MASK) {
- 	case ATOMISP_PCI_DEVICE_SOC_MRFLD:
--		a0_max_id = ATOMISP_PCI_REV_MRFLD_A0_MAX;
- 		name = "Merrifield";
- 		break;
- 	case ATOMISP_PCI_DEVICE_SOC_BYT:
--		a0_max_id = ATOMISP_PCI_REV_BYT_A0_MAX;
- 		name = "Baytrail";
- 		break;
- 	case ATOMISP_PCI_DEVICE_SOC_ANN:
+-	if (!(mctrl & TIOCM_RTS))
++	if (!(mctrl & TIOCM_RTS) && !uport->suspended)
+ 		uart_manual_rfr = UART_MANUAL_RFR_EN | UART_RFR_NOT_READY;
+ 	writel(uart_manual_rfr, uport->membase + SE_UART_MANUAL_RFR);
+ }
 -- 
-2.26.2
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
 
