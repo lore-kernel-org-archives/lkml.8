@@ -2,87 +2,151 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DB8C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081CBC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CED8620716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:00:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gmeIcB5A"
+	by mail.kernel.org (Postfix) with ESMTP id C1B1B20FC3
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbgICPAr (ORCPT
+        id S1729512AbgICPBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:00:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43718 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729080AbgICOGC (ORCPT
+        Thu, 3 Sep 2020 11:01:00 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:49848 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728867AbgICOFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:06:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599141961;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CRM5SDuyNkyo2LaLrW1Sn25CKUsI02PlDXJ3rHe+Ca0=;
-        b=gmeIcB5AxzZTdDpclejsQUCrH7H+zIRhbAUXmpWrUSM29+s+zwo1UwkR4mBxDc1fEqfD7T
-        CgIsugwfmsmuB7b3ilqnrhAhlsBG38JPXnQHOJG7dQPuZhCh/dn+bXmywO1CtaHO3S2T7E
-        ychBSWM9FPo/Uk/t5cV2PDOOOb4UjJ4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-39-cE6VzjKJNmuEUzUKyLYZWQ-1; Thu, 03 Sep 2020 10:03:52 -0400
-X-MC-Unique: cE6VzjKJNmuEUzUKyLYZWQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3D9E18B9F86;
-        Thu,  3 Sep 2020 14:03:47 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.114])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4F9A65C22B;
-        Thu,  3 Sep 2020 14:03:27 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu,  3 Sep 2020 16:03:47 +0200 (CEST)
-Date:   Thu, 3 Sep 2020 16:03:26 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     mhocko@suse.com, christian.brauner@ubuntu.com, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
-        cyphar@cyphar.com, adobriyan@gmail.com, akpm@linux-foundation.org,
-        ebiederm@xmission.com, gladkov.alexey@gmail.com, walken@google.com,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
-        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
-        linux-mm@kvack.org, Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH v3 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-Message-ID: <20200903140324.GH4386@redhat.com>
-References: <20200902012558.2335613-1-surenb@google.com>
+        Thu, 3 Sep 2020 10:05:49 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R341e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=31;SR=0;TI=SMTPD_---0U7pNn5X_1599138766;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U7pNn5X_1599138766)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 03 Sep 2020 21:12:46 +0800
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Howells <dhowells@redhat.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephan Mueller <smueller@chronox.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Waiman Long <longman@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        Vitaly Chikunov <vt@altlinux.org>,
+        "Gilad Ben-Yossef" <gilad@benyossef.com>,
+        Pascal van Leeuwen <pvanleeuwen@rambus.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-security-module@vger.kernel.org
+Cc:     Xufeng Zhang <yunbo.xufeng@linux.alibaba.com>,
+        Jia Zhang <zhang.jia@linux.alibaba.com>,
+        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Subject: [PATCH v6 6/8] X.509: support OSCCA certificate parse
+Date:   Thu,  3 Sep 2020 21:12:40 +0800
+Message-Id: <20200903131242.128665-7-tianjia.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.3.ge56e4f7
+In-Reply-To: <20200903131242.128665-1-tianjia.zhang@linux.alibaba.com>
+References: <20200903131242.128665-1-tianjia.zhang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902012558.2335613-1-surenb@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/01, Suren Baghdasaryan wrote:
->
->  fs/proc/base.c                 |  3 +--
->  include/linux/oom.h            |  1 +
->  include/linux/sched/coredump.h |  1 +
->  kernel/fork.c                  | 21 +++++++++++++++++++++
->  mm/oom_kill.c                  |  2 ++
->  5 files changed, 26 insertions(+), 2 deletions(-)
+The digital certificate format based on SM2 crypto algorithm as
+specified in GM/T 0015-2012. It was published by State Encryption
+Management Bureau, China.
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+This patch adds the OID object identifier defined by OSCCA. The
+x509 certificate supports sm2-with-sm3 type certificate parsing.
+It uses the standard elliptic curve public key, and the sm2
+algorithm signs the hash generated by sm3.
+
+Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Tested-by: Xufeng Zhang <yunbo.xufeng@linux.alibaba.com>
+---
+ crypto/asymmetric_keys/x509_cert_parser.c | 14 +++++++++++++-
+ include/linux/oid_registry.h              |  6 ++++++
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/crypto/asymmetric_keys/x509_cert_parser.c b/crypto/asymmetric_keys/x509_cert_parser.c
+index 26ec20ef4899..6a8aee22bfd4 100644
+--- a/crypto/asymmetric_keys/x509_cert_parser.c
++++ b/crypto/asymmetric_keys/x509_cert_parser.c
+@@ -234,6 +234,10 @@ int x509_note_pkey_algo(void *context, size_t hdrlen,
+ 	case OID_gost2012Signature512:
+ 		ctx->cert->sig->hash_algo = "streebog512";
+ 		goto ecrdsa;
++
++	case OID_sm2_with_sm3:
++		ctx->cert->sig->hash_algo = "sm3";
++		goto sm2;
+ 	}
+ 
+ rsa_pkcs1:
+@@ -246,6 +250,11 @@ int x509_note_pkey_algo(void *context, size_t hdrlen,
+ 	ctx->cert->sig->encoding = "raw";
+ 	ctx->algo_oid = ctx->last_oid;
+ 	return 0;
++sm2:
++	ctx->cert->sig->pkey_algo = "sm2";
++	ctx->cert->sig->encoding = "raw";
++	ctx->algo_oid = ctx->last_oid;
++	return 0;
+ }
+ 
+ /*
+@@ -266,7 +275,8 @@ int x509_note_signature(void *context, size_t hdrlen,
+ 	}
+ 
+ 	if (strcmp(ctx->cert->sig->pkey_algo, "rsa") == 0 ||
+-	    strcmp(ctx->cert->sig->pkey_algo, "ecrdsa") == 0) {
++	    strcmp(ctx->cert->sig->pkey_algo, "ecrdsa") == 0 ||
++	    strcmp(ctx->cert->sig->pkey_algo, "sm2") == 0) {
+ 		/* Discard the BIT STRING metadata */
+ 		if (vlen < 1 || *(const u8 *)value != 0)
+ 			return -EBADMSG;
+@@ -456,6 +466,8 @@ int x509_extract_key_data(void *context, size_t hdrlen,
+ 	else if (ctx->last_oid == OID_gost2012PKey256 ||
+ 		 ctx->last_oid == OID_gost2012PKey512)
+ 		ctx->cert->pub->pkey_algo = "ecrdsa";
++	else if (ctx->last_oid == OID_id_ecPublicKey)
++		ctx->cert->pub->pkey_algo = "sm2";
+ 	else
+ 		return -ENOPKG;
+ 
+diff --git a/include/linux/oid_registry.h b/include/linux/oid_registry.h
+index 657d6bf2c064..48fe3133ff39 100644
+--- a/include/linux/oid_registry.h
++++ b/include/linux/oid_registry.h
+@@ -107,6 +107,12 @@ enum OID {
+ 	OID_gostTC26Sign512B,		/* 1.2.643.7.1.2.1.2.2 */
+ 	OID_gostTC26Sign512C,		/* 1.2.643.7.1.2.1.2.3 */
+ 
++	/* OSCCA */
++	OID_sm2,			/* 1.2.156.10197.1.301 */
++	OID_sm3,			/* 1.2.156.10197.1.401 */
++	OID_sm2_with_sm3,		/* 1.2.156.10197.1.501 */
++	OID_sm3WithRSAEncryption,	/* 1.2.156.10197.1.504 */
++
+ 	OID__NR
+ };
+ 
+-- 
+2.19.1.3.ge56e4f7
 
