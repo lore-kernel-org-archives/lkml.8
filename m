@@ -2,122 +2,116 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E334C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9D6C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3BA20786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E96320786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="n/sywxZY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTmj5Nx/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgICPTV (ORCPT
+        id S1729104AbgICPTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:19:21 -0400
-Received: from crapouillou.net ([89.234.176.41]:51236 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbgICL3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:29:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599132373; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7SglRxexWR02Jo1xu/7HEB4Hand1VF9eBKwwkPhycx4=;
-        b=n/sywxZY3LJtrLFp8PyB9RN3P2+He4kBjU2FJO06S1MBNfZGpYeWilBBTEMOjlEaFWtiZ7
-        7+Ib+m2BtC4kB4qLGttVnuTJ2wEP39qmEVeu84HaiZS2RzTpmQqeZVA4iC5i+7XqqEHHpF
-        Nx7ZrNzJXJg0TMCBkuHfpsdNb/Cp408=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Cristian Birsan <cristian.birsan@microchip.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Tony Prisk <linux@prisktech.co.nz>, Bin Liu <b-liu@ti.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 04/20] usb/host: ehci-platform: Use pm_ptr() macro
-Date:   Thu,  3 Sep 2020 13:25:38 +0200
-Message-Id: <20200903112554.34263-5-paul@crapouillou.net>
-In-Reply-To: <20200903112554.34263-1-paul@crapouillou.net>
-References: <20200903112554.34263-1-paul@crapouillou.net>
+        Thu, 3 Sep 2020 11:19:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728561AbgICL1b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:27:31 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A597C061245;
+        Thu,  3 Sep 2020 04:18:11 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id w7so2075460pfi.4;
+        Thu, 03 Sep 2020 04:18:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dYHgOYFkdCbGZWuPZrhfEhLKQCW87nGOndt8XY8lTCE=;
+        b=YTmj5Nx/rxPJZhk7d9yLcM2eIv4s0d3h/2ZR84Em9iBxXXU+6fm3Z5kcFOSLY+Gsu+
+         rnb+mSPFr38Rfgetp+MVqEa0Y5Z88781pr3jGwxI9aW9uIc2OIfhdOiAuEMz8ZwWRwrv
+         Xtky8ninIqNZ1+nE5/RIr2SDFhktx6FZoCwZ/+NltoqGD8aKYsjsqajhIyssbPj2x/+N
+         cNlWAUKA1jars5Ol/hlBfegnT3XpElC5fPQaZ/dSLZTKwBcP23I4SpXHLO0gD4BDMDd4
+         TOjqdW4p/n2T6IddPecArk4zZSzmYuWcymqQTKaBEo+10kylkPek6mgPXylU1suF/uhb
+         Dt2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dYHgOYFkdCbGZWuPZrhfEhLKQCW87nGOndt8XY8lTCE=;
+        b=I3u4r+FcqjlHj7nPPkNEwEWzHmvcf8EjDtN304Quv9b4+WZ/ITteW9LgnX+XcAi6SQ
+         v86HrdHW4Xxf7sLS8cYb8wwmG2AsQT26IjJfL9mrk0XQcyIdTaBiO6bEyesrubXaR5tL
+         x2dG2118VIj6nHVxqfm6NaqjCvaYO8Eh6Tepkuz4ft6lWMYZPhgOxAuuUss25IUB04/c
+         NgSLaPVRN+coCYviqo2XdrxgPHd6SRVfIorG2QyIL6Nj3P7DXmFJg0X3pzi1piA30muN
+         6p/iKzX4Oxe4/rxsGE8PG4jjCT7yJ6gUrYzaJ2Zjo7+bYHTPRWQGssnJcZUYHqpVPOAp
+         KdCA==
+X-Gm-Message-State: AOAM532V1JSvji1X/vvCNY1hzml2LzMOi8IE78Ui7eLiF3Ubmf6j+X+a
+        nT0uj65eLsHwZQqkltWgLM3mT+NR74GB01HoBLKxrtJGX34=
+X-Google-Smtp-Source: ABdhPJwb3eyvijxdRfrW78iIFLm79zpgRsDNv/ojUM5mIhB1AodbO4N0A4ueSIU1v6GyeE3AMG04UUsRMgbbuwovn94=
+X-Received: by 2002:a17:902:56a:: with SMTP id 97mr3479518plf.130.1599131890968;
+ Thu, 03 Sep 2020 04:18:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200903005300.7894-1-digetx@gmail.com> <20200903005300.7894-10-digetx@gmail.com>
+In-Reply-To: <20200903005300.7894-10-digetx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 3 Sep 2020 14:17:53 +0300
+Message-ID: <CAHp75VdPoJFNC+MntKu-CL8jFMEe85ZT3R9DF0aaNC4KjqWXyg@mail.gmail.com>
+Subject: Re: [PATCH v3 09/22] i2c: tegra: Clean up probe function
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the newly introduced pm_ptr() macro, and mark the suspend/resume
-functions __maybe_unused. These functions can then be moved outside the
-CONFIG_PM_SUSPEND block, and the compiler can then process them and
-detect build failures independently of the config. If unused, they will
-simply be discarded by the compiler.
+On Thu, Sep 3, 2020 at 3:54 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> The driver's probe function code is difficult to read and follow. This
+> patch reorders code of the probe function, forming logical groups that are
+> easy to work with. The clock and hardware initializations are factored
+> out into separate functions in order to keep code clean and ease error
+> unwinding.
+>
+> Driver now makes use of devm_platform_get_and_ioremap_resource() and
+> platform_get_irq() which are replacing boilerplate parts of the code.
+>
+> The dev_err_probe() is now used for reset control retrieval because reset
+> is now requested before clocks, and thus, BPMP driver that provides reset
+> controls for newer SoCs may cause the probe defer.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/usb/host/ehci-platform.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+> The error message of devm_request_irq() is removed because this function
+> takes care of printing the message by itself.
 
-diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-index 006c4f6188a5..4585a3a24678 100644
---- a/drivers/usb/host/ehci-platform.c
-+++ b/drivers/usb/host/ehci-platform.c
-@@ -410,8 +410,7 @@ static int ehci_platform_remove(struct platform_device *dev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int ehci_platform_suspend(struct device *dev)
-+static int __maybe_unused ehci_platform_suspend(struct device *dev)
- {
- 	struct usb_hcd *hcd = dev_get_drvdata(dev);
- 	struct usb_ehci_pdata *pdata = dev_get_platdata(dev);
-@@ -433,7 +432,7 @@ static int ehci_platform_suspend(struct device *dev)
- 	return ret;
- }
- 
--static int ehci_platform_resume(struct device *dev)
-+static int __maybe_unused ehci_platform_resume(struct device *dev)
- {
- 	struct usb_hcd *hcd = dev_get_drvdata(dev);
- 	struct usb_ehci_pdata *pdata = dev_get_platdata(dev);
-@@ -464,7 +463,6 @@ static int ehci_platform_resume(struct device *dev)
- 
- 	return 0;
- }
--#endif /* CONFIG_PM_SLEEP */
- 
- static const struct of_device_id vt8500_ehci_ids[] = {
- 	{ .compatible = "via,vt8500-ehci", },
-@@ -499,7 +497,7 @@ static struct platform_driver ehci_platform_driver = {
- 	.shutdown	= usb_hcd_platform_shutdown,
- 	.driver		= {
- 		.name	= "ehci-platform",
--		.pm	= &ehci_platform_pm_ops,
-+		.pm	= pm_ptr(&ehci_platform_pm_ops),
- 		.of_match_table = vt8500_ehci_ids,
- 		.acpi_match_table = ACPI_PTR(ehci_acpi_match),
- 	}
+I see no evidence of this.
+
+...
+
+> +       of_property_read_u32(np, "clock-frequency", &bus_clk_rate);
+> +       i2c_dev->bus_clk_rate = bus_clk_rate;
+
+Hmm... I dunno if Wolfram is going to implement a special helper
+exactly for this. I remember we discussed that with him during v5.8
+(?) times.
+
+...
+
+> +static int tegra_i2c_init_clocks(struct tegra_i2c_dev *i2c_dev)
+
+Hmm... Don't we have something like devm_clk_bulk_get_all() or so?
+
 -- 
-2.28.0
-
+With Best Regards,
+Andy Shevchenko
