@@ -2,119 +2,125 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9C1C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA87FC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5959B2071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:38:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BlG2wNJP"
+	by mail.kernel.org (Postfix) with ESMTP id A93622072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:39:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599111556;
+	bh=jAExD5YbN4NOCVCuOzux7zGEA6oKWHOZzpnXunrpQVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JQqqw4XDYqNy3K/Kr6RJUzmTMscJkGxIhsZJgTBUuzBnOQZ0+NL0+oKaknn9Ed447
+	 32LNjfIClyL8E8gW/yCTMg2g2B2OR+c3cL8B/DJH798QVYfJCkJIpcc8PQv1EmZlin
+	 ELAAyYH+hFODB1EFup1F5G8j359k8n1bqy+PTmtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgICFin (ORCPT
+        id S1727794AbgICFjP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 01:38:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgICFim (ORCPT
+        Thu, 3 Sep 2020 01:39:15 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43331 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgICFjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 01:38:42 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E991C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 22:38:42 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id n10so1090910qtv.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 22:38:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/srxmXOQUdGOTgQu2IuqE2j58tt26cmpQAGEQoUfF/k=;
-        b=BlG2wNJPYLR+rFryCKSetR5cKCniB4g/4HijU9okP0ui0rIsM3wxVymFTj14GFBX6q
-         pK5+3rG4FJjOIgBAIpAjbQVoXniXWSV0TdHquceFaLdMTu8y7tro9mpkEiFR+UX5OlXU
-         FmrMJRd16wseT1va/r33k5gJEc7XwRoD2CVA8REXK0RmYehVgri6Wsm8Wrsw31hc/BAo
-         O+Va8jlRuamwJ81xgknpaV/yP8nR2C2oRaC32NUaqJxSUwmLsvx1W0uTxBP7Tv+NOj5Q
-         MyLctmJl7IfP+gDw0n0DhQtOdg4Q3DG6Tm/GmE/zgu9UqsqiPeH5aB0lP77qRuuxhuWq
-         8lCQ==
+        Thu, 3 Sep 2020 01:39:13 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k15so1688051wrn.10;
+        Wed, 02 Sep 2020 22:39:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/srxmXOQUdGOTgQu2IuqE2j58tt26cmpQAGEQoUfF/k=;
-        b=VHK/Q/ZihjJw+r+Ie7bOh/n0MAQKFRBkIU3yd7DdqDTIjV13dq/1e2GP819xwCG+9r
-         TDXt5ElEvX66687qt4kkOF9f75YlxiemkeHaI54p9hzky8w1qF//cUPNzphoebg4ZjE5
-         Fi4NJ6LhsroAZvSYlTOu+o6sjAMwDRUbhVjUMuzd45rN5mrHLeiD/vtsvFTYVA3gXxwz
-         UsyMNTV6o9/uRRsE8FRpGDGkiZz9p4RJz8+NkVbASPXo/4wfGDHcLgwPLEctO7VnBdyr
-         0oBUK1nCoP3XL62a6cHKOs31GoavGMkzyOL8HKXqXoHEFYPdTJONGOqKHtu1hhiVN4YU
-         rctw==
-X-Gm-Message-State: AOAM531c9q31hOSEj6XZzkwp2tyLOekJrU8wwphsAjfR566in+TtHqeN
-        Fjqfe1Mw+VFuct51EtpL2F7JG/nA/zoar/3GONM=
-X-Google-Smtp-Source: ABdhPJzaK6BoZepXoJ10dK0NPS4TvabWN2zlZEZXM5iY2qiaE4SmYwSpCXEsJMm/APS6kZyYQg8zAMlaCjyRxI4OR/8=
-X-Received: by 2002:ac8:67ca:: with SMTP id r10mr1883306qtp.54.1599111521573;
- Wed, 02 Sep 2020 22:38:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=cjA1SpxFdTarFmkqi5x6o7EpaRfJ1ZdEWfLV8+qCoTw=;
+        b=V+e64THtvZwl6wLV93JIn1EdEkTh1VPnryR3TOQEGt4WzvLsbO6inJ2oX8a++/xoEy
+         mNQLte6fMa4OOU0yWQ63y+L1FGV7ADlhiy5IVpoQwAH4fnxrF7P4WtilxOOF3w9erxSa
+         wb7CZa03p4kCv8k/jgSTo6BB2cRFhEpYY17BoIUUuFVyCBzAiqLRmwSHhiOabh82891e
+         0mWvMOuaBv0okUxmvrllL7oOPA+yYpMbIENJv+3XtNsjL/WkRPs4FPv88ZEVxWibEDI3
+         WykMIli6GsR1VRkmAGvI0oyvmfm++ufZ4+oG93qhxnIE8Ucbr/Kwfb/go5swpALo48bY
+         sM0g==
+X-Gm-Message-State: AOAM530qPh+JIhfbPsfh7QeR38Otae1sa9q18ODD68wMuSLigSOH/cwK
+        Ar2kRi1Z7nUdfdKu3lhc/yg=
+X-Google-Smtp-Source: ABdhPJzzxouJj0AiVAoYVXd6GYxpjH3humJ0K6tdJJ+HM3g/hLmKJVkO4jJwfiALZiApJbZ3FqXwiw==
+X-Received: by 2002:a5d:540a:: with SMTP id g10mr377991wrv.138.1599111550768;
+        Wed, 02 Sep 2020 22:39:10 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.106])
+        by smtp.googlemail.com with ESMTPSA id q8sm2590564wrx.79.2020.09.02.22.39.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 02 Sep 2020 22:39:09 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 07:39:05 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     =?utf-8?B?TWljaGHFgsKgTWlyb3PFgmF3?= <mirq-linux@rere.qmqm.pl>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 11/11] mmc: host: Enable compile testing of multiple
+ drivers
+Message-ID: <20200903053905.GA14577@kozik-lap>
+References: <20200902193658.20539-1-krzk@kernel.org>
+ <20200902193658.20539-12-krzk@kernel.org>
+ <20200902213227.GE1624@qmqm.qmqm.pl>
 MIME-Version: 1.0
-References: <1599102555-17178-1-git-send-email-shengjiu.wang@nxp.com> <20200903034018.GC4517@Asurada-Nvidia>
-In-Reply-To: <20200903034018.GC4517@Asurada-Nvidia>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Thu, 3 Sep 2020 13:38:30 +0800
-Message-ID: <CAA+D8AOJGH77cpbC9dqaE_BES208sgEPDNPWbZ8HGpfom_FoRg@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: fsl_sai: Set SAI Channel Mode to Output Mode
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200902213227.GE1624@qmqm.qmqm.pl>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 11:42 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Thu, Sep 03, 2020 at 11:09:15AM +0800, Shengjiu Wang wrote:
-> > Transmit data pins will output zero when slots are masked or channels
-> > are disabled. In CHMOD TDM mode, transmit data pins are tri-stated when
-> > slots are masked or channels are disabled. When data pins are tri-stated,
-> > there is noise on some channels when FS clock value is high and data is
-> > read while fsclk is transitioning from high to low.
-> >
-> > Signed-off-by: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
->
-> Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
->
-> Though one nit inline:
->
-> > ---
-> >  sound/soc/fsl/fsl_sai.c | 12 ++++++++++--
-> >  sound/soc/fsl/fsl_sai.h |  2 ++
-> >  2 files changed, 12 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-> > index 62c5fdb678fc..33b194a5c1dc 100644
-> > --- a/sound/soc/fsl/fsl_sai.c
-> > +++ b/sound/soc/fsl/fsl_sai.c
-> > @@ -486,6 +486,12 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
-> >
-> >       val_cr4 |= FSL_SAI_CR4_FRSZ(slots);
-> >
-> > +     /* Output Mode - data pins transmit 0 when slots are masked
-> > +      * or channels are disabled
-> > +      */
->
-> Coding style for multi-line comments. Yet, probably can simplify?
->
->         /* Set to output mode to avoid tri-stated data pins */
-Ok, will update in v2.
+On Wed, Sep 02, 2020 at 11:32:27PM +0200, Michał Mirosław wrote:
+> On Wed, Sep 02, 2020 at 09:36:58PM +0200, Krzysztof Kozlowski wrote:
+> > Multiple MMC host controller driver can be compile tested as they do not
+> > depend on architecture specific headers.
+> [...]
+> > --- a/drivers/mmc/host/Kconfig
+> > +++ b/drivers/mmc/host/Kconfig
+> > @@ -178,7 +178,7 @@ config MMC_SDHCI_OF_AT91
+> [...]
+> >  config MMC_MESON_GX
+> >  	tristate "Amlogic S905/GX*/AXG SD/MMC Host Controller support"
+> > -	depends on ARCH_MESON && MMC
+> > +	depends on MMC
+> > +	depends on ARCH_MESON|| COMPILE_TEST
+> [...]
+> >  config MMC_MOXART
+> >  	tristate "MOXART SD/MMC Host Controller support"
+> > -	depends on ARCH_MOXART && MMC
+> > +	depends on MMC
+> > +	depends on ARCH_MOXART || COMPILE_TEST
+> [...]
+> 
+> You can drop 'MMC' from depends as the whole tree is under 'if MMC' already.
 
-best regards
-wang shengjiu
+Right, thanks for feedback.
+
+Best regards,
+Krzysztof
+
