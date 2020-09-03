@@ -2,92 +2,110 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DC9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A550C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFD2320716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3EE820716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:07:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JgDxjdYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgICPGs (ORCPT
+        id S1729132AbgICPHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:06:48 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:45300 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729357AbgICPFt (ORCPT
+        Thu, 3 Sep 2020 11:07:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729094AbgICPGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:05:49 -0400
-Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
-  by alexa-out.qualcomm.com with ESMTP; 03 Sep 2020 08:05:36 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 03 Sep 2020 08:05:34 -0700
-Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 03 Sep 2020 20:35:05 +0530
-Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
-        id E50A244AB; Thu,  3 Sep 2020 20:35:04 +0530 (IST)
-From:   satya priya <skakit@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>, gregkh@linuxfoundation.org,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
-        satya priya <skakit@codeaurora.org>
-Subject: [PATCH V4 4/4] tty: serial: qcom_geni_serial: Fix the UART wakeup issue
-Date:   Thu,  3 Sep 2020 20:34:58 +0530
-Message-Id: <1599145498-20707-5-git-send-email-skakit@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
-References: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
+        Thu, 3 Sep 2020 11:06:19 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55E5AC061244;
+        Thu,  3 Sep 2020 08:06:19 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id w14so4149180ljj.4;
+        Thu, 03 Sep 2020 08:06:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ra46f3mjSl5aJ0IfpF0sXUWJeJAxdmPhF+0FxDGLqmo=;
+        b=JgDxjdYApcLJWqazHlUGz+EpauRHBZ0jshOn/kECows36v5jEW/iBJPF4MTSMgEexF
+         5QQ/kig+hhhkJVQfsyRWPPhABnV5uPRosBXdyOB1mmZoWj6WjBuSUoOzo3FJ0PSCvQ1h
+         RfdSyPWUfFpkG4C7n9lhE9eGuWKqlR3TbttEo0jZ2kPw8PESHvpbKvKhzwRdK4Qu71uB
+         Vy/ff+yqoGCYU9GWp+6UYxCrEb7j60Q8JVrUf1yMW26YIX2Hkxo01GSJQ279hNMjdDtC
+         xFLaeUij+hJ4JQ3nZehjBtZN6v34GqQcfSUweDsFuP7fBvI734O01nX7sO7kL9L6uZo2
+         M9OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ra46f3mjSl5aJ0IfpF0sXUWJeJAxdmPhF+0FxDGLqmo=;
+        b=SOTKNUrcHDCHrE2vXdGVlJkN6EctXBS2lN4iH3lWkHly36CIO9SDBXDg1ITp2p0rpF
+         +0tzETeYj5Flf51NIAIIQkssZeBMYmgyFxgo6DvzFU4/H1nzc7bQvCItjfHDOaJKE7Dk
+         avdEERrc4FQBEQFecDt7LNkg8HKU0XIBj4oNvBeSBX3m1L7PhL6++1J6qZB6KHPjANn3
+         WIml6ElIgTQrskVc5cQ81KeGT+4T+JcfTW3UNgRNoymk/WE6BPcA7/uVf6syBYYBK/cx
+         XA4skGmslxQgFsXsy/49iEeY4Py4KbWeWFqTtP96WJBpUlJ6wmsF1Ct4ypirgNE78F/X
+         Za+g==
+X-Gm-Message-State: AOAM533S0kwaednXLlYBam3IIluts6z7GA5WpT7AVdUwPU3Utmztu8TA
+        A5Zk0ik0FNBTPHofRGz9cPNyUA9UDCU=
+X-Google-Smtp-Source: ABdhPJzI5LSSLk1Pv2eMlX+j0sGBm/W8MgGYJs0VcInu7QGObglymUk7enJUnJzPeWRtjh7Z1rN7mQ==
+X-Received: by 2002:a2e:a54f:: with SMTP id e15mr1417051ljn.115.1599145575811;
+        Thu, 03 Sep 2020 08:06:15 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id z12sm641253lfj.78.2020.09.03.08.06.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 08:06:15 -0700 (PDT)
+Subject: Re: [PATCH 1/1] Input: atmel_mxt_ts - implement I2C retries
+To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200821082254.16661-1-jiada_wang@mentor.com>
+ <64c77ff9-6d20-abcf-f549-7d5c85fba28d@gmail.com>
+ <2c8ed5c8-f95b-dce4-f964-ac16f12c3f20@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8a287e4b-6ed4-dfae-fedb-da343ee40126@gmail.com>
+Date:   Thu, 3 Sep 2020 18:06:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <2c8ed5c8-f95b-dce4-f964-ac16f12c3f20@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As a part of system suspend uart_port_suspend is called from the
-Serial driver, which calls set_mctrl passing mctrl as NULL. This
-makes RFR high(NOT_READY) during suspend.
+03.09.2020 17:44, Wang, Jiada пишет:
+> Hi Dmitry
+> 
+...
+>> Is it really possible to get a positive ret != 2 from i2c_transfer()?
+>>
+>> Maybe it's better to keep the old code behaviour by returning the "ret"
+>> value directly if it's not equal to ARRAY_SIZE(xfer)?
+>>
+> I think, theoretically i2c_transfer() may return positive value but !=
+> number to transfer,
+> original behavior is,
+> when ret >= 0, it returns -EIO, when ret < 0, it just returns ret,
+> 
+> current behavior is, when ret != 2, it returns -EIO, after retry.
+> 
+> I am OK to change the behavior exactly as same original one.
 
-Due to this BT SoC is not able to send wakeup bytes to UART during
-suspend. Include if check for non-suspend case to keep RFR low
-during suspend.
+The comment to i2c_transfer() says that it either returns a error code
+or number of executed messages. But it's not clear to me what I2C driver
+could return 0 or 1 here and why.
 
-Signed-off-by: satya priya <skakit@codeaurora.org>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Akash Asthana <akashast@codeaurora.org>
----
-Changes in V2:
- - This patch fixes the UART flow control issue during suspend.
-   Newly added in V2.
-
-Changes in V3:
- - As per Matthias's comment removed the extra parentheses.
-
-Changes in V4:
- - No change.
-
- drivers/tty/serial/qcom_geni_serial.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 07b7b6b..2aad9d7 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -242,7 +242,7 @@ static void qcom_geni_serial_set_mctrl(struct uart_port *uport,
- 	if (mctrl & TIOCM_LOOP)
- 		port->loopback = RX_TX_CTS_RTS_SORTED;
- 
--	if (!(mctrl & TIOCM_RTS))
-+	if (!(mctrl & TIOCM_RTS) && !uport->suspended)
- 		uart_manual_rfr = UART_MANUAL_RFR_EN | UART_RFR_NOT_READY;
- 	writel(uart_manual_rfr, uport->membase + SE_UART_MANUAL_RFR);
- }
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
-
+I think it indeed should be better to keep the original behaviour by
+propagating the actual error code whenever possible. It's probably not
+critical for this particular case, but in general it's always better to
+preserve the original error code.
