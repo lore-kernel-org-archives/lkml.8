@@ -2,179 +2,233 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A89C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B1AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3015F2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C53FF206EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:51:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gaDMGyt8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="pDAJc4nw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgICBtH (ORCPT
+        id S1727864AbgICBvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 21:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgICBtE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 21:49:04 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57354C061244;
-        Wed,  2 Sep 2020 18:49:04 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id b6so1023319iof.6;
-        Wed, 02 Sep 2020 18:49:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A041r2jEFTomfDx8u7avd16rEk4eRvYegHw5wHbWQMg=;
-        b=gaDMGyt8CFZEoVtbbxWAN5JkAjcMRRu+pPuNEtpms4SNTjXMkIlwuCmglykMPmkbEI
-         GbZGdG6yTHOQnfZWVdFbXTdvTcLUpvfVL43Um6QJAzl0Y4s/Nl1DYyf3mZBkyYSpUdA4
-         OhLI99hG2/RsLXjXzul2Z/LLduxwOsJszmmllCDBe/gwqZxeqis695H1yBj661g8ERbB
-         J2k5yB/duPOVNpQxNL5gXrtNr7/YT1Vma7JCLr3A7By6kE6L9q7NM9nDfMCkxi8aPh20
-         7cop2Le0OMYh/3reNWDgQ1BZcuKrrrhrsxiFCjt4sCfjxGUbyVzTHQ+tsNvSoPcRKQLF
-         KJ7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A041r2jEFTomfDx8u7avd16rEk4eRvYegHw5wHbWQMg=;
-        b=W3sjdJX/2LBKz5wuAdyFGMCtO0tV3Ku9SYXUfJpCcYXFZreY6KM9W44bDPqkfWgpZL
-         1SehNKZLgvxPR733xriXWmB6LruWyVynGOqjN/wfsZzVJVu2rF+QWSgSW3yNphzDibon
-         eW7LymCIEvac7Z6e+73LvhiKwBhIw4FNY2U2Nqhr7mWmQcnIlpKR2JDangMljdFdd2Bi
-         yEu21zRdJTHXHwt8Vm8iLjPMxRvi/CJEE5jnagXkieUXLrgxCl7qNbsSm9zWdcjm3PbO
-         OFNtvEatR1m0Uc+M83KjQlXx2bRwhJNnlI9h/NRerQAzMmxWemWtPe665GYWCuYAo6Vh
-         KKtw==
-X-Gm-Message-State: AOAM533pn4ELA94VOsYPUHk/16tJHRx26boSyrGQjuaIRcOExdrx/T/W
-        FbhOcBTuDvfOCKOJoinvQ/L90tj8UwN62I+JVaI=
-X-Google-Smtp-Source: ABdhPJyHbPEG1rJcAhQqB4Dwzk+bhahcKhJFsIun8nvgteGVez29nkptOCqNWo72NkqrGvJxaB1fEyhcMr/7itD1cPw=
-X-Received: by 2002:a5d:980f:: with SMTP id a15mr1070690iol.12.1599097743554;
- Wed, 02 Sep 2020 18:49:03 -0700 (PDT)
+        Wed, 2 Sep 2020 21:51:00 -0400
+Received: from crapouillou.net ([89.234.176.41]:47324 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726177AbgICBu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 21:50:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1599097856; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=T+uSrpaQChsNKCgzgdveBEoRYzW1erqJPJN6DAR4JzE=;
+        b=pDAJc4nwGhmam1waBxjGznXngPXUC9iG7W9NRvB0+SsXfvmWDSRjQNveuzqDbl+SWaUIAV
+        RaOJluNSDqTgmOQi1xMf0mrs3ykSZgxSzJleHcN+mmrs4ys9ePpbrJU9pEalk3ug0KwM1D
+        /qoj2FDbo0+JM+mz1T9sqmvc9syPkUw=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     od@zcrc.me, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/5] clk: ingenic: Use to_clk_info() macro for all clocks
+Date:   Thu,  3 Sep 2020 03:50:44 +0200
+Message-Id: <20200903015048.3091523-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
- <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com>
- <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com> <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
- <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com> <CAM_iQpXmpMdxF2JDOROaf+Tjk-8dASiXz53K-Ph_q7jVMe0oVw@mail.gmail.com>
- <cd773132-c98e-18e1-67fd-bbef6babbf0f@huawei.com>
-In-Reply-To: <cd773132-c98e-18e1-67fd-bbef6babbf0f@huawei.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Wed, 2 Sep 2020 18:48:52 -0700
-Message-ID: <CAM_iQpWbZdh5-UGBi6PM19EBgV+Bq7vmifgJPdak6X=R9yztnw@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
- enqueue op for lockless qdisc
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linuxarm@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 6:22 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->
-> On 2020/9/3 8:35, Cong Wang wrote:
-> > On Tue, Sep 1, 2020 at 11:35 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
-> >>
-> >> On 2020/9/2 12:41, Cong Wang wrote:
-> >>> On Tue, Sep 1, 2020 at 6:42 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
-> >>>>
-> >>>> On 2020/9/2 2:24, Cong Wang wrote:
-> >>>>> On Mon, Aug 31, 2020 at 5:59 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
-> >>>>>>
-> >>>>>> Currently there is concurrent reset and enqueue operation for the
-> >>>>>> same lockless qdisc when there is no lock to synchronize the
-> >>>>>> q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
-> >>>>>> qdisc_deactivate() called by dev_deactivate_queue(), which may cause
-> >>>>>> out-of-bounds access for priv->ring[] in hns3 driver if user has
-> >>>>>> requested a smaller queue num when __dev_xmit_skb() still enqueue a
-> >>>>>> skb with a larger queue_mapping after the corresponding qdisc is
-> >>>>>> reset, and call hns3_nic_net_xmit() with that skb later.
-> >>>>>
-> >>>>> Can you be more specific here? Which call path requests a smaller
-> >>>>> tx queue num? If you mean netif_set_real_num_tx_queues(), clearly
-> >>>>> we already have a synchronize_net() there.
-> >>>>
-> >>>> When the netdevice is in active state, the synchronize_net() seems to
-> >>>> do the correct work, as below:
-> >>>>
-> >>>> CPU 0:                                       CPU1:
-> >>>> __dev_queue_xmit()                       netif_set_real_num_tx_queues()
-> >>>> rcu_read_lock_bh();
-> >>>> netdev_core_pick_tx(dev, skb, sb_dev);
-> >>>>         .
-> >>>>         .                               dev->real_num_tx_queues = txq;
-> >>>>         .                                       .
-> >>>>         .                                       .
-> >>>>         .                               synchronize_net();
-> >>>>         .                                       .
-> >>>> q->enqueue()                                    .
-> >>>>         .                                       .
-> >>>> rcu_read_unlock_bh()                            .
-> >>>>                                         qdisc_reset_all_tx_gt
-> >>>>
-> >>>>
-> >>>
-> >>> Right.
-> >>>
-> >>>
-> >>>> but dev->real_num_tx_queues is not RCU-protected, maybe that is a problem
-> >>>> too.
-> >>>>
-> >>>> The problem we hit is as below:
-> >>>> In hns3_set_channels(), hns3_reset_notify(h, HNAE3_DOWN_CLIENT) is called
-> >>>> to deactive the netdevice when user requested a smaller queue num, and
-> >>>> txq->qdisc is already changed to noop_qdisc when calling
-> >>>> netif_set_real_num_tx_queues(), so the synchronize_net() in the function
-> >>>> netif_set_real_num_tx_queues() does not help here.
-> >>>
-> >>> How could qdisc still be running after deactivating the device?
-> >>
-> >> qdisc could be running during the device deactivating process.
-> >>
-> >> The main process of changing channel number is as below:
-> >>
-> >> 1. dev_deactivate()
-> >> 2. hns3 handware related setup
-> >> 3. netif_set_real_num_tx_queues()
-> >> 4. netif_tx_wake_all_queues()
-> >> 5. dev_activate()
-> >>
-> >> During step 1, qdisc could be running while qdisc is resetting, so
-> >> there could be skb left in the old qdisc(which will be restored back to
-> >> txq->qdisc during dev_activate()), as below:
-> >>
-> >> CPU 0:                                       CPU1:
-> >> __dev_queue_xmit():                      dev_deactivate_many():
-> >> rcu_read_lock_bh();                      qdisc_deactivate(qdisc);
-> >> q = rcu_dereference_bh(txq->qdisc);             .
-> >> netdev_core_pick_tx(dev, skb, sb_dev);          .
-> >>         .
-> >>         .                               rcu_assign_pointer(dev_queue->qdisc, qdisc_default);
-> >>         .                                       .
-> >>         .                                       .
-> >>         .                                       .
-> >>         .                                       .
-> >> q->enqueue()                                    .
-> >
-> >
-> > Well, like I said, if the deactivated bit were tested before ->enqueue(),
-> > there would be no packet queued after qdisc_deactivate().
->
-> Only if the deactivated bit testing is also protected by qdisc->seqlock?
-> otherwise there is still window between setting and testing the deactivated bit.
+The to_clk_info() previously had a BUG_ON() to check that it was only
+called for PLL clocks. Yet, all the other clocks were doing the exact
+same thing the macro does, in-line.
 
-Can you be more specific here? Why testing or setting a bit is not atomic?
+Move the to_clk_info() macro to the top of the file, remove the
+hardcoded BUG_ON(), and use it everywhere it makes sense.
 
-AFAIU, qdisc->seqlock is an optimization to replace
-__QDISC_STATE_RUNNING, which has nothing to do with deactivate bit.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/clk/ingenic/cgu.c | 54 +++++++++++----------------------------
+ 1 file changed, 15 insertions(+), 39 deletions(-)
 
-Thanks.
+diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+index d7981b670221..12b14286734c 100644
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -21,6 +21,12 @@
+ 
+ #define MHZ (1000 * 1000)
+ 
++static inline const struct ingenic_cgu_clk_info *
++to_clk_info(struct ingenic_clk *clk)
++{
++	return &clk->cgu->clock_info[clk->idx];
++}
++
+ /**
+  * ingenic_cgu_gate_get() - get the value of clock gate register bit
+  * @cgu: reference to the CGU whose registers should be read
+@@ -71,14 +77,13 @@ static unsigned long
+ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ {
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+-	const struct ingenic_cgu_clk_info *clk_info;
+ 	const struct ingenic_cgu_pll_info *pll_info;
+ 	unsigned m, n, od_enc, od;
+ 	bool bypass;
+ 	u32 ctl;
+ 
+-	clk_info = &cgu->clock_info[ingenic_clk->idx];
+ 	BUG_ON(clk_info->type != CGU_CLK_PLL);
+ 	pll_info = &clk_info->pll;
+ 
+@@ -144,18 +149,6 @@ ingenic_pll_calc(const struct ingenic_cgu_clk_info *clk_info,
+ 		n * od);
+ }
+ 
+-static inline const struct ingenic_cgu_clk_info *to_clk_info(
+-		struct ingenic_clk *ingenic_clk)
+-{
+-	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+-	const struct ingenic_cgu_clk_info *clk_info;
+-
+-	clk_info = &cgu->clock_info[ingenic_clk->idx];
+-	BUG_ON(clk_info->type != CGU_CLK_PLL);
+-
+-	return clk_info;
+-}
+-
+ static long
+ ingenic_pll_round_rate(struct clk_hw *hw, unsigned long req_rate,
+ 		       unsigned long *prate)
+@@ -290,13 +283,11 @@ static const struct clk_ops ingenic_pll_ops = {
+ static u8 ingenic_clk_get_parent(struct clk_hw *hw)
+ {
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+-	const struct ingenic_cgu_clk_info *clk_info;
+ 	u32 reg;
+ 	u8 i, hw_idx, idx = 0;
+ 
+-	clk_info = &cgu->clock_info[ingenic_clk->idx];
+-
+ 	if (clk_info->type & CGU_CLK_MUX) {
+ 		reg = readl(cgu->base + clk_info->mux.reg);
+ 		hw_idx = (reg >> clk_info->mux.shift) &
+@@ -318,14 +309,12 @@ static u8 ingenic_clk_get_parent(struct clk_hw *hw)
+ static int ingenic_clk_set_parent(struct clk_hw *hw, u8 idx)
+ {
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+-	const struct ingenic_cgu_clk_info *clk_info;
+ 	unsigned long flags;
+ 	u8 curr_idx, hw_idx, num_poss;
+ 	u32 reg, mask;
+ 
+-	clk_info = &cgu->clock_info[ingenic_clk->idx];
+-
+ 	if (clk_info->type & CGU_CLK_MUX) {
+ 		/*
+ 		 * Convert the parent index to the hardware index by adding
+@@ -368,13 +357,11 @@ static unsigned long
+ ingenic_clk_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ {
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+-	const struct ingenic_cgu_clk_info *clk_info;
+ 	unsigned long rate = parent_rate;
+ 	u32 div_reg, div;
+ 
+-	clk_info = &cgu->clock_info[ingenic_clk->idx];
+-
+ 	if (clk_info->type & CGU_CLK_DIV) {
+ 		div_reg = readl(cgu->base + clk_info->div.reg);
+ 		div = (div_reg >> clk_info->div.shift) &
+@@ -443,12 +430,9 @@ ingenic_clk_round_rate(struct clk_hw *hw, unsigned long req_rate,
+ 		       unsigned long *parent_rate)
+ {
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
+-	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+-	const struct ingenic_cgu_clk_info *clk_info;
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	unsigned int div = 1;
+ 
+-	clk_info = &cgu->clock_info[ingenic_clk->idx];
+-
+ 	if (clk_info->type & CGU_CLK_DIV)
+ 		div = ingenic_clk_calc_div(clk_info, *parent_rate, req_rate);
+ 	else if (clk_info->type & CGU_CLK_FIXDIV)
+@@ -462,16 +446,14 @@ ingenic_clk_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 		     unsigned long parent_rate)
+ {
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+-	const struct ingenic_cgu_clk_info *clk_info;
+ 	const unsigned timeout = 100;
+ 	unsigned long rate, flags;
+ 	unsigned int hw_div, div, i;
+ 	u32 reg, mask;
+ 	int ret = 0;
+ 
+-	clk_info = &cgu->clock_info[ingenic_clk->idx];
+-
+ 	if (clk_info->type & CGU_CLK_DIV) {
+ 		div = ingenic_clk_calc_div(clk_info, parent_rate, req_rate);
+ 		rate = DIV_ROUND_UP(parent_rate, div);
+@@ -525,12 +507,10 @@ ingenic_clk_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ static int ingenic_clk_enable(struct clk_hw *hw)
+ {
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+-	const struct ingenic_cgu_clk_info *clk_info;
+ 	unsigned long flags;
+ 
+-	clk_info = &cgu->clock_info[ingenic_clk->idx];
+-
+ 	if (clk_info->type & CGU_CLK_GATE) {
+ 		/* ungate the clock */
+ 		spin_lock_irqsave(&cgu->lock, flags);
+@@ -547,12 +527,10 @@ static int ingenic_clk_enable(struct clk_hw *hw)
+ static void ingenic_clk_disable(struct clk_hw *hw)
+ {
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+-	const struct ingenic_cgu_clk_info *clk_info;
+ 	unsigned long flags;
+ 
+-	clk_info = &cgu->clock_info[ingenic_clk->idx];
+-
+ 	if (clk_info->type & CGU_CLK_GATE) {
+ 		/* gate the clock */
+ 		spin_lock_irqsave(&cgu->lock, flags);
+@@ -564,12 +542,10 @@ static void ingenic_clk_disable(struct clk_hw *hw)
+ static int ingenic_clk_is_enabled(struct clk_hw *hw)
+ {
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+-	const struct ingenic_cgu_clk_info *clk_info;
+ 	int enabled = 1;
+ 
+-	clk_info = &cgu->clock_info[ingenic_clk->idx];
+-
+ 	if (clk_info->type & CGU_CLK_GATE)
+ 		enabled = !ingenic_cgu_gate_get(cgu, &clk_info->gate);
+ 
+-- 
+2.28.0
+
