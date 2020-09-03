@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D964C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B61AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08B9020665
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D105720722
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:35:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SbA4Ermb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ano1KxC9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbgICO0X (ORCPT
+        id S1729334AbgICOfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:26:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35166 "EHLO
+        Thu, 3 Sep 2020 10:35:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729166AbgICOX1 (ORCPT
+        with ESMTP id S1729309AbgICOZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:23:27 -0400
+        Thu, 3 Sep 2020 10:25:41 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DB0C06123A;
-        Thu,  3 Sep 2020 07:22:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8435C0611E2;
+        Thu,  3 Sep 2020 07:23:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=GwBdpIiwC2/H13uoaD81joKeq/bh8CR8vbkN01NmQb8=; b=SbA4ErmbdCRIGV1PaNDyOgDFPM
-        WOOiPDFGt5XBXfY5jP3ztB9vrJDDiTR3S831moFSwBWUyfChZFA1BRQyvkGlC4vN6lIlYL31/eVpQ
-        4AZ/cMaZgHPOscMzV+WC/lo7EDhbN6cT4yHXmo8UUQdHbIdKsugCkPPCeHoLQmyy2ajyyl1HCObXN
-        dj+uFNX/JF/U5HPn9nHMlQ9Pywqvz2sdtEcNQUADBxGUgwOgUPSXjjzUvlPRHTvAFfIzHtMEXNFst
-        f548siR/l2sI0jQVLbHQdGVTZCCgvbgDJNNoQ5+zgVnaQl8a2szvK8Yw6jk21Qfeo4BxY81HFnhg5
-        HmT3L4Cw==;
+        bh=B6771Z78+EjFEl66FRYSdFSUZAia5cb3z6J6dPED0dc=; b=ano1KxC9m3ViDX/61fzt8/FHMf
+        RYHXWlYGDttZ0+lgsMWL4w8BpYaRnZtOMa9rrOQLMX33RlH5va3GXXHqre/VPKXxVaQjLpLs9+JLS
+        pNYAQk67L8tsuNGSuVJn4Zfkc6wZ1Rz8Un47lKNDI2PPFupe6j4PP8Ajy2diXmkk1/786NG4JqG1s
+        HpADYcsco56ugQCOTW4Vik4gMhVdYF6aiqtpfbHrCuaICF4S3OglJLXESWBI/ffhk7zEpieJ++kMW
+        bo5eC+DQfcCyEPZrKwWurPrb4oLT3TgydSQ96TbdxijgdvIaJ3aoI9bHG61jifWO6nKrLXYgRZvB8
+        dFeOgvBA==;
 Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDq8V-0004aL-IH; Thu, 03 Sep 2020 14:22:47 +0000
+        id 1kDq8e-0004bg-GP; Thu, 03 Sep 2020 14:22:56 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
@@ -48,9 +48,9 @@ Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
         Kees Cook <keescook@chromium.org>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 03/14] proc: add a read_iter method to proc proc_ops
-Date:   Thu,  3 Sep 2020 16:22:31 +0200
-Message-Id: <20200903142242.925828-4-hch@lst.de>
+Subject: [PATCH 10/14] x86: move PAGE_OFFSET, TASK_SIZE & friends to page_{32,64}_types.h
+Date:   Thu,  3 Sep 2020 16:22:38 +0200
+Message-Id: <20200903142242.925828-11-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200903142242.925828-1-hch@lst.de>
 References: <20200903142242.925828-1-hch@lst.de>
@@ -62,112 +62,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This will allow proc files to implement iter read semantics.
+At least for 64-bit this moves them closer to some of the defines
+they are based on, and it prepares for using the TASK_SIZE_MAX
+definition from assembly.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- fs/proc/inode.c         | 53 ++++++++++++++++++++++++++++++++++++++---
- include/linux/proc_fs.h |  1 +
- 2 files changed, 51 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/page_32_types.h | 11 +++++++
+ arch/x86/include/asm/page_64_types.h | 38 +++++++++++++++++++++
+ arch/x86/include/asm/processor.h     | 49 ----------------------------
+ 3 files changed, 49 insertions(+), 49 deletions(-)
 
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index 93dd2045737504..58c075e2a452d6 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -297,6 +297,21 @@ static loff_t proc_reg_llseek(struct file *file, loff_t offset, int whence)
- 	return rv;
+diff --git a/arch/x86/include/asm/page_32_types.h b/arch/x86/include/asm/page_32_types.h
+index 565ad755c785e2..26236925fb2c36 100644
+--- a/arch/x86/include/asm/page_32_types.h
++++ b/arch/x86/include/asm/page_32_types.h
+@@ -41,6 +41,17 @@
+ #define __VIRTUAL_MASK_SHIFT	32
+ #endif	/* CONFIG_X86_PAE */
+ 
++/*
++ * User space process size: 3GB (default).
++ */
++#define IA32_PAGE_OFFSET	PAGE_OFFSET
++#define TASK_SIZE		PAGE_OFFSET
++#define TASK_SIZE_LOW		TASK_SIZE
++#define TASK_SIZE_MAX		TASK_SIZE
++#define DEFAULT_MAP_WINDOW	TASK_SIZE
++#define STACK_TOP		TASK_SIZE
++#define STACK_TOP_MAX		STACK_TOP
++
+ /*
+  * Kernel image size is limited to 512 MB (see in arch/x86/kernel/head_32.S)
+  */
+diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
+index 288b065955b729..996595c9897e0a 100644
+--- a/arch/x86/include/asm/page_64_types.h
++++ b/arch/x86/include/asm/page_64_types.h
+@@ -58,6 +58,44 @@
+ #define __VIRTUAL_MASK_SHIFT	47
+ #endif
+ 
++/*
++ * User space process size.  This is the first address outside the user range.
++ * There are a few constraints that determine this:
++ *
++ * On Intel CPUs, if a SYSCALL instruction is at the highest canonical
++ * address, then that syscall will enter the kernel with a
++ * non-canonical return address, and SYSRET will explode dangerously.
++ * We avoid this particular problem by preventing anything executable
++ * from being mapped at the maximum canonical address.
++ *
++ * On AMD CPUs in the Ryzen family, there's a nasty bug in which the
++ * CPUs malfunction if they execute code from the highest canonical page.
++ * They'll speculate right off the end of the canonical space, and
++ * bad things happen.  This is worked around in the same way as the
++ * Intel problem.
++ *
++ * With page table isolation enabled, we map the LDT in ... [stay tuned]
++ */
++#define TASK_SIZE_MAX	((1UL << __VIRTUAL_MASK_SHIFT) - PAGE_SIZE)
++
++#define DEFAULT_MAP_WINDOW	((1UL << 47) - PAGE_SIZE)
++
++/* This decides where the kernel will search for a free chunk of vm
++ * space during mmap's.
++ */
++#define IA32_PAGE_OFFSET	((current->personality & ADDR_LIMIT_3GB) ? \
++					0xc0000000 : 0xFFFFe000)
++
++#define TASK_SIZE_LOW		(test_thread_flag(TIF_ADDR32) ? \
++					IA32_PAGE_OFFSET : DEFAULT_MAP_WINDOW)
++#define TASK_SIZE		(test_thread_flag(TIF_ADDR32) ? \
++					IA32_PAGE_OFFSET : TASK_SIZE_MAX)
++#define TASK_SIZE_OF(child)	((test_tsk_thread_flag(child, TIF_ADDR32)) ? \
++					IA32_PAGE_OFFSET : TASK_SIZE_MAX)
++
++#define STACK_TOP		TASK_SIZE_LOW
++#define STACK_TOP_MAX		TASK_SIZE_MAX
++
+ /*
+  * Maximum kernel image size is limited to 1 GiB, due to the fixmap living
+  * in the next 1 GiB (see level2_kernel_pgt in arch/x86/kernel/head_64.S).
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 97143d87994c24..1618eeb08361a9 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -782,17 +782,6 @@ static inline void spin_lock_prefetch(const void *x)
+ })
+ 
+ #ifdef CONFIG_X86_32
+-/*
+- * User space process size: 3GB (default).
+- */
+-#define IA32_PAGE_OFFSET	PAGE_OFFSET
+-#define TASK_SIZE		PAGE_OFFSET
+-#define TASK_SIZE_LOW		TASK_SIZE
+-#define TASK_SIZE_MAX		TASK_SIZE
+-#define DEFAULT_MAP_WINDOW	TASK_SIZE
+-#define STACK_TOP		TASK_SIZE
+-#define STACK_TOP_MAX		STACK_TOP
+-
+ #define INIT_THREAD  {							  \
+ 	.sp0			= TOP_OF_INIT_STACK,			  \
+ 	.sysenter_cs		= __KERNEL_CS,				  \
+@@ -802,44 +791,6 @@ static inline void spin_lock_prefetch(const void *x)
+ #define KSTK_ESP(task)		(task_pt_regs(task)->sp)
+ 
+ #else
+-/*
+- * User space process size.  This is the first address outside the user range.
+- * There are a few constraints that determine this:
+- *
+- * On Intel CPUs, if a SYSCALL instruction is at the highest canonical
+- * address, then that syscall will enter the kernel with a
+- * non-canonical return address, and SYSRET will explode dangerously.
+- * We avoid this particular problem by preventing anything executable
+- * from being mapped at the maximum canonical address.
+- *
+- * On AMD CPUs in the Ryzen family, there's a nasty bug in which the
+- * CPUs malfunction if they execute code from the highest canonical page.
+- * They'll speculate right off the end of the canonical space, and
+- * bad things happen.  This is worked around in the same way as the
+- * Intel problem.
+- *
+- * With page table isolation enabled, we map the LDT in ... [stay tuned]
+- */
+-#define TASK_SIZE_MAX	((1UL << __VIRTUAL_MASK_SHIFT) - PAGE_SIZE)
+-
+-#define DEFAULT_MAP_WINDOW	((1UL << 47) - PAGE_SIZE)
+-
+-/* This decides where the kernel will search for a free chunk of vm
+- * space during mmap's.
+- */
+-#define IA32_PAGE_OFFSET	((current->personality & ADDR_LIMIT_3GB) ? \
+-					0xc0000000 : 0xFFFFe000)
+-
+-#define TASK_SIZE_LOW		(test_thread_flag(TIF_ADDR32) ? \
+-					IA32_PAGE_OFFSET : DEFAULT_MAP_WINDOW)
+-#define TASK_SIZE		(test_thread_flag(TIF_ADDR32) ? \
+-					IA32_PAGE_OFFSET : TASK_SIZE_MAX)
+-#define TASK_SIZE_OF(child)	((test_tsk_thread_flag(child, TIF_ADDR32)) ? \
+-					IA32_PAGE_OFFSET : TASK_SIZE_MAX)
+-
+-#define STACK_TOP		TASK_SIZE_LOW
+-#define STACK_TOP_MAX		TASK_SIZE_MAX
+-
+ #define INIT_THREAD  {						\
+ 	.addr_limit		= KERNEL_DS,			\
  }
- 
-+static ssize_t proc_reg_read_iter(struct kiocb *iocb, struct iov_iter *iter)
-+{
-+	struct proc_dir_entry *pde = PDE(file_inode(iocb->ki_filp));
-+	ssize_t ret;
-+
-+	if (pde_is_permanent(pde))
-+		return pde->proc_ops->proc_read_iter(iocb, iter);
-+
-+	if (!use_pde(pde))
-+		return -EIO;
-+	ret = pde->proc_ops->proc_read_iter(iocb, iter);
-+	unuse_pde(pde);
-+	return ret;
-+}
-+
- static ssize_t pde_read(struct proc_dir_entry *pde, struct file *file, char __user *buf, size_t count, loff_t *ppos)
- {
- 	typeof_member(struct proc_ops, proc_read) read;
-@@ -578,6 +593,18 @@ static const struct file_operations proc_reg_file_ops = {
- 	.release	= proc_reg_release,
- };
- 
-+static const struct file_operations proc_iter_file_ops = {
-+	.llseek		= proc_reg_llseek,
-+	.read_iter	= proc_reg_read_iter,
-+	.write		= proc_reg_write,
-+	.poll		= proc_reg_poll,
-+	.unlocked_ioctl	= proc_reg_unlocked_ioctl,
-+	.mmap		= proc_reg_mmap,
-+	.get_unmapped_area = proc_reg_get_unmapped_area,
-+	.open		= proc_reg_open,
-+	.release	= proc_reg_release,
-+};
-+
- #ifdef CONFIG_COMPAT
- static const struct file_operations proc_reg_file_ops_compat = {
- 	.llseek		= proc_reg_llseek,
-@@ -591,6 +618,19 @@ static const struct file_operations proc_reg_file_ops_compat = {
- 	.open		= proc_reg_open,
- 	.release	= proc_reg_release,
- };
-+
-+static const struct file_operations proc_iter_file_ops_compat = {
-+	.llseek		= proc_reg_llseek,
-+	.read_iter	= proc_reg_read_iter,
-+	.write		= proc_reg_write,
-+	.poll		= proc_reg_poll,
-+	.unlocked_ioctl	= proc_reg_unlocked_ioctl,
-+	.compat_ioctl	= proc_reg_compat_ioctl,
-+	.mmap		= proc_reg_mmap,
-+	.get_unmapped_area = proc_reg_get_unmapped_area,
-+	.open		= proc_reg_open,
-+	.release	= proc_reg_release,
-+};
- #endif
- 
- static void proc_put_link(void *p)
-@@ -642,10 +682,17 @@ struct inode *proc_get_inode(struct super_block *sb, struct proc_dir_entry *de)
- 
- 	if (S_ISREG(inode->i_mode)) {
- 		inode->i_op = de->proc_iops;
--		inode->i_fop = &proc_reg_file_ops;
-+		if (de->proc_ops->proc_read_iter)
-+			inode->i_fop = &proc_iter_file_ops;
-+		else
-+			inode->i_fop = &proc_reg_file_ops;
- #ifdef CONFIG_COMPAT
--		if (de->proc_ops->proc_compat_ioctl)
--			inode->i_fop = &proc_reg_file_ops_compat;
-+		if (de->proc_ops->proc_compat_ioctl) {
-+			if (de->proc_ops->proc_read_iter)
-+				inode->i_fop = &proc_iter_file_ops_compat;
-+			else
-+				inode->i_fop = &proc_reg_file_ops_compat;
-+		}
- #endif
- 	} else if (S_ISDIR(inode->i_mode)) {
- 		inode->i_op = de->proc_iops;
-diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-index 2df965cd09742d..270cab43ca3dad 100644
---- a/include/linux/proc_fs.h
-+++ b/include/linux/proc_fs.h
-@@ -30,6 +30,7 @@ struct proc_ops {
- 	unsigned int proc_flags;
- 	int	(*proc_open)(struct inode *, struct file *);
- 	ssize_t	(*proc_read)(struct file *, char __user *, size_t, loff_t *);
-+	ssize_t (*proc_read_iter)(struct kiocb *, struct iov_iter *);
- 	ssize_t	(*proc_write)(struct file *, const char __user *, size_t, loff_t *);
- 	loff_t	(*proc_lseek)(struct file *, loff_t, int);
- 	int	(*proc_release)(struct inode *, struct file *);
 -- 
 2.28.0
 
