@@ -2,189 +2,142 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7992C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECC1C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 740C9207EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED7D20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:05:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFG/4bUk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q1yCvbZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgICK5h (ORCPT
+        id S1727799AbgICLFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 06:57:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59612 "EHLO
+        Thu, 3 Sep 2020 07:05:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgICK5M (ORCPT
+        with ESMTP id S1728354AbgICK6A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:57:12 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F3DC061244;
-        Thu,  3 Sep 2020 03:57:12 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id 3so2712971oih.0;
-        Thu, 03 Sep 2020 03:57:12 -0700 (PDT)
+        Thu, 3 Sep 2020 06:58:00 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 250A4C061246;
+        Thu,  3 Sep 2020 03:57:57 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u20so2048061pfn.0;
+        Thu, 03 Sep 2020 03:57:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tgb1FdYv8T82Jd6w5jRiU48hqo7xQeiF2mEiL9yBweU=;
-        b=QFG/4bUkbs9VfBy21pDL9Q8XUyyPe9wXhceKeY2wgDmKXEA040vTUIwfRV0anGw9Fh
-         20i2QkS+e18LGuIHnf7Qj+m6Grn9ty+Nchm1j6pNiTyT7X8yzPAdxuQcBhuo5trdG2NY
-         wTQ/hz8cXn8mmGN2qp/dKQTMXLCCmupdOGqrBICW66VOIo7pgOdpnT04f9RVqJ7Xv9G7
-         Esl5vhvRB2opUuXpcoLRO2I4bmYhiNPAR6DXdQ5GSWN7xOxo5c7H0BSxfSc+atHaRwmn
-         dxjThco2hiJjRWAR/Nt4vI92yT3+uUrmX9sjIk0Em6QJWiRPD8WnxVqrcJab6K0aJbmO
-         cUJQ==
+        bh=XvxPmxtC0Bk31a11OwZrMge+dU3uUM43arNhidKdfeY=;
+        b=q1yCvbZ8w01P8xuPxnIcZnEF3Hr07ImVQMcXxZgqnSncr+zba54pN3npDYYOjJXhbm
+         XIqjp77VnYo3sJUa9nsc/OkcPZ2a5Y90boSJn50VaZ74haoOIwzEqzuApddDmuRsWA4t
+         5LlNWMh47eFOI/t/pn9hyEBoN/9bMzFwyvwPxAFUkJ5XUIrhRgszLM/M8If1a/RC8WmZ
+         6qZ5sWP8uitmybmf3cwkB0qwBCXj3OoX/HrhU+S1S1dHFyplWZAkXiQoi27iG3iQmbnm
+         EQGK1zrcCUMrp+7WqPhSebA3XqqW6nM8d6/yeJZq7qMNXZRfKdpHSJtV5y0ESKKzTh/Z
+         pJhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tgb1FdYv8T82Jd6w5jRiU48hqo7xQeiF2mEiL9yBweU=;
-        b=VpTONxvU38qntM8tR6PSXNFY7UlSQLhmOrz42wkY4vyrAeCfC32RWut9kkIzHzp4rE
-         4ucrEQ+wJmoq/JjkYkAGHkRK37UBQjGMIGtN8phWQtZuzxUEMyeK3apZSo6otEEF46fa
-         Ro2xXit2SF/Wu4mlK3v7vKVzvlxh1mTAPJGRO7Rq/B5h0k9d6eNlWx3z3aqE6dFlRXi7
-         q5hxat6k+XjNoau2GMYccdxjkxiTxm4dQC8e6Vd7PEHc4TqwI2LwfC76TFGCmIwCniv3
-         S9lZpA2qUSizYdHpj2vvdo1llnCX1gBWwYJoidAKIbBFQrJy17SFILKo/cHHEVeeGweM
-         jKJA==
-X-Gm-Message-State: AOAM532Dr/0ViK8Wz3BwxnrzgnK31HMrSY/0B+iQ7tE4GoqG2vDx0cGv
-        SQxqHMUzB6Ga+jEbAd21Uze8HGiBui7Kv/GyoKU=
-X-Google-Smtp-Source: ABdhPJz3CH6WP1pRo6OeZzRZ+/kzxbL2XIpvU4N0H7F6AR4b/9j6Kqpznt5rFAtYT7bzUgGIbfNI1Vl9iw2Z/rMwS8w=
-X-Received: by 2002:aca:aa84:: with SMTP id t126mr1658938oie.5.1599130631528;
- Thu, 03 Sep 2020 03:57:11 -0700 (PDT)
+        bh=XvxPmxtC0Bk31a11OwZrMge+dU3uUM43arNhidKdfeY=;
+        b=V3pK3e2Oog1j3HPAQsghba8wYWj1Mtrhpt2ehqrEjsJ/S4lckjMeBl1zy6AwYJ2p07
+         MjPkKE7T6pPseQHyQLb/nrp9N3e0hdaj4sSktyHB2neM406UB+Yd413XzbV+Atn0xfmi
+         Z415AMeFtnBVcs2QNmQPnp891RycLLVRTCwu7GNg8GQcCm7n2+tdQ223nOUWqHELKhlp
+         u7qcXnhY5V0qAnNkJbPbP7rFC2ceG2XU4Au4AOtVXvkUEeqOpVkdX6DTXWd5NrV9057N
+         T4aesZBQZhCHkbWOsAsjy9N8T14T8c3k09Hdw8Puo/L9/9FIaZo2JFKYirXYLYVJMTjH
+         cHRQ==
+X-Gm-Message-State: AOAM533pykzo0Pq5/z+hkZSIkPMwFxvqBvegu3w859zL2aEj/0LXi3qV
+        gKQzm5BlGL2x4mqc/QdhI7FMysM+vkWi7I45vieAzSzRLXUY+g==
+X-Google-Smtp-Source: ABdhPJzWVo7SnArbq5BTD4S1cYWUGvNIOFTqyxYbAJGJHhEbl/k7IWPLuudMRiwWjgcOrgrKPL+6Qt7HKDzE/CcnN7Y=
+X-Received: by 2002:a62:6083:0:b029:13c:1611:66c4 with SMTP id
+ u125-20020a6260830000b029013c161166c4mr1648433pfb.15.1599130676695; Thu, 03
+ Sep 2020 03:57:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <1598578508-14134-1-git-send-email-wanpengli@tencent.com> <20200902212328.GI11695@sjchrist-ice>
-In-Reply-To: <20200902212328.GI11695@sjchrist-ice>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 3 Sep 2020 18:57:00 +0800
-Message-ID: <CANRm+CzQ00nFoYsxLQ7xhDaAnbi01U4BGkmuS9WLY80Nyt254w@mail.gmail.com>
-Subject: Re: [PATCH] KVM: LAPIC: Reset timer_advance_ns if timer mode switch
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
+References: <20200901221646.26491-1-nicoleotsuka@gmail.com> <20200901221646.26491-2-nicoleotsuka@gmail.com>
+In-Reply-To: <20200901221646.26491-2-nicoleotsuka@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 3 Sep 2020 13:57:39 +0300
+Message-ID: <CAHp75VcVJBSnPQ6NfdF8FdEDfM+oQ=Sr+cH5VGX4SrAqrgpf-g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dma-mapping: introduce dma_get_seg_boundary_nr_pages()
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        rth@twiddle.net, ink@jurassic.park.msu.ru,
+        Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        hca@linux.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        sparclinux@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 3 Sep 2020 at 05:23, Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On Wed, Sep 2, 2020 at 1:20 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
 >
-> On Fri, Aug 28, 2020 at 09:35:08AM +0800, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > per-vCPU timer_advance_ns should be set to 0 if timer mode is not tscdeadline
-> > otherwise we waste cpu cycles in the function lapic_timer_int_injected(),
-> > especially on AMD platform which doesn't support tscdeadline mode. We can
-> > reset timer_advance_ns to the initial value if switch back to tscdealine
-> > timer mode.
-> >
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> >  arch/x86/kvm/lapic.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > index 654649b..abc296d 100644
-> > --- a/arch/x86/kvm/lapic.c
-> > +++ b/arch/x86/kvm/lapic.c
-> > @@ -1499,10 +1499,16 @@ static void apic_update_lvtt(struct kvm_lapic *apic)
-> >                       kvm_lapic_set_reg(apic, APIC_TMICT, 0);
-> >                       apic->lapic_timer.period = 0;
-> >                       apic->lapic_timer.tscdeadline = 0;
-> > +                     if (timer_mode == APIC_LVT_TIMER_TSCDEADLINE &&
-> > +                             lapic_timer_advance_dynamic)
+> We found that callers of dma_get_seg_boundary mostly do an ALIGN
+> with page mask and then do a page shift to get number of pages:
+>     ALIGN(boundary + 1, 1 << shift) >> shift
 >
-> Bad indentation.
+> However, the boundary might be as large as ULONG_MAX, which means
+> that a device has no specific boundary limit. So either "+ 1" or
+> passing it to ALIGN() would potentially overflow.
 >
-> > +                             apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_NS_INIT;
+> According to kernel defines:
+>     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
+>     #define ALIGN(x, a) ALIGN_MASK(x, (typeof(x))(a) - 1)
 >
-> Redoing the tuning seems odd.  Doubt it will matter, but it feels weird to
-> have to retune the advancement just because the guest toggled between modes.
+> We can simplify the logic here into a helper function doing:
+>   ALIGN(boundary + 1, 1 << shift) >> shift
+> = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
+> = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
+> = [b + 1 + (1 << s) - 1] >> s
+> = [b + (1 << s)] >> s
+> = (b >> s) + 1
 >
-> Rather than clear timer_advance_ns, can we simply move the check against
-> apic->lapic_timer.expired_tscdeadline much earlier?  I think that would
-> solve this performance hiccup, and IMO would be a logical change in any
-> case.  E.g. with some refactoring to avoid more duplication between VMX and
-> SVM
+> This patch introduces and applies dma_get_seg_boundary_nr_pages()
+> as an overflow-free helper for the dma_get_seg_boundary() callers
+> to get numbers of pages. It also takes care of the NULL dev case
+> for non-DMA API callers.
 
-How about something like below:
+...
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 3b32d3b..51ed4f0 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1582,9 +1582,6 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
-     struct kvm_lapic *apic = vcpu->arch.apic;
-     u64 guest_tsc, tsc_deadline;
+> +static inline unsigned long dma_get_seg_boundary_nr_pages(struct device *dev,
+> +               unsigned int page_shift)
+> +{
+> +       if (!dev)
+> +               return (U32_MAX >> page_shift) + 1;
+> +       return (dma_get_seg_boundary(dev) >> page_shift) + 1;
 
--    if (apic->lapic_timer.expired_tscdeadline == 0)
--        return;
--
-     tsc_deadline = apic->lapic_timer.expired_tscdeadline;
-     apic->lapic_timer.expired_tscdeadline = 0;
-     guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
-@@ -1599,7 +1596,10 @@ static void __kvm_wait_lapic_expire(struct
-kvm_vcpu *vcpu)
+Can it be better to do something like
+  unsigned long boundary = dev ? dma_get_seg_boundary(dev) : U32_MAX;
 
- void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
- {
--    if (lapic_timer_int_injected(vcpu))
-+    if (lapic_in_kernel(vcpu) &&
-+        vcpu->arch.apic->lapic_timer.expired_tscdeadline &&
-+        vcpu->arch.apic->lapic_timer.timer_advance_ns &&
-+        lapic_timer_int_injected(vcpu))
-         __kvm_wait_lapic_expire(vcpu);
- }
- EXPORT_SYMBOL_GPL(kvm_wait_lapic_expire);
-@@ -1635,8 +1635,7 @@ static void apic_timer_expired(struct kvm_lapic
-*apic, bool from_timer_fn)
-     }
+  return (boundary >> page_shift) + 1;
 
-     if (kvm_use_posted_timer_interrupt(apic->vcpu)) {
--        if (apic->lapic_timer.timer_advance_ns)
--            __kvm_wait_lapic_expire(vcpu);
-+        kvm_wait_lapic_expire(vcpu);
-         kvm_apic_inject_pending_timer_irqs(apic);
-         return;
-     }
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 0194336..19e622a 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3456,9 +3456,7 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct
-kvm_vcpu *vcpu)
-     clgi();
-     kvm_load_guest_xsave_state(vcpu);
+?
 
--    if (lapic_in_kernel(vcpu) &&
--        vcpu->arch.apic->lapic_timer.timer_advance_ns)
--        kvm_wait_lapic_expire(vcpu);
-+    kvm_wait_lapic_expire(vcpu);
+> +}
 
-     /*
-      * If this vCPU has touched SPEC_CTRL, restore the guest's value if
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a544351..d6e1656 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6800,9 +6800,7 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
-     if (enable_preemption_timer)
-         vmx_update_hv_timer(vcpu);
-
--    if (lapic_in_kernel(vcpu) &&
--        vcpu->arch.apic->lapic_timer.timer_advance_ns)
--        kvm_wait_lapic_expire(vcpu);
-+    kvm_wait_lapic_expire(vcpu);
-
-     /*
-      * If this vCPU has touched SPEC_CTRL, restore the guest's value if
+-- 
+With Best Regards,
+Andy Shevchenko
