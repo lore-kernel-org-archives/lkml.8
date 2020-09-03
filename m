@@ -2,526 +2,398 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF4AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F40C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94A4A20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4FA20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgICKjD convert rfc822-to-8bit (ORCPT
+        id S1727065AbgICKjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 06:39:03 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2746 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728254AbgICKif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:38:35 -0400
-Received: from lhreml712-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 5E07ADACA0762EBB25E7;
-        Thu,  3 Sep 2020 11:38:33 +0100 (IST)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml712-chm.china.huawei.com (10.201.108.63) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Thu, 3 Sep 2020 11:38:33 +0100
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
- Thu, 3 Sep 2020 11:38:32 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        yangyicong <yangyicong@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: RE: [RESEND PATCH v14 2/2] PCI: hip: Add handling of HiSilicon HIP
- PCIe controller errors
-Thread-Topic: [RESEND PATCH v14 2/2] PCI: hip: Add handling of HiSilicon HIP
- PCIe controller errors
-Thread-Index: AQHWf94KasrJoeNXUki5Ta1QT6sd6alTYpSAgANWdRA=
-Date:   Thu, 3 Sep 2020 10:38:32 +0000
-Message-ID: <7f5146dba8ac4ac0a258742551f204fb@huawei.com>
-References: <20200831212606.1718-1-shiju.jose@huawei.com>
- <20200831212606.1718-3-shiju.jose@huawei.com>
- <20200901082607.GP1891694@smile.fi.intel.com>
-In-Reply-To: <20200901082607.GP1891694@smile.fi.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.93.187]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 3 Sep 2020 06:39:15 -0400
+Received: from mga11.intel.com ([192.55.52.93]:65401 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728330AbgICKjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 06:39:06 -0400
+IronPort-SDR: tn69zof3GGvi35nNUDH4Tmln+WqAHYg+ATxhbqKdySVP5m0BBKFI9ntPFkwHcFrGn4MjAD58tf
+ E9htVmQw5RTw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="155057343"
+X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
+   d="scan'208";a="155057343"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 03:38:49 -0700
+IronPort-SDR: eDreDYwUlX7ot5PIlJMA2Mzq4sqcYaSeQHEzkoepfjZNWXdgogNIW6UZnnYSrFPtfkE2DlRP8p
+ OLwcvMWuE6dQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
+   d="scan'208";a="339238144"
+Received: from slisovsk-lenovo-ideapad-720s-13ikb.fi.intel.com (HELO [10.237.72.190]) ([10.237.72.190])
+  by FMSMGA003.fm.intel.com with ESMTP; 03 Sep 2020 03:38:46 -0700
+Subject: Re: [PATCH V3 4/6] perf tools: Add FIFO file names as alternative
+ options to --control
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20200901200655.GC470123@krava>
+ <20200902105707.11491-1-adrian.hunter@intel.com>
+ <97818947-ed04-1b53-c71a-f00732141ca7@linux.intel.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <e4d294a9-9d97-2cb0-c43d-926fbf90b819@intel.com>
+Date:   Thu, 3 Sep 2020 13:38:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <97818947-ed04-1b53-c71a-f00732141ca7@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
-
->-----Original Message-----
->From: Andy Shevchenko [mailto:andriy.shevchenko@linux.intel.com]
->Sent: 01 September 2020 09:26
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
->kernel@vger.kernel.org; rjw@rjwysocki.net; helgaas@kernel.org;
->bp@alien8.de; james.morse@arm.com; lorenzo.pieralisi@arm.com;
->robh@kernel.org; lenb@kernel.org; tony.luck@intel.com;
->dan.carpenter@oracle.com; yangyicong <yangyicong@huawei.com>;
->Jonathan Cameron <jonathan.cameron@huawei.com>; tanxiaofei
-><tanxiaofei@huawei.com>; Linuxarm <linuxarm@huawei.com>; Bjorn
->Helgaas <bhelgaas@google.com>
->Subject: Re: [RESEND PATCH v14 2/2] PCI: hip: Add handling of HiSilicon HIP
->PCIe controller errors
->
->On Mon, Aug 31, 2020 at 10:26:06PM +0100, Shiju Jose wrote:
->> From: Yicong Yang <yangyicong@hisilicon.com>
+On 2/09/20 8:03 pm, Alexey Budankov wrote:
+> 
+> On 02.09.2020 13:57, Adrian Hunter wrote:
+>> Enable the --control option to accept file names as an alternative to
+>> file descriptors.
 >>
->> The HiSilicon HIP PCIe controller is capable of handling errors on
->> root port and performing port reset separately at each root port.
+>> Example:
 >>
->> Add error handling driver for HIP PCIe controller to log and report
->> recoverable errors. Perform root port reset and restore link status
->> after the recovery.
+>>  $ mkfifo perf.control
+>>  $ mkfifo perf.ack
+>>  $ cat perf.ack &
+>>  [1] 6808
+>>  $ perf record --control fifo:perf.control,perf.ack -- sleep 300 &
+>>  [2] 6810
+>>  $ echo disable > perf.control
+>>  $ Events disabled
+>>  ack
 >>
->> Following are some of the PCIe controller's recoverable errors 1.
->> completion transmission timeout error.
->> 2. CRS retry counter over the threshold error.
->> 3. ECC 2 bit errors
->> 4. AXI bresponse/rresponse errors etc.
+>>  $ echo enable > perf.control
+>>  $ Events enabled
+>>  ack
 >>
->> The driver placed in the drivers/pci/controller/ because the HIP PCIe
->> controller does not use DWC IP.
+>>  $ echo disable > perf.control
+>>  $ Events disabled
+>>  ack
 >>
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->> --
->> drivers/pci/controller/Kconfig           |   8 +
->> drivers/pci/controller/Makefile          |   1 +
->> drivers/pci/controller/pcie-hisi-error.c | 336
->> +++++++++++++++++++++++++++++++
->> 3 files changed, 345 insertions(+)
->> create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+>>  $ kill %2
+>>  [ perf record: Woken up 4 times to write data ]
+>>  $ [ perf record: Captured and wrote 0.018 MB perf.data (7 samples) ]
+>>
+>>  [1]-  Done                    cat perf.ack
+>>  [2]+  Terminated              perf record --control fifo:perf.control,perf.ack -- sleep 300
+>>  $
+>>
+>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+>> Acked-by: Jiri Olsa <jolsa@redhat.com>
 >> ---
->>  drivers/pci/controller/Kconfig           |   8 +
->>  drivers/pci/controller/Makefile          |   1 +
->>  drivers/pci/controller/pcie-hisi-error.c | 327
->> +++++++++++++++++++++++
->>  3 files changed, 336 insertions(+)
->>  create mode 100644 drivers/pci/controller/pcie-hisi-error.c
 >>
->> diff --git a/drivers/pci/controller/Kconfig
->> b/drivers/pci/controller/Kconfig index f18c3725ef80..b1b8a8805dd8
->> 100644
->> --- a/drivers/pci/controller/Kconfig
->> +++ b/drivers/pci/controller/Kconfig
->> @@ -294,6 +294,14 @@ config PCI_LOONGSON
->>  	  Say Y here if you want to enable PCI controller support on
->>  	  Loongson systems.
 >>
->> +config PCIE_HISI_ERR
->> +	depends on ACPI_APEI_GHES && (ARM64 || COMPILE_TEST)
->
->> +	depends on ACPI
->
->Isn't this implied by
->	drivers/acpi/Kconfig:45:if ACPI
->?
+>> Changes in V3:
+>>
+>> 	Rename evlist__parse_control_names to evlist__parse_control_fifo
+>> 	Explicitly initialize *ctl_fd_close = false
+>>
+>>
+>>  tools/perf/Documentation/perf-record.txt |  2 +
+>>  tools/perf/Documentation/perf-stat.txt   |  2 +
+>>  tools/perf/builtin-record.c              | 34 +++++++++++----
+>>  tools/perf/builtin-stat.c                | 18 ++++++--
+>>  tools/perf/util/evlist.c                 | 55 +++++++++++++++++++++++-
+>>  tools/perf/util/evlist.h                 |  2 +-
+>>  tools/perf/util/record.h                 |  1 +
+>>  tools/perf/util/stat.h                   |  1 +
+>>  8 files changed, 101 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+>> index 07c4734f1c7a..2ffc1196d2b8 100644
+>> --- a/tools/perf/Documentation/perf-record.txt
+>> +++ b/tools/perf/Documentation/perf-record.txt
+>> @@ -627,7 +627,9 @@ option. The -e option and this one can be mixed and matched.  Events
+>>  can be grouped using the {} notation.
+>>  endif::HAVE_LIBPFM[]
+>>  
+>> +--control=fifo:ctl-fifo[,ack-fifo]::
+>>  --control=fd:ctl-fd[,ack-fd]::
+>> +ctl-fifo / ack-fifo are opened and used as ctl-fd / ack-fd as follows.
+>>  Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
+>>  'disable': disable events). Measurements can be started with events disabled using
+>>  --delay=-1 option. Optionally send control command completion ('ack\n') to ack-fd descriptor
+>> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+>> index 7fb7368cc2d9..d33ffd11bb85 100644
+>> --- a/tools/perf/Documentation/perf-stat.txt
+>> +++ b/tools/perf/Documentation/perf-stat.txt
+>> @@ -176,7 +176,9 @@ with it.  --append may be used here.  Examples:
+>>       3>results  perf stat --log-fd 3          -- $cmd
+>>       3>>results perf stat --log-fd 3 --append -- $cmd
+>>  
+>> +--control=fifo:ctl-fifo[,ack-fifo]::
+>>  --control=fd:ctl-fd[,ack-fd]::
+>> +ctl-fifo / ack-fifo are opened and used as ctl-fd / ack-fd as follows.
+>>  Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
+>>  'disable': disable events). Measurements can be started with events disabled using
+>>  --delay=-1 option. Optionally send control command completion ('ack\n') to ack-fd descriptor
+>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>> index f2ab5bd7e2ba..117dd180f780 100644
+>> --- a/tools/perf/builtin-record.c
+>> +++ b/tools/perf/builtin-record.c
+>> @@ -2236,7 +2236,17 @@ static int parse_control_option(const struct option *opt,
+>>  {
+>>  	struct record_opts *opts = opt->value;
+>>  
+>> -	return evlist__parse_control(str, &opts->ctl_fd, &opts->ctl_fd_ack);
+>> +	return evlist__parse_control(str, &opts->ctl_fd, &opts->ctl_fd_ack, &opts->ctl_fd_close);
+>> +}
+>> +
+>> +static void close_control_option(struct record_opts *opts)
+> 
+> This function above and the same one for stat mode below look duplicating.
+> It could possibly be combined.
 
-This can be removed as  ACPI_APEI_GHES depends on ACPI.
+Good idea.  I will send a separate patch for that though.
 
-Do you have any other comments on this patch?
-
->
->> +	bool "HiSilicon HIP PCIe controller error handling driver"
->> +	help
->> +	  Say Y here if you want error handling support
->> +	  for the PCIe controller's errors on HiSilicon HIP SoCs
->> +
->>  source "drivers/pci/controller/dwc/Kconfig"
->>  source "drivers/pci/controller/mobiveil/Kconfig"
->>  source "drivers/pci/controller/cadence/Kconfig"
->> diff --git a/drivers/pci/controller/Makefile
->> b/drivers/pci/controller/Makefile index bcdbf49ab1e4..04c6edc285c5
->> 100644
->> --- a/drivers/pci/controller/Makefile
->> +++ b/drivers/pci/controller/Makefile
->> @@ -31,6 +31,7 @@ obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-
->tango.o
->>  obj-$(CONFIG_VMD) += vmd.o
->>  obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
->>  obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
->> +obj-$(CONFIG_PCIE_HISI_ERR) += pcie-hisi-error.o
->>  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
->>  obj-y				+= dwc/
->>  obj-y				+= mobiveil/
->> diff --git a/drivers/pci/controller/pcie-hisi-error.c
->> b/drivers/pci/controller/pcie-hisi-error.c
->> new file mode 100644
->> index 000000000000..7959c9c8d2bc
->> --- /dev/null
->> +++ b/drivers/pci/controller/pcie-hisi-error.c
->> @@ -0,0 +1,327 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Driver for handling the PCIe controller errors on
->> + * HiSilicon HIP SoCs.
->> + *
->> + * Copyright (c) 2020 HiSilicon Limited.
->> + */
->> +
->> +#include <linux/acpi.h>
->> +#include <acpi/ghes.h>
->> +#include <linux/bitops.h>
->> +#include <linux/delay.h>
->> +#include <linux/pci.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/kfifo.h>
->> +#include <linux/spinlock.h>
->> +
->> +/* HISI PCIe controller error definitions */
->> +#define HISI_PCIE_ERR_MISC_REGS	33
->> +
->> +#define HISI_PCIE_LOCAL_VALID_VERSION		BIT(0)
->> +#define HISI_PCIE_LOCAL_VALID_SOC_ID		BIT(1)
->> +#define HISI_PCIE_LOCAL_VALID_SOCKET_ID		BIT(2)
->> +#define HISI_PCIE_LOCAL_VALID_NIMBUS_ID		BIT(3)
->> +#define HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID	BIT(4)
->> +#define HISI_PCIE_LOCAL_VALID_CORE_ID		BIT(5)
->> +#define HISI_PCIE_LOCAL_VALID_PORT_ID		BIT(6)
->> +#define HISI_PCIE_LOCAL_VALID_ERR_TYPE		BIT(7)
->> +#define HISI_PCIE_LOCAL_VALID_ERR_SEVERITY	BIT(8)
->> +#define HISI_PCIE_LOCAL_VALID_ERR_MISC		9
->> +
->> +static guid_t hisi_pcie_sec_guid =
->> +	GUID_INIT(0xB2889FC9, 0xE7D7, 0x4F9D,
->> +		  0xA8, 0x67, 0xAF, 0x42, 0xE9, 0x8B, 0xE7, 0x72);
->> +
->> +/*
->> + * Firmware reports the socket port ID where the error occurred.
->> +These
->> + * macros convert that to the core ID and core port ID required by
->> +the
->> + * ACPI reset method.
->> + */
->> +#define HISI_PCIE_PORT_ID(core, v)       (((v) >> 1) + ((core) << 3))
->> +#define HISI_PCIE_CORE_ID(v)             ((v) >> 3)
->> +#define HISI_PCIE_CORE_PORT_ID(v)        (((v) & 7) << 1)
->> +
->> +struct hisi_pcie_error_data {
->> +	u64	val_bits;
->> +	u8	version;
->> +	u8	soc_id;
->> +	u8	socket_id;
->> +	u8	nimbus_id;
->> +	u8	sub_module_id;
->> +	u8	core_id;
->> +	u8	port_id;
->> +	u8	err_severity;
->> +	u16	err_type;
->> +	u8	reserv[2];
->> +	u32	err_misc[HISI_PCIE_ERR_MISC_REGS];
->> +};
->> +
->> +struct hisi_pcie_error_private {
->> +	struct notifier_block	nb;
->> +	struct device *dev;
->> +};
->> +
->> +enum hisi_pcie_submodule_id {
->> +	HISI_PCIE_SUB_MODULE_ID_AP,
->> +	HISI_PCIE_SUB_MODULE_ID_TL,
->> +	HISI_PCIE_SUB_MODULE_ID_MAC,
->> +	HISI_PCIE_SUB_MODULE_ID_DL,
->> +	HISI_PCIE_SUB_MODULE_ID_SDI,
->> +};
->> +
->> +static const char * const hisi_pcie_sub_module[] = {
->> +	[HISI_PCIE_SUB_MODULE_ID_AP]	= "AP Layer",
->> +	[HISI_PCIE_SUB_MODULE_ID_TL]	= "TL Layer",
->> +	[HISI_PCIE_SUB_MODULE_ID_MAC]	= "MAC Layer",
->> +	[HISI_PCIE_SUB_MODULE_ID_DL]	= "DL Layer",
->> +	[HISI_PCIE_SUB_MODULE_ID_SDI]	= "SDI Layer",
->> +};
->> +
->> +enum hisi_pcie_err_severity {
->> +	HISI_PCIE_ERR_SEV_RECOVERABLE,
->> +	HISI_PCIE_ERR_SEV_FATAL,
->> +	HISI_PCIE_ERR_SEV_CORRECTED,
->> +	HISI_PCIE_ERR_SEV_NONE,
->> +};
->> +
->> +static const char * const hisi_pcie_error_sev[] = {
->> +	[HISI_PCIE_ERR_SEV_RECOVERABLE]	= "recoverable",
->> +	[HISI_PCIE_ERR_SEV_FATAL]	= "fatal",
->> +	[HISI_PCIE_ERR_SEV_CORRECTED]	= "corrected",
->> +	[HISI_PCIE_ERR_SEV_NONE]	= "none",
->> +};
->> +
->> +static const char *hisi_pcie_get_string(const char * const *array,
->> +					size_t n, u32 id)
+> 
+> Acked-by: Alexei Budankov <alexey.budankov@linux.intel.com>
+> 
+> Regards,
+> Alexei
+> 
 >> +{
->> +	u32 index;
->> +
->> +	for (index = 0; index < n; index++) {
->> +		if (index == id && array[index])
->> +			return array[index];
+>> +	if (opts->ctl_fd_close) {
+>> +		opts->ctl_fd_close = false;
+>> +		close(opts->ctl_fd);
+>> +		if (opts->ctl_fd_ack >= 0)
+>> +			close(opts->ctl_fd_ack);
 >> +	}
->> +
->> +	return "unknown";
+>>  }
+>>  
+>>  static void switch_output_size_warn(struct record *rec)
+>> @@ -2578,9 +2588,10 @@ static struct option __record_options[] = {
+>>  		"libpfm4 event selector. use 'perf list' to list available events",
+>>  		parse_libpfm_events_option),
+>>  #endif
+>> -	OPT_CALLBACK(0, "control", &record.opts, "fd:ctl-fd[,ack-fd]",
+>> +	OPT_CALLBACK(0, "control", &record.opts, "fd:ctl-fd[,ack-fd] or fifo:ctl-fifo[,ack-fifo]",
+>>  		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
+>> -		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.",
+>> +		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.\n"
+>> +		     "\t\t\t  Alternatively, ctl-fifo / ack-fifo will be opened and used as ctl-fd / ack-fd.",
+>>  		      parse_control_option),
+>>  	OPT_END()
+>>  };
+>> @@ -2653,12 +2664,14 @@ int cmd_record(int argc, const char **argv)
+>>  	    !perf_can_record_switch_events()) {
+>>  		ui__error("kernel does not support recording context switch events\n");
+>>  		parse_options_usage(record_usage, record_options, "switch-events", 0);
+>> -		return -EINVAL;
+>> +		err = -EINVAL;
+>> +		goto out_opts;
+>>  	}
+>>  
+>>  	if (switch_output_setup(rec)) {
+>>  		parse_options_usage(record_usage, record_options, "switch-output", 0);
+>> -		return -EINVAL;
+>> +		err = -EINVAL;
+>> +		goto out_opts;
+>>  	}
+>>  
+>>  	if (rec->switch_output.time) {
+>> @@ -2669,8 +2682,10 @@ int cmd_record(int argc, const char **argv)
+>>  	if (rec->switch_output.num_files) {
+>>  		rec->switch_output.filenames = calloc(sizeof(char *),
+>>  						      rec->switch_output.num_files);
+>> -		if (!rec->switch_output.filenames)
+>> -			return -EINVAL;
+>> +		if (!rec->switch_output.filenames) {
+>> +			err = -EINVAL;
+>> +			goto out_opts;
+>> +		}
+>>  	}
+>>  
+>>  	/*
+>> @@ -2686,7 +2701,8 @@ int cmd_record(int argc, const char **argv)
+>>  		rec->affinity_mask.bits = bitmap_alloc(rec->affinity_mask.nbits);
+>>  		if (!rec->affinity_mask.bits) {
+>>  			pr_err("Failed to allocate thread mask for %zd cpus\n", rec->affinity_mask.nbits);
+>> -			return -ENOMEM;
+>> +			err = -ENOMEM;
+>> +			goto out_opts;
+>>  		}
+>>  		pr_debug2("thread mask[%zd]: empty\n", rec->affinity_mask.nbits);
+>>  	}
+>> @@ -2817,6 +2833,8 @@ int cmd_record(int argc, const char **argv)
+>>  	evlist__delete(rec->evlist);
+>>  	symbol__exit();
+>>  	auxtrace_record__free(rec->itr);
+>> +out_opts:
+>> +	close_control_option(&rec->opts);
+>>  	return err;
+>>  }
+>>  
+>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>> index 12ce5cf2b10e..6170226d44f9 100644
+>> --- a/tools/perf/builtin-stat.c
+>> +++ b/tools/perf/builtin-stat.c
+>> @@ -1047,7 +1047,17 @@ static int parse_control_option(const struct option *opt,
+>>  {
+>>  	struct perf_stat_config *config = opt->value;
+>>  
+>> -	return evlist__parse_control(str, &config->ctl_fd, &config->ctl_fd_ack);
+>> +	return evlist__parse_control(str, &config->ctl_fd, &config->ctl_fd_ack, &config->ctl_fd_close);
 >> +}
 >> +
->> +static int hisi_pcie_port_reset(struct platform_device *pdev,
->> +				u32 chip_id, u32 port_id)
+>> +static void close_control_option(struct perf_stat_config *config)
 >> +{
->> +	struct device *dev = &pdev->dev;
->> +	acpi_handle handle = ACPI_HANDLE(dev);
->> +	union acpi_object arg[3];
->> +	struct acpi_object_list arg_list;
->> +	acpi_status s;
->> +	unsigned long long data = 0;
->> +
->> +	arg[0].type = ACPI_TYPE_INTEGER;
->> +	arg[0].integer.value = chip_id;
->> +	arg[1].type = ACPI_TYPE_INTEGER;
->> +	arg[1].integer.value = HISI_PCIE_CORE_ID(port_id);
->> +	arg[2].type = ACPI_TYPE_INTEGER;
->> +	arg[2].integer.value = HISI_PCIE_CORE_PORT_ID(port_id);
->> +
->> +	arg_list.count = 3;
->> +	arg_list.pointer = arg;
->> +
->> +	s = acpi_evaluate_integer(handle, "RST", &arg_list, &data);
->> +	if (ACPI_FAILURE(s)) {
->> +		dev_err(dev, "No RST method\n");
->> +		return -EIO;
+>> +	if (config->ctl_fd_close) {
+>> +		config->ctl_fd_close = false;
+>> +		close(config->ctl_fd);
+>> +		if (config->ctl_fd_ack >= 0)
+>> +			close(config->ctl_fd_ack);
 >> +	}
->> +
->> +	if (data) {
->> +		dev_err(dev, "Failed to Reset\n");
->> +		return -EIO;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int hisi_pcie_port_do_recovery(struct platform_device *dev,
->> +				      u32 chip_id, u32 port_id)
+>>  }
+>>  
+>>  static struct option stat_options[] = {
+>> @@ -1151,9 +1161,10 @@ static struct option stat_options[] = {
+>>  		"libpfm4 event selector. use 'perf list' to list available events",
+>>  		parse_libpfm_events_option),
+>>  #endif
+>> -	OPT_CALLBACK(0, "control", &stat_config, "fd:ctl-fd[,ack-fd]",
+>> +	OPT_CALLBACK(0, "control", &stat_config, "fd:ctl-fd[,ack-fd] or fifo:ctl-fifo[,ack-fifo]",
+>>  		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
+>> -		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.",
+>> +		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.\n"
+>> +		     "\t\t\t  Alternatively, ctl-fifo / ack-fifo will be opened and used as ctl-fd / ack-fd.",
+>>  		      parse_control_option),
+>>  	OPT_END()
+>>  };
+>> @@ -2396,6 +2407,7 @@ int cmd_stat(int argc, const char **argv)
+>>  
+>>  	metricgroup__rblist_exit(&stat_config.metric_events);
+>>  	runtime_stat_delete(&stat_config);
+>> +	close_control_option(&stat_config);
+>>  
+>>  	return status;
+>>  }
+>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+>> index 47d1045a19af..00593e5f2a9d 100644
+>> --- a/tools/perf/util/evlist.c
+>> +++ b/tools/perf/util/evlist.c
+>> @@ -1727,12 +1727,63 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
+>>  	return leader;
+>>  }
+>>  
+>> -int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack)
+>> +static int evlist__parse_control_fifo(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close)
 >> +{
->> +	acpi_status s;
->> +	struct device *device = &dev->dev;
->> +	acpi_handle root_handle = ACPI_HANDLE(device);
->> +	struct acpi_pci_root *pci_root;
->> +	struct pci_bus *root_bus;
->> +	struct pci_dev *pdev;
->> +	u32 domain, busnr, devfn;
+>> +	char *s, *p;
+>> +	int ret = 0, fd;
 >> +
->> +	s = acpi_get_parent(root_handle, &root_handle);
->> +	if (ACPI_FAILURE(s))
->> +		return -ENODEV;
->> +	pci_root = acpi_pci_find_root(root_handle);
->> +	if (!pci_root)
->> +		return -ENODEV;
->> +	root_bus = pci_root->bus;
->> +	domain = pci_root->segment;
+>> +	if (strncmp(str, "fifo:", 5))
+>> +		return -EINVAL;
 >> +
->> +	busnr = root_bus->number;
->> +	devfn = PCI_DEVFN(port_id, 0);
->> +	pdev = pci_get_domain_bus_and_slot(domain, busnr, devfn);
->> +	if (!pdev) {
->> +		dev_info(device, "Fail to get root port %04x:%02x:%02x.%d
->device\n",
->> +			 domain, busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
->> +		return -ENODEV;
->> +	}
+>> +	str += 5;
+>> +	if (!*str || *str == ',')
+>> +		return -EINVAL;
 >> +
->> +	pci_stop_and_remove_bus_device_locked(pdev);
->> +	pci_dev_put(pdev);
->> +
->> +	if (hisi_pcie_port_reset(dev, chip_id, port_id))
->> +		return -EIO;
->> +
->> +	/*
->> +	 * The initialization time of subordinate devices after
->> +	 * hot reset is no more than 1s, which is required by
->> +	 * the PCI spec v5.0 sec 6.6.1. The time will shorten
->> +	 * if Readiness Notifications mechanisms are used. But
->> +	 * wait 1s here to adapt any conditions.
->> +	 */
->> +	ssleep(1UL);
->> +
->> +	/* add root port and downstream devices */
->> +	pci_lock_rescan_remove();
->> +	pci_rescan_bus(root_bus);
->> +	pci_unlock_rescan_remove();
->> +
->> +	return 0;
->> +}
->> +
->> +static void hisi_pcie_handle_error(struct platform_device *pdev,
->> +				   const struct hisi_pcie_error_data *edata) {
->> +	struct device *dev = &pdev->dev;
->> +	int idx, rc;
->> +	const unsigned long valid_bits[] =
->> +{BITMAP_FROM_U64(edata->val_bits)};
->> +
->> +	if (edata->val_bits == 0) {
->> +		dev_warn(dev, "%s: no valid error information\n", __func__);
->> +		return;
->> +	}
->> +
->> +	dev_info(dev, "\nHISI : HIP : PCIe controller error\n");
->> +	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_SOC_ID)
->> +		dev_info(dev, "Table version = %d\n", edata->version);
->> +	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_SOCKET_ID)
->> +		dev_info(dev, "Socket ID = %d\n", edata->socket_id);
->> +	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_NIMBUS_ID)
->> +		dev_info(dev, "Nimbus ID = %d\n", edata->nimbus_id);
->> +	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID)
->> +		dev_info(dev, "Sub Module = %s\n",
->> +			 hisi_pcie_get_string(hisi_pcie_sub_module,
->> +
->ARRAY_SIZE(hisi_pcie_sub_module),
->> +					      edata->sub_module_id));
->> +	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_CORE_ID)
->> +		dev_info(dev, "Core ID = core%d\n", edata->core_id);
->> +	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_PORT_ID)
->> +		dev_info(dev, "Port ID = port%d\n", edata->port_id);
->> +	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_ERR_SEVERITY)
->> +		dev_info(dev, "Error severity = %s\n",
->> +			 hisi_pcie_get_string(hisi_pcie_error_sev,
->> +					      ARRAY_SIZE(hisi_pcie_error_sev),
->> +					      edata->err_severity));
->> +	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_ERR_TYPE)
->> +		dev_info(dev, "Error type = 0x%x\n", edata->err_type);
->> +
->> +	dev_info(dev, "Reg Dump:\n");
->> +	idx = HISI_PCIE_LOCAL_VALID_ERR_MISC;
->> +	for_each_set_bit_from(idx, valid_bits,
->> +			      HISI_PCIE_LOCAL_VALID_ERR_MISC +
->HISI_PCIE_ERR_MISC_REGS)
->> +		dev_info(dev, "ERR_MISC_%d = 0x%x\n", idx -
->HISI_PCIE_LOCAL_VALID_ERR_MISC,
->> +			 edata->err_misc[idx -
->HISI_PCIE_LOCAL_VALID_ERR_MISC]);
->> +
->> +	if (edata->err_severity != HISI_PCIE_ERR_SEV_RECOVERABLE)
->> +		return;
->> +
->> +	/* Recovery for the PCIe controller errors, try reset
->> +	 * PCI port for the error recovery
->> +	 */
->> +	rc = hisi_pcie_port_do_recovery(pdev, edata->socket_id,
->> +			HISI_PCIE_PORT_ID(edata->core_id, edata->port_id));
->> +	if (rc)
->> +		dev_info(dev, "fail to do hisi pcie port reset\n"); }
->> +
->> +static int hisi_pcie_notify_error(struct notifier_block *nb,
->> +				  unsigned long event, void *data) {
->> +	struct acpi_hest_generic_data *gdata = data;
->> +	const struct hisi_pcie_error_data *error_data =
->acpi_hest_get_payload(gdata);
->> +	struct hisi_pcie_error_private *priv;
->> +	struct device *dev;
->> +	struct platform_device *pdev;
->> +	guid_t err_sec_guid;
->> +	u8 socket;
->> +
->> +	import_guid(&err_sec_guid, gdata->section_type);
->> +	if (!guid_equal(&err_sec_guid, &hisi_pcie_sec_guid))
->> +		return NOTIFY_DONE;
->> +
->> +	priv = container_of(nb, struct hisi_pcie_error_private, nb);
->> +	dev = priv->dev;
->> +
->> +	if (device_property_read_u8(dev, "socket", &socket))
->> +		return NOTIFY_DONE;
->> +
->> +	if (error_data->socket_id != socket)
->> +		return NOTIFY_DONE;
->> +
->> +	pdev = container_of(dev, struct platform_device, dev);
->> +	hisi_pcie_handle_error(pdev, error_data);
->> +
->> +	return NOTIFY_OK;
->> +}
->> +
->> +static int hisi_pcie_error_handler_probe(struct platform_device
->> +*pdev) {
->> +	struct hisi_pcie_error_private *priv;
->> +	int ret;
->> +
->> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->> +	if (!priv)
+>> +	s = strdup(str);
+>> +	if (!s)
 >> +		return -ENOMEM;
 >> +
->> +	priv->nb.notifier_call = hisi_pcie_notify_error;
->> +	priv->dev = &pdev->dev;
->> +	ret = ghes_register_vendor_record_notifier(&priv->nb);
->> +	if (ret) {
->> +		dev_err(&pdev->dev,
->> +			"Failed to register hisi pcie controller error handler
->with apei\n");
->> +		return ret;
+>> +	p = strchr(s, ',');
+>> +	if (p)
+>> +		*p = '\0';
+>> +
+>> +	/*
+>> +	 * O_RDWR avoids POLLHUPs which is necessary to allow the other
+>> +	 * end of a FIFO to be repeatedly opened and closed.
+>> +	 */
+>> +	fd = open(s, O_RDWR | O_NONBLOCK | O_CLOEXEC);
+>> +	if (fd < 0) {
+>> +		pr_err("Failed to open '%s'\n", s);
+>> +		ret = -errno;
+>> +		goto out_free;
+>> +	}
+>> +	*ctl_fd = fd;
+>> +	*ctl_fd_close = true;
+>> +
+>> +	if (p && *++p) {
+>> +		/* O_RDWR | O_NONBLOCK means the other end need not be open */
+>> +		fd = open(p, O_RDWR | O_NONBLOCK | O_CLOEXEC);
+>> +		if (fd < 0) {
+>> +			pr_err("Failed to open '%s'\n", p);
+>> +			ret = -errno;
+>> +			goto out_free;
+>> +		}
+>> +		*ctl_fd_ack = fd;
 >> +	}
 >> +
->> +	platform_set_drvdata(pdev, priv);
->> +
->> +	return 0;
+>> +out_free:
+>> +	free(s);
+>> +	return ret;
 >> +}
 >> +
->> +static int hisi_pcie_error_handler_remove(struct platform_device
->> +*pdev) {
->> +	struct hisi_pcie_error_private *priv = platform_get_drvdata(pdev);
+>> +int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close)
+>>  {
+>>  	char *comma = NULL, *endptr = NULL;
+>>  
+>> +	*ctl_fd_close = false;
 >> +
->> +	ghes_unregister_vendor_record_notifier(&priv->nb);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct acpi_device_id hisi_pcie_acpi_match[] = {
->> +	{ "HISI0361", 0 },
->> +	{ }
->> +};
->> +
->> +static struct platform_driver hisi_pcie_error_handler_driver = {
->> +	.driver = {
->> +		.name	= "hisi-pcie-error-handler",
->> +		.acpi_match_table = hisi_pcie_acpi_match,
->> +	},
->> +	.probe		= hisi_pcie_error_handler_probe,
->> +	.remove		= hisi_pcie_error_handler_remove,
->> +};
->> +module_platform_driver(hisi_pcie_error_handler_driver);
->> +
->> +MODULE_DESCRIPTION("HiSilicon HIP PCIe controller error handling
->> +driver"); MODULE_LICENSE("GPL v2");
->> --
->> 2.17.1
+>>  	if (strncmp(str, "fd:", 3))
+>> -		return -EINVAL;
+>> +		return evlist__parse_control_fifo(str, ctl_fd, ctl_fd_ack, ctl_fd_close);
+>>  
+>>  	*ctl_fd = strtoul(&str[3], &endptr, 0);
+>>  	if (endptr == &str[3])
+>> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+>> index a5a5a07d5c55..a5678eb5ee60 100644
+>> --- a/tools/perf/util/evlist.h
+>> +++ b/tools/perf/util/evlist.h
+>> @@ -373,7 +373,7 @@ enum evlist_ctl_cmd {
+>>  	EVLIST_CTL_CMD_ACK
+>>  };
+>>  
+>> -int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack);
+>> +int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close);
+>>  int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
+>>  int evlist__finalize_ctlfd(struct evlist *evlist);
+>>  bool evlist__ctlfd_initialized(struct evlist *evlist);
+>> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+>> index 03678ff25539..266760ac9143 100644
+>> --- a/tools/perf/util/record.h
+>> +++ b/tools/perf/util/record.h
+>> @@ -73,6 +73,7 @@ struct record_opts {
+>>  	unsigned int  nr_threads_synthesize;
+>>  	int	      ctl_fd;
+>>  	int	      ctl_fd_ack;
+>> +	bool	      ctl_fd_close;
+>>  };
+>>  
+>>  extern const char * const *record_usage;
+>> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+>> index f8778cffd941..65402e13b704 100644
+>> --- a/tools/perf/util/stat.h
+>> +++ b/tools/perf/util/stat.h
+>> @@ -135,6 +135,7 @@ struct perf_stat_config {
+>>  	struct rblist		 metric_events;
+>>  	int			 ctl_fd;
+>>  	int			 ctl_fd_ack;
+>> +	bool			 ctl_fd_close;
+>>  };
+>>  
+>>  void perf_stat__set_big_num(int set);
 >>
->>
->
->--
->With Best Regards,
->Andy Shevchenko
->
-Thanks,
-Shiju
+
