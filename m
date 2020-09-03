@@ -2,132 +2,488 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281C9C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78238C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA0BB206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E4DD20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="StoEJz9i"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oVLUqCzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgICHtt (ORCPT
+        id S1727794AbgICHzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:49:49 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9777 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgICHts (ORCPT
+        Thu, 3 Sep 2020 03:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgICHzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:49:48 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f509fec0000>; Thu, 03 Sep 2020 00:49:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 03 Sep 2020 00:49:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 03 Sep 2020 00:49:47 -0700
-Received: from [10.2.53.12] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 3 Sep
- 2020 07:49:47 +0000
-Subject: Re: [PATCH 16/38] media: videobuf-dma-sg: number of pages should be
- unsigned long
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <cover.1599062230.git.mchehab+huawei@kernel.org>
- <a57a3584ccc16f33b2e6e8a850b7cb7cf029dfb6.1599062230.git.mchehab+huawei@kernel.org>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <29cbe38a-4094-5d60-9f85-050bb44febcc@nvidia.com>
-Date:   Thu, 3 Sep 2020 00:49:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 3 Sep 2020 03:55:35 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA270C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 00:55:34 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id z23so2429541ejr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 00:55:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OwHUl2N6E4g4iMLlJ0eQ2P/f+5oQ+vqDGlAP6KVYByI=;
+        b=oVLUqCzoFANJaDhfbHAetYLXoZXlZoKAnE1lHwPBj/j5/4bcTyRghmTYdq+JOYGkHk
+         MFfH6LjJ720Ehqh55KtErEfixK80lM4w88vVcaIZt9ZahXDkuT26TTgZFOVYOzH7QpZX
+         eYq5jOFmtxLTDZv82Qr5IIf+iYZuYIvj+DehOgJ9xtPFv60O0KEZwR7T1Dj12urHIMlf
+         K34b0LU0ELCJBBAkZuA8PatY8gFBwYyZN4iMFjMLv7WEBm2AsAND0obrSHOLpGBSdmdU
+         Weshx4k6S5l8YXiEgJP+9z3h3I3nqnUSH9j5wfFmzNu8KacC83PIozlVVdmS51UNERL6
+         XWoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OwHUl2N6E4g4iMLlJ0eQ2P/f+5oQ+vqDGlAP6KVYByI=;
+        b=GDssRTvk//G1sWtDbB6Jfrw64/eXM3OEAFm7MiYKOFdF6+v+cHmcv4GUQL00qZA/ac
+         m41KQXR+8I1QxzD7R1EIYERVBNsaXfMmZnzoQjnmG2MIlIOROT5QR7BTEaKcSCcCuaMM
+         8aSh40A41clBuH2wZ/r3bR6q+g1UwStFV7NC0BKEdCPKIJ+GeOBL2AW+4xi5C7vjVZnV
+         8v9vtikbgEa7aoSGDOXeUbpZzFkW8iKcrOMGWbz55NlJtYHWd5ehGC0nyLPEV2FgzVbe
+         wg169qJRs95CNbeKTW0+GOItoceXSftu4ktco+Ox4CLRvFy9JoXe6AQhLSI8ABzKl+7u
+         0Xfw==
+X-Gm-Message-State: AOAM533BdfBXgR/7Z26bFI+It5LE1gq2KyElyPGHkkKWoRUN+DGW9R/6
+        Il+TRe2q2jd0Z9ri5jZu5JiNCwRkap4sJRNC2B1U+uwFJwI=
+X-Google-Smtp-Source: ABdhPJzveTMW5C+zmioNKFAQWNhbBvrZyIAWPqyZtCHcQuT5bKYURe+KFpa80oYtKvQrjMLG9Tkx7FpNy6774x6UGgU=
+X-Received: by 2002:a17:906:c108:: with SMTP id do8mr925804ejc.88.1599119733257;
+ Thu, 03 Sep 2020 00:55:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <a57a3584ccc16f33b2e6e8a850b7cb7cf029dfb6.1599062230.git.mchehab+huawei@kernel.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599119340; bh=h2YtYK7X/8q5C0J8GcJkvpLDMTqz+dYhXOto+gkI9M0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=StoEJz9iReMvZwUWoJPzLDURYq36XjxdX0hehx0H3TQYOUtozau3fLiE24n5XClNA
-         ewK9DL8Nr3NSo5qkdaRNBJq+nGrCeHq8N7jPvSUezeqX+WXTq9cohG+FcBzRYgNgQR
-         T5wzmgZGEIuk48fyBbNS9tPt4flECSVn1+xaV2OcpZ+jXivNfdJidtnfuxylTC+soy
-         L84gmlGpqVVlALWKfC1tn3jY0u7P7cwxj2FNP3N1WCEtQnGEs/Kw4GGb0iq41OY/th
-         eDtzPslAdNwT8+I+bKdycacU0PEfbcmIHw/maCPnOLKSDLcWKKsyJ+DnoZyE2ZyR/T
-         70hp5hBYErUvw==
+References: <20200831032006.1019978-1-warthog618@gmail.com> <20200831032006.1019978-10-warthog618@gmail.com>
+In-Reply-To: <20200831032006.1019978-10-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 3 Sep 2020 09:55:22 +0200
+Message-ID: <CAMpxmJW9EC_ocs8dA3j+QPu8sW4Na9WEvPYEUZjfxk4-ojf+kA@mail.gmail.com>
+Subject: Re: [PATCH v6 09/20] gpiolib: cdev: support edge detection for uAPI v2
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 9:10 AM, Mauro Carvalho Chehab wrote:
-> As reported by smatch:
-> 
-> 	drivers/media/v4l2-core/videobuf-dma-sg.c:245 videobuf_dma_init_kernel() warn: should 'nr_pages << 12' be a 64 bit type?
-> 
-> The printk should not be using %d for the number of pages.
-> 
-> After looking better, the real problem here is that the
-> number of pages should be long int.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+On Mon, Aug 31, 2020 at 5:22 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> Add support for edge detection to lines requested using
+> GPIO_V2_GET_LINE_IOCTL.
+>
+> The edge_detector implementation is based on the v1 lineevent
+> implementation.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
 > ---
->   drivers/media/v4l2-core/videobuf-dma-sg.c | 22 ++++++++++++----------
->   include/media/videobuf-dma-sg.h           |  2 +-
->   2 files changed, 13 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/videobuf-dma-sg.c b/drivers/media/v4l2-core/videobuf-dma-sg.c
-> index 46ff19df9f53..8dd0562de287 100644
-> --- a/drivers/media/v4l2-core/videobuf-dma-sg.c
-> +++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
-> @@ -180,7 +180,7 @@ static int videobuf_dma_init_user_locked(struct videobuf_dmabuf *dma,
->   	if (rw == READ)
->   		flags |= FOLL_WRITE;
->   
-> -	dprintk(1, "init user [0x%lx+0x%lx => %d pages]\n",
-> +	dprintk(1, "init user [0x%lx+0x%lx => %lu pages]\n",
->   		data, size, dma->nr_pages);
->   
->   	err = pin_user_pages(data & PAGE_MASK, dma->nr_pages,
+>  drivers/gpio/gpiolib-cdev.c | 262 ++++++++++++++++++++++++++++++++++++
+>  drivers/gpio/gpiolib.c      |   2 +
+>  drivers/gpio/gpiolib.h      |   2 +
+>  3 files changed, 266 insertions(+)
+>
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index 544432ad837f..904216a67ed1 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -385,9 +385,32 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+>  /**
+>   * struct line - contains the state of a requested line
+>   * @desc: the GPIO descriptor for this line.
+> + * @req: the corresponding line request
+> + * @irq: the interrupt triggered in response to events on this GPIO
+> + * @eflags: the edge flags, GPIO_V2_LINE_FLAG_EDGE_RISING and/or
+> + * GPIO_V2_LINE_FLAG_EDGE_FALLING, indicating the edge detection applied
+> + * @timestamp: cache for the timestamp storing it between hardirq and IRQ
+> + * thread, used to bring the timestamp close to the actual event
+> + * @req_seqno: the seqno for the current edge event in the sequence of
+> + * events for the corresponding line request. This is drawn from the @req.
+> + * @line_seqno: the seqno for the current edge event in the sequence of
+> + * events for this line.
+>   */
+>  struct line {
+>         struct gpio_desc *desc;
+> +       /*
+> +        * -- edge detector specific fields --
+> +        */
+> +       struct linereq *req;
+> +       unsigned int irq;
+> +       u64 eflags;
+> +       /*
+> +        * timestamp and req_seqno are shared by edge_irq_handler() and
+> +        * edge_irq_thread() which are themselves mutually exclusive.
+> +        */
+> +       u64 timestamp;
+> +       u32 req_seqno;
+> +       u32 line_seqno;
+>  };
+>
+>  /**
+> @@ -395,12 +418,22 @@ struct line {
+>   * @gdev: the GPIO device the line request pertains to
+>   * @label: consumer label used to tag GPIO descriptors
+>   * @num_lines: the number of lines in the lines array
+> + * @wait: wait queue that handles blocking reads of events
+> + * @event_buffer_size: the number of elements allocated in @events
+> + * @events: KFIFO for the GPIO events
+> + * @seqno: the sequence number for edge events generated on all lines in
+> + * this line request.  Note that this is not used when @num_lines is 1, as
+> + * the line_seqno is then the same and is cheaper to calculate.
+>   * @lines: the lines held by this line request, with @num_lines elements.
+>   */
+>  struct linereq {
+>         struct gpio_device *gdev;
+>         const char *label;
+>         u32 num_lines;
+> +       wait_queue_head_t wait;
+> +       u32 event_buffer_size;
+> +       DECLARE_KFIFO_PTR(events, struct gpio_v2_line_event);
+> +       atomic_t seqno;
+>         struct line lines[];
+>  };
+>
+> @@ -417,12 +450,138 @@ struct linereq {
+>         (GPIO_V2_LINE_FLAG_OPEN_DRAIN | \
+>          GPIO_V2_LINE_FLAG_OPEN_SOURCE)
+>
+> +#define GPIO_V2_LINE_EDGE_FLAGS \
+> +       (GPIO_V2_LINE_FLAG_EDGE_RISING | \
+> +        GPIO_V2_LINE_FLAG_EDGE_FALLING)
+> +
+>  #define GPIO_V2_LINE_VALID_FLAGS \
+>         (GPIO_V2_LINE_FLAG_ACTIVE_LOW | \
+>          GPIO_V2_LINE_DIRECTION_FLAGS | \
+>          GPIO_V2_LINE_DRIVE_FLAGS | \
+> +        GPIO_V2_LINE_EDGE_FLAGS | \
+>          GPIO_V2_LINE_BIAS_FLAGS)
+>
+> +static irqreturn_t edge_irq_thread(int irq, void *p)
+> +{
+> +       struct line *line = p;
+> +       struct linereq *lr = line->req;
+> +       struct gpio_v2_line_event le;
+> +       int ret;
+> +
+> +       /* Do not leak kernel stack to userspace */
+> +       memset(&le, 0, sizeof(le));
+> +
+> +       /*
+> +        * We may be running from a nested threaded interrupt in which case
+> +        * we didn't get the timestamp from edge_irq_handler().
+> +        */
+> +       if (!line->timestamp) {
+> +               le.timestamp = ktime_get_ns();
+> +               if (lr->num_lines != 1)
+> +                       line->req_seqno = atomic_inc_return(&lr->seqno);
+> +       } else {
+> +               le.timestamp = line->timestamp;
+> +       }
+> +       line->timestamp = 0;
+> +
+> +       if (line->eflags == (GPIO_V2_LINE_FLAG_EDGE_RISING |
+> +                            GPIO_V2_LINE_FLAG_EDGE_FALLING)) {
+> +               int level = gpiod_get_value_cansleep(line->desc);
+> +
+> +               if (level)
+> +                       /* Emit low-to-high event */
+> +                       le.id = GPIO_V2_LINE_EVENT_RISING_EDGE;
+> +               else
+> +                       /* Emit high-to-low event */
+> +                       le.id = GPIO_V2_LINE_EVENT_FALLING_EDGE;
+> +       } else if (line->eflags == GPIO_V2_LINE_FLAG_EDGE_RISING) {
+> +               /* Emit low-to-high event */
+> +               le.id = GPIO_V2_LINE_EVENT_RISING_EDGE;
+> +       } else if (line->eflags == GPIO_V2_LINE_FLAG_EDGE_FALLING) {
+> +               /* Emit high-to-low event */
+> +               le.id = GPIO_V2_LINE_EVENT_FALLING_EDGE;
+> +       } else {
+> +               return IRQ_NONE;
+> +       }
+> +       line->line_seqno++;
+> +       le.line_seqno = line->line_seqno;
+> +       le.seqno = (lr->num_lines == 1) ? le.line_seqno : line->req_seqno;
+> +       le.offset = gpio_chip_hwgpio(line->desc);
+> +
+> +       ret = kfifo_in_spinlocked_noirqsave(&lr->events, &le,
+> +                                           1, &lr->wait.lock);
+> +       if (ret)
+> +               wake_up_poll(&lr->wait, EPOLLIN);
+> +       else
+> +               pr_debug_ratelimited("event FIFO is full - event dropped\n");
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t edge_irq_handler(int irq, void *p)
+> +{
+> +       struct line *line = p;
+> +       struct linereq *lr = line->req;
+> +
+> +       /*
+> +        * Just store the timestamp in hardirq context so we get it as
+> +        * close in time as possible to the actual event.
+> +        */
+> +       line->timestamp = ktime_get_ns();
+> +
+> +       if (lr->num_lines != 1)
+> +               line->req_seqno = atomic_inc_return(&lr->seqno);
 
+Do we never increase req_seqno for a single line?
 
-One pre-existing detail to remember is that the gup/pup routines,
-specifically pin_user_pages() in this case, use an "int" for the
-incoming nr_pages. (I wonder if that should be changed? It's now
-becoming a pitfall.) So it's now possible to overflow.
+Bart
 
-In other situations like this (see xsdfec_table_write() in
-drivers/misc/xilinx_sdfec.c), we've added checks such as:
-
-	u32 n;
-	...
-
-	if (WARN_ON_ONCE(n > INT_MAX))
-		return -EINVAL;
-
-	nr_pages = n;
-
-	res = pin_user_pages_fast((unsigned long)src_ptr, nr_pages, 0, pages);
-
-...in other words, check the value while it's stored in a 64-bit type,
-before sending it down into a 32-bit API.
-
-...other than that, everything else looks fine.
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+> +
+> +       return IRQ_WAKE_THREAD;
+> +}
+> +
+> +static void edge_detector_stop(struct line *line)
+> +{
+> +       if (line->irq) {
+> +               free_irq(line->irq, line);
+> +               line->irq = 0;
+> +       }
+> +}
+> +
+> +static int edge_detector_setup(struct line *line,
+> +                              u64 eflags)
+> +{
+> +       unsigned long irqflags = 0;
+> +       int irq, ret;
+> +
+> +       if (eflags && !kfifo_initialized(&line->req->events)) {
+> +               ret = kfifo_alloc(&line->req->events,
+> +                                 line->req->event_buffer_size, GFP_KERNEL);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +       line->eflags = eflags;
+> +
+> +       if (!eflags)
+> +               return 0;
+> +
+> +       irq = gpiod_to_irq(line->desc);
+> +       if (irq <= 0)
+> +               return -ENODEV;
+> +
+> +       if (eflags & GPIO_V2_LINE_FLAG_EDGE_RISING)
+> +               irqflags |= test_bit(FLAG_ACTIVE_LOW, &line->desc->flags) ?
+> +                       IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
+> +       if (eflags & GPIO_V2_LINE_FLAG_EDGE_FALLING)
+> +               irqflags |= test_bit(FLAG_ACTIVE_LOW, &line->desc->flags) ?
+> +                       IRQF_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
+> +       irqflags |= IRQF_ONESHOT;
+> +
+> +       /* Request a thread to read the events */
+> +       ret = request_threaded_irq(irq, edge_irq_handler, edge_irq_thread,
+> +                                  irqflags, line->req->label, line);
+> +       if (ret)
+> +               return ret;
+> +
+> +       line->irq = irq;
+> +       return 0;
+> +}
+> +
+>  static u64 gpio_v2_line_config_flags(struct gpio_v2_line_config *lc,
+>                                      unsigned int line_idx)
+>  {
+> @@ -465,6 +624,11 @@ static int gpio_v2_line_flags_validate(u64 flags)
+>             (flags & GPIO_V2_LINE_FLAG_OUTPUT))
+>                 return -EINVAL;
+>
+> +       /* Edge detection requires explicit input. */
+> +       if ((flags & GPIO_V2_LINE_EDGE_FLAGS) &&
+> +           !(flags & GPIO_V2_LINE_FLAG_INPUT))
+> +               return -EINVAL;
+> +
+>         /*
+>          * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
+>          * the hardware actually supports enabling both at the same time the
+> @@ -526,6 +690,10 @@ static void gpio_v2_line_config_flags_to_desc_flags(u64 flags,
+>                 set_bit(FLAG_IS_OUT, flagsp);
+>         else if (flags & GPIO_V2_LINE_FLAG_INPUT)
+>                 clear_bit(FLAG_IS_OUT, flagsp);
+> +       assign_bit(FLAG_EDGE_RISING, flagsp,
+> +                  flags & GPIO_V2_LINE_FLAG_EDGE_RISING);
+> +       assign_bit(FLAG_EDGE_FALLING, flagsp,
+> +                  flags & GPIO_V2_LINE_FLAG_EDGE_FALLING);
+>         assign_bit(FLAG_OPEN_DRAIN, flagsp,
+>                    flags & GPIO_V2_LINE_FLAG_OPEN_DRAIN);
+>         assign_bit(FLAG_OPEN_SOURCE, flagsp,
+> @@ -612,14 +780,85 @@ static long linereq_ioctl_compat(struct file *file, unsigned int cmd,
+>  }
+>  #endif
+>
+> +static __poll_t linereq_poll(struct file *file,
+> +                           struct poll_table_struct *wait)
+> +{
+> +       struct linereq *lr = file->private_data;
+> +       __poll_t events = 0;
+> +
+> +       poll_wait(file, &lr->wait, wait);
+> +
+> +       if (!kfifo_is_empty_spinlocked_noirqsave(&lr->events,
+> +                                                &lr->wait.lock))
+> +               events = EPOLLIN | EPOLLRDNORM;
+> +
+> +       return events;
+> +}
+> +
+> +static ssize_t linereq_read(struct file *file,
+> +                           char __user *buf,
+> +                           size_t count,
+> +                           loff_t *f_ps)
+> +{
+> +       struct linereq *lr = file->private_data;
+> +       struct gpio_v2_line_event le;
+> +       ssize_t bytes_read = 0;
+> +       int ret;
+> +
+> +       if (count < sizeof(le))
+> +               return -EINVAL;
+> +
+> +       do {
+> +               spin_lock(&lr->wait.lock);
+> +               if (kfifo_is_empty(&lr->events)) {
+> +                       if (bytes_read) {
+> +                               spin_unlock(&lr->wait.lock);
+> +                               return bytes_read;
+> +                       }
+> +
+> +                       if (file->f_flags & O_NONBLOCK) {
+> +                               spin_unlock(&lr->wait.lock);
+> +                               return -EAGAIN;
+> +                       }
+> +
+> +                       ret = wait_event_interruptible_locked(lr->wait,
+> +                                       !kfifo_is_empty(&lr->events));
+> +                       if (ret) {
+> +                               spin_unlock(&lr->wait.lock);
+> +                               return ret;
+> +                       }
+> +               }
+> +
+> +               ret = kfifo_out(&lr->events, &le, 1);
+> +               spin_unlock(&lr->wait.lock);
+> +               if (ret != 1) {
+> +                       /*
+> +                        * This should never happen - we were holding the
+> +                        * lock from the moment we learned the fifo is no
+> +                        * longer empty until now.
+> +                        */
+> +                       ret = -EIO;
+> +                       break;
+> +               }
+> +
+> +               if (copy_to_user(buf + bytes_read, &le, sizeof(le)))
+> +                       return -EFAULT;
+> +               bytes_read += sizeof(le);
+> +       } while (count >= bytes_read + sizeof(le));
+> +
+> +       return bytes_read;
+> +}
+> +
+>  static void linereq_free(struct linereq *lr)
+>  {
+>         unsigned int i;
+>
+>         for (i = 0; i < lr->num_lines; i++) {
+> +               edge_detector_stop(&lr->lines[i]);
+>                 if (lr->lines[i].desc)
+>                         gpiod_free(lr->lines[i].desc);
+>         }
+> +       kfifo_free(&lr->events);
+>         kfree(lr->label);
+>         put_device(&lr->gdev->dev);
+>         kfree(lr);
+> @@ -635,6 +874,8 @@ static int linereq_release(struct inode *inode, struct file *file)
+>
+>  static const struct file_operations line_fileops = {
+>         .release = linereq_release,
+> +       .read = linereq_read,
+> +       .poll = linereq_poll,
+>         .owner = THIS_MODULE,
+>         .llseek = noop_llseek,
+>         .unlocked_ioctl = linereq_ioctl,
+> @@ -674,6 +915,9 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+>         lr->gdev = gdev;
+>         get_device(&gdev->dev);
+>
+> +       for (i = 0; i < ulr.num_lines; i++)
+> +               lr->lines[i].req = lr;
+> +
+>         /* Make sure this is terminated */
+>         ulr.consumer[sizeof(ulr.consumer)-1] = '\0';
+>         if (strlen(ulr.consumer)) {
+> @@ -684,6 +928,14 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+>                 }
+>         }
+>
+> +       init_waitqueue_head(&lr->wait);
+> +       lr->event_buffer_size = ulr.event_buffer_size;
+> +       if (lr->event_buffer_size == 0)
+> +               lr->event_buffer_size = ulr.num_lines*16;
+> +       else if (lr->event_buffer_size > GPIO_V2_LINES_MAX*16)
+> +               lr->event_buffer_size = GPIO_V2_LINES_MAX*16;
+> +
+> +       atomic_set(&lr->seqno, 0);
+>         lr->num_lines = ulr.num_lines;
+>
+>         /* Request each GPIO */
+> @@ -722,6 +974,11 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+>                         ret = gpiod_direction_input(desc);
+>                         if (ret)
+>                                 goto out_free_linereq;
+> +
+> +                       ret = edge_detector_setup(&lr->lines[i],
+> +                                       flags & GPIO_V2_LINE_EDGE_FLAGS);
+> +                       if (ret)
+> +                               goto out_free_linereq;
+>                 }
+>
+>                 blocking_notifier_call_chain(&desc->gdev->notifier,
+> @@ -1243,6 +1500,11 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+>         if (test_bit(FLAG_PULL_UP, &desc->flags))
+>                 info->flags |= GPIO_V2_LINE_FLAG_BIAS_PULL_UP;
+>
+> +       if (test_bit(FLAG_EDGE_RISING, &desc->flags))
+> +               info->flags |= GPIO_V2_LINE_FLAG_EDGE_RISING;
+> +       if (test_bit(FLAG_EDGE_FALLING, &desc->flags))
+> +               info->flags |= GPIO_V2_LINE_FLAG_EDGE_FALLING;
+> +
+>         spin_unlock_irqrestore(&gpio_lock, flags);
+>  }
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 80137c1b3cdc..e4c81dca7f8b 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2041,6 +2041,8 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
+>                 clear_bit(FLAG_PULL_UP, &desc->flags);
+>                 clear_bit(FLAG_PULL_DOWN, &desc->flags);
+>                 clear_bit(FLAG_BIAS_DISABLE, &desc->flags);
+> +               clear_bit(FLAG_EDGE_RISING, &desc->flags);
+> +               clear_bit(FLAG_EDGE_FALLING, &desc->flags);
+>                 clear_bit(FLAG_IS_HOGGED, &desc->flags);
+>  #ifdef CONFIG_OF_DYNAMIC
+>                 desc->hog = NULL;
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index 6709f79c02dd..39b356160937 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -114,6 +114,8 @@ struct gpio_desc {
+>  #define FLAG_PULL_UP    13     /* GPIO has pull up enabled */
+>  #define FLAG_PULL_DOWN  14     /* GPIO has pull down enabled */
+>  #define FLAG_BIAS_DISABLE    15        /* GPIO has pull disabled */
+> +#define FLAG_EDGE_RISING     16        /* GPIO CDEV detects rising edge events */
+> +#define FLAG_EDGE_FALLING    17        /* GPIO CDEV detects falling edge events */
+>
+>         /* Connection label */
+>         const char              *label;
+> --
+> 2.28.0
+>
