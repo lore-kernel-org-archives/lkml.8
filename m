@@ -2,398 +2,177 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F40C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDE6C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4FA20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D77420767
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:40:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EQlAWZUa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgICKjP (ORCPT
+        id S1728372AbgICKkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 06:39:15 -0400
-Received: from mga11.intel.com ([192.55.52.93]:65401 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728330AbgICKjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:39:06 -0400
-IronPort-SDR: tn69zof3GGvi35nNUDH4Tmln+WqAHYg+ATxhbqKdySVP5m0BBKFI9ntPFkwHcFrGn4MjAD58tf
- E9htVmQw5RTw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="155057343"
-X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="155057343"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 03:38:49 -0700
-IronPort-SDR: eDreDYwUlX7ot5PIlJMA2Mzq4sqcYaSeQHEzkoepfjZNWXdgogNIW6UZnnYSrFPtfkE2DlRP8p
- OLwcvMWuE6dQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="339238144"
-Received: from slisovsk-lenovo-ideapad-720s-13ikb.fi.intel.com (HELO [10.237.72.190]) ([10.237.72.190])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Sep 2020 03:38:46 -0700
-Subject: Re: [PATCH V3 4/6] perf tools: Add FIFO file names as alternative
- options to --control
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200901200655.GC470123@krava>
- <20200902105707.11491-1-adrian.hunter@intel.com>
- <97818947-ed04-1b53-c71a-f00732141ca7@linux.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <e4d294a9-9d97-2cb0-c43d-926fbf90b819@intel.com>
-Date:   Thu, 3 Sep 2020 13:38:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 3 Sep 2020 06:40:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53260 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726368AbgICKj7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 06:39:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599129597;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ijVYX0z6T27vxR7tJcyTqIs/JuL8BCy4xqW27sy9VD0=;
+        b=EQlAWZUakqOmXIVbURaTip1A/ScsUIObiFLq+tMuo+rE3/nYTOL6EkxIBhrTz7lBLxokeH
+        vXrnHXr8rxgAHL3ihAVCr/WDOvKyTsKPcOFMcNCi28UhvseOA8ViiTx8KbLfSYIOT/bqUD
+        H6soe0WaN93KkUUBD4oMq028jxVnfAI=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-521-KwSB_2fhNLaurU4U7H5IkQ-1; Thu, 03 Sep 2020 06:39:56 -0400
+X-MC-Unique: KwSB_2fhNLaurU4U7H5IkQ-1
+Received: by mail-wr1-f70.google.com with SMTP id b7so926673wrn.6
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 03:39:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ijVYX0z6T27vxR7tJcyTqIs/JuL8BCy4xqW27sy9VD0=;
+        b=a6yh0ZkAyrgMWzCNL5OK0EQDN/rojzotEfzFZ5qgC4wmT+4x66wPJw4AF4SMZFKd9q
+         boC0mTyYAyijVElU6D+uJ4lqy3Z/sgW71HMboOghLCbZrkTnmC0Svqx+3k10zKrIjyXT
+         7ABK4aGhWXe36H47eRv7ysPIt2CTgn+QOxs5mPNYg30A5jVVGCA8vqHUVW3lswXFvS3i
+         BZUVdZ5V5pUwGwmXYAvFfhIURcDFz0KIPx4BT3RLpdiT3RJu7dP/VzRgLZWFIqx2za5Z
+         nLRmWvOX5zaTVMFp+LsLw5AfK7sTGDZ4FywHTe6hp12hCMv8mbUl5JIv2s5m/ZgqsxDr
+         oV1w==
+X-Gm-Message-State: AOAM530qsqFbORYLRPEPxPYrijxH5J5No9ijOkhoeoQ4V19rpIKBTXM5
+        a3OreOLvlkKKgMQXibuEz5DPEiC6grcoPa3FKO1jC8h4QToPUCmS7ETrteXKB6fGXj8n8rNiR9B
+        Q268MqMrOQnnd5HeA2pifrO/E
+X-Received: by 2002:a1c:5a56:: with SMTP id o83mr1852714wmb.77.1599129595087;
+        Thu, 03 Sep 2020 03:39:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyG+5x9gTe9dl+reW0WRwFROTb3hPD2uAj+jMHAJIAE/fjZBSDJ9NaJEz5fiA3rL7PHaZa4Ag==
+X-Received: by 2002:a1c:5a56:: with SMTP id o83mr1852699wmb.77.1599129594857;
+        Thu, 03 Sep 2020 03:39:54 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id a83sm3608921wmh.48.2020.09.03.03.39.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 03:39:54 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Haiwei Li <lihaiwei.kernel@gmail.com>
+Cc:     "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "wanpengli\@tencent.com" <wanpengli@tencent.com>,
+        "jmattson\@google.com" <jmattson@google.com>,
+        "joro\@8bytes.org" <joro@8bytes.org>, tglx@linutronix.de,
+        mingo@redhat.com, "bp\@alien8.de" <bp@alien8.de>,
+        "hpa\@zytor.com" <hpa@zytor.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v2] KVM: Check the allocation of pv cpu mask
+In-Reply-To: <654d8c60-49f0-e398-be25-24aed352360d@gmail.com>
+References: <654d8c60-49f0-e398-be25-24aed352360d@gmail.com>
+Date:   Thu, 03 Sep 2020 12:39:52 +0200
+Message-ID: <87y2lrnnyf.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <97818947-ed04-1b53-c71a-f00732141ca7@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/09/20 8:03 pm, Alexey Budankov wrote:
-> 
-> On 02.09.2020 13:57, Adrian Hunter wrote:
->> Enable the --control option to accept file names as an alternative to
->> file descriptors.
->>
->> Example:
->>
->>  $ mkfifo perf.control
->>  $ mkfifo perf.ack
->>  $ cat perf.ack &
->>  [1] 6808
->>  $ perf record --control fifo:perf.control,perf.ack -- sleep 300 &
->>  [2] 6810
->>  $ echo disable > perf.control
->>  $ Events disabled
->>  ack
->>
->>  $ echo enable > perf.control
->>  $ Events enabled
->>  ack
->>
->>  $ echo disable > perf.control
->>  $ Events disabled
->>  ack
->>
->>  $ kill %2
->>  [ perf record: Woken up 4 times to write data ]
->>  $ [ perf record: Captured and wrote 0.018 MB perf.data (7 samples) ]
->>
->>  [1]-  Done                    cat perf.ack
->>  [2]+  Terminated              perf record --control fifo:perf.control,perf.ack -- sleep 300
->>  $
->>
->> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->> Acked-by: Jiri Olsa <jolsa@redhat.com>
->> ---
->>
->>
->> Changes in V3:
->>
->> 	Rename evlist__parse_control_names to evlist__parse_control_fifo
->> 	Explicitly initialize *ctl_fd_close = false
->>
->>
->>  tools/perf/Documentation/perf-record.txt |  2 +
->>  tools/perf/Documentation/perf-stat.txt   |  2 +
->>  tools/perf/builtin-record.c              | 34 +++++++++++----
->>  tools/perf/builtin-stat.c                | 18 ++++++--
->>  tools/perf/util/evlist.c                 | 55 +++++++++++++++++++++++-
->>  tools/perf/util/evlist.h                 |  2 +-
->>  tools/perf/util/record.h                 |  1 +
->>  tools/perf/util/stat.h                   |  1 +
->>  8 files changed, 101 insertions(+), 14 deletions(-)
->>
->> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
->> index 07c4734f1c7a..2ffc1196d2b8 100644
->> --- a/tools/perf/Documentation/perf-record.txt
->> +++ b/tools/perf/Documentation/perf-record.txt
->> @@ -627,7 +627,9 @@ option. The -e option and this one can be mixed and matched.  Events
->>  can be grouped using the {} notation.
->>  endif::HAVE_LIBPFM[]
->>  
->> +--control=fifo:ctl-fifo[,ack-fifo]::
->>  --control=fd:ctl-fd[,ack-fd]::
->> +ctl-fifo / ack-fifo are opened and used as ctl-fd / ack-fd as follows.
->>  Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
->>  'disable': disable events). Measurements can be started with events disabled using
->>  --delay=-1 option. Optionally send control command completion ('ack\n') to ack-fd descriptor
->> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
->> index 7fb7368cc2d9..d33ffd11bb85 100644
->> --- a/tools/perf/Documentation/perf-stat.txt
->> +++ b/tools/perf/Documentation/perf-stat.txt
->> @@ -176,7 +176,9 @@ with it.  --append may be used here.  Examples:
->>       3>results  perf stat --log-fd 3          -- $cmd
->>       3>>results perf stat --log-fd 3 --append -- $cmd
->>  
->> +--control=fifo:ctl-fifo[,ack-fifo]::
->>  --control=fd:ctl-fd[,ack-fd]::
->> +ctl-fifo / ack-fifo are opened and used as ctl-fd / ack-fd as follows.
->>  Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
->>  'disable': disable events). Measurements can be started with events disabled using
->>  --delay=-1 option. Optionally send control command completion ('ack\n') to ack-fd descriptor
->> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->> index f2ab5bd7e2ba..117dd180f780 100644
->> --- a/tools/perf/builtin-record.c
->> +++ b/tools/perf/builtin-record.c
->> @@ -2236,7 +2236,17 @@ static int parse_control_option(const struct option *opt,
->>  {
->>  	struct record_opts *opts = opt->value;
->>  
->> -	return evlist__parse_control(str, &opts->ctl_fd, &opts->ctl_fd_ack);
->> +	return evlist__parse_control(str, &opts->ctl_fd, &opts->ctl_fd_ack, &opts->ctl_fd_close);
->> +}
->> +
->> +static void close_control_option(struct record_opts *opts)
-> 
-> This function above and the same one for stat mode below look duplicating.
-> It could possibly be combined.
+Haiwei Li <lihaiwei.kernel@gmail.com> writes:
 
-Good idea.  I will send a separate patch for that though.
+> From: Haiwei Li <lihaiwei@tencent.com>
+>
+> check the allocation of per-cpu __pv_cpu_mask. Initialize ops only when
+> successful.
+>
+> Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
+> ---
+>   arch/x86/kernel/kvm.c | 24 ++++++++++++++++++++----
+>   1 file changed, 20 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index 08320b0b2b27..d3c062e551d7 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -555,7 +555,6 @@ static void kvm_send_ipi_mask_allbutself(const 
+> struct cpumask *mask, int vector)
+>   static void kvm_setup_pv_ipi(void)
+>   {
+>   	apic->send_IPI_mask = kvm_send_ipi_mask;
+> -	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
+>   	pr_info("setup PV IPIs\n");
+>   }
+>
+> @@ -654,7 +653,6 @@ static void __init kvm_guest_init(void)
+>   	}
+>
+>   	if (pv_tlb_flush_supported()) {
+> -		pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
+>   		pv_ops.mmu.tlb_remove_table = tlb_remove_table;
+>   		pr_info("KVM setup pv remote TLB flush\n");
+>   	}
+> @@ -767,6 +765,14 @@ static __init int activate_jump_labels(void)
+>   }
+>   arch_initcall(activate_jump_labels);
+>
+> +static void kvm_free_pv_cpu_mask(void)
+> +{
+> +	unsigned int cpu;
+> +
+> +	for_each_possible_cpu(cpu)
+> +		free_cpumask_var(per_cpu(__pv_cpu_mask, cpu));
+> +}
+> +
+>   static __init int kvm_alloc_cpumask(void)
+>   {
+>   	int cpu;
+> @@ -785,11 +791,21 @@ static __init int kvm_alloc_cpumask(void)
+>
+>   	if (alloc)
+>   		for_each_possible_cpu(cpu) {
+> -			zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
+> -				GFP_KERNEL, cpu_to_node(cpu));
+> +			if (!zalloc_cpumask_var_node(
+> +				per_cpu_ptr(&__pv_cpu_mask, cpu),
+> +				GFP_KERNEL, cpu_to_node(cpu)))
+> +				goto zalloc_cpumask_fail;
+>   		}
+>
+> +#if defined(CONFIG_SMP)
+> +	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
+> +#endif
+> +	pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
 
-> 
-> Acked-by: Alexei Budankov <alexey.budankov@linux.intel.com>
-> 
-> Regards,
-> Alexei
-> 
->> +{
->> +	if (opts->ctl_fd_close) {
->> +		opts->ctl_fd_close = false;
->> +		close(opts->ctl_fd);
->> +		if (opts->ctl_fd_ack >= 0)
->> +			close(opts->ctl_fd_ack);
->> +	}
->>  }
->>  
->>  static void switch_output_size_warn(struct record *rec)
->> @@ -2578,9 +2588,10 @@ static struct option __record_options[] = {
->>  		"libpfm4 event selector. use 'perf list' to list available events",
->>  		parse_libpfm_events_option),
->>  #endif
->> -	OPT_CALLBACK(0, "control", &record.opts, "fd:ctl-fd[,ack-fd]",
->> +	OPT_CALLBACK(0, "control", &record.opts, "fd:ctl-fd[,ack-fd] or fifo:ctl-fifo[,ack-fifo]",
->>  		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
->> -		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.",
->> +		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.\n"
->> +		     "\t\t\t  Alternatively, ctl-fifo / ack-fifo will be opened and used as ctl-fd / ack-fd.",
->>  		      parse_control_option),
->>  	OPT_END()
->>  };
->> @@ -2653,12 +2664,14 @@ int cmd_record(int argc, const char **argv)
->>  	    !perf_can_record_switch_events()) {
->>  		ui__error("kernel does not support recording context switch events\n");
->>  		parse_options_usage(record_usage, record_options, "switch-events", 0);
->> -		return -EINVAL;
->> +		err = -EINVAL;
->> +		goto out_opts;
->>  	}
->>  
->>  	if (switch_output_setup(rec)) {
->>  		parse_options_usage(record_usage, record_options, "switch-output", 0);
->> -		return -EINVAL;
->> +		err = -EINVAL;
->> +		goto out_opts;
->>  	}
->>  
->>  	if (rec->switch_output.time) {
->> @@ -2669,8 +2682,10 @@ int cmd_record(int argc, const char **argv)
->>  	if (rec->switch_output.num_files) {
->>  		rec->switch_output.filenames = calloc(sizeof(char *),
->>  						      rec->switch_output.num_files);
->> -		if (!rec->switch_output.filenames)
->> -			return -EINVAL;
->> +		if (!rec->switch_output.filenames) {
->> +			err = -EINVAL;
->> +			goto out_opts;
->> +		}
->>  	}
->>  
->>  	/*
->> @@ -2686,7 +2701,8 @@ int cmd_record(int argc, const char **argv)
->>  		rec->affinity_mask.bits = bitmap_alloc(rec->affinity_mask.nbits);
->>  		if (!rec->affinity_mask.bits) {
->>  			pr_err("Failed to allocate thread mask for %zd cpus\n", rec->affinity_mask.nbits);
->> -			return -ENOMEM;
->> +			err = -ENOMEM;
->> +			goto out_opts;
->>  		}
->>  		pr_debug2("thread mask[%zd]: empty\n", rec->affinity_mask.nbits);
->>  	}
->> @@ -2817,6 +2833,8 @@ int cmd_record(int argc, const char **argv)
->>  	evlist__delete(rec->evlist);
->>  	symbol__exit();
->>  	auxtrace_record__free(rec->itr);
->> +out_opts:
->> +	close_control_option(&rec->opts);
->>  	return err;
->>  }
->>  
->> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->> index 12ce5cf2b10e..6170226d44f9 100644
->> --- a/tools/perf/builtin-stat.c
->> +++ b/tools/perf/builtin-stat.c
->> @@ -1047,7 +1047,17 @@ static int parse_control_option(const struct option *opt,
->>  {
->>  	struct perf_stat_config *config = opt->value;
->>  
->> -	return evlist__parse_control(str, &config->ctl_fd, &config->ctl_fd_ack);
->> +	return evlist__parse_control(str, &config->ctl_fd, &config->ctl_fd_ack, &config->ctl_fd_close);
->> +}
->> +
->> +static void close_control_option(struct perf_stat_config *config)
->> +{
->> +	if (config->ctl_fd_close) {
->> +		config->ctl_fd_close = false;
->> +		close(config->ctl_fd);
->> +		if (config->ctl_fd_ack >= 0)
->> +			close(config->ctl_fd_ack);
->> +	}
->>  }
->>  
->>  static struct option stat_options[] = {
->> @@ -1151,9 +1161,10 @@ static struct option stat_options[] = {
->>  		"libpfm4 event selector. use 'perf list' to list available events",
->>  		parse_libpfm_events_option),
->>  #endif
->> -	OPT_CALLBACK(0, "control", &stat_config, "fd:ctl-fd[,ack-fd]",
->> +	OPT_CALLBACK(0, "control", &stat_config, "fd:ctl-fd[,ack-fd] or fifo:ctl-fifo[,ack-fifo]",
->>  		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
->> -		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.",
->> +		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.\n"
->> +		     "\t\t\t  Alternatively, ctl-fifo / ack-fifo will be opened and used as ctl-fd / ack-fd.",
->>  		      parse_control_option),
->>  	OPT_END()
->>  };
->> @@ -2396,6 +2407,7 @@ int cmd_stat(int argc, const char **argv)
->>  
->>  	metricgroup__rblist_exit(&stat_config.metric_events);
->>  	runtime_stat_delete(&stat_config);
->> +	close_control_option(&stat_config);
->>  
->>  	return status;
->>  }
->> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
->> index 47d1045a19af..00593e5f2a9d 100644
->> --- a/tools/perf/util/evlist.c
->> +++ b/tools/perf/util/evlist.c
->> @@ -1727,12 +1727,63 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
->>  	return leader;
->>  }
->>  
->> -int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack)
->> +static int evlist__parse_control_fifo(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close)
->> +{
->> +	char *s, *p;
->> +	int ret = 0, fd;
->> +
->> +	if (strncmp(str, "fifo:", 5))
->> +		return -EINVAL;
->> +
->> +	str += 5;
->> +	if (!*str || *str == ',')
->> +		return -EINVAL;
->> +
->> +	s = strdup(str);
->> +	if (!s)
->> +		return -ENOMEM;
->> +
->> +	p = strchr(s, ',');
->> +	if (p)
->> +		*p = '\0';
->> +
->> +	/*
->> +	 * O_RDWR avoids POLLHUPs which is necessary to allow the other
->> +	 * end of a FIFO to be repeatedly opened and closed.
->> +	 */
->> +	fd = open(s, O_RDWR | O_NONBLOCK | O_CLOEXEC);
->> +	if (fd < 0) {
->> +		pr_err("Failed to open '%s'\n", s);
->> +		ret = -errno;
->> +		goto out_free;
->> +	}
->> +	*ctl_fd = fd;
->> +	*ctl_fd_close = true;
->> +
->> +	if (p && *++p) {
->> +		/* O_RDWR | O_NONBLOCK means the other end need not be open */
->> +		fd = open(p, O_RDWR | O_NONBLOCK | O_CLOEXEC);
->> +		if (fd < 0) {
->> +			pr_err("Failed to open '%s'\n", p);
->> +			ret = -errno;
->> +			goto out_free;
->> +		}
->> +		*ctl_fd_ack = fd;
->> +	}
->> +
->> +out_free:
->> +	free(s);
->> +	return ret;
->> +}
->> +
->> +int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close)
->>  {
->>  	char *comma = NULL, *endptr = NULL;
->>  
->> +	*ctl_fd_close = false;
->> +
->>  	if (strncmp(str, "fd:", 3))
->> -		return -EINVAL;
->> +		return evlist__parse_control_fifo(str, ctl_fd, ctl_fd_ack, ctl_fd_close);
->>  
->>  	*ctl_fd = strtoul(&str[3], &endptr, 0);
->>  	if (endptr == &str[3])
->> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
->> index a5a5a07d5c55..a5678eb5ee60 100644
->> --- a/tools/perf/util/evlist.h
->> +++ b/tools/perf/util/evlist.h
->> @@ -373,7 +373,7 @@ enum evlist_ctl_cmd {
->>  	EVLIST_CTL_CMD_ACK
->>  };
->>  
->> -int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack);
->> +int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close);
->>  int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
->>  int evlist__finalize_ctlfd(struct evlist *evlist);
->>  bool evlist__ctlfd_initialized(struct evlist *evlist);
->> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
->> index 03678ff25539..266760ac9143 100644
->> --- a/tools/perf/util/record.h
->> +++ b/tools/perf/util/record.h
->> @@ -73,6 +73,7 @@ struct record_opts {
->>  	unsigned int  nr_threads_synthesize;
->>  	int	      ctl_fd;
->>  	int	      ctl_fd_ack;
->> +	bool	      ctl_fd_close;
->>  };
->>  
->>  extern const char * const *record_usage;
->> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
->> index f8778cffd941..65402e13b704 100644
->> --- a/tools/perf/util/stat.h
->> +++ b/tools/perf/util/stat.h
->> @@ -135,6 +135,7 @@ struct perf_stat_config {
->>  	struct rblist		 metric_events;
->>  	int			 ctl_fd;
->>  	int			 ctl_fd_ack;
->> +	bool			 ctl_fd_close;
->>  };
->>  
->>  void perf_stat__set_big_num(int set);
->>
+This is too late I'm afraid. If I'm not mistaken PV patching happens
+earlier, so .init.guest_late_init (kvm_guest_init()) is good and
+arch_initcall() is bad.
+
+Have you checked that with this patch kvm_flush_tlb_others() is still
+being called?
+
+Actually, there is no need to assign kvm_flush_tlb_others() so late. We
+can always check if __pv_cpu_mask was allocated and revert back to the
+architectural path if not.
+
+>   	return 0;
+> +
+> +zalloc_cpumask_fail:
+> +	kvm_free_pv_cpu_mask();
+> +	return -ENOMEM;
+>   }
+>   arch_initcall(kvm_alloc_cpumask);
+>
+> --
+> 2.18.4
+>
+
+-- 
+Vitaly
 
