@@ -2,168 +2,163 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4BDC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23864C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1641820716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31DE20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmDkVADb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+OHpDNc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbgICRTk (ORCPT
+        id S1728491AbgICRVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 13:19:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34212 "EHLO
+        Thu, 3 Sep 2020 13:21:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728353AbgICRTj (ORCPT
+        with ESMTP id S1726678AbgICRVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 13:19:39 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B88D0C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 10:19:37 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id z46so1137188uac.13
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 10:19:37 -0700 (PDT)
+        Thu, 3 Sep 2020 13:21:35 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5E1C061244;
+        Thu,  3 Sep 2020 10:21:35 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id w7so2866988pfi.4;
+        Thu, 03 Sep 2020 10:21:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6E34pUevinBPv9nlXlIDgJMiC3srQBnGMK5fNngoX64=;
-        b=PmDkVADbtD+P3BALcHVP//xg0AuB6aWvk4S4gu9sCpMAAnIbG5kIKMRDXGJZUnOnpv
-         19dDkFukgPEmzBuz5+V4Iiuu06vmhK5xWi/Zd1gnPzov0WQoOplNfg7qsnXCHxRFg3GM
-         yOIy36WMvr9ejpSc2O4jD7r/yuxbTIRILzrbpe3p3RVDXBmL/mqj+1m0owASDioa/NpD
-         iVSUaCSYRRMtkE3z8dXToCXV53S8oS9lOUapu3JS5LvKkpb4eNNAhKeRNK88j8P3fXBX
-         ycuBYY11/Yo/W14NDIm2SBtqfqAPn8UfM9Llgpji/wRYo3yDnhvdN+eWarhXHCIxsbmy
-         bZcQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WashrslN8ZwCXy2QjOJBW4ZEBVnlFGgH8kdTqqVqsKU=;
+        b=Q+OHpDNczlIeDseieuM5+66rQlgCH+Kn5aoq2pyWKSRq/jsvf4wYVv5KXl5eRtYund
+         JZl5WDBcJ0dEFGAqLKtjWEQjMwWHobhbhirlJ4WtWDrUaVMEscMlOMLfXG+JyNpmjzLY
+         oxFSbjOOweW8JzcG9cIzgdnuw+hZPdguo0goAINeDspq+Hd585n+igQho5kjHNKMnFZs
+         d/mhy+7aWYNhesXOkEhE49hGkccq3nb5j4n/I0AdXXF2vt4g1RiB52gu5KSrMws3Qc7k
+         /uYmO9C9UrVb9wYqhcqsE6TsQgnQ7JmOivOcJy8/ZRep26U1/95AKWQ6rEBBingyaXnA
+         bKKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6E34pUevinBPv9nlXlIDgJMiC3srQBnGMK5fNngoX64=;
-        b=dUq665UNgztUEQtm49crAoShiC7yWvGHE3P4uYUs33YniRl9fVFDQo0H0Y82HFh4vo
-         PmIo/u2bpBfXu6+P8Xwune+2AtMX6Yt3wCD4EWqEvif2d7dXfCTLYj+bnSgP9d8mL/Ca
-         Wflu73slVGCRG6UfFDge41xM0Pf3wYsPfFtPYBb/Qg49pwzQ3/LMiMG86CUP6DEnVShp
-         yM6UDCl2Z1oWQxMGWbY/qIXNC6eK7CNm5iFCvNkQxISdKKsR/9S+St64EcspLBjdnKkG
-         x17dEND5QAjS8lnY5jfkgHCLWpwVKkQ0k+Vhk95rPxGWi9JU59zYc3L1HIcH1jVv4sIo
-         /JGw==
-X-Gm-Message-State: AOAM531mBf73t+sWqy9fDgQoVa+ySvOzbSE/5PHYc23SJ1cPANBLnF3U
-        vmELkrsCg9EkqHzahFNn2N2jgxTyZ9QwXA==
-X-Google-Smtp-Source: ABdhPJx2Jsh8K7VdXJFmtWoOKbSsK8rhIEsViyM8Dn1peSF6LPM/4R7OFyyR3EjdLEUQTBN17Cq/DQ==
-X-Received: by 2002:ab0:7849:: with SMTP id y9mr2153221uaq.66.1599153576574;
-        Thu, 03 Sep 2020 10:19:36 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id y15sm374953uag.4.2020.09.03.10.19.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 10:19:36 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id v20so1154675ual.4
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 10:19:36 -0700 (PDT)
-X-Received: by 2002:a9f:2237:: with SMTP id 52mr2117679uad.141.1599153575566;
- Thu, 03 Sep 2020 10:19:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WashrslN8ZwCXy2QjOJBW4ZEBVnlFGgH8kdTqqVqsKU=;
+        b=EneCLvDWfyXI9HSRj/AeuuURaOfFckvN7ggREpZudvB8M9zMUWT2gNfhCVTFjkWO+D
+         ah+74SRFr/lcLKNkHRNDvWm1OY27N1pq3c6tUJ1J3LB81LbvFuUzbwYgo3eqlH3wbmG8
+         IFHfOdbdwtMijWmMXbUaBkSxJ/aPevEE0eLX+CboG04dgrkTK2a1ITp2UZtGXjNHKP4Y
+         oLpYNeTHHUw4qoq5v4OYaq0P5rOsLLe+odRaWGkKU3+KXWcAi06RXp0spQonzpN+zevk
+         2ToR7r3hFHpF9zi/kOphe70EdYpWz6OtCvO32aZx55EmJKp5S7dWAAy0B8jrJBoV1rSU
+         qTuQ==
+X-Gm-Message-State: AOAM533FppvqWe83ZrZWAWlJwTflRxgPUXd7grOf+IMns5xJOJWnfpnx
+        x27F9mXODBIfK66PQfE1pgM=
+X-Google-Smtp-Source: ABdhPJxr2WeIZr+RTpBi78RWdVAu+wpXA957uq/QJRrasdDFcpqcc/b8n30BnDD45Q8xs6p/dArHuQ==
+X-Received: by 2002:a62:26c2:: with SMTP id m185mr4764708pfm.115.1599153695177;
+        Thu, 03 Sep 2020 10:21:35 -0700 (PDT)
+Received: from thinkpad ([2605:8d80:4c0:b73f:202a:aafe:118f:5e94])
+        by smtp.gmail.com with ESMTPSA id mp3sm3002804pjb.33.2020.09.03.10.21.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 10:21:34 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 10:22:15 -0700
+From:   Rustam Kovhaev <rkovhaev@gmail.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     pbonzini@redhat.com, vkuznets@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Subject: Re: [PATCH v2] KVM: fix memory leak in kvm_io_bus_unregister_dev()
+Message-ID: <20200903172215.GA870347@thinkpad>
+References: <20200902225718.675314-1-rkovhaev@gmail.com>
+ <c5990c86-ab01-d748-5505-375f50a4ed7d@embeddedor.com>
 MIME-Version: 1.0
-References: <20200902150442.2779-1-vadym.kochan@plvision.eu> <20200902150442.2779-6-vadym.kochan@plvision.eu>
-In-Reply-To: <20200902150442.2779-6-vadym.kochan@plvision.eu>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Thu, 3 Sep 2020 19:18:59 +0200
-X-Gmail-Original-Message-ID: <CA+FuTSfNX0vYL2QmomVBrjXzmQ7WUUmOhtyM_9WfMkSQD1EuPw@mail.gmail.com>
-Message-ID: <CA+FuTSfNX0vYL2QmomVBrjXzmQ7WUUmOhtyM_9WfMkSQD1EuPw@mail.gmail.com>
-Subject: Re: [PATCH net v6 5/6] net: marvell: prestera: Add Switchdev driver implementation
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mickey Rachamim <mickeyr@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c5990c86-ab01-d748-5505-375f50a4ed7d@embeddedor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 5:07 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
->
-> The following features are supported:
->
->     - VLAN-aware bridge offloading
->     - VLAN-unaware bridge offloading
->     - FDB offloading (learning, ageing)
->     - Switchport configuration
->
-> Currently there are some limitations like:
->
->     - Only 1 VLAN-aware bridge instance supported
->     - FDB ageing timeout parameter is set globally per device
->
-> Co-developed-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
-> Signed-off-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
-> Co-developed-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
-> Signed-off-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
-> Co-developed-by: Taras Chornyi <taras.chornyi@plvision.eu>
-> Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
-> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+On Wed, Sep 02, 2020 at 06:34:11PM -0500, Gustavo A. R. Silva wrote:
+> Hi,
+> 
+> On 9/2/20 17:57, Rustam Kovhaev wrote:
+> > when kmalloc() fails in kvm_io_bus_unregister_dev(), before removing
+> > the bus, we should iterate over all other devices linked to it and call
+> > kvm_iodevice_destructor() for them
+> > 
+> > Reported-and-tested-by: syzbot+f196caa45793d6374707@syzkaller.appspotmail.com
+> > Link: https://syzkaller.appspot.com/bug?extid=f196caa45793d6374707
+> > Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+> > Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
+> I think it's worthwhile to add a Fixes tag for this, too.
+> 
+> Please, see more comments below...
+> 
+> > ---
+> > v2:
+> > - remove redundant whitespace
+> > - remove goto statement and use if/else
+> > ---
+> >  virt/kvm/kvm_main.c | 21 ++++++++++++---------
+> >  1 file changed, 12 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> > index 67cd0b88a6b6..cf88233b819a 100644
+> > --- a/virt/kvm/kvm_main.c
+> > +++ b/virt/kvm/kvm_main.c
+> > @@ -4332,7 +4332,7 @@ int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
+> >  void kvm_io_bus_unregister_dev(struct kvm *kvm, enum kvm_bus bus_idx,
+> >  			       struct kvm_io_device *dev)
+> >  {
+> > -	int i;
+> > +	int i, j;
+> >  	struct kvm_io_bus *new_bus, *bus;
+> >  
+> >  	bus = kvm_get_bus(kvm, bus_idx);
+> > @@ -4349,17 +4349,20 @@ void kvm_io_bus_unregister_dev(struct kvm *kvm, enum kvm_bus bus_idx,
+> >  
+> >  	new_bus = kmalloc(struct_size(bus, range, bus->dev_count - 1),
+> >  			  GFP_KERNEL_ACCOUNT);
+> > -	if (!new_bus)  {
+> > +	if (new_bus) {
+> > +		memcpy(new_bus, bus, sizeof(*bus) + i * sizeof(struct kvm_io_range));
+> 
+> 				    ^^^
+> It seems that you can use struct_size() here (see the allocation code above)...
+> 
+> > +		new_bus->dev_count--;
+> > +		memcpy(new_bus->range + i, bus->range + i + 1,
+> > +		       (new_bus->dev_count - i) * sizeof(struct kvm_io_range));
+> 
+> 					   ^^^
+> ...and, if possible, you can also use flex_array_size() here.
+> 
+> Thanks
+> --
+> Gustavo
+> 
+> > +	} else {
+> >  		pr_err("kvm: failed to shrink bus, removing it completely\n");
+> > -		goto broken;
+> > +		for (j = 0; j < bus->dev_count; j++) {
+> > +			if (j == i)
+> > +				continue;
+> > +			kvm_iodevice_destructor(bus->range[j].dev);
+> > +		}
+> >  	}
+> >  
+> > -	memcpy(new_bus, bus, sizeof(*bus) + i * sizeof(struct kvm_io_range));
+> > -	new_bus->dev_count--;
+> > -	memcpy(new_bus->range + i, bus->range + i + 1,
+> > -	       (new_bus->dev_count - i) * sizeof(struct kvm_io_range));
+> > -
+> > -broken:
+> >  	rcu_assign_pointer(kvm->buses[bus_idx], new_bus);
+> >  	synchronize_srcu_expedited(&kvm->srcu);
+> >  	kfree(bus);
+> > 
 
-
-> +int prestera_switchdev_init(struct prestera_switch *sw)
-> +{
-> +       struct prestera_switchdev *swdev;
-> +       int err;
-> +
-> +       swdev = kzalloc(sizeof(*swdev), GFP_KERNEL);
-> +       if (!swdev)
-> +               return -ENOMEM;
-> +
-> +       sw->swdev = swdev;
-> +       swdev->sw = sw;
-> +
-> +       INIT_LIST_HEAD(&swdev->bridge_list);
-> +
-> +       swdev_wq = alloc_ordered_workqueue("%s_ordered", 0, "prestera_br");
-> +       if (!swdev_wq) {
-> +               err = -ENOMEM;
-> +               goto err_alloc_wq;
-> +       }
-> +
-> +       err = prestera_switchdev_handler_init(swdev);
-> +       if (err)
-> +               goto err_swdev_init;
-> +
-> +       err = prestera_fdb_init(sw);
-> +       if (err)
-> +               goto err_fdb_init;
-> +
-> +       return 0;
-> +
-> +err_fdb_init:
-> +err_swdev_init:
-> +err_alloc_wq:
-> +       kfree(swdev);
-> +
-> +       return err;
-> +}
-> +
-> +void prestera_switchdev_fini(struct prestera_switch *sw)
-> +{
-> +       struct prestera_switchdev *swdev = sw->swdev;
-> +
-> +       prestera_fdb_fini(sw);
-> +       prestera_switchdev_handler_fini(swdev);
-> +       destroy_workqueue(swdev_wq);
-
-this cleanup is also needed on the error path of prestera_switchdev_init
-
-> +       kfree(swdev);
-> +}
+hi Gustavo, thank you for the review, i'll send the new patch.
+Vitaly, i think i will need to drop your "Reviewed-by", because there is
+going to be a bit more changes
