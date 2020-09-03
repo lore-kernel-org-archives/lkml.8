@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C27C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358ABC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFFEE206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0385D206EB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:49:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="bNYvg+rq"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="l7Tbgxzp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbgICLqV (ORCPT
+        id S1728343AbgICLr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:46:21 -0400
-Received: from crapouillou.net ([89.234.176.41]:51956 "EHLO crapouillou.net"
+        Thu, 3 Sep 2020 07:47:58 -0400
+Received: from crapouillou.net ([89.234.176.41]:51944 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728687AbgICLfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:35:33 -0400
+        id S1728646AbgICLfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:35:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599132405; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1599132402; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TaaXhuQwpGfBU2Mff+uP9EGClNX7jlEbfP7HfZOJNPw=;
-        b=bNYvg+rqcT9I6lnK9NOk6dQ3I3ikbPyWzzWj+7j7zASSo8UWh2eNXEhZT6A0FlMbpwnKuO
-        AqKMlucd0Apm1bT4Mtxx1jBksZGS1c2rOj5Az/A5Z0OoSkipsXVWktFPoEIL7xqgBcr9Cy
-        snbEctfTNJq76cOvdt179trzl0YEbQc=
+        bh=hcIYdvuHgCnX105VYCMzaNdLpnwL2oejz7eq3kv/QCg=;
+        b=l7TbgxzpKLSy0f6XLh5qi4mNX+GQCUAKmtU+E1nWIeS96sZKn1LB6jiycJjFMuiwsFy0TA
+        2zCaaa2m6gE/ximHchPnzqKmlRw6nu45OsdT97mINoU/Tc4nlNTa9NBZg0Qq7wHf0VUs87
+        vUj9NR0sMCrRUu/irsY+vlaud1PF1Ls=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Chen <Peter.Chen@nxp.com>,
@@ -55,9 +55,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 16/20] usb/gadget/udc: bdc: Use pm_ptr() macro
-Date:   Thu,  3 Sep 2020 13:25:50 +0200
-Message-Id: <20200903112554.34263-17-paul@crapouillou.net>
+Subject: [PATCH 15/20] usb/gadget/udc: atmel: Use pm_ptr() macro
+Date:   Thu,  3 Sep 2020 13:25:49 +0200
+Message-Id: <20200903112554.34263-16-paul@crapouillou.net>
 In-Reply-To: <20200903112554.34263-1-paul@crapouillou.net>
 References: <20200903112554.34263-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -75,50 +75,49 @@ simply be discarded by the compiler.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/usb/gadget/udc/bdc/bdc_core.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/usb/gadget/udc/atmel_usba_udc.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-index 5ff36525044e..da3a7a59ccae 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_core.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-@@ -597,8 +597,7 @@ static int bdc_remove(struct platform_device *pdev)
+diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
+index a6426dd1cfef..38da3f3ebde7 100644
+--- a/drivers/usb/gadget/udc/atmel_usba_udc.c
++++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
+@@ -2359,8 +2359,7 @@ static int usba_udc_remove(struct platform_device *pdev)
  	return 0;
  }
  
 -#ifdef CONFIG_PM_SLEEP
--static int bdc_suspend(struct device *dev)
-+static int __maybe_unused bdc_suspend(struct device *dev)
+-static int usba_udc_suspend(struct device *dev)
++static int __maybe_unused usba_udc_suspend(struct device *dev)
  {
- 	struct bdc *bdc = dev_get_drvdata(dev);
- 	int ret;
-@@ -611,7 +610,7 @@ static int bdc_suspend(struct device *dev)
- 	return ret;
- }
+ 	struct usba_udc *udc = dev_get_drvdata(dev);
  
--static int bdc_resume(struct device *dev)
-+static int __maybe_unused bdc_resume(struct device *dev)
- {
- 	struct bdc *bdc = dev_get_drvdata(dev);
- 	int ret;
-@@ -630,8 +629,6 @@ static int bdc_resume(struct device *dev)
+@@ -2393,7 +2392,7 @@ static int usba_udc_suspend(struct device *dev)
  	return 0;
  }
  
--#endif /* CONFIG_PM_SLEEP */
--
- static SIMPLE_DEV_PM_OPS(bdc_pm_ops, bdc_suspend,
- 		bdc_resume);
+-static int usba_udc_resume(struct device *dev)
++static int __maybe_unused usba_udc_resume(struct device *dev)
+ {
+ 	struct usba_udc *udc = dev_get_drvdata(dev);
  
-@@ -644,7 +641,7 @@ static const struct of_device_id bdc_of_match[] = {
- static struct platform_driver bdc_driver = {
+@@ -2417,7 +2416,6 @@ static int usba_udc_resume(struct device *dev)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ static SIMPLE_DEV_PM_OPS(usba_udc_pm_ops, usba_udc_suspend, usba_udc_resume);
+ 
+@@ -2425,7 +2423,7 @@ static struct platform_driver udc_driver = {
+ 	.remove		= usba_udc_remove,
  	.driver		= {
- 		.name	= BRCM_BDC_NAME,
--		.pm = &bdc_pm_ops,
-+		.pm = pm_ptr(&bdc_pm_ops),
- 		.of_match_table	= bdc_of_match,
+ 		.name		= "atmel_usba_udc",
+-		.pm		= &usba_udc_pm_ops,
++		.pm		= pm_ptr(&usba_udc_pm_ops),
+ 		.of_match_table	= atmel_udc_dt_ids,
  	},
- 	.probe		= bdc_probe,
+ };
 -- 
 2.28.0
 
