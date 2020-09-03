@@ -2,90 +2,122 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC24EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E60C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD5C2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599155382;
-	bh=PwReb1wR+sXRrMZqogs7x9Vmd4V3JF81RZqSgbUS1AE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eBIgFqN7nd0DGio6Nck2744Jw+gsyIbJma3ETtobldcPAJfvhrJSEeacSrNBiAJLU
-	 nlyYKCqEGwj+BCoXVaDWDkyWo6yhEr1iriWDI70Ak4EXLI4QweP//9pawYoZVjkq1g
-	 FgxAXH+FM+811LGN8k8C+Wo4hLmUlqxgqBi2B2io=
+	by mail.kernel.org (Postfix) with ESMTP id 2767220829
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:57:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgICRtk (ORCPT
+        id S1728304AbgICR5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 13:49:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58790 "EHLO mail.kernel.org"
+        Thu, 3 Sep 2020 13:57:07 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:64673 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbgICRti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 13:49:38 -0400
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A80822072A;
-        Thu,  3 Sep 2020 17:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599155377;
-        bh=PwReb1wR+sXRrMZqogs7x9Vmd4V3JF81RZqSgbUS1AE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qhrzzXdXDKnCyd4Ckt/77e8sctFd5/zYPH/VxgZ1/a3GPpMD09GHyD0nzB2isro/N
-         CLCo7KfDkZiv70y2C0tz52eyPXiISAUHCs3HVDSAjhHtv9ku6kQjyGOED0vwfNgQqd
-         MwMREmEHc0mscFdXBzHIH18iNkgdgAaOuIbmvTb4=
-Received: by mail-oi1-f178.google.com with SMTP id r64so3966612oib.6;
-        Thu, 03 Sep 2020 10:49:37 -0700 (PDT)
-X-Gm-Message-State: AOAM530a7JrKhwk//yTG0z8WbINBEzgv4lqDuQBTYICY2P+cehIbc48J
-        piQ8yNgJn6SYDSONU8s6+ZcadNb65JFlisDUbg==
-X-Google-Smtp-Source: ABdhPJxcXEUSmdKY5Vsvo/Ra42Hgg8KjgnWOfsPDJWq3O7EXceTqI+C/z4ChNMurrb2zF+obJSMgWjL333ToKOp8kaE=
-X-Received: by 2002:aca:1711:: with SMTP id j17mr2842660oii.152.1599155376930;
- Thu, 03 Sep 2020 10:49:36 -0700 (PDT)
+        id S1726025AbgICR5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 13:57:04 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4Bj7mX08rVz9vG1Z;
+        Thu,  3 Sep 2020 19:57:00 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id czc54Tj7o-AE; Thu,  3 Sep 2020 19:56:59 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bj7mW6QXJz9vG1Y;
+        Thu,  3 Sep 2020 19:56:59 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AB9F48B805;
+        Thu,  3 Sep 2020 19:57:01 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id GvL1dM65fFS4; Thu,  3 Sep 2020 19:57:01 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6350C8B803;
+        Thu,  3 Sep 2020 19:57:01 +0200 (CEST)
+Subject: Re: [PATCH] /dev/zero: also implement ->read
+To:     Christoph Hellwig <hch@lst.de>, arnd@arndb.de,
+        gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20200903155922.1111551-1-hch@lst.de>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <1bc34841-f1a3-8a9b-cb48-10930ec55d71@csgroup.eu>
+Date:   Thu, 3 Sep 2020 19:51:07 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20200830112633.6732-1-krzk@kernel.org> <159897179515.47719.6003518135515395142.b4-ty@kernel.org>
- <20200903164738.GA2929052@bogus> <20200903172645.GC4771@sirena.org.uk>
-In-Reply-To: <20200903172645.GC4771@sirena.org.uk>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 3 Sep 2020 11:49:25 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL+_5Lc5vwtqnCZd6Tz9eB1m_oy2r3gtv0cbwBwKTU=dw@mail.gmail.com>
-Message-ID: <CAL_JsqL+_5Lc5vwtqnCZd6Tz9eB1m_oy2r3gtv0cbwBwKTU=dw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: sound: midas-audio: Correct parsing
- sound-dai phandles
-To:     Mark Brown <broonie@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Sangbeom Kim <sbkim73@samsung.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200903155922.1111551-1-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 11:27 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Thu, Sep 03, 2020 at 10:47:38AM -0600, Rob Herring wrote:
->
-> > > [2/2] ASoC: odroid: Use unevaluatedProperties
-> > >       commit: a57307ca6b661e16f9435a25f376ac277c3de697
->
-> > This one should be reverted/dropped too. Patch 1 is fine.
->
-> There are others?  What's the issue with them?  It'd be easiest if you
-> could send patches doing whatever reverts you're looking for.
-
-Just 1 other you picked up. See "ASoC: samsung-i2s: Use
-unevaluatedProperties". Patches adding the missing properties (and
-restoring 'additionalProperties' on these 2 if not reverted) is the
-correct change.
-
-I've gone thru and NAKed all of the others so more don't get picked up.
 
 
-Rob
+Le 03/09/2020 à 17:59, Christoph Hellwig a écrit :
+> Christophe reported a major speedup due to avoiding the iov_iter
+> overhead, so just add this trivial function.  Note that /dev/zero
+> already implements both an iter and non-iter writes so this just
+> makes it more symmetric.
+> 
+> Christophe Leroy <christophe.leroy@csgroup.eu>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   drivers/char/mem.c | 22 ++++++++++++++++++++++
+>   1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+> index abd4ffdc8cdebc..1dc99ab158457a 100644
+> --- a/drivers/char/mem.c
+> +++ b/drivers/char/mem.c
+> @@ -726,6 +726,27 @@ static ssize_t read_iter_zero(struct kiocb *iocb, struct iov_iter *iter)
+>   	return written;
+>   }
+>   
+> +static ssize_t read_zero(struct file *file, char __user *buf,
+> +			 size_t count, loff_t *ppos)
+> +{
+> +	size_t cleared = 0;
+> +
+> +	while (count) {
+> +		size_t chunk = min_t(size_t, count, PAGE_SIZE);
+> +
+> +		if (clear_user(buf + cleared, chunk))
+> +			return cleared ? cleared : -EFAULT;
+> +		cleared += chunk;
+> +		count -= chunk;
+> +
+> +		if (signal_pending(current))
+> +			return cleared ? cleared : -ERESTARTSYS;
+> +		cond_resched();
+> +	}
+> +
+> +	return cleared;
+> +}
+> +
+>   static int mmap_zero(struct file *file, struct vm_area_struct *vma)
+>   {
+>   #ifndef CONFIG_MMU
+> @@ -921,6 +942,7 @@ static const struct file_operations zero_fops = {
+>   	.llseek		= zero_lseek,
+>   	.write		= write_zero,
+>   	.read_iter	= read_iter_zero,
+> +	.read		= read_zero,
+
+Wondering if .read should be before .write, so that we get in order 
+read, write, read_iter, write_iter.
+
+>   	.write_iter	= write_iter_zero,
+>   	.mmap		= mmap_zero,
+>   	.get_unmapped_area = get_unmapped_area_zero,
+> 
+
+Christophe
