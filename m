@@ -4,111 +4,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58638C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7DBC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 278B22083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C263208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599159355;
-	bh=PlV0ogQ3BYV2vyw/Whr/eqIeWVtVv7WHX47K59pJfUM=;
+	s=default; t=1599159671;
+	bh=4O6wT3KPGrg/7msyepJfuWPtvetcJ8fPChc5bMkiIrA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H7yO4j62kGkMJWirHuVPP3a//vjf8lynCM2fvrvBVPL6taWPOHru1ACIVeFmeM4Qr
-	 jJSC9RKDORDKnsWr+eComwMlJ0eWkWOxB71mtKazmT8IRyUJkSbNgCzLaiKEIxpr/P
-	 2m92s1KGkVJ8vnDrgwK33fDeuO2H1HcmgUZH8hLw=
+	b=Qk2a9A+l0WhUieP+Wbec+kBs289vY6BaiBThy2XcskugIpdLz3kw2iVXKARrpns5l
+	 uIXc2JjIVFc2CSi3PGkTd6eQ9b7W39iLzGPRlS5PimJCgOzAERIfDQfpkKvdUmeStR
+	 oaJ5/RpHuyhj3Hz2S09dVZBMd5dfilzSps78JmQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgICSzx (ORCPT
+        id S1729032AbgICTBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 14:55:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56216 "EHLO mail.kernel.org"
+        Thu, 3 Sep 2020 15:01:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726678AbgICSzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 14:55:52 -0400
+        id S1726678AbgICTBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 15:01:04 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C021320722;
-        Thu,  3 Sep 2020 18:55:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F26F20658;
+        Thu,  3 Sep 2020 19:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599159352;
-        bh=PlV0ogQ3BYV2vyw/Whr/eqIeWVtVv7WHX47K59pJfUM=;
+        s=default; t=1599159663;
+        bh=4O6wT3KPGrg/7msyepJfuWPtvetcJ8fPChc5bMkiIrA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SQC14Ve6DUbFopOG2ik3RCP8nRdMHakXTQpNvMJuaqD0IygxWglp5qOGcg1lN2gSs
-         Xxn4j/xB+192OgH0nN5VQgxoancWvuTlFIZti4bFLAvCZu67lU+9WBHds+Q8pWycog
-         vrGphEb+KermeY3sK5mYn2ZlSDpaowJvBC3xFwXM=
+        b=t39wwSvXzeRu5vDYWQGxEtsdGalBK7iodUh85dwnnMd3ptYEDGhQJIoURNHoE8Bg7
+         pTgZF3w9f2sCIqisgmil4hHmRZMoXAQnAWZwtkA60wVUY34YKpRFp6zM4jpUBrgiQ3
+         zWLB6Lp8QczXH2Rn4LYdQoMIi/gykFg+lDQjt7Qk=
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E537B40D3D; Thu,  3 Sep 2020 15:55:49 -0300 (-03)
-Date:   Thu, 3 Sep 2020 15:55:49 -0300
+        id 5DF3540D3D; Thu,  3 Sep 2020 16:01:01 -0300 (-03)
+Date:   Thu, 3 Sep 2020 16:01:01 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, irogers@google.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] perf bench: fix return value check in
- do_run_multi_threaded()
-Message-ID: <20200903185549.GG3495158@kernel.org>
-References: <20200902140526.26916-1-yuehaibing@huawei.com>
- <20200903185301.GE3495158@kernel.org>
- <20200903185451.GF3495158@kernel.org>
+To:     Kim Phillips <kim.phillips@amd.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Tony Jones <tonyj@suse.de>, Jin Yao <yao.jin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] perf record/stat: Explicitly call out event modifiers in
+ the documentation
+Message-ID: <20200903190101.GH3495158@kernel.org>
+References: <20200901215853.276234-1-kim.phillips@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200903185451.GF3495158@kernel.org>
+In-Reply-To: <20200901215853.276234-1-kim.phillips@amd.com>
 X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Sep 03, 2020 at 03:54:51PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Sep 03, 2020 at 03:53:01PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Wed, Sep 02, 2020 at 10:05:26PM +0800, YueHaibing escreveu:
-> > > In case of error, the function perf_session__new() returns ERR_PTR()
-> > > and never returns NULL. The NULL test in the return value check
-> > > should be replaced with IS_ERR()
-> > > 
-> > > Fixes: 13edc237200c ("perf bench: Add a multi-threaded synthesize benchmark")
-> > > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > 
-> > Thanks, applied, kudos for adding the Fixes: tag, appreciated!
-> 
-> But...
->  
-> > > ---
-> > >  tools/perf/bench/synthesize.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
-> > > index 8d624aea1c5e..e39daa609db2 100644
-> > > --- a/tools/perf/bench/synthesize.c
-> > > +++ b/tools/perf/bench/synthesize.c
-> > > @@ -162,8 +162,8 @@ static int do_run_multi_threaded(struct target *target,
-> > >  	init_stats(&event_stats);
-> > >  	for (i = 0; i < multi_iterations; i++) {
-> > >  		session = perf_session__new(NULL, false, NULL);
-> > > -		if (!session)
-> > > -			return -ENOMEM;
-> > > +		if (IS_ERR(session)) {
-> > > +			return PTR_ERR(session);
-> 
-> This doesn't compile, so I take back that kudo ;-\
-> 
-> I'm fixing this by removing that needless '{'.
+Em Tue, Sep 01, 2020 at 04:58:53PM -0500, Kim Phillips escreveu:
+> Event modifiers are not mentioned in the perf record or perf stat
+> manpages.  Add them to orient new users more effectively by pointing
+> them to the perf list manpage for details.
 
-diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
-index e39daa609db2ed9b..b2924e3181dc3844 100644
---- a/tools/perf/bench/synthesize.c
-+++ b/tools/perf/bench/synthesize.c
-@@ -162,7 +162,7 @@ static int do_run_multi_threaded(struct target *target,
- 	init_stats(&event_stats);
- 	for (i = 0; i < multi_iterations; i++) {
- 		session = perf_session__new(NULL, false, NULL);
--		if (IS_ERR(session)) {
-+		if (IS_ERR(session))
- 			return PTR_ERR(session);
+Thanks, applied.
+
+- Arnaldo
  
- 		atomic_set(&event_count, 0);
+> Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+> Fixes: 2055fdaf8703 ("perf list: Document precise event sampling for AMD IBS")
+> Cc: Peter Zijlstra <peterz@infradead.org> 
+> Cc: Ingo Molnar <mingo@redhat.com> 
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org> 
+> Cc: Mark Rutland <mark.rutland@arm.com> 
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com> 
+> Cc: Jiri Olsa <jolsa@redhat.com> 
+> Cc: Namhyung Kim <namhyung@kernel.org> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com> 
+> Cc: Stephane Eranian <eranian@google.com> 
+> Cc: Alexey Budankov <alexey.budankov@linux.intel.com> 
+> Cc: Tony Jones <tonyj@suse.de> 
+> Cc: Jin Yao <yao.jin@linux.intel.com> 
+> Cc: Ian Rogers <irogers@google.com> 
+> Cc: "Paul A. Clarke" <pc@us.ibm.com> 
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> ---
+>  tools/perf/Documentation/perf-record.txt | 4 ++++
+>  tools/perf/Documentation/perf-stat.txt   | 4 ++++
+>  2 files changed, 8 insertions(+)
+> 
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 3f72d8e261f3..bd50cdff08a8 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -33,6 +33,10 @@ OPTIONS
+>          - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
+>  	  hexadecimal event descriptor.
+>  
+> +        - a symbolic or raw PMU event followed by an optional colon
+> +	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
+> +	  linkperf:perf-list[1] man page for details on event modifiers.
+> +
+>  	- a symbolically formed PMU event like 'pmu/param1=0x3,param2/' where
+>  	  'param1', 'param2', etc are defined as formats for the PMU in
+>  	  /sys/bus/event_source/devices/<pmu>/format/*.
+> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+> index c9bfefc051fb..a4b1d11fefc8 100644
+> --- a/tools/perf/Documentation/perf-stat.txt
+> +++ b/tools/perf/Documentation/perf-stat.txt
+> @@ -39,6 +39,10 @@ report::
+>  	- a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
+>  	  hexadecimal event descriptor.
+>  
+> +        - a symbolic or raw PMU event followed by an optional colon
+> +	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
+> +	  linkperf:perf-list[1] man page for details on event modifiers.
+> +
+>  	- a symbolically formed event like 'pmu/param1=0x3,param2/' where
+>  	  param1 and param2 are defined as formats for the PMU in
+>  	  /sys/bus/event_source/devices/<pmu>/format/*
+> -- 
+> 2.27.0
+> 
+
+-- 
+
+- Arnaldo
