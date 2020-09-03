@@ -2,91 +2,120 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F390C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6E7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC82F20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F572072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:11:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="keDETmcG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbgICPLq (ORCPT
+        id S1728865AbgICM2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:11:46 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10761 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728794AbgICM3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 08:29:53 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4FA327C2F37E81201268;
-        Thu,  3 Sep 2020 20:29:43 +0800 (CST)
-Received: from [10.57.101.250] (10.57.101.250) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 3 Sep 2020 20:29:34 +0800
-Subject: Re: [PATCH] PCI: exynos: simplify with PTR_ERR_OR_ZERO
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>
-References: <1599123916-65530-1-git-send-email-xuwei5@hisilicon.com>
-CC:     <linuxarm@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-        <jonathan.cameron@huawei.com>, <john.garry@huawei.com>,
-        <salil.mehta@huawei.com>, <shiju.jose@huawei.com>,
-        <jinying@hisilicon.com>, <zhangyi.ac@huawei.com>,
-        <liguozhu@hisilicon.com>, <tangkunshan@huawei.com>,
-        <huangdaode@hisilicon.com>, Jingoo Han <jingoohan1@gmail.com>,
-        Rob Herring <robh@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <5F50E1AE.2020505@hisilicon.com>
-Date:   Thu, 3 Sep 2020 20:29:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
+        Thu, 3 Sep 2020 08:28:46 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60812 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728771AbgICM0k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:26:40 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083CQTM5033898;
+        Thu, 3 Sep 2020 07:26:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599135989;
+        bh=C49cVGMfysASvBZN8YfOnPiHqifti4v0fpFLtpuvDFo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=keDETmcGnT3787siHhYTvjmFIuGTIwrvkyy99J2Nzz5opdLU/qfvdMgdttMdj1C+B
+         J9iL3nvcFRw084oHqm/2EXmCra4YBrRsF/65ylCQZxrtFOd1XPyTRajpWxZwtRbQx4
+         Fa8Y7QldEhSsm7TcFZ8OdXXh3xR8jQeleVJ/RB4o=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083CQTZf106490
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 3 Sep 2020 07:26:29 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
+ 2020 07:26:28 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 3 Sep 2020 07:26:28 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083CQOpb038856;
+        Thu, 3 Sep 2020 07:26:26 -0500
+Subject: Re: drivers/irqchip/irq-ti-sci-intr.c:148
+ ti_sci_intr_alloc_parent_irq() warn: impossible condition '(p_hwirq < 0) =>
+ (0-u16max < 0)'
+To:     Dan Carpenter <dan.carpenter@oracle.com>, <kbuild@lists.01.org>
+CC:     <lkp@intel.com>, Dan Carpenter <error27@gmail.com>,
+        <kbuild-all@lists.01.org>, <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>
+References: <20200903122159.GE8299@kadam>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <ed83e54c-1216-5c02-6f1f-a3c94e67bb68@ti.com>
+Date:   Thu, 3 Sep 2020 17:56:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1599123916-65530-1-git-send-email-xuwei5@hisilicon.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200903122159.GE8299@kadam>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Hi Dan,
 
-Sorry for the noise and please ignore it.
-I found these kind of changes have been sent and rejected before.
+On 03/09/20 5:51 pm, Dan Carpenter wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   fc3abb53250a90ba2150eebd182137c136f4d25a
+> commit: a5b659bd4bc7518a8e45fda5256c5e5e8d3b7c49 irqchip/ti-sci-intr: Add support for INTR being a parent to INTR
+> config: arm64-randconfig-m031-20200902 (attached as .config)
+> compiler: aarch64-linux-gcc (GCC) 9.3.0
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> 
+> smatch warnings:
+> drivers/irqchip/irq-ti-sci-intr.c:148 ti_sci_intr_alloc_parent_irq() warn: impossible condition '(p_hwirq < 0) => (0-u16max < 0)'
+> 
+> # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a5b659bd4bc7518a8e45fda5256c5e5e8d3b7c49
+> git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> git fetch --no-tags linus master
+> git checkout a5b659bd4bc7518a8e45fda5256c5e5e8d3b7c49
+> vim +148 drivers/irqchip/irq-ti-sci-intr.c
+> 
+> a5b659bd4bc751 Lokesh Vutla 2020-08-06  134  static int ti_sci_intr_alloc_parent_irq(struct irq_domain *domain,
+> cd844b0715ceda Lokesh Vutla 2019-04-30  135  					unsigned int virq, u32 hwirq)
+> cd844b0715ceda Lokesh Vutla 2019-04-30  136  {
+> cd844b0715ceda Lokesh Vutla 2019-04-30  137  	struct ti_sci_intr_irq_domain *intr = domain->host_data;
+> a5b659bd4bc751 Lokesh Vutla 2020-08-06  138  	struct device_node *parent_node;
+> cd844b0715ceda Lokesh Vutla 2019-04-30  139  	struct irq_fwspec fwspec;
+> a5b659bd4bc751 Lokesh Vutla 2020-08-06  140  	u16 out_irq, p_hwirq;
+>                                                 ^^^          ^^^^^^^
+> 
+> a5b659bd4bc751 Lokesh Vutla 2020-08-06  141  	int err = 0;
+> cd844b0715ceda Lokesh Vutla 2019-04-30  142  
+> a5b659bd4bc751 Lokesh Vutla 2020-08-06  143  	out_irq = ti_sci_get_free_resource(intr->out_irqs);
+> a5b659bd4bc751 Lokesh Vutla 2020-08-06  144  	if (out_irq == TI_SCI_RESOURCE_NULL)
+> cd844b0715ceda Lokesh Vutla 2019-04-30  145  		return -EINVAL;
+> cd844b0715ceda Lokesh Vutla 2019-04-30  146  
+> a5b659bd4bc751 Lokesh Vutla 2020-08-06  147  	p_hwirq = ti_sci_intr_xlate_irq(intr, out_irq);
+> a5b659bd4bc751 Lokesh Vutla 2020-08-06 @148  	if (p_hwirq < 0)
+>                                                     ^^^^^^^^^^^
+> Impossible
 
-Best Regards,
-Wei
+This is already fixed by https://patchwork.kernel.org/patch/11737169/
 
-On 2020/9/3 17:05, Wei Xu wrote:
-> Use PTR_ERR_OR_ZERO to make the code a little bit simpler.
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
-> ---
->  drivers/pci/controller/dwc/pci-exynos.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-> index 8d82c43..f59f027 100644
-> --- a/drivers/pci/controller/dwc/pci-exynos.c
-> +++ b/drivers/pci/controller/dwc/pci-exynos.c
-> @@ -90,10 +90,7 @@ static int exynos5440_pcie_get_mem_resources(struct platform_device *pdev,
->  		return -ENOMEM;
->  
->  	ep->mem_res->elbi_base = devm_platform_ioremap_resource(pdev, 0);
-> -	if (IS_ERR(ep->mem_res->elbi_base))
-> -		return PTR_ERR(ep->mem_res->elbi_base);
-> -
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(ep->mem_res->elbi_base);
->  }
->  
->  static int exynos5440_pcie_get_clk_resources(struct exynos_pcie *ep)
-> 
+Thanks and regards,
+Lokesh
+
