@@ -2,93 +2,284 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6640C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC63C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60D6020716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:07:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnTWGDup"
+	by mail.kernel.org (Postfix) with ESMTP id 336A620716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbgICPFt (ORCPT
+        id S1729118AbgICPHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:05:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728915AbgICN6P (ORCPT
+        Thu, 3 Sep 2020 11:07:36 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:10653 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729469AbgICPFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 09:58:15 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB6D6C061A1E;
-        Thu,  3 Sep 2020 06:47:49 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id t7so3072274ljo.13;
-        Thu, 03 Sep 2020 06:47:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5IkJp9DRjjctTj4yQaRDfSKfYFKp/SZ4X/D7aiQqs+Q=;
-        b=OnTWGDupQD64VHCo/u9bL3+tiNJ2NIkF8cEeaaUnpJtO+P5kIqiefJgSrYjSAQ5HNz
-         zeZtIlycu0wL7LRVTip4mNsbSL1hjnsVQEy3zWE+B9sY0LapBpVzZ/+6gq0+JI2rTzur
-         SBDI4jkqc1RDp0gU221csn3ICYPAs7/r3jbJJ2jCXgnk31nJa6gCUjusVXjew91854Cx
-         UC7hqH6NpMzOZjQxrwc4mz8GE38Uq+Ok+vzFLgGL+us/CIBLsKjg2VKtv61aFhhZyBso
-         EXC2FT9JfKzqZznmrEBwWWyWJzHOUy/eo74s4PB33Ikc0gU12EboYZ8LlFOb8rQad+Jn
-         bfjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5IkJp9DRjjctTj4yQaRDfSKfYFKp/SZ4X/D7aiQqs+Q=;
-        b=Z0ZUtXrV2MDsVBZAOhNc2YdJaVKC53nepDeDd/DF1Er8EspOsXMwGge8Rii7ocx8Mc
-         16IcBJF5L2Dg2tiuffMdNxKzoLQ+5BiRULeHFbzlskF9TkJVMeHXtvsnY3HcWYj1D6Iq
-         RrFqnLr4Jf2xsesQ2tGiwjhLZh5XO7Mqz+PyWtbZnpZ3KpaR8YDywUyriGA6MOcSCGqm
-         YpzRA3Cr/dY3iQ0oiH54i7I/IprQe3e42YbFr7hN1b8vUUwdrx0wZD1zwEdo2etFiNe3
-         wU+3/xI4gv5r+Jj8lCQ8h7X2O0UDxYBrhIqktFBj8lqhej2tux10a79eR0Gc3myc/wDL
-         t48w==
-X-Gm-Message-State: AOAM530Zz3mttMqOkfhK/C5UagCs5hF0Uiv9WibnSgaGsCpYbc5YU/mR
-        j5M+7/1mHroUXUblfNsypD29f7imqqo3RnXBtc8=
-X-Google-Smtp-Source: ABdhPJwDdx3G0+9vSDmc/QFH9b0DWyx8r/HgJprZSkOT+jjXTTPq0AkqkkBKi/OhQnVgbF2lp97G9/OB66Ez2GN9K3o=
-X-Received: by 2002:a2e:1417:: with SMTP id u23mr1438912ljd.44.1599140866369;
- Thu, 03 Sep 2020 06:47:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <ecfa135b7b83a31bed821ec0740ab3cf1d39da15.camel@ew.tq-group.com>
- <20200903132241.GB4771@sirena.org.uk> <ce08696b6bf2b3eaa84d6f056f47a8240c7479f4.camel@ew.tq-group.com>
-In-Reply-To: <ce08696b6bf2b3eaa84d6f056f47a8240c7479f4.camel@ew.tq-group.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 3 Sep 2020 10:47:34 -0300
-Message-ID: <CAOMZO5DDhSJHj_PN4ckzYedV3mvNC1=+RvNT6TM2s-rE5iHxcQ@mail.gmail.com>
-Subject: Re: spi-imx: correct interpretation of num-cs DT property?
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 3 Sep 2020 11:05:38 -0400
+Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
+  by alexa-out.qualcomm.com with ESMTP; 03 Sep 2020 08:05:31 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 03 Sep 2020 08:05:29 -0700
+Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 03 Sep 2020 20:35:05 +0530
+Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
+        id 9D197D83; Thu,  3 Sep 2020 20:35:04 +0530 (IST)
+From:   satya priya <skakit@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>, gregkh@linuxfoundation.org,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
+        satya priya <skakit@codeaurora.org>
+Subject: [PATCH V4 1/4] arm64: dts: sc7180: Add wakeup support over UART RX
+Date:   Thu,  3 Sep 2020 20:34:55 +0530
+Message-Id: <1599145498-20707-2-git-send-email-skakit@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
+References: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+Add the necessary pinctrl and interrupts to make UART wakeup capable.
 
-On Thu, Sep 3, 2020 at 10:40 AM Matthias Schiffer
-<matthias.schiffer@ew.tq-group.com> wrote:
+If QUP function is selected in sleep state, UART RTS/RFR is pulled high
+during suspend and BT SoC not able to send wakeup bytes. So, configure
+GPIO mode in sleep state to keep it low during suspend.
 
-> As currently no in-tree DTs use the num-cs property for spi-imx and
-> it's not documented, should support for it be dropped from the driver
-> altogether?
+Signed-off-by: satya priya <skakit@codeaurora.org>
+Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+---
+Changes in V2:
+ - As per Matthias's comment added wakeup support for all the UARTs
+   of SC7180.
 
-Yes, it makes sense to drop num-cs support from the spi-imx driver.
+Changes in V3:
+ - No change.
 
-Care to send a patch?
+Changes in V4:
+ - As per Matthias's comment, added the reason for configuring GPIO
+   mode for sleep state in commit text.
 
-Thanks
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 98 ++++++++++++++++++++++++++++++------
+ 1 file changed, 84 insertions(+), 14 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index d46b383..855b13e 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -793,9 +793,11 @@
+ 				reg = <0 0x00880000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart0_default>;
+-				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart0_sleep>;
++				interrupts-extended = <&intc GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 37 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+@@ -845,9 +847,11 @@
+ 				reg = <0 0x00884000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart1_default>;
+-				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart1_sleep>;
++				interrupts-extended = <&intc GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 3 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+@@ -931,9 +935,11 @@
+ 				reg = <0 0x0088c000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart3_default>;
+-				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart3_sleep>;
++				interrupts-extended = <&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 41 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+@@ -1017,9 +1023,11 @@
+ 				reg = <0 0x00894000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart5_default>;
+-				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart5_sleep>;
++				interrupts-extended = <&intc GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 28 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+@@ -1084,9 +1092,11 @@
+ 				reg = <0 0x00a80000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart6_default>;
+-				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart6_sleep>;
++				interrupts-extended = <&intc GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 62 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+@@ -1256,9 +1266,11 @@
+ 				reg = <0 0x00a90000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart10_default>;
+-				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart10_sleep>;
++				interrupts-extended = <&intc GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 89 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+@@ -1308,9 +1320,11 @@
+ 				reg = <0 0x00a94000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart11_default>;
+-				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart11_sleep>;
++				interrupts-extended = <&intc GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 56 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+@@ -1638,6 +1652,14 @@
+ 				};
+ 			};
+ 
++			qup_uart0_sleep: qup-uart0-sleep {
++				pinmux {
++					pins = "gpio34", "gpio35",
++					       "gpio36", "gpio37";
++					function = "gpio";
++				};
++			};
++
+ 			qup_uart1_default: qup-uart1-default {
+ 				pinmux {
+ 					pins = "gpio0", "gpio1",
+@@ -1646,6 +1668,14 @@
+ 				};
+ 			};
+ 
++			qup_uart1_sleep: qup-uart1-sleep {
++				pinmux {
++					pins = "gpio0", "gpio1",
++					       "gpio2", "gpio3";
++					function = "gpio";
++				};
++			};
++
+ 			qup_uart2_default: qup-uart2-default {
+ 				pinmux {
+ 					pins = "gpio15", "gpio16";
+@@ -1661,6 +1691,14 @@
+ 				};
+ 			};
+ 
++			qup_uart3_sleep: qup-uart3-sleep {
++				pinmux {
++					pins = "gpio38", "gpio39",
++					       "gpio40", "gpio41";
++					function = "gpio";
++				};
++			};
++
+ 			qup_uart4_default: qup-uart4-default {
+ 				pinmux {
+ 					pins = "gpio115", "gpio116";
+@@ -1676,6 +1714,14 @@
+ 				};
+ 			};
+ 
++			qup_uart5_sleep: qup-uart5-sleep {
++				pinmux {
++					pins = "gpio25", "gpio26",
++					       "gpio27", "gpio28";
++					function = "gpio";
++				};
++			};
++
+ 			qup_uart6_default: qup-uart6-default {
+ 				pinmux {
+ 					pins = "gpio59", "gpio60",
+@@ -1684,6 +1730,14 @@
+ 				};
+ 			};
+ 
++			qup_uart6_sleep: qup-uart6-sleep {
++				pinmux {
++					pins = "gpio59", "gpio60",
++					       "gpio61", "gpio62";
++					function = "gpio";
++				};
++			};
++
+ 			qup_uart7_default: qup-uart7-default {
+ 				pinmux {
+ 					pins = "gpio6", "gpio7";
+@@ -1713,6 +1767,14 @@
+ 				};
+ 			};
+ 
++			qup_uart10_sleep: qup-uart10-sleep {
++				pinmux {
++					pins = "gpio86", "gpio87",
++					       "gpio88", "gpio89";
++					function = "gpio";
++				};
++			};
++
+ 			qup_uart11_default: qup-uart11-default {
+ 				pinmux {
+ 					pins = "gpio53", "gpio54",
+@@ -1721,6 +1783,14 @@
+ 				};
+ 			};
+ 
++			qup_uart11_sleep: qup-uart11-sleep {
++				pinmux {
++					pins = "gpio53", "gpio54",
++					       "gpio55", "gpio56";
++					function = "gpio";
++				};
++			};
++
+ 			sdc1_on: sdc1-on {
+ 				pinconf-clk {
+ 					pins = "sdc1_clk";
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
+
