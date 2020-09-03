@@ -2,193 +2,116 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0362C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F1EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78E2F20797
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="hjMrVcf/"
+	by mail.kernel.org (Postfix) with ESMTP id 4A4E62078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599175582;
+	bh=YN64hnHu+sspWvZwzTcYjF6KKEJjiaTwL+xMgbaoqpM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=i04XrhJAckE11ekD/LUnidZ77LIuTBYoserE7UAPUtSI4KH8YccCWtsjDkHZJqUXJ
+	 J41NUaWO3L/gf9Qlk2LEQooOs9JVVr2fGpK45N1V2bJd0Pp6jaZ7jZv/KqGOnCvhUl
+	 iWWTxQuh2R3ueiZZ2WQUClSSP6nctoFY2ONrQu5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbgICXZh (ORCPT
+        id S1729584AbgICX0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 19:25:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34210 "EHLO
+        Thu, 3 Sep 2020 19:26:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729336AbgICXZM (ORCPT
+        with ESMTP id S1729558AbgICX0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 19:25:12 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72794C06125C
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 16:25:11 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id e7so3300182qtj.11
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:25:11 -0700 (PDT)
+        Thu, 3 Sep 2020 19:26:16 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72592C061246
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 16:26:15 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id r13so5823753ljm.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:26:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CpIM1vivLGzOLkg2coJ9MKu5jBPaDdQiymauIKRU90I=;
-        b=hjMrVcf/HWZjuosu4QG0j6BBgJS51vZoP3ffeIvYP7UxIzFTjjobvv7VJIYz+YDMgf
-         YehgtUxoeLnY6L5a76UvY3QrdjGFjp3iorJxhkmXxrRV9hk8QyLMqSCDahkorhyEfkVz
-         JMRC594IihbkmbpshO7AocOKJco3HWgK9TGPvgc9HV9s62TurLnTaJsk/qDNPOWhTJ/t
-         YNblHOM95DB9wXQnyHHWxyJGw/9S9A7WIdYh5ILo6vf37cTOphuuK9eR3E+vBiZXYQgC
-         3w46PkP+1jkJo8Uwv7NRP2d2ttY0RLAejlkt/7mAVlDeYreoSkK4fIaA+u0A18W1QDNg
-         NpXQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eoc+5mie1+ZuNTuaPcGzSI2qJ6owz7A4Ofr10ghZJJ4=;
+        b=gWGJKo5xiJNWPTtwqGkQlOlOwg3GjNMHWAbbLf6G2umLeN+ziH7HLU4o7mqfu6xrQX
+         0nqy/1qDWFPlTHlbUl4hIrosGA73uytx27UrMGezo0ol7EOlqSXT8KqCo6mWmcDs1cwA
+         at576v5S6IW6A1SwuGUswjPYeT1mwL3S6Pfko=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CpIM1vivLGzOLkg2coJ9MKu5jBPaDdQiymauIKRU90I=;
-        b=PWDk25VIDHmJsPNO9RrECcys4LJ11JXGZZ3nn82T4iwwegfS6mG4noJHhlhm3Thpqm
-         bcOztndirXmKZXqbs9mhxNOQB7ETedyd3iBilw5CT9oY+R8nNoOc9uiAa+6xLlAVQHaL
-         FSHh2GHcsLyCwfAzxiCYoVa30uNwo0MXUfx4fJaAnvO70DGm/227usZbYrulIi/D3F/a
-         LfyI1XiUuYK5m76HwVt8eJUwVKjAppfX9QngFqTi03wumdGtb2sf8FOQWj9qmAi0jJeb
-         cAEMo7Zj8Rq3QSkJXmtGzDP2W3IWlyoUInk25MARrmhbQovHgENzhLbvKuzMesTzSEum
-         fSEg==
-X-Gm-Message-State: AOAM531EkXxhlRWa9qGzU1vL+nVxNzsYnext4fyvRLPqfMOb1wt0N54I
-        Y6Qkl1siddD9tBVHw6kI1XQrOA==
-X-Google-Smtp-Source: ABdhPJyy8QS6W7hRKA79lufueRD9aNPrALoyUJvwiGtauVl1gDdogpQGhbfPM37w2mYIENqhEa69oA==
-X-Received: by 2002:aed:3e2e:: with SMTP id l43mr6217308qtf.392.1599175510429;
-        Thu, 03 Sep 2020 16:25:10 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id v202sm3397009qka.5.2020.09.03.16.25.09
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eoc+5mie1+ZuNTuaPcGzSI2qJ6owz7A4Ofr10ghZJJ4=;
+        b=QiwGeQv9ATBy5dkILFj95qidpKHCUQvpklrqKTbITx89DYjH1UkL0eA3shTPe8frNG
+         mHIAIUsiUk+msnZjrgl38XKYydIya+s4N8fAHzGPcvW4UyQfi7O6vtCdNuH09eGqpP2K
+         hEUYjWFzqPRvHdysCcvw/ezumMHc7YnfP4z0YDzQ1bTDyIwlUHQ0kcs2Fjk6zMIwCu7k
+         stbzaMVNKGNnuak53iLGu/n6zySCEbivvnzPo+mTPgV7nGupOTqPe3pdeOP55KJyk9AW
+         wsZd/eCxjMwkylQGYiR45MVQSd4h+3UjuJAfK7uUvjlrLYFotH39KIx/I2a3idxsjP2t
+         CpSw==
+X-Gm-Message-State: AOAM532sV01KNeIPhaEeL8OYTS8h94LYmlZSuYZctEPitgNVzbxKDM5a
+        ltmMyjle0GF1A+NEyvgA5KNZrjHuNKG7jA==
+X-Google-Smtp-Source: ABdhPJxd4U7iZ5C4dc/7Li9mZ0PgdHKvOue3oPpnJrD7a1k5kPqUgLpOHYZcFW9hHqD0+Pg4NDIS6A==
+X-Received: by 2002:a2e:7615:: with SMTP id r21mr2312830ljc.371.1599175573240;
+        Thu, 03 Sep 2020 16:26:13 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id l16sm901224ljb.72.2020.09.03.16.26.11
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 16:25:10 -0700 (PDT)
-Subject: Re: [PATCH v2 07/10] phy: qcom-qmp: Add support for DP in USB3+DP
- combo phy
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Wesley Cheng <wcheng@codeaurora.org>
-References: <20200902230215.3452712-1-swboyd@chromium.org>
- <20200902230215.3452712-8-swboyd@chromium.org>
- <b6f80242-482d-b778-690b-8aefa4e8f23e@marek.ca>
- <159917286975.334488.16684252260287652678@swboyd.mtv.corp.google.com>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <7cf46574-569d-c69d-cfed-0fa20057b4d5@marek.ca>
-Date:   Thu, 3 Sep 2020 19:24:26 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 03 Sep 2020 16:26:11 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id y17so2853200lfa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:26:11 -0700 (PDT)
+X-Received: by 2002:a19:4a88:: with SMTP id x130mr2429205lfa.31.1599175570612;
+ Thu, 03 Sep 2020 16:26:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <159917286975.334488.16684252260287652678@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200903142242.925828-1-hch@lst.de> <20200903142242.925828-13-hch@lst.de>
+ <9ab40244a2164f7db2ff0c1d23ab59a0@AcuMS.aculab.com>
+In-Reply-To: <9ab40244a2164f7db2ff0c1d23ab59a0@AcuMS.aculab.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 3 Sep 2020 16:25:54 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whDtnudkbZ8-hR8HiDE7zog0dv+Gu9Sx5i6SPakrDtajQ@mail.gmail.com>
+Message-ID: <CAHk-=whDtnudkbZ8-hR8HiDE7zog0dv+Gu9Sx5i6SPakrDtajQ@mail.gmail.com>
+Subject: Re: [PATCH 12/14] x86: remove address space overrides using set_fs()
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/20 6:41 PM, Stephen Boyd wrote:
-> Quoting Jonathan Marek (2020-09-03 13:43:10)
->> On 9/2/20 7:02 PM, Stephen Boyd wrote:
->>>
->>> This code is based on a submission of this phy and PLL in the drm
->>> subsystem.
->>
->> I updated my upstream-based sm8150/sm8250 displayport stack [1] to use
->> these patches.
-> 
-> Great!
-> 
->>
->> This commit [2] might interest you, so that you can consider what needs
->> to change between v3 and v4 PHYs. Note some of the V4 registers have the
->> same address as V3, so the diff could be smaller.
-> 
-> Looks like v4 will need to introduce a register indirection table for
-> the differences. Also need to add a table for the aux initial table
-> values and the calibration values for aux_cfg1. Seems like it won't be
-> too bad.
-> 
-> Does DP work with those patches with v4? You should make yourself the
-> author of commit d3c6da6f87eedb20ea1591aaae1ea4e63d7bd777 ;-)
-> 
-
-Yes, it works, although the PHY is hardcoded to CC2 orientation and 4 
-lanes, SS PHY disabled, and hotplugging/TCPM doesn't work in all cases.
-
->>
->> Do you have any plan for dealing with the SS PHY and DP PHY conflicting
->> with each other? For example, PHY_MODE_CTRL needs to be "DP_MODE" for
->> 4-lane DP, "DP_MODE | USB3_MODE" for 2-lane DP + USB3, and (AFAIK)
->> "USB3_MODE" for superspeedplus usb (and it seems this gates some clocks,
->> so you can't read/write dp tx2 registers in 2-lane DP mode for example).
-> 
-> Right. I've seen that behavior as well.
-> 
->>   From your cover letter it sounds like this isn't relevant to your
->> hardware, but it looks like both PHYs are writing to the dp_com region
->> which is still problematic. (in the branch I linked, I disabled the SS
->> PHY to test the DP PHY)
-> 
-> Right. I mentioned in the cover letter that this needs to hook into the
-> type-c subsystem somehow. I haven't done any of that work because I
-> don't have a configuration that is as dynamic. As long as the type-c
-> stuff can express my static configuration it will be fine. If you have
-> done any work there I'm happy to review the code and test it out on my
-> configuration.
-> 
-> The driver is setup for DP_MODE | USB3_MODE (i.e. concurrent mode) so it
-> is already hardcoded for the 2-lane use case that I have. If I didn't
-> connect two lanes from the phy to a USB hub I could support all the
-> different combinations but that isn't the case. On phones it is
-> basically the only case though because the pins from the usb3+dp phy go
-> straight to the type-c connector.
-> 
-> qcom_qmp_phy_com_init() is the only place I see the driver writing to it
-> and it is refcounted so basically the first phy to get initialized will
-> set things up in the common area. I suppose for supporting various use
-> cases like 4 lanes DP or 2 lanes DP and USB then that refcounting logic
-> will need to be changed. I'm not sure what is supposed to happen though.
-> I guess the USB host controller, i.e. dwc3, will have to know to stop
-> trying to use the phy and then power down and let the DP controller take
-> over the phy? It's a dance of three or four drivers.
-> 
-The solution could be that the DP PHY has priority over the SS PHY. If 
-the DP PHY is enabled with 4 lanes then it should go into DP_MODE, 1-2 
-lanes it goes into concurrent mode, and USB3_MODE if disabled. The 
-problem then is that the SS PHY can't be enabled while the DP PHY is 
-enabled (since it will be clock gated), so enabling the SS PHY needs to 
-be deferred to when the DP PHY is disabled. I think that is reasonable?
-
-Note I have a TCPM (typec + USB PD) driver [1] which is required to 
-negotiate the DP altmode (and provides altmode events to the DP driver 
-so it can enable/disable the PHY). My problem is the qcom PMIC doesn't 
-provide exactly what TCPM wants, and I don't have access to PMIC 
-documentation, so its difficult for me to make a fully working TCPM 
-driver. Also conflicts with [2] since both drivers use the typec PMIC 
-block...
-
-[1] 
-https://github.com/flto/linux/commit/820265ce8535c6396083c5a884870f0f44603a72
-[2] https://patchwork.kernel.org/cover/11710371/
-
->>
->> Also some issues I noticed:
->> - used QSERDES_COM_RESETSM_CNTRL instead of
->> QSERDES_V3_COM_RESETSM_CNTRL2, which has different value
->> - in sc7180_dpphy_cfg, .regs is NULL, which results in NULL references
-> 
-> Can you add these as inline review comments? Would help me understand
-> what you're talking about. Thanks for the review!
+On Thu, Sep 3, 2020 at 2:30 PM David Laight <David.Laight@aculab.com> wrote:
 >
+> A non-canonical (is that the right term) address between the highest
+> valid user address and the lowest valid kernel address (7ffe to fffe?)
+> will fault anyway.
+
+Yes.
+
+But we actually warn against that fault, because it's been a good way
+to catch places that didn't use the proper "access_ok()" pattern.
+
+See ex_handler_uaccess() and the
+
+        WARN_ONCE(trapnr == X86_TRAP_GP, "General protection fault in
+user access. Non-canonical address?");
+
+warning. It's been good for randomized testing - a missing range check
+on a user address will often hit this.
+
+Of course, you should never see it in real life (and hopefully not in
+testing either any more). But belt-and-suspenders..
+
+              Linus
