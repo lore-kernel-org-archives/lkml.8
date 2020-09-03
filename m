@@ -2,183 +2,175 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597FCC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3756FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29EA82071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F5020775
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWLVsvDk"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="YSLoqCN2";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tO4wJ5f0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgICHaj (ORCPT
+        id S1728141AbgICHcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:30:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbgICHac (ORCPT
+        Thu, 3 Sep 2020 03:32:05 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:56755 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726025AbgICHcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:30:32 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E9DC061245;
-        Thu,  3 Sep 2020 00:30:31 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 31so1398019pgy.13;
-        Thu, 03 Sep 2020 00:30:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bYwyS6xcFZKtbMy7Ramn/ZzLGZ/OsAzuvP1v3oeNA/0=;
-        b=PWLVsvDkBtjLZaHx70uHZ48Tuk1sUHJ/4JVWxfpKgyt++1uYdWfUoNKn6a7y+wh/+b
-         UZTw3hG4BIO2iq4oVMg3cJxg0sig/yr5UIKPdbqrRpW+RPc8XtYEI++/brmy4cWRkQr7
-         m3u68I3N/dXeGjHOE3CkIpDL+z6DDVkSDeqmw4RA7N9OI3W0wjYB2R8G/+SZNb0klvtA
-         M1DbHcsSMzvPZu26Shxm7ccQMhohLaVgG2jHW8+Ku9M1oQ9Ycoi7ekCQA52McBTEgxFC
-         l2ySGr1lomKPyWTknE+tPo0nwNORsg/o0rUpWH0k5TZhzX+o5NrVGt0U0JfjSFnI4KOr
-         PszA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=bYwyS6xcFZKtbMy7Ramn/ZzLGZ/OsAzuvP1v3oeNA/0=;
-        b=KXXB+Q0UkttkgvNSOsTL6LXw0PD7B5fiS6ix1l5Q39T0N7d3fbPmHQbc8lCLUNn56O
-         ZcMKl0+noyoORaXvBYOTSu1/kuadrmRheQVfxP7GXukDDjUwFLnS8PK1Srmy6jJTHAq6
-         fXjV4sY1CTxZ4mEpc5lFEmZksy/Z3sF6UQRhzhTDrIlsavJIaAwDR8wyXHuHYgqJvTYj
-         pUW5xsDj3HmNLSw0zN4cPoRuV0EWfMEl3Qc43h/x7QTzMzEWu6OSMXJAidXr5GoZaFYt
-         Vghy64JuiG9rtCsSaDmGwxGi2LEdyh5r+O5lVPDmDZNEQk7UROgto8kIMfYNAw3/uI8Z
-         Gz9Q==
-X-Gm-Message-State: AOAM53242/qDPn7r08pl+sTmHiZqD4eEFIYk1iu6BfyRtxEBgAa4fT/5
-        yB0x2kJwog/oZce0ij+4AGXoV6bzT+SAgQ==
-X-Google-Smtp-Source: ABdhPJwh9iqQezkXPRTeJCrVp/pq0tdSoXhNBcbwaaEikQ3lZE8W7r0ZcJ+bxWlU/ctVsoOQU3luXA==
-X-Received: by 2002:a17:902:b289:: with SMTP id u9mr2574874plr.226.1599118230653;
-        Thu, 03 Sep 2020 00:30:30 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.6])
-        by smtp.gmail.com with ESMTPSA id u63sm1949105pfu.34.2020.09.03.00.30.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Sep 2020 00:30:30 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     linus.walleij@linaro.org, lee.jones@linaro.org,
-        bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH: V2  2/2] gpio: tc35894: Disable Direct KBD interrupts to enable gpio irq
-Date:   Thu,  3 Sep 2020 15:30:22 +0800
-Message-Id: <1599118222-18990-3-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599118222-18990-1-git-send-email-dillon.minfei@gmail.com>
-References: <1599118222-18990-1-git-send-email-dillon.minfei@gmail.com>
+        Thu, 3 Sep 2020 03:32:04 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 58E55866;
+        Thu,  3 Sep 2020 03:32:02 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 03 Sep 2020 03:32:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=BmfEZSuMhgdkNo0EUR9JKdgI2ZD
+        uXSSCMmUk8VD6KTs=; b=YSLoqCN2z7hKgLDbrz/BgETbrovs9eoYHK/CXkv6Cts
+        CozKRyB69WNLEnP3L6wjnpPojh1zDFbr3WZbj87sL6SOmr5JVrRE12vE+ySl5/gS
+        ImdFUSMrFBj9xSmYchyyuv9n1iEHN/bSxxwsB1BcO9aNAcLd4Rc9yU2wHCOnw+Ls
+        IwFl5l0Md3e24yLVxaDDgV78a6ighJtmeDEFObG3yguw6Ym3sUbb+T/36uO05UQS
+        zx+ROCcMvxQeW/Kebh1bVj4UCnZhgpQI25/1WBQCgiBvUzV9xsUccj4cSVAsgea9
+        CDrNPgKG3e5nJdVC5nxXc2+SV9nyozhhCxR/CFjlIpg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=BmfEZS
+        uMhgdkNo0EUR9JKdgI2ZDuXSSCMmUk8VD6KTs=; b=tO4wJ5f0RO+AEKDwF4GarD
+        LOcf8n9MjY/EA8Uocxjt3YRfYL3Vqs/d8azDRYEO2pna+wcY3leeu7lacszWak9X
+        tJnrYdVXaKwTnaFhXkc5m78eFK7qNDgtDAwE/oh/ViUvJQxPRCDcLfFWj+cAA3Hn
+        zqoYE4i94kNdFI0WwZTUZYUm5UH4erCdX2wF2ipebjgQnOwHE9H3jRzU7KTVOqQI
+        zrVzvgb6uIpxwoIZKaSH7xLE/Lcab7uO5Jp8C29Hwrp203cPPt0G+wifGtw9+LyO
+        Pc2c+h2WofH6K3AcM55qWZT1MogfEGbHZvHyceADoDE4f+CTWwSyZmS1MJvBSTZg
+        ==
+X-ME-Sender: <xms:8ZtQX5mjPzKoJIfwfyNmpe6EbhlijpY_S0CpC5gW_x4yNXg1H0cxCw>
+    <xme:8ZtQX006FllbjjzFB0JvaoxfbbRYYs8FZf0eW_91NQ7gNeMnaZrxRqnGl_BNs6Ddk
+    M7mbnNw7LDCFf3--Mg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddvudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheei
+    heegudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedune
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:8ZtQX_pYNGOnQcGCKqHoZ1R-9bu7heOb9Tyw-U1LERaFZ6c1ilTT0Q>
+    <xmx:8ZtQX5nqlVyduZaUIUwi_ytfy47E4kvwSLH85kwmfKBClt2_5WYmfg>
+    <xmx:8ZtQX30d6ktT-NWzcjq7JczwKnNwl4gE1dJxdrow2ZoptBTXfQ3otQ>
+    <xmx:8ZtQX3-oXUojqevSMjMndRpfTXl-1XImuIgPOlTcCAvhbaiMujV-Vw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2355D306005B;
+        Thu,  3 Sep 2020 03:32:01 -0400 (EDT)
+Date:   Thu, 3 Sep 2020 09:31:59 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 1/2] clk: Implement protected-clocks for all OF
+ clock providers
+Message-ID: <20200903073159.2tabexowuo7wgdnh@gilmour.lan>
+References: <20200903040015.5627-1-samuel@sholland.org>
+ <20200903040015.5627-2-samuel@sholland.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="e5pau4qoc3zkqthf"
+Content-Disposition: inline
+In-Reply-To: <20200903040015.5627-2-samuel@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
 
-On tc35894, have to disable direct keypad interrupts to make
-it as general purpose interrupts functionality work.
-if not, after chip reset, IRQST(0x91) will always 0x20,
-IRQN always low level, can't be clear.
+--e5pau4qoc3zkqthf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Configure DIRECTx to enable general purpose gpio mode,
-else read GPIOMISx register always zero in irq routine.
+On Wed, Sep 02, 2020 at 11:00:14PM -0500, Samuel Holland wrote:
+> This is a generic implementation of the "protected-clocks" property from
+> the common clock binding. It allows firmware to inform the OS about
+> clocks that must not be disabled while the OS is running.
+>=20
+> This implementation comes with some caveats:
+>=20
+> 1) Clocks that have CLK_IS_CRITICAL in their init data are prepared/
+> enabled before they are attached to the clock tree. protected-clocks are
+> only protected once the clock provider is added, which is generally
+> after all of the clocks it provides have been registered. This leaves a
+> window of opportunity where something could disable or modify the clock,
+> such as a driver running on another CPU, or the clock core itself. There
+> is a comment to this effect in __clk_core_init():
+>=20
+>   /*
+>    * Enable CLK_IS_CRITICAL clocks so newly added critical clocks
+>    * don't get accidentally disabled when walking the orphan tree and
+>    * reparenting clocks
+>    */
+>=20
+> Similarly, these clocks will be enabled after they are first reparented,
+> unlike other CLK_IS_CRITICAL clocks. See the comment in
+> clk_core_reparent_orphans_nolock():
+>=20
+>   /*
+>    * We need to use __clk_set_parent_before() and _after() to
+>    * to properly migrate any prepare/enable count of the orphan
+>    * clock. This is important for CLK_IS_CRITICAL clocks, which
+>    * are enabled during init but might not have a parent yet.
+>    */
+>=20
+> Ideally we could detect protected clocks before they are reparented, but
+> there are two problems with that:
+>=20
+>   a) From the clock core's perspective, hw->init is const.
+>=20
+>   b) The clock core doesn't see the device_node until __clk_register is
+>      called on the first clock.
+>=20
+> So the only "race-free" way to detect protected-clocks is to do it in
+> the middle of __clk_register, between when core->flags is initialized
+> and calling __clk_core_init(). That requires scanning the device tree
+> again for each clock, which is part of why I didn't do it that way.
+>=20
+> 2) __clk_protect needs to be idempotent, for two reasons:
+>=20
+>   a) Clocks with CLK_IS_CRITICAL in their init data are already
+>      prepared/enabled, and we don't want to prepare/enable them again.
+>=20
+>   b) of_clk_set_defaults() is called twice for (at least some) clock
+>      controllers registered with CLK_OF_DECLARE. It is called first in
+>      of_clk_add_provider()/of_clk_add_hw_provider() inside clk_init_cb,
+>      and again afterward in of_clk_init(). The second call in
+>      of_clk_init() may be unnecessary, but verifying that would require
+>      auditing all users of CLK_OF_DECLARE to ensure they called one of
+>      the of_clk_add{,_hw}_provider functions.
+>=20
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-verified on tc35894, need more test on other tc3589x.
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
----
- 
-V1 -> V2:
-Add DIRECTx register configuration to active general purpose gpio mode.
+Thanks!
+Maxime
 
- drivers/gpio/gpio-tc3589x.c | 18 ++++++++++++++++--
- include/linux/mfd/tc3589x.h |  6 ++++++
- 2 files changed, 22 insertions(+), 2 deletions(-)
+--e5pau4qoc3zkqthf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/drivers/gpio/gpio-tc3589x.c b/drivers/gpio/gpio-tc3589x.c
-index ea3f68a28fea..55b8dbd13d11 100644
---- a/drivers/gpio/gpio-tc3589x.c
-+++ b/drivers/gpio/gpio-tc3589x.c
-@@ -19,9 +19,9 @@
-  * These registers are modified under the irq bus lock and cached to avoid
-  * unnecessary writes in bus_sync_unlock.
-  */
--enum { REG_IBE, REG_IEV, REG_IS, REG_IE };
-+enum { REG_IBE, REG_IEV, REG_IS, REG_IE, REG_DIRECT };
- 
--#define CACHE_NR_REGS	4
-+#define CACHE_NR_REGS	5
- #define CACHE_NR_BANKS	3
- 
- struct tc3589x_gpio {
-@@ -200,6 +200,7 @@ static void tc3589x_gpio_irq_sync_unlock(struct irq_data *d)
- 		[REG_IEV]	= TC3589x_GPIOIEV0,
- 		[REG_IS]	= TC3589x_GPIOIS0,
- 		[REG_IE]	= TC3589x_GPIOIE0,
-+		[REG_DIRECT]	= TC3589x_DIRECT0,
- 	};
- 	int i, j;
- 
-@@ -228,6 +229,7 @@ static void tc3589x_gpio_irq_mask(struct irq_data *d)
- 	int mask = BIT(offset % 8);
- 
- 	tc3589x_gpio->regs[REG_IE][regoffset] &= ~mask;
-+	tc3589x_gpio->regs[REG_DIRECT][regoffset] |= mask;
- }
- 
- static void tc3589x_gpio_irq_unmask(struct irq_data *d)
-@@ -239,6 +241,7 @@ static void tc3589x_gpio_irq_unmask(struct irq_data *d)
- 	int mask = BIT(offset % 8);
- 
- 	tc3589x_gpio->regs[REG_IE][regoffset] |= mask;
-+	tc3589x_gpio->regs[REG_DIRECT][regoffset] &= ~mask;
- }
- 
- static struct irq_chip tc3589x_gpio_irq_chip = {
-@@ -334,6 +337,17 @@ static int tc3589x_gpio_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
-+	 /* For tc35894, have to disable Direct KBD interrupts,
-+	  * else IRQST will always be 0x20, IRQN low level, can't
-+	  * clear the irq status.
-+	  * TODO: need more test on other tc3589x chip.
-+	  *
-+	  */
-+	ret = tc3589x_reg_write(tc3589x, TC3589x_DKBDMSK,
-+			TC3589x_DKBDMSK_ELINT | TC3589x_DKBDMSK_EINT);
-+	if (ret < 0)
-+		return ret;
-+
- 	ret = devm_request_threaded_irq(&pdev->dev,
- 					irq, NULL, tc3589x_gpio_irq,
- 					IRQF_ONESHOT, "tc3589x-gpio",
-diff --git a/include/linux/mfd/tc3589x.h b/include/linux/mfd/tc3589x.h
-index bb2b19599761..b84955410e03 100644
---- a/include/linux/mfd/tc3589x.h
-+++ b/include/linux/mfd/tc3589x.h
-@@ -19,6 +19,9 @@ enum tx3589x_block {
- #define TC3589x_RSTCTRL_KBDRST	(1 << 1)
- #define TC3589x_RSTCTRL_GPIRST	(1 << 0)
- 
-+#define TC3589x_DKBDMSK_ELINT	(1 << 1)
-+#define TC3589x_DKBDMSK_EINT	(1 << 0)
-+
- /* Keyboard Configuration Registers */
- #define TC3589x_KBDSETTLE_REG   0x01
- #define TC3589x_KBDBOUNCE       0x02
-@@ -101,6 +104,9 @@ enum tx3589x_block {
- #define TC3589x_GPIOODM2	0xE4
- #define TC3589x_GPIOODE2	0xE5
- 
-+#define TC3589x_DIRECT0		0xEC
-+#define TC3589x_DKBDMSK		0xF3
-+
- #define TC3589x_INT_GPIIRQ	0
- #define TC3589x_INT_TI0IRQ	1
- #define TC3589x_INT_TI1IRQ	2
--- 
-2.7.4
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX1Cb7wAKCRDj7w1vZxhR
+xWRjAPwJhMhdNSP5qbTflANlMD0Xd7lTe6EF9wl0yjLhICGfvQEA6ltIk+FhoKyo
+k62U6tP7k+gbDnsIlZzcIcSLR4de7gU=
+=qMJN
+-----END PGP SIGNATURE-----
+
+--e5pau4qoc3zkqthf--
