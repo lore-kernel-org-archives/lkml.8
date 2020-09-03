@@ -2,268 +2,85 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A755C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8252C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB2020716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D0120716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgICKon (ORCPT
+        id S1726268AbgICKol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 06:44:43 -0400
-Received: from mga04.intel.com ([192.55.52.120]:21633 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbgICKoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:44:38 -0400
-IronPort-SDR: GW35wvVynksGJBxRi6vZlj7Ps5IM1BPOw7+kHUO/uD4thS/qUuLczCWbarL2hn8fjqAt8/SfjC
- oDcFArNdbVtg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="154954518"
-X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="154954518"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 03:44:36 -0700
-IronPort-SDR: rHAjm1XYb/djFxtthLChDrpx3nHhpdYWyB+S5p+EYHju+bYbs1U3orsEL6k+npFoY2suK+qg55
- VXnNaN+3xiBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="339239236"
-Received: from slisovsk-lenovo-ideapad-720s-13ikb.fi.intel.com (HELO [10.237.72.190]) ([10.237.72.190])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Sep 2020 03:44:34 -0700
-Subject: Re: [PATCH V2 5/6] perf record: Add 'snapshot' control command
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200901093758.32293-1-adrian.hunter@intel.com>
- <20200901093758.32293-6-adrian.hunter@intel.com>
- <3b080496-7357-04a3-ec9b-bf531b8ec75a@linux.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <aa7a2be1-9944-2def-03af-cec559e633e4@intel.com>
-Date:   Thu, 3 Sep 2020 13:44:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 3 Sep 2020 06:44:41 -0400
+Received: from mo-csw1115.securemx.jp ([210.130.202.157]:60316 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725984AbgICKoh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 06:44:37 -0400
+X-Greylist: delayed 446 seconds by postgrey-1.27 at vger.kernel.org; Thu, 03 Sep 2020 06:44:36 EDT
+Received: by mo-csw.securemx.jp (mx-mo-csw1115) id 083AiKb0018512; Thu, 3 Sep 2020 19:44:21 +0900
+X-Iguazu-Qid: 2wGr7dZaSIQ3izezc8
+X-Iguazu-QSIG: v=2; s=0; t=1599129860; q=2wGr7dZaSIQ3izezc8; m=rClWSIHtHIcYHMenNimffmgBtp0sivHSc26ZxuLMey8=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1111) id 083AiJTb024969;
+        Thu, 3 Sep 2020 19:44:19 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id 083AiILn020387;
+        Thu, 3 Sep 2020 19:44:18 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 083AiIIa030126;
+        Thu, 3 Sep 2020 19:44:18 +0900
+From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+To:     Ben Levinsky <ben.levinsky@xilinx.com>
+Cc:     stefanos@xilinx.com, michals@xilinx.com, michael.auchter@ni.com,
+        devicetree@vger.kernel.org, emooring@xilinx.com,
+        mathieu.poirier@linaro.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jliang@xilinx.com,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v11 5/5] remoteproc: Add initial zynqmp R5 remoteproc driver
+References: <20200902165846.3366-1-ben.levinsky@xilinx.com>
+        <20200902165846.3366-6-ben.levinsky@xilinx.com>
+Date:   Thu, 03 Sep 2020 19:44:12 +0900
+In-Reply-To: <20200902165846.3366-6-ben.levinsky@xilinx.com> (Ben Levinsky's
+        message of "Wed, 2 Sep 2020 09:58:46 -0700")
+X-TSB-HOP: ON
+Message-ID: <87tuwfp2bn.fsf@kokedama.swc.toshiba.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <3b080496-7357-04a3-ec9b-bf531b8ec75a@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/09/20 8:03 pm, Alexey Budankov wrote:
-> 
-> On 01.09.2020 12:37, Adrian Hunter wrote:
->> Add 'snapshot' control command to create an AUX area tracing snapshot the
->> same as if sending SIGUSR2. The advantage of the FIFO is that access is
->> governed by access to the FIFO.
->>
->> Example:
->>
->>  $ mkfifo perf.control
->>  $ mkfifo perf.ack
->>  $ cat perf.ack &
->>  [1] 15235
->>  $ sudo ~/bin/perf record --control fifo:perf.control,perf.ack -S -e intel_pt//u -- sleep 60 &
->>  [2] 15243
->>  $ ps -e | grep perf
->>   15244 pts/1    00:00:00 perf
->>  $ kill -USR2 15244
->>  bash: kill: (15244) - Operation not permitted
->>  $ echo snapshot > perf.control
->>  ack
->>
->> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->> ---
->>  tools/perf/Documentation/perf-record.txt |  8 ++++----
->>  tools/perf/builtin-record.c              | 24 +++++++++++++++++-------
->>  tools/perf/builtin-stat.c                |  1 +
->>  tools/perf/util/evlist.c                 | 11 +++++++++--
->>  tools/perf/util/evlist.h                 |  5 ++++-
->>  5 files changed, 35 insertions(+), 14 deletions(-)
->>
->> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
->> index 2ffc1196d2b8..588e6191bf39 100644
->> --- a/tools/perf/Documentation/perf-record.txt
->> +++ b/tools/perf/Documentation/perf-record.txt
->> @@ -631,10 +631,10 @@ endif::HAVE_LIBPFM[]
->>  --control=fd:ctl-fd[,ack-fd]::
->>  ctl-fifo / ack-fifo are opened and used as ctl-fd / ack-fd as follows.
->>  Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
->> -'disable': disable events). Measurements can be started with events disabled using
->> ---delay=-1 option. Optionally send control command completion ('ack\n') to ack-fd descriptor
->> -to synchronize with the controlling process. Example of bash shell script to enable and
->> -disable events during measurements:
->> +'disable': disable events, 'snapshot': AUX area tracing snapshot). Measurements can be
->> +started with events disabled using --delay=-1 option. Optionally send control command
->> +completion ('ack\n') to ack-fd descriptor to synchronize with the controlling process.
->> +Example of bash shell script to enable and disable events during measurements:
->>  
->>   #!/bin/bash
->>  
->> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->> index 117dd180f780..476b34ff3152 100644
->> --- a/tools/perf/builtin-record.c
->> +++ b/tools/perf/builtin-record.c
->> @@ -1593,6 +1593,16 @@ static int record__init_clock(struct record *rec)
->>  	return 0;
->>  }
->>  
->> +static void hit_auxtrace_snapshot_trigger(struct record *rec)
->> +{
->> +	if (trigger_is_ready(&auxtrace_snapshot_trigger)) {
->> +		trigger_hit(&auxtrace_snapshot_trigger);
->> +		auxtrace_record__snapshot_started = 1;
->> +		if (auxtrace_record__snapshot_start(rec->itr))
->> +			trigger_error(&auxtrace_snapshot_trigger);
->> +	}
->> +}
->> +
->>  static int __cmd_record(struct record *rec, int argc, const char **argv)
->>  {
->>  	int err;
->> @@ -1937,6 +1947,10 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
->>  			case EVLIST_CTL_CMD_DISABLE:
->>  				pr_info(EVLIST_DISABLED_MSG);
->>  				break;
->> +			case EVLIST_CTL_CMD_SNAPSHOT:
->> +				hit_auxtrace_snapshot_trigger(rec);
-> 
-> Could possibly print a messages to console that snapshot taking has started,
-> similar to enabling and disabling of events.
+Ben Levinsky <ben.levinsky@xilinx.com> writes:
 
-There is a an existing debug print for snapshots, and the ack fifo of
-course.  So I am going to leave that for now.
+> R5 is included in Xilinx Zynq UltraScale MPSoC so by adding this
+> remotproc driver, we can boot the R5 sub-system in different 2
+> configurations: split or lock-step.
+>
+> The Xilinx R5 Remoteproc Driver boots the R5's via calls to the Xilinx
+> Platform Management Unit that handles the R5 configuration, memory access
+> and R5 lifecycle management. The interface to this manager is done in this
+> driver via zynqmp_pm_* function calls.
+>
+> Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
+> Signed-off-by: Wendy Liang <wendy.liang@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Ed Mooring <ed.mooring@xilinx.com>
+> Signed-off-by: Jason Wu <j.wu@xilinx.com>
 
-> 
-> Acked-by: Alexei Budankov <alexey.budankov@linux.intel.com>
-> 
-> Regards,
-> Alexei
-> 
->> +				evlist__ctlfd_ack(rec->evlist);
->> +				break;
->>  			case EVLIST_CTL_CMD_ACK:
->>  			case EVLIST_CTL_CMD_UNSUPPORTED:
->>  			default:
->> @@ -2589,7 +2603,8 @@ static struct option __record_options[] = {
->>  		parse_libpfm_events_option),
->>  #endif
->>  	OPT_CALLBACK(0, "control", &record.opts, "fd:ctl-fd[,ack-fd] or fifo:ctl-fifo[,ack-fifo]",
->> -		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
->> +		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events,\n"
->> +		     "\t\t\t  'snapshot': AUX area tracing snapshot).\n"
->>  		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.\n"
->>  		     "\t\t\t  Alternatively, ctl-fifo / ack-fifo will be opened and used as ctl-fd / ack-fd.",
->>  		      parse_control_option),
->> @@ -2842,12 +2857,7 @@ static void snapshot_sig_handler(int sig __maybe_unused)
->>  {
->>  	struct record *rec = &record;
->>  
->> -	if (trigger_is_ready(&auxtrace_snapshot_trigger)) {
->> -		trigger_hit(&auxtrace_snapshot_trigger);
->> -		auxtrace_record__snapshot_started = 1;
->> -		if (auxtrace_record__snapshot_start(record.itr))
->> -			trigger_error(&auxtrace_snapshot_trigger);
->> -	}
->> +	hit_auxtrace_snapshot_trigger(rec);
->>  
->>  	if (switch_output_signal(rec))
->>  		trigger_hit(&switch_output_trigger);
->> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->> index 6170226d44f9..21424ed0734b 100644
->> --- a/tools/perf/builtin-stat.c
->> +++ b/tools/perf/builtin-stat.c
->> @@ -578,6 +578,7 @@ static void process_evlist(struct evlist *evlist, unsigned int interval)
->>  				process_interval();
->>  			pr_info(EVLIST_DISABLED_MSG);
->>  			break;
->> +		case EVLIST_CTL_CMD_SNAPSHOT:
->>  		case EVLIST_CTL_CMD_ACK:
->>  		case EVLIST_CTL_CMD_UNSUPPORTED:
->>  		default:
->> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
->> index b74e85bc683e..8cd53dbb0357 100644
->> --- a/tools/perf/util/evlist.c
->> +++ b/tools/perf/util/evlist.c
->> @@ -1885,13 +1885,17 @@ static int evlist__ctlfd_recv(struct evlist *evlist, enum evlist_ctl_cmd *cmd,
->>  		} else if (!strncmp(cmd_data, EVLIST_CTL_CMD_DISABLE_TAG,
->>  				    (sizeof(EVLIST_CTL_CMD_DISABLE_TAG)-1))) {
->>  			*cmd = EVLIST_CTL_CMD_DISABLE;
->> +		} else if (!strncmp(cmd_data, EVLIST_CTL_CMD_SNAPSHOT_TAG,
->> +				    (sizeof(EVLIST_CTL_CMD_SNAPSHOT_TAG)-1))) {
->> +			*cmd = EVLIST_CTL_CMD_SNAPSHOT;
->> +			pr_debug("is snapshot\n");
->>  		}
->>  	}
->>  
->>  	return bytes_read ? (int)bytes_read : err;
->>  }
->>  
->> -static int evlist__ctlfd_ack(struct evlist *evlist)
->> +int evlist__ctlfd_ack(struct evlist *evlist)
->>  {
->>  	int err;
->>  
->> @@ -1927,13 +1931,16 @@ int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd)
->>  			case EVLIST_CTL_CMD_DISABLE:
->>  				evlist__disable(evlist);
->>  				break;
->> +			case EVLIST_CTL_CMD_SNAPSHOT:
->> +				break;
->>  			case EVLIST_CTL_CMD_ACK:
->>  			case EVLIST_CTL_CMD_UNSUPPORTED:
->>  			default:
->>  				pr_debug("ctlfd: unsupported %d\n", *cmd);
->>  				break;
->>  			}
->> -			if (!(*cmd == EVLIST_CTL_CMD_ACK || *cmd == EVLIST_CTL_CMD_UNSUPPORTED))
->> +			if (!(*cmd == EVLIST_CTL_CMD_ACK || *cmd == EVLIST_CTL_CMD_UNSUPPORTED ||
->> +			      *cmd == EVLIST_CTL_CMD_SNAPSHOT))
->>  				evlist__ctlfd_ack(evlist);
->>  		}
->>  	}
->> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
->> index a5678eb5ee60..91d1da6e1fe3 100644
->> --- a/tools/perf/util/evlist.h
->> +++ b/tools/perf/util/evlist.h
->> @@ -363,6 +363,7 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evlist,
->>  #define EVLIST_CTL_CMD_ENABLE_TAG  "enable"
->>  #define EVLIST_CTL_CMD_DISABLE_TAG "disable"
->>  #define EVLIST_CTL_CMD_ACK_TAG     "ack\n"
->> +#define EVLIST_CTL_CMD_SNAPSHOT_TAG "snapshot"
->>  
->>  #define EVLIST_CTL_CMD_MAX_LEN 64
->>  
->> @@ -370,7 +371,8 @@ enum evlist_ctl_cmd {
->>  	EVLIST_CTL_CMD_UNSUPPORTED = 0,
->>  	EVLIST_CTL_CMD_ENABLE,
->>  	EVLIST_CTL_CMD_DISABLE,
->> -	EVLIST_CTL_CMD_ACK
->> +	EVLIST_CTL_CMD_ACK,
->> +	EVLIST_CTL_CMD_SNAPSHOT,
->>  };
->>  
->>  int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close);
->> @@ -378,6 +380,7 @@ int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
->>  int evlist__finalize_ctlfd(struct evlist *evlist);
->>  bool evlist__ctlfd_initialized(struct evlist *evlist);
->>  int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
->> +int evlist__ctlfd_ack(struct evlist *evlist);
->>  
->>  #define EVLIST_ENABLED_MSG "Events enabled\n"
->>  #define EVLIST_DISABLED_MSG "Events disabled\n"
->>
+The Signed-off-by chain looks wrong here. As the submitter, your tag
+should be last in the chain.
+
+See Documentation/process/submitting-patches.rst for more details.
+
+Thanks,
+Punit
+
+
+[...]
 
