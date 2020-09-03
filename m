@@ -2,121 +2,98 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCE0C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A76C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9B7020639
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60347206EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:05:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="oYvygHxk"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZK3J+IDm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbgICXBR (ORCPT
+        id S1728582AbgICXFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 19:01:17 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:32698 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728288AbgICXBP (ORCPT
+        Thu, 3 Sep 2020 19:05:41 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:38573 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727804AbgICXEz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 19:01:15 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 083MtjQ5008580
-        for <linux-kernel@vger.kernel.org>; Thu, 3 Sep 2020 16:01:13 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=facebook; bh=YWYptwdcblR9vA8Ah1Yv2S9FNwktLFxutd6Oqa5gWDo=;
- b=oYvygHxk1usYgCuxr0lqc29kSgBGPkEh4uIFXs8uqdq26t9svmxmeTts+25EZnwNzi1m
- nx1fheoukbQTWz5G0EOxL4DOlyuVvCAVmjqY3ISQapcqc4SGiibdvhGDNRiiYyBVwerV
- 2dX0znpWIRaGC5+SC7pGGshjohlBDhsrr7s= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 33ae5urnv2-7
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:01:13 -0700
-Received: from intmgw002.41.prn1.facebook.com (2620:10d:c085:208::11) by
- mail.thefacebook.com (2620:10d:c085:11d::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 3 Sep 2020 16:01:09 -0700
-Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id 2291C3B54F24; Thu,  3 Sep 2020 16:01:09 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
-To:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
-CC:     =Shakeel Butt <shakeelb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>,
-        Michal Hocko <mhocko@suse.com>
-Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH] mm: workingset: ignore slab memory size when calculating shadows pressure
-Date:   Thu, 3 Sep 2020 16:00:55 -0700
-Message-ID: <20200903230055.1245058-1-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-03_14:2020-09-03,2020-09-03 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 bulkscore=0
- spamscore=0 phishscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- suspectscore=0 impostorscore=0 mlxlogscore=733 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009030204
-X-FB-Internal: deliver
+        Thu, 3 Sep 2020 19:04:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1599174294; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=hDpiCErf5Pq+wUXV3mxX7j9jGGSRA8i/72xM+93TfzU=; b=ZK3J+IDmULOrFxNB4C8OLXHI8wKWoqP8ZRKBXcN2qv9z26eYtEnqtymJrw9fOYyx6atp4R8K
+ 3asL1HOkwJz7EK/P4mXA22Cr4RwE1Oj3Xg+KYSXJqEfUn3sQ1W+D8TXvvrZTERMI69IQDx+o
+ cYu9FIhKnT1mn9wGgfTcsfXVhlo=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f51767b25e1ee7586181bf5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 03 Sep 2020 23:04:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A9BBEC43391; Thu,  3 Sep 2020 23:04:26 +0000 (UTC)
+Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 92482C433C9;
+        Thu,  3 Sep 2020 23:04:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 92482C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
+From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
+To:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bjorn.andersson@linaro.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, sidgup@codeaurora.org,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: [PATCH v3 0/3] Expose recovery/coredump configuration from sysfs
+Date:   Thu,  3 Sep 2020 16:03:42 -0700
+Message-Id: <1599174226-2307-1-git-send-email-rishabhb@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the memcg case count_shadow_nodes() sums the number of pages in lru
-lists and the amount of slab memory (reclaimable and non-reclaimable)
-as a baseline for the allowed number of shadow entries.
+From Android R onwards Google has restricted access to debugfs in user
+and user-debug builds. This restricts access to most of the features
+exposed through debugfs. This patch series removes the recovery/coredump
+entries from debugfs and adds a configurable option to expose these
+interfaces from sysfs. 
+'Coredump' and 'Recovery' are critical interfaces that are required
+for remoteproc to work on Qualcomm Chipsets. Coredump configuration
+needs to be set to "inline" in debug/test build and "disabled" in
+production builds. Whereas recovery needs to be "disabled" for
+debugging purposes and "enabled" on production builds.
 
-It seems to be a good analogy for the !memcg case, where
-node_present_pages() is used. However, it's not quite true, as there
-two problems:
+Changelog:
 
-1) Due to slab reparenting introduced by commit fb2f2b0adb98 ("mm:
-memcg/slab: reparent memcg kmem_caches on cgroup removal") local
-per-lruvec slab counters might be inaccurate on non-leaf levels.
-It's the only place where local slab counters are used.
+v3 -> v2:
+- Remove the coredump/recovery entries from debugfs
+- Expose recovery/coredump from sysfs under a feature flag
 
-2) Shadow nodes by themselves are backed by slabs. So there is a loop
-dependency: the more shadow entries are there, the less pressure the
-kernel applies to reclaim them.
+v1 -> v2:
+- Correct the contact name in the sysfs documentation.
+- Remove the redundant write documentation for coredump/recovery sysfs
+- Add a feature flag to make this interface switch configurable.
 
-Fortunately, there is a simple way to solve both problems: slab
-counters shouldn't be taken into the account by count_shadow_nodes().
+Rishabh Bhatnagar (3):
+  remoteproc: Expose remoteproc configuration through sysfs
+  remoteproc: Add coredump configuration to sysfs
+  remoteproc: Add recovery configuration to sysfs
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Shakeel Butt <shakeelb@google.com>
----
- mm/workingset.c | 4 ----
- 1 file changed, 4 deletions(-)
+ Documentation/ABI/testing/sysfs-class-remoteproc |  44 ++++++++
+ drivers/remoteproc/Kconfig                       |  12 +++
+ drivers/remoteproc/remoteproc_debugfs.c          |  10 +-
+ drivers/remoteproc/remoteproc_sysfs.c            | 126 +++++++++++++++++++++++
+ 4 files changed, 190 insertions(+), 2 deletions(-)
 
-diff --git a/mm/workingset.c b/mm/workingset.c
-index 92e66113a577..50d53f3699e4 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -495,10 +495,6 @@ static unsigned long count_shadow_nodes(struct shrin=
-ker *shrinker,
- 		for (pages =3D 0, i =3D 0; i < NR_LRU_LISTS; i++)
- 			pages +=3D lruvec_page_state_local(lruvec,
- 							 NR_LRU_BASE + i);
--		pages +=3D lruvec_page_state_local(
--			lruvec, NR_SLAB_RECLAIMABLE_B) >> PAGE_SHIFT;
--		pages +=3D lruvec_page_state_local(
--			lruvec, NR_SLAB_UNRECLAIMABLE_B) >> PAGE_SHIFT;
- 	} else
- #endif
- 		pages =3D node_present_pages(sc->nid);
---=20
-2.26.2
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
