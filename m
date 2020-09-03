@@ -2,142 +2,147 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F9EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ACEC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F890206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19EDE20658
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:45:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q+YmVJhr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgICOpC (ORCPT
+        id S1729389AbgICOpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:45:02 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:28704 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728918AbgICOoh (ORCPT
+        Thu, 3 Sep 2020 10:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729430AbgICOoj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:44:37 -0400
-IronPort-SDR: nkWVAQKqUCXjXdJVF0KOn7X/P8AH4A4+9wI69zWZU3zIGWV2djriaGGB0WigwaZqbiCLCE7dFL
- XP+9lmAashYfp4IYGIWQM0YFqSb8T5YfbDx/HxOkAc7p91myExBIjyf67GfCpM/Nwe9g0jI9s4
- d9EOGdlvTuy0EhALv78khIxewiGgYsgt7HB5ep7XnErOEVNbBRNWLsHPgaJF0ZE3w9iuf89WSd
- SuRxstOlvEPNeLdn7J0LEtGXWPV6OgGP96xeGQud1OlwLP9A3q+fGA2vj4qhyh8VIFPBckKpwi
- 1U0=
-X-IronPort-AV: E=Sophos;i="5.76,387,1592899200"; 
-   d="scan'208";a="54728480"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 03 Sep 2020 06:44:30 -0800
-IronPort-SDR: Mgmi2Sj3+nlxK/9a28nix/exYFJLpu41rF0jAUMoQX66CtMvBMjTmsnuGDZIH9HRErM/sP7K7+
- VNrT6TbfxCSjcs1cAPcnfdJIdiJgb7dYpNvV7RUKcW15t+QmT17xWc6bog6HJK2tvx8V3fAnpD
- i0JiUYuqpIp9gdxK4puu4tq9wMkN+tD1rW7qR7imz/74ynJGTDlG2Bg3YJ0LXVHHrnHKtVS2rL
- nGDp3E4LRGP12zUXOG/9ySxhvGBn6etQMM2KZrb1s1+xI9o43Khe/06Dpzll8tZ+pn9v3rGBsg
- pV4=
-Subject: Re: [PATCH 1/1] Input: atmel_mxt_ts - implement I2C retries
-To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
-        <dmitry.torokhov@gmail.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
-References: <20200821082254.16661-1-jiada_wang@mentor.com>
- <64c77ff9-6d20-abcf-f549-7d5c85fba28d@gmail.com>
-From:   "Wang, Jiada" <jiada_wang@mentor.com>
-Message-ID: <2c8ed5c8-f95b-dce4-f964-ac16f12c3f20@mentor.com>
-Date:   Thu, 3 Sep 2020 23:44:21 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 3 Sep 2020 10:44:39 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF60EC061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 07:44:38 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id q13so1839040vsj.13
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 07:44:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XR70+EUXVIRU3zQfQqSwfmIgUCJ1T/jLwDVLHaYTwdA=;
+        b=q+YmVJhrr3u/P/vNMvD3sirXji3jW45KNikG/MThND5oLQo4pQW2QSRSpsgrg2SE06
+         QU8V7NYTyO4FoFdz1mbouIlCT6/21Y1Hi+M8++sF4oCJfenetCOhmLch+K019oNdL22D
+         9KuQl536/+Wai/tFatgvxtjabLird/zbZVW12C/iR8IwUDCty1QA/9/Mp1OgctvOVI33
+         kIqrcbKwZXW1x2LTgHVGgNfff9vof6HpPLfOyvVLJGDFl91tsZIyiGZo8u9RdQn3CG9J
+         eZHvGAOP+iN+EvL6dnCFj0IkT78aQfQ+KBaavUjNF/Bxh3/LZoxYntDNTxbUdorOADY3
+         JRjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XR70+EUXVIRU3zQfQqSwfmIgUCJ1T/jLwDVLHaYTwdA=;
+        b=Yj1S2menZf1lczDnqVQochN1YSHrt1ynUIhqkJC6Xwo0HTl+iST/22it/n9ZXRs7GK
+         Fh7p2J9K/tWS1Gk/6dVaHrvGPvNOvyLIDN+EBSIMVPJDkoUeQZpdgI3RZwNHEVwv5wFN
+         nJ7Y2B7cGbZGd0H/rsNv9xzGtNsm/4gedaPIYHcDz9ATD73FGhe4hTKPNsFklQIx1/9U
+         jBaLyBZgJnHinoG4R3+CMFn3zwHWTnb8kvyL/pz5BkNziiN3jW6QvOXsHoIupKYvRDnL
+         4mruwEjLf7o24RU/U3wJCN+KMuGArh9/2Yctxl9usZdd0JaRWRNgZpHShkHE3zWVa8gb
+         DVIA==
+X-Gm-Message-State: AOAM532hpl7q98YysbCmCzTaVvYCKSGspmJZdG8Uwud8dtUTrn2WLhCa
+        C7TjhiyfhdOMDNyBX8h3ttZsgNV6a3DuGIiqhhwvHA==
+X-Google-Smtp-Source: ABdhPJz53TmR5rRF/V50sMeRUYI4APGHmXZws5YFjaDRWUVJAeLr3zEflEDUQfV/gVl2WeV7nmD9xv03OA62d2Xvm1w=
+X-Received: by 2002:a67:e45:: with SMTP id 66mr2085958vso.191.1599144277973;
+ Thu, 03 Sep 2020 07:44:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <64c77ff9-6d20-abcf-f549-7d5c85fba28d@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SVR-ORW-MBX-07.mgc.mentorg.com (147.34.90.207) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+References: <20200902164303.1.I5e598a25222b4534c0083b61dbfa4e0e76f66171@changeid>
+ <CAPDyKFoyKjKhwKGtLMtEyDSeSiBU6wasc=jt6c=sHnhN8jqqjg@mail.gmail.com> <CAD=FV=WaWwJnquPy+9aB89-1OwKmYKJv2PpfOkgo94Z6J8uRUg@mail.gmail.com>
+In-Reply-To: <CAD=FV=WaWwJnquPy+9aB89-1OwKmYKJv2PpfOkgo94Z6J8uRUg@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 3 Sep 2020 16:44:01 +0200
+Message-ID: <CAPDyKFq31bucJhP9hp1HSqh-qM2uNGHgDoyQpmbJf00nEf_T4Q@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-msm: Prefer asynchronous probe
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry
+On Thu, 3 Sep 2020 at 16:35, Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Thu, Sep 3, 2020 at 1:10 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >
+> > On Thu, 3 Sep 2020 at 01:43, Douglas Anderson <dianders@chromium.org> wrote:
+> > >
+> > > Turning on initcall debug on one system showed this:
+> > >   initcall sdhci_msm_driver_init+0x0/0x28 returned 0 after 34782 usecs
+> > >
+> > > The lion's share of this time (~33 ms) was in mmc_power_up().  This
+> > > shouldn't be terribly surprising since there are a few calls to delay
+> > > based on "power_delay_ms" and the default delay there is 10 ms.
+> > >
+> > > Because we haven't specified that we'd prefer asynchronous probe for
+> > > this driver then we'll wait for this driver to finish before we start
+> > > probes for more drivers.  While 33 ms doesn't sound like tons, every
+> > > little bit counts.
+> > >
+> > > There should be little problem with turning on asynchronous probe for
+> > > this driver.  It's already possible that previous drivers may have
+> > > turned on asynchronous probe so we might already have other things
+> > > (that probed before us) probing at the same time we are anyway.  This
+> > > driver isn't really providing resources (clocks, regulators, etc) that
+> > > other drivers need to probe and even if it was they should be handling
+> > > -EPROBE_DEFER.
+> > >
+> > > Let's turn this on and get a bit of boot speed back.
+> >
+> > Thanks for a very well written commit message!
+> >
+> > Indeed, I am sure many mmc host drivers could benefit from a similar
+> > change. At least regular platform drivers and amba drivers are pretty
+> > sure to work, but who knows.
+>
+> Yeah, and many non-mmc drivers can benefit too, which is why I've been
+> sending several of these patches recently as I optimize boot perf on
+> the device that's sitting in front of me.  ;-)  I think the idea was
+> that eventually we'd want the kernel to just turn on async by default
+> everywhere, but at the time the flag was introduced there were too
+> many subtle bugs everywhere.  It feels like one way to get to the
+> point where we'd be confident that this is OK to turn on everywhere is
+> to just start turning it on in lots of places.  Once enough places
+> have it on then perhaps that will give folks confidence that it's OK
+> to turn on by default across the board.
 
-On 2020/08/28 17:19, Dmitry Osipenko wrote:
-> 21.08.2020 11:22, Jiada Wang пишет:
->> From: Nick Dyer <nick.dyer@itdev.co.uk>
->>
->> Some maXTouch chips (eg mXT1386) will not respond on the first I2C request
->> when they are in a sleep state. It must be retried after a delay for the
->> chip to wake up.
->>
->> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
->> Acked-by: Yufeng Shen <miletus@chromium.org>
->> (cherry picked from ndyer/linux/for-upstream commit 63fd7a2cd03c3a572a5db39c52f4856819e1835d)
->> [gdavis: Forward port and fix conflicts.]
->> Signed-off-by: George G. Davis <george_davis@mentor.com>
->> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
->> ---
->>   drivers/input/touchscreen/atmel_mxt_ts.c | 45 ++++++++++++++++--------
->>   1 file changed, 30 insertions(+), 15 deletions(-)
-> 
-> Hello, Jiada!
-> 
-> I tested this patch on Acer A500 that has mXT1386 controller which
-> requires the I2C retrying and everything working good, no problems
-> spotted! Touchscreen doesn't work without this patch!
-> 
-> Tested-by: Dmitry Osipenko <digetx@gmail.com>
-> 
-> I have one minor comment, please see it below!
-> 
->> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
->> index a2189739e30f..e93eda1f3d59 100644
->> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
->> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
->> @@ -196,6 +196,7 @@ enum t100_type {
->>   #define MXT_CRC_TIMEOUT		1000	/* msec */
->>   #define MXT_FW_RESET_TIME	3000	/* msec */
->>   #define MXT_FW_CHG_TIMEOUT	300	/* msec */
->> +#define MXT_WAKEUP_TIME		25	/* msec */
->>   
->>   /* Command to unlock bootloader */
->>   #define MXT_UNLOCK_CMD_MSB	0xaa
->> @@ -626,6 +627,7 @@ static int __mxt_read_reg(struct i2c_client *client,
->>   	struct i2c_msg xfer[2];
->>   	u8 buf[2];
->>   	int ret;
->> +	bool retry = false;
->>   
->>   	buf[0] = reg & 0xff;
->>   	buf[1] = (reg >> 8) & 0xff;
->> @@ -642,17 +644,22 @@ static int __mxt_read_reg(struct i2c_client *client,
->>   	xfer[1].len = len;
->>   	xfer[1].buf = val;
->>   
->> -	ret = i2c_transfer(client->adapter, xfer, 2);
->> -	if (ret == 2) {
->> -		ret = 0;
->> -	} else {
->> -		if (ret >= 0)
->> -			ret = -EIO;
->> -		dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
->> -			__func__, ret);
->> +retry_read:
->> +	ret = i2c_transfer(client->adapter, xfer, ARRAY_SIZE(xfer));
->> +	if (ret != ARRAY_SIZE(xfer)) {
-> 
-> Is it really possible to get a positive ret != 2 from i2c_transfer()?
-> 
-> Maybe it's better to keep the old code behaviour by returning the "ret"
-> value directly if it's not equal to ARRAY_SIZE(xfer)?
-> 
-I think, theoretically i2c_transfer() may return positive value but != 
-number to transfer,
-original behavior is,
-when ret >= 0, it returns -EIO, when ret < 0, it just returns ret,
+Yeah, I guess this is the only way forward at this point.
 
-current behavior is, when ret != 2, it returns -EIO, after retry.
+>
+> If you'd like, I can post patches to update some other set of MMC host
+> drivers, either as one giant patch (hard to backport, but not as
+> spammy) or as a large pile of patches.  I've never played with
+> coccinelle so I'd probably fall back to doing this by hand.  I could
+> probably only test on a small handful (I think I have easy access to
+> dw-mmc-rockchip and sdhci-of-arasan besides the msm one I already
+> posted), so another option is that I could also just post for those
+> devices...  ...or we can just hope others will notice and start
+> posting similar patches themselves after testing.  Let me know what
+> you'd prefer.  ;-)
 
-I am OK to change the behavior exactly as same original one.
+Honestly, I don't know. You go ahead with the option you prefer - then
+I will have a look. :-)
 
-Thanks,
-Jiada
+Don't worry if we break some, as it should be rather easy to fix - as
+long as we keep an eye on it.
+
+Kind regards
+Uffe
