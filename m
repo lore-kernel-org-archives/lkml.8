@@ -2,149 +2,180 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7587AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FEEC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38C2A20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599145507;
-	bh=JRCHmfWSpGS/adPTYfUKHsn7RfTWRGVyO5P/nq3YOkc=;
-	h=From:Cc:Subject:Date:To:List-ID:From;
-	b=BzDABkHDklPbmRMSv+s4wkl3rY7837nZbsc9VP5ugUoTAgOgRqfys9yQ62SfSKMNn
-	 HqigdX6CQbLftG5+ib1xePHZ3ZHBn23fEZc0nY5EDqIlI4c5Hd720UZ+kmS12fIJRT
-	 AaDl8aeK3wLigoaRDW2KfughR6vtBe1wbcY9KqZY=
+	by mail.kernel.org (Postfix) with ESMTP id 4E2FF20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:05:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QP5b21vA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbgICPFF (ORCPT
+        id S1729430AbgICPFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:05:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbgICN6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 11:05:12 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33950 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729002AbgICN6Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 09:58:16 -0400
-Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FC3A208C7;
-        Thu,  3 Sep 2020 13:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599141456;
-        bh=JRCHmfWSpGS/adPTYfUKHsn7RfTWRGVyO5P/nq3YOkc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Idg4Rja7N7FMEZFZwiBpLmqRTEqC0YdAOZONfuamJvwWBO8Z0sOoQji7u1KPsJhaF
-         9LOk9B0Bqur1HyDPEZ8LGJVUGECpYDswhlp4vHva94hQQghMXG3FhKNsA0a97Kxj0c
-         rRoAlIZmJNBXYHh3WQBG4iBjdVALGd6YvFNEEMjc=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kDpk6-004T6i-2b; Thu, 03 Sep 2020 15:57:34 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devel@driverdev.osuosl.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anant Thazhemadam <anant.thazhemadam@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/5] address W=1 warnings at staging/media/atomisp
-Date:   Thu,  3 Sep 2020 15:57:27 +0200
-Message-Id: <cover.1599141140.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083DPoom115466;
+        Thu, 3 Sep 2020 08:25:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599139550;
+        bh=AdVba5dvU+UA3YkUl7bYkqrAbMHpmT7cr+MbTs7OoEE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QP5b21vAK8yefGssR4I1g643HnK8rfcwR66tWhgRIgOYOEg4vOa0Na6zUNlSxHCcw
+         guwGq2XRRUU75JKwjv9G1cR4KU+3QOjbw7AWfAVXoct65kUS4nxgWz0AaTGARjnvBg
+         DWQ2PsSQUDgDd2ozfPEbT0mx8MyL2BB1hAK1j99I=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083DPnRb070019
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 3 Sep 2020 08:25:50 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
+ 2020 08:25:48 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 3 Sep 2020 08:25:48 -0500
+Received: from [10.250.71.39] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083DPlPj007255;
+        Thu, 3 Sep 2020 08:25:47 -0500
+Subject: Re: [RESEND PATCH v2] mfd: syscon: Use a unique name with
+ regmap_config
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        David Lechner <david@lechnology.com>,
+        Tony Lindgren <tony@atomide.com>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Roger Quadros <rogerq@ti.com>, <kernel-team@android.com>
+References: <20200727211008.24225-1-s-anna@ti.com>
+ <0c1feaf91b9d285c1bded488437705da@misterjones.org>
+ <74bc1f9f-cc48-cec9-85f4-3376b66b40fc@ti.com>
+ <78b465b080772b6ba867e39a623c2310@kernel.org>
+ <ef1931eb-5677-d92c-732d-b67b5263425d@ti.com>
+ <0d43f357983711fcffce7023ad115d13@kernel.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <b378af0d-19a8-3d1b-5ca3-54ebccd77c9b@ti.com>
+Date:   Thu, 3 Sep 2020 08:25:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <0d43f357983711fcffce7023ad115d13@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux-media policy is to have zero warnings with W=1. However, when
-I started using a Jenkins instance at https://builder.linuxtv.org to automate
-such tests, I didn't notice that a bug at the scripts were just ignoring
-warnings.
+On 9/3/20 3:26 AM, Marc Zyngier wrote:
+> On 2020-08-27 21:32, Suman Anna wrote:
+>> Hi Marc,
+>>
+>> + Mark Brown
+>>
+>> On 8/27/20 3:06 PM, Marc Zyngier wrote:
+>>> Hi Suman,
+>>>
+>>> On 2020-08-27 19:28, Suman Anna wrote:
+>>>> Hi Marc,
+>>>>
+>>>> On 8/27/20 9:46 AM, Marc Zyngier wrote:
+> 
+> [...]
+> 
+>>>>> This patch triggers some illegal memory accesses when debugfs is
+>>>>> enabled, as regmap does rely on config->name to be persistent
+>>>>> when the debugfs registration is deferred via regmap_debugfs_early_list
+>>>>> (__regmap_init() -> regmap_attach_dev() -> regmap_debugfs_init()...),
+>>>>> leading to a KASAN splat on demand.
+>>>>>
+>>>>
+>>>> Thanks, I missed the subtlety around the debugfs registration.
+>>>>
+>>>>> I came up with the following patch that solves the issue for me.
+>>>>>
+>>>>> Thanks,
+>>>>>
+>>>>>         M.
+>>>>>
+>>>>> From fd3f5f2bf72df53be18d13914fe349a34f81f16b Mon Sep 17 00:00:00 2001
+>>>>> From: Marc Zyngier <maz@kernel.org>
+>>>>> Date: Thu, 27 Aug 2020 14:45:34 +0100
+>>>>> Subject: [PATCH] mfd: syscon: Don't free allocated name for regmap_config
+>>>>>
+>>>>> The name allocated for the regmap_config structure is freed
+>>>>> pretty early, right after the registration of the MMIO region.
+>>>>>
+>>>>> Unfortunately, that doesn't follow the life cycle that debugfs
+>>>>> expects, as it can access the name field long after the free
+>>>>> has occured.
+>>>>>
+>>>>> Move the free on the error path, and keep it forever otherwise.
+>>>>
+>>>> Hmm, this is exactly what I was trying to avoid. The regmap_init does duplicate
+>>>> the name into map->name if config->name is given, and the regmap debugfs makes
+>>>> another copy of its own into debugfs_name when actually registered. If the
+>>>> rules
+>>>> for regmap_init is that the config->name should be persistent, then I guess we
+>>>> have no choice but to go with the below fix.
+>>>>
+>>>> Does something like below help?
+>>>>
+>>>> diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+>>>> index e93700af7e6e..96d8a0161c89 100644
+>>>> --- a/drivers/base/regmap/regmap.c
+>>>> +++ b/drivers/base/regmap/regmap.c
+>>>> @@ -1137,7 +1137,7 @@ struct regmap *__regmap_init(struct device *dev,
+>>>>                 if (ret != 0)
+>>>>                         goto err_regcache;
+>>>>         } else {
+>>>> -               regmap_debugfs_init(map, config->name);
+>>>> +               regmap_debugfs_init(map, map->name);
+>>>>
+>>>> But there are couple of other places in regmap code that uses config->name, but
+>>>> those won't be exercised with the syscon code.
+>>>
+>>> Is config->name always the same as map->name? If so, why don't you just
+>>> pass map once and for all? Is the lifetime of map->name the same as
+>>> that of config->name?
+>>
+>> map->name is created (kstrdup_const) from config->name if not NULL, so above
+>> replacement should be exactly equivalent, map is filled in _regmap_init. But it
+>> does make the regmap_debugfs_init callsites in the file look dissimilar.
+>>
+>>>
+>>> My worry with this approach is that we start changing stuff in a rush,
+>>> and this would IMHO deserve a thorough investigation of whether this
+>>> change is actually safe.
+>>>
+>>> I'd rather take the safe approach of either keeping the memory around
+>>> until we clearly understand what the implications are (and probably
+>>> this should involve the regmap maintainer), or to revert this patch
+>>> until we figure out the actual life cycle of the various names.
+>>
+>> Yeah, agreed. Let's see what Mark suggests.
+>>
+>> Mark,
+>> Can you clarify the lifecycle expectations on the config->name and do you have
+>> any suggestions here?
+> 
+> Have we reached a conclusion here? Can we get a fix in mainline?
 
-Now that this is fixed, we need to get rid of the warnings that got
-re-introduced when the atomisp driver was reverted, as otherwise,
-every time a common header is touched, we'll see messages like
-those:
+Marc, we can go with your patch based on Mark's response.
 
-  Error/warnings:
-
-  patches/0001-media-mxl5xx-remove-unused-including-linux-version.h.patch:
-
-    allyesconfig: return code #0:
-	../drivers/staging/media/atomisp/pci/atomisp_compat_css20.c:164:2: warning: function ‘atomisp_css2_dbg_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
-	../drivers/staging/media/atomisp/pci/atomisp_compat_css20.c:170:2: warning: function ‘atomisp_css2_dbg_ftrace_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
-	../drivers/staging/media/atomisp/pci/atomisp_compat_css20.c:170:2: warning: function ‘atomisp_css2_dbg_ftrace_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
-	../drivers/staging/media/atomisp/pci/atomisp_compat_css20.c:176:2: warning: function ‘atomisp_css2_err_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
-	../drivers/staging/media/atomisp/pci/atomisp_cmd.c:2814:31: warning: variable ‘stream_config’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/atomisp_cmd.c:2893:31: warning: variable ‘stream_config’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/atomisp_v4l2.c:1432:15: warning: variable ‘a0_max_id’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css_mipi.c:410:27: warning: variable ‘mipi_intermediate_info’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:1366:24: warning: variable ‘stream’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:2702:22: warning: variable ‘capture_pipe’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:2831:7: warning: variable ‘continuous’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:3534:15: warning: variable ‘num_output_pins’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:3937:55: warning: variable ‘vf_pp_binary’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:3937:38: warning: variable ‘preview_binary’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:3937:24: warning: variable ‘copy_binary’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:3936:26: warning: variable ‘me’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:5749:24: warning: variable ‘copy_binary’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:6013:7: warning: variable ‘continuous’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:6012:7: warning: variable ‘memory’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:7329:24: warning: variable ‘copy_binary’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:7459:26: warning: variable ‘num_vf_pp_stage’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css.c:10420:22: warning: variable ‘pipe_id’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css_param_shading.c:239:4: warning: variable ‘padded_width’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/sh_css_params.c:1099:36: warning: variable ‘row_padding’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/isp/kernels/dvs/dvs_1.0/ia_css_dvs.host.c:237:31: warning: variable ‘isp_data_ptr’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/isp/kernels/sdis/sdis_2/ia_css_sdis2.host.c:119:28: warning: variable ‘ver_num_isp’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/isp/kernels/sdis/sdis_2/ia_css_sdis2.host.c:119:15: warning: variable ‘hor_num_isp’ set but not used [-Wunused-but-set-variable]
-	../drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c:127:6: warning: variable ‘err’ set but not used [-Wunused-but-set-variable]
-	In file included from ../drivers/staging/media/atomisp//pci/hive_isp_css_include/input_formatter.h:34,
-	                 from ../drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c:55:
-	../drivers/staging/media/atomisp//pci/hive_isp_css_common/host/input_formatter_local.h:118:27: warning: ‘input_formatter_alignment’ defined but not used [-Wunused-const-variable=]
-	../drivers/staging/media/atomisp/pci/runtime/rmgr/src/rmgr_vbuf.c:244:7: warning: variable ‘succes’ set but not used [-Wunused-but-set-variable]
-
-    allyesconfig: return code #0:
-	../drivers/media/v4l2-core/v4l2-ioctl.c: ../drivers/media/v4l2-core/v4l2-ioctl.c:3204 video_put_user() warn: check that 'ev32' doesn't leak information (struct has a hole after 'type')
-	../drivers/media/v4l2-core/v4l2-ioctl.c: ../drivers/media/v4l2-core/v4l2-ioctl.c:3229 video_put_user() warn: check that 'vb32' doesn't leak information (struct has a hole after 'memory')
-	../drivers/media/usb/em28xx/em28xx-video.c: ../drivers/media/usb/em28xx/em28xx-video.c:2841 em28xx_v4l2_init() parse error: turning off implications after 60 seconds
-	../drivers/media/test-drivers/vivid/vivid-core.c: ../drivers/media/test-drivers/vivid/vivid-core.c:1200 vivid_create_instance() parse error: turning off implications after 60 seconds
-	../drivers/media/test-drivers/vivid/vivid-core.c: ../drivers/media/test-drivers/vivid/vivid-core.c:1531 vivid_create_instance() parse error: __split_smt: function too hairy.  Giving up after 301 seconds
-
-This series solve all atomisp W=1 warnings.
-
-Mauro Carvalho Chehab (5):
-  media: atomisp: get rid of some cleanup leftovers
-  media: atomisp: print a warning if error while setting downscaler
-  media: atomisp: get rid of unused vars
-  media: atomisp: move a static constant out of a header file
-  media: atomisp: get rid of -Wsuggest-attribute=format warnings
-
- .../staging/media/atomisp/pci/atomisp_cmd.c   |  6 ---
- .../media/atomisp/pci/atomisp_compat_css20.c  | 20 ++------
- .../staging/media/atomisp/pci/atomisp_v4l2.c  |  3 --
- .../host/input_formatter.c                    |  4 ++
- .../host/input_formatter_local.h              |  4 --
- .../staging/media/atomisp/pci/ia_css_env.h    |  4 +-
- .../isp/kernels/dvs/dvs_1.0/ia_css_dvs.host.c |  3 --
- .../kernels/sdis/sdis_2/ia_css_sdis2.host.c   |  3 --
- .../isp/kernels/vf/vf_1.0/ia_css_vf.host.c    |  5 ++
- .../atomisp/pci/runtime/rmgr/src/rmgr_vbuf.c  |  4 +-
- drivers/staging/media/atomisp/pci/sh_css.c    | 47 ++-----------------
- .../staging/media/atomisp/pci/sh_css_mipi.c   | 12 -----
- .../media/atomisp/pci/sh_css_param_shading.c  | 25 +++-------
- .../staging/media/atomisp/pci/sh_css_params.c |  3 +-
- 14 files changed, 29 insertions(+), 114 deletions(-)
-
--- 
-2.26.2
-
-
+regards
+Suman
