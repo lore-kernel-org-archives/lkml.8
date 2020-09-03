@@ -2,95 +2,123 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7327DC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3492DC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 419E820716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF4A520786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:16:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ssN6UsZB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="htUjP8MO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgICPOX (ORCPT
+        id S1728965AbgICPPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:14:23 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39824 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728629AbgICLnP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:43:15 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083Bh1FO127186;
-        Thu, 3 Sep 2020 06:43:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599133381;
-        bh=EAbt1qPh14EomVGd85mBXEAKdAVjaqQGm+uYE8j3Roo=;
-        h=From:To:CC:Subject:Date;
-        b=ssN6UsZBbmBZz/pml+3gOmPfg+qk/t99T6v8Xyd0hYR3b5X4XAsVblZpRpN2uRu+p
-         oEvZnJsdQYvhY6HYABlWsCvRe6X5Big2UpfvQoZrVaj2iH/mLxZ0vP1XPGE8cTiY6v
-         EhtK6l3VHKRiHfsyoEBXcGjdv6qW8xAgwsvC2k6Y=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083Bh1du047253
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Sep 2020 06:43:01 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
- 2020 06:43:00 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 3 Sep 2020 06:43:00 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083Bh08N075354;
-        Thu, 3 Sep 2020 06:43:00 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v3 0/3] DP83869 Feature additions
-Date:   Thu, 3 Sep 2020 06:42:56 -0500
-Message-ID: <20200903114259.14013-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 3 Sep 2020 11:15:55 -0400
+Received: from crapouillou.net ([89.234.176.41]:52000 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728654AbgICLhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:37:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1599132411; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RNukebu5FJc21AaatW8pIDM/jN+mPnsQcQWuh8bpr7A=;
+        b=htUjP8MOznKj63TiyERDMqJINFETb7XOkyxP8ClwaFkoSfOGrFLr+VLzUvyD3xNeQSswbg
+        p7LZQ5cWe25wPNMfmzaec40O/ElUOkQRnNQGhJbuEk9+6OaARXOMTpUdcXLUSy2DnephH1
+        XwmA8yVt8pDGFouQrnH2pvmVwN+h2mo=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Tony Prisk <linux@prisktech.co.nz>, Bin Liu <b-liu@ti.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 18/20] usb/gadget/udc: pch: Use pm_ptr() macro
+Date:   Thu,  3 Sep 2020 13:25:52 +0200
+Message-Id: <20200903112554.34263-19-paul@crapouillou.net>
+In-Reply-To: <20200903112554.34263-1-paul@crapouillou.net>
+References: <20200903112554.34263-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+Use the newly introduced pm_ptr() macro, and mark the suspend/resume
+functions __maybe_unused. These functions can then be moved outside the
+CONFIG_PM_SUSPEND block, and the compiler can then process them and
+detect build failures independently of the config. If unused, they will
+simply be discarded by the compiler.
 
-Adding features to the DP83869 PHY.  These features are also supported in other
-TI PHYs like the DP83867 and DP83822.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/usb/gadget/udc/pch_udc.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-Fiber Advertisement:
-The DP83869 supports a 100Base-FX connection. When this mode is selected the
-driver needs to advertise that this PHY supports fiber.
-
-WoL:
-The PHY also supports Wake on Lan feature with SecureOn password.
-
-Downshift:
-Speed optimization or AKA downshift is also supported by this PHY.
-
-Dan
-
-Dan Murphy (3):
-  net: dp83869: Add ability to advertise Fiber connection
-  net: phy: dp83869: support Wake on LAN
-  net: dp83869: Add speed optimization feature
-
- drivers/net/phy/dp83869.c | 280 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 280 insertions(+)
-
+diff --git a/drivers/usb/gadget/udc/pch_udc.c b/drivers/usb/gadget/udc/pch_udc.c
+index 8afc31d94b0e..9e26b5ab3058 100644
+--- a/drivers/usb/gadget/udc/pch_udc.c
++++ b/drivers/usb/gadget/udc/pch_udc.c
+@@ -3042,8 +3042,7 @@ static void pch_udc_remove(struct pci_dev *pdev)
+ 	pch_udc_exit(dev);
+ }
+ 
+-#ifdef CONFIG_PM_SLEEP
+-static int pch_udc_suspend(struct device *d)
++static int __maybe_unused pch_udc_suspend(struct device *d)
+ {
+ 	struct pch_udc_dev *dev = dev_get_drvdata(d);
+ 
+@@ -3053,16 +3052,12 @@ static int pch_udc_suspend(struct device *d)
+ 	return 0;
+ }
+ 
+-static int pch_udc_resume(struct device *d)
++static int __maybe_unused pch_udc_resume(struct device *d)
+ {
+ 	return 0;
+ }
+ 
+ static SIMPLE_DEV_PM_OPS(pch_udc_pm, pch_udc_suspend, pch_udc_resume);
+-#define PCH_UDC_PM_OPS		(&pch_udc_pm)
+-#else
+-#define PCH_UDC_PM_OPS		NULL
+-#endif /* CONFIG_PM_SLEEP */
+ 
+ static int pch_udc_probe(struct pci_dev *pdev,
+ 			  const struct pci_device_id *id)
+@@ -3171,7 +3166,7 @@ static struct pci_driver pch_udc_driver = {
+ 	.remove =	pch_udc_remove,
+ 	.shutdown =	pch_udc_shutdown,
+ 	.driver = {
+-		.pm = PCH_UDC_PM_OPS,
++		.pm = pm_ptr(&pch_udc_pm),
+ 	},
+ };
+ 
 -- 
 2.28.0
 
