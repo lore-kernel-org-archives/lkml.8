@@ -2,224 +2,172 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06330C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F5AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8EC320773
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:22:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="UzcvB9eY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kCjx+/FX"
+	by mail.kernel.org (Postfix) with ESMTP id 66BF120773
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:22:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgICCWk (ORCPT
+        id S1728020AbgICCW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 22:22:40 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:56015 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726177AbgICCWi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 22:22:38 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id CBCB058012E;
-        Wed,  2 Sep 2020 22:22:36 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 02 Sep 2020 22:22:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=Z
-        HA9Ys3BbFE/uK3mH/P+4binR9tHt/5auQFE5N/VEm0=; b=UzcvB9eY6ycvjTjhV
-        WwTnXWT54TlevB6RLGw7acGaDmeskyXA5dcl+AXs2KFel9Xu8ZW91OO5gokvoQEb
-        zivH2O4QcO1GkP3YGZTyxpG6U5va3Vd/QfQ2vRlcJhRkfa/UJsu3NeklgonwOB6A
-        Mv+ysNCLiF0DAk2o5Llzz+6iGuR+/qpNXEhKqhmHkFOPRRg71+fqc3TQ5ZFbjA8s
-        R6gXI4JesAytjW0D5W9eodwEuGBN0i3A8BCrtow9yervRe7hP7zHKAHiFWzRjVt+
-        +8fx0Lu0+4DpBoU3Si7QDdtAwwcjWBtGv6nTvZR6FBDHfJa1NxFAbsXarwUQ7uMR
-        mvhCg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=ZHA9Ys3BbFE/uK3mH/P+4binR9tHt/5auQFE5N/VE
-        m0=; b=kCjx+/FXNJqGJx61GurAtrQrD3mCorm0S1vRvhGowKWZNZfJ7aM/9TGkT
-        tGAO9nEWiB/TxAGpQ3Xo03Bvd+lVerHFT+R6+uFFTWMEfmC5OVKloqKZb21A8T/4
-        F/HfDXUDHliLuqZzaXZwghjFKkA20r/cQguj4pqadm8GAalR1X8u5JibrwT5aXsx
-        DmvS2ck7cuiqgLpBUv+8nXe6nQU2mdVvMP6yB32a9oE6NoOKmwF8kIqiPJgnOC+t
-        fml/J4PmjFJBrtq8Mt0EcYdCiVc8r4Iw5vPnZXLMNykFaz4GMwgUA0HgMrexJgh5
-        08GmtrMeQg3wQnSa4YvMnjFCS2scg==
-X-ME-Sender: <xms:alNQX4wEEHX0uGS-GN4SuW7TSVpTqmQSPXm53bSeHX4yaehzFhm0uA>
-    <xme:alNQX8TT7RxT0akP6ndzYeo7vZvO-kw2j3xYRrIvzAC6o5H7VThq1l7Dw9jNbcX1x
-    1ODqZHKJHju5mbvCA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddgheejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecugg
-    ftrfgrthhtvghrnhepgfelkeduveejtdejhfeiledvhfeggeeiieeklefhfeefffffffeg
-    udetteelieejnecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgr
-    nhgurdhorhhg
-X-ME-Proxy: <xmx:a1NQX6WalSV9vioGk7RoQzkRnPFRdEOgieAyO3oEhNNE_4b5eHnd5w>
-    <xmx:a1NQX2iColSFeiEwRrHtOTOBO8Iw7GBm0RTF6TTyCNHSPrfP7ITo8w>
-    <xmx:a1NQX6C6fq6_ADG_NFR_ab4Y4vDN90X2fntsA_xaBmK6qdkpbkLT0g>
-    <xmx:bFNQX268XgzMR4ag7dujTr-he2aEqYSBqQzmE3SimjNteIkDOVhC8Q>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6A1043280063;
-        Wed,  2 Sep 2020 22:22:34 -0400 (EDT)
-Subject: Re: [linux-sunxi] [PATCH 05/16] ASoc: sun4i-i2s: Add 20 and 24 bit
- support
-To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>,
-        peron.clem@gmail.com, Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20200704113902.336911-1-peron.clem@gmail.com>
- <20200704113902.336911-6-peron.clem@gmail.com>
- <1e320dfd-9388-54b2-dba9-7def0bf4bbad@sholland.org>
- <9148679.oVN3Z7rve9@kista>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <fd714cb6-3650-1eb9-616d-33c00f1442eb@sholland.org>
-Date:   Wed, 2 Sep 2020 21:22:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 2 Sep 2020 22:22:57 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52700 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726177AbgICCW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 22:22:56 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 85459CA9E8ACE50B898F;
+        Thu,  3 Sep 2020 10:22:54 +0800 (CST)
+Received: from [10.74.191.121] (10.74.191.121) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 3 Sep 2020 10:22:45 +0800
+Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
+ enqueue op for lockless qdisc
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+CC:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
+        "David Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Linux Kernel Network Developers" <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
+ <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com>
+ <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com>
+ <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
+ <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
+ <CAM_iQpXmpMdxF2JDOROaf+Tjk-8dASiXz53K-Ph_q7jVMe0oVw@mail.gmail.com>
+ <cd773132-c98e-18e1-67fd-bbef6babbf0f@huawei.com>
+ <CAM_iQpWbZdh5-UGBi6PM19EBgV+Bq7vmifgJPdak6X=R9yztnw@mail.gmail.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <c0543793-11fa-6ef1-f8ea-6a724ab2de8f@huawei.com>
+Date:   Thu, 3 Sep 2020 10:22:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-In-Reply-To: <9148679.oVN3Z7rve9@kista>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAM_iQpWbZdh5-UGBi6PM19EBgV+Bq7vmifgJPdak6X=R9yztnw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 1:10 PM, Jernej Škrabec wrote:
-> Hi Samuel!
-> 
-> Dne petek, 10. julij 2020 ob 07:44:51 CEST je Samuel Holland napisal(a):
->> On 7/4/20 6:38 AM, Clément Péron wrote:
->>> From: Marcus Cooper <codekipper@gmail.com>
->>>
->>> Extend the functionality of the driver to include support of 20 and
->>> 24 bits per sample.
->>>
->>> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
->>> Signed-off-by: Clément Péron <peron.clem@gmail.com>
->>> ---
->>>
->>>  sound/soc/sunxi/sun4i-i2s.c | 11 +++++++++--
->>>  1 file changed, 9 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
->>> index f78167e152ce..bc7f9343bc7a 100644
->>> --- a/sound/soc/sunxi/sun4i-i2s.c
->>> +++ b/sound/soc/sunxi/sun4i-i2s.c
->>> @@ -577,6 +577,9 @@ static int sun4i_i2s_hw_params(struct
->>> snd_pcm_substream *substream,> 
->>>  	case 16:
->>>  		width = DMA_SLAVE_BUSWIDTH_2_BYTES;
->>>  		break;
->>>
->>> +	case 32:
->>> +		width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->>> +		break;
+On 2020/9/3 9:48, Cong Wang wrote:
+> On Wed, Sep 2, 2020 at 6:22 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
 >>
->> This breaks the sun4i variants, because sun4i_i2s_get_wss returns 4 for a 32
->> bit width, but it needs to return 3.
+>> On 2020/9/3 8:35, Cong Wang wrote:
+>>> On Tue, Sep 1, 2020 at 11:35 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>>>
+>>>> On 2020/9/2 12:41, Cong Wang wrote:
+>>>>> On Tue, Sep 1, 2020 at 6:42 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>>>>>
+>>>>>> On 2020/9/2 2:24, Cong Wang wrote:
+>>>>>>> On Mon, Aug 31, 2020 at 5:59 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>>>>>>>
+>>>>>>>> Currently there is concurrent reset and enqueue operation for the
+>>>>>>>> same lockless qdisc when there is no lock to synchronize the
+>>>>>>>> q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
+>>>>>>>> qdisc_deactivate() called by dev_deactivate_queue(), which may cause
+>>>>>>>> out-of-bounds access for priv->ring[] in hns3 driver if user has
+>>>>>>>> requested a smaller queue num when __dev_xmit_skb() still enqueue a
+>>>>>>>> skb with a larger queue_mapping after the corresponding qdisc is
+>>>>>>>> reset, and call hns3_nic_net_xmit() with that skb later.
+>>>>>>>
+>>>>>>> Can you be more specific here? Which call path requests a smaller
+>>>>>>> tx queue num? If you mean netif_set_real_num_tx_queues(), clearly
+>>>>>>> we already have a synchronize_net() there.
+>>>>>>
+>>>>>> When the netdevice is in active state, the synchronize_net() seems to
+>>>>>> do the correct work, as below:
+>>>>>>
+>>>>>> CPU 0:                                       CPU1:
+>>>>>> __dev_queue_xmit()                       netif_set_real_num_tx_queues()
+>>>>>> rcu_read_lock_bh();
+>>>>>> netdev_core_pick_tx(dev, skb, sb_dev);
+>>>>>>         .
+>>>>>>         .                               dev->real_num_tx_queues = txq;
+>>>>>>         .                                       .
+>>>>>>         .                                       .
+>>>>>>         .                               synchronize_net();
+>>>>>>         .                                       .
+>>>>>> q->enqueue()                                    .
+>>>>>>         .                                       .
+>>>>>> rcu_read_unlock_bh()                            .
+>>>>>>                                         qdisc_reset_all_tx_gt
+>>>>>>
+>>>>>>
+>>>>>
+>>>>> Right.
+>>>>>
+>>>>>
+>>>>>> but dev->real_num_tx_queues is not RCU-protected, maybe that is a problem
+>>>>>> too.
+>>>>>>
+>>>>>> The problem we hit is as below:
+>>>>>> In hns3_set_channels(), hns3_reset_notify(h, HNAE3_DOWN_CLIENT) is called
+>>>>>> to deactive the netdevice when user requested a smaller queue num, and
+>>>>>> txq->qdisc is already changed to noop_qdisc when calling
+>>>>>> netif_set_real_num_tx_queues(), so the synchronize_net() in the function
+>>>>>> netif_set_real_num_tx_queues() does not help here.
+>>>>>
+>>>>> How could qdisc still be running after deactivating the device?
+>>>>
+>>>> qdisc could be running during the device deactivating process.
+>>>>
+>>>> The main process of changing channel number is as below:
+>>>>
+>>>> 1. dev_deactivate()
+>>>> 2. hns3 handware related setup
+>>>> 3. netif_set_real_num_tx_queues()
+>>>> 4. netif_tx_wake_all_queues()
+>>>> 5. dev_activate()
+>>>>
+>>>> During step 1, qdisc could be running while qdisc is resetting, so
+>>>> there could be skb left in the old qdisc(which will be restored back to
+>>>> txq->qdisc during dev_activate()), as below:
+>>>>
+>>>> CPU 0:                                       CPU1:
+>>>> __dev_queue_xmit():                      dev_deactivate_many():
+>>>> rcu_read_lock_bh();                      qdisc_deactivate(qdisc);
+>>>> q = rcu_dereference_bh(txq->qdisc);             .
+>>>> netdev_core_pick_tx(dev, skb, sb_dev);          .
+>>>>         .
+>>>>         .                               rcu_assign_pointer(dev_queue->qdisc, qdisc_default);
+>>>>         .                                       .
+>>>>         .                                       .
+>>>>         .                                       .
+>>>>         .                                       .
+>>>> q->enqueue()                                    .
+>>>
+>>>
+>>> Well, like I said, if the deactivated bit were tested before ->enqueue(),
+>>> there would be no packet queued after qdisc_deactivate().
+>>
+>> Only if the deactivated bit testing is also protected by qdisc->seqlock?
+>> otherwise there is still window between setting and testing the deactivated bit.
 > 
-> I'm not sure what has WSS with physical width and DMA?
+> Can you be more specific here? Why testing or setting a bit is not atomic?
 
-This is the change where creating a S24_LE stream no longer fails with -EINVAL.
-So this is the change where userspace stops downsampling 24-bit audio sources.
-So this is the change where playback of 24-bit audio sources breaks, because WSS
-is programmed wrong.
+testing a bit or setting a bit separately is atomic.
+But testing a bit and setting a bit is not atomic, right?
 
->> As a side note, I wonder why we use the physical width (the spacing between
->> samples in RAM) to drive the slot width. S24_LE takes up 4 bytes per sample
->> in RAM, which we need for DMA. But I don't see why we would want to
->> transmit the padding over the wire. I would expect it to be transmitted the
->> same as S24_3LE (which has no padding). It did not matter before, because
->> the only supported format had no padding.
+  cpu0:                   cpu1:
+                        testing A bit
+setting A bit                .
+       .                     .
+       .               qdisc enqueuing
+qdisc reset
+
 > 
-> Allwinner DMA engines support only 1, 2, 4 and sometimes 8 bytes for bus 
-> width, so if sample is 24 bits in size, we have no other way but to transmit 
-> padding too.
-
-I understand why we do 4 byte DMA from RAM <=> I2S FIFO; that was not my
-question. I'm referring to the actual wire format (FIFO <=> PCM_DIN/DOUT). The
-sample is already truncated from 32 bits to 24 bits in the FIFO -- that's what
-TXIM and RXOM in FIFO_CTRL control.
-
-If a sample is 24 bits wide, why would we send 32 BCLKs for every LRCK? I would
-expect the slot width to match the sample resolution by default. But yet we have
-this code in the driver:
-
-    unsigned int word_size = params_width(params);
-    unsigned int slot_width = params_physical_width(params);
-
-I think slot_width should be the same as word_size, and I suggest changing it
-before adding 20/24-bit support.
-
-> Best regards,
-> Jernej
-
-Regards,
-Samuel
-
->>>  	default:
->>>  		dev_err(dai->dev, "Unsupported physical sample width: 
-> %d\n",
->>>  		
->>>  			params_physical_width(params));
->>>
->>> @@ -1063,6 +1066,10 @@ static int sun4i_i2s_dai_probe(struct snd_soc_dai
->>> *dai)> 
->>>  	return 0;
->>>  
->>>  }
->>>
->>> +#define SUN4I_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE | \
->>> +			 SNDRV_PCM_FMTBIT_S20_LE | \
->>> +			 SNDRV_PCM_FMTBIT_S24_LE)
->>> +
->>>
->>>  static struct snd_soc_dai_driver sun4i_i2s_dai = {
->>>  
->>>  	.probe = sun4i_i2s_dai_probe,
->>>  	.capture = {
->>>
->>> @@ -1070,14 +1077,14 @@ static struct snd_soc_dai_driver sun4i_i2s_dai = {
->>>
->>>  		.channels_min = 1,
->>>  		.channels_max = 8,
->>>  		.rates = SNDRV_PCM_RATE_8000_192000,
->>>
->>> -		.formats = SNDRV_PCM_FMTBIT_S16_LE,
->>> +		.formats = SUN4I_FORMATS,
->>>
->>>  	},
->>>  	.playback = {
->>>  	
->>>  		.stream_name = "Playback",
->>>  		.channels_min = 1,
->>>  		.channels_max = 8,
->>>  		.rates = SNDRV_PCM_RATE_8000_192000,
->>>
->>> -		.formats = SNDRV_PCM_FMTBIT_S16_LE,
->>> +		.formats = SUN4I_FORMATS,
->>>
->>>  	},
->>>  	.ops = &sun4i_i2s_dai_ops,
->>>  	.symmetric_rates = 1,
+> AFAIU, qdisc->seqlock is an optimization to replace
+> __QDISC_STATE_RUNNING, which has nothing to do with deactivate bit.
 > 
+> Thanks.
+> .
 > 
-> 
-> 
-
