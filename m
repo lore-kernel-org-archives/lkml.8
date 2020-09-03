@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
 	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
 	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960BBC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961A9C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54B9420684
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A2E20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:31:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JbjRfjsv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFMsoPly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbgICUbH (ORCPT
+        id S1729441AbgICUbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:31:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35426 "EHLO
+        Thu, 3 Sep 2020 16:31:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgICUar (ORCPT
+        with ESMTP id S1729273AbgICUar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 16:30:47 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E81EC061245;
-        Thu,  3 Sep 2020 13:30:47 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u18so4110972wmc.3;
-        Thu, 03 Sep 2020 13:30:47 -0700 (PDT)
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E94E3C061244;
+        Thu,  3 Sep 2020 13:30:45 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id a9so4138856wmm.2;
+        Thu, 03 Sep 2020 13:30:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WFsifcAHu4a+Tm23tTPwM2qlu3Wg+NZM8nGekgcuHLc=;
-        b=JbjRfjsv0zK+hnQoKWghf6GDO8TMmhfrwcFH4Y9TaihfLaGYqX7OmruZ+WXgUFOzfg
-         UaJ8dzOPd3pv6WrqarOYZonNdYs6sk2IdJBugQImbR68INPxGodczV6Ul+y/BYqiLXgE
-         kja3FnRqlyek0LwV0tuXpukNymHZGAWkN+bf/w8olDAFA5/kF3X5FAJq1j2ymRCYp6ha
-         Qkgcf/H7DzZhJ6r7QRocX79Zjnds3mSZkLmAL2HnKRGKm/cH1/h1S3xQJs9z7UZK3BSJ
-         TmOJ6XCZdaRwPp1zSPBaN3NgvCkYi2oPxO+ALulSNjN5N0A+zW3gxrUUWxOecMeUqx/s
-         Ig7Q==
+        bh=UhOFrQ6qfsRT/zbm84NK9LroiUxtwPSR9pzAEC7Suno=;
+        b=JFMsoPlyGtgBGt24O6d0Z2GCxKVLK+IYNemL5MJdARV1G8W1XXtfyOdWLa0GApOIn4
+         CbbB6eEVcn6k9FawxC6TrC292zmqD021A1fz4iyUM4ZUqlccNtkLAnxn9HDCP8x8uQoG
+         rbWgJSA8VYpnR74P4O6uHsWRnuKOmrNdffp1LIf+RVxfNm138dSYu0OfSBPgoUWwQIS0
+         OYVRot6DoyQST1V4eijt6BQHY6tW4rhRhLmhAm1tZC154OYTIJ0voy7Fu55++YjW7ZFu
+         B9MiGteEt/IldzUGwKeT3fLpzwOgnnyAJ952vLn1zPjKcM2q24YqD4QvexL2SevOtytE
+         dOdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WFsifcAHu4a+Tm23tTPwM2qlu3Wg+NZM8nGekgcuHLc=;
-        b=NWHKm0YAkhCyBqmV9YOvHbIa5gUEoJLQjti5wwPVN5eSm6K33z5V7LYlvcddMdu3qu
-         2TY5p3UUxNbRuYM5+TCqG6m90ibqJETxUfiNBCpC0nhT59rWYkWmRCxGR4tP94Fy0wiI
-         +nK5DRCNJnfa/ywiFXxON1BWKiYc+PPhQgWtKGSgqk+5N/FXB72KNcx9SoWBLc+PcOkv
-         PEvfEKMKWVQzzBjSm42K3ztD/OWRAS8Ar/+pJ1z2C4tNvc356+f0yh2v8ivtmZ9QPp//
-         zz4AhJXQw0KGRwGZ5chAbesbU6cjv75ib52qElxnuc5i0cvDJy210zMotZSJG/q8m626
-         ItNw==
-X-Gm-Message-State: AOAM530z1PVxTz0LpctukMNIJghpasw0rW0tA0R5QBWyodr0UfyeM6r1
-        1BiUx+g1F3twRNwhhctUvSg=
-X-Google-Smtp-Source: ABdhPJwTx3cnRmX6MQDYiFbRIy7xkcfjPYO9qS2Dvy9WPayvhx6a6Ic0+BbLtmgCpZTpY+wMkMsieA==
-X-Received: by 2002:a1c:105:: with SMTP id 5mr4455498wmb.83.1599165045856;
-        Thu, 03 Sep 2020 13:30:45 -0700 (PDT)
+        bh=UhOFrQ6qfsRT/zbm84NK9LroiUxtwPSR9pzAEC7Suno=;
+        b=GfNep2u9PMCNXCyl8wD7/K+WWAh61hFtij1BXmPLxgqiU1CK2/P01TySXy3Vq3oxTH
+         BYIuDKL3mqA5yHIHQYx+dQmeRHXNwmfJ8CYsrNlMrcw85WGkc0oTQg/ydr+jqioSWv3t
+         BjCe7gztpKvHCKboWbRUmZd27pYREMJvUsHBGROclDTLOOAq5vN5lpcRAdnM+tcZn7z7
+         RrOguxlTmT2KMtbJGjFfyBTSWIPFYSzemyaoLulhG0BcVhKiiq49nRpvdP+vaGLAtl3Q
+         hWGaG0uW0yR6H5KxVsZgD3YraZlXj88u9oGNuUsdASPNbvFTlD1GrXR0+CQw4zwrKeuP
+         /uyg==
+X-Gm-Message-State: AOAM532xCNn+XUcaOylBTTravLmRjXFMfQ3NPr91g7RutLJb2wSQkwOy
+        gqNybKBW4xt5p85VahFUo9qwJBC0poxM4w==
+X-Google-Smtp-Source: ABdhPJxFPdJWP5bs+Yfd6VN8HjhX9dy6LULxDIz3bk0NEQYa1SFSpokHHgBIJt0OuBT3VbISemQnkQ==
+X-Received: by 2002:a1c:7405:: with SMTP id p5mr4197688wmc.35.1599165044454;
+        Thu, 03 Sep 2020 13:30:44 -0700 (PDT)
 Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id q186sm6818274wma.45.2020.09.03.13.30.44
+        by smtp.gmail.com with ESMTPSA id q186sm6818274wma.45.2020.09.03.13.30.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 13:30:45 -0700 (PDT)
+        Thu, 03 Sep 2020 13:30:43 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -72,9 +72,9 @@ Cc:     devicetree@vger.kernel.org,
         Marcus Cooper <codekipper@gmail.com>,
         linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 02/20] ASoC: sun4i-i2s: Add support for H6 I2S
-Date:   Thu,  3 Sep 2020 22:30:16 +0200
-Message-Id: <20200903203034.1057334-3-peron.clem@gmail.com>
+Subject: [PATCH v2 01/20] Revert "ASoC: sun4i-i2s: Fix the LRCK polarity"
+Date:   Thu,  3 Sep 2020 22:30:15 +0200
+Message-Id: <20200903203034.1057334-2-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200903203034.1057334-1-peron.clem@gmail.com>
 References: <20200903203034.1057334-1-peron.clem@gmail.com>
@@ -86,292 +86,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+This reverts commit dd657eae8164f7e4bafe8b875031a7c6c50646a9.
 
-H6 I2S is very similar to that in H3, except it supports up to 16
-channels.
+There was a misinterpretation of the analysis using a scope.
+After rechecking this using a logical analyzer the LRCK polarity is
+fine.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+Fixes: dd657eae8164 ("ASoC: sun4i-i2s: Fix the LRCK polarity")
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 221 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 221 insertions(+)
+ sound/soc/sunxi/sun4i-i2s.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
 diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index fabff7bcccbc..acf24f512f2c 100644
+index f23ff29e7c1d..fabff7bcccbc 100644
 --- a/sound/soc/sunxi/sun4i-i2s.c
 +++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -124,6 +124,21 @@
- #define SUN8I_I2S_RX_CHAN_SEL_REG	0x54
- #define SUN8I_I2S_RX_CHAN_MAP_REG	0x58
+@@ -603,29 +603,23 @@ static int sun8i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
+ 	u32 mode, val;
+ 	u8 offset;
  
-+/* Defines required for sun50i-h6 support */
-+#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET_MASK	GENMASK(21, 20)
-+#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET(offset)	((offset) << 20)
-+#define SUN50I_H6_I2S_TX_CHAN_SEL_MASK		GENMASK(19, 16)
-+#define SUN50I_H6_I2S_TX_CHAN_SEL(chan)		((chan - 1) << 16)
-+#define SUN50I_H6_I2S_TX_CHAN_EN_MASK		GENMASK(15, 0)
-+#define SUN50I_H6_I2S_TX_CHAN_EN(num_chan)	(((1 << num_chan) - 1))
-+
-+#define SUN50I_H6_I2S_TX_CHAN_MAP0_REG	0x44
-+#define SUN50I_H6_I2S_TX_CHAN_MAP1_REG	0x48
-+
-+#define SUN50I_H6_I2S_RX_CHAN_SEL_REG	0x64
-+#define SUN50I_H6_I2S_RX_CHAN_MAP0_REG	0x68
-+#define SUN50I_H6_I2S_RX_CHAN_MAP1_REG	0x6C
-+
- struct sun4i_i2s;
- 
- /**
-@@ -474,6 +489,65 @@ static int sun8i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
- 	return 0;
- }
- 
-+static int sun50i_h6_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
-+				      const struct snd_pcm_hw_params *params)
-+{
-+	unsigned int channels = params_channels(params);
-+	unsigned int slots = channels;
-+	unsigned int lrck_period;
-+
-+	if (i2s->slots)
-+		slots = i2s->slots;
-+
-+	/* Map the channels for playback and capture */
-+	regmap_write(i2s->regmap, SUN50I_H6_I2S_TX_CHAN_MAP1_REG, 0x76543210);
-+	regmap_write(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_MAP1_REG, 0x76543210);
-+
-+	/* Configure the channels */
-+	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
-+			   SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
-+			   SUN50I_H6_I2S_TX_CHAN_SEL(channels));
-+	regmap_update_bits(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_SEL_REG,
-+			   SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
-+			   SUN50I_H6_I2S_TX_CHAN_SEL(channels));
-+
-+	regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
-+			   SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM_MASK,
-+			   SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM(channels));
-+	regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
-+			   SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM_MASK,
-+			   SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM(channels));
-+
-+	switch (i2s->format & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_DSP_A:
-+	case SND_SOC_DAIFMT_DSP_B:
-+	case SND_SOC_DAIFMT_LEFT_J:
-+	case SND_SOC_DAIFMT_RIGHT_J:
-+		lrck_period = params_physical_width(params) * slots;
-+		break;
-+
-+	case SND_SOC_DAIFMT_I2S:
-+		lrck_period = params_physical_width(params);
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (i2s->slot_width)
-+		lrck_period = i2s->slot_width;
-+
-+	regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
-+			   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
-+			   SUN8I_I2S_FMT0_LRCK_PERIOD(lrck_period));
-+
-+	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
-+			   SUN50I_H6_I2S_TX_CHAN_EN_MASK,
-+			   SUN50I_H6_I2S_TX_CHAN_EN(channels));
-+
-+	return 0;
-+}
-+
- static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
- 			       struct snd_pcm_hw_params *params,
- 			       struct snd_soc_dai *dai)
-@@ -693,6 +767,102 @@ static int sun8i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
- 	return 0;
- }
- 
-+static int sun50i_h6_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
-+				     unsigned int fmt)
-+{
-+	u32 mode, val;
-+	u8 offset;
-+
+-	/*
+-	 * DAI clock polarity
+-	 *
+-	 * The setup for LRCK contradicts the datasheet, but under a
+-	 * scope it's clear that the LRCK polarity is reversed
+-	 * compared to the expected polarity on the bus.
+-	 */
 +	/* DAI clock polarity */
-+	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
-+	case SND_SOC_DAIFMT_IB_IF:
-+		/* Invert both clocks */
+ 	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
+ 	case SND_SOC_DAIFMT_IB_IF:
+ 		/* Invert both clocks */
+-		val = SUN8I_I2S_FMT0_BCLK_POLARITY_INVERTED;
 +		val = SUN8I_I2S_FMT0_BCLK_POLARITY_INVERTED |
 +		      SUN8I_I2S_FMT0_LRCLK_POLARITY_INVERTED;
-+		break;
-+	case SND_SOC_DAIFMT_IB_NF:
-+		/* Invert bit clock */
+ 		break;
+ 	case SND_SOC_DAIFMT_IB_NF:
+ 		/* Invert bit clock */
+-		val = SUN8I_I2S_FMT0_BCLK_POLARITY_INVERTED |
+-		      SUN8I_I2S_FMT0_LRCLK_POLARITY_INVERTED;
 +		val = SUN8I_I2S_FMT0_BCLK_POLARITY_INVERTED;
-+		break;
-+	case SND_SOC_DAIFMT_NB_IF:
-+		/* Invert frame clock */
+ 		break;
+ 	case SND_SOC_DAIFMT_NB_IF:
+ 		/* Invert frame clock */
+-		val = 0;
 +		val = SUN8I_I2S_FMT0_LRCLK_POLARITY_INVERTED;
-+		break;
-+	case SND_SOC_DAIFMT_NB_NF:
+ 		break;
+ 	case SND_SOC_DAIFMT_NB_NF:
+-		val = SUN8I_I2S_FMT0_LRCLK_POLARITY_INVERTED;
 +		val = 0;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
-+			   SUN8I_I2S_FMT0_LRCLK_POLARITY_MASK |
-+			   SUN8I_I2S_FMT0_BCLK_POLARITY_MASK,
-+			   val);
-+
-+	/* DAI Mode */
-+	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_DSP_A:
-+		mode = SUN8I_I2S_CTRL_MODE_PCM;
-+		offset = 1;
-+		break;
-+
-+	case SND_SOC_DAIFMT_DSP_B:
-+		mode = SUN8I_I2S_CTRL_MODE_PCM;
-+		offset = 0;
-+		break;
-+
-+	case SND_SOC_DAIFMT_I2S:
-+		mode = SUN8I_I2S_CTRL_MODE_LEFT;
-+		offset = 1;
-+		break;
-+
-+	case SND_SOC_DAIFMT_LEFT_J:
-+		mode = SUN8I_I2S_CTRL_MODE_LEFT;
-+		offset = 0;
-+		break;
-+
-+	case SND_SOC_DAIFMT_RIGHT_J:
-+		mode = SUN8I_I2S_CTRL_MODE_RIGHT;
-+		offset = 0;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	regmap_update_bits(i2s->regmap, SUN4I_I2S_CTRL_REG,
-+			   SUN8I_I2S_CTRL_MODE_MASK, mode);
-+	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
-+			   SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET_MASK,
-+			   SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET(offset));
-+	regmap_update_bits(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_SEL_REG,
-+			   SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET_MASK,
-+			   SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET(offset));
-+
-+	/* DAI clock master masks */
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBS_CFS:
-+		/* BCLK and LRCLK master */
-+		val = SUN8I_I2S_CTRL_BCLK_OUT |	SUN8I_I2S_CTRL_LRCK_OUT;
-+		break;
-+
-+	case SND_SOC_DAIFMT_CBM_CFM:
-+		/* BCLK and LRCLK slave */
-+		val = 0;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	regmap_update_bits(i2s->regmap, SUN4I_I2S_CTRL_REG,
-+			   SUN8I_I2S_CTRL_BCLK_OUT | SUN8I_I2S_CTRL_LRCK_OUT,
-+			   val);
-+
-+	return 0;
-+}
-+
- static int sun4i_i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- {
- 	struct sun4i_i2s *i2s = snd_soc_dai_get_drvdata(dai);
-@@ -973,6 +1143,22 @@ static const struct reg_default sun8i_i2s_reg_defaults[] = {
- 	{ SUN8I_I2S_RX_CHAN_MAP_REG, 0x00000000 },
- };
- 
-+static const struct reg_default sun50i_h6_i2s_reg_defaults[] = {
-+	{ SUN4I_I2S_CTRL_REG, 0x00060000 },
-+	{ SUN4I_I2S_FMT0_REG, 0x00000033 },
-+	{ SUN4I_I2S_FMT1_REG, 0x00000030 },
-+	{ SUN4I_I2S_FIFO_CTRL_REG, 0x000400f0 },
-+	{ SUN4I_I2S_DMA_INT_CTRL_REG, 0x00000000 },
-+	{ SUN4I_I2S_CLK_DIV_REG, 0x00000000 },
-+	{ SUN8I_I2S_CHAN_CFG_REG, 0x00000000 },
-+	{ SUN8I_I2S_TX_CHAN_SEL_REG, 0x00000000 },
-+	{ SUN50I_H6_I2S_TX_CHAN_MAP0_REG, 0x00000000 },
-+	{ SUN50I_H6_I2S_TX_CHAN_MAP1_REG, 0x00000000 },
-+	{ SUN50I_H6_I2S_RX_CHAN_SEL_REG, 0x00000000 },
-+	{ SUN50I_H6_I2S_RX_CHAN_MAP0_REG, 0x00000000 },
-+	{ SUN50I_H6_I2S_RX_CHAN_MAP1_REG, 0x00000000 },
-+};
-+
- static const struct regmap_config sun4i_i2s_regmap_config = {
- 	.reg_bits	= 32,
- 	.reg_stride	= 4,
-@@ -1000,6 +1186,19 @@ static const struct regmap_config sun8i_i2s_regmap_config = {
- 	.volatile_reg	= sun8i_i2s_volatile_reg,
- };
- 
-+static const struct regmap_config sun50i_h6_i2s_regmap_config = {
-+	.reg_bits	= 32,
-+	.reg_stride	= 4,
-+	.val_bits	= 32,
-+	.max_register	= SUN50I_H6_I2S_RX_CHAN_MAP1_REG,
-+	.cache_type	= REGCACHE_FLAT,
-+	.reg_defaults	= sun50i_h6_i2s_reg_defaults,
-+	.num_reg_defaults	= ARRAY_SIZE(sun50i_h6_i2s_reg_defaults),
-+	.writeable_reg	= sun4i_i2s_wr_reg,
-+	.readable_reg	= sun8i_i2s_rd_reg,
-+	.volatile_reg	= sun8i_i2s_volatile_reg,
-+};
-+
- static int sun4i_i2s_runtime_resume(struct device *dev)
- {
- 	struct sun4i_i2s *i2s = dev_get_drvdata(dev);
-@@ -1158,6 +1357,24 @@ static const struct sun4i_i2s_quirks sun50i_a64_codec_i2s_quirks = {
- 	.set_fmt		= sun4i_i2s_set_soc_fmt,
- };
- 
-+static const struct sun4i_i2s_quirks sun50i_h6_i2s_quirks = {
-+	.has_reset		= true,
-+	.reg_offset_txdata	= SUN8I_I2S_FIFO_TX_REG,
-+	.sun4i_i2s_regmap	= &sun50i_h6_i2s_regmap_config,
-+	.field_clkdiv_mclk_en	= REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 8, 8),
-+	.field_fmt_wss		= REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 2),
-+	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 6),
-+	.bclk_dividers		= sun8i_i2s_clk_div,
-+	.num_bclk_dividers	= ARRAY_SIZE(sun8i_i2s_clk_div),
-+	.mclk_dividers		= sun8i_i2s_clk_div,
-+	.num_mclk_dividers	= ARRAY_SIZE(sun8i_i2s_clk_div),
-+	.get_bclk_parent_rate	= sun8i_i2s_get_bclk_parent_rate,
-+	.get_sr			= sun8i_i2s_get_sr_wss,
-+	.get_wss		= sun8i_i2s_get_sr_wss,
-+	.set_chan_cfg		= sun50i_h6_i2s_set_chan_cfg,
-+	.set_fmt		= sun50i_h6_i2s_set_soc_fmt,
-+};
-+
- static int sun4i_i2s_init_regmap_fields(struct device *dev,
- 					struct sun4i_i2s *i2s)
- {
-@@ -1327,6 +1544,10 @@ static const struct of_device_id sun4i_i2s_match[] = {
- 		.compatible = "allwinner,sun50i-a64-codec-i2s",
- 		.data = &sun50i_a64_codec_i2s_quirks,
- 	},
-+	{
-+		.compatible = "allwinner,sun50i-h6-i2s",
-+		.data = &sun50i_h6_i2s_quirks,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, sun4i_i2s_match);
+ 		break;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.25.1
 
