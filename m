@@ -2,151 +2,89 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 081CBC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FBAC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1B1B20FC3
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E317720737
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:01:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbgICPBA (ORCPT
+        id S1729062AbgICOFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:01:00 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:49848 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728867AbgICOFt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:05:49 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R341e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=31;SR=0;TI=SMTPD_---0U7pNn5X_1599138766;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U7pNn5X_1599138766)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 03 Sep 2020 21:12:46 +0800
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Howells <dhowells@redhat.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephan Mueller <smueller@chronox.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Waiman Long <longman@redhat.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        Vitaly Chikunov <vt@altlinux.org>,
-        "Gilad Ben-Yossef" <gilad@benyossef.com>,
-        Pascal van Leeuwen <pvanleeuwen@rambus.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-security-module@vger.kernel.org
-Cc:     Xufeng Zhang <yunbo.xufeng@linux.alibaba.com>,
-        Jia Zhang <zhang.jia@linux.alibaba.com>,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Subject: [PATCH v6 6/8] X.509: support OSCCA certificate parse
-Date:   Thu,  3 Sep 2020 21:12:40 +0800
-Message-Id: <20200903131242.128665-7-tianjia.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.3.ge56e4f7
-In-Reply-To: <20200903131242.128665-1-tianjia.zhang@linux.alibaba.com>
-References: <20200903131242.128665-1-tianjia.zhang@linux.alibaba.com>
+        Thu, 3 Sep 2020 10:05:46 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10808 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728897AbgICMjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:39:16 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 56A098AEC195BED7EB6D;
+        Thu,  3 Sep 2020 20:38:53 +0800 (CST)
+Received: from [10.57.101.250] (10.57.101.250) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 3 Sep 2020 20:38:45 +0800
+Subject: Re: [PATCH] net/mlx5e: kTLS, Fix GFP_KERNEL in spinlock context
+To:     <netdev@vger.kernel.org>
+References: <1599133539-175203-1-git-send-email-xuwei5@hisilicon.com>
+CC:     <davem@davemloft.net>, <saeedm@mellanox.com>, <leon@kernel.org>,
+        <linuxarm@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+        <jonathan.cameron@huawei.com>, <john.garry@huawei.com>,
+        <salil.mehta@huawei.com>, <shiju.jose@huawei.com>,
+        <jinying@hisilicon.com>, <zhangyi.ac@huawei.com>,
+        <liguozhu@hisilicon.com>, <tangkunshan@huawei.com>,
+        <huangdaode@hisilicon.com>, Boris Pismenny <borisp@nvidia.com>,
+        "Saeed Mahameed" <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Wei Xu <xuwei5@hisilicon.com>
+Message-ID: <5F50E3D5.8090302@hisilicon.com>
+Date:   Thu, 3 Sep 2020 20:38:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1599133539-175203-1-git-send-email-xuwei5@hisilicon.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.101.250]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The digital certificate format based on SM2 crypto algorithm as
-specified in GM/T 0015-2012. It was published by State Encryption
-Management Bureau, China.
+Hi All,
 
-This patch adds the OID object identifier defined by OSCCA. The
-x509 certificate supports sm2-with-sm3 type certificate parsing.
-It uses the standard elliptic curve public key, and the sm2
-algorithm signs the hash generated by sm3.
+Sorry for the noise and please ignore it!
+I found a nearly same patch has been sent out 2 days before.
 
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Tested-by: Xufeng Zhang <yunbo.xufeng@linux.alibaba.com>
----
- crypto/asymmetric_keys/x509_cert_parser.c | 14 +++++++++++++-
- include/linux/oid_registry.h              |  6 ++++++
- 2 files changed, 19 insertions(+), 1 deletion(-)
+Best Regards,
+Wei
 
-diff --git a/crypto/asymmetric_keys/x509_cert_parser.c b/crypto/asymmetric_keys/x509_cert_parser.c
-index 26ec20ef4899..6a8aee22bfd4 100644
---- a/crypto/asymmetric_keys/x509_cert_parser.c
-+++ b/crypto/asymmetric_keys/x509_cert_parser.c
-@@ -234,6 +234,10 @@ int x509_note_pkey_algo(void *context, size_t hdrlen,
- 	case OID_gost2012Signature512:
- 		ctx->cert->sig->hash_algo = "streebog512";
- 		goto ecrdsa;
-+
-+	case OID_sm2_with_sm3:
-+		ctx->cert->sig->hash_algo = "sm3";
-+		goto sm2;
- 	}
- 
- rsa_pkcs1:
-@@ -246,6 +250,11 @@ int x509_note_pkey_algo(void *context, size_t hdrlen,
- 	ctx->cert->sig->encoding = "raw";
- 	ctx->algo_oid = ctx->last_oid;
- 	return 0;
-+sm2:
-+	ctx->cert->sig->pkey_algo = "sm2";
-+	ctx->cert->sig->encoding = "raw";
-+	ctx->algo_oid = ctx->last_oid;
-+	return 0;
- }
- 
- /*
-@@ -266,7 +275,8 @@ int x509_note_signature(void *context, size_t hdrlen,
- 	}
- 
- 	if (strcmp(ctx->cert->sig->pkey_algo, "rsa") == 0 ||
--	    strcmp(ctx->cert->sig->pkey_algo, "ecrdsa") == 0) {
-+	    strcmp(ctx->cert->sig->pkey_algo, "ecrdsa") == 0 ||
-+	    strcmp(ctx->cert->sig->pkey_algo, "sm2") == 0) {
- 		/* Discard the BIT STRING metadata */
- 		if (vlen < 1 || *(const u8 *)value != 0)
- 			return -EBADMSG;
-@@ -456,6 +466,8 @@ int x509_extract_key_data(void *context, size_t hdrlen,
- 	else if (ctx->last_oid == OID_gost2012PKey256 ||
- 		 ctx->last_oid == OID_gost2012PKey512)
- 		ctx->cert->pub->pkey_algo = "ecrdsa";
-+	else if (ctx->last_oid == OID_id_ecPublicKey)
-+		ctx->cert->pub->pkey_algo = "sm2";
- 	else
- 		return -ENOPKG;
- 
-diff --git a/include/linux/oid_registry.h b/include/linux/oid_registry.h
-index 657d6bf2c064..48fe3133ff39 100644
---- a/include/linux/oid_registry.h
-+++ b/include/linux/oid_registry.h
-@@ -107,6 +107,12 @@ enum OID {
- 	OID_gostTC26Sign512B,		/* 1.2.643.7.1.2.1.2.2 */
- 	OID_gostTC26Sign512C,		/* 1.2.643.7.1.2.1.2.3 */
- 
-+	/* OSCCA */
-+	OID_sm2,			/* 1.2.156.10197.1.301 */
-+	OID_sm3,			/* 1.2.156.10197.1.401 */
-+	OID_sm2_with_sm3,		/* 1.2.156.10197.1.501 */
-+	OID_sm3WithRSAEncryption,	/* 1.2.156.10197.1.504 */
-+
- 	OID__NR
- };
- 
--- 
-2.19.1.3.ge56e4f7
-
+On 2020/9/3 19:45, Wei Xu wrote:
+> Replace GFP_KERNEL with GFP_ATOMIC while resync_post_get_progress_params
+> is invoked in a spinlock context.
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_rx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_rx.c
+> index acf6d80..1a32435 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_rx.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_rx.c
+> @@ -247,7 +247,7 @@ resync_post_get_progress_params(struct mlx5e_icosq *sq,
+>  	int err;
+>  	u16 pi;
+>  
+> -	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
+> +	buf = kzalloc(sizeof(*buf), GFP_ATOMIC);
+>  	if (unlikely(!buf)) {
+>  		err = -ENOMEM;
+>  		goto err_out;
+> 
