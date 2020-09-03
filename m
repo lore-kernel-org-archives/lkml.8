@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FE7C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB061C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 786D120786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 989D720786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="jYQYUggT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="JuRU33RE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgICPSe (ORCPT
+        id S1727882AbgICLaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:18:34 -0400
-Received: from crapouillou.net ([89.234.176.41]:51512 "EHLO crapouillou.net"
+        Thu, 3 Sep 2020 07:30:20 -0400
+Received: from crapouillou.net ([89.234.176.41]:50376 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728376AbgICLb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:31:58 -0400
+        id S1728422AbgICL0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:26:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599132381; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1599132365; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Q++myQyFVGc5viHm1my4fERz4BkgXBYuJlPFvw347zc=;
-        b=jYQYUggTNuQ1S6/3AD+ZmojFJNLvAFPZAu3nlpl+R3Zxjg7o0i+1ZV9A/w9OncyVirf37r
-        RDUjJo7sVHvcVRBsCymTMBSH3cp4BYuaJq2KJjp3ncoaZ+8635HCMWW3Twt/Oy+vizidMX
-        QmnPSvEHoqj0+1aIe8xKa3yGbcwpIp0=
+        bh=nylEOZ/ud9dJuiCng3IS9pJVAuTv7JQFJCJlDdh38kA=;
+        b=JuRU33REs724J6eVnbhIDjfeUMWW9tOA78MdFBc3i95nB9cktLPxKK2ChHPcQK628+jfXp
+        i3+e9cDmuhgUwtVBolHIKO9sH8/eX+Ybb3YnUm1v+0udsj1vdEp3baEUPowH0LfsUOS6V5
+        R9po9WQ1ueOAKCWhmtjbsOVyV8m+OMk=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Chen <Peter.Chen@nxp.com>,
@@ -55,9 +55,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 07/20] usb/misc: usb3503: Use pm_ptr() macro
-Date:   Thu,  3 Sep 2020 13:25:41 +0200
-Message-Id: <20200903112554.34263-8-paul@crapouillou.net>
+Subject: [PATCH 01/20] usb/host: ohci-platform: Use pm_ptr() macro
+Date:   Thu,  3 Sep 2020 13:25:35 +0200
+Message-Id: <20200903112554.34263-2-paul@crapouillou.net>
 In-Reply-To: <20200903112554.34263-1-paul@crapouillou.net>
 References: <20200903112554.34263-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -75,85 +75,77 @@ simply be discarded by the compiler.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/usb/misc/usb3503.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ drivers/usb/host/ohci-platform.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/usb/misc/usb3503.c b/drivers/usb/misc/usb3503.c
-index 116bd789e568..48099c6bf04c 100644
---- a/drivers/usb/misc/usb3503.c
-+++ b/drivers/usb/misc/usb3503.c
-@@ -322,8 +322,7 @@ static int usb3503_platform_remove(struct platform_device *pdev)
+diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+index 4a8456f12a73..21400d7d8b0a 100644
+--- a/drivers/usb/host/ohci-platform.c
++++ b/drivers/usb/host/ohci-platform.c
+@@ -176,22 +176,21 @@ static int ohci_platform_probe(struct platform_device *dev)
+ 	if (pdata->num_ports)
+ 		ohci->num_ports = pdata->num_ports;
+ 
+-#ifndef CONFIG_USB_OHCI_BIG_ENDIAN_MMIO
+-	if (ohci->flags & OHCI_QUIRK_BE_MMIO) {
++	if (!IS_ENABLED(CONFIG_USB_OHCI_BIG_ENDIAN_MMIO) &&
++	    ohci->flags & OHCI_QUIRK_BE_MMIO) {
+ 		dev_err(&dev->dev,
+ 			"Error: CONFIG_USB_OHCI_BIG_ENDIAN_MMIO not set\n");
+ 		err = -EINVAL;
+ 		goto err_reset;
+ 	}
+-#endif
+-#ifndef CONFIG_USB_OHCI_BIG_ENDIAN_DESC
+-	if (ohci->flags & OHCI_QUIRK_BE_DESC) {
++
++	if (!IS_ENABLED(CONFIG_USB_OHCI_BIG_ENDIAN_DESC) &&
++	    ohci->flags & OHCI_QUIRK_BE_DESC) {
+ 		dev_err(&dev->dev,
+ 			"Error: CONFIG_USB_OHCI_BIG_ENDIAN_DESC not set\n");
+ 		err = -EINVAL;
+ 		goto err_reset;
+ 	}
+-#endif
+ 
+ 	pm_runtime_set_active(&dev->dev);
+ 	pm_runtime_enable(&dev->dev);
+@@ -267,8 +266,7 @@ static int ohci_platform_remove(struct platform_device *dev)
  	return 0;
  }
  
 -#ifdef CONFIG_PM_SLEEP
--static int usb3503_suspend(struct usb3503 *hub)
-+static int __maybe_unused usb3503_suspend(struct usb3503 *hub)
+-static int ohci_platform_suspend(struct device *dev)
++static int __maybe_unused ohci_platform_suspend(struct device *dev)
  {
- 	usb3503_switch_mode(hub, USB3503_MODE_STANDBY);
- 	clk_disable_unprepare(hub->clk);
-@@ -331,7 +330,7 @@ static int usb3503_suspend(struct usb3503 *hub)
+ 	struct usb_hcd *hcd = dev_get_drvdata(dev);
+ 	struct usb_ohci_pdata *pdata = dev->platform_data;
+@@ -286,7 +284,7 @@ static int ohci_platform_suspend(struct device *dev)
+ 	return ret;
+ }
+ 
+-static int ohci_platform_resume(struct device *dev)
++static int __maybe_unused ohci_platform_resume(struct device *dev)
+ {
+ 	struct usb_hcd *hcd = dev_get_drvdata(dev);
+ 	struct usb_ohci_pdata *pdata = dev_get_platdata(dev);
+@@ -306,7 +304,6 @@ static int ohci_platform_resume(struct device *dev)
+ 
  	return 0;
  }
+-#endif /* CONFIG_PM_SLEEP */
  
--static int usb3503_resume(struct usb3503 *hub)
-+static int __maybe_unused usb3503_resume(struct usb3503 *hub)
- {
- 	clk_prepare_enable(hub->clk);
- 	usb3503_switch_mode(hub, hub->mode);
-@@ -339,30 +338,29 @@ static int usb3503_resume(struct usb3503 *hub)
- 	return 0;
- }
- 
--static int usb3503_i2c_suspend(struct device *dev)
-+static int __maybe_unused usb3503_i2c_suspend(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
- 
- 	return usb3503_suspend(i2c_get_clientdata(client));
- }
- 
--static int usb3503_i2c_resume(struct device *dev)
-+static int __maybe_unused usb3503_i2c_resume(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
- 
- 	return usb3503_resume(i2c_get_clientdata(client));
- }
- 
--static int usb3503_platform_suspend(struct device *dev)
-+static int __maybe_unused usb3503_platform_suspend(struct device *dev)
- {
- 	return usb3503_suspend(dev_get_drvdata(dev));
- }
- 
--static int usb3503_platform_resume(struct device *dev)
-+static int __maybe_unused usb3503_platform_resume(struct device *dev)
- {
- 	return usb3503_resume(dev_get_drvdata(dev));
- }
--#endif
- 
- static SIMPLE_DEV_PM_OPS(usb3503_i2c_pm_ops, usb3503_i2c_suspend,
- 		usb3503_i2c_resume);
-@@ -388,7 +386,7 @@ MODULE_DEVICE_TABLE(of, usb3503_of_match);
- static struct i2c_driver usb3503_i2c_driver = {
- 	.driver = {
- 		.name = USB3503_I2C_NAME,
--		.pm = &usb3503_i2c_pm_ops,
-+		.pm = pm_ptr(&usb3503_i2c_pm_ops),
- 		.of_match_table = of_match_ptr(usb3503_of_match),
- 	},
- 	.probe		= usb3503_i2c_probe,
-@@ -400,7 +398,7 @@ static struct platform_driver usb3503_platform_driver = {
- 	.driver = {
- 		.name = USB3503_I2C_NAME,
- 		.of_match_table = of_match_ptr(usb3503_of_match),
--		.pm = &usb3503_platform_pm_ops,
-+		.pm = pm_ptr(&usb3503_platform_pm_ops),
- 	},
- 	.probe		= usb3503_platform_probe,
- 	.remove		= usb3503_platform_remove,
+ static const struct of_device_id ohci_platform_ids[] = {
+ 	{ .compatible = "generic-ohci", },
+@@ -332,7 +329,7 @@ static struct platform_driver ohci_platform_driver = {
+ 	.shutdown	= usb_hcd_platform_shutdown,
+ 	.driver		= {
+ 		.name	= "ohci-platform",
+-		.pm	= &ohci_platform_pm_ops,
++		.pm	= pm_ptr(&ohci_platform_pm_ops),
+ 		.of_match_table = ohci_platform_ids,
+ 	}
+ };
 -- 
 2.28.0
 
