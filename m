@@ -2,68 +2,94 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1420C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A587CC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3BC920786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 847F020786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:02:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599098554;
+	bh=oXS2G4ZGoJ1ZSfjgka22/QmGCif9MbzQQtgewSUYIgc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GoEsEHRFRUlBk3pY+9uBGwNQIogmLOD23/3DWLFKNtkBb+E3COXw8CVZRogizMTdd
+	 UXq01XqGBpnz8uvF9+zoSGtsA4Si5FYeT/Tf3ij8liCEvtCXMn/+KNJKahqPKI6/SG
+	 JZN5Mc+yIO55SwmcMFWyqb+Zm6IP3aBYtuToeq6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgICCA3 (ORCPT
+        id S1727867AbgICCCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 22:00:29 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10802 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726177AbgICCA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 22:00:28 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id ED899317590B7B52DD2C;
-        Thu,  3 Sep 2020 10:00:26 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 3 Sep 2020
- 10:00:20 +0800
-From:   Ye Bin <yebin10@huawei.com>
-To:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <maz@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Ye Bin <yebin10@huawei.com>
-Subject: [PATCH] irqchip/tango: Fix possible null ptr reference in tangox_irq_init
-Date:   Thu, 3 Sep 2020 09:59:52 +0800
-Message-ID: <20200903015952.308888-1-yebin10@huawei.com>
-X-Mailer: git-send-email 2.25.4
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-CFilter-Loop: Reflected
+        Wed, 2 Sep 2020 22:02:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726177AbgICCCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 22:02:32 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55BC82071B;
+        Thu,  3 Sep 2020 02:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599098552;
+        bh=oXS2G4ZGoJ1ZSfjgka22/QmGCif9MbzQQtgewSUYIgc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iGBysdCDoQ7S5l2sM4OOTwhGD85kpcOGwAZRZPInk0byviyBFEHh+BAjY6AFu/XGq
+         dg9YYWydzm5vxEBic16jogzrdIJVi5Hs7pgfLpEO1bfLab+UV5mw6PaXlzxLoyYMP1
+         S+ItB222EMS6Adt+KWv/seS7slNhVvdlJCkuaqNI=
+Date:   Thu, 3 Sep 2020 11:02:26 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     peterz@infradead.org, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel@vger.kernel.org, Eddy_Wu@trendmicro.com,
+        x86@kernel.org, davem@davemloft.net, rostedt@goodmis.org,
+        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        linux-arch@vger.kernel.org, cameron@moodycamel.com,
+        oleg@redhat.com, will@kernel.org, paulmck@kernel.org,
+        systemtap@sourceware.org
+Subject: Re: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers
+ and make kretprobe lockless
+Message-Id: <20200903110226.8963179e6a7c978e2d56c595@kernel.org>
+In-Reply-To: <20200903103954.68f0c97da57b3679169ce3a7@kernel.org>
+References: <159870598914.1229682.15230803449082078353.stgit@devnote2>
+        <20200901190808.GK29142@worktop.programming.kicks-ass.net>
+        <20200902093739.8bd13603380951eaddbcd8a5@kernel.org>
+        <20200902070226.GG2674@hirez.programming.kicks-ass.net>
+        <20200902171755.b126672093a3c5d1b3a62a4f@kernel.org>
+        <20200902093613.GY1362448@hirez.programming.kicks-ass.net>
+        <20200902221926.f5cae5b4ad00b8d8f9ad99c7@kernel.org>
+        <20200902134252.GH1362448@hirez.programming.kicks-ass.net>
+        <20200903103954.68f0c97da57b3679169ce3a7@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In tangox_irq_init allocate chip but not test.
+On Thu, 3 Sep 2020 10:39:54 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Signed-off-by: Ye Bin <yebin10@huawei.com>
----
- drivers/irqchip/irq-tango.c | 2 ++
- 1 file changed, 2 insertions(+)
+> OK, I've confirmed that the lockdep warns on kretprobe from INT3
+> with your fix. Of course make it lockless then warning is gone.
+> But even without the lockless patch, this warning can be false-positive
+> because we prohibit nested kprobe call, right?
+> 
+> If the kprobe user handler uses a spinlock, the spinlock is used
+> only in that handler (and in the context between kprobe_busy_begin/end),
+> it will be safe since the spinlock is not nested.
+> But if the spinlock is shared with other context, it will be dangerous
+> because it can be interrupted by NMI (including INT3). This also applied
+> to the function which is called from kprobe user handlers, thus user
+> has to take care of it.
 
-diff --git a/drivers/irqchip/irq-tango.c b/drivers/irqchip/irq-tango.c
-index 34290f09b853..25da120230ad 100644
---- a/drivers/irqchip/irq-tango.c
-+++ b/drivers/irqchip/irq-tango.c
-@@ -187,6 +187,8 @@ static int __init tangox_irq_init(void __iomem *base, struct resource *baseres,
- 		panic("%pOFn: failed to get address", node);
- 
- 	chip = kzalloc(sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		panic("%pOFn: failed to get chip", node);
- 	chip->ctl = res.start - baseres->start;
- 	chip->base = base;
- 
+Sorry, for noticing this point, I Cc'd to systemtap. Is systemtap taking
+care of spinlock too?
+
+Thank you,
+
 -- 
-2.25.4
-
+Masami Hiramatsu <mhiramat@kernel.org>
