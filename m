@@ -2,103 +2,119 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9215FC2BBDB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F84C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63C4120716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:01:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="Cq3p3J6M"
+	by mail.kernel.org (Postfix) with ESMTP id 7E3502078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:02:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599156120;
+	bh=g/zK/ClT1m5soG/tnXSY+wGtMX3SLoeeyKDXpcFFi+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nwol6Ym07Qz6xI1D0jPipmJ6gawlHARBXBb8ZthwBD1S1+XkSaXWKM5WlTWSDafNL
+	 mqCUAgbFldUFxHjUSgua1reWDgYsMdNA5zKFGCnPop7vzapH2wnDOLzG2rK6/BGip4
+	 uJb4tUUavOQ0fzhtL7k4BpIkF1P24cauzKEc9i0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgICSBo (ORCPT
+        id S1729027AbgICSB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 14:01:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgICSBm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 14:01:42 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9843C061246
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 11:01:41 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id p138so3600374yba.12
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 11:01:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=Kysrwv2vyroocCwa+tcRYatIjOGKit3xRO3evVtQFbc=;
-        b=Cq3p3J6MuBLmXs4+BsJhTAo9WFB6do5dQd5DtPvLivFpB+4Ju12w4vUq6lbWXAzjlm
-         TbcW3W73CMNquCeiwEyKd9wULH55FwWxBcJpvqcNQcSVJIerstXZYAml83qKstkbK1SU
-         okUjrP6TZJ46ow8QUFxy4cJEvShbzmqd/tMJGhc/ubslAQw5E5fKNSN+mDR7fcIMvWkl
-         T5OyxJjCB5mabyFXVA/Kv+8UqCZMU/3HwpGbWxy6Qw6coOJcnVywx1qpwbmB4Rg2DxxW
-         vRrg6aEM7P7/YB4eK0LrHrEquLEDOltwMIB5NacuCaNG7muP/MqjrNPvcOSChtXfdvOR
-         opNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=Kysrwv2vyroocCwa+tcRYatIjOGKit3xRO3evVtQFbc=;
-        b=ryX5dS0ddGN37I1Pl9sUoRANlIyDRIVDK/Qus2zZMnVG968c3tqfslGQ290mLy9YZ1
-         W/veaobb/8qcxv9slS83yZ+HukUV09Hiu9hh2tuSm3x38sBRCbAUL99FEKPri7XjNwTZ
-         0/3AI4XeEf0xYnxxj+Wt1m6NSfiHnBGoKsBoimzN1uSNdOVjhNT0Qa0knuJdIgTvKY4A
-         Z+HCA+3hG8Z4aWY6Eji8WoI7O5YE9tZ1Y4mvLNSAdlVkZIGkrcaCuzvTAa3bCbUifLsF
-         f6iARiy1voB1mboK4F6fcLZf1q4yRDgIZQ2q8+5hojWGoxPURuRf1m7vsV89va8rzNND
-         uG2g==
-X-Gm-Message-State: AOAM533y+olMDgZ8XGL6/Nbz5W9sTrkO1RErQ05Z3aTxOFSm6KOB9Q6J
-        AnfG9IHHvW2co/ZKWExn2QolFC2hRp4=
-X-Google-Smtp-Source: ABdhPJznIT58g0Z8TdpOroAqfZSJEPyQbKcKvYMhot5h+i6tLXl0hXMlUC/qJtrEQeftD65KiOHntPOzGCQ=
-X-Received: from haoluo.svl.corp.google.com ([2620:15c:2cd:202:f693:9fff:fef4:e444])
- (user=haoluo job=sendgmr) by 2002:a25:70c6:: with SMTP id l189mr4414948ybc.263.1599156100416;
- Thu, 03 Sep 2020 11:01:40 -0700 (PDT)
-Date:   Thu,  3 Sep 2020 11:01:21 -0700
-Message-Id: <20200903180121.662887-1-haoluo@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
-Subject: [PATCH] selftests/bpf: Fix check in global_data_init.
-From:   Hao Luo <haoluo@google.com>
-To:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        "=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?=" <toke@redhat.com>,
-        KP Singh <kpsingh@chromium.org>, Hao Luo <haoluo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 3 Sep 2020 14:01:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727065AbgICSB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 14:01:56 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE81520716;
+        Thu,  3 Sep 2020 18:01:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599156115;
+        bh=g/zK/ClT1m5soG/tnXSY+wGtMX3SLoeeyKDXpcFFi+8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ELauOPuUtZVMDFEfwjDgxAIBXYDHvYmSzCpUf2Grzewy1io84bdEPRClmezPdJ+Tc
+         8VayzXho4//0jrpJPwObQ/+LiUOL+aJux/rm7O/0TD93UAHCwrs3UM6Co7DGWhEmoN
+         DPk1GRp2dVdFN8RC2KJ4Tgf4nV7LC/C5/2hmZnJk=
+Date:   Thu, 3 Sep 2020 20:02:17 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Christoph Hellwig <hch@lst.de>, arnd@arndb.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] /dev/zero: also implement ->read
+Message-ID: <20200903180217.GA2038804@kroah.com>
+References: <20200903155922.1111551-1-hch@lst.de>
+ <1bc34841-f1a3-8a9b-cb48-10930ec55d71@csgroup.eu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1bc34841-f1a3-8a9b-cb48-10930ec55d71@csgroup.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The returned value of bpf_object__open_file() should be checked with
-IS_ERR() rather than NULL. This fix makes test_progs not crash when
-test_global_data.o is not present.
+On Thu, Sep 03, 2020 at 07:51:07PM +0200, Christophe Leroy wrote:
+> 
+> 
+> Le 03/09/2020 à 17:59, Christoph Hellwig a écrit :
+> > Christophe reported a major speedup due to avoiding the iov_iter
+> > overhead, so just add this trivial function.  Note that /dev/zero
+> > already implements both an iter and non-iter writes so this just
+> > makes it more symmetric.
+> > 
+> > Christophe Leroy <christophe.leroy@csgroup.eu>
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >   drivers/char/mem.c | 22 ++++++++++++++++++++++
+> >   1 file changed, 22 insertions(+)
+> > 
+> > diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+> > index abd4ffdc8cdebc..1dc99ab158457a 100644
+> > --- a/drivers/char/mem.c
+> > +++ b/drivers/char/mem.c
+> > @@ -726,6 +726,27 @@ static ssize_t read_iter_zero(struct kiocb *iocb, struct iov_iter *iter)
+> >   	return written;
+> >   }
+> > +static ssize_t read_zero(struct file *file, char __user *buf,
+> > +			 size_t count, loff_t *ppos)
+> > +{
+> > +	size_t cleared = 0;
+> > +
+> > +	while (count) {
+> > +		size_t chunk = min_t(size_t, count, PAGE_SIZE);
+> > +
+> > +		if (clear_user(buf + cleared, chunk))
+> > +			return cleared ? cleared : -EFAULT;
+> > +		cleared += chunk;
+> > +		count -= chunk;
+> > +
+> > +		if (signal_pending(current))
+> > +			return cleared ? cleared : -ERESTARTSYS;
+> > +		cond_resched();
+> > +	}
+> > +
+> > +	return cleared;
+> > +}
+> > +
+> >   static int mmap_zero(struct file *file, struct vm_area_struct *vma)
+> >   {
+> >   #ifndef CONFIG_MMU
+> > @@ -921,6 +942,7 @@ static const struct file_operations zero_fops = {
+> >   	.llseek		= zero_lseek,
+> >   	.write		= write_zero,
+> >   	.read_iter	= read_iter_zero,
+> > +	.read		= read_zero,
+> 
+> Wondering if .read should be before .write, so that we get in order read,
+> write, read_iter, write_iter.
 
-Signed-off-by: Hao Luo <haoluo@google.com>
----
- tools/testing/selftests/bpf/prog_tests/global_data_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It really does not matter :)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/global_data_init.c b/tools/testing/selftests/bpf/prog_tests/global_data_init.c
-index 3bdaa5a40744..1ece86d5c519 100644
---- a/tools/testing/selftests/bpf/prog_tests/global_data_init.c
-+++ b/tools/testing/selftests/bpf/prog_tests/global_data_init.c
-@@ -12,7 +12,7 @@ void test_global_data_init(void)
- 	size_t sz;
- 
- 	obj = bpf_object__open_file(file, NULL);
--	if (CHECK_FAIL(!obj))
-+	if (CHECK_FAIL(IS_ERR(obj)))
- 		return;
- 
- 	map = bpf_object__find_map_by_name(obj, "test_glo.rodata");
--- 
-2.28.0.402.g5ffc5be6b7-goog
+thanks,
 
+greg k-h
