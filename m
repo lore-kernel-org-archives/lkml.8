@@ -2,151 +2,163 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8563CC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A99BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6680620716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:56:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599162976;
-	bh=5IpTGMxuZ7gcqM0wZeoo9zCPw09JFw2xsZPxuG701+E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rTi3c0ChEn0wl3dhT9+3l9BTnrd/e2rsSrqrPjqL796hLNweSvgMn7zs9RQlaYJaw
-	 C85WaswP06O+PamSM2AymqfSAYhSceV2CTbFpJ+67rp7eNBOZJVf7QKGHxhzJikFZm
-	 vIhxBYzmGxJhkSzK54fMKgv8GHOwaECMZld56tkg=
+	by mail.kernel.org (Postfix) with ESMTP id 6AE0B20709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:01:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Lgb8SnvQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgICT4P (ORCPT
+        id S1728975AbgICUBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 15:56:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728304AbgICT4O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 15:56:14 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5DA8C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 12:56:13 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t7so4519069ljo.13
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 12:56:13 -0700 (PDT)
+        Thu, 3 Sep 2020 16:01:54 -0400
+Received: from mail-mw2nam10on2074.outbound.protection.outlook.com ([40.107.94.74]:19073
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727065AbgICUBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 16:01:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jrx1B3jtCW3h8p9tu5YciBnyiAUodmhNdjxEURPYGBzOTxNbVeXFWEeCCGvVzKrxB170jlU0lQC38175gJxRqu9x2SGUPFWlc0D3HKLzZrcJ/ZQZrDxbo0wRsKvFxx9A4uy7BUqKkKQNGboCyAVXw0nEZskkyY7AcnSY6RuWZyjOEOF0ra3i+Ca3p8hgZ5w9E6ERmuzY132kRyN0fN0RPVWruTbZc/qLzO0UT5EgkHc5ZkwxxRF4NOzjgx5FcVGr0N8vIRWcUqOuKJpD3hye0tbhzD//sPib0qR9DSw7KGNoFSA5K9xFemxXyDoBxdIy1qmyP8Zlm5fFCijy9HQ6IQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QnynRoID/msCdsPMXzTyG2yVR0DacIUAXoBghpM6low=;
+ b=WllarV0+lGOA23QA4hc/+N0iUhcvegXALtqRRAGyi/q06s55pVARXeZNhY69JmH9+0+UjsUIzE92sBUdY3btqq+1ahc/e1TxbElFXUPKPtpaHCC3NbpM134FEZI0FtmvLyv2yqd/sgXFZFVneV25yPstXc/5T5hRmWeeREY2wgcxN1u1N1c9m6l7mBGGU5vL8Kr8aYlH/OMr1XyFlWGw87j/+AuiVRONfScfD2+KeHZXRbCq6D6kszvQaOWgNjvt2i/aQB31yLNPkr8/6CsFG7HuErSjTnSWslnTB7qjwMy+KOrMbVsxxkj5BosJX8oKSWBjkZuV7OEL38c0jMdrjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+HyCacCrUTSO04Bcz2fAaxbtZLHd8zOfhLgllifmbhk=;
-        b=B/wF0S73fEkmrWeW78FVYp9qaLcNFtik9sGGBc1uklYgCiZlOnL6UKyw8zxdwXKlmM
-         yZe+asx0TMiJqjKXU+9nuISZd3LkJxAOGu4NBUmczdu3m4VNq8bXfQHWIGfk/u5osF/7
-         jhDBu8BCJd9u28EonQab6s+MaaNgFFzQ7//vo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+HyCacCrUTSO04Bcz2fAaxbtZLHd8zOfhLgllifmbhk=;
-        b=VsZcK7Ptv0q20d7z9KxzWqpbWOmPl6vjvbV0QDlvoUiyJob1CQxVmH0CnQvRcOPx7p
-         kKvnSJMwHlAbRS1sTsBEbIgGzaFWP0yJkYnmlhJdJcy++APLlXHHKKMTLkybxFI2RqF6
-         MmqUYKmffbHtDRQkjPPp8IY1PZhQnf2iGMbMUN/iG5soxwsAi24ibPTXYJBQ9Fk0XQ3S
-         NZZ7li2waaZcCtdz2BYkRa8Lb/Mc833Ud7bHK0F9WkEjB9q8iZPMHFup4x83PrxgQY8s
-         AABQ4f/BcVAjuUi0ptYaAZpmroVV1QToa1JvOyRd/uWkn+TGbZJyP+HhjLkQiXU7ut6a
-         todg==
-X-Gm-Message-State: AOAM533dMyduIm5U2ypKGYyFbJyfJb+o2f6f1ls7zl+Lsd0NPjFxoBfv
-        4cR13EhXt69hKda3IYVZx771NFmaKkrZdg==
-X-Google-Smtp-Source: ABdhPJxGt+83BkWRC3isKW34iMAOVnodRYnrwbN6hyjydfc9UcCsAfCkm/XoKjX08SW74xPrCLDjeg==
-X-Received: by 2002:a2e:2c0e:: with SMTP id s14mr400460ljs.174.1599162971688;
-        Thu, 03 Sep 2020 12:56:11 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id 69sm791194lfm.83.2020.09.03.12.56.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 12:56:10 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id v23so5260603ljd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 12:56:10 -0700 (PDT)
-X-Received: by 2002:a2e:3611:: with SMTP id d17mr6508lja.314.1599162969764;
- Thu, 03 Sep 2020 12:56:09 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QnynRoID/msCdsPMXzTyG2yVR0DacIUAXoBghpM6low=;
+ b=Lgb8SnvQgUMWT0n29lwJXKs7rzv5SXbl9EHUgFOfkU3iAB7HHbcCmvLYpx/k0utaiG7/SEU2Tz6qGOGMgivqYoCuGCxkkaryDbnF+nzII+u8qiZ+K1RgI+bJxU/E7g3kXWWDozpWGdYP7nZAoK34Wxc0L2HTyBSrCjBdP3B4g7M=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB3108.namprd12.prod.outlook.com (2603:10b6:408:40::20)
+ by BN8PR12MB2980.namprd12.prod.outlook.com (2603:10b6:408:62::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.25; Thu, 3 Sep
+ 2020 20:01:48 +0000
+Received: from BN8PR12MB3108.namprd12.prod.outlook.com
+ ([fe80::b038:2a58:64e0:2a3e]) by BN8PR12MB3108.namprd12.prod.outlook.com
+ ([fe80::b038:2a58:64e0:2a3e%4]) with mapi id 15.20.3348.015; Thu, 3 Sep 2020
+ 20:01:48 +0000
+From:   Yazen Ghannam <Yazen.Ghannam@amd.com>
+To:     linux-edac@vger.kernel.org
+Cc:     Yazen Ghannam <Yazen.Ghannam@amd.com>,
+        linux-kernel@vger.kernel.org, tony.luck@intel.com, x86@kernel.org,
+        Smita.KoralahalliChannabasappa@amd.com
+Subject: [PATCH v2 0/8] AMD MCA Address Translation Updates
+Date:   Thu,  3 Sep 2020 20:01:36 +0000
+Message-Id: <20200903200144.310991-1-Yazen.Ghannam@amd.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SN4PR0501CA0075.namprd05.prod.outlook.com
+ (2603:10b6:803:22::13) To BN8PR12MB3108.namprd12.prod.outlook.com
+ (2603:10b6:408:40::20)
 MIME-Version: 1.0
-References: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com>
-In-Reply-To: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 3 Sep 2020 12:55:53 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whpJp9W_eyhqJU3Y2JsnX45xMfQHFNQSsb9dNirdMFnaA@mail.gmail.com>
-Message-ID: <CAHk-=whpJp9W_eyhqJU3Y2JsnX45xMfQHFNQSsb9dNirdMFnaA@mail.gmail.com>
-Subject: Re: a crash when running strace from persistent memory
-To:     Mikulas Patocka <mpatocka@redhat.com>, Peter Xu <peterx@redhat.com>
-Cc:     Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kirill Shutemov <kirill@shutemov.name>,
-        Jan Kara <jack@suse.cz>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by SN4PR0501CA0075.namprd05.prod.outlook.com (2603:10b6:803:22::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.7 via Frontend Transport; Thu, 3 Sep 2020 20:01:47 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [165.204.78.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 53489b0c-6d45-4364-caab-08d8504430f4
+X-MS-TrafficTypeDiagnostic: BN8PR12MB2980:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR12MB29806066E880BA652B757D6FF82C0@BN8PR12MB2980.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: WYNHw8kHySQWo+4lOa3orDJ91OkDjcN/PFGMOwzXvoGML8wkx7d1YB7qhaxy9wvF+ZuueRgozoD+VtyvNAS1WLULrN714fjLPK31zHPHC+mn4gA9silMF3t9pP0S8jiQPsxl9zb313KXM7speryHkvEZAn8qc0tfcSN4shzNyKXid2JghD7J3z30Xr3NbkJcyr5RsDEp5SM85HDBwH2Ftvh186mSIBWZ5Dl2NQvfqrojpje90Zgh0fP1k9J1y+IvXpf8Kym0+Ta7dWOAi8aSm3xo24LSGKqJ6G9kjHL0hygFkdD+iJfcWCXD3VFmQNMcc26mzVZtiK3uUVQ+QaEhVHoQTi8paGe3qF95OB5suQyPvvo6XNuxWW4mV2JyvBEkByVEG/N2U8Tvn0y3WVo5hw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(376002)(136003)(396003)(366004)(966005)(83380400001)(8936002)(316002)(1076003)(186003)(16576012)(52116002)(5660300002)(15650500001)(6666004)(66946007)(8676002)(6916009)(86362001)(6486002)(2906002)(2616005)(36756003)(66556008)(66476007)(4326008)(478600001)(26005)(956004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: KrL3TtUyvgM62p0l3tiD7VPySIqZPis0F2SDQ0u3nUxUOBeREAJy+FRPGnfuistj1u04K8mPHm+GxO9pzSsy9J3FNiBZQG/dRE09iDtZvvfHTqKkdrcVESu9d9Hf/xTHZMyIPbUU9beYwOHphqG0mCXUQpj/OPvvWovj4Mw0ApJhkFb1Vy3rLtQeoC3XyoU+M24PEzNnIGP9zUJH3k5WGk070r3KTg+dCJCQSCOtjUtH9Yqq8q2LJ9/V+qpZ3GVCv8XIgxdFYobtGV85YT0qBlLBCj+oZ6fUeb6/z7BQ1x9dg5OQwA/XbW/TywiJjT9eLk9EqtFfUs39WOgzrJv9X4W8KQAP/pTNWhNzoWGQkoBoyS8k31g2PsZTTpifnTrZuUurxHRmHwq9cuLwJe2N3qkFYQalnMS2L8OMichYC2B3dU+D3JJ/a8a3l2rIA9PYxivkkf4gkg5Cf8EgvpTGbf1Tkn9rOP4E12ORtAcWYcUZrsQQpgc/PErEGEY4NL1NUkXGi+AsNYSV7K3f3M81gJRdO3AMlBQMnBhWmU5izA8sZ07W/uoQGdM7fkoQ5dMz4xUsfe+ucNPPOVc2furKMprJgCj2EOuMd0Wa6VMu0QL5yTTn7VZGy4I9COzplxK1We3uHzvSgLlHE6OYdtKIgg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53489b0c-6d45-4364-caab-08d8504430f4
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3108.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2020 20:01:48.3521
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DyIA2w7czyWqIhcHY6STVnDYgmOcB+DLBP2NYJED3HKgZw9ukQwbyzKlmdItHuh/zQQ4xtwHoxIAEDi6qD6xNg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2980
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 12:24 PM Mikulas Patocka <mpatocka@redhat.com> wrote:
->
-> There's a bug when you run strace from dax-based filesystem.
->
-> -- create real or emulated persistent memory device (/dev/pmem0)
-> mkfs.ext2 /dev/pmem0
-> -- mount it
-> mount -t ext2 -o dax /dev/pmem0 /mnt/test
-> -- copy the system to it (well, you can copy just a few files that are
->    needed for running strace and ls)
-> cp -ax / /mnt/test
-> -- bind the system directories
-> mount --bind /dev /mnt/test/dev
-> mount --bind /proc /mnt/test/proc
-> mount --bind /sys /mnt/test/sys
-> -- run strace on the ls command
-> chroot /mnt/test/ strace /bin/ls
->
-> You get this warning and ls is killed with SIGSEGV.
->
-> I bisected the problem and it is caused by the commit
-> 17839856fd588f4ab6b789f482ed3ffd7c403e1f (gup: document and work around
-> "COW can break either way" issue). When I revert the patch (on the kernel
-> 5.9-rc3), the bug goes away.
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-Funky. I really don't see how it could cause that, but we have the
-UDDF issue too, so I'm guessing I will have to fix it the radical way
-with Peter Xu's series based on my "rip out COW special cases" patch.
+This patchset includes updates for the MCA Address Translation process
+on recent AMD systems.
 
-Or maybe I'm just using that as an excuse for really wanting to apply
-that series.. Because we can't just revert that GUP commit due to
-security concerns.
+Patches 1 & 3:
+Fixes an input to the address translation function. The translation
+requires a physical Die ID (NodeId in AMD documentation) rather than a
+logicial NUMA node ID. This is because the physical and logical nodes
+may not always match.
 
-> [   84.191504] WARNING: CPU: 6 PID: 1350 at mm/memory.c:2486 wp_page_copy.cold+0xdb/0xf6
+Patch 2:
+Removes a function that is no longer needed with Patch 1.
 
-I'm assuming this is the WARN_ON_ONCE(1) on line 2482, and you have
-some extra debug patch that causes that line to be off by 4? Because
-at least for me, line 2486 is actually an empty line in v5.9-rc3.
+Patches 4-7:
+Code cleanup in preparation for Patch 8.
 
-That said, I really think this is a pre-existing race, and all the
-"COW can break either way" patch does is change the timing (presumably
-due to the actual pattern of actually doing the COW changing).
+Patch 8:
+Add translation support for new memory interleaving options available in
+Rome systems. The patch is based on the latest AMD reference code for
+the address translation.
 
-See commit c3e5ea6ee574 ("mm: avoid data corruption on CoW fault into
-PFN-mapped VMA") for background.
+Patches 6-8 have checkpatch warnings about long lines, but I kept the
+long lines for readability.
 
-Mikulas, can you check that everything works ok for that case if you
-apply Peter's series? See
+Thanks,
+Yazen
 
-    https://lore.kernel.org/lkml/20200821234958.7896-1-peterx@redhat.com/
+Link:
+https://lkml.kernel.org/r/20200814191449.183998-1-Yazen.Ghannam@amd.com
 
-or if you have 'b4' installed, use
+v1 -> v2:
+* Save the AMD NodeId value in struct cpuinfo_x86 rather than use a
+  local value in MCA code.
+* Include code cleanup for AMD MCA Address Translation function before
+  adding new functionality.
 
-    b4 am 20200821234958.7896-1-peterx@redhat.com
+Muralidhara M K (1):
+  x86/MCE/AMD Support new memory interleaving modes during address
+    translation
 
-to get the series..
+Yazen Ghannam (7):
+  x86/CPU/AMD: Save NodeId on AMD-based systems
+  x86/CPU/AMD: Remove amd_get_nb_id()
+  EDAC/mce_amd: Use struct cpuinfo_x86.node_id for NodeId
+  x86/MCE/AMD: Use defines for register addresses in translation code
+  x86/MCE/AMD: Use macros to get bitfields in translation code
+  x86/MCE/AMD: Drop tmp variable in translation code
+  x86/MCE/AMD: Group register reads in translation code
 
-                     Linus
+ arch/x86/events/amd/core.c       |   2 +-
+ arch/x86/include/asm/cacheinfo.h |   4 +-
+ arch/x86/include/asm/processor.h |   3 +-
+ arch/x86/kernel/amd_nb.c         |   4 +-
+ arch/x86/kernel/cpu/amd.c        |  17 +-
+ arch/x86/kernel/cpu/cacheinfo.c  |   8 +-
+ arch/x86/kernel/cpu/hygon.c      |  11 +-
+ arch/x86/kernel/cpu/mce/amd.c    | 284 ++++++++++++++++++++++---------
+ arch/x86/kernel/cpu/mce/inject.c |   4 +-
+ drivers/edac/amd64_edac.c        |   4 +-
+ drivers/edac/mce_amd.c           |   4 +-
+ 11 files changed, 233 insertions(+), 112 deletions(-)
+
+-- 
+2.25.1
+
