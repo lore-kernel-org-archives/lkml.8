@@ -2,133 +2,114 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F60C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4F8C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B81E20786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C9E2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mQIlxUyo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q0d/Y/mg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgICCgD (ORCPT
+        id S1727895AbgICCnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 22:36:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39496 "EHLO
+        Wed, 2 Sep 2020 22:43:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgICCgB (ORCPT
+        with ESMTP id S1726523AbgICCnQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 22:36:01 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7485AC061244;
-        Wed,  2 Sep 2020 19:36:01 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BhlKj1VkPz9sTS;
-        Thu,  3 Sep 2020 12:35:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599100555;
-        bh=cURnmHEF5OCE3wHPfmuJVfdtp3KvF7NBHs8Is7up7Zk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mQIlxUyooEDyVEpcYWVDhFtPALw5w5iWn9aA72HM118NKtN1nmuVZ7FhDQ4dUphE1
-         woXpSSFpfwwZKWWLcqbkFXruMuGYi2rsXemsBdadidOSJSgTlq54GTRJLHoTLs7CUz
-         BzKU9kmlPPV2dtD1qyFZMt91ZY78bmGNujWVSXG43kY+cw1diZm0WRofq3c3WaAWsw
-         bvJPE8lV+B9AGgESU7rbdxY6fphkOZJ11ZrU2vzbAlD+HWoJHweh8fEGoYdZqcx14n
-         b0KPXprnwWzKbQ8QaEg2+qCF5h6EokkybRhmo1Mt9jSWGLSYPcrnGFWaJFqxIkjlMM
-         U1JK85kAz6SLw==
-Date:   Thu, 3 Sep 2020 12:35:52 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Borislav Petkov <bp@suse.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the tip tree
-Message-ID: <20200903123552.0c5d1277@canb.auug.org.au>
+        Wed, 2 Sep 2020 22:43:16 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D89FCC061244;
+        Wed,  2 Sep 2020 19:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=R9wsgh5OhpmeQRbKxOY/dzd+1XG9pkbfv3w+MHt05O0=; b=Q0d/Y/mgV4RO/6ooAH/2LXQB85
+        ZikQYl7DEhJw0JBCVSjXGIcMbVl6zsAqiApPOSzVrO1y8bK3bKKyj9OTWEA+5qMAYhsU3JZXS2eK5
+        9a7hRAU2SIdQMGbq9DDRom0iyJUHoYGUhZXS/YeZca/sFcJ73/1tB8KnKA+zc3rpv8y4UMgXfcnBK
+        jvx39XdFtkReY7yBDOHTu6qi5cjTUROqvV3hq6TweDxWDjVMfByghE+0yJm/Vyw0iKbPXUGwXR6FK
+        Bugf06xfP81L7EWL2gpauc3So1OuivWqjC4vIEy8FaELOqdfi3+mqrqmLR+WmxnGW+45sGf2H3t+I
+        m5W0id0g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDfDT-0007N5-CZ; Thu, 03 Sep 2020 02:43:11 +0000
+Subject: Re: [PATCH 0/2] docs: Add automatic cross-reference for C types
+To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
+        <nfraprado@protonmail.com>, Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org, andrealmeid@collabora.com
+References: <20200903005747.3900333-1-nfraprado@protonmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1a03c65e-6fbc-25f9-e553-61259a310f29@infradead.org>
+Date:   Wed, 2 Sep 2020 19:43:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/iK+q8_5r/YfNVEVLof7b3+d";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200903005747.3900333-1-nfraprado@protonmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/iK+q8_5r/YfNVEVLof7b3+d
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 9/2/20 5:58 PM, Nícolas F. R. A. Prado wrote:
+> In order to cross-reference C types in the documentation, Sphinx
+> requires the syntax :c:type:`type_name`, or even :c:type:`struct
+> type_name <type_name>` in order to have the link text different from the
+> target text.
+> This patch series removes the need for that markup.
+> 
+> The first commit extends the automarkup script to enable automatic
+> cross-reference of C types by matching any "struct|union|enum|typedef type_name"
+> expression.
+> This makes the documentation's plain text cleaner and adds cross-reference to
+> types without any additional effort by the author.
+> 
+> The second commit updates the "Cross-referencing from
+> reStructuredText" section in Documentation/doc-guide/kernel-doc.rst
+> to reflect that no additional syntax is needed when cross-referencing both types
+> and functions anymore.
+> 
+> When testing this, I did find an edge-case from the output of
+> Documentation/output/scsi/scsi_mid_low_api.rst on the "typedef struct scsi_cmnd
+> Scsi_Cmnd;", where 'typedef struct' is being identified as a reference, but
+> there isn't any named 'struct', so it renders bold.
 
-Hi all,
+There also isn't any file name scsi_typedefs.h any longer,
+so maybe we can update scsi_mid_low_api.rst as well.
 
-After merging the tip tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
+Thanks.
+
+> I thought of adding an ignore_names list just like there is one for functions,
+> with 'struct' in it, to workaround this edge case, but since it was the only
+> one I found, and also because it was unclear what the desired output was
+> (cross-reference 'struct scsi_cmnd' or leave the whole expression as plain text)
+> I wanted to get some feedback beforehand.
+> 
+> After getting this merged I intend to start removing the occurrences of :c:type.
+> 
+> Thanks,
+> Nícolas
+> 
+> Nícolas F. R. A. Prado (2):
+>   docs: Add automatic cross-reference for C types
+>   kernel-doc: Update "cross-referencing from rST" section to use
+>     automarkup
+> 
+>  Documentation/doc-guide/kernel-doc.rst | 33 ++++++++++++-----------
+>  Documentation/sphinx/automarkup.py     | 37 +++++++++++++++++---------
+>  2 files changed, 41 insertions(+), 29 deletions(-)
+> 
 
 
-Caused by commit
+-- 
+~Randy
 
-  f670269a42bf ("x86: Fix early boot crash on gcc-10, next try")
-
-interacting with commit
-
-  a9a3ed1eff36 ("x86: Fix early boot crash on gcc-10, third try")
-
-from Linus' tree (v5.7-rc6) - the automatic merge did not go well.
-
-I have added this patch for today (it removes the older version).
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 3 Sep 2020 12:31:13 +1000
-Subject: [PATCH] merge fix for compiler.h
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- include/linux/compiler.h | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index d60365d4fb56..b78233fb1af7 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -223,12 +223,6 @@ static inline void *offset_to_ptr(const int *off)
- /* &a[0] degrades to a pointer: a different type from an array */
- #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
-=20
--/*
-- * This is needed in functions which generate the stack canary, see
-- * arch/x86/kernel/smpboot.c::start_secondary() for an example.
-- */
--#define prevent_tail_call_optimization()	mb()
--
- #include <asm/rwonce.h>
-=20
- /*
---=20
-2.28.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/iK+q8_5r/YfNVEVLof7b3+d
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9QVogACgkQAVBC80lX
-0GwbcQf+KAZjlj5H/RiH7Q4R8SgiK/xfVy0ZD/LKtJviMmP8XhZRsdy3XvkGf8Sa
-mhTUpRxvD3ofrQUZN+p/qW+E1gX6stvgiQWGbhDDsNG6yT9Nvdvf9aavH4iASgPT
-IjylyJfGOhlj5iRWU1YzD5dFi7b4kP7nUHeRtrfWjUw37kqGCJQCYS1/0v2O1moO
-xiQufp91APpPfHoS3ZDf3iadIVFjIHVlR/CezuqbwGktNzVJJlPEAVWcUPKtPopW
-GmawLPUXbMtiTvADTbyYLgYa7WPxoUUD5soYsuGpXpo1Lw2PzjKhzIIpzYguyhwr
-z5OfdhlUIYocLMKOY5HW/K4v3A1pdw==
-=7RH1
------END PGP SIGNATURE-----
-
---Sig_/iK+q8_5r/YfNVEVLof7b3+d--
