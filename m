@@ -2,307 +2,94 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C43EC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AF2C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 027732065F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599145060;
-	bh=R8U59+ZTxDrjtZexI9A/2GznRQiz979wQ3yR1ESwHfc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=yStCj3KB9aYPI3by/EtRL66JHRtVrw+l0+XvHy8bKufD6ba6tHJ6jCxUpjzWFM0Oi
-	 f0DBpcffw7iCdpo7q+wYtaaQ33g6MV7iAnFdpNNgHRWAlHqY7mbAvPuTva7bdrseF3
-	 EueMalL2/HLsaD4nIap/7vAlHtjcXDN0ElPlyBv8=
+	by mail.kernel.org (Postfix) with ESMTP id CB87220658
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:57:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729344AbgICO5c (ORCPT
+        id S1729303AbgICO54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:57:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729173AbgICOK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:10:28 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EDA8208CA;
-        Thu,  3 Sep 2020 14:02:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599141735;
-        bh=R8U59+ZTxDrjtZexI9A/2GznRQiz979wQ3yR1ESwHfc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MvNLHUEaTe36IJIYCbaueRekrgaTuXciGN/DbvbDZggy9v7qHtSRVx+yF3KAJY6yv
-         eW9L3VdvJ+VtbaBOOAT73xUuSQWp0mgKWVXdl7Q9ba38xeYTK0A2YrMaGU+QnmD8XJ
-         CU7LCTB0U3Kchf7PPwHjRcKWA0WUXdwID84G16yg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, jslaby@suse.cz,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 4.4.235
-Date:   Thu,  3 Sep 2020 16:02:37 +0200
-Message-Id: <1599141757110214@kroah.com>
-X-Mailer: git-send-email 2.28.0
+        Thu, 3 Sep 2020 10:57:56 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:24457 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729135AbgICOJm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:09:42 -0400
+X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
+   d="scan'208";a="465940153"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 16:09:16 +0200
+Date:   Thu, 3 Sep 2020 16:09:16 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>
+cc:     linux-kernel@vger.kernel.org,
+        Gilles Muller <Gilles.Muller@inria.fr>
+Subject: SD_LOAD_BALANCE
+Message-ID: <alpine.DEB.2.22.394.2009031605190.2496@hadrien>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 4.4.235 kernel.
+Uses of SD_LOAD_BALANCE were removed in commit e669ac8ab952 (first
+released in v5.8), with the comment:
 
-All users of the 4.4 kernel series must upgrade.
+The SD_LOAD_BALANCE flag is set unconditionally for all domains in
+sd_init().
 
-The updated 4.4.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+I have the impression that this was not quite true.  The NUMA domain was
+not initialized with sd_init, and didn't have the SD_LOAD_BALANCE flag
+set.  The effect is that in v5.8, the for_each_domain loop in
+select_task_rq_fair can always end up at the global NUMA domain, and thus
+consider any pair of waking cpu (cpu) and previous cpus of the wakee
+(prev_cpu) as arguments to wake_affine.  Up to v5.7, this was only
+possible if cpu and prev_cpu were together in some lower level domain, ie
+sharing the LLC.  The effect is that in v5.8 wake_affine can often end up
+choosing as a target a core that does not share the LLC with the core
+where the thread ran previously.  Threads then move around a lot between
+the different sockets.
 
-thanks,
+Was this intentional?
 
-greg k-h
+The effect can be seen in the traces of the parsec vips benchmark at the
+following URL:
 
-------------
+https://pages.lip6.fr/Julia.Lawall/vips.pdf
 
- Makefile                                                            |    2 
- arch/mips/vdso/genvdso.c                                            |   10 +
- arch/powerpc/platforms/cell/Kconfig                                 |    1 
- arch/powerpc/platforms/pseries/ras.c                                |    1 
- drivers/base/core.c                                                 |   12 -
- drivers/base/power/main.c                                           |   16 +
- drivers/edac/ie31200_edac.c                                         |   50 +++++-
- drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c                      |   16 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_display.c                         |    5 
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c                             |    3 
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c                             |    3 
- drivers/gpu/drm/amd/amdkfd/kfd_topology.c                           |   20 +-
- drivers/gpu/drm/nouveau/nouveau_connector.c                         |    4 
- drivers/gpu/drm/nouveau/nouveau_fbcon.c                             |    4 
- drivers/gpu/drm/radeon/radeon_connectors.c                          |   20 +-
- drivers/hid/usbhid/hiddev.c                                         |    4 
- drivers/i2c/busses/i2c-rcar.c                                       |    1 
- drivers/media/pci/ttpci/av7110.c                                    |    5 
- drivers/media/platform/davinci/vpif_capture.c                       |    2 
- drivers/net/bonding/bond_main.c                                     |   24 ++
- drivers/net/ethernet/freescale/gianfar.c                            |    4 
- drivers/net/ipvlan/ipvlan_main.c                                    |   25 ++-
- drivers/net/wireless/ath/ath10k/hw.h                                |    2 
- drivers/net/wireless/realtek/rtlwifi/usb.c                          |    5 
- drivers/pci/slot.c                                                  |    6 
- drivers/s390/cio/css.c                                              |    5 
- drivers/scsi/fcoe/fcoe_ctlr.c                                       |    2 
- drivers/scsi/lpfc/lpfc_vport.c                                      |   26 ---
- drivers/scsi/scsi_transport_iscsi.c                                 |    2 
- drivers/scsi/ufs/ufshcd.c                                           |    5 
- drivers/target/target_core_user.c                                   |    9 -
- drivers/tty/serial/8250/8250_port.c                                 |    9 -
- drivers/tty/serial/amba-pl011.c                                     |    5 
- drivers/tty/serial/samsung.c                                        |    8 
- drivers/tty/vt/vt.c                                                 |    5 
- drivers/tty/vt/vt_ioctl.c                                           |   12 +
- drivers/usb/core/quirks.c                                           |    2 
- drivers/usb/host/ohci-exynos.c                                      |    5 
- drivers/usb/host/xhci-hub.c                                         |   19 +-
- drivers/usb/misc/lvstest.c                                          |    2 
- drivers/usb/misc/sisusbvga/sisusb.c                                 |    2 
- drivers/usb/misc/yurex.c                                            |    2 
- drivers/usb/storage/unusual_devs.h                                  |    2 
- drivers/usb/storage/unusual_uas.h                                   |   14 +
- drivers/video/console/fbcon.c                                       |   25 ++-
- drivers/xen/events/events_base.c                                    |   16 -
- fs/btrfs/tree-log.c                                                 |   10 -
- fs/ceph/mds_client.c                                                |   14 +
- fs/fs-writeback.c                                                   |   83 +++++-----
- fs/jbd2/transaction.c                                               |   26 +++
- include/linux/fs.h                                                  |    8 
- include/trace/events/writeback.h                                    |   13 -
- kernel/locking/lockdep_proc.c                                       |    2 
- net/core/skbuff.c                                                   |    4 
- net/tipc/netlink_compat.c                                           |   12 +
- sound/pci/cs46xx/cs46xx_lib.c                                       |    2 
- sound/pci/cs46xx/dsp_spos_scb_lib.c                                 |    2 
- sound/pci/hda/hda_codec.c                                           |    2 
- sound/pci/hda/hda_generic.c                                         |    2 
- sound/pci/hda/patch_sigmatel.c                                      |    2 
- sound/pci/ice1712/prodigy192.c                                      |    2 
- sound/pci/oxygen/xonar_dg.c                                         |    2 
- sound/soc/tegra/tegra30_ahub.c                                      |    4 
- sound/soc/tegra/tegra30_i2s.c                                       |    4 
- sound/usb/quirks-table.h                                            |    4 
- tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c    |    2 
- tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c               |    2 
- tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c   |    2 
- tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c    |    2 
- tools/testing/selftests/powerpc/pmu/ebb/ebb.c                       |    2 
- tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c |    2 
- tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c       |    1 
- tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c        |    7 
- tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c      |    2 
- tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c        |    2 
- tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c       |    2 
- 76 files changed, 444 insertions(+), 202 deletions(-)
+The first two graphs (complete run and small fragment) are Linux v5.7 and
+the next two are Linux v5.8.  The machine has 160 hardware threads
+organized in 4 sockets and the colors are by socket.  In the small
+fragment for v5.7 (second graph), one can see that a given pid pretty much
+stays on the same socket, while in the corresponding fragment for v5.8
+(fourth graph), the pids move around between the sockets.  The x's
+describe the unblocks that result in a migration.  A pink x means that the
+migration is in the same socket, while a blue x means that the migration
+is to another socket. It's not apparent from the graphs, but by adding
+some tracing, it seems that the new socket is always the one of the core
+that handles the wakeup.
 
-Aditya Pakki (3):
-      drm/radeon: fix multiple reference count leak
-      drm/nouveau/drm/noveau: fix reference count leak in nouveau_fbcon_open
-      drm/nouveau: Fix reference count leak in nouveau_connector_detect
+I haven't yet studied the early part of the execution of vips in detail,
+but I suspect that the same issue causes all of the threads to be
+initially on the same socket in v5.7, while in v5.8 they are more quickly
+dispersed to other sockets.
 
-Alan Stern (2):
-      USB: yurex: Fix bad gfp argument
-      usb: storage: Add unusual_uas entry for Sony PSZ drives
+My impression from the parsec and the NAS benchmarks is that the v5.8
+performance is a bit better than v5.7, probably because of getting more
+threads to more different sockets earlier, but other benchmarks might
+rely more on locality and might react less well to threads moving around
+so much in this way.
 
-Arnd Bergmann (1):
-      powerpc/spufs: add CONFIG_COREDUMP dependency
-
-Bodo Stroesser (1):
-      scsi: target: tcmu: Fix crash on ARM during cmd completion
-
-Changming Liu (1):
-      USB: sisusbvga: Fix a potential UB casued by left shifting a negative value
-
-Chris Wilson (1):
-      locking/lockdep: Fix overflow in presentation of average lock-time
-
-Cong Wang (2):
-      tipc: fix uninit skb->data in tipc_nl_compat_dumpit()
-      bonding: fix a potential double-unregister
-
-Cyril Roelandt (1):
-      USB: Ignore UAS for JMicron JMS567 ATA/ATAPI Bridge
-
-Desnes A. Nunes do Rosario (1):
-      selftests/powerpc: Purge extra count_pmc() calls of ebb selftests
-
-Dick Kennedy (1):
-      scsi: lpfc: Fix shost refcount mismatch when deleting vport
-
-Evgeny Novikov (2):
-      media: davinci: vpif_capture: fix potential double free
-      USB: lvtest: return proper error code in probe
-
-George Kennedy (2):
-      fbcon: prevent user font height or width change from causing potential out-of-bounds access
-      vt_ioctl: change VT_RESIZEX ioctl to check for error return from vc_resize()
-
-Greg Kroah-Hartman (1):
-      Linux 4.4.235
-
-Hector Martin (1):
-      ALSA: usb-audio: Update documentation comment for MS2109 quirk
-
-Heikki Krogerus (1):
-      device property: Fix the secondary firmware node handling in set_primary_fwnode()
-
-Jan Kara (3):
-      writeback: Protect inode->i_io_list with inode->i_lock
-      writeback: Avoid skipping inode writeback
-      writeback: Fix sync livelock due to b_dirty_time processing
-
-Jarod Wilson (1):
-      bonding: show saner speed for broadcast mode
-
-Jason Baron (1):
-      EDAC/ie31200: Fallback if host bridge device is already initialized
-
-Javed Hasan (1):
-      scsi: fcoe: Memory leak fix in fcoe_sysfs_fcf_del()
-
-Jia-Ju Bai (1):
-      media: pci: ttpci: av7110: fix possible buffer overflow caused by bad DMA value in debiirq()
-
-Jing Xiangfeng (1):
-      scsi: iscsi: Do not put host in iscsi_set_flashnode_param()
-
-Josef Bacik (1):
-      btrfs: check the right error variable in btrfs_del_dir_entries_in_log
-
-Kai-Heng Feng (2):
-      xhci: Do warm-reset when both CAS and XDEV_RESUME are set
-      USB: quirks: Add no-lpm quirk for another Raydium touchscreen
-
-Lukas Czerner (1):
-      jbd2: make sure jh have b_transaction set in refile/unfile_buffer
-
-Lukas Wunner (1):
-      serial: pl011: Don't leak amba_ports entry on driver register error
-
-Mahesh Bandewar (1):
-      ipvlan: fix device features
-
-Miaohe Lin (1):
-      net: Fix potential wrong skb->protocol in skb_vlan_untag()
-
-Navid Emamdoost (4):
-      drm/amdgpu: fix ref count leak in amdgpu_driver_open_kms
-      drm/amd/display: fix ref count leak in amdgpu_drm_ioctl
-      drm/amdgpu: fix ref count leak in amdgpu_display_crtc_set_config
-      drm/amdgpu/display: fix ref count leak when pm_runtime_get_sync fails
-
-Peilin Ye (1):
-      HID: hiddev: Fix slab-out-of-bounds write in hiddev_ioctl_usage()
-
-Peng Fan (1):
-      mips/vdso: Fix resource leaks in genvdso.c
-
-Qiushi Wu (3):
-      ASoC: tegra: Fix reference count leaks.
-      drm/amdkfd: Fix reference count leaks.
-      PCI: Fix pci_create_slot() reference count leak
-
-Rafael J. Wysocki (1):
-      PM: sleep: core: Fix the handling of pending runtime resume requests
-
-Randy Dunlap (1):
-      ALSA: pci: delete repeated words in comments
-
-Reto Schneider (1):
-      rtlwifi: rtl8192cu: Prevent leaking urb
-
-Sergey Senozhatsky (1):
-      serial: 8250: change lock order in serial8250_do_startup()
-
-Stanley Chu (1):
-      scsi: ufs: Fix possible infinite loop in ufshcd_hold
-
-Sumera Priyadarsini (1):
-      net: gianfar: Add of_node_put() before goto statement
-
-Tamseel Shams (1):
-      serial: samsung: Removes the IRQ not found warning
-
-Tang Bin (1):
-      usb: host: ohci-exynos: Fix error handling in exynos_ohci_probe()
-
-Tetsuo Handa (1):
-      vt: defer kfree() of vc_screenbuf in vc_do_resize()
-
-Thinh Nguyen (1):
-      usb: uas: Add quirk for PNY Pro Elite
-
-Thomas Gleixner (1):
-      XEN uses irqdesc::irq_data_common::handler_data to store a per interrupt XEN data pointer which contains XEN specific information.
-
-Vasant Hegde (1):
-      powerpc/pseries: Do not initiate shutdown when system is running on UPS
-
-Vineeth Vijayan (1):
-      s390/cio: add cond_resched() in the slow_eval_known_fn() loop
-
-Wolfram Sang (1):
-      i2c: rcar: in slave mode, clear NACK earlier
-
-Xiubo Li (1):
-      ceph: fix potential mdsc use-after-free crash
-
-Zhi Chen (1):
-      Revert "ath10k: fix DMA related firmware crashes on multiple devices"
-
-zhangyi (F) (1):
-      jbd2: abort journal if free a async write error metadata buffer
-
+julia
