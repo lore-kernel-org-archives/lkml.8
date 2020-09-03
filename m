@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527FBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8F8C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B56D20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A7072072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LdRJc175"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pbq83prJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729411AbgICOrc (ORCPT
+        id S1729421AbgICOrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:47:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35298 "EHLO
+        Thu, 3 Sep 2020 10:47:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728896AbgICOYh (ORCPT
+        with ESMTP id S1729275AbgICOYg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:24:37 -0400
+        Thu, 3 Sep 2020 10:24:36 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48D4AC06123B;
-        Thu,  3 Sep 2020 07:22:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B20EC0611E0;
+        Thu,  3 Sep 2020 07:23:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=DsUb6hfLeJUvA4GCxVVSz23IH1puKspKytCSglE7c2s=; b=LdRJc175F5A1pOcbnm1cLKFZlU
-        ZWU8Ms6njxu8IGdDsuP6Xtf6gGdB1TXoO8O+jnMnwBOYHipnKu3MNZF9yCeopFU5o/EM+3MKdnvTN
-        rupIWrHI6Ls/BCx4j3hhdamcbq8phYVNK5ud8/ptEEHdTR4iXZ1wNf8vFGgvvU0UEeuso2FSGiZuj
-        AynpHzCxr7W78ExmgJvcBrkBdEyg+UodTDeIECsS7lDH9dIjMypmt8ilvWKv8hLTmI+ag7zWapcr8
-        8prZMxYcoHUeZOkvoj/M4W9Xnt0H0kpSyMSyGCsfvZp3iEMfeWTGg/4D8rkCU6pza8Y0gTXauR8Sc
-        1tjzf3NA==;
+        bh=/cLLiDTD8xZJBHOJYcLmc5ERwKhT+Ciq5XK7jpceMuE=; b=pbq83prJA+fXxcThqWYFnT6Obn
+        cUYsu8Ni43+cor2RGu4rMBXxx7jfdsvpSVOSbX4n16DOzdUbgX9qa7z4CI2mQONm2tUUq3iwxvpaT
+        PM+GsYXPjLEPSTSXLJ9emDurcHWPxYrAywVj6rnTZwCt3n4JkkPiYnbaL7Q6NVb2FaOUCpKaXDHe0
+        PsFbVpRoGFu5Vk5sxFJBrEGV1wary0gsgg3l+jttzBGpShbLPyv4yKusnpMoZymJMX6jCQtUIP/zF
+        V1lPH4wsMKGNI9oxjFTB2lfnEuD0MMrqEDlJ9FDYQUUbT7Qp6DeutsJWfrQu8SdGCw+rdyRpuJPR6
+        8A94iuFw==;
 Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDq8W-0004aY-QY; Thu, 03 Sep 2020 14:22:49 +0000
+        id 1kDq8d-0004bX-CJ; Thu, 03 Sep 2020 14:22:55 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
@@ -47,11 +47,10 @@ Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: [PATCH 04/14] sysctl: Convert to iter interfaces
-Date:   Thu,  3 Sep 2020 16:22:32 +0200
-Message-Id: <20200903142242.925828-5-hch@lst.de>
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 09/14] lkdtm: remove set_fs-based tests
+Date:   Thu,  3 Sep 2020 16:22:37 +0200
+Message-Id: <20200903142242.925828-10-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200903142242.925828-1-hch@lst.de>
 References: <20200903142242.925828-1-hch@lst.de>
@@ -63,152 +62,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Once we can't manipulate the address limit, we also can't test what
+happens when the manipulation is abused.
 
-Using the read_iter/write_iter interfaces allows for in-kernel users
-to set sysctls without using set_fs().  Also, the buffer is a string,
-so give it the real type of 'char *', not void *.
-
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/proc/proc_sysctl.c      | 46 ++++++++++++++++++--------------------
- include/linux/bpf-cgroup.h |  2 +-
- kernel/bpf/cgroup.c        |  2 +-
- 3 files changed, 24 insertions(+), 26 deletions(-)
+ drivers/misc/lkdtm/bugs.c               | 10 ----------
+ drivers/misc/lkdtm/core.c               |  2 --
+ drivers/misc/lkdtm/lkdtm.h              |  2 --
+ drivers/misc/lkdtm/usercopy.c           | 15 ---------------
+ tools/testing/selftests/lkdtm/tests.txt |  2 --
+ 5 files changed, 31 deletions(-)
 
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 6c1166ccdaea57..a4a3122f8a584a 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -12,6 +12,7 @@
- #include <linux/cred.h>
- #include <linux/namei.h>
- #include <linux/mm.h>
-+#include <linux/uio.h>
- #include <linux/module.h>
- #include <linux/bpf-cgroup.h>
- #include <linux/mount.h>
-@@ -540,13 +541,14 @@ static struct dentry *proc_sys_lookup(struct inode *dir, struct dentry *dentry,
- 	return err;
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 4dfbfd51bdf774..a0675d4154d2fd 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -312,16 +312,6 @@ void lkdtm_CORRUPT_LIST_DEL(void)
+ 		pr_err("list_del() corruption not detected!\n");
  }
  
--static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
--		size_t count, loff_t *ppos, int write)
-+static ssize_t proc_sys_call_handler(struct kiocb *iocb, struct iov_iter *iter,
-+		int write)
+-/* Test if unbalanced set_fs(KERNEL_DS)/set_fs(USER_DS) check exists. */
+-void lkdtm_CORRUPT_USER_DS(void)
+-{
+-	pr_info("setting bad task size limit\n");
+-	set_fs(KERNEL_DS);
+-
+-	/* Make sure we do not keep running with a KERNEL_DS! */
+-	force_sig(SIGKILL);
+-}
+-
+ /* Test that VMAP_STACK is actually allocating with a leading guard page */
+ void lkdtm_STACK_GUARD_PAGE_LEADING(void)
  {
--	struct inode *inode = file_inode(filp);
-+	struct inode *inode = file_inode(iocb->ki_filp);
- 	struct ctl_table_header *head = grab_header(inode);
- 	struct ctl_table *table = PROC_I(inode)->sysctl_entry;
--	void *kbuf;
-+	size_t count = iov_iter_count(iter);
-+	char *kbuf;
- 	ssize_t error;
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index a5e344df916632..97803f213d9d45 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -112,7 +112,6 @@ static const struct crashtype crashtypes[] = {
+ 	CRASHTYPE(CORRUPT_STACK_STRONG),
+ 	CRASHTYPE(CORRUPT_LIST_ADD),
+ 	CRASHTYPE(CORRUPT_LIST_DEL),
+-	CRASHTYPE(CORRUPT_USER_DS),
+ 	CRASHTYPE(STACK_GUARD_PAGE_LEADING),
+ 	CRASHTYPE(STACK_GUARD_PAGE_TRAILING),
+ 	CRASHTYPE(UNSET_SMEP),
+@@ -172,7 +171,6 @@ static const struct crashtype crashtypes[] = {
+ 	CRASHTYPE(USERCOPY_STACK_FRAME_FROM),
+ 	CRASHTYPE(USERCOPY_STACK_BEYOND),
+ 	CRASHTYPE(USERCOPY_KERNEL),
+-	CRASHTYPE(USERCOPY_KERNEL_DS),
+ 	CRASHTYPE(STACKLEAK_ERASING),
+ 	CRASHTYPE(CFI_FORWARD_PROTO),
+ #ifdef CONFIG_X86_32
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index 8878538b2c1322..6dec4c9b442ff3 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -27,7 +27,6 @@ void lkdtm_OVERFLOW_UNSIGNED(void);
+ void lkdtm_ARRAY_BOUNDS(void);
+ void lkdtm_CORRUPT_LIST_ADD(void);
+ void lkdtm_CORRUPT_LIST_DEL(void);
+-void lkdtm_CORRUPT_USER_DS(void);
+ void lkdtm_STACK_GUARD_PAGE_LEADING(void);
+ void lkdtm_STACK_GUARD_PAGE_TRAILING(void);
+ void lkdtm_UNSET_SMEP(void);
+@@ -96,7 +95,6 @@ void lkdtm_USERCOPY_STACK_FRAME_TO(void);
+ void lkdtm_USERCOPY_STACK_FRAME_FROM(void);
+ void lkdtm_USERCOPY_STACK_BEYOND(void);
+ void lkdtm_USERCOPY_KERNEL(void);
+-void lkdtm_USERCOPY_KERNEL_DS(void);
  
- 	if (IS_ERR(head))
-@@ -569,32 +571,30 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
- 	error = -ENOMEM;
- 	if (count >= KMALLOC_MAX_SIZE)
- 		goto out;
-+	kbuf = kzalloc(count + 1, GFP_KERNEL);
-+	if (!kbuf)
-+		goto out;
- 
- 	if (write) {
--		kbuf = memdup_user_nul(ubuf, count);
--		if (IS_ERR(kbuf)) {
--			error = PTR_ERR(kbuf);
--			goto out;
--		}
--	} else {
--		kbuf = kzalloc(count, GFP_KERNEL);
--		if (!kbuf)
--			goto out;
-+		error = -EFAULT;
-+		if (!copy_from_iter_full(kbuf, count, iter))
-+			goto out_free_buf;
-+		kbuf[count] = '\0';
- 	}
- 
- 	error = BPF_CGROUP_RUN_PROG_SYSCTL(head, table, write, &kbuf, &count,
--					   ppos);
-+					   &iocb->ki_pos);
- 	if (error)
- 		goto out_free_buf;
- 
- 	/* careful: calling conventions are nasty here */
--	error = table->proc_handler(table, write, kbuf, &count, ppos);
-+	error = table->proc_handler(table, write, kbuf, &count, &iocb->ki_pos);
- 	if (error)
- 		goto out_free_buf;
- 
- 	if (!write) {
- 		error = -EFAULT;
--		if (copy_to_user(ubuf, kbuf, count))
-+		if (copy_to_iter(kbuf, count, iter) < count)
- 			goto out_free_buf;
- 	}
- 
-@@ -607,16 +607,14 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
- 	return error;
+ /* lkdtm_stackleak.c */
+ void lkdtm_STACKLEAK_ERASING(void);
+diff --git a/drivers/misc/lkdtm/usercopy.c b/drivers/misc/lkdtm/usercopy.c
+index b833367a45d053..109e8d4302c113 100644
+--- a/drivers/misc/lkdtm/usercopy.c
++++ b/drivers/misc/lkdtm/usercopy.c
+@@ -325,21 +325,6 @@ void lkdtm_USERCOPY_KERNEL(void)
+ 	vm_munmap(user_addr, PAGE_SIZE);
  }
  
--static ssize_t proc_sys_read(struct file *filp, char __user *buf,
--				size_t count, loff_t *ppos)
-+static ssize_t proc_sys_read(struct kiocb *iocb, struct iov_iter *iter)
+-void lkdtm_USERCOPY_KERNEL_DS(void)
+-{
+-	char __user *user_ptr =
+-		(char __user *)(0xFUL << (sizeof(unsigned long) * 8 - 4));
+-	mm_segment_t old_fs = get_fs();
+-	char buf[10] = {0};
+-
+-	pr_info("attempting copy_to_user() to noncanonical address: %px\n",
+-		user_ptr);
+-	set_fs(KERNEL_DS);
+-	if (copy_to_user(user_ptr, buf, sizeof(buf)) == 0)
+-		pr_err("copy_to_user() to noncanonical address succeeded!?\n");
+-	set_fs(old_fs);
+-}
+-
+ void __init lkdtm_usercopy_init(void)
  {
--	return proc_sys_call_handler(filp, (void __user *)buf, count, ppos, 0);
-+	return proc_sys_call_handler(iocb, iter, 0);
- }
- 
--static ssize_t proc_sys_write(struct file *filp, const char __user *buf,
--				size_t count, loff_t *ppos)
-+static ssize_t proc_sys_write(struct kiocb *iocb, struct iov_iter *iter)
- {
--	return proc_sys_call_handler(filp, (void __user *)buf, count, ppos, 1);
-+	return proc_sys_call_handler(iocb, iter, 1);
- }
- 
- static int proc_sys_open(struct inode *inode, struct file *filp)
-@@ -853,8 +851,8 @@ static int proc_sys_getattr(const struct path *path, struct kstat *stat,
- static const struct file_operations proc_sys_file_operations = {
- 	.open		= proc_sys_open,
- 	.poll		= proc_sys_poll,
--	.read		= proc_sys_read,
--	.write		= proc_sys_write,
-+	.read_iter	= proc_sys_read,
-+	.write_iter	= proc_sys_write,
- 	.llseek		= default_llseek,
- };
- 
-diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
-index 64f367044e25f4..82b26a1386d85e 100644
---- a/include/linux/bpf-cgroup.h
-+++ b/include/linux/bpf-cgroup.h
-@@ -136,7 +136,7 @@ int __cgroup_bpf_check_dev_permission(short dev_type, u32 major, u32 minor,
- 
- int __cgroup_bpf_run_filter_sysctl(struct ctl_table_header *head,
- 				   struct ctl_table *table, int write,
--				   void **buf, size_t *pcount, loff_t *ppos,
-+				   char **buf, size_t *pcount, loff_t *ppos,
- 				   enum bpf_attach_type type);
- 
- int __cgroup_bpf_run_filter_setsockopt(struct sock *sock, int *level,
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index e21de4f1754c2c..6ec088a96302f9 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -1226,7 +1226,7 @@ const struct bpf_verifier_ops cg_dev_verifier_ops = {
-  */
- int __cgroup_bpf_run_filter_sysctl(struct ctl_table_header *head,
- 				   struct ctl_table *table, int write,
--				   void **buf, size_t *pcount, loff_t *ppos,
-+				   char **buf, size_t *pcount, loff_t *ppos,
- 				   enum bpf_attach_type type)
- {
- 	struct bpf_sysctl_kern ctx = {
+ 	/* Prepare cache that lacks SLAB_USERCOPY flag. */
+diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
+index 9d266e79c6a270..74a8d329a72c80 100644
+--- a/tools/testing/selftests/lkdtm/tests.txt
++++ b/tools/testing/selftests/lkdtm/tests.txt
+@@ -9,7 +9,6 @@ EXCEPTION
+ #CORRUPT_STACK_STRONG Crashes entire system on success
+ CORRUPT_LIST_ADD list_add corruption
+ CORRUPT_LIST_DEL list_del corruption
+-CORRUPT_USER_DS Invalid address limit on user-mode return
+ STACK_GUARD_PAGE_LEADING
+ STACK_GUARD_PAGE_TRAILING
+ UNSET_SMEP CR4 bits went missing
+@@ -67,6 +66,5 @@ USERCOPY_STACK_FRAME_TO
+ USERCOPY_STACK_FRAME_FROM
+ USERCOPY_STACK_BEYOND
+ USERCOPY_KERNEL
+-USERCOPY_KERNEL_DS
+ STACKLEAK_ERASING OK: the rest of the thread stack is properly erased
+ CFI_FORWARD_PROTO
 -- 
 2.28.0
 
