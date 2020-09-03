@@ -2,127 +2,185 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21273C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5D9C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE53A206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC6F206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VDPMh54U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbgICJPO (ORCPT
+        id S1728275AbgICJRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 05:15:14 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:55682 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726770AbgICJPO (ORCPT
+        Thu, 3 Sep 2020 05:17:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgICJRl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 05:15:14 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U7nf1cO_1599124504;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U7nf1cO_1599124504)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 03 Sep 2020 17:15:05 +0800
-Subject: Re: [PATCH v4 1/4] mm/pageblock: mitigation cmpxchg false sharing in
- pageblock flags
-To:     David Hildenbrand <david@redhat.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1599116482-7410-1-git-send-email-alex.shi@linux.alibaba.com>
- <fb8ae5e8-1480-fe22-6872-f2484bcadbed@redhat.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <7b68847f-89c2-5470-5cf0-fc2e225176bc@linux.alibaba.com>
-Date:   Thu, 3 Sep 2020 17:14:57 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Thu, 3 Sep 2020 05:17:41 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 562A0C061247
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 02:17:41 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id l17so1882917edq.12
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 02:17:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ks8zbpt3K53ylw0T/eWvGEXanQshe4hPX9kTva9RnTk=;
+        b=VDPMh54UU9w25z4QHVBYJjPLF92rQvlDEmZh2WtnxD3Bzdp7sogs2sroU5P8Ur3FAw
+         dv6ULAm2SlhYlvBSIAuPvDAxIDfiPm+Xl5qQW6TODWahjjtzYxh3+twFOVluLHMIgxz6
+         w2Eh0wttggdlvWHo3aw1Rmp6MBbEUcdHEpVWstWJJH51qV9CchXfrCoAG4KXmvAEDlob
+         46JIR8MQRfQ8Jfm3o1xNopn3QfNSGesPEGM2pKxNzZMTPmzwXW7dEhiRXFHJcAydDEnK
+         dOqVw2ar8bKWyJY1V9CQN8WlsrUu+0XVUERIfK37nCxqpwsTFFpOaGTWPpcwdI2fGHIi
+         AaQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ks8zbpt3K53ylw0T/eWvGEXanQshe4hPX9kTva9RnTk=;
+        b=qFdnx9Oyv6OLf4fXp/lDZ32u1lR7DbV03UTjv3PG8RT2SBW2lujfnG17Sntm//FgXw
+         FtqVSS9GzZ0XHsEeF+C9iL3MpgN93WuLxEsB2GAGUL/eU2Kul+U5eHnru1fBVbPF3xGd
+         E6iuQjLWTwkFQxF7mxdIfUMPOpXoxebbVGlMDm4Fq4p0vol9mB8kVlEARBm4HpmfNvlY
+         tU1N7qH8YyAN2M2EqlXnNIaNMjeddOzJ40EAhHqtLXXEzknKf1MgS4pJ27mv+SdoZ/Ll
+         4ipFjvqi3RUjau7vvP94TReaW+kZJrd7kmV4LgZwssNSFkYuWlNbzRGd6n60D84gaRf8
+         jJxA==
+X-Gm-Message-State: AOAM531C+ERgcglPqnVENetqZToYzsc2GkqNFCq0U8+D7ktqzBgbY7xk
+        6xohbLyiCAcqLQL+B3hN21vaZA==
+X-Google-Smtp-Source: ABdhPJxWMzIchcIkSdxyCs4vGPUMhXltKg67YBEhN8oWRx/8t3VGb7k28L3pS6EUEDV05f+huINp0Q==
+X-Received: by 2002:a50:f69a:: with SMTP id d26mr1970262edn.21.1599124657089;
+        Thu, 03 Sep 2020 02:17:37 -0700 (PDT)
+Received: from localhost (dynamic-2a00-1028-919a-a06e-64ac-0036-822c-68d3.ipv6.broadband.iol.cz. [2a00:1028:919a:a06e:64ac:36:822c:68d3])
+        by smtp.gmail.com with ESMTPSA id ot19sm2547529ejb.121.2020.09.03.02.17.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 02:17:36 -0700 (PDT)
+From:   David Brazdil <dbrazdil@google.com>
+To:     Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, linux-arch@vger.kernel.org,
+        kernel-team@android.com, David Brazdil <dbrazdil@google.com>
+Subject: [PATCH v2 01/10] Macros to override naming of percpu symbols and sections
+Date:   Thu,  3 Sep 2020 11:17:03 +0200
+Message-Id: <20200903091712.46456-2-dbrazdil@google.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200903091712.46456-1-dbrazdil@google.com>
+References: <20200903091712.46456-1-dbrazdil@google.com>
 MIME-Version: 1.0
-In-Reply-To: <fb8ae5e8-1480-fe22-6872-f2484bcadbed@redhat.com>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Modify generic linker script macros to generate section/symbol names for
+percpu area using overridable macros. No functional changes.
 
+This will allow arm64 linker script to define a second KVM-specific percpu
+data section using the generic PERCPU_SECTION macro.
 
-在 2020/9/3 下午4:19, David Hildenbrand 写道:
-> On 03.09.20 09:01, Alex Shi wrote:
->> pageblock_flags is used as long, since every pageblock_flags is just 4
->> bits, 'long' size will include 8(32bit machine) or 16 pageblocks' flags,
->> that flag setting has to sync in cmpxchg with 7 or 15 other pageblock
->> flags. It would cause long waiting for sync.
->>
->> If we could change the pageblock_flags variable as char, we could use
->> char size cmpxchg, which just sync up with 2 pageblock flags. it could
->> relief the false sharing in cmpxchg.
->>
->> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Mel Gorman <mgorman@techsingularity.net>
->> Cc: linux-mm@kvack.org
->> Cc: linux-kernel@vger.kernel.org
-> 
-> Could you please
-> 
-> 1. Send a cover letter and indicate the changees between versions. I
-> cannot find any in my mailbox or on -mm - is there any? (also, is there
-> a patch 4 ?)
+Signed-off-by: David Brazdil <dbrazdil@google.com>
+---
+ include/asm-generic/vmlinux.lds.h | 40 +++++++++++++++++++++----------
+ 1 file changed, 27 insertions(+), 13 deletions(-)
 
-Hi David,
-
-Thanks for comments!
-I thought a short patchset don't need a cover. Here it's:
-
-cmpxchg is a lockless way to update data by check and compare the target
-data after updated and retry if target data is changed during that action.
-
-So we should just compare the exact size of target data. If the data is only
-byte, but cmpxchg compare a long word, that leads to a cmpxchg level flase
-sharing, cause more try which lock memory more times. That's a clearly
-logical error and should be fixed.
-
-v1, the initial version
-v2, fix the armv6 cmpxchgb missing issue.
-v3, fix more arch cmpxchg missing issue on armv6, sh2, sparc32, xtensa
-v4, redo cmpxchgb fix by NO_CMPXCHG_BYTE into arch/Kconfig 
-
-> 
-> 2. Report proper performance numbers as requested, especially, over
-> multiple runs. This should go into patch 1/2. Are they buried somewhere?
-
-There are some result sent on
-https://lkml.org/lkml/2020/8/30/95
-
-> 
-> 3. Clarify what patch 3 does: Do we actually waste 8*sizeof(long) where
-> we only need 4 bits?
-
-No, no waste, current kernel pack the 4 bits into long, that cause cmpxchg
-compare 8 pageblock flags which 7 of them are not needed.
-
-> 
-> Also, breaking stuff in patch 1 and fixing it in patch 3 is not
-> acceptable. This breaks git bisect. Skimming over the patches I think
-> this is the case.
-
-Got it, thanks!
-> 
-> I am not convinced yet that we need and want this. As Alex mentioned, we
-> touch pageblock flags while holding the zone lock already in most cases
-> -  and as Mel mentiones, updates should be rare.
-> 
-
-yes, not too much, but there are still a few. and cmpxchg retry will lock memory
- which I believe the less the better.
-
-Thanks
-Alex
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 5430febd34be..8f3f5c45e891 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -920,6 +920,20 @@
+ #define INIT_RAM_FS
+ #endif
+ 
++/*
++ * Macros to override the naming of percpu symbols and sections.
++ * Used by arm64 linker script to define a separate percpu area for KVM.
++ */
++#define PERCPU_SECTION_BASE_NAME .data..percpu
++
++#ifndef PERCPU_SECTION_NAME
++#define PERCPU_SECTION_NAME(suffix) PERCPU_SECTION_BASE_NAME ## suffix
++#endif
++
++#ifndef PERCPU_SYMBOL_NAME
++#define PERCPU_SYMBOL_NAME(name) name
++#endif
++
+ /*
+  * Memory encryption operates on a page basis. Since we need to clear
+  * the memory encryption mask for this section, it needs to be aligned
+@@ -931,7 +945,7 @@
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ #define PERCPU_DECRYPTED_SECTION					\
+ 	. = ALIGN(PAGE_SIZE);						\
+-	*(.data..percpu..decrypted)					\
++	*(PERCPU_SECTION_NAME(..decrypted))				\
+ 	. = ALIGN(PAGE_SIZE);
+ #else
+ #define PERCPU_DECRYPTED_SECTION
+@@ -975,17 +989,17 @@
+  * sharing between subsections for different purposes.
+  */
+ #define PERCPU_INPUT(cacheline)						\
+-	__per_cpu_start = .;						\
+-	*(.data..percpu..first)						\
++	PERCPU_SYMBOL_NAME(__per_cpu_start) = .;			\
++	*(PERCPU_SECTION_NAME(..first))					\
+ 	. = ALIGN(PAGE_SIZE);						\
+-	*(.data..percpu..page_aligned)					\
++	*(PERCPU_SECTION_NAME(..page_aligned))				\
+ 	. = ALIGN(cacheline);						\
+-	*(.data..percpu..read_mostly)					\
++	*(PERCPU_SECTION_NAME(..read_mostly))				\
+ 	. = ALIGN(cacheline);						\
+-	*(.data..percpu)						\
+-	*(.data..percpu..shared_aligned)				\
++	*(PERCPU_SECTION_NAME())					\
++	*(PERCPU_SECTION_NAME(..shared_aligned))			\
+ 	PERCPU_DECRYPTED_SECTION					\
+-	__per_cpu_end = .;
++	PERCPU_SYMBOL_NAME(__per_cpu_end) = .;
+ 
+ /**
+  * PERCPU_VADDR - define output section for percpu area
+@@ -1012,11 +1026,11 @@
+  * address, use PERCPU_SECTION.
+  */
+ #define PERCPU_VADDR(cacheline, vaddr, phdr)				\
+-	__per_cpu_load = .;						\
+-	.data..percpu vaddr : AT(__per_cpu_load - LOAD_OFFSET) {	\
++	PERCPU_SYMBOL_NAME(__per_cpu_load) = .;				\
++	PERCPU_SECTION_NAME() vaddr : AT(PERCPU_SYMBOL_NAME(__per_cpu_load) - LOAD_OFFSET) { \
+ 		PERCPU_INPUT(cacheline)					\
+ 	} phdr								\
+-	. = __per_cpu_load + SIZEOF(.data..percpu);
++	. = PERCPU_SYMBOL_NAME(__per_cpu_load) + SIZEOF(PERCPU_SECTION_NAME());
+ 
+ /**
+  * PERCPU_SECTION - define output section for percpu area, simple version
+@@ -1032,8 +1046,8 @@
+  */
+ #define PERCPU_SECTION(cacheline)					\
+ 	. = ALIGN(PAGE_SIZE);						\
+-	.data..percpu	: AT(ADDR(.data..percpu) - LOAD_OFFSET) {	\
+-		__per_cpu_load = .;					\
++	PERCPU_SECTION_NAME() : AT(ADDR(PERCPU_SECTION_NAME()) - LOAD_OFFSET) { \
++		PERCPU_SYMBOL_NAME(__per_cpu_load) = .;			\
+ 		PERCPU_INPUT(cacheline)					\
+ 	}
+ 
+-- 
+2.28.0.402.g5ffc5be6b7-goog
 
