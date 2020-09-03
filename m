@@ -2,205 +2,134 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB686C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B637C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCC842080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3A120709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:22:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgICBVO (ORCPT
+        id S1727943AbgICBW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 21:21:14 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10757 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726586AbgICBVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 21:21:13 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 252F644608CD59A7BDEC;
-        Thu,  3 Sep 2020 09:21:09 +0800 (CST)
-Received: from [10.74.191.121] (10.74.191.121) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 3 Sep 2020 09:21:02 +0800
-Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
- enqueue op for lockless qdisc
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-CC:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        "David Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Linux Kernel Network Developers" <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
- <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com>
- <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com>
- <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
- <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
- <CAM_iQpXmpMdxF2JDOROaf+Tjk-8dASiXz53K-Ph_q7jVMe0oVw@mail.gmail.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <cd773132-c98e-18e1-67fd-bbef6babbf0f@huawei.com>
-Date:   Thu, 3 Sep 2020 09:21:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Wed, 2 Sep 2020 21:22:28 -0400
+Received: from mga12.intel.com ([192.55.52.136]:36153 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727065AbgICBW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 21:22:28 -0400
+IronPort-SDR: Gqt90s+Jo6MUhApI3q7ht14pitqZW/TA76WHUSPGY1JWFI509zcefWNN7uuHSW2cO1QErf3zVb
+ n8nQay56Ji4w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="137021365"
+X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
+   d="scan'208";a="137021365"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 18:22:27 -0700
+IronPort-SDR: fb6E8nq0cilRzQCk73cJ19JBm1IlpMEVdQP8pS0Z3LXavCslpx/43u8vaB8IBe4/7Gfi7Wp7aF
+ iRS8V5zd6+tw==
+X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
+   d="scan'208";a="302034350"
+Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 18:22:26 -0700
+Date:   Wed, 2 Sep 2020 18:22:25 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Lai Jiangshan <laijs@linux.alibaba.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH V2] kvm x86/mmu: use KVM_REQ_MMU_SYNC to sync when needed
+Message-ID: <20200903012224.GL11695@sjchrist-ice>
+References: <87y2ltx6gl.fsf@vitty.brq.redhat.com>
+ <20200902135421.31158-1-jiangshanlai@gmail.com>
+ <871rjkp8rc.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAM_iQpXmpMdxF2JDOROaf+Tjk-8dASiXz53K-Ph_q7jVMe0oVw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871rjkp8rc.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/9/3 8:35, Cong Wang wrote:
-> On Tue, Sep 1, 2020 at 11:35 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>
->> On 2020/9/2 12:41, Cong Wang wrote:
->>> On Tue, Sep 1, 2020 at 6:42 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>>>
->>>> On 2020/9/2 2:24, Cong Wang wrote:
->>>>> On Mon, Aug 31, 2020 at 5:59 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>>>>>
->>>>>> Currently there is concurrent reset and enqueue operation for the
->>>>>> same lockless qdisc when there is no lock to synchronize the
->>>>>> q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
->>>>>> qdisc_deactivate() called by dev_deactivate_queue(), which may cause
->>>>>> out-of-bounds access for priv->ring[] in hns3 driver if user has
->>>>>> requested a smaller queue num when __dev_xmit_skb() still enqueue a
->>>>>> skb with a larger queue_mapping after the corresponding qdisc is
->>>>>> reset, and call hns3_nic_net_xmit() with that skb later.
->>>>>
->>>>> Can you be more specific here? Which call path requests a smaller
->>>>> tx queue num? If you mean netif_set_real_num_tx_queues(), clearly
->>>>> we already have a synchronize_net() there.
->>>>
->>>> When the netdevice is in active state, the synchronize_net() seems to
->>>> do the correct work, as below:
->>>>
->>>> CPU 0:                                       CPU1:
->>>> __dev_queue_xmit()                       netif_set_real_num_tx_queues()
->>>> rcu_read_lock_bh();
->>>> netdev_core_pick_tx(dev, skb, sb_dev);
->>>>         .
->>>>         .                               dev->real_num_tx_queues = txq;
->>>>         .                                       .
->>>>         .                                       .
->>>>         .                               synchronize_net();
->>>>         .                                       .
->>>> q->enqueue()                                    .
->>>>         .                                       .
->>>> rcu_read_unlock_bh()                            .
->>>>                                         qdisc_reset_all_tx_gt
->>>>
->>>>
->>>
->>> Right.
->>>
->>>
->>>> but dev->real_num_tx_queues is not RCU-protected, maybe that is a problem
->>>> too.
->>>>
->>>> The problem we hit is as below:
->>>> In hns3_set_channels(), hns3_reset_notify(h, HNAE3_DOWN_CLIENT) is called
->>>> to deactive the netdevice when user requested a smaller queue num, and
->>>> txq->qdisc is already changed to noop_qdisc when calling
->>>> netif_set_real_num_tx_queues(), so the synchronize_net() in the function
->>>> netif_set_real_num_tx_queues() does not help here.
->>>
->>> How could qdisc still be running after deactivating the device?
->>
->> qdisc could be running during the device deactivating process.
->>
->> The main process of changing channel number is as below:
->>
->> 1. dev_deactivate()
->> 2. hns3 handware related setup
->> 3. netif_set_real_num_tx_queues()
->> 4. netif_tx_wake_all_queues()
->> 5. dev_activate()
->>
->> During step 1, qdisc could be running while qdisc is resetting, so
->> there could be skb left in the old qdisc(which will be restored back to
->> txq->qdisc during dev_activate()), as below:
->>
->> CPU 0:                                       CPU1:
->> __dev_queue_xmit():                      dev_deactivate_many():
->> rcu_read_lock_bh();                      qdisc_deactivate(qdisc);
->> q = rcu_dereference_bh(txq->qdisc);             .
->> netdev_core_pick_tx(dev, skb, sb_dev);          .
->>         .
->>         .                               rcu_assign_pointer(dev_queue->qdisc, qdisc_default);
->>         .                                       .
->>         .                                       .
->>         .                                       .
->>         .                                       .
->> q->enqueue()                                    .
+On Wed, Sep 02, 2020 at 04:12:55PM +0200, Vitaly Kuznetsov wrote:
+> Lai Jiangshan <jiangshanlai@gmail.com> writes:
 > 
+> > From: Lai Jiangshan <laijs@linux.alibaba.com>
+> >
+> > When kvm_mmu_get_page() gets a page with unsynced children, the spt
+> > pagetable is unsynchronized with the guest pagetable. But the
+> > guest might not issue a "flush" operation on it when the pagetable
+> > entry is changed from zero or other cases. The hypervisor has the 
+> > responsibility to synchronize the pagetables.
+> >
+> > The linux kernel behaves as above for many years, But
+> > 8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
 > 
-> Well, like I said, if the deactivated bit were tested before ->enqueue(),
-> there would be no packet queued after qdisc_deactivate().
+> Nit: checkpatch.pl complains here with 
+> 
+> ERROR: Please use git commit description style 'commit <12+ chars of
+> sha1> ("<title line>")' - ie: 'commit 8c8560b83390 ("KVM: x86/mmu: Use
+> KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes")'
+> #118: 
+> 8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
 
-Only if the deactivated bit testing is also protected by qdisc->seqlock?
-otherwise there is still window between setting and testing the deactivated bit.
+Definitely needs a
 
-> 
-> 
->>         .                                       .
->> rcu_read_unlock_bh()                            .
->>
->> And During step 3, txq->qdisc is pointing to noop_qdisc, so the qdisc_reset()
->> only reset the noop_qdisc, but not the actual qdisc, which is stored in
->> txq->qdisc_sleeping, so the actual qdisc may still have skb.
->>
->> When hns3_link_status_change() call step 4 and 5, it will restore all queue's
->> qdisc using txq->qdisc_sleeping and schedule all queue with net_tx_action().
->> The skb enqueued in step 1 may be dequeued and run, which cause the problem.
->>
->>>
->>>
->>>>
->>>>>
->>>>>>
->>>>>> Avoid the above concurrent op by calling synchronize_rcu_tasks()
->>>>>> after assigning new qdisc to dev_queue->qdisc and before calling
->>>>>> qdisc_deactivate() to make sure skb with larger queue_mapping
->>>>>> enqueued to old qdisc will always be reset when qdisc_deactivate()
->>>>>> is called.
->>>>>
->>>>> Like Eric said, it is not nice to call such a blocking function when
->>>>> we have a large number of TX queues. Possibly we just need to
->>>>> add a synchronize_net() as in netif_set_real_num_tx_queues(),
->>>>> if it is missing.
->>>>
->>>> As above, the synchronize_net() in netif_set_real_num_tx_queues() seems
->>>> to work when netdevice is in active state, but does not work when in
->>>> deactive.
->>>
->>> Please explain why deactivated device still has qdisc running?
->>>
->>> At least before commit 379349e9bc3b4, we always test deactivate
->>> bit before enqueueing. Are you complaining about that commit?
->>> That commit is indeed suspicious, at least it does not precisely revert
->>> commit ba27b4cdaaa66561aaedb21 as it claims.
->>
->> I am not familiar with TCQ_F_CAN_BYPASS.
->> From my understanding, the problem is that there is no order between
->> qdisc enqueuing and qdisc reset.
-> 
-> It has almost nothing to do with BYPASS, my point here is all about
-> __QDISC_STATE_DEACTIVATED bit, clearly commit 379349e9bc3b4
-> removed this bit test for lockless qdisc, whether intentionally or accidentally.
-> That bit test existed prior to BYPASS test, see commit ba27b4cdaaa665.
+  Fixes: 8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
 
-It seems there is no qdisc->seqlock or qdisc->seqlock to protect the
-deactivated bit testing in commit ba27b4cdaaa665 too?
+At that point I'd just have the changelog say "a recent commit".
 
+> > inadvertently included a line of code to change it without giving any
+> > reason in the changelog. It is clear that the commit's intention was to
+> > change KVM_REQ_TLB_FLUSH -> KVM_REQ_TLB_FLUSH_CURRENT, so we don't
+> > unneedlesly flush other contexts but one of the hunks changed
+> > nearby KVM_REQ_MMU_SYNC instead.
+> >
+> > The this patch changes it back.
+> >
+> > Link: https://lore.kernel.org/lkml/20200320212833.3507-26-sean.j.christopherson@intel.com/
+> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> > ---
+> > Changed from v1:
+> > 	update patch description
+> >
+> >  arch/x86/kvm/mmu/mmu.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > index 4e03841f053d..9a93de921f2b 100644
+> > --- a/arch/x86/kvm/mmu/mmu.c
+> > +++ b/arch/x86/kvm/mmu/mmu.c
+> > @@ -2468,7 +2468,7 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
+> >  		}
+> >  
+> >  		if (sp->unsync_children)
+> > -			kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+> > +			kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
+> >  
+> >  		__clear_sp_write_flooding_count(sp);
 > 
-> Thanks.
-> .
+> FWIW, 
 > 
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
+> but it'd be great to hear from Sean).
+
+I got nothing, AFAICT I was simply overzealous.
+
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
