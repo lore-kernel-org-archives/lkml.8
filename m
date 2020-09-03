@@ -2,71 +2,72 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F82C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CA1C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5CE72071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303962071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 04:00:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="OYCMtJ33";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J8vToR7O"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="Kav0Y9YA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="toW4nqzL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbgICEAX (ORCPT
+        id S1726213AbgICEAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 00:00:23 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:55131 "EHLO
+        Thu, 3 Sep 2020 00:00:25 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:54209 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725919AbgICEAT (ORCPT
+        by vger.kernel.org with ESMTP id S1725843AbgICEAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 00:00:19 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 63ED45C01DE;
+        by mailout.nyi.internal (Postfix) with ESMTP id 6240B5C01CF;
         Thu,  3 Sep 2020 00:00:18 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
   by compute3.internal (MEProxy); Thu, 03 Sep 2020 00:00:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=uqR1cgSeYmys9318Brf3VDOyr7
-        tVz0rUsRyqpo86SAQ=; b=OYCMtJ338DOKcpvTZEErWdjRjF3A/PTia/BXX/nkfh
-        mzYu5kI21YKN3WeaNHdQrREuh7xhGKc8wXoXo/Vjhr08t2twlHL6yTFG1kjJiYkc
-        8mYrrP7UlOccMGfGXqbl65Tg7SSIt0+OoIwkk4uTrS4oQOt3jFJoCaXPQ+p086Gb
-        kPoZlk4abAeP0g4PVM0LVtWcEaq7xcedoUGZuXXeCftYtBNDz9fLAxaPVSv2hkoQ
-        YPJ8WwQFaQaZiOgiM/cy1TiPCArxMbQLaxNi2A/wfdNvSKknOK3SXgT+RMB/TQSX
-        qdkmtjZXUdIlq3qVs2DAGSjbF42WqE2MQUdQf1WVvYgA==
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=kGU1vj1XbPmI3
+        GbcVRuOLRdT/UokAk5NkRE0C6HEpFU=; b=Kav0Y9YAS9HFWVGY9Hn5elC31ASXJ
+        9gbkssJLzdj5Qm2qyEiBhoXUq24qOVyMNcZhnx/cZGnkzNAmDCpAQOKihKoIOOR/
+        h91eOk6R2usm4twMvrMzUf4qqEHDQjsaBir31fFirv72huZ8gLU4OXOjqjjRKP2R
+        Jz59EYEMY0ofVCMeNnVMcIBGJBUFF4/+Rs8UEhfJCw7x4IlfE3uRbXRyp1b0tdqC
+        Iwkc9JoHnMKIBFn9qj7LFvZWCIph8sxaPgu/sL4Ak75m3wVcAdXhFk7wMBdzJ6Hh
+        Ga1wi3g6FNMHilksK6tKrEo056ZKdn/XkPfF9Xcro3EGGKcWgT1n0DwTw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=uqR1cgSeYmys9318B
-        rf3VDOyr7tVz0rUsRyqpo86SAQ=; b=J8vToR7OP3IyXq5mJI9/j8+cwGk24lHom
-        h6toLO1izrGCIh3NlkuWX4DAhqTVS/NWHuZSQa0V+YtnmlEbrgFJI7gYDSGIbIZF
-        DuY7j1gaOhqyhReuAJ6nz7epvb5a5W61+QTY9XIAlnK/SK0ZKG/VrOmgqqYdZy7K
-        EWi3nDqmsw5+pBTwRwFwjFuC+lU2qNVubDYdmC6rdhg9vGYbMZAl2rK4CiNFV9Ag
-        Waqbd+aHS5g/ogEpvfbNOK/9SBRXUce0n79yXi1UnMGZBxOsEMhXtncHHr0KBH0P
-        +A534O4WpctSzExK27UkJ5IonHR777SLQ7SSQXEOBuTOEilKn91Ug==
-X-ME-Sender: <xms:UWpQX5rmxNvDg3IxRnnvAfFMu0QBeArZ2PZCbnMTjub6hFgVnbDDhA>
-    <xme:UWpQX7qn8uPW_yrFOzDA_VUbOuqsu2S8ah7athKy4XuWAeKoxvfjt54304ckI3rP_
-    9euBYT6XVwd7Q-8Ww>
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=kGU1vj1XbPmI3GbcVRuOLRdT/UokAk5NkRE0C6HEpFU=; b=toW4nqzL
+        c/GhCWcPpZP8p4/r5ScvQmZiSDreftq3W4cXwSdqsVmt7N+hL7ztRiJPUy9Jh+ZA
+        urATG6M1L1bamLFk65/A23LwjOKfXKRLnaTNyS50uoKVKAOuE9289k7zqMp+vfkD
+        e6uqkXwOfdRfV0QbyQvdTlm4r1MGO3CQ6nUie73nUTL76J2Xaw88C826S2z9emAH
+        O9hwBehCzRgBB8g5WIFSfh9wq8C6AeE4BNLENhE7c5qDjNT7dKfdlA+6YCKvPZtb
+        dcEukayYBrPr3GxKsV5yTM4/nmTqPDzub9pxJAWMZZaVnwVcbwNS/0vrM2idBshV
+        DYKaZM/x63Gf6A==
+X-ME-Sender: <xms:UWpQX0gx8v8zzCsi9eCKU3-h1W0HuEFE0AbaJzpL8YJQwI3H6powWA>
+    <xme:UWpQX9DHu7iyZH-o24vm8uqPhRJCDHlrt0SQGYDHKGSOgRTpSP1bKyeS-bYyFbg1d
+    jyh2cOD_1sOg_lt_A>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddgjeejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgvlhcu
-    jfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtffrrg
-    htthgvrhhnpedvffeijeeivdfgjefgtedutdelkefhuedttdeugeeiteefvddvfeduheei
-    udetleenucffohhmrghinhepshhpihhnihgtshdrnhgvthdpkhgvrhhnvghlrdhorhhgne
-    cukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:UWpQX2Pe2vMQEswq2mHfB55nOXq7ktcgrDqvGE5B-GuUf31kF81Oww>
-    <xmx:UWpQX04OJZrVDaUqerAy7IBuaaRXT9ItFYr8q_yDAQ6eFV_jixe4TA>
-    <xmx:UWpQX47vzPw2w8Gv6_MtsBah1tthJIZC_HJ3Ahcc_N5bOz6k8mrlYA>
-    <xmx:UmpQX1smAUC_-SebPONK1QkrAszTcIam1bG_d0ga5rg6mW4kWyHMOw>
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
+    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtf
+    frrghtthgvrhhnpeduhfejfedvhffgfeehtefghfeiiefgfeehgfdvvdevfeegjeehjedv
+    gfejheeuieenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghn
+    ugdrohhrgh
+X-ME-Proxy: <xmx:UWpQX8FLmeiL76mB_zwJVLOrCZHQxXN4jwHbA85V9-FvgyRufkz3Lg>
+    <xmx:UWpQX1QTJDyW34XT83NGlCuTai7dzjFCiAfikfCNnGH1crdrt2VJ9w>
+    <xmx:UWpQXxx3beqUKZ6CIFw-_k0g7Qt2BPYspRXf1OaUMhKODtL5ENp1cQ>
+    <xmx:UmpQX4l47uA1tuxr1FzrRoUER1Qfv6Bcd2eclUetvGvMoQkSilKZEg>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8F38830600B4;
-        Thu,  3 Sep 2020 00:00:16 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6773630600A3;
+        Thu,  3 Sep 2020 00:00:17 -0400 (EDT)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Stephen Boyd <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -75,10 +76,12 @@ To:     Stephen Boyd <sboyd@kernel.org>,
         Maxime Ripard <mripard@kernel.org>
 Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH RESEND 0/2] Common protected-clocks implementation
-Date:   Wed,  2 Sep 2020 23:00:13 -0500
-Message-Id: <20200903040015.5627-1-samuel@sholland.org>
+Subject: [PATCH RESEND 2/2] Revert "clk: qcom: Support 'protected-clocks' property"
+Date:   Wed,  2 Sep 2020 23:00:15 -0500
+Message-Id: <20200903040015.5627-3-samuel@sholland.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200903040015.5627-1-samuel@sholland.org>
+References: <20200903040015.5627-1-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,32 +89,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen, Maxime,
+Now that protected-clocks is handled in the clk core, this
+driver-specific implementation is redundant.
 
-You previously asked me to implement the protected-clocks property in a
-driver-independent way:
+This reverts commit b181b3b801da8893c8eb706e448dd5111b02de60.
 
-https://www.spinics.net/lists/arm-kernel/msg753832.html
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
+ drivers/clk/qcom/common.c | 18 ------------------
+ 1 file changed, 18 deletions(-)
 
-I provided an implementation 6 months ago, which I am resending now:
-
-https://patchwork.kernel.org/patch/11398629/
-
-Do you have any comments on it?
-
-Thanks,
-Samuel
-
-Samuel Holland (2):
-  clk: Implement protected-clocks for all OF clock providers
-  Revert "clk: qcom: Support 'protected-clocks' property"
-
- drivers/clk/clk-conf.c    | 54 +++++++++++++++++++++++++++++++++++++++
- drivers/clk/clk.c         | 31 ++++++++++++++++++++++
- drivers/clk/clk.h         |  2 ++
- drivers/clk/qcom/common.c | 18 -------------
- 4 files changed, 87 insertions(+), 18 deletions(-)
-
+diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
+index 60d2a78d1395..6e150fd32dbe 100644
+--- a/drivers/clk/qcom/common.c
++++ b/drivers/clk/qcom/common.c
+@@ -194,22 +194,6 @@ int qcom_cc_register_sleep_clk(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(qcom_cc_register_sleep_clk);
+ 
+-/* Drop 'protected-clocks' from the list of clocks to register */
+-static void qcom_cc_drop_protected(struct device *dev, struct qcom_cc *cc)
+-{
+-	struct device_node *np = dev->of_node;
+-	struct property *prop;
+-	const __be32 *p;
+-	u32 i;
+-
+-	of_property_for_each_u32(np, "protected-clocks", prop, p, i) {
+-		if (i >= cc->num_rclks)
+-			continue;
+-
+-		cc->rclks[i] = NULL;
+-	}
+-}
+-
+ static struct clk_hw *qcom_cc_clk_hw_get(struct of_phandle_args *clkspec,
+ 					 void *data)
+ {
+@@ -272,8 +256,6 @@ int qcom_cc_really_probe(struct platform_device *pdev,
+ 	cc->rclks = rclks;
+ 	cc->num_rclks = num_clks;
+ 
+-	qcom_cc_drop_protected(dev, cc);
+-
+ 	for (i = 0; i < num_clk_hws; i++) {
+ 		ret = devm_clk_hw_register(dev, clk_hws[i]);
+ 		if (ret)
 -- 
 2.26.2
 
