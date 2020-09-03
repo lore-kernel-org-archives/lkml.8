@@ -5,68 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F300CC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD38C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC8E32072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7B72072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:45:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="J8uMl5op";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aW6AIcNH"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="ncEEIHoq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="En7xihk/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgICDo4 (ORCPT
+        id S1728249AbgICDo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 23:44:56 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:58309 "EHLO
+        Wed, 2 Sep 2020 23:44:58 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:46943 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726654AbgICDoy (ORCPT
+        by vger.kernel.org with ESMTP id S1726686AbgICDoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 23:44:54 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 015B75C01ED;
+        by mailout.nyi.internal (Postfix) with ESMTP id 015775C01E6;
         Wed,  2 Sep 2020 23:44:53 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
   by compute3.internal (MEProxy); Wed, 02 Sep 2020 23:44:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=CzDMzrx7Uon4Y
-        51DrS7UpU2Heup60DvL4sgkL20Fbjg=; b=J8uMl5opwoW/OmMJ4G60dbmqURcY1
-        RChqN5dCqgT8WrbMamabLIIq1LcjGrPyD292o76PvFvllN9+p9ewG+8xkhBhlgkh
-        BWvziYapMaSzpNEeYWsUI+TTBJYWJetFV5apu4bAiNqCihaj8RdOjfLI2wcnzT4C
-        SRUockgMs+u5pbe9AOWLuRTLGxZ/ugKCMtMhNN8r4IJ8C2cy3ZqiAJ53dIiOH2Hb
-        M01zubZPNbLjaNPld8Ni6gSwrw4CHFzBeEBOyTyC5eJqcl4h0PAThiqIzQtvd/8E
-        TZOEt6N//FRy7tXrFFa8K6UA+XvtZ//iqOECHmABqt70jn1/x7xmfW4tw==
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=+9t662V001TgRGCCG56jM+Z/YQ
+        k7ENVjdwqNyvtMt08=; b=ncEEIHoq2AjQY7yVVJwctMiONp9DMKYtGlsEjV+no+
+        Pb1qtMFvd0ckYLBcMugc8VTnpWaOwIvrb4n9yXpJmShC4cSsIQoLx1wNoRHu6M9n
+        2ZsNh8frkUr7eKjnpW+9H905itNXn1oTT275l7k5TIaDUCNS6aIi10HUtFYI/KZV
+        +nFidQWFExNmaXa1lLfgqQsdqzP9TVHvWQSKVmcejZYBjGat29JrUXRnLRRqPr1k
+        ivap7t/WSf3RPmN41remLxip/pz53kpLxzB+SkrHBnGy0pcTYAXqLHScHPxn0tSj
+        c8LCsZyWyT98iUKSCgZRVdQnXzMjloa9S3Q96Cf2/Dhg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=CzDMzrx7Uon4Y51DrS7UpU2Heup60DvL4sgkL20Fbjg=; b=aW6AIcNH
-        xgPVfcBveaxPlh8CcS3lCrH3Sye199wZUcKtA5BziVivX00BEjpab0D/NoIL/OqL
-        VSu0xTn7PjbNd1YCsBca03LXgKYUivPd7DIth5iuOzYxzzfgeNuZwCkU0bZ2RWNL
-        jLeLGfTtvU6GEXvANXVsOVbVmEAfTidY6ak294Bkl36k078ki9z+xNmD+z52AmJc
-        caOMk9NgGerom7CtYLotfHpzUY4iQmQqgOx5ddaLDfODtF5dsTyEsnWibDnqONQm
-        wxKHZizDcjh0MJ41brraloJoHKRl1dJUUggSqFyl+sEIc3LMG4+jrmu5DwgJofhi
-        uQ/nH02NNKv7wQ==
-X-ME-Sender: <xms:tGZQX6z6XD7v6H-Rx1aoEloMCiHPjdpLXQEzFYAbjTVexdKbmRwNrw>
-    <xme:tGZQX2RfU52C9uIIMZEKj2uF87HoxHKc2cW1XABVLe-ftgIFmPIbiHkH92hQaEs9j
-    gFmoTd-pHPgq58wVw>
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=+9t662V001TgRGCCG
+        56jM+Z/YQk7ENVjdwqNyvtMt08=; b=En7xihk/JdEQlGCehutY2nWWwnJxqnebU
+        KyoT/M+BvwrrGwXhCQeHfx9Lp0MpYeVIjwegS5DA15QjGiPHlztRvBeFMgKJbnU2
+        D5sSGGq8bGM0ztDbwDi8rcP7NSFiqytt3831NNTwS0+NH2u1SVJLLn6e417IucYc
+        tVzy96Mi6tlDxi/IvTaRy368dWY+MnBBePIiA/eh4PTMBkieLwJqC2E3Byz/8B1J
+        9nho/nRy0NIFVpqmqJZ0D8ouEAjonQ30HW8vFjSIZaRGH6+Z/dR21/IjSxiV9SOG
+        htCThY06a8Z2ctB+HM1zftqZ2M+itrKgbp2sEWCAvHGLDh8uUoSig==
+X-ME-Sender: <xms:s2ZQX0lBpgjvIJpsuzpebcml88UtbpJsdAev4D9DWsW7DxvUWtYHtw>
+    <xme:s2ZQXz1-s9KK-bO4a9OebiWW_d87eDNlY3cPocI5k5mD4gM9CG2GrxvDpYxmej1LT
+    ot5MK0V6pPrSf1EzQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddgjeegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtf
-    frrghtthgvrhhnpeduhfejfedvhffgfeehtefghfeiiefgfeehgfdvvdevfeegjeehjedv
-    gfejheeuieenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghn
-    ugdrohhrgh
-X-ME-Proxy: <xmx:tGZQX8XNw4MYfvF0GlL8ozDqJgiGqW321FKWh_C1fBWPKlC3Zqamew>
-    <xmx:tGZQXwgHvdF4wM2O6k-LEqDbwLK7HkAiT2v3NuOgxZa0eKSQkuRRqg>
-    <xmx:tGZQX8DycMmUDldtdGBE9xeqMTYpcKDP3uxcZRF4aufHB7Nzh74GOQ>
-    <xmx:tGZQX75JPP5irkQWFztHg-SGDBb1LjbLVbmto_r3f_khHA8u9sU-uw>
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgvlhcu
+    jfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtffrrg
+    htthgvrhhnpeeiteekhfehuddugfeltddufeejjeefgeevheekueffhffhjeekheeiffdt
+    vedtveenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdr
+    ohhrgh
+X-ME-Proxy: <xmx:s2ZQXyrmczd2stHlXkHCcNk6lslNlWqkW-lgOdMqgSw_swAlbdJq9A>
+    <xmx:s2ZQXwkovpzyiXvVgn4tE9bCSFeD8VCSCLEv8M717ahmrJEkjBaDNw>
+    <xmx:s2ZQXy3mfoc7cTb6rKSBrb8RiiuZYeV63BBTckTU4E934oGLsSxuwQ>
+    <xmx:tGZQX-9qfDQoIW9np7-6wyk0AryePHqHxQmPx6jFocUbYvE-D9AGPw>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D011B30600A3;
+        by mail.messagingengine.com (Postfix) with ESMTPA id 751C23060067;
         Wed,  2 Sep 2020 23:44:51 -0400 (EDT)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Adam Radford <aradford@gmail.com>,
@@ -75,12 +74,10 @@ To:     Adam Radford <aradford@gmail.com>,
 Cc:     Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
         linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v4 2/3] scsi: 3w-9xxx: Reduce scope of structure packing
-Date:   Wed,  2 Sep 2020 22:44:49 -0500
-Message-Id: <20200903034450.5491-2-samuel@sholland.org>
+Subject: [PATCH v4 1/3] scsi: 3w-9xxx: Use flexible array members to avoid struct padding
+Date:   Wed,  2 Sep 2020 22:44:48 -0500
+Message-Id: <20200903034450.5491-1-samuel@sholland.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200903034450.5491-1-samuel@sholland.org>
-References: <20200903034450.5491-1-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -88,83 +85,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, all command packet structs used by this driver are packed.
-However, only one (TW_SG_Entry) actually needs to be packed, because it
-uses 64-bit addresses at 32-bit alignment. To improve the quality of
-generated code, stop packing all of the other command packet structs.
-This requires adjusting the type of one misaligned "reserved" member.
-
-After this change, pahole reports that only one type had its layout
-change: the tw_compat_info member of TW_Device_Extension is now
-naturally aligned.
+In preparation for removing the "#pragma pack(1)" from the driver, fix
+all instances where a trailing array member could be replaced by a
+flexible array member. Since a flexible array member has zero size, it
+introduces no padding, whether or not the struct is packed.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
 
-Changes since v3: None.
+Changes since v3:
+  - Consistently put sizeof(TW_Ioctl_Buf_Apache) before buffer_length.
 
 ---
- drivers/scsi/3w-9xxx.h | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/scsi/3w-9xxx.c | 16 ++++++++++------
+ drivers/scsi/3w-9xxx.h |  4 ++--
+ 2 files changed, 12 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/scsi/3w-9xxx.c b/drivers/scsi/3w-9xxx.c
+index 3337b1e80412..aad9b3b73e15 100644
+--- a/drivers/scsi/3w-9xxx.c
++++ b/drivers/scsi/3w-9xxx.c
+@@ -676,7 +676,9 @@ static long twa_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long
+ 	data_buffer_length_adjusted = (driver_command.buffer_length + 511) & ~511;
+ 
+ 	/* Now allocate ioctl buf memory */
+-	cpu_addr = dma_alloc_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted+sizeof(TW_Ioctl_Buf_Apache) - 1, &dma_handle, GFP_KERNEL);
++	cpu_addr = dma_alloc_coherent(&tw_dev->tw_pci_dev->dev,
++				      sizeof(TW_Ioctl_Buf_Apache) + data_buffer_length_adjusted,
++				      &dma_handle, GFP_KERNEL);
+ 	if (!cpu_addr) {
+ 		retval = TW_IOCTL_ERROR_OS_ENOMEM;
+ 		goto out2;
+@@ -685,7 +687,7 @@ static long twa_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long
+ 	tw_ioctl = (TW_Ioctl_Buf_Apache *)cpu_addr;
+ 
+ 	/* Now copy down the entire ioctl */
+-	if (copy_from_user(tw_ioctl, argp, driver_command.buffer_length + sizeof(TW_Ioctl_Buf_Apache) - 1))
++	if (copy_from_user(tw_ioctl, argp, sizeof(TW_Ioctl_Buf_Apache) + driver_command.buffer_length))
+ 		goto out3;
+ 
+ 	/* See which ioctl we are doing */
+@@ -867,11 +869,13 @@ static long twa_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long
+ 	}
+ 
+ 	/* Now copy the entire response to userspace */
+-	if (copy_to_user(argp, tw_ioctl, sizeof(TW_Ioctl_Buf_Apache) + driver_command.buffer_length - 1) == 0)
++	if (copy_to_user(argp, tw_ioctl, sizeof(TW_Ioctl_Buf_Apache) + driver_command.buffer_length) == 0)
+ 		retval = 0;
+ out3:
+ 	/* Now free ioctl buf memory */
+-	dma_free_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted+sizeof(TW_Ioctl_Buf_Apache) - 1, cpu_addr, dma_handle);
++	dma_free_coherent(&tw_dev->tw_pci_dev->dev,
++			  sizeof(TW_Ioctl_Buf_Apache) + data_buffer_length_adjusted,
++			  cpu_addr, dma_handle);
+ out2:
+ 	mutex_unlock(&tw_dev->ioctl_lock);
+ out:
+@@ -1392,7 +1396,7 @@ static void twa_load_sgl(TW_Device_Extension *tw_dev, TW_Command_Full *full_comm
+ 		newcommand->request_id__lunl =
+ 			cpu_to_le16(TW_REQ_LUN_IN(TW_LUN_OUT(newcommand->request_id__lunl), request_id));
+ 		if (length) {
+-			newcommand->sg_list[0].address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache) - 1);
++			newcommand->sg_list[0].address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache));
+ 			newcommand->sg_list[0].length = cpu_to_le32(length);
+ 		}
+ 		newcommand->sgl_entries__lunh =
+@@ -1407,7 +1411,7 @@ static void twa_load_sgl(TW_Device_Extension *tw_dev, TW_Command_Full *full_comm
+ 				sgl = (TW_SG_Entry *)((u32 *)oldcommand+oldcommand->size - (sizeof(TW_SG_Entry)/4) + pae);
+ 			else
+ 				sgl = (TW_SG_Entry *)((u32 *)oldcommand+TW_SGL_OUT(oldcommand->opcode__sgloffset));
+-			sgl->address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache) - 1);
++			sgl->address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache));
+ 			sgl->length = cpu_to_le32(length);
+ 
+ 			oldcommand->size += pae;
 diff --git a/drivers/scsi/3w-9xxx.h b/drivers/scsi/3w-9xxx.h
-index e65dafda2e3e..36b865eca67d 100644
+index d88cd3499bd5..e65dafda2e3e 100644
 --- a/drivers/scsi/3w-9xxx.h
 +++ b/drivers/scsi/3w-9xxx.h
-@@ -471,13 +471,17 @@ printk(KERN_WARNING "3w-9xxx: ERROR: (0x%02X:0x%04X): %s.\n",a,b,c); \
- #define TW_PADDING_LENGTH (sizeof(dma_addr_t) > 4 ? 8 : 0)
- #define TW_CPU_TO_SGL(x) (sizeof(dma_addr_t) > 4 ? cpu_to_le64(x) : cpu_to_le32(x))
+@@ -588,7 +588,7 @@ typedef struct TAG_TW_Ioctl_Apache {
+ 	TW_Ioctl_Driver_Command driver_command;
+         char padding[488];
+ 	TW_Command_Full firmware_command;
+-	char data_buffer[1];
++	char data_buffer[];
+ } TW_Ioctl_Buf_Apache;
  
--#pragma pack(1)
-+#if IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT)
-+typedef u64 twa_addr_t;
-+#else
-+typedef u32 twa_addr_t;
-+#endif
+ /* Lock structure for ioctl get/release lock */
+@@ -604,7 +604,7 @@ typedef struct {
+ 	unsigned short	parameter_id;
+ 	unsigned short	parameter_size_bytes;
+ 	unsigned short  actual_parameter_size_bytes;
+-	unsigned char	data[1];
++	unsigned char	data[];
+ } TW_Param_Apache, *PTW_Param_Apache;
  
- /* Scatter Gather List Entry */
- typedef struct TAG_TW_SG_Entry {
--	dma_addr_t address;
-+	twa_addr_t address;
- 	u32 length;
--} TW_SG_Entry;
-+} __packed TW_SG_Entry;
- 
- /* Command Packet */
- typedef struct TW_Command {
-@@ -496,12 +500,12 @@ typedef struct TW_Command {
- 		struct {
- 			u32 lba;
- 			TW_SG_Entry sgl[TW_ESCALADE_MAX_SGL_LENGTH];
--			dma_addr_t padding;
-+			twa_addr_t padding;
- 		} io;
- 		struct {
- 			TW_SG_Entry sgl[TW_ESCALADE_MAX_SGL_LENGTH];
- 			u32 padding;
--			dma_addr_t padding2;
-+			twa_addr_t padding2;
- 		} param;
- 	} byte8_offset;
- } TW_Command;
-@@ -531,7 +535,7 @@ typedef struct TAG_TW_Command_Apache_Header {
- 	unsigned char err_specific_desc[98];
- 	struct {
- 		unsigned char size_header;
--		unsigned short reserved;
-+		unsigned char reserved[2];
- 		unsigned char size_sense;
- 	} header_desc;
- } TW_Command_Apache_Header;
-@@ -631,8 +635,6 @@ typedef struct TAG_TW_Compatibility_Info
- 	unsigned short fw_on_ctlr_build;
- } TW_Compatibility_Info;
- 
--#pragma pack()
--
- typedef struct TAG_TW_Device_Extension {
- 	u32                     __iomem *base_addr;
- 	unsigned long	       	*generic_buffer_virt[TW_Q_LENGTH];
+ /* Response queue */
 -- 
 2.26.2
 
