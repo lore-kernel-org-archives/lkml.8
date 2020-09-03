@@ -2,108 +2,305 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B097CC10DAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E4DC10DAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83B5B20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E75B20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:18:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWyRrvJA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="malaHd5r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbgICWSV (ORCPT
+        id S1729383AbgICWSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:18:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51988 "EHLO
+        Thu, 3 Sep 2020 18:18:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgICWST (ORCPT
+        with ESMTP id S1728309AbgICWSb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:18:19 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54CAAC061244;
-        Thu,  3 Sep 2020 15:18:19 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id v23so5661552ljd.1;
-        Thu, 03 Sep 2020 15:18:19 -0700 (PDT)
+        Thu, 3 Sep 2020 18:18:31 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E5D4C061246
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:18:31 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d22so3459791pfn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:18:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=L6OYjrBWLMGkLZUDNUHAcsUTScuiU6WSVwlqzVd6Pzc=;
-        b=TWyRrvJAvb5keY81T6x3lfqcDecwPzWx87ybAGWLnxTvc0Rha1udM7jn+nGN8AbBoX
-         /PPf1Jd2rpVcEBSnypYGZTUFD8BZoNRbJPQjnHXQphg4fL0cLyA3WB+SmZOB9DvHkH1s
-         2pje8dwelv9GhEcpHe/t1X6caFRA75du5buyYrB/0o6kdzGdyg4w05FVo3l6Af6iPKEl
-         DkfCwypiyhMfHKUEq9OSDThzRqYH5aCTQ/nIloDqhLezdVbDD2dfIAAQiYGucHtFY0yl
-         mbFNZUh7A9Fm9fL2eJrmeSyrp2mF3C22jcATK3HfQ+q/hx5dWhWRoWguSBy34/nG+rxO
-         hRzA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Roix3RhAEEOO2V01BUd1l2dtuHebq2+iPymfTqDrfKA=;
+        b=malaHd5r4alh1HJyeDyqDu7Mey/38FwBExzCtlODrP1yv0Kp55lsKlc4p00m1kU1wz
+         06MepI8ARBeA1bjq9yyLsh5N4fIP0/VCGvrCTx/erzWdPrF7UOKJOKJ6LzRstg0tmZjj
+         85RirG/8z6BAsuLa7c24lw9eWx66QUol7PTr4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=L6OYjrBWLMGkLZUDNUHAcsUTScuiU6WSVwlqzVd6Pzc=;
-        b=eFVaeUHOuvODiP4bKhjtTdaTPodYq24idoKW7mRYHI5kZKlFveu/HyU86OTq+cdGRd
-         6bG17rL8nXYQu0N6KhS+1jPYSqZaHFsnCr23+JH9Cn0jThJWOUnIpjV0ydGI0XBLaSpP
-         /CElyTO0HtMe802Ahczhnmc2aE7Vt70sVj6Rhmy/4dbgGJMITbp4R9SjfSvguW77kQ8M
-         dUGYx1U+JY+21BAy0I+EFfMdDgzRRuzqmW3OjoRKAZE8fqjMeaRdvdL2omXLb4CROGIt
-         77EfcfybIG3fajFg488X+StUnuSG094vcGmoWk2Nr1lCotcldiXE42jODS8D4fsayUYI
-         WhwA==
-X-Gm-Message-State: AOAM531fE3P4v4xG5zsetOZQuBmSVjW/CkM4z9InhnwWAyPXCs7baNG+
-        TfqNABHvQ6sBo2ie345rw2nGt6piB/M=
-X-Google-Smtp-Source: ABdhPJz5Ov+gqdpL+IzGjoOMfvZX5CXv7ChYUyHXwOI1HZaIVfBMeKzxeSNXqrpHCrWgQ4/DFUn0Xw==
-X-Received: by 2002:a2e:9d8e:: with SMTP id c14mr1019646ljj.135.1599171497517;
-        Thu, 03 Sep 2020 15:18:17 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id c13sm855258lfi.76.2020.09.03.15.18.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 15:18:16 -0700 (PDT)
-Subject: Re: [PATCH v1 00/12] Improvements for Tegra I2C driver
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200831202303.15391-1-digetx@gmail.com>
- <20200902212026.GD1624@qmqm.qmqm.pl>
- <04aae642-80f9-d22e-1d80-bb206bb27a8b@gmail.com>
- <20200903164709.GA7406@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e1b7a9fc-e638-8576-a79e-7c2cf1cfbfe2@gmail.com>
-Date:   Fri, 4 Sep 2020 01:18:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        bh=Roix3RhAEEOO2V01BUd1l2dtuHebq2+iPymfTqDrfKA=;
+        b=N4T5PWHKrub3Hve/u4u+74zoRbaRGLAdoCMDfhKS7jN97Z5NnRvl6mI2p9X92joYwQ
+         SbTzOiGMXPL3nRmX7j9PlwhQCQjZu/MzRrSpZ7mQ4h1unqtgHKtbvoB6EWfSEjOqn3EJ
+         vxgECvAyijaJmO9gMIDVY1kpjE2x/c4YomangT6Py2+8sb6v18hAtrzbWRtjIEfIkPZT
+         mSzeqaGjN9nvKHwVKOh9pAvO8eunt1ExR+HfanQH764DOvwwKC0zzacuPHLm0H1OBnlx
+         dDgNKogtxfPiZIakR4ugLmfFRC+Yaym8bM99RfQf5LdbBU8xXkGRhFpTwM5t1Kh/gLSh
+         V04A==
+X-Gm-Message-State: AOAM532WDVsxsfaO8mHpdlJCx6TlUiodoGmgNlbxO1P9pVxmdHYhXqfi
+        yNyvccjc/CCycxNQp16QVKjvdA==
+X-Google-Smtp-Source: ABdhPJyNpfEDlgl8BoZHuF2puXp9YWnttTtYfUOHnZq7eEOWT2W+CMSH3iaOHUCZ9AjszaCRgypIcg==
+X-Received: by 2002:a65:614a:: with SMTP id o10mr4697995pgv.411.1599171509795;
+        Thu, 03 Sep 2020 15:18:29 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id p188sm4205391pfb.17.2020.09.03.15.18.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 15:18:29 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        Daniel Campello <campello@chromium.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Evan Green <evgreen@chromium.org>
+Subject: [PATCH] dt-bindings: iio: sx9310: Add various settings as DT properties
+Date:   Thu,  3 Sep 2020 15:18:28 -0700
+Message-Id: <20200903221828.3657250-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 MIME-Version: 1.0
-In-Reply-To: <20200903164709.GA7406@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-03.09.2020 19:47, Michał Mirosław пишет:
-> On Thu, Sep 03, 2020 at 04:12:13AM +0300, Dmitry Osipenko wrote:
->> 03.09.2020 00:20, Michał Mirosław пишет:
->>> BTW, I wonder if you could expose i2c_in_atomic_xfer_mode() and use it
->>> to differentiate atomic_xfer from normal and get rid of the internal
->>> flag and .master_xfer_atomic callback.
->>
->> The atomic transfer uses 90% of the code path that a non-atomic transfer
->> uses. I don't see how it could be exposed without duplicated lots of the
->> code, unless I'm not missing what you're suggesting.
-> 
-> The I2C core falls back to .master_xfer even in atomic mode if
-> .master_xfer_atomic is NULL, so what I'm suggesting is to make
-> i2c_in_atomic_xfer_mode() public (from i2c-core.h) and use it in
-> normal .master_xfer to choose atomic wait variants.
+We need to set various bits in the hardware registers for this device to
+operate properly depending on how it is installed. Add a handful of DT
+properties to configure these things.
 
-Okay, I see now. But the I2C core prints a noisy warning if
-master_xfer_atomic is NULL in atomic transfer, so I'm not sure whether
-changing all that code will bring much benefits to us and anyone else.
-It's a bit too questionable change to me, but maybe I'm still missing
-something. Will be great if you could provide an example patch.
+Cc: Daniel Campello <campello@chromium.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: <devicetree@vger.kernel.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Gwendal Grignou <gwendal@chromium.org>
+Cc: Evan Green <evgreen@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+
+I haven't written any code to handle these properties yet. I'd rather do
+that once the binding patch is reviewed. Patch based on iio.git testing
+branch.
+
+ .../iio/proximity/semtech,sx9310.yaml         | 182 ++++++++++++++++++
+ 1 file changed, 182 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+index 5739074d3592..e74b81483c14 100644
+--- a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
++++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+@@ -40,6 +40,169 @@ properties:
+   "#io-channel-cells":
+     const: 1
+ 
++  semtech,cs0-ground:
++    description: Indicates the CS0 sensor is connected to ground.
++    type: boolean
++
++  semtech,combined-sensors:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [0, 1, 2, 3]
++    default: 0
++    description:
++      Which sensors are combined. 0 for CS3, 1 for CS0+CS1, 2 for CS1+CS2,
++      and 3 for all sensors.
++
++  semtech,cs0-gain-factor:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [1, 2, 4, 8]
++    default: 1
++    description:
++      Gain factor for CS0 (and combined if any) sensor.
++
++  semtech,cs1-gain-factor:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [1, 2, 4, 8]
++    default: 1
++    description:
++      Gain factor for CS1 sensor.
++
++  semtech,cs2-gain-factor:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [1, 2, 4, 8]
++    default: 1
++    description:
++      Gain factor for CS2 sensor.
++
++  semtech,resolution:
++    description:
++      Capacitance measure resolution.
++    enum:
++      - coarsest
++      - very-coarse
++      - coarse
++      - medium-coarse
++      - medium
++      - fine
++      - very-fine
++      - finest
++
++  semtech,startup-sensor:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [0, 1, 2, 3]
++    default: 0
++    description:
++      Sensor used for start-up proximity detection. The combined
++      sensor is represented by 3.
++
++  semtech,proxraw-strength:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [0, 2, 4, 8]
++    default: 2
++    description:
++      PROXRAW filter strength. A value of 0 represents off, and other values
++      represent 1-1/N.
++
++  semtech,compensate-common:
++    description: Any sensor triggers compensation of all channels.
++    type: boolean
++
++  semtech,avg-pos-strength:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [0, 16, 64, 128, 256, 512, 1024, 4294967295]
++    default: 16
++    description:
++      Average positive filter strength. A value of 0 represents off and
++      UINT_MAX (4294967295) represents infinite. Other values
++      represent 1-1/N.
++
++  semtech,cs0-prox-threshold:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 40,
++               48, 56, 64, 72, 80, 88, 96, 112, 128, 144,
++               160, 192, 224, 256, 320, 384, 512, 640,
++               768, 1024, 1536]
++    default: 12
++    description:
++      Proximity detection threshold for CS0 (and combined if any) sensor.
++
++  semtech,cs1-prox-threshold:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 40,
++               48, 56, 64, 72, 80, 88, 96, 112, 128, 144,
++               160, 192, 224, 256, 320, 384, 512, 640,
++               768, 1024, 1536]
++    default: 12
++    description:
++      Proximity detection threshold for CS1 sensor.
++
++  semtech,cs2-prox-threshold:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 40,
++               48, 56, 64, 72, 80, 88, 96, 112, 128, 144,
++               160, 192, 224, 256, 320, 384, 512, 640,
++               768, 1024, 1536]
++    default: 12
++    description:
++      Proximity detection threshold for CS2 sensor.
++
++  semtech,cs0-body-threshold:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [0, 300, 600, 900, 1200, 1500, 1800, 30000]
++    default: 1800
++    description:
++      Body detection threshold for CS0 (and combined if any) sensor.
++
++  semtech,cs1-body-threshold:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [0, 300, 600, 900, 1200, 1500, 1800, 30000]
++    default: 12
++    description:
++      Body detection threshold for CS1 sensor.
++
++  semtech,cs2-body-threshold:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [0, 300, 600, 900, 1200, 1500, 1800, 30000]
++    default: 12
++    description:
++      Body detection threshold for CS2 sensor.
++
++  semtech,hysteresis:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [0, 6, 12, 25]
++    default: 0
++    description:
++      The percentage of hysteresis +/- applied to proximity/body samples.
++
++  semtech,close-debounce-samples:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [0, 2, 4, 8]
++    default: 0
++    description:
++      The number of close samples debounced for proximity/body thresholds.
++
++  semtech,far-debounce-samples:
++    allOf:
++      - $ref: /schemas/types.yaml#definitions/uint32
++      - enum: [0, 2, 4, 8]
++    default: 0
++    description:
++      The number of far samples debounced for proximity/body thresholds.
++
+ required:
+   - compatible
+   - reg
+@@ -61,5 +224,24 @@ examples:
+         vdd-supply = <&pp3300_a>;
+         svdd-supply = <&pp1800_prox>;
+         #io-channel-cells = <1>;
++        semtech,cs0-ground;
++        semtech,combined-sensors = <0>;
++        semtech,cs0-gain-factor = <8>;
++        semtech,cs1-gain-factor = <8>;
++        semtech,cs2-gain-factor = <8>;
++        semtech,resolution = "fine";
++        semtech,startup-sensor = <1>;
++        semtech,proxraw-strength = <2>;
++        semtech,compensate-common;
++        semtech,avg-pos-strength = <64>;
++        semtech,cs0-prox-threshold = <96>;
++        semtech,cs1-prox-threshold = <112>;
++        semtech,cs2-prox-threshold = <96>;
++        semtech,cs0-body-threshold = <300>;
++        semtech,cs1-body-threshold = <300>;
++        semtech,cs2-body-threshold = <300>;
++        semtech,hysteresis = <0>;
++        semtech,close-debounce-samples = <2>;
++        semtech,far-debounce-samples = <2>;
+       };
+     };
+
+base-commit: 1bebdcb928eba880f3a119bacb8149216206958a
+-- 
+Sent by a computer, using git, on the internet
+
