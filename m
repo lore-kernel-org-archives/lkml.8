@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50294C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A1DC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07F4C20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BA520716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:28:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="IsqDITsA"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="PpReesdG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgICW15 (ORCPT
+        id S1729521AbgICW2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53418 "EHLO
+        Thu, 3 Sep 2020 18:28:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729421AbgICW10 (ORCPT
+        with ESMTP id S1729371AbgICW1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:27:26 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE5AFC061258
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:27:25 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id 92so3232131qtb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:27:25 -0700 (PDT)
+        Thu, 3 Sep 2020 18:27:24 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82CE9C061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:27:23 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id d20so4670815qka.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:27:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OisqwqmjPQQZ6SVmmwChVO35pZHcyjn2RbcRqVq7LRw=;
-        b=IsqDITsA9QtcWPUg4nFtOkCoN6mniq0HIGr2JpiSEUQaMJkJ8S7nRxQRzZqJBSGjlx
-         Xa6Rqw4BFHCzLj1k0yhbqQLWfzUDC4RSZoC2I0b+3y0kTMEWh9pxLVZIFo9w/2Mu1nyV
-         eOJ6ZZy4BCx3XQtoWLOvcYY/+mh3JXHu1syF6FTKIgxJ1IqNAkA3E7Q9sD3dMPj9U5Es
-         cQ5qtHPCiqRx2+ho7VKIwBHgwK6H8/0DAxRAHLFvhTDV/Ia6QJAftj+eMLLiM6thSf8q
-         /ZINGS9fJKKnp/9gBumueqXk6ScZbDu6w0ukKp1PvXVYyf2Q+2haPDD1FvP/d5g7XZ62
-         8g1w==
+        bh=pDfmQNHAG0oNL+DinMI855d5TOcqne3bbwmiKm+SFXU=;
+        b=PpReesdGQE8Vba4/yYmVrh2a7rfxxs+MPZD+j9hNbnevBcqSUGbgQT6ezjiz96AKqp
+         3Cvrhp1k+zB6x8kPIDawEsfGugAjZa342zvZOl8ZG6pU3bsoyKziB+o4c82UzYFvbFf3
+         SlJruW/Qo4v0ybhSlDpE3lIrbt8OTpy+kGR2woZdM+boG9UoDl5uJvGd/Tt8n505JI8h
+         n2A2WDDn7xNYQRoUIP2VpemlyvCm7oW2EslDxBhUFSmE5DJa9SI8G6XGsS/3HhpLV9KX
+         PfJ8jua7qWLmxA7qb48pYINTpUwSXpVeRXPWNQlNgUcOnYrcb4UMQjrYz0NUGM0LJ92o
+         MSmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OisqwqmjPQQZ6SVmmwChVO35pZHcyjn2RbcRqVq7LRw=;
-        b=eJxSBxL/Cu0R5YLHmLvRyjz31jBO8NwJEMSXtZJQmaFnQKTpPE/i4xPkQ09gnk3nYR
-         LQrYWUGIZH0jQ4h5a/YnlWP90Xbtipc52CmtXAb4+WYb9ZezwL1EbYklfg8Wv7tMJOEj
-         4dVwvJXcgmhUodA12Zes8u0R50RsyyF3RBIFVtZD0eTSzQDviSLyoF2f5HrPP+2WQZ6d
-         5ae+w18c+30nRrxXZLhwZjAb5ljnaRVQ80TACkyQd2/2aaD+cvB1/DBDFV1FuaBZxJ2T
-         V7xfuGehzFflaoVEYQHctfJ15/zkpY+hFZdsHJollB2fTI9v6DpsPXQefkmIhbsIFFqE
-         jNoQ==
-X-Gm-Message-State: AOAM5338Cwd05k+HFuVnRLY2RytxLJMte63vJfB7rwN01bx4F11Ypzbs
-        u9OyYYLqNXmoqpnRZQEpsETHzw==
-X-Google-Smtp-Source: ABdhPJxWwP7jwGk42wQw4N5MQkgMFahb4UuVCNTSYxSVknqtXL6Ipp+qkcP6fRbnCnHaz+UHxxUg3g==
-X-Received: by 2002:ac8:474d:: with SMTP id k13mr5835795qtp.20.1599172044878;
-        Thu, 03 Sep 2020 15:27:24 -0700 (PDT)
+        bh=pDfmQNHAG0oNL+DinMI855d5TOcqne3bbwmiKm+SFXU=;
+        b=bwtxEKESdWNs0jzQK3O3M+EHZOmT3N38enDLVcoKj+c4sAcuEX9XbWfA5OJ8hqjEZO
+         xnSjJHr2tDUDwUMOyTVpThdkEunQP3DUsifiaMRIfk54aPZCxsEgquukg/P/xK1FrYmi
+         +7Uk9Vgl9cy+mzcMIenbPZsxhO6BflNBBshZvXYwJOtTyrjaZzvZmXBeBNnsSTkNSJKR
+         UiU79Tibl1YdhoQ7MvPbG+o6u84Ilk5p0IIuFiGz6WSFnehINGdSpRn7ZAu6mDQSTj4D
+         UAIT69w+wJb3MK3YuMPzZhJSzSUnyhCk19iQ8qlCgCUyZd9fxy1XwbboveH3dAkVz9iX
+         vAtA==
+X-Gm-Message-State: AOAM533heeKXkpCUjXqx49HSrfh44xlTQmy+La2PgG97jPv/Bde6w3f4
+        ZvqPxq1TQUKrk5T2QQ7VQfAbRg==
+X-Google-Smtp-Source: ABdhPJymExMUZLSQyyRGlbTKoeQqdxr3tNSohC6CFbmiLC7dgkK7N4zCjgVckMsJsmVJqZyrSVJE9Q==
+X-Received: by 2002:a37:c4b:: with SMTP id 72mr5354127qkm.176.1599172042511;
+        Thu, 03 Sep 2020 15:27:22 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id y30sm3217157qth.7.2020.09.03.15.27.23
+        by smtp.gmail.com with ESMTPSA id y30sm3217157qth.7.2020.09.03.15.27.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 15:27:24 -0700 (PDT)
+        Thu, 03 Sep 2020 15:27:22 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     Andy Gross <agross@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
         linux-kernel@vger.kernel.org (open list),
         linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK)
-Subject: [PATCH v2 7/7] clk: qcom: Add display clock controller driver for SM8250
-Date:   Thu,  3 Sep 2020 18:26:15 -0400
-Message-Id: <20200903222620.27448-8-jonathan@marek.ca>
+Subject: [PATCH v2 6/7] clk: qcom: Add display clock controller driver for SM8150
+Date:   Thu,  3 Sep 2020 18:26:14 -0400
+Message-Id: <20200903222620.27448-7-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200903222620.27448-1-jonathan@marek.ca>
 References: <20200903222620.27448-1-jonathan@marek.ca>
@@ -80,7 +80,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the display clock controller found on SM8250
+Add support for the display clock controller found on SM8150
 based devices. This would allow display drivers to probe and
 control their clocks.
 
@@ -88,24 +88,24 @@ Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
  drivers/clk/qcom/Kconfig         |    9 +
  drivers/clk/qcom/Makefile        |    1 +
- drivers/clk/qcom/dispcc-sm8250.c | 1100 ++++++++++++++++++++++++++++++
- 3 files changed, 1110 insertions(+)
- create mode 100644 drivers/clk/qcom/dispcc-sm8250.c
+ drivers/clk/qcom/dispcc-sm8150.c | 1152 ++++++++++++++++++++++++++++++
+ 3 files changed, 1162 insertions(+)
+ create mode 100644 drivers/clk/qcom/dispcc-sm8150.c
 
 diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index b8f82e7495ba..6aee0b8ca897 100644
+index 058327310c25..b8f82e7495ba 100644
 --- a/drivers/clk/qcom/Kconfig
 +++ b/drivers/clk/qcom/Kconfig
-@@ -453,6 +453,15 @@ config SM_DISPCC_8150
- 	  Say Y if you want to support display devices and functionality such as
- 	  splash screen.
+@@ -444,6 +444,15 @@ config SM_GPUCC_8250
+ 	  Say Y if you want to support graphics controller devices and
+ 	  functionality such as 3D graphics.
  
-+config SM_DISPCC_8250
-+	tristate "SM8250 Display Clock Controller"
-+	select SM_GCC_8250
++config SM_DISPCC_8150
++	tristate "SM8150 Display Clock Controller"
++	select SM_GCC_8150
 +	help
 +	  Support for the display clock controller on Qualcomm Technologies, Inc
-+	  SM8250 devices.
++	  SM8150 devices.
 +	  Say Y if you want to support display devices and functionality such as
 +	  splash screen.
 +
@@ -113,26 +113,26 @@ index b8f82e7495ba..6aee0b8ca897 100644
  	tristate "SPMI PMIC clkdiv Support"
  	depends on SPMI || COMPILE_TEST
 diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index edea87f1c7e6..8eb395d02a32 100644
+index 9677e769e7e9..edea87f1c7e6 100644
 --- a/drivers/clk/qcom/Makefile
 +++ b/drivers/clk/qcom/Makefile
-@@ -65,6 +65,7 @@ obj-$(CONFIG_SDM_GPUCC_845) += gpucc-sdm845.o
+@@ -64,6 +64,7 @@ obj-$(CONFIG_SDM_GCC_845) += gcc-sdm845.o
+ obj-$(CONFIG_SDM_GPUCC_845) += gpucc-sdm845.o
  obj-$(CONFIG_SDM_LPASSCC_845) += lpasscc-sdm845.o
  obj-$(CONFIG_SDM_VIDEOCC_845) += videocc-sdm845.o
- obj-$(CONFIG_SM_DISPCC_8150) += dispcc-sm8150.o
-+obj-$(CONFIG_SM_DISPCC_8250) += dispcc-sm8250.o
++obj-$(CONFIG_SM_DISPCC_8150) += dispcc-sm8150.o
  obj-$(CONFIG_SM_GCC_8150) += gcc-sm8150.o
  obj-$(CONFIG_SM_GCC_8250) += gcc-sm8250.o
  obj-$(CONFIG_SM_GPUCC_8150) += gpucc-sm8150.o
-diff --git a/drivers/clk/qcom/dispcc-sm8250.c b/drivers/clk/qcom/dispcc-sm8250.c
+diff --git a/drivers/clk/qcom/dispcc-sm8150.c b/drivers/clk/qcom/dispcc-sm8150.c
 new file mode 100644
-index 000000000000..7c0f384a3a42
+index 000000000000..0e4178df678f
 --- /dev/null
-+++ b/drivers/clk/qcom/dispcc-sm8250.c
-@@ -0,0 +1,1100 @@
++++ b/drivers/clk/qcom/dispcc-sm8150.c
+@@ -0,0 +1,1152 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
 + */
 +
 +#include <linux/clk-provider.h>
@@ -141,7 +141,7 @@ index 000000000000..7c0f384a3a42
 +#include <linux/regmap.h>
 +#include <linux/reset-controller.h>
 +
-+#include <dt-bindings/clock/qcom,dispcc-sm8250.h>
++#include <dt-bindings/clock/qcom,dispcc-sm8150.h>
 +
 +#include "clk-alpha-pll.h"
 +#include "clk-branch.h"
@@ -153,7 +153,6 @@ index 000000000000..7c0f384a3a42
 +
 +enum {
 +	P_BI_TCXO,
-+	P_CHIP_SLEEP_CLK,
 +	P_CORE_BI_PLL_TEST_SE,
 +	P_DISP_CC_PLL0_OUT_MAIN,
 +	P_DISP_CC_PLL1_OUT_EVEN,
@@ -172,26 +171,26 @@ index 000000000000..7c0f384a3a42
 +	P_EDP_PHY_PLL_VCO_DIV_CLK,
 +};
 +
-+static struct pll_vco lucid_vco[] = {
++static struct pll_vco trion_vco[] = {
 +	{ 249600000, 2000000000, 0 },
 +};
 +
-+static const struct alpha_pll_config disp_cc_pll0_config = {
++static struct alpha_pll_config disp_cc_pll0_config = {
 +	.l = 0x47,
 +	.alpha = 0xE000,
 +	.config_ctl_val = 0x20485699,
-+	.config_ctl_hi_val = 0x00002261,
-+	.config_ctl_hi1_val = 0x329A699C,
++	.config_ctl_hi_val = 0x00002267,
++	.config_ctl_hi1_val = 0x00000024,
 +	.user_ctl_val = 0x00000000,
 +	.user_ctl_hi_val = 0x00000805,
-+	.user_ctl_hi1_val = 0x00000000,
++	.user_ctl_hi1_val = 0x000000D0,
 +};
 +
 +static struct clk_alpha_pll disp_cc_pll0 = {
 +	.offset = 0x0,
-+	.vco_table = lucid_vco,
-+	.num_vco = ARRAY_SIZE(lucid_vco),
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID],
++	.vco_table = trion_vco,
++	.num_vco = ARRAY_SIZE(trion_vco),
++	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_TRION],
 +	.clkr = {
 +		.hw.init = &(struct clk_init_data){
 +			.name = "disp_cc_pll0",
@@ -199,27 +198,27 @@ index 000000000000..7c0f384a3a42
 +				.fw_name = "bi_tcxo",
 +			},
 +			.num_parents = 1,
-+			.ops = &clk_alpha_pll_lucid_ops,
++			.ops = &clk_alpha_pll_trion_ops,
 +		},
 +	},
 +};
 +
-+static const struct alpha_pll_config disp_cc_pll1_config = {
++static struct alpha_pll_config disp_cc_pll1_config = {
 +	.l = 0x1F,
 +	.alpha = 0x4000,
 +	.config_ctl_val = 0x20485699,
-+	.config_ctl_hi_val = 0x00002261,
-+	.config_ctl_hi1_val = 0x329A699C,
++	.config_ctl_hi_val = 0x00002267,
++	.config_ctl_hi1_val = 0x00000024,
 +	.user_ctl_val = 0x00000000,
 +	.user_ctl_hi_val = 0x00000805,
-+	.user_ctl_hi1_val = 0x00000000,
++	.user_ctl_hi1_val = 0x000000D0,
 +};
 +
 +static struct clk_alpha_pll disp_cc_pll1 = {
 +	.offset = 0x1000,
-+	.vco_table = lucid_vco,
-+	.num_vco = ARRAY_SIZE(lucid_vco),
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID],
++	.vco_table = trion_vco,
++	.num_vco = ARRAY_SIZE(trion_vco),
++	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_TRION],
 +	.clkr = {
 +		.hw.init = &(struct clk_init_data){
 +			.name = "disp_cc_pll1",
@@ -227,7 +226,7 @@ index 000000000000..7c0f384a3a42
 +				.fw_name = "bi_tcxo",
 +			},
 +			.num_parents = 1,
-+			.ops = &clk_alpha_pll_lucid_ops,
++			.ops = &clk_alpha_pll_trion_ops,
 +		},
 +	},
 +};
@@ -320,11 +319,6 @@ index 000000000000..7c0f384a3a42
 +	},
 +};
 +
-+static const struct freq_tbl ftbl_disp_cc_mdss_byte0_clk_src[] = {
-+	F(19200000, P_BI_TCXO, 1, 0, 0),
-+	{ }
-+};
-+
 +static struct clk_rcg2 disp_cc_mdss_byte0_clk_src = {
 +	.cmd_rcgr = 0x2110,
 +	.mnd_width = 0,
@@ -353,12 +347,17 @@ index 000000000000..7c0f384a3a42
 +	},
 +};
 +
++static const struct freq_tbl ftbl_disp_cc_mdss_dp_aux1_clk_src[] = {
++	F(19200000, P_BI_TCXO, 1, 0, 0),
++	{ }
++};
++
 +static struct clk_rcg2 disp_cc_mdss_dp_aux1_clk_src = {
 +	.cmd_rcgr = 0x2240,
 +	.mnd_width = 0,
 +	.hid_width = 5,
 +	.parent_map = disp_cc_parent_map_1,
-+	.freq_tbl = ftbl_disp_cc_mdss_byte0_clk_src,
++	.freq_tbl = ftbl_disp_cc_mdss_dp_aux1_clk_src,
 +	.clkr.hw.init = &(struct clk_init_data){
 +		.name = "disp_cc_mdss_dp_aux1_clk_src",
 +		.parent_data = disp_cc_parent_data_1,
@@ -373,12 +372,50 @@ index 000000000000..7c0f384a3a42
 +	.mnd_width = 0,
 +	.hid_width = 5,
 +	.parent_map = disp_cc_parent_map_1,
-+	.freq_tbl = ftbl_disp_cc_mdss_byte0_clk_src,
++	.freq_tbl = ftbl_disp_cc_mdss_dp_aux1_clk_src,
 +	.clkr.hw.init = &(struct clk_init_data){
 +		.name = "disp_cc_mdss_dp_aux_clk_src",
 +		.parent_data = disp_cc_parent_data_1,
 +		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
 +		.flags = CLK_SET_RATE_PARENT,
++		.ops = &clk_rcg2_ops,
++	},
++};
++
++static const struct freq_tbl ftbl_disp_cc_mdss_dp_crypto1_clk_src[] = {
++	F(108000000, P_DP_PHY_PLL_LINK_CLK, 3, 0, 0),
++	F(180000000, P_DP_PHY_PLL_LINK_CLK, 3, 0, 0),
++	F(360000000, P_DP_PHY_PLL_LINK_CLK, 3, 0, 0),
++	F(540000000, P_DP_PHY_PLL_LINK_CLK, 3, 0, 0),
++	{ }
++};
++
++static struct clk_rcg2 disp_cc_mdss_dp_crypto1_clk_src = {
++	.cmd_rcgr = 0x2228,
++	.mnd_width = 0,
++	.hid_width = 5,
++	.parent_map = disp_cc_parent_map_0,
++	.freq_tbl = ftbl_disp_cc_mdss_dp_crypto1_clk_src,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "disp_cc_mdss_dp_crypto1_clk_src",
++		.parent_data = disp_cc_parent_data_0,
++		.num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
++		.flags = CLK_GET_RATE_NOCACHE,
++		.ops = &clk_rcg2_ops,
++	},
++};
++
++static struct clk_rcg2 disp_cc_mdss_dp_crypto_clk_src = {
++	.cmd_rcgr = 0x2194,
++	.mnd_width = 0,
++	.hid_width = 5,
++	.parent_map = disp_cc_parent_map_0,
++	.freq_tbl = ftbl_disp_cc_mdss_dp_crypto1_clk_src,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "disp_cc_mdss_dp_crypto_clk_src",
++		.parent_data = disp_cc_parent_data_0,
++		.num_parents = ARRAY_SIZE(disp_cc_parent_data_0),
++		.flags = CLK_GET_RATE_NOCACHE,
 +		.ops = &clk_rcg2_ops,
 +	},
 +};
@@ -468,7 +505,7 @@ index 000000000000..7c0f384a3a42
 +	.mnd_width = 0,
 +	.hid_width = 5,
 +	.parent_map = disp_cc_parent_map_2,
-+	.freq_tbl = ftbl_disp_cc_mdss_byte0_clk_src,
++	.freq_tbl = ftbl_disp_cc_mdss_dp_aux1_clk_src,
 +	.clkr.hw.init = &(struct clk_init_data){
 +		.name = "disp_cc_mdss_esc0_clk_src",
 +		.parent_data = disp_cc_parent_data_2,
@@ -483,7 +520,7 @@ index 000000000000..7c0f384a3a42
 +	.mnd_width = 0,
 +	.hid_width = 5,
 +	.parent_map = disp_cc_parent_map_2,
-+	.freq_tbl = ftbl_disp_cc_mdss_byte0_clk_src,
++	.freq_tbl = ftbl_disp_cc_mdss_dp_aux1_clk_src,
 +	.clkr.hw.init = &(struct clk_init_data){
 +		.name = "disp_cc_mdss_esc1_clk_src",
 +		.parent_data = disp_cc_parent_data_2,
@@ -498,6 +535,7 @@ index 000000000000..7c0f384a3a42
 +	F(85714286, P_DISP_CC_PLL1_OUT_MAIN, 7, 0, 0),
 +	F(100000000, P_DISP_CC_PLL1_OUT_MAIN, 6, 0, 0),
 +	F(150000000, P_DISP_CC_PLL1_OUT_MAIN, 4, 0, 0),
++	F(171428571, P_DISP_CC_PLL1_OUT_MAIN, 3.5, 0, 0),
 +	F(200000000, P_DISP_CC_PLL1_OUT_MAIN, 3, 0, 0),
 +	F(300000000, P_DISP_CC_PLL1_OUT_MAIN, 2, 0, 0),
 +	F(345000000, P_DISP_CC_PLL0_OUT_MAIN, 4, 0, 0),
@@ -550,7 +588,7 @@ index 000000000000..7c0f384a3a42
 +
 +static const struct freq_tbl ftbl_disp_cc_mdss_rot_clk_src[] = {
 +	F(19200000, P_BI_TCXO, 1, 0, 0),
-+	F(200000000, P_DISP_CC_PLL1_OUT_MAIN, 3, 0, 0),
++	F(171428571, P_DISP_CC_PLL1_OUT_MAIN, 3.5, 0, 0),
 +	F(300000000, P_DISP_CC_PLL1_OUT_MAIN, 2, 0, 0),
 +	F(345000000, P_DISP_CC_PLL0_OUT_MAIN, 4, 0, 0),
 +	F(460000000, P_DISP_CC_PLL0_OUT_MAIN, 3, 0, 0),
@@ -577,72 +615,13 @@ index 000000000000..7c0f384a3a42
 +	.mnd_width = 0,
 +	.hid_width = 5,
 +	.parent_map = disp_cc_parent_map_1,
-+	.freq_tbl = ftbl_disp_cc_mdss_byte0_clk_src,
++	.freq_tbl = ftbl_disp_cc_mdss_dp_aux1_clk_src,
 +	.clkr.hw.init = &(struct clk_init_data){
 +		.name = "disp_cc_mdss_vsync_clk_src",
 +		.parent_data = disp_cc_parent_data_1,
 +		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
 +		.flags = CLK_SET_RATE_PARENT,
 +		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static struct clk_regmap_div disp_cc_mdss_byte0_div_clk_src = {
-+	.reg = 0x2128,
-+	.shift = 0,
-+	.width = 2,
-+	.clkr.hw.init = &(struct clk_init_data) {
-+		.name = "disp_cc_mdss_byte0_div_clk_src",
-+		.parent_data = &(const struct clk_parent_data){
-+			.hw = &disp_cc_mdss_byte0_clk_src.clkr.hw,
-+		},
-+		.num_parents = 1,
-+		.ops = &clk_regmap_div_ops,
-+	},
-+};
-+
-+
-+static struct clk_regmap_div disp_cc_mdss_byte1_div_clk_src = {
-+	.reg = 0x2144,
-+	.shift = 0,
-+	.width = 2,
-+	.clkr.hw.init = &(struct clk_init_data) {
-+		.name = "disp_cc_mdss_byte1_div_clk_src",
-+		.parent_data = &(const struct clk_parent_data){
-+			.hw = &disp_cc_mdss_byte1_clk_src.clkr.hw,
-+		},
-+		.num_parents = 1,
-+		.ops = &clk_regmap_div_ops,
-+	},
-+};
-+
-+
-+static struct clk_regmap_div disp_cc_mdss_dp_link1_div_clk_src = {
-+	.reg = 0x2224,
-+	.shift = 0,
-+	.width = 2,
-+	.clkr.hw.init = &(struct clk_init_data) {
-+		.name = "disp_cc_mdss_dp_link1_div_clk_src",
-+		.parent_data = &(const struct clk_parent_data){
-+			.hw = &disp_cc_mdss_dp_link1_clk_src.clkr.hw,
-+		},
-+		.num_parents = 1,
-+		.ops = &clk_regmap_div_ro_ops,
-+	},
-+};
-+
-+
-+static struct clk_regmap_div disp_cc_mdss_dp_link_div_clk_src = {
-+	.reg = 0x2190,
-+	.shift = 0,
-+	.width = 2,
-+	.clkr.hw.init = &(struct clk_init_data) {
-+		.name = "disp_cc_mdss_dp_link_div_clk_src",
-+		.parent_data = &(const struct clk_parent_data){
-+			.hw = &disp_cc_mdss_dp_link_clk_src.clkr.hw,
-+		},
-+		.num_parents = 1,
-+		.ops = &clk_regmap_div_ro_ops,
 +	},
 +};
 +
@@ -682,6 +661,23 @@ index 000000000000..7c0f384a3a42
 +	},
 +};
 +
++static struct clk_regmap_div disp_cc_mdss_byte0_div_clk_src = {
++	.reg = 0x2128,
++	.shift = 0,
++	.width = 2,
++	.clkr = {
++		.hw.init = &(struct clk_init_data){
++			.name = "disp_cc_mdss_byte0_div_clk_src",
++			.parent_data = &(const struct clk_parent_data){
++				.hw = &disp_cc_mdss_byte0_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_GET_RATE_NOCACHE,
++			.ops = &clk_regmap_div_ops,
++		},
++	},
++};
++
 +static struct clk_branch disp_cc_mdss_byte0_intf_clk = {
 +	.halt_reg = 0x202c,
 +	.halt_check = BRANCH_HALT,
@@ -714,6 +710,23 @@ index 000000000000..7c0f384a3a42
 +			.num_parents = 1,
 +			.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
 +			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_regmap_div disp_cc_mdss_byte1_div_clk_src = {
++	.reg = 0x2144,
++	.shift = 0,
++	.width = 2,
++	.clkr = {
++		.hw.init = &(struct clk_init_data){
++			.name = "disp_cc_mdss_byte1_div_clk_src",
++			.parent_data = &(const struct clk_parent_data){
++				.hw = &disp_cc_mdss_byte1_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_GET_RATE_NOCACHE,
++			.ops = &clk_regmap_div_ops,
 +		},
 +	},
 +};
@@ -772,6 +785,42 @@ index 000000000000..7c0f384a3a42
 +	},
 +};
 +
++static struct clk_branch disp_cc_mdss_dp_crypto1_clk = {
++	.halt_reg = 0x2064,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x2064,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "disp_cc_mdss_dp_crypto1_clk",
++			.parent_data = &(const struct clk_parent_data){
++				.hw = &disp_cc_mdss_dp_crypto1_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch disp_cc_mdss_dp_crypto_clk = {
++	.halt_reg = 0x2048,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x2048,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "disp_cc_mdss_dp_crypto_clk",
++			.parent_data = &(const struct clk_parent_data){
++				.hw = &disp_cc_mdss_dp_crypto_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
 +static struct clk_branch disp_cc_mdss_dp_link1_clk = {
 +	.halt_reg = 0x205c,
 +	.halt_check = BRANCH_HALT,
@@ -799,7 +848,7 @@ index 000000000000..7c0f384a3a42
 +		.hw.init = &(struct clk_init_data){
 +			.name = "disp_cc_mdss_dp_link1_intf_clk",
 +			.parent_data = &(const struct clk_parent_data){
-+				.hw = &disp_cc_mdss_dp_link1_div_clk_src.clkr.hw,
++				.hw = &disp_cc_mdss_dp_link1_clk_src.clkr.hw,
 +			},
 +			.num_parents = 1,
 +			.flags = CLK_GET_RATE_NOCACHE,
@@ -835,7 +884,7 @@ index 000000000000..7c0f384a3a42
 +		.hw.init = &(struct clk_init_data){
 +			.name = "disp_cc_mdss_dp_link_intf_clk",
 +			.parent_data = &(const struct clk_parent_data){
-+				.hw = &disp_cc_mdss_dp_link_div_clk_src.clkr.hw,
++				.hw = &disp_cc_mdss_dp_link_clk_src.clkr.hw,
 +			},
 +			.num_parents = 1,
 +			.flags = CLK_GET_RATE_NOCACHE,
@@ -1104,7 +1153,7 @@ index 000000000000..7c0f384a3a42
 +	.flags = HW_CTRL,
 +};
 +
-+static struct clk_regmap *disp_cc_sm8250_clocks[] = {
++static struct clk_regmap *disp_cc_sm8150_clocks[] = {
 +	[DISP_CC_MDSS_AHB_CLK] = &disp_cc_mdss_ahb_clk.clkr,
 +	[DISP_CC_MDSS_AHB_CLK_SRC] = &disp_cc_mdss_ahb_clk_src.clkr,
 +	[DISP_CC_MDSS_BYTE0_CLK] = &disp_cc_mdss_byte0_clk.clkr,
@@ -1119,13 +1168,15 @@ index 000000000000..7c0f384a3a42
 +	[DISP_CC_MDSS_DP_AUX1_CLK_SRC] = &disp_cc_mdss_dp_aux1_clk_src.clkr,
 +	[DISP_CC_MDSS_DP_AUX_CLK] = &disp_cc_mdss_dp_aux_clk.clkr,
 +	[DISP_CC_MDSS_DP_AUX_CLK_SRC] = &disp_cc_mdss_dp_aux_clk_src.clkr,
++	[DISP_CC_MDSS_DP_CRYPTO1_CLK] = &disp_cc_mdss_dp_crypto1_clk.clkr,
++	[DISP_CC_MDSS_DP_CRYPTO1_CLK_SRC] = &disp_cc_mdss_dp_crypto1_clk_src.clkr,
++	[DISP_CC_MDSS_DP_CRYPTO_CLK] = &disp_cc_mdss_dp_crypto_clk.clkr,
++	[DISP_CC_MDSS_DP_CRYPTO_CLK_SRC] = &disp_cc_mdss_dp_crypto_clk_src.clkr,
 +	[DISP_CC_MDSS_DP_LINK1_CLK] = &disp_cc_mdss_dp_link1_clk.clkr,
 +	[DISP_CC_MDSS_DP_LINK1_CLK_SRC] = &disp_cc_mdss_dp_link1_clk_src.clkr,
-+	[DISP_CC_MDSS_DP_LINK1_DIV_CLK_SRC] = &disp_cc_mdss_dp_link1_div_clk_src.clkr,
 +	[DISP_CC_MDSS_DP_LINK1_INTF_CLK] = &disp_cc_mdss_dp_link1_intf_clk.clkr,
 +	[DISP_CC_MDSS_DP_LINK_CLK] = &disp_cc_mdss_dp_link_clk.clkr,
 +	[DISP_CC_MDSS_DP_LINK_CLK_SRC] = &disp_cc_mdss_dp_link_clk_src.clkr,
-+	[DISP_CC_MDSS_DP_LINK_DIV_CLK_SRC] = &disp_cc_mdss_dp_link_div_clk_src.clkr,
 +	[DISP_CC_MDSS_DP_LINK_INTF_CLK] = &disp_cc_mdss_dp_link_intf_clk.clkr,
 +	[DISP_CC_MDSS_DP_PIXEL1_CLK] = &disp_cc_mdss_dp_pixel1_clk.clkr,
 +	[DISP_CC_MDSS_DP_PIXEL1_CLK_SRC] = &disp_cc_mdss_dp_pixel1_clk_src.clkr,
@@ -1155,16 +1206,17 @@ index 000000000000..7c0f384a3a42
 +	[DISP_CC_PLL1] = &disp_cc_pll1.clkr,
 +};
 +
-+static const struct qcom_reset_map disp_cc_sm8250_resets[] = {
++static const struct qcom_reset_map disp_cc_sm8150_resets[] = {
 +	[DISP_CC_MDSS_CORE_BCR] = { 0x2000 },
 +	[DISP_CC_MDSS_RSCC_BCR] = { 0x4000 },
++	[DISP_CC_MDSS_SPDM_BCR] = { 0x6000 },
 +};
 +
-+static struct gdsc *disp_cc_sm8250_gdscs[] = {
++static struct gdsc *disp_cc_sm8150_gdscs[] = {
 +	[MDSS_GDSC] = &mdss_gdsc,
 +};
 +
-+static const struct regmap_config disp_cc_sm8250_regmap_config = {
++static const struct regmap_config disp_cc_sm8150_regmap_config = {
 +	.reg_bits	= 32,
 +	.reg_stride	= 4,
 +	.val_bits	= 32,
@@ -1172,32 +1224,32 @@ index 000000000000..7c0f384a3a42
 +	.fast_io	= true,
 +};
 +
-+static const struct qcom_cc_desc disp_cc_sm8250_desc = {
-+	.config = &disp_cc_sm8250_regmap_config,
-+	.clks = disp_cc_sm8250_clocks,
-+	.num_clks = ARRAY_SIZE(disp_cc_sm8250_clocks),
-+	.resets = disp_cc_sm8250_resets,
-+	.num_resets = ARRAY_SIZE(disp_cc_sm8250_resets),
-+	.gdscs = disp_cc_sm8250_gdscs,
-+	.num_gdscs = ARRAY_SIZE(disp_cc_sm8250_gdscs),
++static const struct qcom_cc_desc disp_cc_sm8150_desc = {
++	.config = &disp_cc_sm8150_regmap_config,
++	.clks = disp_cc_sm8150_clocks,
++	.num_clks = ARRAY_SIZE(disp_cc_sm8150_clocks),
++	.resets = disp_cc_sm8150_resets,
++	.num_resets = ARRAY_SIZE(disp_cc_sm8150_resets),
++	.gdscs = disp_cc_sm8150_gdscs,
++	.num_gdscs = ARRAY_SIZE(disp_cc_sm8150_gdscs),
 +};
 +
-+static const struct of_device_id disp_cc_sm8250_match_table[] = {
-+	{ .compatible = "qcom,sm8250-dispcc" },
++static const struct of_device_id disp_cc_sm8150_match_table[] = {
++	{ .compatible = "qcom,sm8150-dispcc" },
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(of, disp_cc_sm8250_match_table);
++MODULE_DEVICE_TABLE(of, disp_cc_sm8150_match_table);
 +
-+static int disp_cc_sm8250_probe(struct platform_device *pdev)
++static int disp_cc_sm8150_probe(struct platform_device *pdev)
 +{
 +	struct regmap *regmap;
 +
-+	regmap = qcom_cc_map(pdev, &disp_cc_sm8250_desc);
++	regmap = qcom_cc_map(pdev, &disp_cc_sm8150_desc);
 +	if (IS_ERR(regmap))
 +		return PTR_ERR(regmap);
 +
-+	clk_lucid_pll_configure(&disp_cc_pll0, regmap, &disp_cc_pll0_config);
-+	clk_lucid_pll_configure(&disp_cc_pll1, regmap, &disp_cc_pll1_config);
++	clk_trion_pll_configure(&disp_cc_pll0, regmap, &disp_cc_pll0_config);
++	clk_trion_pll_configure(&disp_cc_pll1, regmap, &disp_cc_pll1_config);
 +
 +	/* Enable clock gating for MDP clocks */
 +	regmap_update_bits(regmap, 0x8000, 0x10, 0x10);
@@ -1205,31 +1257,31 @@ index 000000000000..7c0f384a3a42
 +	/* DISP_CC_XO_CLK always-on */
 +	regmap_update_bits(regmap, 0x605c, BIT(0), BIT(0));
 +
-+	return qcom_cc_really_probe(pdev, &disp_cc_sm8250_desc, regmap);
++	return qcom_cc_really_probe(pdev, &disp_cc_sm8150_desc, regmap);
 +}
 +
-+static struct platform_driver disp_cc_sm8250_driver = {
-+	.probe = disp_cc_sm8250_probe,
-+	.driver = {
-+		.name = "disp_cc-sm8250",
-+		.of_match_table = disp_cc_sm8250_match_table,
++static struct platform_driver disp_cc_sm8150_driver = {
++	.probe		= disp_cc_sm8150_probe,
++	.driver		= {
++		.name	= "disp_cc-sm8150",
++		.of_match_table = disp_cc_sm8150_match_table,
 +	},
 +};
 +
-+static int __init disp_cc_sm8250_init(void)
++static int __init disp_cc_sm8150_init(void)
 +{
-+	return platform_driver_register(&disp_cc_sm8250_driver);
++	return platform_driver_register(&disp_cc_sm8150_driver);
 +}
-+subsys_initcall(disp_cc_sm8250_init);
++subsys_initcall(disp_cc_sm8150_init);
 +
-+static void __exit disp_cc_sm8250_exit(void)
++static void __exit disp_cc_sm8150_exit(void)
 +{
-+	platform_driver_unregister(&disp_cc_sm8250_driver);
++	platform_driver_unregister(&disp_cc_sm8150_driver);
 +}
-+module_exit(disp_cc_sm8250_exit);
++module_exit(disp_cc_sm8150_exit);
 +
-+MODULE_DESCRIPTION("QTI DISPCC SM8150 Driver");
 +MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("QTI DISPCC SM8150 Driver");
 -- 
 2.26.1
 
