@@ -2,161 +2,140 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31063C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5515CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05C1220773
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06A732078E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:49:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dionne-riel-com.20150623.gappssmtp.com header.i=@dionne-riel-com.20150623.gappssmtp.com header.b="lgHo1ju3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dfw35si2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbgICDsG (ORCPT
+        id S1728286AbgICDt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 23:48:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50444 "EHLO
+        Wed, 2 Sep 2020 23:49:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgICDsE (ORCPT
+        with ESMTP id S1726821AbgICDtY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 23:48:04 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B411C061245
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 20:48:04 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id g72so1873738qke.8
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 20:48:04 -0700 (PDT)
+        Wed, 2 Sep 2020 23:49:24 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6991BC061244;
+        Wed,  2 Sep 2020 20:49:24 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 7so972445pgm.11;
+        Wed, 02 Sep 2020 20:49:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dionne-riel-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ltnD3f7HjD2+w0pdmZya1OptZlkQr+uyCb04jevIv4c=;
-        b=lgHo1ju3UR6gi4QXqDYGyUrbKc1+gBfxhvCm+aXUAhzRuH6FYoAh+BAGKWsJlxQFfT
-         AplBWGM43eVPQkD6w52YfxYBje9gYrnek2/TqLITDgasLCePVqvkueoeIh/SeRmTU/q2
-         Jv8Ox/q/S0tJIOzz+hUwz3cVbenB4B5PnpdYdMZJcRiV4HrsW9cbWlK8sSLdNz2G1/ny
-         +q4uwyaGEiA6XkkslpzoYGDBmD8Vi+DfuCjCz9qm5FWFAvOl6SOyk485qbPSBC5ITCJQ
-         uEE3WPQMPUCfsKXv2gYktNc+R7yVWdTvxYhE2ua5SVEAzJRtnHXIaoLAqv8jd0zgAkTb
-         Rp1Q==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=npE+6kgY3BgkJuk1F6OrPRsD1LD4neOO0rtoAG0vrnQ=;
+        b=Dfw35si2hpu8HSbt7vYSTT6bRfqooFfqvtuJOMRu31s1zHcazuBWb8iZSDlBuUDlJw
+         WdvvXEzbxkDfv/3wMT9hwIa3vgI16BabY30lQJYLF9R0iavh1iFZ5mGk1p3eyYnbcnIt
+         7n2iSOZwTocINzPyIwz3u4Q/OGjQEoQvlrkLRUo0IkDPHlmCNhJHHwtwiR1DVIWNH7BX
+         Hic3wV6nKXzoAdqR6H42axB1idyI/qVKfN6zGYYz7PURerRBohxXjPLRKp84ckr6cF2x
+         ynCINIfUNQ62j+R1DyQOwOdQdSEOjplBiy9BCntJl4IUlAL1jViGD+G9JAmkHs++SGmY
+         O9bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ltnD3f7HjD2+w0pdmZya1OptZlkQr+uyCb04jevIv4c=;
-        b=K2lRsYI7HsRdb13Ka9NTxTRC3S99NnEBWEsFKXsIdGdlH0SVHyBk4bDdAjN5EjBdd2
-         LyT9LwezkRVpvwnEoRhI/HacQOtQbJW1/F8ToSbVUQqf+jy9+jD8ZSUrenINUqy4gvn9
-         W9idq2dVVG3wbifPqJ+b8lQfbM0kIkJYYZqrXBM2yaAMnVko9FXU5EBtqz7P40sWvVj5
-         HY3qtTskzIvKHwLfbqqKO9kWLR2eG5EuHK39wTu3ziy65EeLWL6HqEmeituEn4T9sDGb
-         +wGhE/xDNbyHHlAbNJjx5uTsyMenMPQci6TnojbfzVAF9msSqM3I5jAHHkznyeMZN/l3
-         f24Q==
-X-Gm-Message-State: AOAM531EvwDW/SSsZ7Wnv0BDrd6PgKwNnel4mRsiR2CrT4r+evQYaLxB
-        hiqa2ZB76PSHgqR4mc/YuDyRew==
-X-Google-Smtp-Source: ABdhPJxMCPmYqhPFNnjlNpKrmGcUQlsXZc/Tyugh4NkRtWsiEYkHpu09DB1AsLX9WA7xQi8wBLFjyQ==
-X-Received: by 2002:a37:ad08:: with SMTP id f8mr1242667qkm.207.1599104881401;
-        Wed, 02 Sep 2020 20:48:01 -0700 (PDT)
-Received: from DUFFMAN (135-23-195-85.cpe.pppoe.ca. [135.23.195.85])
-        by smtp.gmail.com with ESMTPSA id m17sm1393902qkn.45.2020.09.02.20.48.00
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=npE+6kgY3BgkJuk1F6OrPRsD1LD4neOO0rtoAG0vrnQ=;
+        b=tcMF8sV4hyNiTt6R4MRPXqKW2jSfY5fgexwg+CoG8JuwRp7nnW42MQPvz5gooaC+ji
+         jPspvrrfSHNr6rcDjeL71+/gNHQrPunZpUZgQ18gRnS2Q8LHqaXYK1V9m77Sy94l5CR/
+         nd2SYutv2X94JmaJbThLizSqT2A+BM1jRxgb3J+CRqbPvDBIAnToGlgIjpzbzKEnzI5o
+         bonuycLjzHhkvF7nxecnO3IYdSKesO5nQXsrcy/dyd/FgqWBbSsIp9+PUre0crz/IdfE
+         L1UfqIB+HHUTqEdm+pYaCp03JSAbtkBghnWm8PCygaDDmk/miIrS1j3vdpteyCp/bPoZ
+         CtQQ==
+X-Gm-Message-State: AOAM530jcGlWPSlFQQBz4lr5PYyocQIvYUcfCL6UFVFu/TldFx6L14U6
+        X8Ef9WPUl6SfSRSEDM/ZmJg=
+X-Google-Smtp-Source: ABdhPJwYE+xArS4TItybo5Qh7QcbVZSCVtOJJVLj7/To/yDMWI7tvLCl/hdb8f1wk/MrtLh49SCsAA==
+X-Received: by 2002:a65:5c4c:: with SMTP id v12mr1078295pgr.95.1599104963899;
+        Wed, 02 Sep 2020 20:49:23 -0700 (PDT)
+Received: from f3 (ae055068.dynamic.ppp.asahi-net.or.jp. [14.3.55.68])
+        by smtp.gmail.com with ESMTPSA id k4sm804155pjl.10.2020.09.02.20.49.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 20:48:01 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 23:47:56 -0400
-From:   Samuel Dionne-Riel <samuel@dionne-riel.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Boot failure on gru-scarlet-inx with 5.9-rc2
-Message-ID: <20200902234756.60e4c4f6@DUFFMAN>
-In-Reply-To: <20200902160110.GA30014@e121166-lin.cambridge.arm.com>
-References: <20200829164920.7d28e01a@DUFFMAN>
-        <65d88bdd0888a69849327501a2aad186@kernel.org>
-        <20200831031838.2d6d76d9@DUFFMAN>
-        <90731ebb54fe03003dce03bc7ec4872e@kernel.org>
-        <20200831234542.295b1275@DUFFMAN>
-        <5db50a8e5b251714cebe0a719ee9dc73@kernel.org>
-        <20200901164249.GA15045@e121166-lin.cambridge.arm.com>
-        <20200901143356.0425d9ba@DUFFMAN>
-        <20200902160110.GA30014@e121166-lin.cambridge.arm.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 02 Sep 2020 20:49:22 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 12:49:18 +0900
+From:   Benjamin Poirier <benjamin.poirier@gmail.com>
+To:     Coiby Xu <coiby.xu@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Manish Chopra <manishc@marvell.com>,
+        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
+        <GR-Linux-NIC-Dev@marvell.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] staging: qlge: fix build breakage with dumping enabled
+Message-ID: <20200903034918.GA227281@f3>
+References: <20200902140031.203374-1-coiby.xu@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200902140031.203374-1-coiby.xu@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Sep 2020 17:01:19 +0100
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
-
-> On Tue, Sep 01, 2020 at 02:33:56PM -0400, Samuel Dionne-Riel wrote:
+On 2020-09-02 22:00 +0800, Coiby Xu wrote:
+> This fixes commit 0107635e15ac
+> ("staging: qlge: replace pr_err with netdev_err") which introduced an
+> build breakage of missing `struct ql_adapter *qdev` for some functions
+> and a warning of type mismatch with dumping enabled, i.e.,
 > 
-> Please print a pointer as a pointer and print both bus and
-> bus->parent.
-
-Hopefully pointer as a pointer is %px. Not sure what else, if that's
-wrong please tell.
-
----
-@@ -79,6 +79,8 @@ static int rockchip_pcie_valid_device(struct rockchip_pcie *rockchip,
-         * do not read more than one device on the bus directly attached
-         * to RC's downstream side.
-         */
-+       printk("[!!] // bus (%px) bus->parent (%px)\n", bus, bus->parent);
-+       printk("[!!] bus->primary (%d) == rockchip->root_bus_nr (%d) && dev (%d) > 0\n", bus->primary, rockchip->root_bus_nr, dev);
-        if (bus->primary == rockchip->root_bus_nr && dev > 0)
-                return 0;
- 
---
-
-Again, two values, verified with a bit of set and `sort -u`.
-
-[    1.691266] [!!] // bus (ffff0000ef9ab800) bus->parent (0000000000000000)
-[    1.691271] [!!] bus->primary (0) == rockchip->root_bus_nr (0) && dev (0) > 0
-
-and
-
-[    1.697156] [!!] // bus (ffff0000ef9ac000) bus->parent (ffff0000ef9ab800)
-[    1.697160] [!!] bus->primary (0) == rockchip->root_bus_nr (0) && dev (0) > 0
-
-First instance of each shown here. Last time I don't think it was.
-
-> > +       printk("[!!] bus->primary (%d) == rockchip->root_bus_nr
-> > (%d) && dev (%d) > 0\n", bus->primary, rockchip->root_bus_nr, dev);
-> > if (bus->primary == rockchip->root_bus_nr && dev > 0) return 0;
-> > 
-> > --
-> > 
-> > I get two kind of results
-> > 
-> > [    1.692913] [!!] // bus->parent (0)
-> > [    1.692917] [!!] bus->primary (0) == rockchip->root_bus_nr (0)
-> > && dev (0) > 0
-> > 
-> > and
-> > 
-> > [    1.693055] [!!] // bus->parent (-256794624)
-> > [    1.693058] [!!] bus->primary (0) == rockchip->root_bus_nr (0)
-> > && dev (0) > 0 
+> $ make CFLAGS_MODULE="QL_ALL_DUMP=1 QL_OB_DUMP=1 QL_CB_DUMP=1 \
+>   QL_IB_DUMP=1 QL_REG_DUMP=1 QL_DEV_DUMP=1" M=drivers/staging/qlge
 > 
-> Looks like this is the condition that pci_is_root_bus(bus->parent) is
-> not hitting.
+> qlge_dbg.c: In function ‘ql_dump_ob_mac_rsp’:
+> qlge_dbg.c:2051:13: error: ‘qdev’ undeclared (first use in this function); did you mean ‘cdev’?
+>  2051 |  netdev_err(qdev->ndev, "%s\n", __func__);
+>       |             ^~~~
+> qlge_dbg.c: In function ‘ql_dump_routing_entries’:
+> qlge_dbg.c:1435:10: warning: format ‘%s’ expects argument of type ‘char *’, but argument 3 has type ‘int’ [-Wformat=]
+>  1435 |        "%s: Routing Mask %d = 0x%.08x\n",
+>       |         ~^
+>       |          |
+>       |          char *
+>       |         %d
+>  1436 |        i, value);
+>       |        ~
+>       |        |
+>       |        int
+> qlge_dbg.c:1435:37: warning: format ‘%x’ expects a matching ‘unsigned int’ argument [-Wformat=]
+>  1435 |        "%s: Routing Mask %d = 0x%.08x\n",
+>       |                                 ~~~~^
+>       |                                     |
+>       |                                     unsigned int
 > 
+> Fixes: 0107635e15ac ("staging: qlge: replace pr_err with netdev_err")
+> Reported-by: Benjamin Poirier <benjamin.poirier@gmail.com>
+> Suggested-by: Benjamin Poirier <benjamin.poirier@gmail.com>
+> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+> ---
 
+Thanks for following up on this issue.
 
-
-> You are accessing a resource IORESOURCE_MEM that has nothing to do
-> with bus numbers.
+[...]
+> @@ -1632,8 +1635,8 @@ void ql_dump_wqicb(struct wqicb *wqicb)
 > 
-> s/IORESOURCE_MEM/IORESOURCE_BUS
-> 
-> should be better ;-)
+>  void ql_dump_tx_ring(struct tx_ring *tx_ring)
+>  {
+> -	if (!tx_ring)
+> -		return;
+> +	struct ql_adapter *qdev = tx_ring->qdev;
+> +
+>  	netdev_err(qdev->ndev, "===================== Dumping tx_ring %d ===============\n",
+>  		   tx_ring->wq_id);
+>  	netdev_err(qdev->ndev, "tx_ring->base = %p\n", tx_ring->wq_base);
 
-At least correct, rather than luckily working.
+Did you actually check to confirm that the test can be removed?
 
-
-Thanks, as always, anything I missed, or need more precisions, do ask.
-
--- 
-Samuel Dionne-Riel
+This is something that you should mention in the changelog at the very
+least since that change is not directly about fixing the build breakage
+and if it's wrong, it can lead to null pointer deref.
