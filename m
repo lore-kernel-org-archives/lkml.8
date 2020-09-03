@@ -2,133 +2,124 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F5DC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D1BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B906206D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B7B2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:35:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tcVvXI2I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgICPeL (ORCPT
+        id S1728575AbgICPf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:34:11 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:41009 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728320AbgICPeJ (ORCPT
+        Thu, 3 Sep 2020 11:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbgICPfw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:34:09 -0400
-Received: (qmail 663113 invoked by uid 1000); 3 Sep 2020 11:34:08 -0400
-Date:   Thu, 3 Sep 2020 11:34:08 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/20] usb/host: ohci-platform: Use pm_ptr() macro
-Message-ID: <20200903153408.GB662845@rowland.harvard.edu>
-References: <20200903112554.34263-1-paul@crapouillou.net>
- <20200903112554.34263-2-paul@crapouillou.net>
+        Thu, 3 Sep 2020 11:35:52 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96F70C061244;
+        Thu,  3 Sep 2020 08:35:52 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p37so2442019pgl.3;
+        Thu, 03 Sep 2020 08:35:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dGY7hs5cfgBT9KAfFf+SDGAzVg53J8xbuNflx2RbbMI=;
+        b=tcVvXI2IMkSj2iECOiY04GisiyBFCXXMXcHeXn1F3pDysU8yU5gr1Ozzz5bVnqOXjN
+         Fh8xESkYnfzRQ1hf9bPKhBFJwhOg2M5mgBi03LGHMPMJSHZytHfXPnAONPiaAlK59wCn
+         xuP7SGcvuNS6stZTjXx3VOalCGvDo+/kjjeroCl5YMMB+7wjSQ8eQA311ZYP2NFjPVzx
+         G72qePOjkgsRw6NlTh6RNt+sCy4QqDxxF+4anLPGm+QYQyzYNSs7fOHGk9kHMliZSeGK
+         TkRzBYtAOH0qTiZtpZBpW0TMXwiloDssSAZlbOFiV+/9FkfDIm2Rs8/bfDA7+RDjGqCA
+         qhaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dGY7hs5cfgBT9KAfFf+SDGAzVg53J8xbuNflx2RbbMI=;
+        b=QoHylULY3rVjqsUlJZ9Y0rSpZiudCa8qpFeNJLzcR9gdaTOhimSe5t3jXOAVXqRIWa
+         0P0O3dYurQBrB6butc4WPBsd6JkDjwDwfzzW7gzvv8gD43kNW7K69crajtyaa7ZDGqLE
+         J4CV4RzWcvd9fV7Ym9nAmv6R7UR4SdyZ8LTQGwMZ3M/bE6icn2nghtjSorHR3uX6ngfl
+         50Rt/feggGi4tJxINiCkUHRoG0CsayLTQpZVAQnDi48K2cs4c4TVkSC7/ENy2vLVdQNL
+         Kbtxwujat7jgw514YT2EkVuynTSuXMpDXxNtubV8j1+6xcmSdSykFCr2Q5c2gPBBDxTr
+         5vOw==
+X-Gm-Message-State: AOAM530Opg3/NMN3rzPXoCmN4AWnTnPd1i3TAuuB6jLbokVHncnFrp/s
+        a4fF8X/MYpZlHQRPO5zfcFd+dNJZEIIrfb/kHkKyYOl5lqN+wiw8
+X-Google-Smtp-Source: ABdhPJwDybWElbO0XCzQwfjoJ05bAOdoZDBKiX0vvFFdHObiFFUsMI/h6NPVkUvOpOqeD9PkVhXVneMU3Lhyag5xxjc=
+X-Received: by 2002:a63:c543:: with SMTP id g3mr3490616pgd.203.1599147351884;
+ Thu, 03 Sep 2020 08:35:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903112554.34263-2-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200902150442.2779-1-vadym.kochan@plvision.eu>
+ <20200902150442.2779-2-vadym.kochan@plvision.eu> <CA+FuTSfMRhEZ5c2CWaN_F3ASDgvV7eQ4q6zVuY-FvgLqsqYecw@mail.gmail.com>
+In-Reply-To: <CA+FuTSfMRhEZ5c2CWaN_F3ASDgvV7eQ4q6zVuY-FvgLqsqYecw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 3 Sep 2020 18:35:34 +0300
+Message-ID: <CAHp75VcmPnmgxgE+NCTN71Wq17LQjjx8cJOR34AmuLuRFQ4cRg@mail.gmail.com>
+Subject: Re: [PATCH net v6 1/6] net: marvell: prestera: Add driver for
+ Prestera family ASIC devices
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     Vadym Kochan <vadym.kochan@plvision.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 01:25:35PM +0200, Paul Cercueil wrote:
-> Use the newly introduced pm_ptr() macro, and mark the suspend/resume
-> functions __maybe_unused. These functions can then be moved outside the
-> CONFIG_PM_SUSPEND block, and the compiler can then process them and
-> detect build failures independently of the config. If unused, they will
-> simply be discarded by the compiler.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/usb/host/ohci-platform.c | 19 ++++++++-----------
->  1 file changed, 8 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-> index 4a8456f12a73..21400d7d8b0a 100644
-> --- a/drivers/usb/host/ohci-platform.c
-> +++ b/drivers/usb/host/ohci-platform.c
-> @@ -176,22 +176,21 @@ static int ohci_platform_probe(struct platform_device *dev)
->  	if (pdata->num_ports)
->  		ohci->num_ports = pdata->num_ports;
->  
-> -#ifndef CONFIG_USB_OHCI_BIG_ENDIAN_MMIO
-> -	if (ohci->flags & OHCI_QUIRK_BE_MMIO) {
-> +	if (!IS_ENABLED(CONFIG_USB_OHCI_BIG_ENDIAN_MMIO) &&
-> +	    ohci->flags & OHCI_QUIRK_BE_MMIO) {
->  		dev_err(&dev->dev,
->  			"Error: CONFIG_USB_OHCI_BIG_ENDIAN_MMIO not set\n");
->  		err = -EINVAL;
->  		goto err_reset;
->  	}
-> -#endif
-> -#ifndef CONFIG_USB_OHCI_BIG_ENDIAN_DESC
-> -	if (ohci->flags & OHCI_QUIRK_BE_DESC) {
-> +
-> +	if (!IS_ENABLED(CONFIG_USB_OHCI_BIG_ENDIAN_DESC) &&
-> +	    ohci->flags & OHCI_QUIRK_BE_DESC) {
->  		dev_err(&dev->dev,
->  			"Error: CONFIG_USB_OHCI_BIG_ENDIAN_DESC not set\n");
->  		err = -EINVAL;
->  		goto err_reset;
->  	}
-> -#endif
->  
->  	pm_runtime_set_active(&dev->dev);
->  	pm_runtime_enable(&dev->dev);
+On Thu, Sep 3, 2020 at 6:23 PM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+> On Wed, Sep 2, 2020 at 5:37 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
 
-The changes above don't seem to have any connection with the patch 
-description.  Please don't mix multiple changes in a single patch.
+...
 
-The rest of the patch is okay.
+> > +static int prestera_is_valid_mac_addr(struct prestera_port *port, u8 *addr)
+> > +{
+> > +       if (!is_valid_ether_addr(addr))
+> > +               return -EADDRNOTAVAIL;
+> > +
+> > +       if (memcmp(port->sw->base_mac, addr, ETH_ALEN - 1))
+>
+> Why ETH_ALEN - 1?
 
-Alan Stern
+We even have a lot of helpers specifically for ethernet MACs.
+Starting from [1] till almost the end of the file. Here [2] can be
+used (or its unaligned counterpart).
 
-> @@ -267,8 +266,7 @@ static int ohci_platform_remove(struct platform_device *dev)
->  	return 0;
->  }
->  
-> -#ifdef CONFIG_PM_SLEEP
-> -static int ohci_platform_suspend(struct device *dev)
-> +static int __maybe_unused ohci_platform_suspend(struct device *dev)
->  {
->  	struct usb_hcd *hcd = dev_get_drvdata(dev);
->  	struct usb_ohci_pdata *pdata = dev->platform_data;
-> @@ -286,7 +284,7 @@ static int ohci_platform_suspend(struct device *dev)
->  	return ret;
->  }
->  
-> -static int ohci_platform_resume(struct device *dev)
-> +static int __maybe_unused ohci_platform_resume(struct device *dev)
->  {
->  	struct usb_hcd *hcd = dev_get_drvdata(dev);
->  	struct usb_ohci_pdata *pdata = dev_get_platdata(dev);
-> @@ -306,7 +304,6 @@ static int ohci_platform_resume(struct device *dev)
->  
->  	return 0;
->  }
-> -#endif /* CONFIG_PM_SLEEP */
->  
->  static const struct of_device_id ohci_platform_ids[] = {
->  	{ .compatible = "generic-ohci", },
-> @@ -332,7 +329,7 @@ static struct platform_driver ohci_platform_driver = {
->  	.shutdown	= usb_hcd_platform_shutdown,
->  	.driver		= {
->  		.name	= "ohci-platform",
-> -		.pm	= &ohci_platform_pm_ops,
-> +		.pm	= pm_ptr(&ohci_platform_pm_ops),
->  		.of_match_table = ohci_platform_ids,
->  	}
->  };
-> -- 
-> 2.28.0
-> 
+[1]: https://elixir.bootlin.com/linux/latest/source/include/linux/etherdevice.h#L67
+[2]: https://elixir.bootlin.com/linux/latest/source/include/linux/etherdevice.h#L67
+
+> > +               return -EINVAL;
+> > +
+> > +       return 0;
+> > +}
+
+> > +       memcpy(dev->dev_addr, addr->sa_data, dev->addr_len);
+>
+> Is addr_len ever not ETH_ALEN for this device?
+
+And if it is ETH_ALEN, here is [3].
+[3]: https://elixir.bootlin.com/linux/latest/source/include/linux/etherdevice.h#L287
+
+-- 
+With Best Regards,
+Andy Shevchenko
