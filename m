@@ -2,124 +2,115 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136EEC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C202C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2B7D21D20
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32094206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:58:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Aa5DMMRr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="b2QNltio"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hPf9J6SS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="39at3G12"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgICU5q (ORCPT
+        id S1728271AbgICU57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:57:46 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:45821 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726088AbgICU5p (ORCPT
+        Thu, 3 Sep 2020 16:57:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbgICU56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:57:45 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id A9C25EBC;
-        Thu,  3 Sep 2020 16:57:43 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 03 Sep 2020 16:57:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=7xx2c+sURY2BGLNN4PINqRBclr9
-        XFzFHQ6iOqlHyL/E=; b=Aa5DMMRrbjGVB7O78paeHjAcMcuE3VSjemEERDLYO8m
-        6um7dmOKlNqWoVzfXLgP6aRQ/nL26kK7PtNYQ4Xy6zoqDcvRYaCEdGwcgmw9dPLr
-        VTgWwg7kgbtP3oel2lU1s6uqH5K2xoQ/n2cURuHL6rS3o/XO+ZpMpIE7bN6GZbMn
-        MVhN1k+xThBbA5GD1VGI63Eu/ayGD9IKjjDxSLM3KnumRWovxtYkwcieHksCy/Oe
-        ws9C8/Z8VTMwOol64EmSUDN0QB3uhPmdiV7QQIwDVyFhkOwBf+FxghY0TqNV02LI
-        01gF4juWRM03K7r080Wq3Bv11OzvbRbjSq9hBHBvNpA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=7xx2c+
-        sURY2BGLNN4PINqRBclr9XFzFHQ6iOqlHyL/E=; b=b2QNltio4/RPP3JKHAkMrp
-        wrIS3Qp35QbrpaCiS38VD+1OBiCZX0CSgDuNMfWn1hvvbbRaxRFjx5vNYnbSv6HJ
-        xj4/fxOywREePlYj/T9uVOAzM4+1Cwk2M1eQymJnWr36w0jGbeZ699sHKQ8Ngfb7
-        +ZEZt1lnDWrtZJgiRGUF7tcdhzoe2naW3Svrt46kriNPZQCqZqprzVtu5MXhwaUy
-        sUlbQhFjdLZ/2orkAj7nKKltSmJl9jaw+xbPFOdJtiKFWD2YRwTOgqeUYI20ZC12
-        +298NjS4IxOgDDyGYxKjjNE+SwjxkLBnc8Zc5CmMffD8RIm9DH60JH1dskx+MvpQ
-        ==
-X-ME-Sender: <xms:xVhRXxjCm6r1tCIN1HtYKG7k_qtkIKI9k7rpAusVr8OMvSWLKv4nMA>
-    <xme:xVhRX2BQyZqqFejYyfukF74HDH8WqayTVExiXIrDPHOaRVSOOVoVj_xc4n3kRgaL-
-    PSk2E8iFB7aMeb5l-0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudeguddgudehjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpeduvdduhfekkeehgffftefflefgffdtheffudffgeevteffheeuiedvvdej
-    vdfgveenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:xVhRXxHRzRXNCI0aMtcKIBktnk3ChjEHqZIwJlfJkx3RiAD-y-uzmg>
-    <xmx:xVhRX2S2BvHIgUnn9IpWfTupyg_A__TT3BnBsP3wVXa76k6X0KLD5Q>
-    <xmx:xVhRX-xELcAVnIE3LwDwq9nyaibYrlrJvIvNeaMjZBRnAgXSAk4dUg>
-    <xmx:x1hRXzrqXnGkVGSfM5_915DTstig_aeLw-XMgvLtvSbJAxdmpC8QArpXB-s>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A19873280063;
-        Thu,  3 Sep 2020 16:57:41 -0400 (EDT)
-Date:   Thu, 3 Sep 2020 22:57:39 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        devicetree@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 01/20] Revert "ASoC: sun4i-i2s: Fix the LRCK polarity"
-Message-ID: <20200903205739.43dnsu7du6m44u5c@gilmour.lan>
-References: <20200903203034.1057334-1-peron.clem@gmail.com>
- <20200903203034.1057334-2-peron.clem@gmail.com>
+        Thu, 3 Sep 2020 16:57:58 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9664C061244;
+        Thu,  3 Sep 2020 13:57:57 -0700 (PDT)
+Date:   Thu, 03 Sep 2020 20:57:53 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599166674;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rJ20J1YSqOfNWFeT2d2mdgWk7Y+euLW9UaUt0BBj1Ps=;
+        b=hPf9J6SSh/ic0F+Nv+pNMkyRTgsm2/xC9DmJ4N99inQArqfIWn9FGIkbOvfSNyI1RAM5DR
+        YO7yrLz6ncrHEU0k5S4P4SHvjcEgjaeId+/r+uoi9ThxmmUp0y44dCUM3Ejdjs4Tl/49hO
+        +muywDPpbGhZTbRSir/Z08BQH3KKYvx2DXT175r9zz3vp24rpR2qvy1X41p8NtfBxEE2c6
+        roI7UFtS8zOW/2ESBlbrUNvY+oe/nWO0eST7egUpc4tFgHgECU7/G7GPxdVRjehdZMp56I
+        ovgvMK5/4xFzpcJW22RG4QROftqViiZFA/KfICZU9rfb1ncuwlsuc9+pfG2rcw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599166674;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rJ20J1YSqOfNWFeT2d2mdgWk7Y+euLW9UaUt0BBj1Ps=;
+        b=39at3G12Rg5PBDmWl306lDRgzDBXpFiKaviJxvhuQZzWOUG8g9EyeRE8inoYqpmxttP8+1
+        +Dhfd9sr5WBx95Ag==
+From:   "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/uaccess: Use XORL %0,%0 in __get_user_asm()
+Cc:     Uros Bizjak <ubizjak@gmail.com>, Borislav Petkov <bp@suse.de>,
+        "H. Peter Anvin (Intel)" <hpa@zytor.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200827180904.96399-1-ubizjak@gmail.com>
+References: <20200827180904.96399-1-ubizjak@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="p6v5j2ugxblige7u"
-Content-Disposition: inline
-In-Reply-To: <20200903203034.1057334-2-peron.clem@gmail.com>
+Message-ID: <159916667349.20229.3414153735244091368.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/asm branch of tip:
 
---p6v5j2ugxblige7u
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     767ec7289e83721fee205a13b459f12fb2cf922f
+Gitweb:        https://git.kernel.org/tip/767ec7289e83721fee205a13b459f12fb2cf922f
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Thu, 27 Aug 2020 20:09:04 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 03 Sep 2020 22:49:03 +02:00
 
-Hi
+x86/uaccess: Use XORL %0,%0 in __get_user_asm()
 
-On Thu, Sep 03, 2020 at 10:30:15PM +0200, Cl=E9ment P=E9ron wrote:
-> This reverts commit dd657eae8164f7e4bafe8b875031a7c6c50646a9.
->=20
-> There was a misinterpretation of the analysis using a scope.
-> After rechecking this using a logical analyzer the LRCK polarity is
-> fine.
+XORL %0,%0 is equivalent to XORQ %0,%0 as both will zero the entire
+register. Use XORL %0,%0 for all operand sizes to avoid REX prefix byte
+when legacy registers are used and to avoid size prefix byte when 16bit
+registers are used.
 
-Yes, it's fine indeed, so there's no need to change anything?
+Zeroing the full register is OK in this use case.
 
-Maxime
+As a result, the size of the .fixup section decreases by 20 bytes.
 
---p6v5j2ugxblige7u
-Content-Type: application/pgp-signature; name="signature.asc"
+ [ bp: Massage commit message. ]
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Link: https://lkml.kernel.org/r/20200827180904.96399-1-ubizjak@gmail.com
+---
+ arch/x86/include/asm/uaccess.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX1FYwwAKCRDj7w1vZxhR
-xbBKAQCBV+rE9UZoCrdpdAa3jQ9KOPalRBYJ5WnRoj1MUDwpXwEAi95nCcuHlPwE
-O/UMdDgPQbAc4AnYf7asF/A+X7ZbSg4=
-=kbla
------END PGP SIGNATURE-----
-
---p6v5j2ugxblige7u--
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index ecefaff..2bffba2 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -343,7 +343,7 @@ do {									\
+ 		     "2:\n"						\
+ 		     ".section .fixup,\"ax\"\n"				\
+ 		     "3:	mov %[efault],%[errout]\n"		\
+-		     "	xor"itype" %[output],%[output]\n"		\
++		     "	xorl %k[output],%k[output]\n"			\
+ 		     "	jmp 2b\n"					\
+ 		     ".previous\n"					\
+ 		     _ASM_EXTABLE_UA(1b, 3b)				\
