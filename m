@@ -2,65 +2,72 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4B9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F27C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44743206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB335206EB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:41:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d72daTpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbgICOlH (ORCPT
+        id S1729417AbgICOlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:41:07 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:46127 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729369AbgICOgS (ORCPT
+        Thu, 3 Sep 2020 10:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729326AbgICOiW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:36:18 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=31;SR=0;TI=SMTPD_---0U7p3k-0_1599138765;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U7p3k-0_1599138765)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 03 Sep 2020 21:12:45 +0800
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Howells <dhowells@redhat.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephan Mueller <smueller@chronox.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Waiman Long <longman@redhat.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        Vitaly Chikunov <vt@altlinux.org>,
-        "Gilad Ben-Yossef" <gilad@benyossef.com>,
-        Pascal van Leeuwen <pvanleeuwen@rambus.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-security-module@vger.kernel.org
-Cc:     Xufeng Zhang <yunbo.xufeng@linux.alibaba.com>,
-        Jia Zhang <zhang.jia@linux.alibaba.com>,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Subject: [PATCH v6 5/8] crypto: testmgr - support test with different ciphertext per encryption
-Date:   Thu,  3 Sep 2020 21:12:39 +0800
-Message-Id: <20200903131242.128665-6-tianjia.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.3.ge56e4f7
-In-Reply-To: <20200903131242.128665-1-tianjia.zhang@linux.alibaba.com>
-References: <20200903131242.128665-1-tianjia.zhang@linux.alibaba.com>
+        Thu, 3 Sep 2020 10:38:22 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83FCC0619E6
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 06:31:38 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j2so3242161wrx.7
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 06:31:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1ZdEfEgmL9xMVW+zYcpKfDQO7HkBHnE+KMZRuI8Lf9k=;
+        b=d72daTpVXoFFKFMcoZerr4SN73VKG7KBahyo81SxAWwlnUIXnP4Hiu0wEqMahwIn2o
+         LGa/L5PaDhSKkW6A2aKmCvXUc1Y7CQlo1vIRokt4mjGZ/E8C0NkC8DFHdRcyR6zzGStq
+         jD2svGqpzvApSdfm4Yd9u3HDuCaTuayg11hPq4rk7boRhViVFGOwYD1DCSGWHHEQPuyv
+         Umy4g1qdPh5N+ALxnFjOayg/Yw5EsjlS2OOxZcPUTLLLIom3LVSgdN+akv4yZOHb/LFw
+         B4/tzmmeCZek/9PDbgTIoQnidxfXI7T4MJGG1/VXEKZXqpOHHbbuMB+oiIF9CfadmXbU
+         KNRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1ZdEfEgmL9xMVW+zYcpKfDQO7HkBHnE+KMZRuI8Lf9k=;
+        b=HhMnjPqPZC1VEEFANlKAjQ8S3hUjNsLeUSG35lUPoM9Z13vq4UYwjAShCkAcProbvF
+         JDE00OileeoruzB8KBfCjtskg/0VZ+lJ/BXqWS9x3/wbXA5HV7gepg0AMJtiZTA9KB/R
+         +DsAB6f/W6IvGIifW+4oZg7vK/GAQvIZ3jey1fVo+JEcGvPeIOkifueWIBfLNSI4hqoU
+         Qlu0cQw8tI6PhPsq42+yYJH6UN8CkuGWEZH3gkHBSvOXqUopRPxAh1CFABy/kEGgzLXa
+         WAbQzugAO6c7Mg8nrc8zof1W0ux5t+91P5Wf2kKWeNVm1jd45apzRcNVdKzipkv9elot
+         RVJA==
+X-Gm-Message-State: AOAM531KHVSNhw4esPOaJOZFAe2HaNBsXNrj/yOgSpxa3/DqVjMlJqft
+        WkrSpY+DSCRvG1c9be5sx6w44A==
+X-Google-Smtp-Source: ABdhPJwhjR2MLxPCogbMWCND1xPIuqqI6Vt+eUGTlk9kaW1cSI5oFWJ5vZON7txdbDjoS+wkK1t6og==
+X-Received: by 2002:a5d:5602:: with SMTP id l2mr2677121wrv.410.1599139896777;
+        Thu, 03 Sep 2020 06:31:36 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id b2sm4310768wmh.47.2020.09.03.06.31.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Sep 2020 06:31:36 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org, bjorn.andersson@linaro.org
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        sibis@codeaurora.org, mka@chromium.org, dianders@chromium.org,
+        georgi.djakov@linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/7] interconnect: Introduce xlate_extended()
+Date:   Thu,  3 Sep 2020 16:31:27 +0300
+Message-Id: <20200903133134.17201-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,45 +75,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some asymmetric algorithms will get different ciphertext after
-each encryption, such as SM2, and let testmgr support the testing
-of such algorithms.
+Currently the interconnect framework provides the xlate() callback for
+mapping the endpoints from phandle arguments in DT. This is implemented
+by the provider drivers. But the endpoints (or the path between the
+endpoints) might have an additional attributes, which should be parsed
+and populated. During previous discussions [1], it was suggested that
+adding more and more DT properties will not scale very well. So instead
+of adding DT properties, such data should be put into the 'interconnects'
+arguments.
 
-In struct akcipher_testvec, set c and c_size to be empty, skip
-the comparison of the ciphertext, and compare the decrypted
-plaintext with m to achieve the test purpose.
+This patchset is introducing a new xlate_extended() callback, which
+would allow the interconnect provider drivers to parse additional data
+(such as path tags) and allow the framework to make use of them.
 
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Tested-by: Xufeng Zhang <yunbo.xufeng@linux.alibaba.com>
----
- crypto/testmgr.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Thanks to Sibi for the preliminary feedback and testing this patchset
+on the sc7180 platform.
 
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 23c27fc96394..cd002a030af5 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -4025,7 +4025,7 @@ static int test_akcipher_one(struct crypto_akcipher *tfm,
- 		pr_err("alg: akcipher: %s test failed. err %d\n", op, err);
- 		goto free_all;
- 	}
--	if (!vecs->siggen_sigver_test) {
-+	if (!vecs->siggen_sigver_test && c) {
- 		if (req->dst_len != c_size) {
- 			pr_err("alg: akcipher: %s test failed. Invalid output len\n",
- 			       op);
-@@ -4056,6 +4056,11 @@ static int test_akcipher_one(struct crypto_akcipher *tfm,
- 		goto free_all;
- 	}
- 
-+	if (!vecs->siggen_sigver_test && !c) {
-+		c = outbuf_enc;
-+		c_size = req->dst_len;
-+	}
-+
- 	op = vecs->siggen_sigver_test ? "sign" : "decrypt";
- 	if (WARN_ON(c_size > PAGE_SIZE))
- 		goto free_all;
--- 
-2.19.1.3.ge56e4f7
+The patchset is based on linux-next (next-20200903).
+
+Changelog:
+v3:
+* Rebase and update both dts patches as Doug reported that i missed to
+  update the cells for the GPU and also other stuff changed in DT recently.
+* Pick Rob's Reviewed-by
+
+v2: http://lore.kernel.org/r/20200806163126.22667-1-georgi.djakov@linaro.org
+* Add a patch to update the DT documentation, which i missed initially.
+* Minor changes in commit text of patch 1/7. (Sibi)
+* Remove a useless null check in patch 4/7. (Sibi)
+* Print a warning if the number of DT args is higher than what we expect
+  in patch 3/7. (Matthias)
+* Pick Reviewed-by/Tested-by tags.
+* TODO: Replace tag IDs with macros in patches 5/7 and 7/7 when [2] lands.
+
+v1: http://lore.kernel.org/r/20200723130942.28491-1-georgi.djakov@linaro.org
+
+[1] https://lore.kernel.org/linux-devicetree/20200519185836.GA469006@bogus/
+[2] https://lore.kernel.org/r/20200801033215.1440-2-mdtipton@codeaurora.org
+
+Georgi Djakov (5):
+  interconnect: Introduce xlate_extended() callback
+  dt-bindings: interconnect: Document the support of optional path tag
+  interconnect: qcom: Implement xlate_extended() to parse tags
+  interconnect: qcom: sdm845: Replace xlate with xlate_extended
+  arm64: dts: qcom: sdm845: Increase the number of interconnect cells
+
+Sibi Sankar (2):
+  interconnect: qcom: sc7180: Replace xlate with xlate_extended
+  arm64: dts: qcom: sc7180: Increase the number of interconnect cells
+
+ .../bindings/interconnect/interconnect.txt    |  24 +-
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 218 +++++++++---------
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  48 ++--
+ drivers/interconnect/core.c                   |  73 ++++--
+ drivers/interconnect/qcom/icc-rpmh.c          |  27 +++
+ drivers/interconnect/qcom/icc-rpmh.h          |   1 +
+ drivers/interconnect/qcom/sc7180.c            |   2 +-
+ drivers/interconnect/qcom/sdm845.c            |   2 +-
+ include/linux/interconnect-provider.h         |  17 +-
+ 9 files changed, 251 insertions(+), 161 deletions(-)
 
