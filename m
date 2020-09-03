@@ -2,111 +2,97 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EC3C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E21C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8BC206A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47272206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:56:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JasMsxd1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgICQ4h (ORCPT
+        id S1728942AbgICQ4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:56:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbgICQ4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:56:36 -0400
-Received: from gaia (unknown [46.69.195.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 3 Sep 2020 12:56:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48943 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726678AbgICQ4n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 12:56:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599152202;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=YAdtu4wMk+fDL1zMc9RkOIclCF2kveRlgVkmIcPTrJ4=;
+        b=JasMsxd1J06mETB5ihYIp/ZuF3CZ6ajzOSJOCS5b0KVPH/NsLNpzHLudlFRmQkKzUWN2g5
+        lzXdPW8gsJP/JXVXLBew0zXM9P7+SNigqLoRHqe8mTt8Lj+Uxz42xEDUEyS5eEggsCW86y
+        rAi+SnsIdP1qPgTLM7o0RSemjUTTipE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-464-zLPjFgCmMNWB_1VJEgJueg-1; Thu, 03 Sep 2020 12:56:40 -0400
+X-MC-Unique: zLPjFgCmMNWB_1VJEgJueg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF3B9206A5;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 17D821DE09;
+        Thu,  3 Sep 2020 16:56:39 +0000 (UTC)
+Received: from max.home.com (unknown [10.40.194.131])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 93C1410027A6;
         Thu,  3 Sep 2020 16:56:34 +0000 (UTC)
-Date:   Thu, 3 Sep 2020 17:56:32 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        will@kernel.org, akpm@linux-foundation.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] arm64/mm: Change THP helpers to comply with generic
- MM semantics
-Message-ID: <20200903165631.GC31409@gaia>
-References: <1597655984-15428-1-git-send-email-anshuman.khandual@arm.com>
- <1597655984-15428-2-git-send-email-anshuman.khandual@arm.com>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cluster-devel@redhat.com,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [PATCH] iomap: Fix direct I/O write consistency check
+Date:   Thu,  3 Sep 2020 18:56:32 +0200
+Message-Id: <20200903165632.1338996-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597655984-15428-2-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 02:49:43PM +0530, Anshuman Khandual wrote:
-> pmd_present() and pmd_trans_huge() are expected to behave in the following
-> manner during various phases of a given PMD. It is derived from a previous
-> detailed discussion on this topic [1] and present THP documentation [2].
-> 
-> pmd_present(pmd):
-> 
-> - Returns true if pmd refers to system RAM with a valid pmd_page(pmd)
-> - Returns false if pmd does not refer to system RAM - Invalid pmd_page(pmd)
+When a direct I/O write falls back to buffered I/O entirely, dio->size
+will be 0 in iomap_dio_complete.  Function invalidate_inode_pages2_range
+will try to invalidate the rest of the address space.  If there are any
+dirty pages in that range, the write will fail and a "Page cache
+invalidation failure on direct I/O" error will be logged.
 
-The second bullet doesn't make much sense. If you have a pmd mapping of
-some I/O memory, pmd_present() still returns true (as does
-pte_present()).
+On gfs2, this can be reproduced as follows:
 
-> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
-> index 4d867c6446c4..28792fdd9627 100644
-> --- a/arch/arm64/include/asm/pgtable-prot.h
-> +++ b/arch/arm64/include/asm/pgtable-prot.h
-> @@ -19,6 +19,13 @@
->  #define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
->  #define PTE_PROT_NONE		(_AT(pteval_t, 1) << 58) /* only when !PTE_VALID */
->  
-> +/*
-> + * This help indicate that the entry is present i.e pmd_page()
+  xfs_io \
+    -c "open -ft foo" -c "pwrite 4k 4k" -c "close" \
+    -c "open -d foo" -c "pwrite 0 4k"
 
-Nit: add another . after i.e
+Fix this by recognizing 0-length writes.
 
-> + * still points to a valid huge page in memory even if the pmd
-> + * has been invalidated.
-> + */
-> +#define PMD_PRESENT_INVALID	(_AT(pteval_t, 1) << 59) /* only when !PMD_SECT_VALID */
-> +
->  #ifndef __ASSEMBLY__
->  
->  #include <asm/cpufeature.h>
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index d5d3fbe73953..7aa69cace784 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -145,6 +145,18 @@ static inline pte_t set_pte_bit(pte_t pte, pgprot_t prot)
->  	return pte;
->  }
->  
-> +static inline pmd_t clr_pmd_bit(pmd_t pmd, pgprot_t prot)
-> +{
-> +	pmd_val(pmd) &= ~pgprot_val(prot);
-> +	return pmd;
-> +}
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+---
+ fs/iomap/direct-io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Could you use clear_pmd_bit (instead of clr) for consistency with
-clear_pte_bit()?
-
-It would be good if the mm folk can do a sanity check on the assumptions
-about pmd_present/pmdp_invalidate/pmd_trans_huge.
-
-The patch looks fine to me otherwise, feel free to add:
-
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-
+diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+index c1aafb2ab990..c9d6b4eecdb7 100644
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -108,7 +108,7 @@ static ssize_t iomap_dio_complete(struct iomap_dio *dio)
+ 	 * ->end_io() when necessary, otherwise a racing buffer read would cache
+ 	 * zeros from unwritten extents.
+ 	 */
+-	if (!dio->error &&
++	if (!dio->error && dio->size &&
+ 	    (dio->flags & IOMAP_DIO_WRITE) && inode->i_mapping->nrpages) {
+ 		int err;
+ 		err = invalidate_inode_pages2_range(inode->i_mapping,
 -- 
-Catalin
+2.26.2
+
