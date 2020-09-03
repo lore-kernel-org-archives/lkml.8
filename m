@@ -2,81 +2,80 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	TVD_SUBJ_WIPE_DEBT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF48C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F89CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 340D8206EF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E18420786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgICOny (ORCPT
+        id S1729412AbgICOoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:43:54 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45838 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729355AbgICOgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:36:53 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DE721AFE559109854FAC;
-        Thu,  3 Sep 2020 22:36:44 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 3 Sep 2020 22:36:38 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [RFC V2 net-next 2/2] net: disable UDP GSO features when CSUM is disable
-Date:   Thu, 3 Sep 2020 22:34:19 +0800
-Message-ID: <1599143659-62176-3-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599143659-62176-1-git-send-email-tanhuazhong@huawei.com>
-References: <1599143659-62176-1-git-send-email-tanhuazhong@huawei.com>
+        Thu, 3 Sep 2020 10:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729344AbgICOgg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:36:36 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 189C3C061244;
+        Thu,  3 Sep 2020 07:36:36 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDqLl-009rJq-3l; Thu, 03 Sep 2020 14:36:29 +0000
+Date:   Thu, 3 Sep 2020 15:36:29 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: remove the last set_fs() in common code, and remove it for x86
+ and powerpc v3
+Message-ID: <20200903143629.GN1236603@ZenIV.linux.org.uk>
+References: <20200903142242.925828-1-hch@lst.de>
+ <20200903142803.GM1236603@ZenIV.linux.org.uk>
+ <20200903143003.GA17260@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903143003.GA17260@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CSUM is not available, UDP GSO should be disable as well.
+On Thu, Sep 03, 2020 at 04:30:03PM +0200, Christoph Hellwig wrote:
+> On Thu, Sep 03, 2020 at 03:28:03PM +0100, Al Viro wrote:
+> > On Thu, Sep 03, 2020 at 04:22:28PM +0200, Christoph Hellwig wrote:
+> > 
+> > > Besides x86 and powerpc I plan to eventually convert all other
+> > > architectures, although this will be a slow process, starting with the
+> > > easier ones once the infrastructure is merged.  The process to convert
+> > > architectures is roughtly:
+> > > 
+> > >  (1) ensure there is no set_fs(KERNEL_DS) left in arch specific code
+> > >  (2) implement __get_kernel_nofault and __put_kernel_nofault
+> > >  (3) remove the arch specific address limitation functionality
+> > 
+> > The one to really watch out for is sparc; I have something in that
+> > direction, will resurrect as soon as I'm done with eventpoll analysis...
+> > 
+> > I can live with this series; do you want that in vfs.git#for-next?
+> 
+> Either that or a separate tree is fine with me.  It would be good to
+> eventually have a non-rebased stable tree so that other arch trees
+> can work from it, though.
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- net/core/dev.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+FWIW, vfs.git#for-next is always a merge of independent branches; I don't
+put stuff directly into #for-next - too easy to lose that way.
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index d42c9ea..0c78306 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -9402,6 +9402,18 @@ static netdev_features_t netdev_fix_features(struct net_device *dev,
- 		features &= ~NETIF_F_TSO6;
- 	}
- 
-+	if ((features & NETIF_F_GSO_UDP_L4) && !(features & NETIF_F_HW_CSUM) &&
-+	    !(features & NETIF_F_IP_CSUM)) {
-+		netdev_dbg(dev, "Dropping UDP GSO features since no CSUM feature.\n");
-+		features &= ~NETIF_F_GSO_UDP_L4;
-+	}
-+
-+	if ((features & NETIF_F_GSO_UDPV6_L4) && !(features & NETIF_F_HW_CSUM) &&
-+	    !(features & NETIF_F_IPV6_CSUM)) {
-+		netdev_dbg(dev, "Dropping UDPV6 GSO features since no CSUM feature.\n");
-+		features &= ~NETIF_F_GSO_UDPV6_L4;
-+	}
-+
- 	/* TSO with IPv4 ID mangling requires IPv4 TSO be enabled */
- 	if ((features & NETIF_F_TSO_MANGLEID) && !(features & NETIF_F_TSO))
- 		features &= ~NETIF_F_TSO_MANGLEID;
--- 
-2.7.4
+IOW, that would be something like #base.set_fs, included into #for-next
+merge set.  And I've no problem with never-rebased branches...
 
+Where in the mainline are the most recent prereqs of this series?
