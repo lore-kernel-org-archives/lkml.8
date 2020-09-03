@@ -2,109 +2,96 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44BFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0350BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7CC20658
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD93A20658
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:13:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgICOLr (ORCPT
+        id S1729114AbgICOMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:11:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:34436 "EHLO foss.arm.com"
+        Thu, 3 Sep 2020 10:12:42 -0400
+Received: from mga06.intel.com ([134.134.136.31]:34932 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729015AbgICOKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:10:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66D841063;
-        Thu,  3 Sep 2020 06:45:10 -0700 (PDT)
-Received: from localhost (e108754-lin.cambridge.arm.com [10.1.199.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 067F03F66F;
-        Thu,  3 Sep 2020 06:45:09 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 14:45:08 +0100
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        dietmar.eggemann@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        valentin.schneider@arm.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/5] cpufreq: report whether cpufreq supports
- Frequency Invariance (FI)
-Message-ID: <20200903134508.GB29370@arm.com>
-References: <20200901205549.30096-1-ionela.voinescu@arm.com>
- <20200901205549.30096-4-ionela.voinescu@arm.com>
- <20200902132838.GF25462@bogus>
+        id S1729142AbgICOKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:10:07 -0400
+IronPort-SDR: c7qgbts54Y3P1Y2SvMcDeRwFb6ohKhODd/xjnUjbw+0b31oewotWf3NS8hnxECQPMUneM7P8g5
+ r7byl4bChipQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="219129982"
+X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
+   d="scan'208";a="219129982"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 07:09:39 -0700
+IronPort-SDR: rkZ0Olar/QMGUYe0mhdZgEL72iAnn+i/sGoky55dDU7fVd4VgjWgmNUES9gyd25QUNbpwm4FXb
+ Cij5BElBsaRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
+   d="scan'208";a="331797666"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 03 Sep 2020 07:09:37 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kDptc-00E2xB-51; Thu, 03 Sep 2020 17:07:24 +0300
+Date:   Thu, 3 Sep 2020 17:07:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] media: atomisp: get rid of
+ -Wsuggest-attribute=format warnings
+Message-ID: <20200903140724.GE1891694@smile.fi.intel.com>
+References: <cover.1599141140.git.mchehab+huawei@kernel.org>
+ <6c77d765707b1e6b2901fd23d85b4d032f1a1799.1599141140.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200902132838.GF25462@bogus>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6c77d765707b1e6b2901fd23d85b4d032f1a1799.1599141140.git.mchehab+huawei@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sudeep,
-
-Thank you for your review here and for the other patches.
-
-On Wednesday 02 Sep 2020 at 14:28:38 (+0100), Sudeep Holla wrote:
-[..]
-> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > index 4d5fe777184a..570bf2ebe9d4 100644
-> > --- a/drivers/cpufreq/cpufreq.c
-> > +++ b/drivers/cpufreq/cpufreq.c
-> > @@ -61,6 +61,12 @@ static struct cpufreq_driver *cpufreq_driver;
-> >  static DEFINE_PER_CPU(struct cpufreq_policy *, cpufreq_cpu_data);
-> >  static DEFINE_RWLOCK(cpufreq_driver_lock);
-> >  
-> > +static DEFINE_STATIC_KEY_FALSE(cpufreq_freq_invariance);
-> > +bool cpufreq_supports_freq_invariance(void)
-> > +{
-> > +	return static_branch_likely(&cpufreq_freq_invariance);
-> > +}
-> > +
-> >  /* Flag to suspend/resume CPUFreq governors */
-> >  static bool cpufreq_suspended;
-> >  
-> > @@ -2720,6 +2726,15 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
-> >  	cpufreq_driver = driver_data;
-> >  	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
-> >  
-> > +	/*
-> > +	 * Mark support for the scheduler's frequency invariance engine for
-> > +	 * drivers that implement target(), target_index() or fast_switch().
-> > +	 */
-> > +	if (!cpufreq_driver->setpolicy) {
-> > +		static_branch_enable_cpuslocked(&cpufreq_freq_invariance);
-> > +		pr_debug("supports frequency invariance");
-> > +	}
-> > +
-> >  	if (driver_data->setpolicy)
+On Thu, Sep 03, 2020 at 03:57:32PM +0200, Mauro Carvalho Chehab wrote:
+> There are some warnings reported by gcc:
+> 	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:164:2: warning: function ‘atomisp_css2_dbg_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+> 	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:170:2: warning: function ‘atomisp_css2_dbg_ftrace_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+> 	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:170:2: warning: function ‘atomisp_css2_dbg_ftrace_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+> 	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:176:2: warning: function ‘atomisp_css2_err_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
 > 
-> [super nit] while I understand cpufreq_driver = driver_data, it looks odd
-> if 2 consecutive statements refer it with different variables. Or am I
-> confusing myself hugely.
+> That are due to the usage of printf-like messages without
+> enabling the error checking logic.
 > 
+> Add the proper attributes in order to shut up such warnings.
 
-No, you are right. If you look at the rest of the register function,
-after cpufreq_driver = driver_data, both driver_data and cpufreq_driver
-are used. For me using cpufreq_driver seemed more natural as after being
-assigned driver_data, it will continue to be used after registration.
+> +static int  __attribute__((format (printf, 1, 0)))
+> +atomisp_css2_dbg_ftrace_print(const char *fmt, va_list args)
+>  {
+>  	ftrace_vprintk(fmt, args);
+>  	return 0;
+>  }
+>  
 
-If it's alright with you I won't make this change for now. It's possible
-that a better solution is to change the other occurrences of either
-cpufreq_driver or driver_data in a separate patch, to make things
-consistent across the function.
+Why not to drop it completely as well?
 
-Thank you,
-Ionela.
+> -static int atomisp_css2_err_print(const char *fmt, va_list args)
+> -{
+> -	vprintk(fmt, args);
+> -	return 0;
+> -}
 
-> -- 
-> Regards,
-> Sudeep
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
