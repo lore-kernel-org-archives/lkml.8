@@ -2,139 +2,149 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C473C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DDCC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD29C20722
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD5382072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:11:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FxSMag+Q"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H0ZpLV8X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgICPKg (ORCPT
+        id S1729212AbgICPLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:10:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59184 "EHLO
+        Thu, 3 Sep 2020 11:11:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbgICN5y (ORCPT
+        with ESMTP id S1728979AbgICN5y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 09:57:54 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F2A7C0619E8
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 06:31:40 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a17so3240347wrn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 06:31:40 -0700 (PDT)
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CAFDC061A1B
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 06:46:48 -0700 (PDT)
+Received: by mail-vs1-xe2e.google.com with SMTP id y194so1765127vsc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 06:46:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4v7riCkWqOW12WqwNbdYgi3MhtDbA8fxMcLkKxaVn1Q=;
-        b=FxSMag+QeOzVZzZ+W/d4wUZ228qXnTc22tAxz97IrORD8jZ1HYcP+sq2f2Lx6LfZL3
-         hCQmI3l6sISeNn78F6Z3VYf7cXFECd9N8RKUZSKARukgkj2KPTDjIQ10GSUQZ2e4kU1i
-         5lq3epDjkN01sN0gOs9C3LbtQ6sDJ/49NDuxEpQXTerjREMHIdAX7obuKgHhjQb7KXWQ
-         Z2+WlBaT30YpbYgKs+NkWSUG4DKGwNe0EF60dRWyW7HFlwDhxELhqAmCvLa6/kBrW/87
-         TrIVqzw/5wBYmDyhC465Zn9R9K5WBAHLQZxAy/QZRgflKb/yJcaMeT2obJzIRa5fJ54F
-         x3YQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=j0CWDjHuel9BhIbAeE9SClU/k1SGiwHbME2EsbEVqqg=;
+        b=H0ZpLV8XVaPO5Koy+JT8TV7Werq7grrAXsb7ndgYrWD9aaM+kA2QtzugtG05VDPave
+         ses3ofeebxQHSLAcjOGBkC9btWfyNNGqg8vbRKxZ07es2kQ6lWMR4pK7q2EDD14dauZP
+         30UPjbW4pxO5QwJcqFdY16nw8daWweukbCV/4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4v7riCkWqOW12WqwNbdYgi3MhtDbA8fxMcLkKxaVn1Q=;
-        b=J/80YWjYARKyIKgKy/ppAHxjBMIBRZNMCDlCVd1BeZvAkAPPg9/eT//ftJl1c3xaw3
-         N720Slf3WzAfrqpVYfWSXJHAmL5x2NOwUuNDRE2KQOSgnUiuO3ia38JsV49afijNPsU0
-         bbgG34tSlx8M6K25fIev6r8wNk5qMqQR/5iJCZLY6Ju1Oq/DqbsQhyIQgTbiISzzA8Tu
-         dEZUhPl1c/HibqLzpeG/WojJwRkhOgPBSGNqcqYpMXdshD2ML2gVxapt+OF8zDNT56Z6
-         rPN/5S7u64C/K3xI9CNczS2o4sNNo93VUaf9CqTsai+PAhveIupu2ghprIGaU3Hk+94c
-         JVew==
-X-Gm-Message-State: AOAM532wor5MKrf6OVipME6TJCK90r/Va90EpgakENwzWcpCaFDu1yw0
-        r0RpJuUmPnIkZqLiixbSuur8Og==
-X-Google-Smtp-Source: ABdhPJy2mm+MBBMVkV5XJikd7HS9L+iWlSQLCxuxQL9VOQRGQ/LByHjHzHNmXzyk4i662snmvdW6GA==
-X-Received: by 2002:a5d:514e:: with SMTP id u14mr2485171wrt.211.1599139899481;
-        Thu, 03 Sep 2020 06:31:39 -0700 (PDT)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id b2sm4310768wmh.47.2020.09.03.06.31.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Sep 2020 06:31:38 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     linux-pm@vger.kernel.org, bjorn.andersson@linaro.org
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        sibis@codeaurora.org, mka@chromium.org, dianders@chromium.org,
-        georgi.djakov@linaro.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 2/7] dt-bindings: interconnect: Document the support of optional path tag
-Date:   Thu,  3 Sep 2020 16:31:29 +0300
-Message-Id: <20200903133134.17201-3-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200903133134.17201-1-georgi.djakov@linaro.org>
-References: <20200903133134.17201-1-georgi.djakov@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=j0CWDjHuel9BhIbAeE9SClU/k1SGiwHbME2EsbEVqqg=;
+        b=aaokvfl7S+sQMA0gn/aIl8cbgvaQihQtML/Heq5Ari5rdOoSDjDZDXFHyMjxA4K242
+         kvlfH3oj2zdxLQgOIbpL4mRfzEJ62Ny2wk/HqU/ehPzzwAfHpkYranOfQALmPOn0Yr5L
+         +SxhL0KsBjybxcRJEX8FaZpEOJQZI+sL5N5A7J8wO49R9S0Zp3T++/8zxLShhda3Yosd
+         JeL766pK2s6vloVQImZScA3sm3gXsgje/Th8odbDaHYKcZleexlIPTBrO19Bcjpqvz0X
+         520NycjiT/6USoy8DSdUsBA8AKRJs6BM/R43QJh7MQV7/c3Fj62ltRtUVz2SllDwQK/k
+         pbRw==
+X-Gm-Message-State: AOAM533EqzW2EC/OSGCA246VzCuXpdPmjKjNWon3z55jSIGy7SE+/eNr
+        nDUMKi8olJkz0N9nCdpQcAW09yggWRkz4w==
+X-Google-Smtp-Source: ABdhPJyUpbFUVZkfjxEdJ1UeboIjtYhm+7e8EHtxbcGg2Dkx8ZArpBpOG8q/RlUoUfbkcZd6rkfutw==
+X-Received: by 2002:a67:7905:: with SMTP id u5mr1759500vsc.179.1599140804306;
+        Thu, 03 Sep 2020 06:46:44 -0700 (PDT)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id n9sm285299vkq.31.2020.09.03.06.46.43
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 06:46:43 -0700 (PDT)
+Received: by mail-vs1-f42.google.com with SMTP id x203so1731588vsc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 06:46:43 -0700 (PDT)
+X-Received: by 2002:a67:e447:: with SMTP id n7mr1767573vsm.53.1599140802881;
+ Thu, 03 Sep 2020 06:46:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200817144722.6665-1-saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=VE6vCPjDvvP0e73tnd8u5rPuMUa-mwvDazrfUpXP+bKQ@mail.gmail.com>
+ <2a0c5fa189dbb2e810ba88f59621b65c@codeaurora.org> <CAD=FV=X8yS1gUNhhVNyfuRPzDUheG2Rco2g16KMegCG6fKJw7Q@mail.gmail.com>
+ <d949bdfa15b133f74a47727401553c76@codeaurora.org> <7714ee57f75542839d5c33b28f232aa6@codeaurora.org>
+In-Reply-To: <7714ee57f75542839d5c33b28f232aa6@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 3 Sep 2020 06:46:30 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Xt0NTNjCEJ2USfyd2qZ+FfBz9xwctbpv+hSWvvCoAZFg@mail.gmail.com>
+Message-ID: <CAD=FV=Xt0NTNjCEJ2USfyd2qZ+FfBz9xwctbpv+hSWvvCoAZFg@mail.gmail.com>
+Subject: Re: [PATCHv2] soc: qcom: llcc: Support chipsets that can write to
+ llcc registers
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's document that we now support specifying path tag information in the
-arg cells of the 'interconnects' DT property. This information would be
-populated when the xlate_extended() callback is used.
+Hi,
 
-Specifying the tag in DT will allow the interconnect framework to do the
-aggregation based on the tag automatically. The users can still use the
-icc_set_tag() API if/when needed.
+On Thu, Sep 3, 2020 at 2:58 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Hi,
+>
+> On 2020-08-18 21:07, Sai Prakash Ranjan wrote:
+> > Hi Doug,
+> >
+> >>
+> >> I guess to start, it wasn't obvious (to me) that there were two
+> >> choices and we were picking one.  Mentioning that the other
+> >> alternative was way-based allocation would help a lot.  Even if you
+> >> can't fully explain the differences between the two, adding something
+> >> to the commit message indicating that this is a policy decision (in
+> >> other words, both work but each have their tradeoffs) would help.
+> >> Something like this, if it's correct:
+> >>
+> >> In general we try to enable capacity based allocation (instead of the
+> >> default way based allocation) since that gives us better performance
+> >> with the current software / hardware configuration.
+> >>
+> >
+> > Thanks, I will add it for next version. Let me also go poke some arch
+> > teams
+> > to understand if we actually do gain something with this selection, who
+> > knows
+> > we might get some additional details as well.
+> >
+>
+> I got some information from arch team today, to quote them exactly:
+>
+> 1) What benefits capacity based allocation brings over the default way
+> based allocation?
+>
+> "Capacity based allows finer grain partition. It is not about improved
+> performance but more flexibility in configuration."
+>
+> 2) Retain through power collapse, doesn=E2=80=99t it burn more power?
+>
+> "This feature is similar to the standard feature of retention. Yes, when
+> we
+> have cache in retention mode it burns more power but it keeps the values
+> so
+> that when we wake up we can get more cache hits."
+>
+>
+> If its good enough, then I will add this info to the commit msg and post
+> next version.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- .../bindings/interconnect/interconnect.txt    | 24 ++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+Sounds fine to me.  I was mostly looking for a high level idea of what
+was happening here.  I am at least a little curious about the
+retention bit.  Is that retention during S3, or during some sort of
+Runtime PM?  Any idea how much power is burned?  Unless the power is
+miniscule it seems hard to believe that it would be a net win to keep
+a cache powered up during S3 unless you're planning on waking up a
+lot.
 
-diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-index 6f5d23a605b7..138c544c8c8c 100644
---- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-+++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-@@ -19,7 +19,8 @@ directly.
- Required properties:
- - compatible : contains the interconnect provider compatible string
- - #interconnect-cells : number of cells in a interconnect specifier needed to
--			encode the interconnect node id
-+			encode the interconnect node id and optionally add a
-+			path tag
- 
- Example:
- 
-@@ -44,6 +45,10 @@ components it has to interact with.
- Required properties:
- interconnects : Pairs of phandles and interconnect provider specifier to denote
- 	        the edge source and destination ports of the interconnect path.
-+		An optional path tag value could specified as additional argument
-+		to both endpoints and in such cases, this information will be passed
-+		to the interconnect framework to do aggregation based on the attached
-+		tag.
- 
- Optional properties:
- interconnect-names : List of interconnect path name strings sorted in the same
-@@ -62,3 +67,20 @@ Example:
- 		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
- 		interconnect-names = "sdhc-mem";
- 	};
-+
-+Example with path tags:
-+
-+	gnoc: interconnect@17900000 {
-+		...
-+		interconnect-cells = <2>;
-+	};
-+
-+	mnoc: interconnect@1380000 {
-+		...
-+		interconnect-cells = <2>;
-+	};
-+
-+	cpu@0 {
-+		...
-+		interconnects = <&gnoc MASTER_APPSS_PROC 3 &mnoc SLAVE_EBI1 3>;
-+	}
+-Doug
