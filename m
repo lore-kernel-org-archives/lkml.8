@@ -2,182 +2,153 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B9AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40B1C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC52420716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DE920829
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbgICQHd (ORCPT
+        id S1728557AbgICQIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:07:33 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:57375 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727786AbgICQH3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:07:29 -0400
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 191AE240016;
-        Thu,  3 Sep 2020 16:07:22 +0000 (UTC)
-Date:   Thu, 3 Sep 2020 18:11:08 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v3 2/2] media: i2c: ov772x: Add test pattern control
-Message-ID: <20200903161108.aqlgicfhwgyccwou@uno.localdomain>
-References: <20200824190406.27478-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200824190406.27478-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 3 Sep 2020 12:08:35 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:8836 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727786AbgICQIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 12:08:32 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4Bj5MH5XfvzB09ZM;
+        Thu,  3 Sep 2020 18:08:27 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id AhUkCQsrRXgc; Thu,  3 Sep 2020 18:08:27 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bj5MH4CVtzB09ZK;
+        Thu,  3 Sep 2020 18:08:27 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 73D218B806;
+        Thu,  3 Sep 2020 18:08:28 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 5YzyNRM3vKXH; Thu,  3 Sep 2020 18:08:28 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id ECB968B803;
+        Thu,  3 Sep 2020 18:08:20 +0200 (CEST)
+Subject: Re: [PATCH 14/14] powerpc: remove address space overrides using
+ set_fs()
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        linux-arch@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Alexey Dobriyan <adobriyan@gmail.com>
+References: <20200903142242.925828-1-hch@lst.de>
+ <20200903142242.925828-15-hch@lst.de>
+ <e7d2d231-5658-a4d3-0495-2af62f34aa34@csgroup.eu>
+ <20200903154909.GA23023@lst.de> <20200903155644.GA23521@lst.de>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <7b895389-3da8-f634-4a13-82e533398ec5@csgroup.eu>
+Date:   Thu, 3 Sep 2020 18:03:56 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200824190406.27478-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200903155644.GA23521@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On Mon, Aug 24, 2020 at 08:04:06PM +0100, Lad Prabhakar wrote:
-> Add support for test pattern control supported by the sensor.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
->  drivers/media/i2c/ov772x.c | 25 ++++++++++++++++++++++++-
->  include/media/i2c/ov772x.h |  1 +
->  2 files changed, 25 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-> index 67764d647526..f267d8abd742 100644
-> --- a/drivers/media/i2c/ov772x.c
-> +++ b/drivers/media/i2c/ov772x.c
-> @@ -227,7 +227,7 @@
->
->  /* COM3 */
->  #define SWAP_MASK       (SWAP_RGB | SWAP_YUV | SWAP_ML)
-> -#define IMG_MASK        (VFLIP_IMG | HFLIP_IMG)
-> +#define IMG_MASK        (VFLIP_IMG | HFLIP_IMG | SCOLOR_TEST)
->
->  #define VFLIP_IMG       0x80	/* Vertical flip image ON/OFF selection */
->  #define HFLIP_IMG       0x40	/* Horizontal mirror image ON/OFF selection */
-> @@ -425,6 +425,7 @@ struct ov772x_priv {
->  	const struct ov772x_win_size     *win;
->  	struct v4l2_ctrl		 *vflip_ctrl;
->  	struct v4l2_ctrl		 *hflip_ctrl;
-> +	unsigned int			  test_pattern;
->  	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
->  	struct v4l2_ctrl		 *band_filter_ctrl;
->  	unsigned int			  fps;
-> @@ -540,6 +541,11 @@ static const struct ov772x_win_size ov772x_win_sizes[] = {
->  	},
->  };
->
-> +static const char * const ov772x_test_pattern_menu[] = {
-> +	"Disabled",
-> +	"Vertical Color Bar Type 1",
-> +};
-> +
->  /*
->   * frame rate settings lists
->   */
-> @@ -762,6 +768,13 @@ static int ov772x_s_frame_interval(struct v4l2_subdev *sd,
->  	return ret;
->  }
->
-> +static int ov772x_enable_test_pattern(struct ov772x_priv *priv, u32 pattern)
-> +{
-> +	priv->test_pattern = pattern;
-> +	return regmap_update_bits(priv->regmap, COM3, SCOLOR_TEST,
-> +				  pattern ? SCOLOR_TEST : 0x00);
-> +}
-> +
->  static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
->  {
->  	struct ov772x_priv *priv = container_of(ctrl->handler,
-> @@ -809,6 +822,8 @@ static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
->  		}
->
->  		return ret;
-> +	case V4L2_CID_TEST_PATTERN:
-> +		return ov772x_enable_test_pattern(priv, ctrl->val);
 
-I think you should rather save ctrl->val in priv->test_patter here,
-and then apply it at set_params() time (which is called at power on).
-But I see the driver refusing to s_ctrl() and not calling
-__v4l2_ctrl_handler_setup() at power up time, so I think the idea is
-just to ignore controls set when the sensor is powered down..
+Le 03/09/2020 à 17:56, Christoph Hellwig a écrit :
+> On Thu, Sep 03, 2020 at 05:49:09PM +0200, Christoph Hellwig wrote:
+>> On Thu, Sep 03, 2020 at 05:43:25PM +0200, Christophe Leroy wrote:
+>>>
+>>>
+>>> Le 03/09/2020 à 16:22, Christoph Hellwig a écrit :
+>>>> Stop providing the possibility to override the address space using
+>>>> set_fs() now that there is no need for that any more.
+>>>>
+>>>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>>> ---
+>>>
+>>>
+>>>>    -static inline int __access_ok(unsigned long addr, unsigned long size,
+>>>> -			mm_segment_t seg)
+>>>> +static inline bool __access_ok(unsigned long addr, unsigned long size)
+>>>>    {
+>>>> -	if (addr > seg.seg)
+>>>> -		return 0;
+>>>> -	return (size == 0 || size - 1 <= seg.seg - addr);
+>>>> +	if (addr >= TASK_SIZE_MAX)
+>>>> +		return false;
+>>>> +	return size == 0 || size <= TASK_SIZE_MAX - addr;
+>>>>    }
+>>>
+>>> You don't need to test size == 0 anymore. It used to be necessary because
+>>> of the 'size - 1', as size is unsigned.
+>>>
+>>> Now you can directly do
+>>>
+>>> 	return size <= TASK_SIZE_MAX - addr;
+>>>
+>>> If size is 0, this will always be true (because you already know that addr
+>>> is not >= TASK_SIZE_MAX
+>>
+>> True.  What do you think of Linus' comment about always using the
+>> ppc32 version on ppc64 as well with this?
 
->  	}
->
->  	return -EINVAL;
-> @@ -1103,10 +1118,14 @@ static int ov772x_set_params(struct ov772x_priv *priv,
->  		val |= VFLIP_IMG;
->  	if (priv->info && (priv->info->flags & OV772X_FLAG_HFLIP))
->  		val |= HFLIP_IMG;
-> +	if (priv->info && (priv->info->flags & OV772X_FLAG_TEST_PATTERN))
-> +		val |= SCOLOR_TEST;
->  	if (priv->vflip_ctrl->val)
->  		val ^= VFLIP_IMG;
->  	if (priv->hflip_ctrl->val)
->  		val ^= HFLIP_IMG;
-> +	if (priv->test_pattern)
-> +		val ^= SCOLOR_TEST;
+I have nothing against it. That's only adding a substract, all args are 
+already in registers so that will be in the noise for a modern CPU.
 
-I'm not sure this is required to be honest.
+> 
+> i.e. something like this folded in:
+> 
+> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+> index 5363f7fc6dd06c..be070254e50943 100644
+> --- a/arch/powerpc/include/asm/uaccess.h
+> +++ b/arch/powerpc/include/asm/uaccess.h
+> @@ -11,26 +11,14 @@
+>   #ifdef __powerpc64__
+>   /* We use TASK_SIZE_USER64 as TASK_SIZE is not constant */
+>   #define TASK_SIZE_MAX		TASK_SIZE_USER64
+> -
+> -/*
+> - * This check is sufficient because there is a large enough gap between user
+> - * addresses and the kernel addresses.
+> - */
+> -static inline bool __access_ok(unsigned long addr, unsigned long size)
+> -{
+> -	return addr < TASK_SIZE_MAX && size < TASK_SIZE_MAX;
+> -}
+> -
+>   #else
+>   #define TASK_SIZE_MAX		TASK_SIZE
+> +#endif
+>   
+>   static inline bool __access_ok(unsigned long addr, unsigned long size)
+>   {
+> -	if (addr >= TASK_SIZE_MAX)
+> -		return false;
+> -	return size == 0 || size <= TASK_SIZE_MAX - addr;
+> +	return addr < TASK_SIZE_MAX && size <= TASK_SIZE_MAX - addr;
+>   }
+> -#endif /* __powerpc64__ */
+>   
+>   #define access_ok(addr, size)		\
+>   	(__chk_user_ptr(addr),		\
+> 
 
-For hflip/vflip the =^ serves to invert the v4l2-control meaning, as
-the image is said to be already H/V flipped by the platform data (if I
-got this part right).
 
-For test pattern, do we want the same behaviour ? If enabled by
-platform data then selecting "Vertical Color Bar Type 1" then disables
-it ? I don't think so...
-
-Anyway, minor issue. With this addressed
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-
-Thanks
-  j
-
->
->  	ret = regmap_update_bits(priv->regmap, COM3, SWAP_MASK | IMG_MASK, val);
->  	if (ret < 0)
-> @@ -1404,6 +1423,10 @@ static int ov772x_probe(struct i2c_client *client)
->  	priv->band_filter_ctrl = v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
->  						   V4L2_CID_BAND_STOP_FILTER,
->  						   0, 256, 1, 0);
-> +	v4l2_ctrl_new_std_menu_items(&priv->hdl, &ov772x_ctrl_ops,
-> +				     V4L2_CID_TEST_PATTERN,
-> +				     ARRAY_SIZE(ov772x_test_pattern_menu) - 1,
-> +				     0, 0, ov772x_test_pattern_menu);
->  	priv->subdev.ctrl_handler = &priv->hdl;
->  	if (priv->hdl.error) {
->  		ret = priv->hdl.error;
-> diff --git a/include/media/i2c/ov772x.h b/include/media/i2c/ov772x.h
-> index a1702d420087..65e6f8d2f4bb 100644
-> --- a/include/media/i2c/ov772x.h
-> +++ b/include/media/i2c/ov772x.h
-> @@ -12,6 +12,7 @@
->  /* for flags */
->  #define OV772X_FLAG_VFLIP	(1 << 0) /* Vertical flip image */
->  #define OV772X_FLAG_HFLIP	(1 << 1) /* Horizontal flip image */
-> +#define OV772X_FLAG_TEST_PATTERN	(1 << 2) /* Test pattern */
->
->  /*
->   * for Edge ctrl
-> --
-> 2.17.1
->
+Christophe
