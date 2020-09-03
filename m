@@ -2,126 +2,104 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED06C2BD0F
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB0AC2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5160B20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24B920678
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:51:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BFnnjKPk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZyZZKeIp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729430AbgICVus (ORCPT
+        id S1729438AbgICVvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 17:50:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36804 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726397AbgICVur (ORCPT
+        Thu, 3 Sep 2020 17:51:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729088AbgICVvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 17:50:47 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 083LWoJv082071;
-        Thu, 3 Sep 2020 17:50:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
- cc : subject : in-reply-to : date : message-id : mime-version :
- content-type; s=pp1; bh=cjkaZttb2w3H/rGwt9YR9Ok/v2RDmTY8uBKhTtcgvf8=;
- b=BFnnjKPkWcf0MwUvuY69O4iOrHafazQ5JEnpGXXxrampiGmP8661HO4reWhgbVhi+sbN
- rHyRTctCr9yp4CRAEcoyuMTfnUu1CFo+Dh2m+PC1sB5kcsbl2Uc/CwT3Whc/H951cyBV
- BGKigKA8NMAb+GHxO3I0l7a1Io38vi3FwXVOIdqX7kWVMgDMRBDZziUn6e3WLL6EExkq
- PSzEIdl+7ip10LMwWQGaRfLQ3J/N28msekZnJ63LzPx1063J91+HpKf74AbJPCRzo8Ds
- 6z+FPdc7SW7Pk2FvQKAbNAL2MnRX2YZ1rrEnoTG7Jk/OO+LdOPce/rZoUOEwH79Pd/zl +Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33b7cft33c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 17:50:16 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 083LZR35086960;
-        Thu, 3 Sep 2020 17:50:15 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33b7cft32n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 17:50:14 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 083Llwvc002343;
-        Thu, 3 Sep 2020 21:50:13 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma04dal.us.ibm.com with ESMTP id 339tmvdfft-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 21:50:13 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 083LoCDm38142216
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Sep 2020 21:50:12 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28C5FC6055;
-        Thu,  3 Sep 2020 21:50:12 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 48AD6C6057;
-        Thu,  3 Sep 2020 21:50:05 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.211.155.22])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu,  3 Sep 2020 21:50:04 +0000 (GMT)
-References: <20200901195029.30039-1-nramas@linux.microsoft.com>
- <20200901195029.30039-3-nramas@linux.microsoft.com>
-User-agent: mu4e 1.4.10; emacs 27.1
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
-        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [PATCH v5 2/3] arm64: Store IMA log information in kimage used
- for kexec
-In-reply-to: <20200901195029.30039-3-nramas@linux.microsoft.com>
-Date:   Thu, 03 Sep 2020 18:50:02 -0300
-Message-ID: <87v9guy1h1.fsf@morokweng.localdomain>
+        Thu, 3 Sep 2020 17:51:13 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04DF0C061246
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 14:51:13 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mm21so2200399pjb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 14:51:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qXpu71ctdlh3mEQbznjWlLLlQUw5P2bBw2F3vq4Wzjo=;
+        b=ZyZZKeIpcpI80+hejxzxlgql178wdYHMLgxxEcNsZP5DgNheiVVnTG3N+eHQ6nQdTA
+         Niu4Mm24mQzd8zXiPCHvu1WgPl9pvcZLM7dK+CVMgSnMSoSLzj6aaeKFz4fN5yjD378D
+         otR7uM4FcmoQ6MxJYzFRJSwnOdQ8bNb3OFeq4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qXpu71ctdlh3mEQbznjWlLLlQUw5P2bBw2F3vq4Wzjo=;
+        b=SK+Sa33XSbKj5AWAtaLy5AqXcWQsKTFy/NEsgoVRCOhjQMgD1Tcw0xBhaz/UMCYESB
+         OlwQMU64tMnbZXl5aMCCVjpJCnVAH+eKc5eIrdlYs9dlBzfN7b8WlMCAbPF2BlS0M+WO
+         vmhSUMj0UJ2syTtarlEMVNkcoZyifSDMwCcWCsCEOWs8J5AdvGUY9wxv2FQXfmuX0ZaW
+         6RpQ1DI18VD93W8k8o67qWa+A2Q/6DJz6fXNPXfk7DO7y3D8F7//7ey7kgX3XCs8auS3
+         qIOOCnrBmor9pZpIlmts3XgXlmz7n3HAn80pc+BKAyez3kLBgJaiCd7XXVopxFc/B5s0
+         R82A==
+X-Gm-Message-State: AOAM532sXzkuWMLoJ9r2BFT2sJ6knJaZGT7oPHCEr/wBo5ITcj2bKV3m
+        MOA4d00xv29sBTxgHc2S8Eop5A==
+X-Google-Smtp-Source: ABdhPJykQhA773Y/RsqqBh6IkXbjxUAGr+2WNPNkmamwrqnCASrzuPNLdRBsNJk4iZWq6CDQhSD6fA==
+X-Received: by 2002:a17:90a:950a:: with SMTP id t10mr5013648pjo.107.1599169872611;
+        Thu, 03 Sep 2020 14:51:12 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h15sm3019108pfo.23.2020.09.03.14.51.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 14:51:11 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 14:51:10 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v2 05/28] objtool: Add a pass for generating __mcount_loc
+Message-ID: <202009031450.31C71DB@keescook>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-6-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-03_14:2020-09-03,2020-09-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- mlxscore=0 phishscore=0 suspectscore=0 mlxlogscore=781 impostorscore=0
- lowpriorityscore=0 malwarescore=0 spamscore=0 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009030189
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903203053.3411268-6-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 03, 2020 at 01:30:30PM -0700, Sami Tolvanen wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
+> 
+> Add the --mcount option for generating __mcount_loc sections
+> needed for dynamic ftrace. Using this pass requires the kernel to
+> be compiled with -mfentry and CC_USING_NOP_MCOUNT to be defined
+> in Makefile.
+> 
+> Link: https://lore.kernel.org/lkml/20200625200235.GQ4781@hirez.programming.kicks-ass.net/
+> Signed-off-by: Peter Zijlstra <peterz@infradead.org>
 
-Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
+Hmm, I'm not sure why this hasn't gotten picked up yet. Is this expected
+to go through -tip or something else?
 
-> Address and size of the buffer containing the IMA measurement log need
-> to be passed from the current kernel to the next kernel on kexec.
->
-> Add address and size fields to "struct kimage_arch" for ARM64 platform
-> to hold the address and size of the IMA measurement log buffer.
-> Define an architecture specific function for ARM64 namely
-> arch_ima_add_kexec_buffer() that will set the address and size of
-> the current kernel's IMA buffer to be passed to the next kernel on kexec.
->
-> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> Reported-by: kernel test robot <lkp@intel.com> warning: no previous prototype for 'arch_ima_add_kexec_buffer' [-Wmissing-prototypes]
-
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Kees Cook
