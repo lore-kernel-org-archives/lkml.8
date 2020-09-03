@@ -2,54 +2,248 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31503C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE768C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1350520716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 948C220716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:14:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OR++Qwo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbgICPNj (ORCPT
+        id S1729319AbgICPOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:13:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44654 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728696AbgICLnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:43:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id AE9B1B1A7;
-        Thu,  3 Sep 2020 11:43:20 +0000 (UTC)
-Date:   Thu, 3 Sep 2020 13:43:18 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Kristen Carlson Accardi <kristen@linux.intel.com>
-cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] objtool: support symtab_shndx during dump
-In-Reply-To: <20200812175712.9462-1-kristen@linux.intel.com>
-Message-ID: <alpine.LSU.2.21.2009031342590.6039@pobox.suse.cz>
-References: <20200812175712.9462-1-kristen@linux.intel.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 3 Sep 2020 11:14:10 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39822 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728633AbgICLnR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:43:17 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083Bh1qR127190;
+        Thu, 3 Sep 2020 06:43:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599133381;
+        bh=pQ193KVAaE0ZacOrnJLgxUbHpFmanxf9WxzyXcsxib0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=OR++Qwo8b6TVassCmr+llu5BFD8uHlf+urqqG5KlgQbDQoH9tgWEJwZCITB8o5nWT
+         zChO80J69y75JDP0SF1F5FanIXPLNmXsBUyVcZSCXV1asTV16J17ZuccHzB7tlX4oe
+         5hi04SZVSTSYpGStGceGyNnmQkAIXYburJJhXXgY=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083Bh1nF048384
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 3 Sep 2020 06:43:01 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
+ 2020 06:43:01 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 3 Sep 2020 06:43:01 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083Bh14E096734;
+        Thu, 3 Sep 2020 06:43:01 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <hkallweit1@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v3 2/3] net: phy: dp83869: support Wake on LAN
+Date:   Thu, 3 Sep 2020 06:42:58 -0500
+Message-ID: <20200903114259.14013-3-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200903114259.14013-1-dmurphy@ti.com>
+References: <20200903114259.14013-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Aug 2020, Kristen Carlson Accardi wrote:
+This adds WoL support on TI DP83869 for magic, magic secure, unicast and
+broadcast.
 
-> When getting the symbol index number, make sure to use the
-> extended symbol table information in order to support symbol
-> index's greater than 64K.
-> 
-> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/phy/dp83869.c | 128 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 128 insertions(+)
 
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+index 48a68474f89c..5045df9515a5 100644
+--- a/drivers/net/phy/dp83869.c
++++ b/drivers/net/phy/dp83869.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <linux/ethtool.h>
++#include <linux/etherdevice.h>
+ #include <linux/kernel.h>
+ #include <linux/mii.h>
+ #include <linux/module.h>
+@@ -27,6 +28,13 @@
+ #define DP83869_RGMIICTL	0x0032
+ #define DP83869_STRAP_STS1	0x006e
+ #define DP83869_RGMIIDCTL	0x0086
++#define DP83869_RXFCFG		0x0134
++#define DP83869_RXFPMD1		0x0136
++#define DP83869_RXFPMD2		0x0137
++#define DP83869_RXFPMD3		0x0138
++#define DP83869_RXFSOP1		0x0139
++#define DP83869_RXFSOP2		0x013A
++#define DP83869_RXFSOP3		0x013B
+ #define DP83869_IO_MUX_CFG	0x0170
+ #define DP83869_OP_MODE		0x01df
+ #define DP83869_FX_CTRL		0x0c00
+@@ -105,6 +113,14 @@
+ #define DP83869_OP_MODE_MII			BIT(5)
+ #define DP83869_SGMII_RGMII_BRIDGE		BIT(6)
+ 
++/* RXFCFG bits*/
++#define DP83869_WOL_MAGIC_EN		BIT(0)
++#define DP83869_WOL_PATTERN_EN		BIT(1)
++#define DP83869_WOL_BCAST_EN		BIT(2)
++#define DP83869_WOL_UCAST_EN		BIT(4)
++#define DP83869_WOL_SEC_EN		BIT(5)
++#define DP83869_WOL_ENH_MAC		BIT(7)
++
+ enum {
+ 	DP83869_PORT_MIRRORING_KEEP,
+ 	DP83869_PORT_MIRRORING_EN,
+@@ -156,6 +172,115 @@ static int dp83869_config_intr(struct phy_device *phydev)
+ 	return phy_write(phydev, MII_DP83869_MICR, micr_status);
+ }
+ 
++static int dp83869_set_wol(struct phy_device *phydev,
++			   struct ethtool_wolinfo *wol)
++{
++	struct net_device *ndev = phydev->attached_dev;
++	u16 val_rxcfg, val_micr;
++	u8 *mac;
++
++	val_rxcfg = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_RXFCFG);
++	val_micr = phy_read(phydev, MII_DP83869_MICR);
++
++	if (wol->wolopts & (WAKE_MAGIC | WAKE_MAGICSECURE | WAKE_UCAST |
++			    WAKE_BCAST)) {
++		val_rxcfg |= DP83869_WOL_ENH_MAC;
++		val_micr |= MII_DP83869_MICR_WOL_INT_EN;
++
++		if (wol->wolopts & WAKE_MAGIC) {
++			mac = (u8 *)ndev->dev_addr;
++
++			if (!is_valid_ether_addr(mac))
++				return -EINVAL;
++
++			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFPMD1,
++				      (mac[1] << 8 | mac[0]));
++			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFPMD2,
++				      (mac[3] << 8 | mac[2]));
++			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFPMD3,
++				      (mac[5] << 8 | mac[4]));
++
++			val_rxcfg |= DP83869_WOL_MAGIC_EN;
++		} else {
++			val_rxcfg &= ~DP83869_WOL_MAGIC_EN;
++		}
++
++		if (wol->wolopts & WAKE_MAGICSECURE) {
++			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFSOP1,
++				      (wol->sopass[1] << 8) | wol->sopass[0]);
++			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFSOP2,
++				      (wol->sopass[3] << 8) | wol->sopass[2]);
++			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFSOP3,
++				      (wol->sopass[5] << 8) | wol->sopass[4]);
++
++			val_rxcfg |= DP83869_WOL_SEC_EN;
++		} else {
++			val_rxcfg &= ~DP83869_WOL_SEC_EN;
++		}
++
++		if (wol->wolopts & WAKE_UCAST)
++			val_rxcfg |= DP83869_WOL_UCAST_EN;
++		else
++			val_rxcfg &= ~DP83869_WOL_UCAST_EN;
++
++		if (wol->wolopts & WAKE_BCAST)
++			val_rxcfg |= DP83869_WOL_BCAST_EN;
++		else
++			val_rxcfg &= ~DP83869_WOL_BCAST_EN;
++	} else {
++		val_rxcfg &= ~DP83869_WOL_ENH_MAC;
++		val_micr &= ~MII_DP83869_MICR_WOL_INT_EN;
++	}
++
++	phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFCFG, val_rxcfg);
++	phy_write(phydev, MII_DP83869_MICR, val_micr);
++
++	return 0;
++}
++
++static void dp83869_get_wol(struct phy_device *phydev,
++			    struct ethtool_wolinfo *wol)
++{
++	u16 value, sopass_val;
++
++	wol->supported = (WAKE_UCAST | WAKE_BCAST | WAKE_MAGIC |
++			WAKE_MAGICSECURE);
++	wol->wolopts = 0;
++
++	value = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_RXFCFG);
++
++	if (value & DP83869_WOL_UCAST_EN)
++		wol->wolopts |= WAKE_UCAST;
++
++	if (value & DP83869_WOL_BCAST_EN)
++		wol->wolopts |= WAKE_BCAST;
++
++	if (value & DP83869_WOL_MAGIC_EN)
++		wol->wolopts |= WAKE_MAGIC;
++
++	if (value & DP83869_WOL_SEC_EN) {
++		sopass_val = phy_read_mmd(phydev, DP83869_DEVADDR,
++					  DP83869_RXFSOP1);
++		wol->sopass[0] = (sopass_val & 0xff);
++		wol->sopass[1] = (sopass_val >> 8);
++
++		sopass_val = phy_read_mmd(phydev, DP83869_DEVADDR,
++					  DP83869_RXFSOP2);
++		wol->sopass[2] = (sopass_val & 0xff);
++		wol->sopass[3] = (sopass_val >> 8);
++
++		sopass_val = phy_read_mmd(phydev, DP83869_DEVADDR,
++					  DP83869_RXFSOP3);
++		wol->sopass[4] = (sopass_val & 0xff);
++		wol->sopass[5] = (sopass_val >> 8);
++
++		wol->wolopts |= WAKE_MAGICSECURE;
++	}
++
++	if (!(value & DP83869_WOL_ENH_MAC))
++		wol->wolopts = 0;
++}
++
+ static int dp83869_config_port_mirroring(struct phy_device *phydev)
+ {
+ 	struct dp83869_private *dp83869 = phydev->priv;
+@@ -531,6 +656,9 @@ static struct phy_driver dp83869_driver[] = {
+ 		.ack_interrupt	= dp83869_ack_interrupt,
+ 		.config_intr	= dp83869_config_intr,
+ 
++		.get_wol	= dp83869_get_wol,
++		.set_wol	= dp83869_set_wol,
++
+ 		.suspend	= genphy_suspend,
+ 		.resume		= genphy_resume,
+ 	},
+-- 
+2.28.0
 
-M
