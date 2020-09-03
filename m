@@ -2,112 +2,181 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D509C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D02C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6E22072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:51:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599144685;
-	bh=uxrMI+2jcG7Rhw4PCRtsAWbNUWIO2z+gwQ/cr3AcOcg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eWtTnJNGgklfffyTAY9Yf+NRNyV4l12Y+eJZICkH0Jl5sOVNBw2Qx4nz6X+sT4HU4
-	 Kp/o9qNpS02MAK2TbPP7hBIrVBagWKB4Ip11EMxthKHDxpLQbv86RfSVofuWd23DDs
-	 BoTluAONzbbkjNNM+2EJxc8C9kDrqQqZqzWhaCxI=
+	by mail.kernel.org (Postfix) with ESMTP id 366752072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:51:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OeQXI5eM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbgICOvS (ORCPT
+        id S1729376AbgICOv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:51:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729234AbgICOP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:51:27 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36560 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729236AbgICOP1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 10:15:27 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB4D6206EB;
-        Thu,  3 Sep 2020 13:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599139402;
-        bh=uxrMI+2jcG7Rhw4PCRtsAWbNUWIO2z+gwQ/cr3AcOcg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P8ytrwH16XsbRuGogX7XR0cM8l3saDTV7V6rLJqztA3BTdEm8sKCVMgP9+guQw5oh
-         oX9mOY7DAMKky8hGQ1SKM2O4XgfH9OYRZknrqyBOiFB1S6jyiBp4KzSrTKAj5L+IxY
-         Km69Z3dSrT+aWrT+Mz5zDXcBLLs6dyRRrDBlQyfs=
-Date:   Thu, 3 Sep 2020 14:22:41 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: spi-imx: correct interpretation of num-cs DT property?
-Message-ID: <20200903132241.GB4771@sirena.org.uk>
-References: <ecfa135b7b83a31bed821ec0740ab3cf1d39da15.camel@ew.tq-group.com>
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083EFDV8129237;
+        Thu, 3 Sep 2020 09:15:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599142513;
+        bh=EjJKmXElYtJ5D9C1igabu2ue27HZb83HX5r1+ADUS2c=;
+        h=From:To:CC:Subject:Date;
+        b=OeQXI5eMshK1RgUrLhMVPU54HFCSArOBmdMjenUETAtv4uUSXtHbFXpAa1N5uC1L0
+         pjiASOBrbdaYhG+E0n+73IoewXp+5lYyrTDbrfYOE9AvD++20SXysNu36AY5bqIy9X
+         ubAMQBaCpQIUDK1I4tTA1wYcYQb5RLgsYTOA3FII=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083EFDcN017298
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 3 Sep 2020 09:15:13 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
+ 2020 09:15:12 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 3 Sep 2020 09:15:13 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083EFBs2105722;
+        Thu, 3 Sep 2020 09:15:12 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <hkallweit1@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net] net: phy: dp83867: Fix various styling and space issues
+Date:   Thu, 3 Sep 2020 09:15:10 -0500
+Message-ID: <20200903141510.20212-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ADZbWkCsHQ7r3kzd"
-Content-Disposition: inline
-In-Reply-To: <ecfa135b7b83a31bed821ec0740ab3cf1d39da15.camel@ew.tq-group.com>
-X-Cookie: Murphy was an optimist.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix spacing issues reported for misaligned switch..case and extra new
+lines.
 
---ADZbWkCsHQ7r3kzd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Also updated the file header to comply with networking commet style.
 
-On Thu, Sep 03, 2020 at 11:22:20AM +0200, Matthias Schiffer wrote:
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/phy/dp83867.c | 47 ++++++++++++++++++---------------------
+ 1 file changed, 22 insertions(+), 25 deletions(-)
 
-> - If num-cs is set, use that
-> - If num-cs is unset, use the number of cs-gpios
-> - If num-cs is unset and no cs-gpios are defined, use a driver-provided=
-=20
-> default (which is 3 for spi-imx; this matches the number of native CS
-> pins in older implementations of this SPI controller; i.MX6 and newer
-> support up to 4)
+diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+index cd7032628a28..f182a8d767c6 100644
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/*
+- * Driver for the Texas Instruments DP83867 PHY
++/* Driver for the Texas Instruments DP83867 PHY
+  *
+  * Copyright (C) 2015 Texas Instruments Inc.
+  */
+@@ -35,7 +34,7 @@
+ #define DP83867_CFG4_SGMII_ANEG_MASK (BIT(5) | BIT(6))
+ #define DP83867_CFG4_SGMII_ANEG_TIMER_11MS   (3 << 5)
+ #define DP83867_CFG4_SGMII_ANEG_TIMER_800US  (2 << 5)
+-#define DP83867_CFG4_SGMII_ANEG_TIMER_2US    (1 << 5)
++#define DP83867_CFG4_SGMII_ANEG_TIMER_2US    BIT(5)
+ #define DP83867_CFG4_SGMII_ANEG_TIMER_16MS   (0 << 5)
+ 
+ #define DP83867_RGMIICTL	0x0032
+@@ -113,7 +112,6 @@
+ #define DP83867_RGMII_RX_CLK_DELAY_SHIFT	0
+ #define DP83867_RGMII_RX_CLK_DELAY_INV	(DP83867_RGMII_RX_CLK_DELAY_MAX + 1)
+ 
+-
+ /* IO_MUX_CFG bits */
+ #define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MASK	0x1f
+ #define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MAX	0x0
+@@ -384,22 +382,22 @@ static int dp83867_set_downshift(struct phy_device *phydev, u8 cnt)
+ 				      DP83867_DOWNSHIFT_EN);
+ 
+ 	switch (cnt) {
+-		case DP83867_DOWNSHIFT_1_COUNT:
+-			count = DP83867_DOWNSHIFT_1_COUNT_VAL;
+-			break;
+-		case DP83867_DOWNSHIFT_2_COUNT:
+-			count = DP83867_DOWNSHIFT_2_COUNT_VAL;
+-			break;
+-		case DP83867_DOWNSHIFT_4_COUNT:
+-			count = DP83867_DOWNSHIFT_4_COUNT_VAL;
+-			break;
+-		case DP83867_DOWNSHIFT_8_COUNT:
+-			count = DP83867_DOWNSHIFT_8_COUNT_VAL;
+-			break;
+-		default:
+-			phydev_err(phydev,
+-				   "Downshift count must be 1, 2, 4 or 8\n");
+-			return -EINVAL;
++	case DP83867_DOWNSHIFT_1_COUNT:
++		count = DP83867_DOWNSHIFT_1_COUNT_VAL;
++		break;
++	case DP83867_DOWNSHIFT_2_COUNT:
++		count = DP83867_DOWNSHIFT_2_COUNT_VAL;
++		break;
++	case DP83867_DOWNSHIFT_4_COUNT:
++		count = DP83867_DOWNSHIFT_4_COUNT_VAL;
++		break;
++	case DP83867_DOWNSHIFT_8_COUNT:
++		count = DP83867_DOWNSHIFT_8_COUNT_VAL;
++		break;
++	default:
++		phydev_err(phydev,
++			   "Downshift count must be 1, 2, 4 or 8\n");
++		return -EINVAL;
+ 	}
+ 
+ 	val = DP83867_DOWNSHIFT_EN;
+@@ -411,7 +409,7 @@ static int dp83867_set_downshift(struct phy_device *phydev, u8 cnt)
+ }
+ 
+ static int dp83867_get_tunable(struct phy_device *phydev,
+-				struct ethtool_tunable *tuna, void *data)
++			       struct ethtool_tunable *tuna, void *data)
+ {
+ 	switch (tuna->id) {
+ 	case ETHTOOL_PHY_DOWNSHIFT:
+@@ -422,7 +420,7 @@ static int dp83867_get_tunable(struct phy_device *phydev,
+ }
+ 
+ static int dp83867_set_tunable(struct phy_device *phydev,
+-				struct ethtool_tunable *tuna, const void *data)
++			       struct ethtool_tunable *tuna, const void *data)
+ {
+ 	switch (tuna->id) {
+ 	case ETHTOOL_PHY_DOWNSHIFT:
+@@ -524,11 +522,10 @@ static int dp83867_of_init(struct phy_device *phydev)
+ 		dp83867->io_impedance = -1; /* leave at default */
+ 
+ 	dp83867->rxctrl_strap_quirk = of_property_read_bool(of_node,
+-					"ti,dp83867-rxctrl-strap-quirk");
++							    "ti,dp83867-rxctrl-strap-quirk");
+ 
+ 	dp83867->sgmii_ref_clk_en = of_property_read_bool(of_node,
+-					"ti,sgmii-ref-clock-output-enable");
+-
++							  "ti,sgmii-ref-clock-output-enable");
+ 
+ 	dp83867->rx_id_delay = DP83867_RGMII_RX_CLK_DELAY_INV;
+ 	ret = of_property_read_u32(of_node, "ti,rx-internal-delay",
+-- 
+2.28.0
 
-That sounds like what's expected, though we coould just skip the first
-step.
-
-> Also, would it make sense to add num-cs to all DTS files for boards
-> that actually use fewer than 3 CS pins?
-
-No, it was never a good idea to have that property in the first place
-and there should be no case where it helps anything.
-
-> At the moment, the num-cs property is not explicitly documented for the
-> spi-imx driver, although the driver understands it. I also suggested to
-> add this to the docs, which Fabio didn't deem a good idea (I don't
-> quite understand the reasoning here - isn't num-cs generally a useful
-> property to have?)
-
-Could you explain what benefit you would expect having num-cs to offer?
-
---ADZbWkCsHQ7r3kzd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9Q7iAACgkQJNaLcl1U
-h9DI4Qf+IFmOS7dEEhxYZrT/kDf0F1Z6Kj6qTImRT4ImOPc1hhlzs6e9o2HxAj95
-SfPAinxGHrl9ClrK2J8e4XG7xxu+UNfom6FGwma3oz0nhwPJ+kJx6LaQYDdEdCYc
-mgK3XD+n87gwKoS4DdbZxpFTdAE2XR+ngKlDJUdhYmlWxKgGZuWzJfw4ehTZlqbg
-Rvgr9CY+AT6mKFDq9dZS2AxFXpD5LLqOHj4XX25MjpWS9AdSjWuWyop24WbvF2nj
-YJqrMqto0ygGJdW94+ugGz2T+82EOI6Bm17NcpYzXHcSFT7d97GCC2kQbTQmIDql
-1sAVyODUHKz5reRHSSFsIebJiRJSjQ==
-=CrVc
------END PGP SIGNATURE-----
-
---ADZbWkCsHQ7r3kzd--
