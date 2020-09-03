@@ -2,178 +2,89 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C25C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A1EC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC54A20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4415020C56
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:38:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599129510;
+	bh=LAXgYKBZSgHnpP3vkKbhWFMU0X4+abqBQN6jvUOWbqY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ii33Rd8dmsAJ+e7H5vB+hQi3hndSk9W5Kozj4U2zI1FDJKDnJSkXmweMQUaDOdfUB
+	 Q43uJ8wiLsswrfjHkoZZLAg5BRQN8Ut1fkv3Gd0kWk+k8jE6hBCFKuaUevpgfp4von
+	 spr0xF9F+zEK6N6vwrxcHPJryGbhK4H7qM4PjNTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgICKhV (ORCPT
+        id S1728150AbgICKi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 06:37:21 -0400
-Received: from mo-csw1516.securemx.jp ([210.130.202.155]:34272 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgICKhL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:37:11 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 083AanZf025005; Thu, 3 Sep 2020 19:36:50 +0900
-X-Iguazu-Qid: 34tMd2lTh3bNiiFngA
-X-Iguazu-QSIG: v=2; s=0; t=1599129409; q=34tMd2lTh3bNiiFngA; m=yfx5tZuaGPpIcb54aw33BqY59ofmVGV8uHIvgpiLVes=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1513) id 083AampL037729;
-        Thu, 3 Sep 2020 19:36:48 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id 083AamnJ018789;
-        Thu, 3 Sep 2020 19:36:48 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 083AaltQ027249;
-        Thu, 3 Sep 2020 19:36:47 +0900
-From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-To:     Ben Levinsky <ben.levinsky@xilinx.com>
-Cc:     stefanos@xilinx.com, michals@xilinx.com, michael.auchter@ni.com,
-        devicetree@vger.kernel.org, emooring@xilinx.com,
-        mathieu.poirier@linaro.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jliang@xilinx.com,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v11 3/5] firmware: xilinx: Add RPU configuration APIs
-References: <20200902165846.3366-1-ben.levinsky@xilinx.com>
-        <20200902165846.3366-4-ben.levinsky@xilinx.com>
-Date:   Thu, 03 Sep 2020 19:36:46 +0900
-In-Reply-To: <20200902165846.3366-4-ben.levinsky@xilinx.com> (Ben Levinsky's
-        message of "Wed, 2 Sep 2020 09:58:44 -0700")
-X-TSB-HOP: ON
-Message-ID: <87zh67p2o1.fsf@kokedama.swc.toshiba.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Thu, 3 Sep 2020 06:38:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbgICKiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 06:38:24 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FBDD20716;
+        Thu,  3 Sep 2020 10:38:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599129504;
+        bh=LAXgYKBZSgHnpP3vkKbhWFMU0X4+abqBQN6jvUOWbqY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ld1Q2yf2X4ppe6E/1c7dmW3CA+UkvzGxs9ys4JpwdZiYXo2bHei/hIwZyyuZvtNzA
+         NKuGMmyikL5JlRlBn0fZ7UrAPjRMCZkyEhihJyUD+GoBP1BGBrGS9RZn0lCaUA7VmV
+         YRiU01bnSfLZSu9kHl482I7piLbAX2hS/lbCXO2I=
+Date:   Thu, 3 Sep 2020 13:38:19 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Colin Ian King <colin.king@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH rdma-next 2/4] gcov: Use proper duplication routine for
+ const pointer
+Message-ID: <20200903103819.GA1137836@unreal>
+References: <20200902085513.748149-1-leon@kernel.org>
+ <20200902085513.748149-3-leon@kernel.org>
+ <eb874b37-3e3f-6819-78f7-bba3e684ae27@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb874b37-3e3f-6819-78f7-bba3e684ae27@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ben,
-
-Noticed some issues while going through the code. A couple of queries
-below.
-
-Ben Levinsky <ben.levinsky@xilinx.com> writes:
-
-> This patch adds APIs to access to configure RPU and its
-> processor-specific memory.
+On Thu, Sep 03, 2020 at 10:56:38AM +0200, Rasmus Villemoes wrote:
+> On 02/09/2020 10.55, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> >
+> > The filename is a const pointer, so use the proper string duplication
+> > routine that takes into account const identifier.
 >
-> That is query the run-time mode of RPU as either split or lockstep as well
-> as API to set this mode. In addition add APIs to access configuration of
-> the RPUs' tightly coupled memory (TCM).
+> This commit log makes no sense at all.
 >
-> Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
-> ---
-> v3:
-> - add xilinx-related platform mgmt fn's instead of wrapping around
->   function pointer in xilinx eemi ops struct
-> v4:
-> - add default values for enums
-> v9:
-> - update commit message
-> - for zynqmp_pm_set_tcm_config and zynqmp_pm_get_rpu_mode update docs for
->   expected output, arguments as well removing unused args
-> - remove unused fn zynqmp_pm_get_node_status
-> v11:
-> - update usage of zynqmp_pm_get_rpu_mode to return rpu mode in enum
-> - update zynqmp_pm_set_tcm_config and zynqmp_pm_set_rpu_mode arguments to remove unused args
-> ---
->  drivers/firmware/xilinx/zynqmp.c     | 59 ++++++++++++++++++++++++++++
->  include/linux/firmware/xlnx-zynqmp.h | 18 +++++++++
->  2 files changed, 77 insertions(+)
+> kstrdup_const is merely an optimization that can be used when there's a
+> good chance that the passed string lives in vmlinux' .rodata, in which
+> case it is known to be immortal, and we can avoid allocating heap memory
+> to contain a duplicate. [It also requires that the caller has no
+> intention of modifying the returned string.]
 >
-> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-> index a966ee956573..807e404589f8 100644
-> --- a/drivers/firmware/xilinx/zynqmp.c
-> +++ b/drivers/firmware/xilinx/zynqmp.c
-> @@ -846,6 +846,65 @@ int zynqmp_pm_release_node(const u32 node)
->  }
->  EXPORT_SYMBOL_GPL(zynqmp_pm_release_node);
->  
-> +/**
-> + * zynqmp_pm_get_rpu_mode() - Get RPU mode
-> + * @node_id:	Node ID of the device
-> + * @rpu_mode:	return by reference value
-> + *		either split or lockstep
-> + *
-> + * Return:	return 0 on success or error+reason.
-> + *		if success, then  rpu_mode will be set
-> + *		to current rpu mode.
-> + */
-> +int zynqmp_pm_get_rpu_mode(u32 node_id, enum rpu_oper_mode *rpu_mode)
-> +{
-> +	u32 ret_payload[PAYLOAD_ARG_CNT];
-> +	int ret;
-> +
-> +	ret = zynqmp_pm_invoke_fn(PM_IOCTL, node_id,
-> +				  IOCTL_GET_RPU_OPER_MODE, 0, 0, ret_payload);
-> +	if (ret < 0)
-> +		(void)rpu_mode;
+> In the case of something called ->filename, I assume it's initialized
+> with __FILE__ somewhere, making the above true for built-in stuff but
+> not for modules. So if the gcov_info can live longer than the module,
+> it's of course necessary to duplicate the string, but OTOH making an
+> optimization for the built-in stuff makes sense. So this is certainly
+> one of the places where kstrdup_const() seems applicable. But it has
+> nothing whatsoever to do with the C-level qualifiers the argument may have.
 
-There seems to be something missing from this statement. What is
-expected from "(void)rpu_mode" here.
+Thanks, GCOV can't be built as module.
 
-> +	else
-> +		*rpu_mode = ret_payload[0];
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(zynqmp_pm_get_rpu_mode);
-> +
-> +/**
-> + * zynqmp_pm_set_rpu_mode() - Set RPU mode
-> + * @node_id:	Node ID of the device
-> + * @arg1:	Argument 1 to requested IOCTL call. This is expeted to
-> + *              to be value from enum rpu_oper_mode
-> + *
-> + * This function is used to set RPU mode to split or lockstep
-> + *
-> + * Return: Returns status, either success or error+reason
-> + */
-> +int zynqmp_pm_set_rpu_mode(u32 node_id, u32 arg1)
-
-If arg1 is expected to be "enum rpu_oper_mode" please have the function
-argument reflect that and do any conversion needed inside the function.
-
-> +{
-> +	return zynqmp_pm_invoke_fn(PM_IOCTL, node_id,
-> +				   IOCTL_SET_RPU_OPER_MODE, arg1, 0, NULL);
-> +}
-> +EXPORT_SYMBOL_GPL(zynqmp_pm_set_rpu_mode);
-> +
-> +/**
-> + * zynqmp_pm_set_tcm_config - configure TCM
-> + * @arg1:	Argument 1 to requested IOCTL call
-> + *              either PM_RPU_TCM_COMB or PM_RPU_TCM_SPLIT
-> + *
-> + * This function is used to set RPU mode to split or combined
-> + *
-> + * Return: status: 0 for success, else failure
-> + */
-> +int zynqmp_pm_set_tcm_config(u32 node_id, u32 arg1)
-
-Same comment as above - with the appropriate enum ofcourse.
-
-Thanks,
-Punit
-
-> +{
-> +	return zynqmp_pm_invoke_fn(PM_IOCTL, node_id,
-> +				   IOCTL_TCM_COMB_CONFIG, arg1, 0, NULL);
-> +}
-> +EXPORT_SYMBOL_GPL(zynqmp_pm_set_tcm_config);
-> +
->  /**
->   * zynqmp_pm_force_pwrdwn - PM call to request for another PU or subsystem to
->   *             be powered down forcefully
-
-[...]
-
+>
+> Rasmus
