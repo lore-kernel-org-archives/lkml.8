@@ -2,152 +2,119 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD87C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413EEC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 562DF206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142C92087C
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:14:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yR6eSeAR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qTSjE1pP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgICLLd (ORCPT
+        id S1728430AbgICLO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:11:33 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35580 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgICLFn (ORCPT
+        Thu, 3 Sep 2020 07:14:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728372AbgICLKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:05:43 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083B5ChD117900;
-        Thu, 3 Sep 2020 06:05:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599131112;
-        bh=j7gRaGCJZUJFnrbVSfTAo0ASYxH7elhC7M4m/dECa+M=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=yR6eSeAR5AcQBTSkGgbKjy7k6v6/0wXPhYs8yPe8RWGxq3bgOdloMLuQOf104Cq0R
-         Rs3rRyaB8dxW0iR744kb0wsfQsNJ102J+ilKMMzIS6t6Bid+j3ksFgZjk4d+m7xPpA
-         aslrQ1NTCG2kWq3YMh59V+aMB1u12SCI5z4sS+E8=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083B5CIV126003
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Sep 2020 06:05:12 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
- 2020 06:05:12 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 3 Sep 2020 06:05:12 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083B5BtX011954;
-        Thu, 3 Sep 2020 06:05:11 -0500
-Subject: Re: [PATCH net-next v2 3/3] net: dp83869: Add speed optimization
- feature
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200902203444.29167-1-dmurphy@ti.com>
- <20200902203444.29167-4-dmurphy@ti.com>
- <20200902190650.52c46eb7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <e302d45f-c928-e6a3-fe40-da3bce978048@ti.com>
-Date:   Thu, 3 Sep 2020 06:05:06 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 3 Sep 2020 07:10:13 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A20C061247;
+        Thu,  3 Sep 2020 04:10:11 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id u13so1875384pgh.1;
+        Thu, 03 Sep 2020 04:10:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=J1i57IRdZhg4OVu4ihUxUTPehYMdVSv4veIZG06bWXs=;
+        b=qTSjE1pPHNfO1QDYQ9Ia409UNvEpYppa854Dj58KuStsVelX/b9ITDHVNcirMfta1V
+         w9sMOaXM3THG/sQMt4q9TzrIsptXA7M7JX/2SvizD5bBgc+Dpo7k9/KKe5vUoUNuf/Q+
+         H3tVkBVFaC0fQqdMevV/2ouY7TNxI0oL8W00lK+f9B4hlyU3u+3xD65RjDjn0PwaW/pB
+         hjyIKnX1RwhSmqmIjyNhnUR1PD4T0i9JO4PhmwAh5BNp7cVe1f4DkQLRBoAt7DvFqZRK
+         AeOKT3/aCXeYvZIonJSlQ9kA9z4TaJDcKy1mh1thc46CtXdz7ky8VrSiSPFVuMUE0Vzz
+         zkag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=J1i57IRdZhg4OVu4ihUxUTPehYMdVSv4veIZG06bWXs=;
+        b=XLMV7kxLQY61JhoSiGl264lnAdzISFNAlgUL1p8+1mdwQvQtiSpGh5M6HivYA5KUo3
+         ilTwOR+KWV8Un2ZmIkE96rXpUtKQVJhpfJmo1WcpuT1M5eOI/tIvGhLZv+P3WtOnm9Tq
+         yfIDWHo6cG8T7FKzklEwP9H5almE+7z5kfAQrey+QccuuAb0X/4ROpvMCz1m04cYuGom
+         bImZ0iJ5LbTJ6xONTIJaaqLo5EDTgGnjd19jOOXfmsWIHteKdjU/GkNzqLq6xSA/cyMk
+         aatHQR4lmykh/UsoGN+r8+k3rJNr9Vidnds07KRVuj4Awq/xDsxc6hZkbYHw7FMoY3Vv
+         QxLQ==
+X-Gm-Message-State: AOAM532lpI++sdnFLnUHDvC849l8iWlVWoQlq3xdRPFjCFkwBBG2cTox
+        GvKnPqpdQyxXTKrlMyDTF+OTxFbwkdSQB9TVurA=
+X-Google-Smtp-Source: ABdhPJyCwXKGVjz91KGqfY0UKqnCfamjPLQ+Z7zKhx0zAlE0rMJ8Yq95QIAr45mRcsOTIo66t9x+0vzxg/lDu+ElLS8=
+X-Received: by 2002:a17:902:b289:: with SMTP id u9mr3407159plr.226.1599131410681;
+ Thu, 03 Sep 2020 04:10:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200902190650.52c46eb7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200903005300.7894-1-digetx@gmail.com> <20200903005300.7894-5-digetx@gmail.com>
+In-Reply-To: <20200903005300.7894-5-digetx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 3 Sep 2020 14:09:53 +0300
+Message-ID: <CAHp75Vf9P9L1uM+he63D5H+-V3Zwv3jRiKTrXmtB4Sxuk9SC9A@mail.gmail.com>
+Subject: Re: [PATCH v3 04/22] i2c: tegra: Don't ignore tegra_i2c_flush_fifos() error
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jakub
+On Thu, Sep 3, 2020 at 3:53 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> The tegra_i2c_flush_fifos() may fail and transfer should be aborted in
+> this case.
 
-On 9/2/20 9:06 PM, Jakub Kicinski wrote:
-> On Wed, 2 Sep 2020 15:34:44 -0500 Dan Murphy wrote:
->> Set the speed optimization bit on the DP83869 PHY.
->>
->> Speed optimization, also known as link downshift, enables fallback to 100M
->> operation after multiple consecutive failed attempts at Gigabit link
->> establishment. Such a case could occur if cabling with only four wires
->> (two twisted pairs) were connected instead of the standard cabling with
->> eight wires (four twisted pairs).
->>
->> The number of failed link attempts before falling back to 100M operation is
->> configurable. By default, four failed link attempts are required before
->> falling back to 100M.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> there seems to be lots of checkpatch warnings here:
->
-> ERROR: switch and case should be at the same indent
-> #111: FILE: drivers/net/phy/dp83869.c:342:
-> +	switch (cnt) {
-> +		case DP83869_DOWNSHIFT_1_COUNT:
-> [...]
-> +		case DP83869_DOWNSHIFT_2_COUNT:
-> [...]
-> +		case DP83869_DOWNSHIFT_4_COUNT:
-> [...]
-> +		case DP83869_DOWNSHIFT_8_COUNT:
-> [...]
-> +		default:
->
-> CHECK: Alignment should match open parenthesis
-> #139: FILE: drivers/net/phy/dp83869.c:370:
-> +static int dp83869_get_tunable(struct phy_device *phydev,
-> +				struct ethtool_tunable *tuna, void *data)
->
-> CHECK: Alignment should match open parenthesis
-> #150: FILE: drivers/net/phy/dp83869.c:381:
-> +static int dp83869_set_tunable(struct phy_device *phydev,
-> +				struct ethtool_tunable *tuna, const void *data)
->
-> WARNING: please, no spaces at the start of a line
-> #168: FILE: drivers/net/phy/dp83869.c:669:
-> +       ret = phy_modify(phydev, DP83869_CFG2, DP83869_DOWNSHIFT_EN,$
->
-> ERROR: code indent should use tabs where possible
-> #169: FILE: drivers/net/phy/dp83869.c:670:
-> +                        DP83869_DOWNSHIFT_EN);$
->
-> WARNING: please, no spaces at the start of a line
-> #169: FILE: drivers/net/phy/dp83869.c:670:
-> +                        DP83869_DOWNSHIFT_EN);$
->
-> WARNING: please, no spaces at the start of a line
-> #170: FILE: drivers/net/phy/dp83869.c:671:
-> +       if (ret)$
->
-> WARNING: suspect code indent for conditional statements (7, 15)
-> #170: FILE: drivers/net/phy/dp83869.c:671:
-> +       if (ret)
-> +               return ret;
->
-> ERROR: code indent should use tabs where possible
-> #171: FILE: drivers/net/phy/dp83869.c:672:
-> +               return ret;$
->
-> WARNING: please, no spaces at the start of a line
-> #171: FILE: drivers/net/phy/dp83869.c:672:
-> +               return ret;$
->
-> total: 3 errors, 5 warnings, 2 checks, 152 lines checked
+Sounds like a fix. To add to previous comment, fixes that are likely
+to be backported should have Fixes: tags.
 
-I will fix these.
+> Reviewed-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegr=
+a.c
+> index 79e542cf3e59..b912a7153e3b 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -1189,7 +1189,9 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev =
+*i2c_dev,
+>         bool dma;
+>         u16 xfer_time =3D 100;
+>
+> -       tegra_i2c_flush_fifos(i2c_dev);
+> +       err =3D tegra_i2c_flush_fifos(i2c_dev);
+> +       if (err)
+> +               return err;
+>
+>         i2c_dev->msg_buf =3D msg->buf;
+>         i2c_dev->msg_buf_remaining =3D msg->len;
+> --
+> 2.27.0
+>
 
-Dan
 
+--=20
+With Best Regards,
+Andy Shevchenko
