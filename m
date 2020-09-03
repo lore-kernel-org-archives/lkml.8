@@ -2,123 +2,97 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCC5C2BBDB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322CCC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 342AA20758
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 02:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D78020773
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 03:01:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p/aiMNf9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgICCyB (ORCPT
+        id S1728061AbgICDBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 22:54:01 -0400
-Received: from mga09.intel.com ([134.134.136.24]:36512 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbgICCx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 22:53:58 -0400
-IronPort-SDR: XQWA3DQBk98GF3ACSAadTWXp96zAAP1DM3NGiJ+wP1rBH/UzP9MqlRCd3twdGLT0ljniCtJJJ3
- mE9qblWcfo1A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="158496325"
-X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
-   d="scan'208";a="158496325"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 19:53:58 -0700
-IronPort-SDR: kuo7JgczJbT83sHrpVfgqJG/Jqc0ewkrsV3LhjRM7Af8/qwMoGAWfgBC17ng+934Hve0sPN83A
- 64xElWOhzhng==
-X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
-   d="scan'208";a="446740813"
-Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.209.147.104]) ([10.209.147.104])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 19:53:56 -0700
-Subject: Re: [PATCH v11 6/9] x86/cet: Add PTRACE interface for CET
-To:     Jann Horn <jannh@google.com>
-Cc:     the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <20200825002645.3658-1-yu-cheng.yu@intel.com>
- <20200825002645.3658-7-yu-cheng.yu@intel.com>
- <CAG48ez21a_afHJrRQeweuHu8c+fxJ+VN1dezD18UOtZA5q-Shg@mail.gmail.com>
- <9be5356c-ec51-4541-89e5-05a1727a09a8@intel.com>
- <CAG48ez2_8BwG5xnwevniVODAM7oHWxGSY7zyg8gdKcWbzZ9YNQ@mail.gmail.com>
-From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-Message-ID: <1d00a4ed-6f2e-bafd-3540-292e31f1685b@intel.com>
-Date:   Wed, 2 Sep 2020 19:53:55 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Wed, 2 Sep 2020 23:01:22 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51072 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgICDBQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 23:01:16 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0832xvnY044048;
+        Thu, 3 Sep 2020 03:01:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=Qy2IlO9dWP4DqKOdywpLTMGCrMRM7t/UMmSCwrDpvfM=;
+ b=p/aiMNf9z+CPLH7k3QT3phFGApno6TMJzuZupkSNeugcImbei2TfRb8WliLyUFeDbJFH
+ evZWMa/UKigJEY0p6/SD74BiRjgkVT+rimfydlTVk9oAXFuPCwc4Iy6D8aSlUg1rb6ac
+ S1arNDdCyzFD91sL1tc5+7p8EuK1zMkSebC4yvTDdEiP6Izi8CAjwP2wIyeoTvq7bzTc
+ X8AlpxHhaoEe9SX/Siy9rKflVR29WUuH3sja9wLWiQKR3cFb60BPBtoI4CDjtv0VMef0
+ CTNhkGM5M5l75SB41U9CIunPKTUiIP9CohZ9nthxUYRHJUfNW9/rHv8FDdgcK56R77UD 3Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 337eer67m2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 03 Sep 2020 03:01:10 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0832tGlM175939;
+        Thu, 3 Sep 2020 03:01:09 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 3380kr1d3n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Sep 2020 03:01:09 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 083316fY031526;
+        Thu, 3 Sep 2020 03:01:07 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 02 Sep 2020 20:01:06 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     kjlu@umn.edu, Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH] scsi: pm8001: Fix memleak in pm8001_exec_internal_task_abort
+Date:   Wed,  2 Sep 2020 23:00:57 -0400
+Message-Id: <159910202091.23499.5526601082834790688.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200823091453.4782-1-dinghao.liu@zju.edu.cn>
+References: <20200823091453.4782-1-dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez2_8BwG5xnwevniVODAM7oHWxGSY7zyg8gdKcWbzZ9YNQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
+ mlxscore=0 suspectscore=1 malwarescore=0 mlxlogscore=864 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009030027
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9732 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
+ phishscore=0 impostorscore=0 mlxlogscore=883 bulkscore=0 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009030027
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/2020 5:33 PM, Jann Horn wrote:
-> On Thu, Sep 3, 2020 at 12:13 AM Yu, Yu-cheng <yu-cheng.yu@intel.com> wrote:
->> On 9/2/2020 1:03 PM, Jann Horn wrote:
->>> On Tue, Aug 25, 2020 at 2:30 AM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
->>>> Add REGSET_CET64/REGSET_CET32 to get/set CET MSRs:
->>>>
->>>>       IA32_U_CET (user-mode CET settings) and
->>>>       IA32_PL3_SSP (user-mode Shadow Stack)
->>> [...]
->>>> diff --git a/arch/x86/kernel/fpu/regset.c b/arch/x86/kernel/fpu/regset.c
->>> [...]
->>>> +int cetregs_get(struct task_struct *target, const struct user_regset *regset,
->>>> +               struct membuf to)
->>>> +{
->>>> +       struct fpu *fpu = &target->thread.fpu;
->>>> +       struct cet_user_state *cetregs;
->>>> +
->>>> +       if (!boot_cpu_has(X86_FEATURE_SHSTK))
->>>> +               return -ENODEV;
->>>> +
->>>> +       fpu__prepare_read(fpu);
->>>> +       cetregs = get_xsave_addr(&fpu->state.xsave, XFEATURE_CET_USER);
->>>> +       if (!cetregs)
->>>> +               return -EFAULT;
->>>
->>> Can this branch ever be hit without a kernel bug? If yes, I think
->>> -EFAULT is probably a weird error code to choose here. If no, this
->>> should probably use WARN_ON(). Same thing in cetregs_set().
->>>
->>
->> When a thread is not CET-enabled, its CET state does not exist.  I
->> looked at EFAULT, and it means "Bad address".  Maybe this can be ENODEV,
->> which means "No such device"?
-> 
-> Yeah, I guess ENODEV might fit reasonably well.
-> 
+On Sun, 23 Aug 2020 17:14:53 +0800, Dinghao Liu wrote:
 
-I will update it.  Thanks!
+> When pm8001_tag_alloc() fails, task should be freed just
+> like what we've done in the subsequent error paths.
+
+Applied to 5.9/scsi-fixes, thanks!
+
+[1/1] scsi: pm8001: Fix memleak in pm8001_exec_internal_task_abort
+      https://git.kernel.org/mkp/scsi/c/ea403fde7552
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
