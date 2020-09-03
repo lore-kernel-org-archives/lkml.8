@@ -2,104 +2,171 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8744C2BC0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD4AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C95F52071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:06:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="PzHnPuf9"
+	by mail.kernel.org (Postfix) with ESMTP id 97519208C7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599163603;
+	bh=BPQE+aY4Awl+whFKcdM9mAjsuebPu1tzmnWJLS/BxAw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=whEQ7CI32SepBmDl4LGP5xzt8npja9fuHswBu95pbqOu3VK9wce7BJjSqOGSMSvyr
+	 K5l+2bFAU4Kcc+c7NVtbJ410oRHBYculHBUHi/RTPIzPMS95KR4tCqaoEyz2oJUPS4
+	 kImoK4Iqc2gk0fbAFa1ra42b+BnALhyINmFqj5kE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgICUGS (ORCPT
+        id S1729278AbgICUGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:06:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729107AbgICUGL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:06:11 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F552C061247
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:06:11 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id p20so2492514qvl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:06:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=/UWKJLPAXkkx3Yx/UTxrL8j3KiLl2CtZ9wNsas0CmuE=;
-        b=PzHnPuf93hixvMb2aF+7BlDdwkzjC0etPhPvo9SQurkewLDnKyFtIWalPovaKknZb2
-         Fe4e2WB0d036omhsG/4CRB4bG/f4l2UYghYN5ixsc5KDr9GA82fMgPV0OHeekJ2X/AyJ
-         IjEEAOMglVDisZDfffRS9noELvbMTbtyDJ1yL1FpY9tnBi2lowcfU8QaXroOa3Zjz0Zy
-         F0yWB1K9BbNwDr32UJrT4UOXcA+vzBIDP8S2Z0etxhd78EffQJTO69jmA4+pLYZ/aaI+
-         mJ8SWHx38Q11qpJVljv6QaZgdiWGpA9CmRWI+VhQuYlrdpxYA6j/+9OZbzYb7SxXDpLn
-         FIRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=/UWKJLPAXkkx3Yx/UTxrL8j3KiLl2CtZ9wNsas0CmuE=;
-        b=iCaebP86qUad412ktDZ5SC2StEMRziswIGKGwdKR3eVnKuIHlHM0ughGXgkPyXiTfX
-         4RYUY0VGveP6poMbQeYgejJjhUSjrR5QhnvLtki4Nf2JnzOrhfL3phMaYQE6FHB1pPAa
-         rNF1AOP7OxC80B7OmxTd3UfYKM0azI17GTNyvtFKo0lHSjhjR0Y2mC3ByIMyJfI7kPDV
-         8IrWo3ygQ9IXxCwb/gzbsRINO4vTaIbqOh8uFs3qxlW/ZoCD9vUD0hZbJ1CT8y27h4pw
-         H0V2AKblE7D0NSy1SSKJVaKL0V2ZrSOHure7IK5X4QvjCNkFXqL5KGWJ6jNbiUajsDWS
-         lm8Q==
-X-Gm-Message-State: AOAM530bTVqrJ7jDaVli2buxFe61EB0veU70FWsVW5mrwtX8QoTu9zhX
-        0VhIfs5jDd4oKRf468aj+qo4XBlRdwo=
-X-Google-Smtp-Source: ABdhPJyK9sfS5Vkv4dj8ZJQOHZl2X6IErVJpoiHmtkGO5YHA9LFQM3sNM26AhgovDm0AE51Lnt9kXdHfOmw=
-X-Received: from haoluo.svl.corp.google.com ([2620:15c:2cd:202:f693:9fff:fef4:e444])
- (user=haoluo job=sendgmr) by 2002:a0c:edaa:: with SMTP id h10mr3625649qvr.12.1599163567913;
- Thu, 03 Sep 2020 13:06:07 -0700 (PDT)
-Date:   Thu,  3 Sep 2020 13:05:28 -0700
-Message-Id: <20200903200528.747884-1-haoluo@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH] selftests/bpf: Fix check in global_data_init.
-From:   Hao Luo <haoluo@google.com>
-To:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        "=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?=" <toke@redhat.com>,
-        KP Singh <kpsingh@chromium.org>, Hao Luo <haoluo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 3 Sep 2020 16:06:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728312AbgICUGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 16:06:41 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07C322071B;
+        Thu,  3 Sep 2020 20:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599163600;
+        bh=BPQE+aY4Awl+whFKcdM9mAjsuebPu1tzmnWJLS/BxAw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=G8YpLGTc4qtFZmhkWNC5+PSkVkMdAnAb5bUUsHWy3sco0KTU+PywAoJc3HRJ7jhnu
+         02I0TeSbbFYzR2wGM4MbBAQtzDRIVz6x/q7DGXq6sXT3ekArdiuVwM887GcP5hapm8
+         qMyXtzmTdgLiA2KA6bctk0aWx/pN6eQv02TZZouw=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id CEE813522636; Thu,  3 Sep 2020 13:06:39 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 13:06:39 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Question on task_blocks_on_rt_mutex()
+Message-ID: <20200903200639.GA8956@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200831224911.GA13114@paulmck-ThinkPad-P72>
+ <20200831232130.GA28456@paulmck-ThinkPad-P72>
+ <20200901174938.GA8158@paulmck-ThinkPad-P72>
+ <20200901235821.GA8516@paulmck-ThinkPad-P72>
+ <20200902015128.wsulcxhbo7dutcjz@linux-p48b>
+ <20200902155410.GH29330@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902155410.GH29330@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The returned value of bpf_object__open_file() should be checked with
-libbpf_get_error() rather than NULL. This fix prevents test_progs from
-crash when test_global_data.o is not present.
+On Wed, Sep 02, 2020 at 08:54:10AM -0700, Paul E. McKenney wrote:
+> On Tue, Sep 01, 2020 at 06:51:28PM -0700, Davidlohr Bueso wrote:
+> > On Tue, 01 Sep 2020, Paul E. McKenney wrote:
+> > 
+> > > And it appears that a default-niced CPU-bound SCHED_OTHER process is
+> > > not preempted by a newly awakened MAX_NICE SCHED_OTHER process.  OK,
+> > > OK, I never waited for more than 10 minutes, but on my 2.2GHz that is
+> > > close enough to a hang for most people.
+> > > 
+> > > Which means that the patch below prevents the hangs.  And maybe does
+> > > other things as well, firing rcutorture up on it to check.
+> > > 
+> > > But is this indefinite delay expected behavior?
+> > > 
+> > > This reproduces for me on current mainline as follows:
+> > > 
+> > > tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --torture lock --duration 3 --configs LOCK05
+> > > 
+> > > This hangs within a minute of boot on my setup.  Here "hangs" is defined
+> > > as stopping the per-15-second console output of:
+> > > 	Writes:  Total: 569906696 Max/Min: 81495031/63736508   Fail: 0
+> > 
+> > Ok this doesn't seem to be related to lockless wake_qs then. fyi there have
+> > been missed wakeups in the past where wake_q_add() fails the cmpxchg because
+> > the task is already pending a wakeup leading to the actual wakeup ocurring
+> > before its corresponding wake_up_q(). This is why we have wake_q_add_safe().
+> > But for rtmutexes, because there is no lock stealing only top-waiter is awoken
+> > as well as try_to_take_rt_mutex() is done under the lock->wait_lock I was not
+> > seeing an actual race here.
+> 
+> This problem is avoided if stutter_wait() does the occasional sleep.
+> I would have expected preemption to take effect, but even setting the
+> kthreads in stutter_wait() to MAX_NICE doesn't help.  The current fix
+> destroys intended instant-on nature of stutter_wait(), so the eventual
+> fix will need to use hrtimer-based sleeps or some such.
 
-Signed-off-by: Hao Luo <haoluo@google.com>
----
- tools/testing/selftests/bpf/prog_tests/global_data_init.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+And here is my current best shot at a workaround/fix/whatever.  Thoughts?
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/global_data_init.c b/tools/testing/selftests/bpf/prog_tests/global_data_init.c
-index 3bdaa5a40744..ee46b11f1f9a 100644
---- a/tools/testing/selftests/bpf/prog_tests/global_data_init.c
-+++ b/tools/testing/selftests/bpf/prog_tests/global_data_init.c
-@@ -12,7 +12,8 @@ void test_global_data_init(void)
- 	size_t sz;
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit d93a64389f4d544ded241d0ba30b2586497f5dc0
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Tue Sep 1 16:58:41 2020 -0700
+
+    torture: Periodically pause in stutter_wait()
+    
+    Running locktorture scenario LOCK05 results in hangs:
+    
+    tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --torture lock --duration 3 --configs LOCK05
+    
+    The lock_torture_writer() kthreads set themselves to MAX_NICE while
+    running SCHED_OTHER.  Other locktorture kthreads run at default niceness,
+    also SCHED_OTHER.  This results in these other locktorture kthreads
+    indefinitely preempting the lock_torture_writer() kthreads.  Note that
+    the cond_resched() in the stutter_wait() function's loop is ineffective
+    because this scenario is built with CONFIG_PREEMPT=y.
+    
+    It is not clear that such indefinite preemption is supposed to happen, but
+    in the meantime this commit prevents kthreads running in stutter_wait()
+    from being completely CPU-bound, thus allowing the other threads to get
+    some CPU in a timely fashion.  This commit also uses hrtimers to provide
+    very short sleeps to avoid degrading the sudden-on testing that stutter
+    is supposed to provide.
+    
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/kernel/torture.c b/kernel/torture.c
+index 1061492..5488ad2 100644
+--- a/kernel/torture.c
++++ b/kernel/torture.c
+@@ -602,8 +602,11 @@ static int stutter_gap;
+  */
+ bool stutter_wait(const char *title)
+ {
+-	int spt;
++	ktime_t delay;
++	unsigned i = 0;
++	int oldnice;
+ 	bool ret = false;
++	int spt;
  
- 	obj = bpf_object__open_file(file, NULL);
--	if (CHECK_FAIL(!obj))
-+	err = libbpf_get_error(obj);
-+	if (CHECK_FAIL(err))
- 		return;
- 
- 	map = bpf_object__find_map_by_name(obj, "test_glo.rodata");
--- 
-2.28.0.526.ge36021eeef-goog
-
+ 	cond_resched_tasks_rcu_qs();
+ 	spt = READ_ONCE(stutter_pause_test);
+@@ -612,8 +615,17 @@ bool stutter_wait(const char *title)
+ 		if (spt == 1) {
+ 			schedule_timeout_interruptible(1);
+ 		} else if (spt == 2) {
+-			while (READ_ONCE(stutter_pause_test))
++			oldnice = task_nice(current);
++			set_user_nice(current, MAX_NICE);
++			while (READ_ONCE(stutter_pause_test)) {
++				if (!(i++ & 0xffff)) {
++					set_current_state(TASK_INTERRUPTIBLE);
++					delay = 10 * NSEC_PER_USEC;
++					schedule_hrtimeout(&delay, HRTIMER_MODE_REL);
++				}
+ 				cond_resched();
++			}
++			set_user_nice(current, oldnice);
+ 		} else {
+ 			schedule_timeout_interruptible(round_jiffies_relative(HZ));
+ 		}
