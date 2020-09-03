@@ -2,175 +2,222 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E64FC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4045AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50887206D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1397A20658
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:59:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="fFFFaWm8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j+QW6nUz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgICO7l (ORCPT
+        id S1729235AbgICO7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60930 "EHLO
+        Thu, 3 Sep 2020 10:59:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729122AbgICOHw (ORCPT
+        with ESMTP id S1729101AbgICOHH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:07:52 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B970EC061247
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 07:00:35 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id ef16so1341192qvb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 07:00:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JZfJMp3zvHnMX4z50lv6bmh7AfNeSTMMAnF/ge8iWQ4=;
-        b=fFFFaWm86MoOYysgjFdRdEJebs//BYwO9Lze/0DkLVNck4XsEeYuVtCq9E7IFgUgxf
-         kf6Y2eUZcXf4JuXDS9L5UlKYprM2ShOtHsb7EWscI7WAFPm8SjDAmMFkbn60QfhHfXwi
-         1/YIivtfIcyjlhVS9SfytTJMGJc/z53TkmDUXvFvlsyzqn7z5+UxFf2V73xsI5OWdvUf
-         iqjppvJcTaLyGtRlhJLi6bAGvuCFoSpjJhVRRJeKimlNmEgxG4A0zJTjhypWbU5nXgjA
-         TKjG2wh5npKd3+Sp/VkHQmzBsQIppMCXbYv3eAI+VUQWKC+RzCjtLTGrUTcDelMbQIcv
-         FgOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JZfJMp3zvHnMX4z50lv6bmh7AfNeSTMMAnF/ge8iWQ4=;
-        b=K/cbTQlj+ZOLGAbTahCotvRaxebfkklsS1IdKoPhX3n/ZlQiaojA2VaPXBWvto7gOz
-         1o9Y9j+c8yZrTSRzJ51GKnrSZpocD0MP3d70hPp7wro2wPEQDqe+pZrhRL7X7fVFoWAT
-         FvIbm1ZpK6LN9vPQ1bLBjzj1pup0bBkIZmxKsU0VWi0X+07v+J8KpuyhPb8FE2TIsae3
-         4pr3KZtSeypZlN5nQ3LaCmJ2oNzfSAkVOAWpkrC/XnEoOvkSkEGQj2dnSRqmcEBAvqdv
-         kvBXAWdruUTH3zq8fWm+PlUPRrdTnQ9f756ENwl9s/PSK6hcfAx/QqCYUqi5BqjktHd+
-         Fo7w==
-X-Gm-Message-State: AOAM532JVS60kXGAS6BnEZnouiUVwxNfcZ7Bk3+H79kNGsF+hz37AUVH
-        wEHL41RLYvgIeXAOvpsP0KCRHzE2QPPI9Q==
-X-Google-Smtp-Source: ABdhPJxxigHbFeETjldLKaHP1TgreulryDFBuVc+XRnTZ2BDbcXWM2LjeXD3sEZktvaPAokzh6fRGA==
-X-Received: by 2002:ad4:51d1:: with SMTP id p17mr2953984qvq.14.1599141634366;
-        Thu, 03 Sep 2020 07:00:34 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id k6sm2104899qti.23.2020.09.03.07.00.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 07:00:33 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        mhocko@suse.com, linux-mm@kvack.org, pasha.tatashin@soleen.com,
-        osalvador@suse.de, richard.weiyang@gmail.com, david@redhat.com,
-        vbabka@suse.cz, rientjes@google.com
-Subject: [PATCH v2] mm/memory_hotplug: drain per-cpu pages again during memory offline
-Date:   Thu,  3 Sep 2020 10:00:32 -0400
-Message-Id: <20200903140032.380431-1-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 3 Sep 2020 10:07:07 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4685C0610E3;
+        Thu,  3 Sep 2020 06:54:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=HMKdcBAh3Qfsb0YqV9KE1AdBeTa9W/Y2t3RJ7FugT60=; b=j+QW6nUzroNn72HmxKzqjWDO5S
+        NWwyKermXl6fL1UShM1HWUPvHIV2VIC61NK+tJPlQRgbUknfX0vL45DhVcnFsWSUHk8HyK/8ECR1j
+        8+8hm8yUaQRdj6wv2p+8RHIZ28gNkNG1iXSl0/vv0liO/UhJx2SDdQnywRYDUxMehPBrvx+dElVDu
+        +G3fDh/zuuQs1ELn9WRIGouAYkJXP2cZI3UadK89ovYuIhezQzpPZp5Ik3CKgqCxrX0hXW08muef1
+        0tTDaI96K+tEE1jjCVH5g6SluGC4xrhyijttNv08u4guRe3iaUCPcfKe47q1uJ6mgOrT/0lKotz6o
+        4x4yk5pg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDpgU-0002gF-IL; Thu, 03 Sep 2020 13:53:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B8EFE300F7A;
+        Thu,  3 Sep 2020 15:53:47 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9ABEA2BB8B563; Thu,  3 Sep 2020 15:53:47 +0200 (CEST)
+Date:   Thu, 3 Sep 2020 15:53:47 +0200
+From:   peterz@infradead.org
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Saravana Kannan <saravanak@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        madhuparnabhowmik10@gmail.com,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [RFC][PATCH] cpu_pm: Remove RCU abuse
+Message-ID: <20200903135347.GC1362448@hirez.programming.kicks-ass.net>
+References: <20200901104206.GU1362448@hirez.programming.kicks-ass.net>
+ <CAPDyKFo0VkW-cgRSkvPQ0whpuJCo4OKcL1nmH7nz1tDEChOtVg@mail.gmail.com>
+ <CAPDyKFrv+DTF8=twZZk_tenB-sLg6H-CFn9HVDVA5S2kK2=U5Q@mail.gmail.com>
+ <20200901154417.GD20303@codeaurora.org>
+ <20200901155014.GF2674@hirez.programming.kicks-ass.net>
+ <20200901161340.GC29330@paulmck-ThinkPad-P72>
+ <20200901174216.GJ29142@worktop.programming.kicks-ass.net>
+ <CAPDyKFqPh7bg16AsitGv2QQHgwOPnWx9DiPPCMuD1EGA5TFFdg@mail.gmail.com>
+ <20200902121355.GE1362448@hirez.programming.kicks-ass.net>
+ <CAPDyKFrGj+8hOXi7sWxWNv2QP0=mx9pFKLG0JM-L5VNKUPDgeA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFrGj+8hOXi7sWxWNv2QP0=mx9pFKLG0JM-L5VNKUPDgeA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a race during page offline that can lead to infinite loop:
-a page never ends up on a buddy list and __offline_pages() keeps
-retrying infinitely or until a termination signal is received.
+On Wed, Sep 02, 2020 at 05:58:55PM +0200, Ulf Hansson wrote:
+> On Wed, 2 Sep 2020 at 14:14, <peterz@infradead.org> wrote:
+> >
+> > On Wed, Sep 02, 2020 at 09:03:37AM +0200, Ulf Hansson wrote:
+> > > Lots of cpuidle drivers are using CPU_PM notifiers (grep for
+> > > cpu_pm_enter and you will see) from their idlestates ->enter()
+> > > callbacks. And for those we are already calling
+> > > rcu_irq_enter_irqson|off() in cpu_pm_notify() when firing them.
+> >
+> > Yeah, that particular trainwreck is on my todo list already ... then
+> > again, that list is forever overflowing.
+> >
+> > I'm thinking cpu_pm_unregister_notifier() is not a common thing? The few
+> > I looked at seem to suggest 'never' is a good approximation.
+> 
+> The trend is that drivers are turning into regular modules that may
+> also need to manage "->remove()", which may mean unregistering the
+> notifier. Of course, I don't know for sure whether that becomes a
+> problem, but it seems quite limiting.
 
-Thread#1 - a new process:
+You can pin modules, once they're loaded they can never be removed
+again.
 
-load_elf_binary
- begin_new_exec
-  exec_mmap
-   mmput
-    exit_mmap
-     tlb_finish_mmu
-      tlb_flush_mmu
-       release_pages
-        free_unref_page_list
-         free_unref_page_prepare
-          set_pcppage_migratetype(page, migratetype);
-             // Set page->index migration type below  MIGRATE_PCPTYPES
+Anyway, the below should 'work', I think.
 
-Thread#2 - hot-removes memory
-__offline_pages
-  start_isolate_page_range
-    set_migratetype_isolate
-      set_pageblock_migratetype(page, MIGRATE_ISOLATE);
-        Set migration type to MIGRATE_ISOLATE-> set
-        drain_all_pages(zone);
-             // drain per-cpu page lists to buddy allocator.
-
-Thread#1 - continue
-         free_unref_page_commit
-           migratetype = get_pcppage_migratetype(page);
-              // get old migration type
-           list_add(&page->lru, &pcp->lists[migratetype]);
-              // add new page to already drained pcp list
-
-Thread#2
-Never drains pcp again, and therefore gets stuck in the loop.
-
-The fix is to try to drain per-cpu lists again after
-check_pages_isolated_cb() fails.
-
-Fixes: c52e75935f8d ("mm: remove extra drain pages on pcp list")
-
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: stable@vger.kernel.org
-Acked-by: David Rientjes <rientjes@google.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- mm/memory_hotplug.c | 14 ++++++++++++++
- mm/page_isolation.c |  8 ++++++++
- 2 files changed, 22 insertions(+)
-
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index e9d5ab5d3ca0..b11a269e2356 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1575,6 +1575,20 @@ static int __ref __offline_pages(unsigned long start_pfn,
- 		/* check again */
- 		ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
- 					    NULL, check_pages_isolated_cb);
-+		/*
-+		 * per-cpu pages are drained in start_isolate_page_range, but if
-+		 * there are still pages that are not free, make sure that we
-+		 * drain again, because when we isolated range we might
-+		 * have raced with another thread that was adding pages to pcp
-+		 * list.
-+		 *
-+		 * Forward progress should be still guaranteed because
-+		 * pages on the pcp list can only belong to MOVABLE_ZONE
-+		 * because has_unmovable_pages explicitly checks for
-+		 * PageBuddy on freed pages on other zones.
-+		 */
-+		if (ret)
-+			drain_all_pages(zone);
- 	} while (ret);
+diff --git a/kernel/cpu_pm.c b/kernel/cpu_pm.c
+index f7e1d0eccdbc..72804e0883d5 100644
+--- a/kernel/cpu_pm.c
++++ b/kernel/cpu_pm.c
+@@ -12,21 +12,18 @@
+ #include <linux/notifier.h>
+ #include <linux/spinlock.h>
+ #include <linux/syscore_ops.h>
++#include <linux/cpu.h>
++#include <linux/smp.h>
  
- 	/* Ok, all of our target is isolated.
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index 242c03121d73..63a3db10a8c0 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -170,6 +170,14 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
-  * pageblocks we may have modified and return -EBUSY to caller. This
-  * prevents two threads from simultaneously working on overlapping ranges.
-  *
-+ * Please note that there is no strong synchronization with the page allocator
-+ * either. Pages might be freed while their page blocks are marked ISOLATED.
-+ * In some cases pages might still end up on pcp lists and that would allow
-+ * for their allocation even when they are in fact isolated already. Depending
-+ * on how strong of a guarantee the caller needs drain_all_pages might be needed
-+ * (e.g. __offline_pages will need to call it after check for isolated range for
-+ * a next retry).
-+ *
-  * Return: the number of isolated pageblocks on success and -EBUSY if any part
-  * of range cannot be isolated.
+-static ATOMIC_NOTIFIER_HEAD(cpu_pm_notifier_chain);
++static RAW_NOTIFIER_HEAD(cpu_pm_notifier_chain);
++static DEFINE_SPINLOCK(cpu_pm_lock);
+ 
+ static int cpu_pm_notify(enum cpu_pm_event event)
+ {
+ 	int ret;
+ 
+-	/*
+-	 * atomic_notifier_call_chain has a RCU read critical section, which
+-	 * could be disfunctional in cpu idle. Copy RCU_NONIDLE code to let
+-	 * RCU know this.
+-	 */
+-	rcu_irq_enter_irqson();
+-	ret = atomic_notifier_call_chain(&cpu_pm_notifier_chain, event, NULL);
+-	rcu_irq_exit_irqson();
++	lockdep_assert_irqs_disabled();
++	ret = raw_notifier_call_chain(&cpu_pm_notifier_chain, event, NULL);
+ 
+ 	return notifier_to_errno(ret);
+ }
+@@ -35,9 +32,8 @@ static int cpu_pm_notify_robust(enum cpu_pm_event event_up, enum cpu_pm_event ev
+ {
+ 	int ret;
+ 
+-	rcu_irq_enter_irqson();
+-	ret = atomic_notifier_call_chain_robust(&cpu_pm_notifier_chain, event_up, event_down, NULL);
+-	rcu_irq_exit_irqson();
++	lockdep_assert_irqs_disabled();
++	ret = raw_notifier_call_chain_robust(&cpu_pm_notifier_chain, event_up, event_down, NULL);
+ 
+ 	return notifier_to_errno(ret);
+ }
+@@ -54,10 +50,28 @@ static int cpu_pm_notify_robust(enum cpu_pm_event event_up, enum cpu_pm_event ev
   */
--- 
-2.25.1
-
+ int cpu_pm_register_notifier(struct notifier_block *nb)
+ {
+-	return atomic_notifier_chain_register(&cpu_pm_notifier_chain, nb);
++	unsigned long flags;
++	int ret;
++
++	spin_lock_irqsave(&cpu_pm_lock, flags);
++	ret = raw_notifier_chain_register(&cpu_pm_notifier_chain, nb);
++	spin_unlock_irqrestore(&cpu_pm_lock, flags);
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(cpu_pm_register_notifier);
+ 
++static bool __is_idle_cpu(int cpu, void *info)
++{
++	/*
++	 * Racy as heck, however if we fail to see an idle task, it must be
++	 * after we removed our element, so all is fine.
++	 */
++	return is_idle_task(curr_task(cpu));
++}
++
++static void __nop_func(void *arg) { }
++
+ /**
+  * cpu_pm_unregister_notifier - unregister a driver with cpu_pm
+  * @nb: notifier block to be unregistered
+@@ -69,7 +83,30 @@ EXPORT_SYMBOL_GPL(cpu_pm_register_notifier);
+  */
+ int cpu_pm_unregister_notifier(struct notifier_block *nb)
+ {
+-	return atomic_notifier_chain_unregister(&cpu_pm_notifier_chain, nb);
++	unsigned long flags;
++	int ret, cpu;
++
++	spin_lock_irqsave(&cpu_pm_lock, flags);
++	ret = raw_notifier_chain_unregister(&cpu_pm_notifier_chain, nb);
++	spin_unlock_irqrestore(&cpu_pm_lock, flags);
++
++	/*
++	 * Orders the removal above vs the __is_idle_cpu() test below. Matches
++	 * schedule() switching to the idle task.
++	 *
++	 * Ensures that if we miss an idle task, it must be after the removal.
++	 */
++	smp_mb();
++
++	/*
++	 * IPI all idle CPUs, this guarantees that no CPU is currently
++	 * iterating the notifier list.
++	 */
++	cpus_read_lock();
++	on_each_cpu_cond(__is_idle_cpu, __nop_func, NULL, 1);
++	cpus_read_unlock();
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(cpu_pm_unregister_notifier);
+ 
