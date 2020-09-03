@@ -7,37 +7,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B1AC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5DCC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C53FF206EF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F519206EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 01:51:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="pDAJc4nw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="HLeshW5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgICBvA (ORCPT
+        id S1727906AbgICBvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 21:51:00 -0400
-Received: from crapouillou.net ([89.234.176.41]:47324 "EHLO crapouillou.net"
+        Wed, 2 Sep 2020 21:51:08 -0400
+Received: from crapouillou.net ([89.234.176.41]:47364 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbgICBu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 21:50:58 -0400
+        id S1726177AbgICBvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 21:51:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599097856; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1599097857; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=T+uSrpaQChsNKCgzgdveBEoRYzW1erqJPJN6DAR4JzE=;
-        b=pDAJc4nwGhmam1waBxjGznXngPXUC9iG7W9NRvB0+SsXfvmWDSRjQNveuzqDbl+SWaUIAV
-        RaOJluNSDqTgmOQi1xMf0mrs3ykSZgxSzJleHcN+mmrs4ys9ePpbrJU9pEalk3ug0KwM1D
-        /qoj2FDbo0+JM+mz1T9sqmvc9syPkUw=
+         in-reply-to:in-reply-to:references:references;
+        bh=HbIYW/E4nZUqqBJuMSP1Qgg/wX6VkvJuMRuNgmZ+1yQ=;
+        b=HLeshW5h1oxxTmCxz7YLZctvdZemiAFApmsyw0nKl6Z2EXCVZqJtvy3Eif3WLj405QtIma
+        WlEM8wPbBZKJWlfHSUO7bN1hcwTxWSQqYy4HfrzPX8ggCUYJAH+M93q3pkVmWfI+vdU3sJ
+        S02XO2lYPD98ef9V3WtPlQPQqVoPTdc=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     od@zcrc.me, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 1/5] clk: ingenic: Use to_clk_info() macro for all clocks
-Date:   Thu,  3 Sep 2020 03:50:44 +0200
-Message-Id: <20200903015048.3091523-1-paul@crapouillou.net>
+Subject: [PATCH 2/5] clk: ingenic: Use readl_poll_timeout instead of custom loop
+Date:   Thu,  3 Sep 2020 03:50:45 +0200
+Message-Id: <20200903015048.3091523-2-paul@crapouillou.net>
+In-Reply-To: <20200903015048.3091523-1-paul@crapouillou.net>
+References: <20200903015048.3091523-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,190 +48,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The to_clk_info() previously had a BUG_ON() to check that it was only
-called for PLL clocks. Yet, all the other clocks were doing the exact
-same thing the macro does, in-line.
-
-Move the to_clk_info() macro to the top of the file, remove the
-hardcoded BUG_ON(), and use it everywhere it makes sense.
+Use the readl_poll_timeout() function instead of rolling our own
+busy-wait loops. This makes the code simpler.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/clk/ingenic/cgu.c | 54 +++++++++++----------------------------
- 1 file changed, 15 insertions(+), 39 deletions(-)
+ drivers/clk/ingenic/cgu.c | 55 +++++++++++++++++++++------------------
+ 1 file changed, 29 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
-index d7981b670221..12b14286734c 100644
+index 12b14286734c..6bb5dedf0252 100644
 --- a/drivers/clk/ingenic/cgu.c
 +++ b/drivers/clk/ingenic/cgu.c
-@@ -21,6 +21,12 @@
+@@ -12,11 +12,14 @@
+ #include <linux/clkdev.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
++#include <linux/iopoll.h>
+ #include <linux/math64.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
++#include <linux/time.h>
++
+ #include "cgu.h"
  
  #define MHZ (1000 * 1000)
- 
-+static inline const struct ingenic_cgu_clk_info *
-+to_clk_info(struct ingenic_clk *clk)
-+{
-+	return &clk->cgu->clock_info[clk->idx];
-+}
-+
- /**
-  * ingenic_cgu_gate_get() - get the value of clock gate register bit
-  * @cgu: reference to the CGU whose registers should be read
-@@ -71,14 +77,13 @@ static unsigned long
- ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
- {
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
--	const struct ingenic_cgu_clk_info *clk_info;
- 	const struct ingenic_cgu_pll_info *pll_info;
- 	unsigned m, n, od_enc, od;
- 	bool bypass;
- 	u32 ctl;
- 
--	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 	BUG_ON(clk_info->type != CGU_CLK_PLL);
- 	pll_info = &clk_info->pll;
- 
-@@ -144,18 +149,6 @@ ingenic_pll_calc(const struct ingenic_cgu_clk_info *clk_info,
- 		n * od);
+@@ -159,6 +162,16 @@ ingenic_pll_round_rate(struct clk_hw *hw, unsigned long req_rate,
+ 	return ingenic_pll_calc(clk_info, req_rate, *prate, NULL, NULL, NULL);
  }
  
--static inline const struct ingenic_cgu_clk_info *to_clk_info(
--		struct ingenic_clk *ingenic_clk)
--{
--	struct ingenic_cgu *cgu = ingenic_clk->cgu;
--	const struct ingenic_cgu_clk_info *clk_info;
--
--	clk_info = &cgu->clock_info[ingenic_clk->idx];
--	BUG_ON(clk_info->type != CGU_CLK_PLL);
--
--	return clk_info;
--}
--
- static long
- ingenic_pll_round_rate(struct clk_hw *hw, unsigned long req_rate,
- 		       unsigned long *prate)
-@@ -290,13 +283,11 @@ static const struct clk_ops ingenic_pll_ops = {
- static u8 ingenic_clk_get_parent(struct clk_hw *hw)
- {
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
--	const struct ingenic_cgu_clk_info *clk_info;
- 	u32 reg;
- 	u8 i, hw_idx, idx = 0;
- 
--	clk_info = &cgu->clock_info[ingenic_clk->idx];
--
- 	if (clk_info->type & CGU_CLK_MUX) {
- 		reg = readl(cgu->base + clk_info->mux.reg);
- 		hw_idx = (reg >> clk_info->mux.shift) &
-@@ -318,14 +309,12 @@ static u8 ingenic_clk_get_parent(struct clk_hw *hw)
- static int ingenic_clk_set_parent(struct clk_hw *hw, u8 idx)
- {
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
--	const struct ingenic_cgu_clk_info *clk_info;
- 	unsigned long flags;
- 	u8 curr_idx, hw_idx, num_poss;
- 	u32 reg, mask;
- 
--	clk_info = &cgu->clock_info[ingenic_clk->idx];
--
- 	if (clk_info->type & CGU_CLK_MUX) {
- 		/*
- 		 * Convert the parent index to the hardware index by adding
-@@ -368,13 +357,11 @@ static unsigned long
- ingenic_clk_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
- {
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
--	const struct ingenic_cgu_clk_info *clk_info;
- 	unsigned long rate = parent_rate;
- 	u32 div_reg, div;
- 
--	clk_info = &cgu->clock_info[ingenic_clk->idx];
--
- 	if (clk_info->type & CGU_CLK_DIV) {
- 		div_reg = readl(cgu->base + clk_info->div.reg);
- 		div = (div_reg >> clk_info->div.shift) &
-@@ -443,12 +430,9 @@ ingenic_clk_round_rate(struct clk_hw *hw, unsigned long req_rate,
- 		       unsigned long *parent_rate)
- {
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
--	struct ingenic_cgu *cgu = ingenic_clk->cgu;
--	const struct ingenic_cgu_clk_info *clk_info;
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	unsigned int div = 1;
- 
--	clk_info = &cgu->clock_info[ingenic_clk->idx];
--
- 	if (clk_info->type & CGU_CLK_DIV)
- 		div = ingenic_clk_calc_div(clk_info, *parent_rate, req_rate);
- 	else if (clk_info->type & CGU_CLK_FIXDIV)
-@@ -462,16 +446,14 @@ ingenic_clk_set_rate(struct clk_hw *hw, unsigned long req_rate,
++static inline int ingenic_pll_check_stable(struct ingenic_cgu *cgu,
++					   const struct ingenic_cgu_pll_info *pll_info)
++{
++	u32 ctl;
++
++	return readl_poll_timeout(cgu->base + pll_info->reg, ctl,
++				  ctl & BIT(pll_info->stable_bit),
++				  0, 100 * USEC_PER_MSEC);
++}
++
+ static int
+ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
  		     unsigned long parent_rate)
- {
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+@@ -201,9 +214,8 @@ static int ingenic_pll_enable(struct clk_hw *hw)
  	struct ingenic_cgu *cgu = ingenic_clk->cgu;
--	const struct ingenic_cgu_clk_info *clk_info;
- 	const unsigned timeout = 100;
+ 	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
+-	const unsigned int timeout = 100;
+ 	unsigned long flags;
+-	unsigned int i;
++	int ret;
+ 	u32 ctl;
+ 
+ 	spin_lock_irqsave(&cgu->lock, flags);
+@@ -219,20 +231,10 @@ static int ingenic_pll_enable(struct clk_hw *hw)
+ 
+ 	writel(ctl, cgu->base + pll_info->reg);
+ 
+-	/* wait for the PLL to stabilise */
+-	for (i = 0; i < timeout; i++) {
+-		ctl = readl(cgu->base + pll_info->reg);
+-		if (ctl & BIT(pll_info->stable_bit))
+-			break;
+-		mdelay(1);
+-	}
+-
++	ret = ingenic_pll_check_stable(cgu, pll_info);
+ 	spin_unlock_irqrestore(&cgu->lock, flags);
+ 
+-	if (i == timeout)
+-		return -EBUSY;
+-
+-	return 0;
++	return ret;
+ }
+ 
+ static void ingenic_pll_disable(struct clk_hw *hw)
+@@ -441,6 +443,16 @@ ingenic_clk_round_rate(struct clk_hw *hw, unsigned long req_rate,
+ 	return DIV_ROUND_UP(*parent_rate, div);
+ }
+ 
++static inline int ingenic_clk_check_stable(struct ingenic_cgu *cgu,
++					   const struct ingenic_cgu_clk_info *clk_info)
++{
++	u32 reg;
++
++	return readl_poll_timeout(cgu->base + clk_info->div.reg, reg,
++				  !(reg & BIT(clk_info->div.busy_bit)),
++				  0, 100 * USEC_PER_MSEC);
++}
++
+ static int
+ ingenic_clk_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 		     unsigned long parent_rate)
+@@ -448,9 +460,8 @@ ingenic_clk_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
+ 	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+-	const unsigned timeout = 100;
  	unsigned long rate, flags;
- 	unsigned int hw_div, div, i;
+-	unsigned int hw_div, div, i;
++	unsigned int hw_div, div;
  	u32 reg, mask;
  	int ret = 0;
  
--	clk_info = &cgu->clock_info[ingenic_clk->idx];
--
- 	if (clk_info->type & CGU_CLK_DIV) {
- 		div = ingenic_clk_calc_div(clk_info, parent_rate, req_rate);
- 		rate = DIV_ROUND_UP(parent_rate, div);
-@@ -525,12 +507,10 @@ ingenic_clk_set_rate(struct clk_hw *hw, unsigned long req_rate,
- static int ingenic_clk_enable(struct clk_hw *hw)
- {
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
--	const struct ingenic_cgu_clk_info *clk_info;
- 	unsigned long flags;
+@@ -486,16 +497,8 @@ ingenic_clk_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 		writel(reg, cgu->base + clk_info->div.reg);
  
--	clk_info = &cgu->clock_info[ingenic_clk->idx];
--
- 	if (clk_info->type & CGU_CLK_GATE) {
- 		/* ungate the clock */
- 		spin_lock_irqsave(&cgu->lock, flags);
-@@ -547,12 +527,10 @@ static int ingenic_clk_enable(struct clk_hw *hw)
- static void ingenic_clk_disable(struct clk_hw *hw)
- {
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
--	const struct ingenic_cgu_clk_info *clk_info;
- 	unsigned long flags;
+ 		/* wait for the change to take effect */
+-		if (clk_info->div.busy_bit != -1) {
+-			for (i = 0; i < timeout; i++) {
+-				reg = readl(cgu->base + clk_info->div.reg);
+-				if (!(reg & BIT(clk_info->div.busy_bit)))
+-					break;
+-				mdelay(1);
+-			}
+-			if (i == timeout)
+-				ret = -EBUSY;
+-		}
++		if (clk_info->div.busy_bit != -1)
++			ret = ingenic_clk_check_stable(cgu, clk_info);
  
--	clk_info = &cgu->clock_info[ingenic_clk->idx];
--
- 	if (clk_info->type & CGU_CLK_GATE) {
- 		/* gate the clock */
- 		spin_lock_irqsave(&cgu->lock, flags);
-@@ -564,12 +542,10 @@ static void ingenic_clk_disable(struct clk_hw *hw)
- static int ingenic_clk_is_enabled(struct clk_hw *hw)
- {
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
-+	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
--	const struct ingenic_cgu_clk_info *clk_info;
- 	int enabled = 1;
- 
--	clk_info = &cgu->clock_info[ingenic_clk->idx];
--
- 	if (clk_info->type & CGU_CLK_GATE)
- 		enabled = !ingenic_cgu_gate_get(cgu, &clk_info->gate);
- 
+ 		spin_unlock_irqrestore(&cgu->lock, flags);
+ 		return ret;
 -- 
 2.28.0
 
