@@ -2,198 +2,118 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA68AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F48C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9146420684
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F14920684
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:39:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="BNgE/Ex9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZaU4FVQI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgICUjw (ORCPT
+        id S1729568AbgICUjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:39:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35520 "EHLO
+        Thu, 3 Sep 2020 16:39:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729393AbgICUbJ (ORCPT
+        with ESMTP id S1729686AbgICUjP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:31:09 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA1EC061237
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:31:01 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id u128so3992450ybg.17
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:31:01 -0700 (PDT)
+        Thu, 3 Sep 2020 16:39:15 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1CBEC061246
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:39:14 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id h11so4331960ilj.11
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:39:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=Zc5fOwGj6FL/BwQcVTQqN8jM5Y1jCC9q7imUTY2UKoE=;
-        b=BNgE/Ex9wBp4RTaOYT8mdtmEp7DyxnUyA64Gm9ruatFkrcdqc2eXDv2SBkpzV/SseI
-         Ki3DuyZGJhALAJwszdk0ZBZ1pQ8vmCyKnoTFNknw5SoXwls+Es/Yr+2jbtbvBVnoGnj8
-         wb51PO0riE7ubBDGPD3WVLD53IIwK8xSSBTHkIL/vRbXOKemRUASuxtn86yFiw7uwgyu
-         VdRwxCfj2fp7s1clcD1U+wOiTo5zcL2Qy4YStNGcFrXmpSLzJE/QCYFNgoi8suDp+DYi
-         IqApOtPKmt3CggpahQVRrrVTxOaPmT0JNkLKvsP/fv2bcPHB6DRWdPx80LxodGa3iCNs
-         flmA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tydz84oeqirnpuLu3bbRByfKWhDqGhIFntBJvkUrXd8=;
+        b=ZaU4FVQIZtMoJYgeUnVah1sxMUXe4vfXTOApozs8v6qNaLeEML6U2zwXK4RI8j3L8R
+         gdk49UHCtCkTT7Qj7uWEEVLmTeC7BKMTFS0FisXaRhAcDqj37QcTT3AG2uDlFQsretSm
+         jx3/IQsY08B6aRhkWnaPGh2zA1VHmrLvhm6eM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Zc5fOwGj6FL/BwQcVTQqN8jM5Y1jCC9q7imUTY2UKoE=;
-        b=RrogaY4OCcZHzeU+EP7E1VK9P5ByANyDI08cQ+rm3HId8N9/YgPdqnRsw16bcH/X1t
-         lgcKrUesEJIt+0yhkySBku2VLaRk376HUrvoH3niJDWaSVHEIFjuOlbRGtgG8NeOWM/D
-         dXRhNBsy+3eLxRnT2jGzjlCgzHYf3BjQ96mv6yeZrm7sF5aLuuDyT2aZ3PsOvHpUhd06
-         FvLEqm7pZV9zlPcjJA+oguDyRLOKJ/Pq8jqJbA0QPXSCD6sbQ1R4jUip5pgv3KQAyucq
-         xTCiZTH+F76LI+YSJ2Eyr4nrY7NjyZRLyL2TKsAl4dfqZe1b7fXeQvt/KO96zlPzyZ5j
-         uOcw==
-X-Gm-Message-State: AOAM531agiKDZKk71jm9zdbT3oIoLU1DAC+mfRWd7cyJe4WuU5aWusFK
-        4IbfcFOBHL1Sc6BIUc+K4cFTM0VmyoRHCzIQIc8=
-X-Google-Smtp-Source: ABdhPJwOs38+ji6mAOwxoH65cFtoyaDjS9TPKHuyLwiR1Gojf0+6KETd30w6tAaklsU6u1xgAxbmUkeOrgiUoBMDkZ4=
-X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
- (user=samitolvanen job=sendgmr) by 2002:a5b:30b:: with SMTP id
- j11mr5537716ybp.483.1599165060985; Thu, 03 Sep 2020 13:31:00 -0700 (PDT)
-Date:   Thu,  3 Sep 2020 13:30:28 -0700
-In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
-Message-Id: <20200903203053.3411268-4-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com> <20200903203053.3411268-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH v2 03/28] lib/string.c: implement stpcpy
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tydz84oeqirnpuLu3bbRByfKWhDqGhIFntBJvkUrXd8=;
+        b=dNfmxbhGFe/Vl7B0pvtFKy8sEfNq3vAbPI/LeLl4gdR6w7uVk2N7Ez2XAKK79lywGd
+         rHliTUiBy23cJoYtYlQS/8zwNmAgefZSHriA0eH8ARSIGk/zTi1pX51eQ9sMlUdKPr2O
+         BCRWrn55TenFoElUMSEBrr7AjzCbZzp9YuAilV/iBeqsJ0Bg5n0PjMvsgsyIT+M7IXVs
+         BJcOIlNLk7y0B6B0dqcPg1D8ygBLMYv1IPUYnKQjia2Ac63S7+qg8drYL/DNFod3ymdy
+         w+NPRNTgBmxECT9GO6PPzcL4e3GeMl0vmAn//VVEUZf+fJcjIqgdoxJTZkS5wwMnwvZj
+         193g==
+X-Gm-Message-State: AOAM533gWp6N21N688wEzURNM0D+K3EIS6XN4nibsHRLr/fj+NjuuFLg
+        xJR9T5+we1rv/p1DZbFitn53JJalinXjuCU4NTVqSw==
+X-Google-Smtp-Source: ABdhPJwBvaiqqfUAkNG6JlVarMP8g2QAyipuCkVid/rgJbNcm8n/aSIMAlmfjCs1sxttE5hXJYAbbpIvA3jaGYNftIo=
+X-Received: by 2002:a92:b74c:: with SMTP id c12mr5047627ilm.237.1599165554066;
+ Thu, 03 Sep 2020 13:39:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200903141746.996974-1-enric.balletbo@collabora.com> <CABXOdTeHZ52HzghkS85rRs92gG-mPe6JEfUx9uz3vMrxXYjpaQ@mail.gmail.com>
+In-Reply-To: <CABXOdTeHZ52HzghkS85rRs92gG-mPe6JEfUx9uz3vMrxXYjpaQ@mail.gmail.com>
+From:   Gwendal Grignou <gwendal@chromium.org>
+Date:   Thu, 3 Sep 2020 13:39:00 -0700
+Message-ID: <CAPUE2utgmDH6PL4ubW9G0-3V+uwovfFiKSvHf_=GacpuS2KJRg@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: Kconfig: Remove the transitional
+ MFD_CROS_EC config
+To:     Guenter Roeck <groeck@google.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
-
-LLVM implemented a recent "libcall optimization" that lowers calls to
-`sprintf(dest, "%s", str)` where the return value is used to
-`stpcpy(dest, str) - dest`. This generally avoids the machinery involved
-in parsing format strings.  `stpcpy` is just like `strcpy` except it
-returns the pointer to the new tail of `dest`.  This optimization was
-introduced into clang-12.
-
-Implement this so that we don't observe linkage failures due to missing
-symbol definitions for `stpcpy`.
-
-Similar to last year's fire drill with:
-commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
-
-The kernel is somewhere between a "freestanding" environment (no full libc)
-and "hosted" environment (many symbols from libc exist with the same
-type, function signature, and semantics).
-
-As H. Peter Anvin notes, there's not really a great way to inform the
-compiler that you're targeting a freestanding environment but would like
-to opt-in to some libcall optimizations (see pr/47280 below), rather than
-opt-out.
-
-Arvind notes, -fno-builtin-* behaves slightly differently between GCC
-and Clang, and Clang is missing many __builtin_* definitions, which I
-consider a bug in Clang and am working on fixing.
-
-Masahiro summarizes the subtle distinction between compilers justly:
-  To prevent transformation from foo() into bar(), there are two ways in
-  Clang to do that; -fno-builtin-foo, and -fno-builtin-bar.  There is
-  only one in GCC; -fno-buitin-foo.
-
-(Any difference in that behavior in Clang is likely a bug from a missing
-__builtin_* definition.)
-
-Masahiro also notes:
-  We want to disable optimization from foo() to bar(),
-  but we may still benefit from the optimization from
-  foo() into something else. If GCC implements the same transform, we
-  would run into a problem because it is not -fno-builtin-bar, but
-  -fno-builtin-foo that disables that optimization.
-
-  In this regard, -fno-builtin-foo would be more future-proof than
-  -fno-built-bar, but -fno-builtin-foo is still potentially overkill. We
-  may want to prevent calls from foo() being optimized into calls to
-  bar(), but we still may want other optimization on calls to foo().
-
-It seems that compilers today don't quite provide the fine grain control
-over which libcall optimizations pseudo-freestanding environments would
-prefer.
-
-Finally, Kees notes that this interface is unsafe, so we should not
-encourage its use.  As such, I've removed the declaration from any
-header, but it still needs to be exported to avoid linkage errors in
-modules.
-
-Reported-by: Sami Tolvanen <samitolvanen@google.com>
-Suggested-by: Andy Lavr <andy.lavr@gmail.com>
-Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
-Suggested-by: Joe Perches <joe@perches.com>
-Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: stable@vger.kernel.org
-Link: https://bugs.llvm.org/show_bug.cgi?id=47162
-Link: https://bugs.llvm.org/show_bug.cgi?id=47280
-Link: https://github.com/ClangBuiltLinux/linux/issues/1126
-Link: https://man7.org/linux/man-pages/man3/stpcpy.3.html
-Link: https://pubs.opengroup.org/onlinepubs/9699919799/functions/stpcpy.html
-Link: https://reviews.llvm.org/D85963
----
- lib/string.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/lib/string.c b/lib/string.c
-index 6012c385fb31..6bd0cf0fb009 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -272,6 +272,30 @@ ssize_t strscpy_pad(char *dest, const char *src, size_t count)
- }
- EXPORT_SYMBOL(strscpy_pad);
- 
-+/**
-+ * stpcpy - copy a string from src to dest returning a pointer to the new end
-+ *          of dest, including src's %NUL-terminator. May overrun dest.
-+ * @dest: pointer to end of string being copied into. Must be large enough
-+ *        to receive copy.
-+ * @src: pointer to the beginning of string being copied from. Must not overlap
-+ *       dest.
-+ *
-+ * stpcpy differs from strcpy in a key way: the return value is the new
-+ * %NUL-terminated character. (for strcpy, the return value is a pointer to
-+ * src. This interface is considered unsafe as it doesn't perform bounds
-+ * checking of the inputs. As such it's not recommended for usage. Instead,
-+ * its definition is provided in case the compiler lowers other libcalls to
-+ * stpcpy.
-+ */
-+char *stpcpy(char *__restrict__ dest, const char *__restrict__ src);
-+char *stpcpy(char *__restrict__ dest, const char *__restrict__ src)
-+{
-+	while ((*dest++ = *src++) != '\0')
-+		/* nothing */;
-+	return --dest;
-+}
-+EXPORT_SYMBOL(stpcpy);
-+
- #ifndef __HAVE_ARCH_STRCAT
- /**
-  * strcat - Append one %NUL-terminated string to another
--- 
-2.28.0.402.g5ffc5be6b7-goog
-
+On Thu, Sep 3, 2020 at 8:02 AM Guenter Roeck <groeck@google.com> wrote:
+>
+> On Thu, Sep 3, 2020 at 7:17 AM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
+> >
+> > The MFD_CROS_EC config was a transitional Kconfig option to not break
+> > current defconfigs in the kernel. Now, this is not required anymore
+> > because all the defconfigs have been removed this option and migrated to
+> > enable the CrOS EC parts individually.
+> >
+> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>
+> Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Tested-by: Gwendal Grignou <gwendal@chromium.org>
+>
+> > ---
+> >
+> >  drivers/platform/chrome/Kconfig | 10 ----------
+> >  1 file changed, 10 deletions(-)
+> >
+> > diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+> > index a056031dee81..ccc23d8686e8 100644
+> > --- a/drivers/platform/chrome/Kconfig
+> > +++ b/drivers/platform/chrome/Kconfig
+> > @@ -3,16 +3,6 @@
+> >  # Platform support for Chrome OS hardware (Chromebooks and Chromeboxes)
+> >  #
+> >
+> > -config MFD_CROS_EC
+> > -       tristate "Platform support for Chrome hardware (transitional)"
+> > -       select CHROME_PLATFORMS
+> > -       select CROS_EC
+> > -       select MFD_CROS_EC_DEV
+> > -       depends on X86 || ARM || ARM64 || COMPILE_TEST
+> > -       help
+> > -         This is a transitional Kconfig option and will be removed after
+> > -         everyone enables the parts individually.
+> > -
+> >  menuconfig CHROME_PLATFORMS
+> >         bool "Platform support for Chrome hardware"
+> >         depends on X86 || ARM || ARM64 || COMPILE_TEST
+> > --
+> > 2.28.0
+> >
