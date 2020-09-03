@@ -2,119 +2,107 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D47C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0807FC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7AB20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NT8UDCqL"
+	by mail.kernel.org (Postfix) with ESMTP id C2CDD20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729150AbgICPDa (ORCPT
+        id S1729501AbgICPDg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:03:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729047AbgICPCy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:02:54 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F49BC061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 08:02:54 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id i22so4330161eja.5
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 08:02:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OEZULZGUnrJd5MA6uBgxW8EAcWqrbiDc+CTyDki6MEk=;
-        b=NT8UDCqL1GZXqiJGvRF6IDS1DP0g+AYdwg+RDanVz+rq5KIg51wcdy3qDEQjr6tplJ
-         CT+RKKs2ucwpAY90xooram4d0h6xZleCf4HROeppkHL1u2cDUfGTNsa1rVP0fSAdhNSx
-         XdhJwv3iA0DlkNZBTfR59JoHeMkFecuvnus7ihbs3t2C3OpdUxWk4JN/FfpuMnOTuByB
-         TGzcEN82k2KxvFXWE9Si/I1fsq5+0uRIW5kajA3SJdO232CPeLaXXJZtqQ+5zQwIM1PU
-         HXW/zn/dK46dlU5StP8CD/TmlXL5MEOv7qRbJMxlqBfeo0HQJ6dQnRx0fIib9dLJyy0j
-         0bVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OEZULZGUnrJd5MA6uBgxW8EAcWqrbiDc+CTyDki6MEk=;
-        b=ung41FT0VBL868leBAuN/bG5zrKBL8xTL7lNb6StNRKYUA7I/GeMey8qcMlWnwRHSY
-         w4orMJ0ROf/b0A/pPPBTzmQBu17XCP1YzM0mF9EjR7fk7eXyi4jwMD34kS6cd+e5vDGS
-         qlogKll63aPFeTUb7yQ3g9zGZTI7b+wyGHiPcbiUaZOkTyPuhFRVvILVAXnnE+GIaVfZ
-         nAIULp0WCJiE0UH2YpSMjVGonkArGWAAD7EJfGjZpljMWHmBGHx6HOx1HjveKZhFiQ18
-         umT+hMLL4oAZhbRZGv9IIXbnhxVzgbgEsxWHdsALvsCfG3GPRMLRJKnZcvzLHhxxC9HP
-         VO9Q==
-X-Gm-Message-State: AOAM530R0vqcWkwj+um0duE9VYy7PidV4+EkB4uI3bBcs5Bqh4eu0caZ
-        fsK25F+/GvK8838xrbzTyVhA5bqzqVWY/2noUoyyVQ==
-X-Google-Smtp-Source: ABdhPJyPS/HR9MNGYvLkqlJ+L/rJ9ZPBwb3yDUrFpkR3P7YeKQO0QT//nQv8xIL7sNSS2YePXN0JUKxCBy5MvCzJBX4=
-X-Received: by 2002:a17:906:1e11:: with SMTP id g17mr2447258ejj.298.1599145372527;
- Thu, 03 Sep 2020 08:02:52 -0700 (PDT)
+        Thu, 3 Sep 2020 11:03:36 -0400
+Received: from mga14.intel.com ([192.55.52.115]:38263 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729035AbgICN6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 09:58:51 -0400
+IronPort-SDR: YAhaW+RyLQepdox+9fTVQYjSZtPcCQjixBgP7Klj5NzQUqinJnqDcxle2o5XqL1mmg/049l9Kh
+ aJY8kdcG+s5g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="156839375"
+X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
+   d="scan'208";a="156839375"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 06:30:00 -0700
+IronPort-SDR: Ii80nP53OMhKu3YPQanI2V3JEHYHtL7FOqbXWnBxegPkQJnHeLe8iGmOnrNuw5ZytWdFKHt8+v
+ PmIgzgzmD4iA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
+   d="scan'208";a="282676539"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Sep 2020 06:30:00 -0700
+Received: from shsmsx601.ccr.corp.intel.com (10.109.6.141) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 3 Sep 2020 06:29:59 -0700
+Received: from shsmsx601.ccr.corp.intel.com (10.109.6.141) by
+ SHSMSX601.ccr.corp.intel.com (10.109.6.141) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 3 Sep 2020 21:29:57 +0800
+Received: from shsmsx601.ccr.corp.intel.com ([10.109.6.141]) by
+ SHSMSX601.ccr.corp.intel.com ([10.109.6.141]) with mapi id 15.01.1713.004;
+ Thu, 3 Sep 2020 21:29:57 +0800
+From:   "Sang, Oliver" <oliver.sang@intel.com>
+To:     "dsterba@suse.cz" <dsterba@suse.cz>
+CC:     Goldwyn Rodrigues <rgoldwyn@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "lkp@lists.01.org" <lkp@lists.01.org>, lkp <lkp@intel.com>,
+        "ltp@lists.linux.it" <ltp@lists.linux.it>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
+Subject: RE: [btrfs] c0aaf9b7a1: ltp: stuck at diotest4
+Thread-Topic: [btrfs] c0aaf9b7a1: ltp: stuck at diotest4
+Thread-Index: AQHWgdJgTz1eQ6GVAE+fMaKAQV67JalW6OSQ
+Date:   Thu, 3 Sep 2020 13:29:57 +0000
+Message-ID: <06668b52b9ac4d4e81f945e06223d9b7@intel.com>
+References: <20200903062837.GA3654@xsang-OptiPlex-9020>
+ <20200903091123.GO28318@suse.cz>
+In-Reply-To: <20200903091123.GO28318@suse.cz>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+x-originating-ip: [10.239.127.36]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200903141746.996974-1-enric.balletbo@collabora.com>
-In-Reply-To: <20200903141746.996974-1-enric.balletbo@collabora.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Thu, 3 Sep 2020 08:02:41 -0700
-Message-ID: <CABXOdTeHZ52HzghkS85rRs92gG-mPe6JEfUx9uz3vMrxXYjpaQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: Kconfig: Remove the transitional
- MFD_CROS_EC config
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 7:17 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> The MFD_CROS_EC config was a transitional Kconfig option to not break
-> current defconfigs in the kernel. Now, this is not required anymore
-> because all the defconfigs have been removed this option and migrated to
-> enable the CrOS EC parts individually.
->
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> -----Original Message-----
+> From: David Sterba <dsterba@suse.cz>
+> Sent: Thursday, September 3, 2020 5:11 PM
+> To: Sang, Oliver <oliver.sang@intel.com>
+> Cc: Goldwyn Rodrigues <rgoldwyn@suse.com>; David Sterba
+> <dsterba@suse.com>; LKML <linux-kernel@vger.kernel.org>; lkp@lists.01.org;
+> lkp <lkp@intel.com>; ltp@lists.linux.it; linux-btrfs@vger.kernel.org
+> Subject: Re: [btrfs] c0aaf9b7a1: ltp: stuck at diotest4
+> 
+> On Thu, Sep 03, 2020 at 02:28:37PM +0800, kernel test robot wrote:
+> > Greeting,
+> >
+> > FYI, we noticed the following commit (built with gcc-9):
+> >
+> > commit: c0aaf9b7a114f6b75e0da97be7d99c102347a751 ("btrfs: switch to
+> > iomap_dio_rw() for dio")
+> > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git
+> > master
+> 
+> That's probably the O_DIRECT + O_(D)SYNC deadlock that was found recently.
+> One of the cases in diotest4 does
+> 
+> 	open(filename, O_DIRECT | O_RDWR | O_SYNC)
+> 
+> Fix is work in progress, thanks for the report.
 
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
-
-> ---
->
->  drivers/platform/chrome/Kconfig | 10 ----------
->  1 file changed, 10 deletions(-)
->
-> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-> index a056031dee81..ccc23d8686e8 100644
-> --- a/drivers/platform/chrome/Kconfig
-> +++ b/drivers/platform/chrome/Kconfig
-> @@ -3,16 +3,6 @@
->  # Platform support for Chrome OS hardware (Chromebooks and Chromeboxes)
->  #
->
-> -config MFD_CROS_EC
-> -       tristate "Platform support for Chrome hardware (transitional)"
-> -       select CHROME_PLATFORMS
-> -       select CROS_EC
-> -       select MFD_CROS_EC_DEV
-> -       depends on X86 || ARM || ARM64 || COMPILE_TEST
-> -       help
-> -         This is a transitional Kconfig option and will be removed after
-> -         everyone enables the parts individually.
-> -
->  menuconfig CHROME_PLATFORMS
->         bool "Platform support for Chrome hardware"
->         depends on X86 || ARM || ARM64 || COMPILE_TEST
-> --
-> 2.28.0
->
+Thanks a lot for information!
