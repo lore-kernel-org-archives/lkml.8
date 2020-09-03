@@ -2,156 +2,182 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFA9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296AEC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA18F20767
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:15:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OeSUI7+0"
+	by mail.kernel.org (Postfix) with ESMTP id 0CCF420767
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:15:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgICIPs (ORCPT
+        id S1728937AbgICIP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:15:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbgICIBh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:01:37 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D2ECC061245;
-        Thu,  3 Sep 2020 01:01:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=GAh0vVFEhCXA70kAe0Y+yEC9hZCV2ibXINKGKfT3XfY=; b=OeSUI7+01Hk0fPdyWoHh1ve1/8
-        T4bqVIdsMN4WlAytBfIwpWMCsadyDFmkkqkaggRNNVC8TOH61LbRnYsCwndKj955Z8iHLr6+HqlOt
-        z5fMTSuZ2YijCOtTDQUZ4kHpQEeqQZsc465afsQUcLUVpAIOPeQgoGTX9/lK5EWRPsj6om2T0NXfu
-        z8ZF+LqrI69uIHLdJo2i0GLCPONoiFD9RdmKRGcXUPCLSZYg/y3kWmbRFd4IkKWmn1MNqeK+Uk6X0
-        esb2Rqe2Zx7O43y4reLYAw9yfc8DCS3ztjnJfHGaKEWTtttNw5qITLSfuE1VI/GO/68JW8ugP2j7x
-        cISEboJg==;
-Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDkBV-0006aw-Jj; Thu, 03 Sep 2020 08:01:29 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thu, 3 Sep 2020 04:15:58 -0400
+Received: from mga11.intel.com ([192.55.52.93]:55058 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728787AbgICIPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 04:15:44 -0400
+IronPort-SDR: GpqKeUXx+aNbmjFEIOgb+NiALJ9sSxXkLG6S60atlHx+cOXZPwy6ZwQ8ADnanTo2+OVeQhRo9k
+ yQT/IIpaJPhg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="155042681"
+X-IronPort-AV: E=Sophos;i="5.76,385,1592895600"; 
+   d="scan'208";a="155042681"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 01:15:43 -0700
+IronPort-SDR: PzgkixOpBw/2MXRipbTtMdExKciOY0phgh2vceFz0ReqOW5caqWzC+8sLL+QlmNnvuyF1vzeP/
+ 7zpoXoC9MnnQ==
+X-IronPort-AV: E=Sophos;i="5.76,385,1592895600"; 
+   d="scan'208";a="405416207"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 01:15:40 -0700
+Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 6FB2F203ED;
+        Thu,  3 Sep 2020 11:15:38 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@linux.intel.com>)
+        id 1kDkPO-0001c9-Hc; Thu, 03 Sep 2020 11:15:50 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: [PATCH 06/19] block: add an optional probe callback to major_names
-Date:   Thu,  3 Sep 2020 10:01:06 +0200
-Message-Id: <20200903080119.441674-7-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200903080119.441674-1-hch@lst.de>
-References: <20200903080119.441674-1-hch@lst.de>
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        linux-media@vger.kernel.org
+Subject: [PATCH v8 1/6] i2c: Allow an ACPI driver to manage the device's power state during probe
+Date:   Thu,  3 Sep 2020 11:15:45 +0300
+Message-Id: <20200903081550.6012-2-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200903081550.6012-1-sakari.ailus@linux.intel.com>
+References: <20200903081550.6012-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a callback to the major_names array that allows a driver to override
-how to probe for dev_t that doesn't currently have a gendisk registered.
-This will help separating the lookup of the gendisk by dev_t vs probe
-action for a not currently registered dev_t.
+Enable drivers to tell ACPI that there's no need to power on a device for
+probe. Drivers should still perform this by themselves if there's a need
+to. In some cases powering on the device during probe is undesirable, and
+this change enables a driver to choose what fits best for it.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Add a field called "flags" into struct i2c_driver for driver flags, and a
+flag I2C_DRV_FL_ALLOW_LOW_POWER_PROBE to tell a driver supports probe in
+low power state.
+
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- block/genhd.c         | 21 ++++++++++++++++++---
- include/linux/genhd.h |  5 ++++-
- 2 files changed, 22 insertions(+), 4 deletions(-)
+ drivers/i2c/i2c-core-base.c | 19 ++++++++++++++++---
+ include/linux/i2c.h         | 14 ++++++++++++++
+ 2 files changed, 30 insertions(+), 3 deletions(-)
 
-diff --git a/block/genhd.c b/block/genhd.c
-index d9ecc751fc956c..3abd764443a6af 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -399,6 +399,7 @@ static struct blk_major_name {
- 	struct blk_major_name *next;
- 	int major;
- 	char name[16];
-+	void (*probe)(dev_t devt);
- } *major_names[BLKDEV_MAJOR_HASH_SIZE];
- static DEFINE_MUTEX(major_names_lock);
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 5ec082e2039d9..cfb1e777c6196 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -436,6 +436,16 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
+ 	return irq > 0 ? irq : -ENXIO;
+ }
  
-@@ -441,7 +442,8 @@ void blkdev_show(struct seq_file *seqf, off_t offset)
-  * See Documentation/admin-guide/devices.txt for the list of allocated
-  * major numbers.
-  */
--int register_blkdev(unsigned int major, const char *name)
-+int __register_blkdev(unsigned int major, const char *name,
-+		void (*probe)(dev_t devt))
++static bool allow_low_power_probe(struct device *dev)
++{
++	struct i2c_driver *driver = to_i2c_driver(dev->driver);
++
++	return driver->flags & I2C_DRV_FL_ALLOW_LOW_POWER_PROBE &&
++		!acpi_dev_get_property(ACPI_COMPANION(dev),
++				       "i2c-allow-low-power-probe",
++				       ACPI_TYPE_ANY, NULL);
++}
++
+ static int i2c_device_probe(struct device *dev)
  {
- 	struct blk_major_name **n, *p;
- 	int index, ret = 0;
-@@ -480,6 +482,7 @@ int register_blkdev(unsigned int major, const char *name)
+ 	struct i2c_client	*client = i2c_verify_client(dev);
+@@ -514,7 +524,8 @@ static int i2c_device_probe(struct device *dev)
+ 	if (status < 0)
+ 		goto err_clear_wakeup_irq;
+ 
+-	status = dev_pm_domain_attach(&client->dev, true);
++	status = dev_pm_domain_attach(&client->dev,
++				      !allow_low_power_probe(&client->dev));
+ 	if (status)
+ 		goto err_clear_wakeup_irq;
+ 
+@@ -536,7 +547,8 @@ static int i2c_device_probe(struct device *dev)
+ 	return 0;
+ 
+ err_detach_pm_domain:
+-	dev_pm_domain_detach(&client->dev, true);
++	dev_pm_domain_detach(&client->dev,
++			     !allow_low_power_probe(&client->dev));
+ err_clear_wakeup_irq:
+ 	dev_pm_clear_wake_irq(&client->dev);
+ 	device_init_wakeup(&client->dev, false);
+@@ -562,7 +574,8 @@ static int i2c_device_remove(struct device *dev)
+ 		status = driver->remove(client);
  	}
  
- 	p->major = major;
-+	p->probe = probe;
- 	strlcpy(p->name, name, sizeof(p->name));
- 	p->next = NULL;
- 	index = major_to_index(major);
-@@ -502,8 +505,7 @@ int register_blkdev(unsigned int major, const char *name)
- 	mutex_unlock(&major_names_lock);
- 	return ret;
- }
--
--EXPORT_SYMBOL(register_blkdev);
-+EXPORT_SYMBOL(__register_blkdev);
+-	dev_pm_domain_detach(&client->dev, true);
++	dev_pm_domain_detach(&client->dev,
++			     !allow_low_power_probe(&client->dev));
  
- void unregister_blkdev(unsigned int major, const char *name)
- {
-@@ -1035,6 +1037,19 @@ static ssize_t disk_badblocks_store(struct device *dev,
+ 	dev_pm_clear_wake_irq(&client->dev);
+ 	device_init_wakeup(&client->dev, false);
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index fc55ea41d3237..f8c3257a8bb25 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -11,6 +11,7 @@
+ #define _LINUX_I2C_H
  
- static void request_gendisk_module(dev_t devt)
- {
-+	unsigned int major = MAJOR(devt);
-+	struct blk_major_name **n;
+ #include <linux/acpi.h>		/* for acpi_handle */
++#include <linux/bits.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/device.h>	/* for struct device */
+ #include <linux/sched.h>	/* for completion */
+@@ -217,6 +218,16 @@ enum i2c_alert_protocol {
+ 	I2C_PROTOCOL_SMBUS_HOST_NOTIFY,
+ };
+ 
++/**
++ * enum i2c_driver_flags - Flags for an I2C device driver
++ *
++ * @I2C_DRV_FL_ALLOW_LOW_POWER_PROBE: Let the ACPI driver manage the device's
++ *				      power state during probe and remove
++ */
++enum i2c_driver_flags {
++	I2C_DRV_FL_ALLOW_LOW_POWER_PROBE = BIT(0),
++};
 +
-+	mutex_lock(&major_names_lock);
-+	for (n = &major_names[major_to_index(major)]; *n; n = &(*n)->next) {
-+		if ((*n)->major == major && (*n)->probe) {
-+			(*n)->probe(devt);
-+			mutex_unlock(&major_names_lock);
-+			return;
-+		}
-+	}
-+	mutex_unlock(&major_names_lock);
+ /**
+  * struct i2c_driver - represent an I2C device driver
+  * @class: What kind of i2c device we instantiate (for detect)
+@@ -231,6 +242,7 @@ enum i2c_alert_protocol {
+  * @detect: Callback for device detection
+  * @address_list: The I2C addresses to probe (for detect)
+  * @clients: List of detected clients we created (for i2c-core use only)
++ * @flags: A bitmask of flags defined in &enum i2c_driver_flags
+  *
+  * The driver.owner field should be set to the module owner of this driver.
+  * The driver.name field should be set to the name of this driver.
+@@ -289,6 +301,8 @@ struct i2c_driver {
+ 	int (*detect)(struct i2c_client *client, struct i2c_board_info *info);
+ 	const unsigned short *address_list;
+ 	struct list_head clients;
 +
- 	if (request_module("block-major-%d-%d", MAJOR(devt), MINOR(devt)) > 0)
- 		/* Make old-style 2.4 aliases work */
- 		request_module("block-major-%d", MAJOR(devt));
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index c618b27292fcc8..a808afe80a4fec 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -367,7 +367,10 @@ extern void blk_unregister_region(dev_t devt, unsigned long range);
++	u32 flags;
+ };
+ #define to_i2c_driver(d) container_of(d, struct i2c_driver, driver)
  
- #define alloc_disk(minors) alloc_disk_node(minors, NUMA_NO_NODE)
- 
--int register_blkdev(unsigned int major, const char *name);
-+int __register_blkdev(unsigned int major, const char *name,
-+		void (*probe)(dev_t devt));
-+#define register_blkdev(major, name) \
-+	__register_blkdev(major, name, NULL)
- void unregister_blkdev(unsigned int major, const char *name);
- 
- void revalidate_disk_size(struct gendisk *disk, bool verbose);
 -- 
-2.28.0
+2.20.1
 
