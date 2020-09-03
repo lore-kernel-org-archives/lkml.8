@@ -2,121 +2,109 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A559DC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F873C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5362071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:17:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DgUFp7W4"
+	by mail.kernel.org (Postfix) with ESMTP id 1CFBE2071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgICLQi (ORCPT
+        id S1728461AbgICLSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:16:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33640 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728409AbgICLLx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:11:53 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00F5CC061249;
-        Thu,  3 Sep 2020 04:01:26 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id h12so1836308pgm.7;
-        Thu, 03 Sep 2020 04:01:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+DEgrL1WqdyDp96QHpOBjswHW12HsyAvByI+w5af+1I=;
-        b=DgUFp7W4BHAzcm7/LgTX2Fc1BO1sq9gKqpjsC2I/9qSrQExgNfPuGBXIRSxOWXozme
-         ySmh3YYVU5QFZ+VFFuwoxF+P/k05Jt9mgxmmSzEyV3mwl8+8ylfaSmCuw0YLLeYDRI32
-         9GdussqBn8kHj8gNLSZKL132p4vck8rhSER4R+KEFSlBzNv5ARgwyKd0oB8iBIT8eq+R
-         JzEDWHPbo8ar9HvrRF1xogLTK0hfmYFd1EBtgKuRVl2WexthE/y40zYBqrdoAK2sOZKG
-         C7Hkkp9W4d4CgY8K0MX8qvn77cDs5WBmHPfkB3ukSITD+gbjDKNZTWxCY/Q0FteWNhXz
-         cOfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+DEgrL1WqdyDp96QHpOBjswHW12HsyAvByI+w5af+1I=;
-        b=QjghZg8F4JHoa/rs4KQFwLC6mTbhIyZNXbbisCZuYdmAN9WR8tQrXRLbsvxkwJCk5z
-         mWk74A9+VzTnCAYGk3HposoYmK7A2USUMJGd4BKCs1pbhxjjIJrE07K3yyVRuIpe/rRb
-         adcdq2wVqY8n89REdnnNRvO6fmxk2WQ3zhBZU2b4ZFVNOzN1b2wLU4pCMsXvRkczzMuG
-         vX4BU7QZAcI9P/vF/dUO8hhjjhGSU108BRCvfPT1Lcen9pmBZmAA218xF8+PVe8Hqx95
-         wevBQ1VmaB/CuOq7Xk+8D6u+R+Kl56Lm9Wk7RI4NmW0l3gc/rHEUDvFrEZ3RsC8VCeMG
-         yK5A==
-X-Gm-Message-State: AOAM533Mw8xpwH3l9WFD5NnPo0rI4b6ndX43M4K+wqgqbvLbcFBgUCin
-        M5YpfhumBik2e4ZRAsriGpPpZI2vCvJoZ93Zfs4=
-X-Google-Smtp-Source: ABdhPJzWB8HoVy5iFsB5Op5vyLrnbRcI/Ap8Gp+5ZFJ0NzzhtqGslGDMIN9czc9ATfqg7sEcE+oUtEC2yQtpuLRRVv8=
-X-Received: by 2002:a63:d648:: with SMTP id d8mr2507713pgj.4.1599130885521;
- Thu, 03 Sep 2020 04:01:25 -0700 (PDT)
+        Thu, 3 Sep 2020 07:18:06 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:6185 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727799AbgICLPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:15:41 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4Bhys33byhz9vCyR;
+        Thu,  3 Sep 2020 13:15:19 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id IsxfKL8rKCpI; Thu,  3 Sep 2020 13:15:19 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bhys32SNgz9vCyN;
+        Thu,  3 Sep 2020 13:15:19 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9FD558B7FA;
+        Thu,  3 Sep 2020 13:15:20 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 6OaqXtM4BBp5; Thu,  3 Sep 2020 13:15:20 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 494FF8B7B1;
+        Thu,  3 Sep 2020 13:15:20 +0200 (CEST)
+Subject: Re: watchdog start on restart
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <d2343032814705f33cd81f18f45630bf327c0ff8.camel@yadro.com>
+ <1721f170-95df-2451-e3af-6369e830afad@roeck-us.net>
+ <2b14920abf9f430731ec11c1df6c0253185c7ce7.camel@yadro.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <d6aa46c5-a1ac-c32e-5cc6-bf9a15a53b65@csgroup.eu>
+Date:   Thu, 3 Sep 2020 13:13:58 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20200831212606.1718-1-shiju.jose@huawei.com> <20200831212606.1718-3-shiju.jose@huawei.com>
- <20200901082607.GP1891694@smile.fi.intel.com> <7f5146dba8ac4ac0a258742551f204fb@huawei.com>
-In-Reply-To: <7f5146dba8ac4ac0a258742551f204fb@huawei.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 3 Sep 2020 14:01:08 +0300
-Message-ID: <CAHp75Vd3wjNHdYC_A1EVV+kzN=6SGqP2qQ0Wb6pdZWWt9qMMLw@mail.gmail.com>
-Subject: Re: [RESEND PATCH v14 2/2] PCI: hip: Add handling of HiSilicon HIP
- PCIe controller errors
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        yangyicong <yangyicong@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2b14920abf9f430731ec11c1df6c0253185c7ce7.camel@yadro.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 1:43 PM Shiju Jose <shiju.jose@huawei.com> wrote:
-> >From: Andy Shevchenko [mailto:andriy.shevchenko@linux.intel.com]
-> >Sent: 01 September 2020 09:26
-> >On Mon, Aug 31, 2020 at 10:26:06PM +0100, Shiju Jose wrote:
-> >> From: Yicong Yang <yangyicong@hisilicon.com>
 
-...
 
-> >> +config PCIE_HISI_ERR
-> >> +    depends on ACPI_APEI_GHES && (ARM64 || COMPILE_TEST)
-> >
-> >> +    depends on ACPI
-> >
-> >Isn't this implied by
-> >       drivers/acpi/Kconfig:45:if ACPI
-> >?
->
-> This can be removed as  ACPI_APEI_GHES depends on ACPI.
->
-> Do you have any other comments on this patch?
+Le 03/09/2020 à 12:23, Ivan Mikhaylov a écrit :
+> On Wed, 2020-09-02 at 06:36 -0700, Guenter Roeck wrote:
+>> On 9/2/20 6:02 AM, Ivan Mikhaylov wrote:
+>>> Hello everyone. Currently, the watchdog interface only has "stop watchdog on
+>>> restart" but lacks a "start watchdog on restart" one. Is there a way to
+>>> achieve
+>>> such functionality?
+>>>
+>>> I'd like to know why "stop watchdog on restart" wasn't implemented via ioctl
+>>> interface? It would be more convenient from user perspective and you can
+>>> control that behavior whenever you want from application layer.
+>>>
+>>
+>> Because it is and always was a driver level decision. The function was added
+>> to replace lots of driver level code implementing this functionality.
+>> Overriding it from userspace doesn't make sense because the driver is supposed
+>> to have a reason for disabling it on reboot (for example due to clock issues
+>> or power issues or becasue it has a short hardware timeout).
+> 
+> If it's only driver level decision then it makes sense.
+> 
+>> That functionality doesn't make much sense. It can be accomplished by not
+>> stopping the watchdog on reboot in the first place. And if the watchdog
+>> wasn't running before, it can be started from userspace just before the
+>> reboot.
+> 
+> I understand that it can be started from userspace. As example, I want the
+> watchdog trigger with guarantee that the userspace will be properly shut on
+> reboot, how can I get it with current interface? Just start before the reboot
+> doesn't guarantee that it will be triggered or will be triggered in middle
+> of reboot/restart.
+> 
 
-Nope. The rest is fine to me.
+I'm not sure I understand what you want to do.
 
-> >> +    bool "HiSilicon HIP PCIe controller error handling driver"
-> >> +    help
-> >> +      Say Y here if you want error handling support
-> >> +      for the PCIe controller's errors on HiSilicon HIP SoCs
+You want to start the watchdog just before calling 'reboot' but want to 
+make sure that the watchdog will not reset the board before all 
+userspace has shut down correctly ?
 
--- 
-With Best Regards,
-Andy Shevchenko
+But what is the purpose of the watchdog then, isn't it there to make 
+sure that the machine gets reboot within a given timeout anyway in case 
+some userspace takes too long to shut down ?
+
+Christophe
