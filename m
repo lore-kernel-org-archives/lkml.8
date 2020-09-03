@@ -2,277 +2,90 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F36D7C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC24EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE96220775
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD5C2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599155289;
-	bh=eBScgq3untVm1JNgzeW3AgzHBHxhui0vxRLm67RczsQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OmEhVx4kJPtLWf2+lFviB5iNHpr6ViZgCnHCqu1YsD0ixpIpV7/tg9Wvb5MXcZeKR
-	 ED5vQZUZNvAABhaSY7pBoP2davvlvWEvkKvCK3x79dyZyVa1vda8Cy7LDnYuDUDX/6
-	 6sztwnBh4wsPnd85r1yqSL5/wZYUpULFNDOFlE3w=
+	s=default; t=1599155382;
+	bh=PwReb1wR+sXRrMZqogs7x9Vmd4V3JF81RZqSgbUS1AE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eBIgFqN7nd0DGio6Nck2744Jw+gsyIbJma3ETtobldcPAJfvhrJSEeacSrNBiAJLU
+	 nlyYKCqEGwj+BCoXVaDWDkyWo6yhEr1iriWDI70Ak4EXLI4QweP//9pawYoZVjkq1g
+	 FgxAXH+FM+811LGN8k8C+Wo4hLmUlqxgqBi2B2io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgICRsI (ORCPT
+        id S1728885AbgICRtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 13:48:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58116 "EHLO mail.kernel.org"
+        Thu, 3 Sep 2020 13:49:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbgICRsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 13:48:06 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726025AbgICRti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 13:49:38 -0400
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D8E72072A;
-        Thu,  3 Sep 2020 17:48:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A80822072A;
+        Thu,  3 Sep 2020 17:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599155285;
-        bh=eBScgq3untVm1JNgzeW3AgzHBHxhui0vxRLm67RczsQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QZeNhD3cWD0pw54cMzi3SJjaOVp30KudROoznFDdw26tJcTD6a9YTdaXw3u7WzpvB
-         qeUT0bUKUJE1srhVabqLPyUAVBB5ceQheOPSYkvnmDUX9JQH6jzqKhZCOGZAlDmTJS
-         t1xeu2IlFu7PDVeK4eTDsjDAE2CqL5/tLu8pirnI=
-Date:   Thu, 3 Sep 2020 10:48:04 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Daeho Jeong <daeho43@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: change i_compr_blocks of inode to
- atomic value
-Message-ID: <20200903174804.GB3619770@google.com>
-References: <20200903030320.330507-1-daeho43@gmail.com>
+        s=default; t=1599155377;
+        bh=PwReb1wR+sXRrMZqogs7x9Vmd4V3JF81RZqSgbUS1AE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qhrzzXdXDKnCyd4Ckt/77e8sctFd5/zYPH/VxgZ1/a3GPpMD09GHyD0nzB2isro/N
+         CLCo7KfDkZiv70y2C0tz52eyPXiISAUHCs3HVDSAjhHtv9ku6kQjyGOED0vwfNgQqd
+         MwMREmEHc0mscFdXBzHIH18iNkgdgAaOuIbmvTb4=
+Received: by mail-oi1-f178.google.com with SMTP id r64so3966612oib.6;
+        Thu, 03 Sep 2020 10:49:37 -0700 (PDT)
+X-Gm-Message-State: AOAM530a7JrKhwk//yTG0z8WbINBEzgv4lqDuQBTYICY2P+cehIbc48J
+        piQ8yNgJn6SYDSONU8s6+ZcadNb65JFlisDUbg==
+X-Google-Smtp-Source: ABdhPJxcXEUSmdKY5Vsvo/Ra42Hgg8KjgnWOfsPDJWq3O7EXceTqI+C/z4ChNMurrb2zF+obJSMgWjL333ToKOp8kaE=
+X-Received: by 2002:aca:1711:: with SMTP id j17mr2842660oii.152.1599155376930;
+ Thu, 03 Sep 2020 10:49:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903030320.330507-1-daeho43@gmail.com>
+References: <20200830112633.6732-1-krzk@kernel.org> <159897179515.47719.6003518135515395142.b4-ty@kernel.org>
+ <20200903164738.GA2929052@bogus> <20200903172645.GC4771@sirena.org.uk>
+In-Reply-To: <20200903172645.GC4771@sirena.org.uk>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 3 Sep 2020 11:49:25 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL+_5Lc5vwtqnCZd6Tz9eB1m_oy2r3gtv0cbwBwKTU=dw@mail.gmail.com>
+Message-ID: <CAL_JsqL+_5Lc5vwtqnCZd6Tz9eB1m_oy2r3gtv0cbwBwKTU=dw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: sound: midas-audio: Correct parsing
+ sound-dai phandles
+To:     Mark Brown <broonie@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Sangbeom Kim <sbkim73@samsung.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/03, Daeho Jeong wrote:
-> From: Daeho Jeong <daehojeong@google.com>
-> 
-> writepages() can be concurrently invoked for the same file by different
-> threads such as a thread fsyncing the file and a kworker kernel thread.
-> So, changing i_compr_blocks without protection is racy and we need to
-> protect it by changing it with atomic type value. Plus, we don't need
-> a 64bit value for i_compr_blocks, so just we will use a atomic value,
-> not atomic64.
-> 
-> Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> ---
-> Changes in v2:
->  - Change atomic64 to atomic and remove unnecessary part
-> ---
->  fs/f2fs/f2fs.h  | 18 ++++++++----------
->  fs/f2fs/file.c  | 22 ++++++++++++----------
->  fs/f2fs/inode.c | 11 +++++++----
->  fs/f2fs/super.c |  1 +
->  4 files changed, 28 insertions(+), 24 deletions(-)
-> 
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index f60414805e05..f6b8ac10a55c 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -801,7 +801,7 @@ struct f2fs_inode_info {
->  	struct timespec64 i_disk_time[4];/* inode disk times */
->  
->  	/* for file compress */
-> -	u64 i_compr_blocks;			/* # of compressed blocks */
-> +	atomic_t i_compr_blocks;		/* # of compressed blocks */
->  	unsigned char i_compress_algorithm;	/* algorithm type */
->  	unsigned char i_log_cluster_size;	/* log of cluster size */
->  	unsigned int i_cluster_size;		/* cluster size */
-> @@ -3936,12 +3936,9 @@ static inline u64 f2fs_disable_compressed_file(struct inode *inode)
->  
->  	if (!f2fs_compressed_file(inode))
->  		return 0;
-> -	if (S_ISREG(inode->i_mode)) {
-> -		if (get_dirty_pages(inode))
-> -			return 1;
-> -		if (fi->i_compr_blocks)
-> -			return fi->i_compr_blocks;
-> -	}
-> +	if (S_ISREG(inode->i_mode) &&
-> +		(get_dirty_pages(inode) || atomic_read(&fi->i_compr_blocks)))
-> +		return 1;
+On Thu, Sep 3, 2020 at 11:27 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Thu, Sep 03, 2020 at 10:47:38AM -0600, Rob Herring wrote:
+>
+> > > [2/2] ASoC: odroid: Use unevaluatedProperties
+> > >       commit: a57307ca6b661e16f9435a25f376ac277c3de697
+>
+> > This one should be reverted/dropped too. Patch 1 is fine.
+>
+> There are others?  What's the issue with them?  It'd be easiest if you
+> could send patches doing whatever reverts you're looking for.
 
-Please keep the original flow in this patch which says swithing to atomic.
-Instead, it'd be better to have another patch which cleans up
-f2fs_disable_compressed_file() having "bool" as a return value.
+Just 1 other you picked up. See "ASoC: samsung-i2s: Use
+unevaluatedProperties". Patches adding the missing properties (and
+restoring 'additionalProperties' on these 2 if not reverted) is the
+correct change.
 
->  
->  	fi->i_flags &= ~F2FS_COMPR_FL;
->  	stat_dec_compr_inode(inode);
-> @@ -4057,16 +4054,17 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
->  						u64 blocks, bool add)
->  {
->  	int diff = F2FS_I(inode)->i_cluster_size - blocks;
-> +	struct f2fs_inode_info *fi = F2FS_I(inode);
->  
->  	/* don't update i_compr_blocks if saved blocks were released */
-> -	if (!add && !F2FS_I(inode)->i_compr_blocks)
-> +	if (!add && !atomic_read(&fi->i_compr_blocks))
->  		return;
->  
->  	if (add) {
-> -		F2FS_I(inode)->i_compr_blocks += diff;
-> +		atomic_add(diff, &fi->i_compr_blocks);
->  		stat_add_compr_blocks(inode, diff);
->  	} else {
-> -		F2FS_I(inode)->i_compr_blocks -= diff;
-> +		atomic_sub(diff, &fi->i_compr_blocks);
->  		stat_sub_compr_blocks(inode, diff);
->  	}
->  	f2fs_mark_inode_dirty_sync(inode, true);
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index cc7f5670390f..adc4acad488a 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -564,7 +564,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
->  	bool compressed_cluster = false;
->  	int cluster_index = 0, valid_blocks = 0;
->  	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
-> -	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
-> +	bool released = !atomic_read(&F2FS_I(dn->inode)->i_compr_blocks);
->  
->  	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
->  		base = get_extra_isize(dn->inode);
-> @@ -3436,7 +3436,7 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
->  	if (!f2fs_compressed_file(inode))
->  		return -EINVAL;
->  
-> -	blocks = F2FS_I(inode)->i_compr_blocks;
-> +	blocks = atomic_read(&F2FS_I(inode)->i_compr_blocks);
->  	return put_user(blocks, (u64 __user *)arg);
->  }
->  
-> @@ -3535,7 +3535,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
->  	if (ret)
->  		goto out;
->  
-> -	if (!F2FS_I(inode)->i_compr_blocks)
-> +	if (!atomic_read(&F2FS_I(inode)->i_compr_blocks))
->  		goto out;
->  
->  	F2FS_I(inode)->i_flags |= F2FS_IMMUTABLE_FL;
-> @@ -3588,14 +3588,15 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
->  
->  	if (ret >= 0) {
->  		ret = put_user(released_blocks, (u64 __user *)arg);
-> -	} else if (released_blocks && F2FS_I(inode)->i_compr_blocks) {
-> +	} else if (released_blocks &&
-> +			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
->  		set_sbi_flag(sbi, SBI_NEED_FSCK);
->  		f2fs_warn(sbi, "%s: partial blocks were released i_ino=%lx "
-> -			"iblocks=%llu, released=%u, compr_blocks=%llu, "
-> +			"iblocks=%llu, released=%u, compr_blocks=%u, "
->  			"run fsck to fix.",
->  			__func__, inode->i_ino, inode->i_blocks,
->  			released_blocks,
-> -			F2FS_I(inode)->i_compr_blocks);
-> +			atomic_read(&F2FS_I(inode)->i_compr_blocks));
->  	}
->  
->  	return ret;
-> @@ -3683,7 +3684,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
->  	if (ret)
->  		return ret;
->  
-> -	if (F2FS_I(inode)->i_compr_blocks)
-> +	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
->  		goto out;
->  
->  	f2fs_balance_fs(F2FS_I_SB(inode), true);
-> @@ -3747,14 +3748,15 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
->  
->  	if (ret >= 0) {
->  		ret = put_user(reserved_blocks, (u64 __user *)arg);
-> -	} else if (reserved_blocks && F2FS_I(inode)->i_compr_blocks) {
-> +	} else if (reserved_blocks &&
-> +			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
->  		set_sbi_flag(sbi, SBI_NEED_FSCK);
->  		f2fs_warn(sbi, "%s: partial blocks were released i_ino=%lx "
-> -			"iblocks=%llu, reserved=%u, compr_blocks=%llu, "
-> +			"iblocks=%llu, reserved=%u, compr_blocks=%u, "
->  			"run fsck to fix.",
->  			__func__, inode->i_ino, inode->i_blocks,
->  			reserved_blocks,
-> -			F2FS_I(inode)->i_compr_blocks);
-> +			atomic_read(&F2FS_I(inode)->i_compr_blocks));
->  	}
->  
->  	return ret;
-> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> index 66969ae852b9..2ed935c13aed 100644
-> --- a/fs/f2fs/inode.c
-> +++ b/fs/f2fs/inode.c
-> @@ -442,7 +442,8 @@ static int do_read_inode(struct inode *inode)
->  					(fi->i_flags & F2FS_COMPR_FL)) {
->  		if (F2FS_FITS_IN_INODE(ri, fi->i_extra_isize,
->  					i_log_cluster_size)) {
-> -			fi->i_compr_blocks = le64_to_cpu(ri->i_compr_blocks);
-> +			atomic_set(&fi->i_compr_blocks,
-> +					le64_to_cpu(ri->i_compr_blocks));
->  			fi->i_compress_algorithm = ri->i_compress_algorithm;
->  			fi->i_log_cluster_size = ri->i_log_cluster_size;
->  			fi->i_cluster_size = 1 << fi->i_log_cluster_size;
-> @@ -460,7 +461,7 @@ static int do_read_inode(struct inode *inode)
->  	stat_inc_inline_inode(inode);
->  	stat_inc_inline_dir(inode);
->  	stat_inc_compr_inode(inode);
-> -	stat_add_compr_blocks(inode, F2FS_I(inode)->i_compr_blocks);
-> +	stat_add_compr_blocks(inode, atomic_read(&fi->i_compr_blocks));
->  
->  	return 0;
->  }
-> @@ -619,7 +620,8 @@ void f2fs_update_inode(struct inode *inode, struct page *node_page)
->  			F2FS_FITS_IN_INODE(ri, F2FS_I(inode)->i_extra_isize,
->  							i_log_cluster_size)) {
->  			ri->i_compr_blocks =
-> -				cpu_to_le64(F2FS_I(inode)->i_compr_blocks);
-> +				cpu_to_le64(atomic_read(
-> +					&F2FS_I(inode)->i_compr_blocks));
->  			ri->i_compress_algorithm =
->  				F2FS_I(inode)->i_compress_algorithm;
->  			ri->i_log_cluster_size =
-> @@ -768,7 +770,8 @@ void f2fs_evict_inode(struct inode *inode)
->  	stat_dec_inline_dir(inode);
->  	stat_dec_inline_inode(inode);
->  	stat_dec_compr_inode(inode);
-> -	stat_sub_compr_blocks(inode, F2FS_I(inode)->i_compr_blocks);
-> +	stat_sub_compr_blocks(inode,
-> +			atomic_read(&F2FS_I(inode)->i_compr_blocks));
->  
->  	if (likely(!f2fs_cp_error(sbi) &&
->  				!is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index 83bf9a02f83f..813aa207824c 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -1011,6 +1011,7 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
->  
->  	/* Initialize f2fs-specific inode info */
->  	atomic_set(&fi->dirty_pages, 0);
-> +	atomic_set(&fi->i_compr_blocks, 0);
->  	init_rwsem(&fi->i_sem);
->  	spin_lock_init(&fi->i_size_lock);
->  	INIT_LIST_HEAD(&fi->dirty_list);
-> -- 
-> 2.28.0.526.ge36021eeef-goog
-> 
-> 
-> 
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+I've gone thru and NAKed all of the others so more don't get picked up.
+
+
+Rob
