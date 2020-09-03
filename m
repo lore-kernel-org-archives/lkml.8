@@ -2,77 +2,197 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 456E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259F5C2BC0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19EA3208C7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0404E20829
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599149599;
+	bh=9FaJQybxAo/3InCuXUKDnAJ1C7ijAOgWHtbS+wO20r4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fUQi8MLTT8Pu3MZU4TTAoGDRPmz7qapv917B/1DiW6TIWbe0uoshtff9f167MTNMm
+	 o7TFx+DQLS77iyhMPNLCyORtHNTY082c1eMEWgHkatoWttSbXpS3t6ci5dp+irviS/
+	 fTrKdgrRxmzU8HceW0SaqBhcUpiu+78PRGaVm97I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbgICQNE (ORCPT
+        id S1728929AbgICQNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:13:04 -0400
-Received: from verein.lst.de ([213.95.11.211]:38543 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728294AbgICQM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:12:58 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0749867357; Thu,  3 Sep 2020 18:12:53 +0200 (CEST)
-Date:   Thu, 3 Sep 2020 18:12:52 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        rth@twiddle.net, ink@jurassic.park.msu.ru,
-        Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        hca@linux.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org
-Subject: Re: [PATCH 1/2] dma-mapping: introduce
- dma_get_seg_boundary_nr_pages()
-Message-ID: <20200903161252.GA24841@lst.de>
-References: <20200901221646.26491-1-nicoleotsuka@gmail.com> <20200901221646.26491-2-nicoleotsuka@gmail.com> <CAHp75VcVJBSnPQ6NfdF8FdEDfM+oQ=Sr+cH5VGX4SrAqrgpf-g@mail.gmail.com>
+        Thu, 3 Sep 2020 12:13:17 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38969 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728876AbgICQNL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 12:13:11 -0400
+Received: by mail-io1-f65.google.com with SMTP id b6so3431874iof.6;
+        Thu, 03 Sep 2020 09:13:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9gvvTNIPw9I6yRji5WhK7wdTzHtDJw07/YZwY1IVSsY=;
+        b=SU6/sECIOlwCOJREGHuvbI4ls1nIxVAU3tXyaQ4mHKKPyNMlE5BubX3MNYPKVeMj+Z
+         MID1s9yM5ojqvDrhmQ3uCi2zY4leoNUShOv1XdWdOKwE9nMBmvSiYbHsXH1h/XyglAYw
+         +xtNwQDEqoNiDMloQsqf6PZmirbYAGOjdlP1sxdhzTfYoKZQ4Sz1nvSZFs7aw2w7gnOv
+         BMEveH9ECyci8TxHWxwaTl1EqTBSdOM+TgY8h1F02o3d6FCBpQgddmoc6GzSqFSfg03U
+         OtrWYOdqIi9b6svf3mjdEi0afxzgqg87l+ZO9esmfvGmDycODCXBFvZepoJlu/sR82OT
+         CXWA==
+X-Gm-Message-State: AOAM5312t2DLN7+MjY6iXWZ036WZk68Nm/zo2zEW723eDTciMgX2H0hz
+        zhg2Y1afgLf/vna+iUYCiuFZv56sTuVh
+X-Google-Smtp-Source: ABdhPJw1y8SasChHSTDfMyS2qjEcudm7/rU4rfBgpZ0EgRlXlwT3bdsqp3mySJSWfKAAvZeflDceyg==
+X-Received: by 2002:a05:6602:2003:: with SMTP id y3mr3664419iod.203.1599149591009;
+        Thu, 03 Sep 2020 09:13:11 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id f141sm1664938ilh.65.2020.09.03.09.13.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 09:13:10 -0700 (PDT)
+Received: (nullmailer pid 2874688 invoked by uid 1000);
+        Thu, 03 Sep 2020 16:13:09 -0000
+Date:   Thu, 3 Sep 2020 10:13:09 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/5] dt-bindings: clock: add SM8250 QCOM video clock
+ bindings
+Message-ID: <20200903161309.GB2872956@bogus>
+References: <20200902031359.6703-1-jonathan@marek.ca>
+ <20200902031359.6703-4-jonathan@marek.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcVJBSnPQ6NfdF8FdEDfM+oQ=Sr+cH5VGX4SrAqrgpf-g@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200902031359.6703-4-jonathan@marek.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 01:57:39PM +0300, Andy Shevchenko wrote:
-> > +{
-> > +       if (!dev)
-> > +               return (U32_MAX >> page_shift) + 1;
-> > +       return (dma_get_seg_boundary(dev) >> page_shift) + 1;
-> 
-> Can it be better to do something like
->   unsigned long boundary = dev ? dma_get_seg_boundary(dev) : U32_MAX;
-> 
->   return (boundary >> page_shift) + 1;
-> 
-> ?
+On Tue, Sep 01, 2020 at 11:13:53PM -0400, Jonathan Marek wrote:
+> Add device tree bindings for video clock controller for SM8250 SoCs.
 
-I don't really see what that would buy us.
+WARNING: please, no space before tabs
+#182: FILE: include/dt-bindings/clock/qcom,videocc-sm8250.h:37:
++#define MVS0C_GDSC ^I^I^I0$
+
+WARNING: please, no space before tabs
+#183: FILE: include/dt-bindings/clock/qcom,videocc-sm8250.h:38:
++#define MVS1C_GDSC ^I^I^I1$
+
+WARNING: please, no space before tabs
+#184: FILE: include/dt-bindings/clock/qcom,videocc-sm8250.h:39:
++#define MVS0_GDSC ^I^I^I2$
+
+WARNING: please, no space before tabs
+#185: FILE: include/dt-bindings/clock/qcom,videocc-sm8250.h:40:
++#define MVS1_GDSC ^I^I^I3$
+
+total: 0 errors, 4 warnings, 73 lines checked
+
+
+> 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>  .../bindings/clock/qcom,videocc.yaml          |  6 ++-
+>  .../dt-bindings/clock/qcom,videocc-sm8250.h   | 42 +++++++++++++++++++
+>  2 files changed, 47 insertions(+), 1 deletion(-)
+>  create mode 100644 include/dt-bindings/clock/qcom,videocc-sm8250.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml b/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
+> index d04f5bd28dde..757837e260a2 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
+> @@ -11,12 +11,13 @@ maintainers:
+>  
+>  description: |
+>    Qualcomm video clock control module which supports the clocks, resets and
+> -  power domains on SDM845/SC7180/SM8150.
+> +  power domains on SDM845/SC7180/SM8150/SM8250.
+>  
+>    See also:
+>      dt-bindings/clock/qcom,videocc-sdm845.h
+>      dt-bindings/clock/qcom,videocc-sc7180.h
+>      dt-bindings/clock/qcom,videocc-sm8150.h
+> +    dt-bindings/clock/qcom,videocc-sm8250.h
+>  
+>  properties:
+>    compatible:
+> @@ -24,14 +25,17 @@ properties:
+>        - qcom,sdm845-videocc
+>        - qcom,sc7180-videocc
+>        - qcom,sm8150-videocc
+> +      - qcom,sm8250-videocc
+>  
+>    clocks:
+>      items:
+>        - description: Board XO source
+> +      - description: Board XO source, always-on (required by sm8250 only)
+>  
+>    clock-names:
+>      items:
+>        - const: bi_tcxo
+> +      - const: bi_tcxo_ao
+>  
+>    '#clock-cells':
+>      const: 1
+> diff --git a/include/dt-bindings/clock/qcom,videocc-sm8250.h b/include/dt-bindings/clock/qcom,videocc-sm8250.h
+> new file mode 100644
+> index 000000000000..4c44f9c468db
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/qcom,videocc-sm8250.h
+> @@ -0,0 +1,42 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLK_QCOM_VIDEO_CC_SM8250_H
+> +#define _DT_BINDINGS_CLK_QCOM_VIDEO_CC_SM8250_H
+> +
+> +/* VIDEO_CC clocks */
+> +#define VIDEO_CC_AHB_CLK		0
+> +#define VIDEO_CC_AHB_CLK_SRC		1
+> +#define VIDEO_CC_MVS0_CLK		2
+> +#define VIDEO_CC_MVS0_CLK_SRC		3
+> +#define VIDEO_CC_MVS0_DIV_CLK_SRC	4
+> +#define VIDEO_CC_MVS0C_CLK		5
+> +#define VIDEO_CC_MVS0C_DIV2_DIV_CLK_SRC	6
+> +#define VIDEO_CC_MVS1_CLK		7
+> +#define VIDEO_CC_MVS1_CLK_SRC		8
+> +#define VIDEO_CC_MVS1_DIV2_CLK		9
+> +#define VIDEO_CC_MVS1_DIV_CLK_SRC	10
+> +#define VIDEO_CC_MVS1C_CLK		11
+> +#define VIDEO_CC_MVS1C_DIV2_DIV_CLK_SRC	12
+> +#define VIDEO_CC_XO_CLK			13
+> +#define VIDEO_CC_XO_CLK_SRC		14
+> +#define VIDEO_CC_PLL0			15
+> +#define VIDEO_CC_PLL1			16
+> +
+> +/* VIDEO_CC resets */
+> +#define VIDEO_CC_CVP_INTERFACE_BCR	0
+> +#define VIDEO_CC_CVP_MVS0_BCR		1
+> +#define VIDEO_CC_MVS0C_CLK_ARES		2
+> +#define VIDEO_CC_CVP_MVS0C_BCR		3
+> +#define VIDEO_CC_CVP_MVS1_BCR		4
+> +#define VIDEO_CC_MVS1C_CLK_ARES		5
+> +#define VIDEO_CC_CVP_MVS1C_BCR		6
+> +
+> +#define MVS0C_GDSC 			0
+> +#define MVS1C_GDSC 			1
+> +#define MVS0_GDSC 			2
+> +#define MVS1_GDSC 			3
+> +
+> +#endif
+> -- 
+> 2.26.1
+> 
