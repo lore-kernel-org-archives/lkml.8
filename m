@@ -2,150 +2,91 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EE6C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950F1C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4DF82098B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:24:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UoqkUtPL"
+	by mail.kernel.org (Postfix) with ESMTP id 6D4D62098B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 19:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599161210;
+	bh=yS2vWoQBhhf3QSRyhF5rOIpprqbVA5TZG9bHqKjsrgk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XmKQR96uVaDy/aJuZUPmm8gSgg7z0M+erHpCGJityVg2/JztPjghP13NQZ6ftL0+x
+	 i5UJNlCJJnErXq3o4EBEph/Qbo8X6X+11RXbFTpXRNvwxWJsmegXBreZio1n06oZDd
+	 RgswjeFmsobDUDQXc461FeD84spHJATwQ1T8+01Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgICTYm (ORCPT
+        id S1729043AbgICT0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 15:24:42 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21962 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728491AbgICTYk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 15:24:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599161078;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=hA5BHxGnyIpr07k13xquxSqh/5t1ipENL7Z2gKNlLvk=;
-        b=UoqkUtPL6ivTC2jQXQwNzLMmTrGtK5JeaODw7J0Ch+BF9I3/48mKnmnCpSy2ehWqJiC3AN
-        aqxcxS/GHXnmCkDKyH3w+GqFs5/joFuYnU4nbn32VMmLvnAZw1EA/N5BRxGjEQ3kHl+o+P
-        /o886PDL1KS/N0//nfA1S87XCIuZZ3c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-235-ZZCQTtvfOfiixfzAj-ch5w-1; Thu, 03 Sep 2020 15:24:34 -0400
-X-MC-Unique: ZZCQTtvfOfiixfzAj-ch5w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 3 Sep 2020 15:26:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728304AbgICT0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 15:26:48 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A65881F000;
-        Thu,  3 Sep 2020 19:24:32 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DD3EF5C1C2;
-        Thu,  3 Sep 2020 19:24:28 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 083JOSW3017461;
-        Thu, 3 Sep 2020 15:24:28 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 083JOR69017457;
-        Thu, 3 Sep 2020 15:24:27 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Thu, 3 Sep 2020 15:24:27 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kirill Shutemov <kirill@shutemov.name>,
-        Jan Kara <jack@suse.cz>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
-Subject: a crash when running strace from persistent memory
-Message-ID: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03550206EF;
+        Thu,  3 Sep 2020 19:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599161208;
+        bh=yS2vWoQBhhf3QSRyhF5rOIpprqbVA5TZG9bHqKjsrgk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gpv1Qom+eMOgbXkpyj98wtFG3rFjKT/tP+A7ClmDHCZJfEaEunHQ/E685AF4Uigt7
+         uqQ42Ym9QmxcIyL5ZtDkKJTtIWrktP27m8a+J9RWfO1crXnKn9d2wxoj7Xe+M/Q6rH
+         Gx5ffmPf64zWSy3Ci7H9R03KCahXxiqgcsNZPPUo=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B80E340D3D; Thu,  3 Sep 2020 16:26:44 -0300 (-03)
+Date:   Thu, 3 Sep 2020 16:26:44 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH] tools build feature: cleanup feature files on make clean
+Message-ID: <20200903192644.GK3495158@kernel.org>
+References: <159851841661.1072907.13770213104521805592.stgit@firesoul>
+ <20200903190350.GI3495158@kernel.org>
+ <eb3ad60a-68be-f350-9597-b999edae5244@iogearbox.net>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb3ad60a-68be-f350-9597-b999edae5244@iogearbox.net>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Em Thu, Sep 03, 2020 at 09:20:35PM +0200, Daniel Borkmann escreveu:
+> Hi Arnaldo,
+> 
+> On 9/3/20 9:03 PM, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Aug 27, 2020 at 10:53:36AM +0200, Jesper Dangaard Brouer escreveu:
+> > > The system for "Auto-detecting system features" located under
+> > > tools/build/ are (currently) used by perf, libbpf and bpftool. It can
+> > > contain stalled feature detection files, which are not cleaned up by
+> > > libbpf and bpftool on make clean (side-note: perf tool is correct).
+> > > 
+> > > Fix this by making the users invoke the make clean target.
+> > > 
+> > > Some details about the changes. The libbpf Makefile already had a
+> > > clean-config target (which seems to be copy-pasted from perf), but this
+> > > target was not "connected" (a make dependency) to clean target. Choose
+> > > not to rename target as someone might be using it. Did change the output
+> > > from "CLEAN config" to "CLEAN feature-detect", to make it more clear
+> > > what happens.
+> > 
+> > Since this mostly touches BPF, should it go via the BPF tree?
+> 
+> Already applied roughly a week ago:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/commit/?id=661b37cd437ef49cd28444f79b9b0c71ea76e8c8
 
-There's a bug when you run strace from dax-based filesystem.
+Thanks!
 
--- create real or emulated persistent memory device (/dev/pmem0)
-mkfs.ext2 /dev/pmem0
--- mount it
-mount -t ext2 -o dax /dev/pmem0 /mnt/test
--- copy the system to it (well, you can copy just a few files that are 
-   needed for running strace and ls)
-cp -ax / /mnt/test
--- bind the system directories
-mount --bind /dev /mnt/test/dev
-mount --bind /proc /mnt/test/proc
-mount --bind /sys /mnt/test/sys
--- run strace on the ls command
-chroot /mnt/test/ strace /bin/ls
-
-You get this warning and ls is killed with SIGSEGV.
-
-I bisected the problem and it is caused by the commit 
-17839856fd588f4ab6b789f482ed3ffd7c403e1f (gup: document and work around 
-"COW can break either way" issue). When I revert the patch (on the kernel 
-5.9-rc3), the bug goes away.
-
-Mikulas
-
-
-[   84.190961] ------------[ cut here ]------------
-[   84.191504] WARNING: CPU: 6 PID: 1350 at mm/memory.c:2486 wp_page_copy.cold+0xdb/0xf6
-[   84.192398] Modules linked in: ext2 uvesafb cfbfillrect cfbimgblt cn cfbcopyarea fb fbdev ipv6 tun autofs4 binfmt_misc configfs af_packet mousedev virtio_balloon virtio_rng evdev rng_core pcspkr button raid10 raid456 async_raid6_recov async_memcpy async_pq raid6_pq async_xor xor async_tx libcrc32c raid1 raid0 md_mod sd_mod t10_pi virtio_scsi virtio_net psmouse net_failover scsi_mod failover
-[   84.196301] CPU: 6 PID: 1350 Comm: strace Not tainted 5.9.0-rc3 #6
-[   84.197020] Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-[   84.197685] RIP: 0010:wp_page_copy.cold+0xdb/0xf6
-[   84.198231] Code: ff ff ff 0f 00 eb 8e 48 8b 3c 24 48 8b 74 24 08 ba 00 10 00 00 e8 33 87 1f 00 85 c0 74 1f 48 c7 c7 a7 2b ba 81 e8 cc b6 f0 ff <0f> 0b 48 8b 3c 24 e8 08 82 1f 00 41 be 01 00 00 00 eb ae 41 be 01
-[   84.200410] RSP: 0018:ffff88940c1dba58 EFLAGS: 00010282
-[   84.201035] RAX: 0000000000000006 RBX: ffff88940c1dbb00 RCX: 0000000000000000
-[   84.201842] RDX: 0000000000000003 RSI: ffffffff81b9c0fa RDI: 00000000ffffffff
-[   84.202650] RBP: ffffea004f0e4d80 R08: 0000000000000000 R09: 0000000000000000
-[   84.203460] R10: 0000000000000046 R11: 0000000000000000 R12: 0000000000000000
-[   84.204265] R13: ffff88940aa86318 R14: 00000000f7fac000 R15: ffff8893c8db3c40
-[   84.205083] FS:  00007fd8a8320740(0000) GS:ffff88940fb80000(0000) knlGS:0000000000000000
-[   84.206000] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   84.206664] CR2: 00000000f7fac000 CR3: 00000013c93a6000 CR4: 00000000000006a0
-[   84.207481] Call Trace:
-[   84.207883]  do_wp_page+0x172/0x6a0
-[   84.208285]  handle_mm_fault+0xd0b/0x1540
-[   84.208753]  __get_user_pages+0x21a/0x6c0
-[   84.209213]  __get_user_pages_remote+0xc8/0x2a0
-[   84.209735]  process_vm_rw_core.isra.0+0x1ac/0x440
-[   84.210318]  ? __might_fault+0x26/0x40
-[   84.210758]  ? _copy_from_user+0x6a/0xa0
-[   84.211208]  ? __might_fault+0x26/0x40
-[   84.211642]  ? _copy_from_user+0x6a/0xa0
-[   84.212091]  process_vm_rw+0xd1/0x100
-[   84.212511]  ? _copy_to_user+0x69/0x80
-[   84.212946]  ? ptrace_get_syscall_info+0x9b/0x180
-[   84.213484]  ? find_held_lock+0x2b/0x80
-[   84.213926]  ? __x64_sys_ptrace+0x106/0x140
-[   84.214405]  ? fpregs_assert_state_consistent+0x19/0x40
-[   84.215002]  ? exit_to_user_mode_prepare+0x2d/0x120
-[   84.215556]  __x64_sys_process_vm_readv+0x22/0x40
-[   84.216103]  do_syscall_64+0x2d/0x80
-[   84.216518]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   84.217098] RIP: 0033:0x7fd8a84896da
-[   84.217512] Code: 48 8b 15 b9 f7 0b 00 f7 d8 64 89 02 b8 ff ff ff ff eb d2 e8 18 f0 00 00 0f 1f 84 00 00 00 00 00 49 89 ca b8 36 01 00 00 0f 05 <48> 3d 00 f0 ff ff 77 06 c3 0f 1f 44 00 00 48 8b 15 81 f7 0b 00 f7
-[   84.219618] RSP: 002b:00007ffd08c3c678 EFLAGS: 00000246 ORIG_RAX: 0000000000000136
-[   84.220563] RAX: ffffffffffffffda RBX: 00000000f7fac000 RCX: 00007fd8a84896da
-[   84.221380] RDX: 0000000000000001 RSI: 00007ffd08c3c680 RDI: 0000000000000549
-[   84.222194] RBP: 00007ffd08c3c760 R08: 0000000000000001 R09: 0000000000000000
-[   84.222999] R10: 00007ffd08c3c690 R11: 0000000000000246 R12: 00000000f7faca80
-[   84.223804] R13: 0000000000000580 R14: 0000000000000549 R15: 00005589a50eee80
-[   84.223804] R13: 0000000000000580 R14: 0000000000000549 R15: 00005589a50eee80
-[   84.224612] ---[ end trace d8dbf2da5dc1b7ca ]---
-
+- Arnaldo
