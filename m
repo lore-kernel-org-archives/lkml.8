@@ -2,229 +2,593 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F517C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA34C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA589206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27898206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:03:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oLlcauC7"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Bii++mvR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DxrJG73B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgICICf (ORCPT
+        id S1728082AbgICICw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:02:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728324AbgICIBz (ORCPT
+        Thu, 3 Sep 2020 04:02:52 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:56277 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728314AbgICICA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:01:55 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42288C061244;
-        Thu,  3 Sep 2020 01:01:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=NFOwqE0OTf28Pzk09AzI0JxPba4dhtTomedh4If56AQ=; b=oLlcauC7xrR+Kfht2MPIU3Yk5x
-        WYH7U/p8F/dLbRb373c5rEFQ9b0epP6KTd1HkhpWUTgRNa8pM2Lu9+LlQqkhbLnsfGuIUlMskIVrs
-        O5YVF3gGYL2w0eVTQpCoNjTllr7TEEVbnnah2t9DdHK2eCdc+vhbFf8emzIhbY1kQkm6weqVDZX/E
-        ZbHqSpf1xd+xwoEvrZddAOH5lrlMOC+56bcyLE0jZwKpUOEn9EXVaZdchC9p9QABamKuhotEXhhSo
-        bkbjlFBSZoe8mc2Y0HxuywcfKQmj2RaxynEQAEPHaaW8+KngWbdNGjXtbpOBbmwIdbSx/70R8Sv59
-        AzcW6uzA==;
-Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDkBp-0006f9-21; Thu, 03 Sep 2020 08:01:49 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: [PATCH 18/19] z2ram: use separate gendisk for the different modes
-Date:   Thu,  3 Sep 2020 10:01:18 +0200
-Message-Id: <20200903080119.441674-19-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200903080119.441674-1-hch@lst.de>
-References: <20200903080119.441674-1-hch@lst.de>
+        Thu, 3 Sep 2020 04:02:00 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 070A2B3E;
+        Thu,  3 Sep 2020 04:01:57 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:01:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=nEE5TD5gRiSbG
+        D0oNsM3BpBpwVr9Q890PPYh0o+aWtY=; b=Bii++mvR8xQpoBJy24UH8EHOYoWSL
+        DeAscb6UnYFIJ06bQXEEVmjUthovgQc6d8QWxvVyy0QeTWT0BdbblvACD6tqzlWa
+        o/hacvioUH85WliEu6XRtm8lj8AUvBKkEklaHoHtf48u3ysglfZMJK9ys7U7FpX8
+        l8knnD/Bwc8cBPzR5M+7P5av2HKi5nmXcgpi8gyrpKDAj7SqXuM9GxqYoBmYAAUd
+        zW+034fFKmuwes/LcabE4Bnwn94u7M260YyJopLMRaJ92xRQXwJXX6sRMGIePKJy
+        CmEYg5mP0MzQWVtSsG0goH+En13f8SREmC9q1zZJmpYGSsEB5l5/ccCPg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=nEE5TD5gRiSbGD0oNsM3BpBpwVr9Q890PPYh0o+aWtY=; b=DxrJG73B
+        ZLpy8z2vEQEpXsFMn4H2sOdUuWCe0YOKnouHO4AgLwbhqAx/OeO3aKr7Cv/ZWnrL
+        2WjkIXkljZL9ZE5zN1iI3wEbaPCOmfLm3gmSe8gBweTFlR8BlPg4dSaA24ZIqiiN
+        32FtWSL3XBPyzOZsyd606IHNi4EX+/z5+d7bhROZgeuE+s2zltg1GzbSb8VJWJbk
+        59AwNA8qtis3cNu2M+UNnL2v4O0TEST+AkEJxOjGzAFjJUEq5I22inngF4IoYIc6
+        yDpiqofWdLquzUbi+5DGAKsqqkheKuDIP6CZlOk9VXrv+It8apsGa7or/o/O+YrL
+        WXhUewDJNkts9g==
+X-ME-Sender: <xms:9aJQX-FfuiScuhw6Q_2KdGRT6vqaDdIJ8uiL_AAEubsSpPY2c9DM6A>
+    <xme:9aJQX_UU4d65xHPCMz0IOT3tigiE63LLmv6uVDlorXhF3xccHTFnCWzSEkNLHAKKf
+    x-NFx20YKoI9rYASoM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveev
+    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedune
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:9aJQX4Ji5t0CA7u3LF0fxHUBg4cG4gfEDdZACmCC1tjaJMSA_ZL9UQ>
+    <xmx:9aJQX4EpVEhvcfJwM9efJ_rQaB6QynZXOlRKrp6bMG_bpC3IwUicgw>
+    <xmx:9aJQX0VWT8bmW-NKRXM1tUqizyAMiKrSm4QRxzYDV3GDIa4MYzPVAQ>
+    <xmx:9aJQXzM7P9WVTiksS-UbHS3l8fgGSyTRsUuN4QKRh0Fur6V5rdCyQpPfHJo>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3661F3280065;
+        Thu,  3 Sep 2020 04:01:57 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH v5 02/80] drm/vc4: Add support for the BCM2711 HVS5
+Date:   Thu,  3 Sep 2020 10:00:34 +0200
+Message-Id: <1d02fab3b916d639c2dc05608c117bbd8230ebe8.1599120059.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
+References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use separate gendisks (which share a tag_set) for the different operating
-modes instead of redirecting the gendisk lookup using a probe callback.
-This avoids potential problems with aliased block_device instances and
-will eventually allow for removing the blk_register_region framework.
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+The HVS found in the BCM2711 is slightly different from the previous
+generations.
+
+Most notably, the display list layout changes a bit, the LBM doesn't have
+the same size and the formats ordering for some formats is swapped.
+
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/block/z2ram.c | 100 ++++++++++++++++++++++++------------------
- 1 file changed, 58 insertions(+), 42 deletions(-)
+ drivers/gpu/drm/vc4/vc4_drv.h   |   4 +-
+ drivers/gpu/drm/vc4/vc4_hvs.c   |  34 ++++--
+ drivers/gpu/drm/vc4/vc4_plane.c | 194 ++++++++++++++++++++++++---------
+ drivers/gpu/drm/vc4/vc4_regs.h  |  67 +++++++++++-
+ 4 files changed, 240 insertions(+), 59 deletions(-)
 
-diff --git a/drivers/block/z2ram.c b/drivers/block/z2ram.c
-index eafecc9a72b38d..c1d20818e64920 100644
---- a/drivers/block/z2ram.c
-+++ b/drivers/block/z2ram.c
-@@ -63,7 +63,7 @@ static int current_device = -1;
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
+index fa19160c801f..e4cde1f9224b 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.h
++++ b/drivers/gpu/drm/vc4/vc4_drv.h
+@@ -329,7 +329,11 @@ struct vc4_hvs {
+ 	spinlock_t mm_lock;
  
- static DEFINE_SPINLOCK(z2ram_lock);
- 
--static struct gendisk *z2ram_gendisk;
-+static struct gendisk *z2ram_gendisk[Z2MINOR_COUNT];
- 
- static blk_status_t z2_queue_rq(struct blk_mq_hw_ctx *hctx,
- 				const struct blk_mq_queue_data *bd)
-@@ -283,7 +283,7 @@ static int z2_open(struct block_device *bdev, fmode_t mode)
- 
- 		current_device = device;
- 		z2ram_size <<= Z2RAM_CHUNKSHIFT;
--		set_capacity(z2ram_gendisk, z2ram_size >> 9);
-+		set_capacity(z2ram_gendisk[device], z2ram_size >> 9);
- 	}
- 
- 	mutex_unlock(&z2ram_mutex);
-@@ -315,71 +315,87 @@ static const struct block_device_operations z2_fops = {
- 	.release = z2_release,
+ 	struct drm_mm_node mitchell_netravali_filter;
++
+ 	struct debugfs_regset32 regset;
++
++	/* HVS version 5 flag, therefore requires updated dlist structures */
++	bool hvs5;
  };
  
--static struct kobject *z2_find(dev_t dev, int *part, void *data)
--{
--	*part = 0;
--	return get_disk_and_module(z2ram_gendisk);
--}
--
--static struct request_queue *z2_queue;
- static struct blk_mq_tag_set tag_set;
- 
- static const struct blk_mq_ops z2_mq_ops = {
- 	.queue_rq = z2_queue_rq,
- };
- 
-+static int z2ram_register_disk(int minor)
-+{
-+	struct request_queue *q;
-+	struct gendisk *disk;
+ struct vc4_plane {
+diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
+index 2d2bf59c0503..836d8799d79e 100644
+--- a/drivers/gpu/drm/vc4/vc4_hvs.c
++++ b/drivers/gpu/drm/vc4/vc4_hvs.c
+@@ -277,11 +277,19 @@ void vc4_hvs_atomic_enable(struct drm_crtc *crtc,
+ 	 * mode.
+ 	 */
+ 	dispctrl = SCALER_DISPCTRLX_ENABLE;
+-	dispctrl |= VC4_SET_FIELD(mode->hdisplay,
+-				  SCALER_DISPCTRLX_WIDTH) |
+-		    VC4_SET_FIELD(mode->vdisplay,
+-				  SCALER_DISPCTRLX_HEIGHT) |
+-		    (oneshot ? SCALER_DISPCTRLX_ONESHOT : 0);
 +
-+	disk = alloc_disk(1);
-+	if (!disk)
-+		return -ENOMEM;
-+
-+	q = blk_mq_init_queue(&tag_set);
-+	if (IS_ERR(q)) {
-+		put_disk(disk);
-+		return PTR_ERR(q);
-+	}
-+
-+	disk->major = Z2RAM_MAJOR;
-+	disk->first_minor = minor;
-+	disk->fops = &z2_fops;
-+	if (minor)
-+		sprintf(disk->disk_name, "z2ram%d", minor);
++	if (!vc4->hvs->hvs5)
++		dispctrl |= VC4_SET_FIELD(mode->hdisplay,
++					  SCALER_DISPCTRLX_WIDTH) |
++			    VC4_SET_FIELD(mode->vdisplay,
++					  SCALER_DISPCTRLX_HEIGHT) |
++			    (oneshot ? SCALER_DISPCTRLX_ONESHOT : 0);
 +	else
-+		sprintf(disk->disk_name, "z2ram");
-+	disk->queue = q;
-+
-+	z2ram_gendisk[minor] = disk;
-+	add_disk(disk);
-+	return 0;
-+}
-+
- static int __init z2_init(void)
- {
--	int ret;
-+	int ret, i;
++		dispctrl |= VC4_SET_FIELD(mode->hdisplay,
++					  SCALER5_DISPCTRLX_WIDTH) |
++			    VC4_SET_FIELD(mode->vdisplay,
++					  SCALER5_DISPCTRLX_HEIGHT) |
++			    (oneshot ? SCALER5_DISPCTRLX_ONESHOT : 0);
  
- 	if (!MACH_IS_AMIGA)
- 		return -ENODEV;
+ 	HVS_WRITE(SCALER_DISPCTRLX(vc4_crtc->channel), dispctrl);
+ }
+@@ -521,6 +529,9 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
  
--	ret = -EBUSY;
- 	if (register_blkdev(Z2RAM_MAJOR, DEVICE_NAME))
--		goto err;
--
--	ret = -ENOMEM;
--	z2ram_gendisk = alloc_disk(1);
--	if (!z2ram_gendisk)
--		goto out_disk;
--
--	z2_queue = blk_mq_init_sq_queue(&tag_set, &z2_mq_ops, 16,
--					BLK_MQ_F_SHOULD_MERGE);
--	if (IS_ERR(z2_queue)) {
--		ret = PTR_ERR(z2_queue);
--		z2_queue = NULL;
--		goto out_queue;
-+		return -EBUSY;
+ 	hvs->pdev = pdev;
+ 
++	if (of_device_is_compatible(pdev->dev.of_node, "brcm,bcm2711-hvs"))
++		hvs->hvs5 = true;
 +
-+	tag_set.ops = &z2_mq_ops;
-+	tag_set.nr_hw_queues = 1;
-+	tag_set.nr_maps = 1;
-+	tag_set.queue_depth = 16;
-+	tag_set.numa_node = NUMA_NO_NODE;
-+	tag_set.flags = BLK_MQ_F_SHOULD_MERGE;
-+	ret = blk_mq_alloc_tag_set(&tag_set);
-+	if (ret)
-+		goto out_unregister_blkdev;
-+
-+	for (i = 0; i < Z2MINOR_COUNT; i++) {
-+		ret = z2ram_register_disk(i);
-+		if (ret && i == 0)
-+			goto out_free_tagset;
- 	}
+ 	hvs->regs = vc4_ioremap_regs(pdev, 0);
+ 	if (IS_ERR(hvs->regs))
+ 		return PTR_ERR(hvs->regs);
+@@ -529,7 +540,10 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
+ 	hvs->regset.regs = hvs_regs;
+ 	hvs->regset.nregs = ARRAY_SIZE(hvs_regs);
  
--	z2ram_gendisk->major = Z2RAM_MAJOR;
--	z2ram_gendisk->first_minor = 0;
--	z2ram_gendisk->fops = &z2_fops;
--	sprintf(z2ram_gendisk->disk_name, "z2ram");
--
--	z2ram_gendisk->queue = z2_queue;
--	add_disk(z2ram_gendisk);
--	blk_register_region(MKDEV(Z2RAM_MAJOR, 0), Z2MINOR_COUNT, THIS_MODULE,
--			    z2_find, NULL, NULL);
--
- 	return 0;
+-	hvs->dlist = hvs->regs + SCALER_DLIST_START;
++	if (!hvs->hvs5)
++		hvs->dlist = hvs->regs + SCALER_DLIST_START;
++	else
++		hvs->dlist = hvs->regs + SCALER5_DLIST_START;
  
--out_queue:
--	put_disk(z2ram_gendisk);
--out_disk:
-+out_free_tagset:
-+	blk_mq_free_tag_set(&tag_set);
-+out_unregister_blkdev:
- 	unregister_blkdev(Z2RAM_MAJOR, DEVICE_NAME);
--err:
- 	return ret;
+ 	spin_lock_init(&hvs->mm_lock);
+ 
+@@ -547,7 +561,12 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
+ 	 * between planes when they don't overlap on the screen, but
+ 	 * for now we just allocate globally.
+ 	 */
+-	drm_mm_init(&hvs->lbm_mm, 0, 96 * 1024);
++	if (!hvs->hvs5)
++		/* 96kB */
++		drm_mm_init(&hvs->lbm_mm, 0, 96 * 1024);
++	else
++		/* 70k words */
++		drm_mm_init(&hvs->lbm_mm, 0, 70 * 2 * 1024);
+ 
+ 	/* Upload filter kernels.  We only have the one for now, so we
+ 	 * keep it around for the lifetime of the driver.
+@@ -632,6 +651,7 @@ static int vc4_hvs_dev_remove(struct platform_device *pdev)
  }
  
- static void __exit z2_exit(void)
- {
- 	int i, j;
--	blk_unregister_region(MKDEV(Z2RAM_MAJOR, 0), Z2MINOR_COUNT);
-+
- 	unregister_blkdev(Z2RAM_MAJOR, DEVICE_NAME);
--	del_gendisk(z2ram_gendisk);
--	put_disk(z2ram_gendisk);
--	blk_cleanup_queue(z2_queue);
-+
-+	for (i = 0; i < Z2MINOR_COUNT; i++) {
-+		del_gendisk(z2ram_gendisk[i]);
-+		blk_cleanup_queue(z2ram_gendisk[i]->queue);
-+		put_disk(z2ram_gendisk[i]);
-+	}
- 	blk_mq_free_tag_set(&tag_set);
+ static const struct of_device_id vc4_hvs_dt_match[] = {
++	{ .compatible = "brcm,bcm2711-hvs" },
+ 	{ .compatible = "brcm,bcm2835-hvs" },
+ 	{}
+ };
+diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
+index d040d9f12c6d..20c949b57827 100644
+--- a/drivers/gpu/drm/vc4/vc4_plane.c
++++ b/drivers/gpu/drm/vc4/vc4_plane.c
+@@ -32,45 +32,60 @@ static const struct hvs_format {
+ 	u32 drm; /* DRM_FORMAT_* */
+ 	u32 hvs; /* HVS_FORMAT_* */
+ 	u32 pixel_order;
++	u32 pixel_order_hvs5;
+ } hvs_formats[] = {
+ 	{
+-		.drm = DRM_FORMAT_XRGB8888, .hvs = HVS_PIXEL_FORMAT_RGBA8888,
++		.drm = DRM_FORMAT_XRGB8888,
++		.hvs = HVS_PIXEL_FORMAT_RGBA8888,
+ 		.pixel_order = HVS_PIXEL_ORDER_ABGR,
++		.pixel_order_hvs5 = HVS_PIXEL_ORDER_ARGB,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_ARGB8888, .hvs = HVS_PIXEL_FORMAT_RGBA8888,
++		.drm = DRM_FORMAT_ARGB8888,
++		.hvs = HVS_PIXEL_FORMAT_RGBA8888,
+ 		.pixel_order = HVS_PIXEL_ORDER_ABGR,
++		.pixel_order_hvs5 = HVS_PIXEL_ORDER_ARGB,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_ABGR8888, .hvs = HVS_PIXEL_FORMAT_RGBA8888,
++		.drm = DRM_FORMAT_ABGR8888,
++		.hvs = HVS_PIXEL_FORMAT_RGBA8888,
+ 		.pixel_order = HVS_PIXEL_ORDER_ARGB,
++		.pixel_order_hvs5 = HVS_PIXEL_ORDER_ABGR,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_XBGR8888, .hvs = HVS_PIXEL_FORMAT_RGBA8888,
++		.drm = DRM_FORMAT_XBGR8888,
++		.hvs = HVS_PIXEL_FORMAT_RGBA8888,
+ 		.pixel_order = HVS_PIXEL_ORDER_ARGB,
++		.pixel_order_hvs5 = HVS_PIXEL_ORDER_ABGR,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_RGB565, .hvs = HVS_PIXEL_FORMAT_RGB565,
++		.drm = DRM_FORMAT_RGB565,
++		.hvs = HVS_PIXEL_FORMAT_RGB565,
+ 		.pixel_order = HVS_PIXEL_ORDER_XRGB,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_BGR565, .hvs = HVS_PIXEL_FORMAT_RGB565,
++		.drm = DRM_FORMAT_BGR565,
++		.hvs = HVS_PIXEL_FORMAT_RGB565,
+ 		.pixel_order = HVS_PIXEL_ORDER_XBGR,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_ARGB1555, .hvs = HVS_PIXEL_FORMAT_RGBA5551,
++		.drm = DRM_FORMAT_ARGB1555,
++		.hvs = HVS_PIXEL_FORMAT_RGBA5551,
+ 		.pixel_order = HVS_PIXEL_ORDER_ABGR,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_XRGB1555, .hvs = HVS_PIXEL_FORMAT_RGBA5551,
++		.drm = DRM_FORMAT_XRGB1555,
++		.hvs = HVS_PIXEL_FORMAT_RGBA5551,
+ 		.pixel_order = HVS_PIXEL_ORDER_ABGR,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_RGB888, .hvs = HVS_PIXEL_FORMAT_RGB888,
++		.drm = DRM_FORMAT_RGB888,
++		.hvs = HVS_PIXEL_FORMAT_RGB888,
+ 		.pixel_order = HVS_PIXEL_ORDER_XRGB,
+ 	},
+ 	{
+-		.drm = DRM_FORMAT_BGR888, .hvs = HVS_PIXEL_FORMAT_RGB888,
++		.drm = DRM_FORMAT_BGR888,
++		.hvs = HVS_PIXEL_FORMAT_RGB888,
+ 		.pixel_order = HVS_PIXEL_ORDER_XBGR,
+ 	},
+ 	{
+@@ -776,35 +791,6 @@ static int vc4_plane_mode_set(struct drm_plane *plane,
+ 		return -EINVAL;
+ 	}
  
- 	if (current_device != -1) {
+-	/* Control word */
+-	vc4_dlist_write(vc4_state,
+-			SCALER_CTL0_VALID |
+-			(rotation & DRM_MODE_REFLECT_X ? SCALER_CTL0_HFLIP : 0) |
+-			(rotation & DRM_MODE_REFLECT_Y ? SCALER_CTL0_VFLIP : 0) |
+-			VC4_SET_FIELD(SCALER_CTL0_RGBA_EXPAND_ROUND, SCALER_CTL0_RGBA_EXPAND) |
+-			(format->pixel_order << SCALER_CTL0_ORDER_SHIFT) |
+-			(hvs_format << SCALER_CTL0_PIXEL_FORMAT_SHIFT) |
+-			VC4_SET_FIELD(tiling, SCALER_CTL0_TILING) |
+-			(vc4_state->is_unity ? SCALER_CTL0_UNITY : 0) |
+-			VC4_SET_FIELD(scl0, SCALER_CTL0_SCL0) |
+-			VC4_SET_FIELD(scl1, SCALER_CTL0_SCL1));
+-
+-	/* Position Word 0: Image Positions and Alpha Value */
+-	vc4_state->pos0_offset = vc4_state->dlist_count;
+-	vc4_dlist_write(vc4_state,
+-			VC4_SET_FIELD(state->alpha >> 8, SCALER_POS0_FIXED_ALPHA) |
+-			VC4_SET_FIELD(vc4_state->crtc_x, SCALER_POS0_START_X) |
+-			VC4_SET_FIELD(vc4_state->crtc_y, SCALER_POS0_START_Y));
+-
+-	/* Position Word 1: Scaled Image Dimensions. */
+-	if (!vc4_state->is_unity) {
+-		vc4_dlist_write(vc4_state,
+-				VC4_SET_FIELD(vc4_state->crtc_w,
+-					      SCALER_POS1_SCL_WIDTH) |
+-				VC4_SET_FIELD(vc4_state->crtc_h,
+-					      SCALER_POS1_SCL_HEIGHT));
+-	}
+-
+ 	/* Don't waste cycles mixing with plane alpha if the set alpha
+ 	 * is opaque or there is no per-pixel alpha information.
+ 	 * In any case we use the alpha property value as the fixed alpha.
+@@ -812,20 +798,120 @@ static int vc4_plane_mode_set(struct drm_plane *plane,
+ 	mix_plane_alpha = state->alpha != DRM_BLEND_ALPHA_OPAQUE &&
+ 			  fb->format->has_alpha;
+ 
+-	/* Position Word 2: Source Image Size, Alpha */
+-	vc4_state->pos2_offset = vc4_state->dlist_count;
+-	vc4_dlist_write(vc4_state,
+-			VC4_SET_FIELD(fb->format->has_alpha ?
+-				      SCALER_POS2_ALPHA_MODE_PIPELINE :
+-				      SCALER_POS2_ALPHA_MODE_FIXED,
+-				      SCALER_POS2_ALPHA_MODE) |
+-			(mix_plane_alpha ? SCALER_POS2_ALPHA_MIX : 0) |
+-			(fb->format->has_alpha ? SCALER_POS2_ALPHA_PREMULT : 0) |
+-			VC4_SET_FIELD(vc4_state->src_w[0], SCALER_POS2_WIDTH) |
+-			VC4_SET_FIELD(vc4_state->src_h[0], SCALER_POS2_HEIGHT));
++	if (!vc4->hvs->hvs5) {
++	/* Control word */
++		vc4_dlist_write(vc4_state,
++				SCALER_CTL0_VALID |
++				(rotation & DRM_MODE_REFLECT_X ? SCALER_CTL0_HFLIP : 0) |
++				(rotation & DRM_MODE_REFLECT_Y ? SCALER_CTL0_VFLIP : 0) |
++				VC4_SET_FIELD(SCALER_CTL0_RGBA_EXPAND_ROUND, SCALER_CTL0_RGBA_EXPAND) |
++				(format->pixel_order << SCALER_CTL0_ORDER_SHIFT) |
++				(hvs_format << SCALER_CTL0_PIXEL_FORMAT_SHIFT) |
++				VC4_SET_FIELD(tiling, SCALER_CTL0_TILING) |
++				(vc4_state->is_unity ? SCALER_CTL0_UNITY : 0) |
++				VC4_SET_FIELD(scl0, SCALER_CTL0_SCL0) |
++				VC4_SET_FIELD(scl1, SCALER_CTL0_SCL1));
++
++		/* Position Word 0: Image Positions and Alpha Value */
++		vc4_state->pos0_offset = vc4_state->dlist_count;
++		vc4_dlist_write(vc4_state,
++				VC4_SET_FIELD(state->alpha >> 8, SCALER_POS0_FIXED_ALPHA) |
++				VC4_SET_FIELD(vc4_state->crtc_x, SCALER_POS0_START_X) |
++				VC4_SET_FIELD(vc4_state->crtc_y, SCALER_POS0_START_Y));
++
++		/* Position Word 1: Scaled Image Dimensions. */
++		if (!vc4_state->is_unity) {
++			vc4_dlist_write(vc4_state,
++					VC4_SET_FIELD(vc4_state->crtc_w,
++						      SCALER_POS1_SCL_WIDTH) |
++					VC4_SET_FIELD(vc4_state->crtc_h,
++						      SCALER_POS1_SCL_HEIGHT));
++		}
++
++		/* Position Word 2: Source Image Size, Alpha */
++		vc4_state->pos2_offset = vc4_state->dlist_count;
++		vc4_dlist_write(vc4_state,
++				VC4_SET_FIELD(fb->format->has_alpha ?
++					      SCALER_POS2_ALPHA_MODE_PIPELINE :
++					      SCALER_POS2_ALPHA_MODE_FIXED,
++					      SCALER_POS2_ALPHA_MODE) |
++				(mix_plane_alpha ? SCALER_POS2_ALPHA_MIX : 0) |
++				(fb->format->has_alpha ?
++						SCALER_POS2_ALPHA_PREMULT : 0) |
++				VC4_SET_FIELD(vc4_state->src_w[0],
++					      SCALER_POS2_WIDTH) |
++				VC4_SET_FIELD(vc4_state->src_h[0],
++					      SCALER_POS2_HEIGHT));
++
++		/* Position Word 3: Context.  Written by the HVS. */
++		vc4_dlist_write(vc4_state, 0xc0c0c0c0);
++
++	} else {
++		u32 hvs_pixel_order = format->pixel_order;
+ 
+-	/* Position Word 3: Context.  Written by the HVS. */
+-	vc4_dlist_write(vc4_state, 0xc0c0c0c0);
++		if (format->pixel_order_hvs5)
++			hvs_pixel_order = format->pixel_order_hvs5;
++
++		/* Control word */
++		vc4_dlist_write(vc4_state,
++				SCALER_CTL0_VALID |
++				(hvs_pixel_order << SCALER_CTL0_ORDER_SHIFT) |
++				(hvs_format << SCALER_CTL0_PIXEL_FORMAT_SHIFT) |
++				VC4_SET_FIELD(tiling, SCALER_CTL0_TILING) |
++				(vc4_state->is_unity ?
++						SCALER5_CTL0_UNITY : 0) |
++				VC4_SET_FIELD(scl0, SCALER_CTL0_SCL0) |
++				VC4_SET_FIELD(scl1, SCALER_CTL0_SCL1) |
++				SCALER5_CTL0_ALPHA_EXPAND |
++				SCALER5_CTL0_RGB_EXPAND);
++
++		/* Position Word 0: Image Positions and Alpha Value */
++		vc4_state->pos0_offset = vc4_state->dlist_count;
++		vc4_dlist_write(vc4_state,
++				(rotation & DRM_MODE_REFLECT_Y ?
++						SCALER5_POS0_VFLIP : 0) |
++				VC4_SET_FIELD(vc4_state->crtc_x,
++					      SCALER_POS0_START_X) |
++				(rotation & DRM_MODE_REFLECT_X ?
++					      SCALER5_POS0_HFLIP : 0) |
++				VC4_SET_FIELD(vc4_state->crtc_y,
++					      SCALER5_POS0_START_Y)
++			       );
++
++		/* Control Word 2 */
++		vc4_dlist_write(vc4_state,
++				VC4_SET_FIELD(state->alpha >> 4,
++					      SCALER5_CTL2_ALPHA) |
++				fb->format->has_alpha ?
++					SCALER5_CTL2_ALPHA_PREMULT : 0 |
++				(mix_plane_alpha ?
++					SCALER5_CTL2_ALPHA_MIX : 0) |
++				VC4_SET_FIELD(fb->format->has_alpha ?
++				      SCALER5_CTL2_ALPHA_MODE_PIPELINE :
++				      SCALER5_CTL2_ALPHA_MODE_FIXED,
++				      SCALER5_CTL2_ALPHA_MODE)
++			       );
++
++		/* Position Word 1: Scaled Image Dimensions. */
++		if (!vc4_state->is_unity) {
++			vc4_dlist_write(vc4_state,
++					VC4_SET_FIELD(vc4_state->crtc_w,
++						      SCALER_POS1_SCL_WIDTH) |
++					VC4_SET_FIELD(vc4_state->crtc_h,
++						      SCALER_POS1_SCL_HEIGHT));
++		}
++
++		/* Position Word 2: Source Image Size */
++		vc4_state->pos2_offset = vc4_state->dlist_count;
++		vc4_dlist_write(vc4_state,
++				VC4_SET_FIELD(vc4_state->src_w[0],
++					      SCALER5_POS2_WIDTH) |
++				VC4_SET_FIELD(vc4_state->src_h[0],
++					      SCALER5_POS2_HEIGHT));
++
++		/* Position Word 3: Context.  Written by the HVS. */
++		vc4_dlist_write(vc4_state, 0xc0c0c0c0);
++	}
+ 
+ 
+ 	/* Pointer Word 0/1/2: RGB / Y / Cb / Cr Pointers
+@@ -1203,6 +1289,10 @@ static bool vc4_format_mod_supported(struct drm_plane *plane,
+ 		default:
+ 			return false;
+ 		}
++	case DRM_FORMAT_RGBX1010102:
++	case DRM_FORMAT_BGRX1010102:
++	case DRM_FORMAT_RGBA1010102:
++	case DRM_FORMAT_BGRA1010102:
+ 	case DRM_FORMAT_YUV422:
+ 	case DRM_FORMAT_YVU422:
+ 	case DRM_FORMAT_YUV420:
+diff --git a/drivers/gpu/drm/vc4/vc4_regs.h b/drivers/gpu/drm/vc4/vc4_regs.h
+index 324462cc9cd4..91b785725555 100644
+--- a/drivers/gpu/drm/vc4/vc4_regs.h
++++ b/drivers/gpu/drm/vc4/vc4_regs.h
+@@ -327,6 +327,20 @@
+ # define SCALER_DISPCTRLX_HEIGHT_MASK		VC4_MASK(11, 0)
+ # define SCALER_DISPCTRLX_HEIGHT_SHIFT		0
+ 
++# define SCALER5_DISPCTRLX_WIDTH_MASK		VC4_MASK(28, 16)
++# define SCALER5_DISPCTRLX_WIDTH_SHIFT		16
++/* Generates a single frame when VSTART is seen and stops at the last
++ * pixel read from the FIFO.
++ */
++# define SCALER5_DISPCTRLX_ONESHOT		BIT(15)
++/* Processes a single context in the dlist and then task switch,
++ * instead of an entire line.
++ */
++# define SCALER5_DISPCTRLX_ONECTX_MASK		VC4_MASK(14, 13)
++# define SCALER5_DISPCTRLX_ONECTX_SHIFT		13
++# define SCALER5_DISPCTRLX_HEIGHT_MASK		VC4_MASK(12, 0)
++# define SCALER5_DISPCTRLX_HEIGHT_SHIFT		0
++
+ #define SCALER_DISPBKGND0                       0x00000044
+ # define SCALER_DISPBKGND_AUTOHS		BIT(31)
+ # define SCALER_DISPBKGND_INTERLACE		BIT(30)
+@@ -460,6 +474,8 @@
+ #define SCALER_DLIST_START                      0x00002000
+ #define SCALER_DLIST_SIZE                       0x00004000
+ 
++#define SCALER5_DLIST_START			0x00004000
++
+ #define VC4_HDMI_CORE_REV			0x000
+ 
+ #define VC4_HDMI_SW_RESET_CONTROL		0x004
+@@ -825,6 +841,8 @@ enum hvs_pixel_format {
+ 	HVS_PIXEL_FORMAT_PALETTE = 13,
+ 	HVS_PIXEL_FORMAT_YUV444_RGB = 14,
+ 	HVS_PIXEL_FORMAT_AYUV444_RGB = 15,
++	HVS_PIXEL_FORMAT_RGBA1010102 = 16,
++	HVS_PIXEL_FORMAT_YCBCR_10BIT = 17,
+ };
+ 
+ /* Note: the LSB is the rightmost character shown.  Only valid for
+@@ -879,6 +897,10 @@ enum hvs_pixel_format {
+ #define SCALER_CTL0_RGBA_EXPAND_MSB		2
+ #define SCALER_CTL0_RGBA_EXPAND_ROUND		3
+ 
++#define SCALER5_CTL0_ALPHA_EXPAND		BIT(12)
++
++#define SCALER5_CTL0_RGB_EXPAND			BIT(11)
++
+ #define SCALER_CTL0_SCL1_MASK			VC4_MASK(10, 8)
+ #define SCALER_CTL0_SCL1_SHIFT			8
+ 
+@@ -896,10 +918,13 @@ enum hvs_pixel_format {
+ 
+ /* Set to indicate no scaling. */
+ #define SCALER_CTL0_UNITY			BIT(4)
++#define SCALER5_CTL0_UNITY			BIT(15)
+ 
+ #define SCALER_CTL0_PIXEL_FORMAT_MASK		VC4_MASK(3, 0)
+ #define SCALER_CTL0_PIXEL_FORMAT_SHIFT		0
+ 
++#define SCALER5_CTL0_PIXEL_FORMAT_MASK		VC4_MASK(4, 0)
++
+ #define SCALER_POS0_FIXED_ALPHA_MASK		VC4_MASK(31, 24)
+ #define SCALER_POS0_FIXED_ALPHA_SHIFT		24
+ 
+@@ -909,12 +934,48 @@ enum hvs_pixel_format {
+ #define SCALER_POS0_START_X_MASK		VC4_MASK(11, 0)
+ #define SCALER_POS0_START_X_SHIFT		0
+ 
++#define SCALER5_POS0_START_Y_MASK		VC4_MASK(27, 16)
++#define SCALER5_POS0_START_Y_SHIFT		16
++
++#define SCALER5_POS0_START_X_MASK		VC4_MASK(13, 0)
++#define SCALER5_POS0_START_X_SHIFT		0
++
++#define SCALER5_POS0_VFLIP			BIT(31)
++#define SCALER5_POS0_HFLIP			BIT(15)
++
++#define SCALER5_CTL2_ALPHA_MODE_MASK		VC4_MASK(31, 30)
++#define SCALER5_CTL2_ALPHA_MODE_SHIFT		30
++#define SCALER5_CTL2_ALPHA_MODE_PIPELINE		0
++#define SCALER5_CTL2_ALPHA_MODE_FIXED		1
++#define SCALER5_CTL2_ALPHA_MODE_FIXED_NONZERO	2
++#define SCALER5_CTL2_ALPHA_MODE_FIXED_OVER_0x07	3
++
++#define SCALER5_CTL2_ALPHA_PREMULT		BIT(29)
++
++#define SCALER5_CTL2_ALPHA_MIX			BIT(28)
++
++#define SCALER5_CTL2_ALPHA_LOC			BIT(25)
++
++#define SCALER5_CTL2_MAP_SEL_MASK		VC4_MASK(18, 17)
++#define SCALER5_CTL2_MAP_SEL_SHIFT		17
++
++#define SCALER5_CTL2_GAMMA			BIT(16)
++
++#define SCALER5_CTL2_ALPHA_MASK			VC4_MASK(15, 4)
++#define SCALER5_CTL2_ALPHA_SHIFT		4
++
+ #define SCALER_POS1_SCL_HEIGHT_MASK		VC4_MASK(27, 16)
+ #define SCALER_POS1_SCL_HEIGHT_SHIFT		16
+ 
+ #define SCALER_POS1_SCL_WIDTH_MASK		VC4_MASK(11, 0)
+ #define SCALER_POS1_SCL_WIDTH_SHIFT		0
+ 
++#define SCALER5_POS1_SCL_HEIGHT_MASK		VC4_MASK(28, 16)
++#define SCALER5_POS1_SCL_HEIGHT_SHIFT		16
++
++#define SCALER5_POS1_SCL_WIDTH_MASK		VC4_MASK(12, 0)
++#define SCALER5_POS1_SCL_WIDTH_SHIFT		0
++
+ #define SCALER_POS2_ALPHA_MODE_MASK		VC4_MASK(31, 30)
+ #define SCALER_POS2_ALPHA_MODE_SHIFT		30
+ #define SCALER_POS2_ALPHA_MODE_PIPELINE		0
+@@ -930,6 +991,12 @@ enum hvs_pixel_format {
+ #define SCALER_POS2_WIDTH_MASK			VC4_MASK(11, 0)
+ #define SCALER_POS2_WIDTH_SHIFT			0
+ 
++#define SCALER5_POS2_HEIGHT_MASK		VC4_MASK(28, 16)
++#define SCALER5_POS2_HEIGHT_SHIFT		16
++
++#define SCALER5_POS2_WIDTH_MASK			VC4_MASK(12, 0)
++#define SCALER5_POS2_WIDTH_SHIFT		0
++
+ /* Color Space Conversion words.  Some values are S2.8 signed
+  * integers, except that the 2 integer bits map as {0x0: 0, 0x1: 1,
+  * 0x2: 2, 0x3: -1}
 -- 
-2.28.0
-
+git-series 0.9.1
