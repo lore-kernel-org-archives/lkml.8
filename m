@@ -2,144 +2,111 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA219C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0832AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8062B20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xt19bCiq"
+	by mail.kernel.org (Postfix) with ESMTP id CA20A20722
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599145792;
+	bh=68DNqEok2XhXHOmQ4/OhRUUJNNkVRuXHV71v+f39NZM=;
+	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
+	b=LbhysrWsEeYGPUwtuBjSsUBZFodEZ+S/xF1zEr9bCqCZPYib1KoDIbClqSB7jqLZO
+	 fC0lhRxajPDFTa53TKiyksUrFCvF99n/2uhFCcXcMbhknJRYC5d3X+1Rt8u5ibpd9E
+	 SQ57+YGCSYOl/i9k1d8K+vksZfydpB+sIADIk4gQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgICPJm (ORCPT
+        id S1729367AbgICPJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:09:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728210AbgICPIf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:08:35 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A03C061244;
-        Thu,  3 Sep 2020 08:08:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zANyIwCFwmI0089viO54wIY1EtKNXS5UU2MUznvRctw=; b=Xt19bCiqDWoyV9PpNg6GGpyH9f
-        WCsHq7tvnfmtYZYDBmMjiLlWj113OpmQwZ5tdmKKR0Vv57P2Xm+elE3a4ZPGVSxz3x6zG2N4wiZgy
-        ZdVKnorpy+Y7Inbiu/ScjqXmhyw6c2YNj6QOxpfBW3L2I2YpZBpdJiTAU8wPDakdFDLKUBvTgcTpm
-        gix2VPcZd55hc0k06exyNfLnbOkmvVv7HXNEWxIF4kx45nYAKyVDlCULOXt66V9lRnInjb5w6OyAW
-        SdLWfaEsXzGPzJYBv146rzRuSKwgpOvJW2IBElhWe5MMn4RzfGOMTnpKjfkF9FqI1RXKYenzXPX5U
-        FPY3m3EQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDqqb-0007tU-VS; Thu, 03 Sep 2020 15:08:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 3 Sep 2020 11:09:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728938AbgICN6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 09:58:15 -0400
+Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 372B6300F7A;
-        Thu,  3 Sep 2020 17:08:20 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0A5F92BBB68AD; Thu,  3 Sep 2020 17:08:20 +0200 (CEST)
-Date:   Thu, 3 Sep 2020 17:08:19 +0200
-From:   peterz@infradead.org
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Saravana Kannan <saravanak@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        madhuparnabhowmik10@gmail.com,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC][PATCH] cpu_pm: Remove RCU abuse
-Message-ID: <20200903150819.GE1362448@hirez.programming.kicks-ass.net>
-References: <CAPDyKFrv+DTF8=twZZk_tenB-sLg6H-CFn9HVDVA5S2kK2=U5Q@mail.gmail.com>
- <20200901154417.GD20303@codeaurora.org>
- <20200901155014.GF2674@hirez.programming.kicks-ass.net>
- <20200901161340.GC29330@paulmck-ThinkPad-P72>
- <20200901174216.GJ29142@worktop.programming.kicks-ass.net>
- <CAPDyKFqPh7bg16AsitGv2QQHgwOPnWx9DiPPCMuD1EGA5TFFdg@mail.gmail.com>
- <20200902121355.GE1362448@hirez.programming.kicks-ass.net>
- <CAPDyKFrGj+8hOXi7sWxWNv2QP0=mx9pFKLG0JM-L5VNKUPDgeA@mail.gmail.com>
- <20200903135347.GC1362448@hirez.programming.kicks-ass.net>
- <CAPDyKFqduU65YmhBZ8PwDRTZDLtWhWX087LBy0bx56go+ra4Ow@mail.gmail.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15723208CA;
+        Thu,  3 Sep 2020 13:57:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599141456;
+        bh=68DNqEok2XhXHOmQ4/OhRUUJNNkVRuXHV71v+f39NZM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rEZLA3kledQKylisBtEd5Hn2NlCom0PPkl9HQlukK8uR7gs15pLUmnJaULD7xNNwn
+         OEfc68462reeaHv2UsNQJmoNwbq+f+1TA2IpzcGOKvLq+zQHjwoyLqYL8PVZ4O2p8V
+         5ZHIrQRcac1DUnzSkVcVszp5btpwcGpTcz+J6ZmY=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kDpk6-004T6r-6d; Thu, 03 Sep 2020 15:57:34 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/5] media: atomisp: move a static constant out of a header file
+Date:   Thu,  3 Sep 2020 15:57:31 +0200
+Message-Id: <a3280622dd3c85360c789e156f7b9d03bc8b2de3.1599141140.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1599141140.git.mchehab+huawei@kernel.org>
+References: <cover.1599141140.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFqduU65YmhBZ8PwDRTZDLtWhWX087LBy0bx56go+ra4Ow@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 04:36:35PM +0200, Ulf Hansson wrote:
-> On Thu, 3 Sep 2020 at 15:53, <peterz@infradead.org> wrote:
-> >  static int cpu_pm_notify(enum cpu_pm_event event)
-> >  {
-> >         int ret;
-> >
-> > +       lockdep_assert_irqs_disabled();
-> 
-> Nitpick, maybe the lockdep should be moved to a separate patch.
+Gcc reports that input_formatter_alignment is not used:
 
-Well, the unregister relies on IRQs being disabled here, so I figured
-asserting this was a good thing ;-)
+	In file included from ./drivers/staging/media/atomisp//pci/hive_isp_css_include/input_formatter.h:34,
+	                 from drivers/staging/media/atomisp//pci/runtime/debug/src/ia_css_debug.c:55:
+	./drivers/staging/media/atomisp//pci/hive_isp_css_common/host/input_formatter_local.h:118:27: warning: ‘input_formatter_alignment’ defined but not used [-Wunused-const-variable=]
 
-Starting the audit below, this might not in fact be true, which then
-invalidates the unregister implementation. In particular the notifier in
-arch/arm/kernel/hw_breakpoint.c seems to unconditionally enable IRQs.
+However, it is, but only inside input_formatter.c.
 
-> > +       ret = raw_notifier_call_chain(&cpu_pm_notifier_chain, event, NULL);
-> 
-> Converting to raw_notifiers seems reasonable - if we need to avoid the
-> RCU usage.
-> 
-> My point is, I wonder about if the notifier callbacks themselves are
-> safe from RCU usage. For example, I would not be surprised if tracing
-> is happening behind them.
+So, move it out of the header file.
 
-A bunch of them seem to call into the clk domain stuff, and I think
-there's tracepoints in that.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../atomisp/pci/hive_isp_css_common/host/input_formatter.c    | 4 ++++
+ .../pci/hive_isp_css_common/host/input_formatter_local.h      | 4 ----
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-> Moreover, I am not sure that we really need to prevent and limit
-> tracing from happening. Instead we could push rcu_idle_enter|exit()
-> further down to the arch specific code in the cpuidle drivers, as you
-> kind of all proposed earlier.
+diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter.c b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter.c
+index 1b196cd265b9..5cd6136f21a2 100644
+--- a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter.c
++++ b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter.c
+@@ -27,6 +27,10 @@
+ #include "input_formatter_private.h"
+ #endif /* __INLINE_INPUT_FORMATTER__ */
+ 
++static const unsigned int input_formatter_alignment[N_INPUT_FORMATTER_ID] = {
++	ISP_VEC_ALIGN, ISP_VEC_ALIGN, HIVE_ISP_CTRL_DATA_BYTES
++};
++
+ const hrt_address HIVE_IF_SRST_ADDRESS[N_INPUT_FORMATTER_ID] = {
+ 	INPUT_FORMATTER0_SRST_OFFSET,
+ 	INPUT_FORMATTER1_SRST_OFFSET,
+diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter_local.h b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter_local.h
+index 94fff77584f7..dfb593c109af 100644
+--- a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter_local.h
++++ b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter_local.h
+@@ -115,8 +115,4 @@ struct input_formatter_bin_state_s {
+ 	u32	en_status_update;
+ };
+ 
+-static const unsigned int input_formatter_alignment[N_INPUT_FORMATTER_ID] = {
+-	ISP_VEC_ALIGN, ISP_VEC_ALIGN, HIVE_ISP_CTRL_DATA_BYTES
+-};
+-
+ #endif /* __INPUT_FORMATTER_LOCAL_H_INCLUDED__ */
+-- 
+2.26.2
 
-Well, at some point the CPU is in a really dodgy state, ISTR there being
-ARM platforms where you have to manually leave the cache coherency
-fabric and all sorts of insanity. There should be a definite cut-off on
-tracing before that.
-
-Also, what is the point of all this clock and power domain callbacks, if
-not to put the CPU into an extremely low power state, surely you want to
-limit the amount of code that's ran when the CPU is in such a state.
-
-> In this way, we can step by step, move to a new "version" of
-> cpu_pm_enter() that doesn't have to deal with rcu_irq_enter_irqson(),
-> because RCU hasn't been pushed to idle yet.
-
-That should be easy enough to audit. The thing is that mainline is now
-generating (debug) splats, and some people are upset with this.
-
-If you're ok with ARM not being lockdep clean while this is being
-reworked I'm perfectly fine with that.
-
-(There used to be a separate CONFIG for RCU-lockdep, but that seems to
-have been removed)
