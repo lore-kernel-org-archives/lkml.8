@@ -2,136 +2,144 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78735C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78484C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6E12072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455242072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:51:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="l+VpGWun"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lG6NluBZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbgICMth (ORCPT
+        id S1728990AbgICMsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 08:49:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47018 "EHLO
+        Thu, 3 Sep 2020 08:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728893AbgICMid (ORCPT
+        with ESMTP id S1728828AbgICMhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 08:38:33 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5C0C061246
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 05:38:33 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id e5so1723017qth.5
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 05:38:33 -0700 (PDT)
+        Thu, 3 Sep 2020 08:37:08 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FFD5C061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 05:37:07 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id s205so3484447lja.7
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 05:37:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=C2d6QG1IblDeyroVtS3hMSNO/LsvLyKHGpkVymmB4pg=;
-        b=l+VpGWunXGi10wTShVSflV5Z/zSRT8cCTRxA819xi63BVbtXqlDpnECjBDN7GsHK7z
-         or/7Sqa1wMEMzBpsWVzrxXsFMyFqiWbufjImu+VlfgkFRZCjpHcxErVTGWkswDasZfQr
-         6yWHvRV1b8AQlYNlt89QWL9z+Q4EZpOls6QyvVy3ESS8+f+aqBaB8vcShXcMkuM19NnG
-         p7mGV8w5kiUuRNUWzqMRO4W8fA5nR9arzaRRoe75UAP/QmfNfZLu/zF1Zi5HnyFyFN/I
-         XfCL0idn3B2DF1Z7l3CRyneOXAHtA0bZYF7e2xSkOuCf2ax+VpT3DVFrFYwQFzAhADRE
-         X7wg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kHbO1tTc5n73bbL98QAauHq5Il5LPmDzuV8lMRkC0cU=;
+        b=lG6NluBZx+Gi+NN5w27t4VROy92oORzL/IHVGkOIwzhzR0L9BF1NKnFm+7q50/c8LF
+         QpHHC9UXNpOD5+9BeTXM3qYu+QdeEOkRA6h5Oztvp4otQOQz1B4dBULysn76kV51WNkJ
+         mV+W7dWOydL6MPcZmWnok9DVp96FO43h0OOk8MhM5v0nKe4zmWQRqSPXgogL9vc+caL/
+         ww2+4zFjJGIg78c0cFgoY9ytEpFY5VobiFGxr+JmUFy3iz+AUklXQCUzZ4Agrk6efDUR
+         qHfIrDsfi+9sBBj9VQrMIcVsvdsuRXjEohIKS2LN3cZ2gNKPYSiny8IkN7q2yXaCizRc
+         VOFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=C2d6QG1IblDeyroVtS3hMSNO/LsvLyKHGpkVymmB4pg=;
-        b=jHMW2wkVDzhYvOIV5pwBfHUacJpmciv3GaEWF98C8ddoyTy3fnD3zy9/MxGGjGjK8s
-         iF+WqUdj5wtlGlhkvNqmzV2YO/jKA99TqbkkTDJCztcRGmaStV5puEGnODIyYYmMMB5P
-         m0rQgMXhS/i1rAD7/qOoyB7yfGB8gz/7wZWPL4vGCXA0E6bzkP5yhgm17TNcjPpJMOPb
-         ARXEr0NAiPC/JxhaI/2CipaXDAsu+VqXTSf7bmgpT4Re6XubyCX2QdiWR00DPnW2b+vG
-         +OqcI3Azk0STPiC1zvCQtJ2OQu7KVsA+v5EEFe1Cp82FbQbSy3V/9kjXveS8O8vVru9i
-         T6tQ==
-X-Gm-Message-State: AOAM5334WjrqtkXceykAeAUJc/q/5ZcnUzffBd+Ofd2j1/2lrdIftbV/
-        YKEeO4YDprkaGlIEPDk/Nfa3sg==
-X-Google-Smtp-Source: ABdhPJzk9Vn1uJfPyBefi7iCXkdsWcTrDpZZF56VRUWX7CwcPp80tVcpXoqV9sLgSyT7IGuTrTs0uA==
-X-Received: by 2002:aed:2ce7:: with SMTP id g94mr3289809qtd.184.1599136711564;
-        Thu, 03 Sep 2020 05:38:31 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id r6sm2088194qkc.43.2020.09.03.05.38.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 05:38:30 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 08:38:25 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     skhan@linuxfoundation.org, sfr@canb.auug.org.au
-Cc:     brendanhiggins@google.com, urielguajardo@google.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-next@vger.kernel.org
-Subject: Re: [PATCH 2/2] kunit: ubsan integration
-Message-ID: <20200903123824.GA4225@lca.pw>
-References: <20200806174326.3577537-1-urielguajardojr@gmail.com>
- <20200806174326.3577537-2-urielguajardojr@gmail.com>
- <20200902125223.GA5676@lca.pw>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kHbO1tTc5n73bbL98QAauHq5Il5LPmDzuV8lMRkC0cU=;
+        b=iKbvotcxeKLf1K1Q/n283CehZ2LrlrNusN1eOprmeIStycnEhoNfMfzv2WxCKQWIBI
+         RLAT/WJpojZYngI7JBp8EoDLS0gixQi97KoQwLLdedufEecUbPXtwd5YzPogHtuG+1qZ
+         H1S7LlMb/8ss77q11qM7MEvuM3IEspmDdRamtesXP7Ae/rkjPVmKiTYG8q3+TNFJ11TK
+         lnAv3sBCkR5ijkswp1eVmsRgYgnJcruFP+ZdjC7gNKoqVXC8psgZ8tG6qgK7nVUyZOv/
+         8ZLgRg/Ma4TRfVXVjWN8xfrAgY1Mw21rNDkvW7JO/2XR6/Vf/aVokKjHlV2k2qHy6jZT
+         HPhw==
+X-Gm-Message-State: AOAM531JyIkRRCN6PQqk1FDX7NUjA4bmDUXPKzruO7UZ6rXiiugpZ9TV
+        GDQN2QUrCbF6BNLf5A3rmaHtPg==
+X-Google-Smtp-Source: ABdhPJxB63FvDL9KGDRorRvmo2+IyaQ1xI27E50OTunOMlitWRMrF+o827XaK4zj7R/A6uszSU2R0w==
+X-Received: by 2002:a2e:9886:: with SMTP id b6mr1145293ljj.258.1599136625541;
+        Thu, 03 Sep 2020 05:37:05 -0700 (PDT)
+Received: from [192.168.1.211] ([188.162.64.138])
+        by smtp.gmail.com with ESMTPSA id i26sm581490ljj.102.2020.09.03.05.37.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 05:37:04 -0700 (PDT)
+Subject: Re: [PATCH v1 6/9] phy: qcom-qmp: Add support for DP in USB3+DP combo
+ phy
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Rob Clark <robdclark@chromium.org>
+References: <20200826024711.220080-1-swboyd@chromium.org>
+ <20200826024711.220080-7-swboyd@chromium.org>
+ <335a0660-40e1-0c1e-3f7d-87f7024de18a@linaro.org>
+ <159900847014.334488.14041376759905055412@swboyd.mtv.corp.google.com>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Message-ID: <62bdac87-b886-58c1-f071-095ec9945f68@linaro.org>
+Date:   Thu, 3 Sep 2020 15:37:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200902125223.GA5676@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <159900847014.334488.14041376759905055412@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 08:52:24AM -0400, Qian Cai wrote:
-> On Thu, Aug 06, 2020 at 05:43:26PM +0000, Uriel Guajardo wrote:
-> > Integrates UBSAN into the KUnit testing framework. It fails KUnit tests
-> > whenever it reports undefined behavior.
-> > 
-> > Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
+On 02/09/2020 04:01, Stephen Boyd wrote:
+> Quoting Dmitry Baryshkov (2020-09-01 06:36:34)
+>> With these functions I'm struggling between introducing
+>> PHY_TYPE_DP_V3/V4 and introducing callbacks into qmp_phy_cfg. What would
+>> you prefer?
+>>
+>> What about the following struct?
+>>
+>> struct qmp_phy_dp_opts {
+>>          void (*dp_aux_init)(struct qmp_phy *qphy);
+>>          void (*dp_configure_tx)(struct qmp_phy *qphy);
+>>          void (*dp_configure_lanes)(struct qmp_phy *qphy);
+>> };
+>>
+>> I'm not sure about dp_calibrate().
+>>
 > 
-> It looks like this patch had been merged into linux-next but the "[PATCH 1/2]
-> kunit: support failure from dynamic analysis tools" did not. Hence, it caused a
-> compiling failure.
-> 
-> lib/ubsan.c: In function ‘ubsan_prologue’:
-> lib/ubsan.c:141:2: error: implicit declaration of function ‘kunit_fail_current_test’; did you mean ‘kunit_init_test’? [-Werror=implicit-function-declaration]
->   kunit_fail_current_test();
->   ^~~~~~~~~~~~~~~~~~~~~~~
->   kunit_init_test
-> cc1: some warnings being treated as errors
+> Is there v4 code somewhere that I can see? Another level of indirection
+> is always a solution, so it is probably fine. This driver is currently
+> written with many conditionals instead of function tables so I'm not
+> sure it fits in with the style of how things are done though. The
+> alternative is to use an enum and call different functions?
 
-Stephen, Shuah, can you revert this commit or pick up its dependency as well?
+Downstream DP driver sources can be found here:
+https://source.codeaurora.org/quic/la/platform/vendor/opensource/display-drivers/tree/msm/dp/dp_catalog_v420.c?h=LA.UM.8.12.r1-13900-sm8250.0
 
-https://lore.kernel.org/linux-kselftest/20200813205722.1384108-1-urielguajardojr@gmail.com/
-
-Still seeing this on today's linux-next build.
+https://source.codeaurora.org/quic/la/platform/vendor/opensource/display-drivers/tree/pll/dp_pll_7nm_util.c?h=LA.UM.8.12.r1-13900-sm8250.0
 
 > 
-> > ---
-> >  lib/ubsan.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/lib/ubsan.c b/lib/ubsan.c
-> > index cb9af3f6b77e..1460e2c828c8 100644
-> > --- a/lib/ubsan.c
-> > +++ b/lib/ubsan.c
-> > @@ -14,6 +14,7 @@
-> >  #include <linux/types.h>
-> >  #include <linux/sched.h>
-> >  #include <linux/uaccess.h>
-> > +#include <kunit/test.h>
-> >  
-> >  #include "ubsan.h"
-> >  
-> > @@ -137,6 +138,7 @@ static void ubsan_prologue(struct source_location *loc, const char *reason)
-> >  {
-> >  	current->in_ubsan++;
-> >  
-> > +	kunit_fail_current_test();
-> >  	pr_err("========================================"
-> >  		"========================================\n");
-> >  	pr_err("UBSAN: %s in %s:%d:%d\n", reason, loc->file_name,
-> > -- 
-> > 2.28.0.163.g6104cc2f0b6-goog
-> > 
+> The calibrate call is there to "turn the crank" on the aux settings.  I
+> need to cycle through the different values for that aux register so that
+> aux can be tuned properly. The AUX channel really has another phy that
+> needs tuning so we're sort of combining the aux and DP link phy together
+> here by letting the calibrate call tune the AUX phy and the configure
+> call tune the DP phy. I don't see any sort of concept of an AUX phy
+> though so this seemed ok. Does v4 need to tune more registers?
+
+
+It looks like four values are written to AUX_CFG1:
+0x20, 0x13, 0x23, 0x1d
+
+
+
+-- 
+With best wishes
+Dmitry
