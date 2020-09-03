@@ -3,109 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29973C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DA8C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F33D3205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:40:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gAU2dhcj"
+	by mail.kernel.org (Postfix) with ESMTP id 9E2B32065E
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:40:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599122441;
+	bh=/RhL1+Os0ZHjkfhSyZSXiOAfORqfkCbABBv7SoNeSus=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b+wHXCH24QYGqkjAEGFJKTId6dlV0PPRjGxWclrTd6yqZbncBnbUjGensFLtRJELj
+	 /EN5ZF2IAbNcbmj2cbCP3HeyvBtKnihq3jDIF5e5pDSWHhAntjmGQ+2QoHKWQmXbxy
+	 jwk6F5WWgIZNoUIaSFCx4hXB9AWrvlYGK3UF2XpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgICIkH (ORCPT
+        id S1728020AbgICIkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:40:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55866 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726543AbgICIkG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:40:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599122405;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nkompj5IxHGnEPikK3tjox7kn9DQzhQmyMUxr6MfduU=;
-        b=gAU2dhcjCXjB9cRCksONNpnCKv4McCDvFKn0UhXVG71jKwCDfgobKQ3PxkBJLrol6bDa+u
-        mjMFORjpWQA+VB4v6ceD690oUlY1B4la6cPduX8OdawuLwAuhbkLGGTLZDzGcw8TIVrPG3
-        dOSfezF/A9LItZgwmgQAdCA780C6TuE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-326-wYAvPqxcMZWIiuS14GZ_bg-1; Thu, 03 Sep 2020 04:40:00 -0400
-X-MC-Unique: wYAvPqxcMZWIiuS14GZ_bg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 3 Sep 2020 04:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726479AbgICIki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 04:40:38 -0400
+Received: from localhost (unknown [122.171.179.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9CFF58015F6;
-        Thu,  3 Sep 2020 08:39:58 +0000 (UTC)
-Received: from ovpn-115-2.ams2.redhat.com (ovpn-115-2.ams2.redhat.com [10.36.115.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8309A19C59;
-        Thu,  3 Sep 2020 08:39:55 +0000 (UTC)
-Message-ID: <dd73f551d1fc89e457ffabd106cbf0bf401b747b.camel@redhat.com>
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Kehuan Feng <kehuan.feng@gmail.com>
-Cc:     Hillf Danton <hdanton@sina.com>, Jike Song <albcamus@gmail.com>,
-        Josh Hunt <johunt@akamai.com>,
-        Jonas Bonn <jonas.bonn@netrounds.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        David Miller <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Date:   Thu, 03 Sep 2020 10:39:54 +0200
-In-Reply-To: <CAM_iQpV-JMURzFApp-Zhxs3QN9j=Zdf6yqwOP=E42ERDHxe6Hw@mail.gmail.com>
-References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
-         <20200623134259.8197-1-mzhivich@akamai.com>
-         <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
-         <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
-         <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
-         <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com>
-         <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
-         <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com>
-         <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
-         <20200822032800.16296-1-hdanton@sina.com>
-         <CACS=qqKhsu6waaXndO5tQL_gC9TztuUQpqQigJA2Ac0y12czMQ@mail.gmail.com>
-         <20200825032312.11776-1-hdanton@sina.com>
-         <CACS=qqK-5g-QM_vczjY+A=3fi3gChei4cAkKweZ4Sn2L537DQA@mail.gmail.com>
-         <20200825162329.11292-1-hdanton@sina.com>
-         <CACS=qqKgiwdCR_5+z-vkZ0X8DfzOPD7_ooJ_imeBnx+X1zw2qg@mail.gmail.com>
-         <CACS=qqKptAQQGiMoCs1Zgs9S4ZppHhasy1AK4df2NxnCDR+vCw@mail.gmail.com>
-         <5f46032e.1c69fb81.9880c.7a6cSMTPIN_ADDED_MISSING@mx.google.com>
-         <CACS=qq+Yw734DWhETNAULyBZiy_zyjuzzOL-NO30AB7fd2vUOQ@mail.gmail.com>
-         <20200827125747.5816-1-hdanton@sina.com>
-         <CACS=qq+a0H=e8yLFu95aE7Hr0bQ9ytCBBn2rFx82oJnPpkBpvg@mail.gmail.com>
-         <CAM_iQpV-JMURzFApp-Zhxs3QN9j=Zdf6yqwOP=E42ERDHxe6Hw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A650206C0;
+        Thu,  3 Sep 2020 08:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599122437;
+        bh=/RhL1+Os0ZHjkfhSyZSXiOAfORqfkCbABBv7SoNeSus=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Bqv3xA8ZsbL4xC45ykIHJ3xL4LxR6kgq8JH3vNz6QsLqABuwb+j0v/e8bQtPJcnO4
+         uIEC6+0nhPjNhUTiHlLZCuF18W+QHuyFLqrkKvJdff1OkX6DfTs4JFuXfaFflrpavS
+         nrDQ/cuSnGXpIB5oSpsCKMZEsQDwLNImH5lnrzM8=
+Date:   Thu, 3 Sep 2020 14:10:33 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     trix@redhat.com
+Cc:     yung-chuan.liao@linux.intel.com,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        natechancellor@gmail.com, ndesaulniers@google.com,
+        shreyas.nc@intel.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v2] soundwire: fix double free of dangling pointer
+Message-ID: <20200903084033.GN2639@vkoul-mobl>
+References: <20200902202650.14189-1-trix@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902202650.14189-1-trix@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-09-02 at 22:01 -0700, Cong Wang wrote:
-> Can you test the attached one-line fix? I think we are overthinking,
-> probably all
-> we need here is a busy wait.
+On 02-09-20, 13:26, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
+> 
+> clang static analysis flags this problem
+> 
+> stream.c:844:9: warning: Use of memory after
+>   it is freed
+>         kfree(bus->defer_msg.msg->buf);
+>               ^~~~~~~~~~~~~~~~~~~~~~~
+> 
+> This happens in an error handler cleaning up memory
+> allocated for elements in a list.
+> 
+> 	list_for_each_entry(m_rt, &stream->master_list, stream_node) {
+> 		bus = m_rt->bus;
+> 
+> 		kfree(bus->defer_msg.msg->buf);
+> 		kfree(bus->defer_msg.msg);
+> 	}
+> 
+> And is triggered when the call to sdw_bank_switch() fails.
+> There are a two problems.
+> 
+> First, when sdw_bank_switch() fails, though it frees memory it
+> does not clear bus's reference 'defer_msg.msg' to that memory.
+> 
+> The second problem is the freeing msg->buf. In some cases
+> msg will be NULL so this will dereference a null pointer.
+> Need to check before freeing.
 
-I think that will solve, but I also think that will kill NOLOCK
-performances due to really increased contention.
+Applied, thanks
 
-At this point I fear we could consider reverting the NOLOCK stuff.
-I personally would hate doing so, but it looks like NOLOCK benefits are
-outweighed by its issues.
-
-Any other opinion more than welcome!
-
-Cheers,
-
-Paolo
-
+-- 
+~Vinod
