@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CF4C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FDAC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9883B2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9565F2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599151318;
-	bh=VafyGkd2RQV3WY1NMwd4BTj7aNE+8uY7ba0Z+FNdfrQ=;
+	s=default; t=1599151353;
+	bh=C62qZtvU1LK8ekrlPR4F28bMHDUImJe8bnDuR7yrADw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mEw7C/5dLSNBg1Lt5PdH76Du3w7on8HJ8APHZVY+k4Zlyh5834Wrlnk1sJcz2HKFv
-	 ETfFyDcQ8jT2IWI/pk+vz0YPKNXr0vw/frtTk8aUlzYJu95wE5AZzpqvAWi6bMEzb6
-	 pdpaGVYwQStneCpvpKdOaQ/LfiW1BbpHZV6jQres=
+	b=TG4gJwpDmVnRXmGEtrVNEopB9bQnGI9R++k1oWAuVu9Angy+AiGQG9kSdAWPWpr1F
+	 0mcNceMmpEvXQtp6PMfVn2+UPRdtpfhIKwXViPsn4sgUi9AlyhWTw2fEt/Ulm3YaYz
+	 C30KfuFLcwAhznozb3Ehxor8GJoGddS/hQ2E79BQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgICQl5 (ORCPT
+        id S1729028AbgICQmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:41:57 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39106 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728500AbgICQlw (ORCPT
+        Thu, 3 Sep 2020 12:42:31 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:34838 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728937AbgICQm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:41:52 -0400
-Received: by mail-io1-f65.google.com with SMTP id b6so3607460iof.6;
-        Thu, 03 Sep 2020 09:41:51 -0700 (PDT)
+        Thu, 3 Sep 2020 12:42:26 -0400
+Received: by mail-il1-f196.google.com with SMTP id l4so3324494ilq.2;
+        Thu, 03 Sep 2020 09:42:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Wd2vM2P8GP7stt4qpcMkqIPITIt3Ct2eJFilR5ppWPI=;
-        b=k50DIZk3FeWW103BfeRi0BBg+QwILKZF+IVnsWKlU8YQ7sWmxq3Nxvei2xUmsz1egC
-         uhy7P4ZnmyjWQQNo9U/M6nTF3g2HUJNfP4USIkBkG7F21NvJB16nEjtdi5IKmlqqGsDb
-         VAbx/2ZpL1fF40veiIq4GY0/U0xt5ukVMfnWfdMU4asPv0Wg2NQqCOTjzXS0pKhy61KD
-         3CMGoKKxSKilencqW6j4MIrulg87g4NU6RUkDpaA0ZsK+iTLsmAkvw11Xk9j8mN6I7Zg
-         pPL06FhjWPSWcGa5rHURnCYrzLoDvONxP4fX7KSw+WxN8fuQnUkfmc75chCrYlobQPwL
-         291Q==
-X-Gm-Message-State: AOAM530AnHzIsUPk/YRP9V+38IBcrlY4FAln2AWKAsZuwxfLfHThJw0Z
-        YWpyzOo9l3QMnV75uw/+8Q==
-X-Google-Smtp-Source: ABdhPJzDecNUqKQf1RpxUDZRVZ3zNdbS9KNP+UvJxBO5cwkdQiDLk1fX4u9oDum9yV0Oyy8pM76AHg==
-X-Received: by 2002:a6b:8fc9:: with SMTP id r192mr3940678iod.24.1599151311395;
-        Thu, 03 Sep 2020 09:41:51 -0700 (PDT)
+        bh=6Sphnv+kZz9m5G/Scys4rI5dlFuqK5i9UXTX5h29xxM=;
+        b=rFfdjeR0lusgfyMKrA9Ay15UK55vm4CQwQ8SyN6Gjov91NnaBjX1PxkZp+7UPWK3KT
+         L75mOga0AO4pLXU3l+7mgAdrVvtEVXvRAPaHO6e+W47EbUFcdi6z9TYuEGhlTBke68Yr
+         PMEZGAGgo2y8Fo4YZ/BuybuX/vtKAWrkOof8WeD5UsVwqbFKzKGEIJ+ieUQEf/W7X1+/
+         IXdgDjkQPDjh09qntHy32jYtrG7zudeRpS+tIFNcJsREBL4V9QzYokWhyEiBwbVz50Nr
+         eXfCdeSi2TI+Bm/foJixoH95GMsyNhcN6ATQz/UlD3UD1YrqynPe41k61g/UEJwQ5fQ6
+         bG2g==
+X-Gm-Message-State: AOAM533RBaB0I7BDYhl+DnW720ORH9MRcxOtUSdURsevqG5XFWS7llpL
+        i8BK/Vyf9cQ0kQ48fEFwoQ==
+X-Google-Smtp-Source: ABdhPJyf5z2NqnEUDQWThMqUbFgeD+F0Z4y8wVXxVNOYbxoIN6ARDFco2WA47g884qz86E7kb3prsQ==
+X-Received: by 2002:a92:bf0a:: with SMTP id z10mr4215186ilh.39.1599151345148;
+        Thu, 03 Sep 2020 09:42:25 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id k16sm1482659ioc.15.2020.09.03.09.41.49
+        by smtp.gmail.com with ESMTPSA id p78sm1578646iod.0.2020.09.03.09.42.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 09:41:50 -0700 (PDT)
-Received: (nullmailer pid 2923306 invoked by uid 1000);
-        Thu, 03 Sep 2020 16:41:49 -0000
-Date:   Thu, 3 Sep 2020 10:41:49 -0600
+        Thu, 03 Sep 2020 09:42:24 -0700 (PDT)
+Received: (nullmailer pid 2924166 invoked by uid 1000);
+        Thu, 03 Sep 2020 16:42:23 -0000
+Date:   Thu, 3 Sep 2020 10:42:23 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     Kukjin Kim <kgene@kernel.org>, David Airlie <airlied@linux.ie>,
@@ -72,29 +72,31 @@ Cc:     Kukjin Kim <kgene@kernel.org>, David Airlie <airlied@linux.ie>,
         Sylwester Nawrocki <snawrocki@kernel.org>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH 01/10] dt-bindings: arm: samsung: pmu: Use
+Subject: Re: [PATCH 02/10] dt-bindings: gpu: arm,mali-midgard: Use
  unevaluatedProperties
-Message-ID: <20200903164149.GA2922901@bogus>
+Message-ID: <20200903164223.GA2923881@bogus>
 References: <20200829142501.31478-1-krzk@kernel.org>
+ <20200829142501.31478-2-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200829142501.31478-1-krzk@kernel.org>
+In-Reply-To: <20200829142501.31478-2-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 04:24:52PM +0200, Krzysztof Kozlowski wrote:
-> Additional properties actually might appear (e.g. assigned-clocks) so
-> use unevaluatedProperties to fix dtbs_check warnings like:
+On Sat, Aug 29, 2020 at 04:24:53PM +0200, Krzysztof Kozlowski wrote:
+> Additional properties or nodes actually might appear (e.g. operating
+> points table) so use unevaluatedProperties to fix dtbs_check warnings
+> like:
 > 
->   arch/arm64/boot/dts/exynos/exynos5433-tm2.dt.yaml: system-controller@105c0000:
->     'assigned-clock-parents', 'assigned-clocks' do not match any of the regexes: 'pinctrl-[0-9]+'
+>   arch/arm64/boot/dts/exynos/exynos5433-tm2.dt.yaml: gpu@14ac0000:
+>     'opp_table' does not match any of the regexes: 'pinctrl-[0-9]+'
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  Documentation/devicetree/bindings/arm/samsung/pmu.yaml | 2 +-
+>  Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 
 NAK. See https://lore.kernel.org/r/CAL_JsqKPXJxsHPS34_TCf9bwgKxZNSV4mvQR-WKRnknQVtGGxQ@mail.gmail.com/
