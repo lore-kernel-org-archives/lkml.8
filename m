@@ -2,152 +2,122 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35949C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AF6C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5B020709
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599157975;
-	bh=mVFpvmgbL9aHM0kUg80E2fSvuXkLZwtJPuuYUdX/F3U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0GZjeV1uaJ+bfFX+m+7GgSNpDOr2518fgW+sA2zFfXXYonpK3dGMBxfXOnMPT/ZSd
-	 4s9EP+zBuj04a+vJNC2+CDxEXj+GLKHfmA6IX0Ve2ZFbSt0ifZvrjT7c7s5No1zon4
-	 VSTb3gGw8AeAdhDmkTW84E/4YaWwmCVDdh+I8rxE=
+	by mail.kernel.org (Postfix) with ESMTP id B877D20709
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 18:33:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X94xHdmw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728942AbgICScx (ORCPT
+        id S1729268AbgICSdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 14:32:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729172AbgICSc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 14:32:29 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BED70208C7;
-        Thu,  3 Sep 2020 18:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599157948;
-        bh=mVFpvmgbL9aHM0kUg80E2fSvuXkLZwtJPuuYUdX/F3U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T9xQhkthPp4XX1sCPcQtzZb4P9lPpzJy92vaBrzI/3ZcekzT6RxInICfA7cig8e7W
-         vVlyqfeUzuFRIopmPX4E4dOItd0DpaDg7PrBlfQB77yFCm03xgIQ+tKXWafZSK6rKV
-         RBCAxjuHPSDT8hfm2dyZZcU9do8eM2SFip8PeWJw=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kDu27-008xrJ-4I; Thu, 03 Sep 2020 19:32:27 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        kernel-team@android.com
-Subject: [PATCH v2 2/4] irqchip/gic-v2, v3: Implement irq_chip->irq_retrigger()
-Date:   Thu,  3 Sep 2020 19:32:04 +0100
-Message-Id: <20200903183206.104838-3-maz@kernel.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200903183206.104838-1-maz@kernel.org>
-References: <20200903183206.104838-1-maz@kernel.org>
+        Thu, 3 Sep 2020 14:33:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729235AbgICScr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 14:32:47 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 462F5C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 11:32:47 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id u25so3618636otq.6
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 11:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=82HbmK1MEBIFmpgC+4ObPuGeXfJ8JE9e+JzzYbyM3tE=;
+        b=X94xHdmwtOXvMxEcdgfpcX4mJtVehcidGAiYCw1Vog/RSDUzgYyod31XsjIavxEQbY
+         4xEewzsKjrW3iUx+Y62sBhEBrAdv/m7FZfXszs7J7ppNdjEgwUkM6mJRiP3O1DtVpTWz
+         HYV1nQfMyT8IsbhYIy4jmpPqZo/OUsUycK75ro178LPy5svxyfJL9XJsdw0ajeIHttQt
+         C/uOGw/OcqNlCn9lsGsA0E1TMvN2xL+9eXVwwVdA17l/A3hey850rNFp+jSw/F4L9k/r
+         4P4TRpf8O4VTdBIJ/wIa60c8xQlAi+UZFXizgBr/WhHOwMtMS62EqI0d/HCF1tA20oaO
+         ylpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=82HbmK1MEBIFmpgC+4ObPuGeXfJ8JE9e+JzzYbyM3tE=;
+        b=Ass/kNg4HrSk42fzF2mLlhmXB5A/rUfgcNpHcrEKEaA92vX0ZFch/lN1Are1E6bIeu
+         0wZu1kt5mruVOGEGKDqu+//zqpLxwUpajnkvp/8FgJz7EXKIGG2OUqjzfmGMLoTjqufR
+         FVSB0K7DT3Y6oI0yKsF8TJsdmZRlyjbhNe/kd+pbNfDNmtxr3SYDS2+vRDBIO7687Z6J
+         45T/xSPiSvDJddilczLJbFLbAgGOfnWmaHB1PysW11c6/nBnk4BSrdo9Led/b/tO0JnB
+         K2xLZGXi3KcHgN3lLDPFgm6JcjU6r9mhFGAexNIHqEz12Svbhbz1cawgbHWjyRxsVlPa
+         KwZg==
+X-Gm-Message-State: AOAM5322GYrIgvSxRLx6FrjbBd8dpGGvOg0ibKPw5PCqT7TjCsvrIqUt
+        I7x9rIAEwAPj8jUXO/osN0IRyJdUdv6mA+fBvtJvlg==
+X-Google-Smtp-Source: ABdhPJx4FulqrTQ3lfTEcpEmm4pBJFjbKkKsoNqSqromwGpcbyaKjofyMNw2dD4agncvN2jgU3ZkvPOHjE/BxR0dyUo=
+X-Received: by 2002:a9d:1c8f:: with SMTP id l15mr2563980ota.241.1599157966243;
+ Thu, 03 Sep 2020 11:32:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net, tglx@linutronix.de, valentin.schneider@arm.com, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200903141122.72908-1-mgamal@redhat.com> <CALMp9eTrc8_z3pKBtLVmbnMvC+KtzXMYbYTXZPPz5F0UWW8oNQ@mail.gmail.com>
+ <00b0f9eb-286b-72e8-40b5-02f9576f2ce3@redhat.com>
+In-Reply-To: <00b0f9eb-286b-72e8-40b5-02f9576f2ce3@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 3 Sep 2020 11:32:34 -0700
+Message-ID: <CALMp9eS6O18WcEyw8b6npRSazsyKiGtBjV+coZVGxDNU1JEOsQ@mail.gmail.com>
+Subject: Re: [PATCH] KVM: x86: VMX: Make smaller physical guest address space
+ support user-configurable
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Mohammed Gamal <mgamal@redhat.com>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+On Thu, Sep 3, 2020 at 11:03 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 03/09/20 19:57, Jim Mattson wrote:
+> > On Thu, Sep 3, 2020 at 7:12 AM Mohammed Gamal <mgamal@redhat.com> wrote:
+> >> This patch exposes allow_smaller_maxphyaddr to the user as a module parameter.
+> >>
+> >> Since smaller physical address spaces are only supported on VMX, the parameter
+> >> is only exposed in the kvm_intel module.
+> >> Modifications to VMX page fault and EPT violation handling will depend on whether
+> >> that parameter is enabled.
+> >>
+> >> Also disable support by default, and let the user decide if they want to enable
+> >> it.
+> >
+> > I think a smaller guest physical address width *should* be allowed.
+> > However, perhaps the pedantic adherence to the architectural
+> > specification could be turned on or off per-VM? And, if we're going to
+> > be pedantic, I think we should go all the way and get MOV-to-CR3
+> > correct.
+>
+> That would be way too slow.  Even the current trapping of present #PF
+> can introduce some slowdown depending on the workload.
 
-While digging around IRQCHIP_EOI_IF_HANDLED and irq/resend.c, it has come
-to my attention that the IRQ resend situation seems a bit precarious for
-the GIC(s).
+Yes, I was concerned about that...which is why I would not want to
+enable pedantic mode. But if you're going to be pedantic, why go
+halfway?
 
-When marking an IRQ with IRQS_PENDING, handle_fasteoi_irq() will bail out
-and issue an irq_eoi(). Should the IRQ in question be re-enabled,
-check_irq_resend() will trigger a SW resend, which will go through the flow
-handler again and issue *another* irq_eoi() on the *same* IRQ
-activation. This is something the GIC spec clearly describes as a bad idea:
-any EOI must match a previous ACK.
+> > Does the typical guest care about whether or not setting any of the
+> > bits 51:46 in a PFN results in a fault?
+>
+> At least KVM with shadow pages does, which is a bit niche but it shows
+> that you cannot really rely on no one doing it.  As you guessed, the
+> main usage of the feature is for machines with 5-level page tables where
+> there are no reserved bits; emulating smaller MAXPHYADDR allows
+> migrating VMs from 4-level page-table hosts.
+>
+> Enabling per-VM would not be particularly useful IMO because if you want
+> to disable this code you can just set host MAXPHYADDR = guest
+> MAXPHYADDR, which should be the common case unless you want to do that
+> kind of Skylake to Icelake (or similar) migration.
 
-Implement irq_chip.irq_retrigger() for the GIC chips by setting the GIC
-pending bit of the relevant IRQ. After being called by check_irq_resend(),
-this will eventually trigger a *new* interrupt which we will handle as usual.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200730170321.31228-2-valentin.schneider@arm.com
----
- drivers/irqchip/irq-gic-v3.c | 7 +++++++
- drivers/irqchip/irq-gic.c    | 6 ++++++
- 2 files changed, 13 insertions(+)
-
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 324f280ff606..b507bc7c5cda 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1207,6 +1207,11 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- #define gic_smp_init()		do { } while(0)
- #endif
- 
-+static int gic_retrigger(struct irq_data *data)
-+{
-+	return !gic_irq_set_irqchip_state(data, IRQCHIP_STATE_PENDING, true);
-+}
-+
- #ifdef CONFIG_CPU_PM
- static int gic_cpu_pm_notifier(struct notifier_block *self,
- 			       unsigned long cmd, void *v)
-@@ -1242,6 +1247,7 @@ static struct irq_chip gic_chip = {
- 	.irq_eoi		= gic_eoi_irq,
- 	.irq_set_type		= gic_set_type,
- 	.irq_set_affinity	= gic_set_affinity,
-+	.irq_retrigger          = gic_retrigger,
- 	.irq_get_irqchip_state	= gic_irq_get_irqchip_state,
- 	.irq_set_irqchip_state	= gic_irq_set_irqchip_state,
- 	.irq_nmi_setup		= gic_irq_nmi_setup,
-@@ -1258,6 +1264,7 @@ static struct irq_chip gic_eoimode1_chip = {
- 	.irq_eoi		= gic_eoimode1_eoi_irq,
- 	.irq_set_type		= gic_set_type,
- 	.irq_set_affinity	= gic_set_affinity,
-+	.irq_retrigger          = gic_retrigger,
- 	.irq_get_irqchip_state	= gic_irq_get_irqchip_state,
- 	.irq_set_irqchip_state	= gic_irq_set_irqchip_state,
- 	.irq_set_vcpu_affinity	= gic_irq_set_vcpu_affinity,
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index a27ba2cc1dce..e92ee2b6d7a5 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -347,6 +347,11 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- }
- #endif
- 
-+static int gic_retrigger(struct irq_data *data)
-+{
-+	return !gic_irq_set_irqchip_state(data, IRQCHIP_STATE_PENDING, true);
-+}
-+
- static void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
- {
- 	u32 irqstat, irqnr;
-@@ -417,6 +422,7 @@ static const struct irq_chip gic_chip = {
- 	.irq_unmask		= gic_unmask_irq,
- 	.irq_eoi		= gic_eoi_irq,
- 	.irq_set_type		= gic_set_type,
-+	.irq_retrigger          = gic_retrigger,
- 	.irq_get_irqchip_state	= gic_irq_get_irqchip_state,
- 	.irq_set_irqchip_state	= gic_irq_set_irqchip_state,
- 	.flags			= IRQCHIP_SET_TYPE_MASKED |
--- 
-2.28.0
-
+I expect that it will be quite common to run 46-bit wide legacy VMs on
+Ice Lake hardware, as Ice Lake machines start showing up in
+heterogeneous data centers.
