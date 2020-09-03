@@ -2,73 +2,112 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF1FC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC90C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12A6020786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB7421527
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbgICP3q (ORCPT
+        id S1728473AbgICPaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:29:46 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:46509 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728337AbgICP3j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:29:39 -0400
-Received: (qmail 662975 invoked by uid 1000); 3 Sep 2020 11:29:37 -0400
-Date:   Thu, 3 Sep 2020 11:29:37 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Penghao <penghao@uniontech.com>
-Cc:     gregkh@linuxfoundation.org, johan@kernel.org, hdegoede@redhat.com,
-        dlaz@chromium.org, kerneldev@karsmulder.nl, jonathan@jdcox.net,
-        tomasz@meresinski.eu, linux-usb@vger.kernel.org,
+        Thu, 3 Sep 2020 11:30:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58750 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728145AbgICPaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 11:30:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id CE5D6AD60;
+        Thu,  3 Sep 2020 15:30:09 +0000 (UTC)
+Subject: Re: [PATCH v5 3/3] xen: add helpers to allocate unpopulated memory
+To:     Roger Pau Monne <roger.pau@citrix.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] HID: quirks: Add USB_QUIRK_IGNORE_REMOTE_WAKEUP quirk
- for BYD zhaoxin notebook
-Message-ID: <20200903152937.GA662845@rowland.harvard.edu>
-References: <20200903100326.5327-1-penghao@uniontech.com>
+Cc:     Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
+        Yan Yankovskyi <yyankovskyi@gmail.com>,
+        dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org,
+        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20200901083326.21264-1-roger.pau@citrix.com>
+ <20200901083326.21264-4-roger.pau@citrix.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <b1713f26-8202-ac1e-c18a-4989312219b9@suse.com>
+Date:   Thu, 3 Sep 2020 17:30:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903100326.5327-1-penghao@uniontech.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200901083326.21264-4-roger.pau@citrix.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 06:03:26PM +0800, Penghao wrote:
-> Add a USB_QUIRK_IGNORE_REMOTE_WAKEUP quirk for the BYD zhaoxin notebook.
-> This notebook come with usb touchpad. And we would like to disable touchpad
-> wakeup on this notebook by default.
+On 01.09.20 10:33, Roger Pau Monne wrote:
+> To be used in order to create foreign mappings. This is based on the
+> ZONE_DEVICE facility which is used by persistent memory devices in
+> order to create struct pages and kernel virtual mappings for the IOMEM
+> areas of such devices. Note that on kernels without support for
+> ZONE_DEVICE Xen will fallback to use ballooned pages in order to
+> create foreign mappings.
 > 
-> Signed-off-by: Penghao <penghao@uniontech.com>
-> ---
->  drivers/usb/core/quirks.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> The newly added helpers use the same parameters as the existing
+> {alloc/free}_xenballooned_pages functions, which allows for in-place
+> replacement of the callers. Once a memory region has been added to be
+> used as scratch mapping space it will no longer be released, and pages
+> returned are kept in a linked list. This allows to have a buffer of
+> pages and prevents resorting to frequent additions and removals of
+> regions.
 > 
-> diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
-> index 7c1198f80c23..5fa3f2416967 100644
-> --- a/drivers/usb/core/quirks.c
-> +++ b/drivers/usb/core/quirks.c
-> @@ -387,6 +387,10 @@ static const struct usb_device_id usb_quirk_list[] = {
->  	{ USB_DEVICE(0x0b05, 0x17e0), .driver_info =
->  			USB_QUIRK_IGNORE_REMOTE_WAKEUP },
->  
-> +	/* SONiX USB DEVICE Touchpad */
-> +	{ USB_DEVICE(0x0c45, 0x7056), .driver_info =
-> +			USB_QUIRK_IGNORE_REMOTE_WAKEUP },
-> +
->  	/* Realtek hub in Dell WD19 (Type-C) */
->  	{ USB_DEVICE(0x0bda, 0x0487), .driver_info = USB_QUIRK_NO_LPM },
+> If enabled (because ZONE_DEVICE is supported) the usage of the new
+> functionality untangles Xen balloon and RAM hotplug from the usage of
+> unpopulated physical memory ranges to map foreign pages, which is the
+> correct thing to do in order to avoid mappings of foreign pages depend
+> on memory hotplug.
+> 
+> Note the driver is currently not enabled on Arm platforms because it
+> would interfere with the identity mapping required on some platforms.
+> 
+> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
 
-Please follow the instructions at the start of the file about keeping 
-the entries sorted by vendor ID and product ID.
+Sorry, I just got a build error for x86 32-bit build:
 
-Alan Stern
+WARNING: unmet direct dependencies detected for ZONE_DEVICE
+   Depends on [n]: MEMORY_HOTPLUG [=n] && MEMORY_HOTREMOVE [=n] && 
+SPARSEMEM_VMEMMAP [=n] && ARCH_HAS_PTE_DEVMAP [=n]
+   Selected by [y]:
+   - XEN_UNPOPULATED_ALLOC [=y] && XEN [=y] && X86 [=y]
+   GEN     Makefile
+   CC      kernel/bounds.s
+   CALL    /home/gross/korg/src/scripts/atomic/check-atomics.sh
+   UPD     include/generated/bounds.h
+   CC      arch/x86/kernel/asm-offsets.s
+In file included from /home/gross/korg/src/include/linux/mmzone.h:19:0,
+                  from /home/gross/korg/src/include/linux/gfp.h:6,
+                  from /home/gross/korg/src/include/linux/slab.h:15,
+                  from /home/gross/korg/src/include/linux/crypto.h:19,
+                  from /home/gross/korg/src/arch/x86/kernel/asm-offsets.c:9:
+/home/gross/korg/src/include/linux/page-flags-layout.h:95:2: error: 
+#error "Not enough bits in page flags"
+  #error "Not enough bits in page flags"
+   ^~~~~
+make[2]: *** [/home/gross/korg/src/scripts/Makefile.build:114: 
+arch/x86/kernel/asm-offsets.s] Error 1
+make[1]: *** [/home/gross/korg/src/Makefile:1175: prepare0] Error 2
+make[1]: Leaving directory '/home/gross/korg/x8632'
+make: *** [Makefile:185: __sub-make] Error 2
+
+
+Juergen
