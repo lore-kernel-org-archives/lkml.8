@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43720C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC74C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3DA20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F35D20786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599144821;
-	bh=W7h7ePY56Dl8yzoGnP0Mk8cmTxilk8y0NBdF4hUdM1k=;
+	s=default; t=1599144826;
+	bh=3W4LmiLdjUpUX7ZuVTTgTSG2Qxld+wJCMLcxAsOwaW8=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Ei9nZ9WNjnVJ2uL98LzH/O5RsESfiRf+wOjhAvcSOFqpIC5aK1MjQzfdERIj228/L
-	 HYFAFGUSGuoZAU8hL5CG+PnHeVLSXZCxpPiGD4cE+4f9Ch2OSZs4/mZSTpuU8tq+VD
-	 qSW/F4dA5Aehn6kAaPPm3UNtf14TnDc6YwlB9tW0=
+	b=hkgnDc8+6BbOOSf076SJeL2PJGiCtU0pTLMKv93z8n1RpVtktPAbfKvfH6Zkqfcgp
+	 sqgw4FpVlGm2pDMjllyZIWewL/AvGSUm1rXndtDY/EIj4kYcXOSDZ9JoeYpLQheoUP
+	 m4zaIB1Tr5PPVuHIoTirdtvwsSvEEl4yuIOjLadM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbgICOxg (ORCPT
+        id S1729428AbgICOxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:53:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54626 "EHLO mail.kernel.org"
+        Thu, 3 Sep 2020 10:53:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729201AbgICOME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:12:04 -0400
+        id S1729200AbgICOMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:12:03 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2A9C20C56;
-        Thu,  3 Sep 2020 14:02:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E02B20E65;
+        Thu,  3 Sep 2020 14:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599141751;
-        bh=W7h7ePY56Dl8yzoGnP0Mk8cmTxilk8y0NBdF4hUdM1k=;
+        s=default; t=1599141754;
+        bh=3W4LmiLdjUpUX7ZuVTTgTSG2Qxld+wJCMLcxAsOwaW8=;
         h=From:To:Cc:Subject:Date:From;
-        b=lDylTEHrc+QmN9gatBwgfvs7NkCpyx4hMkunGgJFJ0coPPFuAhFs57fPsBmMVXPBH
-         tHTYMHCSz9CWNPNBqDqW8PVSeYnEVPyYrJ7wVGqrelQaMosKrVxJczQb2HzTZYF0Z5
-         4l6QhPB6bmaSq3svyicWlsNNmEb1ABIn7T2FppvY=
+        b=Ts4/TlcGEfsiHO9sjZUGEZhqp7GopJff/gY9MOnAtE+22Bk8AKUGx/qIbLk5PqTmz
+         JEO5ttcb62/CGbl71nXtqkgcOrVkxa0GUUDWd+O3UH1Vr4TcWMRdtTOwXuOgwpYmeH
+         hdQrTms/Tnta9vWYQimhGZbirIHcnIckG5gHbSB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, jslaby@suse.cz,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 4.9.235
-Date:   Thu,  3 Sep 2020 16:02:45 +0200
-Message-Id: <1599141765157230@kroah.com>
+Subject: Linux 4.14.196
+Date:   Thu,  3 Sep 2020 16:02:50 +0200
+Message-Id: <15991417701990@kroah.com>
 X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -55,12 +55,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 4.9.235 kernel.
+I'm announcing the release of the 4.14.196 kernel.
 
-All users of the 4.9 kernel series must upgrade.
+All users of the 4.14 kernel series must upgrade.
 
-The updated 4.9.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.9.y
+The updated 4.14.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.14.y
 and can be browsed at the normal kernel.org git web browser:
 	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
@@ -74,15 +74,22 @@ greg k-h
  arch/arm64/boot/dts/qcom/msm8916-pins.dtsi                          |    2 
  arch/arm64/kvm/hyp/switch.c                                         |    2 
  arch/mips/vdso/genvdso.c                                            |   10 +
+ arch/powerpc/kernel/cpu_setup_power.S                               |    2 
  arch/powerpc/perf/core-book3s.c                                     |    4 
  arch/powerpc/platforms/cell/Kconfig                                 |    1 
+ arch/powerpc/sysdev/xive/native.c                                   |    2 
  drivers/base/core.c                                                 |   12 -
  drivers/base/power/main.c                                           |   16 +
+ drivers/block/null_blk.c                                            |    2 
+ drivers/char/tpm/tpm-chip.c                                         |    9 -
+ drivers/char/tpm/tpm.h                                              |    6 
+ drivers/char/tpm/tpm2-space.c                                       |   26 +--
+ drivers/char/tpm/tpmrm-dev.c                                        |    2 
  drivers/edac/ie31200_edac.c                                         |   50 +++++-
  drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c                      |   16 +
  drivers/gpu/drm/amd/amdgpu/amdgpu_display.c                         |    5 
  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c                             |    3 
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c                             |    3 
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c                             |    7 
  drivers/gpu/drm/amd/amdkfd/kfd_topology.c                           |   20 +-
  drivers/gpu/drm/nouveau/nouveau_connector.c                         |    4 
  drivers/gpu/drm/nouveau/nouveau_fbcon.c                             |    4 
@@ -92,26 +99,31 @@ greg k-h
  drivers/i2c/busses/i2c-rcar.c                                       |    1 
  drivers/iommu/iova.c                                                |    4 
  drivers/md/dm-table.c                                               |   10 -
+ drivers/media/cec/cec-api.c                                         |    8 
  drivers/media/pci/ttpci/av7110.c                                    |    5 
  drivers/media/platform/davinci/vpif_capture.c                       |    2 
- drivers/net/bonding/bond_main.c                                     |   24 ++
+ drivers/media/rc/gpio-ir-tx.c                                       |    7 
+ drivers/mfd/intel-lpss-pci.c                                        |    3 
  drivers/net/ethernet/freescale/gianfar.c                            |    4 
- drivers/net/ipvlan/ipvlan_main.c                                    |   25 ++-
+ drivers/net/ipvlan/ipvlan_main.c                                    |   27 ++-
  drivers/net/wireless/ath/ath10k/hw.h                                |    2 
  drivers/net/wireless/realtek/rtlwifi/usb.c                          |    5 
+ drivers/nvme/host/fc.c                                              |    4 
  drivers/pci/slot.c                                                  |    6 
  drivers/s390/cio/css.c                                              |    5 
  drivers/scsi/fcoe/fcoe_ctlr.c                                       |    2 
  drivers/scsi/lpfc/lpfc_vport.c                                      |   26 ---
  drivers/scsi/scsi_transport_iscsi.c                                 |    2 
- drivers/scsi/ufs/ufshcd.c                                           |   11 -
- drivers/staging/media/cec/cec-api.c                                 |    8 
+ drivers/scsi/ufs/ufshcd.c                                           |   14 +
+ drivers/spi/spi-stm32.c                                             |    3 
  drivers/target/target_core_user.c                                   |    9 -
+ drivers/tty/serial/8250/8250_exar.c                                 |   24 ++
  drivers/tty/serial/8250/8250_port.c                                 |    9 -
  drivers/tty/serial/amba-pl011.c                                     |   16 +
  drivers/tty/serial/samsung.c                                        |    8 
  drivers/tty/vt/vt.c                                                 |    5 
  drivers/tty/vt/vt_ioctl.c                                           |   12 +
+ drivers/usb/class/cdc-acm.c                                         |   22 +-
  drivers/usb/core/quirks.c                                           |    2 
  drivers/usb/gadget/function/f_ncm.c                                 |   81 ++++++++-
  drivers/usb/gadget/function/f_tcm.c                                 |    7 
@@ -123,7 +135,7 @@ greg k-h
  drivers/usb/misc/yurex.c                                            |    2 
  drivers/usb/storage/unusual_devs.h                                  |    2 
  drivers/usb/storage/unusual_uas.h                                   |   14 +
- drivers/video/console/fbcon.c                                       |   25 ++-
+ drivers/video/fbdev/core/fbcon.c                                    |   25 ++-
  drivers/video/fbdev/omap2/omapfb/dss/dispc.c                        |    7 
  drivers/video/fbdev/omap2/omapfb/dss/dsi.c                          |    7 
  drivers/video/fbdev/omap2/omapfb/dss/dss.c                          |    7 
@@ -136,7 +148,8 @@ greg k-h
  fs/btrfs/tree-log.c                                                 |   10 -
  fs/buffer.c                                                         |    9 +
  fs/ceph/mds_client.c                                                |   14 +
- fs/ext4/super.c                                                     |    7 
+ fs/ext4/super.c                                                     |   75 +++++----
+ fs/f2fs/super.c                                                     |    5 
  fs/fs-writeback.c                                                   |   83 +++++-----
  fs/jbd2/transaction.c                                               |   26 +++
  include/linux/efi.h                                                 |    4 
@@ -144,6 +157,7 @@ greg k-h
  include/linux/overflow.h                                            |   73 ++++++++
  include/trace/events/writeback.h                                    |   13 -
  kernel/locking/lockdep_proc.c                                       |    2 
+ kernel/trace/blktrace.c                                             |   12 +
  net/core/skbuff.c                                                   |    4 
  net/ipv6/ip6_tunnel.c                                               |   10 +
  net/tipc/netlink_compat.c                                           |   12 +
@@ -168,7 +182,7 @@ greg k-h
  tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c      |    2 
  tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c        |    2 
  tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c       |    2 
- 98 files changed, 709 insertions(+), 275 deletions(-)
+ 112 files changed, 825 insertions(+), 341 deletions(-)
 
 Aditya Pakki (4):
       drm/radeon: fix multiple reference count leak
@@ -183,10 +197,20 @@ Alan Stern (2):
       USB: yurex: Fix bad gfp argument
       usb: storage: Add unusual_uas entry for Sony PSZ drives
 
+Alex Deucher (1):
+      drm/amdgpu: Fix buffer overflow in INFO ioctl
+
+Alexey Kardashevskiy (1):
+      powerpc/xive: Ignore kmemleak false positives
+
+Amelie Delaunay (1):
+      spi: stm32: fix stm32_spi_prepare_mbr in case of odd clk_rate
+
 Andrey Konovalov (1):
       efi: provide empty efi_enter_virtual_mode implementation
 
-Andy Shevchenko (1):
+Andy Shevchenko (2):
+      mfd: intel-lpss: Add Intel Emmitsburg PCH PCI IDs
       USB: gadget: u_f: Unbreak offset calculation in VLAs
 
 Arnd Bergmann (1):
@@ -211,8 +235,7 @@ Chris Wilson (1):
 Christophe JAILLET (1):
       usb: gadget: f_tcm: Fix some resource leaks in some error paths
 
-Cong Wang (2):
-      bonding: fix a potential double-unregister
+Cong Wang (1):
       tipc: fix uninit skb->data in tipc_nl_compat_dumpit()
 
 Cyril Roelandt (1):
@@ -239,7 +262,7 @@ George Kennedy (2):
       vt_ioctl: change VT_RESIZEX ioctl to check for error return from vc_resize()
 
 Greg Kroah-Hartman (1):
-      Linux 4.9.235
+      Linux 4.14.196
 
 Hans Verkuil (1):
       cec-api: prevent leaking memory through hole in structure
@@ -253,13 +276,17 @@ Hector Martin (1):
 Heikki Krogerus (1):
       device property: Fix the secondary firmware node handling in set_primary_fwnode()
 
-Jan Kara (3):
+Hou Pu (1):
+      null_blk: fix passing of REQ_FUA flag in null_handle_rq
+
+Jan Kara (4):
+      ext4: don't BUG on inconsistent journal feature
       writeback: Protect inode->i_io_list with inode->i_lock
       writeback: Avoid skipping inode writeback
       writeback: Fix sync livelock due to b_dirty_time processing
 
-Jarod Wilson (1):
-      bonding: show saner speed for broadcast mode
+Jarkko Sakkinen (1):
+      tpm: Unify the mismatching TPM space buffer sizes
 
 Jason Baron (1):
       EDAC/ie31200: Fallback if host bridge device is already initialized
@@ -283,6 +310,12 @@ Kai-Heng Feng (2):
 Kees Cook (1):
       overflow.h: Add allocation size calculation helpers
 
+Li Guifu (1):
+      f2fs: fix use-after-free issue
+
+Luis Chamberlain (1):
+      blktrace: ensure our debugfs dir exists
+
 Lukas Czerner (1):
       jbd2: make sure jh have b_transaction set in refile/unfile_buffer
 
@@ -298,6 +331,9 @@ Mark Tomlinson (1):
 
 Miaohe Lin (1):
       net: Fix potential wrong skb->protocol in skb_vlan_untag()
+
+Michael Ellerman (1):
+      powerpc/64s: Don't init FSCR_DSCR in __init_FSCR()
 
 Navid Emamdoost (4):
       drm/amdgpu: fix ref count leak in amdgpu_driver_open_kms
@@ -328,11 +364,15 @@ Reto Schneider (1):
 Robin Murphy (1):
       iommu/iova: Don't BUG on invalid PFNs
 
+Sean Young (1):
+      media: gpio-ir-tx: improve precision of transmitted signal due to scheduling
+
 Sergey Senozhatsky (1):
       serial: 8250: change lock order in serial8250_do_startup()
 
-Stanley Chu (1):
+Stanley Chu (2):
       scsi: ufs: Fix possible infinite loop in ufshcd_hold
+      scsi: ufs: Clean up completed request without interrupt notification
 
 Stephan Gerhold (1):
       arm64: dts: qcom: msm8916: Pull down PDM GPIOs during sleep
@@ -354,6 +394,15 @@ Thinh Nguyen (1):
 
 Thomas Gleixner (1):
       XEN uses irqdesc::irq_data_common::handler_data to store a per interrupt XEN data pointer which contains XEN specific information.
+
+Tianjia Zhang (1):
+      nvme-fc: Fix wrong return value in __nvme_fc_init_request()
+
+Tom Rix (1):
+      USB: cdc-acm: rework notification_buffer resizing
+
+Valmer Huhn (1):
+      serial: 8250_exar: Fix number of ports for Commtech PCIe cards
 
 Vineeth Vijayan (1):
       s390/cio: add cond_resched() in the slow_eval_known_fn() loop
