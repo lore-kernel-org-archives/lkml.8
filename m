@@ -2,176 +2,102 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFDAC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE84CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF72C206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89951206EB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:42:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tb4u650/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vOSGEgf6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgICOl7 (ORCPT
+        id S1729324AbgICOmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:41:59 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59448 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728918AbgICOlh (ORCPT
+        Thu, 3 Sep 2020 10:42:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729298AbgICOiW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:41:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599144094;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dlXSpmpAiY7YS5kYtaeWA3wo80DV7Gum6Jwj3vtpgjg=;
-        b=Tb4u650/EhrjifM8zHaSmMqai3pNgctiuE+sArtWYkPv0tXJjq8Q+5tYaNpfgFkYkhi9av
-        Mz2zf0Uva5qADVd4ap88wtfgYy1GKeLvNccz2lrVxOwXsYzEVeBdvBEOVP9LPucO9UrFV8
-        q0UNh5Ab8R55tjnoHjXDYJNC3mcQeIY=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-167-uT69CP2lMYKvBuRTGEBTJw-1; Thu, 03 Sep 2020 10:41:31 -0400
-X-MC-Unique: uT69CP2lMYKvBuRTGEBTJw-1
-Received: by mail-io1-f70.google.com with SMTP id j4so2169786iob.8
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 07:41:31 -0700 (PDT)
+        Thu, 3 Sep 2020 10:38:22 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CA19C0619EE
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 06:31:43 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id w5so3243510wrp.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 06:31:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=K0z+nN4Q2Lop7WGeqT2R4X33dK+rJ9oWoUAFXO5nbng=;
+        b=vOSGEgf6njBXHejEOPLRHy4TZAUQbPHyzsizQv5UbjVey2hgli2PPE3iNmgeVMMFs0
+         meXBmX3GehNJYf3Ml6pbsP2w+4GF+P6VawqJTS1rRAj2/4oGepg1b1xG2XaSI+e7RWit
+         8HUcIb5RhAPVg5TvwMbJZEM/MIjDq/fbCrqfS6Y053rTcS1XYTsuVRGfBIvafn9rNkmi
+         JEwAseO17PL7oWFMSA4A66UwSwyoHr2SapFY34R7ouYM7Gj0Ukfc4mWUoe51kB+Gc+MZ
+         cN+Ql6/5tuaw74VyLSTTKCj6J2l3AVXNMioaOfqFNUGt1QtHYWuOnVdgucewh50lSBBR
+         KCIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=dlXSpmpAiY7YS5kYtaeWA3wo80DV7Gum6Jwj3vtpgjg=;
-        b=SwpJYeHdZ9o9RdPhiRIPLMbCK/3LbcCKZ1J/pSrEZ4VRcUggWYPyeArZNRIipkJa2q
-         lJYqPF6UlD/zEdpDRInUJzNyeX5w7qsPPdWAlujV+i4UFDejFxR8bfJFz2N/VjuFVIh6
-         YLDjB4WKwZgp1TgqegfuyeESbVPFWqucmE2faPfovDjp/X9Aa54WApVz27Ymq6rLzH9X
-         2YtAbHLqu1x/M9vBV+SYL/av7zZBPcr0+UoN5FnMQZKt6lrs5DzXR03t7fIrMBEyXi8F
-         K1VpaYfXmF8rGrZiwsKT5koddfHt+8zVO3Gvet+PKg4ysUaCKFmHO2MwypQaLhE27kO4
-         oMZQ==
-X-Gm-Message-State: AOAM530qz/N7p2voBbujHhVZeg29OfPlxA8H5deMr2vCYYdSJjnU4vr+
-        bbbsbhnO2STn/O5mcFQCn9SooVnaZlSDkeCN8L99rVPOlpcurivEXCZZdE1WLfYGbmx/ye2iEjj
-        5VS2maQNCuR/VkOu4oy2RZtN6
-X-Received: by 2002:a92:c78e:: with SMTP id c14mr3385275ilk.3.1599144090427;
-        Thu, 03 Sep 2020 07:41:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxCAl5Mf+O6dLNF91Wu0iMCa8KPqD4EBuQd+O1BKyeEB3KAYW3jsrXGYwXNu2cuFkUA/BFcLw==
-X-Received: by 2002:a92:c78e:: with SMTP id c14mr3385251ilk.3.1599144090118;
-        Thu, 03 Sep 2020 07:41:30 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id s16sm1403323iow.47.2020.09.03.07.41.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 07:41:29 -0700 (PDT)
-Subject: Re: [PATCH] media: dvb-frontends/cxd2099: report errors
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     jasmin@anw.at, o.endriss@gmx.de, rjkm@metzlerbros.de,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200722134126.31191-1-trix@redhat.com>
- <20200903161328.62378992@coco.lan>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <b274b6b1-e2ac-2b68-9fb8-502255ca6982@redhat.com>
-Date:   Thu, 3 Sep 2020 07:41:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=K0z+nN4Q2Lop7WGeqT2R4X33dK+rJ9oWoUAFXO5nbng=;
+        b=Ewm0B8OQrJZkXteL6qArzi3rQGdCEWbpFi+bbxTbNzwXRB61pfBxYi9oss5mxMKQ81
+         7K26Gtt/bsTXal8HgCloEBHiRHgq1eP7sbYo3uhGzWZUvWqcSNE8K8q/F/Pmy5nHmy7p
+         i8eSNa41FyT1ozhoJKY64YNBLfiw2uMXaHxMjBxqXG09sOxRVrPZJRggTWuuzHTLyZ8B
+         mXM8irsm8u/90DR5rKEhA7EPk5I2V19pFUAsVJ9SRWxAbg4oyLa9wc/Ll83DID4NsqP2
+         mfaVQlCxtdRg7bHvUn7f81iXHNr9ZF5hboH3QIoS0cFH774Q/Z/K1NG7sUvtzzqnliVQ
+         wrtA==
+X-Gm-Message-State: AOAM533gf0hoYQz2R8eXSeKNOwHMJZe07EhdEC55k1PBNzG7g5eAw5FS
+        UmaoeHUBlVXqvfKLXciA6SeaRg==
+X-Google-Smtp-Source: ABdhPJxTxGCfwDBn+/7V1YSvROvPT1ttvkiv0uIYlja7weTTbnepk4txpD42uCKrL8YHil8kIzqmkQ==
+X-Received: by 2002:adf:fe42:: with SMTP id m2mr2451454wrs.367.1599139902154;
+        Thu, 03 Sep 2020 06:31:42 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id b2sm4310768wmh.47.2020.09.03.06.31.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Sep 2020 06:31:41 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org, bjorn.andersson@linaro.org
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        sibis@codeaurora.org, mka@chromium.org, dianders@chromium.org,
+        georgi.djakov@linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 4/7] interconnect: qcom: sdm845: Replace xlate with xlate_extended
+Date:   Thu,  3 Sep 2020 16:31:31 +0300
+Message-Id: <20200903133134.17201-5-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200903133134.17201-1-georgi.djakov@linaro.org>
+References: <20200903133134.17201-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200903161328.62378992@coco.lan>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use the qcom_icc_xlate_extended() in order to parse tags, that are
+specified as an additional arguments to the path endpoints in DT.
 
-On 9/3/20 7:13 AM, Mauro Carvalho Chehab wrote:
-> Em Wed, 22 Jul 2020 06:41:26 -0700
-> trix@redhat.com escreveu:
->
->> From: Tom Rix <trix@redhat.com>
->>
->> Clang static analysis reports this error
->>
->> drivers/media/dvb-frontends/cxd2099.c:420:2: warning: Undefined
->>   or garbage value returned to caller
->>         return val;
->>         ^~~~~~~~~~
->>
->> In read_cam_control, the call to read_io can fail.
->> When it fails val is not set.
->>
->> The failure status should be returned to the caller,
->> not the unset val.
->>
->> Similar problem with read_attribute_mem
->>
->> Fixes: 0f0b270f905b ("[media] ngene: CXD2099AR Common Interface driver")
->>
->> Signed-off-by: Tom Rix <trix@redhat.com>
->> ---
->>  drivers/media/dvb-frontends/cxd2099.c | 14 ++++++++++----
->>  1 file changed, 10 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/media/dvb-frontends/cxd2099.c b/drivers/media/dvb-frontends/cxd2099.c
->> index f88b5355493e..9dfaf18fc4b4 100644
->> --- a/drivers/media/dvb-frontends/cxd2099.c
->> +++ b/drivers/media/dvb-frontends/cxd2099.c
->> @@ -387,12 +387,15 @@ static int read_attribute_mem(struct dvb_ca_en50221 *ca,
->>  {
->>  	struct cxd *ci = ca->data;
->>  	u8 val;
->> +	int ret;
->>  
->>  	mutex_lock(&ci->lock);
->>  	set_mode(ci, 1);
->> -	read_pccard(ci, address, &val, 1);
->> +	ret = read_pccard(ci, address, &val, 1);
->> +	if (!ret)
->> +		ret = val;
->>  	mutex_unlock(&ci->lock);
->> -	return val;
->> +	return ret;
->>  }
->>  
->>  static int write_attribute_mem(struct dvb_ca_en50221 *ca, int slot,
->> @@ -412,12 +415,15 @@ static int read_cam_control(struct dvb_ca_en50221 *ca,
->>  {
->>  	struct cxd *ci = ca->data;
->>  	unsigned int val;
->> +	int ret;
->>  
->>  	mutex_lock(&ci->lock);
->>  	set_mode(ci, 0);
->> -	read_io(ci, address, &val);
->> +	ret = read_io(ci, address, &val);
->> +	if (!ret)
->> +		ret = val;
->>  	mutex_unlock(&ci->lock);
->> -	return val;
->> +	return ret;
->>  }
->>  
->>  static int write_cam_control(struct dvb_ca_en50221 *ca, int slot,
-> Hmm... Had you test this one on a real hardware? It is not
-> uncommon to have some DVB devices that would fail reading
-> when the firmware is on cold state.
->
-> Without testing a patch like that at a real hardware, there's
-> no way to know if this is intentional or if the original
-> developer forgot to add a check for the error.
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ drivers/interconnect/qcom/sdm845.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-No, I do not have hw.  I understand your concerns, it is ok if you want to drop this patch, else i'll beef up the warnings.
-
-Tom
-
->
-> So, at most, it could print some warning message for
-> non-zero return codes.
->
->
-> Thanks,
-> Mauro
->
-
+diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
+index f6c7b969520d..3b81dbb71b0b 100644
+--- a/drivers/interconnect/qcom/sdm845.c
++++ b/drivers/interconnect/qcom/sdm845.c
+@@ -469,7 +469,7 @@ static int qnoc_probe(struct platform_device *pdev)
+ 	provider->set = qcom_icc_set;
+ 	provider->pre_aggregate = qcom_icc_pre_aggregate;
+ 	provider->aggregate = qcom_icc_aggregate;
+-	provider->xlate = of_icc_xlate_onecell;
++	provider->xlate_extended = qcom_icc_xlate_extended;
+ 	INIT_LIST_HEAD(&provider->nodes);
+ 	provider->data = data;
+ 
