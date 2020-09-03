@@ -2,78 +2,117 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A6FC43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A456C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8CB4208B3
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0611320716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:47:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="FbzJpLnI"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DrefXjNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgICQrR (ORCPT
+        id S1728962AbgICQrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:47:17 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:36885 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728458AbgICQrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:47:16 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4Bj6D12XTXz6R;
-        Thu,  3 Sep 2020 18:47:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1599151633; bh=aW3vviD3X6zwOHneikrU8nTQgniWlnIKgJxxeVIHhJc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FbzJpLnIa630aI8y1RwLW6KhJfwv1iwu+6hA0QRMlp0ZEJJmHLVSjEfMNteG8X0pl
-         EqDLn5s12AOv0XmkWGmMTHkPQsiOfwD6nMkVKshDWu+/WGzO/BW34JsPh8mVDIIAvL
-         869P6DJQhM2mRbDuH6Xdvssmue6J7OTw7+u/9t6p+O0TAvmPtxbn0Lss7Umv7Ngu+Q
-         gvEinYFM/r4d/3r2n+V2pP3RpESDyyYeJyueGVzixZocEcRoluB8xYcH7CJtRWD+/6
-         iDIWsJGPVA6lSPu6dvxqiEV0aUf6DrgyOI69eF5zdi9t120zv14TV99kQJj/H7pA57
-         daEzCQdcOWfGw==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.4 at mail
-Date:   Thu, 3 Sep 2020 18:47:09 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 00/12] Improvements for Tegra I2C driver
-Message-ID: <20200903164709.GA7406@qmqm.qmqm.pl>
-References: <20200831202303.15391-1-digetx@gmail.com>
- <20200902212026.GD1624@qmqm.qmqm.pl>
- <04aae642-80f9-d22e-1d80-bb206bb27a8b@gmail.com>
+        Thu, 3 Sep 2020 12:47:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728902AbgICQrT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 12:47:19 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 999CCC061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 09:47:18 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id i1so3219203edv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 09:47:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BoOsmQ2rBW+EbnUHAzVo+1cABtO0sjJmNcwrCxNVF/A=;
+        b=DrefXjNN8klAxwkDEtDXlFK8vggfcZ/C/CRF+LX12Ix1TZ08f0o81Izumvko0Z2jVF
+         LycY29rD0Pxs+7jbEPJZloKwDB2Uc4g/PH8c5khbTdNmIPWrx8dHYNHOeJMvQMQQB1qJ
+         HwAKRNQ2jz9daw1E8VUsyq24UC6Mcxb74XxIs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BoOsmQ2rBW+EbnUHAzVo+1cABtO0sjJmNcwrCxNVF/A=;
+        b=hDVX/w8B3v1x2gDMmRjgC6QEFpku7Mq9B/NNU9U6vUZ7VGx9oMPspQ7zRkF+5uthQ1
+         n1iueRJdqJC0CIqaTfySZm6Trz9qhD4Vw53lan/izQOT/aFpwPHC8r9BPkhGo1J2SNyI
+         u0NY1FKQ4DIrG7ZcjPRkte4Lq9jLUMi1s/GgK9LQcxZtU/Ptqz7LQec2kotVLJgNfG3N
+         +pH668CRYQtKb9Xqp3PiREF/8mOVyjXNHKjT+f3vjc6jp7OawV5BYP6PdDBM0j+5/+cJ
+         R1RUnPJa9ZPxAC7pjBTMw3GFkoXFiR8DqjNEyphiOTbVoNPQ7SP9IuACHEbZD0aX190R
+         rQ7g==
+X-Gm-Message-State: AOAM531GAGC/Y7ZUxWMOwt5RGbR0zVodNrphfaKidOyyIY7F+1blh51u
+        b9tm4gQU+lK16h6j+5Q2I+Tci4TuCQIW58Fn1KidnA==
+X-Google-Smtp-Source: ABdhPJxMeFogkFas77zemMlntf263DD9ilLv7Qd6K+YljkScZccbQgYQDbdCP80JMCHM2uxPrdDdTxdUYKasre4/cYA=
+X-Received: by 2002:aa7:d750:: with SMTP id a16mr4221514eds.362.1599151637185;
+ Thu, 03 Sep 2020 09:47:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <04aae642-80f9-d22e-1d80-bb206bb27a8b@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200831082917.17117-1-jagan@amarulasolutions.com>
+ <20200831082917.17117-6-jagan@amarulasolutions.com> <20200903162550.GA2896127@bogus>
+In-Reply-To: <20200903162550.GA2896127@bogus>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Thu, 3 Sep 2020 22:17:05 +0530
+Message-ID: <CAMty3ZCXV9=VzVKiKJ740RcR+uYA7CHUzjrDL0vwQ1NOw9n4FQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] dt-bindings: arm: rockchip: Add Engicam PX30.Core
+ C.TOUCH 2.0
+To:     Rob Herring <robh@kernel.org>
+Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 04:12:13AM +0300, Dmitry Osipenko wrote:
-> 03.09.2020 00:20, Michał Mirosław пишет:
-> > BTW, I wonder if you could expose i2c_in_atomic_xfer_mode() and use it
-> > to differentiate atomic_xfer from normal and get rid of the internal
-> > flag and .master_xfer_atomic callback.
-> 
-> The atomic transfer uses 90% of the code path that a non-atomic transfer
-> uses. I don't see how it could be exposed without duplicated lots of the
-> code, unless I'm not missing what you're suggesting.
+On Thu, Sep 3, 2020 at 9:55 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, 31 Aug 2020 13:59:15 +0530, Jagan Teki wrote:
+> > PX30.Core is an EDIMM SOM based on Rockchip PX30 from Engicam.
+> >
+> > C.TOUCH 2.0 is a general purpose carrier board with capacitive
+> > touch interface support.
+> >
+> > PX30.Core needs to mount on top of this Carrier board for creating
+> > complete PX30.Core C.TOUCH 2.0 board.
+> >
+> > Add bindings for it.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> > Changes for v3:
+> > - none
+> > Changes for v2:
+> > - new patch
+> >
+> >  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+>
+>
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+>
+> If a tag was not added on purpose, please state why and what changed.
 
-The I2C core falls back to .master_xfer even in atomic mode if
-.master_xfer_atomic is NULL, so what I'm suggesting is to make
-i2c_in_atomic_xfer_mode() public (from i2c-core.h) and use it in
-normal .master_xfer to choose atomic wait variants.
+Yes, it's on purpose. The previous binding was about C.TOUCH with LVDS
+board and this one is C.TOUCH carrier only. ie the main reason I have
+not included. I did mention in the cover-letter saying previous one
+dropped and the C.TOUCH carrier added.
 
-Best Regards,
-Michał Mirosław
+Hope this answers your query.
+
+Jagan.
