@@ -2,109 +2,276 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7149C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F999C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8F720716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB4B20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:09:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eQcxtvqn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SsJ+pR+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbgICPJQ (ORCPT
+        id S1729064AbgICPJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:09:16 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50186 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728947AbgICN6P (ORCPT
+        Thu, 3 Sep 2020 11:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729008AbgICN6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 09:58:15 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083DOEAN107415;
-        Thu, 3 Sep 2020 08:24:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599139454;
-        bh=EcU5sNHWfjTOyGcbOYeypp2bM4hBc053FDywI/zCZgI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=eQcxtvqnZRKreSf0Vaxnunri+IKr+JeTETEHDlG3TGHQUc0M0Mn73C+q8Vv1namqZ
-         jZ1xow4jSsm6s+OODwzn6yKM0UsJqVYz1A8eR+d0Kg1MSwmw3ayHAYGW8JOscxQtj/
-         By5Vv8GASjI1iQNpg8F4N9ttfpt3hp8vKZnKTdPU=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083DOEAr006875
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Sep 2020 08:24:14 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
- 2020 08:24:13 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 3 Sep 2020 08:24:13 -0500
-Received: from [10.250.71.39] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083DODrj004638;
-        Thu, 3 Sep 2020 08:24:13 -0500
-Subject: Re: [PATCH V2 2/8] arm64: dts: ti: k3-am65-main: Use lower case
- hexadecimal
-To:     Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <lokeshvutla@ti.com>,
-        <grygorii.strashko@ti.com>, <nsekhar@ti.com>
-References: <20200901223059.14801-1-nm@ti.com>
- <20200903130015.21361-3-nm@ti.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <2875a2d5-2f1b-7579-4642-aec8dc829d5b@ti.com>
-Date:   Thu, 3 Sep 2020 08:24:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0A1AC0619F2
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 06:31:44 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id b79so2905623wmb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 06:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Uz4Jw+zKdFJ0416tNACRop3YdQEnLlXpW/XophXNKMc=;
+        b=SsJ+pR+jva11YMNYXuR8oKRz3WkjfDu0N2/d1aBy3h3hrm7VEI8InTw0eMtSsOHgyu
+         MzWwXYA11zNdok0KLUzWuTw14F3zPuhNNIVOtN+Az/NGR8ltkOdMawjTB80Wv0qgTKLm
+         8Q/B7J7qKDDjV46D4v7vn0X6K5GWf97hKFgKJOA0y/3Ud8XypXCmY7yY+zMwfK4NCjGp
+         onI2tSuL8PJJnsGGX9PGWb3jbnRwFO9ZR5rxaAJtZ0ghiE7L4RpAtWfXO+VWpfDCgRWE
+         EGYt3RaMCZ1IQLTHE5TBzew0hFAnVFz/ah2tM8QQOM8r2EktwqxZ/UP8O2enS0MttAZp
+         jItA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Uz4Jw+zKdFJ0416tNACRop3YdQEnLlXpW/XophXNKMc=;
+        b=gk3ZWUZr4TuHkbmfnt5oRZrzHkYE/TSjOOOEphzUktjD+RJKf9Z2RU9TE5igrB6zPW
+         jTo3ueNV/6EYVxFUXg4oGK/qSbYBYqMFzYBjxT4UYOcPmjVY3HKdDM+pKIcwQ0oh0a2k
+         dimf5rEHXIEbFJMHpO8yT/JAnPuNEq8dnljlHbnQn15+cvQvUlWcFAizvUMqTJM2YwWB
+         hflXRsq0LyZGLqDY5hVGUw7NMENqgD0kKsyyikI+x+SrnsAW9RhfIbt1u8xNFpqQ6xTr
+         3vj7oANbU2oc6wZMisq6IhrfAdClbQwnA9S8vUxzTTQIohwZlnBbZln9Xq+Q0ebpDqIh
+         fXXQ==
+X-Gm-Message-State: AOAM533dpe9gOWzHmR789css055sw1pE+mFemoBeyaOU+QiQqvXTTuMr
+        Cof2aSQW70VIEzJXbChhWVlI5w==
+X-Google-Smtp-Source: ABdhPJxaF4E+1j0XqyCtqYw54pZtJdjO9j2lnQ6PJO6Azl5mINnM05AxHMUeDBjRV0V0132YGxxFWg==
+X-Received: by 2002:a7b:c1d4:: with SMTP id a20mr2600512wmj.30.1599139903444;
+        Thu, 03 Sep 2020 06:31:43 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id b2sm4310768wmh.47.2020.09.03.06.31.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Sep 2020 06:31:42 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org, bjorn.andersson@linaro.org
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        sibis@codeaurora.org, mka@chromium.org, dianders@chromium.org,
+        georgi.djakov@linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 5/7] arm64: dts: qcom: sdm845: Increase the number of interconnect cells
+Date:   Thu,  3 Sep 2020 16:31:32 +0300
+Message-Id: <20200903133134.17201-6-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200903133134.17201-1-georgi.djakov@linaro.org>
+References: <20200903133134.17201-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200903130015.21361-3-nm@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/20 8:00 AM, Nishanth Menon wrote:
-> Device tree convention uses lower case a-f for hexadecimals. Fix the
-> same.
-> 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
+Increase the number of interconnect-cells, as now we can include
+the tag information. The consumers can specify the path tag as an
+additional argument to the endpoints.
 
-Acked-by: Suman Anna <s-anna@ti.com>
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 48 ++++++++++++++--------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
-> ---
-> Change:
-> v2: - new
-> 
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> index 76e0edc4ad5c..d53d1ead4bb6 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> @@ -344,9 +344,9 @@
->  					<0x4090 0x3>; /* SERDES1 lane select */
->  		};
->  
-> -		dss_oldi_io_ctrl: dss_oldi_io_ctrl@41E0 {
-> +		dss_oldi_io_ctrl: dss_oldi_io_ctrl@41e0 {
->  			compatible = "syscon";
-> -			reg = <0x0000041E0 0x14>;
-> +			reg = <0x0000041e0 0x14>;
->  		};
->  
->  		ehrpwm_tbclk: syscon@4140 {
-> 
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 2884577dcb77..253d95f43152 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -200,7 +200,7 @@ &LITTLE_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <100>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+-			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
++			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			next-level-cache = <&L2_0>;
+@@ -225,7 +225,7 @@ &LITTLE_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <100>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+-			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
++			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			next-level-cache = <&L2_100>;
+@@ -247,7 +247,7 @@ &LITTLE_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <100>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+-			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
++			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			next-level-cache = <&L2_200>;
+@@ -269,7 +269,7 @@ &LITTLE_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <100>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+-			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
++			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			next-level-cache = <&L2_300>;
+@@ -291,7 +291,7 @@ &BIG_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <396>;
+ 			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			operating-points-v2 = <&cpu4_opp_table>;
+-			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
++			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			next-level-cache = <&L2_400>;
+@@ -313,7 +313,7 @@ &BIG_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <396>;
+ 			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			operating-points-v2 = <&cpu4_opp_table>;
+-			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
++			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			next-level-cache = <&L2_500>;
+@@ -335,7 +335,7 @@ &BIG_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <396>;
+ 			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			operating-points-v2 = <&cpu4_opp_table>;
+-			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
++			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			next-level-cache = <&L2_600>;
+@@ -357,7 +357,7 @@ &BIG_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <396>;
+ 			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			operating-points-v2 = <&cpu4_opp_table>;
+-			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc SLAVE_EBI1>,
++			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			next-level-cache = <&L2_700>;
+@@ -2011,49 +2011,49 @@ pcie1_lane: lanes@1c06200 {
+ 		mem_noc: interconnect@1380000 {
+ 			compatible = "qcom,sdm845-mem-noc";
+ 			reg = <0 0x01380000 0 0x27200>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
+ 		dc_noc: interconnect@14e0000 {
+ 			compatible = "qcom,sdm845-dc-noc";
+ 			reg = <0 0x014e0000 0 0x400>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
+ 		config_noc: interconnect@1500000 {
+ 			compatible = "qcom,sdm845-config-noc";
+ 			reg = <0 0x01500000 0 0x5080>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
+ 		system_noc: interconnect@1620000 {
+ 			compatible = "qcom,sdm845-system-noc";
+ 			reg = <0 0x01620000 0 0x18080>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
+ 		aggre1_noc: interconnect@16e0000 {
+ 			compatible = "qcom,sdm845-aggre1-noc";
+ 			reg = <0 0x016e0000 0 0x15080>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
+ 		aggre2_noc: interconnect@1700000 {
+ 			compatible = "qcom,sdm845-aggre2-noc";
+ 			reg = <0 0x01700000 0 0x1f300>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
+ 		mmss_noc: interconnect@1740000 {
+ 			compatible = "qcom,sdm845-mmss-noc";
+ 			reg = <0 0x01740000 0 0x1c100>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
+@@ -2156,9 +2156,9 @@ ipa: ipa@1e40000 {
+ 			clocks = <&rpmhcc RPMH_IPA_CLK>;
+ 			clock-names = "core";
+ 
+-			interconnects = <&aggre2_noc MASTER_IPA &mem_noc SLAVE_EBI1>,
+-				        <&aggre2_noc MASTER_IPA &system_noc SLAVE_IMEM>,
+-					<&gladiator_noc MASTER_APPSS_PROC &config_noc SLAVE_IPA_CFG>;
++			interconnects = <&aggre2_noc MASTER_IPA 0 &mem_noc SLAVE_EBI1 0>,
++					<&aggre2_noc MASTER_IPA 0 &system_noc SLAVE_IMEM 0>,
++					<&gladiator_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_IPA_CFG 0>;
+ 			interconnect-names = "memory",
+ 					     "imem",
+ 					     "config";
+@@ -3569,8 +3569,8 @@ usb_1: usb@a6f8800 {
+ 
+ 			resets = <&gcc GCC_USB30_PRIM_BCR>;
+ 
+-			interconnects = <&aggre2_noc MASTER_USB3_0 &mem_noc SLAVE_EBI1>,
+-					<&gladiator_noc MASTER_APPSS_PROC &config_noc SLAVE_USB3_0>;
++			interconnects = <&aggre2_noc MASTER_USB3_0 0 &mem_noc SLAVE_EBI1 0>,
++					<&gladiator_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_USB3_0 0>;
+ 			interconnect-names = "usb-ddr", "apps-usb";
+ 
+ 			usb_1_dwc3: dwc3@a600000 {
+@@ -3617,8 +3617,8 @@ usb_2: usb@a8f8800 {
+ 
+ 			resets = <&gcc GCC_USB30_SEC_BCR>;
+ 
+-			interconnects = <&aggre2_noc MASTER_USB3_1 &mem_noc SLAVE_EBI1>,
+-					<&gladiator_noc MASTER_APPSS_PROC &config_noc SLAVE_USB3_1>;
++			interconnects = <&aggre2_noc MASTER_USB3_1 0 &mem_noc SLAVE_EBI1 0>,
++					<&gladiator_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_USB3_1 0>;
+ 			interconnect-names = "usb-ddr", "apps-usb";
+ 
+ 			usb_2_dwc3: dwc3@a800000 {
+@@ -4007,7 +4007,7 @@ gpu: gpu@5000000 {
+ 
+ 			qcom,gmu = <&gmu>;
+ 
+-			interconnects = <&mem_noc MASTER_GFX3D &mem_noc SLAVE_EBI1>;
++			interconnects = <&mem_noc MASTER_GFX3D 0 &mem_noc SLAVE_EBI1 0>;
+ 			interconnect-names = "gfx-mem";
+ 
+ 			gpu_opp_table: opp-table {
+@@ -4324,7 +4324,7 @@ lpasscc: clock-controller@17014000 {
+ 		gladiator_noc: interconnect@17900000 {
+ 			compatible = "qcom,sdm845-gladiator-noc";
+ 			reg = <0 0x17900000 0 0xd080>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
