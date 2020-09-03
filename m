@@ -2,160 +2,172 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E074FC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D964C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1D8D2071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B9020665
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:35:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SbA4Ermb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgICOee (ORCPT
+        id S1729321AbgICO0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:34:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48752 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729322AbgICOdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:33:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3B393B58F;
-        Thu,  3 Sep 2020 13:43:23 +0000 (UTC)
-Message-ID: <561110efffc3f6bf57894bf39861b39e1ec87845.camel@suse.com>
-Subject: Re: [RFC PATCH v7 17/23] kernel/entry: Add support for core-wide
- protection of kernel-mode
-From:   Dario Faggioli <dfaggioli@suse.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Dhaval Giani <dhaval.giani@oracle.com>,
-        Chris Hyser <chris.hyser@oracle.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Ingo Molnar <mingo@kernel.org>, Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
+        Thu, 3 Sep 2020 10:26:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729166AbgICOX1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 10:23:27 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DB0C06123A;
+        Thu,  3 Sep 2020 07:22:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=GwBdpIiwC2/H13uoaD81joKeq/bh8CR8vbkN01NmQb8=; b=SbA4ErmbdCRIGV1PaNDyOgDFPM
+        WOOiPDFGt5XBXfY5jP3ztB9vrJDDiTR3S831moFSwBWUyfChZFA1BRQyvkGlC4vN6lIlYL31/eVpQ
+        4AZ/cMaZgHPOscMzV+WC/lo7EDhbN6cT4yHXmo8UUQdHbIdKsugCkPPCeHoLQmyy2ajyyl1HCObXN
+        dj+uFNX/JF/U5HPn9nHMlQ9Pywqvz2sdtEcNQUADBxGUgwOgUPSXjjzUvlPRHTvAFfIzHtMEXNFst
+        f548siR/l2sI0jQVLbHQdGVTZCCgvbgDJNNoQ5+zgVnaQl8a2szvK8Yw6jk21Qfeo4BxY81HFnhg5
+        HmT3L4Cw==;
+Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDq8V-0004aL-IH; Thu, 03 Sep 2020 14:22:47 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
         Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, vineeth@bitbyteword.org,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Agata Gruza <agata.gruza@intel.com>,
-        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
-        graf@amazon.com, konrad.wilk@oracle.com,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Patrick Bellasi <derkling@google.com>,
-        =?UTF-8?Q?benbjiang=28=E8=92=8B=E5=BD=AA=29?= 
-        <benbjiang@tencent.com>, Aubrey Li <aubrey.li@linux.intel.com>,
-        Tim Chen <tim.c.chen@intel.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Date:   Thu, 03 Sep 2020 15:43:19 +0200
-In-Reply-To: <CAEXW_YRQiC_0edO5L2vVmL0NcfeZaRt4WYoyrcKmzbFcQP3PvA@mail.gmail.com>
-References: <cover.1598643276.git.jdesfossez@digitalocean.com>
-         <2a4398b55fe258ea53fb1fbc727063298f7eea8f.1598643276.git.jdesfossez@digitalocean.com>
-         <87y2lth4qa.fsf@nanos.tec.linutronix.de>
-         <20200901165052.GA1662854@google.com>
-         <875z8xl0zh.fsf@nanos.tec.linutronix.de>
-         <20200902012905.GB1703315@google.com>
-         <87h7sgk41y.fsf@nanos.tec.linutronix.de>
-         <a80babf130a45841e166fa155f84afc19b4257d3.camel@suse.com>
-         <CAEXW_YRQiC_0edO5L2vVmL0NcfeZaRt4WYoyrcKmzbFcQP3PvA@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-u3iHHAldM+mQ4zS+I0no"
-User-Agent: Evolution 3.36.4 (by Flathub.org) 
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 03/14] proc: add a read_iter method to proc proc_ops
+Date:   Thu,  3 Sep 2020 16:22:31 +0200
+Message-Id: <20200903142242.925828-4-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200903142242.925828-1-hch@lst.de>
+References: <20200903142242.925828-1-hch@lst.de>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This will allow proc files to implement iter read semantics.
 
---=-u3iHHAldM+mQ4zS+I0no
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/proc/inode.c         | 53 ++++++++++++++++++++++++++++++++++++++---
+ include/linux/proc_fs.h |  1 +
+ 2 files changed, 51 insertions(+), 3 deletions(-)
 
-On Thu, 2020-09-03 at 00:34 -0400, Joel Fernandes wrote:
-> On Wed, Sep 2, 2020 at 12:57 PM Dario Faggioli <dfaggioli@suse.com>
-> wrote:
-> > 2) protection of the kernel from the other thread running in
-> > userspace
-> > may be achieved in different ways. This is one, sure. ASI will
-> > probably
-> > be another. Hence if/when we'll have both, this and ASI, it would
-> > be
-> > cool to be able to configure the system in such a way that there is
-> > only one active, to avoid paying the price of both! :-)
->=20
-> Actually, no. Part of ASI will involve exactly what this patch does -
-> IPI-pausing siblings but ASI does so when they have no choice but to
-> switch away from the "limited kernel" mapping, into the full host
-> kernel mapping. I am not sure if they have yet implemented that part
-> but they do talk of it in [1] and in their pretty LPC slides.  It is
-> just that ASI tries to avoid that scenario of kicking all siblings
-> out
-> of guest mode.  So, maybe this patch can be a stepping stone to ASI.
->
-Ah, sure! I mean, it of course depends on how things get mixed
-together, which we still don't know. :-)
-
-I know that ASI wants to do this very same thing some times. I just
-wanted to say that we need/want only one mechanism for doing that, in
-place at any given time.
-
-If that mechanism will be this one, and ASI then uses it (e.g., in a
-scenario where for whatever reason one wants ASI with the kicking but
-not Core Scheduling), then great, I agree, and everything does makes
-sense.
-
-> Why do you feel that ASI on its own offers some magical protection
-> that eliminates the need for this patch?
->=20
-I don't. I was just trying to think at different use cases, how they
-mix and match, etc. But as you're suggesting (and as Thomas has shown
-very clearly in another reply to this email), the thing that makes the
-most sense is to have one mechanism for the kicking, used by anyone
-that needs it. :-)
-
-Thanks and Regards
---=20
-Dario Faggioli, Ph.D
-http://about.me/dario.faggioli
-Virtualization Software Engineer
-SUSE Labs, SUSE https://www.suse.com/
--------------------------------------------------------------------
-<<This happens because _I_ choose it to happen!>> (Raistlin Majere)
-
---=-u3iHHAldM+mQ4zS+I0no
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEES5ssOj3Vhr0WPnOLFkJ4iaW4c+4FAl9Q8vcACgkQFkJ4iaW4
-c+5YFw/8DNj8gL/7OQ+hKTi4bd076a6jYdA0RHw6nKTO/ITc90dUEr7FLAzuPP4X
-IdRYVx779rR0RlUvbzLYSOswI17hlcJY+gXBd0RpC2lFhRwySZUiq1GMIOXnqxjs
-M9+g8z3c2Mv1Iv+aMUlW/A34BgPgAkEvTiEp/6bhMJWYXAdrd8G0BONc4F/CTB69
-XyFDTSVmbgMG0puD0jO8h3C+s8P6A8jUfo8j4AIKE1ayzORjCOcy/iHUVZEBlkJC
-XP0e4oonZIflyWKqsEh+Ozi1hN2GbUXyBY42BEOi++q5WfqJo1f6sg2t3s7k9HXg
-z7tXs62+DxPeygeOFfKxtJa1lSIu6g6uMV6AzYraMNecKu/iO9V6XAww5g6lkgZl
-jzvZHdb7s7+kGkymKxxnlVxYZGoAa2H1eschTSwvV1P06L3710PQ7nj2TKR/7BAk
-Bynvt7b/D0coxkxvYEoyS5oazV9z97Nncpp35n0iK/H+2IcmZiRDYFVX10HD0PrB
-Pmx5FzkNbgmsYzM3uYilRcgYFj+g8Z/evQ8ksPRqo5HBzM7erw13urGLNl5bpJ67
-uqGTLEC80e4dYElBxJHz3j+WxL8lEmv1ZN2A9zGglPpPaGk5AGVa46YfXt/b1nNf
-wYTncBiXGWjalAGnh3SmkeUkgl4F1m8ioY0+aeyHdM7Jf9byvj8=
-=e7D3
------END PGP SIGNATURE-----
-
---=-u3iHHAldM+mQ4zS+I0no--
+diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+index 93dd2045737504..58c075e2a452d6 100644
+--- a/fs/proc/inode.c
++++ b/fs/proc/inode.c
+@@ -297,6 +297,21 @@ static loff_t proc_reg_llseek(struct file *file, loff_t offset, int whence)
+ 	return rv;
+ }
+ 
++static ssize_t proc_reg_read_iter(struct kiocb *iocb, struct iov_iter *iter)
++{
++	struct proc_dir_entry *pde = PDE(file_inode(iocb->ki_filp));
++	ssize_t ret;
++
++	if (pde_is_permanent(pde))
++		return pde->proc_ops->proc_read_iter(iocb, iter);
++
++	if (!use_pde(pde))
++		return -EIO;
++	ret = pde->proc_ops->proc_read_iter(iocb, iter);
++	unuse_pde(pde);
++	return ret;
++}
++
+ static ssize_t pde_read(struct proc_dir_entry *pde, struct file *file, char __user *buf, size_t count, loff_t *ppos)
+ {
+ 	typeof_member(struct proc_ops, proc_read) read;
+@@ -578,6 +593,18 @@ static const struct file_operations proc_reg_file_ops = {
+ 	.release	= proc_reg_release,
+ };
+ 
++static const struct file_operations proc_iter_file_ops = {
++	.llseek		= proc_reg_llseek,
++	.read_iter	= proc_reg_read_iter,
++	.write		= proc_reg_write,
++	.poll		= proc_reg_poll,
++	.unlocked_ioctl	= proc_reg_unlocked_ioctl,
++	.mmap		= proc_reg_mmap,
++	.get_unmapped_area = proc_reg_get_unmapped_area,
++	.open		= proc_reg_open,
++	.release	= proc_reg_release,
++};
++
+ #ifdef CONFIG_COMPAT
+ static const struct file_operations proc_reg_file_ops_compat = {
+ 	.llseek		= proc_reg_llseek,
+@@ -591,6 +618,19 @@ static const struct file_operations proc_reg_file_ops_compat = {
+ 	.open		= proc_reg_open,
+ 	.release	= proc_reg_release,
+ };
++
++static const struct file_operations proc_iter_file_ops_compat = {
++	.llseek		= proc_reg_llseek,
++	.read_iter	= proc_reg_read_iter,
++	.write		= proc_reg_write,
++	.poll		= proc_reg_poll,
++	.unlocked_ioctl	= proc_reg_unlocked_ioctl,
++	.compat_ioctl	= proc_reg_compat_ioctl,
++	.mmap		= proc_reg_mmap,
++	.get_unmapped_area = proc_reg_get_unmapped_area,
++	.open		= proc_reg_open,
++	.release	= proc_reg_release,
++};
+ #endif
+ 
+ static void proc_put_link(void *p)
+@@ -642,10 +682,17 @@ struct inode *proc_get_inode(struct super_block *sb, struct proc_dir_entry *de)
+ 
+ 	if (S_ISREG(inode->i_mode)) {
+ 		inode->i_op = de->proc_iops;
+-		inode->i_fop = &proc_reg_file_ops;
++		if (de->proc_ops->proc_read_iter)
++			inode->i_fop = &proc_iter_file_ops;
++		else
++			inode->i_fop = &proc_reg_file_ops;
+ #ifdef CONFIG_COMPAT
+-		if (de->proc_ops->proc_compat_ioctl)
+-			inode->i_fop = &proc_reg_file_ops_compat;
++		if (de->proc_ops->proc_compat_ioctl) {
++			if (de->proc_ops->proc_read_iter)
++				inode->i_fop = &proc_iter_file_ops_compat;
++			else
++				inode->i_fop = &proc_reg_file_ops_compat;
++		}
+ #endif
+ 	} else if (S_ISDIR(inode->i_mode)) {
+ 		inode->i_op = de->proc_iops;
+diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+index 2df965cd09742d..270cab43ca3dad 100644
+--- a/include/linux/proc_fs.h
++++ b/include/linux/proc_fs.h
+@@ -30,6 +30,7 @@ struct proc_ops {
+ 	unsigned int proc_flags;
+ 	int	(*proc_open)(struct inode *, struct file *);
+ 	ssize_t	(*proc_read)(struct file *, char __user *, size_t, loff_t *);
++	ssize_t (*proc_read_iter)(struct kiocb *, struct iov_iter *);
+ 	ssize_t	(*proc_write)(struct file *, const char __user *, size_t, loff_t *);
+ 	loff_t	(*proc_lseek)(struct file *, loff_t, int);
+ 	int	(*proc_release)(struct inode *, struct file *);
+-- 
+2.28.0
 
