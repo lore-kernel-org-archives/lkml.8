@@ -2,163 +2,121 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23864C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92966C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E31DE20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:21:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+OHpDNc"
+	by mail.kernel.org (Postfix) with ESMTP id 6D6B720758
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 17:26:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599153988;
+	bh=GBGQIwlyncgThPk4oc0KBJUBJSOWhCjUBBxAlMP4mEI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zOxTRnKVLmW/ANRKfvpnYvN7Uw03tog95lRKKImbdcEWXa9ydR1S1TTOJB8L8w+gJ
+	 k0ej7BGfwj5N+1oLl/s8qpUQRgdJLd1d/ACP2FZLXnihXgNaLl1hFHTHDW+kNzoEMh
+	 BdKixGOZLwip7duY/k1QomgI4DHD4Kf5oxglG1YA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728491AbgICRVg (ORCPT
+        id S1728525AbgICR01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 13:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34520 "EHLO
+        Thu, 3 Sep 2020 13:26:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbgICRVf (ORCPT
+        with ESMTP id S1726327AbgICR0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 13:21:35 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5E1C061244;
-        Thu,  3 Sep 2020 10:21:35 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id w7so2866988pfi.4;
-        Thu, 03 Sep 2020 10:21:35 -0700 (PDT)
+        Thu, 3 Sep 2020 13:26:23 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B623AC061244;
+        Thu,  3 Sep 2020 10:26:23 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k15so1874524pji.3;
+        Thu, 03 Sep 2020 10:26:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=WashrslN8ZwCXy2QjOJBW4ZEBVnlFGgH8kdTqqVqsKU=;
-        b=Q+OHpDNczlIeDseieuM5+66rQlgCH+Kn5aoq2pyWKSRq/jsvf4wYVv5KXl5eRtYund
-         JZl5WDBcJ0dEFGAqLKtjWEQjMwWHobhbhirlJ4WtWDrUaVMEscMlOMLfXG+JyNpmjzLY
-         oxFSbjOOweW8JzcG9cIzgdnuw+hZPdguo0goAINeDspq+Hd585n+igQho5kjHNKMnFZs
-         d/mhy+7aWYNhesXOkEhE49hGkccq3nb5j4n/I0AdXXF2vt4g1RiB52gu5KSrMws3Qc7k
-         /uYmO9C9UrVb9wYqhcqsE6TsQgnQ7JmOivOcJy8/ZRep26U1/95AKWQ6rEBBingyaXnA
-         bKKA==
+        bh=mlukllwXOvEWBwyxT6IJZnJXvBsYB26IwXfjpSrBgXM=;
+        b=HTCenVFaASPOOyrZ4MuSvt5EQz8zWSEllLs/FvI1XXSg5kvv6+Bfy+9RyaGOfKCUlT
+         M2N1CGRU4EKEWXTpNDHMaioJyuVY2r0F06hCuFhb7m6Q7yeQpYbv8Re9zlzH0R1Nkyv1
+         GZ/KqhXoJhgW9OkWC1479sBJDsYwX/AaHj3ElLQIxjpMW4fPMqBEqwlOXtF/PKWtPmCR
+         J50WmGly6CxH1zk2qLeeFWMTSGTpzk/PaaX0AGSsm9A/MZyrlu/WoCRSKrS6qBYAsMme
+         fN3L53GqDHqDURfeVggvctHVfNI386/EhhjVCxHfshKbf8brlz3qhdHOULrCRJ931s8K
+         3xfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WashrslN8ZwCXy2QjOJBW4ZEBVnlFGgH8kdTqqVqsKU=;
-        b=EneCLvDWfyXI9HSRj/AeuuURaOfFckvN7ggREpZudvB8M9zMUWT2gNfhCVTFjkWO+D
-         ah+74SRFr/lcLKNkHRNDvWm1OY27N1pq3c6tUJ1J3LB81LbvFuUzbwYgo3eqlH3wbmG8
-         IFHfOdbdwtMijWmMXbUaBkSxJ/aPevEE0eLX+CboG04dgrkTK2a1ITp2UZtGXjNHKP4Y
-         oLpYNeTHHUw4qoq5v4OYaq0P5rOsLLe+odRaWGkKU3+KXWcAi06RXp0spQonzpN+zevk
-         2ToR7r3hFHpF9zi/kOphe70EdYpWz6OtCvO32aZx55EmJKp5S7dWAAy0B8jrJBoV1rSU
-         qTuQ==
-X-Gm-Message-State: AOAM533FppvqWe83ZrZWAWlJwTflRxgPUXd7grOf+IMns5xJOJWnfpnx
-        x27F9mXODBIfK66PQfE1pgM=
-X-Google-Smtp-Source: ABdhPJxr2WeIZr+RTpBi78RWdVAu+wpXA957uq/QJRrasdDFcpqcc/b8n30BnDD45Q8xs6p/dArHuQ==
-X-Received: by 2002:a62:26c2:: with SMTP id m185mr4764708pfm.115.1599153695177;
-        Thu, 03 Sep 2020 10:21:35 -0700 (PDT)
-Received: from thinkpad ([2605:8d80:4c0:b73f:202a:aafe:118f:5e94])
-        by smtp.gmail.com with ESMTPSA id mp3sm3002804pjb.33.2020.09.03.10.21.31
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=mlukllwXOvEWBwyxT6IJZnJXvBsYB26IwXfjpSrBgXM=;
+        b=UV3x2r9vsmaAkbUoX0bSDq19rc1vO9kIE52oL3VhPAxX6Sy0A9ZodevEKe/x088bFg
+         Wb3QTIrUIRKTpmvkD0ZTSScUfAwk8kCxIz21Pog6C4Fm4hEc/ra3aKB3i6nCfGZ1Kuvf
+         9lEqApaxDz09g0cPTrPPYM6aw7DWGGH7JRg/Tb1USVIJo93N86RjOPiXdu8GYlkpa3L5
+         CPDgIt7G3Nb0ASZJv86eASBtedqNVFZTxt35/iyow1J5kHTnbVQVCLVRWCrdWkCiysf/
+         zTDPl4dzUgUyCanZGHDWELc6vCNowbCSafA6kLA0l5dgf/LoGRpCsq/Kqdm8cq9gyCjG
+         X8GA==
+X-Gm-Message-State: AOAM530DK/QMinv7OwVB7mFWveB/rlkQ/CcKj0WmcrO7cySD65th+70l
+        fXJEBuvmGh4fyTJqJQ98bx7HX0FPTZs=
+X-Google-Smtp-Source: ABdhPJzH6ua6oUgv3mANunm8XzcHBa3n2YthyvHZ4FbZ3oyARraK6utFFmoqIxB2J7WlM3nGx/eerw==
+X-Received: by 2002:a17:90a:5298:: with SMTP id w24mr4009307pjh.221.1599153982408;
+        Thu, 03 Sep 2020 10:26:22 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:7220:84ff:fe09:5e58])
+        by smtp.gmail.com with ESMTPSA id d8sm3230786pgt.19.2020.09.03.10.26.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 10:21:34 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 10:22:15 -0700
-From:   Rustam Kovhaev <rkovhaev@gmail.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     pbonzini@redhat.com, vkuznets@redhat.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [PATCH v2] KVM: fix memory leak in kvm_io_bus_unregister_dev()
-Message-ID: <20200903172215.GA870347@thinkpad>
-References: <20200902225718.675314-1-rkovhaev@gmail.com>
- <c5990c86-ab01-d748-5505-375f50a4ed7d@embeddedor.com>
+        Thu, 03 Sep 2020 10:26:21 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 10:26:18 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
+        David Rientjes <rientjes@google.com>,
+        Arjun Roy <arjunroy@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christian Brauner <christian@brauner.io>,
+        Daniel Colascione <dancol@google.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        SeongJae Park <sjpark@amazon.de>, linux-man@vger.kernel.org
+Subject: Re: [PATCH v9 3/3] mm/madvise: introduce process_madvise() syscall:
+ an external memory hinting API
+Message-ID: <20200903172618.GB1959033@google.com>
+References: <20200901000633.1920247-1-minchan@kernel.org>
+ <20200901000633.1920247-4-minchan@kernel.org>
+ <87blippc7p.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c5990c86-ab01-d748-5505-375f50a4ed7d@embeddedor.com>
+In-Reply-To: <87blippc7p.fsf@mid.deneb.enyo.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 06:34:11PM -0500, Gustavo A. R. Silva wrote:
-> Hi,
+On Tue, Sep 01, 2020 at 08:46:02PM +0200, Florian Weimer wrote:
+> * Minchan Kim:
 > 
-> On 9/2/20 17:57, Rustam Kovhaev wrote:
-> > when kmalloc() fails in kvm_io_bus_unregister_dev(), before removing
-> > the bus, we should iterate over all other devices linked to it and call
-> > kvm_iodevice_destructor() for them
-> > 
-> > Reported-and-tested-by: syzbot+f196caa45793d6374707@syzkaller.appspotmail.com
-> > Link: https://syzkaller.appspot.com/bug?extid=f196caa45793d6374707
-> > Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
-> > Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> >       ssize_t process_madvise(int pidfd, const struct iovec *iovec,
+> >                 unsigned long vlen, int advice, unsigned int flags);
 > 
-> I think it's worthwhile to add a Fixes tag for this, too.
+> size_t for vlen provides a clearer hint regarding the type of special
+> treatment needed for ILP32 here (zero extension, not changing the type
+> to long long).
 > 
-> Please, see more comments below...
-> 
-> > ---
-> > v2:
-> > - remove redundant whitespace
-> > - remove goto statement and use if/else
-> > ---
-> >  virt/kvm/kvm_main.c | 21 ++++++++++++---------
-> >  1 file changed, 12 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index 67cd0b88a6b6..cf88233b819a 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -4332,7 +4332,7 @@ int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
-> >  void kvm_io_bus_unregister_dev(struct kvm *kvm, enum kvm_bus bus_idx,
-> >  			       struct kvm_io_device *dev)
-> >  {
-> > -	int i;
-> > +	int i, j;
-> >  	struct kvm_io_bus *new_bus, *bus;
-> >  
-> >  	bus = kvm_get_bus(kvm, bus_idx);
-> > @@ -4349,17 +4349,20 @@ void kvm_io_bus_unregister_dev(struct kvm *kvm, enum kvm_bus bus_idx,
-> >  
-> >  	new_bus = kmalloc(struct_size(bus, range, bus->dev_count - 1),
-> >  			  GFP_KERNEL_ACCOUNT);
-> > -	if (!new_bus)  {
-> > +	if (new_bus) {
-> > +		memcpy(new_bus, bus, sizeof(*bus) + i * sizeof(struct kvm_io_range));
-> 
-> 				    ^^^
-> It seems that you can use struct_size() here (see the allocation code above)...
-> 
-> > +		new_bus->dev_count--;
-> > +		memcpy(new_bus->range + i, bus->range + i + 1,
-> > +		       (new_bus->dev_count - i) * sizeof(struct kvm_io_range));
-> 
-> 					   ^^^
-> ...and, if possible, you can also use flex_array_size() here.
-> 
-> Thanks
-> --
-> Gustavo
-> 
-> > +	} else {
-> >  		pr_err("kvm: failed to shrink bus, removing it completely\n");
-> > -		goto broken;
-> > +		for (j = 0; j < bus->dev_count; j++) {
-> > +			if (j == i)
-> > +				continue;
-> > +			kvm_iodevice_destructor(bus->range[j].dev);
-> > +		}
-> >  	}
-> >  
-> > -	memcpy(new_bus, bus, sizeof(*bus) + i * sizeof(struct kvm_io_range));
-> > -	new_bus->dev_count--;
-> > -	memcpy(new_bus->range + i, bus->range + i + 1,
-> > -	       (new_bus->dev_count - i) * sizeof(struct kvm_io_range));
-> > -
-> > -broken:
-> >  	rcu_assign_pointer(kvm->buses[bus_idx], new_bus);
-> >  	synchronize_srcu_expedited(&kvm->srcu);
-> >  	kfree(bus);
-> > 
 
-hi Gustavo, thank you for the review, i'll send the new patch.
-Vitaly, i think i will need to drop your "Reviewed-by", because there is
-going to be a bit more changes
+All existing system calls using iove in Linux uses unsigned long so
+I want to be consistent with them unless process_madvise need something
+speicial.
