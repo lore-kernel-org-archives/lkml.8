@@ -2,92 +2,86 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8410C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57420C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A904B20767
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:43:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599129783;
-	bh=Y17fOItbzHxWxDdPgwuBKoBEommCrq+F8Xn4jHcXZAI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GNRVAa75RRIfiF/pT+p4LVIK2xuAB7Blr6i9V5R4dhlL4gxsO2HSfObJQEuGlqd3b
-	 as5QFGduWk62TcVqPtxHOgDK/qboxOGsblw3tAcEWNTJlTzsKklwH5dTEqnCFhr9Fy
-	 7pm/IX7OTOFV2N9JIlueCClyFv/n4Oc6Jo1jWb2c=
+	by mail.kernel.org (Postfix) with ESMTP id 19E6920767
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 10:43:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CmAlHIxk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgICKnA (ORCPT
+        id S1728304AbgICKnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 06:43:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgICKmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 06:42:53 -0400
-Received: from localhost (unknown [122.171.179.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F72D20767;
-        Thu,  3 Sep 2020 10:42:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599129773;
-        bh=Y17fOItbzHxWxDdPgwuBKoBEommCrq+F8Xn4jHcXZAI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OJ1xUt//QkPMx0Cfc4p/DXpBnaafHLIK6mBMO4UnmugYOZ0hJi4IYYDgPYjBHzZS7
-         qoCUTd5cy14V3mj7Xs5Ax+ZdUenLGKJngmE15ChxdkThCBPQJA1475Xkaook6vHjVS
-         mAo2GA4iU++XEza0AFZqh0jHjA67DZPjqkPqoVyw=
-Date:   Thu, 3 Sep 2020 16:12:48 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, pierre-louis.bossart@linux.intel.com,
-        sanyog.r.kale@intel.com, mengdong.lin@intel.com,
-        bard.liao@intel.com
-Subject: Re: [PATCH 0/7] ASoC: soundwire: Move sdw stream operations to
-Message-ID: <20200903104248.GQ2639@vkoul-mobl>
-References: <20200901150240.19288-1-yung-chuan.liao@linux.intel.com>
+        Thu, 3 Sep 2020 06:43:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725984AbgICKnc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 06:43:32 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63077C061244;
+        Thu,  3 Sep 2020 03:43:32 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id n13so2141353edo.10;
+        Thu, 03 Sep 2020 03:43:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fVf69sgjmQCrEKYoeM+/1FVWXC87ayDjMXhE8nmIQDI=;
+        b=CmAlHIxkVGkcogMiRH95dFIDi8MtypkT4KAhVSJXxMvL9CkkOPaW5Edo9JJotPudcN
+         G7v1ptqRXr4yiAXhs7VJli2ZSxelJPRJkFhu+bmNiGz0uDo7GLq7iVqHkz80auQh4EyM
+         x3clYrpTOEjC0Bx1UDW5KibmT2l/RvmwCmjcGs9QvmU3jQZxsBaJfd8y8HIpb1P2I1a2
+         1jpLyXGn5QZj9ClFdKSUfAuiElucNXBnEKl0H1OuqJef+T4Fuqsu+TWn5iHI2aG6aqDo
+         CoLFt4btdZAM5SeuHuTyz98kjzqg6oexbkAFefI/Q+bnCwEGwq49JBQ9dYWABiocQ+X/
+         XetA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fVf69sgjmQCrEKYoeM+/1FVWXC87ayDjMXhE8nmIQDI=;
+        b=IpwUZA53ea9GBkpfEseMDosoMKnGHXPp27CVw1WzTDRBbCmADrfdK49x63iIcY9tKa
+         287rBOxzPp3huQoivaQs04+K4ro8BD1RcUVQbdkXDnWB2mZb8f5/aWyiQ+NueiMPOtdx
+         oiIAuSo0GaDIuWBkUXErlQQk3JfKnpqaaN4oCB4Dap7+Iyt/7CgzoApb7ui9CIaFgxAH
+         EPybj6FXN39dxpgCnTCRqFu2ik8GLln3X+vCYoYkWq0kfD38fdfcpyK9Y274CK+JenGk
+         ngWud/rMrvOPqdRMo5W4s3gvciwqMcweLwmegfjl54KMxxuyK5fL3dq1ohBif384A9Kg
+         mwPA==
+X-Gm-Message-State: AOAM530vPT5H9g2+aXl/hCW2cJxgUwDht/1iwBbSx1m8CnjQZI64wn1Z
+        GveuhbFZuQK7bLtxG/JrRcfukYMuqblj5YgUujY=
+X-Google-Smtp-Source: ABdhPJyu8Qa+G8WqE5A1ihixIYP1N10xyh0oXqPvS5rhQyYINqD323MbTNZuZq9TzrQXm+MwLfErIORRLYTSFNa2n+Q=
+X-Received: by 2002:a05:6402:220d:: with SMTP id cq13mr2326156edb.260.1599129811091;
+ Thu, 03 Sep 2020 03:43:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901150240.19288-1-yung-chuan.liao@linux.intel.com>
+References: <20200831061013.4327-1-avolmat@me.com>
+In-Reply-To: <20200831061013.4327-1-avolmat@me.com>
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+Date:   Thu, 3 Sep 2020 16:13:19 +0530
+Message-ID: <CAOh2x=ksVwnmqS_9dUukBKPBD26Tv5Yd0G_pXW1C6zhzfv2o1g@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Enable CPUFreq for STi stih418 SoC.
+To:     Alain Volmat <avolmat@me.com>
+Cc:     Patrice Chotard <patrice.chotard@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-09-20, 23:02, Bard Liao wrote:
-> sdw stream operation APIs can be called once per stream. dailink
-> callbacks are good places to call these APIs.
+On Mon, Aug 31, 2020 at 11:42 AM Alain Volmat <avolmat@me.com> wrote:
+>
+> This serie enables cpufreq for the STi stih418 SoC.
 
-Again, please mention here if this is to be merged thru sdw tree or ASoC
-tree
+Please cc the maintainers directly for patches. I almost missed these,
+just found during
+random screening of the list.
 
-> 
-> Pierre-Louis Bossart (7):
->   ASoC: soc-dai: clarify return value for get_sdw_stream()
->   soundwire: stream: fix NULL/IS_ERR confusion
->   soundwire: intel: fix NULL/ERR_PTR confusion
->   ASOC: Intel: sof_sdw: add dailink .trigger callback
->   ASOC: Intel: sof_sdw: add dailink .prepare and .hw_free callback
+Applied all.
 
-These should be ASoC
-
->   soundwire: intel: remove .trigger operation
->   soundwire: intel: remove stream handling from .prepare and .hw_free
-> 
->  drivers/soundwire/intel.c        | 60 ++++-------------------
->  drivers/soundwire/stream.c       |  2 +-
->  include/sound/soc-dai.h          |  3 +-
->  sound/soc/intel/boards/sof_sdw.c | 81 ++++++++++++++++++++++++++++++++
->  4 files changed, 92 insertions(+), 54 deletions(-)
-> 
-> -- 
-> 2.17.1
-
--- 
-~Vinod
+--
+viresh
