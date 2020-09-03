@@ -2,129 +2,99 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326CCC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4F3C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3F8E20786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56AB920786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:21:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zu9icTeS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVbRyPos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbgICPVt (ORCPT
+        id S1728474AbgICLYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:21:49 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:57382 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728454AbgICLYX (ORCPT
+        Thu, 3 Sep 2020 07:24:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728330AbgICLLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:24:23 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083BNmZu073910;
-        Thu, 3 Sep 2020 06:23:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599132228;
-        bh=NQo7vUhMynuWKGR7nysjqjeboPuk+AK5YMlGBnTcHWU=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=Zu9icTeSjqIxCdXj+48f6EVVaFLF196A1IfPMbjhblFy+GXWToUbLUJPfEzvd+NH6
-         P1XILBLc96enbD1fCX07hha5ybwgfWgiI07TPFTw7a1Mpy6AKvv9ZauqwbIEmlbxwv
-         WHWPNuJ0ID7eKlyzAnVDxV9h/xrAb8YQrrXHf/uQ=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083BNmth100340;
-        Thu, 3 Sep 2020 06:23:48 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
- 2020 06:23:48 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 3 Sep 2020 06:23:48 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083BNmhR079007;
-        Thu, 3 Sep 2020 06:23:48 -0500
-Date:   Thu, 3 Sep 2020 06:23:48 -0500
-From:   Nishanth Menon <nm@ti.com>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-CC:     Suman Anna <s-anna@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <lokeshvutla@ti.com>,
-        <grygorii.strashko@ti.com>, <nsekhar@ti.com>
-Subject: Re: [PATCH 6/7] arm64: dts: ti: k3-*: Use generic adc for node names
-Message-ID: <20200903112348.dcj7b7zytgdt6pjv@akan>
-References: <20200901223059.14801-1-nm@ti.com>
- <20200901223059.14801-7-nm@ti.com>
- <60e6b790-360a-6eaf-03a3-5bb256adf215@ti.com>
- <20200902181820.nlvl3pfzeh4agzzi@akan>
- <9fb2f8f4-5eeb-6190-9cbf-b28084c58a8f@ti.com>
+        Thu, 3 Sep 2020 07:11:23 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE974C061247;
+        Thu,  3 Sep 2020 04:11:22 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id e33so1876952pgm.0;
+        Thu, 03 Sep 2020 04:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AobGiMqA/cDFWY4Oywceftiem4qTQGg8aRmvx/rxcd0=;
+        b=BVbRyPosrveWpQahdCcvHTRppfLuXeS3v+eTlwJFCAoPh3ntC5bQROHsHpugizKvdt
+         cgiVCHDYUMP2nZhqAJQ2AwdrW5nAlLjnuHxc0fJ6bI++ZNnXBR9M7kwi0c/EFdYcLE+n
+         eVS/idRookFVOKqrMSubmrwXX78cnmETb/5mzEytvnmtbeZzrYWW+Aof+CdKtOeYg4ki
+         m2Dz1IqrkAekl4/M1WuGF3G3YiD6iY+szu8L1BWFHDoGJb2sDSQa7rtzf+UN3Kb9eIev
+         Fa5y4hisZyBqoUEwy/vvxR/G5zL2YREMY+GOHwV8bLPX6rZJIL3zlR84yfhExQPYVKKT
+         HrrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AobGiMqA/cDFWY4Oywceftiem4qTQGg8aRmvx/rxcd0=;
+        b=Q811y2WVOb0yIp1iubyTRyVHQ1D6FbE+OGeS6vqu0uXbFm6aJtV/buwIcR82eeE2JH
+         IJ7EbFurxD06k2fq6RbtaCQMNV8spElpzFkFs5RAAVXNKXOzCa4m1gY6oeH0KdRKJB7X
+         X8raWCZT0MxV/MllHyUIKmhRqsd6AE4AzxI7TdkA6elRfUAJwpceBOryXMD4j0ctco1q
+         pNZjP2VDmmvBP3Ihmc6JQ5U57TZ6banpWJF2zTWKs0UwBDxrcwIGsw0Tj5XqkY1MIhJG
+         JSSoQzU/7kKBZ8mb4G7uU4WGtH6OJum40F2c+fWHUeYaPwVSIc8pNn6R6uAnqIZl96e2
+         2Afg==
+X-Gm-Message-State: AOAM530KhF0tAEjHUgJFulOCHzWGO/JfrBwD/ph0v53QtPBMNDZ9h8Sw
+        A+xSMF18uj7zQljsiyytUYcECn5Y38pxrHsRGqQ=
+X-Google-Smtp-Source: ABdhPJxPIuRSAkooAyor+9Sgh8QhWpV5z/djl4ilpRF9DBd6NzbYPrgG14FAx4hP0rBWt6RkZN7TL/RDa5wxsr+Fh7g=
+X-Received: by 2002:a17:902:56a:: with SMTP id 97mr3453206plf.130.1599131482530;
+ Thu, 03 Sep 2020 04:11:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <9fb2f8f4-5eeb-6190-9cbf-b28084c58a8f@ti.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200903005300.7894-1-digetx@gmail.com> <20200903005300.7894-6-digetx@gmail.com>
+In-Reply-To: <20200903005300.7894-6-digetx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 3 Sep 2020 14:11:03 +0300
+Message-ID: <CAHp75VefJMxAoGxN8muTxLUJ=bwcMyjzX4uEGvYdckE6xYJvjw@mail.gmail.com>
+Subject: Re: [PATCH v3 05/22] i2c: tegra: Use reset_control_reset()
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10:55-20200903, Vignesh Raghavendra wrote:
-> Hi Nishanth,
-> 
-> On 9/2/20 11:48 PM, Nishanth Menon wrote:
-> > On 11:51-20200902, Suman Anna wrote:
-> >> On 9/1/20 5:30 PM, Nishanth Menon wrote:
-> >>> Use adc@ naming for nodes following standard conventions of device
-> >>> tree (section 2.2.2 Generic Names recommendation in [1]).
-> >>>
-> >>> [1] https://github.com/devicetree-org/devicetree-specification/tree/v0.3
-> >>>
-> >>> Suggested-by: Suman Anna <s-anna@ti.com>
-> >>> Signed-off-by: Nishanth Menon <nm@ti.com>
-> >>> ---
-> >>>  arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi         | 4 ++--
-> >>>  arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 4 ++--
-> >>>  2 files changed, 4 insertions(+), 4 deletions(-)
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-> >>> index 51ca4b4d4c21..6dfec68ac865 100644
-> >>> --- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-> >>> +++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-> >>> @@ -80,7 +80,7 @@
-> >>>  		#size-cells = <0>;
-> >>>  	};
-> >>>  
-> >>> -	tscadc0: tscadc@40200000 {
-> >>> +	tscadc0: adc@40200000 {
-> >>
-> >> OK with these changes, since these seem to be only have the adc child nodes.
-> >> This node is essentially a parent node for touchscreen and adc child nodes. The
-> >> driver is currently looking for "tsc" on touchscreen child nodes, but none of
-> >> the K3 SoCs have them atm.
-> >>
-> > 
-> > 
-> > Vignesh: are you ok with this, care to comment?
-> > 
-> 
-> On K3 SoCs, ADC IP is reuse from AM335x but just lacks resistive
-> touchscreen interfaces. So, existing AM335x ADC driver is being reused
-> for K3 devices as well. Unfortunately, ADC driver cannot be used as
-> standalone and is dependent on MFD parent to be present...
-> Above node represents the MFD parent and ADC itself is the child node
-> (see arch/arm64/boot/dts/ti/k3-am654-base-board.dts). So, I recommend
-> that we keep this node's name as tscadc in order to avoid having same
-> name for parent and child node which will be quite confusing.
+On Thu, Sep 3, 2020 at 3:53 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> Use a single reset_control_reset() instead of assert/deasset couple in
+> order to make code cleaner a tad.
+
+> Note that the reset_control_reset()
+> uses 1 microsecond delay instead of 2 that was used previously, but this
+> shouldn't matter.
+
+What datasheet says about this delay?
+
+> In addition don't ignore potential error of the reset.
+>
+> Reviewed-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
 
-Thanks for your feedback. I will drop this patch.
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+--=20
+With Best Regards,
+Andy Shevchenko
