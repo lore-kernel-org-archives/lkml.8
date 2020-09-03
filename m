@@ -2,185 +2,74 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FF8C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AE4C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8344D20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:12:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ByB0e8PB"
+	by mail.kernel.org (Postfix) with ESMTP id 93DBC20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:14:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbgICWMz (ORCPT
+        id S1729461AbgICWOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:12:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22708 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728309AbgICWMy (ORCPT
+        Thu, 3 Sep 2020 18:14:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728129AbgICWOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:12:54 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 083M2I4g088162;
-        Thu, 3 Sep 2020 18:12:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
- cc : subject : in-reply-to : date : message-id : mime-version :
- content-type; s=pp1; bh=vfAxjaSURqVQkdPQBM6+/IzRa+Uk6OykdgGVzRffals=;
- b=ByB0e8PBQLcON3bXwl5sX4lNJG76MDoMxpAGwYXt94MSuRVtHeYezYCwDwJV6hcoq4yi
- rwJFqRrHIc9n9u5NBUwmtXNwz80TS4pnVyhJLiBvj14kFOMu+qZD9drJ/RqG7s79sJ/H
- AZilOvUMjJCGGXTVGMcrMJZ2QQCCw7a6TBW9fZD0guQ/x+9jpJDcRZvTlsCIqj0bzacm
- eTE2LfUfK6Fuvom08bTrrdSjtJMy9K1RN2X/j98vAymPtqwM2u7mfg6s2BfDeNyrBtlY
- rvotHgOKnVi6w/fBIGXh99EKFWf65SV/veSSFbwG2FoHoXYeMRkhLKpUmgmOewuBd7FW ww== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33b8n60m1a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 18:12:01 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 083M2kT7090455;
-        Thu, 3 Sep 2020 18:12:00 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33b8n60m0y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 18:12:00 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 083MBYkK028762;
-        Thu, 3 Sep 2020 22:12:00 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma02wdc.us.ibm.com with ESMTP id 337ena2xht-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Sep 2020 22:11:59 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 083MBtXH30671564
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Sep 2020 22:11:55 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E322A78086;
-        Thu,  3 Sep 2020 22:11:58 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D95378083;
-        Thu,  3 Sep 2020 22:11:51 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.211.155.22])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu,  3 Sep 2020 22:11:51 +0000 (GMT)
-References: <20200901195029.30039-1-nramas@linux.microsoft.com>
- <20200901195029.30039-4-nramas@linux.microsoft.com>
-User-agent: mu4e 1.4.10; emacs 27.1
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
-        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [PATCH v5 3/3] arm64: Add IMA kexec buffer to DTB
-In-reply-to: <20200901195029.30039-4-nramas@linux.microsoft.com>
-Date:   Thu, 03 Sep 2020 19:11:48 -0300
-Message-ID: <87sgbyy0gr.fsf@morokweng.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-03_14:2020-09-03,2020-09-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 impostorscore=0 spamscore=0 suspectscore=0
- mlxscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009030189
+        Thu, 3 Sep 2020 18:14:07 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C4EC061244;
+        Thu,  3 Sep 2020 15:14:06 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 27145127A0335;
+        Thu,  3 Sep 2020 14:57:19 -0700 (PDT)
+Date:   Thu, 03 Sep 2020 15:14:04 -0700 (PDT)
+Message-Id: <20200903.151404.2085033333649714923.davem@davemloft.net>
+To:     paul.davey@alliedtelesis.co.nz
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 0/2] Allow more than 255 IPv4 multicast
+ interfaces
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200902032222.25109-1-paul.davey@alliedtelesis.co.nz>
+References: <20200902032222.25109-1-paul.davey@alliedtelesis.co.nz>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Thu, 03 Sep 2020 14:57:19 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Paul Davey <paul.davey@alliedtelesis.co.nz>
+Date: Wed,  2 Sep 2020 15:22:20 +1200
 
-Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
+> Currently it is not possible to use more than 255 multicast interfaces
+> for IPv4 due to the format of the igmpmsg header which only has 8 bits
+> available for the VIF ID.  There is enough space for the full VIF ID in
+> the Netlink cache notifications, however the value is currently taken
+> directly from the igmpmsg header and has thus already been truncated.
+> 
+> Using the full VIF ID in the Netlink notifications allows use of more
+> than 255 IPv4 multicast interfaces if the user space routing daemon
+> uses the Netlink notifications instead of the igmpmsg cache reports.
+> 
+> However doing this reveals a deficiency in the Netlink cache report
+> notifications, they lack any means for differentiating cache reports
+> relating to different multicast routing tables.  This is easily
+> resolved by adding the multicast route table ID to the cache reports.
 
-> The address and size of the current kernel's IMA measurement log
-> need to be added to the device tree's IMA kexec buffer node for
-> the log to be carried over to the next kernel on the kexec call.
->
-> Add the IMA measurement log buffer properties to the device tree for
-> ARM64 and reserve the memory for storing the IMA log.
-> Update CONFIG_KEXEC_FILE to select CONFIG_HAVE_IMA_KEXEC to
-> indicate that the IMA measurement log information is present in
-> the device tree.
->
-> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> ---
->  arch/arm64/Kconfig                     |  1 +
->  arch/arm64/kernel/machine_kexec_file.c | 15 +++++++++++++++
->  2 files changed, 16 insertions(+)
->
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 6d232837cbee..9f03c8245e5b 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -1077,6 +1077,7 @@ config KEXEC
->  config KEXEC_FILE
->  	bool "kexec file based system call"
->  	select KEXEC_CORE
-> +	select HAVE_IMA_KEXEC
->  	help
->  	  This is new version of kexec system call. This system call is
->  	  file based and takes file descriptors as system call argument
-> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> index 361a1143e09e..0fe3d629eefe 100644
-> --- a/arch/arm64/kernel/machine_kexec_file.c
-> +++ b/arch/arm64/kernel/machine_kexec_file.c
-> @@ -136,6 +136,21 @@ static int setup_dtb(struct kimage *image,
->  				FDT_PROP_KASLR_SEED);
->  	}
->  
-> +	/* add ima-kexec-buffer */
-> +	if (image->arch.ima_buffer_size > 0) {
-> +		ret = fdt_appendprop_addrrange(dtb, 0, off,
-> +				FDT_PROP_IMA_KEXEC_BUFFER,
-> +				image->arch.ima_buffer_addr,
-> +				image->arch.ima_buffer_size);
-> +		if (ret)
-> +			return (ret == -FDT_ERR_NOSPACE ? -ENOMEM : -EINVAL);
-> +
-> +		ret = fdt_add_mem_rsv(dtb, image->arch.ima_buffer_addr,
-> +				      image->arch.ima_buffer_size);
-> +		if (ret)
-> +			goto out;
-> +	}
-> +
->  	/* add rng-seed */
->  	if (rng_is_initialized()) {
->  		void *rng_seed;
+But this means that mrouted has no way to see the full 16-bit value
+via traditional igmpmsg UAPI interfaces.
 
-I just noticed one more thing this code isn't doing compared to the
-powerpc version (sorry to bring these issues piecemeal, I didn't realize
-this before):
+Please instead make use of the unused3 member to store the high
+order 16-bits of the vifi_t in the igmpmsg, and then code your
+netlink changes around that.
 
-You're not checking whether there already is a device tree property and
-corresponding memory reservation for an IMA kexec buffer that the
-currently running kernel might have received from a previous kernel. In
-that case, this code will do the wrong thing because
-fdt_appendprop_addrrange() will append the range to the existing
-property, which is not what you want. You'll also have a memory
-reservation entry for a stale IMA kexec buffer, which just wastes
-memory.
-
-So one thing you need to do, whether or not there's an IMA kexec buffer
-to be passed to the next kernel, is to remove any existing
-FDT_PROP_IMA_KEXEC_BUFFER property and also its corresponding memory
-reservation, so that you avoid accumulating stale memory reservations
-for non-existing IMA kexec buffers from previous kexecs.
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
