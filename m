@@ -2,101 +2,119 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51D2C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3156C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5812078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D643208C7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 11:29:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pOAISEGL"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="rfr/QNV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbgICL0Y (ORCPT
+        id S1728580AbgICL3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 07:26:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728344AbgICLHg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:07:36 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EFE5C06125C;
-        Thu,  3 Sep 2020 04:07:07 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 17so2036396pfw.9;
-        Thu, 03 Sep 2020 04:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eaRhsZ5TWpfGSPdWSz1VTVO/mX4t+F5UcIQtgVoahy0=;
-        b=pOAISEGLGapqlDNpjEyrYBaAWWHCLZskiXqlh+HTkbAlUtPGW03AZqfOZ3hYuFyLbk
-         lVD/q/IhrFnVi8CGt4+6D+XTK0NJl39HWm95D36dIPjI28fEOhMxhzxAT7rHsQQPAZrt
-         smLXj7Pyz+w2tOkyJGqF/AcVBPEadWdkY3CFpTjA4+Fqi6lTgJ/diuVMUl9wZ1mPKrPo
-         e3lplG7jjPGbp/idOhPr16vxd7cMzWkeIanwZSbiZ8hUgXr+M92KcbYeOuq18bU9M/A6
-         j/sR/JAP8mfnkqspbu7n6oanpUB387x/uLQJ8eq//8xolL9L/CEXsshXX91FvOmzdlQi
-         Iqzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eaRhsZ5TWpfGSPdWSz1VTVO/mX4t+F5UcIQtgVoahy0=;
-        b=kRXRzaoRUuwZmCRJ8VZaAGZV0pexjtmnIeY/YRoE6Fmy6X3t8H7B27BZ4R377bg84j
-         WJt7p6q0dAAVa1sDrRDoEvdTUo8PnonwWaocEaKaK9JQHPl3l9ooC4QJSb9tYIWFq1Rh
-         tDVA5dQu2BovPG0ZqHj/TG4+l+gx3l1in0qnJaT/JyGDpoy+Ge4YafL+LCbH6pEvM/Ke
-         fRi5DDlS6dOs2aB5PnxR9cv6BrWZ4bAjwQqgSRutsLY8hOfeHVmnF0qLgyWkQnbO5Bqv
-         22YE4Is01+JK9942PzSoEdIJ0Zu+t/dXRBPXtXB9NOGxcmXX66LhCRH3xPI4AQ44iB5v
-         m2KA==
-X-Gm-Message-State: AOAM533sBkYheN4TYSGJBIZ0HwUJfjYRbhyg/QNwbNDk0G6vBckvrhw7
-        /voV8x6rz7xHQp8GycjD03xkxYocUUBpAFo375s=
-X-Google-Smtp-Source: ABdhPJwuGc2+bCg2ErG6/q6jf3bKJSgb0rbju4qg8koUw0SNPYEPIhl4iKY40gX8AZ3+BDdHmV3pB+52drdFpLjXWtA=
-X-Received: by 2002:a17:902:ea86:: with SMTP id x6mr3360111plb.131.1599131226890;
- Thu, 03 Sep 2020 04:07:06 -0700 (PDT)
+        Thu, 3 Sep 2020 07:29:13 -0400
+Received: from crapouillou.net ([89.234.176.41]:50270 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728085AbgICL0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:26:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1599132362; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=SR+iHQciNK1Dv29p/vdSQ9gduW5dmKiBTrl2NLxMY20=;
+        b=rfr/QNV5RzywkcrtwTfLhKPhjdrJfEhu9mfs28GozR5K5U8TlPo9A01AW4BtxUR0RBNi1G
+        wp1us28vEA+MBOzKHcKM5g0SmOT77V5i42hS1PHUdaVWF/CjlRncgOuu0whBvXUbmSWVwR
+        h6uZjr6MxNY4Y4dlFC9WpuGu+k9PXQk=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Tony Prisk <linux@prisktech.co.nz>, Bin Liu <b-liu@ti.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 00/20] usb: Use new pm_ptr() macro
+Date:   Thu,  3 Sep 2020 13:25:34 +0200
+Message-Id: <20200903112554.34263-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20200903005300.7894-1-digetx@gmail.com> <20200903005300.7894-4-digetx@gmail.com>
-In-Reply-To: <20200903005300.7894-4-digetx@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 3 Sep 2020 14:06:49 +0300
-Message-ID: <CAHp75VfFZ2bgEqS7cbTfYzxtXk3T5VaoJpum5aiNMpfvhfbuqw@mail.gmail.com>
-Subject: Re: [PATCH v3 03/22] i2c: tegra: Clean up messages in the code
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 3:53 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> This patch unifies style of all messages in the driver by starting them
-> with a lowercase letter and using consistent capitalization and wording
-> for all messages.
+The pm_ptr() macro was introduced to avoid conditional compilation of
+the PM code. Instead of having the .suspend/.resume functions compiled
+conditionally if CONFIG_PM_SLEEP, they are now always visible by the
+compiler, which can then detect bugs, and will be discarded if unused.
 
-I didn't look at the rest (yet) but this series has a patch ordering issue.
-Why do we first do some little, non-critical clean ups?
+Cheers,
+-Paul
 
-The preferred way is to arrange like:
- - fixes that may be backported
- - fixes that are likely not going to be backported
- - features
- - cleanups
+Paul Cercueil (20):
+  usb/host: ohci-platform: Use pm_ptr() macro
+  usb/host: ehci-spear: Use pm_ptr() macro
+  usb/host: ehci-npcm7xx: Use pm_ptr() macro
+  usb/host: ehci-platform: Use pm_ptr() macro
+  usb/cdns3: core: Use pm_ptr() macro
+  usb/chipidea: core: Use pm_ptr() macro
+  usb/misc: usb3503: Use pm_ptr() macro
+  usb/misc: usb4604: Use pm_ptr() macro
+  usb/musb: am35x: Use pm_ptr() macro
+  usb/musb: da8xx: Use pm_ptr() macro
+  usb/musb: musb_dsps: Use pm_ptr() macro
+  usb/musb: ux500: Use pm_ptr() macro
+  usb/phy: am335x: Use pm_ptr() macro
+  usb/phy: mxs-usb: Use pm_ptr() macro
+  usb/gadget/udc: atmel: Use pm_ptr() macro
+  usb/gadget/udc: bdc: Use pm_ptr() macro
+  usb/gadget/udc: mv-u3d: Use pm_ptr() macro
+  usb/gadget/udc: pch: Use pm_ptr() macro
+  usb/gadget/udc: renesas: Use pm_ptr() macro
+  usb/gadget/udc: snps: Use pm_ptr() macro
 
-In its turn cleanups go by severity:
- - code affected ones (and maybe logical changers)
- - ...
- - commentary / indentation fixes
+ drivers/usb/cdns3/core.c                | 13 ++++---------
+ drivers/usb/chipidea/core.c             | 26 +++++++++++--------------
+ drivers/usb/gadget/udc/atmel_usba_udc.c |  8 +++-----
+ drivers/usb/gadget/udc/bdc/bdc_core.c   |  9 +++------
+ drivers/usb/gadget/udc/mv_u3d_core.c    |  8 +++-----
+ drivers/usb/gadget/udc/pch_udc.c        | 11 +++--------
+ drivers/usb/gadget/udc/renesas_usb3.c   |  8 +++-----
+ drivers/usb/gadget/udc/snps_udc_plat.c  | 16 +++++----------
+ drivers/usb/host/ehci-npcm7xx.c         |  8 +++-----
+ drivers/usb/host/ehci-platform.c        |  8 +++-----
+ drivers/usb/host/ehci-spear.c           |  8 +++-----
+ drivers/usb/host/ohci-platform.c        | 19 ++++++++----------
+ drivers/usb/misc/usb3503.c              | 18 ++++++++---------
+ drivers/usb/misc/usb4604.c              |  8 +++-----
+ drivers/usb/musb/am35x.c                |  8 +++-----
+ drivers/usb/musb/da8xx.c                |  8 +++-----
+ drivers/usb/musb/musb_dsps.c            | 20 +++++++------------
+ drivers/usb/musb/ux500.c                |  8 +++-----
+ drivers/usb/phy/phy-am335x.c            |  8 +++-----
+ drivers/usb/phy/phy-mxs-usb.c           | 11 +++++------
+ 20 files changed, 87 insertions(+), 144 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.28.0
+
