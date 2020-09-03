@@ -2,159 +2,100 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D2FC10DAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C515C10DAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8B6620709
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB3920678
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 21:52:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vFQ57p1a"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KicJSqu+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgICVv3 (ORCPT
+        id S1729356AbgICVwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 17:51:29 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:24611 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729445AbgICVv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 17:51:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1599169885; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=KkUwaOv29rJxTh90c7/ir1eEKy0BUkrSWEVWw1RACx0=; b=vFQ57p1a8e6zC+oFJW7l+/32KmJDxe/ENJN2ylPWPklsPc2uEB6pLKHj89ecISEKdsJ1eRqx
- 7/Y6RfErvRsY8dhxvPxd4iQ0VOWwnZiDjrYTdwMffOLbLftH8feYVR0d0XnsqVR8Yq7paN1l
- MlLip6sekTux/FFcdlgwA20fgd0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f51653654e87432be657479 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 03 Sep 2020 21:50:46
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 68F2EC433C9; Thu,  3 Sep 2020 21:50:45 +0000 (UTC)
-Received: from [10.110.72.171] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 48B28C433C8;
-        Thu,  3 Sep 2020 21:50:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 48B28C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v8 4/4] arm64: boot: dts: qcom: pm8150b: Add DTS node for
- PMIC VBUS booster
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Sergei Shtylyov <sergei.shtylyov@gmail.com>, sboyd@kernel.org,
-        heikki.krogerus@linux.intel.com, agross@kernel.org,
-        robh+dt@kernel.org, gregkh@linuxfoundation.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20200812071925.315-1-wcheng@codeaurora.org>
- <20200812071925.315-5-wcheng@codeaurora.org>
- <1ed0a34c-6219-fe3d-7d9c-13a74ce2d4d0@gmail.com>
- <02111c69-73fd-5e8c-5594-27393865d458@codeaurora.org>
- <20200830175257.GA1947@uller>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <fb81083e-7672-d199-689f-ede89228b485@codeaurora.org>
-Date:   Thu, 3 Sep 2020 14:50:43 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 3 Sep 2020 17:52:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbgICVwh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 17:52:37 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 537EFC061246
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 14:52:37 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id np15so4273597pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 14:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=niBSeaSbgvRvlB35MBxx98Nw+20RftQpbuI5pjBM80I=;
+        b=KicJSqu+xVTyfixy3duLdJz55bxWRU3qA5qutCjSiukroOXIqFG0/1lD3QJeDVIqMC
+         hZ6NZa7w9Qs1p1rJ4Alr8OVZgM7Zw7wnpZVEMqp9fetWV7i08ZFQCV9dvLbQsymap8Sa
+         WEtcBNRNrgLCnUJf91oNzu8Xfg8xBZ6/pJAwg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=niBSeaSbgvRvlB35MBxx98Nw+20RftQpbuI5pjBM80I=;
+        b=kyI+9IllOH9RGerTHKcACkOFVnO/8vrs9qbiQBn+sIGeVMA5Mukm6AROufgMIUoRUX
+         ZUnY0HQl1gxIG5ol7+2RrX7GblLLIP1l/ie2RA5ObKA4r2BXYXw14d4OQT7n2U1H7Nr/
+         hll9QtJhKVgUxed6QwxCPPPmeOryq8uofV0ErwqbGQqViKRUs16+GXd96aE8nBoYcPXI
+         BrPnwo0Gauk/+QWB+7TyKekcUOC/JmRb59qMm3ne+/dwqNBzPrBgo/hpuhJ4mTqWZGAO
+         GX0E+ZIciNGEB2KVCMsk2WBM58UOKxUuLLH8TDJLMECMU6Hc7xpxFfYYnKHDKLlhvooi
+         5FOw==
+X-Gm-Message-State: AOAM530LKBs9ccp+U90k5vNzzTT45SF6O5qefs6QMK0CuNqwIygWMqES
+        l7gVgFGx66K6YhSr72EHGQeLJg==
+X-Google-Smtp-Source: ABdhPJwa48YSM6ExHujIeVMJjTdMKXdlCG8evKNumN+cGLnV5tqHACBkFFTWQTDxLZ9gej+518XXtg==
+X-Received: by 2002:a17:90a:f198:: with SMTP id bv24mr5394608pjb.117.1599169956918;
+        Thu, 03 Sep 2020 14:52:36 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 31sm3746762pgo.17.2020.09.03.14.52.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 14:52:36 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 14:52:35 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v2 06/28] objtool: Don't autodetect vmlinux.o
+Message-ID: <202009031452.FD826A9748@keescook>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-7-samitolvanen@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200830175257.GA1947@uller>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903203053.3411268-7-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/30/2020 10:52 AM, Bjorn Andersson wrote:
-> On Thu 20 Aug 07:47 UTC 2020, Wesley Cheng wrote:
+On Thu, Sep 03, 2020 at 01:30:31PM -0700, Sami Tolvanen wrote:
+> With LTO, we run objtool on vmlinux.o, but don't want noinstr
+> validation. This change requires --vmlinux to be passed to objtool
+> explicitly.
 > 
->>
->>
->> On 8/12/2020 2:34 AM, Sergei Shtylyov wrote:
->>> Hello!
->>>
->>> On 12.08.2020 10:19, Wesley Cheng wrote:
->>>
->>>> Add the required DTS node for the USB VBUS output regulator, which is
->>>> available on PM8150B.  This will provide the VBUS source to connected
->>>> peripherals.
->>>>
->>>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->>>> ---
->>>>   arch/arm64/boot/dts/qcom/pm8150b.dtsi   | 6 ++++++
->>>>   arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 4 ++++
->>>>   2 files changed, 10 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
->>>> b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
->>>> index 053c659734a7..9e560c1ca30d 100644
->>>> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
->>>> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
->>>> @@ -53,6 +53,12 @@ power-on@800 {
->>>>               status = "disabled";
->>>>           };
->>>>   +        pm8150b_vbus: dcdc@1100 {
->>>
->>>    s/dcdc/regulator/? What is "dcdc", anyway?
->>>    The device nodes must have the generic names, according to the DT spec.
->>>
->>
->> Hi Sergei,
->>
->> Thanks for the comment!
->>
->> DCDC is the label that we use for the DC to DC converter block, since
->> the VBUS booster will output 5V to the connected devices.  Would it make
->> more sense to have "dc-dc?"
->>
-> 
-> At this level it's just a regulator at 0x1100, so it should be
-> "regulator@1100". If you would like a more useful name in the running
-> system you should be able to use the "regulator-name" property.
-> 
-> Regards,
-> Bjorn
-> 
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-Hi Bjorn,
+Looks right to me.
 
-Thanks for the suggestion.  Sounds good, I will just use the "regulator"
-name for now.
-
-Thanks
-Wesley
-
->> Thanks
->> Wesley
->>
->>>> +            compatible = "qcom,pm8150b-vbus-reg";
->>>> +            status = "disabled";
->>>> +            reg = <0x1100>;
->>>> +        };
->>>> +
->>>>           pm8150b_typec: typec@1500 {
->>>>               compatible = "qcom,pm8150b-usb-typec";
->>>>               status = "disabled";
->>> [...]
->>>
->>> MBR, Sergei
->>
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Kees Cook
