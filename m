@@ -2,183 +2,175 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0B8C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFD1C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05DF8206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:34:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CFa0qij2"
+	by mail.kernel.org (Postfix) with ESMTP id 62F56206EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 12:36:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgICMdv (ORCPT
+        id S1728464AbgICMgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 08:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728663AbgICM1z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 08:27:55 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD54BC061258
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 05:17:12 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mm21so1438977pjb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 05:17:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=/BKi2i04xBQBPBh/3OfYq0JRpU2M+He5BM3tljwdBCM=;
-        b=CFa0qij2VAf/49RV/zrVX3ncNvnawUqzeGRhAyqR73uvVwsZ6hAeWDUGsG1iks33Yw
-         qw1Yl03RYYHbFFHCzQ0PRzupwQJvkCqZwMICNDOSfgLGE/O4ELoNyjbaPL1hw8vg5FA8
-         8yW4KCkJAbe23y5BhusonlRTSxbSsaG+8h7/E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/BKi2i04xBQBPBh/3OfYq0JRpU2M+He5BM3tljwdBCM=;
-        b=eekU9Zayxse4CVbBtbB4UcFJk8U4t5embDtST0B52mHIIe0+J0lSQye13EPPEFszp+
-         En4Qj8tVCFjeWbAMuaozJqaB3Kr3t5bTb49mP3rrTtcZQn1ltx7aaWIimlUIdaImIYM7
-         7DqFi9zBMWS/GNhbCbvwqgkqljjhyxD/4lvUFrGrBvGAwYIuUGqvWriud9Z4GjHxHPtw
-         nzhxLCjAQkCMq+DlNvlZKMRNpuvou9Eb+ZuLWKzZfF7QrhRvIRQ7Gkv6A/mp2PYVuPQT
-         aqrlFiySaEq+LIWI9Ag/kAsroqMdpHCFegqAW3hhK31Z3LtXJxzVLbmnB9uZ4HWdzF/5
-         JGfA==
-X-Gm-Message-State: AOAM530qxN5Yj1SCaF0c/cyGjiPHPpXPH8W1KD/TpZHD90sADN2TQ123
-        C6PtxApUWLS+ppIlJ/rpWicIHQ==
-X-Google-Smtp-Source: ABdhPJyRNKcBgEX/LHFE+6DRGovh0X2K5LHGwdLni0au93gA95eaRzC4WEulWXQDvMWRqPJEHgWOjA==
-X-Received: by 2002:a17:90a:858a:: with SMTP id m10mr2854307pjn.185.1599135431975;
-        Thu, 03 Sep 2020 05:17:11 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id q201sm3130842pfq.80.2020.09.03.05.17.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 05:17:11 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 05:17:10 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add 'sustainable_power' for
- CPU thermal zones
-Message-ID: <20200903121710.GG3419728@google.com>
-References: <20200813113030.1.I89c33c4119eaffb986b1e8c1bc6f0e30267089cd@changeid>
- <20200901170745.GA3419728@google.com>
- <CAD=FV=Xv0FLtWWcQcRy7p2LPNdDtSjdarsvNHRHaLkWwABnwJw@mail.gmail.com>
- <8ad0589e-102d-7523-899f-0ebe85b7d2b8@codeaurora.org>
- <CAD=FV=XKUEQP3gyE8E2UOE12qKYwzgMp0eNeYjCp0DxPDACSMQ@mail.gmail.com>
- <6693eed6-9a6b-48c8-e56e-acdde9cf9ffe@codeaurora.org>
- <f77d9b24-dbca-cea0-2ef8-3c5cf0c2f2dd@codeaurora.org>
+        Thu, 3 Sep 2020 08:36:36 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48950 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728565AbgICM2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:28:40 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7C657E04B63EC1F09FCD;
+        Thu,  3 Sep 2020 20:28:32 +0800 (CST)
+Received: from thunder-town.china.huawei.com (10.174.177.253) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 3 Sep 2020 20:28:24 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH 3/3] ARM: dts: add SD5203 dts
+Date:   Thu, 3 Sep 2020 20:27:34 +0800
+Message-ID: <20200903122734.2369-4-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
+In-Reply-To: <20200903122734.2369-1-thunder.leizhen@huawei.com>
+References: <20200903122734.2369-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f77d9b24-dbca-cea0-2ef8-3c5cf0c2f2dd@codeaurora.org>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.177.253]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rajendra,
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-On Thu, Sep 03, 2020 at 11:00:52AM +0530, Rajendra Nayak wrote:
-> 
-> On 9/3/2020 10:14 AM, Rajendra Nayak wrote:
-> > 
-> > On 9/2/2020 9:02 PM, Doug Anderson wrote:
-> > > Hi,
-> > > 
-> > > On Tue, Sep 1, 2020 at 10:36 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
-> > > > 
-> > > > 
-> > > > > * In terms of the numbers here, I believe that you're claiming that we
-> > > > > can dissipate 768 mW * 6 + 1202 mW * 2 = ~7 Watts of power.  My memory
-> > > > > of how much power we could dissipate in previous laptops I worked on
-> > > > > is a little fuzzy, but that doesn't seem insane for a passively-cooled
-> > > > > laptop.  However, I think someone could conceivably put this chip in a
-> > > > > smaller form factor.  In such a case, it seems like we'd want these
-> > > > > things to sum up to ~2000 (if it would ever make sense for someone to
-> > > > > put this chip in a phone) or ~4000 (if it would ever make sense for
-> > > > > someone to put this chip in a small tablet).  It seems possible that,
-> > > > > to achieve this, we might have to tweak the
-> > > > > "dynamic-power-coefficient".
-> > > > 
-> > > > DPC values are calculated (at a SoC) by actually measuring max power at various
-> > > > frequency/voltage combinations by running things like dhrystone.
-> > > > How would the max power a SoC can generate depend on form factors?
-> > > > How much it can dissipate sure is, but then I am not super familiar how
-> > > > thermal frameworks end up using DPC for calculating power dissipated,
-> > > > I am guessing they don't.
-> > > > 
-> > > > > I don't know how much thought was put
-> > > > > into those numbers, but the fact that the little cores have a super
-> > > > > round 100 for their dynamic-power-coefficient makes me feel like they
-> > > > > might have been more schwags than anything.  Rajendra maybe knows?
-> > > > 
-> > > > FWIK, the values are always scaled and normalized to 100 for silver and
-> > > > then used to derive the relative DPC number for gold. If you see the DPC
-> > > > for silver cores even on sdm845 is a 100.
-> > > > Again these are not estimations but based on actual power measurements.
-> > > 
-> > > The scaling to 100 doesn't seem to match how the thermal framework is
-> > > using them.  Take a look at of_cpufreq_cooling_register().  It takes
-> > > the "dynamic-power-coefficient" and passes it as "capacitance" into
-> > > __cpufreq_cooling_register().  That's eventually used to compute
-> > > power, which is documented in the code to be in mW.
-> > > 
-> > > power = (u64)capacitance * freq_mhz * voltage_mv * voltage_mv;
-> > > do_div(power, 1000000000);
-> > > 
-> > > /* power is stored in mW */
-> > > freq_table[i].power = power;
-> > > 
-> > > That's used together with "sustainable-power", which is the attribute
-> > > that Matthias is trying to set.  That value is documented to be in mW
-> > > as well.
-> > > 
-> > > ...so if the silver cores are always scaled to 100 regardless of how
-> > > much power they actually draw then it'll be impossible to actually
-> > > think about "sustainable-power" as a mW value.  Presumably we either
-> > > need to accept that fact (and ideally document it) or we need to
-> > > change the values for silver / gold cores (we could still keep the
-> > > relative values the same and just scale them).
-> > 
-> > That sounds reasonable (still keep the relative values and scale them)
-> > I'll get back on what those scaled numbers would look like, and try to
-> > get some sense of why this scaling to 100 was done (like you said
-> > I don't see any documentation on this), but I see atleast a few other non-qcom
-> > SoCs doing this too in mainline (like rockchip/rk3399)
-> 
-> On second thoughts, why wouldn't a relative 'sustainable-power' value work?
-> On every device, one would need to do the exercise that Matthias did to come
-> up with the OPP at which we can sustain max CPU/GPU loads anyway.
+Add sd5203.dts for Hisilicon SD5203 SoC platform.
 
-You assume that a thermal zone only has cooling devices of a the same type (or
-with the same fake unit for power consumption). This falls apart when multiple
-types are used, which is common.
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ arch/arm/boot/dts/Makefile   |  2 +
+ arch/arm/boot/dts/sd5203.dts | 90 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 92 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sd5203.dts
 
-Also sustainable power is only a derived value, the lying already starts in
-the energy model, which is used by EAS, so a fake unit could cause further
-problems.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 4572db3fa5ae..1d1262df5c55 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -357,6 +357,8 @@ dtb-$(CONFIG_ARCH_MPS2) += \
+ 	mps2-an399.dtb
+ dtb-$(CONFIG_ARCH_MOXART) += \
+ 	moxart-uc7112lx.dtb
++dtb-$(CONFIG_ARCH_SD5203) += \
++	sd5203.dtb
+ dtb-$(CONFIG_SOC_IMX1) += \
+ 	imx1-ads.dtb \
+ 	imx1-apf9328.dtb
+diff --git a/arch/arm/boot/dts/sd5203.dts b/arch/arm/boot/dts/sd5203.dts
+new file mode 100644
+index 000000000000..99da46072f72
+--- /dev/null
++++ b/arch/arm/boot/dts/sd5203.dts
+@@ -0,0 +1,90 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2020 Hisilicon Limited.
++ *
++ * DTS file for Hisilicon SD5203 Board
++ */
++
++/dts-v1/;
++
++/ {
++	model = "Hisilicon SD5203";
++	compatible = "hisilicon,sd5203";
++	interrupt-parent = <&vic>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	chosen {
++		bootargs="console=ttyS0,9600 earlycon=uart8250,mmio32,0x1600d000";
++	};
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	cpu {
++		compatible = "arm,arm926ej-s";
++		device_type = "cpu";
++	};
++
++	memory@30000000 {
++		device_type = "memory";
++		reg = <0x30000000 0x8000000>;
++	};
++
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges;
++
++		vic: interrupt-controller@10130000 {
++			compatible = "hisilicon,sd5203-vic";
++			reg = <0x10130000 0x1000>;
++			interrupt-controller;
++			#interrupt-cells = <1>;
++		};
++
++		refclk125mhz: refclk125mhz {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <125000000>;
++		};
++
++		timer0: timer@16002000 {
++			compatible = "arm,sp804", "arm,primecell";
++			reg = <0x16002000 0x1000>;
++			interrupts = <4>;
++			clocks = <&refclk125mhz>;
++			clock-names = "apb_pclk";
++		};
++
++		timer1: timer@16003000 {
++			compatible = "arm,sp804", "arm,primecell";
++			reg = <0x16003000 0x1000>;
++			interrupts = <5>;
++			clocks = <&refclk125mhz>;
++			clock-names = "apb_pclk";
++		};
++
++		uart0: serial@1600D000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x1600D000 0x1000>;
++			bus_id = "uart0";
++			clocks = <&refclk125mhz>;
++			clock-names = "apb_pclk";
++			reg-shift = <2>;
++			interrupts = <17>;
++		};
++
++		uart1: serial@1600C000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x1600C000 0x1000>;
++			clocks = <&refclk125mhz>;
++			clock-names = "apb_pclk";
++			reg-shift = <2>;
++			interrupts = <16>;
++			status = "disabled";
++		};
++	};
++};
+-- 
+2.26.0.106.g9fadedd
 
-> I mean even if we do change the DPC values to match actual power, Matthias would
-> still observe that we can sustain at the very same OPP and not any different.
-> Its just that the mW values that are passed to kernel are relative and not
-> absolute. My worry is that perhaps no SoC vendor wants to put these absolute numbers
-> out.
 
-This is pretty much 'security' by obscurity. It would be relatively easy to
-measure actual power consumption at different CPU speeds and derive the DPC
-values from that.
