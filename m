@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD694C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C5FC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1CF12072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 989C9208B3
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:17:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Vx2UPtjt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="M/kfg7wa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbgICPQn (ORCPT
+        id S1728989AbgICPRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:16:43 -0400
-Received: from crapouillou.net ([89.234.176.41]:51966 "EHLO crapouillou.net"
+        Thu, 3 Sep 2020 11:17:46 -0400
+Received: from crapouillou.net ([89.234.176.41]:51792 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728697AbgICLfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 07:35:50 -0400
+        id S1728354AbgICLdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 07:33:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599132408; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1599132394; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zOk90+M51eZ5tI9ivTHZKHwy00IhaQlS+1+ArcDDDCo=;
-        b=Vx2UPtjtliAswHBk8SZCaP2DvtJN/jS6azp/jPeSUY3YkmCg1BzYIeaJpaw714tuYK6Qx+
-        0klYFlkQoHxQb+65paN2wu1ttyLFHuygxhLsf0p7lfhCwwhL2+WeAod4Kqkx5M4WFpPvhz
-        M5pLVSy7NtvEdOvBNIZc0rt4QQ/FUAI=
+        bh=utgKzOLLgksdIlgLwCETskaSs78Yqz7cFo3jO08OUyA=;
+        b=M/kfg7waEBVPPqIV29RKlzuq3XReCvGUEPpjSph3PabopjIxrBkgzq9CYDplp1G5OYhDNf
+        aHBI9oaDeg83VY3j4WmlVnJVSOYEoVhQXX1bSJSmMQWYhx0lP9O1oReKYaOzr1AWZcjU6T
+        XX8DWnJ6kqxSyv/lG6knaAdaaNawWu4=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Chen <Peter.Chen@nxp.com>,
@@ -55,9 +55,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 17/20] usb/gadget/udc: mv-u3d: Use pm_ptr() macro
-Date:   Thu,  3 Sep 2020 13:25:51 +0200
-Message-Id: <20200903112554.34263-18-paul@crapouillou.net>
+Subject: [PATCH 12/20] usb/musb: ux500: Use pm_ptr() macro
+Date:   Thu,  3 Sep 2020 13:25:46 +0200
+Message-Id: <20200903112554.34263-13-paul@crapouillou.net>
 In-Reply-To: <20200903112554.34263-1-paul@crapouillou.net>
 References: <20200903112554.34263-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -75,49 +75,49 @@ simply be discarded by the compiler.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/usb/gadget/udc/mv_u3d_core.c | 8 +++-----
+ drivers/usb/musb/ux500.c | 8 +++-----
  1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/mv_u3d_core.c b/drivers/usb/gadget/udc/mv_u3d_core.c
-index 5486f5a70868..a7e3736fd0c1 100644
---- a/drivers/usb/gadget/udc/mv_u3d_core.c
-+++ b/drivers/usb/gadget/udc/mv_u3d_core.c
-@@ -1988,8 +1988,7 @@ static int mv_u3d_probe(struct platform_device *dev)
- 	return retval;
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int mv_u3d_suspend(struct device *dev)
-+static int __maybe_unused mv_u3d_suspend(struct device *dev)
- {
- 	struct mv_u3d *u3d = dev_get_drvdata(dev);
- 
-@@ -2012,7 +2011,7 @@ static int mv_u3d_suspend(struct device *dev)
+diff --git a/drivers/usb/musb/ux500.c b/drivers/usb/musb/ux500.c
+index 73538d1d0524..3defe83f3a16 100644
+--- a/drivers/usb/musb/ux500.c
++++ b/drivers/usb/musb/ux500.c
+@@ -327,8 +327,7 @@ static int ux500_remove(struct platform_device *pdev)
  	return 0;
  }
  
--static int mv_u3d_resume(struct device *dev)
-+static int __maybe_unused mv_u3d_resume(struct device *dev)
+-#ifdef CONFIG_PM_SLEEP
+-static int ux500_suspend(struct device *dev)
++static int __maybe_unused ux500_suspend(struct device *dev)
  {
- 	struct mv_u3d *u3d = dev_get_drvdata(dev);
- 	int retval;
-@@ -2031,7 +2030,6 @@ static int mv_u3d_resume(struct device *dev)
+ 	struct ux500_glue	*glue = dev_get_drvdata(dev);
+ 	struct musb		*musb = glue_to_musb(glue);
+@@ -341,7 +340,7 @@ static int ux500_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int ux500_resume(struct device *dev)
++static int __maybe_unused ux500_resume(struct device *dev)
+ {
+ 	struct ux500_glue	*glue = dev_get_drvdata(dev);
+ 	struct musb		*musb = glue_to_musb(glue);
+@@ -358,7 +357,6 @@ static int ux500_resume(struct device *dev)
  
  	return 0;
  }
 -#endif
  
- static SIMPLE_DEV_PM_OPS(mv_u3d_pm_ops, mv_u3d_suspend, mv_u3d_resume);
+ static SIMPLE_DEV_PM_OPS(ux500_pm_ops, ux500_suspend, ux500_resume);
  
-@@ -2051,7 +2049,7 @@ static struct platform_driver mv_u3d_driver = {
- 	.shutdown	= mv_u3d_shutdown,
+@@ -374,7 +372,7 @@ static struct platform_driver ux500_driver = {
+ 	.remove		= ux500_remove,
  	.driver		= {
- 		.name	= "mv-u3d",
--		.pm	= &mv_u3d_pm_ops,
-+		.pm	= pm_ptr(&mv_u3d_pm_ops),
+ 		.name	= "musb-ux500",
+-		.pm	= &ux500_pm_ops,
++		.pm	= pm_ptr(&ux500_pm_ops),
+ 		.of_match_table = ux500_match,
  	},
  };
- 
 -- 
 2.28.0
 
