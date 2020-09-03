@@ -2,168 +2,213 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCC0C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F02AC2D0E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFDE2083B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22FF12083B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 20:41:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QB5fuzCP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="h0+Pz1Cs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbgICUlL (ORCPT
+        id S1729628AbgICUlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 16:41:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35442 "EHLO
+        Thu, 3 Sep 2020 16:41:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729306AbgICUav (ORCPT
+        with ESMTP id S1729317AbgICUa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:30:51 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02B7EC061244;
-        Thu,  3 Sep 2020 13:30:51 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t10so4620632wrv.1;
-        Thu, 03 Sep 2020 13:30:50 -0700 (PDT)
+        Thu, 3 Sep 2020 16:30:56 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD54C061258
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 13:30:55 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id z190so2315043qkc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 13:30:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SOE/OufDVdftX3/5DbSJXaktDiZZ0XiuGv+LhNkVuyU=;
-        b=QB5fuzCP50t8x9ptrCUFxBtgRq7mzEUX8Hl9zZI6AyIfW9pojvgYUQUBCBRxr3kqlA
-         14rr62erX03m/hCwXDn0RD6DzKVkH/Jhovz7Ens7xMjD6qkBwYNaDCJZ7eDoNtCGAW5u
-         TT1XfpsyHG8AcneQzaHt4aV42oTpzRKku2o3V8RhmdB/S3SltLxzYc8CHX5mbjqsrPLb
-         6MD6TQVYc6UWK52vDugIpUgFNXrObpNmQ5kKJHmj8AhRFX8I6SP/WQx2OgVBs0djoCwc
-         nT0vqytArb7OOq2VZWbuWfkLwrH/G5zroo0ONuDDKzGzd/APM/xilplzX6st297R8rqz
-         cHXg==
+        d=google.com; s=20161025;
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=nGr4msUS0dEW75ogQM/nhSlm97UUOCMWXorkodmMp40=;
+        b=h0+Pz1CszWOumbWEcLmAC3O2sDpreVbpYTU/LLeX71N9riUhico9+tp5lrxUEUaJUq
+         9/9jya3977ohpQ/UFatz+tG09iq0m7MVC3DPVvg75x+pJc1eEY0ZcnS0k1+FD0W4xfb0
+         0s+GpFY0ECMdosU7iEgPv+ytcGRd+QAMRWGomwTGMAF/oKYGdOMzrdSAXUCcyTbSDzPs
+         dbV5UeBXLgGB51pRx1q2svY0VUeB76G3YYFH4HGDmwpMrISfVfQK8Ou5NlhZ+ph++gno
+         1f2227PbyNuZ6U1XezgTQhhRcqLNB/aPe/L1HXGAltrVeTWBZQOgom9iMWye5PZNH9er
+         DUZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SOE/OufDVdftX3/5DbSJXaktDiZZ0XiuGv+LhNkVuyU=;
-        b=hXbxoALrVHgiDNtaYxa6WqrlCJEwdKY+yp/HCND/FF0md0Fs/davnGOYw3SG1cNf2Q
-         uvtr9g5DiJJFBowmEG9J50e7Pif+OdNlVRX3CcioVr1Eytc5ct8wMwz1u018vebTjCxo
-         QC3RqnOEPgcrNY0VLFtkzymlwBt27o1GGa7xhOIFAusu3gcANR2O1zATWcyPio1wMRf0
-         EKip1k0xrXYDcHlvLsQDLkTLuxTLonu4N6AbE8x97weZyMWM6mUAVpjb/ACIA77xG9E4
-         FodEVykqAjwBXLuPrn8c5CbKXh31se5qHtBbtuRB/zAvtYGFqXVdZ1CFWmaZk8DA0WDZ
-         t7wA==
-X-Gm-Message-State: AOAM531+fOsy6yPMzza1xH5q9ZE092v+3d6g9y+MP0rSR0yOhzD/nAV6
-        yij0DG92nWCLzjV9FzjThpU=
-X-Google-Smtp-Source: ABdhPJzhycUboTpC49Og5dyxs3aR2NUwKbYldNcNkiriHvt0HEJBsbOEZK4Uoye30aMEWSu3nDvefg==
-X-Received: by 2002:adf:e84a:: with SMTP id d10mr4642478wrn.60.1599165049590;
-        Thu, 03 Sep 2020 13:30:49 -0700 (PDT)
-Received: from clement-Latitude-7490.numericable.fr (213-245-241-245.rev.numericable.fr. [213.245.241.245])
-        by smtp.gmail.com with ESMTPSA id q186sm6818274wma.45.2020.09.03.13.30.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 13:30:48 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     devicetree@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 05/20] ASoC: sun4i-i2s: Set sign extend sample
-Date:   Thu,  3 Sep 2020 22:30:19 +0200
-Message-Id: <20200903203034.1057334-6-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200903203034.1057334-1-peron.clem@gmail.com>
-References: <20200903203034.1057334-1-peron.clem@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=nGr4msUS0dEW75ogQM/nhSlm97UUOCMWXorkodmMp40=;
+        b=BNnL/5X8pDzc4Y92WyufhNcMmy804pSAL8ByZ99DM8B6LXujxCfxoCc9SRDB7/cBD4
+         OHMjavZLdpTLj+uSEwe6He9LUgzQCn/Is0UxPIfMRdUEIDGEA8xN2Cw1dTYgAoO/flIE
+         pvyzMqqyfB1kgw3QaCzoKc8aABiyCPmMG6OyW6myj9DtTLmi4BipOP0CslHZ50jSso1A
+         Oe6xpTQWVSaq1cIm0YYV7qHIb4Re1Bh4ykqPDWSUApvjPhfpx68B9i/sZbsmR81n4JPT
+         Yz3iJJevhesH4g64xr4qC6+PVkM3Xg29Wu0XWxpHBhTNNNDV0AJdKEyvz3DnTOcdKVba
+         4OpA==
+X-Gm-Message-State: AOAM530fepBf2ns3LAbBENV2NeGDZ6ypcdN32QROdS/RWNcUu1bAXSEs
+        zP+trEtYadOnzbh/P/snjqPkk64EYK0U0GSRuEs=
+X-Google-Smtp-Source: ABdhPJxH0RX0szKuHKPur3enUKVPJmiZ5UDvXRtv8sxJrR42cHWJcizyyc12gG2V+M5Plv1Dslq7MnG2DtQcSDaz1iU=
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+ (user=samitolvanen job=sendgmr) by 2002:a0c:d803:: with SMTP id
+ h3mr3572282qvj.0.1599165054814; Thu, 03 Sep 2020 13:30:54 -0700 (PDT)
+Date:   Thu,  3 Sep 2020 13:30:25 -0700
+In-Reply-To: <20200624203200.78870-1-samitolvanen@google.com>
+Message-Id: <20200903203053.3411268-1-samitolvanen@google.com>
+Mime-Version: 1.0
+References: <20200624203200.78870-1-samitolvanen@google.com>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+Subject: [PATCH v2 00/28] Add support for Clang LTO
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcus Cooper <codekipper@gmail.com>
+This patch series adds support for building x86_64 and arm64 kernels
+with Clang's Link Time Optimization (LTO).
 
-On the newer SoCs such as the H3 and A64 this is set by default
-to transfer a 0 after each sample in each slot. However the A10
-and A20 SoCs that this driver was developed on had a default
-setting where it padded the audio gain with zeros.
+In addition to performance, the primary motivation for LTO is
+to allow Clang's Control-Flow Integrity (CFI) to be used in the
+kernel. Google has shipped millions of Pixel devices running three
+major kernel versions with LTO+CFI since 2018.
 
-This isn't a problem while we have only support for 16bit audio
-but with larger sample resolution rates in the pipeline then SEXT
-bits should be cleared so that they also pad at the LSB. Without
-this the audio gets distorted.
+Most of the patches are build system changes for handling LLVM
+bitcode, which Clang produces with LTO instead of ELF object files,
+postponing ELF processing until a later stage, and ensuring initcall
+ordering.
 
-Set sign extend sample for all the sunxi generations even if they
-are not affected. This will keep consistency and avoid relying on
-default.
+Note that patches 1-4 are not directly related to LTO, but are
+needed to compile LTO kernels with ToT Clang, so I'm including them
+in the series for your convenience:
 
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
+ - Patches 1-3 are required for building the kernel with ToT Clang,
+   and IAS, and patch 4 is needed to build allmodconfig with LTO.
+
+ - Patches 3-4 are already in linux-next, but not yet in 5.9-rc.
+
 ---
- sound/soc/sunxi/sun4i-i2s.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Changes in v2:
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 1b4482b0f4af..13e64180e917 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -48,6 +48,9 @@
- #define SUN4I_I2S_FMT0_FMT_I2S				(0 << 0)
- 
- #define SUN4I_I2S_FMT1_REG		0x08
-+#define SUN4I_I2S_FMT1_REG_SEXT_MASK		BIT(8)
-+#define SUN4I_I2S_FMT1_REG_SEXT(sext)			((sext) << 8)
-+
- #define SUN4I_I2S_FIFO_TX_REG		0x0c
- #define SUN4I_I2S_FIFO_RX_REG		0x10
- 
-@@ -105,6 +108,9 @@
- #define SUN8I_I2S_FMT0_BCLK_POLARITY_INVERTED		(1 << 7)
- #define SUN8I_I2S_FMT0_BCLK_POLARITY_NORMAL		(0 << 7)
- 
-+#define SUN8I_I2S_FMT1_REG_SEXT_MASK		GENMASK(5, 4)
-+#define SUN8I_I2S_FMT1_REG_SEXT(sext)			((sext) << 4)
-+
- #define SUN8I_I2S_INT_STA_REG		0x0c
- #define SUN8I_I2S_FIFO_TX_REG		0x20
- 
-@@ -671,6 +677,7 @@ static int sun4i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
- 	}
- 	regmap_update_bits(i2s->regmap, SUN4I_I2S_CTRL_REG,
- 			   SUN4I_I2S_CTRL_MODE_MASK, val);
-+
- 	return 0;
- }
- 
-@@ -767,6 +774,11 @@ static int sun8i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
- 			   SUN8I_I2S_CTRL_BCLK_OUT | SUN8I_I2S_CTRL_LRCK_OUT,
- 			   val);
- 
-+	/* Set sign extension to pad out LSB with 0 */
-+	regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT1_REG,
-+			   SUN8I_I2S_FMT1_REG_SEXT_MASK,
-+			   SUN8I_I2S_FMT1_REG_SEXT(0));
-+
- 	return 0;
- }
- 
-@@ -863,6 +875,11 @@ static int sun50i_h6_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
- 			   SUN8I_I2S_CTRL_BCLK_OUT | SUN8I_I2S_CTRL_LRCK_OUT,
- 			   val);
- 
-+	/* Set sign extension to pad out LSB with 0 */
-+	regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT1_REG,
-+			   SUN8I_I2S_FMT1_REG_SEXT_MASK,
-+			   SUN8I_I2S_FMT1_REG_SEXT(0));
-+
- 	return 0;
- }
- 
+  - Fixed -Wmissing-prototypes warnings with W=1.
+
+  - Dropped cc-option from -fsplit-lto-unit and added .thinlto-cache
+    scrubbing to make distclean.
+
+  - Added a comment about Clang >=11 being required.
+
+  - Added a patch to disable LTO for the arm64 KVM nVHE code.
+
+  - Disabled objtool's noinstr validation with LTO unless enabled.
+
+  - Included Peter's proposed objtool mcount patch in the series
+    and replaced recordmcount with the objtool pass to avoid
+    whitelisting relocations that are not calls.
+
+  - Updated several commit messages with better explanations.
+
+
+Arvind Sankar (2):
+  x86/boot/compressed: Disable relocation relaxation
+  x86/asm: Replace __force_order with memory clobber
+
+Luca Stefani (1):
+  RAS/CEC: Fix cec_init() prototype
+
+Nick Desaulniers (1):
+  lib/string.c: implement stpcpy
+
+Peter Zijlstra (1):
+  objtool: Add a pass for generating __mcount_loc
+
+Sami Tolvanen (23):
+  objtool: Don't autodetect vmlinux.o
+  kbuild: add support for objtool mcount
+  x86, build: use objtool mcount
+  kbuild: add support for Clang LTO
+  kbuild: lto: fix module versioning
+  kbuild: lto: postpone objtool
+  kbuild: lto: limit inlining
+  kbuild: lto: merge module sections
+  kbuild: lto: remove duplicate dependencies from .mod files
+  init: lto: ensure initcall ordering
+  init: lto: fix PREL32 relocations
+  PCI: Fix PREL32 relocations for LTO
+  modpost: lto: strip .lto from module names
+  scripts/mod: disable LTO for empty.c
+  efi/libstub: disable LTO
+  drivers/misc/lkdtm: disable LTO for rodata.o
+  arm64: export CC_USING_PATCHABLE_FUNCTION_ENTRY
+  arm64: vdso: disable LTO
+  KVM: arm64: disable LTO for the nVHE directory
+  arm64: allow LTO_CLANG and THINLTO to be selected
+  x86, vdso: disable LTO only for vDSO
+  x86, relocs: Ignore L4_PAGE_OFFSET relocations
+  x86, build: allow LTO_CLANG and THINLTO to be selected
+
+ .gitignore                            |   1 +
+ Makefile                              |  65 ++++++-
+ arch/Kconfig                          |  67 +++++++
+ arch/arm64/Kconfig                    |   2 +
+ arch/arm64/Makefile                   |   1 +
+ arch/arm64/kernel/vdso/Makefile       |   4 +-
+ arch/arm64/kvm/hyp/nvhe/Makefile      |   4 +-
+ arch/x86/Kconfig                      |   3 +
+ arch/x86/Makefile                     |   5 +
+ arch/x86/boot/compressed/Makefile     |   2 +
+ arch/x86/boot/compressed/pgtable_64.c |   9 -
+ arch/x86/entry/vdso/Makefile          |   5 +-
+ arch/x86/include/asm/special_insns.h  |  28 +--
+ arch/x86/kernel/cpu/common.c          |   4 +-
+ arch/x86/tools/relocs.c               |   1 +
+ drivers/firmware/efi/libstub/Makefile |   2 +
+ drivers/misc/lkdtm/Makefile           |   1 +
+ drivers/ras/cec.c                     |   9 +-
+ include/asm-generic/vmlinux.lds.h     |  11 +-
+ include/linux/init.h                  |  79 +++++++-
+ include/linux/pci.h                   |  19 +-
+ kernel/trace/Kconfig                  |   5 +
+ lib/string.c                          |  24 +++
+ scripts/Makefile.build                |  55 +++++-
+ scripts/Makefile.lib                  |   6 +-
+ scripts/Makefile.modfinal             |  31 ++-
+ scripts/Makefile.modpost              |  26 ++-
+ scripts/generate_initcall_order.pl    | 270 ++++++++++++++++++++++++++
+ scripts/link-vmlinux.sh               |  94 ++++++++-
+ scripts/mod/Makefile                  |   1 +
+ scripts/mod/modpost.c                 |  16 +-
+ scripts/mod/modpost.h                 |   9 +
+ scripts/mod/sumversion.c              |   6 +-
+ scripts/module-lto.lds                |  26 +++
+ tools/objtool/builtin-check.c         |  13 +-
+ tools/objtool/builtin.h               |   2 +-
+ tools/objtool/check.c                 |  83 ++++++++
+ tools/objtool/check.h                 |   1 +
+ tools/objtool/objtool.h               |   1 +
+ 39 files changed, 883 insertions(+), 108 deletions(-)
+ create mode 100755 scripts/generate_initcall_order.pl
+ create mode 100644 scripts/module-lto.lds
+
+
+base-commit: e28f0104343d0c132fa37f479870c9e43355fee4
 -- 
-2.25.1
+2.28.0.402.g5ffc5be6b7-goog
 
