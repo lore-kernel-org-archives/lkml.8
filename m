@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2CDC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 529FDC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6418D2098B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D3620C09
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:12:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="LA/7fzSG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Mlp+FK0V"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="WqelfLXD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YWjVwqtQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgICIMb (ORCPT
+        id S1728797AbgICIMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:12:31 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:47753 "EHLO
+        Thu, 3 Sep 2020 04:12:35 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:39287 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728338AbgICICO (ORCPT
+        by vger.kernel.org with ESMTP id S1727986AbgICICK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:02:14 -0400
+        Thu, 3 Sep 2020 04:02:10 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 5C7A5C02;
-        Thu,  3 Sep 2020 04:02:06 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:02:07 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id 10D9B773;
+        Thu,  3 Sep 2020 04:02:02 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:02:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=tbdfL9NcjyVQC
-        Pzt3lMBWUV5KAA8n13YgBSTiiVmjF8=; b=LA/7fzSGs8xD6O2w1ZfRC3AvE3HcV
-        TUdOO+VYs3bo4lBFlh2TLgEuFVijj1RQSd9CCqaBy+Hw7EQaf9zIHAXXDs6TyhRT
-        V6pNBSiTtRuZyho8phWrsAMB3CWq+UN+0CnW3sgzs5hq4gIKrpPvhc7SsVuXLH26
-        nLJs/72nDaIIb/KgAqDchzFgfrRuJ2iBlouPdQohPwsvgWanvWrzhD0PO0KBn8lk
-        rry5a67JHLsqOIPMvavma2Sld1TA+WjC60cuYV280oH2bADlM8SrlsufYVg4btco
-        HjcFtuAlqFMFKfbj0Oow6qPxXG2oQshuYDcn/n73MxaJkA6ln9pQm0nxg==
+        :mime-version:content-transfer-encoding; s=fm3; bh=qWv3080+04I3x
+        tFsr6akNZMKAgFUHWpEILEWQrHaXl4=; b=WqelfLXDNznqEKCHPkckhvq7jCWQ9
+        aFfbvgK0FoOttrA1Gd1aXg4t7jDq7CMR+VUeUudWSUGY2Hkum0uRc5CL46tBUb3Q
+        nAfuyWw+JOKMcirSnQGtnell5By+WN1XRZ9u2dy8vsYOh2RYXOtOq0PKlVZdxpx/
+        kfAxmJNGOzJNlPD+zfhiuid/iCpjYfSepUovmuEVoNDwdfSxuiGkxhquqrKcUH0H
+        w4Cl2i9+I458cH/Hlez3TGxca4jUbHY7t5NGCthU808abNF5mEFUWCbZEzoTxbOC
+        WrWSx9FGekKBufkx6ALn9nSadY1k8y4VnZVlPk7wX4LySEYsTSKaIpIbQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=tbdfL9NcjyVQCPzt3lMBWUV5KAA8n13YgBSTiiVmjF8=; b=Mlp+FK0V
-        IMcn74sINPQrsKkb0miDQ7e5bku51H5Zifq/t7QB6yKwYS2enfqXDQGEQlhoWAsy
-        l+Zlnfxv5lxYH4QumuZapUd1LDx5+TDOHzH9xM7FCVIxPwZsq6re6SAhmTMrWZU4
-        vVUcp8ldPobeW0CilhS2Fx+AH/8/4zJ5bxL55KJjR6dky1j7/QNrmGcO/VFTi+QO
-        dHELPdaShm1PAGBKLwkj/ny2GHXBwLZM+VQeaNJqNY1r7BptkHxQMD+qholxK35/
-        CpxZ0xxD3vXkUFpUvKhNfV8ktnIRxFPR60OAyaouQBCWh+DKdIdP0RPgtICIeoXo
-        9NepO3+hh7YnhQ==
-X-ME-Sender: <xms:_aJQX1vDJ27HEQNfClToHShZiPDzXE8gXLgW2_RtGYBlT9vL2K06cA>
-    <xme:_aJQX-cLTOplxYKjzhS4RR1bE54Wg7gPVWC5DYXDJV3UY_BPVXgMSNOvRUAdTckai
-    uPra_edjBDtMq7Ji-M>
+        fm3; bh=qWv3080+04I3xtFsr6akNZMKAgFUHWpEILEWQrHaXl4=; b=YWjVwqtQ
+        jWrFviJNnYB7RuJv+GS869qPgEPq2nexSQ3FXIfYhby8YQ2ee2jUJ/VMMADjHnS8
+        nzJ0SqvYNIu0qVbJcTe/8Yo429xCFt7yXWCmgm6RJqoO/gXca3UEpwAwRt9Yttm5
+        wlv80BoXaxVeVtleyJL5mWD85Jo7eS6DIxl8vBaZq89ywd2H6hFzLfuFAt02ZBMi
+        H9isCtKYtGHC0EIp8/M2wdCbEKvmFSuu8pYteUBlJ05Q2op6ki/1V4UWTZ8CNM7E
+        RsJWCBYGRDEXoqe29GU1q44ZOPN3WcrtwyBOuzhoFQ5nxJjLU93jUMtPvqJqYFbM
+        BLX6jrzVUFVd3w==
+X-ME-Sender: <xms:-aJQX0YCJLx8shUnfY7K33mAhLWwqp8D8n_V4Hewd1YGl2c7C8PE0g>
+    <xme:-aJQX_b33Yn9v4HNpK-BoMALOUL7MHmKPj78UTU56Ku0dRXR9mPL6iMmv54skGooF
+    mgfTWn5CwGxPa4CJsw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihi
     mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
     htthgvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveev
-    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpeeine
+    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedune
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:_aJQX4zzZlfRLjfK-qjjhLlBqzmy7cHcuyyxKfpQ946hzkIXvoChfg>
-    <xmx:_aJQX8PmmOcQ0jd3xHUXdiS7YWgpgx-fOb9JliLnFGn8LlCTrnPSyQ>
-    <xmx:_aJQX183dQ147yUdp8e62Kv2IBNLAoYMu97pbcO_lbskt628iVb6uA>
-    <xmx:_qJQX8WXshJbCTIxGwrxRH8r26XG5D_Ete9h4l-j2igb8n1O_vfOJUECgs0>
+X-ME-Proxy: <xmx:-aJQX-_vcQK4bgcq87i_xch7_5RMrmKjmnnFM3SZEyyPT3b-PRXlQw>
+    <xmx:-aJQX-pOSx-weiKZGYZYtduejF5PrSK0LAej8J77JfNRe-CYDCpD2w>
+    <xmx:-aJQX_qZ8uPxg264JBPY_KSpHYn3AZZKfO1lCgoUHB8x-_0eJ5apTw>
+    <xmx:-aJQX4RTKIm3kTM0yEmA0zx947TpIDsDhDoJLXWifKhy9i1rZVC2_WBuIMo>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 93F26328005A;
-        Thu,  3 Sep 2020 04:02:05 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4B9D3306005B;
+        Thu,  3 Sep 2020 04:02:01 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -81,9 +81,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Hoegeun Kwon <hoegeun.kwon@samsung.com>,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH v5 08/80] drm/vc4: crtc: Use a shared interrupt
-Date:   Thu,  3 Sep 2020 10:00:40 +0200
-Message-Id: <5a915d374357f41083ac71779fa9b2c35a339c2f.1599120059.git-series.maxime@cerno.tech>
+Subject: [PATCH v5 05/80] drm/vc4: plane: Optimize the LBM allocation size
+Date:   Thu,  3 Sep 2020 10:00:37 +0200
+Message-Id: <b9e091883a4f7395c5b6a4f7c6070225934293db.1599120059.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
 References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
@@ -94,32 +94,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some pixelvalves in vc5 use the same interrupt line so let's register our
-interrupt handler as a shared one.
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Reviewed-by: Eric Anholt <eric@anholt.net>
+The current code is using the maximum of the source line size and the
+destination line size to compute the size of the LBM to allocate.
+
+While this is simpler, it starts to be an issue with modes such as 4k with
+a quite long that will consume all the available memory, so we no longer
+have that luxury.
+
 Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
 Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vc4/vc4_plane.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index e55b2208b4b7..9faae22cb0f8 100644
---- a/drivers/gpu/drm/vc4/vc4_crtc.c
-+++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -919,7 +919,9 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
- 	CRTC_WRITE(PV_INTEN, 0);
- 	CRTC_WRITE(PV_INTSTAT, PV_INT_VFP_START);
- 	ret = devm_request_irq(dev, platform_get_irq(pdev, 0),
--			       vc4_crtc_irq_handler, 0, "vc4 crtc", vc4_crtc);
-+			       vc4_crtc_irq_handler,
-+			       IRQF_SHARED,
-+			       "vc4 crtc", vc4_crtc);
- 	if (ret)
- 		goto err_destroy_planes;
+diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
+index d0771ebd5f75..23916814b4e3 100644
+--- a/drivers/gpu/drm/vc4/vc4_plane.c
++++ b/drivers/gpu/drm/vc4/vc4_plane.c
+@@ -437,10 +437,7 @@ static void vc4_write_ppf(struct vc4_plane_state *vc4_state, u32 src, u32 dst)
+ static u32 vc4_lbm_size(struct drm_plane_state *state)
+ {
+ 	struct vc4_plane_state *vc4_state = to_vc4_plane_state(state);
+-	/* This is the worst case number.  One of the two sizes will
+-	 * be used depending on the scaling configuration.
+-	 */
+-	u32 pix_per_line = max(vc4_state->src_w[0], (u32)vc4_state->crtc_w);
++	u32 pix_per_line;
+ 	u32 lbm;
  
+ 	/* LBM is not needed when there's no vertical scaling. */
+@@ -448,6 +445,18 @@ static u32 vc4_lbm_size(struct drm_plane_state *state)
+ 	    vc4_state->y_scaling[1] == VC4_SCALING_NONE)
+ 		return 0;
+ 
++	/*
++	 * This can be further optimized in the RGB/YUV444 case if the PPF
++	 * decimation factor is between 0.5 and 1.0 by using crtc_w.
++	 *
++	 * It's not an issue though, since in that case since src_w[0] is going
++	 * to be greater than or equal to crtc_w.
++	 */
++	if (vc4_state->x_scaling[0] == VC4_SCALING_TPZ)
++		pix_per_line = vc4_state->crtc_w;
++	else
++		pix_per_line = vc4_state->src_w[0];
++
+ 	if (!vc4_state->is_yuv) {
+ 		if (vc4_state->y_scaling[0] == VC4_SCALING_TPZ)
+ 			lbm = pix_per_line * 8;
 -- 
 git-series 0.9.1
