@@ -2,161 +2,94 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4141C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493D1C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A85D20578
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:38:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Io7Y/6j5"
+	by mail.kernel.org (Postfix) with ESMTP id 1337020578
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599151225;
+	bh=UiIzmqfGXHwelXZSYJYDxFYAZi/UgotBRq6BD896Hxk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=byFvpxLlQ5Pc6DlWKTcKabFMVTVa24Q5/3Kg8g3fAJfEiQGDlm6S3f1dbikASLv84
+	 2SIxAR6Rwc/AdLeQjutioPIiTXutaGYr6xJslvCLwCLM///yRhwkDmhmwIPWEQb5kI
+	 dsQOJuE5MiD7noK3aj6CwzjcXGMta84JQFjuCu9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbgICQiw (ORCPT
+        id S1728503AbgICQkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:38:52 -0400
-Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:25354 "EHLO
-        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgICQit (ORCPT
+        Thu, 3 Sep 2020 12:40:23 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45341 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728145AbgICQkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:38:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1599151128;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=1r9p2+RFoF3u+hOb93ac0ysyr0EJPEppHknwa791fSA=;
-  b=Io7Y/6j5GZ3IHmYkbGqKfewzhAvtnLOM8W6dzlShv2LVvKOuAVn6gcc9
-   QTKwdywHLXMaAMfxvbE23O2qeRhvwpvYH3C8tfNZCJuODuK2tcMD/vXPv
-   iBQd6oUWIa3c5jOv6ro0Atn5Mf/T4FfTdw5hkUYDn11hrIFsNDVSZmn5y
-   A=;
-Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: n1UBm6NTmzRoEEmp6chXaBm2JeGlv1UPeWW4NcDpE6MmwKaEEug3qgxA4LMjLaJkfVteFGd+aK
- UyQpDEBtpjDgR7UYwd0Jg33GV7o86inlKKFgsaaHyJNUflCzFSfwopxMOWerSgF0XhG9sEzEfL
- 4RRD4RotP+qyYV2hpJYsl3r0gsfqUIOsSdH5lSVHXWp122/oY9ooFXECyGx/srx7sfWn8zfJG2
- vY03kGbKprm5mmB9gPqzwmUs7bHHXQflmjbxrqlmteL5zA03CFuteALBCgRnmyTsXmwaj14XY0
- bkc=
-X-SBRS: 2.7
-X-MesageID: 26904079
-X-Ironport-Server: esa4.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.76,387,1592884800"; 
-   d="scan'208";a="26904079"
-Date:   Thu, 3 Sep 2020 18:38:37 +0200
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        David Airlie <airlied@linux.ie>,
-        "Daniel Vetter" <daniel@ffwll.ch>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <xen-devel@lists.xenproject.org>, <linux-mm@kvack.org>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v5 3/3] xen: add helpers to allocate unpopulated memory
-Message-ID: <20200903163837.GM753@Air-de-Roger>
-References: <20200901083326.21264-1-roger.pau@citrix.com>
- <20200901083326.21264-4-roger.pau@citrix.com>
- <b1713f26-8202-ac1e-c18a-4989312219b9@suse.com>
+        Thu, 3 Sep 2020 12:40:22 -0400
+Received: by mail-io1-f68.google.com with SMTP id u126so3550520iod.12;
+        Thu, 03 Sep 2020 09:40:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8sPTNyLMjAX2vzuFXiQYDjjubKf1msEl5Z2p+ZrZ6Lo=;
+        b=RxwyD3vB90lreMZb5R4zdoJoSB45C8dNzCoC8cnfYJdmK+j5G4bUQP8RCtjZIRawTN
+         5H8SngmeA2PN/6OaJnQgWMDkdmzz8hsdsawZ8YU8PCFgr1V2L/nl0SIxbkgR/bC4lKxU
+         PSdWWhnfT6lMOypSNsigV1LD8Ap7divPtUdv37VvmNgC4HUCwuGwH7dY5Xd7w9gHs4eU
+         DVoeD3PR6z23l3RDd7DsZzaWFb+4jfi2Qw4of464KKW/yCyTkv49sUtdRdtaB7YvtNGI
+         FRQUchcr87ITLEb5lgGXJgXNcSP80FaN50IR64m3HadFFGYu31zssSwhunlqXUXtrOl3
+         m9tg==
+X-Gm-Message-State: AOAM533Q/MpCGRl0QV8KmEXvFTipEuWIqD8cJQ6cKwH6iwxnf6B+9aKZ
+        Ki9bmAp0UH5J6u3KNpofgA==
+X-Google-Smtp-Source: ABdhPJy+YQ71xhPo9LDk5kKZzDhFUMEpp0nFRwbZF6cszIsV6tyvnefl2UlOOTqSdDoevgNCPnDj9g==
+X-Received: by 2002:a02:9986:: with SMTP id a6mr1953790jal.28.1599151221270;
+        Thu, 03 Sep 2020 09:40:21 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id m3sm1777806ill.57.2020.09.03.09.40.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 09:40:20 -0700 (PDT)
+Received: (nullmailer pid 2921054 invoked by uid 1000);
+        Thu, 03 Sep 2020 16:40:19 -0000
+Date:   Thu, 3 Sep 2020 10:40:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Wolfram Sang <wolfram@the-dreams.de>,
+        Dong Aisheng <aisheng.dong@nxp.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH 3/7] dt-bindings: mailbox: fsl,mu: Use
+ unevaluatedProperties
+Message-ID: <20200903164019.GA2920343@bogus>
+References: <20200829111800.2786-1-krzk@kernel.org>
+ <20200829111800.2786-3-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b1713f26-8202-ac1e-c18a-4989312219b9@suse.com>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- FTLPEX02CL06.citrite.net (10.13.108.179)
+In-Reply-To: <20200829111800.2786-3-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 05:30:07PM +0200, Jürgen Groß wrote:
-> On 01.09.20 10:33, Roger Pau Monne wrote:
-> > To be used in order to create foreign mappings. This is based on the
-> > ZONE_DEVICE facility which is used by persistent memory devices in
-> > order to create struct pages and kernel virtual mappings for the IOMEM
-> > areas of such devices. Note that on kernels without support for
-> > ZONE_DEVICE Xen will fallback to use ballooned pages in order to
-> > create foreign mappings.
-> > 
-> > The newly added helpers use the same parameters as the existing
-> > {alloc/free}_xenballooned_pages functions, which allows for in-place
-> > replacement of the callers. Once a memory region has been added to be
-> > used as scratch mapping space it will no longer be released, and pages
-> > returned are kept in a linked list. This allows to have a buffer of
-> > pages and prevents resorting to frequent additions and removals of
-> > regions.
-> > 
-> > If enabled (because ZONE_DEVICE is supported) the usage of the new
-> > functionality untangles Xen balloon and RAM hotplug from the usage of
-> > unpopulated physical memory ranges to map foreign pages, which is the
-> > correct thing to do in order to avoid mappings of foreign pages depend
-> > on memory hotplug.
-> > 
-> > Note the driver is currently not enabled on Arm platforms because it
-> > would interfere with the identity mapping required on some platforms.
-> > 
-> > Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+On Sat, Aug 29, 2020 at 01:17:56PM +0200, Krzysztof Kozlowski wrote:
+> Additional properties actually might appear (e.g. power-domains) so use
+> unevaluatedProperties to fix dtbs_check warnings like:
 > 
-> Sorry, I just got a build error for x86 32-bit build:
+>   arch/arm64/boot/dts/freescale/imx8qxp-mek.dt.yaml:
+>     mailbox@5d280000: 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
 > 
-> WARNING: unmet direct dependencies detected for ZONE_DEVICE
->   Depends on [n]: MEMORY_HOTPLUG [=n] && MEMORY_HOTREMOVE [=n] &&
-> SPARSEMEM_VMEMMAP [=n] && ARCH_HAS_PTE_DEVMAP [=n]
->   Selected by [y]:
->   - XEN_UNPOPULATED_ALLOC [=y] && XEN [=y] && X86 [=y]
->   GEN     Makefile
->   CC      kernel/bounds.s
->   CALL    /home/gross/korg/src/scripts/atomic/check-atomics.sh
->   UPD     include/generated/bounds.h
->   CC      arch/x86/kernel/asm-offsets.s
-> In file included from /home/gross/korg/src/include/linux/mmzone.h:19:0,
->                  from /home/gross/korg/src/include/linux/gfp.h:6,
->                  from /home/gross/korg/src/include/linux/slab.h:15,
->                  from /home/gross/korg/src/include/linux/crypto.h:19,
->                  from /home/gross/korg/src/arch/x86/kernel/asm-offsets.c:9:
-> /home/gross/korg/src/include/linux/page-flags-layout.h:95:2: error: #error
-> "Not enough bits in page flags"
->  #error "Not enough bits in page flags"
->   ^~~~~
-> make[2]: *** [/home/gross/korg/src/scripts/Makefile.build:114:
-> arch/x86/kernel/asm-offsets.s] Error 1
-> make[1]: *** [/home/gross/korg/src/Makefile:1175: prepare0] Error 2
-> make[1]: Leaving directory '/home/gross/korg/x8632'
-> make: *** [Makefile:185: __sub-make] Error 2
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/mailbox/fsl,mu.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sorry for this. I've tested a 32bit build but I think it was before
-the last Kconfig changes. I'm a little unsure how to solve this, as
-ZONE_DEVICE doesn't select the required options for it to run, but
-rather depends on them to be available.
-
-You can trigger something similar on x86-64 by doing:
-
-$ make ARCH=x86_64 xen.config
-Using .config as base
-Merging ./kernel/configs/xen.config
-Merging ./arch/x86/configs/xen.config
-#
-# merged configuration written to .config (needs make)
-#
-scripts/kconfig/conf  --olddefconfig Kconfig
-
-WARNING: unmet direct dependencies detected for ZONE_DEVICE
-  Depends on [n]: MEMORY_HOTPLUG [=y] && MEMORY_HOTREMOVE [=n] && SPARSEMEM_VMEMMAP [=y] && ARCH_HAS_PTE_DEVMAP [=y]
-  Selected by [y]:
-  - XEN_UNPOPULATED_ALLOC [=y] && XEN [=y] && X86_64 [=y]
-#
-# configuration written to .config
-#
-
-I think the only solution is to have XEN_UNPOPULATED_ALLOC depend on
-ZONE_DEVICE rather than select it?
-
-Thanks, Roger.
+NAK. See https://lore.kernel.org/r/CAL_JsqKPXJxsHPS34_TCf9bwgKxZNSV4mvQR-WKRnknQVtGGxQ@mail.gmail.com/
