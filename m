@@ -2,104 +2,525 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2556C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2AAC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61E382072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:44:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GUyJXpuz"
+	by mail.kernel.org (Postfix) with ESMTP id 1398420786
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgICNoH (ORCPT
+        id S1729017AbgICNod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 09:44:07 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37660 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728957AbgICNB4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 09:01:56 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083D0MUH043869;
-        Thu, 3 Sep 2020 08:00:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599138022;
-        bh=qQW5ipfj6G1Y5qcfFCnVCAuBLatcnVAUuXwNs7dTqWU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=GUyJXpuzfN+ZUvoQbyJ0mOlI4Y7Tb4WBmFCa7YQZJQcShYKRAcO4cT7FBpTPu4VFM
-         x5kNJ0kaMkjRTDZBp9o0L7AkIky+/vmx2vyFpMz1WlFn+ZDUfnZ8zXmFq00IAsnOXa
-         okOiK/c5uFjz8qijkR782ZmtZTPjk+cW3U+R8/m8=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083D0MNX097478
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Sep 2020 08:00:22 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
- 2020 08:00:22 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 3 Sep 2020 08:00:22 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083D0Mo8125618;
-        Thu, 3 Sep 2020 08:00:22 -0500
-From:   Nishanth Menon <nm@ti.com>
-To:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Suman Anna <s-anna@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <lokeshvutla@ti.com>,
-        <grygorii.strashko@ti.com>, <nsekhar@ti.com>,
-        Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2 6/8] arm64: dts: ti: k3-am65-base-board Use generic camera for node name instead of ov5640
-Date:   Thu, 3 Sep 2020 08:00:13 -0500
-Message-ID: <20200903130015.21361-7-nm@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901223059.14801-1-nm@ti.com>
-References: <20200901223059.14801-1-nm@ti.com>
+        Thu, 3 Sep 2020 09:44:33 -0400
+Received: from mga17.intel.com ([192.55.52.151]:56581 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728965AbgICMsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 08:48:07 -0400
+IronPort-SDR: I0lDK6KaOSNruyKu9VUz6HtnSLrTCfnuYz6fPxDCevtx8ScWH7pofrtJAs8JFIzpOvY2vRy9vO
+ pilDDUvNUtVw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="137616535"
+X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
+   d="scan'208";a="137616535"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:43:48 -0700
+IronPort-SDR: IY2ofXok+dOq2ZdfSbOiAfTFmSdgUirgPwSLd8nlrnsnM1d/M1dkxhE1n00UIVrkBV1KsK+lDO
+ xK48uqdSSbVw==
+X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
+   d="scan'208";a="284068005"
+Received: from shsi6026.sh.intel.com (HELO localhost) ([10.239.147.135])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:43:44 -0700
+From:   shuo.a.liu@intel.com
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Shuo Liu <shuo.a.liu@intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: [PATCH v2 15/17] virt: acrn: Introduce ioeventfd
+Date:   Thu,  3 Sep 2020 20:41:59 +0800
+Message-Id: <20200903124201.17275-16-shuo.a.liu@intel.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200903124201.17275-1-shuo.a.liu@intel.com>
+References: <20200903124201.17275-1-shuo.a.liu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use camera@ naming for nodes following standard conventions of device
-tree (section 2.2.2 Generic Names recommendation in [1]).
+From: Shuo Liu <shuo.a.liu@intel.com>
 
-[1] https://github.com/devicetree-org/devicetree-specification/tree/v0.3
+ioeventfd is a mechanism to register PIO/MMIO regions to trigger an
+eventfd signal when written to by a User VM. ACRN userspace can register
+any arbitrary I/O address with a corresponding eventfd and then pass the
+eventfd to a specific end-point of interest for handling.
 
-Suggested-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
-Acked-by: Suman Anna <s-anna@ti.com>
+Vhost is a kernel-level virtio server which uses eventfd for signalling.
+To support vhost on ACRN, ioeventfd is introduced in HSM.
+
+A new I/O client dedicated to ioeventfd is associated with a User VM
+during VM creation. HSM provides ioctls to associate an I/O region with
+a eventfd. The I/O client signals a eventfd once its corresponding I/O
+region is matched with an I/O request.
+
+Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
+Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Zhi Wang <zhi.a.wang@intel.com>
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+Cc: Yu Wang <yu1.wang@intel.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-Changes:
-v2: None (picked acks/reviews)
-v1: https://lore.kernel.org/linux-arm-kernel/20200901223059.14801-5-nm@ti.com/
+ drivers/virt/acrn/Kconfig     |   1 +
+ drivers/virt/acrn/Makefile    |   2 +-
+ drivers/virt/acrn/acrn_drv.h  |  10 ++
+ drivers/virt/acrn/hsm.c       |   8 +
+ drivers/virt/acrn/ioeventfd.c | 276 ++++++++++++++++++++++++++++++++++
+ drivers/virt/acrn/vm.c        |   2 +
+ include/uapi/linux/acrn.h     |  29 ++++
+ 7 files changed, 327 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/virt/acrn/ioeventfd.c
 
- arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-index b8a8a0fcb8af..86c9074cb070 100644
---- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-@@ -257,7 +257,7 @@
- 	pinctrl-0 = <&main_i2c1_pins_default>;
- 	clock-frequency = <400000>;
+diff --git a/drivers/virt/acrn/Kconfig b/drivers/virt/acrn/Kconfig
+index 36c80378c30c..3e1a61c9d8d8 100644
+--- a/drivers/virt/acrn/Kconfig
++++ b/drivers/virt/acrn/Kconfig
+@@ -2,6 +2,7 @@
+ config ACRN_HSM
+ 	tristate "ACRN Hypervisor Service Module"
+ 	depends on ACRN_GUEST
++	select EVENTFD
+ 	help
+ 	  ACRN Hypervisor Service Module (HSM) is a kernel module which
+ 	  communicates with ACRN userspace through ioctls and talks to
+diff --git a/drivers/virt/acrn/Makefile b/drivers/virt/acrn/Makefile
+index 21721cbf6a80..755b583b32ca 100644
+--- a/drivers/virt/acrn/Makefile
++++ b/drivers/virt/acrn/Makefile
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_ACRN_HSM)	:= acrn.o
+-acrn-y := hsm.o vm.o mm.o ioreq.o
++acrn-y := hsm.o vm.o mm.o ioreq.o ioeventfd.o
+diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
+index cde12eaa492e..4cb8a61d4ccd 100644
+--- a/drivers/virt/acrn/acrn_drv.h
++++ b/drivers/virt/acrn/acrn_drv.h
+@@ -156,6 +156,9 @@ extern rwlock_t acrn_vm_list_lock;
+  * @ioreq_page:			The page of the I/O request shared buffer
+  * @pci_conf_addr:		Address of a PCI configuration access emulation
+  * @monitor_page:		Page of interrupt statistics of User VM
++ * @ioeventfds_lock:		Lock to protect ioeventfds list
++ * @ioeventfds:			List to link all hsm_ioeventfd
++ * @ioeventfd_client:		I/O client for ioeventfds of the VM
+  */
+ struct acrn_vm {
+ 	struct device			*dev;
+@@ -173,6 +176,9 @@ struct acrn_vm {
+ 	struct page			*ioreq_page;
+ 	u32				pci_conf_addr;
+ 	struct page			*monitor_page;
++	struct mutex			ioeventfds_lock;
++	struct list_head		ioeventfds;
++	struct acrn_ioreq_client	*ioeventfd_client;
+ };
  
--	ov5640@3c {
-+	ov5640: camera@3c {
- 		compatible = "ovti,ov5640";
- 		reg = <0x3c>;
+ struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
+@@ -205,4 +211,8 @@ void acrn_ioreq_range_del(struct acrn_ioreq_client *client,
  
+ int acrn_msi_inject(struct acrn_vm *vm, u64 msi_addr, u64 msi_data);
+ 
++int acrn_ioeventfd_init(struct acrn_vm *vm);
++int acrn_ioeventfd_config(struct acrn_vm *vm, struct acrn_ioeventfd *args);
++void acrn_ioeventfd_deinit(struct acrn_vm *vm);
++
+ #endif /* __ACRN_HSM_DRV_H */
+diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
+index ea9c73e6e8a5..7290c67fca15 100644
+--- a/drivers/virt/acrn/hsm.c
++++ b/drivers/virt/acrn/hsm.c
+@@ -114,6 +114,7 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+ 	struct acrn_vcpu_regs *cpu_regs;
+ 	struct acrn_ioreq_notify notify;
+ 	struct acrn_ptdev_irq *irq_info;
++	struct acrn_ioeventfd ioeventfd;
+ 	struct acrn_vm_memmap memmap;
+ 	struct acrn_msi_entry *msi;
+ 	struct acrn_pcidev *pcidev;
+@@ -299,6 +300,13 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+ 
+ 		ret = pmcmd_ioctl(cstate_cmd, (void __user *)ioctl_param);
+ 		break;
++	case ACRN_IOCTL_IOEVENTFD:
++		if (copy_from_user(&ioeventfd, (void __user *)ioctl_param,
++				   sizeof(ioeventfd)))
++			return -EFAULT;
++
++		ret = acrn_ioeventfd_config(vm, &ioeventfd);
++		break;
+ 	default:
+ 		dev_warn(dev, "Unknown IOCTL 0x%x!\n", cmd);
+ 		ret = -ENOTTY;
+diff --git a/drivers/virt/acrn/ioeventfd.c b/drivers/virt/acrn/ioeventfd.c
+new file mode 100644
+index 000000000000..7a070f234270
+--- /dev/null
++++ b/drivers/virt/acrn/ioeventfd.c
+@@ -0,0 +1,276 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ACRN HSM eventfd - use eventfd objects to signal expected I/O requests
++ *
++ * Copyright (C) 2020 Intel Corporation. All rights reserved.
++ *
++ * Authors:
++ *	Shuo Liu <shuo.a.liu@intel.com>
++ *	Yakui Zhao <yakui.zhao@intel.com>
++ */
++
++#define pr_fmt(fmt) "acrn: " fmt
++#define dev_fmt(fmt) "acrn: " fmt
++
++#include <linux/eventfd.h>
++#include <linux/slab.h>
++
++#include "acrn_drv.h"
++
++/**
++ * struct hsm_ioeventfd - Properties of HSM ioeventfd
++ * @list:	Entry within &acrn_vm.ioeventfds of ioeventfds of a VM
++ * @eventfd:	Eventfd of the HSM ioeventfd
++ * @addr:	Address of I/O range
++ * @data:	Data for matching
++ * @length:	Length of I/O range
++ * @type:	Type of I/O range (ACRN_IOREQ_TYPE_MMIO/ACRN_IOREQ_TYPE_PORTIO)
++ * @wildcard:	Data matching or not
++ */
++struct hsm_ioeventfd {
++	struct list_head	list;
++	struct eventfd_ctx	*eventfd;
++	u64			addr;
++	u64			data;
++	int			length;
++	int			type;
++	bool			wildcard;
++};
++
++static inline int ioreq_type_from_flags(int flags)
++{
++	return flags & ACRN_IOEVENTFD_FLAG_PIO ?
++		       ACRN_IOREQ_TYPE_PORTIO : ACRN_IOREQ_TYPE_MMIO;
++}
++
++static void acrn_ioeventfd_shutdown(struct acrn_vm *vm, struct hsm_ioeventfd *p)
++{
++	lockdep_assert_held(&vm->ioeventfds_lock);
++
++	eventfd_ctx_put(p->eventfd);
++	list_del(&p->list);
++	kfree(p);
++}
++
++static bool hsm_ioeventfd_is_conflict(struct acrn_vm *vm,
++				      struct hsm_ioeventfd *ioeventfd)
++{
++	struct hsm_ioeventfd *p;
++
++	lockdep_assert_held(&vm->ioeventfds_lock);
++
++	/* Either one is wildcard, the data matching will be skipped. */
++	list_for_each_entry(p, &vm->ioeventfds, list)
++		if (p->eventfd == ioeventfd->eventfd &&
++		    p->addr == ioeventfd->addr &&
++		    p->type == ioeventfd->type &&
++		    (p->wildcard || ioeventfd->wildcard ||
++			p->data == ioeventfd->data))
++			return true;
++
++	return false;
++}
++
++/*
++ * Assign an eventfd to a VM and create a HSM ioeventfd associated with the
++ * eventfd. The properties of the HSM ioeventfd are built from a &struct
++ * acrn_ioeventfd.
++ */
++static int acrn_ioeventfd_assign(struct acrn_vm *vm,
++				 struct acrn_ioeventfd *args)
++{
++	struct eventfd_ctx *eventfd;
++	struct hsm_ioeventfd *p;
++	int ret;
++
++	/* Check for range overflow */
++	if (args->addr + args->len < args->addr)
++		return -EINVAL;
++
++	/*
++	 * Currently, acrn_ioeventfd is used to support vhost. 1,2,4,8 width
++	 * accesses can cover vhost's requirements.
++	 */
++	if (!(args->len == 1 || args->len == 2 ||
++	      args->len == 4 || args->len == 8))
++		return -EINVAL;
++
++	eventfd = eventfd_ctx_fdget(args->fd);
++	if (IS_ERR(eventfd))
++		return PTR_ERR(eventfd);
++
++	p = kzalloc(sizeof(*p), GFP_KERNEL);
++	if (!p) {
++		ret = -ENOMEM;
++		goto fail;
++	}
++
++	INIT_LIST_HEAD(&p->list);
++	p->addr = args->addr;
++	p->length = args->len;
++	p->eventfd = eventfd;
++	p->type = ioreq_type_from_flags(args->flags);
++
++	/*
++	 * ACRN_IOEVENTFD_FLAG_DATAMATCH flag is set in virtio 1.0 support, the
++	 * writing of notification register of each virtqueue may trigger the
++	 * notification. There is no data matching requirement.
++	 */
++	if (args->flags & ACRN_IOEVENTFD_FLAG_DATAMATCH)
++		p->data = args->data;
++	else
++		p->wildcard = true;
++
++	mutex_lock(&vm->ioeventfds_lock);
++
++	if (hsm_ioeventfd_is_conflict(vm, p)) {
++		ret = -EEXIST;
++		goto unlock_fail;
++	}
++
++	/* register the I/O range into ioreq client */
++	ret = acrn_ioreq_range_add(vm->ioeventfd_client, p->type,
++				   p->addr, p->addr + p->length - 1);
++	if (ret < 0)
++		goto unlock_fail;
++
++	list_add_tail(&p->list, &vm->ioeventfds);
++	mutex_unlock(&vm->ioeventfds_lock);
++
++	return 0;
++
++unlock_fail:
++	mutex_unlock(&vm->ioeventfds_lock);
++	kfree(p);
++fail:
++	eventfd_ctx_put(eventfd);
++	return ret;
++}
++
++static int acrn_ioeventfd_deassign(struct acrn_vm *vm,
++				   struct acrn_ioeventfd *args)
++{
++	struct hsm_ioeventfd *p;
++	struct eventfd_ctx *eventfd;
++
++	eventfd = eventfd_ctx_fdget(args->fd);
++	if (IS_ERR(eventfd))
++		return PTR_ERR(eventfd);
++
++	mutex_lock(&vm->ioeventfds_lock);
++	list_for_each_entry(p, &vm->ioeventfds, list) {
++		if (p->eventfd != eventfd)
++			continue;
++
++		acrn_ioreq_range_del(vm->ioeventfd_client, p->type,
++				     p->addr, p->addr + p->length - 1);
++		acrn_ioeventfd_shutdown(vm, p);
++		break;
++	}
++	mutex_unlock(&vm->ioeventfds_lock);
++
++	eventfd_ctx_put(eventfd);
++	return 0;
++}
++
++static struct hsm_ioeventfd *hsm_ioeventfd_match(struct acrn_vm *vm, u64 addr,
++						 u64 data, int len, int type)
++{
++	struct hsm_ioeventfd *p = NULL;
++
++	lockdep_assert_held(&vm->ioeventfds_lock);
++
++	list_for_each_entry(p, &vm->ioeventfds, list) {
++		if (p->type == type && p->addr == addr && p->length >= len &&
++		    (p->wildcard || p->data == data))
++			return p;
++	}
++
++	return NULL;
++}
++
++static int acrn_ioeventfd_handler(struct acrn_ioreq_client *client,
++				  struct acrn_io_request *req)
++{
++	struct hsm_ioeventfd *p;
++	u64 addr, val;
++	int size;
++
++	if (req->type == ACRN_IOREQ_TYPE_MMIO) {
++		/*
++		 * I/O requests are dispatched by range check only, so a
++		 * acrn_ioreq_client need process both READ and WRITE accesses
++		 * of same range. READ accesses are safe to be ignored here
++		 * because virtio PCI devices write the notify registers for
++		 * notification.
++		 */
++		if (req->reqs.mmio_request.direction == ACRN_IOREQ_DIR_READ) {
++			/* reading does nothing and return 0 */
++			req->reqs.mmio_request.value = 0;
++			return 0;
++		}
++		addr = req->reqs.mmio_request.address;
++		size = req->reqs.mmio_request.size;
++		val = req->reqs.mmio_request.value;
++	} else {
++		if (req->reqs.pio_request.direction == ACRN_IOREQ_DIR_READ) {
++			/* reading does nothing and return 0 */
++			req->reqs.pio_request.value = 0;
++			return 0;
++		}
++		addr = req->reqs.pio_request.address;
++		size = req->reqs.pio_request.size;
++		val = req->reqs.pio_request.value;
++	}
++
++	mutex_lock(&client->vm->ioeventfds_lock);
++	p = hsm_ioeventfd_match(client->vm, addr, val, size, req->type);
++	if (p)
++		eventfd_signal(p->eventfd, 1);
++	mutex_unlock(&client->vm->ioeventfds_lock);
++
++	return 0;
++}
++
++int acrn_ioeventfd_config(struct acrn_vm *vm, struct acrn_ioeventfd *args)
++{
++	int ret;
++
++	if (args->flags & ACRN_IOEVENTFD_FLAG_DEASSIGN)
++		ret = acrn_ioeventfd_deassign(vm, args);
++	else
++		ret = acrn_ioeventfd_assign(vm, args);
++
++	return ret;
++}
++
++int acrn_ioeventfd_init(struct acrn_vm *vm)
++{
++	char name[ACRN_NAME_LEN];
++
++	mutex_init(&vm->ioeventfds_lock);
++	INIT_LIST_HEAD(&vm->ioeventfds);
++	snprintf(name, sizeof(name), "ioeventfd-%u", vm->vmid);
++	vm->ioeventfd_client = acrn_ioreq_client_create(vm,
++							acrn_ioeventfd_handler,
++							NULL, false, name);
++	if (!vm->ioeventfd_client) {
++		dev_err(vm->dev, "Failed to create ioeventfd ioreq client!\n");
++		return -EINVAL;
++	}
++
++	dev_dbg(vm->dev, "VM %u ioeventfd init.\n", vm->vmid);
++	return 0;
++}
++
++void acrn_ioeventfd_deinit(struct acrn_vm *vm)
++{
++	struct hsm_ioeventfd *p, *next;
++
++	dev_dbg(vm->dev, "VM %u ioeventfd deinit.\n", vm->vmid);
++	acrn_ioreq_client_destroy(vm->ioeventfd_client);
++	mutex_lock(&vm->ioeventfds_lock);
++	list_for_each_entry_safe(p, next, &vm->ioeventfds, list)
++		acrn_ioeventfd_shutdown(vm, p);
++	mutex_unlock(&vm->ioeventfds_lock);
++}
+diff --git a/drivers/virt/acrn/vm.c b/drivers/virt/acrn/vm.c
+index 7b3b14b53c55..53d504e26803 100644
+--- a/drivers/virt/acrn/vm.c
++++ b/drivers/virt/acrn/vm.c
+@@ -47,6 +47,7 @@ struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
+ 	list_add(&vm->list, &acrn_vm_list);
+ 	write_unlock_bh(&acrn_vm_list_lock);
+ 
++	acrn_ioeventfd_init(vm);
+ 	dev_dbg(vm->dev, "VM %u created.\n", vm->vmid);
+ 	return vm;
+ }
+@@ -64,6 +65,7 @@ int acrn_vm_destroy(struct acrn_vm *vm)
+ 	list_del_init(&vm->list);
+ 	write_unlock_bh(&acrn_vm_list_lock);
+ 
++	acrn_ioeventfd_deinit(vm);
+ 	acrn_ioreq_deinit(vm);
+ 	if (vm->monitor_page) {
+ 		put_page(vm->monitor_page);
+diff --git a/include/uapi/linux/acrn.h b/include/uapi/linux/acrn.h
+index 9fed7209a8ef..7a99124c7d4d 100644
+--- a/include/uapi/linux/acrn.h
++++ b/include/uapi/linux/acrn.h
+@@ -385,6 +385,32 @@ enum acrn_pm_cmd_type {
+ 	ACRN_PMCMD_GET_CX_DATA,
+ };
+ 
++#define ACRN_IOEVENTFD_FLAG_PIO		0x01
++#define ACRN_IOEVENTFD_FLAG_DATAMATCH	0x02
++#define ACRN_IOEVENTFD_FLAG_DEASSIGN	0x04
++/**
++ * struct acrn_ioeventfd - Data to operate a &struct hsm_ioeventfd
++ * @fd:		The fd of eventfd associated with a hsm_ioeventfd
++ * @flags:	Logical-OR of ACRN_IOEVENTFD_FLAG_*
++ * @addr:	The start address of IO range of ioeventfd
++ * @len:	The length of IO range of ioeventfd
++ * @reserved:	Reserved
++ * @data:	Data for data matching
++ *
++ * Without flag ACRN_IOEVENTFD_FLAG_DEASSIGN, ioctl ACRN_IOCTL_IOEVENTFD
++ * creates a &struct hsm_ioeventfd with properties originated from &struct
++ * acrn_ioeventfd. With flag ACRN_IOEVENTFD_FLAG_DEASSIGN, ioctl
++ * ACRN_IOCTL_IOEVENTFD destroys the &struct hsm_ioeventfd matching the fd.
++ */
++struct acrn_ioeventfd {
++	__u32	fd;
++	__u32	flags;
++	__u64	addr;
++	__u32	len;
++	__u32	reserved;
++	__u64	data;
++};
++
+ /* The ioctl type, documented in ioctl-number.rst */
+ #define ACRN_IOCTL_TYPE			0xA2
+ 
+@@ -439,4 +465,7 @@ enum acrn_pm_cmd_type {
+ #define ACRN_IOCTL_PM_GET_CPU_STATE	\
+ 	_IOWR(ACRN_IOCTL_TYPE, 0x60, __u64)
+ 
++#define ACRN_IOCTL_IOEVENTFD		\
++	_IOW(ACRN_IOCTL_TYPE, 0x70, struct acrn_ioeventfd)
++
+ #endif /* _UAPI_ACRN_H */
 -- 
-2.17.1
+2.28.0
 
