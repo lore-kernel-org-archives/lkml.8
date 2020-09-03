@@ -2,260 +2,161 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC08C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4141C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D61902072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A85D20578
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:38:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Io7Y/6j5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbgICQhW (ORCPT
+        id S1728646AbgICQiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:37:22 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:41822 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgICQhU (ORCPT
+        Thu, 3 Sep 2020 12:38:52 -0400
+Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:25354 "EHLO
+        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgICQit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:37:20 -0400
-Received: by mail-il1-f200.google.com with SMTP id e23so2750166ill.8
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 09:37:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=g7LWrEEzS7K4SBthHufKEANswDJugXnsabtvbwG0OdM=;
-        b=ReDgM0z2bbqht4IIMkUs28tIESXgp7XzclFEVQ84PWCM3+Xl8IeQ44aw+d0PYOwWgH
-         40cgoVwlaxCgCdN6wEZdjqb51Gua3K8qdIRIf0qx780UhPDZnWZ5j5PCDgFfMEt54fCU
-         amm1OSw8ggy42nAQZe7l8B4r/3NQRSQTttULq5yBdqWGrwLU6ik0KS+0/O0tkRJ0mZB0
-         ykPtda02HiKueVcGEAsWNug1QPmt8ahJJ2OjhVfdDDdwNDDkr/VbFtDM5wiwpKKiGscX
-         ITCv2pd1cwB9R6K78mUXWT4QWi36ktr9stDved2MYoBm9myZ+RyGnS7wgvOeWb6K/Aqb
-         ZZ9w==
-X-Gm-Message-State: AOAM531ywlOib37QBeMHQM9l/7fykfb9jSd6Xsn3C8JFD+IdRD59I7Jd
-        lh0wQyjzo8QgBUKQqrkPxSYxbN2drFh8/egVEjQ5IPVIps+E
-X-Google-Smtp-Source: ABdhPJwTM/CPP/PUd30y5J9pwOG53XOrDzAAb58mxHQyiXBP8X3gxSmsiQSrjKbcyDRBzuSxUrChIlqlvjMQkd8Zcbs2yaXwwXIC
+        Thu, 3 Sep 2020 12:38:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1599151128;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=1r9p2+RFoF3u+hOb93ac0ysyr0EJPEppHknwa791fSA=;
+  b=Io7Y/6j5GZ3IHmYkbGqKfewzhAvtnLOM8W6dzlShv2LVvKOuAVn6gcc9
+   QTKwdywHLXMaAMfxvbE23O2qeRhvwpvYH3C8tfNZCJuODuK2tcMD/vXPv
+   iBQd6oUWIa3c5jOv6ro0Atn5Mf/T4FfTdw5hkUYDn11hrIFsNDVSZmn5y
+   A=;
+Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: n1UBm6NTmzRoEEmp6chXaBm2JeGlv1UPeWW4NcDpE6MmwKaEEug3qgxA4LMjLaJkfVteFGd+aK
+ UyQpDEBtpjDgR7UYwd0Jg33GV7o86inlKKFgsaaHyJNUflCzFSfwopxMOWerSgF0XhG9sEzEfL
+ 4RRD4RotP+qyYV2hpJYsl3r0gsfqUIOsSdH5lSVHXWp122/oY9ooFXECyGx/srx7sfWn8zfJG2
+ vY03kGbKprm5mmB9gPqzwmUs7bHHXQflmjbxrqlmteL5zA03CFuteALBCgRnmyTsXmwaj14XY0
+ bkc=
+X-SBRS: 2.7
+X-MesageID: 26904079
+X-Ironport-Server: esa4.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.76,387,1592884800"; 
+   d="scan'208";a="26904079"
+Date:   Thu, 3 Sep 2020 18:38:37 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        David Airlie <airlied@linux.ie>,
+        "Daniel Vetter" <daniel@ffwll.ch>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
+        Yan Yankovskyi <yyankovskyi@gmail.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <xen-devel@lists.xenproject.org>, <linux-mm@kvack.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v5 3/3] xen: add helpers to allocate unpopulated memory
+Message-ID: <20200903163837.GM753@Air-de-Roger>
+References: <20200901083326.21264-1-roger.pau@citrix.com>
+ <20200901083326.21264-4-roger.pau@citrix.com>
+ <b1713f26-8202-ac1e-c18a-4989312219b9@suse.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:194b:: with SMTP id e11mr4200423ilm.133.1599151039271;
- Thu, 03 Sep 2020 09:37:19 -0700 (PDT)
-Date:   Thu, 03 Sep 2020 09:37:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a358f905ae6b5dc6@google.com>
-Subject: KASAN: use-after-free Read in dump_schedule
-From:   syzbot <syzbot+621fd33c0b53d15ee8de@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b1713f26-8202-ac1e-c18a-4989312219b9@suse.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ FTLPEX02CL06.citrite.net (10.13.108.179)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Sep 03, 2020 at 05:30:07PM +0200, Jürgen Groß wrote:
+> On 01.09.20 10:33, Roger Pau Monne wrote:
+> > To be used in order to create foreign mappings. This is based on the
+> > ZONE_DEVICE facility which is used by persistent memory devices in
+> > order to create struct pages and kernel virtual mappings for the IOMEM
+> > areas of such devices. Note that on kernels without support for
+> > ZONE_DEVICE Xen will fallback to use ballooned pages in order to
+> > create foreign mappings.
+> > 
+> > The newly added helpers use the same parameters as the existing
+> > {alloc/free}_xenballooned_pages functions, which allows for in-place
+> > replacement of the callers. Once a memory region has been added to be
+> > used as scratch mapping space it will no longer be released, and pages
+> > returned are kept in a linked list. This allows to have a buffer of
+> > pages and prevents resorting to frequent additions and removals of
+> > regions.
+> > 
+> > If enabled (because ZONE_DEVICE is supported) the usage of the new
+> > functionality untangles Xen balloon and RAM hotplug from the usage of
+> > unpopulated physical memory ranges to map foreign pages, which is the
+> > correct thing to do in order to avoid mappings of foreign pages depend
+> > on memory hotplug.
+> > 
+> > Note the driver is currently not enabled on Arm platforms because it
+> > would interfere with the identity mapping required on some platforms.
+> > 
+> > Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+> 
+> Sorry, I just got a build error for x86 32-bit build:
+> 
+> WARNING: unmet direct dependencies detected for ZONE_DEVICE
+>   Depends on [n]: MEMORY_HOTPLUG [=n] && MEMORY_HOTREMOVE [=n] &&
+> SPARSEMEM_VMEMMAP [=n] && ARCH_HAS_PTE_DEVMAP [=n]
+>   Selected by [y]:
+>   - XEN_UNPOPULATED_ALLOC [=y] && XEN [=y] && X86 [=y]
+>   GEN     Makefile
+>   CC      kernel/bounds.s
+>   CALL    /home/gross/korg/src/scripts/atomic/check-atomics.sh
+>   UPD     include/generated/bounds.h
+>   CC      arch/x86/kernel/asm-offsets.s
+> In file included from /home/gross/korg/src/include/linux/mmzone.h:19:0,
+>                  from /home/gross/korg/src/include/linux/gfp.h:6,
+>                  from /home/gross/korg/src/include/linux/slab.h:15,
+>                  from /home/gross/korg/src/include/linux/crypto.h:19,
+>                  from /home/gross/korg/src/arch/x86/kernel/asm-offsets.c:9:
+> /home/gross/korg/src/include/linux/page-flags-layout.h:95:2: error: #error
+> "Not enough bits in page flags"
+>  #error "Not enough bits in page flags"
+>   ^~~~~
+> make[2]: *** [/home/gross/korg/src/scripts/Makefile.build:114:
+> arch/x86/kernel/asm-offsets.s] Error 1
+> make[1]: *** [/home/gross/korg/src/Makefile:1175: prepare0] Error 2
+> make[1]: Leaving directory '/home/gross/korg/x8632'
+> make: *** [Makefile:185: __sub-make] Error 2
 
-syzbot found the following issue on:
+Sorry for this. I've tested a 32bit build but I think it was before
+the last Kconfig changes. I'm a little unsure how to solve this, as
+ZONE_DEVICE doesn't select the required options for it to run, but
+rather depends on them to be available.
 
-HEAD commit:    fc3abb53 Merge branch 'for-linus' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17b672f5900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e1c560d0f4e121c9
-dashboard link: https://syzkaller.appspot.com/bug?extid=621fd33c0b53d15ee8de
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1129d0e9900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17fb6a25900000
+You can trigger something similar on x86-64 by doing:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+621fd33c0b53d15ee8de@syzkaller.appspotmail.com
+$ make ARCH=x86_64 xen.config
+Using .config as base
+Merging ./kernel/configs/xen.config
+Merging ./arch/x86/configs/xen.config
+#
+# merged configuration written to .config (needs make)
+#
+scripts/kconfig/conf  --olddefconfig Kconfig
 
-==================================================================
-BUG: KASAN: use-after-free in dump_schedule+0x4b/0x850 net/sched/sch_taprio.c:1747
-Read of size 8 at addr ffff88808f48cb40 by task syz-executor466/11250
+WARNING: unmet direct dependencies detected for ZONE_DEVICE
+  Depends on [n]: MEMORY_HOTPLUG [=y] && MEMORY_HOTREMOVE [=n] && SPARSEMEM_VMEMMAP [=y] && ARCH_HAS_PTE_DEVMAP [=y]
+  Selected by [y]:
+  - XEN_UNPOPULATED_ALLOC [=y] && XEN [=y] && X86_64 [=y]
+#
+# configuration written to .config
+#
 
-CPU: 0 PID: 11250 Comm: syz-executor466 Not tainted 5.9.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1d6/0x29e lib/dump_stack.c:118
- print_address_description+0x66/0x620 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report+0x132/0x1d0 mm/kasan/report.c:530
- dump_schedule+0x4b/0x850 net/sched/sch_taprio.c:1747
- taprio_dump+0x701/0xcc0 net/sched/sch_taprio.c:1815
- tc_fill_qdisc+0x5c5/0x1150 net/sched/sch_api.c:916
- qdisc_notify+0x1df/0x370 net/sched/sch_api.c:983
- tc_modify_qdisc+0x1b1a/0x1d90 net/sched/sch_api.c:1635
- rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5563
- netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2470
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1330
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1919
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg net/socket.c:671 [inline]
- kernel_sendmsg+0xe2/0x120 net/socket.c:691
- sock_no_sendpage+0xe0/0x120 net/core/sock.c:2852
- kernel_sendpage net/socket.c:3642 [inline]
- sock_sendpage+0xd0/0x120 net/socket.c:944
- pipe_to_sendpage+0x208/0x2d0 fs/splice.c:448
- splice_from_pipe_feed fs/splice.c:502 [inline]
- __splice_from_pipe+0x351/0x8b0 fs/splice.c:626
- splice_from_pipe fs/splice.c:661 [inline]
- generic_splice_sendpage+0x112/0x180 fs/splice.c:834
- do_splice_from fs/splice.c:846 [inline]
- do_splice+0xdd1/0x1a50 fs/splice.c:1144
- __do_sys_splice fs/splice.c:1419 [inline]
- __se_sys_splice fs/splice.c:1401 [inline]
- __x64_sys_splice+0x14f/0x1f0 fs/splice.c:1401
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x449fa9
-Code: e8 9c e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 04 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fa469406d88 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
-RAX: ffffffffffffffda RBX: 00000000006e0c48 RCX: 0000000000449fa9
-RDX: 0000000000000004 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 00000000006e0c40 R08: 0000000000010973 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e0c4c
-R13: 140b0024000000a4 R14: 0000000000000000 R15: 000000306d616574
+I think the only solution is to have XEN_UNPOPULATED_ALLOC depend on
+ZONE_DEVICE rather than select it?
 
-Allocated by task 11229:
- kasan_save_stack mm/kasan/common.c:48 [inline]
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc+0x100/0x130 mm/kasan/common.c:461
- kmem_cache_alloc_trace+0x1e4/0x2e0 mm/slab.c:3550
- kmalloc include/linux/slab.h:554 [inline]
- kzalloc include/linux/slab.h:666 [inline]
- taprio_change+0x3b5/0x5200 net/sched/sch_taprio.c:1436
- qdisc_change net/sched/sch_api.c:1331 [inline]
- tc_modify_qdisc+0x1793/0x1d90 net/sched/sch_api.c:1633
- rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5563
- netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2470
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1330
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1919
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg net/socket.c:671 [inline]
- kernel_sendmsg+0xe2/0x120 net/socket.c:691
- sock_no_sendpage+0xe0/0x120 net/core/sock.c:2852
- kernel_sendpage net/socket.c:3642 [inline]
- sock_sendpage+0xd0/0x120 net/socket.c:944
- pipe_to_sendpage+0x208/0x2d0 fs/splice.c:448
- splice_from_pipe_feed fs/splice.c:502 [inline]
- __splice_from_pipe+0x351/0x8b0 fs/splice.c:626
- splice_from_pipe fs/splice.c:661 [inline]
- generic_splice_sendpage+0x112/0x180 fs/splice.c:834
- do_splice_from fs/splice.c:846 [inline]
- do_splice+0xdd1/0x1a50 fs/splice.c:1144
- __do_sys_splice fs/splice.c:1419 [inline]
- __se_sys_splice fs/splice.c:1401 [inline]
- __x64_sys_splice+0x14f/0x1f0 fs/splice.c:1401
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 9:
- kasan_save_stack mm/kasan/common.c:48 [inline]
- kasan_set_track+0x3d/0x70 mm/kasan/common.c:56
- kasan_set_free_info+0x17/0x30 mm/kasan/generic.c:355
- __kasan_slab_free+0xdd/0x110 mm/kasan/common.c:422
- __cache_free mm/slab.c:3418 [inline]
- kfree+0x113/0x200 mm/slab.c:3756
- rcu_do_batch kernel/rcu/tree.c:2428 [inline]
- rcu_core+0x79b/0x1130 kernel/rcu/tree.c:2656
- __do_softirq+0x256/0x6d5 kernel/softirq.c:298
-
-Last call_rcu():
- kasan_save_stack+0x27/0x50 mm/kasan/common.c:48
- kasan_record_aux_stack+0x7b/0xb0 mm/kasan/generic.c:346
- __call_rcu kernel/rcu/tree.c:2894 [inline]
- call_rcu+0x141/0x830 kernel/rcu/tree.c:2968
- taprio_change+0x4202/0x5200 net/sched/sch_taprio.c:1554
- qdisc_change net/sched/sch_api.c:1331 [inline]
- tc_modify_qdisc+0x1793/0x1d90 net/sched/sch_api.c:1633
- rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5563
- netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2470
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1330
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1919
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg net/socket.c:671 [inline]
- kernel_sendmsg+0xe2/0x120 net/socket.c:691
- sock_no_sendpage+0xe0/0x120 net/core/sock.c:2852
- kernel_sendpage net/socket.c:3642 [inline]
- sock_sendpage+0xd0/0x120 net/socket.c:944
- pipe_to_sendpage+0x208/0x2d0 fs/splice.c:448
- splice_from_pipe_feed fs/splice.c:502 [inline]
- __splice_from_pipe+0x351/0x8b0 fs/splice.c:626
- splice_from_pipe fs/splice.c:661 [inline]
- generic_splice_sendpage+0x112/0x180 fs/splice.c:834
- do_splice_from fs/splice.c:846 [inline]
- do_splice+0xdd1/0x1a50 fs/splice.c:1144
- __do_sys_splice fs/splice.c:1419 [inline]
- __se_sys_splice fs/splice.c:1401 [inline]
- __x64_sys_splice+0x14f/0x1f0 fs/splice.c:1401
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Second to last call_rcu():
- kasan_save_stack+0x27/0x50 mm/kasan/common.c:48
- kasan_record_aux_stack+0x7b/0xb0 mm/kasan/generic.c:346
- __call_rcu kernel/rcu/tree.c:2894 [inline]
- call_rcu+0x141/0x830 kernel/rcu/tree.c:2968
- taprio_change+0x4202/0x5200 net/sched/sch_taprio.c:1554
- qdisc_change net/sched/sch_api.c:1331 [inline]
- tc_modify_qdisc+0x1793/0x1d90 net/sched/sch_api.c:1633
- rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5563
- netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2470
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1330
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1919
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg net/socket.c:671 [inline]
- kernel_sendmsg+0xe2/0x120 net/socket.c:691
- sock_no_sendpage+0xe0/0x120 net/core/sock.c:2852
- kernel_sendpage net/socket.c:3642 [inline]
- sock_sendpage+0xd0/0x120 net/socket.c:944
- pipe_to_sendpage+0x208/0x2d0 fs/splice.c:448
- splice_from_pipe_feed fs/splice.c:502 [inline]
- __splice_from_pipe+0x351/0x8b0 fs/splice.c:626
- splice_from_pipe fs/splice.c:661 [inline]
- generic_splice_sendpage+0x112/0x180 fs/splice.c:834
- do_splice_from fs/splice.c:846 [inline]
- do_splice+0xdd1/0x1a50 fs/splice.c:1144
- __do_sys_splice fs/splice.c:1419 [inline]
- __se_sys_splice fs/splice.c:1401 [inline]
- __x64_sys_splice+0x14f/0x1f0 fs/splice.c:1401
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff88808f48cb00
- which belongs to the cache kmalloc-96 of size 96
-The buggy address is located 64 bytes inside of
- 96-byte region [ffff88808f48cb00, ffff88808f48cb60)
-The buggy address belongs to the page:
-page:00000000cae6299d refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88808f48cd00 pfn:0x8f48c
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0002761e08 ffffea000275d888 ffff8880aa440300
-raw: ffff88808f48cd00 ffff88808f48c000 000000010000001a 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88808f48ca00: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
- ffff88808f48ca80: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
->ffff88808f48cb00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-                                           ^
- ffff88808f48cb80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
- ffff88808f48cc00: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Thanks, Roger.
