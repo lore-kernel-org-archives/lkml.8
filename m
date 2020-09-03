@@ -2,229 +2,74 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D58C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B643AC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B080206EF
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:08:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599138498;
-	bh=tfzu/ZWIp8d2WAZNm1IHe6S3/MEpEsZM5VlFwOuIU00=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iHtK9Gw2I8Cxk71BR9hALLSBOi894JJFxRoQ5JfBnosgfzBslrMzLSutFzFiUWJpQ
-	 QmKQBlf8sGeKujn/F4p8reE/OmxVGbSKQ3AihoJERdKFsRJYO4wk+jz1LoplaIbty8
-	 9W4ySVyT1SNpNOKdaTYK4RzrP62MLcQe6/yr6FAE=
+	by mail.kernel.org (Postfix) with ESMTP id 880FF20775
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:12:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgICNHx (ORCPT
+        id S1728999AbgICNMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 09:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728972AbgICMxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 09:12:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42544 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728950AbgICMxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 08:53:37 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECB082072A;
-        Thu,  3 Sep 2020 12:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599137615;
-        bh=tfzu/ZWIp8d2WAZNm1IHe6S3/MEpEsZM5VlFwOuIU00=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rp6LONV/3+Siygj3rKc8zUqJMYY285dZqy9PfeYyddjBT9olzZ8t8SkWA10rrKuuR
-         1aDh78ixCTcYCMPLYS0NH3ZHfk8Hl5iaGX/ikbf/Y8T7BWcgLi8moiWnTAmc+vimA4
-         cGSWZpdXXhR90EIumCcTu1670kIbptuw36hPiSiQ=
-Date:   Thu, 3 Sep 2020 14:53:59 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuo.a.liu@intel.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yu Wang <yu1.wang@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: Re: [PATCH v2 05/17] virt: acrn: Introduce ACRN HSM basic driver
-Message-ID: <20200903125359.GA2778029@kroah.com>
-References: <20200903124201.17275-1-shuo.a.liu@intel.com>
- <20200903124201.17275-6-shuo.a.liu@intel.com>
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3994CD8AFAE9B2A858E0;
+        Thu,  3 Sep 2020 20:05:27 +0800 (CST)
+Received: from thunder-town.china.huawei.com (10.174.177.253) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 3 Sep 2020 20:05:19 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH 0/2] add support for Hisilicon SD5203 vector interrupt controller
+Date:   Thu, 3 Sep 2020 20:05:02 +0800
+Message-ID: <20200903120504.2308-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903124201.17275-6-shuo.a.liu@intel.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.177.253]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 08:41:49PM +0800, shuo.a.liu@intel.com wrote:
-> From: Shuo Liu <shuo.a.liu@intel.com>
-> 
-> ACRN Hypervisor Service Module (HSM) is a kernel module in Service VM
-> which communicates with ACRN userspace through ioctls and talks to ACRN
-> Hypervisor through hypercalls.
-> 
-> Add a basic HSM driver which allows Service VM userspace to communicate
-> with ACRN. The following patches will add more ioctls, guest VM memory
-> mapping caching, I/O request processing, ioeventfd and irqfd into this
-> module. HSM exports a char device interface (/dev/acrn_hsm) to userspace.
-> 
-> Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
-> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Zhi Wang <zhi.a.wang@intel.com>
-> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-> Cc: Yu Wang <yu1.wang@intel.com>
-> Cc: Reinette Chatre <reinette.chatre@intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  .../userspace-api/ioctl/ioctl-number.rst      |  1 +
->  MAINTAINERS                                   |  2 +
->  drivers/virt/Kconfig                          |  2 +
->  drivers/virt/Makefile                         |  1 +
->  drivers/virt/acrn/Kconfig                     | 14 +++
->  drivers/virt/acrn/Makefile                    |  3 +
->  drivers/virt/acrn/acrn_drv.h                  | 19 ++++
->  drivers/virt/acrn/hsm.c                       | 98 +++++++++++++++++++
->  include/uapi/linux/acrn.h                     | 17 ++++
->  9 files changed, 157 insertions(+)
->  create mode 100644 drivers/virt/acrn/Kconfig
->  create mode 100644 drivers/virt/acrn/Makefile
->  create mode 100644 drivers/virt/acrn/acrn_drv.h
->  create mode 100644 drivers/virt/acrn/hsm.c
->  create mode 100644 include/uapi/linux/acrn.h
-> 
-> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> index 2a198838fca9..ac60efedb104 100644
-> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> @@ -319,6 +319,7 @@ Code  Seq#    Include File                                           Comments
->  0xA0  all    linux/sdp/sdp.h                                         Industrial Device Project
->                                                                       <mailto:kenji@bitgate.com>
->  0xA1  0      linux/vtpm_proxy.h                                      TPM Emulator Proxy Driver
-> +0xA2  all    uapi/linux/acrn.h                                       ACRN hypervisor
+The interrupt controller of SD5203 SoC is VIC(vector interrupt controller), it's
+based on Synopsys DesignWare APB interrupt controller (dw_apb_ictl) IP, but it
+can not directly use dw_apb_ictl driver. The main reason is that VIC is used as
+primary interrupt controller and dw_apb_ictl driver worked for secondary
+interrupt controller. So add a new driver: "hisilicon,sd5203-vic".
 
-You don't have any ioctls in this patch, so why add this documentation
-here?
+Kefeng Wang (1):
+  irqchip: add Hisilicon SD5203 vector interrupt controller
 
->  0xA3  80-8F                                                          Port ACL  in development:
->                                                                       <mailto:tlewis@mindspring.com>
->  0xA3  90-9F  linux/dtlk.h
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e0fea5e464b4..d4c1ef303c2d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -442,6 +442,8 @@ L:	acrn-dev@lists.projectacrn.org
->  S:	Supported
->  W:	https://projectacrn.org
->  F:	Documentation/virt/acrn/
-> +F:	drivers/virt/acrn/
-> +F:	include/uapi/linux/acrn.h
+Zhen Lei (1):
+  dt-bindings: interrupt-controller: add Hisilicon SD5203 vector
+    interrupt controller
 
-This uapi file is not used in this patch, please add it in a later
-patch.
+ .../hisilicon,sd5203-vic.txt                  |  27 ++++
+ drivers/irqchip/Kconfig                       |   5 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-sd5203-vic.c              | 128 ++++++++++++++++++
+ 4 files changed, 161 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/hisilicon,sd5203-vic.txt
+ create mode 100644 drivers/irqchip/irq-sd5203-vic.c
 
-> +static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
-> +			   unsigned long ioctl_param)
-> +{
-> +	return 0;
-> +}
+-- 
+2.26.0.106.g9fadedd
 
-As your ioctl does nothing, no need to include it here, add it in a
-later patch.
 
-> +
-> +static int acrn_dev_release(struct inode *inode, struct file *filp)
-> +{
-> +	struct acrn_vm *vm = filp->private_data;
-> +
-> +	kfree(vm);
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations acrn_fops = {
-> +	.owner		= THIS_MODULE,
-> +	.open		= acrn_dev_open,
-> +	.release	= acrn_dev_release,
-> +	.unlocked_ioctl	= acrn_dev_ioctl,
-> +};
-> +
-> +static struct miscdevice acrn_dev = {
-> +	.minor	= MISC_DYNAMIC_MINOR,
-> +	.name	= "acrn_hsm",
-> +	.fops	= &acrn_fops,
-> +};
-> +
-> +static int __init hsm_init(void)
-> +{
-> +	int ret;
-> +
-> +	if (x86_hyper_type != X86_HYPER_ACRN)
-> +		return -ENODEV;
-> +
-> +	if (!acrn_is_privileged_vm())
-> +		return -EPERM;
-> +
-> +	ret = misc_register(&acrn_dev);
-> +	if (ret) {
-> +		pr_err("Create misc dev failed!\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-
-Tiny tiny nit, these lines can be rewritten as:
-	if (ret)
-		pr_err("Create misc dev failed!\n");
-
-	return ret;
-
-:)
-
-> +}
-> +
-> +static void __exit hsm_exit(void)
-> +{
-> +	misc_deregister(&acrn_dev);
-> +}
-> +module_init(hsm_init);
-> +module_exit(hsm_exit);
-> +
-> +MODULE_AUTHOR("Intel Corporation");
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("ACRN Hypervisor Service Module (HSM)");
-> diff --git a/include/uapi/linux/acrn.h b/include/uapi/linux/acrn.h
-> new file mode 100644
-> index 000000000000..4ae34f86e2be
-> --- /dev/null
-> +++ b/include/uapi/linux/acrn.h
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/*
-> + * Userspace interface for /dev/acrn_hsm - ACRN Hypervisor Service Module
-> + *
-> + * This file can be used by applications that need to communicate with the HSM
-> + * via the ioctl interface.
-> + */
-> +
-> +#ifndef _UAPI_ACRN_H
-> +#define _UAPI_ACRN_H
-> +
-> +#include <linux/types.h>
-> +
-> +/* The ioctl type, documented in ioctl-number.rst */
-> +#define ACRN_IOCTL_TYPE			0xA2
-
-This isn't used in this patch, so save it for a later one please.
-
-thanks,
-
-greg k-h
