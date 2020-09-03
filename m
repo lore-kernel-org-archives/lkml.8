@@ -2,121 +2,160 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D0C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BA1C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 189B920786
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2649C2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728999AbgICP5O (ORCPT
+        id S1728785AbgICP7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:57:14 -0400
-Received: from verein.lst.de ([213.95.11.211]:38410 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728354AbgICP4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:56:48 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 953B667357; Thu,  3 Sep 2020 17:56:44 +0200 (CEST)
-Date:   Thu, 3 Sep 2020 17:56:44 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        linux-arch@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Alexey Dobriyan <adobriyan@gmail.com>
-Subject: Re: [PATCH 14/14] powerpc: remove address space overrides using
- set_fs()
-Message-ID: <20200903155644.GA23521@lst.de>
-References: <20200903142242.925828-1-hch@lst.de> <20200903142242.925828-15-hch@lst.de> <e7d2d231-5658-a4d3-0495-2af62f34aa34@csgroup.eu> <20200903154909.GA23023@lst.de>
+        Thu, 3 Sep 2020 11:59:13 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:32257 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728210AbgICP7I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 11:59:08 -0400
+IronPort-SDR: sQuBkVyHqn/Ig2AcWPmZw4NPMF5YIpMiFd9eh+DCF5gSxavyUk7Ij8sQRm8JabM9oD+n2iPbus
+ Va2nNkmWngDJLytdKZonUWsUTAaYSDYmp1YuElkiaAY5ITFB0dy6CESo1aMZl0dS737tUimu4b
+ 4s5d9CT8U7MLWPkCNMl6nOqBdohDsaBEbi93ADVO0pa5URhbcKaZC8oBSjeTxoCVv87F/kUf/h
+ aisqRvz57yMWtHT47KHJY6ZSC1NBL/1F2vyTka8gbWwZXsKa7tolnoWk93As7d2u0nTM+7mOWT
+ ypk=
+X-IronPort-AV: E=Sophos;i="5.76,387,1592899200"; 
+   d="scan'208";a="54733292"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa1.mentor.iphmx.com with ESMTP; 03 Sep 2020 07:59:07 -0800
+IronPort-SDR: tmMqlO4tN+aNPQnDfhjouRSCXhR9zxcoA5+Cd7M7kEk8lv7ZoHl5jjrxtWO8u0ZE9xGAyt5K+I
+ bEEk2UzTNOMIzw23ULrJDgjZIKn6pPP2/0pVkbIRqgRzBFBYUlQ5T0JExpSt9X5s6Yv9WlalVz
+ /FJa2B9Qyv4++JqDNI/xnxGddm4ybkPr7zhEXxsPenCE0glOo1ipsTAKvnQMf1KYTwu8ViMaQF
+ llfotMJLS9BDBmFRe6wU+48deTY3yqeHu+ygbD+MMsDE6Ocp/7Kqer6H4JdsBPjf2x9u/zhj5G
+ 18I=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Andrew_Gabbasov@mentor.com>, <erosca@de.adit-jv.com>,
+        <digetx@gmail.com>, <jiada_wang@mentor.com>
+Subject: [PATCH v2 1/1] Input: atmel_mxt_ts - implement I2C retries
+Date:   Fri, 4 Sep 2020 00:59:04 +0900
+Message-ID: <20200903155904.17454-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200903154909.GA23023@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 05:49:09PM +0200, Christoph Hellwig wrote:
-> On Thu, Sep 03, 2020 at 05:43:25PM +0200, Christophe Leroy wrote:
-> >
-> >
-> > Le 03/09/2020 à 16:22, Christoph Hellwig a écrit :
-> >> Stop providing the possibility to override the address space using
-> >> set_fs() now that there is no need for that any more.
-> >>
-> >> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> >> ---
-> >
-> >
-> >>   -static inline int __access_ok(unsigned long addr, unsigned long size,
-> >> -			mm_segment_t seg)
-> >> +static inline bool __access_ok(unsigned long addr, unsigned long size)
-> >>   {
-> >> -	if (addr > seg.seg)
-> >> -		return 0;
-> >> -	return (size == 0 || size - 1 <= seg.seg - addr);
-> >> +	if (addr >= TASK_SIZE_MAX)
-> >> +		return false;
-> >> +	return size == 0 || size <= TASK_SIZE_MAX - addr;
-> >>   }
-> >
-> > You don't need to test size == 0 anymore. It used to be necessary because 
-> > of the 'size - 1', as size is unsigned.
-> >
-> > Now you can directly do
-> >
-> > 	return size <= TASK_SIZE_MAX - addr;
-> >
-> > If size is 0, this will always be true (because you already know that addr 
-> > is not >= TASK_SIZE_MAX
-> 
-> True.  What do you think of Linus' comment about always using the
-> ppc32 version on ppc64 as well with this?
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
-i.e. something like this folded in:
+Some maXTouch chips (eg mXT1386) will not respond on the first I2C request
+when they are in a sleep state. It must be retried after a delay for the
+chip to wake up.
 
-diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-index 5363f7fc6dd06c..be070254e50943 100644
---- a/arch/powerpc/include/asm/uaccess.h
-+++ b/arch/powerpc/include/asm/uaccess.h
-@@ -11,26 +11,14 @@
- #ifdef __powerpc64__
- /* We use TASK_SIZE_USER64 as TASK_SIZE is not constant */
- #define TASK_SIZE_MAX		TASK_SIZE_USER64
--
--/*
-- * This check is sufficient because there is a large enough gap between user
-- * addresses and the kernel addresses.
-- */
--static inline bool __access_ok(unsigned long addr, unsigned long size)
--{
--	return addr < TASK_SIZE_MAX && size < TASK_SIZE_MAX;
--}
--
- #else
- #define TASK_SIZE_MAX		TASK_SIZE
-+#endif
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+Acked-by: Yufeng Shen <miletus@chromium.org>
+(cherry picked from ndyer/linux/for-upstream commit 63fd7a2cd03c3a572a5db39c52f4856819e1835d)
+[gdavis: Forward port and fix conflicts.]
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+[jiada: return exact errno when i2c_transfer & i2c_master_send fails]
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 45 ++++++++++++++++--------
+ 1 file changed, 30 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index a2189739e30f..5d4cb15d21dc 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -196,6 +196,7 @@ enum t100_type {
+ #define MXT_CRC_TIMEOUT		1000	/* msec */
+ #define MXT_FW_RESET_TIME	3000	/* msec */
+ #define MXT_FW_CHG_TIMEOUT	300	/* msec */
++#define MXT_WAKEUP_TIME		25	/* msec */
  
- static inline bool __access_ok(unsigned long addr, unsigned long size)
- {
--	if (addr >= TASK_SIZE_MAX)
--		return false;
--	return size == 0 || size <= TASK_SIZE_MAX - addr;
-+	return addr < TASK_SIZE_MAX && size <= TASK_SIZE_MAX - addr;
+ /* Command to unlock bootloader */
+ #define MXT_UNLOCK_CMD_MSB	0xaa
+@@ -626,6 +627,7 @@ static int __mxt_read_reg(struct i2c_client *client,
+ 	struct i2c_msg xfer[2];
+ 	u8 buf[2];
+ 	int ret;
++	bool retry = false;
+ 
+ 	buf[0] = reg & 0xff;
+ 	buf[1] = (reg >> 8) & 0xff;
+@@ -642,17 +644,22 @@ static int __mxt_read_reg(struct i2c_client *client,
+ 	xfer[1].len = len;
+ 	xfer[1].buf = val;
+ 
+-	ret = i2c_transfer(client->adapter, xfer, 2);
+-	if (ret == 2) {
+-		ret = 0;
+-	} else {
+-		if (ret >= 0)
+-			ret = -EIO;
+-		dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
+-			__func__, ret);
++retry_read:
++	ret = i2c_transfer(client->adapter, xfer, ARRAY_SIZE(xfer));
++	if (ret != ARRAY_SIZE(xfer)) {
++		if (!retry) {
++			dev_dbg(&client->dev, "%s: i2c retry\n", __func__);
++			msleep(MXT_WAKEUP_TIME);
++			retry = true;
++			goto retry_read;
++		} else {
++			dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
++				__func__, ret);
++			return ret < 0 ? ret : -EIO;
++		}
+ 	}
+ 
+-	return ret;
++	return 0;
  }
--#endif /* __powerpc64__ */
  
- #define access_ok(addr, size)		\
- 	(__chk_user_ptr(addr),		\
+ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
+@@ -661,6 +668,7 @@ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
+ 	u8 *buf;
+ 	size_t count;
+ 	int ret;
++	bool retry = false;
+ 
+ 	count = len + 2;
+ 	buf = kmalloc(count, GFP_KERNEL);
+@@ -671,14 +679,21 @@ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
+ 	buf[1] = (reg >> 8) & 0xff;
+ 	memcpy(&buf[2], val, len);
+ 
++retry_write:
+ 	ret = i2c_master_send(client, buf, count);
+-	if (ret == count) {
+-		ret = 0;
++	if (ret != count) {
++		if (!retry) {
++			dev_dbg(&client->dev, "%s: i2c retry\n", __func__);
++			msleep(MXT_WAKEUP_TIME);
++			retry = true;
++			goto retry_write;
++		} else {
++			dev_err(&client->dev, "%s: i2c send failed (%d)\n",
++				__func__, ret);
++			ret = ret < 0 ? ret : -EIO;
++		}
+ 	} else {
+-		if (ret >= 0)
+-			ret = -EIO;
+-		dev_err(&client->dev, "%s: i2c send failed (%d)\n",
+-			__func__, ret);
++		ret = 0;
+ 	}
+ 
+ 	kfree(buf);
+-- 
+2.17.1
+
