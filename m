@@ -2,149 +2,153 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3842C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 06:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD53C43461
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 06:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9592A206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 06:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A564E206EB
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 06:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgICGck (ORCPT
+        id S1727921AbgICGeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 02:32:40 -0400
-Received: from lucky1.263xmail.com ([211.157.147.132]:40334 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726288AbgICGck (ORCPT
+        Thu, 3 Sep 2020 02:34:22 -0400
+Received: from mo-csw1114.securemx.jp ([210.130.202.156]:52200 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725986AbgICGeW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 02:32:40 -0400
-Received: from localhost (unknown [192.168.167.13])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 44257ED62A;
-        Thu,  3 Sep 2020 14:32:37 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P29633T140716441319168S1599114756148900_;
-        Thu, 03 Sep 2020 14:32:37 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <f97d728069991bec97f975f10c0dab4d>
-X-RL-SENDER: zhangqing@rock-chips.com
-X-SENDER: zhangqing@rock-chips.com
-X-LOGIN-NAME: zhangqing@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Elaine Zhang <zhangqing@rock-chips.com>
-To:     heiko@sntech.de
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org, xxx@rock-chips.com,
-        xf@rock-chips.com, huangtao@rock-chips.com,
-        kever.yang@rock-chips.com, Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v2 6/6] clk: rockchip: rk3399: Support module build
-Date:   Thu,  3 Sep 2020 14:32:34 +0800
-Message-Id: <20200903063234.10639-1-zhangqing@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200903063147.10237-1-zhangqing@rock-chips.com>
-References: <20200903063147.10237-1-zhangqing@rock-chips.com>
+        Thu, 3 Sep 2020 02:34:22 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1114) id 0836XqkV026096; Thu, 3 Sep 2020 15:33:52 +0900
+X-Iguazu-Qid: 2wGqimZzpdodzp3qKb
+X-Iguazu-QSIG: v=2; s=0; t=1599114831; q=2wGqimZzpdodzp3qKb; m=3lD5yTuNA9UipE4IT4HqtHJpMosJZhyi/NRwtDEowSQ=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1111) id 0836Xnhn027327;
+        Thu, 3 Sep 2020 15:33:49 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id 0836XnKm019408;
+        Thu, 3 Sep 2020 15:33:49 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 0836XmiJ027896;
+        Thu, 3 Sep 2020 15:33:48 +0900
+From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+To:     Smita Koralahalli Channabasappa <skoralah@amd.com>
+Cc:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+        <linux-efi@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <devel@acpica.org>, Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Yazen Ghannam <yazen.ghannam@amd.com>
+Subject: Re: [PATCH v2 1/2] cper, apei, mce: Pass x86 CPER through the MCA handling chain
+References: <20200828203332.11129-1-Smita.KoralahalliChannabasappa@amd.com>
+        <20200828203332.11129-2-Smita.KoralahalliChannabasappa@amd.com>
+        <878sdvv20h.fsf@kokedama.swc.toshiba.co.jp>
+        <102d0c75-d642-8f8b-68c7-792499c2a62a@amd.com>
+Date:   Thu, 03 Sep 2020 15:33:47 +0900
+In-Reply-To: <102d0c75-d642-8f8b-68c7-792499c2a62a@amd.com> (Smita Koralahalli
+        Channabasappa's message of "Wed, 2 Sep 2020 14:29:28 -0500")
+X-TSB-HOP: ON
+Message-ID: <87a6y7qshg.fsf@kokedama.swc.toshiba.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-support CLK_OF_DECLARE and builtin_platform_driver_probe
-double clk init method.
-add module author, description and license to support building
-Soc Rk3399 clock driver as module.
+Hi Smita,
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
----
- drivers/clk/rockchip/clk-rk3399.c | 55 +++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+Smita Koralahalli Channabasappa <skoralah@amd.com> writes:
 
-diff --git a/drivers/clk/rockchip/clk-rk3399.c b/drivers/clk/rockchip/clk-rk3399.c
-index ce1d2446f142..40ff17aee5b6 100644
---- a/drivers/clk/rockchip/clk-rk3399.c
-+++ b/drivers/clk/rockchip/clk-rk3399.c
-@@ -5,9 +5,11 @@
-  */
- 
- #include <linux/clk-provider.h>
-+#include <linux/module.h>
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <dt-bindings/clock/rk3399-cru.h>
-@@ -1600,3 +1602,56 @@ static void __init rk3399_pmu_clk_init(struct device_node *np)
- 	rockchip_clk_of_add_provider(np, ctx);
- }
- CLK_OF_DECLARE(rk3399_cru_pmu, "rockchip,rk3399-pmucru", rk3399_pmu_clk_init);
-+
-+struct clk_rk3399_inits {
-+		void (*inits)(struct device_node *np);
-+};
-+
-+static const struct clk_rk3399_inits clk_rk3399_pmucru_init = {
-+	.inits = rk3399_pmu_clk_init,
-+};
-+
-+static const struct clk_rk3399_inits clk_rk3399_cru_init = {
-+	.inits = rk3399_clk_init,
-+};
-+
-+static const struct of_device_id clk_rk3399_match_table[] = {
-+	{
-+		.compatible = "rockchip,rk3399-cru",
-+		.data = &clk_rk3399_cru_init,
-+	},  {
-+		.compatible = "rockchip,rk3399-pmucru",
-+		.data = &clk_rk3399_pmucru_init,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, clk_rk3399_match_table);
-+
-+static int __init clk_rk3399_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	const struct of_device_id *match;
-+	const struct clk_rk3399_inits *init_data;
-+
-+	match = of_match_device(clk_rk3399_match_table, &pdev->dev);
-+	if (!match || !match->data)
-+		return -EINVAL;
-+
-+	init_data = match->data;
-+	if (init_data->inits)
-+		init_data->inits(np);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver clk_rk3399_driver = {
-+	.driver		= {
-+		.name	= "clk-rk3399",
-+		.of_match_table = clk_rk3399_match_table,
-+	},
-+};
-+builtin_platform_driver_probe(clk_rk3399_driver, clk_rk3399_probe);
-+
-+MODULE_DESCRIPTION("Rockchip RK3399 Clock Driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:clk-rk3399");
--- 
-2.17.1
+> On 8/31/20 12:05 AM, Punit Agrawal wrote:
+>
+>> Hi Smita,
+>>
+>> A couple of comments below -
+>>
+>> Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> writes:
+>>
+>> [...]
+>>
+>>
+>>> diff --git a/drivers/firmware/efi/cper-x86.c b/drivers/firmware/efi/cper-x86.c
+>>> index 2531de49f56c..374b8e18552a 100644
+>>> --- a/drivers/firmware/efi/cper-x86.c
+>>> +++ b/drivers/firmware/efi/cper-x86.c
+>>> @@ -1,7 +1,7 @@
+>>>   // SPDX-License-Identifier: GPL-2.0
+>>>   // Copyright (C) 2018, Advanced Micro Devices, Inc.
+>>>   -#include <linux/cper.h>
+>> Why is the include dropped? AFAICT, the definitions from there are still
+>> being used after this patch.
+>
+> Dropped because <acpi/apei.h> already includes <linux/cper.h>
 
+Generally, you want to follow the rule that if a declaration from a
+header file is being used, it should show up in the includes. The same
+applies to both source as well as header files.
 
+It doesn't matter if another include in the source file in turn ends up
+including the same header again; the #ifdef guards are there to prevent
+duplicate declarations.
 
+The rationale is that if future changes remove the usage of
+<acpi/apei.h>, the C file can still be compiled after dropping the
+include; there should be no need to then re-introduce <linux/cper.h> at
+that point.
+
+Hope that makes sense.
+
+Thanks,
+Punit
+
+>>> +#include <acpi/apei.h>
+>
+> [...]
+>
+>>> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
+>>> index 680f80960c3d..44d4d08acce0 100644
+>>> --- a/include/acpi/apei.h
+>>> +++ b/include/acpi/apei.h
+>>> @@ -33,8 +33,15 @@ extern bool ghes_disable;
+>>>     #ifdef CONFIG_ACPI_APEI
+>>>   void __init acpi_hest_init(void);
+>>> +int arch_apei_report_x86_error(struct cper_ia_proc_ctx *ctx_info,
+>>> +			       u64 lapic_id);
+>>>   #else
+>>>   static inline void acpi_hest_init(void) { return; }
+>>> +static inline int arch_apei_report_x86_error(struct cper_ia_proc_ctx *ctx_info,
+>>> +					     u64 lapic_id)
+>>> +{
+>>> +	return -EINVAL;
+>>> +}
+>>>   #endif
+>> Adding the declaration to this include violates the separation of
+>> generic and architecture specific code.
+>>
+>> Can this be moved to the appropriate architecture specific header?
+>> Perhaps arch/x86/include/asm/apei.h.
+>
+> Yes, I have fixed this and moved into arch/x86/include/asm/acpi.h.
+>
+>>>   typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void *data);
+>>> @@ -51,6 +58,8 @@ int erst_clear(u64 record_id);
+>>>     int arch_apei_enable_cmcff(struct acpi_hest_header *hest_hdr,
+>>> void *data);
+>>>   void arch_apei_report_mem_error(int sev, struct cper_sec_mem_err *mem_err);
+>>> +int arch_apei_report_x86_error(struct cper_ia_proc_ctx *ctx_info,
+>>> +			       u64 lapic_id);
+>>
+>> Why is the additional declaration needed?
+>
+> Will fix in the next revision.
+>
+> Thanks,
+> Smita
+>
+> [...]
