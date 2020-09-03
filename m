@@ -5,74 +5,78 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6ADFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD74C10DAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 872512078E
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6F720797
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 23:25:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eoeZ1xlM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VhBq0Pd1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbgICXZk (ORCPT
+        id S1729554AbgICXZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 3 Sep 2020 19:25:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34206 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgICXZK (ORCPT
+        with ESMTP id S1728988AbgICXZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 19:25:10 -0400
+        Thu, 3 Sep 2020 19:25:11 -0400
 Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D347DC061258
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 16:25:09 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id w186so3332512pgb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:25:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A66C061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 16:25:11 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id g29so3349356pgl.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 16:25:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0oWgj2zq4zbbu5lAqus3SluKKFu5QfUtlWwopTJGHMA=;
-        b=eoeZ1xlMPFP7Tf/iVuNvLqP75LmGdaQxIL0WoQWrQV7z/RAJe1VI+/DA7rgv4g5DBu
-         f0Hxd7xcKwWdR4vAPofeXOYXGuq3ZOZAmsFgRp6sbKo+mbb7rIzMsOOHkMTDmoyimP1X
-         Kd32TS18l3b0IpJjGqqUzlJtQhqZl55x6MECE=
+        bh=ak7sgXD1yUS+b4yneXUgmseigL5T/tHURONnrfZ0LI4=;
+        b=VhBq0Pd1fQUl41cTBulPJPpdxGflwL0G7Gqg1UwnWwh7hC3EHSfa7oPF3xPReYY4jn
+         BAWM7qrieI6Kba9y15jYXktkL7ZlLYJjFqbAHH+2+qgP7TtD6dXZkTSM/dM7KV4y/BQ2
+         YfsUkkK/A9E3N0HUpkt7fYZBAsf2ixttwmFIU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0oWgj2zq4zbbu5lAqus3SluKKFu5QfUtlWwopTJGHMA=;
-        b=JbAUgRMqm97Ewmnyewdk8ZWVToMRTF5zefEvyt0JOdiujpAsX62WBQoUEBxUALRS2z
-         Bk3maiYQOd+nTtxAMFCT0tSkc/wYNbQuwLJvL5hISLoARtvKHWaag4SY2QQpk7skT2Fa
-         Z7fhI9oBqOUPmU7dx2qxMtgXoK5VAFQTuaMTnNGAtUPhD7LUo5mEcXSgoHTAP3QblwJU
-         OANw9d477mMJjd82X/jhJ/JzkEaWNd0EGxVDVCmRJYf5mbMICsPWM7KQF26Z6WrhdaWH
-         q4F8uwpx+nJnYJ1Do6+1TVlAVv9RxsPQB7O4RvixJ8BmnOg7EF2F/lkOp633teejARMR
-         3U1A==
-X-Gm-Message-State: AOAM530+tXk6sIfjT31kWD32opp+SIoQw5WLGZd500tcR0uFluiF4HAY
-        pT6B3lLjUDvt2wjjpi/c7xgcEA==
-X-Google-Smtp-Source: ABdhPJxXci8J9Qv2zlxPsg4flpI87MuxgFVsNrgjNmKzdj6MjvnpdWRph2Y0Jrgb94EhRBlfr/NozA==
-X-Received: by 2002:a62:838a:: with SMTP id h132mr5979867pfe.72.1599175509378;
-        Thu, 03 Sep 2020 16:25:09 -0700 (PDT)
+        bh=ak7sgXD1yUS+b4yneXUgmseigL5T/tHURONnrfZ0LI4=;
+        b=c/UKbjOf7QPd3ZtDgrATvvOIM2aQrqKii+jgVDJzgvyFIJezAlyn7Q3Ko+ePCxs5EV
+         7MqUMfa1Yh8EKajQE5GcKIOVB1kS/M023iFSiT1EYuSEFflvnCtlcmmU/OohlhxSendk
+         qccBlutMXDdHWi9WBdXWfRiyXWCQrDgKo1D6NjH8mEPwyuSPEf8YV0HMH9cObc3G9SGB
+         1qb/SAk9CSB7lmSNjrk0D9d8/hKDzdG8gPT2Ysr5AiZ8ZcTQFj4yyS+OFk1EYfa0n3bO
+         eaPCfk6A99fZqHllnQa9WNWnlOS6SBt6jThU6R2gEZzrFHel9cGMgx2FhEI3pMI3TvlC
+         Uo7w==
+X-Gm-Message-State: AOAM531S64erQcJHhRWBFRuN0nOSeZHfF+CrXVYq5iC9eSjjR4TW6/TT
+        JZ6DpHdccXW3HyGuHpYr1OOMBQ==
+X-Google-Smtp-Source: ABdhPJzWCp1ofM9pNblsz3oLmRdRBFRUQauHQjSC92yoCjre8k5Y3NiZEW1Bbb485EaunCczoEjv5Q==
+X-Received: by 2002:a62:ea01:: with SMTP id t1mr6001343pfh.125.1599175510807;
+        Thu, 03 Sep 2020 16:25:10 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id q7sm3614459pgg.10.2020.09.03.16.25.08
+        by smtp.gmail.com with ESMTPSA id q7sm3614459pgg.10.2020.09.03.16.25.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 16:25:08 -0700 (PDT)
+        Thu, 03 Sep 2020 16:25:10 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Ulf Hansson <ulf.hansson@linaro.org>
 Cc:     swboyd@chromium.org, Douglas Anderson <dianders@chromium.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Angelo Dureghello <angelo.dureghello@timesys.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-mmc@vger.kernel.org
-Subject: [PATCH 5/6] mmc: Set PROBE_PREFER_ASYNCHRONOUS for drivers that existed in v5.4
-Date:   Thu,  3 Sep 2020 16:24:40 -0700
-Message-Id: <20200903162412.5.I2b630c4d40ff4ea61d5b30b8ccfe95890e257100@changeid>
+Subject: [PATCH 6/6] mmc: Set PROBE_PREFER_ASYNCHRONOUS for drivers that are newer than 5.4
+Date:   Thu,  3 Sep 2020 16:24:41 -0700
+Message-Id: <20200903162412.6.Ib121debfb18e5f923a3cd38fe9c36aa086c650c5@changeid>
 X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 In-Reply-To: <20200903232441.2694866-1-dianders@chromium.org>
 References: <20200903232441.2694866-1-dianders@chromium.org>
@@ -85,86 +89,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 This is like commit 3d3451124f3d ("mmc: sdhci-msm: Prefer asynchronous
 probe") but applied to a whole pile of drivers.  This batch converts
-the drivers that appeared to be around in the v5.4 timeframe.
+the drivers that appeared to have been added after kernel 5.4.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- drivers/mmc/host/alcor.c           | 1 +
- drivers/mmc/host/sdhci-of-aspeed.c | 2 ++
- drivers/mmc/host/sdhci-sprd.c      | 1 +
- drivers/mmc/host/sdhci_am654.c     | 1 +
- drivers/mmc/host/uniphier-sd.c     | 1 +
- 5 files changed, 6 insertions(+)
+ drivers/mmc/host/meson-mx-sdhc-mmc.c | 1 +
+ drivers/mmc/host/owl-mmc.c           | 1 +
+ drivers/mmc/host/sdhci-esdhc-mcf.c   | 1 +
+ drivers/mmc/host/sdhci-milbeaut.c    | 1 +
+ drivers/mmc/host/sdhci-of-sparx5.c   | 1 +
+ 5 files changed, 5 insertions(+)
 
-diff --git a/drivers/mmc/host/alcor.c b/drivers/mmc/host/alcor.c
-index 026ca9194ce5..bfb8efeb7eb8 100644
---- a/drivers/mmc/host/alcor.c
-+++ b/drivers/mmc/host/alcor.c
-@@ -1178,6 +1178,7 @@ static struct platform_driver alcor_pci_sdmmc_driver = {
- 	.id_table	= alcor_pci_sdmmc_ids,
- 	.driver		= {
- 		.name	= DRV_NAME_ALCOR_PCI_SDMMC,
+diff --git a/drivers/mmc/host/meson-mx-sdhc-mmc.c b/drivers/mmc/host/meson-mx-sdhc-mmc.c
+index 53e3f6a4245a..7cd9c0ec2fcf 100644
+--- a/drivers/mmc/host/meson-mx-sdhc-mmc.c
++++ b/drivers/mmc/host/meson-mx-sdhc-mmc.c
+@@ -903,6 +903,7 @@ static struct platform_driver meson_mx_sdhc_driver = {
+ 	.remove  = meson_mx_sdhc_remove,
+ 	.driver  = {
+ 		.name = "meson-mx-sdhc",
 +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.pm	= &alcor_mmc_pm_ops
+ 		.of_match_table = of_match_ptr(meson_mx_sdhc_of_match),
  	},
  };
-diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
-index a1bcc0f4ba9e..4f008ba3280e 100644
---- a/drivers/mmc/host/sdhci-of-aspeed.c
-+++ b/drivers/mmc/host/sdhci-of-aspeed.c
-@@ -240,6 +240,7 @@ static const struct of_device_id aspeed_sdhci_of_match[] = {
- static struct platform_driver aspeed_sdhci_driver = {
- 	.driver		= {
- 		.name	= "sdhci-aspeed",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table = aspeed_sdhci_of_match,
- 	},
- 	.probe		= aspeed_sdhci_probe,
-@@ -318,6 +319,7 @@ MODULE_DEVICE_TABLE(of, aspeed_sdc_of_match);
- static struct platform_driver aspeed_sdc_driver = {
- 	.driver		= {
- 		.name	= "sd-controller-aspeed",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.pm	= &sdhci_pltfm_pmops,
- 		.of_match_table = aspeed_sdc_of_match,
- 	},
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index a910cb461ed7..f88d38e34a23 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -787,6 +787,7 @@ static struct platform_driver sdhci_sprd_driver = {
- 	.remove = sdhci_sprd_remove,
+diff --git a/drivers/mmc/host/owl-mmc.c b/drivers/mmc/host/owl-mmc.c
+index df43f42855e2..ccf214a89eda 100644
+--- a/drivers/mmc/host/owl-mmc.c
++++ b/drivers/mmc/host/owl-mmc.c
+@@ -689,6 +689,7 @@ MODULE_DEVICE_TABLE(of, owl_mmc_of_match);
+ static struct platform_driver owl_mmc_driver = {
  	.driver = {
- 		.name = "sdhci_sprd_r11",
+ 		.name	= "owl_mmc",
 +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table = of_match_ptr(sdhci_sprd_of_match),
- 		.pm = &sdhci_sprd_pm_ops,
+ 		.of_match_table = owl_mmc_of_match,
  	},
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index c5f47197d177..a4c6d9d80e88 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -745,6 +745,7 @@ static int sdhci_am654_remove(struct platform_device *pdev)
- static struct platform_driver sdhci_am654_driver = {
+ 	.probe		= owl_mmc_probe,
+diff --git a/drivers/mmc/host/sdhci-esdhc-mcf.c b/drivers/mmc/host/sdhci-esdhc-mcf.c
+index 71bf086a9812..ca7a1690b2a8 100644
+--- a/drivers/mmc/host/sdhci-esdhc-mcf.c
++++ b/drivers/mmc/host/sdhci-esdhc-mcf.c
+@@ -509,6 +509,7 @@ static int sdhci_esdhc_mcf_remove(struct platform_device *pdev)
+ static struct platform_driver sdhci_esdhc_mcf_driver = {
+ 	.driver	= {
+ 		.name = "sdhci-esdhc-mcf",
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+ 	},
+ 	.probe = sdhci_esdhc_mcf_probe,
+ 	.remove = sdhci_esdhc_mcf_remove,
+diff --git a/drivers/mmc/host/sdhci-milbeaut.c b/drivers/mmc/host/sdhci-milbeaut.c
+index 4e7cc0680f94..148b37ac6564 100644
+--- a/drivers/mmc/host/sdhci-milbeaut.c
++++ b/drivers/mmc/host/sdhci-milbeaut.c
+@@ -333,6 +333,7 @@ static int sdhci_milbeaut_remove(struct platform_device *pdev)
+ static struct platform_driver sdhci_milbeaut_driver = {
  	.driver = {
- 		.name = "sdhci-am654",
+ 		.name = "sdhci-milbeaut",
 +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table = sdhci_am654_of_match,
+ 		.of_match_table = of_match_ptr(mlb_dt_ids),
  	},
- 	.probe = sdhci_am654_probe,
-diff --git a/drivers/mmc/host/uniphier-sd.c b/drivers/mmc/host/uniphier-sd.c
-index 55efd5c53249..3092466a99ab 100644
---- a/drivers/mmc/host/uniphier-sd.c
-+++ b/drivers/mmc/host/uniphier-sd.c
-@@ -685,6 +685,7 @@ static struct platform_driver uniphier_sd_driver = {
- 	.remove = uniphier_sd_remove,
+ 	.probe	= sdhci_milbeaut_probe,
+diff --git a/drivers/mmc/host/sdhci-of-sparx5.c b/drivers/mmc/host/sdhci-of-sparx5.c
+index 747f108a0ace..28e4ee69e100 100644
+--- a/drivers/mmc/host/sdhci-of-sparx5.c
++++ b/drivers/mmc/host/sdhci-of-sparx5.c
+@@ -255,6 +255,7 @@ MODULE_DEVICE_TABLE(of, sdhci_sparx5_of_match);
+ static struct platform_driver sdhci_sparx5_driver = {
  	.driver = {
- 		.name = "uniphier-sd",
+ 		.name = "sdhci-sparx5",
 +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 		.of_match_table = uniphier_sd_match,
+ 		.of_match_table = sdhci_sparx5_of_match,
+ 		.pm = &sdhci_pltfm_pmops,
  	},
- };
 -- 
 2.28.0.526.ge36021eeef-goog
 
