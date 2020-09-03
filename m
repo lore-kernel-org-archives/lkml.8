@@ -2,121 +2,125 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48196C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD59C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05F53206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0F2206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 14:17:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OgiACbcb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AUH7edDx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgICOQb (ORCPT
+        id S1729253AbgICORW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 10:16:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728731AbgICOMi (ORCPT
+        Thu, 3 Sep 2020 10:17:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:39896 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729207AbgICONs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 10:12:38 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC627C0619CC;
-        Thu,  3 Sep 2020 06:25:26 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id h12so2132105pgm.7;
-        Thu, 03 Sep 2020 06:25:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8rBLHCW+xCPafeIkvVVQSL44AW9YIX51FOu10BKIiLw=;
-        b=OgiACbcbQ1ItN0Rs6SHierX23wZ3W0QcSSP6eHDn26H6ndV6FVvyAPfzddT63ATKJ0
-         j20K6Qun/pU/eTF15WCngzAcNZekk0cCrl5XV9cAScvAwA3M4JQrrdmh/0/XXJ1yYzc5
-         auls8Zngp7jLOtlmd6vlb/AQMblOo/0eoaP8Aft9XRyijNkiG/93XP9jlW8+HoTG5zTz
-         PgcXNTaXhjb+IOHaAL8TNTXE3sWpQ7gRKc3BTt9YcoactbZeouPK/MwojZhbkY3Ql8M6
-         5zc1xe4CjGj7XXJNE8lt/Rl2LsQnSUcXJdm6g69l1qbRYwnpzYqmwhMD3ifUehAFGv0J
-         spMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8rBLHCW+xCPafeIkvVVQSL44AW9YIX51FOu10BKIiLw=;
-        b=qdsjSrmKdsiukpSqogdso7HbbarUYCZd/pRFi8BO+0GCeBGilxM1XhR76oybwQ2pp4
-         SCgGtW+Nig6ueAUw+9Ecv3uVtw1ew0u9j2nZyn+qrpIJlX2C6SBOJ842XBYimxZ1wNbT
-         JJ3lw5kVXrMkPK5TZoTjUdMvMkV5pHRKxZQxE3SXtG1TB0q/g2KDGfRcsyhAybxdJo9y
-         QCcvRNdSmbmGpU6czpzOaOgoNHvfIrg51hsyEQK8ftbW+gAg+bvhPBXBwXEXCSJECScl
-         koZ3I6DkmRv05ATf2i3wH5QF4mUGqwjjrYeFhNyyQ3T7s6B0xHwfmwsgdv4r6mgBiTQS
-         I8yQ==
-X-Gm-Message-State: AOAM532jcwYqEBeNY+0IxlTXNK0F3DNkx6IpiCxB8SIPMehDtVr5q/He
-        UNjRqjmNIdpMnbBNU2LifFxKgTi1yX3cLk4fcR3ds1OcsbkFwEb/
-X-Google-Smtp-Source: ABdhPJzimILiNCSgnKp/qJ9/9071OtoXwPPCV8ZOTnov1Okg3uUJ9PSdnnWUgfLq+tSjngGf5i/NlRBPuXDUiWzdlSE=
-X-Received: by 2002:a17:902:b289:: with SMTP id u9mr3949007plr.226.1599139525682;
- Thu, 03 Sep 2020 06:25:25 -0700 (PDT)
+        Thu, 3 Sep 2020 10:13:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599142427;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=I0HZj8Fjtd+TJ8+nY3F25eaagzLSvWKMqED4dPK0Qo8=;
+        b=AUH7edDxvyXxmaA4o/KEAnueoYM9XrcNvJRYFlTUWCKScjg6PmklOhfxDH6cDiKr02wMB0
+        Fz3Wkq14s7dVuXofDfKV2lP/Q9qAwkh5LkQy/agdpjUYjAAO2yWhYTa7RPaQO30n6hm0c0
+        sT+uMiUfa6v66hkNuj+o9sBIpgKpaOQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-434-0_InniYDM--af73vdO89cw-1; Thu, 03 Sep 2020 10:13:46 -0400
+X-MC-Unique: 0_InniYDM--af73vdO89cw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1594C10ABDD9;
+        Thu,  3 Sep 2020 14:13:45 +0000 (UTC)
+Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 82E1E7E408;
+        Thu,  3 Sep 2020 14:13:43 +0000 (UTC)
+Subject: Re: [PATCH v4 03/10] vfio/fsl-mc: Implement VFIO_DEVICE_GET_INFO
+ ioctl
+To:     Diana Craciun <diana.craciun@oss.nxp.com>,
+        alex.williamson@redhat.com, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
+        laurentiu.tudor@nxp.com, Bharat Bhushan <Bharat.Bhushan@nxp.com>
+References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
+ <20200826093315.5279-4-diana.craciun@oss.nxp.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <c201d6b8-a824-76ff-124a-177093d7a23f@redhat.com>
+Date:   Thu, 3 Sep 2020 16:13:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200903130950.6274-1-nish.malpani25@gmail.com> <20200903130950.6274-4-nish.malpani25@gmail.com>
-In-Reply-To: <20200903130950.6274-4-nish.malpani25@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 3 Sep 2020 16:25:08 +0300
-Message-ID: <CAHp75VfReT-EjCV=cW8mV1MmoMPPdY9q1scoPwbD_DEHpQHd3g@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] iio: gyro: adxrs290: Add debugfs register access support
-To:     Nishant Malpani <nish.malpani25@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
-        darius.berghe@analog.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200826093315.5279-4-diana.craciun@oss.nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 4:10 PM Nishant Malpani <nish.malpani25@gmail.com> wrote:
->
-> Extend support to read/write byte data from/to the device using
-> debugfs iio interface.
+Hi Diana,
 
-...
+On 8/26/20 11:33 AM, Diana Craciun wrote:
+> Allow userspace to get fsl-mc device info (number of regions
+> and irqs).
+> 
+> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-> +static int adxrs290_reg_access(struct iio_dev *indio_dev, unsigned int reg,
-> +                              unsigned int writeval, unsigned int *readval)
-> +{
-> +       struct adxrs290_state *st = iio_priv(indio_dev);
-> +       int ret;
+Thanks
+
+Eric
+> ---
+>  drivers/vfio/fsl-mc/vfio_fsl_mc.c | 21 ++++++++++++++++++++-
+>  1 file changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> index 85e007be3a5d..5a5460d01f00 100644
+> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> @@ -33,10 +33,29 @@ static void vfio_fsl_mc_release(void *device_data)
+>  static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
+>  			      unsigned long arg)
+>  {
+> +	unsigned long minsz;
+> +	struct vfio_fsl_mc_device *vdev = device_data;
+> +	struct fsl_mc_device *mc_dev = vdev->mc_dev;
 > +
-> +       if (!readval)
-> +               return adxrs290_spi_write_reg(st->spi, reg, writeval);
+>  	switch (cmd) {
+>  	case VFIO_DEVICE_GET_INFO:
+>  	{
+> -		return -ENOTTY;
+> +		struct vfio_device_info info;
 > +
-> +       ret = spi_w8r8(st->spi, ADXRS290_READ_REG(reg));
-> +       if (ret < 0)
-> +               return ret;
+> +		minsz = offsetofend(struct vfio_device_info, num_irqs);
 > +
-> +       *readval = ret;
+> +		if (copy_from_user(&info, (void __user *)arg, minsz))
+> +			return -EFAULT;
 > +
-> +       return 0;
-> +}
+> +		if (info.argsz < minsz)
+> +			return -EINVAL;
+> +
+> +		info.flags = VFIO_DEVICE_FLAGS_FSL_MC;
+> +		info.num_regions = mc_dev->obj_desc.region_count;
+> +		info.num_irqs = mc_dev->obj_desc.irq_count;
+> +
+> +		return copy_to_user((void __user *)arg, &info, minsz) ?
+> +			-EFAULT : 0;
+>  	}
+>  	case VFIO_DEVICE_GET_REGION_INFO:
+>  	{
+> 
 
-Hmm... I would suggest to have it like
-
-adxrs290_reg_access_rw()
-{
- ...
- return 0;
-}
-
-adxrs290_reg_access()
-{
- if (readval)
-  return adxrs290_reg_access_rw();
- else // it's redundant, but someone can use for better formatting
-  return adxrs290_spi_write_reg();
-}
-
--- 
-With Best Regards,
-Andy Shevchenko
