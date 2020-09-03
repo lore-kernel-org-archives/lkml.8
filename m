@@ -4,111 +4,127 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDABC433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91893C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30202206EB
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A62A20897
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbgICHTI (ORCPT
+        id S1728107AbgICHU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:19:08 -0400
-Received: from mga11.intel.com ([192.55.52.93]:50360 "EHLO mga11.intel.com"
+        Thu, 3 Sep 2020 03:20:59 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:53672 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727955AbgICHTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:19:08 -0400
-IronPort-SDR: s2FJnA7GE+DTIZ46pVz/DiuU7I9DZEA+pi/5aHrUrX96hSPYrS+W5zTYvg08OJqE0uf53yzsTv
- 0vv8aEQVZF+A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="155036824"
-X-IronPort-AV: E=Sophos;i="5.76,385,1592895600"; 
-   d="scan'208";a="155036824"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 00:19:08 -0700
-IronPort-SDR: fTo99JnhqCgFkBUut2syhSAtgp8nnudAzDtvy9C5FvzNlHqF0dG9gg8yaORwLKYvna9eRwj6/8
- Pp5RHPpGzBCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,385,1592895600"; 
-   d="scan'208";a="297946856"
-Received: from unknown (HELO [10.239.154.46]) ([10.239.154.46])
-  by orsmga003.jf.intel.com with ESMTP; 03 Sep 2020 00:19:03 -0700
-Subject: Re: [PATCH] i2c: virtio: add a virtio i2c frontend driver
-To:     Jason Wang <jasowang@redhat.com>, linux-i2c@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     mst@redhat.com, wsa+renesas@sang-engineering.com, wsa@kernel.org,
-        andriy.shevchenko@linux.intel.com, jarkko.nikula@linux.intel.com,
-        jdelvare@suse.de, Sergey.Semin@baikalelectronics.ru,
-        krzk@kernel.org, rppt@kernel.org, loic.poulain@linaro.org,
-        tali.perry1@gmail.com, bjorn.andersson@linaro.org,
-        shuo.a.liu@intel.com, conghui.chen@intel.com, yu1.wang@intel.com
-References: <0efc2605c8c06b4b1bf68cbad5536c4a900dc019.1599110284.git.jie.deng@intel.com>
- <f3ab5d7d-cce5-b34c-5931-dd5d74f065e7@redhat.com>
-From:   Jie Deng <jie.deng@intel.com>
-Message-ID: <6517879c-15d4-6265-761c-626cba9c95d6@intel.com>
-Date:   Thu, 3 Sep 2020 15:19:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.0.1
+        id S1726022AbgICHU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 03:20:58 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BhsfY3bm4zB09Zf;
+        Thu,  3 Sep 2020 09:20:53 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id z990iF4fMPYf; Thu,  3 Sep 2020 09:20:53 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BhsfY2h7WzB09ZZ;
+        Thu,  3 Sep 2020 09:20:53 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5F8A78B7B1;
+        Thu,  3 Sep 2020 09:20:54 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id GoY3tY2xK-tx; Thu,  3 Sep 2020 09:20:54 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A1A698B790;
+        Thu,  3 Sep 2020 09:20:53 +0200 (CEST)
+Subject: Re: [PATCH 10/10] powerpc: remove address space overrides using
+ set_fs()
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200827150030.282762-1-hch@lst.de>
+ <20200827150030.282762-11-hch@lst.de>
+ <8974838a-a0b1-1806-4a3a-e983deda67ca@csgroup.eu>
+ <20200902123646.GA31184@lst.de>
+ <d78cb4be-48a9-a7c5-d9d1-d04d2a02b4c6@csgroup.eu>
+ <CAHk-=wiDCcxuHgENo3UtdFi2QW9B7yXvNpG5CtF=A6bc6PTTgA@mail.gmail.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <6a6ea160-a661-4a15-777c-e26a487829d4@csgroup.eu>
+Date:   Thu, 3 Sep 2020 09:20:35 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <f3ab5d7d-cce5-b34c-5931-dd5d74f065e7@redhat.com>
+In-Reply-To: <CAHk-=wiDCcxuHgENo3UtdFi2QW9B7yXvNpG5CtF=A6bc6PTTgA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020/9/3 14:12, Jason Wang wrote:
->
-> On 2020/9/3 下午1:34, Jie Deng wrote:
->> Add an I2C bus driver for virtio para-virtualization.
->>
->> The controller can be emulated by the backend driver in
->> any device model software by following the virtio protocol.
->>
->> This driver communicates with the backend driver through a
->> virtio I2C message structure which includes following parts:
->>
->> - Header: i2c_msg addr, flags, len.
->> - Data buffer: the pointer to the i2c msg data.
->> - Status: the processing result from the backend.
->>
->> People may implement different backend drivers to emulate
->> different controllers according to their needs. A backend
->> example can be found in the device model of the open source
->> project ACRN. For more information, please refer to
->> https://projectacrn.org.
->
->
-> May I know the reason why don't you use i2c or virtio directly?
->
-We don't want to add virtio drivers for every I2C devices in the guests.
-This bus driver is designed to provide a way to flexibly expose the 
-physical
-I2C slave devices to the guest without adding or changing the drivers of 
-the
-I2C slave devices in the guest OS.
 
-
->
+Le 02/09/2020 à 20:02, Linus Torvalds a écrit :
+> On Wed, Sep 2, 2020 at 8:17 AM Christophe Leroy
+> <christophe.leroy@csgroup.eu> wrote:
 >>
->> The virtio device ID 34 is used for this I2C adpter since IDs
->> before 34 have been reserved by other virtio devices.
->
->
-> Is there a link to the spec patch?
->
-> Thanks
->
-I haven't submitted the patch to reserve the ID in spec yet.
-I write the ID here because I want to see your opinions first.
+>>
+>> With this fix, I get
+>>
+>> root@vgoippro:~# time dd if=/dev/zero of=/dev/null count=1M
+>> 536870912 bytes (512.0MB) copied, 6.776327 seconds, 75.6MB/s
+>>
+>> That's still far from the 91.7MB/s I get with 5.9-rc2, but better than
+>> the 65.8MB/s I got yesterday with your series. Still some way to go thought.
+> 
+> I don't see why this change would make any difference.
+> 
 
-Thanks
+Neither do I.
 
+Looks like nowadays, CONFIG_STACKPROTECTOR has become a default.
+I rebuilt the kernel without it, I now get a throughput of 99.8MB/s both 
+without and with this series.
 
+Looking at the generated code (GCC 10.1), a small change in a function 
+seems to make large changes in the generated code when 
+CONFIG_STACKPROTECTOR is set.
+
+In addition to that, trivial functions which don't use the stack at all 
+get a stack frame anyway when CONFIG_STACKPROTECTOR is set, allthough 
+that's only -fstack-protector-strong. And there is no canary check.
+
+Without CONFIG_STACKPROTECTOR:
+
+c01572a0 <no_llseek>:
+c01572a0:	38 60 ff ff 	li      r3,-1
+c01572a4:	38 80 ff e3 	li      r4,-29
+c01572a8:	4e 80 00 20 	blr
+
+With CONFIG_STACKPROTECTOR (regardless of CONFIG_STACKPROTECTOR_STRONG 
+or not):
+
+c0164e08 <no_llseek>:
+c0164e08:	94 21 ff f0 	stwu    r1,-16(r1)
+c0164e0c:	38 60 ff ff 	li      r3,-1
+c0164e10:	38 80 ff e3 	li      r4,-29
+c0164e14:	38 21 00 10 	addi    r1,r1,16
+c0164e18:	4e 80 00 20 	blr
+
+Wondering why CONFIG_STACKPROTECTOR has become the default. It seems to 
+imply a 10% performance loss even in the best case (91.7MB/s versus 
+99.8MB/s)
+
+Note that without CONFIG_STACKPROTECTOR_STRONG, I'm at 99.3MB/s, so 
+that's really the _STRONG alternative that hurts.
+
+Christophe
