@@ -2,57 +2,150 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C421EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACE9C10DAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9580520716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA5B520716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 22:09:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RMbQl2aW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbgICWIX (ORCPT
+        id S1728620AbgICWJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 18:08:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50448 "EHLO
+        Thu, 3 Sep 2020 18:09:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgICWIW (ORCPT
+        with ESMTP id S1727065AbgICWJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 18:08:22 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF706C061244;
-        Thu,  3 Sep 2020 15:08:21 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D80B71278BE7A;
-        Thu,  3 Sep 2020 14:51:32 -0700 (PDT)
-Date:   Thu, 03 Sep 2020 15:08:18 -0700 (PDT)
-Message-Id: <20200903.150818.2272303461422137378.davem@davemloft.net>
-To:     f.fainelli@gmail.com
-Cc:     netdev@vger.kernel.org, kuba@kernel.org, robh+dt@kernel.org,
-        andrew@lunn.ch, vivien.didelot@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/3] net: dsa: bcm_sf2: Clock support
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200901225913.1587628-1-f.fainelli@gmail.com>
-References: <20200901225913.1587628-1-f.fainelli@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Thu, 03 Sep 2020 14:51:33 -0700 (PDT)
+        Thu, 3 Sep 2020 18:09:02 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5B89C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 15:09:01 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id w186so3206015pgb.8
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 15:09:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1TFkAeGi9KR3Vg+6dLLM1QKXoNn5coQYzJIjZ0tVjI0=;
+        b=RMbQl2aWLhRmRg/xlWTquty6EAETDxVrOPrJsvxj3D3ziQggwm1LR9Z+7lvF/RBSAh
+         rdDSpm9JIeEpDa886F9HHLV4dstrmldnU0gSRqvqiZwoQrPW2lTBh5oU/X/4TrS8pCra
+         DV/jID9deoswwRtNn+Jy77/ci1g1OxqByrPxs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1TFkAeGi9KR3Vg+6dLLM1QKXoNn5coQYzJIjZ0tVjI0=;
+        b=lD1CthY+L5WGInpIEA6/oSn4MwPULPqJlajcwywbxw49ME6viJXrdktxy2gTUVKzX3
+         Pp2K9LbIqDJdx0wWIg3iVfH55/CnnkCcdv3jcmOOgkxCfIvKSjizHCjHa4OsqjjWIWOp
+         iRmItLJC5bzq86Ht5w2FAzPOWEflJkM5CCGDdi8m1u0swhK1nFf/bFF5alYXbU9s8czG
+         y7OQXk6/MgDDjHXrIt9rTPsoLJRKp1itVDmf8PgKPnsVMFlftI5n0kBzD+6hFE+nWBf9
+         fiS4yryWk+MJTiYW18y36kmSQ/TXZ4jRuopcJ6JTl05Xd1bMl0JvV4iiDjRxhJgnPnFP
+         KPHA==
+X-Gm-Message-State: AOAM531AmhENzv8L0sGQk1EDZ9Up7XfeRJzZYtetTQGXAbqOsyUdy8Ac
+        YZhhvQ+diVTeLctY/SzR4Leq9w==
+X-Google-Smtp-Source: ABdhPJxtv6qZk8AFQNSEBhXOHhLxWmSvOpKmtDAl4TWDKr3eiSBk8TPdIQLGddmagxPcGUhPAwGmGg==
+X-Received: by 2002:aa7:925a:: with SMTP id 26mr5953492pfp.6.1599170941115;
+        Thu, 03 Sep 2020 15:09:01 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t11sm4160655pfe.165.2020.09.03.15.08.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 15:09:00 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 15:08:59 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v2 09/28] kbuild: add support for Clang LTO
+Message-ID: <202009031504.07098D6F8@keescook>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-10-samitolvanen@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903203053.3411268-10-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-Date: Tue,  1 Sep 2020 15:59:10 -0700
+On Thu, Sep 03, 2020 at 01:30:34PM -0700, Sami Tolvanen wrote:
+> This change adds build system support for Clang's Link Time
+> Optimization (LTO). With -flto, instead of ELF object files, Clang
+> produces LLVM bitcode, which is compiled into native code at link
+> time, allowing the final binary to be optimized globally. For more
+> details, see:
+> 
+>   https://llvm.org/docs/LinkTimeOptimization.html
+> 
+> The Kconfig option CONFIG_LTO_CLANG is implemented as a choice,
+> which defaults to LTO being disabled. To use LTO, the architecture
+> must select ARCH_SUPPORTS_LTO_CLANG and support:
+> 
+>   - compiling with Clang,
+>   - compiling inline assembly with Clang's integrated assembler,
+>   - and linking with LLD.
+> 
+> While using full LTO results in the best runtime performance, the
+> compilation is not scalable in time or memory. CONFIG_THINLTO
+> enables ThinLTO, which allows parallel optimization and faster
+> incremental builds. ThinLTO is used by default if the architecture
+> also selects ARCH_SUPPORTS_THINLTO:
+> 
+>   https://clang.llvm.org/docs/ThinLTO.html
+> 
+> To enable LTO, LLVM tools must be used to handle bitcode files. The
+> easiest way is to pass the LLVM=1 option to make:
+> 
+>   $ make LLVM=1 defconfig
+>   $ scripts/config -e LTO_CLANG
+>   $ make LLVM=1
+> 
+> Alternatively, at least the following LLVM tools must be used:
+> 
+>   CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm
+> 
+> To prepare for LTO support with other compilers, common parts are
+> gated behind the CONFIG_LTO option, and LTO can be disabled for
+> specific files by filtering out CC_FLAGS_LTO.
+> 
+> Note that support for DYNAMIC_FTRACE and MODVERSIONS are added in
+> follow-up patches.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-> This patch series adds support for controlling the SF2 switch core and
-> divider clock (where applicable).
+I remain crazy excited about being able to use this in upstream. :)
 
-Series applied, thank you.
+The only suggestion I have here, if it might help with clarity, would be
+to remove DISABLE_LTO globally as a separate patch, since it's entirely
+unused in the kernel right now. This series removes it as it goes, which
+I think is fine, but it might cause some reviewers to ponder "what's
+this DISABLE_LTO thing? Don't we need that?" without realizing currently
+unused in the kernel.
+
+I'm glad to see the general CONFIG_LTO, as I think it should be easy for
+GCC LTO support to get added when someone steps up to do it. The bulk of
+the changed needed to support GCC LTO are part of this series already,
+since the build problems involving non-ELF .o files and init ordering
+are shared by Clang and GCC AFAICT.
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
