@@ -2,132 +2,229 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EC2C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B66AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA85208C7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 613CD208C7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 15:23:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FjlHG+KA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rEqNHiOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgICPXH (ORCPT
+        id S1729063AbgICPXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 11:23:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44326 "EHLO
+        Thu, 3 Sep 2020 11:23:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728887AbgICPWe (ORCPT
+        with ESMTP id S1729070AbgICPXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 11:22:34 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C118DC061247
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 08:22:33 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id b16so1947387vsl.6
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 08:22:33 -0700 (PDT)
+        Thu, 3 Sep 2020 11:23:07 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B9FC061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 08:23:05 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id j188so1958181vsd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 08:23:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VL9yT/iQU/7WYSyaJd+H27DFdWliWvUjL54Y+NsxJ+I=;
-        b=FjlHG+KAVM2HrA8dEJu+O7Fkw4M+FfssWQuHmE6z4ZrrUMP9sA+t5IctdZ2OkMUI6D
-         WsFfqHLiJNO/AOLF0E3cImHv/LaKx8pb1XiftmKfE/+2tByodNa6zbBzDL0AG/Rxc311
-         71Yv/0SFAwnh8tV1CPA72wjy114HMo1VfEwjc=
+        bh=Joe7bJxFvjhQ7PFpcfdBrDyWM8om/PRVTMRPGum9AiA=;
+        b=rEqNHiOw8u46b6Z6/wsQzrmXcn6qbwSQp6vFILV8eNXL4YI9HvX2LIdfq+9eYrPyMU
+         MZ8MZGKO/8MwIkMSX5QePW1p/3cpjdE6ToP6ar4lpWqtFL/VIxOhFHSpLzbqDreaGUjv
+         UuPq5Tr37QGU8YozIZVPxnAjbqr0fCPKh5klkqsd3G6Lyx3d1TWO3gCMf2CK2UOt4FCu
+         YtnPZZXxp8YVqB6bBDuwXkio1RDCKyuZ1o7omSRnc7gtoCaUfawN49aEN+kCGRLudwVT
+         W0f4ljMLH0rlCEZn9TEGabz6/iTlKPHCljVvToCtll8LCmpHH/PJpEIFKA6fnVpwgKAD
+         uOGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VL9yT/iQU/7WYSyaJd+H27DFdWliWvUjL54Y+NsxJ+I=;
-        b=sXhyv3Kz+Nls3V8WVU98WUyohgFs8PqdlFftm4EaXTxqIWaJ1Ek4U+qnkNaj/z5r3+
-         yskt+uPaAPu/CF9MjbvT9zFH8aSjGx4ngYsNQIo22nsqiVTVLmG2+7eLZt2anXJ7h6Sp
-         A2E6FtZKm8ABhIr23JxvDZrx8o9gG8Yb2vuDl05z/XWO1q4SBxtXNudjMacm/7+oWHzZ
-         FGhmh8LQ/cNtEUtMkGdL2G0ajIU7OTWy+CGTM1Jy3hd/gAgC6wvjnPrbTmJoiedkJdpK
-         gq4ONwfbGoPaz84yDhSfKPVJskXI54BrMuLHJZkhSYbSIPAJv6fWUz2QhG7DRYXEoXo1
-         vrOQ==
-X-Gm-Message-State: AOAM533jOSD0t4msxDMNiTDXUIGv1u54fb9OTuFrEHe8mwYIHhFojONb
-        Q62oPmpIPWivE9+Sa0KBBU590zELda4VmA==
-X-Google-Smtp-Source: ABdhPJzi+wduIw7sHmdgpCmZoypDGwh3bvyt99AH8ucuCN+cKNVy2M7IL3iZyc3d2glM1s6JnYZ2NQ==
-X-Received: by 2002:a05:6102:35c:: with SMTP id e28mr2306015vsa.167.1599146551995;
-        Thu, 03 Sep 2020 08:22:31 -0700 (PDT)
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
-        by smtp.gmail.com with ESMTPSA id z8sm420980vsk.32.2020.09.03.08.22.30
+        bh=Joe7bJxFvjhQ7PFpcfdBrDyWM8om/PRVTMRPGum9AiA=;
+        b=X7DA//uM3yFBKAuseqKDfPv0GcudMh4hGdVbhKGQq6U1SRj7bwdb5Exc6wmR5X2cdf
+         8I0n9wSQWGRdo48hf4795HK4sriWJM28kkowLqzVn6c9G1yYdkgPCHlgy3xvfiw3PkWB
+         rz/jw9A2qOzveBBXSqYKtACxa80spM/n2kf2Bvmjb5aNZGL//Jk+I9eGbaOD1NxzpaSA
+         adEF7DmgPnCMOSWWOBBd6PNt4uZlxGyS5+G9KEbOGfS6l2dzS7U4ABG8wxCbECe0IBgc
+         0m5AApWOWZmc0d7Azj/HraH7Kxo3JbKPhytMjffFna+2Umn8lkxDyL3txLhznjZbT6PO
+         q27A==
+X-Gm-Message-State: AOAM533vaXGjoPKIOmGMmXS1gwkmfA3rQD5ESJkml0zQu0Ug3K32LoZE
+        HND5mS8G5MyoeAmGUYSiOXdpL26RaHn0HA==
+X-Google-Smtp-Source: ABdhPJx9I58u1/xGs17tYFzOmU0allDsECl1NcbZ8gFeD++UBAVT4rVY+wfx148QJX5lMV8DJFnhRw==
+X-Received: by 2002:a67:fd01:: with SMTP id f1mr1648752vsr.46.1599146583791;
+        Thu, 03 Sep 2020 08:23:03 -0700 (PDT)
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
+        by smtp.gmail.com with ESMTPSA id l17sm455602uab.1.2020.09.03.08.23.01
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 08:22:30 -0700 (PDT)
-Received: by mail-vs1-f51.google.com with SMTP id p185so1929539vsp.8
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 08:22:30 -0700 (PDT)
-X-Received: by 2002:a05:6102:3031:: with SMTP id v17mr883797vsa.10.1599146550147;
- Thu, 03 Sep 2020 08:22:30 -0700 (PDT)
+        Thu, 03 Sep 2020 08:23:02 -0700 (PDT)
+Received: by mail-vs1-f54.google.com with SMTP id y3so1964250vsn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 08:23:01 -0700 (PDT)
+X-Received: by 2002:a05:6102:150:: with SMTP id a16mr2136712vsr.99.1599146581291;
+ Thu, 03 Sep 2020 08:23:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200902214250.1.I63d3f1c93f88cb0cda5161c42e97decb4a63a571@changeid>
-In-Reply-To: <20200902214250.1.I63d3f1c93f88cb0cda5161c42e97decb4a63a571@changeid>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 3 Sep 2020 08:22:18 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W9H4-VD04AA7xEM-YuvXVjuOxtczkLhvQfDC5M9KR4Lw@mail.gmail.com>
-Message-ID: <CAD=FV=W9H4-VD04AA7xEM-YuvXVjuOxtczkLhvQfDC5M9KR4Lw@mail.gmail.com>
-Subject: Re: [PATCH] HID: i2c-hid: Prefer asynchronous probe
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andrea Borgia <andrea@borgia.bo.it>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Aaron Ma <aaron.ma@canonical.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Daniel Playfair Cal <daniel.playfair.cal@gmail.com>,
-        Pavel Balan <admin@kryma.net>,
-        You-Sheng Yang <vicamo.yang@canonical.com>,
-        linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20200902150442.2779-1-vadym.kochan@plvision.eu> <20200902150442.2779-2-vadym.kochan@plvision.eu>
+In-Reply-To: <20200902150442.2779-2-vadym.kochan@plvision.eu>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Thu, 3 Sep 2020 17:22:24 +0200
+X-Gmail-Original-Message-ID: <CA+FuTSfMRhEZ5c2CWaN_F3ASDgvV7eQ4q6zVuY-FvgLqsqYecw@mail.gmail.com>
+Message-ID: <CA+FuTSfMRhEZ5c2CWaN_F3ASDgvV7eQ4q6zVuY-FvgLqsqYecw@mail.gmail.com>
+Subject: Re: [PATCH net v6 1/6] net: marvell: prestera: Add driver for
+ Prestera family ASIC devices
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mickey Rachamim <mickeyr@marvell.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Sep 2, 2020 at 5:37 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+>
+> Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
+> ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
+> wireless SMB deployment.
+>
+> The current implementation supports only boards designed for the Marvell
+> Switchdev solution and requires special firmware.
+>
+> The core Prestera switching logic is implemented in prestera_main.c,
+> there is an intermediate hw layer between core logic and firmware. It is
+> implemented in prestera_hw.c, the purpose of it is to encapsulate hw
+> related logic, in future there is a plan to support more devices with
+> different HW related configurations.
+>
+> This patch contains only basic switch initialization and RX/TX support
+> over SDMA mechanism.
+>
+> Currently supported devices have DMA access range <= 32bit and require
+> ZONE_DMA to be enabled, for such cases SDMA driver checks if the skb
+> allocated in proper range supported by the Prestera device.
+>
+> Also meanwhile there is no TX interrupt support in current firmware
+> version so recycling work is scheduled on each xmit.
+>
+> Port's mac address is generated from the switch base mac which may be
+> provided via device-tree (static one or as nvme cell), or randomly
+> generated.
+>
+> Co-developed-by: Andrii Savka <andrii.savka@plvision.eu>
+> Signed-off-by: Andrii Savka <andrii.savka@plvision.eu>
+> Co-developed-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
+> Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
+> Co-developed-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
+> Signed-off-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
+> Co-developed-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
+> Signed-off-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
+> Co-developed-by: Taras Chornyi <taras.chornyi@plvision.eu>
+> Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
+> Co-developed-by: Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
+> Signed-off-by: Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
+> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
 
-On Wed, Sep 2, 2020 at 9:43 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> Adding printouts to the i2c_hid_probe() function shows that it takes
-> quite some time.  It used to take about 70 ms, but after commit
-> eef4016243e9 ("HID: i2c-hid: Always sleep 60ms after I2C_HID_PWR_ON
-> commands") it takes about 190 ms.  This is not tons of time but it's
-> not trivial.  Because we haven't yet specified that we'd prefer
-> asynchronous probe for this driver then, if the driver is builtin to
-> the kernel, we'll wait for this driver to finish before we start
-> probes for more drivers.  Let's set the flag to enable asynchronous
-> for this driver so that other drivers aren't blocked from probing
-> until we finish.
->
-> Since this driver can be configured as a module and modules are
-> always asynchronously probed this is quite a safe change and will
-> benefit anyone who has a reason to build this driver into the kernel
-> instead of using it as a module.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
->  drivers/hid/i2c-hid/i2c-hid-core.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-> index 87ff93bf76ba..c898bd8617f9 100644
-> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
-> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-> @@ -1280,8 +1280,10 @@ static struct i2c_driver i2c_hid_driver = {
->         .driver = {
->                 .name   = "i2c_hid",
->                 .pm     = &i2c_hid_pm,
-> +               .probe_type = PROBE_PREFER_ASYNCHRONOUS,
->                 .acpi_match_table = ACPI_PTR(i2c_hid_acpi_match),
->                 .of_match_table = of_match_ptr(i2c_hid_of_match),
+> +int prestera_hw_port_cap_get(const struct prestera_port *port,
+> +                            struct prestera_port_caps *caps)
+> +{
+> +       struct prestera_msg_port_attr_resp resp;
+> +       struct prestera_msg_port_attr_req req = {
+> +               .attr = PRESTERA_CMD_PORT_ATTR_CAPABILITY,
+> +               .port = port->hw_id,
+> +               .dev = port->dev_id
+> +       };
+> +       int err;
 > +
+> +       err = prestera_cmd_ret(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_GET,
+> +                              &req.cmd, sizeof(req), &resp.ret, sizeof(resp));
 
-Boy, I'm not sure how I managed to introduce this extra whitespace
-without noticing.  Sorry!  :(  If the patch looks good I'm happy to
-re-post or I'm happy if a maintainer wants to fix my mistake when
-applying.
+Here and elsewhere, why use a pointer to the first field in the struct
+vs the struct itself?
 
--Doug
+They are the same address, so it's fine, just a bit confusing as the
+size argument makes clear that the entire struct is to be copied.
+
+> +static int prestera_is_valid_mac_addr(struct prestera_port *port, u8 *addr)
+> +{
+> +       if (!is_valid_ether_addr(addr))
+> +               return -EADDRNOTAVAIL;
+> +
+> +       if (memcmp(port->sw->base_mac, addr, ETH_ALEN - 1))
+
+Why ETH_ALEN - 1?
+
+> +               return -EINVAL;
+> +
+> +       return 0;
+> +}
+> +
+> +static int prestera_port_set_mac_address(struct net_device *dev, void *p)
+> +{
+> +       struct prestera_port *port = netdev_priv(dev);
+> +       struct sockaddr *addr = p;
+> +       int err;
+> +
+> +       err = prestera_is_valid_mac_addr(port, addr->sa_data);
+> +       if (err)
+> +               return err;
+> +
+> +       err = prestera_hw_port_mac_set(port, addr->sa_data);
+> +       if (err)
+> +               return err;
+> +
+> +       memcpy(dev->dev_addr, addr->sa_data, dev->addr_len);
+
+Is addr_len ever not ETH_ALEN for this device?
+
+> +static int prestera_sdma_buf_init(struct prestera_sdma *sdma,
+> +                                 struct prestera_sdma_buf *buf)
+> +{
+> +       struct device *dma_dev = sdma->sw->dev->dev;
+> +       struct prestera_sdma_desc *desc;
+> +       dma_addr_t dma;
+> +
+> +       desc = dma_pool_alloc(sdma->desc_pool, GFP_DMA | GFP_KERNEL, &dma);
+> +       if (!desc)
+> +               return -ENOMEM;
+> +
+> +       if (dma + sizeof(struct prestera_sdma_desc) > sdma->dma_mask) {
+
+Can this happen? The DMA API should take care of dev->dma_mask constraints.
+
+> +               dma_pool_free(sdma->desc_pool, desc, dma);
+> +               dev_err(dma_dev, "failed to alloc desc\n");
+> +               return -ENOMEM;
+> +       }
+
+> +static int prestera_sdma_rx_skb_alloc(struct prestera_sdma *sdma,
+> +                                     struct prestera_sdma_buf *buf)
+> +{
+> +       struct device *dev = sdma->sw->dev->dev;
+> +       struct sk_buff *skb;
+> +       dma_addr_t dma;
+> +
+> +       skb = alloc_skb(PRESTERA_SDMA_BUFF_SIZE_MAX, GFP_DMA | GFP_ATOMIC);
+> +       if (!skb)
+> +               return -ENOMEM;
+> +
+> +       dma = dma_map_single(dev, skb->data, skb->len, DMA_FROM_DEVICE);
+> +       if (dma_mapping_error(dev, dma))
+> +               goto err_dma_map;
+> +       if (dma + skb->len > sdma->dma_mask)
+> +               goto err_dma_range;
+
+Same here
