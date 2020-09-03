@@ -2,114 +2,157 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333D8C43461
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29932C433E2
 	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA2BC208C7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2643220716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 08:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1eQSNdV"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="RDmF/WtY";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lnUXH2yT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbgICIKc (ORCPT
+        id S1728755AbgICIKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 04:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728422AbgICIJS (ORCPT
+        Thu, 3 Sep 2020 04:10:31 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:58303 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728401AbgICIC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:09:18 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE47FC061244;
-        Thu,  3 Sep 2020 01:09:16 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 2so1130781pjx.5;
-        Thu, 03 Sep 2020 01:09:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RURXhoSNO6UVA5+14oGQ42BXO9M7ZTHBpyDbq8ci7Tg=;
-        b=R1eQSNdV+yfRPHbTWeXz/dsE6R/9h6TUKo2Z03c0RW6y6977qwabfy86+Nh3D9hUlL
-         kf1Rvy/bzV2Y2ALXtVxHKDaFWw84VmflJ1F+212osnpMZnbFijnvuRUFVaJn0E/mKpne
-         I/n9iVHXiCeOArxYDCeHxWnkhaJfbmNGAwiTM/w0I4ZKXmeCqKjX52/HPrOfj4vpSWPr
-         JWYWbmKdggCKRXbfhOXUoQmpaWU9T+45cpKLCXa8CPQWrnJk/Z+SjlxN3NcjPQd+6jWY
-         1uSfuDjQUJ+L+5PKGEs2XlARLQ25x2s5dYCRnpTtMipm4Fx4mA+LNryb6j0iMxQ067xD
-         98Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RURXhoSNO6UVA5+14oGQ42BXO9M7ZTHBpyDbq8ci7Tg=;
-        b=TmO7HfthLwwxlo4Nf8Bq1WJbSt427pfGXei8ZBuvYv13TKlzzgD0n0RbZPWAJwupSz
-         7/58bLkSKUf9zd3LHfL2jVpArnocbtQz5c52M5UIaE0DCE4DIWCGco1dJbFevgFrVWfE
-         QYa+Pgcb0JvttkYpuaYKuViYXbQhaU+OEW27AhmwM6PxnIp/1mr+GPco5wWt60j5oWcD
-         uyMXs2chAKRe4+9Ok2c6ou6o8oZkUv0kptuvvNv9c5crk6S2IfKjGcZ1AhJ/uv47KR6G
-         6oxZyToHQQbRVw2OghCvEGj1WojopGBQaQT1/JuAg0MlOgEbm6OIPtjBuzuv84rl9F6A
-         8glQ==
-X-Gm-Message-State: AOAM530N2Guws2Yz3Vx2HP+FS6BPPnR3O4dAkVyN9VKWQiCyrhd9+oZK
-        b8yqG9vlNVEoQ+Qdi/DooJEXUHEGzk4=
-X-Google-Smtp-Source: ABdhPJxdYvZCbYJdIIz3QXLwk+zuevQELWKIUEfKDi0B96Qfd92l/lXvPdjI+RVvFqNZzzz4wN7Q5A==
-X-Received: by 2002:a17:90a:384c:: with SMTP id l12mr2066227pjf.27.1599120555112;
-        Thu, 03 Sep 2020 01:09:15 -0700 (PDT)
-Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id q2sm1799248pgs.90.2020.09.03.01.09.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 01:09:14 -0700 (PDT)
-Date:   Thu, 3 Sep 2020 16:09:09 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 09/20] gpiolib: cdev: support edge detection for uAPI
- v2
-Message-ID: <20200903080909.GA17108@sol>
-References: <20200831032006.1019978-1-warthog618@gmail.com>
- <20200831032006.1019978-10-warthog618@gmail.com>
- <CAMpxmJW9EC_ocs8dA3j+QPu8sW4Na9WEvPYEUZjfxk4-ojf+kA@mail.gmail.com>
+        Thu, 3 Sep 2020 04:02:27 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id ACBA8B18;
+        Thu,  3 Sep 2020 04:02:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 03 Sep 2020 04:02:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=5NFnvP2JBLynW
+        yZwQN0upyxjvNoms0c6VxUpgb0gKqM=; b=RDmF/WtYQsjOZGJsIATppofns1tXV
+        7qVkl50tC9By2BAvGLm7ggqSFZkc3Gy5vwxiK8vWv880bKolo9+rIfNO2Mr/K68D
+        11oXHb2FVUsK3QezglqbCN7+mWyAh4rZzHJRvCpzCp5wcqLvJbzM9Euy1fHTuvjo
+        aL7EcaTPA7qVAMGAqXXJcaFX5Y3t7jLOw+9OhxC7FJG+HAuaQplykgSIqK6LNkxH
+        SLIFwVMh+lAvjeFwr/DHjFM66FKu32QGR0/MJcS2ErFTT0kciiHgYo1kF0zjA+z+
+        IOu9msuxu8rRyMTzP+5uCJqsHyuX++5/rohOdtciYSTMqZHaj912tYX3w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=5NFnvP2JBLynWyZwQN0upyxjvNoms0c6VxUpgb0gKqM=; b=lnUXH2yT
+        usimRGSLROAKxjVehqLOcyrAe/an+ElY5dCVi+eULvH5y609vjLFVXkCN4lle1T9
+        z1KfV7WrWQncfzDEvqzRc6VPLInABCOg48IoNmR0i8gkB2u+l1IKhrjLqUKZwX5z
+        T+PEYIhVsSkw7telMQRwUiO3+rjnjVvziY5cApdqVv4f32u3VoZEdPv5uAAb8zP7
+        8vF/0cNvl5Kwr4fype5QBvYGhcrAUCj3FKNnHC2495J68yANlLkMAFqRwBow/wxB
+        auQ+7xUYOlJjXoUTWRMXa3IQj2PNJpRu1pXJXqIgHkEdAkhPYA48UYUec97ZA6z3
+        zArXm/e+UaNm8w==
+X-ME-Sender: <xms:DqNQXxQ6GXREPezwYl_c0NfGu_Pr4UgzqPiDJ-2cXcgRFNSnbwMj4A>
+    <xme:DqNQX6zOUUPqGJ9_1ygH2tQSiaVJrftVfTIYwH02tP56qzeGya-xDTeugIXfya9m7
+    k_RmJHNwL9eou9kTGA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegtddguddviecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveev
+    heehvdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedule
+    enucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:DqNQX23fc8-4EeHN3gwsL0zHX5bLKAwNNJgFWd8dVxN5ru4bNCbh9A>
+    <xmx:DqNQX5B7cTK3OomltJBj15Uh01pj1S7AvBoBdW7gUsyVe4bTjGTAGg>
+    <xmx:DqNQX6jAWHSJsdHGy_tJ5v32Ju1Qc4MOza1Cch0k0DKYubdgaQ-4DQ>
+    <xmx:DqNQXxpREgnpclm90ndi-7VclsCBTCGxT1ILdBwnxWkX3f-TwIrYnaG7eTU>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id EA1AF328005D;
+        Thu,  3 Sep 2020 04:02:21 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH v5 20/80] drm/vc4: crtc: Turn pixelvalve reset into a function
+Date:   Thu,  3 Sep 2020 10:00:52 +0200
+Message-Id: <fb31003a9eee02c4b949556299ff41f0a113499a.1599120059.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
+References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJW9EC_ocs8dA3j+QPu8sW4Na9WEvPYEUZjfxk4-ojf+kA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 09:55:22AM +0200, Bartosz Golaszewski wrote:
-> On Mon, Aug 31, 2020 at 5:22 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > Add support for edge detection to lines requested using
-> > GPIO_V2_GET_LINE_IOCTL.
-> >
-> > The edge_detector implementation is based on the v1 lineevent
-> > implementation.
-> >
+The driver resets the pixelvalve FIFO in a number of occurences without
+always using the same sequence.
 
-[snip]
+Since this will be critical for BCM2711, let's move that sequence to a
+function so that we are consistent.
 
-> > +        * close in time as possible to the actual event.
-> > +        */
-> > +       line->timestamp = ktime_get_ns();
-> > +
-> > +       if (lr->num_lines != 1)
-> > +               line->req_seqno = atomic_inc_return(&lr->seqno);
-> 
-> Do we never increase req_seqno for a single line?
-> 
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ drivers/gpu/drm/vc4/vc4_crtc.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-For a single line we just use line_seqno for both to avoid the
-atomic_inc here and so reduce the time spent in the ISR and any
-SMP sync overheads.
-
-As per the comment in struct linereq:
- * @seqno: the sequence number for edge events generated on all lines in
- * this line request.  Note that this is not used when @num_lines is 1, as
- * the line_seqno is then the same and is cheaper to calculate.
-
-Cheers,
-Kent.
+diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
+index 41bc61d5a61f..c2ab907611e3 100644
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -267,6 +267,15 @@ static struct drm_encoder *vc4_get_crtc_encoder(struct drm_crtc *crtc)
+ 	return NULL;
+ }
+ 
++static void vc4_crtc_pixelvalve_reset(struct drm_crtc *crtc)
++{
++	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
++
++	/* The PV needs to be disabled before it can be flushed */
++	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) & ~PV_CONTROL_EN);
++	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) | PV_CONTROL_FIFO_CLR);
++}
++
+ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
+ {
+ 	struct drm_encoder *encoder = vc4_get_crtc_encoder(crtc);
+@@ -282,10 +291,7 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
+ 	u32 format = is_dsi ? PV_CONTROL_FORMAT_DSIV_24 : PV_CONTROL_FORMAT_24;
+ 	u8 ppc = pv_data->pixels_per_clock;
+ 
+-	/* Reset the PV fifo. */
+-	CRTC_WRITE(PV_CONTROL, 0);
+-	CRTC_WRITE(PV_CONTROL, PV_CONTROL_FIFO_CLR | PV_CONTROL_EN);
+-	CRTC_WRITE(PV_CONTROL, 0);
++	vc4_crtc_pixelvalve_reset(crtc);
+ 
+ 	CRTC_WRITE(PV_HORZA,
+ 		   VC4_SET_FIELD((mode->htotal - mode->hsync_end) * pixel_rep / ppc,
+@@ -430,9 +436,9 @@ static void vc4_crtc_atomic_enable(struct drm_crtc *crtc,
+ 
+ 	require_hvs_enabled(dev);
+ 
+-	/* Reset the PV fifo. */
+-	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) |
+-		   PV_CONTROL_FIFO_CLR | PV_CONTROL_EN);
++	vc4_crtc_pixelvalve_reset(crtc);
++
++	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) | PV_CONTROL_EN);
+ 
+ 	/* Enable vblank irq handling before crtc is started otherwise
+ 	 * drm_crtc_get_vblank() fails in vc4_crtc_update_dlist().
+-- 
+git-series 0.9.1
