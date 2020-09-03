@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-21.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553F0C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1760C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C76C207EA
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A56BC206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 09:18:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hUF/wWzn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WGeAJLDM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgICJST (ORCPT
+        id S1728300AbgICJSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 05:18:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44490 "EHLO
+        Thu, 3 Sep 2020 05:18:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727938AbgICJR7 (ORCPT
+        with ESMTP id S1728322AbgICJSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 05:17:59 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C24C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 02:17:57 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id l21so1920134eds.7
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 02:17:57 -0700 (PDT)
+        Thu, 3 Sep 2020 05:18:03 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C868DC06124F
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 02:18:02 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id i22so2833160eja.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 02:18:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SnlRtG/CWSkZI4NVeKIKEydnJw+LdVFZjKE2XgTifuQ=;
-        b=hUF/wWznrhIV4kD0nNa5LDuTyvYBcRJqJRT4AjaF0cV0Cm85jlZhKS8Ka8OrV/1IAb
-         3ShKef+kcOd+ghf91meHp8twmWmMTmr4i5li7S6u7jJW6COg/KwmunepQBEEG8a5QFIu
-         1S2h+XyMXH330ZazXmjmCzIWyT2Qywoc6aqRJCEVxaYU4ilpOuUylSu269/RPYD7X8bP
-         NjDFh5AJcfRDgrzcsJvPmljNBjZqDVaWRNQ/lIcy0aO4vsDvRiJzYGI3BUma+LFFGV1K
-         2wy6oRw6OCKcrv6ifEqMw0FCTMubNFMKgTFfLp2vzTIloUIxgJ9boRrWrZ6ZZz5qUzG+
-         xdAg==
+        bh=NQv+tl4uppeFkb8OE5qw190d9LgQJYKQj0zpEykuMCM=;
+        b=WGeAJLDMsRVumT9Q9ux6Nast3r0JswgFOC70ZutZNZBpf4GDOxF1Vq6GaxB6cpDZ45
+         Ubq1CjFd9RyDJye5zoVo0+QI21IJuR8D5K5NTSCX0bfI9NOKTkGvpRSdqjbbeU8lOgnD
+         tJC8vPxb//wpf1qUbLuSg0l8hrW/1r/jrioS74dOFucWmTNYEf6D0j0FI538lwVoZMfU
+         6nmWYHKuc7tfuY983RwJ7bm/dKm2mVyjPAIdqZoonp/ofsHcYNliONbyDgPpLGYp45Oa
+         CHQHOnDIGMvH+AX91mPbZluIWwNyPlz47HjPqLMi0Ot2VIwY+bVwfHvG9y4br0BODeiC
+         d9rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SnlRtG/CWSkZI4NVeKIKEydnJw+LdVFZjKE2XgTifuQ=;
-        b=VsVKl5CKqO9UeFTqVLdYg/lXDyzKWOphLeDsGwXpXZYfhRqOx5thzbozjzTcCWLGDk
-         h5sxplm+BdENhQd+ojylq7LMua7tLVtFmNU+RZWnd8p00UzYCLQwqYqxXytk0jm+Sp8J
-         olqTQyTl61J/nzpEUcAtKK9PV7xLN5QuUBRWCpqJXWAyheT8fQn0PFp5Nk37AMxjA1Wi
-         1PBb2T3IAKxrvHTZR11bYg9JoWFLZOqKQUIKwY+1wuNfkqZXfEmJDTBSl5s0At6J+vyN
-         dSqfOW2p70qUL63JrAetXvvTwu/yaoQtGP5vPP3EfFE1n5Bt0VJuACFCdYVOqK38Vu7I
-         ufrQ==
-X-Gm-Message-State: AOAM533U0HXmeVLd08rU+xWy6zEbgby6rc0CcEy2VT+u9Mos7YMzQUBo
-        kA4buy4qVCRMkzuUs6o2h7SodwN0L2/OWAswhwk=
-X-Google-Smtp-Source: ABdhPJyT2Eil9AjKw8R/4nwj3PA9MLb8SnTJe5Rd8N1txrd2cT5Dl89hJVcJvGxtWZCvckgjsovWlA==
-X-Received: by 2002:aa7:dc16:: with SMTP id b22mr2013761edu.252.1599124675844;
-        Thu, 03 Sep 2020 02:17:55 -0700 (PDT)
+        bh=NQv+tl4uppeFkb8OE5qw190d9LgQJYKQj0zpEykuMCM=;
+        b=a/N7MOBk00WzUyMd2/oW4t4s14G1qoDJQ74fWKeSoddB4rqoSSZEUrE0b7DrR/+VH5
+         FfpmRrRlA/i0U05yAwPCl+cw8GER+ZC9EfBY1XHt6y+JkWdR35RqL12BcTvmfhN8mTW8
+         5lYWmPpe+duOjQW7zj6mwkLIS8OKenepLrGu1K7bOSOS9KpV9Y5uavKZp6r882BQzbnN
+         k4rupNIa6ySk0RBzEhR/cTmuv0AHnzVQtBHSPr0cCmj+2M39JSc1LNlRJAdQlWEicXMi
+         DqDravAAAXCCE3tU+jystI1kgR7XmMuO7biWyH0uHv5lQaIMwSq7wNEy/TBjcpyJzr03
+         iRGg==
+X-Gm-Message-State: AOAM533gDkDwvAAXUpp02Ki7X6rjLO2OildLjyLf45KXDhOwT+QxnSgk
+        BYwle2yAYh8FzrDTTnqjapjGlQ==
+X-Google-Smtp-Source: ABdhPJwKWw1WUu0SdgKqUcKkconNR0zceARFGVkjySt2UpxXg4FXus55KxeqDNsvsTsSugbaugIAoQ==
+X-Received: by 2002:a17:906:3ac4:: with SMTP id z4mr1065800ejd.65.1599124681204;
+        Thu, 03 Sep 2020 02:18:01 -0700 (PDT)
 Received: from localhost (dynamic-2a00-1028-919a-a06e-64ac-0036-822c-68d3.ipv6.broadband.iol.cz. [2a00:1028:919a:a06e:64ac:36:822c:68d3])
-        by smtp.gmail.com with ESMTPSA id v13sm2714856edl.9.2020.09.03.02.17.54
+        by smtp.gmail.com with ESMTPSA id x25sm2429769edv.42.2020.09.03.02.17.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 02:17:55 -0700 (PDT)
+        Thu, 03 Sep 2020 02:18:00 -0700 (PDT)
 From:   David Brazdil <dbrazdil@google.com>
 To:     Marc Zyngier <maz@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -72,9 +72,9 @@ Cc:     James Morse <james.morse@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         kvmarm@lists.cs.columbia.edu, linux-arch@vger.kernel.org,
         kernel-team@android.com, David Brazdil <dbrazdil@google.com>
-Subject: [PATCH v2 08/10] kvm: arm64: Mark hyp stack pages reserved
-Date:   Thu,  3 Sep 2020 11:17:10 +0200
-Message-Id: <20200903091712.46456-9-dbrazdil@google.com>
+Subject: [PATCH v2 10/10] kvm: arm64: Remove unnecessary hyp mappings
+Date:   Thu,  3 Sep 2020 11:17:12 +0200
+Message-Id: <20200903091712.46456-11-dbrazdil@google.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200903091712.46456-1-dbrazdil@google.com>
 References: <20200903091712.46456-1-dbrazdil@google.com>
@@ -85,87 +85,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for unmapping hyp pages from host stage-2, allocate/free hyp
-stack using new helpers which automatically mark the pages reserved.
+With all nVHE per-CPU variables being part of the hyp per-CPU region,
+mapping them individual is not necessary any longer. They are mapped to hyp
+as part of the overall per-CPU region.
 
 Signed-off-by: David Brazdil <dbrazdil@google.com>
 ---
- arch/arm64/kvm/arm.c | 49 ++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 47 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/kvm_mmu.h | 25 +++++++------------------
+ arch/arm64/kvm/arm.c             | 17 +----------------
+ 2 files changed, 8 insertions(+), 34 deletions(-)
 
+diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
+index 9db93da35606..bbe9df76ff42 100644
+--- a/arch/arm64/include/asm/kvm_mmu.h
++++ b/arch/arm64/include/asm/kvm_mmu.h
+@@ -531,28 +531,17 @@ static inline int kvm_map_vectors(void)
+ DECLARE_PER_CPU_READ_MOSTLY(u64, arm64_ssbd_callback_required);
+ DECLARE_KVM_NVHE_PER_CPU(u64, arm64_ssbd_callback_required);
+ 
+-static inline int hyp_init_aux_data(void)
++static inline void hyp_init_aux_data(void)
+ {
+-	int cpu, err;
++	int cpu;
+ 
+-	for_each_possible_cpu(cpu) {
+-		u64 *ptr;
+-
+-		ptr = per_cpu_ptr_nvhe(arm64_ssbd_callback_required, cpu);
+-		err = create_hyp_mappings(ptr, ptr + 1, PAGE_HYP);
+-		if (err)
+-			return err;
+-
+-		/* Copy value from kernel to hyp. */
+-		*ptr = per_cpu(arm64_ssbd_callback_required, cpu);
+-	}
+-	return 0;
++	/* Copy arm64_ssbd_callback_required values from kernel to hyp. */
++	for_each_possible_cpu(cpu)
++		*(per_cpu_ptr_nvhe(arm64_ssbd_callback_required, cpu)) =
++			per_cpu(arm64_ssbd_callback_required, cpu);
+ }
+ #else
+-static inline int hyp_init_aux_data(void)
+-{
+-	return 0;
+-}
++static inline void hyp_init_aux_data(void) {}
+ #endif
+ 
+ #define kvm_phys_to_vttbr(addr)		phys_to_ttbr(addr)
 diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index d437052c5481..8a1fcf4dffca 100644
+index df7d133056ce..dfe1baa5bbb7 100644
 --- a/arch/arm64/kvm/arm.c
 +++ b/arch/arm64/kvm/arm.c
-@@ -1453,13 +1453,58 @@ static int init_subsystems(void)
- 	return err;
- }
+@@ -1631,22 +1631,7 @@ static int init_hyp_mode(void)
+ 		}
+ 	}
  
-+/*
-+ * Alloc pages and mark them reserved so the kernel never tries to
-+ * take them away from the hypervisor.
-+ */
-+static unsigned long alloc_hyp_pages(gfp_t flags, unsigned int order)
-+{
-+	struct page *page;
-+	unsigned long i;
-+
-+	page = alloc_pages(flags, order);
-+	if (!page)
-+		return 0;
-+
-+	for (i = 0; i < (1ul << order); ++i)
-+		mark_page_reserved(page + i);
-+
-+	return (unsigned long)page_address(page);
-+}
-+
-+static unsigned long alloc_hyp_page(gfp_t flags)
-+{
-+	return alloc_hyp_pages(flags, 0);
-+}
-+
-+/*
-+ * Free pages which were previously marked reserved for the hypervisor.
-+ */
-+static void free_hyp_pages(unsigned long addr, unsigned int order)
-+{
-+	unsigned long i;
-+	struct page *page;
-+
-+	if (!addr)
-+		return;
-+
-+	page = virt_to_page(addr);
-+	for (i = 0; i < (1ul << order); ++i)
-+		free_reserved_page(page + i);
-+}
-+
-+static void free_hyp_page(unsigned long addr)
-+{
-+	return free_hyp_pages(addr, 0);
-+}
-+
- static void teardown_hyp_mode(void)
- {
- 	int cpu;
+-	for_each_possible_cpu(cpu) {
+-		kvm_host_data_t *cpu_data;
+-
+-		cpu_data = per_cpu_ptr_hyp(kvm_host_data, cpu);
+-		err = create_hyp_mappings(cpu_data, cpu_data + 1, PAGE_HYP);
+-
+-		if (err) {
+-			kvm_err("Cannot map host CPU state: %d\n", err);
+-			goto out_err;
+-		}
+-	}
+-
+-	err = hyp_init_aux_data();
+-	if (err)
+-		kvm_err("Cannot map host auxiliary data: %d\n", err);
+-
++	hyp_init_aux_data();
+ 	return 0;
  
- 	free_hyp_pgds();
- 	for_each_possible_cpu(cpu)
--		free_page(per_cpu(kvm_arm_hyp_stack_page, cpu));
-+		free_hyp_page(per_cpu(kvm_arm_hyp_stack_page, cpu));
- }
- 
- /**
-@@ -1483,7 +1528,7 @@ static int init_hyp_mode(void)
- 	for_each_possible_cpu(cpu) {
- 		unsigned long stack_page;
- 
--		stack_page = __get_free_page(GFP_KERNEL);
-+		stack_page = alloc_hyp_page(GFP_KERNEL);
- 		if (!stack_page) {
- 			err = -ENOMEM;
- 			goto out_err;
+ out_err:
 -- 
 2.28.0.402.g5ffc5be6b7-goog
 
