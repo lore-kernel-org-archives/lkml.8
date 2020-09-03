@@ -2,100 +2,137 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8331BC2BC0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB52C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 485CC2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:43:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599151405;
-	bh=RXn8B7cMLtnL6JgR3+E2Ro4t6hQahjnuOLHVgAJzfZY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c8M+o2Ql8vmEjICrGypTKqV7CbG6PyH5Rm07OKWlelNit7ZDuPDIYJ/61jZdVBfSF
-	 VNol0aNdl2JlxtlelzivSGu42Fbci82GbZHslc2Y0rEsRdjuYKIoHXQqO1s7tCQl16
-	 KFg2wQr//oPo5KlTH/bwo0ONWrG6ukE6zG8cgakU=
+	by mail.kernel.org (Postfix) with ESMTP id A6E0E2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:43:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FNoXoEQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbgICQnY (ORCPT
+        id S1729066AbgICQnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:43:24 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40380 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728085AbgICQnW (ORCPT
+        Thu, 3 Sep 2020 12:43:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728834AbgICQng (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:43:22 -0400
-Received: by mail-io1-f68.google.com with SMTP id j2so3614440ioj.7;
-        Thu, 03 Sep 2020 09:43:22 -0700 (PDT)
+        Thu, 3 Sep 2020 12:43:36 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DE3C061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 09:43:35 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id d190so3651073iof.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 09:43:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=eHkxiuk1eSm1DePy7YCsS54Z9TU/8bBeG5Oe2ljkq7Y=;
+        b=FNoXoEQUsIGmKdirDIyIBrPfQP2wgWg1cVLcNLAiVqHCfrTDP3ItcQFySMk5RjhWM/
+         /l6R126vUtILPRQesX/lurW+hA8HqodCLtnvRsW21xlnMeeIRD+8wXHzDcQgP+v5Rhcp
+         xvJ+t65aaeumRtWuAeAnavcY+ip67+jHciSTijtOWjzmn8VcPJKDTIiLWvMki6ckfBFZ
+         wYpO7gdQKNIe69RIUfwaky3oV32mqjm3QVrwMh9nRyymASrtAxDywMbh5M08TgHDMvkG
+         IY1alpeoELbc5vmd5TMQlPbP603as/I79FsvFD1CpUsRi+yAzIA0i89Clym5Mx0SuSY7
+         Syhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Vm4YZ0rV7T1k22Okll5l0Zfn2qIEM+/b9DI6foS5uOU=;
-        b=eIdixNMwVA1BSVf5r8j4q5hPyRPL52EpoEaisYI4aQUKS3ZJtjD4a6baafk9ylTD3A
-         dA+WKOa0RclbuptiyB/EgsU6F0Gc9NqkJ6i8Ffs278hHSpakjmPIJ+UI0G3Pd6IAzkDA
-         d84bU5urrpfRhGrjrz053Gq0NnMbY4DC+t1ebJpAuVYLR2GOnwxux16w+E5YWKesckt1
-         krBb6UoMjv2AFFSHBIpeSTsjork0r0K0YCUlSNOkHq6NZKPULBczPeThK5KrXNqG2+/Z
-         jV30eQu7NCj1+m5rstb6V1m/VutonmTEnPE1tgveaqpm+ncsNBxiGzKFaFtU4lZ0g4Qm
-         kcUg==
-X-Gm-Message-State: AOAM530monXh5Ei5z5cNobpSQRdBRSXcHOno1JSBzqK9FkDZvJ2WaPcT
-        TdxEf5dW28Lw+OnQ4kGomA==
-X-Google-Smtp-Source: ABdhPJxdGWvSm91m5o4p27kxDEJ3BksNrLtWiBafKboKccHq8iHXL8Nu/05NN9zEgfjXFSxDiBv6CA==
-X-Received: by 2002:a02:834a:: with SMTP id w10mr4193188jag.63.1599151401695;
-        Thu, 03 Sep 2020 09:43:21 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id w12sm1483444ioa.8.2020.09.03.09.43.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 09:43:21 -0700 (PDT)
-Received: (nullmailer pid 2925553 invoked by uid 1000);
-        Thu, 03 Sep 2020 16:43:19 -0000
-Date:   Thu, 3 Sep 2020 10:43:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Kukjin Kim <kgene@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        alsa-devel@alsa-project.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH 06/10] dt-bindings: sound: samsung-i2s: Use
- unevaluatedProperties
-Message-ID: <20200903164319.GA2925151@bogus>
-References: <20200829142501.31478-1-krzk@kernel.org>
- <20200829142501.31478-6-krzk@kernel.org>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eHkxiuk1eSm1DePy7YCsS54Z9TU/8bBeG5Oe2ljkq7Y=;
+        b=g39yESxPapM22rO9lUYmljOHgjzArvHyV7V4TCSHxUP3fBbLpEq2r1ucsJlDSIzkb5
+         Zk+xjJ+kxoySp7WA14b2HCbbYfncGUlQ6we4bPe/duYKafCAnfIW3lxL+r58tV/N7uvr
+         DX9AkIqp0UDqAQauQ21b84RzdcJL05ztvFe9TxuTluHu9GX8LopsqWr5IjBgUXXkHf1Z
+         dqj19xZpK0E3nUfIIDuD0DqxoOY/UhYgB0xo6oj21dQQ4EbH/4WjE8JNExet6DPFpRYj
+         phYn2a/cGZLWBgwSl7NcGcCR2KTqXjcRr3genspqXbre1jKSP8+OA4LImj2t66a4ftD2
+         cPzw==
+X-Gm-Message-State: AOAM532892fhgZMvFz5cKFwYZhtI+JQDtUDgqtM3ZJay3ibUnPuEY4I9
+        hi26Ru/0UAYCsWZQOEo8Czn2XA==
+X-Google-Smtp-Source: ABdhPJz1yx++v0gHT7j6NwFr744737j20etIRTYuc5PbNzrbNVzAPFSHvc6bMtQwSLgZXe9aZTma9A==
+X-Received: by 2002:a05:6638:611:: with SMTP id g17mr4115533jar.40.1599151415003;
+        Thu, 03 Sep 2020 09:43:35 -0700 (PDT)
+Received: from [192.168.1.117] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id p18sm1417264iog.1.2020.09.03.09.43.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 09:43:34 -0700 (PDT)
+Subject: Re: INFO: task can't die in io_uring_setup
+To:     syzbot <syzbot+3227d097b95b4207b570@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sgarzare@redhat.com, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <0000000000003d90ba05ae6b3d5f@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ebe53b3d-5bc6-5092-be03-f49bf49fa7df@kernel.dk>
+Date:   Thu, 3 Sep 2020 10:43:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200829142501.31478-6-krzk@kernel.org>
+In-Reply-To: <0000000000003d90ba05ae6b3d5f@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 04:24:57PM +0200, Krzysztof Kozlowski wrote:
-> Additional properties actually might appear (e.g. power-domains) so use
-> unevaluatedProperties to fix dtbs_check warnings like:
+On 9/3/20 10:28 AM, syzbot wrote:
+> Hello,
 > 
->   arch/arm64/boot/dts/exynos/exynos5433-tm2.dt.yaml: i2s@11440000:
->     Additional properties are not allowed ('power-domains', '#address-cells', 'interrupts', '#size-cells' were unexpected)
+> syzbot found the following issue on:
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  Documentation/devicetree/bindings/sound/samsung-i2s.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> HEAD commit:    4442749a Add linux-next specific files for 20200902
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=138e7285900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=39134fcec6c78e33
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3227d097b95b4207b570
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15306279900000
+> 
+> The issue was bisected to:
+> 
+> commit dfe127799f8e663c7e3e48b5275ca538b278177b
+> Author: Stefano Garzarella <sgarzare@redhat.com>
+> Date:   Thu Aug 27 14:58:31 2020 +0000
+> 
+>     io_uring: allow disabling rings during the creation
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15b09115900000
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=17b09115900000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13b09115900000
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+3227d097b95b4207b570@syzkaller.appspotmail.com
+> Fixes: dfe127799f8e ("io_uring: allow disabling rings during the creation")
+> 
+> INFO: task syz-executor.0:28543 can't die for more than 143 seconds.
+> task:syz-executor.0  state:D stack:28824 pid:28543 ppid:  6864 flags:0x00004004
+> Call Trace:
+>  context_switch kernel/sched/core.c:3777 [inline]
+>  __schedule+0xea9/0x2230 kernel/sched/core.c:4526
+>  schedule+0xd0/0x2a0 kernel/sched/core.c:4601
+>  schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1855
+>  do_wait_for_common kernel/sched/completion.c:85 [inline]
+>  __wait_for_common kernel/sched/completion.c:106 [inline]
+>  wait_for_common kernel/sched/completion.c:117 [inline]
+>  wait_for_completion+0x163/0x260 kernel/sched/completion.c:138
+>  io_sq_thread_stop fs/io_uring.c:6906 [inline]
+>  io_finish_async fs/io_uring.c:6920 [inline]
+>  io_sq_offload_create fs/io_uring.c:7595 [inline]
+>  io_uring_create fs/io_uring.c:8671 [inline]
+>  io_uring_setup+0x1495/0x29a0 fs/io_uring.c:8744
+>  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-NAK. See https://lore.kernel.org/r/CAL_JsqKPXJxsHPS34_TCf9bwgKxZNSV4mvQR-WKRnknQVtGGxQ@mail.gmail.com/
+This very much looks like a dupe of the issue that Hillf already
+fixed, but as there's no C reproducer yet, I can't verify.
+
+-- 
+Jens Axboe
+
