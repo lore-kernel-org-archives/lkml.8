@@ -2,158 +2,155 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB81C433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014A5C433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF042072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B651E2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evPZOJHn"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Of7z7xh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728972AbgICNd4 (ORCPT
+        id S1728928AbgICNha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 09:33:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729024AbgICNNs (ORCPT
+        Thu, 3 Sep 2020 09:37:30 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:37664 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728979AbgICNB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 09:13:48 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2CB4C061244;
-        Thu,  3 Sep 2020 06:13:48 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id di5so1242605qvb.13;
-        Thu, 03 Sep 2020 06:13:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=16GLCGALzYrJCFawMoH0VgHFVPs1CvmpayaSRTY5z7s=;
-        b=evPZOJHn5wjeeMILUNHLBnH1JI4BG+9muwF1ZkEHIRV0odCxmxg7lslcrD+flGuIqC
-         E+8d15IW3lFEVRULOeVA6cr7qpSkP6OviGBZRD4XJc0SdE7SsexICJSz30Wv0nMZyD37
-         S+/MeG/zGWASF3WtrXXTOvANMzUmByx+p11QumqWm7RrpEg9s/l2TaJIxlVUAAcCkZG5
-         XuvfI3Y40Xnwj0zsy7cOzab7UuW29lV2+P5ohaoRdh/OdjVqMZPF5JmlMrr0fvUR8wSz
-         imzEYoFzKrAie0cCh9Ol6acp1tpCX0JieW0GfOuqdlPId1QytJMGOJIdw0wVvcZ0uQD8
-         l0ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=16GLCGALzYrJCFawMoH0VgHFVPs1CvmpayaSRTY5z7s=;
-        b=f02IU36e/JNbFJAUsALZYOmPpBN4YeiKv6j95bqMBVKLA50JUXFd9hQb61GRZq17gB
-         KJnNmcsr12/C7spwTiVdXCVA9H/QTaglGZMnlSkl+oap+ncI6gZXnGDkIqL5aD10V/vn
-         svEbEqNZDcu8c3Yx/iN3CFQt89eg7kS8yqGSj2H4V8PgXmqLcxdD/2uU8IJeGWWl6aYz
-         VoJ8f/hAUK1eKw2dMllMBby/2jPFRXYRCaIWgmw3lqEv9SiDcib19s+Mg92iknIwtOqg
-         TK/WUSTxVddMvguyuRr02s+qJm8X1UXDRIcX6M2dj3tX4STM4Nz6va1r9T5qFtcdXJX7
-         34QA==
-X-Gm-Message-State: AOAM533EEo0kR6FcqA268UWVYPlMNwsSx8o0OOCIgfvhw83FcYMe6Eo9
-        iwRFIDscbv+h/3gf3peGXTFJ1JzDjRT3GQ==
-X-Google-Smtp-Source: ABdhPJz1dsaKjV+oWM0aqVjV/hyW4lv/ZE3pJHVSef2EfDZj24DqtqFv+QMzsO1MbwrBnSAyPmMRuQ==
-X-Received: by 2002:a0c:fe06:: with SMTP id x6mr2762682qvr.191.1599138826999;
-        Thu, 03 Sep 2020 06:13:46 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14d:72b1:8920:da15:c0bd:33c1:e2ad])
-        by smtp.gmail.com with ESMTPSA id e63sm2127007qkf.29.2020.09.03.06.13.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 06:13:46 -0700 (PDT)
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-X-Google-Original-From: Daniel W. S. Almeida
-To:     linux-kernel@vger.kernel.org
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: [v2 1/2] media: dvb-frontends: lgdt3306a.c: remove dead code
-Date:   Thu,  3 Sep 2020 10:13:09 -0300
-Message-Id: <20200903131311.442255-1-dwlsalmeida@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Thu, 3 Sep 2020 09:01:57 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 083D0Oth043878;
+        Thu, 3 Sep 2020 08:00:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599138024;
+        bh=hC8MGnrzcwOc/jOvEUis8iOVo4RaDpVeqzpk8KjNJPI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Of7z7xh6wlyFOXFCVaHXMrPM1dhh1fruQWkmcp4kXEeuNspuy31am2A0gBrWF9Yyh
+         DTneAEXxmtWB1TJ+2u1gQYJWfY/E2N++WgQWAayI5R3j5SO+C617vyTamzUmBaM+ze
+         bY0GPzDCVRuKhbvXzzTJsgWxJ5g/egNK/FHU4nT8=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 083D0OXu027918
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 3 Sep 2020 08:00:24 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
+ 2020 08:00:22 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 3 Sep 2020 08:00:22 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 083D0McA105505;
+        Thu, 3 Sep 2020 08:00:22 -0500
+From:   Nishanth Menon <nm@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Suman Anna <s-anna@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <lokeshvutla@ti.com>,
+        <grygorii.strashko@ti.com>, <nsekhar@ti.com>,
+        Nishanth Menon <nm@ti.com>
+Subject: [PATCH V2 5/8] arm64: dts: ti: k3-*: Use generic pinctrl for node names
+Date:   Thu, 3 Sep 2020 08:00:12 -0500
+Message-ID: <20200903130015.21361-6-nm@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200901223059.14801-1-nm@ti.com>
+References: <20200901223059.14801-1-nm@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Use pinctrl@ naming for nodes following standard conventions of device
+tree (section 2.2.2 Generic Names recommendation in [1]).
 
-Fix the following coccinelle report:
+[1] https://github.com/devicetree-org/devicetree-specification/tree/v0.3
 
-drivers/media/dvb-frontends/lgdt3306a.c:718:5-8:
-Unneeded variable: "ret". Return "0" on line 744
-
-Code was enclosed with #if 0 and thus this variable was not needed.
-Remove that function altogether.
-
-The  lgdt3306a_spectral_inversion function was dropped completely
-since the function doesn't do anything. A comment was left at its
-calling site to let others know that spectral_inversion defaults
-already set for VSB and QAM
-
-Found using - Coccinelle (http://coccinelle.lip6.fr)
-
-Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+Suggested-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Nishanth Menon <nm@ti.com>
+Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+Acked-by: Suman Anna <s-anna@ti.com>
 ---
- drivers/media/dvb-frontends/lgdt3306a.c | 37 ++-----------------------
- 1 file changed, 2 insertions(+), 35 deletions(-)
+Changes:
+v2: None (picked acks/reviews)
+v1: https://lore.kernel.org/linux-arm-kernel/20200901223059.14801-4-nm@ti.com/
 
-diff --git a/drivers/media/dvb-frontends/lgdt3306a.c b/drivers/media/dvb-frontends/lgdt3306a.c
-index d3c330e035c4..38718e6fe01d 100644
---- a/drivers/media/dvb-frontends/lgdt3306a.c
-+++ b/drivers/media/dvb-frontends/lgdt3306a.c
-@@ -711,39 +711,6 @@ static int lgdt3306a_set_inversion_auto(struct lgdt3306a_state *state,
- 	return ret;
- }
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi        | 4 ++--
+ arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi      | 2 +-
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi       | 2 +-
+ arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 63a1299cb0b2..1dd488cb15c6 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -134,7 +134,7 @@
+ 		};
+ 	};
  
--static int lgdt3306a_spectral_inversion(struct lgdt3306a_state *state,
--				       struct dtv_frontend_properties *p,
--				       int inversion)
--{
--	int ret = 0;
--
--	dbg_info("(%d)\n", inversion);
--#if 0
--	/*
--	 * FGR - spectral_inversion defaults already set for VSB and QAM;
--	 * can enable later if desired
--	 */
--
--	ret = lgdt3306a_set_inversion(state, inversion);
--
--	switch (p->modulation) {
--	case VSB_8:
--		/* Manual only for VSB */
--		ret = lgdt3306a_set_inversion_auto(state, 0);
--		break;
--	case QAM_64:
--	case QAM_256:
--	case QAM_AUTO:
--		/* Auto ok for QAM */
--		ret = lgdt3306a_set_inversion_auto(state, 1);
--		break;
--	default:
--		ret = -EINVAL;
--	}
--#endif
--	return ret;
--}
--
- static int lgdt3306a_set_if(struct lgdt3306a_state *state,
- 			   struct dtv_frontend_properties *p)
- {
-@@ -1048,8 +1015,8 @@ static int lgdt3306a_set_parameters(struct dvb_frontend *fe)
- 	if (lg_chkerr(ret))
- 		goto fail;
+-	main_pmx0: pinmux@11c000 {
++	main_pmx0: pinctrl@11c000 {
+ 		compatible = "pinctrl-single";
+ 		reg = <0x0 0x11c000 0x0 0x2e4>;
+ 		#pinctrl-cells = <1>;
+@@ -142,7 +142,7 @@
+ 		pinctrl-single,function-mask = <0xffffffff>;
+ 	};
  
--	ret = lgdt3306a_spectral_inversion(state, p,
--					state->cfg->spectral_inversion ? 1 : 0);
-+	/* spectral_inversion defaults already set for VSB and QAM */
-+
- 	if (lg_chkerr(ret))
- 		goto fail;
+-	main_pmx1: pinmux@11c2e8 {
++	main_pmx1: pinctrl@11c2e8 {
+ 		compatible = "pinctrl-single";
+ 		reg = <0x0 0x11c2e8 0x0 0x24>;
+ 		#pinctrl-cells = <1>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+index 0765700a8ba8..bb498be2f0a4 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+@@ -39,7 +39,7 @@
+ 		reg = <0x43000014 0x4>;
+ 	};
  
+-	wkup_pmx0: pinmux@4301c000 {
++	wkup_pmx0: pinctrl@4301c000 {
+ 		compatible = "pinctrl-single";
+ 		reg = <0x4301c000 0x118>;
+ 		#pinctrl-cells = <1>;
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+index 00a36a14efe7..1d2a7c05b6f3 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+@@ -327,7 +327,7 @@
+ 		};
+ 	};
+ 
+-	main_pmx0: pinmux@11c000 {
++	main_pmx0: pinctrl@11c000 {
+ 		compatible = "pinctrl-single";
+ 		/* Proxy 0 addressing */
+ 		reg = <0x0 0x11c000 0x0 0x2b4>;
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+index c4a48e8d420a..9ad0266598ad 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+@@ -53,7 +53,7 @@
+ 		reg = <0x0 0x43000014 0x0 0x4>;
+ 	};
+ 
+-	wkup_pmx0: pinmux@4301c000 {
++	wkup_pmx0: pinctrl@4301c000 {
+ 		compatible = "pinctrl-single";
+ 		/* Proxy 0 addressing */
+ 		reg = <0x00 0x4301c000 0x00 0x178>;
 -- 
-2.28.0
+2.17.1
 
