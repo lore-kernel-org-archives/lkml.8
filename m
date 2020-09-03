@@ -2,120 +2,119 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EBBC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FACC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6C6D20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FA520716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 16:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgICQJF (ORCPT
+        id S1728654AbgICQKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 12:09:05 -0400
-Received: from mga12.intel.com ([192.55.52.136]:42295 "EHLO mga12.intel.com"
+        Thu, 3 Sep 2020 12:10:16 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:37149 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbgICQJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 12:09:04 -0400
-IronPort-SDR: 1NhuyrsD94GV8ZMw89w7t0V1xuNWB8VuXgSJVnoettkb83VcOdd55dOpGtC+ZON/LuG7CYlF6c
- b7y8ofnHa3Fw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="137127466"
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="137127466"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 09:09:03 -0700
-IronPort-SDR: +C92qNo6vPQliFbZvRVoLeCI4c58RtTTyJZLqSfKqMdZx/NGqhVaiuZEkTHCzNP6ihEpbCixYB
- VQvGXEsgZUUQ==
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="503116307"
-Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.209.173.133]) ([10.209.173.133])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 09:09:01 -0700
-Subject: Re: [PATCH v11 6/9] x86/cet: Add PTRACE interface for CET
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Cc:     Jann Horn <jannh@google.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <46e42e5e-0bca-5f3f-efc9-5ab15827cc0b@intel.com>
- <40BC093A-F430-4DCC-8DC0-2BA90A6FC3FA@amacapital.net>
- <b3809dd7-8566-0517-2389-8089475135b7@intel.com>
-From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-Message-ID: <88261152-2de1-fe8d-7ab0-acb108e97e04@intel.com>
-Date:   Thu, 3 Sep 2020 09:09:01 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+        id S1727065AbgICQKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 12:10:15 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4Bj5PG5Yv8zB09ZM;
+        Thu,  3 Sep 2020 18:10:10 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id O-5sjIVtz4zX; Thu,  3 Sep 2020 18:10:10 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bj5PG4nykzB09ZK;
+        Thu,  3 Sep 2020 18:10:10 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 02F3D8B807;
+        Thu,  3 Sep 2020 18:10:10 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 1FKxObY2whfQ; Thu,  3 Sep 2020 18:10:10 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7AECE8B801;
+        Thu,  3 Sep 2020 18:10:07 +0200 (CEST)
+Subject: Re: [PATCH] /dev/zero: also implement ->read
+To:     Christoph Hellwig <hch@lst.de>, arnd@arndb.de,
+        gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20200903155922.1111551-1-hch@lst.de>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <55d1ecb8-4a0c-fa58-d3cf-bf6796eea7bd@csgroup.eu>
+Date:   Thu, 3 Sep 2020 18:05:41 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <b3809dd7-8566-0517-2389-8089475135b7@intel.com>
+In-Reply-To: <20200903155922.1111551-1-hch@lst.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/2020 7:26 AM, Dave Hansen wrote:
-> On 9/2/20 9:35 PM, Andy Lutomirski wrote:
->>>>>>> +       fpu__prepare_read(fpu);
->>>>>>> +       cetregs = get_xsave_addr(&fpu->state.xsave, XFEATURE_CET_USER);
->>>>>>> +       if (!cetregs)
->>>>>>> +               return -EFAULT;
->>>>>> Can this branch ever be hit without a kernel bug? If yes, I think
->>>>>> -EFAULT is probably a weird error code to choose here. If no, this
->>>>>> should probably use WARN_ON(). Same thing in cetregs_set().
->>>>> When a thread is not CET-enabled, its CET state does not exist.  I looked at EFAULT, and it means "Bad address".  Maybe this can be ENODEV, which means "No such device"?
->> Having read the code, I’m unconvinced. It looks like a get_xsave_addr() failure means “state not saved; task sees INIT state”.  So *maybe* it’s reasonable -ENODEV this, but I’m not really convinced. I tend to think we should return the actual INIT state and that we should permit writes and handle them correctly.
+
+
+Le 03/09/2020 à 17:59, Christoph Hellwig a écrit :
+> Christophe reported a major speedup due to avoiding the iov_iter
+> overhead, so just add this trivial function.  Note that /dev/zero
+> already implements both an iter and non-iter writes so this just
+> makes it more symmetric.
 > 
-> PTRACE is asking for access to the values in the *registers*, not for
-> the value in the kernel XSAVE buffer.  We just happen to only have the
-> kernel XSAVE buffer around.
+> Christophe Leroy <christophe.leroy@csgroup.eu>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-When get_xsave_addr() returns NULL, there are three possibilities:
-- XSAVE is not enabled or not supported;
-- The kernel does not support the requested feature;
-- The requested feature is in INIT state.
+Tested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-If the debugger is going to write an MSR, only in the third case would 
-this make a slight sense.  For example, if the system has CET enabled, 
-but the task does not have CET enabled, and GDB is writing to a CET MSR. 
-  But still, this is strange to me.
-
+> ---
+>   drivers/char/mem.c | 22 ++++++++++++++++++++++
+>   1 file changed, 22 insertions(+)
 > 
-> If we want to really support PTRACE we have to allow the registers to be
-> get/set, regardless of what state they are in, INIT state or not.  So,
-> yeah I agree with Andy.
+> diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+> index abd4ffdc8cdebc..1dc99ab158457a 100644
+> --- a/drivers/char/mem.c
+> +++ b/drivers/char/mem.c
+> @@ -726,6 +726,27 @@ static ssize_t read_iter_zero(struct kiocb *iocb, struct iov_iter *iter)
+>   	return written;
+>   }
+>   
+> +static ssize_t read_zero(struct file *file, char __user *buf,
+> +			 size_t count, loff_t *ppos)
+> +{
+> +	size_t cleared = 0;
+> +
+> +	while (count) {
+> +		size_t chunk = min_t(size_t, count, PAGE_SIZE);
+> +
+> +		if (clear_user(buf + cleared, chunk))
+> +			return cleared ? cleared : -EFAULT;
+> +		cleared += chunk;
+> +		count -= chunk;
+> +
+> +		if (signal_pending(current))
+> +			return cleared ? cleared : -ERESTARTSYS;
+> +		cond_resched();
+> +	}
+> +
+> +	return cleared;
+> +}
+> +
+>   static int mmap_zero(struct file *file, struct vm_area_struct *vma)
+>   {
+>   #ifndef CONFIG_MMU
+> @@ -921,6 +942,7 @@ static const struct file_operations zero_fops = {
+>   	.llseek		= zero_lseek,
+>   	.write		= write_zero,
+>   	.read_iter	= read_iter_zero,
+> +	.read		= read_zero,
+>   	.write_iter	= write_iter_zero,
+>   	.mmap		= mmap_zero,
+>   	.get_unmapped_area = get_unmapped_area_zero,
 > 
-
-GDB does not have a WRMSR mechanism.  If GDB is going to write an MSR, 
-it will call arch_prctl or an assembly routine in memory.
-
-Yu-cheng
