@@ -2,181 +2,124 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07836C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597F0C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D718420716
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3480120716
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 05:25:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kxJSQe8S"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nCwvJHb4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgICFVd (ORCPT
+        id S1726221AbgICFZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 01:21:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbgICFVd (ORCPT
+        Thu, 3 Sep 2020 01:25:23 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:38180 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbgICFZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 01:21:33 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57D81C061244;
-        Wed,  2 Sep 2020 22:21:32 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bhq0m3020z9sTR;
-        Thu,  3 Sep 2020 15:21:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599110489;
-        bh=jZvSrUvj+3p1kj0fdZq9n9Li1snbnthe4AFd5BxUDu4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=kxJSQe8SgcWOaFCHV18X7P/oJj7FHNUzZXIQFA1Po+tdZAnK3vypcR7rHkvGpF+y9
-         RVGOj9VDBdzoShErnjxH/WPoYCVng0fXgWGXXiYkt6YoLh2kOqqNIevkhnt66Kz8lW
-         L+VxgwymbeubjDCB/nJz3I9HNhFJHfZmIEmHSnRiEakcH7aLpnsqRbU4v1r86jZNY8
-         TChpB3672LGSAiBzt01WU6fcxxdD0yVilDainZe9pJY6rwMCb2IT0mgKJMMGG5T2WO
-         rjvnNFHtXgunzq6xUAaPAVjwr06WdDiT2ITcEk7WRJQEc47slgNQFUxWvaZYAx+N8w
-         0wCtyPa+0lSiw==
-Date:   Thu, 3 Sep 2020 15:21:27 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Stanley Chu <stanley.chu@mediatek.com>,
-        Can Guo <cang@codeaurora.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the scsi-mkp tree with Linus' tree
-Message-ID: <20200903152127.297498c5@canb.auug.org.au>
+        Thu, 3 Sep 2020 01:25:21 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0835PGpK106044;
+        Thu, 3 Sep 2020 00:25:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599110716;
+        bh=gBdMuSqpoJW5+xK4b3xBor8GR+5z9HkxD1LroMmwd0o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nCwvJHb4cTIgz0czU5mwtGvPzqf1BZmnb1+bCRwz7FDsyvkjnwBvq9ktjxwy0g0jA
+         ftWz4SrnKDvDDodTw8/luxIb45MNHjMTfmigipDi0H7LElAFpxyR46Ay1I5Ocy7QNI
+         54sTyMrVhG7QeSmhlH0JR8V6yH3DjxT1uqo0GO0s=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0835PGM4080260;
+        Thu, 3 Sep 2020 00:25:16 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 3 Sep
+ 2020 00:25:14 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 3 Sep 2020 00:25:15 -0500
+Received: from [10.250.235.166] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0835PBC9061764;
+        Thu, 3 Sep 2020 00:25:12 -0500
+Subject: Re: [PATCH 6/7] arm64: dts: ti: k3-*: Use generic adc for node names
+To:     Nishanth Menon <nm@ti.com>, Suman Anna <s-anna@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <lokeshvutla@ti.com>,
+        <grygorii.strashko@ti.com>, <nsekhar@ti.com>
+References: <20200901223059.14801-1-nm@ti.com>
+ <20200901223059.14801-7-nm@ti.com>
+ <60e6b790-360a-6eaf-03a3-5bb256adf215@ti.com>
+ <20200902181820.nlvl3pfzeh4agzzi@akan>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <9fb2f8f4-5eeb-6190-9cbf-b28084c58a8f@ti.com>
+Date:   Thu, 3 Sep 2020 10:55:11 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qfAhbppz5zu6lUnwnsjSZyh";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200902181820.nlvl3pfzeh4agzzi@akan>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qfAhbppz5zu6lUnwnsjSZyh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Nishanth,
 
-Hi all,
+On 9/2/20 11:48 PM, Nishanth Menon wrote:
+> On 11:51-20200902, Suman Anna wrote:
+>> On 9/1/20 5:30 PM, Nishanth Menon wrote:
+>>> Use adc@ naming for nodes following standard conventions of device
+>>> tree (section 2.2.2 Generic Names recommendation in [1]).
+>>>
+>>> [1] https://github.com/devicetree-org/devicetree-specification/tree/v0.3
+>>>
+>>> Suggested-by: Suman Anna <s-anna@ti.com>
+>>> Signed-off-by: Nishanth Menon <nm@ti.com>
+>>> ---
+>>>  arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi         | 4 ++--
+>>>  arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 4 ++--
+>>>  2 files changed, 4 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+>>> index 51ca4b4d4c21..6dfec68ac865 100644
+>>> --- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+>>> +++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+>>> @@ -80,7 +80,7 @@
+>>>  		#size-cells = <0>;
+>>>  	};
+>>>  
+>>> -	tscadc0: tscadc@40200000 {
+>>> +	tscadc0: adc@40200000 {
+>>
+>> OK with these changes, since these seem to be only have the adc child nodes.
+>> This node is essentially a parent node for touchscreen and adc child nodes. The
+>> driver is currently looking for "tsc" on touchscreen child nodes, but none of
+>> the K3 SoCs have them atm.
+>>
+> 
+> 
+> Vignesh: are you ok with this, care to comment?
+> 
 
-Today's linux-next merge of the scsi-mkp tree got a conflict in:
+On K3 SoCs, ADC IP is reuse from AM335x but just lacks resistive
+touchscreen interfaces. So, existing AM335x ADC driver is being reused
+for K3 devices as well. Unfortunately, ADC driver cannot be used as
+standalone and is dependent on MFD parent to be present...
+Above node represents the MFD parent and ADC itself is the child node
+(see arch/arm64/boot/dts/ti/k3-am654-base-board.dts). So, I recommend
+that we keep this node's name as tscadc in order to avoid having same
+name for parent and child node which will be quite confusing.
 
-  drivers/scsi/ufs/ufshcd.c
-
-between commit:
-
-  b10178ee7fa8 ("scsi: ufs: Clean up completed request without interrupt no=
-tification")
-
-from Linus' tree and commit:
-
-  307348f6ab14 ("scsi: ufs: Abort tasks before clearing them from doorbell")
-
-from the scsi-mkp tree.
-
-I fixed it up (I thnink - see below) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/scsi/ufs/ufshcd.c
-index 3abc5b65e21c,05716f62febe..000000000000
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@@ -6587,65 -6745,10 +6749,11 @@@ static int ufshcd_abort(struct scsi_cmn
-  		goto out;
-  	}
- =20
-- 	for (poll_cnt =3D 100; poll_cnt; poll_cnt--) {
-- 		err =3D ufshcd_issue_tm_cmd(hba, lrbp->lun, lrbp->task_tag,
-- 				UFS_QUERY_TASK, &resp);
-- 		if (!err && resp =3D=3D UPIU_TASK_MANAGEMENT_FUNC_SUCCEEDED) {
-- 			/* cmd pending in the device */
-- 			dev_err(hba->dev, "%s: cmd pending in the device. tag =3D %d\n",
-- 				__func__, tag);
-- 			break;
-- 		} else if (!err && resp =3D=3D UPIU_TASK_MANAGEMENT_FUNC_COMPL) {
-- 			/*
-- 			 * cmd not pending in the device, check if it is
-- 			 * in transition.
-- 			 */
-- 			dev_err(hba->dev, "%s: cmd at tag %d not pending in the device.\n",
-- 				__func__, tag);
-- 			reg =3D ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
-- 			if (reg & (1 << tag)) {
-- 				/* sleep for max. 200us to stabilize */
-- 				usleep_range(100, 200);
-- 				continue;
-- 			}
-- 			/* command completed already */
-- 			dev_err(hba->dev, "%s: cmd at tag %d successfully cleared from DB.\n",
-- 				__func__, tag);
-- 			goto cleanup;
-- 		} else {
-- 			dev_err(hba->dev,
-- 				"%s: no response from device. tag =3D %d, err %d\n",
-- 				__func__, tag, err);
-- 			if (!err)
-- 				err =3D resp; /* service response error */
-- 			goto out;
-- 		}
-- 	}
--=20
-- 	if (!poll_cnt) {
-- 		err =3D -EBUSY;
-- 		goto out;
-- 	}
--=20
-- 	err =3D ufshcd_issue_tm_cmd(hba, lrbp->lun, lrbp->task_tag,
-- 			UFS_ABORT_TASK, &resp);
-- 	if (err || resp !=3D UPIU_TASK_MANAGEMENT_FUNC_COMPL) {
-- 		if (!err) {
-- 			err =3D resp; /* service response error */
-- 			dev_err(hba->dev, "%s: issued. tag =3D %d, err %d\n",
-- 				__func__, tag, err);
-- 		}
-- 		goto out;
-- 	}
--=20
-- 	err =3D ufshcd_clear_cmd(hba, tag);
-- 	if (err) {
-- 		dev_err(hba->dev, "%s: Failed clearing cmd at tag %d, err %d\n",
-- 			__func__, tag, err);
-+ 	err =3D ufshcd_try_to_abort_task(hba, tag);
-+ 	if (err)
-  		goto out;
-- 	}
- =20
- +cleanup:
-  	spin_lock_irqsave(host->host_lock, flags);
-  	__ufshcd_transfer_req_compl(hba, (1UL << tag));
-  	spin_unlock_irqrestore(host->host_lock, flags);
-
---Sig_/qfAhbppz5zu6lUnwnsjSZyh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9QfVcACgkQAVBC80lX
-0GzpSwf9Fyqe5InyRMy41tsqUBPvSCdk488eVMxS65Ua72HEOB54BOtgzta9FLj3
-4Wg2sSUzb19M3NiGpWSHUHdFUuVIDVpmQCqaSOsrHzWJK707qvM2hvAXtm3AppXh
-CiJUDLHafB4grTwjR0f6GkcsJNvHCMYI2++6FQo64cHviv2aVZJ993Zei6BaALZ8
-8VnC3ZislsbV0PQ1nQ5z6iqYU2q1gH1q7/9FMVBmDe93aODGy+LTLg1hwLf7xQNM
-EfLIKSNsZcFU3DYa4Fwry+9/ytbkxMTCtTVB/6qRO5uRY+4q2r+NykPeq7zKZv00
-J5JH2TluGB09pwvInjtl2jYxNU5S0Q==
-=byrI
------END PGP SIGNATURE-----
-
---Sig_/qfAhbppz5zu6lUnwnsjSZyh--
+Regards
+Vignesh
