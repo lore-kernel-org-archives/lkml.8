@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 138C1C43461
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F8FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E30062071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CAA820758
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 13:47:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgICNpb (ORCPT
+        id S1728989AbgICNqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 09:45:31 -0400
-Received: from mga03.intel.com ([134.134.136.65]:32755 "EHLO mga03.intel.com"
+        Thu, 3 Sep 2020 09:46:23 -0400
+Received: from mga11.intel.com ([192.55.52.93]:9530 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728956AbgICMpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728962AbgICMpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 3 Sep 2020 08:45:51 -0400
-IronPort-SDR: qXY0j2xcJfdsUkVpbAbbuBruHK7wbsv1eF2yX+osRqfVGiP5qFPuxYIyi5XQcSJgpBEyX8NRn1
- SFqwATeWTkkQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="157568431"
+IronPort-SDR: EfEbsoBe8jOKzrZAj2+fduQx+oaeF3cy0abA6l+wPXmWH+UPMk7nEsoaMaDOl25hOt3ljutDPQ
+ Ce4kSNR6Vaow==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="155069760"
 X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="157568431"
+   d="scan'208";a="155069760"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:43:18 -0700
-IronPort-SDR: Awfy6k8cRDfUbpR7t7YSTNtUg6Oi+g9y+mJxBrBhJxAert9blL5j7wnKeDxn9maRoW9PgdcVa7
- rHJsieGM5MwA==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:43:42 -0700
+IronPort-SDR: 5iVsMplXIfUSZJ9rVZxnnxar8iO+OT6l4a/6v0+UHywlcKoGKIE26dvgnEDiFPN6piT+tghm6W
+ G/Hr6wut/gvw==
 X-IronPort-AV: E=Sophos;i="5.76,386,1592895600"; 
-   d="scan'208";a="282664759"
+   d="scan'208";a="405467695"
 Received: from shsi6026.sh.intel.com (HELO localhost) ([10.239.147.135])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:43:15 -0700
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 05:43:38 -0700
 From:   shuo.a.liu@intel.com
 To:     linux-kernel@vger.kernel.org, x86@kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -44,10 +44,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Yu Wang <yu1.wang@intel.com>,
         Reinette Chatre <reinette.chatre@intel.com>,
-        Shuo Liu <shuo.a.liu@intel.com>
-Subject: [PATCH v2 10/17] virt: acrn: Introduce PCI configuration space PIO accesses combiner
-Date:   Thu,  3 Sep 2020 20:41:54 +0800
-Message-Id: <20200903124201.17275-11-shuo.a.liu@intel.com>
+        Shuo Liu <shuo.a.liu@intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: [PATCH v2 14/17] virt: acrn: Introduce I/O ranges operation interfaces
+Date:   Thu,  3 Sep 2020 20:41:58 +0800
+Message-Id: <20200903124201.17275-15-shuo.a.liu@intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200903124201.17275-1-shuo.a.liu@intel.com>
 References: <20200903124201.17275-1-shuo.a.liu@intel.com>
@@ -60,187 +62,111 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shuo Liu <shuo.a.liu@intel.com>
 
-A User VM can access its virtual PCI configuration spaces via port IO
-approach, which has two following steps:
- 1) writes address into port 0xCF8
- 2) put/get data in/from port 0xCFC
+An I/O request of a User VM, which is constructed by hypervisor, is
+distributed by the ACRN Hypervisor Service Module to an I/O client
+corresponding to the address range of the I/O request.
 
-To distribute a complete PCI configuration space access one time, HSM
-need to combine such two accesses together.
-
-Combine two paired PIO I/O requests into one PCI I/O request and
-continue the I/O request distribution.
+I/O client maintains a list of address ranges. Introduce
+acrn_ioreq_range_{add,del}() to manage these address ranges.
 
 Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Zhi Wang <zhi.a.wang@intel.com>
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+Cc: Yu Wang <yu1.wang@intel.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/virt/acrn/acrn_drv.h |  2 +
- drivers/virt/acrn/ioreq.c    | 76 ++++++++++++++++++++++++++++++++++++
- include/uapi/linux/acrn.h    | 15 +++++++
- 3 files changed, 93 insertions(+)
+ drivers/virt/acrn/acrn_drv.h |  4 +++
+ drivers/virt/acrn/ioreq.c    | 60 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
 
 diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
-index 9a8e3bb007b1..4f86feaa5e1b 100644
+index 84d9a8f80101..cde12eaa492e 100644
 --- a/drivers/virt/acrn/acrn_drv.h
 +++ b/drivers/virt/acrn/acrn_drv.h
-@@ -154,6 +154,7 @@ extern rwlock_t acrn_vm_list_lock;
-  * @default_client:		The default I/O request client
-  * @ioreq_buf:			I/O request shared buffer
-  * @ioreq_page:			The page of the I/O request shared buffer
-+ * @pci_conf_addr:		Address of a PCI configuration access emulation
-  */
- struct acrn_vm {
- 	struct device			*dev;
-@@ -169,6 +170,7 @@ struct acrn_vm {
- 	struct acrn_ioreq_client	*default_client;
- 	struct acrn_io_request_buffer	*ioreq_buf;
- 	struct page			*ioreq_page;
-+	u32				pci_conf_addr;
- };
+@@ -198,6 +198,10 @@ struct acrn_ioreq_client *acrn_ioreq_client_create(struct acrn_vm *vm,
+ 						   void *data, bool is_default,
+ 						   const char *name);
+ void acrn_ioreq_client_destroy(struct acrn_ioreq_client *client);
++int acrn_ioreq_range_add(struct acrn_ioreq_client *client,
++			 u32 type, u64 start, u64 end);
++void acrn_ioreq_range_del(struct acrn_ioreq_client *client,
++			  u32 type, u64 start, u64 end);
  
- struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
+ int acrn_msi_inject(struct acrn_vm *vm, u64 msi_addr, u64 msi_data);
+ 
 diff --git a/drivers/virt/acrn/ioreq.c b/drivers/virt/acrn/ioreq.c
-index 08a4a8ee41c1..d1e1062e9d75 100644
+index d1e1062e9d75..cf0e05864b99 100644
 --- a/drivers/virt/acrn/ioreq.c
 +++ b/drivers/virt/acrn/ioreq.c
-@@ -224,6 +224,80 @@ int acrn_ioreq_client_wait(struct acrn_ioreq_client *client)
- 	return 0;
+@@ -104,6 +104,66 @@ int acrn_ioreq_request_default_complete(struct acrn_vm *vm, u16 vcpu)
+ 	return ret;
  }
  
-+static bool is_cfg_addr(struct acrn_io_request *req)
-+{
-+	return ((req->type == ACRN_IOREQ_TYPE_PORTIO) &&
-+		(req->reqs.pio_request.address == 0xcf8));
-+}
-+
-+static bool is_cfg_data(struct acrn_io_request *req)
-+{
-+	return ((req->type == ACRN_IOREQ_TYPE_PORTIO) &&
-+		((req->reqs.pio_request.address >= 0xcfc) &&
-+		 (req->reqs.pio_request.address < (0xcfc + 4))));
-+}
-+
-+/* The low 8-bit of supported pci_reg addr.*/
-+#define PCI_LOWREG_MASK  0xFC
-+/* The high 4-bit of supported pci_reg addr */
-+#define PCI_HIGHREG_MASK 0xF00
-+/* Max number of supported functions */
-+#define PCI_FUNCMAX	7
-+/* Max number of supported slots */
-+#define PCI_SLOTMAX	31
-+/* Max number of supported buses */
-+#define PCI_BUSMAX	255
-+#define CONF1_ENABLE	0x80000000UL
-+/*
-+ * A PCI configuration space access via PIO 0xCF8 and 0xCFC normally has two
-+ * following steps:
-+ *   1) writes address into 0xCF8 port
-+ *   2) accesses data in/from 0xCFC
-+ * This function combines such paired PCI configuration space I/O requests into
-+ * one ACRN_IOREQ_TYPE_PCICFG type I/O request and continues the processing.
++/**
++ * acrn_ioreq_range_add() - Add an iorange monitored by an ioreq client
++ * @client:	The ioreq client
++ * @type:	Type (ACRN_IOREQ_TYPE_MMIO or ACRN_IOREQ_TYPE_PORTIO)
++ * @start:	Start address of iorange
++ * @end:	End address of iorange
++ *
++ * Return: 0 on success, <0 on error
 + */
-+static bool handle_cf8cfc(struct acrn_vm *vm,
-+			  struct acrn_io_request *req, u16 vcpu)
++int acrn_ioreq_range_add(struct acrn_ioreq_client *client,
++			 u32 type, u64 start, u64 end)
 +{
-+	int offset, pci_cfg_addr, pci_reg;
-+	bool is_handled = false;
++	struct acrn_ioreq_range *range;
 +
-+	if (is_cfg_addr(req)) {
-+		WARN_ON(req->reqs.pio_request.size != 4);
-+		if (req->reqs.pio_request.direction == ACRN_IOREQ_DIR_WRITE)
-+			vm->pci_conf_addr = req->reqs.pio_request.value;
-+		else
-+			req->reqs.pio_request.value = vm->pci_conf_addr;
-+		is_handled = true;
-+	} else if (is_cfg_data(req)) {
-+		if (!(vm->pci_conf_addr & CONF1_ENABLE)) {
-+			if (req->reqs.pio_request.direction ==
-+					ACRN_IOREQ_DIR_READ)
-+				req->reqs.pio_request.value = 0xffffffff;
-+			is_handled = true;
-+		} else {
-+			offset = req->reqs.pio_request.address - 0xcfc;
-+
-+			req->type = ACRN_IOREQ_TYPE_PCICFG;
-+			pci_cfg_addr = vm->pci_conf_addr;
-+			req->reqs.pci_request.bus =
-+					(pci_cfg_addr >> 16) & PCI_BUSMAX;
-+			req->reqs.pci_request.dev =
-+					(pci_cfg_addr >> 11) & PCI_SLOTMAX;
-+			req->reqs.pci_request.func =
-+					(pci_cfg_addr >> 8) & PCI_FUNCMAX;
-+			pci_reg = (pci_cfg_addr & PCI_LOWREG_MASK) +
-+				   ((pci_cfg_addr >> 16) & PCI_HIGHREG_MASK);
-+			req->reqs.pci_request.reg = pci_reg + offset;
-+		}
++	if (end < start) {
++		dev_err(client->vm->dev,
++			"Invalid IO range [0x%llx,0x%llx]\n", start, end);
++		return -EFAULT;
 +	}
 +
-+	if (is_handled)
-+		ioreq_complete_request(vm, vcpu, req);
++	range = kzalloc(sizeof(*range), GFP_KERNEL);
++	if (!range)
++		return -ENOMEM;
 +
-+	return is_handled;
++	range->type = type;
++	range->start = start;
++	range->end = end;
++
++	write_lock_bh(&client->range_lock);
++	list_add(&range->list, &client->range_list);
++	write_unlock_bh(&client->range_lock);
++
++	return 0;
 +}
 +
- static bool in_range(struct acrn_ioreq_range *range,
- 		     struct acrn_io_request *req)
- {
-@@ -383,6 +457,8 @@ static int acrn_ioreq_dispatch(struct acrn_vm *vm)
- 				ioreq_complete_request(vm, i, req);
- 				continue;
- 			}
-+			if (handle_cf8cfc(vm, req, i))
-+				continue;
- 
- 			spin_lock_bh(&vm->ioreq_clients_lock);
- 			client = find_ioreq_client(vm, req);
-diff --git a/include/uapi/linux/acrn.h b/include/uapi/linux/acrn.h
-index 8eb687f1482c..31cf0fd73bcc 100644
---- a/include/uapi/linux/acrn.h
-+++ b/include/uapi/linux/acrn.h
-@@ -20,6 +20,7 @@
- 
- #define ACRN_IOREQ_TYPE_PORTIO		0
- #define ACRN_IOREQ_TYPE_MMIO		1
-+#define ACRN_IOREQ_TYPE_PCICFG		2
- 
- #define ACRN_IOREQ_DIR_READ		0
- #define ACRN_IOREQ_DIR_WRITE		1
-@@ -40,6 +41,18 @@ struct acrn_pio_request {
- 	__u32	value;
- } __attribute__((aligned(8)));
- 
-+/* Need keep same header fields with pio_request */
-+struct acrn_pci_request {
-+	__u32	direction;
-+	__u32	reserved[3];
-+	__u64	size;
-+	__u32	value;
-+	__u32	bus;
-+	__u32	dev;
-+	__u32	func;
-+	__u32	reg;
-+} __attribute__((aligned(8)));
++/**
++ * acrn_ioreq_range_del() - Del an iorange monitored by an ioreq client
++ * @client:	The ioreq client
++ * @type:	Type (ACRN_IOREQ_TYPE_MMIO or ACRN_IOREQ_TYPE_PORTIO)
++ * @start:	Start address of iorange
++ * @end:	End address of iorange
++ */
++void acrn_ioreq_range_del(struct acrn_ioreq_client *client,
++			  u32 type, u64 start, u64 end)
++{
++	struct acrn_ioreq_range *range;
 +
- /**
-  * struct acrn_io_request - 256-byte ACRN I/O request
-  * @type:		Type of this request (ACRN_IOREQ_TYPE_*).
-@@ -48,6 +61,7 @@ struct acrn_pio_request {
-  * @reserved0:		Reserved fields.
-  * @reqs:		Union of different types of request. Byte offset: 64.
-  * @reqs.pio_request:	PIO request data of the I/O request.
-+ * @reqs.pci_request:	PCI configuration space request data of the I/O request.
-  * @reqs.mmio_request:	MMIO request data of the I/O request.
-  * @reqs.data:		Raw data of the I/O request.
-  * @reserved1:		Reserved fields.
-@@ -107,6 +121,7 @@ struct acrn_io_request {
- 	__u32	reserved0[14];
- 	union {
- 		struct acrn_pio_request		pio_request;
-+		struct acrn_pci_request		pci_request;
- 		struct acrn_mmio_request	mmio_request;
- 		__u64				data[8];
- 	} reqs;
++	write_lock_bh(&client->range_lock);
++	list_for_each_entry(range, &client->range_list, list) {
++		if (type == range->type &&
++		    start == range->start &&
++		    end == range->end) {
++			list_del(&range->list);
++			kfree(range);
++			break;
++		}
++	}
++	write_unlock_bh(&client->range_lock);
++}
++
+ /*
+  * ioreq_task() is the execution entity of handler thread of an I/O client.
+  * The handler callback of the I/O client is called within the handler thread.
 -- 
 2.28.0
 
