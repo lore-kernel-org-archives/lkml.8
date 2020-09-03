@@ -2,91 +2,125 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C5FC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96575C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF72420773
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59CD220773
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 00:06:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DJVpw/6/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W+DOsAlA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgICACA (ORCPT
+        id S1727065AbgICAGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 20:02:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44190 "EHLO
+        Wed, 2 Sep 2020 20:06:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgICAB7 (ORCPT
+        with ESMTP id S1726979AbgICAGQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 20:01:59 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8271BC061244;
-        Wed,  2 Sep 2020 17:01:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=jG/anSY/5LJ9ebMkKbHQcu0NPrstmMT3teYNar15g7Q=; b=DJVpw/6/EjS/5Vi1TOx+P43hi+
-        0Mb1VKZRuV+VtEiaMix6/Y+oL6zpiQ+Wq4JKmC3q3d+2ltYN0Xr0HV1JlKRwBZBPx5r1sZuA5NMQO
-        /wrIn6znnWnAJybMIoWNQB5tIMA/T7fGnumSHne7ZtRXvnODdkzl/7fscOpgYOlhTbRAsQbcNrDik
-        6YXPz5P5IYAzTH1t/prwtfaMsYUU/AwzDpf5rfKWxqw6p+yvO5mb2tBlyLJXRhXnXHeKlblG2fB7F
-        iT+rzfid4z19fEqaz21dzyEIatotU3wpswJrm5o12uItiZZQBDnZe86q93bcM4AyVMKXL55bXSax4
-        ZwWUywKA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kDchN-0008UX-J1; Thu, 03 Sep 2020 00:01:54 +0000
-Subject: Re: [PATCH v2] mm/doc: editorial pass on page migration
-To:     Ralph Campbell <rcampbell@nvidia.com>, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200902225247.15213-1-rcampbell@nvidia.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <8def6c20-0efe-99f3-bde3-3e49f1456112@infradead.org>
-Date:   Wed, 2 Sep 2020 17:01:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 2 Sep 2020 20:06:16 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9380C061245
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 17:06:15 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ds1so587808pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 17:06:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z04vsoOUn7JwZd/p6IxCr5Uu7ufkQph2sZ/+/wCM6Mk=;
+        b=W+DOsAlATrKpzZEseA1m7WhWDyUKst3T4q0mLaydrOeoREGz2Ox1/Mri6QwMsxSXBs
+         bcBBGjMJOVLmsIrZB2EGrL1jFeMJ4viiasi1GsuGzLm8jkP9RCcNAiJ+hL4LgWS9M8n+
+         1kvwnTLA1NUrvLZv81NBSsHsU70A6yjZaSqpA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z04vsoOUn7JwZd/p6IxCr5Uu7ufkQph2sZ/+/wCM6Mk=;
+        b=o0pOZWGxinz8vn1TdZeu806y3D/jMxaZ7qUdNSMawHbb1E2vWYuqUXf1In8WUTgya1
+         kUDAhKijegiUInUAlLSR2LRwEk0czhayvUMYCt5uUwUioPOTQL2rd9SNq44wjB/adyaQ
+         UJukg2kqjn3OajO2fBNoWHbKAaBZwQebKJ0Lmcl4/B6Rlo2PAckOffRcD2MUH5rkovJq
+         giozIu67aSeWLy9yYcucDcRvCHD8YLmvSMQyAJ7unMO0mpUmHMTNPZLyJ31TlyihNVtR
+         EW6JcHvsyZG72+yBfwhC0zjnUAR+tqFWalgZ0HXd5ogtHowJc+1WSrujhW/Cc4mGqpqC
+         Oelg==
+X-Gm-Message-State: AOAM531kR3YBwlhxQKeq8WOAOEtEtGUYd33pn4YST4hIxHAJjlf1W7JP
+        jDXXmtkrGJE8EAhT4OgVMV7iSw==
+X-Google-Smtp-Source: ABdhPJyDYOH+kR2LzNuzKkhYgxKK4anL0GLAhY3wBw4PKVEzGUP9xXeD0JDhuJkTGMRs9dOYGjD3Rg==
+X-Received: by 2002:a17:90b:2388:: with SMTP id mr8mr220861pjb.161.1599091575254;
+        Wed, 02 Sep 2020 17:06:15 -0700 (PDT)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:7220:84ff:fe09:41dc])
+        by smtp.gmail.com with ESMTPSA id gt13sm478342pjb.43.2020.09.02.17.06.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 17:06:14 -0700 (PDT)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH v3] rpmsg: Avoid double-free in mtk_rpmsg_register_device
+Date:   Thu,  3 Sep 2020 08:05:58 +0800
+Message-Id: <20200903080547.v3.1.I56cf27cd59f4013bd074dc622c8b8248b034a4cc@changeid>
+X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
 MIME-Version: 1.0
-In-Reply-To: <20200902225247.15213-1-rcampbell@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/20 3:52 PM, Ralph Campbell wrote:
-> Add Sphinx reference links to HMM and CPUSETS, and numerous small
-> editorial changes to make the page_migration.rst document more readable.
-> 
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+If rpmsg_register_device fails, it will call
+mtk_rpmsg_release_device which already frees mdev.
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Fixes: 7017996951fd ("rpmsg: add rpmsg support for mt8183 SCP.")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
 
-Thanks.
+Changes in v3:
+ - 12-char Fixes tag (Mathieu Poirier)
 
-> ---
-> 
-> The patch applies cleanly to the latest linux or linux-mm tree.
-> Since this is MM relatated, perhaps Andrew Morton would like to
-> take this into the linux-mm tree.
-> 
-> Changes in v2:
-> Applied suggestions from Randy Dunlap:
-> Replace outdated ftp:// link to https://github
-> Changed "off node" to "off-node" and "non-lru" to "non-LRU"
-> 
->  .../admin-guide/cgroup-v1/cpusets.rst         |   2 +
->  Documentation/vm/hmm.rst                      |   2 +-
->  Documentation/vm/page_migration.rst           | 164 +++++++++---------
->  3 files changed, 87 insertions(+), 81 deletions(-)
-> 
+Changes in v2:
+ - Drop useless if and ret variable (Markus Elfring)
 
+ drivers/rpmsg/mtk_rpmsg.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/drivers/rpmsg/mtk_rpmsg.c b/drivers/rpmsg/mtk_rpmsg.c
+index 83f2b8804ee9..96a17ec29140 100644
+--- a/drivers/rpmsg/mtk_rpmsg.c
++++ b/drivers/rpmsg/mtk_rpmsg.c
+@@ -200,7 +200,6 @@ static int mtk_rpmsg_register_device(struct mtk_rpmsg_rproc_subdev *mtk_subdev,
+ 	struct rpmsg_device *rpdev;
+ 	struct mtk_rpmsg_device *mdev;
+ 	struct platform_device *pdev = mtk_subdev->pdev;
+-	int ret;
+ 
+ 	mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);
+ 	if (!mdev)
+@@ -219,13 +218,7 @@ static int mtk_rpmsg_register_device(struct mtk_rpmsg_rproc_subdev *mtk_subdev,
+ 	rpdev->dev.parent = &pdev->dev;
+ 	rpdev->dev.release = mtk_rpmsg_release_device;
+ 
+-	ret = rpmsg_register_device(rpdev);
+-	if (ret) {
+-		kfree(mdev);
+-		return ret;
+-	}
+-
+-	return 0;
++	return rpmsg_register_device(rpdev);
+ }
+ 
+ static void mtk_register_device_work_function(struct work_struct *register_work)
 -- 
-~Randy
+2.28.0.402.g5ffc5be6b7-goog
+
