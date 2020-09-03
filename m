@@ -2,131 +2,126 @@ Return-Path: <SRS0=vQOp=CM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36ECBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C600C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19DAD2071B
-	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646062071B
+	for <linux-kernel@archiver.kernel.org>; Thu,  3 Sep 2020 07:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgICHJs (ORCPT
+        id S1728012AbgICHLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 03:09:48 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:35968 "EHLO inva021.nxp.com"
+        Thu, 3 Sep 2020 03:11:49 -0400
+Received: from verein.lst.de ([213.95.11.211]:36619 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbgICHJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 03:09:48 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 80C1C2014D3;
-        Thu,  3 Sep 2020 09:09:46 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7748E200233;
-        Thu,  3 Sep 2020 09:09:43 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 52FB640249;
-        Thu,  3 Sep 2020 09:09:39 +0200 (CEST)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Li Yang <leoyang.li@nxp.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peng Ma <peng.ma@nxp.com>, Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v5] soc: fsl: enable acpi support in RCPM driver
-Date:   Thu,  3 Sep 2020 15:01:58 +0800
-Message-Id: <20200903070158.27399-1-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725919AbgICHLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 03:11:49 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 0164568BEB; Thu,  3 Sep 2020 09:11:44 +0200 (CEST)
+Date:   Thu, 3 Sep 2020 09:11:44 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 10/10] powerpc: remove address space overrides using
+ set_fs()
+Message-ID: <20200903071144.GA19247@lst.de>
+References: <20200827150030.282762-1-hch@lst.de> <20200827150030.282762-11-hch@lst.de> <8974838a-a0b1-1806-4a3a-e983deda67ca@csgroup.eu> <20200902123646.GA31184@lst.de> <d78cb4be-48a9-a7c5-d9d1-d04d2a02b4c6@csgroup.eu> <CAHk-=wiDCcxuHgENo3UtdFi2QW9B7yXvNpG5CtF=A6bc6PTTgA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiDCcxuHgENo3UtdFi2QW9B7yXvNpG5CtF=A6bc6PTTgA@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Ma <peng.ma@nxp.com>
+On Wed, Sep 02, 2020 at 11:02:22AM -0700, Linus Torvalds wrote:
+> I don't see why this change would make any difference.
 
-This patch enables ACPI support in RCPM driver.
+Me neither, but while looking at a different project I did spot places
+that actually do an access_ok with len 0, that's why I wanted him to
+try.
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+That being said: Christophe are these number stables?  Do you get
+similar numbers with multiple runs?
+
+> And btw, why do the 32-bit and 64-bit checks even differ? It's not
+> like the extra (single) instruction should even matter. I think the
+> main reason is that the simpler 64-bit case could stay as a macro
+> (because it only uses "addr" and "size" once), but honestly, that
+> "simplification" doesn't help when you then need to have that #ifdef
+> for the 32-bit case and an inline function anyway.
+
+I'll have to leave that to the powerpc folks.  The intent was to not
+change the behavior (and I even fucked that up for the the size == 0
+case).
+
+> However, I suspect a bigger reason for the actual performance
+> degradation would be the patch that makes things use "write_iter()"
+> for writing, even when a simpler "write()" exists.
+
+Except that we do not actually have such a patch.  For normal user
+writes we only use ->write_iter if ->write is not present.  But what
+shows up in the profile is that /dev/zero only has a read_iter op and
+not a normal read.  I've added a patch below that implements a normal
+read which might help a tad with this workload, but should not be part
+of a regression.
+
+Also Christophe:  can you bisect which patch starts this?  Is it really
+this last patch in the series?
+
 ---
-Change in v5:
- - Fix panic when dev->of_node is null
-
-Change in v4:
- - Make commit subject more accurate
- - Remove unrelated new blank line
-
-Change in v3:
- - Add #ifdef CONFIG_ACPI for acpi_device_id
- - Rename rcpm_acpi_imx_ids to rcpm_acpi_ids
-
-Change in v2:
- - Update acpi_device_id to fix conflict with other driver
-
- drivers/soc/fsl/rcpm.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
-index a093dbe..58870f4 100644
---- a/drivers/soc/fsl/rcpm.c
-+++ b/drivers/soc/fsl/rcpm.c
-@@ -2,7 +2,7 @@
- //
- // rcpm.c - Freescale QorIQ RCPM driver
- //
--// Copyright 2019 NXP
-+// Copyright 2019-2020 NXP
- //
- // Author: Ran Wang <ran.wang_1@nxp.com>
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index abd4ffdc8cdebc..1dc99ab158457a 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -726,6 +726,27 @@ static ssize_t read_iter_zero(struct kiocb *iocb, struct iov_iter *iter)
+ 	return written;
+ }
  
-@@ -13,6 +13,7 @@
- #include <linux/slab.h>
- #include <linux/suspend.h>
- #include <linux/kernel.h>
-+#include <linux/acpi.h>
- 
- #define RCPM_WAKEUP_CELL_MAX_SIZE	7
- 
-@@ -56,10 +57,14 @@ static int rcpm_pm_prepare(struct device *dev)
- 				"fsl,rcpm-wakeup", value,
- 				rcpm->wakeup_cells + 1);
- 
--		/*  Wakeup source should refer to current rcpm device */
--		if (ret || (np->phandle != value[0]))
-+		if (ret)
- 			continue;
- 
-+		if (is_of_node(dev->fwnode))
-+			/*  Should refer to current rcpm device */
-+			if (np->phandle != value[0])
-+				continue;
++static ssize_t read_zero(struct file *file, char __user *buf,
++			 size_t count, loff_t *ppos)
++{
++	size_t cleared = 0;
 +
- 		/* Property "#fsl,rcpm-wakeup-cells" of rcpm node defines the
- 		 * number of IPPDEXPCR register cells, and "fsl,rcpm-wakeup"
- 		 * of wakeup source IP contains an integer array: <phandle to
-@@ -139,10 +144,19 @@ static const struct of_device_id rcpm_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, rcpm_of_match);
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id rcpm_acpi_ids[] = {
-+	{"NXP0015",},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, rcpm_acpi_ids);
-+#endif
++	while (count) {
++		size_t chunk = min_t(size_t, count, PAGE_SIZE);
 +
- static struct platform_driver rcpm_driver = {
- 	.driver = {
- 		.name = "rcpm",
- 		.of_match_table = rcpm_of_match,
-+		.acpi_match_table = ACPI_PTR(rcpm_acpi_ids),
- 		.pm	= &rcpm_pm_ops,
- 	},
- 	.probe = rcpm_probe,
--- 
-2.7.4
-
++		if (clear_user(buf + cleared, chunk))
++			return cleared ? cleared : -EFAULT;
++		cleared += chunk;
++		count -= chunk;
++
++		if (signal_pending(current))
++			return cleared ? cleared : -ERESTARTSYS;
++		cond_resched();
++	}
++
++	return cleared;
++}
++
+ static int mmap_zero(struct file *file, struct vm_area_struct *vma)
+ {
+ #ifndef CONFIG_MMU
+@@ -921,6 +942,7 @@ static const struct file_operations zero_fops = {
+ 	.llseek		= zero_lseek,
+ 	.write		= write_zero,
+ 	.read_iter	= read_iter_zero,
++	.read		= read_zero,
+ 	.write_iter	= write_iter_zero,
+ 	.mmap		= mmap_zero,
+ 	.get_unmapped_area = get_unmapped_area_zero,
