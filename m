@@ -2,1770 +2,215 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36332C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2076C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E109320684
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78AAF20684
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:03:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="CyA5fLBe"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Etf7a8Y5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbgIDODZ (ORCPT
+        id S1730734AbgIDODh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:03:25 -0400
-Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:49454 "EHLO
-        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730624AbgIDNqP (ORCPT
+        Fri, 4 Sep 2020 10:03:37 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:44936 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730618AbgIDNp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:46:15 -0400
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id 2B78F82156;
-        Fri,  4 Sep 2020 16:34:38 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1599226478;
-        bh=GPU7vnszvWba2MavNXD4F1IT0g6XCJ5KYpSm2P6GEeY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=CyA5fLBeFoDkzzGbd647DdHdxmQCrNpg3bztXItMtReTxSgl5SEse4g76Hc87EUqD
-         Xkmol0Ru6w8GoysAqmVjBlUXpsWa3NRjKXPYgaJ+Kk380Ev2KTEcKoAu+FrXB/3vl/
-         fc3lzBsZhKd9J7LMmJnehUOzAf9Xb8Tdl7YQYbFI=
-Received: from fsd-lkpg.ufsd.paragon-software.com (172.30.114.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 4 Sep 2020 16:34:37 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     <linux-fsdevel@vger.kernel.org>
-CC:     <viro@zeniv.linux.org.uk>, <linux-kernel@vger.kernel.org>,
-        <pali@kernel.org>, <dsterba@suse.cz>, <aaptel@suse.com>,
-        <willy@infradead.org>, <rdunlap@infradead.org>, <joe@perches.com>,
-        <mark@harmstone.com>, <nborisov@suse.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Subject: [PATCH v4 03/10] fs/ntfs3: Add bitmap
-Date:   Fri, 4 Sep 2020 16:32:24 +0300
-Message-ID: <20200904133231.1769292-4-almaz.alexandrovich@paragon-software.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200904133231.1769292-1-almaz.alexandrovich@paragon-software.com>
-References: <20200904133231.1769292-1-almaz.alexandrovich@paragon-software.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.30.114.105]
-X-ClientProxiedBy: vdlg-exch-02.paragon-software.com (172.30.1.105) To
- vdlg-exch-02.paragon-software.com (172.30.1.105)
+        Fri, 4 Sep 2020 09:45:57 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200904133508euoutp01b3e9bd1ee54db5b2a0634da57d997193~xmAlH9ej10722107221euoutp01v
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:35:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200904133508euoutp01b3e9bd1ee54db5b2a0634da57d997193~xmAlH9ej10722107221euoutp01v
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599226508;
+        bh=y8XiqPQs8/1IzXK7H+MMTYb8kGMuWtVP33aXQuilFtM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Etf7a8Y5FjKgDoLQNLsvt3x0NkfZ41pqpCz4DTjEgRigL8QlJnWW4/c4qc1QBdhTt
+         6ioolpyjYGRMdx74udJwL2mbzvM6GmyXBSaIs+7IVFW5j6e1XS1Qk8/cCTFFpV/thq
+         4OockXCrA/hinZvLJ5fPpDO9g9VMBHczREHG7xhY=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200904133507eucas1p295c82eee7f3f5f66d185e12641b0be97~xmAkzCyXP0693606936eucas1p2V;
+        Fri,  4 Sep 2020 13:35:07 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id BE.66.05997.B82425F5; Fri,  4
+        Sep 2020 14:35:07 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200904133507eucas1p1d164b469647e3904da7f272413341e4c~xmAkgIgJA0116001160eucas1p14;
+        Fri,  4 Sep 2020 13:35:07 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200904133507eusmtrp2ab02774ebff16dbcbbecb63ac6c157f3~xmAkfTyF50977009770eusmtrp2V;
+        Fri,  4 Sep 2020 13:35:07 +0000 (GMT)
+X-AuditID: cbfec7f4-677ff7000000176d-72-5f52428bb5c9
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 7F.A0.06017.B82425F5; Fri,  4
+        Sep 2020 14:35:07 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200904133507eusmtip148cedeecc0144c4e071b05b3336969ca~xmAj72YGi1939819398eusmtip17;
+        Fri,  4 Sep 2020 13:35:07 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH v10 23/30] drm: host1x: fix common struct sg_table related
+ issues
+Date:   Fri,  4 Sep 2020 15:17:04 +0200
+Message-Id: <20200904131711.12950-24-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200904131711.12950-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSWUwTURSGvTPT6VCoDoXIDQgkTTDRRBbFOAaCSAxOeCIYl2AEC4xAWNMC
+        Ai+iIkIpBDQG0hhANCK0bAVZ6tqqFEULyi6yCTEgEJBNUAJ2GJC37/znP/c/ObkEKmrk2RKR
+        sQmMNFYSLcYFWEPLavuhbJ+AYNfJD8eoHON7hKotrOZRGw35KNW1NItT5ap3CFXyyoNa7BpF
+        KM1YD4/q1N7HqaxFJU5Vvh3kU7q5cR61qi3CvIW0ukgN6BfLJRjdrBzk043LIzx6ONuA0HWP
+        rtED62MofbevDNDP+tNwOre+AtALGgd/80CBZxgTHZnESF28Lgsi1P19aHyvXXL9whqSBu7t
+        lQMzApLusDtvGmVZRD4BcEnvJAcCEy8CONzRhnPFAoB/MxTo9oR6ZRTjGmUAquTd+M7I9SyM
+        deGkG5TPyHGWrclbALbmWLAmlPyOwKzez5tPWZFnoDa9F7CMkU4wu6lgUxeSXnB0Mh3n4hyh
+        qub1pm5m0p8WjvPYhyDZwocvlTqMM52CzdU9W2wFfxrq+RzvgxvNxQg3cBPAUWMlnysUAHbe
+        KAScywN+M/4xxRGm/Q7Aaq0LJ5+Ec49vY6wMyd2wb8aSlVET3mlgF2VlIczMEHHu/VBpqPof
+        q+v4snUuGk61GlHuQvkAzg+t43nAUbkTVgJABbBhEmUx4YzscCxz1VkmiZElxoY7h8bFaIDp
+        O7WtGxabgHYtRA9IAogthLtOBASLeJIkWUqMHkACFVsLfT61BYmEYZKUVEYaFyxNjGZkemBH
+        YGIb4ZHSyUsiMlySwEQxTDwj3e4ihJltGqjAokKKpx+qzsenmQ/bT/T8mBB7lCncNVNf3U/v
+        +bhRUDmr8Us2iNNhfEKgT5HxQq5DYb3OV4BQpW1H/Zdov9mhUKRFd7bWO6h9pTIqzzudiG5R
+        1Kl5A/N1rliiZU1kVSZ1sVrhlFwed4Wa+OXbbf9An+qpfP7meNM5z5HfwWJMFiFxO4hKZZJ/
+        XKXwiEoDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsVy+t/xu7rdTkHxBiduqlj0njvJZLFxxnpW
+        i//bJjJbXPn6ns1i5eqjTBYL9ltbfLnykMli0+NrrBaXd81hs+j8MovNYu2Ru+wWBz88YbX4
+        uWseiwOvx5p5axg99n5bwOKxc9Zddo/t3x6wetzvPs7ksXlJvcftf4+ZPSbfWM7osftmA5tH
+        35ZVjB6fN8kFcEfp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSW
+        pRbp2yXoZay5eYO54Lp0xZbPf5gaGKeKdTFyckgImEis+fGQpYuRi0NIYCmjxKdFS1khEjIS
+        J6c1QNnCEn+udbFBFH1ilNh14jUjSIJNwFCi6y1EQkSgk1FiWvdHdhCHWeAVk8SHP61gVcIC
+        gRLXp9xmArFZBFQlundMZwaxeQXsJB6+bGGDWCEvsXrDAbA4J1B864wnYKuFBGwlPsxZzDKB
+        kW8BI8MqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwGjZduznlh2MXe+CDzEKcDAq8fAy2AfF
+        C7EmlhVX5h5ilOBgVhLhdTp7Ok6INyWxsiq1KD++qDQntfgQoynQUROZpUST84GRnFcSb2hq
+        aG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgbHu0A2e9b2HO8Xljx259kXq
+        jdq1MMmwjUZa8TwHRItVN+Xc6XZvux7S8lJZW06kVSBsOttVoVlr7/vX/Gi9JRtqsPG81yOd
+        Z0ULf7d3ehmvPmCp/OVudvXfJSe8jaZ8nXyYV8Lx8c/txfLP/H6IcJxZJiwz51DGpkxBkT7/
+        gnLXF0VvP17YdFqJpTgj0VCLuag4EQDLA0werAIAAA==
+X-CMS-MailID: 20200904133507eucas1p1d164b469647e3904da7f272413341e4c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200904133507eucas1p1d164b469647e3904da7f272413341e4c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200904133507eucas1p1d164b469647e3904da7f272413341e4c
+References: <20200904131711.12950-1-m.szyprowski@samsung.com>
+        <CGME20200904133507eucas1p1d164b469647e3904da7f272413341e4c@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds bitmap
+The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+returns the number of the created entries in the DMA address space.
+However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+dma_unmap_sg must be called with the original number of the entries
+passed to the dma_map_sg().
 
-Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+struct sg_table is a common structure used for describing a non-contiguous
+memory buffer, used commonly in the DRM and graphics subsystems. It
+consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+and DMA mapped pages (nents entry).
+
+It turned out that it was a common mistake to misuse nents and orig_nents
+entries, calling DMA-mapping functions with a wrong number of entries or
+ignoring the number of mapped entries returned by the dma_map_sg()
+function.
+
+To avoid such issues, lets use a common dma-mapping wrappers operating
+directly on the struct sg_table objects and use scatterlist page
+iterators where possible. This, almost always, hides references to the
+nents and orig_nents entries, making the code robust, easier to follow
+and copy/paste safe.
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 ---
- fs/ntfs3/bitfunc.c |  137 ++++
- fs/ntfs3/bitmap.c  | 1546 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 1683 insertions(+)
- create mode 100644 fs/ntfs3/bitfunc.c
- create mode 100644 fs/ntfs3/bitmap.c
+ drivers/gpu/host1x/job.c | 22 ++++++++--------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/fs/ntfs3/bitfunc.c b/fs/ntfs3/bitfunc.c
-new file mode 100644
-index 000000000000..b19972177535
---- /dev/null
-+++ b/fs/ntfs3/bitfunc.c
-@@ -0,0 +1,137 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  linux/fs/ntfs3/bitfunc.c
-+ *
-+ * Copyright (C) 2019-2020 Paragon Software GmbH, All rights reserved.
-+ *
-+ */
-+#include <linux/blkdev.h>
-+#include <linux/buffer_head.h>
-+#include <linux/fs.h>
-+#include <linux/nls.h>
-+#include <linux/sched/signal.h>
-+
-+#include "debug.h"
-+#include "ntfs.h"
-+#include "ntfs_fs.h"
-+
-+#define BITS_IN_SIZE_T (sizeof(size_t) * 8)
-+
-+/*
-+ * fill_mask[i] - first i bits are '1' , i = 0,1,2,3,4,5,6,7,8
-+ * fill_mask[i] = 0xFF >> (8-i)
-+ */
-+static const u8 fill_mask[] = { 0x00, 0x01, 0x03, 0x07, 0x0F,
-+				0x1F, 0x3F, 0x7F, 0xFF };
-+
-+/*
-+ * zero_mask[i] - first i bits are '0' , i = 0,1,2,3,4,5,6,7,8
-+ * zero_mask[i] = 0xFF << i
-+ */
-+static const u8 zero_mask[] = { 0xFF, 0xFE, 0xFC, 0xF8, 0xF0,
-+				0xE0, 0xC0, 0x80, 0x00 };
-+
-+/*
-+ * are_bits_clear
-+ *
-+ * Returns true if all bits [bit, bit+nbits) are zeros "0"
-+ */
-+bool are_bits_clear(const ulong *lmap, size_t bit, size_t nbits)
-+{
-+	size_t pos = bit & 7;
-+	const u8 *map = (u8 *)lmap + (bit >> 3);
-+
-+	if (pos) {
-+		if (8 - pos >= nbits)
-+			return !nbits || !(*map & fill_mask[pos + nbits] &
-+					   zero_mask[pos]);
-+
-+		if (*map++ & zero_mask[pos])
-+			return false;
-+		nbits -= 8 - pos;
-+	}
-+
-+	pos = ((size_t)map) & (sizeof(size_t) - 1);
-+	if (pos) {
-+		pos = sizeof(size_t) - pos;
-+		if (nbits >= pos * 8) {
-+			for (nbits -= pos * 8; pos; pos--, map++) {
-+				if (*map)
-+					return false;
-+			}
-+		}
-+	}
-+
-+	for (pos = nbits / BITS_IN_SIZE_T; pos; pos--, map += sizeof(size_t)) {
-+		if (*((size_t *)map))
-+			return false;
-+	}
-+
-+	for (pos = (nbits % BITS_IN_SIZE_T) >> 3; pos; pos--, map++) {
-+		if (*map)
-+			return false;
-+	}
-+
-+	pos = nbits & 7;
-+	if (pos && (*map & fill_mask[pos]))
-+		return false;
-+
-+	// All bits are zero
-+	return true;
-+}
-+
-+/*
-+ * are_bits_set
-+ *
-+ * Returns true if all bits [bit, bit+nbits) are ones "1"
-+ */
-+bool are_bits_set(const ulong *lmap, size_t bit, size_t nbits)
-+{
-+	u8 mask;
-+	size_t pos = bit & 7;
-+	const u8 *map = (u8 *)lmap + (bit >> 3);
-+
-+	if (pos) {
-+		if (8 - pos >= nbits) {
-+			mask = fill_mask[pos + nbits] & zero_mask[pos];
-+			return !nbits || (*map & mask) == mask;
-+		}
-+
-+		mask = zero_mask[pos];
-+		if ((*map++ & mask) != mask)
-+			return false;
-+		nbits -= 8 - pos;
-+	}
-+
-+	pos = ((size_t)map) & (sizeof(size_t) - 1);
-+	if (pos) {
-+		pos = sizeof(size_t) - pos;
-+		if (nbits >= pos * 8) {
-+			for (nbits -= pos * 8; pos; pos--, map++) {
-+				if (*map != 0xFF)
-+					return false;
-+			}
-+		}
-+	}
-+
-+	for (pos = nbits / BITS_IN_SIZE_T; pos; pos--, map += sizeof(size_t)) {
-+		if (*((size_t *)map) != MINUS_ONE_T)
-+			return false;
-+	}
-+
-+	for (pos = (nbits % BITS_IN_SIZE_T) >> 3; pos; pos--, map++) {
-+		if (*map != 0xFF)
-+			return false;
-+	}
-+
-+	pos = nbits & 7;
-+	if (pos) {
-+		u8 mask = fill_mask[pos];
-+
-+		if ((*map & mask) != mask)
-+			return false;
-+	}
-+
-+	// All bits are ones
-+	return true;
-+}
-diff --git a/fs/ntfs3/bitmap.c b/fs/ntfs3/bitmap.c
-new file mode 100644
-index 000000000000..6b8b090b3b53
---- /dev/null
-+++ b/fs/ntfs3/bitmap.c
-@@ -0,0 +1,1546 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  linux/fs/ntfs3/bitmap.c
-+ *
-+ * Copyright (C) 2019-2020 Paragon Software GmbH, All rights reserved.
-+ *
-+ */
-+
-+#include <linux/blkdev.h>
-+#include <linux/buffer_head.h>
-+#include <linux/fs.h>
-+#include <linux/nls.h>
-+#include <linux/sched/signal.h>
-+
-+#include "debug.h"
-+#include "ntfs.h"
-+#include "ntfs_fs.h"
-+
-+struct rb_node_key {
-+	struct rb_node node;
-+	size_t key;
-+};
-+
-+/*
-+ * Tree is sorted by start (key)
-+ */
-+struct e_node {
-+	struct rb_node_key start; /* Tree sorted by start */
-+	struct rb_node_key count; /* Tree sorted by len*/
-+};
-+
-+static int wnd_rescan(struct wnd_bitmap *wnd);
-+static struct buffer_head *wnd_map(struct wnd_bitmap *wnd, size_t iw);
-+static bool wnd_is_free_hlp(struct wnd_bitmap *wnd, size_t bit, size_t bits);
-+
-+static inline u32 wnd_bits(const struct wnd_bitmap *wnd, size_t i)
-+{
-+	return i + 1 == wnd->nwnd ? wnd->bits_last : wnd->sb->s_blocksize * 8;
-+}
-+
-+/*
-+ * b_pos + b_len - biggest fragment
-+ * Scan range [wpos wbits) window 'buf'
-+ * Returns -1 if not found
-+ */
-+static size_t wnd_scan(const ulong *buf, size_t wbit, u32 wpos, u32 wend,
-+		       size_t to_alloc, size_t *prev_tail, size_t *b_pos,
-+		       size_t *b_len)
-+{
-+	while (wpos < wend) {
-+		size_t free_len;
-+		u32 free_bits, end;
-+		u32 used = find_next_zero_bit(buf, wend, wpos);
-+
-+		if (used >= wend) {
-+			if (*b_len < *prev_tail) {
-+				*b_pos = wbit - *prev_tail;
-+				*b_len = *prev_tail;
-+			}
-+
-+			*prev_tail = 0;
-+			return -1;
-+		}
-+
-+		if (used > wpos) {
-+			wpos = used;
-+			if (*b_len < *prev_tail) {
-+				*b_pos = wbit - *prev_tail;
-+				*b_len = *prev_tail;
-+			}
-+
-+			*prev_tail = 0;
-+		}
-+
-+		/*
-+		 * Now we have a fragment [wpos, wend) staring with 0
-+		 */
-+		end = wpos + to_alloc - *prev_tail;
-+		free_bits = find_next_bit(buf, min(end, wend), wpos);
-+
-+		free_len = *prev_tail + free_bits - wpos;
-+
-+		if (*b_len < free_len) {
-+			*b_pos = wbit + wpos - *prev_tail;
-+			*b_len = free_len;
-+		}
-+
-+		if (free_len >= to_alloc)
-+			return wbit + wpos - *prev_tail;
-+
-+		if (free_bits >= wend) {
-+			*prev_tail += free_bits - wpos;
-+			return -1;
-+		}
-+
-+		wpos = free_bits + 1;
-+
-+		*prev_tail = 0;
-+	}
-+
-+	return -1;
-+}
-+
-+/*
-+ * wnd_close
-+ *
-+ *
-+ */
-+void wnd_close(struct wnd_bitmap *wnd)
-+{
-+	struct rb_node *node, *next;
-+
-+	if (wnd->free_bits != wnd->free_holder)
-+		ntfs_free(wnd->free_bits);
-+	run_close(&wnd->run);
-+
-+	node = rb_first(&wnd->start_tree);
-+
-+	while (node) {
-+		next = rb_next(node);
-+		rb_erase(node, &wnd->start_tree);
-+		ntfs_free(rb_entry(node, struct e_node, start.node));
-+		node = next;
-+	}
-+}
-+
-+static struct rb_node *rb_lookup(struct rb_root *root, size_t v)
-+{
-+	struct rb_node **p = &root->rb_node;
-+	struct rb_node *r = NULL;
-+
-+	while (*p) {
-+		struct rb_node_key *k;
-+
-+		k = rb_entry(*p, struct rb_node_key, node);
-+		if (v < k->key) {
-+			p = &(*p)->rb_left;
-+		} else if (v > k->key) {
-+			r = &k->node;
-+			p = &(*p)->rb_right;
-+		} else {
-+			return &k->node;
-+		}
-+	}
-+
-+	return r;
-+}
-+
-+/*
-+ * rb_insert_count
-+ *
-+ * Helper function to insert special kind of 'count' tree
-+ */
-+static inline bool rb_insert_count(struct rb_root *root, struct e_node *e)
-+{
-+	struct rb_node **p = &root->rb_node;
-+	struct rb_node *parent = NULL;
-+	size_t e_ckey = e->count.key;
-+	size_t e_skey = e->start.key;
-+
-+	while (*p) {
-+		struct e_node *k =
-+			rb_entry(parent = *p, struct e_node, count.node);
-+
-+		if (e_ckey > k->count.key) {
-+			p = &(*p)->rb_left;
-+		} else if (e_ckey < k->count.key) {
-+			p = &(*p)->rb_right;
-+		} else if (e_skey < k->start.key) {
-+			p = &(*p)->rb_left;
-+		} else if (e_skey > k->start.key) {
-+			p = &(*p)->rb_right;
-+		} else {
-+			WARN_ON(1);
-+			return false;
-+		}
-+	}
-+
-+	rb_link_node(&e->count.node, parent, p);
-+	rb_insert_color(&e->count.node, root);
-+	return true;
-+}
-+
-+/*
-+ * inline bool rb_insert_start
-+ *
-+ * Helper function to insert special kind of 'count' tree
-+ */
-+static inline bool rb_insert_start(struct rb_root *root, struct e_node *e)
-+{
-+	struct rb_node **p = &root->rb_node;
-+	struct rb_node *parent = NULL;
-+	size_t e_skey = e->start.key;
-+
-+	while (*p) {
-+		struct e_node *k;
-+
-+		parent = *p;
-+
-+		k = rb_entry(parent, struct e_node, start.node);
-+		if (e_skey < k->start.key) {
-+			p = &(*p)->rb_left;
-+		} else if (e_skey > k->start.key) {
-+			p = &(*p)->rb_right;
-+		} else {
-+			WARN_ON(1);
-+			return false;
-+		}
-+	}
-+
-+	rb_link_node(&e->start.node, parent, p);
-+	rb_insert_color(&e->start.node, root);
-+	return true;
-+}
-+
-+#define NTFS_MAX_WND_EXTENTS (32u * 1024u)
-+
-+/*
-+ * wnd_add_free_ext
-+ *
-+ * adds a new extent of free space
-+ * build = 1 when building tree
-+ */
-+static void wnd_add_free_ext(struct wnd_bitmap *wnd, size_t bit, size_t len,
-+			     bool build)
-+{
-+	struct e_node *e, *e0 = NULL;
-+	size_t ib, end_in = bit + len;
-+	struct rb_node *n;
-+
-+	if (!build)
-+		goto lookup;
-+
-+	if (wnd->count >= NTFS_MAX_WND_EXTENTS && len <= wnd->extent_min) {
-+		wnd->uptodated = -1;
-+		return;
-+	}
-+
-+	goto insert_new;
-+
-+lookup:
-+	/* Try to find extent before 'bit' */
-+	n = rb_lookup(&wnd->start_tree, bit);
-+
-+	if (!n) {
-+		n = rb_first(&wnd->start_tree);
-+	} else {
-+		e = rb_entry(n, struct e_node, start.node);
-+
-+		n = rb_next(n);
-+		if (e->start.key + e->count.key == bit) {
-+			/* Remove left */
-+			bit = e->start.key;
-+			len += e->count.key;
-+
-+			rb_erase(&e->start.node, &wnd->start_tree);
-+			rb_erase(&e->count.node, &wnd->count_tree);
-+			wnd->count -= 1;
-+			e0 = e;
-+		}
-+	}
-+
-+	while (n) {
-+		size_t next_end;
-+
-+		e = rb_entry(n, struct e_node, start.node);
-+
-+		next_end = e->start.key + e->count.key;
-+		if (e->start.key > end_in)
-+			break;
-+
-+		/* Remove right */
-+		n = rb_next(n);
-+		len += next_end - end_in;
-+		end_in = next_end;
-+		rb_erase(&e->start.node, &wnd->start_tree);
-+		rb_erase(&e->count.node, &wnd->count_tree);
-+		wnd->count -= 1;
-+
-+		if (!e0)
-+			e0 = e;
-+		else
-+			ntfs_free(e);
-+	}
-+
-+	if (wnd->uptodated == 1)
-+		goto insert_new;
-+
-+	/* Check bits before 'bit' */
-+	ib = wnd->zone_bit == wnd->zone_end || bit < wnd->zone_end ?
-+		     0 :
-+		     wnd->zone_end;
-+
-+	while (bit > ib && wnd_is_free_hlp(wnd, bit - 1, 1)) {
-+		bit -= 1;
-+		len += 1;
-+	}
-+
-+	/* Check bits after 'end_in' */
-+	ib = wnd->zone_bit == wnd->zone_end || end_in > wnd->zone_bit ?
-+		     wnd->nbits :
-+		     wnd->zone_bit;
-+
-+	while (end_in < ib && wnd_is_free_hlp(wnd, end_in, 1)) {
-+		end_in += 1;
-+		len += 1;
-+	}
-+
-+insert_new:
-+	/* Insert new fragment */
-+	if (wnd->count < NTFS_MAX_WND_EXTENTS)
-+		goto allocate_new;
-+
-+	if (e0)
-+		ntfs_free(e0);
-+
-+	wnd->uptodated = -1;
-+
-+	/* Compare with smallest fragment */
-+	n = rb_last(&wnd->count_tree);
-+	e = rb_entry(n, struct e_node, count.node);
-+	if (len <= e->count.key)
-+		goto out; /* Do not insert small fragments */
-+
-+	if (build) {
-+		struct e_node *e2;
-+
-+		n = rb_prev(n);
-+		e2 = rb_entry(n, struct e_node, count.node);
-+		/* smallest fragment will be 'e2->count.key' */
-+		wnd->extent_min = e2->count.key;
-+	}
-+
-+	/* Replace smallest fragment by new one */
-+	rb_erase(&e->start.node, &wnd->start_tree);
-+	rb_erase(&e->count.node, &wnd->count_tree);
-+	wnd->count -= 1;
-+	goto insert;
-+
-+allocate_new:
-+	e = e0 ? e0 : ntfs_alloc(sizeof(struct e_node), 0);
-+	if (!e) {
-+		wnd->uptodated = -1;
-+		goto out;
-+	}
-+
-+	if (build && len <= wnd->extent_min)
-+		wnd->extent_min = len;
-+insert:
-+	e->start.key = bit;
-+	e->count.key = len;
-+	if (len > wnd->extent_max)
-+		wnd->extent_max = len;
-+
-+	rb_insert_start(&wnd->start_tree, e);
-+	rb_insert_count(&wnd->count_tree, e);
-+	wnd->count += 1;
-+
-+out:;
-+}
-+
-+/*
-+ * wnd_remove_free_ext
-+ *
-+ * removes a run from the cached free space
-+ */
-+static void wnd_remove_free_ext(struct wnd_bitmap *wnd, size_t bit, size_t len)
-+{
-+	struct rb_node *n, *n3;
-+	struct e_node *e, *e3;
-+	size_t end_in = bit + len;
-+	size_t end3, end, new_key, new_len, max_new_len;
-+	bool bmax;
-+
-+	/* Try to find extent before 'bit' */
-+	n = rb_lookup(&wnd->start_tree, bit);
-+
-+	if (!n)
-+		return;
-+
-+	e = rb_entry(n, struct e_node, start.node);
-+	end = e->start.key + e->count.key;
-+
-+	new_key = new_len = 0;
-+	len = e->count.key;
-+
-+	/* Range [bit,end_in) must be inside 'e' or outside 'e' and 'n' */
-+	if (e->start.key > bit)
-+		goto check_biggest;
-+
-+	if (end_in <= end) {
-+		/* Range [bit,end_in) inside 'e' */
-+		new_key = end_in;
-+		new_len = end - end_in;
-+		len = bit - e->start.key;
-+		goto check_biggest;
-+	}
-+
-+	if (bit <= end)
-+		goto check_biggest;
-+
-+	bmax = false;
-+
-+	n3 = rb_next(n);
-+
-+	while (n3) {
-+		e3 = rb_entry(n3, struct e_node, start.node);
-+		if (e3->start.key >= end_in)
-+			break;
-+
-+		if (e3->count.key == wnd->extent_max)
-+			bmax = true;
-+
-+		end3 = e3->start.key + e3->count.key;
-+		if (end3 > end_in) {
-+			e3->start.key = end_in;
-+			rb_erase(&e3->count.node, &wnd->count_tree);
-+			e3->count.key = end3 - end_in;
-+			rb_insert_count(&wnd->count_tree, e3);
-+			break;
-+		}
-+
-+		n3 = rb_next(n3);
-+		rb_erase(&e3->start.node, &wnd->start_tree);
-+		rb_erase(&e3->count.node, &wnd->count_tree);
-+		wnd->count -= 1;
-+		ntfs_free(e3);
-+	}
-+	if (!bmax)
-+		return;
-+	n3 = rb_first(&wnd->count_tree);
-+	wnd->extent_max =
-+		n3 ? rb_entry(n3, struct e_node, count.node)->count.key : 0;
-+	return;
-+
-+check_biggest:
-+	if (e->count.key != wnd->extent_max)
-+		goto check_len;
-+
-+	/* We have to change the biggest extent */
-+	n3 = rb_prev(&e->count.node);
-+	if (n3)
-+		goto check_len;
-+
-+	n3 = rb_next(&e->count.node);
-+	max_new_len = len > new_len ? len : new_len;
-+	if (!n3) {
-+		wnd->extent_max = max_new_len;
-+		goto check_len;
-+	}
-+	e3 = rb_entry(n3, struct e_node, count.node);
-+	wnd->extent_max = max(e3->count.key, max_new_len);
-+
-+check_len:
-+	if (!len) {
-+		if (new_len) {
-+			e->start.key = new_key;
-+			rb_erase(&e->count.node, &wnd->count_tree);
-+			e->count.key = new_len;
-+			rb_insert_count(&wnd->count_tree, e);
-+		} else {
-+			rb_erase(&e->start.node, &wnd->start_tree);
-+			rb_erase(&e->count.node, &wnd->count_tree);
-+			wnd->count -= 1;
-+			ntfs_free(e);
-+		}
-+		goto out;
-+	}
-+	rb_erase(&e->count.node, &wnd->count_tree);
-+	e->count.key = len;
-+	rb_insert_count(&wnd->count_tree, e);
-+
-+	if (!new_len)
-+		goto out;
-+
-+	if (wnd->count >= NTFS_MAX_WND_EXTENTS) {
-+		wnd->uptodated = -1;
-+
-+		/* Get minimal extent */
-+		e = rb_entry(rb_last(&wnd->count_tree), struct e_node,
-+			     count.node);
-+		if (e->count.key > new_len)
-+			goto out;
-+
-+		/* Replace minimum */
-+		rb_erase(&e->start.node, &wnd->start_tree);
-+		rb_erase(&e->count.node, &wnd->count_tree);
-+		wnd->count -= 1;
-+	} else {
-+		e = ntfs_alloc(sizeof(struct e_node), 0);
-+		if (!e)
-+			wnd->uptodated = -1;
-+	}
-+
-+	if (e) {
-+		e->start.key = new_key;
-+		e->count.key = new_len;
-+		rb_insert_start(&wnd->start_tree, e);
-+		rb_insert_count(&wnd->count_tree, e);
-+		wnd->count += 1;
-+	}
-+
-+out:
-+	if (!wnd->count && 1 != wnd->uptodated)
-+		wnd_rescan(wnd);
-+}
-+
-+/*
-+ * wnd_rescan
-+ *
-+ * Scan all bitmap. used while initialization.
-+ */
-+static int wnd_rescan(struct wnd_bitmap *wnd)
-+{
-+	int err = 0;
-+	size_t prev_tail = 0;
-+	struct super_block *sb = wnd->sb;
-+	struct ntfs_sb_info *sbi = sb->s_fs_info;
-+	u64 lbo, len = 0;
-+	u32 blocksize = sb->s_blocksize;
-+	u8 cluster_bits = sbi->cluster_bits;
-+	const u32 ra_bytes = 512 * 1024;
-+	const u32 ra_pages = ra_bytes >> PAGE_SHIFT;
-+	u32 wbits = 8 * sb->s_blocksize;
-+	u32 ra_mask = (ra_bytes >> sb->s_blocksize_bits) - 1;
-+	struct address_space *mapping = sb->s_bdev->bd_inode->i_mapping;
-+	u32 used, frb;
-+	const ulong *buf;
-+	size_t wpos, wbit, iw, vbo;
-+	struct buffer_head *bh = NULL;
-+	CLST lcn, clen;
-+
-+	wnd->uptodated = 0;
-+	wnd->extent_max = 0;
-+	wnd->extent_min = MINUS_ONE_T;
-+	wnd->total_zeroes = 0;
-+
-+	vbo = 0;
-+	iw = 0;
-+
-+start_wnd:
-+
-+	if (iw + 1 == wnd->nwnd)
-+		wbits = wnd->bits_last;
-+
-+	if (wnd->inited) {
-+		if (!wnd->free_bits[iw]) {
-+			/* all ones */
-+			if (!prev_tail)
-+				goto next_wnd;
-+
-+			wnd_add_free_ext(wnd, vbo * 8 - prev_tail, prev_tail,
-+					 true);
-+			prev_tail = 0;
-+			goto next_wnd;
-+		}
-+		if (wbits == wnd->free_bits[iw]) {
-+			/* all zeroes */
-+			prev_tail += wbits;
-+			wnd->total_zeroes += wbits;
-+			goto next_wnd;
-+		}
-+	}
-+
-+	if (len)
-+		goto read_wnd;
-+
-+	if (!run_lookup_entry(&wnd->run, vbo >> cluster_bits, &lcn, &clen,
-+			      NULL)) {
-+		err = -ENOENT;
-+		goto out;
-+	}
-+
-+	lbo = (u64)lcn << cluster_bits;
-+	len = (u64)clen << cluster_bits;
-+
-+read_wnd:
-+	if (!(iw & ra_mask))
-+		page_cache_readahead_unbounded(mapping, NULL, lbo >> PAGE_SHIFT,
-+					       ra_pages, 0);
-+
-+	bh = ntfs_bread(sb, lbo >> sb->s_blocksize_bits);
-+	if (!bh) {
-+		err = -EIO;
-+		goto out;
-+	}
-+
-+	buf = (ulong *)bh->b_data;
-+
-+	used = __bitmap_weight(buf, wbits);
-+	if (used < wbits) {
-+		frb = wbits - used;
-+		wnd->free_bits[iw] = frb;
-+		wnd->total_zeroes += frb;
-+	}
-+
-+	wpos = 0;
-+	wbit = vbo * 8;
-+
-+	if (wbit + wbits > wnd->nbits)
-+		wbits = wnd->nbits - wbit;
-+
-+next_range:
-+	used = find_next_zero_bit(buf, wbits, wpos);
-+
-+	if (used > wpos && prev_tail) {
-+		wnd_add_free_ext(wnd, wbit + wpos - prev_tail, prev_tail, true);
-+		prev_tail = 0;
-+	}
-+
-+	wpos = used;
-+
-+	if (wpos >= wbits) {
-+		/* No free blocks */
-+		prev_tail = 0;
-+		goto next_wnd;
-+	}
-+
-+	frb = find_next_bit(buf, wbits, wpos);
-+	if (frb >= wbits) {
-+		/* keep last free block */
-+		prev_tail += frb - wpos;
-+		goto next_wnd;
-+	}
-+
-+	wnd_add_free_ext(wnd, wbit + wpos - prev_tail, frb + prev_tail - wpos,
-+			 true);
-+
-+	/* Skip free block and first '1' */
-+	wpos = frb + 1;
-+	/* Reset previous tail */
-+	prev_tail = 0;
-+	if (wpos < wbits)
-+		goto next_range;
-+next_wnd:
-+
-+	if (bh)
-+		put_bh(bh);
-+	bh = NULL;
-+
-+	vbo += blocksize;
-+	if (len) {
-+		len -= blocksize;
-+		lbo += blocksize;
-+	}
-+
-+	if (++iw < wnd->nwnd)
-+		goto start_wnd;
-+
-+	/* Add last block */
-+	if (prev_tail)
-+		wnd_add_free_ext(wnd, wnd->nbits - prev_tail, prev_tail, true);
-+
-+	/*
-+	 * Before init cycle wnd->uptodated was 0
-+	 * If any errors or limits occurs while initialization then
-+	 * wnd->uptodated will be -1
-+	 * If 'uptodated' is still 0 then Tree is really updated
-+	 */
-+	if (!wnd->uptodated)
-+		wnd->uptodated = 1;
-+
-+	if (wnd->zone_bit != wnd->zone_end) {
-+		size_t zlen = wnd->zone_end - wnd->zone_bit;
-+
-+		wnd->zone_end = wnd->zone_bit;
-+		wnd_zone_set(wnd, wnd->zone_bit, zlen);
-+	}
-+
-+out:
-+	return err;
-+}
-+
-+/*
-+ * wnd_init
-+ */
-+int wnd_init(struct wnd_bitmap *wnd, struct super_block *sb, size_t nbits)
-+{
-+	int err;
-+	u32 blocksize = sb->s_blocksize;
-+	u32 wbits = blocksize * 8;
-+
-+	init_rwsem(&wnd->rw_lock);
-+
-+	wnd->sb = sb;
-+	wnd->nbits = nbits;
-+	wnd->total_zeroes = nbits;
-+	wnd->extent_max = MINUS_ONE_T;
-+	wnd->zone_bit = wnd->zone_end = 0;
-+	wnd->nwnd = bytes_to_block(sb, bitmap_size(nbits));
-+	wnd->bits_last = nbits & (wbits - 1);
-+	if (!wnd->bits_last)
-+		wnd->bits_last = wbits;
-+
-+	if (wnd->nwnd <= ARRAY_SIZE(wnd->free_holder)) {
-+		wnd->free_bits = wnd->free_holder;
-+	} else {
-+		wnd->free_bits = ntfs_alloc(wnd->nwnd * sizeof(u16), 1);
-+		if (!wnd->free_bits)
-+			return -ENOMEM;
-+	}
-+
-+	err = wnd_rescan(wnd);
-+	if (err)
-+		return err;
-+
-+	wnd->inited = true;
-+
-+	return 0;
-+}
-+
-+/*
-+ * wnd_map
-+ *
-+ * call sb_bread for requested window
-+ */
-+static struct buffer_head *wnd_map(struct wnd_bitmap *wnd, size_t iw)
-+{
-+	size_t vbo;
-+	CLST lcn, clen;
-+	struct super_block *sb = wnd->sb;
-+	struct ntfs_sb_info *sbi;
-+	struct buffer_head *bh;
-+	u64 lbo;
-+
-+	sbi = sb->s_fs_info;
-+	vbo = (u64)iw << sb->s_blocksize_bits;
-+
-+	if (!run_lookup_entry(&wnd->run, vbo >> sbi->cluster_bits, &lcn, &clen,
-+			      NULL)) {
-+		return ERR_PTR(-ENOENT);
-+	}
-+
-+	lbo = ((u64)lcn << sbi->cluster_bits) + (vbo & sbi->cluster_mask);
-+
-+	bh = ntfs_bread(wnd->sb, lbo >> sb->s_blocksize_bits);
-+
-+	if (!bh)
-+		return ERR_PTR(-EIO);
-+
-+	return bh;
-+}
-+
-+/*
-+ * wnd_set_free
-+ *
-+ * Marks the bits range from bit to bit + bits as free
-+ */
-+int wnd_set_free(struct wnd_bitmap *wnd, size_t bit, size_t bits)
-+{
-+	int err = 0;
-+	struct super_block *sb = wnd->sb;
-+	size_t bits0 = bits;
-+	u32 wbits = 8 * sb->s_blocksize;
-+	size_t iw = bit >> (sb->s_blocksize_bits + 3);
-+	u32 wbit = bit & (wbits - 1);
-+	struct buffer_head *bh;
-+
-+	while (iw < wnd->nwnd && bits) {
-+		u32 tail, op;
-+		ulong *buf;
-+
-+		if (iw + 1 == wnd->nwnd)
-+			wbits = wnd->bits_last;
-+
-+		tail = wbits - wbit;
-+		op = tail < bits ? tail : bits;
-+
-+		bh = wnd_map(wnd, iw);
-+		if (IS_ERR(bh)) {
-+			err = PTR_ERR(bh);
-+			break;
-+		}
-+
-+		buf = (ulong *)bh->b_data;
-+
-+		lock_buffer(bh);
-+
-+		__bitmap_clear(buf, wbit, op);
-+
-+		wnd->free_bits[iw] += op;
-+
-+		set_buffer_uptodate(bh);
-+		mark_buffer_dirty(bh);
-+		unlock_buffer(bh);
-+		put_bh(bh);
-+
-+		wnd->total_zeroes += op;
-+		bits -= op;
-+		wbit = 0;
-+		iw += 1;
-+	}
-+
-+	wnd_add_free_ext(wnd, bit, bits0, false);
-+
-+	return err;
-+}
-+
-+/*
-+ * wnd_set_used
-+ *
-+ * Marks the bits range from bit to bit + bits as used
-+ */
-+int wnd_set_used(struct wnd_bitmap *wnd, size_t bit, size_t bits)
-+{
-+	int err = 0;
-+	struct super_block *sb = wnd->sb;
-+	size_t bits0 = bits;
-+	size_t iw = bit >> (sb->s_blocksize_bits + 3);
-+	u32 wbits = 8 * sb->s_blocksize;
-+	u32 wbit = bit & (wbits - 1);
-+	struct buffer_head *bh;
-+
-+	while (iw < wnd->nwnd && bits) {
-+		u32 tail, op;
-+		ulong *buf;
-+
-+		if (unlikely(iw + 1 == wnd->nwnd))
-+			wbits = wnd->bits_last;
-+
-+		tail = wbits - wbit;
-+		op = tail < bits ? tail : bits;
-+
-+		bh = wnd_map(wnd, iw);
-+		if (IS_ERR(bh)) {
-+			err = PTR_ERR(bh);
-+			break;
-+		}
-+		buf = (ulong *)bh->b_data;
-+
-+		lock_buffer(bh);
-+
-+		__bitmap_set(buf, wbit, op);
-+		wnd->free_bits[iw] -= op;
-+
-+		set_buffer_uptodate(bh);
-+		mark_buffer_dirty(bh);
-+		unlock_buffer(bh);
-+		put_bh(bh);
-+
-+		wnd->total_zeroes -= op;
-+		bits -= op;
-+		wbit = 0;
-+		iw += 1;
-+	}
-+
-+	if (!RB_EMPTY_ROOT(&wnd->start_tree))
-+		wnd_remove_free_ext(wnd, bit, bits0);
-+
-+	return err;
-+}
-+
-+/*
-+ * wnd_is_free_hlp
-+ *
-+ * Returns true if all clusters [bit, bit+bits) are free (bitmap only)
-+ */
-+static bool wnd_is_free_hlp(struct wnd_bitmap *wnd, size_t bit, size_t bits)
-+{
-+	struct super_block *sb = wnd->sb;
-+	size_t iw = bit >> (sb->s_blocksize_bits + 3);
-+	u32 wbits = 8 * sb->s_blocksize;
-+	u32 wbit = bit & (wbits - 1);
-+
-+	while (iw < wnd->nwnd && bits) {
-+		u32 tail, op;
-+
-+		if (unlikely(iw + 1 == wnd->nwnd))
-+			wbits = wnd->bits_last;
-+
-+		tail = wbits - wbit;
-+		op = tail < bits ? tail : bits;
-+
-+		if (wbits != wnd->free_bits[iw]) {
-+			bool ret;
-+			struct buffer_head *bh = wnd_map(wnd, iw);
-+
-+			if (IS_ERR(bh))
-+				return false;
-+
-+			ret = are_bits_clear((ulong *)bh->b_data, wbit, op);
-+
-+			put_bh(bh);
-+			if (!ret)
-+				return false;
-+		}
-+
-+		bits -= op;
-+		wbit = 0;
-+		iw += 1;
-+	}
-+
-+	return true;
-+}
-+
-+/*
-+ * wnd_is_free
-+ *
-+ * Returns true if all clusters [bit, bit+bits) are free
-+ */
-+bool wnd_is_free(struct wnd_bitmap *wnd, size_t bit, size_t bits)
-+{
-+	bool ret;
-+	struct rb_node *n;
-+	size_t end;
-+	struct e_node *e;
-+
-+	if (RB_EMPTY_ROOT(&wnd->start_tree))
-+		goto use_wnd;
-+
-+	n = rb_lookup(&wnd->start_tree, bit);
-+	if (!n)
-+		goto use_wnd;
-+
-+	e = rb_entry(n, struct e_node, start.node);
-+
-+	end = e->start.key + e->count.key;
-+
-+	if (bit < end && bit + bits <= end)
-+		return true;
-+
-+use_wnd:
-+	ret = wnd_is_free_hlp(wnd, bit, bits);
-+
-+	return ret;
-+}
-+
-+/*
-+ * wnd_is_used
-+ *
-+ * Returns true if all clusters [bit, bit+bits) are used
-+ */
-+bool wnd_is_used(struct wnd_bitmap *wnd, size_t bit, size_t bits)
-+{
-+	bool ret = false;
-+	struct super_block *sb = wnd->sb;
-+	size_t iw = bit >> (sb->s_blocksize_bits + 3);
-+	u32 wbits = 8 * sb->s_blocksize;
-+	u32 wbit = bit & (wbits - 1);
-+	size_t end;
-+	struct rb_node *n;
-+	struct e_node *e;
-+
-+	if (RB_EMPTY_ROOT(&wnd->start_tree))
-+		goto use_wnd;
-+
-+	end = bit + bits;
-+	n = rb_lookup(&wnd->start_tree, end - 1);
-+	if (!n)
-+		goto use_wnd;
-+
-+	e = rb_entry(n, struct e_node, start.node);
-+	if (e->start.key + e->count.key > bit)
-+		return false;
-+
-+use_wnd:
-+	while (iw < wnd->nwnd && bits) {
-+		u32 tail, op;
-+
-+		if (unlikely(iw + 1 == wnd->nwnd))
-+			wbits = wnd->bits_last;
-+
-+		tail = wbits - wbit;
-+		op = tail < bits ? tail : bits;
-+
-+		if (wnd->free_bits[iw]) {
-+			bool ret;
-+			struct buffer_head *bh = wnd_map(wnd, iw);
-+
-+			if (IS_ERR(bh))
-+				goto out;
-+
-+			ret = are_bits_set((ulong *)bh->b_data, wbit, op);
-+			put_bh(bh);
-+			if (!ret)
-+				goto out;
-+		}
-+
-+		bits -= op;
-+		wbit = 0;
-+		iw += 1;
-+	}
-+	ret = true;
-+
-+out:
-+	return ret;
-+}
-+
-+/*
-+ * wnd_find
-+ * - flags - BITMAP_FIND_XXX flags
-+ *
-+ * looks for free space
-+ * Returns 0 if not found
-+ */
-+size_t wnd_find(struct wnd_bitmap *wnd, size_t to_alloc, size_t hint,
-+		size_t flags, size_t *allocated)
-+{
-+	struct super_block *sb;
-+	u32 wbits, wpos, wzbit, wzend;
-+	size_t fnd, max_alloc, b_len, b_pos;
-+	size_t iw, prev_tail, nwnd, wbit, ebit, zbit, zend;
-+	size_t to_alloc0 = to_alloc;
-+	const ulong *buf;
-+	const struct e_node *e;
-+	const struct rb_node *pr, *cr;
-+	u8 log2_bits;
-+	bool fbits_valid;
-+	struct buffer_head *bh;
-+
-+	/* fast checking for available free space */
-+	if (flags & BITMAP_FIND_FULL) {
-+		size_t zeroes = wnd_zeroes(wnd);
-+
-+		zeroes -= wnd->zone_end - wnd->zone_bit;
-+		if (zeroes < to_alloc0)
-+			goto no_space;
-+
-+		if (to_alloc0 > wnd->extent_max)
-+			goto no_space;
-+	} else {
-+		if (to_alloc > wnd->extent_max)
-+			to_alloc = wnd->extent_max;
-+	}
-+
-+	if (wnd->zone_bit <= hint && hint < wnd->zone_end)
-+		hint = wnd->zone_end;
-+
-+	max_alloc = wnd->nbits;
-+	b_len = b_pos = 0;
-+
-+	if (hint >= max_alloc)
-+		hint = 0;
-+
-+	if (RB_EMPTY_ROOT(&wnd->start_tree)) {
-+		if (wnd->uptodated == 1) {
-+			/* extents tree is updated -> no free space */
-+			goto no_space;
-+		}
-+		goto scan_bitmap;
-+	}
-+
-+	e = NULL;
-+	if (!hint)
-+		goto allocate_biggest;
-+
-+	/* Use hint: enumerate extents by start >= hint */
-+	pr = NULL;
-+	cr = wnd->start_tree.rb_node;
-+
-+	for (;;) {
-+		e = rb_entry(cr, struct e_node, start.node);
-+
-+		if (e->start.key == hint)
-+			break;
-+
-+		if (e->start.key < hint) {
-+			pr = cr;
-+			cr = cr->rb_right;
-+			if (!cr)
-+				break;
-+			continue;
-+		}
-+
-+		cr = cr->rb_left;
-+		if (!cr) {
-+			e = pr ? rb_entry(pr, struct e_node, start.node) : NULL;
-+			break;
-+		}
-+	}
-+
-+	if (!e)
-+		goto allocate_biggest;
-+
-+	if (e->start.key + e->count.key > hint) {
-+		/* We have found extension with 'hint' inside */
-+		size_t len = e->start.key + e->count.key - hint;
-+
-+		if (len >= to_alloc && hint + to_alloc <= max_alloc) {
-+			fnd = hint;
-+			goto found;
-+		}
-+
-+		if (!(flags & BITMAP_FIND_FULL)) {
-+			if (len > to_alloc)
-+				len = to_alloc;
-+
-+			if (hint + len <= max_alloc) {
-+				fnd = hint;
-+				to_alloc = len;
-+				goto found;
-+			}
-+		}
-+	}
-+
-+allocate_biggest:
-+
-+	/* Allocate from biggest free extent */
-+	e = rb_entry(rb_first(&wnd->count_tree), struct e_node, count.node);
-+	if (e->count.key != wnd->extent_max)
-+		wnd->extent_max = e->count.key;
-+
-+	if (e->count.key < max_alloc) {
-+		if (e->count.key >= to_alloc) {
-+			;
-+		} else if (flags & BITMAP_FIND_FULL) {
-+			if (e->count.key < to_alloc0) {
-+				/* Biggest free block is less then requested */
-+				goto no_space;
-+			}
-+			to_alloc = e->count.key;
-+		} else if (-1 != wnd->uptodated) {
-+			to_alloc = e->count.key;
-+		} else {
-+			/* Check if we can use more bits */
-+			size_t op, max_check;
-+			struct rb_root start_tree;
-+
-+			memcpy(&start_tree, &wnd->start_tree,
-+			       sizeof(struct rb_root));
-+			memset(&wnd->start_tree, 0, sizeof(struct rb_root));
-+
-+			max_check = e->start.key + to_alloc;
-+			if (max_check > max_alloc)
-+				max_check = max_alloc;
-+			for (op = e->start.key + e->count.key; op < max_check;
-+			     op++) {
-+				if (!wnd_is_free(wnd, op, 1))
-+					break;
-+			}
-+			memcpy(&wnd->start_tree, &start_tree,
-+			       sizeof(struct rb_root));
-+			to_alloc = op - e->start.key;
-+		}
-+
-+		/* Prepare to return */
-+		fnd = e->start.key;
-+		if (e->start.key + to_alloc > max_alloc)
-+			to_alloc = max_alloc - e->start.key;
-+		goto found;
-+	}
-+
-+	if (wnd->uptodated == 1) {
-+		/* extents tree is updated -> no free space */
-+		goto no_space;
-+	}
-+
-+	b_len = e->count.key;
-+	b_pos = e->start.key;
-+
-+scan_bitmap:
-+	sb = wnd->sb;
-+	log2_bits = sb->s_blocksize_bits + 3;
-+
-+	/* At most two ranges [hint, max_alloc) + [0, hint) */
-+Again:
-+
-+	/* TODO: optimize request for case nbits > wbits */
-+	iw = hint >> log2_bits;
-+	wbits = sb->s_blocksize * 8;
-+	wpos = hint & (wbits - 1);
-+	prev_tail = 0;
-+	fbits_valid = true;
-+
-+	if (max_alloc == wnd->nbits) {
-+		nwnd = wnd->nwnd;
-+	} else {
-+		size_t t = max_alloc + wbits - 1;
-+
-+		nwnd = likely(t > max_alloc) ? (t >> log2_bits) : wnd->nwnd;
-+	}
-+
-+	/* Enumerate all windows */
-+	iw -= 1;
-+next_wnd:
-+	iw += 1;
-+	if (iw >= nwnd)
-+		goto estimate;
-+
-+	wbit = iw << log2_bits;
-+
-+	if (!wnd->free_bits[iw]) {
-+		if (prev_tail > b_len) {
-+			b_pos = wbit - prev_tail;
-+			b_len = prev_tail;
-+		}
-+
-+		/* Skip full used window */
-+		prev_tail = 0;
-+		wpos = 0;
-+		goto next_wnd;
-+	}
-+
-+	if (unlikely(iw + 1 == nwnd)) {
-+		if (max_alloc == wnd->nbits) {
-+			wbits = wnd->bits_last;
-+		} else {
-+			size_t t = max_alloc & (wbits - 1);
-+
-+			if (t) {
-+				wbits = t;
-+				fbits_valid = false;
-+			}
-+		}
-+	}
-+
-+	if (wnd->zone_end <= wnd->zone_bit)
-+		goto skip_zone;
-+
-+	ebit = wbit + wbits;
-+	zbit = max(wnd->zone_bit, wbit);
-+	zend = min(wnd->zone_end, ebit);
-+
-+	/* Here we have a window [wbit, ebit) and zone [zbit, zend) */
-+	if (zend <= zbit) {
-+		/* Zone does not overlap window */
-+		goto skip_zone;
-+	}
-+
-+	wzbit = zbit - wbit;
-+	wzend = zend - wbit;
-+
-+	/* Zone overlaps window */
-+	if (wnd->free_bits[iw] == wzend - wzbit) {
-+		prev_tail = 0;
-+		wpos = 0;
-+		goto next_wnd;
-+	}
-+
-+	/* Scan two ranges window: [wbit, zbit) and [zend, ebit) */
-+	bh = wnd_map(wnd, iw);
-+
-+	if (IS_ERR(bh)) {
-+		/* TODO: error */
-+		prev_tail = 0;
-+		wpos = 0;
-+		goto next_wnd;
-+	}
-+
-+	buf = (ulong *)bh->b_data;
-+
-+	/* Scan range [wbit, zbit) */
-+	if (wpos < wzbit) {
-+		/* Scan range [wpos, zbit) */
-+		fnd = wnd_scan(buf, wbit, wpos, wzbit, to_alloc, &prev_tail,
-+			       &b_pos, &b_len);
-+		if (fnd != MINUS_ONE_T) {
-+			put_bh(bh);
-+			goto found;
-+		}
-+	}
-+
-+	prev_tail = 0;
-+
-+	/* Scan range [zend, ebit) */
-+	if (wzend < wbits) {
-+		fnd = wnd_scan(buf, wbit, max(wzend, wpos), wbits, to_alloc,
-+			       &prev_tail, &b_pos, &b_len);
-+		if (fnd != MINUS_ONE_T) {
-+			put_bh(bh);
-+			goto found;
-+		}
-+	}
-+
-+	wpos = 0;
-+	put_bh(bh);
-+	goto next_wnd;
-+
-+skip_zone:
-+	/* Current window does not overlap zone */
-+	if (!wpos && fbits_valid && wnd->free_bits[iw] == wbits) {
-+		/* window is empty */
-+		if (prev_tail + wbits >= to_alloc) {
-+			fnd = wbit + wpos - prev_tail;
-+			goto found;
-+		}
-+
-+		/* Increase 'prev_tail' and process next window */
-+		prev_tail += wbits;
-+		wpos = 0;
-+		goto next_wnd;
-+	}
-+
-+	/* read window */
-+	bh = wnd_map(wnd, iw);
-+	if (IS_ERR(bh)) {
-+		// TODO: error
-+		prev_tail = 0;
-+		wpos = 0;
-+		goto next_wnd;
-+	}
-+
-+	buf = (ulong *)bh->b_data;
-+
-+	/* Scan range [wpos, eBits) */
-+	fnd = wnd_scan(buf, wbit, wpos, wbits, to_alloc, &prev_tail, &b_pos,
-+		       &b_len);
-+	put_bh(bh);
-+	if (fnd != MINUS_ONE_T)
-+		goto found;
-+	goto next_wnd;
-+
-+estimate:
-+	if (b_len < prev_tail) {
-+		/* The last fragment */
-+		b_len = prev_tail;
-+		b_pos = max_alloc - prev_tail;
-+	}
-+
-+	if (hint) {
-+		/*
-+		 * We have scanned range [hint max_alloc)
-+		 * Prepare to scan range [0 hint + to_alloc)
-+		 */
-+		size_t nextmax = hint + to_alloc;
-+
-+		if (likely(nextmax >= hint) && nextmax < max_alloc)
-+			max_alloc = nextmax;
-+		hint = 0;
-+		goto Again;
-+	}
-+
-+	if (!b_len)
-+		goto no_space;
-+
-+	wnd->extent_max = b_len;
-+
-+	if (flags & BITMAP_FIND_FULL)
-+		goto no_space;
-+
-+	fnd = b_pos;
-+	to_alloc = b_len;
-+
-+found:
-+	if (flags & BITMAP_FIND_MARK_AS_USED) {
-+		/* TODO optimize remove extent (pass 'e'?) */
-+		if (wnd_set_used(wnd, fnd, to_alloc))
-+			goto no_space;
-+	} else if (wnd->extent_max != MINUS_ONE_T &&
-+		   to_alloc > wnd->extent_max) {
-+		wnd->extent_max = to_alloc;
-+	}
-+
-+	*allocated = fnd;
-+	return to_alloc;
-+
-+no_space:
-+	return 0;
-+}
-+
-+/*
-+ * wnd_extend
-+ *
-+ * Extend bitmap ($MFT bitmap)
-+ */
-+int wnd_extend(struct wnd_bitmap *wnd, size_t new_bits)
-+{
-+	int err;
-+	struct super_block *sb = wnd->sb;
-+	struct ntfs_sb_info *sbi = sb->s_fs_info;
-+	u32 blocksize = sb->s_blocksize;
-+	u32 wbits = blocksize * 8;
-+	u32 b0, new_last;
-+	size_t bits, iw, new_wnd;
-+	size_t old_bits = wnd->nbits;
-+	u16 *new_free;
-+
-+	if (new_bits <= old_bits)
-+		return -EINVAL;
-+
-+	/* align to 8 byte boundary */
-+	new_wnd = bytes_to_block(sb, bitmap_size(new_bits));
-+	new_last = new_bits & (wbits - 1);
-+	if (!new_last)
-+		new_last = wbits;
-+
-+	if (new_wnd == wnd->nwnd)
-+		goto skip_reallocate;
-+
-+	if (new_wnd <= ARRAY_SIZE(wnd->free_holder)) {
-+		new_free = wnd->free_holder;
-+	} else {
-+		new_free = ntfs_alloc(new_wnd * sizeof(u16), 0);
-+		if (!new_free)
-+			return -ENOMEM;
-+	}
-+
-+	if (new_free != wnd->free_bits)
-+		memcpy(new_free, wnd->free_bits, wnd->nwnd * sizeof(short));
-+	memset(new_free + wnd->nwnd, 0, (new_wnd - wnd->nwnd) * sizeof(short));
-+	if (wnd->free_bits != wnd->free_holder)
-+		ntfs_free(wnd->free_bits);
-+
-+	wnd->free_bits = new_free;
-+
-+skip_reallocate:
-+	/* Zero bits [old_bits,new_bits) */
-+	bits = new_bits - old_bits;
-+	b0 = old_bits & (wbits - 1);
-+
-+	for (iw = old_bits >> (sb->s_blocksize_bits + 3); bits; iw += 1) {
-+		u32 op;
-+		size_t frb;
-+		u64 vbo, lbo, bytes;
-+		struct buffer_head *bh;
-+		ulong *buf;
-+
-+		if (iw + 1 == new_wnd)
-+			wbits = new_last;
-+
-+		op = b0 + bits > wbits ? wbits - b0 : bits;
-+		vbo = (u64)iw * blocksize;
-+
-+		err = ntfs_vbo_to_lbo(sbi, &wnd->run, vbo, &lbo, &bytes);
-+		if (err)
-+			break;
-+
-+		bh = ntfs_bread(sb, lbo >> sb->s_blocksize_bits);
-+		if (!bh)
-+			return -EIO;
-+
-+		lock_buffer(bh);
-+		buf = (ulong *)bh->b_data;
-+
-+		__bitmap_clear(buf, b0, blocksize * 8 - b0);
-+		frb = wbits - __bitmap_weight(buf, wbits);
-+		wnd->total_zeroes += frb - wnd->free_bits[iw];
-+		wnd->free_bits[iw] = frb;
-+
-+		set_buffer_uptodate(bh);
-+		mark_buffer_dirty(bh);
-+		unlock_buffer(bh);
-+		/*err = sync_dirty_buffer(bh);*/
-+
-+		b0 = 0;
-+		bits -= op;
-+	}
-+
-+	wnd->nbits = new_bits;
-+	wnd->nwnd = new_wnd;
-+	wnd->bits_last = new_last;
-+
-+	wnd_add_free_ext(wnd, old_bits, new_bits - old_bits, false);
-+
-+	return 0;
-+}
-+
-+/*
-+ * wnd_zone_set
-+ */
-+void wnd_zone_set(struct wnd_bitmap *wnd, size_t lcn, size_t len)
-+{
-+	size_t zlen;
-+
-+	zlen = wnd->zone_end - wnd->zone_bit;
-+	if (zlen)
-+		wnd_add_free_ext(wnd, wnd->zone_bit, zlen, false);
-+
-+	if (!RB_EMPTY_ROOT(&wnd->start_tree) && len)
-+		wnd_remove_free_ext(wnd, lcn, len);
-+
-+	wnd->zone_bit = lcn;
-+	wnd->zone_end = lcn + len;
-+}
-+
-+int ntfs_trim_fs(struct ntfs_sb_info *sbi, struct fstrim_range *range)
-+{
-+	int err = 0;
-+	struct super_block *sb = sbi->sb;
-+	struct wnd_bitmap *wnd = &sbi->used.bitmap;
-+	u32 wbits = 8 * sb->s_blocksize;
-+	CLST len = 0, lcn = 0, done = 0;
-+	CLST minlen = bytes_to_cluster(sbi, range->minlen);
-+	CLST lcn_from = bytes_to_cluster(sbi, range->start);
-+	size_t iw = lcn_from >> (sb->s_blocksize_bits + 3);
-+	u32 wbit = lcn_from & (wbits - 1);
-+	const ulong *buf;
-+	CLST lcn_to;
-+
-+	if (!minlen)
-+		minlen = 1;
-+
-+	if (range->len == (u64)-1)
-+		lcn_to = wnd->nbits;
-+	else
-+		lcn_to = bytes_to_cluster(sbi, range->start + range->len);
-+
-+	down_read_nested(&wnd->rw_lock, BITMAP_MUTEX_CLUSTERS);
-+
-+	for (; iw < wnd->nbits; iw++, wbit = 0) {
-+		CLST lcn_wnd = iw * wbits;
-+		struct buffer_head *bh;
-+
-+		if (lcn_wnd > lcn_to)
-+			break;
-+
-+		if (!wnd->free_bits[iw])
-+			continue;
-+
-+		if (iw + 1 == wnd->nwnd)
-+			wbits = wnd->bits_last;
-+
-+		if (lcn_wnd + wbits > lcn_to)
-+			wbits = lcn_to - lcn_wnd;
-+
-+		bh = wnd_map(wnd, iw);
-+		if (IS_ERR(bh)) {
-+			err = PTR_ERR(bh);
-+			break;
-+		}
-+
-+		buf = (ulong *)bh->b_data;
-+
-+		for (; wbit < wbits; wbit++) {
-+			if (!test_bit(wbit, buf)) {
-+				if (!len)
-+					lcn = lcn_wnd + wbit;
-+				len += 1;
-+				continue;
-+			}
-+			if (len >= minlen) {
-+				err = ntfs_discard(sbi, lcn, len);
-+				if (err)
-+					goto out;
-+				done += len;
-+			}
-+			len = 0;
-+		}
-+		put_bh(bh);
-+	}
-+
-+	/* Process the last fragment */
-+	if (len >= minlen) {
-+		err = ntfs_discard(sbi, lcn, len);
-+		if (err)
-+			goto out;
-+		done += len;
-+	}
-+
-+out:
-+	range->len = done << sbi->cluster_bits;
-+
-+	up_read(&wnd->rw_lock);
-+
-+	return err;
-+}
+diff --git a/drivers/gpu/host1x/job.c b/drivers/gpu/host1x/job.c
+index 89b6c14b7392..82d0a60ba3f7 100644
+--- a/drivers/gpu/host1x/job.c
++++ b/drivers/gpu/host1x/job.c
+@@ -170,11 +170,9 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+ 				goto unpin;
+ 			}
+ 
+-			err = dma_map_sg(dev, sgt->sgl, sgt->nents, dir);
+-			if (!err) {
+-				err = -ENOMEM;
++			err = dma_map_sgtable(dev, sgt, dir, 0);
++			if (err)
+ 				goto unpin;
+-			}
+ 
+ 			job->unpins[job->num_unpins].dev = dev;
+ 			job->unpins[job->num_unpins].dir = dir;
+@@ -228,7 +226,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+ 		}
+ 
+ 		if (host->domain) {
+-			for_each_sg(sgt->sgl, sg, sgt->nents, j)
++			for_each_sgtable_sg(sgt, sg, j)
+ 				gather_size += sg->length;
+ 			gather_size = iova_align(&host->iova, gather_size);
+ 
+@@ -240,9 +238,9 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+ 				goto put;
+ 			}
+ 
+-			err = iommu_map_sg(host->domain,
++			err = iommu_map_sgtable(host->domain,
+ 					iova_dma_addr(&host->iova, alloc),
+-					sgt->sgl, sgt->nents, IOMMU_READ);
++					sgt, IOMMU_READ);
+ 			if (err == 0) {
+ 				__free_iova(&host->iova, alloc);
+ 				err = -EINVAL;
+@@ -252,12 +250,9 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+ 			job->unpins[job->num_unpins].size = gather_size;
+ 			phys_addr = iova_dma_addr(&host->iova, alloc);
+ 		} else if (sgt) {
+-			err = dma_map_sg(host->dev, sgt->sgl, sgt->nents,
+-					 DMA_TO_DEVICE);
+-			if (!err) {
+-				err = -ENOMEM;
++			err = dma_map_sgtable(host->dev, sgt, DMA_TO_DEVICE, 0);
++			if (err)
+ 				goto put;
+-			}
+ 
+ 			job->unpins[job->num_unpins].dir = DMA_TO_DEVICE;
+ 			job->unpins[job->num_unpins].dev = host->dev;
+@@ -660,8 +655,7 @@ void host1x_job_unpin(struct host1x_job *job)
+ 		}
+ 
+ 		if (unpin->dev && sgt)
+-			dma_unmap_sg(unpin->dev, sgt->sgl, sgt->nents,
+-				     unpin->dir);
++			dma_unmap_sgtable(unpin->dev, sgt, unpin->dir, 0);
+ 
+ 		host1x_bo_unpin(dev, unpin->bo, sgt);
+ 		host1x_bo_put(unpin->bo);
 -- 
-2.25.4
+2.17.1
 
