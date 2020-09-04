@@ -2,97 +2,108 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BE8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B319C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF8F3208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4FCA208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:41:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HXxsLfjB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OByOQrFk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgIDTlf (ORCPT
+        id S1728087AbgIDTlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 15:41:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34884 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726221AbgIDTlc (ORCPT
+        Fri, 4 Sep 2020 15:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728057AbgIDTlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:41:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599248491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+LfMo0bPH1qwF7NhkKROPvBHvn6aBWYvqMe0We0V1A0=;
-        b=HXxsLfjBYjbu6NGky4ZQ0HHmqN6pgZ7Fn9BdIClHifGWuoqpfHiqCMSvdhrTJuuOnZ2Hg3
-        QNRNd4Sz+RlRTaWLwcvD0RNbkdpI1pP8XSC4RarEvNYHUIh/5TXA/ObzxaC8SQe/RaERwA
-        eMYl6AZ9CfDm8Thpp8yRxPnfaApXdWk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-256-6gBDPg3gMXel9fFtSjWU5g-1; Fri, 04 Sep 2020 15:41:29 -0400
-X-MC-Unique: 6gBDPg3gMXel9fFtSjWU5g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 968D71DE13;
-        Fri,  4 Sep 2020 19:41:28 +0000 (UTC)
-Received: from localhost (ovpn-116-173.gru2.redhat.com [10.97.116.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D74735C1D0;
-        Fri,  4 Sep 2020 19:41:24 +0000 (UTC)
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     zohar@linux.ibm.com, Bruno Meneguele <bmeneg@redhat.com>
-Subject: [PATCH v2 4/4] integrity: prompt keyring name for unknown key request
-Date:   Fri,  4 Sep 2020 16:41:00 -0300
-Message-Id: <20200904194100.761848-5-bmeneg@redhat.com>
-In-Reply-To: <20200904194100.761848-1-bmeneg@redhat.com>
-References: <20200904194100.761848-1-bmeneg@redhat.com>
+        Fri, 4 Sep 2020 15:41:36 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59596C061244;
+        Fri,  4 Sep 2020 12:41:35 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id gf14so3501408pjb.5;
+        Fri, 04 Sep 2020 12:41:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mcsIlDVMIcUgft0ekyY0X99cCTJAxpVQRIP6nlnBXbc=;
+        b=OByOQrFknJxWRmEtf25EpKLbIGtdY0kd9f/fX8Hr7+29+KiLhxQUwDpYDtiN1x45fB
+         HCvUGOHS+awokYPhDYzNEA6iI78xlz2hxKQn0+VznHM8nG0zgJNXHrXZX5SwVFctw/MG
+         SJ6VJY7fc34fSVGps/b/aZRuNsZeCacJNmh6aUR8Hy0/Jc1PXKdBs//ACx5hcWWOE9NU
+         fkTklC1O1mCi08VFUcTGoNzdYMTHKyuf/3/IuD1gU9PnGQSWGc/WC9PpKWA7ZEKMTml+
+         EP1UYoRng43nDGN3Atq+/auHq//zUtWaQKFMBkIAoEnKd1Yr77SL8KCAKsaPa3woJgva
+         DvUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mcsIlDVMIcUgft0ekyY0X99cCTJAxpVQRIP6nlnBXbc=;
+        b=TyiSVjNspKvN2hX6N0KlQ/vldXy1YomlbtF5NvMVAdjFPqLRoTERUDv1oOd/Lib3W/
+         iD6PyBzfoxlS1lm7Sk0uk9n+3YmwO7V2bPeF/XIPEWJzwRW0oPU8MHTmzJ4Vm1E+ZCIs
+         BV6VSrznllaQY883syE3iBOb5g0hUlcjGQrYs0qnpkODfVM5rP1+PdwgMCYorper/F21
+         sDMGanzNVzTepPzNdxohSw//e/Lt77SO/JzfHtlvX8rS/7K983rMGFtbOrN2k3xCQkI9
+         5+Scb/Ea0e0of2RchcS5yRIBPnS9cewIdgPx1mer5CJbk4cxAUxSSMwaT0GWS40I3gVz
+         b5DA==
+X-Gm-Message-State: AOAM531YXyJTxkaN+VY1o/b+xh4NCT+Tj2m7bUEH186Lov2R9a67rfc2
+        9Czo4CkzeQb13HOEyKSo/Afm3QrAhMJQ8wfIVec=
+X-Google-Smtp-Source: ABdhPJxcGLl/CTorXyJAuI6R5EH4tOpOeD365PjwKiKexpa6cad5SSIyiJB8AIAHWBmbvZGIinuJ7nz0IWeS9OZsrgU=
+X-Received: by 2002:a17:90a:b387:: with SMTP id e7mr9876038pjr.228.1599248494903;
+ Fri, 04 Sep 2020 12:41:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200904165222.18444-1-vadym.kochan@plvision.eu> <20200904165222.18444-6-vadym.kochan@plvision.eu>
+In-Reply-To: <20200904165222.18444-6-vadym.kochan@plvision.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 4 Sep 2020 22:41:17 +0300
+Message-ID: <CAHp75VedS=cnE-9KVMFS-CF9YwR_wrkGgwqHROhe0RD-G3O7YQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v7 5/6] net: marvell: prestera: Add Switchdev
+ driver implementation
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Depending on the IMA policy a key can be searched in multiple keyrings (e.g.
-.ima and .platform) and possibly failing for both. However, for the user not
-aware of the searching order it's not clear what's the keyring the kernel
-didn't find the key. With this patch we improve this feedback by printing
-the keyring "description" (name).
+On Fri, Sep 4, 2020 at 7:52 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+>
+> The following features are supported:
+>
+>     - VLAN-aware bridge offloading
+>     - VLAN-unaware bridge offloading
+>     - FDB offloading (learning, ageing)
+>     - Switchport configuration
+>
+> Currently there are some limitations like:
+>
+>     - Only 1 VLAN-aware bridge instance supported
+>     - FDB ageing timeout parameter is set globally per device
 
-Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
----
- security/integrity/digsig_asymmetric.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Similar comments as per previous patches.
 
-diff --git a/security/integrity/digsig_asymmetric.c b/security/integrity/digsig_asymmetric.c
-index cfa4127d0518..14de98ef67f6 100644
---- a/security/integrity/digsig_asymmetric.c
-+++ b/security/integrity/digsig_asymmetric.c
-@@ -55,8 +55,14 @@ static struct key *request_asymmetric_key(struct key *keyring, uint32_t keyid)
- 	}
- 
- 	if (IS_ERR(key)) {
--		pr_err_ratelimited("Request for unknown key '%s' err %ld\n",
--				   name, PTR_ERR(key));
-+		if (keyring)
-+			pr_err_ratelimited("Request for unknown key '%s' in '%s' keyring. err %ld\n",
-+					   name, keyring->description,
-+					   PTR_ERR(key));
-+		else
-+			pr_err_ratelimited("Request for unknown key '%s' err %ld\n",
-+					   name, PTR_ERR(key));
-+
- 		switch (PTR_ERR(key)) {
- 			/* Hide some search errors */
- 		case -EACCES:
+> +       struct list_head vlans_list;
+
+How this container is being protected against races?
+
 -- 
-2.26.2
-
+With Best Regards,
+Andy Shevchenko
