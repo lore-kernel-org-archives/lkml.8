@@ -2,80 +2,81 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526A7C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADC5C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3124A20770
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F81D20770
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729992AbgIDKrl (ORCPT
+        id S1729883AbgIDKuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 06:47:41 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:47658 "EHLO pegase1.c-s.fr"
+        Fri, 4 Sep 2020 06:50:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35900 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbgIDKqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:46:54 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BjZ9g0N8jzB09bN;
-        Fri,  4 Sep 2020 12:46:47 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id F4FlIkCuojZq; Fri,  4 Sep 2020 12:46:46 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BjZ9f5q30zB09bD;
-        Fri,  4 Sep 2020 12:46:46 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 26D5F8B81B;
-        Fri,  4 Sep 2020 12:46:48 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id TdVkn9hP2ZBb; Fri,  4 Sep 2020 12:46:48 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (unknown [10.25.210.31])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 037788B76A;
-        Fri,  4 Sep 2020 12:46:48 +0200 (CEST)
-Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id DC97D653FF; Fri,  4 Sep 2020 10:46:47 +0000 (UTC)
-Message-Id: <346f65d677adb11865f7762c25a1ca3c64404ba5.1599216023.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH] powerpc/uaccess: Add pre-update addressing to
- __put_user_asm_goto()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri,  4 Sep 2020 10:46:47 +0000 (UTC)
+        id S1726811AbgIDKuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:50:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 7B96EAED8;
+        Fri,  4 Sep 2020 10:50:03 +0000 (UTC)
+Date:   Fri, 4 Sep 2020 12:50:01 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Yu Zhao <yuzhao@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] mm: use
+ add_page_to_lru_list()/page_lru()/page_off_lru()
+Message-ID: <20200904105001.GH15277@dhcp22.suse.cz>
+References: <20200831175042.3527153-1-yuzhao@google.com>
+ <20200903082832.GR4617@dhcp22.suse.cz>
+ <20200904032400.GA4102421@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904032400.GA4102421@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable pre-update addressing mode in __put_user_asm_goto()
+On Thu 03-09-20 21:24:00, Yu Zhao wrote:
+> On Thu, Sep 03, 2020 at 10:28:32AM +0200, Michal Hocko wrote:
+> > On Mon 31-08-20 11:50:41, Yu Zhao wrote:
+> > [...]
+> > > @@ -1860,16 +1859,11 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+> > >  		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+> > >  
+> > >  		SetPageLRU(page);
+> > > -		lru = page_lru(page);
+> > > -
+> > > -		nr_pages = thp_nr_pages(page);
+> > > -		update_lru_size(lruvec, lru, page_zonenum(page), nr_pages);
+> > > -		list_move(&page->lru, &lruvec->lists[lru]);
+> > > +		add_page_to_lru_list(page, lruvec, page_lru(page));
+> > >  
+> > >  		if (put_page_testzero(page)) {
+> > >  			__ClearPageLRU(page);
+> > > -			__ClearPageActive(page);
+> > 
+> > This should go into its own patch. The rest is a mechanical and clear.
+> 
+> Thanks for reviewing.
+> 
+> I assume you are worrying about PG_unevictable being set on the page
+> because page_off_lru() checks it first.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/include/asm/uaccess.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-index 7c2427f237e1..a5cfe867fbdc 100644
---- a/arch/powerpc/include/asm/uaccess.h
-+++ b/arch/powerpc/include/asm/uaccess.h
-@@ -254,7 +254,7 @@ do {								\
- 		"1:	" op "%U1%X1 %0,%1	# put_user\n"	\
- 		EX_TABLE(1b, %l2)				\
- 		:						\
--		: "r" (x), "m" (*addr)				\
-+		: "r" (x), "m<>" (*addr)				\
- 		:						\
- 		: label)
- 
+No, I was referring to __ClearPageActive. You are right that this is
+cleared in page_off_lru but that is hidden in a release path and e.g.
+compound pages are released via their destructor which for some might
+not involve releasing the page - e.g. hugetlb pages. This should be fine
+because hugetlb pages are not on LRU so as I've said this is fine but it
+belongs to its own patch because it is not a pure mechanical change like
+the rest of the patch.
 -- 
-2.25.0
-
+Michal Hocko
+SUSE Labs
