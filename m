@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C4FC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D930CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A72206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A2C8206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:21:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599229284;
-	bh=UYGrFiUUciS2pRDj/avGMDlJSM4FAvnB34fE3gpLw3M=;
+	s=default; t=1599229304;
+	bh=eqFhAXZbmT26mUEhpjJJVcnWgVNwi5MXc9wL2qtl/7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ttkW+q/uieWMcK+1wsUAAazkBLiGHUyoAF1RHtnf/jlfmTYiELQ9aHyOoC3XMgrsj
-	 gtTcBu29+j2WnTPogdi+f1ZeMRF0kXVVWb+HIot1Ochb908B4mJEdyzdbRmqTa6EFn
-	 Qldvs3fobNMARR80HqbeVFCLvC7UuzGgy7kwci8I=
+	b=Q+ZTceybFDwLkEZTfduVWJ2L5hSAo50wyji2vfc//nBMIwz0f+T1c+O27c2ZKQErh
+	 GxENkhzawFWtYW5Lwiafzpg7/21kfGikQHy/Rha7Pwp/ypCi6lf/6/OUBW3CxcaU2U
+	 qygDd1wmWbzBAWlCO43s11uYIYmrU2/83F9Kw7yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730753AbgIDOU7 (ORCPT
+        id S1730735AbgIDOVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44354 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 10:21:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730498AbgIDNmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:42:54 -0400
+        id S1730416AbgIDNeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:34:24 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E72D72087E;
-        Fri,  4 Sep 2020 13:30:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8242021527;
+        Fri,  4 Sep 2020 13:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226222;
-        bh=UYGrFiUUciS2pRDj/avGMDlJSM4FAvnB34fE3gpLw3M=;
+        s=default; t=1599226277;
+        bh=eqFhAXZbmT26mUEhpjJJVcnWgVNwi5MXc9wL2qtl/7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TGbmAFbXtqzr82x/vpwUoLaZC6ybHt7v/MTPcWc8BpuglA7qpQwWJux2nrDmFM8gv
-         mtSG5d8pNTmep0yFec3PsTgENrDBsACGQceT+CqB0qHyblKh1p/YZPILZ7wymrjwx+
-         8LR/wPFoQqn7KWddx+ty41WWFDWroH8P7LzVdd1Q=
+        b=atuO0HeADBwnfIbz6dpC3LvviHrTT9mRPB7Udi8uuaj1VGRkGkamYUuTgSoZal605
+         5IQikB9ow2U8EAb/l1k7BeCKA2rDwuj+KzrHfSvKwFbf/u+eI9LW95GSn7QMXorcMC
+         c8KBU1dNmjc5r98EgZa7+ugTsknYL50LVAIriGKc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 13/16] sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
-Date:   Fri,  4 Sep 2020 15:30:06 +0200
-Message-Id: <20200904120257.852217368@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.8 16/17] nl80211: fix NL80211_ATTR_HE_6GHZ_CAPABILITY usage
+Date:   Fri,  4 Sep 2020 15:30:15 +0200
+Message-Id: <20200904120258.791596514@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904120257.203708503@linuxfoundation.org>
-References: <20200904120257.203708503@linuxfoundation.org>
+In-Reply-To: <20200904120257.983551609@linuxfoundation.org>
+References: <20200904120257.983551609@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,43 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit e33588adcaa925c18ee2ea253161fb0317fa2329 upstream.
+commit fce2ff728f95b8894db14f51c9274dc56c37616f upstream.
 
-commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+In nl80211_set_station(), we check NL80211_ATTR_HE_6GHZ_CAPABILITY
+and then use NL80211_ATTR_HE_CAPABILITY, which is clearly wrong.
+Fix this to use NL80211_ATTR_HE_6GHZ_CAPABILITY as well.
 
-SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK is set for Tegra210 from the
-beginning of Tegra210 support in the driver.
-
-Tegra210 SDMMC hardware by default uses timeout clock (TMCLK)
-instead of SDCLK and this quirk should not be set.
-
-So, this patch remove this quirk for Tegra210.
-
-Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
-Cc: stable <stable@vger.kernel.org> # 5.4
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Link: https://lore.kernel.org/r/1598548861-32373-2-git-send-email-skomatineni@nvidia.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: stable@vger.kernel.org
+Fixes: 43e64bf301fd ("cfg80211: handle 6 GHz capability of new station")
+Link: https://lore.kernel.org/r/20200805153516.310cef625955.I0abc04dc8abb2c7c005c88ef8fa2d0e3c9fb95c4@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-tegra.c |    1 -
- 1 file changed, 1 deletion(-)
+ net/wireless/nl80211.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -1370,7 +1370,6 @@ static const struct sdhci_ops tegra210_s
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -6010,7 +6010,7 @@ static int nl80211_set_station(struct sk
  
- static const struct sdhci_pltfm_data sdhci_tegra210_pdata = {
- 	.quirks = SDHCI_QUIRK_BROKEN_TIMEOUT_VAL |
--		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
- 		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
- 		  SDHCI_QUIRK_NO_HISPD_BIT |
- 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
+ 	if (info->attrs[NL80211_ATTR_HE_6GHZ_CAPABILITY])
+ 		params.he_6ghz_capa =
+-			nla_data(info->attrs[NL80211_ATTR_HE_CAPABILITY]);
++			nla_data(info->attrs[NL80211_ATTR_HE_6GHZ_CAPABILITY]);
+ 
+ 	if (info->attrs[NL80211_ATTR_AIRTIME_WEIGHT])
+ 		params.airtime_weight =
 
 
