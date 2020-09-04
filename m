@@ -2,164 +2,152 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C9AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E6FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8E320709
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EAD620709
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:45:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ERPML5Tf"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="foF8JGCi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbgIDLoJ (ORCPT
+        id S1730055AbgIDLpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:44:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729659AbgIDLny (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 07:43:54 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B653AC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:43:53 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id g4so6431774wrs.5
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 04:43:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ysBV8EHmB5bF7bmhKaHH5XXdeOwwXfi3lB8yzT/cQJI=;
-        b=ERPML5TfkAu4IeCukhG/Nhlef0bp6OEGWyqpI+H9cqWpmexGM/dwCjHvlLMpvGvX82
-         s++1gsWLmCFIQqjtJ6gPxGZg64liHxtYHMNfzEwXjYUhG1pqLBkD6MzKYUkK5ioJ0e28
-         1gE7JrRjKkvKi2dnQs5itiw0RcAflKbRtSmVy4BEyrD+youQszYtp+ZAq2TK2TQHQ3/Z
-         NvPbd39Cf8+edAPlFgRmtHkYGb40/7T/A+vmU9uqJ1gqGH5frO/n3rDNoiuxeb6RzMiM
-         DHqMTkB1Z03edqTnGiWf+N3I4VCcU3DMoQM+drbafMbvrHXFaQ6EpO+AEYAVV0xS+Nlh
-         V0Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ysBV8EHmB5bF7bmhKaHH5XXdeOwwXfi3lB8yzT/cQJI=;
-        b=Ny02nXCR/nZSkQztAEbHo0UXB/7sjcALdzrjGVsHiOs18JqmXMmCx1v+e5YBOHLiEj
-         atmOPgrN8XMltSoddM53v398MOAjApSCzsP4S3JjHAVTXeE3eBY746jTaUl+w5TunEtD
-         oB0jKbSNuARC05/v27ry9GN/kpoA22l5nCRzLP9a1b2MAeaZ4u1Xd9BwyAHu/9/QwM1S
-         p0zJgkaOZWSLVRaZ5MnPBjX64Bc46XnodbN1HUun6X3ntRA8Ctg0hq0crCyTcU0ve05p
-         3GeEAL2HkVAcWaQ2sb4AeSHfvdHTccCiA9DsIWXAlDDYPZb/DDXNpSoAR82AzgIIUxrO
-         uLxg==
-X-Gm-Message-State: AOAM531J0EjSZU4ne98mthsucRvyyYMNUQ25cWz5tB3Aq3ltYjwwut3T
-        YCNSq6HkiQmg+1syCNrgUgN1yA==
-X-Google-Smtp-Source: ABdhPJy9JCvlhC4pfdcbOeNMvmI99h2ggyh5dFXaXSknmVKya2fRCYzaf1Gn4wvLYshTpHoPPGgO8g==
-X-Received: by 2002:a5d:518b:: with SMTP id k11mr6996379wrv.369.1599219832344;
-        Fri, 04 Sep 2020 04:43:52 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id o4sm6783818wru.55.2020.09.04.04.43.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 04:43:51 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 12:43:49 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Alexandru Stan <amstan@chromium.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 3/3] ARM: dts: rockchip: Remove 0 point in backlight
-Message-ID: <20200904114349.fq26qqozd4tz6sjs@holly.lan>
-References: <20200721042522.2403410-1-amstan@chromium.org>
- <20200720212502.3.I96b8d872ec51171f19274e43e96cadc092881271@changeid>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Fri, 4 Sep 2020 07:45:21 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:16737 "EHLO nat-hk.nvidia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728118AbgIDLpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 07:45:11 -0400
+Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f5228c20000>; Fri, 04 Sep 2020 19:45:06 +0800
+Received: from HKMAIL102.nvidia.com ([10.18.16.11])
+  by hkpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 04 Sep 2020 04:45:06 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate102.nvidia.com on Fri, 04 Sep 2020 04:45:06 -0700
+Received: from HKMAIL104.nvidia.com (10.18.16.13) by HKMAIL102.nvidia.com
+ (10.18.16.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 4 Sep
+ 2020 11:45:05 +0000
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.177)
+ by HKMAIL104.nvidia.com (10.18.16.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Fri, 4 Sep 2020 11:45:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JtAR2i6VeSEYH1ySrtkjjKgw2aVA8J3czVTg0tJdSiJhu6xdT0Al9OW9CyPShrt/fhkw8zuN7kUXZ/OAgEAInd/M5Y1P5RsOd09+TtphjmajD6RVguePRtsXVCzuRNDjr+RBbgkJpFBs/tcRgsGgnRkU8Umen6ZXr4SwpEPh4LEGPhW4JxxJTkPz3tUEBfDCh5QugtK49GdepMZohR+zG+tNmkPiP3N0PFLsmPN9meWf6orHB2rF0CfcAxQfIwJPfkklNcSzGAwTRL0pXgr5EuY5cz0qgo3GYghIrz9Y78cBZtlcX7KOPvYBePi4+jT706TaaHfvsYtm5lQWJkKWJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WpKi9Uq78BZpCzdFEfP9RLkmEkb6kuDM2UsMxw26l74=;
+ b=kVkk0aNxsGLmU/CNdAq9hFamm8QuipddOef67pJn41N+DuRpmg2+Ak6jMnguI6tZ99UHXk2wlSgV0wEQT/TEObWxnQ/0kJ5s6UAmUPeq28+mjS+hDqSTpf61eQhZRcU5PznpguEkUuRM6pcL9r/xlrhPbDO9BC9oVyhzRzPoArwOw+OHx5v/KH5IdmZzDnbCtHrZMwRwmqAxAw+5w/6zgYgGvScAWB/Csc0oagfEDgz1McpXccys/orINO7gIxR9OvL8ANyw9MMIhFuftNl6uETz4pmqf8H02ty97gvnZGhSJ7YP/kD4Z7wdI8SilFlDdpJqOhfs6tYmhODisRTIKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB4451.namprd12.prod.outlook.com (2603:10b6:5:2ab::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Fri, 4 Sep
+ 2020 11:45:03 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3326.025; Fri, 4 Sep 2020
+ 11:45:03 +0000
+Date:   Fri, 4 Sep 2020 08:45:01 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Marc Zyngier" <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: tegra: Convert to MSI domains
+Message-ID: <20200904114501.GO1152540@nvidia.com>
+References: <20200904105613.444945-1-thierry.reding@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200720212502.3.I96b8d872ec51171f19274e43e96cadc092881271@changeid>
+In-Reply-To: <20200904105613.444945-1-thierry.reding@gmail.com>
+X-ClientProxiedBy: MN2PR19CA0058.namprd19.prod.outlook.com
+ (2603:10b6:208:19b::35) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR19CA0058.namprd19.prod.outlook.com (2603:10b6:208:19b::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Fri, 4 Sep 2020 11:45:02 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kEA9N-007HJd-Im; Fri, 04 Sep 2020 08:45:01 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c2525011-17b1-4c90-7673-08d850c7f5e8
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4451:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB4451D3A1DC70988E17F88ED7C22D0@DM6PR12MB4451.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yXnV6LyKeUqvouuMEnpv/rySVGm8cxkH9zoXeeA1Czxbu6lntt7YbhYMwH0nHWT7g09ZC7ep6ZueZ6jL9U46qUb7LyH3pkTBC8Z9qcw8+r7opo7USPAE7Kzb9vY15zmFsH60zKKnS7N1wUoNNVbHDp3wZoD5hCAR1T4gwXGVFoEwqnRMuLWRoxNYvEX0xpCdZIfRE7Radm4pF17x5NHLTZaef+nZ1SWbB3uFovtRQC+MVFgsZtbnTC/vr4qH/EH8mKoGDWXyEXBuMyBcJSroSCbqI/KmtXkbyUgq/Rc9adcRv8At8VMO5E/5KpnAtgrU4K7NFk0s+8cu5XruWR2fiw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(366004)(136003)(396003)(376002)(9786002)(4744005)(1076003)(2616005)(8936002)(54906003)(8676002)(9746002)(478600001)(2906002)(4326008)(36756003)(316002)(33656002)(66946007)(66556008)(426003)(66476007)(6916009)(86362001)(26005)(5660300002)(186003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 6le88Eu2MmzcFORS0mtlzMjWldHNBSb60tFU2Ikn5WltcmrjVRqpXFmRXMDM17L7RvoK+furBDAW6ZUr34jxuy5DAB7BCMAzJfYT3J/9LkjXJd3XOr7L4+26/rNj1nXkvos4QrhXCgcx6QyhNxyrpwobPOwFCIDDmX0Jq1qmF+k5PFB1mkWhGPWTjtqN/l3pc+W+6wdC3WWkjldhTHWiTRVljQ2wDcqB2uKNCG3axDW8ALLlKnQgam2UQgjkKsA4eytIu+1ae2Pj641l6k5KTuX0qpBNPEIQ4LhiOQimmgxxypjnSa0UscsZnpaNFopk8xxWvljnd+o2k0OJ/tO4AKVNydmwF9YNL4+m4zOgwGWznzftdvO6gTBdbkRkZbHSuEs6YIRjwlrjgo/DJINilVceLbjyLlEw7QZeFn3iALbJxrUBljgQNTOeMZPtfSsiH8q9i7cY6txXtMI3YkmfyA/3hmyJCYrUgrVlMGYouTMVgPDP8V55mhw96t4MR0Cp3Kd0zlefKLNgiVAwjfpbi5ekRF0fmWx+r92X/wOH0xmkC+qbj3fs++yqIcnyUA2HX7rXpluL3p/a82VzkCdP0hkT+IcltYZd0lISnB6IUlUZNPIMYo/Nu+ZBDspz7HBEsEr4gmjklUVLqzwGyyhvlg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2525011-17b1-4c90-7673-08d850c7f5e8
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2020 11:45:02.9970
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: w9+8ssVutFd2vp2ETQGmjAX+hnaItcB8RpfRg9txtcFzpx+ezyAZnheJHKvtdZsE
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4451
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599219906; bh=WpKi9Uq78BZpCzdFEfP9RLkmEkb6kuDM2UsMxw26l74=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-MS-Exchange-Transport-Forked:
+         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
+         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
+         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+         X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=foF8JGCicESgfuRFmj6PJi7KjK7kxjmJOOztUH0KL/G0+GOz7B4q8IXiOquvt+i1B
+         aiynSj2V8t6yjfUeNBhmyUAcY1uBHDW+yTdUZ/FcSby8CYNBXp/uyhJJWLea/2JwMR
+         lD0xP6AekwzDYtmwtNsoK1Nd77kwRHEoHKY+xcECSaSCpdwLNIyaUF9Jx004qiASi5
+         scl2YI+XpPChZxRaZtk7hZDho6/pvDHKdgvF89UsjkKueOxAGQPsItnSOG0LBF96vi
+         unhEwxrDoXeW2y9cH9YtpfYcfcS1/GHPFUV01TTmxBTlwyH61wnrwKoVdZT8ij/Nby
+         0FZv24Fz4/LMA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 09:25:22PM -0700, Alexandru Stan wrote:
-> After the "PWM backlight interpolation adjustments" patches, the
-> backlight interpolation works a little differently. The way these
-> dts files were working before was relying on a bug (IMHO).
-> 
-> Remove the 0-3 range since otherwise we would have a 252 long
-> interpolation that would slowly go between 0 and 3, looking really bad
-> in userspace.
-> 
-> We'll still have the 0% point available to userspace, "backlight:
-> pwm_bl: Artificially add 0% during interpolation" takes care of that.
-> 
-> Signed-off-by: Alexandru Stan <amstan@chromium.org>
+On Fri, Sep 04, 2020 at 12:56:13PM +0200, Thierry Reding wrote:
+> +static void tegra_msi_irq_mask(struct irq_data *d)
+> +{
+> +	struct tegra_msi *msi = irq_data_get_irq_chip_data(d);
+> +	struct tegra_pcie *pcie = msi_to_pcie(msi);
+> +	unsigned int index = d->hwirq / 32;
+> +	u32 value;
+> +
+> +	value = afi_readl(pcie, AFI_MSI_EN_VEC(index));
+> +	value &= ~BIT(d->hwirq % 32);
+> +	afi_writel(pcie, value, AFI_MSI_EN_VEC(index));
+> +}
 
-Hmnn... almost wish I hadn't seen this ;-)
+Do these need a flushing write? The Mask operation should be synchronous?
 
-This basically says that your first patch will produce some odd
-behaviour for existing device trees! On the other hand I strongly
-suspect this trick is only currently seen on Chromebooks (since IIRC
-that's where backlight animation is popular).
-
-To be clear I'm entirely in favour of the changes in this patch... I
-just dubious about combining it with artifically adding that 0%
-
-
-Daniel.
-
-
-> ---
-> 
->  arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 2 +-
->  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 2 +-
->  arch/arm/boot/dts/rk3288-veyron-tiger.dts  | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-> index 171ba6185b6d..af4b21636c08 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-> +++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-> @@ -20,7 +20,7 @@ / {
->  
->  &backlight {
->  	/* Jaq panel PWM must be >= 3%, so start non-zero brightness at 8 */
-> -	brightness-levels = <0 8 255>;
-> +	brightness-levels = <8 255>;
->  	num-interpolated-steps = <247>;
->  };
->  
-> diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-> index 383fad1a88a1..b25aa2f3cbee 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-> +++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-> @@ -39,7 +39,7 @@ volum_up {
->  
->  &backlight {
->  	/* Minnie panel PWM must be >= 1%, so start non-zero brightness at 3 */
-> -	brightness-levels = <0 3 255>;
-> +	brightness-levels = <3 255>;
->  	num-interpolated-steps = <252>;
->  };
->  
-> diff --git a/arch/arm/boot/dts/rk3288-veyron-tiger.dts b/arch/arm/boot/dts/rk3288-veyron-tiger.dts
-> index 069f0c2c1fdf..52a84cbe7a90 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron-tiger.dts
-> +++ b/arch/arm/boot/dts/rk3288-veyron-tiger.dts
-> @@ -23,7 +23,7 @@ / {
->  
->  &backlight {
->  	/* Tiger panel PWM must be >= 1%, so start non-zero brightness at 3 */
-> -	brightness-levels = <0 3 255>;
-> +	brightness-levels = <3 255>;
->  	num-interpolated-steps = <252>;
->  };
->  
-> -- 
-> 2.27.0
+Thanks,
+Jason
