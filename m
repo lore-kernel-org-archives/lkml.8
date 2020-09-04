@@ -2,120 +2,92 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA39C52D77
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A18C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7C8724840
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:03:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iZQkkf6i"
+	by mail.kernel.org (Postfix) with ESMTP id 4A7EF20796
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgIDREh (ORCPT
+        id S1726434AbgIDSP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbgIDREf (ORCPT
+        Fri, 4 Sep 2020 14:15:27 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:48701 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgIDSPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:04:35 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC217C061244;
-        Fri,  4 Sep 2020 10:04:33 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id b79so6706737wmb.4;
-        Fri, 04 Sep 2020 10:04:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qnhyxI2YW5mCxRpk6hspno3Ftt+MAEF29reZU4Qqw2U=;
-        b=iZQkkf6izy+fvsbb5gd2CCpJANc2aFO2akcl5DrXKfp/Zd29xDWNH8JHNG7iH2QCPI
-         3Lw/zdWQLASMouw+2tht0b9dJM7YwAClfzpE9Uyg+RdNJuYdSC24ClQcbs8TTsbgsH6E
-         KVe8LIvhfpsfY8KOgERJYvJY7c8rsddfLmxCJ0LL3QdrKyH1hTb1aPx4uowyjB23RHZu
-         /evXgP1vA4rx+EjTtO1WPLxTFQRG33rmDph6zGXhgux/YX4wZ0oin6GT3tKBvUsHlMCV
-         cLEdbvhqoKhb6xbxti0lmjZ2QVqL4z+uPTeXZYunWzT8YjDmkI+OY/u+TAucokSqcZ1J
-         SA9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qnhyxI2YW5mCxRpk6hspno3Ftt+MAEF29reZU4Qqw2U=;
-        b=KI5pjDuf7+TMJ3DJ92TZ6oklOqsvULE/wZg2DVhr2zv1Wam1YkTp7hJv2022NxExQp
-         d2AQOQpPRfmyTPS7NRXF57gnqGw3Qt3UWDlxa3/W9T6B852L0OLzkLtACCe28LQEcmy8
-         2TxmZoiJqmQSnwsf+9KIiGAy3nsoB6SwMBD3jBKzWPwdkHimurN0ZrkYF2+9zed0o+4y
-         R6oIYWYMdgadHo0Vp7KkaRq7k6p6jD426hhFz3qAu2nw6z/2cH2DzVpbzspBWUFFAfyu
-         JWwDS0LcpbIR3As/yrWek/1Jl7wt/L6vR4xywlAdSrYlqTSgLiTkQxYrMTNzquKmlBsF
-         qJ6A==
-X-Gm-Message-State: AOAM532b3qvRaZGHZYAsrDnI9jfSooPjg+sY5Y64SDLwb/oeMuOvqP2N
-        3zKXfzqXGIHn/7giqlu9oy0=
-X-Google-Smtp-Source: ABdhPJwTay7wrMhUJ7lacbMquseeNhy37Fil53XNxaCXx7jKQTbxBga2aWvaK3SVGUi5cXCZB8GUng==
-X-Received: by 2002:a05:600c:2109:: with SMTP id u9mr8060516wml.147.1599239072429;
-        Fri, 04 Sep 2020 10:04:32 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id 5sm12144759wmz.22.2020.09.04.10.04.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 10:04:31 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Beniamin Bia <beniamin.bia@analog.com>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Artur Rojek <contact@artur-rojek.eu>,
-        Alexandru Tachici <alexandru.tachici@analog.com>,
-        Vincent Pelletier <plr.vincent@gmail.com>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH] iio: adc: rockchip_saradc: Allow compile-testing with !ARM
-Date:   Fri,  4 Sep 2020 18:04:16 +0100
-Message-Id: <20200904170416.16061-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Fri, 4 Sep 2020 14:15:23 -0400
+Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N1u2b-1kh6sy2GqX-012Dvb; Fri, 04 Sep 2020 20:15:21 +0200
+Received: by mail-qt1-f172.google.com with SMTP id k25so4384913qtu.4;
+        Fri, 04 Sep 2020 11:15:21 -0700 (PDT)
+X-Gm-Message-State: AOAM533e69PysRwNoKpPesgSkinefoz9n3rM/xIVEpGTSJAT64OsF2S0
+        K/u0S7RRl+OLPlFboo7vrGI+iC9IpJQcXO4u0e4=
+X-Google-Smtp-Source: ABdhPJwucPkGj3LAptlXE2DwEcjRJWWLLErfX9qgvukoJGkc4WlGdVJ6sLBUa+bp1zSZuzZUqHdfNwF7k0QysP9l5QE=
+X-Received: by 2002:ac8:46d7:: with SMTP id h23mr9627667qto.18.1599243320351;
+ Fri, 04 Sep 2020 11:15:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200904165216.1799796-1-hch@lst.de>
+In-Reply-To: <20200904165216.1799796-1-hch@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 4 Sep 2020 20:15:03 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3t8a0gD2HsoPsMi7whtNb7BdzPN6-oo6ABnqkbQJoBfA@mail.gmail.com>
+Message-ID: <CAK8P3a3t8a0gD2HsoPsMi7whtNb7BdzPN6-oo6ABnqkbQJoBfA@mail.gmail.com>
+Subject: Re: remove set_fs for riscv
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:81BS4z0m57ZK4qyXrsq11zca2uneqsVnUM8XPOg7CT/FWoIaiS9
+ fs3e+oG5cA56KISzqigr5geh6fO7HMpvO5Krv0Jst+QaBrIeQkTWarWjZivohl0DQqXq1AA
+ KLYfcvm9U3jBcLldCoszKm0Yc97KTq2JY1UhVAQs8LsehhYxsCH7GkeF73SJ22gu1vroU+J
+ 1JkjvZWhMKYrW/9CtCldg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lr5TuermnBk=:PCoJktSSLG+ZeHvNw7N0zX
+ cW6UggLRZYxqN/S9iWUgcEqRzrxOII8rOO4ZA/q/+gWQU9G9i2jr2Yfok6/qKIYr+PcgqcxC3
+ JJ4k8qNQRYaYHcs0lLyVoJnEmqvdYjpf5evsuhTQMP1I1NcfUW0IK4WSTTV6kIRkkr/nH76MZ
+ We/cWCyslsmg8ejLl9e5x48yuAdtOgi3/MehtVRib7Gz8mYBglz0NbSccdIz8O2gRJoXVgJ+H
+ cJwlr458ljEA3E148exOzK4mV5IGYjnXg8z3nSaXmCwj/s2uXvM0S6MSHnq8du5Q5XUSyVR1T
+ gTGTmTi12TPomz/w7efjmQ2hhd36lByAmfj2nUSKGBz+UcdYfScAxKr4ClJGZPo35xVkCnbH6
+ 4tzxwiH5vvjP5WWnuqY5uTp+4TN26is5jo2vV8NEzHVvktuyeDXkqFEwQPEP6N/c/wp7fQLGA
+ i/qVbTFFGgElY4viid//pXk4GeQG/lbe+gVLUUTy5mvXENCW/9BHeSyfQA6NxdISEZoCEMdwk
+ aLUaoWvnuncAK0769U5hROtNOPHWjWMRG+cVTVqPvJeszKzYowCqfirorSR166aGioERp05ER
+ L+lcwZb9TPPvaCFm8avV0n7ynuqxFOHjsGSDVx3AOLA/N/fw6s4jXTFz4Wked3yUZJOCXlQM4
+ p7C7kDid0B2LM6Bqh8tahIWJoas7B6cJg5Pzj6E0ApP8qZhwHZ9t/uDHY2uKhXrBWUsZBO/am
+ L0W4Xq1ObsZ98DPv614YsbrBSdRSrxRFa91rIOSP9dK954ln9RwxApbBB8vIwc2GttYqffXJb
+ LphFMIMXAh00P6t65Oe02ZjWE3AyF9aNeuZ7WDmTM9J8WAbQuyKwZenILYI2ASi7VzCQDDt4C
+ OwgfpFtkQW/EDJ7NP8JvU0+TxPg1qbwamQvM/ScaARqe3fN/xyKLnIla7tpv68AyW/5a3FCsE
+ I5j9wYpnRJ5lxRBgYGNbLq3wS/FWoM5NykKCKWYcq0A6HnSLMCIy2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There seems no reason to allow for compile-testing on ARM only, so
-remove this restriction.
+On Fri, Sep 4, 2020 at 6:52 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Hi all,
+>
+> this series converts riscv to the new set_fs less world and is on top of this
+> branch:
+>
+>     https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git/log/?h=base.set_fs
+>
+> The first four patches are general improvements and enablement for all nommu
+> ports, and might make sense to merge through the above base branch.
 
-Build-tested with allyesconfig on x86.
+For asm-generic:
 
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- drivers/iio/adc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index d94dc800b842..03929606bb01 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -863,7 +863,7 @@ config RN5T618_ADC
- 
- config ROCKCHIP_SARADC
- 	tristate "Rockchip SARADC driver"
--	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
- 	depends on RESET_CONTROLLER
- 	select IIO_BUFFER
- 	select IIO_TRIGGERED_BUFFER
--- 
-2.28.0
+Is there a bigger plan for the rest? I can probably have a look at the Arm
+OABI code if nobody else working on that yet.
 
+      Arnd
