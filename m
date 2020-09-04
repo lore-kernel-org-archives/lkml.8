@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A002CC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61902C2BB84
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7065B20770
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 267D82074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599231268;
-	bh=rpsSuPF55D8wUkxcwd9feqYT0zQ6KFywXHAw7ktgB80=;
+	s=default; t=1599231274;
+	bh=QOJLGecW1qxz6ZNlLifYa3oKhiDzUyvvKI7pYuzuHRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iJElt2csqm6OM7ZjpkY1FPOHTG/QCuQyTNkrsjPq5lyOPFGL9n3OWb1M5ohOd46H2
-	 gbABzSKjD+Uh29jpEWFAYNAgbxQThL5+l5li46Xr/4ki/w85ACg8ooOypvyP4qLxjT
-	 gXW871KoEfnqFMwh5dgFBbrntAUvKb4Yunj2lKwE=
+	b=s2AZXy1CjiN7b+7bCMmA1KTcVK5qMxNiopU0awoMQOQjihxJ+kyq75vZ57HYZyuxE
+	 dYrsyp/fxgAp9riyZpqtGvEsu7bK1N8Q6nykkb8OtCUdLxCEivkebtJXzCM5kVaN7c
+	 qJhCcJyPeqwRUX6M6vbp86/32b0qnSewC4TaVhTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730846AbgIDOy1 (ORCPT
+        id S1730863AbgIDOyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:54:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49110 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 10:54:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730815AbgIDOyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:54:20 -0400
+        id S1730849AbgIDOyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 10:54:31 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D4D120722;
-        Fri,  4 Sep 2020 14:54:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ABC620722;
+        Fri,  4 Sep 2020 14:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599231260;
-        bh=rpsSuPF55D8wUkxcwd9feqYT0zQ6KFywXHAw7ktgB80=;
+        s=default; t=1599231271;
+        bh=QOJLGecW1qxz6ZNlLifYa3oKhiDzUyvvKI7pYuzuHRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JvV9pFWC3wErh0W+nTssH8qc19UqAU6Gr91Qlc56nQb2/BCiK1FfnlfgOUtWssA3X
-         3fL2Ao7O7XBk3M5t0Zkx4Gcm616faoXTUxKKUZ1RYBQGWrpod+i60sROoY9MO9C0QA
-         6Sx6tlTQYQ/ORbwGcJEl8bN5GGPSCJZAgzcM/oq8=
+        b=MIaC+jSu5K5Ul1I+hd40MUvRZUlCxrX3f809s3TEnNjprGSdRQROcWey19AD11pmp
+         rNnrLLXLjWuznWa5iLoYcNm9Pklcbv5VdJ06qeBB/uqh9wDr7sdvRI3xD6HUPPtJgH
+         LJlaXSdlXFcy/CbOvNSeld92RdgUUw+jXBoqcLkk=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
@@ -58,9 +58,9 @@ To:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
         dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 10/13] arm64: dts: imx8mq: Add missing interrupts to GPC
-Date:   Fri,  4 Sep 2020 16:53:09 +0200
-Message-Id: <20200904145312.10960-11-krzk@kernel.org>
+Subject: [PATCH 12/13] arm64: dts: imx8mq-librem5: Drop interrupt-names in PMIC
+Date:   Fri,  4 Sep 2020 16:53:11 +0200
+Message-Id: <20200904145312.10960-13-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200904145312.10960-1-krzk@kernel.org>
 References: <20200904145312.10960-1-krzk@kernel.org>
@@ -69,32 +69,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i.MX General Power Controller v2 device node was missing interrupts
-property necessary to route its interrupt to GIC.  This also fixes the
-dbts_check warnings like:
+The 'interrupt-names' property is not described in dtschema, not used by
+the driver and does not really make sense as its value is simple 'irq'.
+Drop it to fix dtbs_check warnings like:
 
-  arch/arm64/boot/dts/freescale/imx8mq-evk.dt.yaml: gpc@303a0000:
-    {'compatible': ... '$nodename': ['gpc@303a0000']} is not valid under any of the given schemas
-  arch/arm64/boot/dts/freescale/imx8mq-evk.dt.yaml: gpc@303a0000: 'interrupts' is a required property
+  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dt.yaml:
+    pmic@4b: 'interrupt-names' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-Fixes: fdbcc04da246 ("arm64: dts: imx8mq: add GPC power domains")
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 1 -
+ arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi       | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index aad3b9f2f35c..5e0e7d0f1bc4 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -623,6 +623,7 @@
- 			gpc: gpc@303a0000 {
- 				compatible = "fsl,imx8mq-gpc";
- 				reg = <0x303a0000 0x10000>;
-+				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
- 				interrupt-parent = <&gic>;
- 				interrupt-controller;
- 				#interrupt-cells = <3>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+index 10f30ff85fd3..cce1b595e2d6 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+@@ -289,7 +289,6 @@
+ 		clock-output-names = "pmic_clk";
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <3 GPIO_ACTIVE_LOW>;
+-		interrupt-names = "irq";
+ 		rohm,reset-snvs-powered;
+ 
+ 		regulators {
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
+index 4e50cb62654d..a78584086fa9 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
+@@ -640,7 +640,6 @@
+ 		clock-output-names = "pmic_clk";
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <7 GPIO_ACTIVE_LOW>;
+-		interrupt-names = "irq";
+ 		rohm,reset-snvs-powered;
+ 
+ 		regulators {
 -- 
 2.17.1
 
