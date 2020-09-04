@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4BDC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FC4C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 173312078E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A48E206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:20:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="irpJt6rv"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fj2TrcKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbgIDOUc (ORCPT
+        id S1730723AbgIDOUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:20:32 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:42358 "EHLO
+        Fri, 4 Sep 2020 10:20:50 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:42354 "EHLO
         mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730499AbgIDNmy (ORCPT
+        with ESMTP id S1730508AbgIDNmy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 09:42:54 -0400
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200904133504euoutp02be82e613dcaaccd56942af0e3bf18f9a~xmAh6z5sc2949829498euoutp02F
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:35:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200904133504euoutp02be82e613dcaaccd56942af0e3bf18f9a~xmAh6z5sc2949829498euoutp02F
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200904133457euoutp027553bacf0a880e8ea8256c199f550f0f~xmAas19oH2842328423euoutp02v
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:34:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200904133457euoutp027553bacf0a880e8ea8256c199f550f0f~xmAas19oH2842328423euoutp02v
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599226504;
-        bh=6mXoG5G9PW5+boUAHHItjwrf4VrXlD4+aWxl8BX4EFk=;
+        s=mail20170921; t=1599226497;
+        bh=Jqso+4bTDsmQXRdsE1uC1DJyWvKiAsqf3Oy0GQ+Xf/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=irpJt6rvcnjqUgQZaO88fr8b+ScYrYeuFZi/s5KBROzokTkuXXnXYS5ECdmj6xwwH
-         HU1LLO4GDGVuR9ZVZ8w/xICirBtEuoXF2Rfl6iEJvhcWOb86MbmDdX/LrmuhkVdDiG
-         zTRQu2xD6lnL1wpnOXgUvK97iII78FJLFxdVO1T8=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        b=fj2TrcKf9R10JjdPmn+rEu3DyFqBxhluYIcuV115IcoXWRztmlLMmR8/O8Intlaxt
+         TDmaVragrqng7YJZ6tb7IYNgn6QEY5FOk7L3fLWZt+9oJAu9UDJ/fXuNQGXNxnIz/O
+         MK/nVgFnENb1wEYJ7bD6W5QfHKNNUXkwzIrRp+Nc=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200904133504eucas1p1147c9da883b8213540141300a31313ad~xmAhjzxmV0114501145eucas1p1u;
-        Fri,  4 Sep 2020 13:35:04 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 7B.66.05997.882425F5; Fri,  4
-        Sep 2020 14:35:04 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        20200904133456eucas1p19e8a254b2d7cec37aae8e5060a65da78~xmAaaCCDv1681116811eucas1p1Z;
+        Fri,  4 Sep 2020 13:34:56 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 81.39.06318.082425F5; Fri,  4
+        Sep 2020 14:34:56 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200904133504eucas1p12ddfe8e0904a750bfe21f964821cb832~xmAhQs7X01134411344eucas1p1R;
-        Fri,  4 Sep 2020 13:35:04 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200904133504eusmtrp1ce7f9eda04fb52c97d36192787872ba4~xmAhQAnMy0766507665eusmtrp1A;
-        Fri,  4 Sep 2020 13:35:04 +0000 (GMT)
-X-AuditID: cbfec7f4-65dff7000000176d-69-5f5242887000
+        20200904133456eucas1p10d0fe1628474fcd4803a7af4437be4e1~xmAZ8PRD70114501145eucas1p1m;
+        Fri,  4 Sep 2020 13:34:56 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200904133456eusmtrp21e5fcd9c9d86afb3994231902fa9fe43~xmAZ7evrQ0905709057eusmtrp2b;
+        Fri,  4 Sep 2020 13:34:56 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-89-5f5242803992
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id D4.BE.06314.782425F5; Fri,  4
-        Sep 2020 14:35:04 +0100 (BST)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 4E.90.06017.082425F5; Fri,  4
+        Sep 2020 14:34:56 +0100 (BST)
 Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200904133503eusmtip157f60648e81dc5a72c6e8a9c62ca8c80~xmAglfis_1624216242eusmtip1q;
-        Fri,  4 Sep 2020 13:35:03 +0000 (GMT)
+        20200904133455eusmtip1bb4917684ef6f6bef142062880ad386c~xmAZXYpvM1683116831eusmtip1W;
+        Fri,  4 Sep 2020 13:34:55 +0000 (GMT)
 From:   Marek Szyprowski <m.szyprowski@samsung.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
         linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
@@ -68,52 +68,51 @@ Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         linux-arm-kernel@lists.infradead.org,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH v10 17/30] drm: tegra: fix common struct sg_table related
+        Lucas Stach <l.stach@pengutronix.de>,
+        etnaviv@lists.freedesktop.org
+Subject: [PATCH v10 05/30] drm: etnaviv: fix common struct sg_table related
  issues
-Date:   Fri,  4 Sep 2020 15:16:58 +0200
-Message-Id: <20200904131711.12950-18-m.szyprowski@samsung.com>
+Date:   Fri,  4 Sep 2020 15:16:46 +0200
+Message-Id: <20200904131711.12950-6-m.szyprowski@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200904131711.12950-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSfUhTYRTGe3d3tztxcp2GL7OSVhoKbppBlwwrE7pBhIxMCFKXXlTyi121
-        9B9FU3RqZILNZaKWzfxMM7Op5KycNhtzWmkm5UdJH1a0pfmRtnnV/vud5zyH85yXF0MEWlSI
-        xSYkU/IEWZyIY8du71s0eOcFSsN9evtdiSLDAItoUTajxFp7MUKM/P7BIe7VP2cRlU/8iSuq
-        ajZhGZlkEa3Tr1FiWFPOIfItKg7R+GyCS2h/zqDEoqaCfdSBbKhoAGT3fCWbfKya4JKP5j+g
-        5PsCHYt8cCeDHF+dRsiSUTUgO8cyOWRR9ncOebWtDpDm1l3B9ufsDkdRcbGplFwSEGEXU9pa
-        jiZpfC6vNXdzM4FynwLwMIgfgFp1DlsB7DABXgtg/q1XXKawAPh1UAeYwgxgtbmKuzlSYZlC
-        mIYawPG6j8jWiNF0m2VzcXBfqJhTcGzsjOcA2F9kbzMheCECe0oXgK3hhEthoVmP2JiNu8M8
-        gxG1MR8PgHdNgwizzg3W3+9ZZ55Vf6icQRndxIX9ZQcZDoKKpTwWw07wi65tI+oOqC8pXL8O
-        4tkAThoauUxRCOBwlhIwLn/4zrBkjYpZ43nCZo2EkY/Bto5FYJMh7gBH5xxtMmLF6+03EEbm
-        w7xcAeP2gCpd09ZardG0EZ+EfbVqlHmgYgBLa6e414Cb6v+ySgDqgAuVQsdHU/T+BOqSmJbF
-        0ykJ0eLIxPhWYP1Y+lWdpQNoVi70AhwDInv+tiPScAEqS6XT4nsBxBCRMz/wpT5MwI+SpaVT
-        8sRweUocRfcCV4wtcuH7VX8+L8CjZcnURYpKouSbXRbGE2aCxvrjXgtvco2z7sahZUVTyy8p
-        +W0sK7jyULlnjbRMslu850RUOxnqyDu57HfKqzM9VRypd9cJ3XaeqXkRG7Q2aBpY+6vUBj0N
-        das3sEJmTvNoY+m4t+VT5k3BWY+KoeLxMKWE3i4Mini7MtvV9cc9QjUSUFZQFTI65G2/V5uV
-        IWLTMTJfL0ROy/4BssApWlQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsVy+t/xu7odTkHxBqcuMVn0njvJZLFxxnpW
-        i//bJjJbXPn6ns1i5eqjTBYL9ltbtMxaxGLx5cpDJotNj6+xWlzeNYfNovPLLDaLtUfuslsc
-        /PCE1eLnrnksDnwea+atYfTY+20Bi8fOWXfZPbZ/e8Dqcb/7OJPH5iX1Hrf/PWb2mHxjOaPH
-        7psNbB69ze/YPPq2rGL0+LxJLoAnSs+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbK
-        yFRJ384mJTUnsyy1SN8uQS9j2qY5rAW7DCr+r9/L3sA4Q72LkZNDQsBEYt6XR8xdjFwcQgJL
-        GSXmrWpmhUjISJyc1gBlC0v8udbFBmILCXxilHhwpBLEZhMwlOh6CxLn4hAR6GSUmNb9kR3E
-        YRaYwiwx9X4DI0iVsECAxLQzM8AmsQioSnScuwBm8wrYSSy7dIYZYoO8xOoNB8BsTqD41hlP
-        WCG22Up8mLOYZQIj3wJGhlWMIqmlxbnpucWGesWJucWleel6yfm5mxiB8bPt2M/NOxgvbQw+
-        xCjAwajEw8tgHxQvxJpYVlyZe4hRgoNZSYTX6ezpOCHelMTKqtSi/Pii0pzU4kOMpkBHTWSW
-        Ek3OB8Z2Xkm8oamhuYWlobmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGxpKXX14p
-        7b2Xd1f5Wu2TFexT9xr//SV6sjvn2ZR4vqjkC891fT1m8N76/jim/PDJvfm3ZNsLLWpmmxW+
-        0YyxvLlvVQ5zVbPD8mUdD7lS2ALufd21rDk2g78uWa3D+KGvXEjAhmcSjtaOxu8D4m6a3uXk
-        iZcQuTIt9N5y/h7F7pQZMYuSdUs9lViKMxINtZiLihMBo67HBLUCAAA=
-X-CMS-MailID: 20200904133504eucas1p12ddfe8e0904a750bfe21f964821cb832
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTYRj229k5Oy4nxznYh4nCQNEsL5hwwGsmdCIiE6UbaTNPU9NpO86y
+        iLRQwrJ0SZqt1BA0bzM1b2Veqq0SZzgz75f0hxZSOB1YXnIerX/P9z7vc+HlwxFhA2qHx8lT
+        aIVcmiDB+Nwm7UrfvvTgsCjP1Uk3Mkf/kUO+KNSg5EZTHkIOLP/EyLbCMR75vOo9hyzp8CWn
+        ngxzyKWBaQ5ZPzOIkoY2NUbWvBvnkV2/ZtEgAVX9tBpQ7aYSLtVsmkKpyTs6DtVQdoMaXZ9B
+        qAdD5YB6NZyOUffXPKl7jZWAMtY7hO46zfeLoRPiUmmFR8A5fmx+3TyWPOB0xdSl5aWDRsds
+        YIlDYj/MH6wF2YCPC4kKAIdWajAzISSWAGw0HmIJI4BZZc3IjmJc38FjiXIAc4rNCj6rUBu+
+        bm1hhBfMXsjeshIRmQB+yLEyY4SY5MA/8/FmbEuEw8X2Da4ZcwknaGod3HTFcQHhD9VDrmyY
+        I6yq69yytCQC4MvCWdScBQktD5a91mw3CoFd2gXAYlv4XdfIY7E93Ggt5rCCWwBO62t47OMu
+        gIabhdsKXzim/42ZkxHCFWraPNjxATj8RYeYx5CwhkMLNmx/a6hqKtgeC+DtLCG77QyLdLX/
+        Yrs+929Xo6BhpAVlL5oHYMajvbnAseh/VgkAlUBMK5lEGc14y+nL7ow0kVHKZe7nkxLrweZX
+        6lnXLbeAN6vR3YDAgcRKYBEYFiVEpalMWmI3gDgiEQmCe3sihYIYadpVWpEUpVAm0Ew32I1z
+        JWKB97P5s0JCJk2hL9J0Mq3YYTm4pV06SHYLPxENVNfXgwKdF/3QS6Ei3Te+V2ZQyDEbruHw
+        JGpxykdd2vlQI+aJ/fvfGo/EYDJVBHXwcZ7cTyKamHMovcbvl8z5eP3oY9Ta8gtrGcKKiAlv
+        WcPJrMoV26NnMHFceKe8IVIpOF6goqpTZj6FdthH9+aOuMSPGj00wS4SLhMr9dqDKBjpX7CY
+        1PFGAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGIsWRmVeSWpSXmKPExsVy+t/xu7oNTkHxBq8OCVj0njvJZLFxxnpW
+        i//bJjJbXPn6ns1i14w77BYrVx9lsliw39riwdybTBZfrjxkstj0+BqrxeVdc9gs1h65y25x
+        8MMTVgdejzXz1jB67P22gMVj+7cHrB73u48zeWxeUu9x+99jZo/JN5Yzeuy+2cDm0f/XwKNv
+        yypGj8+b5AK4o/RsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstS
+        i/TtEvQypmx4yVZwRbXi28Fj7A2MW+S7GDk5JARMJO6e28/excjFISSwlFFixaI9TBAJGYmT
+        0xpYIWxhiT/Xutggij4xStzq3cQCkmATMJToeguREBHoZJSY1v2RHSTBLPCcSeJliz6ILSwQ
+        JHH15WOwSSwCqhLfdl4DquHg4BWwlZhzQxNigbzE6g0HmEFsTgE7ia0znoCVCwGVfJizmGUC
+        I98CRoZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgXGy7djPLTsYu94FH2IU4GBU4uFlsA+K
+        F2JNLCuuzD3EKMHBrCTC63T2dJwQb0piZVVqUX58UWlOavEhRlOgmyYyS4km5wNjOK8k3tDU
+        0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA+OBTO+fRbJqCUqrHu68VKw4
+        b7/k8cnq4gHrvldLW9u/3Pvr08d90/nfS7psd1xTsPCy/+kDgao7bqz3+/g++9ekvU/dtsYy
+        P73KmmTqaXj1wSeGs0UHk672z3f//N5fva7i/RPPNTfO/P6b4bDnXA0nH1PiXpVXnio3zm07
+        ppXPkea9chXP0dd8SizFGYmGWsxFxYkAzNO77qkCAAA=
+X-CMS-MailID: 20200904133456eucas1p10d0fe1628474fcd4803a7af4437be4e1
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200904133504eucas1p12ddfe8e0904a750bfe21f964821cb832
+X-RootMTR: 20200904133456eucas1p10d0fe1628474fcd4803a7af4437be4e1
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200904133504eucas1p12ddfe8e0904a750bfe21f964821cb832
+X-CMS-RootMailID: 20200904133456eucas1p10d0fe1628474fcd4803a7af4437be4e1
 References: <20200904131711.12950-1-m.szyprowski@samsung.com>
-        <CGME20200904133504eucas1p12ddfe8e0904a750bfe21f964821cb832@eucas1p1.samsung.com>
+        <CGME20200904133456eucas1p10d0fe1628474fcd4803a7af4437be4e1@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -145,146 +144,99 @@ and copy/paste safe.
 Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/gpu/drm/tegra/gem.c   | 27 ++++++++++-----------------
- drivers/gpu/drm/tegra/plane.c | 15 +++++----------
- 2 files changed, 15 insertions(+), 27 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_gem.c | 12 +++++-------
+ drivers/gpu/drm/etnaviv/etnaviv_mmu.c | 15 ++++-----------
+ 2 files changed, 9 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/gem.c b/drivers/gpu/drm/tegra/gem.c
-index 723df142a981..01d94befab11 100644
---- a/drivers/gpu/drm/tegra/gem.c
-+++ b/drivers/gpu/drm/tegra/gem.c
-@@ -98,8 +98,8 @@ static struct sg_table *tegra_bo_pin(struct device *dev, struct host1x_bo *bo,
- 		 * the SG table needs to be copied to avoid overwriting any
- 		 * other potential users of the original SG table.
- 		 */
--		err = sg_alloc_table_from_sg(sgt, obj->sgt->sgl, obj->sgt->nents,
--					     GFP_KERNEL);
-+		err = sg_alloc_table_from_sg(sgt, obj->sgt->sgl,
-+					     obj->sgt->orig_nents, GFP_KERNEL);
- 		if (err < 0)
- 			goto free;
- 	} else {
-@@ -196,8 +196,7 @@ static int tegra_bo_iommu_map(struct tegra_drm *tegra, struct tegra_bo *bo)
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
+index f06e19e7be04..eaf1949bc2e4 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
+@@ -27,7 +27,7 @@ static void etnaviv_gem_scatter_map(struct etnaviv_gem_object *etnaviv_obj)
+ 	 * because display controller, GPU, etc. are not coherent.
+ 	 */
+ 	if (etnaviv_obj->flags & ETNA_BO_CACHE_MASK)
+-		dma_map_sg(dev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL);
++		dma_map_sgtable(dev->dev, sgt, DMA_BIDIRECTIONAL, 0);
+ }
  
- 	bo->iova = bo->mm->start;
+ static void etnaviv_gem_scatterlist_unmap(struct etnaviv_gem_object *etnaviv_obj)
+@@ -51,7 +51,7 @@ static void etnaviv_gem_scatterlist_unmap(struct etnaviv_gem_object *etnaviv_obj
+ 	 * discard those writes.
+ 	 */
+ 	if (etnaviv_obj->flags & ETNA_BO_CACHE_MASK)
+-		dma_unmap_sg(dev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL);
++		dma_unmap_sgtable(dev->dev, sgt, DMA_BIDIRECTIONAL, 0);
+ }
  
--	bo->size = iommu_map_sg(tegra->domain, bo->iova, bo->sgt->sgl,
--				bo->sgt->nents, prot);
-+	bo->size = iommu_map_sgtable(tegra->domain, bo->iova, bo->sgt, prot);
- 	if (!bo->size) {
- 		dev_err(tegra->drm->dev, "failed to map buffer\n");
- 		err = -ENOMEM;
-@@ -264,8 +263,7 @@ static struct tegra_bo *tegra_bo_alloc_object(struct drm_device *drm,
- static void tegra_bo_free(struct drm_device *drm, struct tegra_bo *bo)
- {
- 	if (bo->pages) {
--		dma_unmap_sg(drm->dev, bo->sgt->sgl, bo->sgt->nents,
--			     DMA_FROM_DEVICE);
-+		dma_unmap_sgtable(drm->dev, bo->sgt, DMA_FROM_DEVICE, 0);
- 		drm_gem_put_pages(&bo->gem, bo->pages, true, true);
- 		sg_free_table(bo->sgt);
- 		kfree(bo->sgt);
-@@ -290,12 +288,9 @@ static int tegra_bo_get_pages(struct drm_device *drm, struct tegra_bo *bo)
- 		goto put_pages;
+ /* called with etnaviv_obj->lock held */
+@@ -404,9 +404,8 @@ int etnaviv_gem_cpu_prep(struct drm_gem_object *obj, u32 op,
  	}
  
--	err = dma_map_sg(drm->dev, bo->sgt->sgl, bo->sgt->nents,
--			 DMA_FROM_DEVICE);
--	if (err == 0) {
--		err = -EFAULT;
-+	err = dma_map_sgtable(drm->dev, bo->sgt, DMA_FROM_DEVICE, 0);
-+	if (err)
- 		goto free_sgt;
+ 	if (etnaviv_obj->flags & ETNA_BO_CACHED) {
+-		dma_sync_sg_for_cpu(dev->dev, etnaviv_obj->sgt->sgl,
+-				    etnaviv_obj->sgt->nents,
+-				    etnaviv_op_to_dma_dir(op));
++		dma_sync_sgtable_for_cpu(dev->dev, etnaviv_obj->sgt,
++					 etnaviv_op_to_dma_dir(op));
+ 		etnaviv_obj->last_cpu_prep_op = op;
+ 	}
+ 
+@@ -421,8 +420,7 @@ int etnaviv_gem_cpu_fini(struct drm_gem_object *obj)
+ 	if (etnaviv_obj->flags & ETNA_BO_CACHED) {
+ 		/* fini without a prep is almost certainly a userspace error */
+ 		WARN_ON(etnaviv_obj->last_cpu_prep_op == 0);
+-		dma_sync_sg_for_device(dev->dev, etnaviv_obj->sgt->sgl,
+-			etnaviv_obj->sgt->nents,
++		dma_sync_sgtable_for_device(dev->dev, etnaviv_obj->sgt,
+ 			etnaviv_op_to_dma_dir(etnaviv_obj->last_cpu_prep_op));
+ 		etnaviv_obj->last_cpu_prep_op = 0;
+ 	}
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
+index 3607d348c298..15d9fa3879e5 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
+@@ -73,13 +73,13 @@ static int etnaviv_iommu_map(struct etnaviv_iommu_context *context, u32 iova,
+ 			     struct sg_table *sgt, unsigned len, int prot)
+ {	struct scatterlist *sg;
+ 	unsigned int da = iova;
+-	unsigned int i, j;
++	unsigned int i;
+ 	int ret;
+ 
+ 	if (!context || !sgt)
+ 		return -EINVAL;
+ 
+-	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
++	for_each_sgtable_dma_sg(sgt, sg, i) {
+ 		u32 pa = sg_dma_address(sg) - sg->offset;
+ 		size_t bytes = sg_dma_len(sg) + sg->offset;
+ 
+@@ -95,14 +95,7 @@ static int etnaviv_iommu_map(struct etnaviv_iommu_context *context, u32 iova,
+ 	return 0;
+ 
+ fail:
+-	da = iova;
+-
+-	for_each_sg(sgt->sgl, sg, i, j) {
+-		size_t bytes = sg_dma_len(sg) + sg->offset;
+-
+-		etnaviv_context_unmap(context, da, bytes);
+-		da += bytes;
 -	}
- 
- 	return 0;
- 
-@@ -571,7 +566,7 @@ tegra_gem_prime_map_dma_buf(struct dma_buf_attachment *attach,
- 			goto free;
- 	}
- 
--	if (dma_map_sg(attach->dev, sgt->sgl, sgt->nents, dir) == 0)
-+	if (dma_map_sgtable(attach->dev, sgt, dir, 0))
- 		goto free;
- 
- 	return sgt;
-@@ -590,7 +585,7 @@ static void tegra_gem_prime_unmap_dma_buf(struct dma_buf_attachment *attach,
- 	struct tegra_bo *bo = to_tegra_bo(gem);
- 
- 	if (bo->pages)
--		dma_unmap_sg(attach->dev, sgt->sgl, sgt->nents, dir);
-+		dma_unmap_sgtable(attach->dev, sgt, dir, 0);
- 
- 	sg_free_table(sgt);
- 	kfree(sgt);
-@@ -609,8 +604,7 @@ static int tegra_gem_prime_begin_cpu_access(struct dma_buf *buf,
- 	struct drm_device *drm = gem->dev;
- 
- 	if (bo->pages)
--		dma_sync_sg_for_cpu(drm->dev, bo->sgt->sgl, bo->sgt->nents,
--				    DMA_FROM_DEVICE);
-+		dma_sync_sgtable_for_cpu(drm->dev, bo->sgt, DMA_FROM_DEVICE);
- 
- 	return 0;
++	etnaviv_context_unmap(context, iova, da - iova);
+ 	return ret;
  }
-@@ -623,8 +617,7 @@ static int tegra_gem_prime_end_cpu_access(struct dma_buf *buf,
- 	struct drm_device *drm = gem->dev;
  
- 	if (bo->pages)
--		dma_sync_sg_for_device(drm->dev, bo->sgt->sgl, bo->sgt->nents,
--				       DMA_TO_DEVICE);
-+		dma_sync_sgtable_for_device(drm->dev, bo->sgt, DMA_TO_DEVICE);
+@@ -113,7 +106,7 @@ static void etnaviv_iommu_unmap(struct etnaviv_iommu_context *context, u32 iova,
+ 	unsigned int da = iova;
+ 	int i;
  
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/tegra/plane.c b/drivers/gpu/drm/tegra/plane.c
-index 4cd0461cc508..539d14935728 100644
---- a/drivers/gpu/drm/tegra/plane.c
-+++ b/drivers/gpu/drm/tegra/plane.c
-@@ -131,12 +131,9 @@ static int tegra_dc_pin(struct tegra_dc *dc, struct tegra_plane_state *state)
- 		}
+-	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
++	for_each_sgtable_dma_sg(sgt, sg, i) {
+ 		size_t bytes = sg_dma_len(sg) + sg->offset;
  
- 		if (sgt) {
--			err = dma_map_sg(dc->dev, sgt->sgl, sgt->nents,
--					 DMA_TO_DEVICE);
--			if (err == 0) {
--				err = -ENOMEM;
-+			err = dma_map_sgtable(dc->dev, sgt, DMA_TO_DEVICE, 0);
-+			if (err)
- 				goto unpin;
--			}
- 
- 			/*
- 			 * The display controller needs contiguous memory, so
-@@ -144,7 +141,7 @@ static int tegra_dc_pin(struct tegra_dc *dc, struct tegra_plane_state *state)
- 			 * map its SG table to a single contiguous chunk of
- 			 * I/O virtual memory.
- 			 */
--			if (err > 1) {
-+			if (sgt->nents > 1) {
- 				err = -EINVAL;
- 				goto unpin;
- 			}
-@@ -166,8 +163,7 @@ static int tegra_dc_pin(struct tegra_dc *dc, struct tegra_plane_state *state)
- 		struct sg_table *sgt = state->sgt[i];
- 
- 		if (sgt)
--			dma_unmap_sg(dc->dev, sgt->sgl, sgt->nents,
--				     DMA_TO_DEVICE);
-+			dma_unmap_sgtable(dc->dev, sgt, DMA_TO_DEVICE, 0);
- 
- 		host1x_bo_unpin(dc->dev, &bo->base, sgt);
- 		state->iova[i] = DMA_MAPPING_ERROR;
-@@ -186,8 +182,7 @@ static void tegra_dc_unpin(struct tegra_dc *dc, struct tegra_plane_state *state)
- 		struct sg_table *sgt = state->sgt[i];
- 
- 		if (sgt)
--			dma_unmap_sg(dc->dev, sgt->sgl, sgt->nents,
--				     DMA_TO_DEVICE);
-+			dma_unmap_sgtable(dc->dev, sgt, DMA_TO_DEVICE, 0);
- 
- 		host1x_bo_unpin(dc->dev, &bo->base, sgt);
- 		state->iova[i] = DMA_MAPPING_ERROR;
+ 		etnaviv_context_unmap(context, da, bytes);
 -- 
 2.17.1
 
