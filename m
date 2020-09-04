@@ -2,127 +2,64 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F64C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B67C28E83
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E426D206D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2138206D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:06:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbgIDKFd (ORCPT
+        id S1730003AbgIDKGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 06:05:33 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52162 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726811AbgIDKFa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:05:30 -0400
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-406-rc5grr6gOyq25YEngeUmUg-1; Fri, 04 Sep 2020 06:05:27 -0400
-X-MC-Unique: rc5grr6gOyq25YEngeUmUg-1
-Received: by mail-ed1-f71.google.com with SMTP id y21so2460513edu.23
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 03:05:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cMyogM8ZaAuNV7IxlLfX+jXiTjjJ4VPOtsKDCg2OR6A=;
-        b=KnTos83OTWu6m+m8+sH70Mof8n+VX9HZLGuuJianOD0EzArTRmSNuOdNLBnqnNIe5r
-         UL2ToTF31kwI463Kvs44YtvhBxy6PcihNSsQIGRoEANa/CNj/bbyuHbGW18+tI7Pqmk3
-         0inRMevVnSh5Eerg+D6l8FcJEzh1E6w7rRtoFtteQfYIbzstPaeGHpv4PiHDayDOKcwB
-         LWw/g9wvLw7cWevOQ+L8EQMPlwTJ4xd3BowvOmr7X9hR6AayKEEQOdUQzX2vQ/SLlfbg
-         heKsQBkhaRaz1dlkfYCskmGNHEcEz/FbCtZWmCjz593jI0237b7vVg2nIBBg6QQvhgEO
-         G+cw==
-X-Gm-Message-State: AOAM531T9lx3W+LlJA2QjcpFhq/Klu6uUZsRGvklKOiuVQ6Y5+BIkVfm
-        uSaqKoXyopYpFdaxcW3ggEbocEP8pan+z8V6i82GEVH/+Q9WHCuHrTCKQHDodmvDTQXpXwe8alW
-        lApzUEvr/scQrnOZp9iKljOCO
-X-Received: by 2002:a17:906:6805:: with SMTP id k5mr6211703ejr.397.1599213925728;
-        Fri, 04 Sep 2020 03:05:25 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy6nPPe8mUMfr66/fT4ciZ4Zhe4GtwODi5MgFU85csrnkDnHN8nJsAEcKFSHNX1KN2Z4xR87Q==
-X-Received: by 2002:a17:906:6805:: with SMTP id k5mr6211680ejr.397.1599213925469;
-        Fri, 04 Sep 2020 03:05:25 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id x1sm5595434ejc.119.2020.09.04.03.05.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 03:05:24 -0700 (PDT)
-Subject: Re: [PATCH v3] HID: quirks: Add USB_QUIRK_IGNORE_REMOTE_WAKEUP quirk
- for BYD zhaoxin notebook
-To:     Penghao <penghao@uniontech.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
-Cc:     johan@kernel.org, dlaz@chromium.org, stern@rowland.harvard.edu,
-        kerneldev@karsmulder.nl, jonathan@jdcox.net, tomasz@meresinski.eu
-References: <20200904091322.30426-1-penghao@uniontech.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <f519d8a0-9082-13c5-0222-40dd9a1fac36@redhat.com>
-Date:   Fri, 4 Sep 2020 12:05:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 4 Sep 2020 06:06:02 -0400
+Received: from 8bytes.org ([81.169.241.247]:41090 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726811AbgIDKF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:05:59 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id DE4873D5; Fri,  4 Sep 2020 12:05:57 +0200 (CEST)
+Date:   Fri, 4 Sep 2020 12:05:56 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Cc:     "jroedel@suse.de" <jroedel@suse.de>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "Huang, Ray" <Ray.Huang@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] iommu/amd: Fix IOMMUv2 devices when SME is active
+Message-ID: <20200904100556.GU6714@8bytes.org>
+References: <20200824105415.21000-1-joro@8bytes.org>
+ <MN2PR12MB4488D6B7BBF98845DF796E0BF7540@MN2PR12MB4488.namprd12.prod.outlook.com>
+ <34db343f-cd23-09af-3bc5-29b9d385f85d@amd.com>
+ <MN2PR12MB4488BF7DDE700378F7B2776CF7540@MN2PR12MB4488.namprd12.prod.outlook.com>
+ <20200828134639.GW3354@suse.de>
+ <60067932-dbf4-d67b-cf11-4dd2b016ed63@amd.com>
+ <MN2PR12MB448849D3AD019749DB64A146F7520@MN2PR12MB4488.namprd12.prod.outlook.com>
+ <20200828152943.GY3354@suse.de>
+ <MN2PR12MB4488BE2F12F85BDBC91E2C0CF7520@MN2PR12MB4488.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200904091322.30426-1-penghao@uniontech.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MN2PR12MB4488BE2F12F85BDBC91E2C0CF7520@MN2PR12MB4488.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Aug 28, 2020 at 03:47:07PM +0000, Deucher, Alexander wrote:
+> Ah, right,  So CZ and ST are not an issue.  Raven is paired with Zen based CPUs.
 
-On 9/4/20 11:13 AM, Penghao wrote:
-> Add a USB_QUIRK_IGNORE_REMOTE_WAKEUP quirk for the BYD zhaoxin notebook.
-> This notebook come with usb touchpad. And we would like to disable touchpad
-> wakeup on this notebook by default.
-
-You are still not explaining why this is necessary ?
-
-And you did not answer my question if this touchpad is using hid-multitouch
-either ?
-
-So NACK (rejection) from me until both questions are answered. The commi
-message for a quirk should always explain why a quirk is necessary and
-"we would like to disable touchpad wakeup on this notebook by default"
-does not explain why you want to do that.
+Okay, so for the Raven case, can you add code to the amdgpu driver which
+makes it fail to initialize on Raven when SME is active? There is a
+global checking function for that, so that shouldn't be hard to do.
 
 Regards,
 
-Hans
-
-
-
-> 
-> Signed-off-by: Penghao <penghao@uniontech.com>
-> ---
-> 
-> Changes since v2:
->   - Add changes
-> 
-> Changes since v1:
->   - Add the entries sorted by vendor ID and product ID.
-> 
->   drivers/usb/core/quirks.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
-> index 7c1198f80c23..fffe1f7f1098 100644
-> --- a/drivers/usb/core/quirks.c
-> +++ b/drivers/usb/core/quirks.c
-> @@ -393,6 +393,10 @@ static const struct usb_device_id usb_quirk_list[] = {
->   	/* Generic RTL8153 based ethernet adapters */
->   	{ USB_DEVICE(0x0bda, 0x8153), .driver_info = USB_QUIRK_NO_LPM },
->   
-> +	/* SONiX USB DEVICE Touchpad */
-> +	{ USB_DEVICE(0x0c45, 0x7056), .driver_info =
-> +			USB_QUIRK_IGNORE_REMOTE_WAKEUP },
-> +
->   	/* Action Semiconductor flash disk */
->   	{ USB_DEVICE(0x10d6, 0x2200), .driver_info =
->   			USB_QUIRK_STRING_FETCH_255 },
-> 
-
+	Joerg
