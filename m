@@ -2,98 +2,114 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B9EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0A8C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79094206A5
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1579206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:59:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IIT8ojs3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbgIDH7X (ORCPT
+        id S1729724AbgIDH7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 03:59:23 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:39294 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726127AbgIDH7R (ORCPT
+        Fri, 4 Sep 2020 03:59:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729683AbgIDH7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 03:59:17 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-181-u9TZWDNaNCSHyguiU6M2MQ-1; Fri, 04 Sep 2020 08:59:13 +0100
-X-MC-Unique: u9TZWDNaNCSHyguiU6M2MQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 4 Sep 2020 08:59:12 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 4 Sep 2020 08:59:12 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Linus Torvalds' <torvalds@linux-foundation.org>
-CC:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Alexey Dobriyan" <adobriyan@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Kees Cook" <keescook@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH 12/14] x86: remove address space overrides using set_fs()
-Thread-Topic: [PATCH 12/14] x86: remove address space overrides using set_fs()
-Thread-Index: AQHWggEOyEQXa7QqyE6TJTq6U2S8aalXbNZggAARhwCAAJziAA==
-Date:   Fri, 4 Sep 2020 07:59:12 +0000
-Message-ID: <4ec56728ace54dd081f02a6c0f32f781@AcuMS.aculab.com>
-References: <20200903142242.925828-1-hch@lst.de>
- <20200903142242.925828-13-hch@lst.de>
- <9ab40244a2164f7db2ff0c1d23ab59a0@AcuMS.aculab.com>
- <CAHk-=whDtnudkbZ8-hR8HiDE7zog0dv+Gu9Sx5i6SPakrDtajQ@mail.gmail.com>
-In-Reply-To: <CAHk-=whDtnudkbZ8-hR8HiDE7zog0dv+Gu9Sx5i6SPakrDtajQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 4 Sep 2020 03:59:42 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66134C061245
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 00:59:42 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id k15so2820714pji.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 00:59:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=4sO3K9KUt0lx1jX3LT5Qymn7SNSmjZ7mgkYLWSMNBaA=;
+        b=IIT8ojs3Nphf5jUQlNRD+WdyJ7QgPdCDWGeS+Cf9dHwvTtzymqZ5CJfN6cYwvNnzfL
+         RZt4TKNYjzspKAP86CMfbqvRCqZyvIsCXJX59+jz8vKOnvZuyYZK2sYmgORS55b/zH6w
+         jCut7AyX94mREgkX9hgMWHU3ZArX7DJhi2Br/oDphVk49Dx3j+bwrAikNhvv5XLJ6ZfZ
+         pIa5063N+161yywi96AGx/Z8XvbHjbDp40eiLIBm0H7avjGvFjkaLi3EsSMVBVa83XHC
+         SOhhVrMZUG0A1cD23H4oS+HIKCrJgv7D0BT2KYJV74W8cB+FA7Xw7dAQqIzBM8TG0IU7
+         8/Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4sO3K9KUt0lx1jX3LT5Qymn7SNSmjZ7mgkYLWSMNBaA=;
+        b=b3wmT0yhEwp6pnyJ8zdq2sPFrG/nSBcil3TSGjvMjyVmIN89f7Oj1jEdFjITfuVuJk
+         gPSFZZgL6iHfBT/7NrqLideArocbFFyu8i84bsGkRvEhp+WRk+T1DzEyqSanfxdPtnhA
+         poN+DeAzUenSd+E3DMnQjtAwi7FbJgqAoWT6FskRFuPCTvTUMmBYb8I39Mlm9tYSuuxD
+         Vynp7g2aYHdFBHg/uauRsYstBP0GaRMYsdT3kqqHwjQs/mq6hjnWlSLvRtkoqo4fdA+P
+         1ocjrkv+pze+PZ7fUTKaxx6Is4MKYb2XmMaDNmG86MjmAiU6gL4ctUyph439YnzbmGl0
+         mAbg==
+X-Gm-Message-State: AOAM533c34nmsHCOzU3RkheDoVfHhEzEY7acSSSLnNNzPD/tIvjiW4Tr
+        qrzulia8bT/219h0SLHUvuve65gIzl2PUDPtoOIPnw==
+X-Google-Smtp-Source: ABdhPJwcr9ntIJAx1uVoOxLFhbawv85XiwvUMkctNVJ4VlDH49I6YFh6OAIpfBe+5b5h6pqAcSyv6KOQPu/P1CqMTME=
+X-Received: by 2002:a17:90a:fe07:: with SMTP id ck7mr7022389pjb.20.1599206381503;
+ Fri, 04 Sep 2020 00:59:41 -0700 (PDT)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Content-Language: en-US
+References: <20200902180950.4bc7c4de@canb.auug.org.au> <3abfa193-a56e-66ba-1080-885906fa0196@infradead.org>
+ <fdf322d4-cc01-2c85-67cd-86b2d6f4ebff@infradead.org>
+In-Reply-To: <fdf322d4-cc01-2c85-67cd-86b2d6f4ebff@infradead.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 4 Sep 2020 00:59:30 -0700
+Message-ID: <CAFd5g44g6OrL3fxQNRZ1rR0PruAty8tBZr8JDzM-oonZJRDZyw@mail.gmail.com>
+Subject: Re: linux-next: Tree for Sep 2 (lib/ubsan.c)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMDQgU2VwdGVtYmVyIDIwMjAgMDA6MjYNCj4g
-DQo+IE9uIFRodSwgU2VwIDMsIDIwMjAgYXQgMjozMCBQTSBEYXZpZCBMYWlnaHQgPERhdmlkLkxh
-aWdodEBhY3VsYWIuY29tPiB3cm90ZToNCj4gPg0KPiA+IEEgbm9uLWNhbm9uaWNhbCAoaXMgdGhh
-dCB0aGUgcmlnaHQgdGVybSkgYWRkcmVzcyBiZXR3ZWVuIHRoZSBoaWdoZXN0DQo+ID4gdmFsaWQg
-dXNlciBhZGRyZXNzIGFuZCB0aGUgbG93ZXN0IHZhbGlkIGtlcm5lbCBhZGRyZXNzICg3ZmZlIHRv
-IGZmZmU/KQ0KPiA+IHdpbGwgZmF1bHQgYW55d2F5Lg0KPiANCj4gWWVzLg0KPiANCj4gQnV0IHdl
-IGFjdHVhbGx5IHdhcm4gYWdhaW5zdCB0aGF0IGZhdWx0LCBiZWNhdXNlIGl0J3MgYmVlbiBhIGdv
-b2Qgd2F5DQo+IHRvIGNhdGNoIHBsYWNlcyB0aGF0IGRpZG4ndCB1c2UgdGhlIHByb3BlciAiYWNj
-ZXNzX29rKCkiIHBhdHRlcm4uDQo+IA0KPiBTZWUgZXhfaGFuZGxlcl91YWNjZXNzKCkgYW5kIHRo
-ZQ0KPiANCj4gICAgICAgICBXQVJOX09OQ0UodHJhcG5yID09IFg4Nl9UUkFQX0dQLCAiR2VuZXJh
-bCBwcm90ZWN0aW9uIGZhdWx0IGluDQo+IHVzZXIgYWNjZXNzLiBOb24tY2Fub25pY2FsIGFkZHJl
-c3M/Iik7DQo+IA0KPiB3YXJuaW5nLiBJdCdzIGJlZW4gZ29vZCBmb3IgcmFuZG9taXplZCB0ZXN0
-aW5nIC0gYSBtaXNzaW5nIHJhbmdlIGNoZWNrDQo+IG9uIGEgdXNlciBhZGRyZXNzIHdpbGwgb2Z0
-ZW4gaGl0IHRoaXMuDQo+IA0KPiBPZiBjb3Vyc2UsIHlvdSBzaG91bGQgbmV2ZXIgc2VlIGl0IGlu
-IHJlYWwgbGlmZSAoYW5kIGhvcGVmdWxseSBub3QgaW4NCj4gdGVzdGluZyBlaXRoZXIgYW55IG1v
-cmUpLiBCdXQgYmVsdC1hbmQtc3VzcGVuZGVycy4uDQoNClRoYXQgY291bGQgc3RpbGwgYmUgZWZm
-ZWN0aXZlLCBqdXN0IHBpY2sgYW4gYWRkcmVzcyBsaW1pdCB0aGF0IGlzDQphcHByb3ByaWF0ZSBm
-b3IgdGhlIG9uZSBhY2Nlc3Nfb2soKSBpcyB1c2luZy4NCg0KRXZlbiBpZiBhY2Nlc3Nfb2soKSB1
-c2VzIDE8PDYzIHRoZXJlIGFyZSBwbGVudHkgb2YgYWRkcmVzc2VzIGFib3ZlIGl0IHRoYXQgZmF1
-bHQuDQpCdXQgdGhlIHVwcGVyIGxpbWl0IGZvciA1LWxldmVsIHBhZ2UgdGFibGVzIGNvdWxkIGJl
-IHVzZWQgYWxsIHRoZSB0aW1lLg0KDQpPbmUgb3B0aW9uIGlzIHRvIHRlc3QgJyhhZGRyZXNzIHwg
-bGVuZ3RoKSA8ICgzPDw2MiknIGluIGFjY2Vzc19vaygpLg0KVGhhdCBpcyBhbHNvIG1vZGVyYXRl
-bHkgc3VpdGFibGUgZm9yIG1hc2tpbmcgaW52YWxpZCBhZGRyZXNzZXMgdG8gMC4NCg0KCURhdmlk
-DQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBG
-YXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2
-IChXYWxlcykNCg==
+On Thu, Sep 3, 2020 at 11:12 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 9/2/20 8:44 AM, Randy Dunlap wrote:
+> > On 9/2/20 1:09 AM, Stephen Rothwell wrote:
+> >> Hi all,
+> >>
+> >> Changes since 20200828:
+> >>
+> >
+> >
+> > on i386:
+> >
+> > ../lib/ubsan.c: In function =E2=80=98ubsan_prologue=E2=80=99:
+> > ../lib/ubsan.c:141:2: error: implicit declaration of function =E2=80=98=
+kunit_fail_current_test=E2=80=99; did you mean =E2=80=98kunit_init_test=E2=
+=80=99? [-Werror=3Dimplicit-function-declaration]
+> >   kunit_fail_current_test();
+> >
+> >
+> > Full randconfig file is attached.
+> >
+>
+> Hi Brendan,
+>
+> Do you know anything about this build error?
+>
+> I can't find kunit_fail_current_test() anywhere.
 
+Yeah, this got applied for some reason without the prerequisite
+patches. It is from a two patch series, the other being here:
+
+https://lore.kernel.org/linux-kselftest/20200813205722.1384108-1-urielguaja=
+rdojr@gmail.com/
+
+which in turn depends on another patchset which didn't make it into 5.9.
+
+Again, I don't know why this was applied without it's prereqs. Sorry about =
+that.
