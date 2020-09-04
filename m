@@ -2,152 +2,144 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E6FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0979CC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EAD620709
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD461206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:45:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="foF8JGCi"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qnNO069J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730055AbgIDLpV (ORCPT
+        id S1729741AbgIDLpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:45:21 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:16737 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728118AbgIDLpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 07:45:11 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f5228c20000>; Fri, 04 Sep 2020 19:45:06 +0800
-Received: from HKMAIL102.nvidia.com ([10.18.16.11])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 04 Sep 2020 04:45:06 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Fri, 04 Sep 2020 04:45:06 -0700
-Received: from HKMAIL104.nvidia.com (10.18.16.13) by HKMAIL102.nvidia.com
- (10.18.16.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 4 Sep
- 2020 11:45:05 +0000
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.177)
- by HKMAIL104.nvidia.com (10.18.16.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 4 Sep 2020 11:45:05 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JtAR2i6VeSEYH1ySrtkjjKgw2aVA8J3czVTg0tJdSiJhu6xdT0Al9OW9CyPShrt/fhkw8zuN7kUXZ/OAgEAInd/M5Y1P5RsOd09+TtphjmajD6RVguePRtsXVCzuRNDjr+RBbgkJpFBs/tcRgsGgnRkU8Umen6ZXr4SwpEPh4LEGPhW4JxxJTkPz3tUEBfDCh5QugtK49GdepMZohR+zG+tNmkPiP3N0PFLsmPN9meWf6orHB2rF0CfcAxQfIwJPfkklNcSzGAwTRL0pXgr5EuY5cz0qgo3GYghIrz9Y78cBZtlcX7KOPvYBePi4+jT706TaaHfvsYtm5lQWJkKWJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WpKi9Uq78BZpCzdFEfP9RLkmEkb6kuDM2UsMxw26l74=;
- b=kVkk0aNxsGLmU/CNdAq9hFamm8QuipddOef67pJn41N+DuRpmg2+Ak6jMnguI6tZ99UHXk2wlSgV0wEQT/TEObWxnQ/0kJ5s6UAmUPeq28+mjS+hDqSTpf61eQhZRcU5PznpguEkUuRM6pcL9r/xlrhPbDO9BC9oVyhzRzPoArwOw+OHx5v/KH5IdmZzDnbCtHrZMwRwmqAxAw+5w/6zgYgGvScAWB/Csc0oagfEDgz1McpXccys/orINO7gIxR9OvL8ANyw9MMIhFuftNl6uETz4pmqf8H02ty97gvnZGhSJ7YP/kD4Z7wdI8SilFlDdpJqOhfs6tYmhODisRTIKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB4451.namprd12.prod.outlook.com (2603:10b6:5:2ab::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Fri, 4 Sep
- 2020 11:45:03 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3326.025; Fri, 4 Sep 2020
- 11:45:03 +0000
-Date:   Fri, 4 Sep 2020 08:45:01 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "Marc Zyngier" <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: tegra: Convert to MSI domains
-Message-ID: <20200904114501.GO1152540@nvidia.com>
-References: <20200904105613.444945-1-thierry.reding@gmail.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200904105613.444945-1-thierry.reding@gmail.com>
-X-ClientProxiedBy: MN2PR19CA0058.namprd19.prod.outlook.com
- (2603:10b6:208:19b::35) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Fri, 4 Sep 2020 07:45:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729897AbgIDLpo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 07:45:44 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24321C061244;
+        Fri,  4 Sep 2020 04:45:41 -0700 (PDT)
+Received: from [192.168.0.20] (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 448B8540;
+        Fri,  4 Sep 2020 13:45:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1599219939;
+        bh=44GjaBfTEzghMrQ7oGA8qaW8/hWoyB3FU8SLP8RkQ1c=;
+        h=Subject:To:Cc:References:Reply-To:From:Date:In-Reply-To:From;
+        b=qnNO069JgUnagd0tuo+PkM87G+JkKeh5+AXXcWUt5Aq0UKpYDckwREZTR80LcedvC
+         L6Sds+V71Bq4aiXeWOXWi+7eIM5zQS4l/U3jmXSIVHeDoxCK/SHcs96ErrHrIurdlW
+         4zZnrJI9cH3wR3XNMuUGKCoI9P6+aA02hwv9dUAI=
+Subject: Re: [PATCH 14/29] media: Avoid comma separated statements
+To:     Joe Perches <joe@perches.com>, Jiri Kosina <trivial@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1598331148.git.joe@perches.com>
+ <5f2ac0ba683d4e5d3449395721788527b8487a57.1598331149.git.joe@perches.com>
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <f4aa26fa-78ad-9dc0-ba4e-23a3d9691630@ideasonboard.com>
+Date:   Fri, 4 Sep 2020 12:45:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR19CA0058.namprd19.prod.outlook.com (2603:10b6:208:19b::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Fri, 4 Sep 2020 11:45:02 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kEA9N-007HJd-Im; Fri, 04 Sep 2020 08:45:01 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c2525011-17b1-4c90-7673-08d850c7f5e8
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4451:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4451D3A1DC70988E17F88ED7C22D0@DM6PR12MB4451.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yXnV6LyKeUqvouuMEnpv/rySVGm8cxkH9zoXeeA1Czxbu6lntt7YbhYMwH0nHWT7g09ZC7ep6ZueZ6jL9U46qUb7LyH3pkTBC8Z9qcw8+r7opo7USPAE7Kzb9vY15zmFsH60zKKnS7N1wUoNNVbHDp3wZoD5hCAR1T4gwXGVFoEwqnRMuLWRoxNYvEX0xpCdZIfRE7Radm4pF17x5NHLTZaef+nZ1SWbB3uFovtRQC+MVFgsZtbnTC/vr4qH/EH8mKoGDWXyEXBuMyBcJSroSCbqI/KmtXkbyUgq/Rc9adcRv8At8VMO5E/5KpnAtgrU4K7NFk0s+8cu5XruWR2fiw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(366004)(136003)(396003)(376002)(9786002)(4744005)(1076003)(2616005)(8936002)(54906003)(8676002)(9746002)(478600001)(2906002)(4326008)(36756003)(316002)(33656002)(66946007)(66556008)(426003)(66476007)(6916009)(86362001)(26005)(5660300002)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 6le88Eu2MmzcFORS0mtlzMjWldHNBSb60tFU2Ikn5WltcmrjVRqpXFmRXMDM17L7RvoK+furBDAW6ZUr34jxuy5DAB7BCMAzJfYT3J/9LkjXJd3XOr7L4+26/rNj1nXkvos4QrhXCgcx6QyhNxyrpwobPOwFCIDDmX0Jq1qmF+k5PFB1mkWhGPWTjtqN/l3pc+W+6wdC3WWkjldhTHWiTRVljQ2wDcqB2uKNCG3axDW8ALLlKnQgam2UQgjkKsA4eytIu+1ae2Pj641l6k5KTuX0qpBNPEIQ4LhiOQimmgxxypjnSa0UscsZnpaNFopk8xxWvljnd+o2k0OJ/tO4AKVNydmwF9YNL4+m4zOgwGWznzftdvO6gTBdbkRkZbHSuEs6YIRjwlrjgo/DJINilVceLbjyLlEw7QZeFn3iALbJxrUBljgQNTOeMZPtfSsiH8q9i7cY6txXtMI3YkmfyA/3hmyJCYrUgrVlMGYouTMVgPDP8V55mhw96t4MR0Cp3Kd0zlefKLNgiVAwjfpbi5ekRF0fmWx+r92X/wOH0xmkC+qbj3fs++yqIcnyUA2HX7rXpluL3p/a82VzkCdP0hkT+IcltYZd0lISnB6IUlUZNPIMYo/Nu+ZBDspz7HBEsEr4gmjklUVLqzwGyyhvlg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2525011-17b1-4c90-7673-08d850c7f5e8
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2020 11:45:02.9970
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: w9+8ssVutFd2vp2ETQGmjAX+hnaItcB8RpfRg9txtcFzpx+ezyAZnheJHKvtdZsE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4451
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599219906; bh=WpKi9Uq78BZpCzdFEfP9RLkmEkb6kuDM2UsMxw26l74=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-MS-Exchange-Transport-Forked:
-         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=foF8JGCicESgfuRFmj6PJi7KjK7kxjmJOOztUH0KL/G0+GOz7B4q8IXiOquvt+i1B
-         aiynSj2V8t6yjfUeNBhmyUAcY1uBHDW+yTdUZ/FcSby8CYNBXp/uyhJJWLea/2JwMR
-         lD0xP6AekwzDYtmwtNsoK1Nd77kwRHEoHKY+xcECSaSCpdwLNIyaUF9Jx004qiASi5
-         scl2YI+XpPChZxRaZtk7hZDho6/pvDHKdgvF89UsjkKueOxAGQPsItnSOG0LBF96vi
-         unhEwxrDoXeW2y9cH9YtpfYcfcS1/GHPFUV01TTmxBTlwyH61wnrwKoVdZT8ij/Nby
-         0FZv24Fz4/LMA==
+In-Reply-To: <5f2ac0ba683d4e5d3449395721788527b8487a57.1598331149.git.joe@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 12:56:13PM +0200, Thierry Reding wrote:
-> +static void tegra_msi_irq_mask(struct irq_data *d)
-> +{
-> +	struct tegra_msi *msi = irq_data_get_irq_chip_data(d);
-> +	struct tegra_pcie *pcie = msi_to_pcie(msi);
-> +	unsigned int index = d->hwirq / 32;
-> +	u32 value;
-> +
-> +	value = afi_readl(pcie, AFI_MSI_EN_VEC(index));
-> +	value &= ~BIT(d->hwirq % 32);
-> +	afi_writel(pcie, value, AFI_MSI_EN_VEC(index));
-> +}
+On 25/08/2020 05:56, Joe Perches wrote:
+> Use semicolons and braces.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/media/i2c/msp3400-kthreads.c      | 12 ++++++++----
+>  drivers/media/pci/bt8xx/bttv-cards.c      |  6 ++++--
+>  drivers/media/pci/saa7134/saa7134-video.c |  7 +++++--
+>  3 files changed, 17 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/msp3400-kthreads.c b/drivers/media/i2c/msp3400-kthreads.c
+> index d3b0d1c18efd..ac8752c63266 100644
+> --- a/drivers/media/i2c/msp3400-kthreads.c
+> +++ b/drivers/media/i2c/msp3400-kthreads.c
+> @@ -549,8 +549,10 @@ int msp3400c_thread(void *data)
+>  			val = msp_read_dsp(client, 0x1b);
+>  			if (val > 32767)
+>  				val -= 65536;
+> -			if (val1 < val)
+> -				val1 = val, max1 = i;
+> +			if (val1 < val) {
+> +				val1 = val;
+> +				max1 = i;
+> +			}
+>  			dev_dbg_lvl(&client->dev, 1, msp_debug,
+>  				"carrier1 val: %5d / %s\n", val, cd[i].name);
+>  		}
+> @@ -586,8 +588,10 @@ int msp3400c_thread(void *data)
+>  			val = msp_read_dsp(client, 0x1b);
+>  			if (val > 32767)
+>  				val -= 65536;
+> -			if (val2 < val)
+> -				val2 = val, max2 = i;
+> +			if (val2 < val) {
+> +				val2 = val;
+> +				max2 = i;
+> +			}
+>  			dev_dbg_lvl(&client->dev, 1, msp_debug,
+>  				"carrier2 val: %5d / %s\n", val, cd[i].name);
+>  		}
+> diff --git a/drivers/media/pci/bt8xx/bttv-cards.c b/drivers/media/pci/bt8xx/bttv-cards.c
+> index 16148802dabb..ca20b806e82d 100644
+> --- a/drivers/media/pci/bt8xx/bttv-cards.c
+> +++ b/drivers/media/pci/bt8xx/bttv-cards.c
+> @@ -3934,8 +3934,10 @@ static void osprey_eeprom(struct bttv *btv, const u8 ee[256])
+>  			if (checksum != ee[21])
+>  				return;
+>  			cardid = BTTV_BOARD_OSPREY1x0_848;
+> -			for (i = 12; i < 21; i++)
+> -				serial *= 10, serial += ee[i] - '0';
+> +			for (i = 12; i < 21; i++) {
+> +				serial *= 10;
+> +				serial += ee[i] - '0';
+> +			}
+>  		}
+>  	} else {
+>  		unsigned short type;
+> diff --git a/drivers/media/pci/saa7134/saa7134-video.c b/drivers/media/pci/saa7134/saa7134-video.c
+> index a8ac94fadc14..f673cda57f30 100644
+> --- a/drivers/media/pci/saa7134/saa7134-video.c
+> +++ b/drivers/media/pci/saa7134/saa7134-video.c
+> @@ -868,8 +868,11 @@ static int buffer_activate(struct saa7134_dev *dev,
+>  		lines_uv = dev->height >> dev->fmt->vshift;
+>  		base2    = base + bpl * dev->height;
+>  		base3    = base2 + bpl_uv * lines_uv;
+> -		if (dev->fmt->uvswap)
+> -			tmp = base2, base2 = base3, base3 = tmp;
+> +		if (dev->fmt->uvswap) {
+> +			tmp = base2;
+> +			base2 = base3;
+> +			base3 = tmp;
 
-Do these need a flushing write? The Mask operation should be synchronous?
+Don't we have any swap macro helpers for this?
 
-Thanks,
-Jason
+Anyway, that would be out of scope of this patch series.
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+> +		}
+>  		video_dbg("uv: bpl=%ld lines=%ld base2/3=%ld/%ld\n",
+>  			bpl_uv,lines_uv,base2,base3);
+>  		if (V4L2_FIELD_HAS_BOTH(dev->field)) {
+> 
+
