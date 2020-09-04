@@ -2,66 +2,65 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A17EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4ACDC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B27F20772
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:32:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kloZIbAl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZkkMYlZM"
+	by mail.kernel.org (Postfix) with ESMTP id 7D0A12074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgIDPcg (ORCPT
+        id S1726680AbgIDPcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:32:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbgIDPcZ (ORCPT
+        Fri, 4 Sep 2020 11:32:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44349 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726445AbgIDPco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:32:25 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6CDEC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:32:24 -0700 (PDT)
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599233543;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DOlCusGec2Wr1Dy0U85d2jgNpxQ1a2nd3MeDLyvmhrk=;
-        b=kloZIbAlxwvkE63TlwCQDi5p9UVaKC8SvcIQWjvl2L0OGMc1fLB8nbf/IdrISsCi6J2Cax
-        vLEaAtBFW5poSlN99epvErd+YZGNHEPtrYH2OxkS66Q/roiiKNUjJ2D/Xpt7IuItz5i254
-        dEpYSJorwCUsLX07IBjxcUJOkVnT9ykL99PpwM26cnIgfnyUzJ5Uk0XWZNRu1QYBXtkkFj
-        8YzzVv0zNFcrZFUc9FOdY0siZsKyuRAq8zRpE83VNsbA9Nkv49tb2du1GEfX2LRsPBaWOK
-        CnfbiQ9BnOamgnHovJSTr0SxtrWPwO4JMVjhNR49jlO2kfiHTIO5dbw9GhAU2w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599233543;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DOlCusGec2Wr1Dy0U85d2jgNpxQ1a2nd3MeDLyvmhrk=;
-        b=ZkkMYlZMpMLhFWuFV7tbp+CWN8FQPpJaRE0y9pcqoerqbBUhiuO2gE/y0B+UB1tlcAmjha
-        e9PkxSG4DFKA9CCA==
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Subject: [PATCH v2 4/5] seqlock: seqcount_LOCKNAME_t: Introduce PREEMPT_RT support
-Date:   Fri,  4 Sep 2020 17:32:30 +0200
-Message-Id: <20200904153231.11994-5-a.darwish@linutronix.de>
-In-Reply-To: <20200904153231.11994-1-a.darwish@linutronix.de>
-References: <20200904153231.11994-1-a.darwish@linutronix.de>
+        Fri, 4 Sep 2020 11:32:44 -0400
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-336-YPYEynNpPJaq6L1fSULq2A-1; Fri, 04 Sep 2020 11:32:41 -0400
+X-MC-Unique: YPYEynNpPJaq6L1fSULq2A-1
+Received: by mail-ej1-f70.google.com with SMTP id d8so633239ejt.14
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:32:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tFn51Jxy4pRAwPvXw45xwkFaIM6vyiRr+rO29b+TGyw=;
+        b=C0la2Wi1C/abLzByCPJjGb0miK/yOk1mPmIgTUzjyYHWo+Bta+DQht9mLFj9wjutAM
+         W4roYT4m0XWKSgjj9NLHswI5e+m3Tjx1X81AG2tLuthMLLFiIdJrAUtk5c8yGmI4KWMr
+         0GOkZmVekqTEvC8C6c5cV6u/UoPMW6wDtorNo4ZB43lnmDdeuBFzuhERHn7U3auMTgFu
+         0EOpPQJ9Zdx2L0w5YCj/jUAQPc+X0wmbNeo4i7z21VjTv0HitHn6KQsYSW5VvhkADF3R
+         h/gkUyo4FuglB1JgYwelBZchOoYYISbIhImxefUUDWEE0tsVov9YNe/3iNW/4w3rNe7t
+         rqYA==
+X-Gm-Message-State: AOAM531S7lUWyzKvG0do/UkmLgfo613jMbClliUFe/Ar7WIvD1mXuCwz
+        f5SL4R0OoI9icFWy95KtjhlHIpr8Hwf0XlACtrwdUYZbeVHSdjXA6H19btgMrn8aWoEsVlLnxFS
+        YhafLDKgo3K0L5Ap9MSay8JPO
+X-Received: by 2002:a17:906:e88:: with SMTP id p8mr3064329ejf.134.1599233560181;
+        Fri, 04 Sep 2020 08:32:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwF7cuo3gixAQnKEIWWouNboudlxNmcXhxsXS5NYlh5fzqD6cV9MIRQmFRkdUAYYqPVrhXYTg==
+X-Received: by 2002:a17:906:e88:: with SMTP id p8mr3064303ejf.134.1599233559914;
+        Fri, 04 Sep 2020 08:32:39 -0700 (PDT)
+Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
+        by smtp.gmail.com with ESMTPSA id c2sm6281226edu.3.2020.09.04.08.32.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 08:32:39 -0700 (PDT)
+From:   Julien Thierry <jthierry@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
+        raphael.gault@arm.com, benh@kernel.crashing.org,
+        Julien Thierry <jthierry@redhat.com>
+Subject: [PATCH v3 04/10] objtool: Abstract alternative special case handling
+Date:   Fri,  4 Sep 2020 16:30:22 +0100
+Message-Id: <20200904153028.32676-5-jthierry@redhat.com>
+X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200904153028.32676-1-jthierry@redhat.com>
+References: <20200904153028.32676-1-jthierry@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,188 +68,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Preemption must be disabled before entering a sequence counter write
-side critical section.  Otherwise the read side section can preempt the
-write side section and spin for the entire scheduler tick.  If that
-reader belongs to a real-time scheduling class, it can spin forever and
-the kernel will livelock.
+Some alternatives associated with a specific feature need to be treated
+in a special way. Since the features and how to treat them vary from one
+architecture to another, move the special case handling to arch specific
+code.
 
-Disabling preemption cannot be done for PREEMPT_RT though: it can lead
-to higher latencies, and the write side sections will not be able to
-acquire locks which become sleeping locks (e.g. spinlock_t).
-
-To remain preemptible, while avoiding a possible livelock caused by the
-reader preempting the writer, use a different technique: let the reader
-detect if a seqcount_LOCKNAME_t writer is in progress. If that's the
-case, acquire then release the associated LOCKNAME writer serialization
-lock. This will allow any possibly-preempted writer to make progress
-until the end of its writer serialization lock critical section.
-
-Implement this lock-unlock technique for all seqcount_LOCKNAME_t with
-an associated (PREEMPT_RT) sleeping lock.
-
-Link: https://lkml.kernel.org/r/159708609435.2571.13948681727529247231.tglx@nanos
-Link: https://lkml.kernel.org/r/20200519214547.352050-1-a.darwish@linutronix.de
-References: 55f3560df975 ("seqlock: Extend seqcount API with associated locks")
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- include/linux/seqlock.h | 72 +++++++++++++++++++++++++++++++++--------
- 1 file changed, 58 insertions(+), 14 deletions(-)
+ tools/objtool/arch/x86/Build     |  1 +
+ tools/objtool/arch/x86/special.c | 37 ++++++++++++++++++++++++++++++++
+ tools/objtool/objtool.h          |  2 ++
+ tools/objtool/special.c          | 32 +++++----------------------
+ tools/objtool/special.h          |  2 ++
+ tools/objtool/weak.c             |  2 --
+ 6 files changed, 47 insertions(+), 29 deletions(-)
+ create mode 100644 tools/objtool/arch/x86/special.c
 
-diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-index ed1c6c0ff8bb..6ac5a63fc536 100644
---- a/include/linux/seqlock.h
-+++ b/include/linux/seqlock.h
-@@ -17,6 +17,7 @@
- #include <linux/kcsan-checks.h>
- #include <linux/lockdep.h>
- #include <linux/mutex.h>
-+#include <linux/ww_mutex.h>
- #include <linux/preempt.h>
- #include <linux/spinlock.h>
+diff --git a/tools/objtool/arch/x86/Build b/tools/objtool/arch/x86/Build
+index 7c5004008e97..9f7869b5c5e0 100644
+--- a/tools/objtool/arch/x86/Build
++++ b/tools/objtool/arch/x86/Build
+@@ -1,3 +1,4 @@
++objtool-y += special.o
+ objtool-y += decode.o
  
-@@ -131,7 +132,23 @@ static inline void seqcount_lockdep_reader_access(const seqcount_t *s)
-  * See Documentation/locking/seqlock.rst
-  */
- 
--#ifdef CONFIG_LOCKDEP
-+/*
-+ * For PREEMPT_RT, seqcount_LOCKNAME_t write side critical sections cannot
-+ * disable preemption. It can lead to higher latencies, and the write side
-+ * sections will not be able to acquire locks which become sleeping locks
-+ * (e.g. spinlock_t).
-+ *
-+ * To remain preemptible while avoiding a possible livelock caused by the
-+ * reader preempting the writer, use a different technique: let the reader
-+ * detect if a seqcount_LOCKNAME_t writer is in progress. If that is the
-+ * case, acquire then release the associated LOCKNAME writer serialization
-+ * lock. This will allow any possibly-preempted writer to make progress
-+ * until the end of its writer serialization lock critical section.
-+ *
-+ * This lock-unlock technique must be implemented for all of PREEMPT_RT
-+ * sleeping locks.  See Documentation/locking/locktypes.rst
-+ */
-+#if defined(CONFIG_LOCKDEP) || defined(CONFIG_PREEMPT_RT)
- #define __SEQ_LOCK(expr)	expr
- #else
- #define __SEQ_LOCK(expr)
-@@ -162,10 +179,12 @@ static inline void seqcount_lockdep_reader_access(const seqcount_t *s)
-  *
-  * @lockname:		"LOCKNAME" part of seqcount_LOCKNAME_t
-  * @locktype:		LOCKNAME canonical C data type
-- * @preemptible:	preemptibility of above lockname
-+ * @preemptible:	preemptibility of above locktype
-  * @lockmember:		argument for lockdep_assert_held()
-+ * @lockbase:		associated lock release function (prefix only)
-+ * @lock_acquire:	associated lock acquisition function (full call)
-  */
--#define SEQCOUNT_LOCKNAME(lockname, locktype, preemptible, lockmember)	\
-+#define SEQCOUNT_LOCKNAME(lockname, locktype, preemptible, lockmember, lockbase, lock_acquire) \
- typedef struct seqcount_##lockname {					\
- 	seqcount_t		seqcount;				\
- 	__SEQ_LOCK(locktype	*lock);					\
-@@ -187,7 +206,23 @@ __seqprop_seqcount_##lockname##_ptr(seqcount_##lockname##_t *s)		\
- static __always_inline unsigned						\
- __seqprop_seqcount_##lockname##_sequence(const seqcount_##lockname##_t *s)\
- {									\
--	return READ_ONCE(s->seqcount.sequence);				\
-+	unsigned seq = READ_ONCE(s->seqcount.sequence);			\
-+									\
-+	if (!IS_ENABLED(CONFIG_PREEMPT_RT))				\
-+		return seq;						\
-+									\
-+	if (preemptible && unlikely(seq & 1)) {				\
-+		__SEQ_LOCK(lock_acquire);				\
-+		__SEQ_LOCK(lockbase##_unlock(s->lock));			\
-+									\
-+		/*							\
-+		 * Re-read the sequence counter since the (possibly	\
-+		 * preempted) writer made progress.			\
-+		 */							\
-+		seq = READ_ONCE(s->seqcount.sequence);			\
-+	}								\
-+									\
-+	return seq;							\
- }									\
- 									\
- static __always_inline bool						\
-@@ -226,11 +261,13 @@ static inline void __seqprop_seqcount_assert(const seqcount_t *s)
- 	lockdep_assert_preemption_disabled();
- }
- 
--SEQCOUNT_LOCKNAME(raw_spinlock,	raw_spinlock_t,		false,	s->lock)
--SEQCOUNT_LOCKNAME(spinlock,	spinlock_t,		false,	s->lock)
--SEQCOUNT_LOCKNAME(rwlock,	rwlock_t,		false,	s->lock)
--SEQCOUNT_LOCKNAME(mutex,	struct mutex,		true,	s->lock)
--SEQCOUNT_LOCKNAME(ww_mutex,	struct ww_mutex,	true,	&s->lock->base)
-+#define __SEQ_RT	IS_ENABLED(CONFIG_PREEMPT_RT)
+ inat_tables_script = ../arch/x86/tools/gen-insn-attr-x86.awk
+diff --git a/tools/objtool/arch/x86/special.c b/tools/objtool/arch/x86/special.c
+new file mode 100644
+index 000000000000..823561e4015c
+--- /dev/null
++++ b/tools/objtool/arch/x86/special.c
+@@ -0,0 +1,37 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include "../../special.h"
++#include "../../builtin.h"
 +
-+SEQCOUNT_LOCKNAME(raw_spinlock, raw_spinlock_t,  false,    s->lock,        raw_spin, raw_spin_lock(s->lock))
-+SEQCOUNT_LOCKNAME(spinlock,     spinlock_t,      __SEQ_RT, s->lock,        spin,     spin_lock(s->lock))
-+SEQCOUNT_LOCKNAME(rwlock,       rwlock_t,        __SEQ_RT, s->lock,        read,     read_lock(s->lock))
-+SEQCOUNT_LOCKNAME(mutex,        struct mutex,    true,     s->lock,        mutex,    mutex_lock(s->lock))
-+SEQCOUNT_LOCKNAME(ww_mutex,     struct ww_mutex, true,     &s->lock->base, ww_mutex, ww_mutex_lock(s->lock, NULL))
- 
- /**
-  * SEQCNT_LOCKNAME_ZERO - static initializer for seqcount_LOCKNAME_t
-@@ -406,13 +443,20 @@ static inline int read_seqcount_t_retry(const seqcount_t *s, unsigned start)
- 	return __read_seqcount_t_retry(s, start);
- }
- 
-+/*
-+ * Enforce non-preemptibility for all seqcount_LOCKNAME_t writers. Don't
-+ * do it for PREEMPT_RT, for the reasons outlined at __SEQ_LOCK().
-+ */
-+#define __seq_enforce_writer_non_preemptibility(s)			\
-+	(!IS_ENABLED(CONFIG_PREEMPT_RT) && __seqcount_lock_preemptible(s))
++#define X86_FEATURE_POPCNT (4 * 32 + 23)
++#define X86_FEATURE_SMAP   (9 * 32 + 20)
 +
- /**
-  * raw_write_seqcount_begin() - start a seqcount_t write section w/o lockdep
-  * @s: Pointer to seqcount_t or any of the seqcount_LOCKNAME_t variants
-  */
- #define raw_write_seqcount_begin(s)					\
- do {									\
--	if (__seqcount_lock_preemptible(s))				\
-+	if (__seq_enforce_writer_non_preemptibility(s))			\
- 		preempt_disable();					\
- 									\
- 	raw_write_seqcount_t_begin(__seqcount_ptr(s));			\
-@@ -433,7 +477,7 @@ static inline void raw_write_seqcount_t_begin(seqcount_t *s)
- do {									\
- 	raw_write_seqcount_t_end(__seqcount_ptr(s));			\
- 									\
--	if (__seqcount_lock_preemptible(s))				\
-+	if (__seq_enforce_writer_non_preemptibility(s))			\
- 		preempt_enable();					\
- } while (0)
++void arch_handle_alternative(unsigned short feature, struct special_alt *alt)
++{
++	switch (feature) {
++	case X86_FEATURE_SMAP:
++		/*
++		 * If UACCESS validation is enabled; force that alternative;
++		 * otherwise force it the other way.
++		 *
++		 * What we want to avoid is having both the original and the
++		 * alternative code flow at the same time, in that case we can
++		 * find paths that see the STAC but take the NOP instead of
++		 * CLAC and the other way around.
++		 */
++		if (uaccess)
++			alt->skip_orig = true;
++		else
++			alt->skip_alt = true;
++		break;
++	case X86_FEATURE_POPCNT:
++		/*
++		 * It has been requested that we don't validate the !POPCNT
++		 * feature path which is a "very very small percentage of
++		 * machines".
++		 */
++		alt->skip_orig = true;
++		break;
++	default:
++		break;
++	}
++}
+diff --git a/tools/objtool/objtool.h b/tools/objtool/objtool.h
+index 46240098f08d..79716f4158e8 100644
+--- a/tools/objtool/objtool.h
++++ b/tools/objtool/objtool.h
+@@ -12,6 +12,8 @@
  
-@@ -456,7 +500,7 @@ static inline void raw_write_seqcount_t_end(seqcount_t *s)
- do {									\
- 	__seqcount_assert_lock_held(s);					\
- 									\
--	if (__seqcount_lock_preemptible(s))				\
-+	if (__seq_enforce_writer_non_preemptibility(s))			\
- 		preempt_disable();					\
- 									\
- 	write_seqcount_t_begin_nested(__seqcount_ptr(s), subclass);	\
-@@ -483,7 +527,7 @@ static inline void write_seqcount_t_begin_nested(seqcount_t *s, int subclass)
- do {									\
- 	__seqcount_assert_lock_held(s);					\
- 									\
--	if (__seqcount_lock_preemptible(s))				\
-+	if (__seq_enforce_writer_non_preemptibility(s))			\
- 		preempt_disable();					\
- 									\
- 	write_seqcount_t_begin(__seqcount_ptr(s));			\
-@@ -504,7 +548,7 @@ static inline void write_seqcount_t_begin(seqcount_t *s)
- do {									\
- 	write_seqcount_t_end(__seqcount_ptr(s));			\
- 									\
--	if (__seqcount_lock_preemptible(s))				\
-+	if (__seq_enforce_writer_non_preemptibility(s))			\
- 		preempt_enable();					\
- } while (0)
+ #include "elf.h"
  
++#define __weak __attribute__((weak))
++
+ struct objtool_file {
+ 	struct elf *elf;
+ 	struct list_head insn_list;
+diff --git a/tools/objtool/special.c b/tools/objtool/special.c
+index b04f395de5de..1a2420febd08 100644
+--- a/tools/objtool/special.c
++++ b/tools/objtool/special.c
+@@ -16,9 +16,6 @@
+ #include "warn.h"
+ #include "arch_special.h"
+ 
+-#define X86_FEATURE_POPCNT (4*32+23)
+-#define X86_FEATURE_SMAP   (9*32+20)
+-
+ struct special_entry {
+ 	const char *sec;
+ 	bool group, jump_or_nop;
+@@ -54,6 +51,10 @@ struct special_entry entries[] = {
+ 	{},
+ };
+ 
++void __weak arch_handle_alternative(unsigned short feature, struct special_alt *alt)
++{
++}
++
+ static int get_alt_entry(struct elf *elf, struct special_entry *entry,
+ 			 struct section *sec, int idx,
+ 			 struct special_alt *alt)
+@@ -78,30 +79,7 @@ static int get_alt_entry(struct elf *elf, struct special_entry *entry,
+ 
+ 		feature = *(unsigned short *)(sec->data->d_buf + offset +
+ 					      entry->feature);
+-
+-		/*
+-		 * It has been requested that we don't validate the !POPCNT
+-		 * feature path which is a "very very small percentage of
+-		 * machines".
+-		 */
+-		if (feature == X86_FEATURE_POPCNT)
+-			alt->skip_orig = true;
+-
+-		/*
+-		 * If UACCESS validation is enabled; force that alternative;
+-		 * otherwise force it the other way.
+-		 *
+-		 * What we want to avoid is having both the original and the
+-		 * alternative code flow at the same time, in that case we can
+-		 * find paths that see the STAC but take the NOP instead of
+-		 * CLAC and the other way around.
+-		 */
+-		if (feature == X86_FEATURE_SMAP) {
+-			if (uaccess)
+-				alt->skip_orig = true;
+-			else
+-				alt->skip_alt = true;
+-		}
++		arch_handle_alternative(feature, alt);
+ 	}
+ 
+ 	orig_reloc = find_reloc_by_dest(elf, sec, offset + entry->orig);
+diff --git a/tools/objtool/special.h b/tools/objtool/special.h
+index 35061530e46e..44da89afeda2 100644
+--- a/tools/objtool/special.h
++++ b/tools/objtool/special.h
+@@ -28,4 +28,6 @@ struct special_alt {
+ 
+ int special_get_alts(struct elf *elf, struct list_head *alts);
+ 
++void arch_handle_alternative(unsigned short feature, struct special_alt *alt);
++
+ #endif /* _SPECIAL_H */
+diff --git a/tools/objtool/weak.c b/tools/objtool/weak.c
+index 29180d599b08..7843e9a7a72f 100644
+--- a/tools/objtool/weak.c
++++ b/tools/objtool/weak.c
+@@ -9,8 +9,6 @@
+ #include <errno.h>
+ #include "objtool.h"
+ 
+-#define __weak __attribute__((weak))
+-
+ #define UNSUPPORTED(name)						\
+ ({									\
+ 	fprintf(stderr, "error: objtool: " name " not implemented\n");	\
 -- 
-2.28.0
+2.21.3
 
