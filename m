@@ -2,152 +2,130 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58793C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED2DC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B12A20791
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6EF206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:09:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fxpeJ0Kk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BBvwVZVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbgIDIIt (ORCPT
+        id S1729776AbgIDIJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:08:49 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35715 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728588AbgIDIIm (ORCPT
+        Fri, 4 Sep 2020 04:09:12 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:30821 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728293AbgIDIJH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:08:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599206920;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SO1+KNA9ZAbDAbragBawZT9Ig1IFiDJv5+VVeyfD9cA=;
-        b=fxpeJ0Kk002XrhFJTls2z5wbf28lJzir51gkuZxmuRcyrBss0IkrmTcFf6BcV6VJk7+g+9
-        3MApSfBkpg+NReoMV79r66DlcNCmHWHSZuzAZtfXfF4XPLslrHd2hJCRxBaPQT5k5IPd+F
-        JtcwZnCmAN/E2zFrhKDiUz2RWGH1ZYk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-vmHYr-41PsCP_UiG7NElMA-1; Fri, 04 Sep 2020 04:08:36 -0400
-X-MC-Unique: vmHYr-41PsCP_UiG7NElMA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBA7656BE3;
-        Fri,  4 Sep 2020 08:08:34 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D0F01A4D6;
-        Fri,  4 Sep 2020 08:08:28 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 08488SAu016399;
-        Fri, 4 Sep 2020 04:08:28 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 08488Qmj016395;
-        Fri, 4 Sep 2020 04:08:26 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Fri, 4 Sep 2020 04:08:26 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kirill Shutemov <kirill@shutemov.name>,
-        Jan Kara <jack@suse.cz>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Subject: Re: a crash when running strace from persistent memory
-In-Reply-To: <CAHk-=whpJp9W_eyhqJU3Y2JsnX45xMfQHFNQSsb9dNirdMFnaA@mail.gmail.com>
-Message-ID: <alpine.LRH.2.02.2009040402560.14993@file01.intranet.prod.int.rdu2.redhat.com>
-References: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com> <CAHk-=whpJp9W_eyhqJU3Y2JsnX45xMfQHFNQSsb9dNirdMFnaA@mail.gmail.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        Fri, 4 Sep 2020 04:09:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1599206946; x=1630742946;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=8kg7NVGvA/Y4ravBA+Ck9g+ekPrMr/sJwXHN4ceS2DY=;
+  b=BBvwVZVA5EyI70ql0luan7uUrbQjOW9SWdfqJNCAQkQSKVmq+Ay0idPf
+   Ee50RPVHTkouPwJr5cWSL0a9hxC6DqV/7ps2eqGXnpXLP21QWSOAjXJKa
+   ZcM9Zwfj7Ydzj7hU78ohR2BWuojh+ITMtkNcTAyQwZ3UoVrejJ5LzHFUG
+   Fb9+F0KqZA3G/2HHlaOHcfIyh+RaEo3LW2HVmV4lLQNtGnIOYDFwCxKHI
+   4uQMcyptwlWsLKXk33HTU4cLNhqrcPdH/yKy9enHrIPsSGi+l4JmtQG/I
+   3LfL0lnLStkBHaX2eIWzkijQXnZyOSW1Kyt+gnPd15a5BQRrYlC63vOJH
+   g==;
+IronPort-SDR: gFJOOhxnbMekT+gVguHT6+Xjx6sB8n0ubMR5otjKsB+saYnGsOOppBCh+Fj0+R+9J65PTYV2wf
+ dGSvHGIUiWDX8mmGYWMD9l5tHBxzEVhOzHkD0xk0VJAyFaqkKnXGuLkFAquFe8OYNFzYg5us/O
+ 5hPW1xnCuOFYZvDMcr+oFh27Ht4NZ8KdA2fEMvQdWVpXfGghpUjg9s+QOe53DLcVCB3Wk62jPv
+ FRF6/hiBOfsRphm+lo3KYSbpidZ+5L8BTG4RFT/HBis8Eclgsv7eK/7BIThzFeFJvMZn81bb0k
+ 0Ec=
+X-IronPort-AV: E=Sophos;i="5.76,389,1592895600"; 
+   d="scan'208";a="90544258"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Sep 2020 01:09:05 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 4 Sep 2020 01:08:54 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Fri, 4 Sep 2020 01:08:04 -0700
+References: <20200902193658.20539-1-krzk@kernel.org> <20200902193658.20539-11-krzk@kernel.org>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+CC:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        "Jerome Brunet" <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        "Steen Hegelund" <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>, <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 10/11] mmc: sdhci-of-sparx5: Use proper printk format for dma_addr_t
+In-Reply-To: <20200902193658.20539-11-krzk@kernel.org>
+Date:   Fri, 4 Sep 2020 10:08:48 +0200
+Message-ID: <87zh66vu9b.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Krzysztof Kozlowski writes:
 
-On Thu, 3 Sep 2020, Linus Torvalds wrote:
+> dma_addr_t size varies between architectures so use dedicated printk
+> format to fix compile testing warning (e.g. on 32-bit MIPS):
+>
+>   drivers/mmc/host/sdhci-of-sparx5.c:63:11: warning:
+>     format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 5 has type ‘dma_addr_t {aka unsigned int}’ [-Wformat=]
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/mmc/host/sdhci-of-sparx5.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-sparx5.c b/drivers/mmc/host/sdhci-of-sparx5.c
+> index 14b5dad6575a..747f108a0ace 100644
+> --- a/drivers/mmc/host/sdhci-of-sparx5.c
+> +++ b/drivers/mmc/host/sdhci-of-sparx5.c
+> @@ -60,8 +60,8 @@ static void sdhci_sparx5_adma_write_desc(struct sdhci_host *host, void **desc,
+>                 return;
+>         }
+>
+> -       pr_debug("%s: write_desc: splitting dma len %d, offset 0x%0llx\n",
+> -                mmc_hostname(host->mmc), len, addr);
+> +       pr_debug("%s: write_desc: splitting dma len %d, offset %pad\n",
+> +                mmc_hostname(host->mmc), len, &addr);
+>
+>         offset = addr & (SZ_128M - 1);
+>         tmplen = SZ_128M - offset;
 
-> On Thu, Sep 3, 2020 at 12:24 PM Mikulas Patocka <mpatocka@redhat.com> wrote:
-> >
-> > There's a bug when you run strace from dax-based filesystem.
-> >
-> > -- create real or emulated persistent memory device (/dev/pmem0)
-> > mkfs.ext2 /dev/pmem0
-> > -- mount it
-> > mount -t ext2 -o dax /dev/pmem0 /mnt/test
-> > -- copy the system to it (well, you can copy just a few files that are
-> >    needed for running strace and ls)
-> > cp -ax / /mnt/test
-> > -- bind the system directories
-> > mount --bind /dev /mnt/test/dev
-> > mount --bind /proc /mnt/test/proc
-> > mount --bind /sys /mnt/test/sys
-> > -- run strace on the ls command
-> > chroot /mnt/test/ strace /bin/ls
-> >
-> > You get this warning and ls is killed with SIGSEGV.
-> >
-> > I bisected the problem and it is caused by the commit
-> > 17839856fd588f4ab6b789f482ed3ffd7c403e1f (gup: document and work around
-> > "COW can break either way" issue). When I revert the patch (on the kernel
-> > 5.9-rc3), the bug goes away.
-> 
-> Funky. I really don't see how it could cause that, but we have the
-> UDDF issue too, so I'm guessing I will have to fix it the radical way
-> with Peter Xu's series based on my "rip out COW special cases" patch.
-> 
-> Or maybe I'm just using that as an excuse for really wanting to apply
-> that series.. Because we can't just revert that GUP commit due to
-> security concerns.
-> 
-> > [   84.191504] WARNING: CPU: 6 PID: 1350 at mm/memory.c:2486 wp_page_copy.cold+0xdb/0xf6
-> 
-> I'm assuming this is the WARN_ON_ONCE(1) on line 2482, and you have
-> some extra debug patch that causes that line to be off by 4? Because
-> at least for me, line 2486 is actually an empty line in v5.9-rc3.
+Acked-by: Lars Povlsen <larc.povlsen@microchip.com>
 
-Yes, that's it. I added a few printk to look at the control flow.
-
-> That said, I really think this is a pre-existing race, and all the
-> "COW can break either way" patch does is change the timing (presumably
-> due to the actual pattern of actually doing the COW changing).
-> 
-> See commit c3e5ea6ee574 ("mm: avoid data corruption on CoW fault into
-> PFN-mapped VMA") for background.
-> 
-> Mikulas, can you check that everything works ok for that case if you
-> apply Peter's series? See
-> 
->     https://lore.kernel.org/lkml/20200821234958.7896-1-peterx@redhat.com/
-
-I applied these four patches and strace works well. There is no longer any 
-warning or crash.
-
-Mikulas
-
-> or if you have 'b4' installed, use
-> 
->     b4 am 20200821234958.7896-1-peterx@redhat.com
-> 
-> to get the series..
-> 
->                      Linus
-> 
-
+-- 
+Lars Povlsen,
+Microchip
