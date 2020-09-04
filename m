@@ -2,155 +2,250 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656CCC54F49
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4E9C47430
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E564F25239
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C92253A1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8tlbEtt"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="MyR6X/1g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgIDRST (ORCPT
+        id S1728091AbgIDRiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:18:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgIDRSQ (ORCPT
+        Fri, 4 Sep 2020 13:38:20 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:2960 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728069AbgIDRiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:18:16 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 253BEC061244;
-        Fri,  4 Sep 2020 10:18:16 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id p6so4918667ybk.10;
-        Fri, 04 Sep 2020 10:18:16 -0700 (PDT)
+        Fri, 4 Sep 2020 13:38:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Zfc6VGSzm8zmMkjKMO2rWCvc30ekK+qXgo2rUCsAxuM=;
-        b=a8tlbEttDX50qzj8qHjpXbYGBhjRJ9uvUqpEV2R8yLMtp1Gzg+iWlz06G8VZsSTszo
-         MPD3j6hD8uyMYD+V5I6OM+ZcoXTGNDkBUn18h54CrVdRU7rrf0HiWFg+WMMwiaTD9uYT
-         t4Ypr3EwyEux9hSP1xOowV4DiiPcVKuVX+eUC4ZSSe7E5lIbVGXpKL5zclIXutKJ5hF7
-         2GAk3/L667DNbOlPt/Uper0E1rL/9MoxK5ptomEb31jkAbgwm9GFZDgQCqmrmV6VcmYz
-         wA61GZTNyBu9fH2sAq2DjlsmQR15fzrJhzI/cYhZg60VktFXiwjYaOJE+2M0W2IPlH6l
-         Rmeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zfc6VGSzm8zmMkjKMO2rWCvc30ekK+qXgo2rUCsAxuM=;
-        b=G56hpS+Q4tjgj4Tlb7iher8os7GSfl+r/hqmJNNRh7rH+0WtDbXnCLcBrzAzZFPCQW
-         it6U/BMgBj+cNYnCBKCW2FxeX/WAjgL1DsUStAVeSTg36dQRAeYHL2jf8Q2s0JTTvtfu
-         N7x6n5V5XT8XzNWpzjTWhfHSXzJCTXO1ayfZsfHX+0V7osoVOKvSzIMBvZDgkNfZOEa/
-         UQAIGeIe7k4dhBXI4fWN1ifGyAyU19DjbYAztamNBS3rPCXCXjDH3B9EqDyu0bnmVmFJ
-         MZqC1Z9BngHautegIulNgs72DxlQ1YBwBimDDJhje1BENS3sJcMnLv4zVT2RBnN2cmej
-         CkXw==
-X-Gm-Message-State: AOAM533hnISkeMEQwftVZI66+J95Ih/+PP3/zthVBW4Kbx6hrHIA9mNG
-        cViTRlJxXA6g7DdygNeKd8Lfuf77LnQMOPgJaRY=
-X-Google-Smtp-Source: ABdhPJzhf2gcGQW8Bfk3nZHbFBeNDENxJ0X5gjaUzunqO3RJTsGgO+ufYZWXr5gUYyTjAC2onvKsLAp3P54FO1+I9hk=
-X-Received: by 2002:a25:bbcf:: with SMTP id c15mr11170341ybk.127.1599239895457;
- Fri, 04 Sep 2020 10:18:15 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1599241088; x=1630777088;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=sy6e6VascrUNe6HJdOQOpPygSVEo53UfSvxaOKmtn5A=;
+  b=MyR6X/1g94ov01x5+6tZdLXGm+PAJUVsRYKbt39tpKu5Af5NkWH8C8LR
+   2Md5ff60zcBKX1sRH5XHG4gr16Jnr4wazYrfDwCTDkFXJxMVrWHVKip71
+   JuhGlNZSVECWZNXtSGcQrKfUIZ1fovU3pH5sDh5gfEuvECPTbIYtG/BvU
+   I=;
+X-IronPort-AV: E=Sophos;i="5.76,390,1592870400"; 
+   d="scan'208";a="51938801"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 04 Sep 2020 17:38:06 +0000
+Received: from EX13D16EUB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id 5C08DA1837;
+        Fri,  4 Sep 2020 17:38:04 +0000 (UTC)
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.85) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 4 Sep 2020 17:37:54 +0000
+From:   Andra Paraschiv <andraprs@amazon.com>
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "David Duncan" <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Karen Noel" <knoel@redhat.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm <kvm@vger.kernel.org>,
+        ne-devel-upstream <ne-devel-upstream@amazon.com>,
+        Andra Paraschiv <andraprs@amazon.com>
+Subject: [PATCH v8 03/18] nitro_enclaves: Define enclave info for internal bookkeeping
+Date:   Fri, 4 Sep 2020 20:37:03 +0300
+Message-ID: <20200904173718.64857-4-andraprs@amazon.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+In-Reply-To: <20200904173718.64857-1-andraprs@amazon.com>
+References: <20200904173718.64857-1-andraprs@amazon.com>
 MIME-Version: 1.0
-References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200825162718.5838-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdUbxtb+Yg=3dgRXWXn2k2tGYcmVzbS-n6rLM0QAJrfo-A@mail.gmail.com>
-In-Reply-To: <CAMuHMdUbxtb+Yg=3dgRXWXn2k2tGYcmVzbS-n6rLM0QAJrfo-A@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 4 Sep 2020 18:17:49 +0100
-Message-ID: <CA+V-a8vyrQjK-c6NYwn_zJcC2iRCL7sDm_-q2rcM7uicfEV7yQ@mail.gmail.com>
-Subject: Re: [PATCH 3/4] ARM: dts: r8a7742-iwg21d-q7: Add can0 support to
- carrier board
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Originating-IP: [10.43.161.85]
+X-ClientProxiedBy: EX13D13UWB001.ant.amazon.com (10.43.161.156) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+The Nitro Enclaves driver keeps an internal info per each enclave.
 
-Thank you for the review.
+This is needed to be able to manage enclave resources state, enclave
+notifications and have a reference of the PCI device that handles
+command requests for enclave lifetime management.
 
-On Thu, Sep 3, 2020 at 1:14 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Tue, Aug 25, 2020 at 6:28 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > This patch enables CAN0 interface exposed through connector J20 on the
-> > carrier board.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
->
-> According to my schematics, the CAN port on J20 has its signals named
-> CAN0_[RT]XD on the carrier board, but connected to CAN1[RT]X (GP4_[67])
-> on the SoM.
->
-> Or am I looking at the wrong file?
->
-You are correct, I misplaced the node from the carrier board, will post a v2.
+Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
+Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+Reviewed-by: Alexander Graf <graf@amazon.com>
+---
+Changelog
 
-Cheers,
-Prabhakar
+v7 -> v8
 
-> > --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > @@ -198,6 +198,13 @@
-> >         };
-> >  };
-> >
-> > +&can0 {
->
-> can1
->
-> > +       pinctrl-0 = <&can0_pins>;
->
-> can1_pins
->
-> > +       pinctrl-names = "default";
-> > +
-> > +       status = "okay";
-> > +};
-> > +
-> >  &cmt0 {
-> >         status = "okay";
-> >  };
->
-> > @@ -287,6 +303,11 @@
-> >                 function = "tpu0";
-> >         };
-> >
-> > +       can0_pins: can0 {
-> > +               groups = "can0_data_d";
->
-> can1_data_b
->
-> > +               function = "can0";
-> > +       };
-> > +
-> >         i2c2_pins: i2c2 {
-> >                 groups = "i2c2_b";
-> >                 function = "i2c2";
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+* No changes.
+
+v6 -> v7
+
+* Update the naming and add more comments to make more clear the logic
+  of handling full CPU cores and dedicating them to the enclave.
+
+v5 -> v6
+
+* Update documentation to kernel-doc format.
+* Include in the enclave memory region data structure the user space
+  address and size for duplicate user space memory regions checks.
+
+v4 -> v5
+
+* Include enclave cores field in the enclave metadata.
+* Update the vCPU ids data structure to be a cpumask instead of a list.
+
+v3 -> v4
+
+* Add NUMA node field for an enclave metadata as the enclave memory and
+  CPUs need to be from the same NUMA node.
+
+v2 -> v3
+
+* Remove the GPL additional wording as SPDX-License-Identifier is
+  already in place.
+
+v1 -> v2
+
+* Add enclave memory regions and vcpus count for enclave bookkeeping.
+* Update ne_state comments to reflect NE_START_ENCLAVE ioctl naming
+  update.
+---
+ drivers/virt/nitro_enclaves/ne_misc_dev.h | 99 +++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
+ create mode 100644 drivers/virt/nitro_enclaves/ne_misc_dev.h
+
+diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.h b/drivers/virt/nitro_enclaves/ne_misc_dev.h
+new file mode 100644
+index 000000000000..a907924de7ca
+--- /dev/null
++++ b/drivers/virt/nitro_enclaves/ne_misc_dev.h
+@@ -0,0 +1,99 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ */
++
++#ifndef _NE_MISC_DEV_H_
++#define _NE_MISC_DEV_H_
++
++#include <linux/cpumask.h>
++#include <linux/list.h>
++#include <linux/miscdevice.h>
++#include <linux/mm.h>
++#include <linux/mutex.h>
++#include <linux/pci.h>
++#include <linux/wait.h>
++
++/**
++ * struct ne_mem_region - Entry in the enclave user space memory regions list.
++ * @mem_region_list_entry:	Entry in the list of enclave memory regions.
++ * @memory_size:		Size of the user space memory region.
++ * @nr_pages:			Number of pages that make up the memory region.
++ * @pages:			Pages that make up the user space memory region.
++ * @userspace_addr:		User space address of the memory region.
++ */
++struct ne_mem_region {
++	struct list_head	mem_region_list_entry;
++	u64			memory_size;
++	unsigned long		nr_pages;
++	struct page		**pages;
++	u64			userspace_addr;
++};
++
++/**
++ * struct ne_enclave - Per-enclave data used for enclave lifetime management.
++ * @enclave_info_mutex :	Mutex for accessing this internal state.
++ * @enclave_list_entry :	Entry in the list of created enclaves.
++ * @eventq:			Wait queue used for out-of-band event notifications
++ *				triggered from the PCI device event handler to
++ *				the enclave process via the poll function.
++ * @has_event:			Variable used to determine if the out-of-band event
++ *				was triggered.
++ * @max_mem_regions:		The maximum number of memory regions that can be
++ *				handled by the hypervisor.
++ * @mem_regions_list:		Enclave user space memory regions list.
++ * @mem_size:			Enclave memory size.
++ * @mm :			Enclave process abstraction mm data struct.
++ * @nr_mem_regions:		Number of memory regions associated with the enclave.
++ * @nr_parent_vm_cores :	The size of the threads per core array. The
++ *				total number of CPU cores available on the
++ *				parent / primary VM.
++ * @nr_threads_per_core:	The number of threads that a full CPU core has.
++ * @nr_vcpus:			Number of vcpus associated with the enclave.
++ * @numa_node:			NUMA node of the enclave memory and CPUs.
++ * @pdev:			PCI device used for enclave lifetime management.
++ * @slot_uid:			Slot unique id mapped to the enclave.
++ * @state:			Enclave state, updated during enclave lifetime.
++ * @threads_per_core:		Enclave full CPU cores array, indexed by core id,
++ *				consisting of cpumasks with all their threads.
++ *				Full CPU cores are taken from the NE CPU pool
++ *				and are available to the enclave.
++ * @vcpu_ids:			Cpumask of the vCPUs that are set for the enclave.
++ */
++struct ne_enclave {
++	struct mutex		enclave_info_mutex;
++	struct list_head	enclave_list_entry;
++	wait_queue_head_t	eventq;
++	bool			has_event;
++	u64			max_mem_regions;
++	struct list_head	mem_regions_list;
++	u64			mem_size;
++	struct mm_struct	*mm;
++	unsigned int		nr_mem_regions;
++	unsigned int		nr_parent_vm_cores;
++	unsigned int		nr_threads_per_core;
++	unsigned int		nr_vcpus;
++	int			numa_node;
++	struct pci_dev		*pdev;
++	u64			slot_uid;
++	u16			state;
++	cpumask_var_t		*threads_per_core;
++	cpumask_var_t		vcpu_ids;
++};
++
++/**
++ * enum ne_state - States available for an enclave.
++ * @NE_STATE_INIT:	The enclave has not been started yet.
++ * @NE_STATE_RUNNING:	The enclave was started and is running as expected.
++ * @NE_STATE_STOPPED:	The enclave exited without userspace interaction.
++ */
++enum ne_state {
++	NE_STATE_INIT		= 0,
++	NE_STATE_RUNNING	= 2,
++	NE_STATE_STOPPED	= U16_MAX,
++};
++
++/* Nitro Enclaves (NE) misc device */
++extern struct miscdevice ne_misc_dev;
++
++#endif /* _NE_MISC_DEV_H_ */
+-- 
+2.20.1 (Apple Git-117)
+
+
+
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
+
