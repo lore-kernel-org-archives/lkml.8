@@ -2,90 +2,95 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC3FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4D6C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D69AD2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:51:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599227489;
-	bh=el/KmqFc8f3GdvnpdNRE/cNKFzWqZ6G9M8jRv8DfkBM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lEw0DXA7wZrntxa1FKrAmNta8wdwz7oyIUh+vtGX1m2kYi0DHAln61nzPEqsosJWO
-	 B6Du9+lWww6vk9QdxSH+T5DPPLqHPyG0TFqwgL7SsgW1wEzA+MSrPw3OXJl7izsfI4
-	 VRBYCVkumyxGOPdw4JbJHNHVoSHo3y5H20lkoBQc=
+	by mail.kernel.org (Postfix) with ESMTP id E6F4E204FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:51:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="eYKsJWfO";
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="PExss+wQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbgIDNv1 (ORCPT
+        id S1730647AbgIDNvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:51:27 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45896 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730443AbgIDNr3 (ORCPT
+        Fri, 4 Sep 2020 09:51:38 -0400
+Received: from smtp119.ord1d.emailsrvr.com ([184.106.54.119]:60930 "EHLO
+        smtp119.ord1d.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730642AbgIDNrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:47:29 -0400
-Received: by mail-ed1-f66.google.com with SMTP id l17so6107389edq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 06:47:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RW0o+OIL0Vm4OhMexQgpiD/wZOFMn7Fo3sHj5t3ae9Y=;
-        b=CUhGqRQcyg6gyaVRiEthFefx/hVmdbUaRF9S81bOqGsSQVqsrO8sHJvW1/N0dEmB14
-         8uxHTNPftulUNENrVcqrefByj3cUFDK8rcoc4/OGFD42hDZfAc1paPpwE0wFS1l99xvR
-         ZBo6gtkD3xUgH5TAqt2K5mwnQ3VdfS8gznycAUM0oGi9nvYRN1bemsU1CMHMQnMytPUN
-         AUKSHzIO8rF6xFhwT2B/0WWaxu1qB7JOf2FVATG4Q7PZPN2hJv0Ge/7ENqY8NdrodKNg
-         dFMaAkppoZtaeZUJFLewvrGVDPqFvKeFL57fWEICSbj01AQNzuM0ZR38UbarZnhbh7CM
-         xeIA==
-X-Gm-Message-State: AOAM531vNvavtOqkwhUOoYTmbz97Wdw+w8taiuhufsuqty6c/+SsBh86
-        EiAaovJvznZazQ/IafiTmQjR3WZ5YI3J43kIq0w/NGJkDts=
-X-Google-Smtp-Source: ABdhPJwF+NSTkWtm8P293dISyySn6474njU02dR24YDqr49uaT//i8EA0wGna2BqpTfZm2sD12/ITZIo/EKteek6E6o=
-X-Received: by 2002:adf:a3c9:: with SMTP id m9mr7698455wrb.80.1599226801443;
- Fri, 04 Sep 2020 06:40:01 -0700 (PDT)
+        Fri, 4 Sep 2020 09:47:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
+        s=20190322-9u7zjiwi; t=1599225716;
+        bh=5SJnI8WDnM0hEpvsccPY+yQSaaqaRJ06uiCw7yBDmlg=;
+        h=From:To:Subject:Date:From;
+        b=eYKsJWfOiinOZwOPFa1lPI3lop0cBdFq6UdYRd7zYzVaKaThjIeNVkz/qOz4zWixa
+         J2RDMNmQr7D1LkUQyg0utINYinplmS5imXbuNsey67xPNJq6J40ATGE6HQzghG9/Hk
+         zM1JEbeUJo+oz4E4OKgz+hMmVqTDfGMcrs359B6E=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1599225716;
+        bh=5SJnI8WDnM0hEpvsccPY+yQSaaqaRJ06uiCw7yBDmlg=;
+        h=From:To:Subject:Date:From;
+        b=PExss+wQoqgJVlLurQZLNPXcgP0OwsxACB1jdFkaomusbvHYp7Qp7A2KZBpkI/KuA
+         6rzFTvGrXN45mBHNEOpsWTT+CAduuHShwkifgbJ2K/5NNNOQxyjY2Jgs4IqETOJ8cf
+         f2gf7x88pavZQ27MhqhbfoSy5mN6MRsgILy9/ny8=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp23.relay.ord1d.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 54E47200E6;
+        Fri,  4 Sep 2020 09:21:55 -0400 (EDT)
+From:   Ian Abbott <abbotti@mev.co.uk>
+To:     linux-input@vger.kernel.org
+Cc:     David Rheinsberg <david.rheinsberg@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Ian Abbott <abbotti@mev.co.uk>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] HID: wiimote: make handlers[] const
+Date:   Fri,  4 Sep 2020 14:21:42 +0100
+Message-Id: <20200904132143.9496-2-abbotti@mev.co.uk>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200904132143.9496-1-abbotti@mev.co.uk>
+References: <20200904132143.9496-1-abbotti@mev.co.uk>
 MIME-Version: 1.0
-References: <20200904032142.516333-1-namhyung@kernel.org> <CAP-5=fXjeCBemNivMb6+9AH-PETTqTghaZHniOohd_1ms1rU2A@mail.gmail.com>
-In-Reply-To: <CAP-5=fXjeCBemNivMb6+9AH-PETTqTghaZHniOohd_1ms1rU2A@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 4 Sep 2020 22:39:50 +0900
-Message-ID: <CAM9d7cgQAj-md=ZPKGD7iHEBYDnFqCfB1CO8moRih52MFoP6XQ@mail.gmail.com>
-Subject: Re: [PATCH] perf metric: Fix some memory leaks
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Classification-ID: ee464daf-2bdc-4db4-9ef3-697c4738b247-2-1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 1:02 PM Ian Rogers <irogers@google.com> wrote:
->
-> On Thu, Sep 3, 2020 at 8:21 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > I found some memory leaks while reading the metric code.  Some are
-> > real and others only occur in the error path.
->
-> Thanks Namhyung! Is it possible to get test coverage?
-> Ian
+The `handlers[]` array contents are never modified, so use the `const`
+qualifier.
 
-Not sure what you want..
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+---
+ drivers/hid/hid-wiimote-core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-As I found it from code inspection I don't know if there's a test covering this.
+diff --git a/drivers/hid/hid-wiimote-core.c b/drivers/hid/hid-wiimote-core.c
+index e484c3618dec..e03a0ba5611a 100644
+--- a/drivers/hid/hid-wiimote-core.c
++++ b/drivers/hid/hid-wiimote-core.c
+@@ -1586,7 +1586,7 @@ struct wiiproto_handler {
+ 	void (*func)(struct wiimote_data *wdata, const __u8 *payload);
+ };
+ 
+-static struct wiiproto_handler handlers[] = {
++static const struct wiiproto_handler handlers[] = {
+ 	{ .id = WIIPROTO_REQ_STATUS, .size = 6, .func = handler_status },
+ 	{ .id = WIIPROTO_REQ_STATUS, .size = 2, .func = handler_status_K },
+ 	{ .id = WIIPROTO_REQ_DATA, .size = 21, .func = handler_data },
+@@ -1618,7 +1618,7 @@ static int wiimote_hid_event(struct hid_device *hdev, struct hid_report *report,
+ 							u8 *raw_data, int size)
+ {
+ 	struct wiimote_data *wdata = hid_get_drvdata(hdev);
+-	struct wiiproto_handler *h;
++	const struct wiiproto_handler *h;
+ 	int i;
+ 	unsigned long flags;
+ 
+-- 
+2.28.0
 
-But as far as I can see, 2 of them are on the error path so maybe not easy
-to add a test, other one is called from perf list code, and the last one is on
-the normal code path so any test should cover it.
-
-Thanks
-Namhyung
