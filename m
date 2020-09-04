@@ -2,145 +2,96 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C08C2BC84
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA26BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9440320748
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A445A20748
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:09:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cTvEUuLm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uerSpXIe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbgIDJH1 (ORCPT
+        id S1729952AbgIDJJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 05:07:27 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:53698 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729712AbgIDJHY (ORCPT
+        Fri, 4 Sep 2020 05:09:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729712AbgIDJJH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 05:07:24 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200904090723euoutp02396c2a0ddcc902990ecf7fdc1f00e034~xiWzr_3C71489314893euoutp02B
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 09:07:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200904090723euoutp02396c2a0ddcc902990ecf7fdc1f00e034~xiWzr_3C71489314893euoutp02B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599210443;
-        bh=ZQ0PXpDZj1o8rgqUA1eu6VEabHL0uTSRcNQeoD20uR0=;
-        h=Subject:To:From:Date:In-Reply-To:References:From;
-        b=cTvEUuLmmN0ks6vYuw9s2z/AzrBKuBNdstzVS+Kgu06fhhB9J/og6qavc+yOJyHVF
-         wK4xz0lYe8R+2HM6hjbfhIumneeDJGQtRtn5h/Rz7EROPki+O7AdYrZq/5OFdtitN/
-         QuFLeKAV8997PKMC5JCMo+yjfICpMTyPZWNRK/A4=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200904090723eucas1p2b6b993ca0c152d8ce3054d5fcb873e00~xiWzdWjSZ1442414424eucas1p2d;
-        Fri,  4 Sep 2020 09:07:23 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id AF.2E.05997.BC3025F5; Fri,  4
-        Sep 2020 10:07:23 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200904090723eucas1p10b7d6f01088aeeff289b22a9f65039d4~xiWzMO2Jh3163431634eucas1p1g;
-        Fri,  4 Sep 2020 09:07:23 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200904090723eusmtrp230de8f2e240726048cfdf0e965a07659~xiWzLlJnf0713607136eusmtrp2X;
-        Fri,  4 Sep 2020 09:07:23 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-14-5f5203cb0ffa
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 80.E9.06017.AC3025F5; Fri,  4
-        Sep 2020 10:07:23 +0100 (BST)
-Received: from [106.120.51.18] (unknown [106.120.51.18]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200904090722eusmtip22b25fd0bae84585d038e6865193d691f~xiWyyHkq22235822358eusmtip2t;
-        Fri,  4 Sep 2020 09:07:22 +0000 (GMT)
-Subject: Re: [PATCH 1/3] dt-bindings: crypto: slimsss: Correct a typo in
- compatible
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Kamil Konieczny <k.konieczny@samsung.com>
-Message-ID: <3b8f5c30-a669-c228-5835-5e4efa431879@samsung.com>
-Date:   Fri, 4 Sep 2020 11:07:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Fri, 4 Sep 2020 05:09:07 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4072C061244;
+        Fri,  4 Sep 2020 02:09:06 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id d189so5853299oig.12;
+        Fri, 04 Sep 2020 02:09:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=B1F8lj9Fqbo8dezZg1rybU9KGFv88k33ECwbjR1JZPg=;
+        b=uerSpXIeuW8egdvhrBOxgSI4H2+MkV6nfqmwsSTgZe47kr+R4dT9esdHyC+dIzFWew
+         7S+NReQ4tqsuASIVsTid6SoMhFv18Dm09UPS/qI9ygjssIKXTsOtlwtyAblWnz+QXIgA
+         XQQyxE3czHKcKJKUZ38sgdUxKt0maQcuOKpyq2SZKMU/7x+b94LGhX1XcsxaCNmnRvOl
+         nPRurPAzNxzekagJqkvPL+Ofo0aliDeqFYpMz7bAYCg64CVXz5kDbgHqmkKjkI2jPB7P
+         rZSI8t3k4BggoJ7slMx/Y6IRXo20nj5bsW+eHMiIiwKCsAiMbBD1Pc5EydUQO1BwRsTd
+         /ISQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=B1F8lj9Fqbo8dezZg1rybU9KGFv88k33ECwbjR1JZPg=;
+        b=hDJeq65df35qgD4FQYh0zEhWQoIqjat9i0QriidCX/U4spyF7DXMowGyh1X5cV8qCO
+         cQUZUltl1Yac+V9y6df6SkLLg6Acmo4XKgjXC7z3/yR4EOVhuAk+GLxj0gyBQFH3dVxK
+         HMLI2KotD96rimjZpVZlqQlwB+Et7JorzYZsTpVYryIv3UuMAS9aiUaNQFlAjl01Ix1O
+         Re9HV9wTzLDA5TSAQJvPAUD1z+ICb4cMfnDf06/zwEg5JFRT/M1AIoQfcV6kZDGdMGq/
+         wOGWofsN4q+pH1AAo93O9gP7bvuJN+HWFjW6dmrjsqQr9Ul2csN7xHP+WGsnKovqB5CT
+         jhdg==
+X-Gm-Message-State: AOAM531Ygq3CSqrHYGb5iSHUnh7wdvvaJRYuzvf82zuBqTPKdd8zjoE1
+        iAvtxNkgnXemrH+AaBgXVVH0OuyRMHmroeHePeY=
+X-Google-Smtp-Source: ABdhPJzj5BSTE3f88vS3BroKAd3o5SJIpsD68NdbolonePhBudgEeFDjp+JjeTdgozVDGzH6QYZ+34EfW5ujOYGl078=
+X-Received: by 2002:aca:d409:: with SMTP id l9mr4407752oig.70.1599210545701;
+ Fri, 04 Sep 2020 02:09:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200903180400.2865-1-krzk@kernel.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEKsWRmVeSWpSXmKPExsWy7djP87qnmYPiDZrfClvMOd/CYjH/yDlW
-        i+5XMhbnz29gt7h/7yeTxeVdc9gsZpzfx2TRuvcIu8X/X83MDpweW1beZPLYdkDVY9OqTjaP
-        fwunsHh83iQXwBrFZZOSmpNZllqkb5fAlXHnzzfGgn3sFdun97A0MC5l62Lk5JAQMJG492Mi
-        SxcjF4eQwApGicO3bzNDOF8YJY4unswG4XxmlJjbfJ0JpmVF73FWiMRyRolX66awdzFyADlv
-        GSX6NEFqhAVCJT596gQbKyJwhEli7fM2VpAEm4C+xMGzJ1lAbF4BO4mH/YfAbBYBFYklLdPA
-        akQFIiV2Pn3JDlEjKHFy5hOwGk6gxV+vHwarYRYQl7j1ZD4ThC0vsf3tHLCzJQQ2sUv0LL7B
-        CnGpi8Sq3TOYIWxhiVfHt7BD2DIS/3eCNIM0NDNKnG6Yyg7h9DBK7P2yBRo01hKfPx5gA3mN
-        WUBTYv0ufYiwo8Sp+RuYQMISAnwSN94KQhzBJzFp23RmiDCvREebEES1qsTzUz3QgJOW6Pq/
-        jhWixEPiynKuCYyKs5B8OQvJZ7OQfDYL4YQFjCyrGMVTS4tz01OLjfJSy/WKE3OLS/PS9ZLz
-        czcxAlPS6X/Hv+xg3PUn6RCjAAejEg/vjfcB8UKsiWXFlbmHGCU4mJVEeJ3Ono4T4k1JrKxK
-        LcqPLyrNSS0+xCjNwaIkzmu86GWskEB6YklqdmpqQWoRTJaJg1OqgTHk1fnWU9V8Z9etFHNe
-        Fu1uqnQueEFH8CzWZbeqBKvjF7e9KFIuzo/db9KS4xn1beL3e3tajP74/jvOHr1YeIGW4+eC
-        pjtG8WbHT+8sVni+RU4jPNnQo3i+ec8b78+bkqpuzvhcL/FAdl5W6vaIW3bpXfXWRYzzjGyq
-        e3jDvveXXHcsipslr8RSnJFoqMVcVJwIAC0KJbJFAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsVy+t/xe7qnmYPiDbbNYbSYc76FxWL+kXOs
-        Ft2vZCzOn9/AbnH/3k8mi8u75rBZzDi/j8mide8Rdov/v5qZHTg9tqy8yeSx7YCqx6ZVnWwe
-        /xZOYfH4vEkugDVKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSez
-        LLVI3y5BL+POn2+MBfvYK7ZP72FpYFzK1sXIySEhYCKxovc4K4gtJLCUUeLAakeIuLRE4+nV
-        TBC2sMSfa11A9VxANa8ZJZYsWMwOkhAWCJX49KmTBSQhInCESWL9zOdMEFXtjBL7bu8Ca2cT
-        0Jc4ePYkC4jNK2An8bD/EJjNIqAisaRlGtBqDg5RgUiJnTssIUoEJU7OfAJWwgl03dfrh8Gu
-        YxZQl/gz7xIzhC0ucevJfCYIW15i+9s5zBMYBWchaZ+FpGUWkpZZSFoWMLKsYhRJLS3OTc8t
-        NtIrTswtLs1L10vOz93ECIy2bcd+btnB2PUu+BCjAAejEg/vjfcB8UKsiWXFlbmHGCU4mJVE
-        eJ3Ono4T4k1JrKxKLcqPLyrNSS0+xGgK9NtEZinR5HxgIsgriTc0NTS3sDQ0NzY3NrNQEuft
-        EDgYIySQnliSmp2aWpBaBNPHxMEp1cAoF3jQIdruRPjR61dsrLnUD0b1LLsQUTKn9ab8gtlh
-        zafUutcrd1zzURCKOPX2Z/3r/5maH/9sniQQ+dXjzKOb0g5T905N3GXtvH3xhfqaB78OqoQr
-        XXxwee2awMlyRgfaJ1X9v7quVrs7h3/qtH9u0yeG//x2q/PpnoWr3yw20tlg/1nVY2ZBixJL
-        cUaioRZzUXEiABmAcpDMAgAA
-X-CMS-MailID: 20200904090723eucas1p10b7d6f01088aeeff289b22a9f65039d4
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200903180412eucas1p10d854b51ba650b27265f088b07c93b15
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200903180412eucas1p10d854b51ba650b27265f088b07c93b15
-References: <CGME20200903180412eucas1p10d854b51ba650b27265f088b07c93b15@eucas1p1.samsung.com>
-        <20200903180400.2865-1-krzk@kernel.org>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com> <20200904085520.GN2674@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200904085520.GN2674@hirez.programming.kicks-ass.net>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 4 Sep 2020 11:08:54 +0200
+Message-ID: <CA+icZUVzWZZ=CCKEWiwsaMXM2Xy1F1NLNRS_2D15NeNZUGqquA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/28] Add support for Clang LTO
+To:     peterz@infradead.org
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 4, 2020 at 10:55 AM <peterz@infradead.org> wrote:
+>
+>
+> Please don't nest series!
+>
+> Start a new thread for every posting.
+>
 
+You are right Peter, my apologies.
 
-On 9/3/20 8:03 PM, Krzysztof Kozlowski wrote:
-> Correct a typo in the compatible - missing trailing 's'.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  Documentation/devicetree/bindings/crypto/samsung-slimsss.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/crypto/samsung-slimsss.yaml b/Documentation/devicetree/bindings/crypto/samsung-slimsss.yaml
-> index 04fe5dfa794a..7743eae049ab 100644
-> --- a/Documentation/devicetree/bindings/crypto/samsung-slimsss.yaml
-> +++ b/Documentation/devicetree/bindings/crypto/samsung-slimsss.yaml
-> @@ -19,7 +19,7 @@ description: |+
->  properties:
->    compatible:
->      items:
-> -      - const: samsung,exynos5433-slim-ss
-> +      - const: samsung,exynos5433-slim-sss
->  
->    reg:
->      maxItems: 1
-> 
-
-Reviewed-by: Kamil Konieczny <k.konieczny@samsung.com>
-Acked-by: Kamil Konieczny <k.konieczny@samsung.com>
+- Sedat -
