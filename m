@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C538C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE024C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE22F2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FB12073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJ0GTxEm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRnez5fn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730218AbgIDNAp (ORCPT
+        id S1730363AbgIDNBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:00:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46406 "EHLO
+        Fri, 4 Sep 2020 09:01:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730018AbgIDNAM (ORCPT
+        with ESMTP id S1728588AbgIDNAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:00:12 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94FDBC061246;
-        Fri,  4 Sep 2020 06:00:11 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id w1so6018614edr.3;
-        Fri, 04 Sep 2020 06:00:11 -0700 (PDT)
+        Fri, 4 Sep 2020 09:00:07 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5539BC061244;
+        Fri,  4 Sep 2020 06:00:07 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id c10so5998765edk.6;
+        Fri, 04 Sep 2020 06:00:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ED83ClsltKl6ZtFlLHI8TWQIT9oSGeGONF7WLhe+X04=;
-        b=SJ0GTxEmI87RApG2Nm2xqHkbFuk4dJ6yhm3b/beBjIC1TMCez8zUa9zx4QAYz0OSDQ
-         6eR6wUSL0g9IBGcKMe6r1tILP2Z+egOoDLyjGj03xRL1y+sNWpie4PAVpPOJPwiDicCP
-         ss23jzOxg11d1bkFN/mN8Ir9WNd1fygw1T7XQ4FztAzs40FPgKvhQT0xrCs+qb0ciMJN
-         UB/CMqXjXf+83yzqRLjuGT24bkmj+GRuP3tYOYNuHadcrCdY6IVP6pa4jG4gIbAISd3M
-         bpCOmwfAImflOLX/lig7SbLwJTO1XoC6LHq00r0ROAE9AlLMpNqkrBg7D2Ks0CE3bU68
-         FhEA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eoJIkDtT5yIdSXOyl7ZSN/ybf/6ZO2PtqfzMV2ShYXs=;
+        b=VRnez5fnDdx4YUTxOQcGHIgidGmKBkEm+asD3J7ZNJR0U26yYQNito/FHsTVC9QD2G
+         TgWilTQTk6y65Pl3jvfV4kCh0JVkQI31zt1OAWkm8sLSOuarYbuGbHJC6D6oVSmAewgL
+         g3OHoNtWlAF1SNGok1YGYsjQ+oMxxkFaGZxrfDImowRjeeE8IFhSxATxJGLaQbCZqfP2
+         HhFmFH2qxDy8cE6xtXfRevpSQY0Z+jikSIIyNsZweyH1Onsyijgmp6EnUxl7VJR1Ot7/
+         UPitx57LX3xiP8znCQItX5MnrMHaL6oZauMvAH5WWAXcpN49HgYFTThYPCYW+aCiaAi6
+         S3OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ED83ClsltKl6ZtFlLHI8TWQIT9oSGeGONF7WLhe+X04=;
-        b=fWG9KUrkp8qspmsKuXZoBJIIRPhp1gm5AJhxOhYOBzVQ0VRuMYwo+3VzPYnPAnw008
-         QVZpvFViooizHGal5PnRWJVD3AOuM7NaOo+33pDbEwy9nPmTItFMML/vFEiRJTYimWAw
-         ThVbToWZafR/conchP8f4crlAClF0kdGkHTqL8tbgN11kp0MhPFda20IRODYXhtF1Z5D
-         QeBAyJ+3FTN9rOuYma0b3jlo2cOVqtsGnmv77PQGc/ow1116EK7lWCfa9AqW0sadHzZa
-         j/wvzBOCTYrJGhbstUASJ0X9+bUqAwQKlIILFhSmBexF/VlTzt8OjC56B7gY9I+kErOW
-         Dfdw==
-X-Gm-Message-State: AOAM532p93wZkIuizbCuHp6D2qg5rO94xxeI0XwVQY3rKLmmxFSyXgH4
-        7LBnE1MLWKy5rzVzFCdQslo=
-X-Google-Smtp-Source: ABdhPJwnKE/4voTUtlCVakxWkblsJCw+pNCNo078hfIGVA8aCxC+aag5yU6c35xKJU1ZjgNkO0g6iw==
-X-Received: by 2002:a50:f081:: with SMTP id v1mr8566185edl.161.1599224410229;
-        Fri, 04 Sep 2020 06:00:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eoJIkDtT5yIdSXOyl7ZSN/ybf/6ZO2PtqfzMV2ShYXs=;
+        b=JuhMq3/NgXO3D8Vu6/dva8CFNBcb6YqjDlKSUon/Eumnkgf8RiITAeUlgB0lg6H40z
+         SubTksnq9CLhD3UKX72lfc4zeO4b96KMV4Ln/5SBs/cJ+0Ysmpvx+J+H0eiMlxn0ni8n
+         2Sf85vhaS39pq3YkAMCGor8Qz+dnVT8petJ3Z8cAeqmG6eecFEvXL3TIY6fbZ6TggV+y
+         mKIy6E28/3DrCLA9wMyMf5J/4+J3qjFnM+tgztgxg5cidOJkmesDbiMixbxKRMm+xcjG
+         TOXjUZuLbk+diH0N2YyhSTnnUHuSP2qdhyuBRwayxpUd9UIOCEROZBiJJNoeZxA5mcmU
+         JWkQ==
+X-Gm-Message-State: AOAM530m+ufy3L+JvGlw7unfNo+vsV7KhMSfVJ82t7I7SEORE2C1UobH
+        P4D+wABOGy5p6fR5pawk7Bs=
+X-Google-Smtp-Source: ABdhPJyd3GfRiKMW3Hv1SXKOXdFm20VEy4aybXXN4EDdDImnvlQLArlBx5ZgWZXwJPMnMy22iZIX8g==
+X-Received: by 2002:a50:fe98:: with SMTP id d24mr2605949edt.223.1599224405833;
+        Fri, 04 Sep 2020 06:00:05 -0700 (PDT)
 Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id g24sm2040948edy.51.2020.09.04.06.00.09
+        by smtp.gmail.com with ESMTPSA id w1sm5839816eds.18.2020.09.04.06.00.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 06:00:09 -0700 (PDT)
+        Fri, 04 Sep 2020 06:00:04 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Joerg Roedel <joro@8bytes.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -68,12 +68,10 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
         iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/4] iommu: dma: Use of_iommu_get_resv_regions()
-Date:   Fri,  4 Sep 2020 14:59:59 +0200
-Message-Id: <20200904130000.691933-3-thierry.reding@gmail.com>
+Subject: [PATCH v2 1/4] dt-bindings: reserved-memory: Document "active" property
+Date:   Fri,  4 Sep 2020 14:59:57 +0200
+Message-Id: <20200904130000.691933-1-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904130000.691933-1-thierry.reding@gmail.com>
-References: <20200904130000.691933-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,39 +81,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-For device tree nodes, use the standard of_iommu_get_resv_regions()
-implementation to obtain the reserved memory regions associated with a
-device.
+Reserved memory regions can be marked as "active" if hardware is
+expected to access the regions during boot and before the operating
+system can take control. One example where this is useful is for the
+operating system to infer whether the region needs to be identity-
+mapped through an IOMMU.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/iommu/dma-iommu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../bindings/reserved-memory/reserved-memory.txt           | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 5141d49a046b..1c36ca6ec2a3 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -20,6 +20,7 @@
- #include <linux/irq.h>
- #include <linux/mm.h>
- #include <linux/mutex.h>
-+#include <linux/of_iommu.h>
- #include <linux/pci.h>
- #include <linux/scatterlist.h>
- #include <linux/vmalloc.h>
-@@ -164,6 +165,8 @@ void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
- 	if (!is_of_node(dev_iommu_fwspec_get(dev)->iommu_fwnode))
- 		iort_iommu_msi_get_resv_regions(dev, list);
+diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+index 4dd20de6977f..163d2927e4fc 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
++++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+@@ -63,6 +63,13 @@ reusable (optional) - empty property
+       able to reclaim it back. Typically that means that the operating
+       system can use that region to store volatile or cached data that
+       can be otherwise regenerated or migrated elsewhere.
++active (optional) - empty property
++    - If this property is set for a reserved memory region, it indicates
++      that some piece of hardware may be actively accessing this region.
++      Should the operating system want to enable IOMMU protection for a
++      device, all active memory regions must have been identity-mapped
++      in order to ensure that non-quiescent hardware during boot can
++      continue to access the memory.
  
-+	if (dev->of_node)
-+		of_iommu_get_resv_regions(dev, list);
- }
- EXPORT_SYMBOL(iommu_dma_get_resv_regions);
- 
+ Linux implementation note:
+ - If a "linux,cma-default" property is present, then Linux will use the
 -- 
 2.28.0
 
