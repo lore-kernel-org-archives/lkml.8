@@ -2,103 +2,103 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E87C2D0E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025DDC2D0E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4E72074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 17:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC706208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599239048;
-	bh=FipX2gXj7DqsPgMIvbGNc5YB06E8+l+c8s3NE55dYVA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P87EyXOh6jrS2JXpSAWoPrw+Ew7EDD1ePEwjpmWP5zjeXoYHWjvYyr90ZeUq0A+UW
-	 6bQKX8ZzIcfIAVx1D/LIc2/IbfPUydHOhV9ZXS34Qohbv3OUMShVxINkIU8yqpi9pF
-	 f78M1HzDTfaKmJkAUsv3Jfw4aItgc521GkiAoFRU=
+	s=default; t=1599243172;
+	bh=Id4qhzHOsS6DwGIQ5LVetNXj3LxgcTh1B0kqH3vve5o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uIgQOsrJOSRSNDETXU0shxQsvEoivnlJgGoNEaWMU/Rn0ZLNA/i5mgtQarxfrrCKN
+	 k5qdlZ8EeSbZ2tCESQ/COsWiH0GdIHHV3jfj1pOYOq3jr+9dMg49+YCasX6KKq7ikf
+	 i9kkBkDxTeqToh/QjL1dOXgt+Z298on32Qth9XzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgIDREG (ORCPT
+        id S1726287AbgIDSMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:04:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbgIDREG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:04:06 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47263C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 10:04:04 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id f142so6896452qke.13
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 10:04:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0PbJyFxZ/ikkr3u6krBAPVcbTwRijRlUkolyKnsIfDc=;
-        b=lkQgWlndpkmX01kw2g+/unio85/icYvH7GZAEdq+sk6bll0r4VlcGMKs85WTWapzQR
-         ny9TJmJJC9kKDCEOOy4EbE3gMvdiZjJ9jWs9vNjccQP7pzaNyaB3y8HEAmzqonTRaSao
-         TVWxR0PfMKD5QwtKoSWB1PHgFsGTNWiCRjiIq/cHUQm7+FG7Ktq7oSW34bgEhLyOMpwv
-         nsLigst0P3peCueb2oE2UO1a+nD94jcep8SeVj/N8bgRfw6DjGltHycbsHEOo50Nwnl7
-         BJ6/dt68Dr7a9ewNAGmr7lSWx3cvvWmvVjKM0jwz75ixjcg6hbSvvzFvhNTgpPCg3Nsx
-         97WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=0PbJyFxZ/ikkr3u6krBAPVcbTwRijRlUkolyKnsIfDc=;
-        b=ZS4xn8OFeQrC5ePQDakmScxDLnDzYnrJ70j4u+LUDvbbT2d/Qxt8YhW3F0w8yXTsaY
-         jAB6WvYMjxUtjhWqZO1Adh5XMTstPzZLQD9/tsJa+7N9SOu8I99/MS1j3Uampsf0KRbt
-         jEbDjGYQtE9dHHLEPlmAnmYHvy6UBL/XKlTlk43hTdgq8HtVXkSwJ8atynQHNhCB6y+Y
-         UpXGbIYgM8lXyV/CqWrvNiBrLSSQXcIM9GXKsW3CCdCyEEpLf9pHO7pTf2kguNOMQxZX
-         qrhPfUJmZki0AbS+V9wyiwcOFOTd+W/WujeR9qB8pHDPQYmkOD9yihb6El74gJv4Jyv+
-         iJWQ==
-X-Gm-Message-State: AOAM530jephwu/l6dyL8PLftQcxD0q38LhHsonlQCNquWSoR1mw6nBYz
-        m3uzf1h5u4duvm6joOxvMWI=
-X-Google-Smtp-Source: ABdhPJzfOHrQhWklhy/F2+O99nkRgQiCVZk8uKFmqifyeo7KZfddncbunJqtrOWcHr207Onjr5+lCg==
-X-Received: by 2002:a37:5c84:: with SMTP id q126mr8553178qkb.462.1599239043147;
-        Fri, 04 Sep 2020 10:04:03 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:f2f5])
-        by smtp.gmail.com with ESMTPSA id s5sm5093709qtj.25.2020.09.04.10.04.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 10:04:02 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 13:04:01 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Qianli Zhao <zhaoqianligood@gmail.com>
-Cc:     jiangshanlai@gmail.com, dan.carpenter@oracle.com,
-        Markus.Elfring@web.de, linux-kernel@vger.kernel.org,
-        zhaoqianli@xiaomi.com
-Subject: Re: [PATCH v4] workqueue: Warn when work flush own workqueue
-Message-ID: <20200904170401.GB4295@mtj.thefacebook.com>
-References: <4c1287b0881e780368623314348f704bd43e9bd2.1598507105.git.zhaoqianli@xiaomi.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c1287b0881e780368623314348f704bd43e9bd2.1598507105.git.zhaoqianli@xiaomi.com>
+        Fri, 4 Sep 2020 14:12:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726109AbgIDSMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 14:12:49 -0400
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C8AA208CA;
+        Fri,  4 Sep 2020 18:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599243168;
+        bh=Id4qhzHOsS6DwGIQ5LVetNXj3LxgcTh1B0kqH3vve5o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=geJYOB2xEbbkF6OnJWiwu7wzHo+MfStfINict1HWGoIhirYFl0er44nUec+OYyT6I
+         5bU477LNJafUy+yz95yiwzDBZZFFmKVk1bPChtXZIgy9vdBd3baPfALJQ3DXi4Hau0
+         TKowc5PUkqMsVKJpY1vfP72u4k/Ge0C++UwD1M68=
+Date:   Fri, 4 Sep 2020 11:12:47 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     mateusznosek0@gmail.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/page_alloc.c: Clean code by removing unnecessary
+ initialization
+Message-Id: <20200904111247.371e5bfca967239781e5bf27@linux-foundation.org>
+In-Reply-To: <20200904132422.17387-1-mateusznosek0@gmail.com>
+References: <20200904132422.17387-1-mateusznosek0@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 02:09:11PM +0800, Qianli Zhao wrote:
-> @@ -2594,13 +2595,17 @@ static void check_flush_dependency(struct workqueue_struct *target_wq,
->  				   struct work_struct *target_work)
->  {
->  	work_func_t target_func = target_work ? target_work->func : NULL;
-> -	struct worker *worker;
-> +	struct worker *worker = current_wq_worker();
-> +
-> +	WARN_ONCE(worker && worker->current_pwq->wq == target_wq &&
-> +		  worker->task == current &&
-> +		  (target_work ? worker->current_work == target_work : true),
-> +		  "workqueue: current work function:%ps is flushing own workqueue:%s",
-> +		  worker->current_func, target_wq->name);
+On Fri,  4 Sep 2020 15:24:22 +0200 mateusznosek0@gmail.com wrote:
 
-So, the idea is that we catch these with lockdeps. Doesn't lockdep trigger
-for the same condition?
+> From: Mateusz Nosek <mateusznosek0@gmail.com>
+> 
+> Previously variable 'tmp' was initialized, but was not read later
+> before reassigning. So the initialization can be removed.
+> 
+> ...
+>
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5637,7 +5637,7 @@ static int find_next_best_node(int node, nodemask_t *used_node_mask)
+>  	int n, val;
+>  	int min_val = INT_MAX;
+>  	int best_node = NUMA_NO_NODE;
+> -	const struct cpumask *tmp = cpumask_of_node(0);
+> +	const struct cpumask *tmp;
+>  
+>  	/* Use the local node if we haven't already */
+>  	if (!node_isset(node, *used_node_mask)) {
 
-Thanks.
+OK.   But we may as well kill tmp altogether?
 
--- 
-tejun
+--- a/mm/page_alloc.c~mm-page_allocc-clean-code-by-removing-unnecessary-initialization-fix
++++ a/mm/page_alloc.c
+@@ -5637,7 +5637,6 @@ static int find_next_best_node(int node,
+ 	int n, val;
+ 	int min_val = INT_MAX;
+ 	int best_node = NUMA_NO_NODE;
+-	const struct cpumask *tmp;
+ 
+ 	/* Use the local node if we haven't already */
+ 	if (!node_isset(node, *used_node_mask)) {
+@@ -5658,8 +5657,7 @@ static int find_next_best_node(int node,
+ 		val += (n < node);
+ 
+ 		/* Give preference to headless and unused nodes */
+-		tmp = cpumask_of_node(n);
+-		if (!cpumask_empty(tmp))
++		if (!cpumask_empty(cpumask_of_node(n)))
+ 			val += PENALTY_FOR_NODE_WITH_CPUS;
+ 
+ 		/* Slight preference for less loaded node */
+_
+
