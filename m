@@ -2,123 +2,114 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F86C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C41E9C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC3282137B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:10:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="hJ3WmZA7"
+	by mail.kernel.org (Postfix) with ESMTP id 8C7BF20665
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599250214;
+	bh=yYyih0tRkyXvxF6zrp5M82q33ztuOVBW3TzBHsnDAx0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=h/s84gvATQw1QWQYVcRrptJDxPgA+l2DWTmKJt+neQ3gnR/MrIpxAOkvo+8unB/gZ
+	 stAOCbdskFdxlVf+RKa2FTF6ZOzymS3Lw27X9Oa7L0TTL1Xpzrw/iSdMm2K6t3G8i+
+	 k1OU+r6XpSk7z0YAcDlf0Pc2BceN+GJ18vzQ/IOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgIDUKD (ORCPT
+        id S1728079AbgIDUKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 16:10:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56388 "EHLO
+        Fri, 4 Sep 2020 16:10:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgIDUKB (ORCPT
+        with ESMTP id S1726833AbgIDUKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 16:10:01 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B0BCC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:10:01 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p37so4882478pgl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 13:10:01 -0700 (PDT)
+        Fri, 4 Sep 2020 16:10:10 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D43BCC061245
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:10:09 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id w3so7437961ilh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 13:10:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KJ5NxE/Sb6vg2FlBfCPguPeBw4GYPPc+Jx6ElFQ+lVk=;
-        b=hJ3WmZA7gEEz+H1WLmMkcHdQk079WgWN2Jghvkz4jwGsYwuMpM3+IoXFRbd+5IybMD
-         hPRwI8GnwqsqEtnP2YmOvrj2sTufMq2VH1W/5c6SGC3ORWlwzhDiyjLzaEbO7fGSeq4s
-         RhaeWSKtfxm6L4sByoQ1C/zsAZbtqGXsdQokKOlQdOkMoqelUMPWrKID/vvaXGKMhfny
-         Aq1cmcd8z8sZxvhL62TiVrBUezigtar0E7wEsDCZxq4IKOjCOXBtQoZ2bGFd/JZogUAW
-         HnIzIsdveHt3lNk5PSoscfX/FmHtVpclh3yeOAZ+IXx1QpJFwsT/Y4lppOY51TRFF/6E
-         j6cg==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0Jg9VU73gZ+7YHgdtpsBvolMRud2ea97/XzW1kHoQ78=;
+        b=drgRPsaTFf2IoqCMs2qQUUD6T2aRkWsilesRkIJmWBhZCw+Z7A+0mD+fbyls5lYR8e
+         V3I5boO2IbRk6BAsIapKarliFDFzI41FdDLgQWvnS3oNw9wuQDPBNPaRJyIk/LPNahTe
+         ovLxfoINDEpXd12w5eforYLmFXjYmP5u1BaxE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=KJ5NxE/Sb6vg2FlBfCPguPeBw4GYPPc+Jx6ElFQ+lVk=;
-        b=dibWtDRZm2Jxp4GRMYbcsvTM+3DV9oVoBzxyc8Du4Yb0o7jtQLM8PEV0o2WeGUWkZH
-         rgGHADDTph6FxkPZh+zP4Mcch7dvi6fTNdsjoGbe/j/ZICRELMJQ1igVU5pwkxCTJ0CH
-         bZHDN0M82HWIthzknsP4Bk6vQK2KKO64ioqhqpIAsU6pF0M4TGXgR5UXpEuxLNY+NvJ8
-         zF0XoUNtiFJYJ57i9P7q3qFu052yS/fEGk7yHSZUQsX7L+oYpow0gey43dhAjmIpmNlz
-         LH0iCr57kASJYpSKeeOocP5H2WvNyw+Fi7G83yiIo8UrFxKZ/xv4npyqbzxXKJJTpxoe
-         N9tg==
-X-Gm-Message-State: AOAM533L464YKHwz6YcbvRWioZS2dttEwfzcY1xPlXO+Oeik/3HyoMlW
-        WckfqxrrzWIdR4UKe/JfYkkUGA==
-X-Google-Smtp-Source: ABdhPJwQd97Fevygs/QwspxX0CSO78eU2bGnQ7igysCzU4on56F/oWWChWBWpxi1thWzW5vN4SdgOA==
-X-Received: by 2002:a63:e249:: with SMTP id y9mr8619036pgj.117.1599250201009;
-        Fri, 04 Sep 2020 13:10:01 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id 82sm6442524pgd.6.2020.09.04.13.10.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 13:10:00 -0700 (PDT)
-Date:   Fri, 04 Sep 2020 13:10:00 -0700 (PDT)
-X-Google-Original-Date: Fri, 04 Sep 2020 13:09:58 PDT (-0700)
-Subject:     Re: [PATCH v4 0/3] Get cache information from userland
-In-Reply-To: <cover.1598859038.git.zong.li@sifive.com>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>,
-        david.abdurachmanov@sifive.com, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, zong.li@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     zong.li@sifive.com
-Message-ID: <mhng-68e2fbf7-f87b-4a31-acaa-eed3e788fd7f@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0Jg9VU73gZ+7YHgdtpsBvolMRud2ea97/XzW1kHoQ78=;
+        b=Q9OoKP07H3OPP/LZCGCWPu5CurEENUWd5j25mwnAypIigTroqZTNGa7sF6WAN5eKym
+         AFvm1mBhnceMI5q5eniqAgdGb4L/8DdTZgAx00Rv0mEZKEK2Uef38BA6WC9q+ZRKsdU0
+         AkJzoI6rmFPq6s9kHne/LPz0khShUgG53x8akTclro8QzGd+gV8LWFTL0JG+CqktG5Nv
+         7EsDpJ28kYJA7g4JFnNZYL4TodJmfDih6FC2/MKfOamUGH3tJSH6grDgjoIwydyJkRBM
+         jfTyhdG6cyVYDnW1g2d8HlpRdVgGG6f5lcChrzdhl9AuhlIC0TpEUdJwsNsDAazE71Qb
+         pHGA==
+X-Gm-Message-State: AOAM532de1AmzSeXHY0JFR7myov+up4GU6HsZ0IsAmkBfnMIFro7mt+E
+        bVei2oD23QOprJYXywBvsfrc1g==
+X-Google-Smtp-Source: ABdhPJwRZrm7hpuD3sortxqwL+6h/N369d/kvC0s0f1ETskEGIAlcADB7xD3nvi1nzK3Unx8NNos3A==
+X-Received: by 2002:a05:6e02:146:: with SMTP id j6mr9828929ilr.132.1599250208332;
+        Fri, 04 Sep 2020 13:10:08 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id h15sm3465334ils.74.2020.09.04.13.10.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2020 13:10:07 -0700 (PDT)
+Subject: Re: [PATCH 5.4 00/16] 5.4.63-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20200904120257.203708503@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <c9508e8f-1fb3-3bc1-8006-dffad4923026@linuxfoundation.org>
+Date:   Fri, 4 Sep 2020 14:10:06 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200904120257.203708503@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 31 Aug 2020 00:33:47 PDT (-0700), zong.li@sifive.com wrote:
-> There are no standard CSR registers to provide cache information, the
-> way for RISC-V is to get this information from DT. Currently, AT_L1I_X,
-> AT_L1D_X and AT_L2_X are present in glibc header, and sysconf syscall
-> could use them to get information of cache through AUX vector. We
-> exploit 'struct cacheinfo' to obtain the information of cache, then we
-> don't need additional variable or data structure to record it.
->
-> We also need some works in glibc, but we have to support the function in
-> kernel first by rule of glibc, then post the patch to glibc site.
->
-> The result of 'getconf -a' as follows:
->
-> LEVEL1_ICACHE_SIZE                 32768
-> LEVEL1_ICACHE_ASSOC                8
-> LEVEL1_ICACHE_LINESIZE             64
-> LEVEL1_DCACHE_SIZE                 32768
-> LEVEL1_DCACHE_ASSOC                8
-> LEVEL1_DCACHE_LINESIZE             64
-> LEVEL2_CACHE_SIZE                  2097152
-> LEVEL2_CACHE_ASSOC                 32
-> LEVEL2_CACHE_LINESIZE              64
->
-> Changed in v4:
->   - Check null pointer before use.
->   - Re-write the code for readability.
->   - Rebase source to v5.9-rc3.
->
-> Changed in v3:
->   - Fix sparse warning: Use NULL instead of integer 0.
->
-> Changed in v2:
->   - Add error checking for parsing cache properties.
->
-> Zong Li (3):
->   riscv: Set more data to cacheinfo
->   riscv: Define AT_VECTOR_SIZE_ARCH for ARCH_DLINFO
->   riscv: Add cache information in AUX vector
->
->  arch/riscv/include/asm/cacheinfo.h   |  5 ++
->  arch/riscv/include/asm/elf.h         | 13 ++++
->  arch/riscv/include/uapi/asm/auxvec.h | 24 +++++++
->  arch/riscv/kernel/cacheinfo.c        | 98 +++++++++++++++++++++++-----
->  4 files changed, 124 insertions(+), 16 deletions(-)
+On 9/4/20 7:29 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.63 release.
+> There are 16 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 06 Sep 2020 12:02:48 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.63-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Ah, I just saw these so they're in instead of the v2.  Thanks!
+Compiled and booted on my test system. No dmesg regressions.
+
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
+
