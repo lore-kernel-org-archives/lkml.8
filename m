@@ -2,70 +2,82 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243B6C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D729C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0BFE206F2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C30206F2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbgIDNIx (ORCPT
+        id S1730397AbgIDNJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:08:53 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10814 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729297AbgIDNIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:08:48 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D072199F3E3C63284F16;
-        Fri,  4 Sep 2020 21:08:44 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Fri, 4 Sep 2020
- 21:08:40 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <willemb@google.com>,
-        <john.ogness@linutronix.de>, <maowenan@huawei.com>,
-        <jrosen@cisco.com>, <arnd@arndb.de>, <colin.king@canonical.com>,
-        <edumazet@google.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] net/packet: Remove unused macro BLOCK_PRIV
-Date:   Fri, 4 Sep 2020 21:06:08 +0800
-Message-ID: <20200904130608.19869-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 4 Sep 2020 09:09:53 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:33526 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730331AbgIDNJU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:09:20 -0400
+Received: by mail-io1-f72.google.com with SMTP id l22so4327076iol.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 06:09:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=nQsXJ+2Sn0MGE1vR1zI3z182rgZanXd2F2eDcOAOPAE=;
+        b=AnXBcwC2ArBW5yk0x0CFOtCgrrjB3Q2Cs8GkGvtq5kS9hHgzbF3KsjOdklsMQRmYSQ
+         V+liCTQj+U0Ec9s0otaNaXLEFhlOQVDP9TPC9gisiC7RmEG4i1PyaupjXQM6r+vaabDp
+         OfPy5ionb7xcXtkEcbJ2bErY2oxXRNixAff3J42ONF2vjgarL2/4yLKq7c+vGDeOgoSy
+         ID8Gzc0BoRlQIlFnzaS+ymTOLno86OXcOjoOFD69GEgkVcBzHPr77Ma9e4WAwUeWBh7u
+         X+oOqp9rjm/7kuuWNoakh0QcI2Ubp8Yb/wQLg9sIr6kSD68HeURtIt+DVb+5+3iMzAHf
+         3W8Q==
+X-Gm-Message-State: AOAM531QkhJ/ne0LEjmTlaW8hSbJj0aXPNQXVtEY8Dy+0o5sE8OZt3Fb
+        tG0lor+161akC2zUBFiluSHtJynGLViIlDgCpQZG9CKb4ImW
+X-Google-Smtp-Source: ABdhPJxf8t7VNvzid2ouf5qVOPnpSDKMCVM8d0r7TIrVaIlBa9eEFM0Usf4AS/KJPZyjoztDdjY8EqP8DYsJeHYvCCAEl7iEHley
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a05:6638:76b:: with SMTP id y11mr8087182jad.29.1599224959482;
+ Fri, 04 Sep 2020 06:09:19 -0700 (PDT)
+Date:   Fri, 04 Sep 2020 06:09:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a03f8d05ae7c9371@google.com>
+Subject: WARNING: can't access registers at asm_sysvec_reschedule_ipi
+From:   syzbot <syzbot+853f7009c5c271473926@syzkaller.appspotmail.com>
+To:     alexandre.chartre@oracle.com, bp@alien8.de, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
+        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BPDU_TYPE_TCN is never used after it was introduced.
-So better to remove it.
+Hello,
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
+syzbot found the following issue on:
+
+HEAD commit:    e28f0104 Merge tag 'fixes-2020-09-03' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10c43af9900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3c5f6ce8d5b68299
+dashboard link: https://syzkaller.appspot.com/bug?extid=853f7009c5c271473926
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+853f7009c5c271473926@syzkaller.appspotmail.com
+
+WARNING: can't access registers at asm_sysvec_reschedule_ipi+0x12/0x20 arch/x86/include/asm/idtentry.h:586
+
+
 ---
- net/packet/af_packet.c | 1 -
- 1 file changed, 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index da8254e680f9..c430672c6a67 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -177,7 +177,6 @@ static int packet_set_ring(struct sock *sk, union tpacket_req_u *req_u,
- #define BLOCK_LEN(x)		((x)->hdr.bh1.blk_len)
- #define BLOCK_SNUM(x)		((x)->hdr.bh1.seq_num)
- #define BLOCK_O2PRIV(x)	((x)->offset_to_priv)
--#define BLOCK_PRIV(x)		((void *)((char *)(x) + BLOCK_O2PRIV(x)))
- 
- struct packet_sock;
- static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
--- 
-2.17.1
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
