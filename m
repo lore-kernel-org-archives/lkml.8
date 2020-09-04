@@ -2,117 +2,165 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D42C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB01C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D33ED2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:26:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599233166;
-	bh=Pq6AMCutClAdC1MVlFH4CnQL+gGmRAYhCy6R3i2GV1c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KsQh6DsGsc9IwCD/pgHj5Dnq+H/V9UYQa14+JKdkXeL+odfQOnFVXw5JqCqQ1MiVY
-	 5jBMvdgueDIdIG+sdzngJNqScGS2NPf/eYAHDa5itbs2ubgXk3vF/rhGukHn6jsog4
-	 lmVSsnC8JlyQvkkqoVb5EeRSBWATJuDNNgEihe8Q=
+	by mail.kernel.org (Postfix) with ESMTP id 4936B2074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:26:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OZVm2W8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731109AbgIDP0F (ORCPT
+        id S1730934AbgIDP0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:26:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730476AbgIDPZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:25:01 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 942D02074D;
-        Fri,  4 Sep 2020 15:24:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599233100;
-        bh=Pq6AMCutClAdC1MVlFH4CnQL+gGmRAYhCy6R3i2GV1c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjis33CzlE4L8H5Hnvz2sDPU+++Cix7kCoiPDA0FaQM0iuGrWZ141pW18vBqPfqaT
-         Umi3jXeYOqFfHssMDCjdXC2mY1bme+uWigxNZiQQXnN/iI1NQK5KMKoaigEUqADwJK
-         6PFcpRACCzgdaObvVFzjEiaKq6yu/d9JATDLwVWQ=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 09/14] dt-bindings: mfd: rohm,bd71847-pmic: Correct clock properties requirements
-Date:   Fri,  4 Sep 2020 17:23:59 +0200
-Message-Id: <20200904152404.20636-10-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904152404.20636-1-krzk@kernel.org>
-References: <20200904152404.20636-1-krzk@kernel.org>
+        Fri, 4 Sep 2020 11:26:25 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34062 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731026AbgIDPY7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 11:24:59 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 084FJsMC188608;
+        Fri, 4 Sep 2020 15:24:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=WfiizxCphgb6QMNLb5fT4M+/BAoLor82zRM000tnzY8=;
+ b=OZVm2W8U/UA+Ndwco77I9LszK18bI2NyYtqN4HAAx1AE0V1EN1mbzulc8oa+9/yABdR9
+ YncAiMkHYRntgKpZ1erX5uN+z/xY76Ve5OIxZ5GAio/biL5wI4l6V4OtZ5cKXX3TNxB/
+ J1wWY15uhggrVkT4pxhkPCKOOt3BeSsHo7wAt5zSFbpPtbmW8/85rxWUS1qz6DEmpgT5
+ 8sjfkmhizAYnW1gI+O3mKvYMqe0s7V8W6lpsLPzovo4iSI1zW2wRY2A33uG54zeaaQGl
+ ZiHZ39RDgR+lq7hRDXKTidizr1t7OxcwTlDI+fK3x6k0b/x2w2wPMp061ZoCwL+N+MN0 5g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 339dmndgav-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 04 Sep 2020 15:24:51 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 084FLLFV040943;
+        Fri, 4 Sep 2020 15:22:51 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 3380ktmmeh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 04 Sep 2020 15:22:50 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 084FMmoB004140;
+        Fri, 4 Sep 2020 15:22:48 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 04 Sep 2020 08:22:48 -0700
+Date:   Fri, 4 Sep 2020 08:22:47 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     linux-ext4@vger.kernel.org, jack@suse.cz, tytso@mit.edu,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yuxuan Shui <yshuiv7@gmail.com>
+Subject: Re: [PATCH] ext4: Implement swap_activate aops using iomap
+Message-ID: <20200904152247.GA6088@magnolia>
+References: <20200904091653.1014334-1-riteshh@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904091653.1014334-1-riteshh@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9734 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
+ mlxscore=0 suspectscore=1 malwarescore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009040134
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9734 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=1
+ spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009040134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The input clock and number of clock provider cells are not required for
-the PMIC to operate.  They are needed only for the optional bd718x7
-clock driver.
+On Fri, Sep 04, 2020 at 02:46:53PM +0530, Ritesh Harjani wrote:
+> After moving ext4's bmap to iomap interface, swapon functionality
+> on files created using fallocate (which creates unwritten extents) are
+> failing. This is since iomap_bmap interface returns 0 for unwritten
+> extents and thus generic_swapfile_activate considers this as holes
+> and hence bail out with below kernel msg :-
+> 
+> [340.915835] swapon: swapfile has holes
+> 
+> To fix this we need to implement ->swap_activate aops in ext4
+> which will use ext4_iomap_report_ops. Since we only need to return
+> the list of extents so ext4_iomap_report_ops should be enough.
+> 
+> Reported-by: Yuxuan Shui <yshuiv7@gmail.com>
+> Fixes: ac58e4fb03f ("ext4: move ext4 bmap to use iomap infrastructure")
+> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+> ---
+> [Tested xfstests with -g swap; Tested stress-ng with --thrash option]
 
-Add also clock-output-names as driver takes use of it.
+Seems reasonable to me (at least from the iomap and "did you run QA?"
+end...)
 
-This fixes dtbs_check warnings like:
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-    arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b: 'clocks' is a required property
-    arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b: '#clock-cells' is a required property
+--D
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- .../devicetree/bindings/mfd/rohm,bd71847-pmic.yaml       | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
-index 77bcca2d414f..5d531051a153 100644
---- a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
-@@ -38,6 +38,9 @@ properties:
-   "#clock-cells":
-     const: 0
- 
-+  clock-output-names:
-+    maxItems: 1
-+
- # The BD71847 abd BD71850 support two different HW states as reset target
- # states. States are called as SNVS and READY. At READY state all the PMIC
- # power outputs go down and OTP is reload. At the SNVS state all other logic
-@@ -116,12 +119,14 @@ required:
-   - compatible
-   - reg
-   - interrupts
--  - clocks
--  - "#clock-cells"
-   - regulators
- 
- additionalProperties: false
- 
-+dependencies:
-+  '#clock-cells': [clocks]
-+  clocks: ['#clock-cells']
-+
- examples:
-   - |
-     #include <dt-bindings/interrupt-controller/irq.h>
--- 
-2.17.1
-
+> 
+>  fs/ext4/inode.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 1556cabd3a7d..9ac0f83e6fbe 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -3605,6 +3605,13 @@ static int ext4_set_page_dirty(struct page *page)
+>  	return __set_page_dirty_buffers(page);
+>  }
+>  
+> +static int ext4_iomap_swap_activate(struct swap_info_struct *sis,
+> +				    struct file *file, sector_t *span)
+> +{
+> +	return iomap_swapfile_activate(sis, file, span,
+> +				       &ext4_iomap_report_ops);
+> +}
+> +
+>  static const struct address_space_operations ext4_aops = {
+>  	.readpage		= ext4_readpage,
+>  	.readpages		= ext4_readpages,
+> @@ -3620,6 +3627,7 @@ static const struct address_space_operations ext4_aops = {
+>  	.migratepage		= buffer_migrate_page,
+>  	.is_partially_uptodate  = block_is_partially_uptodate,
+>  	.error_remove_page	= generic_error_remove_page,
+> +	.swap_activate		= ext4_iomap_swap_activate,
+>  };
+>  
+>  static const struct address_space_operations ext4_journalled_aops = {
+> @@ -3636,6 +3644,7 @@ static const struct address_space_operations ext4_journalled_aops = {
+>  	.direct_IO		= noop_direct_IO,
+>  	.is_partially_uptodate  = block_is_partially_uptodate,
+>  	.error_remove_page	= generic_error_remove_page,
+> +	.swap_activate		= ext4_iomap_swap_activate,
+>  };
+>  
+>  static const struct address_space_operations ext4_da_aops = {
+> @@ -3653,6 +3662,7 @@ static const struct address_space_operations ext4_da_aops = {
+>  	.migratepage		= buffer_migrate_page,
+>  	.is_partially_uptodate  = block_is_partially_uptodate,
+>  	.error_remove_page	= generic_error_remove_page,
+> +	.swap_activate		= ext4_iomap_swap_activate,
+>  };
+>  
+>  static const struct address_space_operations ext4_dax_aops = {
+> @@ -3661,6 +3671,7 @@ static const struct address_space_operations ext4_dax_aops = {
+>  	.set_page_dirty		= noop_set_page_dirty,
+>  	.bmap			= ext4_bmap,
+>  	.invalidatepage		= noop_invalidatepage,
+> +	.swap_activate		= ext4_iomap_swap_activate,
+>  };
+>  
+>  void ext4_set_aops(struct inode *inode)
+> -- 
+> 2.25.1
+> 
