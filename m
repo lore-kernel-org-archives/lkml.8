@@ -2,81 +2,143 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE520C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EBDC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2FE206F2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89C6206F2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:44:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZyUdKXPv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730274AbgIDMmr (ORCPT
+        id S1730232AbgIDMo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 08:42:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57356 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730151AbgIDMmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 08:42:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 87E75ACB5;
-        Fri,  4 Sep 2020 12:42:21 +0000 (UTC)
-Date:   Fri, 4 Sep 2020 14:42:19 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        osalvador@suse.de, richard.weiyang@gmail.com, vbabka@suse.cz,
-        rientjes@google.com
-Subject: Re: [PATCH v2] mm/memory_hotplug: drain per-cpu pages again during
- memory offline
-Message-ID: <20200904124219.GB4610@dhcp22.suse.cz>
-References: <20200903140032.380431-1-pasha.tatashin@soleen.com>
- <6ec66eb9-eeba-5076-af97-cef59ed5cbaa@redhat.com>
- <20200903123136.1fa50e773eb58c6200801e65@linux-foundation.org>
+        Fri, 4 Sep 2020 08:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729897AbgIDMoU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 08:44:20 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E43EC061244;
+        Fri,  4 Sep 2020 05:44:18 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id f18so4535495pfa.10;
+        Fri, 04 Sep 2020 05:44:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7iNfDgkuDEGlftYpwjK5faW+HwOe3OLIUqc26Ik79ck=;
+        b=ZyUdKXPv4L7VlJLBRTfQ1k+AOducABPqvLFELRrc5Os/rsaqYUW9AeQPROvE09jncF
+         kODhQjLAZll+/V3KGaYYCIIZfCcbpIlReF1xsLcZBCZQrHEPz4mIRtXMMK9xAbm3piFB
+         q97PcSvTx2KI3Jab8fyHaaOG1Hmi5oWCxaa9aCmsHbqrayZNxYB+sVkmrudLY81bJv6R
+         6L+S5Ash4yl5e068RtnWtCuVDH8SFoO/45a4nE8XuWJvKuoTHHBxTaL70D/xU08E71zv
+         wdqUcVAbmnC8jgnJZUOSEnXHIb+hDSvOB8Pl6ThrKHNhex4hXOmRWw1yAnPvs+oaTV8q
+         KSCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7iNfDgkuDEGlftYpwjK5faW+HwOe3OLIUqc26Ik79ck=;
+        b=QXhRBKPxpRG+BPdorui+fCoaqUNf64aJmzKATtA1y8zg7hVKTr/EdCJIdgJ3aBJ494
+         Iox4zfqRDX+zl1ylrjQd1ctsAeFrAYNT7ixMkED0fIr9O1iFGulT0EUQ9JAEQAjU4iDl
+         G4i266iC6NQ+1R9JqRQdIx6emhOZpPMhlhSCkrwYqERjh9KokCAuxz/FgHzDZ55b0nFW
+         SvK42h/Mj2PQcnKdUmJwXxg23lbA3TS5baGS/4ywP0vrNxlDj1kYNHaykpPKbO3g8Voa
+         YQLHQpoBIIkfZWu7+M6UJnZZkAmIz4LAqMkxQB4bM3Zz0W9YbAGJxUGT1r1Jrqego7Y9
+         hTXw==
+X-Gm-Message-State: AOAM531SGnY+P3ZZzqtD8PO1eo7K/H0Lx4DDRRZttvDxteHsCcbTqdgq
+        Do6YQ8bIWW63K0aDhUiizg==
+X-Google-Smtp-Source: ABdhPJz62AAdK4DRlYo37bxyMRoAXbSGodAX3uLmTR2FE/JhQILygGVywaZ19PyQEH5vs6fOIR6F5g==
+X-Received: by 2002:a62:1888:: with SMTP id 130mr8320050pfy.220.1599223458054;
+        Fri, 04 Sep 2020 05:44:18 -0700 (PDT)
+Received: from [127.0.0.1] ([103.7.29.9])
+        by smtp.gmail.com with ESMTPSA id v4sm5227320pjh.38.2020.09.04.05.44.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2020 05:44:17 -0700 (PDT)
+Subject: Re: [PATCH] KVM: SVM: Add tracepoint for cr_interception
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     "hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>, joro@8bytes.org,
+        "jmattson@google.com" <jmattson@google.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        sean.j.christopherson@intel.com,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+References: <f3031602-db3b-c4fe-b719-d402663b0a2b@gmail.com>
+ <87imctoinr.fsf@vitty.brq.redhat.com>
+From:   Haiwei Li <lihaiwei.kernel@gmail.com>
+Message-ID: <5b8d366f-db2d-489d-bb48-5c0287323ec6@gmail.com>
+Date:   Fri, 4 Sep 2020 20:44:04 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903123136.1fa50e773eb58c6200801e65@linux-foundation.org>
+In-Reply-To: <87imctoinr.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 03-09-20 12:31:36, Andrew Morton wrote:
-> On Thu, 3 Sep 2020 19:36:26 +0200 David Hildenbrand <david@redhat.com> wrote:
-> 
-> > (still on vacation, back next week on Tuesday)
-> > 
-> > I didn't look into discussions in v1, but to me this looks like we are
-> > trying to hide an actual bug by implementing hacks in the caller
-> > (repeated calls to drain_all_pages()). What about alloc_contig_range()
-> > users - you get more allocation errors just because PCP code doesn't
-> > play along.
-> > 
-> > There *is* strong synchronization with the page allocator - however,
-> > there seems to be one corner case race where we allow to allocate pages
-> > from isolated pageblocks.
-> > 
-> > I want that fixed instead if possible, otherwise this is just an ugly
-> > hack to make the obvious symptoms (offlining looping forever) disappear.
-> > 
-> > If that is not possible easily, I'd much rather want to see all
-> > drain_all_pages() calls being moved to the caller and have the expected
-> > behavior documented instead of specifying "there is no strong
-> > synchronization with the page allocator" - which is wrong in all but PCP
-> > cases (and there only in one possible race?).
-> > 
-> 
-> It's a two-line hack which fixes a bug in -stable kernels, so I'm
-> inclined to proceed with it anyway.  We can undo it later on as part of
-> a better fix, OK?
 
-Agreed. http://lkml.kernel.org/r/20200904070235.GA15277@dhcp22.suse.cz
-for reference.
--- 
-Michal Hocko
-SUSE Labs
+
+On 20/9/4 20:01, Vitaly Kuznetsov wrote:
+> Haiwei Li <lihaiwei.kernel@gmail.com> writes:
+> 
+>> From: Haiwei Li <lihaiwei@tencent.com>
+>>
+>> Add trace_kvm_cr_write and trace_kvm_cr_read for svm.
+>>
+>> Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
+>> ---
+>>    arch/x86/kvm/svm/svm.c | 2 ++
+>>    1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+>> index 03dd7bac8034..2c6dea48ba62 100644
+>> --- a/arch/x86/kvm/svm/svm.c
+>> +++ b/arch/x86/kvm/svm/svm.c
+>> @@ -2261,6 +2261,7 @@ static int cr_interception(struct vcpu_svm *svm)
+> 
+> There are two special cases when we go to emulate_on_interception() and
+> these won't be logged but I don't think this is a must.
+> 
+>>    	if (cr >= 16) { /* mov to cr */
+>>    		cr -= 16;
+>>    		val = kvm_register_read(&svm->vcpu, reg);
+>> +		trace_kvm_cr_write(cr, val);
+>>    		switch (cr) {
+>>    		case 0:
+>>    			if (!check_selective_cr0_intercepted(svm, val))
+>> @@ -2306,6 +2307,7 @@ static int cr_interception(struct vcpu_svm *svm)
+>>    			return 1;
+>>    		}
+>>    		kvm_register_write(&svm->vcpu, reg, val);
+>> +		trace_kvm_cr_read(cr, val);
+> 
+> The 'default:' case above does 'return 1;' so we won't get the trace but
+> I understand you put trace_kvm_cr_read() here so you can log the
+> returned 'val', #UD should be clearly visible.
+> 
+>>    	}
+>>    	return kvm_complete_insn_gp(&svm->vcpu, err);
+>>    }
+>> --
+>> 2.18.4
+>>
+> 
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+Thanks a lot.
+
+> 
