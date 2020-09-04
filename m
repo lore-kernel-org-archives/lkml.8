@@ -2,152 +2,78 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A653C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64CCC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E468320795
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA584206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:52:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="STmnWLK+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgIDQtX (ORCPT
+        id S1726559AbgIDQw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:49:23 -0400
-Received: from mga11.intel.com ([192.55.52.93]:23851 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbgIDQtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:49:23 -0400
-IronPort-SDR: 2aJQAxuZF+nQ0kD/8DqziKMwXakc6B+csttTSYTwUjhvvhZ4uF7tTN5vbDWvCCsRRiKjdRa2m2
- r2H8vHID8hIw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="155290168"
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="155290168"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:49:22 -0700
-IronPort-SDR: 6NMaScHpBzrAv4GHHTNx0/JStaZi28jYqd4g8bgcibCmLyhCGJAt4Jv/kUJ31YqA4ewxpIHzq8
- Oxv/AJskggkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="332218742"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 04 Sep 2020 09:49:20 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kEEtp-00EKRq-I2; Fri, 04 Sep 2020 19:49:17 +0300
-Date:   Fri, 4 Sep 2020 19:49:17 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 15/23] gpio: mockup: use dynamic device IDs
-Message-ID: <20200904164917.GC1891694@smile.fi.intel.com>
-References: <20200904154547.3836-1-brgl@bgdev.pl>
- <20200904154547.3836-16-brgl@bgdev.pl>
+        Fri, 4 Sep 2020 12:52:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgIDQwY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:52:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46E05C061244;
+        Fri,  4 Sep 2020 09:52:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=vg3eMp3qgi31sLSmCrf5FHDomo2X8qRKjrMoI4zUJzk=; b=STmnWLK+ma1qwigPmOi+LTrWVt
+        VwzJER0Yn+fHMRwnVnqTdt6SoKqMbguQN+a/9bm0TVtSBXW1C0gxIbGfwNlfBpjUGygw9Jy5wDvUv
+        xr1cJZi5CxRDXK5waonglnCVvRpTvJigi0Xp8+exRfuXksMBm5WrSmB3843+DaNxCUYmQ6zNwjN+p
+        wUEo8kW7glq7Y543bYAln+e6JO4HTZfPSjf1hgWWsqPLqnhDudBhuwc3JQ4AwZYpnPllEmCW/Fws2
+        qGDF7LNFWUu80E/41QdN1iBPTrGz6vjS4cUbH9gv6G9ZFx6oiTwDxnY2HZ9Az9a0BFoI5B/3aYdML
+        eFeBiq/Q==;
+Received: from [2001:4bb8:184:af1:704:22b1:700d:1395] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kEEwj-00012Z-Fz; Fri, 04 Sep 2020 16:52:19 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: remove set_fs for riscv
+Date:   Fri,  4 Sep 2020 18:52:08 +0200
+Message-Id: <20200904165216.1799796-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904154547.3836-16-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 05:45:39PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> We're currently creating chips at module init time only so using a
-> static index for dummy devices is fine. We want to support dynamically
-> created chips however so we need to switch to dynamic device IDs.
+Hi all,
 
-It misses ida_destroy().
+this series converts riscv to the new set_fs less world and is on top of this
+branch:
 
-What about XArray API?
+    https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git/log/?h=base.set_fs
 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/gpio/gpio-mockup.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> index 96976ba66598..995e37fef9c5 100644
-> --- a/drivers/gpio/gpio-mockup.c
-> +++ b/drivers/gpio/gpio-mockup.c
-> @@ -9,6 +9,7 @@
->  
->  #include <linux/debugfs.h>
->  #include <linux/gpio/driver.h>
-> +#include <linux/idr.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/irq_sim.h>
-> @@ -70,6 +71,8 @@ module_param_named(gpio_mockup_named_lines,
->  
->  static struct dentry *gpio_mockup_dbg_dir;
->  
-> +static DEFINE_IDA(gpio_mockup_ida);
-> +
->  static int gpio_mockup_range_base(unsigned int index)
->  {
->  	return gpio_mockup_ranges[index * 2];
-> @@ -480,8 +483,12 @@ static LIST_HEAD(gpio_mockup_devices);
->  
->  static void gpio_mockup_unregister_one_device(struct gpio_mockup_device *dev)
->  {
-> +	int id;
-> +
->  	list_del(&dev->list);
-> +	id = dev->pdev->id;
->  	platform_device_unregister(dev->pdev);
-> +	ida_free(&gpio_mockup_ida, id);
->  	kfree(dev);
->  }
->  
-> @@ -587,12 +594,19 @@ static int __init gpio_mockup_init(void)
->  		}
->  
->  		pdevinfo.name = "gpio-mockup";
-> -		pdevinfo.id = i;
->  		pdevinfo.properties = properties;
->  
-> +		pdevinfo.id = ida_alloc(&gpio_mockup_ida, GFP_KERNEL);
-> +		if (pdevinfo.id < 0) {
-> +			kfree_strarray(line_names, ngpio);
-> +			err = pdevinfo.id;
-> +			goto err_out;
-> +		}
-> +
->  		mockup_dev = kzalloc(sizeof(*mockup_dev), GFP_KERNEL);
->  		if (!mockup_dev) {
->  			kfree_strarray(line_names, ngpio);
-> +			ida_free(&gpio_mockup_ida, pdevinfo.id);
->  			err = -ENOMEM;
->  			goto err_out;
->  		}
-> @@ -601,6 +615,7 @@ static int __init gpio_mockup_init(void)
->  		kfree_strarray(line_names, ngpio);
->  		if (IS_ERR(mockup_dev->pdev)) {
->  			pr_err("error registering device");
-> +			ida_free(&gpio_mockup_ida, pdevinfo.id);
->  			kfree(mockup_dev);
->  			err = PTR_ERR(mockup_dev->pdev);
->  			goto err_out;
-> -- 
-> 2.26.1
-> 
+The first four patches are general improvements and enablement for all nommu
+ports, and might make sense to merge through the above base branch.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Diffstat
+ arch/riscv/Kconfig                   |    2 
+ arch/riscv/include/asm/thread_info.h |    6 -
+ arch/riscv/include/asm/uaccess.h     |  177 +++++++++++++++++------------------
+ arch/riscv/kernel/process.c          |    1 
+ arch/riscv/lib/Makefile              |    2 
+ include/asm-generic/uaccess.h        |   42 +++++---
+ include/linux/uaccess.h              |    4 
+ 7 files changed, 127 insertions(+), 107 deletions(-)
