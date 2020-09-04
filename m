@@ -2,106 +2,104 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FA7C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDF3C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56FF6206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A97206D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599229850;
-	bh=3S93tF/ignIiM43QgnWujtoIATS7BPwQ6dqnISHKtyA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CufgNjT8JGLVYm0HUOIqk/tmhslZvJJj47b7oS4PaQZPUgSXvB76A63mcLHv9dk+0
-	 /VXifcQj/i0HxWtuhuPJYWCLH4vFcT1wD+38LILrYgN3cetpASAaEp7maPsZ5jDvju
-	 tT/emVqKLZfYntW0QUA9Apkdqo/hisbA3Og2Cuto=
+	s=default; t=1599229917;
+	bh=Ovne3zPGozEcouB+wDQ/5CsnhQR2Yaomg+oiECsR7c4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z9gPVxt+A6Hj8cOjcra82WkfKunlYeJr8L5AZVhCxGsMhq//sZ87GLYyTE3b8yoXy
+	 Y+DCA7zv8Be+IzZVqavgVnF97a+VstG2pyoBO+a0wbrKTcgUcLFVIk1Uud04CVOcrk
+	 rA/6f+qS/hRBOza4eiyq0mXhVUKQWBNuqj2muFFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730510AbgIDOar (ORCPT
+        id S1730611AbgIDObw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:30:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38850 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 10:31:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728983AbgIDOaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:30:01 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730395AbgIDObi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 10:31:38 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 483C320829;
-        Fri,  4 Sep 2020 14:30:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE301206B8;
+        Fri,  4 Sep 2020 14:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599229800;
-        bh=3S93tF/ignIiM43QgnWujtoIATS7BPwQ6dqnISHKtyA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XV8ablvO+fK4xp0xfyjNshid/tVnEyWkQtkPPPQfeOF4f87nnqaEtvL5J755xhn5Y
-         T5s0H9LmmJLHzNgJaQS/q8PEa6Ex55mnbh205MBq8BwCISmLTIVUN/06P5Lsh1rmmP
-         yVYluI8pZ0Mpv/+/QxVc9jIlMf3kVUZD1gFBL/Jg=
-Received: by mail-ot1-f46.google.com with SMTP id g10so6004397otq.9;
-        Fri, 04 Sep 2020 07:30:00 -0700 (PDT)
-X-Gm-Message-State: AOAM530AW4cqcRMIU7ePwSlzwDFWbMBtrueGzo9sh0y8ixvNppfbL1pP
-        VC4DM44osg+2FGyTtOohiIQsfcH/NqTaYelZbA==
-X-Google-Smtp-Source: ABdhPJy0LBatfFdNSWrwrnthwVqtmbC3ydSQ8JsKPP8Rsx3nxJylJbVfefD5DwCJwyvZvCLpFqLpQJtRkwEJ4gGjHPs=
-X-Received: by 2002:a9d:7f84:: with SMTP id t4mr5794412otp.192.1599229799600;
- Fri, 04 Sep 2020 07:29:59 -0700 (PDT)
+        s=default; t=1599229897;
+        bh=Ovne3zPGozEcouB+wDQ/5CsnhQR2Yaomg+oiECsR7c4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ys2qUxkdrc2bt7b+dBy/+jS317c4d7xtuPAKrXIXg//u0JUvlm0/azD+UP0UL/3oc
+         arIq7LwSUlMnT/oq5GGpSVdyI18HDgX/f1muAN1Nrj4h+UaP4vIid+cv4Y3HmON6po
+         uOPI7u7lN8wFPEf+S80Qh65xr3zmFsjIjfY9tf+k=
+Date:   Fri, 4 Sep 2020 09:37:53 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Rustam Kovhaev <rkovhaev@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        pbonzini@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Subject: Re: [PATCH v2] KVM: fix memory leak in kvm_io_bus_unregister_dev()
+Message-ID: <20200904143753.GE31464@embeddedor>
+References: <20200902225718.675314-1-rkovhaev@gmail.com>
+ <c5990c86-ab01-d748-5505-375f50a4ed7d@embeddedor.com>
+ <20200903172215.GA870347@thinkpad>
+ <87ft7xoiig.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200829111800.2786-1-krzk@kernel.org> <20200829111800.2786-6-krzk@kernel.org>
- <20200903164117.GA2922218@bogus> <CAJKOXPc_abP=YU9cWFfPsFLrnb9N1PBEEbaSWPLLvYHZ_GmsGQ@mail.gmail.com>
-In-Reply-To: <CAJKOXPc_abP=YU9cWFfPsFLrnb9N1PBEEbaSWPLLvYHZ_GmsGQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 4 Sep 2020 08:29:47 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKUHZvqT7WH4B=1NZ32o2HJ14-0wL4TYN7sQYx-fyjCsA@mail.gmail.com>
-Message-ID: <CAL_JsqKUHZvqT7WH4B=1NZ32o2HJ14-0wL4TYN7sQYx-fyjCsA@mail.gmail.com>
-Subject: Re: [PATCH 6/7] dt-bindings: i2c: imx: Use unevaluatedProperties
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Wolfram Sang <wolfram@the-dreams.de>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ft7xoiig.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 2:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Thu, 3 Sep 2020 at 18:41, Rob Herring <robh@kernel.org> wrote:
+On Fri, Sep 04, 2020 at 02:04:23PM +0200, Vitaly Kuznetsov wrote:
+> Rustam Kovhaev <rkovhaev@gmail.com> writes:
+> 
+> > On Wed, Sep 02, 2020 at 06:34:11PM -0500, Gustavo A. R. Silva wrote:
+> >> Hi,
+> >> 
+> >> On 9/2/20 17:57, Rustam Kovhaev wrote:
+> >> > when kmalloc() fails in kvm_io_bus_unregister_dev(), before removing
+> >> > the bus, we should iterate over all other devices linked to it and call
+> >> > kvm_iodevice_destructor() for them
+> >> > 
+> >> > Reported-and-tested-by: syzbot+f196caa45793d6374707@syzkaller.appspotmail.com
+> >> > Link: https://syzkaller.appspot.com/bug?extid=f196caa45793d6374707
+> >> > Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+> >> > Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> >> 
+> >> I think it's worthwhile to add a Fixes tag for this, too.
+> >> 
+> >> Please, see more comments below...
+[..]
 > >
-> > On Sat, Aug 29, 2020 at 01:17:59PM +0200, Krzysztof Kozlowski wrote:
-> > > Additional properties actually might appear (e.g. power-domains or child
-> > > nodes) so use unevaluatedProperties to fix dtbs_check warnings like:
-> > >
-> > >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: i2c@30a20000:
-> > >     '#address-cells', '#size-cells', 'pmic@25' do not match any of the regexes: 'pinctrl-[0-9]+'
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > hi Gustavo, thank you for the review, i'll send the new patch.
+> > Vitaly, i think i will need to drop your "Reviewed-by", because there is
+> > going to be a bit more changes
 > >
-> > NAK. See https://lore.kernel.org/r/CAL_JsqKPXJxsHPS34_TCf9bwgKxZNSV4mvQR-WKRnknQVtGGxQ@mail.gmail.com/
->
-> I can reference the generic i2c-controller schema and add missing
-> properties but what to do with children (pmic@25 and many other)? I
-> see that all of the other I2C controller dtschema files solve it by
-> skipping "additionalProperties: false". Is this the way to go with I2C
-> controllers?
+> 
+> Personally, I'd prefer to make struct_size()/flex_array_size() a
+> separate preparatory patch so the real fix is small but I don't have a
+> strong opinion. I'll take look at v3 so feel free to drop R-b if you
+> decide to make a combined patch and feel free to keep it if you make the
+> preparatory changes separate :-)
+> 
 
-If there's a $ref to the i2c schema, then using unevaluatedProperties
-is correct.
+I agree. A two-patch series is much better in this case.
 
-Rob
+Rustam - please add a Fixes tag to the first patch and see if it can be
+applied to -stable. If so, you should Cc stable@vger.kernel.org, too.
+
+Thanks
+--
+Gustavo
