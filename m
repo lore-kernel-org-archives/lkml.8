@@ -2,92 +2,98 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C9CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB60BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7B5220722
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599235107;
-	bh=NAsK1sUFDlG4CiX9f4OB6b0xBhrLDeTgLHvblUMrtaM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Tzn0DDiNicCnibahYsggKY/M19aWgyUTTFcvebLhnmsfigazo3y+DJCZTASqm60aC
-	 23OgT56pt9o9jdaqShpzygB/NI4+KUyl2/Bf6yVon2SFWt9jWX+RFoCGZA2ZI6FcGS
-	 t1UobXmsBxOKsMVsXY915drKdBo21+yi8v1Sqgdo=
+	by mail.kernel.org (Postfix) with ESMTP id 9FB0E20722
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:00:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgIDP6Z (ORCPT
+        id S1726771AbgIDQAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:58:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48000 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 12:00:15 -0400
+Received: from mga01.intel.com ([192.55.52.88]:29411 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726032AbgIDP6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:58:23 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA2CA20722;
-        Fri,  4 Sep 2020 15:58:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599235103;
-        bh=NAsK1sUFDlG4CiX9f4OB6b0xBhrLDeTgLHvblUMrtaM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=CxiLcu+IavsmiFWc1grAlsJkcTXHw4K6ozpt2vBnh6R4XvrgV2X3QEICE/K0AVkcb
-         d8WTjniGpJmbt4LqzmnCAg0v6srWri1CrBuTKxpJ4jYbvaV0yqF/8kD/inRqf3WqtK
-         B4V36ETOe6xMXSoh8esmgZ2USCWKkz99piSAdOp0=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH -rc v1] gcov: Disable gcov build with GCC 10
-Date:   Fri,  4 Sep 2020 18:58:08 +0300
-Message-Id: <20200904155808.4997-1-leon@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        id S1726127AbgIDQAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:00:14 -0400
+IronPort-SDR: p8h0t8mTpBiLdWIa0lCT2hDK/9FmG8zdObq84BgZqMShFEzbEdvKJB6rV0qY74DXuFdaq8iLDI
+ jGaF/agi6LbQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="175822319"
+X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
+   d="scan'208";a="175822319"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:00:12 -0700
+IronPort-SDR: B0zfEkIxhDFm2q4frTASRz7FOgl7CEHz9Q72W6CC3ioa5Lv3Tv2kK5vDrwxBrX/5AQR4oq9jq0
+ 7vT+c1KM7zlg==
+X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
+   d="scan'208";a="478552197"
+Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:00:12 -0700
+Date:   Fri, 4 Sep 2020 09:00:10 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Tsirkin <mst@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Jones <drjones@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] KVM: x86: KVM_MEM_PCI_HOLE memory
+Message-ID: <20200904160008.GA2206@sjchrist-ice>
+References: <20200807141232.402895-1-vkuznets@redhat.com>
+ <20200825212526.GC8235@xz-x1>
+ <87eenlwoaa.fsf@vitty.brq.redhat.com>
+ <20200901200021.GB3053@xz-x1>
+ <877dtcpn9z.fsf@vitty.brq.redhat.com>
+ <20200904061210.GA22435@sjchrist-ice>
+ <20200904072905.vbkiq3h762fyzds6@sirius.home.kraxel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904072905.vbkiq3h762fyzds6@sirius.home.kraxel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Fri, Sep 04, 2020 at 09:29:05AM +0200, Gerd Hoffmann wrote:
+>   Hi,
+> 
+> > Unless I'm mistaken, microvm doesn't even support PCI, does it?
+> 
+> Correct, no pci support right now.
+> 
+> We could probably wire up ecam (arm/virt style) for pcie support, once
+> the acpi support for mictovm finally landed (we need acpi for that
+> because otherwise the kernel wouldn't find the pcie bus).
+> 
+> Question is whenever there is a good reason to do so.  Why would someone
+> prefer microvm with pcie support over q35?
+> 
+> > If all of the above is true, this can be handled by adding "pci=lastbus=0"
+> > as a guest kernel param to override its scanning of buses.  And couldn't
+> > that be done by QEMU's microvm_fix_kernel_cmdline() to make it transparent
+> > to the end user?
+> 
+> microvm_fix_kernel_cmdline() is a hack, not a solution.
+> 
+> Beside that I doubt this has much of an effect on microvm because
+> it doesn't support pcie in the first place.
 
-GCOV built with GCC 10 doesn't initialize n_function variable.
-This produces different kernel panics as was seen by Colin in
-Ubuntu [1] and me in FC 32 [2].
+I am so confused.  Vitaly, can you clarify exactly what QEMU VM type this
+series is intended to help?  If this is for microvm, then why is the guest
+doing PCI scanning in the first place?  If it's for q35, why is the
+justification for microvm-like workloads?
 
-As a workaround, let's disable GCOV build for broken GCC 10 version.
-
-[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1891288
-[2] https://lore.kernel.org/lkml/20200827133932.3338519-1-leon@kernel.org
-Cc: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- As was discussed:
- https://lore.kernel.org/lkml/CAHk-=whbijeSdSvx-Xcr0DPMj0BiwhJ+uiNnDSVZcr_h_kg7UA@mail.gmail.com/
----
- kernel/gcov/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-index 3110c77230c7..bb4b680e8455 100644
---- a/kernel/gcov/Kconfig
-+++ b/kernel/gcov/Kconfig
-@@ -4,6 +4,7 @@ menu "GCOV-based kernel profiling"
- config GCOV_KERNEL
- 	bool "Enable gcov-based kernel profiling"
- 	depends on DEBUG_FS
-+	depends on !CC_IS_GCC || GCC_VERSION < 100000
- 	select CONSTRUCTORS if !UML
- 	default n
- 	help
---
-2.26.2
-
+Either way, I think it makes sense explore other options before throwing
+something into KVM, e.g. modifying guest command line, adding a KVM hint,
+"fixing" QEMU, etc... 
