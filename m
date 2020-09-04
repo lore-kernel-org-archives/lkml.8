@@ -2,384 +2,134 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35473C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 750F3C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F127720795
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:01:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eiIw4NsX"
+	by mail.kernel.org (Postfix) with ESMTP id 5506020829
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgIDQBR (ORCPT
+        id S1726292AbgIDQBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 4 Sep 2020 12:01:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbgIDQA2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:00:28 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43D87C061249
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 09:00:24 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id m12so3334664otr.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 09:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=l7LoSFQsLXDiF4Ji50t4+0OWRIPdPxzSD1bzh5bWiVM=;
-        b=eiIw4NsX/hyoaaz/4K6N1vOyEUOseagRphmbmaYrEF6mHxd2oVHydbdxC9ZQ9YFYxm
-         nL2oGB3LfRzX/80v0sedNSZxTdaNpZFFLXXCBdUChphm2FX6yQgON4tQihG1DsVfYLZx
-         dVPb5044+cKlSIz1QXm9DkbHXOJbnnTTwA6joHib4R/9W9CEsh1kVz087skXVlHTIwJb
-         3/VeiT+B1dsInWZ3bWxBRyLBYjOeyR3suSnpmOnVFdDsU3XFOo+cD8OiV8fYyDWmksib
-         djSM17ZBDsqJUjoG5vrupPycQozkYxOkbYelyjKaYjL+qmblPnKtCxWRPql6Sx+I/S0c
-         01ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=l7LoSFQsLXDiF4Ji50t4+0OWRIPdPxzSD1bzh5bWiVM=;
-        b=BFizing9+HWZ2U6BBXnIajQau3pwTauz4eDmtQ1zjFiZBKxAI0W+sCwL3zdJzvUwjf
-         Vucr9Y1DssiPTLPyKMjYDU08+NiB6OzdtHDtAJkeEvHDH+D680VnT5j5WyMmhYqSFKav
-         jHVNgbBt0MTwRNIhlqCVdLeH44IdNasdwPNERmfBX7hgmttklx2aU1NEYScDA5iK2e7y
-         nLPMI0LBWO2ZInXbil2uRNCobwrXtWBGzOmO+b7sqVlXtOA9vmhvbl7n/y4oGoU0YPIf
-         8p7dSepc2pJ34bSAkZO7Zo724Ns17rROMvj1hhbiSf9WD909tqwhSRviPKqAy/abJNaf
-         0Ecw==
-X-Gm-Message-State: AOAM530bZsC6FtlntW8+FEiyNm3S+Swxj+yKHNEyoJp4lqxPxLRr0vQu
-        movG4dtWGlR2mJimearZkA6Q/w==
-X-Google-Smtp-Source: ABdhPJwEPb6TXkzRGgvBsJjfupGmCtXahK43pSYpwnSmjBaRhRAFXuNxknYwxjhASOP7uTdjp/NgDw==
-X-Received: by 2002:a9d:7095:: with SMTP id l21mr6105710otj.224.1599235223846;
-        Fri, 04 Sep 2020 09:00:23 -0700 (PDT)
-Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
-        by smtp.gmail.com with ESMTPSA id t1sm1370247ooi.27.2020.09.04.09.00.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 09:00:23 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 11:00:18 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Hanna Hawa <hannah@marvell.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krishna Reddy <vdumpa@nvidia.com>,
-        "moderated list:ARM SMMU DRIVERS" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v16 14/20] iommu/arm-smmu: Prepare for the adreno-smmu
- implementation
-Message-ID: <20200904160018.GH3715@yoga>
-References: <20200901164707.2645413-1-robdclark@gmail.com>
- <20200901164707.2645413-15-robdclark@gmail.com>
+Received: from foss.arm.com ([217.140.110.172]:53260 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726789AbgIDQA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:00:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2935E11B3;
+        Fri,  4 Sep 2020 09:00:27 -0700 (PDT)
+Received: from e112269-lin.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD76B3F66F;
+        Fri,  4 Sep 2020 09:00:24 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
+Cc:     Steven Price <steven.price@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>, qemu-devel@nongnu.org,
+        Juan Quintela <quintela@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Peter Maydell <Peter.Maydell@arm.com>,
+        Haibo Xu <Haibo.Xu@arm.com>
+Subject: [PATCH v2 0/2] MTE support for KVM guest
+Date:   Fri,  4 Sep 2020 17:00:16 +0100
+Message-Id: <20200904160018.29481-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901164707.2645413-15-robdclark@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 01 Sep 11:46 CDT 2020, Rob Clark wrote:
+Arm's Memory Tagging Extension (MTE) adds 4 bits of tag data to every 16
+bytes of memory in the system. This along with stashing a tag within the
+high bit of virtual addresses allows runtime checking of memory
+accesses.
 
-> From: Jordan Crouse <jcrouse@codeaurora.org>
-> 
-> Do a bit of prep work to add the upcoming adreno-smmu implementation.
-> 
-> Add an hook to allow the implementation to choose which context banks
-> to allocate.
-> 
-> Move some of the common structs to arm-smmu.h in anticipation of them
-> being used by the implementations and update some of the existing hooks
-> to pass more information that the implementation will need.
-> 
-> These modifications will be used by the upcoming Adreno SMMU
-> implementation to identify the GPU device and properly configure it
-> for pagetable switching.
-> 
-> Co-developed-by: Rob Clark <robdclark@chromium.org>
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+These patches add support to KVM to enable MTE within a guest. They are
+based on Catalin's v9 MTE user-space support series[1].
 
-As I built the handoff support on top of this patch I ended up
-reworking the alloc_context_bank() prototype to something I found a
-little bit cleaner.
+I'd welcome feedback on the proposed user-kernel ABI. Specifically this
+series currently:
 
-So perhaps you would be interested in squashing
-https://lore.kernel.org/linux-arm-msm/20200904155513.282067-2-bjorn.andersson@linaro.org/
-into this patch?
+ 1. Requires the VMM to enable MTE per-VCPU.
+ 2. Automatically promotes (normal host) memory given to the guest to be
+    tag enabled (sets PG_mte_tagged), if any VCPU has MTE enabled. The
+    tags are cleared if the memory wasn't previously MTE enabled.
+ 3. Doesn't provide any new methods for the VMM to access the tags on
+    memory.
 
-Otherwise, feel free to add my:
+(2) and (3) are particularly interesting from the aspect of VM migration.
+The guest is able to store/retrieve data in the tags (presumably for the
+purpose of tag checking, but architecturally it could be used as just
+storage). This means that when migrating a guest the data needs to be
+transferred (or saved/restored).
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+MTE tags are controlled by the same permission model as normal pages
+(i.e. a read-only page has read-only tags), so the normal methods of
+detecting guest changes to pages can be used. But this would also
+require the tags within a page to be migrated at the same time as the
+data (since the access control for tags is the same as the normal data
+within a page).
 
-Regards,
-Bjorn
+(3) may be problematic and I'd welcome input from those familiar with
+VMMs. User space cannot access tags unless the memory is mapped with the
+PROT_MTE flag. However enabling PROT_MTE will also enable tag checking
+for the user space process (assuming the VMM enables tag checking for
+the process) and since the tags in memory are controlled by the guest
+it's unlikely the VMM would have an appropriately tagged pointer for its
+access. This means the VMM would either need to maintain two mappings of
+memory (one to access tags, the other to access data) or disable tag
+checking during the accesses to data.
 
-> ---
->  drivers/iommu/arm/arm-smmu/arm-smmu-impl.c |  2 +-
->  drivers/iommu/arm/arm-smmu/arm-smmu.c      | 69 ++++++----------------
->  drivers/iommu/arm/arm-smmu/arm-smmu.h      | 51 +++++++++++++++-
->  3 files changed, 68 insertions(+), 54 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
-> index a9861dcd0884..88f17cc33023 100644
-> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
-> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
-> @@ -69,7 +69,7 @@ static int cavium_cfg_probe(struct arm_smmu_device *smmu)
->  }
->  
->  static int cavium_init_context(struct arm_smmu_domain *smmu_domain,
-> -		struct io_pgtable_cfg *pgtbl_cfg)
-> +		struct io_pgtable_cfg *pgtbl_cfg, struct device *dev)
->  {
->  	struct cavium_smmu *cs = container_of(smmu_domain->smmu,
->  					      struct cavium_smmu, smmu);
-> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-> index 8e884e58f208..68b7b9e6140e 100644
-> --- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
-> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-> @@ -65,41 +65,10 @@ module_param(disable_bypass, bool, S_IRUGO);
->  MODULE_PARM_DESC(disable_bypass,
->  	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
->  
-> -struct arm_smmu_s2cr {
-> -	struct iommu_group		*group;
-> -	int				count;
-> -	enum arm_smmu_s2cr_type		type;
-> -	enum arm_smmu_s2cr_privcfg	privcfg;
-> -	u8				cbndx;
-> -};
-> -
->  #define s2cr_init_val (struct arm_smmu_s2cr){				\
->  	.type = disable_bypass ? S2CR_TYPE_FAULT : S2CR_TYPE_BYPASS,	\
->  }
->  
-> -struct arm_smmu_smr {
-> -	u16				mask;
-> -	u16				id;
-> -	bool				valid;
-> -};
-> -
-> -struct arm_smmu_cb {
-> -	u64				ttbr[2];
-> -	u32				tcr[2];
-> -	u32				mair[2];
-> -	struct arm_smmu_cfg		*cfg;
-> -};
-> -
-> -struct arm_smmu_master_cfg {
-> -	struct arm_smmu_device		*smmu;
-> -	s16				smendx[];
-> -};
-> -#define INVALID_SMENDX			-1
-> -#define cfg_smendx(cfg, fw, i) \
-> -	(i >= fw->num_ids ? INVALID_SMENDX : cfg->smendx[i])
-> -#define for_each_cfg_sme(cfg, fw, i, idx) \
-> -	for (i = 0; idx = cfg_smendx(cfg, fw, i), i < fw->num_ids; ++i)
-> -
->  static bool using_legacy_binding, using_generic_binding;
->  
->  static inline int arm_smmu_rpm_get(struct arm_smmu_device *smmu)
-> @@ -234,19 +203,6 @@ static int arm_smmu_register_legacy_master(struct device *dev,
->  }
->  #endif /* CONFIG_ARM_SMMU_LEGACY_DT_BINDINGS */
->  
-> -static int __arm_smmu_alloc_bitmap(unsigned long *map, int start, int end)
-> -{
-> -	int idx;
-> -
-> -	do {
-> -		idx = find_next_zero_bit(map, end, start);
-> -		if (idx == end)
-> -			return -ENOSPC;
-> -	} while (test_and_set_bit(idx, map));
-> -
-> -	return idx;
-> -}
-> -
->  static void __arm_smmu_free_bitmap(unsigned long *map, int idx)
->  {
->  	clear_bit(idx, map);
-> @@ -578,7 +534,7 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
->  	}
->  }
->  
-> -static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
-> +void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
->  {
->  	u32 reg;
->  	bool stage1;
-> @@ -665,7 +621,8 @@ static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
->  }
->  
->  static int arm_smmu_init_domain_context(struct iommu_domain *domain,
-> -					struct arm_smmu_device *smmu)
-> +					struct arm_smmu_device *smmu,
-> +					struct device *dev)
->  {
->  	int irq, start, ret = 0;
->  	unsigned long ias, oas;
-> @@ -780,10 +737,20 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->  		ret = -EINVAL;
->  		goto out_unlock;
->  	}
-> -	ret = __arm_smmu_alloc_bitmap(smmu->context_map, start,
-> +
-> +	smmu_domain->smmu = smmu;
-> +
-> +	if (smmu->impl && smmu->impl->alloc_context_bank)
-> +		ret = smmu->impl->alloc_context_bank(smmu_domain, dev,
-> +				start, smmu->num_context_banks);
-> +	else
-> +		ret = __arm_smmu_alloc_bitmap(smmu->context_map, start,
->  				      smmu->num_context_banks);
-> -	if (ret < 0)
-> +
-> +	if (ret < 0) {
-> +		smmu_domain->smmu = NULL;
->  		goto out_unlock;
-> +	}
->  
->  	cfg->cbndx = ret;
->  	if (smmu->version < ARM_SMMU_V2) {
-> @@ -798,8 +765,6 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->  	else
->  		cfg->asid = cfg->cbndx;
->  
-> -	smmu_domain->smmu = smmu;
-> -
->  	pgtbl_cfg = (struct io_pgtable_cfg) {
->  		.pgsize_bitmap	= smmu->pgsize_bitmap,
->  		.ias		= ias,
-> @@ -810,7 +775,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->  	};
->  
->  	if (smmu->impl && smmu->impl->init_context) {
-> -		ret = smmu->impl->init_context(smmu_domain, &pgtbl_cfg);
-> +		ret = smmu->impl->init_context(smmu_domain, &pgtbl_cfg, dev);
->  		if (ret)
->  			goto out_clear_smmu;
->  	}
-> @@ -1194,7 +1159,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
->  		return ret;
->  
->  	/* Ensure that the domain is finalised */
-> -	ret = arm_smmu_init_domain_context(domain, smmu);
-> +	ret = arm_smmu_init_domain_context(domain, smmu, dev);
->  	if (ret < 0)
->  		goto rpm_put;
->  
-> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-> index f3e456893f28..59ff3fc5c6c8 100644
-> --- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
-> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-> @@ -256,6 +256,21 @@ enum arm_smmu_implementation {
->  	QCOM_SMMUV2,
->  };
->  
-> +struct arm_smmu_s2cr {
-> +	struct iommu_group		*group;
-> +	int				count;
-> +	enum arm_smmu_s2cr_type		type;
-> +	enum arm_smmu_s2cr_privcfg	privcfg;
-> +	u8				cbndx;
-> +};
-> +
-> +struct arm_smmu_smr {
-> +	u16				mask;
-> +	u16				id;
-> +	bool				valid;
-> +	bool				pinned;
-> +};
-> +
->  struct arm_smmu_device {
->  	struct device			*dev;
->  
-> @@ -331,6 +346,13 @@ struct arm_smmu_cfg {
->  };
->  #define ARM_SMMU_INVALID_IRPTNDX	0xff
->  
-> +struct arm_smmu_cb {
-> +	u64				ttbr[2];
-> +	u32				tcr[2];
-> +	u32				mair[2];
-> +	struct arm_smmu_cfg		*cfg;
-> +};
-> +
->  enum arm_smmu_domain_stage {
->  	ARM_SMMU_DOMAIN_S1 = 0,
->  	ARM_SMMU_DOMAIN_S2,
-> @@ -350,6 +372,11 @@ struct arm_smmu_domain {
->  	struct iommu_domain		domain;
->  };
->  
-> +struct arm_smmu_master_cfg {
-> +	struct arm_smmu_device		*smmu;
-> +	s16				smendx[];
-> +};
-> +
->  static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
->  {
->  	u32 tcr = FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
-> @@ -400,14 +427,35 @@ struct arm_smmu_impl {
->  	int (*cfg_probe)(struct arm_smmu_device *smmu);
->  	int (*reset)(struct arm_smmu_device *smmu);
->  	int (*init_context)(struct arm_smmu_domain *smmu_domain,
-> -			struct io_pgtable_cfg *cfg);
-> +			struct io_pgtable_cfg *cfg, struct device *dev);
->  	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
->  			 int status);
->  	int (*def_domain_type)(struct device *dev);
->  	irqreturn_t (*global_fault)(int irq, void *dev);
->  	irqreturn_t (*context_fault)(int irq, void *dev);
-> +	int (*alloc_context_bank)(struct arm_smmu_domain *smmu_domain,
-> +			struct device *dev, int start, int max);
->  };
->  
-> +#define INVALID_SMENDX			-1
-> +#define cfg_smendx(cfg, fw, i) \
-> +	(i >= fw->num_ids ? INVALID_SMENDX : cfg->smendx[i])
-> +#define for_each_cfg_sme(cfg, fw, i, idx) \
-> +	for (i = 0; idx = cfg_smendx(cfg, fw, i), i < fw->num_ids; ++i)
-> +
-> +static inline int __arm_smmu_alloc_bitmap(unsigned long *map, int start, int end)
-> +{
-> +	int idx;
-> +
-> +	do {
-> +		idx = find_next_zero_bit(map, end, start);
-> +		if (idx == end)
-> +			return -ENOSPC;
-> +	} while (test_and_set_bit(idx, map));
-> +
-> +	return idx;
-> +}
-> +
->  static inline void __iomem *arm_smmu_page(struct arm_smmu_device *smmu, int n)
->  {
->  	return smmu->base + (n << smmu->pgshift);
-> @@ -472,6 +520,7 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu);
->  struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu);
->  struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu);
->  
-> +void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx);
->  int arm_mmu500_reset(struct arm_smmu_device *smmu);
->  
->  #endif /* _ARM_SMMU_H */
-> -- 
-> 2.26.2
-> 
+If it's not practical to either disable tag checking in the VMM or
+maintain multiple mappings then the alternatives I'm aware of are:
+
+ * Provide a KVM-specific method to extract the tags from guest memory.
+   This might also have benefits in terms of providing an easy way to
+   read bulk tag data from guest memory (since the LDGM instruction
+   isn't available at EL0).
+ * Provide support for user space setting the TCMA0 or TCMA1 bits in
+   TCR_EL1. These would allow the VMM to generate pointers which are not
+   tag checked.
+
+Feedback is welcome, and feel free to ask questions if anything in the
+above doesn't make sense.
+
+Changes since the previous v1 posting[2]:
+
+ * Rebasing clean-ups
+ * sysreg visibility is now controlled based on whether the VCPU has MTE
+   enabled or not
+
+[1] https://lore.kernel.org/r/20200904103029.32083-1-catalin.marinas@arm.com
+[2] https://lore.kernel.org/r/20200713100102.53664-1-steven.price%40arm.com
+
+Steven Price (2):
+  arm64: kvm: Save/restore MTE registers
+  arm64: kvm: Introduce MTE VCPU feature
+
+ arch/arm64/include/asm/kvm_emulate.h       |  3 +++
+ arch/arm64/include/asm/kvm_host.h          |  9 ++++++++-
+ arch/arm64/include/asm/sysreg.h            |  3 ++-
+ arch/arm64/include/uapi/asm/kvm.h          |  1 +
+ arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h | 14 ++++++++++++++
+ arch/arm64/kvm/mmu.c                       | 15 +++++++++++++++
+ arch/arm64/kvm/reset.c                     |  8 ++++++++
+ arch/arm64/kvm/sys_regs.c                  | 20 +++++++++++++++-----
+ 8 files changed, 66 insertions(+), 7 deletions(-)
+
+-- 
+2.20.1
+
