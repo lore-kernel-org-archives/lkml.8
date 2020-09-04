@@ -2,208 +2,164 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B91BC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8888AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 313E1206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:30:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lRcg68qS"
+	by mail.kernel.org (Postfix) with ESMTP id 5A4B32075D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599187202;
+	bh=Gx4Q5qe+KCoxGI03EpDx33dmvhQFLS1/UkVjl6tbZqA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=GVhpY0QqS5Aou7MXxu+1nqpekfnYijzsWj9+NJn5q8BGMlEGM+JaUSZGXGajGhm/c
+	 irPkqcdMnAyWh45pf6J5pVUf2ml/Cnq5Faf6B8Q3ktGxB1PINAMxrUM4wl2LCTNdmw
+	 EYfTJPGvMXcP+Pn8dcv3R13BgtmD5izaSlO//75I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbgIDCaP (ORCPT
+        id S1729580AbgIDCj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 22:30:15 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:42706 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729507AbgIDCaO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 22:30:14 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 85D26540;
-        Fri,  4 Sep 2020 04:30:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1599186611;
-        bh=3IhAp6iiTQb1VIkwNiG2ixLcKMYBNgk+LZRubUP8PCw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lRcg68qSD5iYxtgkBuIVFRvJRfhUMvWKvU3HZyFB2v6AWSmK9IzjnnOl5o4J3w1ic
-         swiLpzMA9uttHRDEkkhSHKyZ8vQZmlXrwm948O2PAHfZK1K+Yi274qHQZEKDcsBcsT
-         um8P7GYinkLDmsvDgYhWubWdAb8OeV00+fQVWg78=
-Date:   Fri, 4 Sep 2020 05:29:48 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Swapnil Jakhade <sjakhade@cadence.com>,
-        dri-devel@lists.freedesktop.org, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, a.hajda@samsung.com, narmstrong@baylibre.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mparab@cadence.com, yamonkar@cadence.com, jsarha@ti.com,
-        nsekhar@ti.com, praneeth@ti.com, nikhil.nd@ti.com
-Subject: Re: [PATCH v9 2/3] drm: bridge: Add support for Cadence MHDP8546
- DPI/DP bridge
-Message-ID: <20200904022948.GE9369@pendragon.ideasonboard.com>
-References: <1598862215-10222-1-git-send-email-sjakhade@cadence.com>
- <1598862215-10222-3-git-send-email-sjakhade@cadence.com>
- <71452de7-80e7-0144-4802-e3370c00854b@ti.com>
+        Thu, 3 Sep 2020 22:39:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728697AbgIDCj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 22:39:56 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F107D206D4;
+        Fri,  4 Sep 2020 02:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599187196;
+        bh=Gx4Q5qe+KCoxGI03EpDx33dmvhQFLS1/UkVjl6tbZqA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=wHGTgWWNf47GLCUSRBQFUyHXongWWL7BkCHykoDAufFgTqmVlFN1LhAIcyF3GEK6J
+         p8xMVBSwusMdjwHyLVfLczKGG/xX27XIPLZgloqJDGyEBpesVNJEGWmV70qHLseBcu
+         /YoJRsXrkok85KPDZ643waxfvhPXCAp6Bl97Balo=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id C8AB63522636; Thu,  3 Sep 2020 19:39:55 -0700 (PDT)
+Date:   Thu, 3 Sep 2020 19:39:55 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
+        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+        luc.maranget@inria.fr, akiyks@gmail.com
+Subject: Re: [PATCH kcsan 6/9] tools/memory-model: Expand the cheatsheet.txt
+ notion of relaxed
+Message-ID: <20200904023955.GX29330@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
+ <20200831182037.2034-6-paulmck@kernel.org>
+ <20200902035448.GC49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <20200902101412.GC1362448@hirez.programming.kicks-ass.net>
+ <20200902123715.GD49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <20200903233037.GW29330@paulmck-ThinkPad-P72>
+ <20200904005921.GA7503@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <71452de7-80e7-0144-4802-e3370c00854b@ti.com>
+In-Reply-To: <20200904005921.GA7503@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomi,
+On Fri, Sep 04, 2020 at 08:59:21AM +0800, Boqun Feng wrote:
+> On Thu, Sep 03, 2020 at 04:30:37PM -0700, Paul E. McKenney wrote:
 
-On Tue, Sep 01, 2020 at 10:46:03AM +0300, Tomi Valkeinen wrote:
-> Hi Swapnil,
-> 
-> On 31/08/2020 11:23, Swapnil Jakhade wrote:
-> 
-> > +static int cdns_mhdp_validate_mode_params(struct cdns_mhdp_device *mhdp,
-> > +					  const struct drm_display_mode *mode,
-> > +					  struct drm_bridge_state *bridge_state)
-> > +{
-> > +	u32 tu_size = 30, line_thresh1, line_thresh2, line_thresh = 0;
-> > +	u32 rate, vs, vs_f, required_bandwidth, available_bandwidth;
-> > +	struct cdns_mhdp_bridge_state *state;
-> > +	int pxlclock;
-> > +	u32 bpp;
-> > +
-> > +	state = to_cdns_mhdp_bridge_state(bridge_state);
-> > +
-> > +	pxlclock = mode->crtc_clock;
-> > +
-> > +	/* Get rate in MSymbols per second per lane */
-> > +	rate = mhdp->link.rate / 1000;
-> > +
-> > +	bpp = cdns_mhdp_get_bpp(&mhdp->display_fmt);
-> 
-> None of the above are used when calling cdns_mhdp_bandwidth_ok(). For clarity, I'd move the above
-> lines a bit closer to where they are needed, as currently it makes me think the above values are
-> used when checking the bandwidth.
-> 
-> > +	if (!cdns_mhdp_bandwidth_ok(mhdp, mode, mhdp->link.num_lanes,
-> > +				    mhdp->link.rate)) {
-> > +		dev_err(mhdp->dev, "%s: Not enough BW for %s (%u lanes at %u Mbps)\n",
-> > +			__func__, mode->name, mhdp->link.num_lanes,
-> > +			mhdp->link.rate / 100);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* find optimal tu_size */
-> > +	required_bandwidth = pxlclock * bpp / 8;
-> > +	available_bandwidth = mhdp->link.num_lanes * rate;
-> > +	do {
-> > +		tu_size += 2;
-> > +
-> > +		vs_f = tu_size * required_bandwidth / available_bandwidth;
-> > +		vs = vs_f / 1000;
-> > +		vs_f = vs_f % 1000;
-> > +		/* Downspreading is unused currently */
-> > +	} while ((vs == 1 || ((vs_f > 850 || vs_f < 100) && vs_f != 0) ||
-> > +		 tu_size - vs < 2) && tu_size < 64);
-> > +
-> > +	if (vs > 64) {
-> > +		dev_err(mhdp->dev,
-> > +			"%s: No space for framing %s (%u lanes at %u Mbps)\n",
-> > +			__func__, mode->name, mhdp->link.num_lanes,
-> > +			mhdp->link.rate / 100);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (vs == tu_size)
-> > +		vs = tu_size - 1;
-> > +
-> > +	line_thresh1 = ((vs + 1) << 5) * 8 / bpp;
-> > +	line_thresh2 = (pxlclock << 5) / 1000 / rate * (vs + 1) - (1 << 5);
-> > +	line_thresh = line_thresh1 - line_thresh2 / mhdp->link.num_lanes;
-> > +	line_thresh = (line_thresh >> 5) + 2;
-> > +
-> > +	state->vs = vs;
-> > +	state->tu_size = tu_size;
-> > +	state->line_thresh = line_thresh;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int cdns_mhdp_atomic_check(struct drm_bridge *bridge,
-> > +				  struct drm_bridge_state *bridge_state,
-> > +				  struct drm_crtc_state *crtc_state,
-> > +				  struct drm_connector_state *conn_state)
-> > +{
-> > +	struct cdns_mhdp_device *mhdp = bridge_to_mhdp(bridge);
-> > +	const struct drm_display_mode *mode = &crtc_state->adjusted_mode;
-> > +	int ret;
-> > +
-> > +	mutex_lock(&mhdp->link_mutex);
-> > +
-> > +	if (!mhdp->plugged) {
-> > +		mhdp->link.rate = mhdp->host.link_rate;
-> > +		mhdp->link.num_lanes = mhdp->host.lanes_cnt;
-> > +	}
-> > +
-> > +	ret = cdns_mhdp_validate_mode_params(mhdp, mode, bridge_state);
-> > +
-> > +	mutex_unlock(&mhdp->link_mutex);
-> > +
-> > +	return ret;
-> > +}
-> 
-> Laurent mentioned that atomic_check should not change state. Note that
-> cdns_mhdp_validate_mode_params also changes state, as it calculates tu_size, vs and line_thresh.
+[ . . . ]
 
-.atomic_check() isn't allowed to change any global state, which means
-both hardware state and data in cdns_mhdp_device. The drm_bridge_state
-(and thus the cdns_mhdp_bridge_state) can be modified as it stores the
-state for the atomic commit being checked.
+> > How about like this, adding "Relaxed" to the WRITE_ONCE() and READ_ONCE()
+> > rows and "RMW" to the "Relaxed operation" row?
+> > 
+> 
+> Much better now, thanks! However ...
+> 
+> > The file contents are followed by a diff against the previous version.
+> > 
+> > 							Thanx, Paul
+> > 
+> > ------------------------------------------------------------------------
 
-> There seems to be issues with mode changes, but I think the first step would be to clarify the
-> related code a bit. cdns_mhdp_validate_mode_params() is misnamed, I think it should be renamed to
-> calculate_tu or something like that.
-> 
-> cdns_mhdp_bandwidth_ok() should take display_fmt or bpp as a parameter, as currently it digs that up
-> from the current state.
-> 
-> Probably cdns_mhdp_validate_mode_params() would be better if it doesn't write the result to the
-> state, but returns the values. That way it could also be used to verify if suitable settings can be
-> found, without changing the state.
+[ . . . ]
 
-This use case is actually a very good example of proper usage of the
-atomic state :-) .atomic_check() has to perform computations to verify
-the atomic commit, and storing the results in the commit's state
-prevents duplicating the same calculation at .atomic_commit() time.
+> > Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
+> > 		  operation, an unsuccessful RMW operation, READ_ONCE(),
+> > 		  WRITE_ONCE(), or one of the atomic_read() and
+> > 		  atomic_set() family of operations.
+> 
+> And:
+> 		  a RMW operation that doesn't return any value (e.g
+> 		  atomic_inc()), IOW it's a void Relaxed operation.
 
-> The are two issues I see with some testing, which are probably related.
-> 
-> The first one is that if I run kmstest with a new mode, I see tu-size & co being calculated. But the
-> calculation happens before link training, which doesn't make sense. So I think what's done here is
-> that atomic_check causes tu-size calculations, then atomic_enable does link training and enables the
-> video.
-> 
-> The second happens when my monitor fails with the first CR after power-on, and the driver drops
-> number-of-lanes to 2. It goes like this:
-> 
-> The driver is loaded. Based on EDID, fbdev is created with 1920x1200. Link training is done, which
-> has the CR issue, and because of that the actual mode that we get is 1280x960. I get a proper
-> picture here, so far so good.
-> 
-> Then if I run kmstest, it only allows 1280x960 as the link doesn't support higher modes (that's ok).
-> It the does link training and gets a 4 lane link, and enables 1280x960. But the picture is not ok.
-> 
-> If I then exit kmstest, it goes back to fbdev, but now that picture is broken also.
-> 
-> Running kmstest again gives me 1920x1200 (as the link has been 4 lane now), and the picture is fine.
-> 
-> I think the above suggests that the driver is not properly updating all the registers based on the
-> new mode and link. I tried adding cdns_mhdp_validate_mode_params() call to
-> cdns_mhdp_atomic_enable(), so that tu-size etc will be calculated, but that did not fix the problem.
+Good point!  Please see below.
 
--- 
-Regards,
+							Thanx, Paul
 
-Laurent Pinchart
+------------------------------------------------------------------------
+
+                                  Prior Operation     Subsequent Operation
+                                  ---------------  ---------------------------
+                               C  Self  R  W  RMW  Self  R  W  DR  DW  RMW  SV
+                              --  ----  -  -  ---  ----  -  -  --  --  ---  --
+
+Relaxed store                        Y                                       Y
+Relaxed load                         Y                          Y   Y        Y
+Relaxed RMW operation                Y                          Y   Y        Y
+rcu_dereference()                    Y                          Y   Y        Y
+Successful *_acquire()               R                   Y  Y   Y   Y    Y   Y
+Successful *_release()         C        Y  Y    Y     W                      Y
+smp_rmb()                               Y       R        Y      Y        R
+smp_wmb()                                  Y    W           Y       Y    W
+smp_mb() & synchronize_rcu()  CP        Y  Y    Y        Y  Y   Y   Y    Y
+Successful full non-void RMW  CP     Y  Y  Y    Y     Y  Y  Y   Y   Y    Y   Y
+smp_mb__before_atomic()       CP        Y  Y    Y        a  a   a   a    Y
+smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
+
+
+Key:	Relaxed:  A relaxed operation is either READ_ONCE(), WRITE_ONCE(),
+		  a *_relaxed() RMW operation, an unsuccessful RMW
+		  operation, a non-value-returning RMW operation such
+		  as atomic_inc(), or one of the atomic*_read() and
+		  atomic*_set() family of operations.
+	C:	  Ordering is cumulative
+	P:	  Ordering propagates
+	R:	  Read, for example, READ_ONCE(), or read portion of RMW
+	W:	  Write, for example, WRITE_ONCE(), or write portion of RMW
+	Y:	  Provides ordering
+	a:	  Provides ordering given intervening RMW atomic operation
+	DR:	  Dependent read (address dependency)
+	DW:	  Dependent write (address, data, or control dependency)
+	RMW:	  Atomic read-modify-write operation
+	SELF:	  Orders self, as opposed to accesses before and/or after
+	SV:	  Orders later accesses to the same variable
+
+------------------------------------------------------------------------
+
+diff --git a/tools/memory-model/Documentation/cheatsheet.txt b/tools/memory-model/Documentation/cheatsheet.txt
+index 4146b8d..99d0087 100644
+--- a/tools/memory-model/Documentation/cheatsheet.txt
++++ b/tools/memory-model/Documentation/cheatsheet.txt
+@@ -17,10 +17,11 @@ smp_mb__before_atomic()       CP        Y  Y    Y        a  a   a   a    Y
+ smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
+ 
+ 
+-Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
+-		  operation, an unsuccessful RMW operation, READ_ONCE(),
+-		  WRITE_ONCE(), or one of the atomic_read() and
+-		  atomic_set() family of operations.
++Key:	Relaxed:  A relaxed operation is either READ_ONCE(), WRITE_ONCE(),
++		  a *_relaxed() RMW operation, an unsuccessful RMW
++		  operation, a non-value-returning RMW operation such
++		  as atomic_inc(), or one of the atomic*_read() and
++		  atomic*_set() family of operations.
+ 	C:	  Ordering is cumulative
+ 	P:	  Ordering propagates
+ 	R:	  Read, for example, READ_ONCE(), or read portion of RMW
