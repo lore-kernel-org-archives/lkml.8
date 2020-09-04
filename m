@@ -2,215 +2,126 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA11C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CD6C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB7E20770
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 197032074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:57:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CJgMpx43"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="JvHApvPT";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="bmt+oMpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgIDP4S (ORCPT
+        id S1726654AbgIDP5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:56:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45322 "EHLO
+        Fri, 4 Sep 2020 11:57:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbgIDPzT (ORCPT
+        with ESMTP id S1726063AbgIDP52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:55:19 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1287CC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:55:18 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id g72so6691323qke.8
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:55:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cqOydC4P7PfDdkAhN3VGNKHPJJ431uRaailmt1kgaeU=;
-        b=CJgMpx43qvc9byFhCZEm4/SvL1LvLGr9/CsL3bEH8cddixy5T8h5M48QlyKChSENHN
-         1Mp4gnVrKUsEcY+Zvd2qjlsVZf5YkEaRHfnHyTzeSSLlrwG/PHrSyTzkQQFCpAsQpUHH
-         /ga6s7nNWwtc9MCgLx8cJ7JuWU4DbMfgJn9Mcny+8PrcdQyid92MSarw3ah/r+aWD8y9
-         Y2C4R/Mwos3AkmPQRDcED2x0vbj5V8mG5GcXZRDagt429AEGnzV4BNtAdc2oyPy/jYtW
-         vmK2oXorZkRIx4xxxPzHCfn9x00d/5y08meh8VAM0QgWNkEs3yCi4wO/QgFASYWDo4sO
-         fqIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cqOydC4P7PfDdkAhN3VGNKHPJJ431uRaailmt1kgaeU=;
-        b=bV6NugjbfoYOR3BoS95/TUXGTWO+vjfZhl9pQ+IWsuR0E8oxMZTeti5ACQSBc2Vtnn
-         Zk+CMnhEdzbGlZ8nGYOyqudcML7AaUrzG10yey9gP0gayDoRixVlxaYtkDOzoErnHuTJ
-         jexk3Hdu1Iinz2fzxH2uGWj81aii5mJV+Tl/SQULNdTbsse9tF/uSp26ysAcX6w+tLgH
-         N88d8NeVD4RrB2Jyt6XmKqy4Uf4iaRKzxoz1f3+TXaKMlxtkAuGSjy5lPjZ6yLLtOiBf
-         LuQfvQP/POvNoDi/Pp4Tc/v90bSYXDk/p45UJco5Wmg2lUll83qQqmAJ9nB/7gsFttG2
-         kv5Q==
-X-Gm-Message-State: AOAM530iVyJGKWEQ3c05PFfbMe5aor6uZgbwsKQLFXsOoWxu0/sX5wyh
-        FL2fL5RRI2Q+ligmfwUktV0m7g==
-X-Google-Smtp-Source: ABdhPJwHcjVR8gvpVo5cc8Zutt5nJd/mELZ/BVmZZWe+VuF+L6dgLXd87rsYat09jN3kKHXviyEKTA==
-X-Received: by 2002:a05:620a:211c:: with SMTP id l28mr8189345qkl.395.1599234917217;
-        Fri, 04 Sep 2020 08:55:17 -0700 (PDT)
-Received: from localhost.localdomain (ec2-34-197-84-77.compute-1.amazonaws.com. [34.197.84.77])
-        by smtp.gmail.com with ESMTPSA id v18sm4724473qtq.15.2020.09.04.08.55.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:55:16 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>
-Cc:     Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH v3 2/8] iommu/arm-smmu: Delay modifying domain during init
-Date:   Fri,  4 Sep 2020 15:55:07 +0000
-Message-Id: <20200904155513.282067-3-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904155513.282067-1-bjorn.andersson@linaro.org>
-References: <20200904155513.282067-1-bjorn.andersson@linaro.org>
+        Fri, 4 Sep 2020 11:57:28 -0400
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [IPv6:2001:67c:2050::465:101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4828C061244;
+        Fri,  4 Sep 2020 08:57:27 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Bjj4202B3zKmgZ;
+        Fri,  4 Sep 2020 17:57:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
+        content-language:content-transfer-encoding:content-type
+        :content-type:in-reply-to:mime-version:date:date:message-id:from
+        :from:references:subject:subject:received; s=mail20150812; t=
+        1599235038; bh=IfbqbAynnmqph8MOdKpdNnD6H2jlmEmAh/USR0WprNQ=; b=J
+        vHApvPT+4EMxw6SriHQ/P9Fnd6/XIqD37ZcMH/Nih4tMYqBx2x+IamTY3uEDYAt8
+        skSRkKnHAmL2MeJVSDBmJUejgcMDHI9vVLAFhhynMEnayFfDOYwS7yA21kRq29CM
+        R5ALAaAkgAB/LYZ3EEjNZdx+7F3y3p6/vR8ib2jnvWUX4o632hP/VPpcjjvloHdd
+        h3xRBcqjZWb8W5hSvkJkwgTTgmZRGEnJv8QXyanhkC8wFfHyHUJQA0eT7NjcbafR
+        fAJN5YU+kJDN+XiWdG6iPTsSR9RzKyeht0sPA1f6e8KQ3s84wQxOxIgiCcnCLEXl
+        VeAHykOg9Fap3RPft3i5w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+        t=1599235040;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zpbGrYXWP/yGCKsnNdD8K9eAP1BmEsLdGpvnWaHq9rI=;
+        b=bmt+oMpuCBXaASht7+BBjNGx6BVxlcZiBEQl7R2mdwqFSIXGO//tJep7BNls1dtL3qtsxF
+        yAcAvUJlJAMauTOWJtg0wj3JRD26nMY/2sSPa/1oPjaY5NTxDFFhFe5L2E5pcWICVKyUBH
+        fxJj2hUngCu1DVJAHW40aiaEYLGjoN8lBpP+yk5M210jadeoY75prly0CkO4FXHwyag0B7
+        8iFpNwbic26uhHY5WhNcg1vgM9C10VTmf7mLjgXt3cK/yNRfP9Y+Gvlthe6TZ/r/glulMq
+        1rd8jDDsprHJj6LRpk0FZYvrrN7VU7IDuG+I3691jev+3AZxkU5G+kLPQ8AQ0g==
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id F7yNVVoBbHKf; Fri,  4 Sep 2020 17:57:18 +0200 (CEST)
+Subject: Re: kworker/0:3+pm hogging CPU
+To:     Michal Hocko <mhocko@suse.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Salvatore Bonaccorso <carnil@debian.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+References: <20200720173807.GJ1228057@rowland.harvard.edu>
+ <20200720174530.GB4061@dhcp22.suse.cz>
+ <20200720174812.GK1228057@rowland.harvard.edu>
+ <20200720181605.GC4061@dhcp22.suse.cz>
+ <20200720200243.GA1244989@rowland.harvard.edu>
+ <20200721055917.GD4061@dhcp22.suse.cz>
+ <20200721143325.GB1272082@rowland.harvard.edu>
+ <20200829095003.GA2446485@eldamar.local>
+ <20200829155949.GA499295@rowland.harvard.edu>
+ <38dfdef4-f9ab-1755-8418-2285d843af86@linux.intel.com>
+ <20200901152728.GI16650@dhcp22.suse.cz>
+From:   Dirk Kostrewa <dirk.kostrewa@mailbox.org>
+Message-ID: <f723f5a7-1b2e-e8d1-3b0b-201069b7a40c@mailbox.org>
+Date:   Fri, 4 Sep 2020 17:57:16 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200901152728.GI16650@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -2.84 / 15.00 / 15.00
+X-Rspamd-Queue-Id: A6E0A179E
+X-Rspamd-UID: 7fae64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Delay modifications to the domain during arm_smmu_init_domain_context()
-until we've allocated a context bank. This will allow us to postpone the
-special handling of identity domains until the platform specific context
-bank allocator has been executed, in a later patch.
+Hi,
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+meanwhile, I convinced Dell that I have a hardware issue (and not a 
+Linux issue), and Dell has replaced the mainboard of my laptop. After 
+that, both the USB over-current kernel messages and the kworker 
+processes with permanent high CPU load are gone. So, this was indeed a 
+hardware issue!
 
-Changes since v2:
-- New patch to allow us to rely on the impl specific alloc_context_bank().
+Many thanks for your feedback and help!
 
- drivers/iommu/arm/arm-smmu/arm-smmu.c | 40 +++++++++++++++------------
- 1 file changed, 23 insertions(+), 17 deletions(-)
+Best regards,
 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-index e19d7bdc7674..add2e1807e21 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-@@ -645,6 +645,9 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
- 	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
- 	irqreturn_t (*context_fault)(int irq, void *dev);
-+	struct arm_smmu_cfg new_cfg = *cfg;
-+	enum arm_smmu_domain_stage new_stage = smmu_domain->stage;
-+	const struct iommu_flush_ops *flush_ops;
- 
- 	mutex_lock(&smmu_domain->init_mutex);
- 	if (smmu_domain->smmu)
-@@ -675,9 +678,9 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 	 * Note that you can't actually request stage-2 mappings.
- 	 */
- 	if (!(smmu->features & ARM_SMMU_FEAT_TRANS_S1))
--		smmu_domain->stage = ARM_SMMU_DOMAIN_S2;
-+		new_stage = ARM_SMMU_DOMAIN_S2;
- 	if (!(smmu->features & ARM_SMMU_FEAT_TRANS_S2))
--		smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
-+		new_stage = ARM_SMMU_DOMAIN_S1;
- 
- 	/*
- 	 * Choosing a suitable context format is even more fiddly. Until we
-@@ -688,32 +691,32 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 	 * support to be a superset of AArch32 support...
- 	 */
- 	if (smmu->features & ARM_SMMU_FEAT_FMT_AARCH32_L)
--		cfg->fmt = ARM_SMMU_CTX_FMT_AARCH32_L;
-+		new_cfg.fmt = ARM_SMMU_CTX_FMT_AARCH32_L;
- 	if (IS_ENABLED(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) &&
- 	    !IS_ENABLED(CONFIG_64BIT) && !IS_ENABLED(CONFIG_ARM_LPAE) &&
- 	    (smmu->features & ARM_SMMU_FEAT_FMT_AARCH32_S) &&
--	    (smmu_domain->stage == ARM_SMMU_DOMAIN_S1))
--		cfg->fmt = ARM_SMMU_CTX_FMT_AARCH32_S;
--	if ((IS_ENABLED(CONFIG_64BIT) || cfg->fmt == ARM_SMMU_CTX_FMT_NONE) &&
-+	    (new_stage == ARM_SMMU_DOMAIN_S1))
-+		new_cfg.fmt = ARM_SMMU_CTX_FMT_AARCH32_S;
-+	if ((IS_ENABLED(CONFIG_64BIT) || new_cfg.fmt == ARM_SMMU_CTX_FMT_NONE) &&
- 	    (smmu->features & (ARM_SMMU_FEAT_FMT_AARCH64_64K |
- 			       ARM_SMMU_FEAT_FMT_AARCH64_16K |
- 			       ARM_SMMU_FEAT_FMT_AARCH64_4K)))
--		cfg->fmt = ARM_SMMU_CTX_FMT_AARCH64;
-+		new_cfg.fmt = ARM_SMMU_CTX_FMT_AARCH64;
- 
--	if (cfg->fmt == ARM_SMMU_CTX_FMT_NONE) {
-+	if (new_cfg.fmt == ARM_SMMU_CTX_FMT_NONE) {
- 		ret = -EINVAL;
- 		goto out_unlock;
- 	}
- 
--	switch (smmu_domain->stage) {
-+	switch (new_stage) {
- 	case ARM_SMMU_DOMAIN_S1:
--		cfg->cbar = CBAR_TYPE_S1_TRANS_S2_BYPASS;
-+		new_cfg.cbar = CBAR_TYPE_S1_TRANS_S2_BYPASS;
- 		start = smmu->num_s2_context_banks;
- 		ias = smmu->va_size;
- 		oas = smmu->ipa_size;
--		if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64) {
-+		if (new_cfg.fmt == ARM_SMMU_CTX_FMT_AARCH64) {
- 			fmt = ARM_64_LPAE_S1;
--		} else if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH32_L) {
-+		} else if (new_cfg.fmt == ARM_SMMU_CTX_FMT_AARCH32_L) {
- 			fmt = ARM_32_LPAE_S1;
- 			ias = min(ias, 32UL);
- 			oas = min(oas, 40UL);
-@@ -722,7 +725,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 			ias = min(ias, 32UL);
- 			oas = min(oas, 32UL);
- 		}
--		smmu_domain->flush_ops = &arm_smmu_s1_tlb_ops;
-+		flush_ops = &arm_smmu_s1_tlb_ops;
- 		break;
- 	case ARM_SMMU_DOMAIN_NESTED:
- 		/*
-@@ -730,11 +733,11 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 		 * involved.
- 		 */
- 	case ARM_SMMU_DOMAIN_S2:
--		cfg->cbar = CBAR_TYPE_S2_TRANS;
-+		new_cfg.cbar = CBAR_TYPE_S2_TRANS;
- 		start = 0;
- 		ias = smmu->ipa_size;
- 		oas = smmu->pa_size;
--		if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64) {
-+		if (new_cfg.fmt == ARM_SMMU_CTX_FMT_AARCH64) {
- 			fmt = ARM_64_LPAE_S2;
- 		} else {
- 			fmt = ARM_32_LPAE_S2;
-@@ -742,9 +745,9 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 			oas = min(oas, 40UL);
- 		}
- 		if (smmu->version == ARM_SMMU_V2)
--			smmu_domain->flush_ops = &arm_smmu_s2_tlb_ops_v2;
-+			flush_ops = &arm_smmu_s2_tlb_ops_v2;
- 		else
--			smmu_domain->flush_ops = &arm_smmu_s2_tlb_ops_v1;
-+			flush_ops = &arm_smmu_s2_tlb_ops_v1;
- 		break;
- 	default:
- 		ret = -EINVAL;
-@@ -757,6 +760,9 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 	}
- 
- 	smmu_domain->smmu = smmu;
-+	smmu_domain->cfg = new_cfg;
-+	smmu_domain->stage = new_stage;
-+	smmu_domain->flush_ops = flush_ops;
- 
- 	cfg->cbndx = ret;
- 	if (smmu->version < ARM_SMMU_V2) {
--- 
-2.28.0
+Dirk.
 
+Am 01.09.20 um 17:27 schrieb Michal Hocko:
+
+> On Mon 31-08-20 14:37:10, Mathias Nyman wrote:
+> [...]
+>> I can't come up with any good solution to this right now.
+>> Only bad ideas such as
+>> a. Add a sleep to the over-current case,
+>>     doesn't solve anything else than the ~100% cpu hogging part of the problem
+> This sounds like a better thing from the user space point of view. I do
+> not have any insight on what kind of other side effects this might have
+> so I didn't dare to try that on my piece of (broken) HW. I do not see
+> the problem all the time and I plan to replace it soon anyway.
+>
+> Considering that tweaking the power management helps maybe that could be
+> done automagically after many consecutive failures.
+>
+> Just my 2c
