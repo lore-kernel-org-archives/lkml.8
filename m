@@ -2,120 +2,134 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148F8C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50360C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6E3C206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:40:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599234032;
-	bh=UAR/0+WFmx8OVQKEUwR8M1ofPElVR/g3UzxICkFCKa4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ws968hq3MdtkRmcowQ080LFBKUT7ZywFJ/aWiuyOuK9TtqoMoSzJQpvG2lI/1wqb4
-	 JJCziFSD7r/gOt8X76VwEq6+YR7FlBAJ6nhQbxKS7LD+oBnGhHZ2q3Fj9u6wu3NI+d
-	 nG42QEIuHMhAlBBUajxtfTSdEPuOiMW9FVMYGDWY=
+	by mail.kernel.org (Postfix) with ESMTP id 14805206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:40:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4Iyt6hm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgIDPk3 (ORCPT
+        id S1726544AbgIDPkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:40:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgIDPkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:40:21 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D35A32083B;
-        Fri,  4 Sep 2020 15:40:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599234021;
-        bh=UAR/0+WFmx8OVQKEUwR8M1ofPElVR/g3UzxICkFCKa4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XXSyBms+Ca+wqhd/Owwo8OB3AEqdJWufDnkclusdhZfyjyemCCzGb13/xxFFrb9TD
-         Fe96Rax76Q56c9WfwykrKBT9XDVkIp+LJNE1A3HJW3e5Ve5rg1S7AFxQF0nnVf9tq6
-         xFmAvBOpL4zY2mpE9zoyOI4e+QYjjAPUaNrXVOZ8=
-Received: by mail-ot1-f49.google.com with SMTP id i4so6269733ota.2;
-        Fri, 04 Sep 2020 08:40:20 -0700 (PDT)
-X-Gm-Message-State: AOAM533cl7hIIW55Xh1k5dF2U3zMZ1cy/IJ7R5K1wT6K8ISZ/4HiIwbd
-        TzCCfHALMjZ3x2qKG+d4sWQQOO9rqaoYadqqEw==
-X-Google-Smtp-Source: ABdhPJw1oaweJSOxp/Hs5WNuevPNIBfXtJv/Gk75Q/8Ya70E8+SBi0EbnW3JC3c/w3BVO1X3ug9F5KaKGeMyOUtsdss=
-X-Received: by 2002:a9d:6b0d:: with SMTP id g13mr5930304otp.129.1599234019987;
- Fri, 04 Sep 2020 08:40:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200830185356.5365-1-digetx@gmail.com> <20200830185356.5365-2-digetx@gmail.com>
- <20200903161022.GA2707794@bogus> <790dbb23-7422-887a-3f11-5ae55bb916fa@gmail.com>
-In-Reply-To: <790dbb23-7422-887a-3f11-5ae55bb916fa@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 4 Sep 2020 09:40:07 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+Ue72jJ9gurcG0f_R+gGVC77dErhgbKpB_p40buUewLg@mail.gmail.com>
-Message-ID: <CAL_Jsq+Ue72jJ9gurcG0f_R+gGVC77dErhgbKpB_p40buUewLg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: Add ENE KB930 Embedded
- Controller binding
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        Fri, 4 Sep 2020 11:40:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbgIDPkY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 11:40:24 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9A5CC061244;
+        Fri,  4 Sep 2020 08:40:23 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id z15so1330872plo.7;
+        Fri, 04 Sep 2020 08:40:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IQDo8FpZy7wFoQHqQEGpuc/VN48kIyQ/D/5kCAdKndk=;
+        b=M4Iyt6hmbuC0Nc1C+qmGy0wqKy3g7yP3OwrgHydu/W17QGa5LA0SEC8NOWK8g7RdN/
+         tvQa78oWiD6OWtUkE/xRkoZj8WnVN538mg1l7XKcHv0mszsqV8zEu5QZGBcY1B6lCgyu
+         QTJSSBiNSHwy7BK59Zu8tiXVOLAm1qjSwSWtct41vqcHSJFOl7VlHhxggz3zsmiENGiG
+         HGkLwmTYFk9IGB5qMYbuWT5gpIrJ0zMU6XbaEjyUG5znsZQTvpxae1OT84ZyyMHoTxwD
+         Lm1Bc9Bw3al/mmId8M40rDWu6D5fJpIoB/zoxBoHvRuyc50AMuvMFSgcSEH3iJ+p3kDN
+         nd7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IQDo8FpZy7wFoQHqQEGpuc/VN48kIyQ/D/5kCAdKndk=;
+        b=onnhuTO2HfgdJDSbjiQrQ5FL6a4iZnYz/zW4rUUKD9qi7hahnzXRKVGU9pZ1Z034Y7
+         RMeH3lFyX7hRKgkpzI1Qc+3awpBbqk04ymCcBjvtqOj4WwbI5KF3BTmPXjzhwBT27ar0
+         0CfBt+NI4Sm4uC4hxBQFXshKJko8FIO8D+CCQjJVUKBzzkDJBT7M+mBFU47z2Q/Dh8oT
+         vkC97R7A6OWGxUMOd2jlvyYQL1PjH526US/MxAsN4xMx0+RB8zecGdhsOucR+okDrbLs
+         csgTqY4ko27BxWLCgucUAqnxT46kRnS+Gu7eu9U2JT49J45ax6t9mTmEELA8taljWyV2
+         JRwA==
+X-Gm-Message-State: AOAM533JiTf95FuK+0L8lggPhHzOxcWWwOy8IgBAvUSqwMPAbl1ne+ZM
+        L02YyHDUDrqIzw6DHEoI22Y=
+X-Google-Smtp-Source: ABdhPJzX0Yhp5J3UeAfE+CsyKGNiSh6rI3Mpd1uBXgvYBR9CDaJEgfIYRv4WtYU7vXCEQXAc+2pKlA==
+X-Received: by 2002:a17:90b:4c0f:: with SMTP id na15mr8514030pjb.119.1599234023415;
+        Fri, 04 Sep 2020 08:40:23 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id v17sm6889773pfn.24.2020.09.04.08.40.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2020 08:40:22 -0700 (PDT)
+Subject: Re: [PATCH 00/10] dt-bindings: Convert SP805 to Json-schema (and fix
+ users)
+To:     =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Chanho Min <chanho.min@lge.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Wei Xu <xuwei5@hisilicon.com>
+References: <20200828130602.42203-1-andre.przywara@arm.com>
+ <19c6a67e-48f0-c0b6-3653-32a5a1f09e07@gmail.com>
+ <CACRpkdbMbNd87145iwdL7=x501cvgU7wiZXNLF456sn6WvoodQ@mail.gmail.com>
+ <302c54fd-5183-c8d0-7038-f6e60c7bb056@gmail.com>
+ <26416b9b-d390-d7df-ee1f-8ec7ca08ba72@arm.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <1eea5f98-b437-1fda-d967-facf878c704c@gmail.com>
+Date:   Fri, 4 Sep 2020 08:40:12 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.2.1
+MIME-Version: 1.0
+In-Reply-To: <26416b9b-d390-d7df-ee1f-8ec7ca08ba72@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 6:07 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> 03.09.2020 19:10, Rob Herring =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Sun, 30 Aug 2020 21:53:51 +0300, Dmitry Osipenko wrote:
-> >> Add binding document for the ENE KB930 Embedded Controller.
-> >>
-> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >> ---
-> >>  .../devicetree/bindings/mfd/ene-kb930.yaml    | 66 ++++++++++++++++++=
-+
-> >>  1 file changed, 66 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb930.ya=
-ml
-> >>
-> >
-> >
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mf=
-d/ene-kb930.example.dt.yaml: battery-cell: 'operating-range-celsius' does n=
-ot match any of the regexes: '^ocv-capacity-table-[0-9]+$', 'pinctrl-[0-9]+=
-'
-> >       From schema: /builds/robherring/linux-dt-review/Documentation/dev=
-icetree/bindings/power/supply/battery.yaml
-> >
-> >
-> > See https://patchwork.ozlabs.org/patch/1354004
-> >
-> > If you already ran 'make dt_binding_check' and didn't see the above
-> > error(s), then make sure dt-schema is up to date:
-> >
-> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master=
- --upgrade
-> >
-> > Please check and re-submit.
-> >
->
-> Apparently bot uses outdated kernel.
 
-It's on v5.9-rc2. The scripts don't know your base/dependencies and
-neither did I because you didn't mention anything here. I do review
-the errors before spamming people.
 
-Rob
+On 9/4/2020 8:35 AM, André Przywara wrote:
+> On 04/09/2020 16:29, Florian Fainelli wrote:
+> 
+> Hi,
+> 
+>> On 9/4/2020 1:58 AM, Linus Walleij wrote:>> On Fri, Aug 28, 2020 at 9:34 PM Florian Fainelli
+>>> <f.fainelli@gmail.com> wrote:
+>>>> On 8/28/20 6:05 AM, Andre Przywara wrote:
+>>>
+>>>> What is the plan for merging this series? Should Rob pick up all changes
+>>>> or since those are non critical changes, should we just leave it to the
+>>>> SoC maintainers to pick up the changes in their tree?
+>>>
+>>> What about André just send a pull request to the ARM SoC maintainers
+>>> for the whole thing?
+>>
+>> I already applied some of the patches, if we got that route please CC me
+>> so I can drop them from my local queue. Thanks
+> 
+> I would for sure drop these from any PR.
+> 
+> Rob, are you happy with the actual binding conversion? If you are
+> willing to take it as it is (Viresh has already acked), I could then
+> split off the DT fixes and either chase the maintainers or send ARM SoC
+> a PR. But this really depends on the binding being good.
+
+We had discussed this in an another leg of this thread that starts here:
+
+https://lore.kernel.org/linux-devicetree/CAL_JsqKvcGAotS6xL7pu+wM8X33PLCQCuoaXYmWrA3j3OdoR5A@mail.gmail.com/
+--
+Florian
