@@ -2,130 +2,163 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED2DC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF52C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D6EF206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:09:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BBvwVZVA"
+	by mail.kernel.org (Postfix) with ESMTP id 58365206A5
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbgIDIJM (ORCPT
+        id S1729691AbgIDILE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:09:12 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:30821 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728293AbgIDIJH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:09:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1599206946; x=1630742946;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=8kg7NVGvA/Y4ravBA+Ck9g+ekPrMr/sJwXHN4ceS2DY=;
-  b=BBvwVZVA5EyI70ql0luan7uUrbQjOW9SWdfqJNCAQkQSKVmq+Ay0idPf
-   Ee50RPVHTkouPwJr5cWSL0a9hxC6DqV/7ps2eqGXnpXLP21QWSOAjXJKa
-   ZcM9Zwfj7Ydzj7hU78ohR2BWuojh+ITMtkNcTAyQwZ3UoVrejJ5LzHFUG
-   Fb9+F0KqZA3G/2HHlaOHcfIyh+RaEo3LW2HVmV4lLQNtGnIOYDFwCxKHI
-   4uQMcyptwlWsLKXk33HTU4cLNhqrcPdH/yKy9enHrIPsSGi+l4JmtQG/I
-   3LfL0lnLStkBHaX2eIWzkijQXnZyOSW1Kyt+gnPd15a5BQRrYlC63vOJH
-   g==;
-IronPort-SDR: gFJOOhxnbMekT+gVguHT6+Xjx6sB8n0ubMR5otjKsB+saYnGsOOppBCh+Fj0+R+9J65PTYV2wf
- dGSvHGIUiWDX8mmGYWMD9l5tHBxzEVhOzHkD0xk0VJAyFaqkKnXGuLkFAquFe8OYNFzYg5us/O
- 5hPW1xnCuOFYZvDMcr+oFh27Ht4NZ8KdA2fEMvQdWVpXfGghpUjg9s+QOe53DLcVCB3Wk62jPv
- FRF6/hiBOfsRphm+lo3KYSbpidZ+5L8BTG4RFT/HBis8Eclgsv7eK/7BIThzFeFJvMZn81bb0k
- 0Ec=
-X-IronPort-AV: E=Sophos;i="5.76,389,1592895600"; 
-   d="scan'208";a="90544258"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Sep 2020 01:09:05 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 4 Sep 2020 01:08:54 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Fri, 4 Sep 2020 01:08:04 -0700
-References: <20200902193658.20539-1-krzk@kernel.org> <20200902193658.20539-11-krzk@kernel.org>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-CC:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "Jerome Brunet" <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        "Steen Hegelund" <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>, <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 10/11] mmc: sdhci-of-sparx5: Use proper printk format for dma_addr_t
-In-Reply-To: <20200902193658.20539-11-krzk@kernel.org>
-Date:   Fri, 4 Sep 2020 10:08:48 +0200
-Message-ID: <87zh66vu9b.fsf@soft-dev15.microsemi.net>
+        Fri, 4 Sep 2020 04:11:04 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45830 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726425AbgIDILB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 04:11:01 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2CABDE12EC3A4C7AC792;
+        Fri,  4 Sep 2020 16:10:58 +0800 (CST)
+Received: from [10.74.191.121] (10.74.191.121) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 4 Sep 2020 16:10:51 +0800
+Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
+ enqueue op for lockless qdisc
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+CC:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
+        "David Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Linux Kernel Network Developers" <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
+ <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com>
+ <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com>
+ <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
+ <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
+ <1f7208e6-8667-e542-88dd-bd80a6c59fd2@gmail.com>
+ <6984825d-1ef7-bf58-75fe-cee1bafe3c1a@huawei.com>
+ <df8423fb-63ed-604d-df4d-a94be5b47b31@gmail.com>
+ <041539d7-fb42-908d-5638-49ca51d758f1@huawei.com>
+ <1c01f9e0-fde4-a8ee-caa3-598738a9a98d@gmail.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <5223daf1-a7a2-5d20-7dde-b5b6284f8e02@huawei.com>
+Date:   Fri, 4 Sep 2020 16:10:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
+In-Reply-To: <1c01f9e0-fde4-a8ee-caa3-598738a9a98d@gmail.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/9/3 15:24, Eric Dumazet wrote:
+> 
+> 
+> On 9/2/20 6:14 PM, Yunsheng Lin wrote:
+> 
+>>
+>> It seems semantics for some_qdisc_is_busy() is changed, which does not only do
+>> the checking, but also do the reseting?
+> 
+> Yes, obviously, we would have to rename to a better name.
+> 
+>>
+>> Also, qdisc_reset() could be called multi times for the same qdisc if some_qdisc_is_busy()
+>> return true multi times?
+> 
+> This should not matter, qdisc_reset() can be called multiple times,
+> as we also call it from qdisc_destroy() anyway.
 
-Krzysztof Kozlowski writes:
+How about the below patch, which does not need to change the semantics
+for some_qdisc_is_busy() and avoid calling qdisc_reset() multi times?
 
-> dma_addr_t size varies between architectures so use dedicated printk
-> format to fix compile testing warning (e.g. on 32-bit MIPS):
->
->   drivers/mmc/host/sdhci-of-sparx5.c:63:11: warning:
->     format ‘%llx’ expects argument of type ‘long long unsigned int’, but argument 5 has type ‘dma_addr_t {aka unsigned int}’ [-Wformat=]
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/mmc/host/sdhci-of-sparx5.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-of-sparx5.c b/drivers/mmc/host/sdhci-of-sparx5.c
-> index 14b5dad6575a..747f108a0ace 100644
-> --- a/drivers/mmc/host/sdhci-of-sparx5.c
-> +++ b/drivers/mmc/host/sdhci-of-sparx5.c
-> @@ -60,8 +60,8 @@ static void sdhci_sparx5_adma_write_desc(struct sdhci_host *host, void **desc,
->                 return;
->         }
->
-> -       pr_debug("%s: write_desc: splitting dma len %d, offset 0x%0llx\n",
-> -                mmc_hostname(host->mmc), len, addr);
-> +       pr_debug("%s: write_desc: splitting dma len %d, offset %pad\n",
-> +                mmc_hostname(host->mmc), len, &addr);
->
->         offset = addr & (SZ_128M - 1);
->         tmplen = SZ_128M - offset;
 
-Acked-by: Lars Povlsen <larc.povlsen@microchip.com>
+diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
+index 265a61d..ce9031c 100644
+--- a/net/sched/sch_generic.c
++++ b/net/sched/sch_generic.c
+@@ -1131,24 +1131,7 @@ EXPORT_SYMBOL(dev_activate);
 
--- 
-Lars Povlsen,
-Microchip
+ static void qdisc_deactivate(struct Qdisc *qdisc)
+ {
+-	bool nolock = qdisc->flags & TCQ_F_NOLOCK;
+-
+-	if (qdisc->flags & TCQ_F_BUILTIN)
+-		return;
+-	if (test_bit(__QDISC_STATE_DEACTIVATED, &qdisc->state))
+-		return;
+-
+-	if (nolock)
+-		spin_lock_bh(&qdisc->seqlock);
+-	spin_lock_bh(qdisc_lock(qdisc));
+-
+ 	set_bit(__QDISC_STATE_DEACTIVATED, &qdisc->state);
+-
+-	qdisc_reset(qdisc);
+-
+-	spin_unlock_bh(qdisc_lock(qdisc));
+-	if (nolock)
+-		spin_unlock_bh(&qdisc->seqlock);
+ }
+
+ static void dev_deactivate_queue(struct net_device *dev,
+@@ -1165,6 +1148,33 @@ static void dev_deactivate_queue(struct net_device *dev,
+ 	}
+ }
+
++static void dev_reset_qdisc(struct net_device *dev)
++{
++	unsigned int i;
++
++	for (i = 0; i < dev->num_tx_queues; i++) {
++		struct netdev_queue *dev_queue;
++		struct Qdisc *q;
++		bool nolock;
++
++		dev_queue = netdev_get_tx_queue(dev, i);
++		q = dev_queue->qdisc_sleeping;
++		nolock = q->flags & TCQ_F_NOLOCK;
++
++		if (nolock)
++			spin_lock_bh(&q->seqlock);
++
++		spin_lock_bh(qdisc_lock(q));
++
++		qdisc_reset(q);
++
++		spin_unlock_bh(qdisc_lock(q));
++
++		if (nolock)
++			spin_unlock_bh(&q->seqlock);
++	}
++}
++
+ static bool some_qdisc_is_busy(struct net_device *dev)
+ {
+ 	unsigned int i;
+@@ -1219,6 +1229,9 @@ void dev_deactivate_many(struct list_head *head)
+ 	 */
+ 	synchronize_net();
+
++	list_for_each_entry(dev, head, close_list)
++		dev_reset_qdisc(dev);
++
+ 	/* Wait for outstanding qdisc_run calls. */
+ 	list_for_each_entry(dev, head, close_list) {
+ 		while (some_qdisc_is_busy(dev)) {
+
+
+
+> 
+> 
