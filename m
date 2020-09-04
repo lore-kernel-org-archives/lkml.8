@@ -2,169 +2,209 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E06DC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA20C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0F892083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA4F205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599226722;
-	bh=gNkloA6OY2ynQh0sJoasekwDdf2JY9Lev9yh/BkUr0M=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cxQi+x9XRCHmBx09+d5N4Igm0j3xHQk6t2/+XPPCKNHNasd/6nh779arpI1sKddtP
-	 ylIBXrx1/nOswiVLwqXULP8pyX9OHIh32WeQ7xuQev091HAYwOaN+iuI2KrPtmb7//
-	 pvzzgnfCOUDepuNkViFzsT3fvlUS8jPfjqTNkADM=
+	s=default; t=1599226842;
+	bh=XcG9GkBVTmVMCdpNi2uhzvlMRINLawkgoypdeuFEcGI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vaFwvge7nvOjwudY8/CTZRBUwg9sooxzzirbC4p/ng49+E/BCn0gn8/pY7tZWk9dG
+	 VBpoIkA7ELN84gcG+uQYyD8jNXeQbgMbMQVWg1CQtUJIJn6oSiU/N60oi7WXsCYPff
+	 w1KzZmQtlh1WeAJQFUwt2NXA+0QMY13jshJ+sV5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbgIDNiZ (ORCPT
+        id S1730382AbgIDNjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:38:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36124 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 09:39:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730448AbgIDNaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730451AbgIDNaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 09:30:21 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B95220722;
-        Fri,  4 Sep 2020 13:29:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFFA82074D;
+        Fri,  4 Sep 2020 13:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226189;
-        bh=gNkloA6OY2ynQh0sJoasekwDdf2JY9Lev9yh/BkUr0M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gTNvbUwV2Ec4Ey2W5AKq4v8f7+6TbXtBxqprA5h7Wck5jK1XoETBkqUOjL2mN/Wbe
-         sOsQ3+fql6uBpf3CVg7WIkRCc0hK8gVxFqh8ddGHRHHyTdXENHPaeRJ0ZtPURzjrOD
-         tTcXwfbsZnQvbbVjFut6ts3p4owkVdtfZuJsbg/s=
+        s=default; t=1599226203;
+        bh=XcG9GkBVTmVMCdpNi2uhzvlMRINLawkgoypdeuFEcGI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HJS5/+DkTEuGjXdPxRCLAjwmen9Yu+KDfORuIDwYGC5gL4Ar0VfVp0hTA756huU0E
+         FZ/orR6NA0cGsiR43YifLTed0xH+auFlj7axGtch1zgrj0FNDw/WkMW8dGyz+PNd8Z
+         VpcgQ23vUSH5QlQJiRNXuPO1t7/RtoPwPNv4vIU8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.4 00/16] 5.4.63-rc1 review
-Date:   Fri,  4 Sep 2020 15:29:53 +0200
-Message-Id: <20200904120257.203708503@linuxfoundation.org>
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Walter Lozano <walter.lozano@collabora.com>,
+        Jonathan Marek <jonathan@marek.ca>
+Subject: [PATCH 5.4 05/16] drm/etnaviv: fix TS cache flushing on GPUs with BLT engine
+Date:   Fri,  4 Sep 2020 15:29:58 +0200
+Message-Id: <20200904120257.464056467@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
+In-Reply-To: <20200904120257.203708503@linuxfoundation.org>
+References: <20200904120257.203708503@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.63-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.63-rc1
-X-KernelTest-Deadline: 2020-09-06T12:02+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.4.63 release.
-There are 16 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Lucas Stach <l.stach@pengutronix.de>
 
-Responses should be made by Sun, 06 Sep 2020 12:02:48 +0000.
-Anything received after that time might be too late.
+commit f232d9ec029ce3e2543b05213e2979e01e503408 upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.63-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-and the diffstat can be found below.
+As seen in the Vivante kernel driver, most GPUs with the BLT engine have
+a broken TS cache flush. The workaround is to temporarily set the BLT
+command to CLEAR_IMAGE, without actually executing the clear. Apparently
+this state change is enough to trigger the required TS cache flush. As
+the BLT engine is completely asychronous, we also need a few more stall
+states to synchronize the flush with the frontend.
 
-thanks,
+Root-caused-by: Jonathan Marek <jonathan@marek.ca>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Cc: Walter Lozano <walter.lozano@collabora.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-greg k-h
+---
+ drivers/gpu/drm/etnaviv/etnaviv_buffer.c |   60 ++++++++++++++++++++++++++++---
+ drivers/gpu/drm/etnaviv/state_blt.xml.h  |    2 +
+ 2 files changed, 57 insertions(+), 5 deletions(-)
 
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.4.63-rc1
-
-Bodo Stroesser <bstroesser@ts.fujitsu.com>
-    scsi: target: tcmu: Optimize use of flush_dcache_page
-
-Bodo Stroesser <bstroesser@ts.fujitsu.com>
-    scsi: target: tcmu: Fix size in calls to tcmu_flush_dcache_range
-
-Sowjanya Komatineni <skomatineni@nvidia.com>
-    sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra186
-
-Sowjanya Komatineni <skomatineni@nvidia.com>
-    sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
-
-Sowjanya Komatineni <skomatineni@nvidia.com>
-    arm64: tegra: Add missing timeout clock to Tegra210 SDMMC
-
-Sowjanya Komatineni <skomatineni@nvidia.com>
-    arm64: tegra: Add missing timeout clock to Tegra186 SDMMC nodes
-
-Sowjanya Komatineni <skomatineni@nvidia.com>
-    arm64: tegra: Add missing timeout clock to Tegra194 SDMMC nodes
-
-Sowjanya Komatineni <skomatineni@nvidia.com>
-    dt-bindings: mmc: tegra: Add tmclk for Tegra210 and later
-
-James Morse <james.morse@arm.com>
-    KVM: arm64: Set HCR_EL2.PTW to prevent AT taking synchronous exception
-
-James Morse <james.morse@arm.com>
-    KVM: arm64: Survive synchronous exceptions caused by AT instructions
-
-James Morse <james.morse@arm.com>
-    KVM: arm64: Add kvm_extable for vaxorcism code
-
-Lucas Stach <l.stach@pengutronix.de>
-    drm/etnaviv: fix TS cache flushing on GPUs with BLT engine
-
-Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-    drm/sched: Fix passing zero to 'PTR_ERR' warning v2
-
-Kim Phillips <kim.phillips@amd.com>
-    perf record/stat: Explicitly call out event modifiers in the documentation
-
-Marc Zyngier <maz@kernel.org>
-    HID: core: Sanitize event code and type when mapping input
-
-Marc Zyngier <maz@kernel.org>
-    HID: core: Correctly handle ReportSize being zero
-
-
--------------
-
-Diffstat:
-
- .../bindings/mmc/nvidia,tegra20-sdhci.txt          | 32 ++++++++++-
- Makefile                                           |  4 +-
- arch/arm64/boot/dts/nvidia/tegra186.dtsi           | 20 ++++---
- arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 15 +++--
- arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 20 ++++---
- arch/arm64/include/asm/kvm_arm.h                   |  3 +-
- arch/arm64/include/asm/kvm_asm.h                   | 43 ++++++++++++++
- arch/arm64/kernel/vmlinux.lds.S                    |  8 +++
- arch/arm64/kvm/hyp/entry.S                         | 15 +++--
- arch/arm64/kvm/hyp/hyp-entry.S                     | 65 ++++++++++++++--------
- arch/arm64/kvm/hyp/switch.c                        | 39 +++++++++++--
- drivers/gpu/drm/etnaviv/etnaviv_buffer.c           | 60 ++++++++++++++++++--
- drivers/gpu/drm/etnaviv/state_blt.xml.h            |  2 +
- drivers/gpu/drm/scheduler/sched_main.c             |  7 ++-
- drivers/hid/hid-core.c                             | 15 ++++-
- drivers/hid/hid-input.c                            |  4 ++
- drivers/hid/hid-multitouch.c                       |  2 +
- drivers/mmc/host/sdhci-tegra.c                     |  2 -
- drivers/target/target_core_user.c                  | 15 +++--
- include/linux/hid.h                                | 42 +++++++++-----
- tools/perf/Documentation/perf-record.txt           |  4 ++
- tools/perf/Documentation/perf-stat.txt             |  4 ++
- 22 files changed, 329 insertions(+), 92 deletions(-)
+--- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
+@@ -12,6 +12,7 @@
+ 
+ #include "common.xml.h"
+ #include "state.xml.h"
++#include "state_blt.xml.h"
+ #include "state_hi.xml.h"
+ #include "state_3d.xml.h"
+ #include "cmdstream.xml.h"
+@@ -233,6 +234,8 @@ void etnaviv_buffer_end(struct etnaviv_g
+ 	struct etnaviv_cmdbuf *buffer = &gpu->buffer;
+ 	unsigned int waitlink_offset = buffer->user_size - 16;
+ 	u32 link_target, flush = 0;
++	bool has_blt = !!(gpu->identity.minor_features5 &
++			  chipMinorFeatures5_BLT_ENGINE);
+ 
+ 	lockdep_assert_held(&gpu->lock);
+ 
+@@ -248,16 +251,38 @@ void etnaviv_buffer_end(struct etnaviv_g
+ 	if (flush) {
+ 		unsigned int dwords = 7;
+ 
++		if (has_blt)
++			dwords += 10;
++
+ 		link_target = etnaviv_buffer_reserve(gpu, buffer, dwords);
+ 
+ 		CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
+ 		CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
++		if (has_blt) {
++			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
++			CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
++			CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
++			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
++		}
+ 		CMD_LOAD_STATE(buffer, VIVS_GL_FLUSH_CACHE, flush);
+-		if (gpu->exec_state == ETNA_PIPE_3D)
+-			CMD_LOAD_STATE(buffer, VIVS_TS_FLUSH_CACHE,
+-				       VIVS_TS_FLUSH_CACHE_FLUSH);
++		if (gpu->exec_state == ETNA_PIPE_3D) {
++			if (has_blt) {
++				CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
++				CMD_LOAD_STATE(buffer, VIVS_BLT_SET_COMMAND, 0x1);
++				CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
++			} else {
++				CMD_LOAD_STATE(buffer, VIVS_TS_FLUSH_CACHE,
++					       VIVS_TS_FLUSH_CACHE_FLUSH);
++			}
++		}
+ 		CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
+ 		CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
++		if (has_blt) {
++			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
++			CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
++			CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
++			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
++		}
+ 		CMD_END(buffer);
+ 
+ 		etnaviv_buffer_replace_wait(buffer, waitlink_offset,
+@@ -323,6 +348,8 @@ void etnaviv_buffer_queue(struct etnaviv
+ 	bool switch_mmu_context = gpu->mmu_context != mmu_context;
+ 	unsigned int new_flush_seq = READ_ONCE(gpu->mmu_context->flush_seq);
+ 	bool need_flush = switch_mmu_context || gpu->flush_seq != new_flush_seq;
++	bool has_blt = !!(gpu->identity.minor_features5 &
++			  chipMinorFeatures5_BLT_ENGINE);
+ 
+ 	lockdep_assert_held(&gpu->lock);
+ 
+@@ -433,6 +460,15 @@ void etnaviv_buffer_queue(struct etnaviv
+ 	 * 2 semaphore stall + 1 event + 1 wait + 1 link.
+ 	 */
+ 	return_dwords = 7;
++
++	/*
++	 * When the BLT engine is present we need 6 more dwords in the return
++	 * target: 3 enable/flush/disable + 4 enable/semaphore stall/disable,
++	 * but we don't need the normal TS flush state.
++	 */
++	if (has_blt)
++		return_dwords += 6;
++
+ 	return_target = etnaviv_buffer_reserve(gpu, buffer, return_dwords);
+ 	CMD_LINK(cmdbuf, return_dwords, return_target);
+ 
+@@ -447,11 +483,25 @@ void etnaviv_buffer_queue(struct etnaviv
+ 		CMD_LOAD_STATE(buffer, VIVS_GL_FLUSH_CACHE,
+ 				       VIVS_GL_FLUSH_CACHE_DEPTH |
+ 				       VIVS_GL_FLUSH_CACHE_COLOR);
+-		CMD_LOAD_STATE(buffer, VIVS_TS_FLUSH_CACHE,
+-				       VIVS_TS_FLUSH_CACHE_FLUSH);
++		if (has_blt) {
++			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
++			CMD_LOAD_STATE(buffer, VIVS_BLT_SET_COMMAND, 0x1);
++			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
++		} else {
++			CMD_LOAD_STATE(buffer, VIVS_TS_FLUSH_CACHE,
++					       VIVS_TS_FLUSH_CACHE_FLUSH);
++		}
+ 	}
+ 	CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
+ 	CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
++
++	if (has_blt) {
++		CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
++		CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
++		CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
++		CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
++	}
++
+ 	CMD_LOAD_STATE(buffer, VIVS_GL_EVENT, VIVS_GL_EVENT_EVENT_ID(event) |
+ 		       VIVS_GL_EVENT_FROM_PE);
+ 	CMD_WAIT(buffer);
+--- a/drivers/gpu/drm/etnaviv/state_blt.xml.h
++++ b/drivers/gpu/drm/etnaviv/state_blt.xml.h
+@@ -46,6 +46,8 @@ DEALINGS IN THE SOFTWARE.
+ 
+ /* This is a cut-down version of the state_blt.xml.h file */
+ 
++#define VIVS_BLT_SET_COMMAND					0x000140ac
++
+ #define VIVS_BLT_ENABLE						0x000140b8
+ #define VIVS_BLT_ENABLE_ENABLE					0x00000001
+ 
 
 
