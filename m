@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB04CC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2D5C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A684220C56
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15C620E65
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TpEQqCm3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qIGEZ8IU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgIDUvZ (ORCPT
+        id S1728418AbgIDUvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 16:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34450 "EHLO
+        Fri, 4 Sep 2020 16:51:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728402AbgIDUvE (ORCPT
+        with ESMTP id S1728400AbgIDUvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 16:51:04 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C455C061245
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:51:04 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id kk9so1207832pjb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 13:51:04 -0700 (PDT)
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3620C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:51:02 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y6so1691264plk.10
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 13:51:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
         bh=CiIeU7VL4tMoVGzTU+NA9ADQCjCTiXtDHd4RfiX4JPU=;
-        b=TpEQqCm3U0bm8vIfXBH7ZpINW0GzAA2v2l1AOR7PdceZ3Rqtw0iDq5cIbjBsJoUHHw
-         AiIUBroQDv5sVxpMzGIp0MKqXgCX+jBzF9a+ROmyIzJAEfnR2U0SUh3yK0eXzrx/0FD/
-         ZimrQv8wjydfRRM3Sj6NBaoTy6qp43DRr05Kg6/ZuQSukzUZIemtyT33gnMBoeMkuYCH
-         rMqZv03e/ssGDdNjXcxF2NG0/Vy8nwTU69XfOo0bGkEd0H+C3CiECS0hgEPUD5FwXS7v
-         zMUwbKoWaE8PmahUdTX2xkTYiuh01g8aKrRbGBKvdaDMt1WmHjN/Cps+YXc2vn60Ol1N
-         9skA==
+        b=qIGEZ8IU/KonixvIH+81t7lD5THpreiflld91bmt22uKrzTnbgRJeS0Poot9aBXOGb
+         Q7zEEfBEhexKvNtM+omzhJC3B+L28OioVM3x3BpwByaR0ENclxeoLDlPdTdh6ZThhD5F
+         3SUFweLGFdfH2KLyFx8seFVjqjKOZMXX2sqnuWcAB264OajedZlpMCTnkBmkGsCKrGuN
+         MWBNQkaCYah6BHjRvOWWkDwZWY/mZ1sO1gLOoDkWbn2Tn5bv6B0EB8UQAb/PlEUa67M7
+         jaxoGww25pGOVIBYDwnR5cTB5Fj2uOmDs3WXCfKNhW8FrjWUAVNk2/+6Paczb5z8Qf2X
+         PFyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
         bh=CiIeU7VL4tMoVGzTU+NA9ADQCjCTiXtDHd4RfiX4JPU=;
-        b=S/GneQlq6iG6wBedklU85haVnhV8Oo1YE9kJ934kLDba2xEeX+n6B7p1eLM4zT7eMj
-         qthytFELZloFe/LzwtuQetSMAByJR2FnmMM9kY6WP7g9d/n30eVSutcFk6bV8JvYqRzK
-         +7hrhDaHIQLkAhfuDslJTTlF5nVDcdZE4HnuOfpEJXGW8nvF87i4XefCv8fUpPXwBcyw
-         yF9drd7zPXI3tET3SnytHle2ONeIl64rj3Cnd/OixhZv2lhTOJeLtdD4vGJq1nkXUMHe
-         66EPHvzL7AtZyR02pI7s4MO3u4GSAwKr/jEfxl9hvBEgXxSNswaG7bXczxzlmrX37te0
-         B5EA==
-X-Gm-Message-State: AOAM530IlGH5HcL0NbVe6QjPRkpvlMFWhRotfDlDgaltg807fYrH2Edx
-        Z9S4LBBvMBBPTVxsrOxMkb1hdEeOHu0=
-X-Google-Smtp-Source: ABdhPJzC4UU7SlZa++HoA/QEWbA2QJaK1tz5LVrwGN7Y80q0tOgaZYPjxs72HElFd1mqzt51GqdExQ==
-X-Received: by 2002:a17:902:ac8b:b029:d0:89f4:6220 with SMTP id h11-20020a170902ac8bb02900d089f46220mr8738797plr.8.1599252664111;
-        Fri, 04 Sep 2020 13:51:04 -0700 (PDT)
+        b=nLJRwIuFdpuIXy436tUJQwqVI1Jzi38IHlgxI29DHgLyRiF1jiTNGX9iJzFV2YPIFk
+         ACUOkq3TYW1XoIKyHQWyE///xyy/UG+QqRQMZUEqV3MGsY/4B45JOEZ9eFJFlgas5KDF
+         t4kWpjr3n26lHWoXWcM7SSgJHfhcwtTbKr1sbDsdor6o6wAJ0Y8fAOgmugGfEPDOsVCa
+         UlUrafuLazLhUoMHJ18X6URVjLCHEjxMWKR+3A0mY1ixPM4cTO2sGxMkb8P+SykLN/Yk
+         /4TrLt5xZFmHiy1RWenaZqLy95rR9VHSE2hKdhmvHsnvRI77tBMP8xat2bk3xQmtb0I9
+         ey8g==
+X-Gm-Message-State: AOAM532i969IXMdEPHDLEYTrRTurvMi0LfI9fX4ETB7+9n4q3r+aZ0/t
+        WU+hUK+Uq7YHqjpEJghcmAA=
+X-Google-Smtp-Source: ABdhPJyjr9MyChSY4+lePwokvZkYAaeFkzJKMyNDxCbsugPjT78loijjo/Ue4CL6eCT7IpC5fnZ/2g==
+X-Received: by 2002:a17:902:b60d:: with SMTP id b13mr10584752pls.48.1599252662512;
+        Fri, 04 Sep 2020 13:51:02 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id gb17sm6193305pjb.15.2020.09.04.13.51.02
+        by smtp.gmail.com with ESMTPSA id gb17sm6193305pjb.15.2020.09.04.13.51.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 13:51:03 -0700 (PDT)
+        Fri, 04 Sep 2020 13:51:01 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
         ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/4] soc: brcmstb: biuctrl: Tune MCP settings for 72165
-Date:   Fri,  4 Sep 2020 13:50:53 -0700
-Message-Id: <20200904205055.3309379-4-f.fainelli@gmail.com>
+Subject: [PATCH 2/4] soc: bcm: brcmstb: biuctrl: Tune MCP settings for 72165
+Date:   Fri,  4 Sep 2020 13:50:52 -0700
+Message-Id: <20200904205055.3309379-3-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200904205055.3309379-1-f.fainelli@gmail.com>
 References: <20200904205055.3309379-1-f.fainelli@gmail.com>
