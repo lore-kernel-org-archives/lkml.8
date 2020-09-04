@@ -4,186 +4,253 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B517BC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855C4C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7435120C09
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E5920665
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599245821;
-	bh=vi4wMcAnFlI7LP1Bsr5719yNonx1AiQkc7yCppe6TcE=;
+	s=default; t=1599246006;
+	bh=cizle+5yPbXTGE2X+e1LEvsyXzxqCWcv0OsGskbYsD0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=phm3ck8yn38tfsjplJs18VRKiDAlOiqpBO/Q58qg6aW5qr64j9jrWFxmyrqdfSlY0
-	 CHixgP5Cpg2gSnuvL45jyS7oG22q6SYSmlCcbNDXvBXOIbwI3gDAd5PacSj+/PwKUn
-	 DE8wDcEYrfYc9wApKhN/m3743ltwDMTCflE8/BPs=
+	b=iLOtUJWSCwZ+6DiJn/2f137xIGxor2QswucE4mrqX1f5ODtJDYzcgIvK1q0Cfm12Q
+	 Gff+PZgHng/XKou5mZPoDxhLT/TP11p/hf4hqc7pCcK9jBh3VNCjD+BNH3G8ynAOkm
+	 UTgF4M8igMuWpPYBwH2cZaP+OIMraWgafoJcTN6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgIDS5A (ORCPT
+        id S1726667AbgIDTAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 14:57:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43074 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 15:00:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbgIDS47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 14:56:59 -0400
+        id S1726047AbgIDTAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 15:00:02 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D712D20665;
-        Fri,  4 Sep 2020 18:56:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68B3020665;
+        Fri,  4 Sep 2020 19:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599245818;
-        bh=vi4wMcAnFlI7LP1Bsr5719yNonx1AiQkc7yCppe6TcE=;
+        s=default; t=1599246001;
+        bh=cizle+5yPbXTGE2X+e1LEvsyXzxqCWcv0OsGskbYsD0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EtsZ2ZZEPg1daImFEtJfC7roPo1epvE0FUhWXX1L2vyRfX1ner0GfebjNeZZOB9qM
-         tlEJJWeaHk6sMuZRlV5YN5jltYX6Pd6k5XIH5EhE8GvzoTjAKgSo3Xs3ZqjWW+MbLq
-         QCTZ11lTAxssqRbXd6Zh74DY28NHTGchysXba2nA=
+        b=ehoGC2fbL9r5L9A0U0oGbSzpDMlDgPShgZ8zvT44NDZt/0WicImniQ4BunieauS5k
+         PYxQpxEz9olUrra1m3XKDPiUR7JkQEGqD7tj8kDUvpZfRsfcuxjoO5xdullaAc7qUQ
+         h8b7KRhWztfvwQDMCqIpRjcWyKbu3BNhnzOVQ3Qg=
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 01DBB40D3D; Fri,  4 Sep 2020 15:56:55 -0300 (-03)
-Date:   Fri, 4 Sep 2020 15:56:55 -0300
+        id 6FE4540D3D; Fri,  4 Sep 2020 15:59:59 -0300 (-03)
+Date:   Fri, 4 Sep 2020 15:59:59 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Consolidate close_control_option()'s into
- one function
-Message-ID: <20200904185655.GC3752059@kernel.org>
-References: <e4d294a9-9d97-2cb0-c43d-926fbf90b819@intel.com>
- <20200903122937.25691-1-adrian.hunter@intel.com>
+        linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [RESEND PATCH] perf: ftrace: Add filter support for option
+ -F/--funcs
+Message-ID: <20200904185959.GA3753976@kernel.org>
+References: <20200904152357.6053-1-changbin.du@gmail.com>
+ <20200904162716.GT3495158@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200903122937.25691-1-adrian.hunter@intel.com>
+In-Reply-To: <20200904162716.GT3495158@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Sep 03, 2020 at 03:29:37PM +0300, Adrian Hunter escreveu:
-> Consolidate control option fifo closing into one function.
+Em Fri, Sep 04, 2020 at 01:27:16PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Sep 04, 2020 at 11:23:57PM +0800, Changbin Du escreveu:
+> > Same as 'perf probe -F', this patch adds filter support for the ftrace
+> > subcommand option '-F, --funcs <[FILTER]>'.
+> > 
+> > Here is an example that only lists functions which start with 'vfs_':
+> > $ sudo perf ftrace -F vfs_*
+> > vfs_fadvise
+> > vfs_fallocate
+> > vfs_truncate
+> > vfs_open
+> > vfs_setpos
+> > vfs_llseek
+> > vfs_readf
+> > vfs_writef
+> > ...
 > 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
+> I'll process these now, the urgent ones were already sent to Linus, so I
+> will now concentrate on the new stuff for v5.10,
+> 
+> Thanks for working on this!
 
-Applied and added this:
-
-Suggested-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-
-Thanks,
+Thanks, applied, will go to v5.10, i.e. to my perf/core branch as soon
+as the usual set of tests pass,
 
 - Arnaldo
  
+> - Arnaldo
+>  
+> > Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  tools/perf/Documentation/perf-ftrace.txt |  3 +-
+> >  tools/perf/builtin-ftrace.c              | 84 ++++++++++++++++++++++--
+> >  2 files changed, 80 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+> > index 78358af9a1c4..1e91121bac0f 100644
+> > --- a/tools/perf/Documentation/perf-ftrace.txt
+> > +++ b/tools/perf/Documentation/perf-ftrace.txt
+> > @@ -33,7 +33,8 @@ OPTIONS
+> >  
+> >  -F::
+> >  --funcs::
+> > -        List all available functions to trace.
+> > +        List available functions to trace. It accepts a pattern to
+> > +        only list interested functions.
+> >  
+> >  -p::
+> >  --pid=::
+> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> > index 1d44bc2f63d8..9366fad591dc 100644
+> > --- a/tools/perf/builtin-ftrace.c
+> > +++ b/tools/perf/builtin-ftrace.c
+> > @@ -25,6 +25,7 @@
+> >  #include "target.h"
+> >  #include "cpumap.h"
+> >  #include "thread_map.h"
+> > +#include "strfilter.h"
+> >  #include "util/cap.h"
+> >  #include "util/config.h"
+> >  #include "util/units.h"
+> > @@ -36,7 +37,6 @@ struct perf_ftrace {
+> >  	struct evlist		*evlist;
+> >  	struct target		target;
+> >  	const char		*tracer;
+> > -	bool			list_avail_functions;
+> >  	struct list_head	filters;
+> >  	struct list_head	notrace;
+> >  	struct list_head	graph_funcs;
+> > @@ -181,6 +181,40 @@ static int read_tracing_file_to_stdout(const char *name)
+> >  	return ret;
+> >  }
+> >  
+> > +static int read_tracing_file_by_line(const char *name,
+> > +				     void (*cb)(char *str, void *arg),
+> > +				     void *cb_arg)
+> > +{
+> > +	char *line = NULL;
+> > +	size_t len = 0;
+> > +	char *file;
+> > +	FILE *fp;
+> > +
+> > +	file = get_tracing_file(name);
+> > +	if (!file) {
+> > +		pr_debug("cannot get tracing file: %s\n", name);
+> > +		return -1;
+> > +	}
+> > +
+> > +	fp = fopen(file, "r");
+> > +	if (fp == NULL) {
+> > +		pr_debug("cannot open tracing file: %s\n", name);
+> > +		put_tracing_file(file);
+> > +		return -1;
+> > +	}
+> > +
+> > +	while (getline(&line, &len, fp) != -1) {
+> > +		cb(line, cb_arg);
+> > +	}
+> > +
+> > +	if (line)
+> > +		free(line);
+> > +
+> > +	fclose(fp);
+> > +	put_tracing_file(file);
+> > +	return 0;
+> > +}
+> > +
+> >  static int write_tracing_file_int(const char *name, int value)
+> >  {
+> >  	char buf[16];
+> > @@ -557,9 +591,6 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+> >  	signal(SIGCHLD, sig_handler);
+> >  	signal(SIGPIPE, sig_handler);
+> >  
+> > -	if (ftrace->list_avail_functions)
+> > -		return read_tracing_file_to_stdout("available_filter_functions");
+> > -
+> >  	if (reset_tracing_files(ftrace) < 0) {
+> >  		pr_err("failed to reset ftrace\n");
+> >  		goto out;
+> > @@ -683,6 +714,46 @@ static int perf_ftrace_config(const char *var, const char *value, void *cb)
+> >  	return -1;
+> >  }
+> >  
+> > +static void list_function_cb(char *str, void *arg)
+> > +{
+> > +	struct strfilter *filter = (struct strfilter *)arg;
+> > +
+> > +	if (strfilter__compare(filter, str))
+> > +		printf("%s", str);
+> > +}
+> > +
+> > +static int opt_list_avail_functions(const struct option *opt __maybe_unused,
+> > +				    const char *str, int unset)
+> > +{
+> > +	struct strfilter *filter;
+> > +	const char *err = NULL;
+> > +	int ret;
+> > +
+> > +	if (unset || !str)
+> > +		return -1;
+> > +
+> > +	filter = strfilter__new(str, &err);
+> > +	if (!filter)
+> > +		return err ? -EINVAL : -ENOMEM;
+> > +
+> > +	ret = strfilter__or(filter, str, &err);
+> > +	if (ret == -EINVAL) {
+> > +		pr_err("Filter parse error at %td.\n", err - str + 1);
+> > +		pr_err("Source: \"%s\"\n", str);
+> > +		pr_err("         %*c\n", (int)(err - str + 1), '^');
+> > +		strfilter__delete(filter);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = read_tracing_file_by_line("available_filter_functions",
+> > +					list_function_cb, filter);
+> > +	strfilter__delete(filter);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	exit(0);
+> > +}
+> > +
+> >  static int parse_filter_func(const struct option *opt, const char *str,
+> >  			     int unset __maybe_unused)
+> >  {
+> > @@ -817,8 +888,9 @@ int cmd_ftrace(int argc, const char **argv)
+> >  	const struct option ftrace_options[] = {
+> >  	OPT_STRING('t', "tracer", &ftrace.tracer, "tracer",
+> >  		   "Tracer to use: function_graph(default) or function"),
+> > -	OPT_BOOLEAN('F', "funcs", &ftrace.list_avail_functions,
+> > -		    "Show available functions to filter"),
+> > +	OPT_CALLBACK_DEFAULT('F', "funcs", NULL, "[FILTER]",
+> > +			     "Show available functions to filter",
+> > +			     opt_list_avail_functions, "*"),
+> >  	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
+> >  		   "Trace on existing process id"),
+> >  	/* TODO: Add short option -t after -t/--tracer can be removed. */
+> > -- 
+> > 2.25.1
+> > 
 > 
-> This patch is on top of patch:
-> "perf tools: Add FIFO file names as alternative options to --control"
-> 
-> 
->  tools/perf/builtin-record.c | 12 +-----------
->  tools/perf/builtin-stat.c   | 12 +-----------
->  tools/perf/util/evlist.c    | 10 ++++++++++
->  tools/perf/util/evlist.h    |  1 +
->  4 files changed, 13 insertions(+), 22 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 476b34ff3152..9db3901e6561 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -2253,16 +2253,6 @@ static int parse_control_option(const struct option *opt,
->  	return evlist__parse_control(str, &opts->ctl_fd, &opts->ctl_fd_ack, &opts->ctl_fd_close);
->  }
->  
-> -static void close_control_option(struct record_opts *opts)
-> -{
-> -	if (opts->ctl_fd_close) {
-> -		opts->ctl_fd_close = false;
-> -		close(opts->ctl_fd);
-> -		if (opts->ctl_fd_ack >= 0)
-> -			close(opts->ctl_fd_ack);
-> -	}
-> -}
-> -
->  static void switch_output_size_warn(struct record *rec)
->  {
->  	u64 wakeup_size = evlist__mmap_size(rec->opts.mmap_pages);
-> @@ -2849,7 +2839,7 @@ int cmd_record(int argc, const char **argv)
->  	symbol__exit();
->  	auxtrace_record__free(rec->itr);
->  out_opts:
-> -	close_control_option(&rec->opts);
-> +	evlist__close_control(rec->opts.ctl_fd, rec->opts.ctl_fd_ack, &rec->opts.ctl_fd_close);
->  	return err;
->  }
->  
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 21424ed0734b..68d4bdf15635 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -1051,16 +1051,6 @@ static int parse_control_option(const struct option *opt,
->  	return evlist__parse_control(str, &config->ctl_fd, &config->ctl_fd_ack, &config->ctl_fd_close);
->  }
->  
-> -static void close_control_option(struct perf_stat_config *config)
-> -{
-> -	if (config->ctl_fd_close) {
-> -		config->ctl_fd_close = false;
-> -		close(config->ctl_fd);
-> -		if (config->ctl_fd_ack >= 0)
-> -			close(config->ctl_fd_ack);
-> -	}
-> -}
-> -
->  static struct option stat_options[] = {
->  	OPT_BOOLEAN('T', "transaction", &transaction_run,
->  		    "hardware transaction statistics"),
-> @@ -2408,7 +2398,7 @@ int cmd_stat(int argc, const char **argv)
->  
->  	metricgroup__rblist_exit(&stat_config.metric_events);
->  	runtime_stat_delete(&stat_config);
-> -	close_control_option(&stat_config);
-> +	evlist__close_control(stat_config.ctl_fd, stat_config.ctl_fd_ack, &stat_config.ctl_fd_close);
->  
->  	return status;
->  }
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index e72ff7e78dec..ee7b576d3b12 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -1802,6 +1802,16 @@ int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *c
->  	return 0;
->  }
->  
-> +void evlist__close_control(int ctl_fd, int ctl_fd_ack, bool *ctl_fd_close)
-> +{
-> +	if (*ctl_fd_close) {
-> +		*ctl_fd_close = false;
-> +		close(ctl_fd);
-> +		if (ctl_fd_ack >= 0)
-> +			close(ctl_fd_ack);
-> +	}
-> +}
-> +
->  int evlist__initialize_ctlfd(struct evlist *evlist, int fd, int ack)
->  {
->  	if (fd == -1) {
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index 91d1da6e1fe3..bc38a53f6a1a 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -376,6 +376,7 @@ enum evlist_ctl_cmd {
->  };
->  
->  int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close);
-> +void evlist__close_control(int ctl_fd, int ctl_fd_ack, bool *ctl_fd_close);
->  int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
->  int evlist__finalize_ctlfd(struct evlist *evlist);
->  bool evlist__ctlfd_initialized(struct evlist *evlist);
 > -- 
-> 2.17.1
 > 
+> - Arnaldo
 
 -- 
 
