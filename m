@@ -2,288 +2,181 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E895C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE2FC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD7ED2078E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:21:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bjrYzJsH"
+	by mail.kernel.org (Postfix) with ESMTP id 8624B2078E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgIDXVH (ORCPT
+        id S1728317AbgIDX0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 19:21:07 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59760 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728249AbgIDXVF (ORCPT
+        Fri, 4 Sep 2020 19:26:36 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:34864 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728250AbgIDX02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 19:21:05 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 084NG2LG132422;
-        Fri, 4 Sep 2020 23:20:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=3U+AWzZ3VOvj5CDDuDWGs0DpY0EazstKv2374JGKZMQ=;
- b=bjrYzJsHfZVC4SlZKC/XSIwbMSDXq0tVME7GYOCMuDH/ikV9WyNsu2KPzDlF2+uOtJGr
- NN7mo3hCWdLhJm1SmsUDfm0tGl6/OL4eCUIEvDgUoUKiLfQIx+R/wdyFaC/BOjIniJ0f
- Q7rPTNG5e6C05tJZEGhjASB+DKJck5xyRP+9I8+V5nfkDpz/oouHVi0/hj3hJoPkcMyE
- rZsE1eKKr8YufTnN68jSjC1X9O9Q6Y2aazgEuXZ2K5VTomnw5TEQlcRPchEhZPZ0YiWc
- oXhi5/0CdCgA7aZXaTr7D5qEiK/6Z6li9fgJ7vp0wh+YhCuwQSwdDivpO7cv/dXMLORs JA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 337eerguwj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 04 Sep 2020 23:20:38 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 084NFEM4103386;
-        Fri, 4 Sep 2020 23:20:38 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 33bhs5an24-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 04 Sep 2020 23:20:38 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 084NKK3c016818;
-        Fri, 4 Sep 2020 23:20:21 GMT
-Received: from dhcp-10-65-147-1.vpn.oracle.com (/10.65.147.1)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 04 Sep 2020 16:20:20 -0700
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [RFC PATCH] certs: Add EFI_CERT_X509_GUID support for dbx
- entries]
-From:   Eric Snowberg <eric.snowberg@oracle.com>
-In-Reply-To: <20200904125931.GE39023@linux.intel.com>
-Date:   Fri, 4 Sep 2020 17:20:17 -0600
-Cc:     dhowells@redhat.com, dwmw2@infradead.org, jmorris@namei.org,
-        serge@hallyn.com, Mimi Zohar <zohar@linux.ibm.com>,
-        erichte@linux.ibm.com, nayna@linux.ibm.com, mpe@ellerman.id.au,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D842021F-3054-45FC-8519-9DF5A85AFC37@oracle.com>
-References: <20200901165143.10295-1-eric.snowberg@oracle.com>
- <20200904125931.GE39023@linux.intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-X-Mailer: Apple Mail (2.3273)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9734 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 adultscore=0 suspectscore=3 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009040196
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9734 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=3
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009040196
+        Fri, 4 Sep 2020 19:26:28 -0400
+Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
+        id 94D8E2ACD5; Fri,  4 Sep 2020 19:26:27 -0400 (EDT)
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Message-Id: <bb61650bea4f4c91fb8e24b9a6f130a1438651a7.1599260540.git.fthain@telegraphics.com.au>
+In-Reply-To: <cover.1599260540.git.fthain@telegraphics.com.au>
+References: <cover.1599260540.git.fthain@telegraphics.com.au>
+From:   Finn Thain <fthain@telegraphics.com.au>
+Subject: [PATCH 2/5] powerpc/tau: Convert from timer to workqueue
+Date:   Sat, 05 Sep 2020 09:02:20 +1000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since commit 19dbdcb8039cf ("smp: Warn on function calls from softirq
+context") the Thermal Assist Unit driver causes a warning like the
+following when CONFIG_SMP is enabled.
 
-> On Sep 4, 2020, at 6:59 AM, Jarkko Sakkinen =
-<jarkko.sakkinen@linux.intel.com> wrote:
->=20
-> On Tue, Sep 01, 2020 at 12:51:43PM -0400, Eric Snowberg wrote:
->> The Secure Boot Forbidden Signature Database, dbx, contains a list of =
-now
->> revoked signatures and keys previously approved to boot with UEFI =
-Secure
->> Boot enabled.  The dbx is capable of containing any number of
->> EFI_CERT_X509_SHA256_GUID, EFI_CERT_SHA256_GUID, and =
-EFI_CERT_X509_GUID
->> entries.
->>=20
->> Currently when EFI_CERT_X509_GUID are contained in the dbx, the =
-entries are
->> skipped.
->>=20
->> This change adds support for EFI_CERT_X509_GUID dbx entries. When a
->> EFI_CERT_X509_GUID is found, it is added as an asymmetrical key to =
-the
->> .blacklist keyring.  Anytime the .platform keyring is used, the keys =
-in
->> the .blacklist keyring are referenced, if a matching key is found, =
-the
->> key will be rejected.
->>=20
->> Signed-off-by: Eric Snowberg <eric.snowberg@oracle.com>
->=20
-> In the last paragraph, please use imperative form: "Add support for =
-=E2=80=A6".
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 0 at kernel/smp.c:428 smp_call_function_many_cond+0xf4/0x38c
+Modules linked in:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-pmac #3
+NIP:  c00b37a8 LR: c00b3abc CTR: c001218c
+REGS: c0799c60 TRAP: 0700   Not tainted  (5.7.0-pmac)
+MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 42000224  XER: 00000000
 
-I will change this in V2.
+GPR00: c00b3abc c0799d18 c076e300 c079ef5c c0011fec 00000000 00000000 00000000
+GPR08: 00000100 00000100 00008000 ffffffff 42000224 00000000 c079d040 c079d044
+GPR16: 00000001 00000000 00000004 c0799da0 c079f054 c07a0000 c07a0000 00000000
+GPR24: c0011fec 00000000 c079ef5c c079ef5c 00000000 00000000 00000000 00000000
+NIP [c00b37a8] smp_call_function_many_cond+0xf4/0x38c
+LR [c00b3abc] on_each_cpu+0x38/0x68
+Call Trace:
+[c0799d18] [ffffffff] 0xffffffff (unreliable)
+[c0799d68] [c00b3abc] on_each_cpu+0x38/0x68
+[c0799d88] [c0096704] call_timer_fn.isra.26+0x20/0x7c
+[c0799d98] [c0096b40] run_timer_softirq+0x1d4/0x3fc
+[c0799df8] [c05b4368] __do_softirq+0x118/0x240
+[c0799e58] [c0039c44] irq_exit+0xc4/0xcc
+[c0799e68] [c000ade8] timer_interrupt+0x1b0/0x230
+[c0799ea8] [c0013520] ret_from_except+0x0/0x14
+--- interrupt: 901 at arch_cpu_idle+0x24/0x6c
+    LR = arch_cpu_idle+0x24/0x6c
+[c0799f70] [00000001] 0x1 (unreliable)
+[c0799f80] [c0060990] do_idle+0xd8/0x17c
+[c0799fa0] [c0060ba8] cpu_startup_entry+0x24/0x28
+[c0799fb0] [c072d220] start_kernel+0x434/0x44c
+[c0799ff0] [00003860] 0x3860
+Instruction dump:
+8129f204 2f890000 40beff98 3d20c07a 8929eec4 2f890000 40beff88 0fe00000
+81220000 552805de 550802ef 4182ff84 <0fe00000> 3860ffff 7f65db78 7f44d378
+---[ end trace 34a886e47819c2eb ]---
 
->=20
->> ---
->> certs/blacklist.c                             | 36 =
-+++++++++++++++++++
->> certs/system_keyring.c                        |  6 ++++
->> include/keys/system_keyring.h                 | 11 ++++++
->> .../platform_certs/keyring_handler.c          | 11 ++++++
->> 4 files changed, 64 insertions(+)
->>=20
->> diff --git a/certs/blacklist.c b/certs/blacklist.c
->> index 6514f9ebc943..17ebf50cf0ae 100644
->> --- a/certs/blacklist.c
->> +++ b/certs/blacklist.c
->> @@ -15,6 +15,7 @@
->> #include <linux/err.h>
->> #include <linux/seq_file.h>
->> #include <keys/system_keyring.h>
->> +#include <crypto/pkcs7.h>
->> #include "blacklist.h"
->>=20
->> static struct key *blacklist_keyring;
->> @@ -100,6 +101,41 @@ int mark_hash_blacklisted(const char *hash)
->> 	return 0;
->> }
->>=20
->> +int mark_key_revocationlisted(const char *data, size_t size)
->> +{
->> +	key_ref_t key;
->> +
->> +	key =3D key_create_or_update(make_key_ref(blacklist_keyring, =
-true),
->> +				   "asymmetric",
->> +				   NULL,
->> +				   data,
->> +				   size,
->> +				   ((KEY_POS_ALL & ~KEY_POS_SETATTR) |
->> +				    KEY_USR_VIEW),
->> +				   KEY_ALLOC_NOT_IN_QUOTA |
->> +				   KEY_ALLOC_BUILT_IN);
->> +
->> +	if (IS_ERR(key)) {
->> +		pr_err("Problem with revocation key (%ld)\n", =
-PTR_ERR(key));
->> +		return PTR_ERR(key);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +int is_key_revocationlisted(struct pkcs7_message *pkcs7)
->> +{
->> +	int ret;
->> +
->> +	ret =3D pkcs7_validate_trust(pkcs7, blacklist_keyring);
->> +
->> +	if (ret =3D=3D 0)
->> +		return -EKEYREJECTED;
->> +
->> +	return -ENOKEY;
->> +}
->> +EXPORT_SYMBOL_GPL(is_key_revocationlisted);
->> +
->> /**
->>  * is_hash_blacklisted - Determine if a hash is blacklisted
->>  * @hash: The hash to be checked as a binary blob
->> diff --git a/certs/system_keyring.c b/certs/system_keyring.c
->> index 798291177186..f8ea96219155 100644
->> --- a/certs/system_keyring.c
->> +++ b/certs/system_keyring.c
->> @@ -241,6 +241,12 @@ int verify_pkcs7_message_sig(const void *data, =
-size_t len,
->> 			pr_devel("PKCS#7 platform keyring is not =
-available\n");
->> 			goto error;
->> 		}
->> +
->> +		ret =3D is_key_revocationlisted(pkcs7);
->> +		if (ret !=3D -ENOKEY) {
->> +			pr_devel("PKCS#7 platform key =
-revocationlisted\n");
->> +			goto error;
->> +		}
->> 	}
->> 	ret =3D pkcs7_validate_trust(pkcs7, trusted_keys);
->> 	if (ret < 0) {
->> diff --git a/include/keys/system_keyring.h =
-b/include/keys/system_keyring.h
->> index fb8b07daa9d1..b6991cfe1b6d 100644
->> --- a/include/keys/system_keyring.h
->> +++ b/include/keys/system_keyring.h
->> @@ -31,11 +31,14 @@ extern int =
-restrict_link_by_builtin_and_secondary_trusted(
->> #define restrict_link_by_builtin_and_secondary_trusted =
-restrict_link_by_builtin_trusted
->> #endif
->>=20
->> +extern struct pkcs7_message *pkcs7;
->> #ifdef CONFIG_SYSTEM_BLACKLIST_KEYRING
->> extern int mark_hash_blacklisted(const char *hash);
->> +extern int mark_key_revocationlisted(const char *data, size_t size);
->> extern int is_hash_blacklisted(const u8 *hash, size_t hash_len,
->> 			       const char *type);
->> extern int is_binary_blacklisted(const u8 *hash, size_t hash_len);
->> +extern int is_key_revocationlisted(struct pkcs7_message *pkcs7);
->> #else
->> static inline int is_hash_blacklisted(const u8 *hash, size_t =
-hash_len,
->> 				      const char *type)
->> @@ -47,6 +50,14 @@ static inline int is_binary_blacklisted(const u8 =
-*hash, size_t hash_len)
->> {
->> 	return 0;
->> }
->> +static inline int mark_key_revocationlisted(const char *data, size_t =
-size)
->> +{
->> +	return 0;
->> +}
->> +static inline int is_key_revocationlisted(struct pkcs7_message =
-*pkcs7)
->> +{
->> +	return -ENOKEY;
->> +}
->> #endif
->>=20
->> #ifdef CONFIG_IMA_BLACKLIST_KEYRING
->> diff --git a/security/integrity/platform_certs/keyring_handler.c =
-b/security/integrity/platform_certs/keyring_handler.c
->> index c5ba695c10e3..cc5a43804bc4 100644
->> --- a/security/integrity/platform_certs/keyring_handler.c
->> +++ b/security/integrity/platform_certs/keyring_handler.c
->> @@ -55,6 +55,15 @@ static __init void uefi_blacklist_binary(const =
-char *source,
->> 	uefi_blacklist_hash(source, data, len, "bin:", 4);
->> }
->>=20
->> +/*
->> + * Revocationlist the X509 cert
->> + */
->> +static __init void uefi_revocationlist_x509(const char *source,
->> +					    const void *data, size_t =
-len)
->> +{
->> +	mark_key_revocationlisted(data, len);
->> +}
->> +
->> /*
->>  * Return the appropriate handler for particular signature list types =
-found in
->>  * the UEFI db and MokListRT tables.
->> @@ -76,5 +85,7 @@ __init efi_element_handler_t =
-get_handler_for_dbx(const efi_guid_t *sig_type)
->> 		return uefi_blacklist_x509_tbs;
->> 	if (efi_guidcmp(*sig_type, efi_cert_sha256_guid) =3D=3D 0)
->> 		return uefi_blacklist_binary;
->> +	if (efi_guidcmp(*sig_type, efi_cert_x509_guid) =3D=3D 0)
->> +		return uefi_revocationlist_x509;
->> 	return 0;
->> }
->> --=20
->> 2.18.1
->>=20
->=20
-> I did not find anything wrong with the code change.
+Don't call on_each_cpu() from a timer callback, call it from a worker
+thread instead.
 
-Thanks
+Fixes: 1da177e4c3f41 ("Linux-2.6.12-rc2")
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+---
+ arch/powerpc/kernel/tau_6xx.c | 38 +++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
+
+diff --git a/arch/powerpc/kernel/tau_6xx.c b/arch/powerpc/kernel/tau_6xx.c
+index 976d5bc1b5176..268205cc347da 100644
+--- a/arch/powerpc/kernel/tau_6xx.c
++++ b/arch/powerpc/kernel/tau_6xx.c
+@@ -13,13 +13,14 @@
+  */
+ 
+ #include <linux/errno.h>
+-#include <linux/jiffies.h>
+ #include <linux/kernel.h>
+ #include <linux/param.h>
+ #include <linux/string.h>
+ #include <linux/mm.h>
+ #include <linux/interrupt.h>
+ #include <linux/init.h>
++#include <linux/delay.h>
++#include <linux/workqueue.h>
+ 
+ #include <asm/io.h>
+ #include <asm/reg.h>
+@@ -39,8 +40,6 @@ static struct tau_temp
+ 	unsigned char grew;
+ } tau[NR_CPUS];
+ 
+-struct timer_list tau_timer;
+-
+ #undef DEBUG
+ 
+ /* TODO: put these in a /proc interface, with some sanity checks, and maybe
+@@ -50,7 +49,7 @@ struct timer_list tau_timer;
+ #define step_size		2	/* step size when temp goes out of range */
+ #define window_expand		1	/* expand the window by this much */
+ /* configurable values for shrinking the window */
+-#define shrink_timer	2*HZ	/* period between shrinking the window */
++#define shrink_timer	2000	/* period between shrinking the window */
+ #define min_window	2	/* minimum window size, degrees C */
+ 
+ static void set_thresholds(unsigned long cpu)
+@@ -187,14 +186,18 @@ static void tau_timeout(void * info)
+ 	local_irq_restore(flags);
+ }
+ 
+-static void tau_timeout_smp(struct timer_list *unused)
+-{
++static struct workqueue_struct *tau_workq;
+ 
+-	/* schedule ourselves to be run again */
+-	mod_timer(&tau_timer, jiffies + shrink_timer) ;
++static void tau_work_func(struct work_struct *work)
++{
++	msleep(shrink_timer);
+ 	on_each_cpu(tau_timeout, NULL, 0);
++	/* schedule ourselves to be run again */
++	queue_work(tau_workq, work);
+ }
+ 
++DECLARE_WORK(tau_work, tau_work_func);
++
+ /*
+  * setup the TAU
+  *
+@@ -227,21 +230,16 @@ static int __init TAU_init(void)
+ 		return 1;
+ 	}
+ 
+-
+-	/* first, set up the window shrinking timer */
+-	timer_setup(&tau_timer, tau_timeout_smp, 0);
+-	tau_timer.expires = jiffies + shrink_timer;
+-	add_timer(&tau_timer);
++	tau_workq = alloc_workqueue("tau", WQ_UNBOUND, 1, 0);
++	if (!tau_workq)
++		return -ENOMEM;
+ 
+ 	on_each_cpu(TAU_init_smp, NULL, 0);
+ 
+-	printk("Thermal assist unit ");
+-#ifdef CONFIG_TAU_INT
+-	printk("using interrupts, ");
+-#else
+-	printk("using timers, ");
+-#endif
+-	printk("shrink_timer: %d jiffies\n", shrink_timer);
++	queue_work(tau_workq, &tau_work);
++
++	pr_info("Thermal assist unit using %s, shrink_timer: %d ms\n",
++		IS_ENABLED(CONFIG_TAU_INT) ? "interrupts" : "workqueue", shrink_timer);
+ 	tau_initialized = 1;
+ 
+ 	return 0;
+-- 
+2.26.2
 
