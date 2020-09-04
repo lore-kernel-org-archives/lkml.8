@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4ACDC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1E2C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0A12074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A819A2074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgIDPcw (ORCPT
+        id S1726417AbgIDPc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:32:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44349 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726445AbgIDPco (ORCPT
+        Fri, 4 Sep 2020 11:32:29 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52106 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726235AbgIDPcN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:32:44 -0400
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-336-YPYEynNpPJaq6L1fSULq2A-1; Fri, 04 Sep 2020 11:32:41 -0400
-X-MC-Unique: YPYEynNpPJaq6L1fSULq2A-1
-Received: by mail-ej1-f70.google.com with SMTP id d8so633239ejt.14
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:32:41 -0700 (PDT)
+        Fri, 4 Sep 2020 11:32:13 -0400
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-380-XT_p-ukTPPqlZ0ruMbG8kw-1; Fri, 04 Sep 2020 11:32:10 -0400
+X-MC-Unique: XT_p-ukTPPqlZ0ruMbG8kw-1
+Received: by mail-ed1-f71.google.com with SMTP id c25so2831169edx.11
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:32:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tFn51Jxy4pRAwPvXw45xwkFaIM6vyiRr+rO29b+TGyw=;
-        b=C0la2Wi1C/abLzByCPJjGb0miK/yOk1mPmIgTUzjyYHWo+Bta+DQht9mLFj9wjutAM
-         W4roYT4m0XWKSgjj9NLHswI5e+m3Tjx1X81AG2tLuthMLLFiIdJrAUtk5c8yGmI4KWMr
-         0GOkZmVekqTEvC8C6c5cV6u/UoPMW6wDtorNo4ZB43lnmDdeuBFzuhERHn7U3auMTgFu
-         0EOpPQJ9Zdx2L0w5YCj/jUAQPc+X0wmbNeo4i7z21VjTv0HitHn6KQsYSW5VvhkADF3R
-         h/gkUyo4FuglB1JgYwelBZchOoYYISbIhImxefUUDWEE0tsVov9YNe/3iNW/4w3rNe7t
-         rqYA==
-X-Gm-Message-State: AOAM531S7lUWyzKvG0do/UkmLgfo613jMbClliUFe/Ar7WIvD1mXuCwz
-        f5SL4R0OoI9icFWy95KtjhlHIpr8Hwf0XlACtrwdUYZbeVHSdjXA6H19btgMrn8aWoEsVlLnxFS
-        YhafLDKgo3K0L5Ap9MSay8JPO
-X-Received: by 2002:a17:906:e88:: with SMTP id p8mr3064329ejf.134.1599233560181;
-        Fri, 04 Sep 2020 08:32:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwF7cuo3gixAQnKEIWWouNboudlxNmcXhxsXS5NYlh5fzqD6cV9MIRQmFRkdUAYYqPVrhXYTg==
-X-Received: by 2002:a17:906:e88:: with SMTP id p8mr3064303ejf.134.1599233559914;
-        Fri, 04 Sep 2020 08:32:39 -0700 (PDT)
+        bh=xU8TftOeC0Fuep7MfzZLrg+PX+L/jbLYfVc8Z+rENd8=;
+        b=s/qvEHq2FcJNXqtB+nht6P0EiW4PkFK59eilmEzgcKySch5Wf63e4DWKnr8qd1OqLk
+         YmeNREbNi0Xh9j2geMBqvihuAwjwRqwm7m5aOOH8/f71Zb7xpGdbFg6DFVzLXU6TQmSr
+         /nb58JkYwIlh/2sCsrNseFb+0/TaN/1H7dVqmM5XEw2u9YXjMcZt9gt4Glzn9dZyOB68
+         iIeTh4cRswN5IBmqQ4/DCeX34nSpJTJgZ8pvRbbhN64qfHewYvMp+DhQFig0yeKEdk0A
+         wJdfAl4EelOX+cOm1av3SgCci1Bj0bV6/CnFQa0xKimhdZWcBHUeEcmA3mfzp7WJnYVW
+         qy6Q==
+X-Gm-Message-State: AOAM531pq1NJEGcx4AHDqs04H9VEBFZW8uGc9piPO4+7ufUK1asFkXSQ
+        vPqoKNTXBehFs5Smj9wb9CPym803R6zCfOt+NYaEdKKecH1rYb/VVjVinlIR1RJi2qW1hogZJdr
+        He0WdDW7uSWOsUONGdW3wGiZq
+X-Received: by 2002:a50:fd10:: with SMTP id i16mr9531800eds.54.1599233528482;
+        Fri, 04 Sep 2020 08:32:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwsycBr1KCw/lYaAr2tRyQPj/ln19zy1cJXxbs4+k4FtK2YYjPxfhbpDd8McR6GeZx6zFnV1w==
+X-Received: by 2002:a50:fd10:: with SMTP id i16mr9531772eds.54.1599233528278;
+        Fri, 04 Sep 2020 08:32:08 -0700 (PDT)
 Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id c2sm6281226edu.3.2020.09.04.08.32.39
+        by smtp.gmail.com with ESMTPSA id x21sm6418833ejy.97.2020.09.04.08.32.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:32:39 -0700 (PDT)
+        Fri, 04 Sep 2020 08:32:07 -0700 (PDT)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
         raphael.gault@arm.com, benh@kernel.crashing.org,
         Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH v3 04/10] objtool: Abstract alternative special case handling
-Date:   Fri,  4 Sep 2020 16:30:22 +0100
-Message-Id: <20200904153028.32676-5-jthierry@redhat.com>
+Subject: [PATCH v3 03/10] objtool: Move macros describing structures to arch-dependent code
+Date:   Fri,  4 Sep 2020 16:30:21 +0100
+Message-Id: <20200904153028.32676-4-jthierry@redhat.com>
 X-Mailer: git-send-email 2.21.3
 In-Reply-To: <20200904153028.32676-1-jthierry@redhat.com>
 References: <20200904153028.32676-1-jthierry@redhat.com>
@@ -68,169 +68,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some alternatives associated with a specific feature need to be treated
-in a special way. Since the features and how to treat them vary from one
-architecture to another, move the special case handling to arch specific
-code.
+Some macros are defined to describe the size and layout of structures
+exception_table_entry, jump_entry and alt_instr. These values can vary
+from one architecture to another.
 
+Have the values be defined by arch specific code.
+
+Suggested-by: Raphael Gault <raphael.gault@arm.com>
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- tools/objtool/arch/x86/Build     |  1 +
- tools/objtool/arch/x86/special.c | 37 ++++++++++++++++++++++++++++++++
- tools/objtool/objtool.h          |  2 ++
- tools/objtool/special.c          | 32 +++++----------------------
- tools/objtool/special.h          |  2 ++
- tools/objtool/weak.c             |  2 --
- 6 files changed, 47 insertions(+), 29 deletions(-)
- create mode 100644 tools/objtool/arch/x86/special.c
+ tools/objtool/arch/x86/include/arch_special.h | 20 +++++++++++++++++++
+ tools/objtool/special.c                       | 16 +--------------
+ 2 files changed, 21 insertions(+), 15 deletions(-)
+ create mode 100644 tools/objtool/arch/x86/include/arch_special.h
 
-diff --git a/tools/objtool/arch/x86/Build b/tools/objtool/arch/x86/Build
-index 7c5004008e97..9f7869b5c5e0 100644
---- a/tools/objtool/arch/x86/Build
-+++ b/tools/objtool/arch/x86/Build
-@@ -1,3 +1,4 @@
-+objtool-y += special.o
- objtool-y += decode.o
- 
- inat_tables_script = ../arch/x86/tools/gen-insn-attr-x86.awk
-diff --git a/tools/objtool/arch/x86/special.c b/tools/objtool/arch/x86/special.c
+diff --git a/tools/objtool/arch/x86/include/arch_special.h b/tools/objtool/arch/x86/include/arch_special.h
 new file mode 100644
-index 000000000000..823561e4015c
+index 000000000000..d818b2bffa02
 --- /dev/null
-+++ b/tools/objtool/arch/x86/special.c
-@@ -0,0 +1,37 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+#include "../../special.h"
-+#include "../../builtin.h"
++++ b/tools/objtool/arch/x86/include/arch_special.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef _X86_ARCH_SPECIAL_H
++#define _X86_ARCH_SPECIAL_H
 +
-+#define X86_FEATURE_POPCNT (4 * 32 + 23)
-+#define X86_FEATURE_SMAP   (9 * 32 + 20)
++#define EX_ENTRY_SIZE		12
++#define EX_ORIG_OFFSET		0
++#define EX_NEW_OFFSET		4
 +
-+void arch_handle_alternative(unsigned short feature, struct special_alt *alt)
-+{
-+	switch (feature) {
-+	case X86_FEATURE_SMAP:
-+		/*
-+		 * If UACCESS validation is enabled; force that alternative;
-+		 * otherwise force it the other way.
-+		 *
-+		 * What we want to avoid is having both the original and the
-+		 * alternative code flow at the same time, in that case we can
-+		 * find paths that see the STAC but take the NOP instead of
-+		 * CLAC and the other way around.
-+		 */
-+		if (uaccess)
-+			alt->skip_orig = true;
-+		else
-+			alt->skip_alt = true;
-+		break;
-+	case X86_FEATURE_POPCNT:
-+		/*
-+		 * It has been requested that we don't validate the !POPCNT
-+		 * feature path which is a "very very small percentage of
-+		 * machines".
-+		 */
-+		alt->skip_orig = true;
-+		break;
-+	default:
-+		break;
-+	}
-+}
-diff --git a/tools/objtool/objtool.h b/tools/objtool/objtool.h
-index 46240098f08d..79716f4158e8 100644
---- a/tools/objtool/objtool.h
-+++ b/tools/objtool/objtool.h
-@@ -12,6 +12,8 @@
- 
- #include "elf.h"
- 
-+#define __weak __attribute__((weak))
++#define JUMP_ENTRY_SIZE		16
++#define JUMP_ORIG_OFFSET	0
++#define JUMP_NEW_OFFSET		4
 +
- struct objtool_file {
- 	struct elf *elf;
- 	struct list_head insn_list;
++#define ALT_ENTRY_SIZE		13
++#define ALT_ORIG_OFFSET		0
++#define ALT_NEW_OFFSET		4
++#define ALT_FEATURE_OFFSET	8
++#define ALT_ORIG_LEN_OFFSET	10
++#define ALT_NEW_LEN_OFFSET	11
++
++#endif /* _X86_ARCH_SPECIAL_H */
 diff --git a/tools/objtool/special.c b/tools/objtool/special.c
-index b04f395de5de..1a2420febd08 100644
+index e893f1e48e44..b04f395de5de 100644
 --- a/tools/objtool/special.c
 +++ b/tools/objtool/special.c
-@@ -16,9 +16,6 @@
+@@ -14,21 +14,7 @@
+ #include "builtin.h"
+ #include "special.h"
  #include "warn.h"
- #include "arch_special.h"
- 
--#define X86_FEATURE_POPCNT (4*32+23)
--#define X86_FEATURE_SMAP   (9*32+20)
 -
- struct special_entry {
- 	const char *sec;
- 	bool group, jump_or_nop;
-@@ -54,6 +51,10 @@ struct special_entry entries[] = {
- 	{},
- };
- 
-+void __weak arch_handle_alternative(unsigned short feature, struct special_alt *alt)
-+{
-+}
-+
- static int get_alt_entry(struct elf *elf, struct special_entry *entry,
- 			 struct section *sec, int idx,
- 			 struct special_alt *alt)
-@@ -78,30 +79,7 @@ static int get_alt_entry(struct elf *elf, struct special_entry *entry,
- 
- 		feature = *(unsigned short *)(sec->data->d_buf + offset +
- 					      entry->feature);
+-#define EX_ENTRY_SIZE		12
+-#define EX_ORIG_OFFSET		0
+-#define EX_NEW_OFFSET		4
 -
--		/*
--		 * It has been requested that we don't validate the !POPCNT
--		 * feature path which is a "very very small percentage of
--		 * machines".
--		 */
--		if (feature == X86_FEATURE_POPCNT)
--			alt->skip_orig = true;
+-#define JUMP_ENTRY_SIZE		16
+-#define JUMP_ORIG_OFFSET	0
+-#define JUMP_NEW_OFFSET		4
 -
--		/*
--		 * If UACCESS validation is enabled; force that alternative;
--		 * otherwise force it the other way.
--		 *
--		 * What we want to avoid is having both the original and the
--		 * alternative code flow at the same time, in that case we can
--		 * find paths that see the STAC but take the NOP instead of
--		 * CLAC and the other way around.
--		 */
--		if (feature == X86_FEATURE_SMAP) {
--			if (uaccess)
--				alt->skip_orig = true;
--			else
--				alt->skip_alt = true;
--		}
-+		arch_handle_alternative(feature, alt);
- 	}
+-#define ALT_ENTRY_SIZE		13
+-#define ALT_ORIG_OFFSET		0
+-#define ALT_NEW_OFFSET		4
+-#define ALT_FEATURE_OFFSET	8
+-#define ALT_ORIG_LEN_OFFSET	10
+-#define ALT_NEW_LEN_OFFSET	11
++#include "arch_special.h"
  
- 	orig_reloc = find_reloc_by_dest(elf, sec, offset + entry->orig);
-diff --git a/tools/objtool/special.h b/tools/objtool/special.h
-index 35061530e46e..44da89afeda2 100644
---- a/tools/objtool/special.h
-+++ b/tools/objtool/special.h
-@@ -28,4 +28,6 @@ struct special_alt {
- 
- int special_get_alts(struct elf *elf, struct list_head *alts);
- 
-+void arch_handle_alternative(unsigned short feature, struct special_alt *alt);
-+
- #endif /* _SPECIAL_H */
-diff --git a/tools/objtool/weak.c b/tools/objtool/weak.c
-index 29180d599b08..7843e9a7a72f 100644
---- a/tools/objtool/weak.c
-+++ b/tools/objtool/weak.c
-@@ -9,8 +9,6 @@
- #include <errno.h>
- #include "objtool.h"
- 
--#define __weak __attribute__((weak))
--
- #define UNSUPPORTED(name)						\
- ({									\
- 	fprintf(stderr, "error: objtool: " name " not implemented\n");	\
+ #define X86_FEATURE_POPCNT (4*32+23)
+ #define X86_FEATURE_SMAP   (9*32+20)
 -- 
 2.21.3
 
