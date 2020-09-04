@@ -2,110 +2,100 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A85C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 00:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B973C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 00:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7559F20716
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 00:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D059820758
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 00:34:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cMCzrfCU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1YonLzO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbgIDAeg (ORCPT
+        id S1729464AbgIDAew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 20:34:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44918 "EHLO
+        Thu, 3 Sep 2020 20:34:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgIDAed (ORCPT
+        with ESMTP id S1726397AbgIDAet (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 20:34:33 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EDABC061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 17:34:33 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id g29so3431670pgl.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 17:34:33 -0700 (PDT)
+        Thu, 3 Sep 2020 20:34:49 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47836C061244;
+        Thu,  3 Sep 2020 17:34:49 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id z17so2900331lfi.12;
+        Thu, 03 Sep 2020 17:34:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IAJoEh+6AzC+pKTWp/bOcEFzbdoQ52Nyw5yIscBfr1w=;
-        b=cMCzrfCUtqRc1nmYxs2wvQHa172v0v+L5ucazx+Eh+kn/j4HMo1nlDNN+LmF5s/V90
-         /K3aUdV9IuwY3khbOtHSqEd6AZsZ7rUQZgxfSFDCUVry1aU0ScVy+qDKEHIsDDznw50a
-         /YRhAYGl4p4pEfwO38kik1Pqw4rt0eAWPF5otnIpAntDpaYJZfJpjD624bXGqFKILfSF
-         q/KXzddAvo3eys0xyW46uBduglw0h0+XCFBOlhx7B4JTjRLi+cLWK9fkuECZMd4pXYpc
-         UZLcu5iqesbONCFhep9whhQtarYSIoRVbV111xpKL75HfzDgJ+rTE8/7A91uqmZqCpjk
-         uilA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Zf9S2piXp30RkaJ2ipfBoaYTZaao4UDSG/OSRaoirlU=;
+        b=l1YonLzO4TnrRRTqbgQdZYO/B5udRfOiFenBTzllYhmQs2ya/ZA1o9lGtWktnuHeDP
+         2XyH7zGLFUilVCO9JEqXGmWT6Rt3szoSm1FbPQWLo8Nx3kHhAeP+LGFU2FrtFro6u09e
+         HtRFzWoApRPRPnfdzhTyLiG2a/a0/pQFhYhpf6CSRcOPoxyz6s5aoWG7XTsXOlNrHDsr
+         efqZWGAmmCS/wA8n4+zhr53jdIk7xm9CoNNJozbXODpYGvRyqABSnPMJMdJbK0egoH2j
+         HyrODunsAbEXghg24sK7ILYjYhMC4o7YAlQ3XngLLS5L1e4hdnGhEGI4Fhgpxbx4Zgrq
+         ODtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IAJoEh+6AzC+pKTWp/bOcEFzbdoQ52Nyw5yIscBfr1w=;
-        b=m3VfKWITMPnYRd4GTvdcrlC1uWYfqGCji28/MzrJ4/qk+ThUFfD32pACtiKRJqR+ey
-         OusKtWCLA6Mw+yTauWWvV1n8cWTCr6sTQgWhlKV1UTy2pc55iAET+PBLyLS1coJTHEJB
-         JIhsEQZRNTpikM89ekWVR/XJy6nXOrpowSb/QBKDxRn51lqOBmbjYb4Zls76pL1IXf5v
-         Wt73nLbL7tVKsW+sad9aBuuAwNm3s1Q6TOjbXykLy+m9ahBGdvbkAC90jFVpi+K9A+TE
-         dIVOYjs6+XWVhhtNN6RQuK9IVi4MGVBS6sTUNmtcDA9WftH7tNC5Gti3lL455Le6ZpBm
-         Ui8A==
-X-Gm-Message-State: AOAM531sNgf58lMIgaTt38GXam68eRZnGRGP0U/icacxh70K/I1P+rtE
-        yXbQ8QnvPxTL/5yvY+0Fh3M=
-X-Google-Smtp-Source: ABdhPJzg0g/r/JRAq1RMe5JuWkOkXDNZ26WMpp7IGq6R51F5xXzfvpMyaX3rFnKeL8iB2qbXMWriZA==
-X-Received: by 2002:a63:ba18:: with SMTP id k24mr5215503pgf.335.1599179672743;
-        Thu, 03 Sep 2020 17:34:32 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.195.77])
-        by smtp.gmail.com with ESMTPSA id n68sm4412817pfn.145.2020.09.03.17.34.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 17:34:31 -0700 (PDT)
-From:   Anant Thazhemadam <anant.thazhemadam@gmail.com>
-Cc:     Anant Thazhemadam <anant.thazhemadam@gmail.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Remove unused variables
-Date:   Fri,  4 Sep 2020 06:04:06 +0530
-Message-Id: <20200904003408.452999-1-anant.thazhemadam@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zf9S2piXp30RkaJ2ipfBoaYTZaao4UDSG/OSRaoirlU=;
+        b=QNfiAlK34q59yxWL4RE+EKy+Hig/b9NHsyyitK2yHucEnS9VFxz/UJUWkQIkytKJYK
+         ZIISQ1bJPL8ewrr+5BPgEjK7a/hCZC3gdHkKOotQbFvmfC130Wk3en7je96wrZ90FdqG
+         I3cLvIuodtkx/a57P8BygVq/p/xNMcAasgYWRWF/MtJHlf0D+ceZilsh01VG9XmVn41B
+         TVScoZBOEBB2OWSv6KcyzqlvfAkdFegMLS8jYXol3zuDlkAAfZEDvpQs7zbf97V2VdS5
+         aIniti1Gg1uKY2IA0QWvmfhDR+0jogCISsX6paUEGxJfFm7LFKXPcjfYO+YEeLeJ42Td
+         E2Ug==
+X-Gm-Message-State: AOAM532rrFwlUJ4GjUME4LFcXAZgSt8wPS1TmLV559eOE5aZr2iBS+dR
+        Ktl4WkMy5UGQABhz/TXIaVkxNdFk9RPBKusvHTM=
+X-Google-Smtp-Source: ABdhPJyWDhHejTRyjPxyoAp33rJyDC4HRl0ogGbj6fFUS47jtnTzP4pgO97Ef1AMYlrtz+jm8azfGbMQ1LqXF0DHYqw=
+X-Received: by 2002:a05:6512:2101:: with SMTP id q1mr2519517lfr.157.1599179687683;
+ Thu, 03 Sep 2020 17:34:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200903200528.747884-1-haoluo@google.com> <CAEf4Bza6e+x8Rqy7cBzMG0F0D5WCzE7xPRoAqJgSbfyqXxtT5A@mail.gmail.com>
+In-Reply-To: <CAEf4Bza6e+x8Rqy7cBzMG0F0D5WCzE7xPRoAqJgSbfyqXxtT5A@mail.gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Thu, 3 Sep 2020 17:34:36 -0700
+Message-ID: <CAADnVQLASsjZ8W4Hi9R3ev0zVGvrCTyh8DzSYRpQFr1RB7ZV8g@mail.gmail.com>
+Subject: Re: [PATCH] selftests/bpf: Fix check in global_data_init.
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Hao Luo <haoluo@google.com>, Networking <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        KP Singh <kpsingh@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A few unused variables that were defined were found and removed.
+On Thu, Sep 3, 2020 at 1:36 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Thu, Sep 3, 2020 at 1:06 PM Hao Luo <haoluo@google.com> wrote:
+> >
+> > The returned value of bpf_object__open_file() should be checked with
+> > libbpf_get_error() rather than NULL. This fix prevents test_progs from
+> > crash when test_global_data.o is not present.
+> >
+> > Signed-off-by: Hao Luo <haoluo@google.com>
+> > ---
+>
+> thanks!
+>
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-Signed-off-by: Anant Thazhemadam <anant.thazhemadam@gmail.com>
----
- drivers/staging/comedi/drivers/dt2814.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/staging/comedi/drivers/dt2814.c b/drivers/staging/comedi/drivers/dt2814.c
-index bcf4d5444faf..1a36d8612d9f 100644
---- a/drivers/staging/comedi/drivers/dt2814.c
-+++ b/drivers/staging/comedi/drivers/dt2814.c
-@@ -190,7 +190,6 @@ static irqreturn_t dt2814_interrupt(int irq, void *d)
- 	struct comedi_device *dev = d;
- 	struct dt2814_private *devpriv = dev->private;
- 	struct comedi_subdevice *s = dev->read_subdev;
--	int data;
- 
- 	if (!dev->attached) {
- 		dev_err(dev->class_dev, "spurious interrupt\n");
-@@ -229,7 +228,6 @@ static int dt2814_attach(struct comedi_device *dev, struct comedi_devconfig *it)
- 	struct dt2814_private *devpriv;
- 	struct comedi_subdevice *s;
- 	int ret;
--	int i;
- 
- 	ret = comedi_request_region(dev, it->options[0], 0x2);
- 	if (ret)
--- 
-2.25.1
-
+Applied. Thanks
