@@ -2,325 +2,122 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D473C4CC73
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40D5C52D69
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A52921D20
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:01:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="FyjrU+HS"
+	by mail.kernel.org (Postfix) with ESMTP id 8842C25359
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599242648;
+	bh=lKICge3jhun+RF61dqzonN1rfSXdIUyK+d/Ihwq7Gs4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q2h3ZXYntWde19dOWLLfn85VK/QYbfKVFWXrwGDaPJWZo1oKYHGcT7mC/IY0ghLZJ
+	 XeQpflocnrVDk2lZWvZycjEijAMfwDXoJLbXB3Wj7rHGHPPxaoUKH9Wu+Pf5bM1vxO
+	 FdVhmy8IkpuAfdSYuXbDfBrWbPyKbDGqxs29hRW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgIDRkY (ORCPT
+        id S1727903AbgIDRaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:40:24 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:5381 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728213AbgIDRkB (ORCPT
+        Fri, 4 Sep 2020 13:30:23 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40713 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727077AbgIDRaK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:40:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1599241200; x=1630777200;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yi9Y28k8+KNZA7HbOZBu8uKIvfwREPwb/zQHiET4WYo=;
-  b=FyjrU+HSEObzq8AOvptic93CRyVHiFls2BGNgHAv4Epeo3XK6ilz7JSa
-   faojz0MtCVTf7QO6v8Z2/LO0S/sZpVxILHscDQlSSLo2MMPVUy7n34rCd
-   09JKK+U/Xx/68x3QtXMsUDdNUBlryqGRoOvLYwGCd8EWVxW+pWDUKLVgW
-   4=;
-X-IronPort-AV: E=Sophos;i="5.76,390,1592870400"; 
-   d="scan'208";a="65515504"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-821c648d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 04 Sep 2020 17:39:50 +0000
-Received: from EX13D16EUB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-821c648d.us-east-1.amazon.com (Postfix) with ESMTPS id DB443A2097;
-        Fri,  4 Sep 2020 17:39:47 +0000 (UTC)
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.145) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 4 Sep 2020 17:39:37 +0000
-From:   Andra Paraschiv <andraprs@amazon.com>
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "David Duncan" <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Karen Noel" <knoel@redhat.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm <kvm@vger.kernel.org>,
-        ne-devel-upstream <ne-devel-upstream@amazon.com>,
-        Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v8 12/18] nitro_enclaves: Add logic for starting an enclave
-Date:   Fri, 4 Sep 2020 20:37:12 +0300
-Message-ID: <20200904173718.64857-13-andraprs@amazon.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20200904173718.64857-1-andraprs@amazon.com>
-References: <20200904173718.64857-1-andraprs@amazon.com>
+        Fri, 4 Sep 2020 13:30:10 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j2so7499875wrx.7;
+        Fri, 04 Sep 2020 10:30:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wNy2hGieTjSAjcYv7kwR0BOvIQ7J3JLWd6JVvNnGJ0g=;
+        b=sZ03nkQtO3bsUjoKBy3QLm+3u9SW6Lpvfeq1irGk3xaB8UVZSgwiFfIOjAs+/gYeQ1
+         8aNDgOqAkWfXlIWn9fUfe70C5H3COjdeQ84Emxxr45a15Sl5RJOpoNgB+0bq4Wh4yscx
+         GXz14XgfuJ8nOfgUP4YuW2e5LCoqQJcueFlRFYa5BWMwNcy/UauUarfmlUO5jxvMC0XZ
+         ElGn1peCJabazZjZdDPZ/kLCmkwK+bzO01R+AQRRS3YAPT4QRU6I56z8JiXhWdAiOj3e
+         OCcuQgr1zTsWHpUV0Rj3iPB5JqGiafm3X5Ha3PCiao01tujuWrfQSALkEjcBK5JsF/3w
+         Xzlg==
+X-Gm-Message-State: AOAM533obBxxceAl1ccD5rMuXaXoqhCPMYiYwiGk2vLdqAkoT3gmEzeb
+        Wz/9RgycX3ySBYBWvOeP0vI=
+X-Google-Smtp-Source: ABdhPJy4lxSlIVmCZUYUt5G7cHc/b9vzzBbVyS5+h60xbFD5BvIaoh1SmuoljfZVF5ACmqFJVbs98w==
+X-Received: by 2002:a05:6000:100c:: with SMTP id a12mr9155928wrx.115.1599240608246;
+        Fri, 04 Sep 2020 10:30:08 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id h5sm13026654wrt.31.2020.09.04.10.30.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 10:30:07 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 17:30:06 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: Re: [PATCH v1 5/5] hv_balloon: try to merge system ram resources
+Message-ID: <20200904173006.e65qow53ietxzpne@liuwe-devbox-debian-v2>
+References: <20200821103431.13481-1-david@redhat.com>
+ <20200821103431.13481-6-david@redhat.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.43.161.145]
-X-ClientProxiedBy: EX13D08UWC002.ant.amazon.com (10.43.162.168) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821103431.13481-6-david@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After all the enclave resources are set, the enclave is ready for
-beginning to run.
+On Fri, Aug 21, 2020 at 12:34:31PM +0200, David Hildenbrand wrote:
+> Let's use the new mechanism to merge system ram resources below the
+> root. We are the only one hotplugging system ram, e.g., DIMMs don't apply,
+> so this is safe to be used.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richardw.yang@linux.intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/hv/hv_balloon.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index 32e3bc0aa665a..49a6305f0fb73 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -745,6 +745,9 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+>  			has->covered_end_pfn -=  processed_pfn;
+>  			spin_unlock_irqrestore(&dm_device.ha_lock, flags);
+>  			break;
+> +		} else {
+> +			/* Try to reduce the number of system ram resources. */
+> +			merge_system_ram_resources(&iomem_resource);
+>  		}
 
-Add ioctl command logic for starting an enclave after all its resources,
-memory regions and CPUs, have been set.
+You don't need to put the call under the "else" branch. It will have
+broken out of the loop if ret is not zero.
 
-The enclave start information includes the local channel addressing -
-vsock CID - and the flags associated with the enclave.
+Wei.
 
-Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
-Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-Reviewed-by: Alexander Graf <graf@amazon.com>
----
-Changelog
-
-v7 -> v8
-
-* Add check for invalid enclave CID value e.g. well-known CIDs and
-  parent VM CID.
-* Add custom error code for incorrect flag in enclave start info and
-  invalid enclave CID.
-
-v6 -> v7
-
-* Update the naming and add more comments to make more clear the logic
-  of handling full CPU cores and dedicating them to the enclave.
-
-v5 -> v6
-
-* Check for invalid enclave start flags.
-* Update documentation to kernel-doc format.
-
-v4 -> v5
-
-* Add early exit on enclave start ioctl function call error.
-* Move sanity checks in the enclave start ioctl function, outside of the
-  switch-case block.
-* Remove log on copy_from_user() / copy_to_user() failure.
-
-v3 -> v4
-
-* Use dev_err instead of custom NE log pattern.
-* Update the naming for the ioctl command from metadata to info.
-* Check for minimum enclave memory size.
-
-v2 -> v3
-
-* Remove the WARN_ON calls.
-* Update static calls sanity checks.
-
-v1 -> v2
-
-* Add log pattern for NE.
-* Check if enclave state is init when starting an enclave.
-* Remove the BUG_ON calls.
----
- drivers/virt/nitro_enclaves/ne_misc_dev.c | 155 ++++++++++++++++++++++
- 1 file changed, 155 insertions(+)
-
-diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-index 9912d78c0905..5ec7fdf9d08e 100644
---- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
-+++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-@@ -989,6 +989,77 @@ static int ne_set_user_memory_region_ioctl(struct ne_enclave *ne_enclave,
- 	return rc;
- }
- 
-+/**
-+ * ne_start_enclave_ioctl() - Trigger enclave start after the enclave resources,
-+ *			      such as memory and CPU, have been set.
-+ * @ne_enclave :		Private data associated with the current enclave.
-+ * @enclave_start_info :	Enclave info that includes enclave cid and flags.
-+ *
-+ * Context: Process context. This function is called with the ne_enclave mutex held.
-+ * Return:
-+ * * 0 on success.
-+ * * Negative return value on failure.
-+ */
-+static int ne_start_enclave_ioctl(struct ne_enclave *ne_enclave,
-+	struct ne_enclave_start_info *enclave_start_info)
-+{
-+	struct ne_pci_dev_cmd_reply cmd_reply = {};
-+	unsigned int cpu = 0;
-+	struct enclave_start_req enclave_start_req = {};
-+	unsigned int i = 0;
-+	int rc = -EINVAL;
-+
-+	if (!ne_enclave->nr_mem_regions) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Enclave has no mem regions\n");
-+
-+		return -NE_ERR_NO_MEM_REGIONS_ADDED;
-+	}
-+
-+	if (ne_enclave->mem_size < NE_MIN_ENCLAVE_MEM_SIZE) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Enclave memory is less than %ld\n",
-+				    NE_MIN_ENCLAVE_MEM_SIZE);
-+
-+		return -NE_ERR_ENCLAVE_MEM_MIN_SIZE;
-+	}
-+
-+	if (!ne_enclave->nr_vcpus) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Enclave has no vCPUs\n");
-+
-+		return -NE_ERR_NO_VCPUS_ADDED;
-+	}
-+
-+	for (i = 0; i < ne_enclave->nr_parent_vm_cores; i++)
-+		for_each_cpu(cpu, ne_enclave->threads_per_core[i])
-+			if (!cpumask_test_cpu(cpu, ne_enclave->vcpu_ids)) {
-+				dev_err_ratelimited(ne_misc_dev.this_device,
-+						    "Full CPU cores not used\n");
-+
-+				return -NE_ERR_FULL_CORES_NOT_USED;
-+			}
-+
-+	enclave_start_req.enclave_cid = enclave_start_info->enclave_cid;
-+	enclave_start_req.flags = enclave_start_info->flags;
-+	enclave_start_req.slot_uid = ne_enclave->slot_uid;
-+
-+	rc = ne_do_request(ne_enclave->pdev, ENCLAVE_START, &enclave_start_req,
-+			   sizeof(enclave_start_req), &cmd_reply, sizeof(cmd_reply));
-+	if (rc < 0) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Error in enclave start [rc=%d]\n", rc);
-+
-+		return rc;
-+	}
-+
-+	ne_enclave->state = NE_STATE_RUNNING;
-+
-+	enclave_start_info->enclave_cid = cmd_reply.enclave_cid;
-+
-+	return 0;
-+}
-+
- /**
-  * ne_enclave_ioctl() - Ioctl function provided by the enclave file.
-  * @file:	File associated with this ioctl function.
-@@ -1147,6 +1218,90 @@ static long ne_enclave_ioctl(struct file *file, unsigned int cmd, unsigned long
- 		return 0;
- 	}
- 
-+	case NE_START_ENCLAVE: {
-+		struct ne_enclave_start_info enclave_start_info = {};
-+		int rc = -EINVAL;
-+
-+		if (copy_from_user(&enclave_start_info, (void __user *)arg,
-+				   sizeof(enclave_start_info)))
-+			return -EFAULT;
-+
-+		if (enclave_start_info.flags >= NE_ENCLAVE_START_MAX_FLAG_VAL) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Incorrect flag in enclave start info\n");
-+
-+			return -NE_ERR_INVALID_FLAG_VALUE;
-+		}
-+
-+		/*
-+		 * Do not use well-known CIDs - 0, 1, 2 - for enclaves.
-+		 * VMADDR_CID_ANY = -1U
-+		 * VMADDR_CID_HYPERVISOR = 0
-+		 * VMADDR_CID_LOCAL = 1
-+		 * VMADDR_CID_HOST = 2
-+		 * Note: 0 is used as a placeholder to auto-generate an enclave CID.
-+		 * http://man7.org/linux/man-pages/man7/vsock.7.html
-+		 */
-+		if (enclave_start_info.enclave_cid > 0 &&
-+		    enclave_start_info.enclave_cid <= VMADDR_CID_HOST) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Well-known CID value, not to be used for enclaves\n");
-+
-+			return -NE_ERR_INVALID_ENCLAVE_CID;
-+		}
-+
-+		if (enclave_start_info.enclave_cid == U32_MAX) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Well-known CID value, not to be used for enclaves\n");
-+
-+			return -NE_ERR_INVALID_ENCLAVE_CID;
-+		}
-+
-+		/*
-+		 * Do not use the CID of the primary / parent VM for enclaves.
-+		 */
-+		if (enclave_start_info.enclave_cid == NE_PARENT_VM_CID) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "CID of the parent VM, not to be used for enclaves\n");
-+
-+			return -NE_ERR_INVALID_ENCLAVE_CID;
-+		}
-+
-+		/* 64-bit CIDs are not yet supported for the vsock device. */
-+		if (enclave_start_info.enclave_cid > U32_MAX) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "64-bit CIDs not yet supported for the vsock device\n");
-+
-+			return -NE_ERR_INVALID_ENCLAVE_CID;
-+		}
-+
-+		mutex_lock(&ne_enclave->enclave_info_mutex);
-+
-+		if (ne_enclave->state != NE_STATE_INIT) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Enclave is not in init state\n");
-+
-+			mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+			return -NE_ERR_NOT_IN_INIT_STATE;
-+		}
-+
-+		rc = ne_start_enclave_ioctl(ne_enclave, &enclave_start_info);
-+		if (rc < 0) {
-+			mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+			return rc;
-+		}
-+
-+		mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+		if (copy_to_user((void __user *)arg, &enclave_start_info,
-+				 sizeof(enclave_start_info)))
-+			return -EFAULT;
-+
-+		return 0;
-+	}
-+
- 	default:
- 		return -ENOTTY;
- 	}
--- 
-2.20.1 (Apple Git-117)
-
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
-
+>  
+>  		/*
+> -- 
+> 2.26.2
+> 
