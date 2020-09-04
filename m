@@ -2,192 +2,384 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87536C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35473C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60ACC206F2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F127720795
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:01:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eiIw4NsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgIDQAu (ORCPT
+        id S1727857AbgIDQBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:00:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:53282 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbgIDQAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:00:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C423011D4;
-        Fri,  4 Sep 2020 09:00:29 -0700 (PDT)
-Received: from e112269-lin.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60A3C3F66F;
-        Fri,  4 Sep 2020 09:00:27 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
-Cc:     Steven Price <steven.price@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, qemu-devel@nongnu.org,
-        Juan Quintela <quintela@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Peter Maydell <Peter.Maydell@arm.com>,
-        Haibo Xu <Haibo.Xu@arm.com>
-Subject: [PATCH v2 1/2] arm64: kvm: Save/restore MTE registers
-Date:   Fri,  4 Sep 2020 17:00:17 +0100
-Message-Id: <20200904160018.29481-2-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200904160018.29481-1-steven.price@arm.com>
-References: <20200904160018.29481-1-steven.price@arm.com>
+        Fri, 4 Sep 2020 12:01:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726800AbgIDQA2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:00:28 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43D87C061249
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 09:00:24 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id m12so3334664otr.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 09:00:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=l7LoSFQsLXDiF4Ji50t4+0OWRIPdPxzSD1bzh5bWiVM=;
+        b=eiIw4NsX/hyoaaz/4K6N1vOyEUOseagRphmbmaYrEF6mHxd2oVHydbdxC9ZQ9YFYxm
+         nL2oGB3LfRzX/80v0sedNSZxTdaNpZFFLXXCBdUChphm2FX6yQgON4tQihG1DsVfYLZx
+         dVPb5044+cKlSIz1QXm9DkbHXOJbnnTTwA6joHib4R/9W9CEsh1kVz087skXVlHTIwJb
+         3/VeiT+B1dsInWZ3bWxBRyLBYjOeyR3suSnpmOnVFdDsU3XFOo+cD8OiV8fYyDWmksib
+         djSM17ZBDsqJUjoG5vrupPycQozkYxOkbYelyjKaYjL+qmblPnKtCxWRPql6Sx+I/S0c
+         01ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=l7LoSFQsLXDiF4Ji50t4+0OWRIPdPxzSD1bzh5bWiVM=;
+        b=BFizing9+HWZ2U6BBXnIajQau3pwTauz4eDmtQ1zjFiZBKxAI0W+sCwL3zdJzvUwjf
+         Vucr9Y1DssiPTLPyKMjYDU08+NiB6OzdtHDtAJkeEvHDH+D680VnT5j5WyMmhYqSFKav
+         jHVNgbBt0MTwRNIhlqCVdLeH44IdNasdwPNERmfBX7hgmttklx2aU1NEYScDA5iK2e7y
+         nLPMI0LBWO2ZInXbil2uRNCobwrXtWBGzOmO+b7sqVlXtOA9vmhvbl7n/y4oGoU0YPIf
+         8p7dSepc2pJ34bSAkZO7Zo724Ns17rROMvj1hhbiSf9WD909tqwhSRviPKqAy/abJNaf
+         0Ecw==
+X-Gm-Message-State: AOAM530bZsC6FtlntW8+FEiyNm3S+Swxj+yKHNEyoJp4lqxPxLRr0vQu
+        movG4dtWGlR2mJimearZkA6Q/w==
+X-Google-Smtp-Source: ABdhPJwEPb6TXkzRGgvBsJjfupGmCtXahK43pSYpwnSmjBaRhRAFXuNxknYwxjhASOP7uTdjp/NgDw==
+X-Received: by 2002:a9d:7095:: with SMTP id l21mr6105710otj.224.1599235223846;
+        Fri, 04 Sep 2020 09:00:23 -0700 (PDT)
+Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
+        by smtp.gmail.com with ESMTPSA id t1sm1370247ooi.27.2020.09.04.09.00.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 09:00:23 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 11:00:18 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-arm-msm@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Hanna Hawa <hannah@marvell.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        "moderated list:ARM SMMU DRIVERS" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v16 14/20] iommu/arm-smmu: Prepare for the adreno-smmu
+ implementation
+Message-ID: <20200904160018.GH3715@yoga>
+References: <20200901164707.2645413-1-robdclark@gmail.com>
+ <20200901164707.2645413-15-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901164707.2645413-15-robdclark@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define the new system registers that MTE introduces and context switch
-them. The MTE feature is still hidden from the ID register as it isn't
-supported in a VM yet.
+On Tue 01 Sep 11:46 CDT 2020, Rob Clark wrote:
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- arch/arm64/include/asm/kvm_host.h          |  4 ++++
- arch/arm64/include/asm/sysreg.h            |  3 ++-
- arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h | 14 ++++++++++++++
- arch/arm64/kvm/sys_regs.c                  | 14 ++++++++++----
- 4 files changed, 30 insertions(+), 5 deletions(-)
+> From: Jordan Crouse <jcrouse@codeaurora.org>
+> 
+> Do a bit of prep work to add the upcoming adreno-smmu implementation.
+> 
+> Add an hook to allow the implementation to choose which context banks
+> to allocate.
+> 
+> Move some of the common structs to arm-smmu.h in anticipation of them
+> being used by the implementations and update some of the existing hooks
+> to pass more information that the implementation will need.
+> 
+> These modifications will be used by the upcoming Adreno SMMU
+> implementation to identify the GPU device and properly configure it
+> for pagetable switching.
+> 
+> Co-developed-by: Rob Clark <robdclark@chromium.org>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index e52c927aade5..4f4360dd149e 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -126,6 +126,8 @@ enum vcpu_sysreg {
- 	SCTLR_EL1,	/* System Control Register */
- 	ACTLR_EL1,	/* Auxiliary Control Register */
- 	CPACR_EL1,	/* Coprocessor Access Control */
-+	RGSR_EL1,	/* Random Allocation Tag Seed Register */
-+	GCR_EL1,	/* Tag Control Register */
- 	ZCR_EL1,	/* SVE Control */
- 	TTBR0_EL1,	/* Translation Table Base Register 0 */
- 	TTBR1_EL1,	/* Translation Table Base Register 1 */
-@@ -142,6 +144,8 @@ enum vcpu_sysreg {
- 	TPIDR_EL1,	/* Thread ID, Privileged */
- 	AMAIR_EL1,	/* Aux Memory Attribute Indirection Register */
- 	CNTKCTL_EL1,	/* Timer Control Register (EL1) */
-+	TFSRE0_EL1,	/* Tag Fault Status Register (EL0) */
-+	TFSR_EL1,	/* Tag Fault Stauts Register (EL1) */
- 	PAR_EL1,	/* Physical Address Register */
- 	MDSCR_EL1,	/* Monitor Debug System Control Register */
- 	MDCCINT_EL1,	/* Monitor Debug Comms Channel Interrupt Enable Reg */
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index 52eefe2f7d95..cd60677551b7 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -563,7 +563,8 @@
- #define SCTLR_ELx_M	(BIT(0))
- 
- #define SCTLR_ELx_FLAGS	(SCTLR_ELx_M  | SCTLR_ELx_A | SCTLR_ELx_C | \
--			 SCTLR_ELx_SA | SCTLR_ELx_I | SCTLR_ELx_IESB)
-+			 SCTLR_ELx_SA | SCTLR_ELx_I | SCTLR_ELx_IESB | \
-+			 SCTLR_ELx_ITFSB)
- 
- /* SCTLR_EL2 specific flags. */
- #define SCTLR_EL2_RES1	((BIT(4))  | (BIT(5))  | (BIT(11)) | (BIT(16)) | \
-diff --git a/arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h b/arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h
-index 7a986030145f..a124ffa49ba3 100644
---- a/arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h
-+++ b/arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h
-@@ -18,6 +18,11 @@
- static inline void __sysreg_save_common_state(struct kvm_cpu_context *ctxt)
- {
- 	ctxt_sys_reg(ctxt, MDSCR_EL1)	= read_sysreg(mdscr_el1);
-+	if (system_supports_mte()) {
-+		ctxt_sys_reg(ctxt, RGSR_EL1)	= read_sysreg_s(SYS_RGSR_EL1);
-+		ctxt_sys_reg(ctxt, GCR_EL1)	= read_sysreg_s(SYS_GCR_EL1);
-+		ctxt_sys_reg(ctxt, TFSRE0_EL1)	= read_sysreg_s(SYS_TFSRE0_EL1);
-+	}
- }
- 
- static inline void __sysreg_save_user_state(struct kvm_cpu_context *ctxt)
-@@ -45,6 +50,8 @@ static inline void __sysreg_save_el1_state(struct kvm_cpu_context *ctxt)
- 	ctxt_sys_reg(ctxt, CNTKCTL_EL1)	= read_sysreg_el1(SYS_CNTKCTL);
- 	ctxt_sys_reg(ctxt, PAR_EL1)	= read_sysreg(par_el1);
- 	ctxt_sys_reg(ctxt, TPIDR_EL1)	= read_sysreg(tpidr_el1);
-+	if (system_supports_mte())
-+		ctxt_sys_reg(ctxt, TFSR_EL1) = read_sysreg_el1(SYS_TFSR);
- 
- 	ctxt_sys_reg(ctxt, SP_EL1)	= read_sysreg(sp_el1);
- 	ctxt_sys_reg(ctxt, ELR_EL1)	= read_sysreg_el1(SYS_ELR);
-@@ -63,6 +70,11 @@ static inline void __sysreg_save_el2_return_state(struct kvm_cpu_context *ctxt)
- static inline void __sysreg_restore_common_state(struct kvm_cpu_context *ctxt)
- {
- 	write_sysreg(ctxt_sys_reg(ctxt, MDSCR_EL1),  mdscr_el1);
-+	if (system_supports_mte()) {
-+		write_sysreg_s(ctxt_sys_reg(ctxt, RGSR_EL1), SYS_RGSR_EL1);
-+		write_sysreg_s(ctxt_sys_reg(ctxt, GCR_EL1), SYS_GCR_EL1);
-+		write_sysreg_s(ctxt_sys_reg(ctxt, TFSRE0_EL1), SYS_TFSRE0_EL1);
-+	}
- }
- 
- static inline void __sysreg_restore_user_state(struct kvm_cpu_context *ctxt)
-@@ -106,6 +118,8 @@ static inline void __sysreg_restore_el1_state(struct kvm_cpu_context *ctxt)
- 	write_sysreg_el1(ctxt_sys_reg(ctxt, CNTKCTL_EL1), SYS_CNTKCTL);
- 	write_sysreg(ctxt_sys_reg(ctxt, PAR_EL1),	par_el1);
- 	write_sysreg(ctxt_sys_reg(ctxt, TPIDR_EL1),	tpidr_el1);
-+	if (system_supports_mte())
-+		write_sysreg_el1(ctxt_sys_reg(ctxt, TFSR_EL1), SYS_TFSR);
- 
- 	if (!has_vhe() &&
- 	    cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT) &&
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 379f4969d0bd..a655f172b5ad 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1391,6 +1391,12 @@ static bool access_mte_regs(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
- 	return false;
- }
- 
-+static unsigned int mte_visibility(const struct kvm_vcpu *vcpu,
-+				   const struct sys_reg_desc *rd)
-+{
-+	return REG_HIDDEN_USER | REG_HIDDEN_GUEST;
-+}
-+
- /* sys_reg_desc initialiser for known cpufeature ID registers */
- #define ID_SANITISED(name) {			\
- 	SYS_DESC(SYS_##name),			\
-@@ -1557,8 +1563,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 	{ SYS_DESC(SYS_ACTLR_EL1), access_actlr, reset_actlr, ACTLR_EL1 },
- 	{ SYS_DESC(SYS_CPACR_EL1), NULL, reset_val, CPACR_EL1, 0 },
- 
--	{ SYS_DESC(SYS_RGSR_EL1), access_mte_regs },
--	{ SYS_DESC(SYS_GCR_EL1), access_mte_regs },
-+	{ SYS_DESC(SYS_RGSR_EL1), access_mte_regs, reset_unknown, RGSR_EL1, .visibility = mte_visibility },
-+	{ SYS_DESC(SYS_GCR_EL1), access_mte_regs, reset_unknown, GCR_EL1, .visibility = mte_visibility },
- 
- 	{ SYS_DESC(SYS_ZCR_EL1), NULL, reset_val, ZCR_EL1, 0, .visibility = sve_visibility },
- 	{ SYS_DESC(SYS_TTBR0_EL1), access_vm_reg, reset_unknown, TTBR0_EL1 },
-@@ -1584,8 +1590,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 	{ SYS_DESC(SYS_ERXMISC0_EL1), trap_raz_wi },
- 	{ SYS_DESC(SYS_ERXMISC1_EL1), trap_raz_wi },
- 
--	{ SYS_DESC(SYS_TFSR_EL1), access_mte_regs },
--	{ SYS_DESC(SYS_TFSRE0_EL1), access_mte_regs },
-+	{ SYS_DESC(SYS_TFSR_EL1), access_mte_regs, reset_unknown, TFSR_EL1, .visibility = mte_visibility },
-+	{ SYS_DESC(SYS_TFSRE0_EL1), access_mte_regs, reset_unknown, TFSRE0_EL1, .visibility = mte_visibility },
- 
- 	{ SYS_DESC(SYS_FAR_EL1), access_vm_reg, reset_unknown, FAR_EL1 },
- 	{ SYS_DESC(SYS_PAR_EL1), NULL, reset_unknown, PAR_EL1 },
--- 
-2.20.1
+As I built the handoff support on top of this patch I ended up
+reworking the alloc_context_bank() prototype to something I found a
+little bit cleaner.
 
+So perhaps you would be interested in squashing
+https://lore.kernel.org/linux-arm-msm/20200904155513.282067-2-bjorn.andersson@linaro.org/
+into this patch?
+
+Otherwise, feel free to add my:
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/iommu/arm/arm-smmu/arm-smmu-impl.c |  2 +-
+>  drivers/iommu/arm/arm-smmu/arm-smmu.c      | 69 ++++++----------------
+>  drivers/iommu/arm/arm-smmu/arm-smmu.h      | 51 +++++++++++++++-
+>  3 files changed, 68 insertions(+), 54 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+> index a9861dcd0884..88f17cc33023 100644
+> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+> @@ -69,7 +69,7 @@ static int cavium_cfg_probe(struct arm_smmu_device *smmu)
+>  }
+>  
+>  static int cavium_init_context(struct arm_smmu_domain *smmu_domain,
+> -		struct io_pgtable_cfg *pgtbl_cfg)
+> +		struct io_pgtable_cfg *pgtbl_cfg, struct device *dev)
+>  {
+>  	struct cavium_smmu *cs = container_of(smmu_domain->smmu,
+>  					      struct cavium_smmu, smmu);
+> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+> index 8e884e58f208..68b7b9e6140e 100644
+> --- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
+> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+> @@ -65,41 +65,10 @@ module_param(disable_bypass, bool, S_IRUGO);
+>  MODULE_PARM_DESC(disable_bypass,
+>  	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
+>  
+> -struct arm_smmu_s2cr {
+> -	struct iommu_group		*group;
+> -	int				count;
+> -	enum arm_smmu_s2cr_type		type;
+> -	enum arm_smmu_s2cr_privcfg	privcfg;
+> -	u8				cbndx;
+> -};
+> -
+>  #define s2cr_init_val (struct arm_smmu_s2cr){				\
+>  	.type = disable_bypass ? S2CR_TYPE_FAULT : S2CR_TYPE_BYPASS,	\
+>  }
+>  
+> -struct arm_smmu_smr {
+> -	u16				mask;
+> -	u16				id;
+> -	bool				valid;
+> -};
+> -
+> -struct arm_smmu_cb {
+> -	u64				ttbr[2];
+> -	u32				tcr[2];
+> -	u32				mair[2];
+> -	struct arm_smmu_cfg		*cfg;
+> -};
+> -
+> -struct arm_smmu_master_cfg {
+> -	struct arm_smmu_device		*smmu;
+> -	s16				smendx[];
+> -};
+> -#define INVALID_SMENDX			-1
+> -#define cfg_smendx(cfg, fw, i) \
+> -	(i >= fw->num_ids ? INVALID_SMENDX : cfg->smendx[i])
+> -#define for_each_cfg_sme(cfg, fw, i, idx) \
+> -	for (i = 0; idx = cfg_smendx(cfg, fw, i), i < fw->num_ids; ++i)
+> -
+>  static bool using_legacy_binding, using_generic_binding;
+>  
+>  static inline int arm_smmu_rpm_get(struct arm_smmu_device *smmu)
+> @@ -234,19 +203,6 @@ static int arm_smmu_register_legacy_master(struct device *dev,
+>  }
+>  #endif /* CONFIG_ARM_SMMU_LEGACY_DT_BINDINGS */
+>  
+> -static int __arm_smmu_alloc_bitmap(unsigned long *map, int start, int end)
+> -{
+> -	int idx;
+> -
+> -	do {
+> -		idx = find_next_zero_bit(map, end, start);
+> -		if (idx == end)
+> -			return -ENOSPC;
+> -	} while (test_and_set_bit(idx, map));
+> -
+> -	return idx;
+> -}
+> -
+>  static void __arm_smmu_free_bitmap(unsigned long *map, int idx)
+>  {
+>  	clear_bit(idx, map);
+> @@ -578,7 +534,7 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+>  	}
+>  }
+>  
+> -static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+> +void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+>  {
+>  	u32 reg;
+>  	bool stage1;
+> @@ -665,7 +621,8 @@ static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+>  }
+>  
+>  static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+> -					struct arm_smmu_device *smmu)
+> +					struct arm_smmu_device *smmu,
+> +					struct device *dev)
+>  {
+>  	int irq, start, ret = 0;
+>  	unsigned long ias, oas;
+> @@ -780,10 +737,20 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>  		ret = -EINVAL;
+>  		goto out_unlock;
+>  	}
+> -	ret = __arm_smmu_alloc_bitmap(smmu->context_map, start,
+> +
+> +	smmu_domain->smmu = smmu;
+> +
+> +	if (smmu->impl && smmu->impl->alloc_context_bank)
+> +		ret = smmu->impl->alloc_context_bank(smmu_domain, dev,
+> +				start, smmu->num_context_banks);
+> +	else
+> +		ret = __arm_smmu_alloc_bitmap(smmu->context_map, start,
+>  				      smmu->num_context_banks);
+> -	if (ret < 0)
+> +
+> +	if (ret < 0) {
+> +		smmu_domain->smmu = NULL;
+>  		goto out_unlock;
+> +	}
+>  
+>  	cfg->cbndx = ret;
+>  	if (smmu->version < ARM_SMMU_V2) {
+> @@ -798,8 +765,6 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>  	else
+>  		cfg->asid = cfg->cbndx;
+>  
+> -	smmu_domain->smmu = smmu;
+> -
+>  	pgtbl_cfg = (struct io_pgtable_cfg) {
+>  		.pgsize_bitmap	= smmu->pgsize_bitmap,
+>  		.ias		= ias,
+> @@ -810,7 +775,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>  	};
+>  
+>  	if (smmu->impl && smmu->impl->init_context) {
+> -		ret = smmu->impl->init_context(smmu_domain, &pgtbl_cfg);
+> +		ret = smmu->impl->init_context(smmu_domain, &pgtbl_cfg, dev);
+>  		if (ret)
+>  			goto out_clear_smmu;
+>  	}
+> @@ -1194,7 +1159,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+>  		return ret;
+>  
+>  	/* Ensure that the domain is finalised */
+> -	ret = arm_smmu_init_domain_context(domain, smmu);
+> +	ret = arm_smmu_init_domain_context(domain, smmu, dev);
+>  	if (ret < 0)
+>  		goto rpm_put;
+>  
+> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+> index f3e456893f28..59ff3fc5c6c8 100644
+> --- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
+> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+> @@ -256,6 +256,21 @@ enum arm_smmu_implementation {
+>  	QCOM_SMMUV2,
+>  };
+>  
+> +struct arm_smmu_s2cr {
+> +	struct iommu_group		*group;
+> +	int				count;
+> +	enum arm_smmu_s2cr_type		type;
+> +	enum arm_smmu_s2cr_privcfg	privcfg;
+> +	u8				cbndx;
+> +};
+> +
+> +struct arm_smmu_smr {
+> +	u16				mask;
+> +	u16				id;
+> +	bool				valid;
+> +	bool				pinned;
+> +};
+> +
+>  struct arm_smmu_device {
+>  	struct device			*dev;
+>  
+> @@ -331,6 +346,13 @@ struct arm_smmu_cfg {
+>  };
+>  #define ARM_SMMU_INVALID_IRPTNDX	0xff
+>  
+> +struct arm_smmu_cb {
+> +	u64				ttbr[2];
+> +	u32				tcr[2];
+> +	u32				mair[2];
+> +	struct arm_smmu_cfg		*cfg;
+> +};
+> +
+>  enum arm_smmu_domain_stage {
+>  	ARM_SMMU_DOMAIN_S1 = 0,
+>  	ARM_SMMU_DOMAIN_S2,
+> @@ -350,6 +372,11 @@ struct arm_smmu_domain {
+>  	struct iommu_domain		domain;
+>  };
+>  
+> +struct arm_smmu_master_cfg {
+> +	struct arm_smmu_device		*smmu;
+> +	s16				smendx[];
+> +};
+> +
+>  static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
+>  {
+>  	u32 tcr = FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
+> @@ -400,14 +427,35 @@ struct arm_smmu_impl {
+>  	int (*cfg_probe)(struct arm_smmu_device *smmu);
+>  	int (*reset)(struct arm_smmu_device *smmu);
+>  	int (*init_context)(struct arm_smmu_domain *smmu_domain,
+> -			struct io_pgtable_cfg *cfg);
+> +			struct io_pgtable_cfg *cfg, struct device *dev);
+>  	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+>  			 int status);
+>  	int (*def_domain_type)(struct device *dev);
+>  	irqreturn_t (*global_fault)(int irq, void *dev);
+>  	irqreturn_t (*context_fault)(int irq, void *dev);
+> +	int (*alloc_context_bank)(struct arm_smmu_domain *smmu_domain,
+> +			struct device *dev, int start, int max);
+>  };
+>  
+> +#define INVALID_SMENDX			-1
+> +#define cfg_smendx(cfg, fw, i) \
+> +	(i >= fw->num_ids ? INVALID_SMENDX : cfg->smendx[i])
+> +#define for_each_cfg_sme(cfg, fw, i, idx) \
+> +	for (i = 0; idx = cfg_smendx(cfg, fw, i), i < fw->num_ids; ++i)
+> +
+> +static inline int __arm_smmu_alloc_bitmap(unsigned long *map, int start, int end)
+> +{
+> +	int idx;
+> +
+> +	do {
+> +		idx = find_next_zero_bit(map, end, start);
+> +		if (idx == end)
+> +			return -ENOSPC;
+> +	} while (test_and_set_bit(idx, map));
+> +
+> +	return idx;
+> +}
+> +
+>  static inline void __iomem *arm_smmu_page(struct arm_smmu_device *smmu, int n)
+>  {
+>  	return smmu->base + (n << smmu->pgshift);
+> @@ -472,6 +520,7 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu);
+>  struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu);
+>  struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu);
+>  
+> +void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx);
+>  int arm_mmu500_reset(struct arm_smmu_device *smmu);
+>  
+>  #endif /* _ARM_SMMU_H */
+> -- 
+> 2.26.2
+> 
