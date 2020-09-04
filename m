@@ -2,103 +2,245 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13431C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A177BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADC31254A1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:09:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="XEjxaSkJ"
+	by mail.kernel.org (Postfix) with ESMTP id E500B254A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599242953;
+	bh=i3C0cEhoqm4zXBsvgthKMXaFth2wdQw98051BVjTJSA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=dZYxraWOvldHadaNsCO7fpqklWT04SAVbFZ2XjGqKbFGUva72qhzAcGNTayPmsUJM
+	 S9LdET0fDEg3puHjwrscmKYoxqAA+cAjtYjPGybk3JYCYBk32loipnKqV2qKreva/b
+	 SX5bGpwrCHebSarVuu3NJMLTwRfSO62FtsWEkqN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgIDSJD (ORCPT
+        id S1726984AbgIDSJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 4 Sep 2020 14:09:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726853AbgIDSJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 14:09:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbgIDSI6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 14:08:58 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41DA7C061245
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 11:08:58 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id o20so5021222pfp.11
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 11:08:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VR8GNVs/4QhnhespfyktUk1pNIw2OaOAjoA98mpiYlI=;
-        b=XEjxaSkJBRR+Nw65OrveDE7+DhOIyYNNraHHcuxii2UG8l+JWdFCrP2biFNSD8SJLt
-         iPpvc/c18znjeUqOgilXudlTLABnQxCGUa233Zz7pHeEFnFh/Ygh4hEFUPEM3OK82AlB
-         GtyNiZFiOZX6nfJJ0FnGEnxtA1aACnAzqAeUY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VR8GNVs/4QhnhespfyktUk1pNIw2OaOAjoA98mpiYlI=;
-        b=qZ/p6L/cd/Xot2JioBrfPSCcEv7TTlmAa7nF5n7+TO5jTvCJtVbibC4Om4DbGjz0el
-         7YN0L2nmKVOBwUaMfV887CuwwV3sOf9xKEO+AB0B/5F6OJfPMfhofDilUeHn51ajlvAC
-         N+fSPz0ycORqqylHNo3l7UIVvG6b1XjNwJxYoKL+05HDS7hX2kj4VcwknByyFlkUydPI
-         qa3iyBlr+qC7viSWczwAdoUq1gkTvUrE5BuU5Yhr+ms8f7VJWsb2ywIV+e1GH5Z0UQ3L
-         xr11e5Dhl4IwHD6tuMlQ+I9+m0xFs7V7wKtHmnFTNBhDK0diGUuMMOscGvz1Jt3yEQ0K
-         L+Zg==
-X-Gm-Message-State: AOAM532ms1wraYjR1dvUh7QFvRPY109ioQkWyw0suo6+0pU8/QNZqTRw
-        yTBonF4Mjqir/4pY6VfkEdXxNw==
-X-Google-Smtp-Source: ABdhPJxCodZ5I7hCe8TfVPMYqQ+obWSOHN+ol2zsrB4TMir8vNQYBz2HIJbl5PnGjUbOhMTC7eVnSQ==
-X-Received: by 2002:a63:5c1a:: with SMTP id q26mr8341714pgb.223.1599242937733;
-        Fri, 04 Sep 2020 11:08:57 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:b9ea:24bf:6b2b:1eee])
-        by smtp.gmail.com with ESMTPSA id 131sm7448281pfy.5.2020.09.04.11.08.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 11:08:57 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 2/3] dt-bindings: display: simple: Add YTC700TLAG-05-201C
-Date:   Fri,  4 Sep 2020 23:38:20 +0530
-Message-Id: <20200904180821.302194-2-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200904180821.302194-1-jagan@amarulasolutions.com>
-References: <20200904180821.302194-1-jagan@amarulasolutions.com>
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7256B25499;
+        Fri,  4 Sep 2020 18:09:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599242942;
+        bh=i3C0cEhoqm4zXBsvgthKMXaFth2wdQw98051BVjTJSA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=i1j5qxOXhRD/TLfnt3g/1zlwqwPMLF+vAkXnEWAFRezRCNj1E+G+1PfOkcisqNpzL
+         aAasUdB0kD0LuyC/3oDMAm8kMidBZvv4gnMQcy6yDce6JiZPB/zCs8WoSWy2XxXHaA
+         UvQ8dmy0tspVIFizJhmzhrmzzR22dccdl+vID2RE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 26166352162B; Fri,  4 Sep 2020 11:09:02 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 11:09:02 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, joel@joelfernandes.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH tip/core/rcu 3/4] kernel/smp: Provide CSD lock timeout
+ diagnostics
+Message-ID: <20200904180902.GI29330@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200831181356.GA1224@paulmck-ThinkPad-P72>
+ <20200831181417.1378-3-paulmck@kernel.org>
+ <20200904031953.GB7922@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904031953.GB7922@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dt-bindings for YTC700TLAG-05-201C 7" TFT LCD panel from
-Yes Optoelectronics Co.,Ltd.
+On Fri, Sep 04, 2020 at 11:19:53AM +0800, Boqun Feng wrote:
+> On Mon, Aug 31, 2020 at 11:14:16AM -0700, paulmck@kernel.org wrote:
+> > From: "Paul E. McKenney" <paulmck@kernel.org>
+> > 
+> > This commit causes csd_lock_wait() to emit diagnostics when a CPU
+> > fails to respond quickly enough to one of the smp_call_function()
+> > family of function calls.  These diagnostics are enabled by a new
+> > CSD_LOCK_WAIT_DEBUG Kconfig option that depends on DEBUG_KERNEL.
+> > 
+> > This commit was inspired by an earlier patch by Josef Bacik.
+> > 
+> > [ paulmck: Fix for syzbot+0f719294463916a3fc0e@syzkaller.appspotmail.com ]
+> > [ paulmck: Fix KASAN use-after-free issue reported by Qian Cai. ]
+> > [ paulmck: Fix botched nr_cpu_ids comparison per Dan Carpenter. ]
+> > [ paulmck: Apply Peter Zijlstra feedback. ]
+> > Link: https://lore.kernel.org/lkml/00000000000042f21905a991ecea@google.com
+> > Link: https://lore.kernel.org/lkml/0000000000002ef21705a9933cf3@google.com
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > ---
+> >  kernel/smp.c      | 132 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  lib/Kconfig.debug |  11 +++++
+> >  2 files changed, 143 insertions(+)
+> > 
+> > diff --git a/kernel/smp.c b/kernel/smp.c
+> > index a47382d..c5d3188 100644
+> > --- a/kernel/smp.c
+> > +++ b/kernel/smp.c
+> > @@ -20,6 +20,9 @@
+> >  #include <linux/sched.h>
+> >  #include <linux/sched/idle.h>
+> >  #include <linux/hypervisor.h>
+> > +#include <linux/sched/clock.h>
+> > +#include <linux/nmi.h>
+> > +#include <linux/sched/debug.h>
+> >  
+> >  #include "smpboot.h"
+> >  #include "sched/smp.h"
+> > @@ -96,6 +99,103 @@ void __init call_function_init(void)
+> >  	smpcfd_prepare_cpu(smp_processor_id());
+> >  }
+> >  
+> > +#ifdef CONFIG_CSD_LOCK_WAIT_DEBUG
+> > +
+> > +static DEFINE_PER_CPU(call_single_data_t *, cur_csd);
+> > +static DEFINE_PER_CPU(smp_call_func_t, cur_csd_func);
+> > +static DEFINE_PER_CPU(void *, cur_csd_info);
+> > +
+> > +#define CSD_LOCK_TIMEOUT (5ULL * NSEC_PER_SEC)
+> > +atomic_t csd_bug_count = ATOMIC_INIT(0);
+> > +
+> > +/* Record current CSD work for current CPU, NULL to erase. */
+> > +static void csd_lock_record(call_single_data_t *csd)
+> > +{
+> > +	if (!csd) {
+> > +		smp_mb(); /* NULL cur_csd after unlock. */
+> > +		__this_cpu_write(cur_csd, NULL);
+> > +		return;
+> > +	}
+> > +	__this_cpu_write(cur_csd_func, csd->func);
+> > +	__this_cpu_write(cur_csd_info, csd->info);
+> > +	smp_wmb(); /* func and info before csd. */
+> > +	__this_cpu_write(cur_csd, csd);
+> > +	smp_mb(); /* Update cur_csd before function call. */
+> > +		  /* Or before unlock, as the case may be. */
+> > +}
+> > +
+> > +static __always_inline int csd_lock_wait_getcpu(call_single_data_t *csd)
+> > +{
+> > +	unsigned int csd_type;
+> > +
+> > +	csd_type = CSD_TYPE(csd);
+> > +	if (csd_type == CSD_TYPE_ASYNC || csd_type == CSD_TYPE_SYNC)
+> > +		return csd->dst; /* Other CSD_TYPE_ values might not have ->dst. */
+> > +	return -1;
+> > +}
+> > +
+> > +/*
+> > + * Complain if too much time spent waiting.  Note that only
+> > + * the CSD_TYPE_SYNC/ASYNC types provide the destination CPU,
+> > + * so waiting on other types gets much less information.
+> > + */
+> > +static __always_inline bool csd_lock_wait_toolong(call_single_data_t *csd, u64 ts0, u64 *ts1, int *bug_id)
+> > +{
+> > +	int cpu = -1;
+> > +	int cpux;
+> > +	bool firsttime;
+> > +	u64 ts2, ts_delta;
+> > +	call_single_data_t *cpu_cur_csd;
+> > +	unsigned int flags = READ_ONCE(csd->flags);
+> > +
+> > +	if (!(flags & CSD_FLAG_LOCK)) {
+> > +		if (!unlikely(*bug_id))
+> > +			return true;
+> > +		cpu = csd_lock_wait_getcpu(csd);
+> > +		pr_alert("csd: CSD lock (#%d) got unstuck on CPU#%02d, CPU#%02d released the lock.\n",
+> > +			 *bug_id, raw_smp_processor_id(), cpu);
+> > +		return true;
+> > +	}
+> > +
+> > +	ts2 = sched_clock();
+> > +	ts_delta = ts2 - *ts1;
+> > +	if (likely(ts_delta <= CSD_LOCK_TIMEOUT))
+> > +		return false;
+> > +
+> > +	firsttime = !*bug_id;
+> > +	if (firsttime)
+> > +		*bug_id = atomic_inc_return(&csd_bug_count);
+> > +	cpu = csd_lock_wait_getcpu(csd);
+> > +	if (WARN_ONCE(cpu < 0 || cpu >= nr_cpu_ids, "%s: cpu = %d\n", __func__, cpu))
+> > +		cpux = 0;
+> > +	else
+> > +		cpux = cpu;
+> > +	cpu_cur_csd = smp_load_acquire(&per_cpu(cur_csd, cpux)); /* Before func and info. */
+> 
+> Should we re-read csd->flags and check CSD_FLAG_LOCK again to improve
+> the accuracy or to avoid unnecessary stack dumping? Because cpux may
+> just finish the csd in question and clear the CSD_FLAG_LOCK bit, so it's
+> late but no so late ;-) Maybe we can put the following check:
+> 
+> > +	pr_alert("csd: %s non-responsive CSD lock (#%d) on CPU#%d, waiting %llu ns for CPU#%02d %pS(%ps).\n",
+> > +		 firsttime ? "Detected" : "Continued", *bug_id, raw_smp_processor_id(), ts2 - ts0,
+> > +		 cpu, csd->func, csd->info);
+> 
+> 	/*
+> 	 * Re-read and check the flag.
+> 	 *
+> 	 * If destination cpu just handled the csd in question, we want
+> 	 * to report the timeout but may not want to do stack dumping on
+> 	 * either src or dst cpu, because in that case the stacks will
+> 	 * be pretty much pointless. Since csd_lock_record(NULL) will
+> 	 * issue a smp_mb() before setting cur_csd, we are guaranteed
+> 	 * to observe the unlocked state of ->flags if the previous
+> 	 * smp_load_acquire() observe the csd_lock_record(NULL) of
+> 	 * handling the csd in question as follow:
+> 	 * 
+> 	 * CPU 0			CPU 1
+> 	 *				<queue csd>
+> 	 * <handle other csds>		csd_lock_wait_toolong()
+> 	 * 				flags = READ_ONCE(csd->flags); // locked
+> 	 * <handle the csd of CPU 1>
+> 	 * csd_lock_record(csd);
+> 	 * func(info);
+> 	 * csd_unlock(csd); // unlocked
+> 	 * csd_lock_record(NULL);
+> 	 *				<ts_delat > CSD_LOCK_TIMEOUT> // going to report the timeout
+> 	 *				cpu_cur_csd = smp_load_acquire(...);
+> 	 * <handle other csds>
+> 	 * csd_lock_record(other_csd);
+> 	 *				flags = READ_ONCE(csd->flags); // observe the unlocked state
+> 	 *				                               // no matter cpu_cur_csd is NULL or other_csd
+> 	 * 
+> 	 */
+> 	flags = READ_ONCE(csd->flags);
+> 	if (!(flags & CSD_FLAG_LOCK)) {
+> 		pr_alert("csd: CSD lock (#%d) got unstuck on CPU#%02d, CPU#%02d released the lock.\n",
+> 			 *bug_id, raw_smp_processor_id(), cpux);
+> 		return true;
+> 	}
+> 
+> Thoughts?
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
- 1 file changed, 2 insertions(+)
+it might eventually be necessary to do this, but we do need to see
+a real problem before layering on more code.  After all, the episode
+could just as easily end right after the re-read.  And thus far, aside
+from scftorture, the episodes in the wild were of the type that never
+does end.  Plus the stack dump will take quite a bit more time than the
+interval between the initial read and your proposed re-read.  So again,
+we need to see a real problem before doing something like this.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index f629d04f7737..3e12b32897e0 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -268,6 +268,8 @@ properties:
-       - vxt,vl050-8048nt-c01
-         # Winstar Display Corporation 3.5" QVGA (320x240) TFT LCD panel
-       - winstar,wf35ltiacd
-+        # Yes Optoelectronics YTC700TLAG-05-201C 7" TFT LCD panel
-+      - yes-optoelectronics,ytc700tlag-05-201c
- 
-   backlight: true
-   enable-gpios: true
--- 
-2.25.1
-
+							Thanx, Paul
