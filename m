@@ -2,155 +2,108 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C5CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 22:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6BAC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 22:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 543582087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 22:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD05C2087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 22:14:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599257686;
+	bh=Ghhq5Gp5y9JBDA0hXM9EVOfgXHkYK/npcCPbvCa+d0s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1ky7ctuUeGAFWr07XeYx4OLagiW/+1H9gxoscJ8SUzQb3/zQdbcp6XLPE78ITFe1b
+	 x29jSFnHFKlouE2at94M9Elbx70aqLNcLJ+zn3w2kFC/GRVvkTBlD+nm8MT7gOQkx+
+	 7eBeTfymYKRqPuGPyVQdG23fiYMvo9Xk55P2QFt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbgIDWKT (ORCPT
+        id S1728177AbgIDWOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 18:10:19 -0400
-Received: from smtprelay0073.hostedemail.com ([216.40.44.73]:47896 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728120AbgIDWKS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 18:10:18 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 75AD2100E7B42;
-        Fri,  4 Sep 2020 22:10:17 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: land80_2909a34270b5
-X-Filterd-Recvd-Size: 5167
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  4 Sep 2020 22:10:16 +0000 (UTC)
-Message-ID: <d9e2693cc157bbc09df92a91a9ecad8dcc8438ce.camel@perches.com>
-Subject: [PATCH] fscrypt: Reduce object size of logging messages
-From:   Joe Perches <joe@perches.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-fscrypt@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 04 Sep 2020 15:10:15 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Fri, 4 Sep 2020 18:14:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728114AbgIDWOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 18:14:44 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 728072083B;
+        Fri,  4 Sep 2020 22:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599257683;
+        bh=Ghhq5Gp5y9JBDA0hXM9EVOfgXHkYK/npcCPbvCa+d0s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bTAn5h5Y+a0GAfXKhQIO4q3HW4GOgIjJXX5QcCpOG3dltGe7BlglDvJpRHwyr3jna
+         +38ZU0onZVIH1bvsokogDtK4YdLECNU6AfhhdiYEfb0wvRIfV9uE8iEZUwJ2FQ4ewk
+         oxNu6B7pJgaWlxOOiu+Adj4Gwh1het9edZUCw5Ys=
+Date:   Fri, 4 Sep 2020 15:14:41 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Xie He <xie.he.0141@gmail.com>
+Cc:     Krzysztof Halasa <khc@pm.waw.pl>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Subject: Re: [PATCH net v2] drivers/net/wan/hdlc_fr: Add needed_headroom for
+ PVC devices
+Message-ID: <20200904151441.27c97d80@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200903000658.89944-1-xie.he.0141@gmail.com>
+References: <20200903000658.89944-1-xie.he.0141@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reduce the object size of logging messages by removing the
-separate KERN_LEVEL argument and adding it to the format.
+On Wed,  2 Sep 2020 17:06:58 -0700 Xie He wrote:
+> PVC devices are virtual devices in this driver stacked on top of the
+> actual HDLC device. They are the devices normal users would use.
+> PVC devices have two types: normal PVC devices and Ethernet-emulating
+> PVC devices.
+> 
+> When transmitting data with PVC devices, the ndo_start_xmit function
+> will prepend a header of 4 or 10 bytes. Currently this driver requests
+> this headroom to be reserved for normal PVC devices by setting their
+> hard_header_len to 10. However, this does not work when these devices
+> are used with AF_PACKET/RAW sockets. Also, this driver does not request
+> this headroom for Ethernet-emulating PVC devices (but deals with this
+> problem by reallocating the skb when needed, which is not optimal).
+> 
+> This patch replaces hard_header_len with needed_headroom, and set
+> needed_headroom for Ethernet-emulating PVC devices, too. This makes
+> the driver to request headroom for all PVC devices in all cases.
 
-Miscellanea:
+Since this is a tunnel protocol on top of HDLC interfaces, and
+hdlc_setup_dev() sets dev->hard_header_len = 16; should we actually 
+set the needed_headroom to 10 + 16 = 26? I'm not clear on where/if 
+hdlc devices actually prepend 16 bytes of header, though.
 
-o Rename fscypt_msg to fscrypt_printk
+CC: Willem as he was reviewing your similar patch recently.
 
-x86-64 defconfig with fscrypto:
+> diff --git a/drivers/net/wan/hdlc_fr.c b/drivers/net/wan/hdlc_fr.c
+> index 9acad651ea1f..12b35404cd8e 100644
+> --- a/drivers/net/wan/hdlc_fr.c
+> +++ b/drivers/net/wan/hdlc_fr.c
+> @@ -1041,7 +1041,7 @@ static void pvc_setup(struct net_device *dev)
+>  {
+>  	dev->type = ARPHRD_DLCI;
+>  	dev->flags = IFF_POINTOPOINT;
+> -	dev->hard_header_len = 10;
+> +	dev->hard_header_len = 0;
 
-Original sizes:
-$ size fs/crypto/built-in.a -t
-   text	   data	    bss	    dec	    hex	filename
-   3815	    300	     24	   4139	   102b	fs/crypto/crypto.o (ex fs/crypto/built-in.a)
-   4354	     84	      0	   4438	   1156	fs/crypto/fname.o (ex fs/crypto/built-in.a)
-   1484	     24	      0	   1508	    5e4	fs/crypto/hkdf.o (ex fs/crypto/built-in.a)
-   2910	     68	      0	   2978	    ba2	fs/crypto/hooks.o (ex fs/crypto/built-in.a)
-   7797	    664	     65	   8526	   214e	fs/crypto/keyring.o (ex fs/crypto/built-in.a)
-   5005	    493	      0	   5498	   157a	fs/crypto/keysetup.o (ex fs/crypto/built-in.a)
-   2805	      0	    544	   3349	    d15	fs/crypto/keysetup_v1.o (ex fs/crypto/built-in.a)
-   6391	     90	      0	   6481	   1951	fs/crypto/policy.o (ex fs/crypto/built-in.a)
-   1369	     40	      0	   1409	    581	fs/crypto/bio.o (ex fs/crypto/built-in.a)
-  35930	   1763	    633	  38326	   95b6	(TOTALS)
+Is there a need to set this to 0? Will it not be zero after allocation?
 
-New sizes:
-$ size fs/crypto/built-in.a -t
-   text	   data	    bss	    dec	    hex	filename
-   3874	    300	     24	   4198	   1066	fs/crypto/crypto.o (ex fs/crypto/built-in.a)
-   4347	     84	      0	   4431	   114f	fs/crypto/fname.o (ex fs/crypto/built-in.a)
-   1476	     24	      0	   1500	    5dc	fs/crypto/hkdf.o (ex fs/crypto/built-in.a)
-   2902	     68	      0	   2970	    b9a	fs/crypto/hooks.o (ex fs/crypto/built-in.a)
-   7781	    664	     65	   8510	   213e	fs/crypto/keyring.o (ex fs/crypto/built-in.a)
-   4961	    493	      0	   5454	   154e	fs/crypto/keysetup.o (ex fs/crypto/built-in.a)
-   2790	      0	    544	   3334	    d06	fs/crypto/keysetup_v1.o (ex fs/crypto/built-in.a)
-   6306	     90	      0	   6396	   18fc	fs/crypto/policy.o (ex fs/crypto/built-in.a)
-   1369	     40	      0	   1409	    581	fs/crypto/bio.o (ex fs/crypto/built-in.a)
-  35806	   1763	    633	  38202	   953a	(TOTALS)
-
-Signed-off-by: Joe Perches <joe@perches.com>
----
- fs/crypto/crypto.c          | 14 ++++++++------
- fs/crypto/fscrypt_private.h | 12 ++++++------
- 2 files changed, 14 insertions(+), 12 deletions(-)
-
-diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
-index 9212325763b0..c82cc3907e43 100644
---- a/fs/crypto/crypto.c
-+++ b/fs/crypto/crypto.c
-@@ -329,25 +329,27 @@ int fscrypt_initialize(unsigned int cop_flags)
- 	return err;
- }
- 
--void fscrypt_msg(const struct inode *inode, const char *level,
--		 const char *fmt, ...)
-+void fscrypt_printk(const struct inode *inode, const char *fmt, ...)
- {
- 	static DEFINE_RATELIMIT_STATE(rs, DEFAULT_RATELIMIT_INTERVAL,
- 				      DEFAULT_RATELIMIT_BURST);
- 	struct va_format vaf;
- 	va_list args;
-+	int level;
- 
- 	if (!__ratelimit(&rs))
- 		return;
- 
- 	va_start(args, fmt);
--	vaf.fmt = fmt;
-+	level = printk_get_level(fmt);
-+	vaf.fmt = printk_skip_level(fmt);
- 	vaf.va = &args;
- 	if (inode)
--		printk("%sfscrypt (%s, inode %lu): %pV\n",
--		       level, inode->i_sb->s_id, inode->i_ino, &vaf);
-+		printk("%c%cfscrypt (%s, inode %lu): %pV\n",
-+		       KERN_SOH_ASCII, level, inode->i_sb->s_id, inode->i_ino,
-+		       &vaf);
- 	else
--		printk("%sfscrypt: %pV\n", level, &vaf);
-+		printk("%c%cfscrypt: %pV\n", KERN_SOH_ASCII, level, &vaf);
- 	va_end(args);
- }
- 
-diff --git a/fs/crypto/fscrypt_private.h b/fs/crypto/fscrypt_private.h
-index 8117a61b6f55..fcdb1fc7cbfd 100644
---- a/fs/crypto/fscrypt_private.h
-+++ b/fs/crypto/fscrypt_private.h
-@@ -264,13 +264,13 @@ int fscrypt_crypt_block(const struct inode *inode, fscrypt_direction_t rw,
- 			unsigned int offs, gfp_t gfp_flags);
- struct page *fscrypt_alloc_bounce_page(gfp_t gfp_flags);
- 
--void __printf(3, 4) __cold
--fscrypt_msg(const struct inode *inode, const char *level, const char *fmt, ...);
-+void __printf(2, 3) __cold
-+fscrypt_printk(const struct inode *inode, const char *fmt, ...);
- 
--#define fscrypt_warn(inode, fmt, ...)		\
--	fscrypt_msg((inode), KERN_WARNING, fmt, ##__VA_ARGS__)
--#define fscrypt_err(inode, fmt, ...)		\
--	fscrypt_msg((inode), KERN_ERR, fmt, ##__VA_ARGS__)
-+#define fscrypt_err(inode, fmt, ...)					\
-+	fscrypt_printk(inode, KERN_ERR fmt, ##__VA_ARGS__)
-+#define fscrypt_warn(inode, fmt, ...)					\
-+	fscrypt_printk(inode, KERN_WARNING fmt, ##__VA_ARGS__)
- 
- #define FSCRYPT_MAX_IV_SIZE	32
- 
-
+>  	dev->addr_len = 2;
+>  	netif_keep_dst(dev);
+>  }
+> @@ -1093,6 +1093,7 @@ static int fr_add_pvc(struct net_device *frad, unsigned int dlci, int type)
+>  	dev->mtu = HDLC_MAX_MTU;
+>  	dev->min_mtu = 68;
+>  	dev->max_mtu = HDLC_MAX_MTU;
+> +	dev->needed_headroom = 10;
+>  	dev->priv_flags |= IFF_NO_QUEUE;
+>  	dev->ml_priv = pvc;
+>  
