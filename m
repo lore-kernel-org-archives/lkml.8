@@ -2,195 +2,267 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CEBC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034C7C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37E77206CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4EE3206C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CUYM0LnH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gt3FzVO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729858AbgIDIRy (ORCPT
+        id S1729759AbgIDITH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:17:54 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:22398 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729822AbgIDIRv (ORCPT
+        Fri, 4 Sep 2020 04:19:07 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60892 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726151AbgIDITG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:17:51 -0400
-X-UUID: 879cd4c6313e4e9082aa7c76b42b9703-20200904
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=upMNS0MB3Ur6gFFBG2sLXkXEri5loD8L5SIhf1iYAyQ=;
-        b=CUYM0LnHruRgV1/J1cf93Ng3qB5fV+fE9gxX2pA/+zzo0wa2dVbEdUz1rddUTuRDxevA9YYsISqMbHL+J/dIiET4neYzAlY5UfVkm2Lsl0NiWUaYsGvE3uMinA4ljhP6zciDgi81fRBBcMhtrBaynSjPl0lYjqGMXKfleyyMocc=;
-X-UUID: 879cd4c6313e4e9082aa7c76b42b9703-20200904
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 921742249; Fri, 04 Sep 2020 16:17:33 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 4 Sep 2020 16:17:29 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 4 Sep 2020 16:17:28 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Zhanyong Wang <zhanyong.wang@mediatek.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        Yaqii Wu <yaqii.wu@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [RFC PATCH v2 1/4] usb: xhci-mtk: improve bandwidth scheduling with multi-TT
-Date:   Fri, 4 Sep 2020 16:15:37 +0800
-Message-ID: <1599207340-4673-1-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
+        Fri, 4 Sep 2020 04:19:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599207545;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=phO9cBpvfpkXU4NPdjyoUela0DTAh6976p8XX9PeDZQ=;
+        b=gt3FzVO1r2yoGTpmyOLBtsqzEFshVTceLGSCx28+bUlFZ8tAUsf8zjaEPpnFCwULBUdPwu
+        Gj/5k/fVykSTvKnHE+pJelJaKcBxmRg4HGml00ycCSlFeOyOioMZsK2iUvd4+R0psrk9zc
+        uUVlJ5P7gKNJ7kBNSTGge0b8vMl9DGE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-26-wpVnDR64MJ6lLMQmyz9u9Q-1; Fri, 04 Sep 2020 04:19:03 -0400
+X-MC-Unique: wpVnDR64MJ6lLMQmyz9u9Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40121107464E;
+        Fri,  4 Sep 2020 08:19:02 +0000 (UTC)
+Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9DD3A1002D64;
+        Fri,  4 Sep 2020 08:18:57 +0000 (UTC)
+Subject: Re: [PATCH v4 09/10] vfio/fsl-mc: Add read/write support for fsl-mc
+ devices
+To:     Diana Craciun <diana.craciun@oss.nxp.com>,
+        alex.williamson@redhat.com, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
+        laurentiu.tudor@nxp.com, Bharat Bhushan <Bharat.Bhushan@nxp.com>
+References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
+ <20200826093315.5279-10-diana.craciun@oss.nxp.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <182a6686-a1ca-398b-2ccc-8a5638ffe7aa@redhat.com>
+Date:   Fri, 4 Sep 2020 10:18:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 430485D858A4CFB133030A5B5ABA27634A483D908A1E5E217CE6FB000C5E0BBA2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200826093315.5279-10-diana.craciun@oss.nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogWmhhbnlvbmcgV2FuZyA8emhhbnlvbmcud2FuZ0BtZWRpYXRlay5jb20+DQoNCkFmdGVy
-IGluc2VydGVkIHRoZSB1c2IgdHlwZS1jIDMuNW1tIGRvbmdsZSB3aXRoIGhlYWRzZXQsIGRtZXNn
-IHNob3dlZDoNCnVzYiAxLTEuMTogbmV3IGZ1bGwtc3BlZWQgVVNCIGRldmljZSBudW1iZXIgNSB1
-c2luZyB4aGNpLW10aw0KdXNiIDEtMS4xOiBOZXcgVVNCIGRldmljZSBmb3VuZCwgaWRWZW5kb3I9
-MDVhYywgaWRQcm9kdWN0PTExMGEsIGJjZERldmljZT0yNi4xMQ0KdXNiIDEtMS4xOiBOZXcgVVNC
-IGRldmljZSBzdHJpbmdzOiBNZnI9MSwgUHJvZHVjdD0yLCBTZXJpYWxOdW1iZXI9Mw0KdXNiIDEt
-MS4xOiBQcm9kdWN0OiBVU0ItQyB0byAzLjVtbSBIZWFkcGhvbmUgSmFjayBBZGFwdGVyDQp1c2Ig
-MS0xLjE6IE1hbnVmYWN0dXJlcjogQXBwbGUsIEluYy4NCnVzYiAxLTEuMTogU2VyaWFsTnVtYmVy
-OiBEV0g5MTU1MDFURkpLTFRBTQ0KeGhjaS1tdGsgMTEyMDAwMDAueGhjaTogTm90IGVub3VnaCBi
-YW5kd2lkdGghDQp1c2IgMS0xLjE6IGNhbid0IHNldCBjb25maWcgIzIsIGVycm9yIC0yOA0KDQpp
-bXByb3ZlIGxvdy1zcGVlZC9mdWxsLXNwZWVkIElOVC9JU09DIGJhbmR3aWR0aCBzY2hlZHVsaW5n
-IHdpdGggVVNCDQptdWxpLVRULg0KDQpTaWduZWQtb2ZmLWJ5OiBZYXFpaSBXdSA8eWFxaWkud3VA
-bWVkaWF0ZWsuY29tPg0KU2lnbmVkLW9mZi1ieTogQ2h1bmZlbmcgWXVuIDxjaHVuZmVuZy55dW5A
-bWVkaWF0ZWsuY29tPg0KLS0tDQp2Mjogbm8gY2hhbmdlcw0KLS0tDQogZHJpdmVycy91c2IvaG9z
-dC94aGNpLW10ay1zY2guYyB8IDkxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKyst
-LS0tLS0tDQogZHJpdmVycy91c2IvaG9zdC94aGNpLW10ay5oICAgICB8ICA4ICsrKy0NCiAyIGZp
-bGVzIGNoYW5nZWQsIDg0IGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQ0KIG1vZGUgY2hh
-bmdlIDEwMDY0NCA9PiAxMDA3NTUgZHJpdmVycy91c2IvaG9zdC94aGNpLW10ay1zY2guYw0KDQpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvaG9zdC94aGNpLW10ay1zY2guYyBiL2RyaXZlcnMvdXNi
-L2hvc3QveGhjaS1tdGstc2NoLmMNCm9sZCBtb2RlIDEwMDY0NA0KbmV3IG1vZGUgMTAwNzU1DQpp
-bmRleCA0NWM1NGQ1Ni4uOTQyOTJiOQ0KLS0tIGEvZHJpdmVycy91c2IvaG9zdC94aGNpLW10ay1z
-Y2guYw0KKysrIGIvZHJpdmVycy91c2IvaG9zdC94aGNpLW10ay1zY2guYw0KQEAgLTM4Myw3ICsz
-ODMsOSBAQCBzdGF0aWMgaW50IGNoZWNrX3NjaF90dChzdHJ1Y3QgdXNiX2RldmljZSAqdWRldiwN
-CiAJdTMyIGZzX2J1ZGdldF9zdGFydDsNCiAJdTMyIHN0YXJ0X3NzLCBsYXN0X3NzOw0KIAl1MzIg
-c3RhcnRfY3MsIGxhc3RfY3M7DQotCWludCBpOw0KKwl1MzIgbnVtX2VzaXQsIGJhc2U7DQorCWlu
-dCBpLCBqOw0KKwl1MzIgdG1wOw0KIA0KIAlzdGFydF9zcyA9IG9mZnNldCAlIDg7DQogCWZzX2J1
-ZGdldF9zdGFydCA9IChzdGFydF9zcyArIDEpICUgODsNCkBAIC0zOTgsMTAgKzQwMCwxMyBAQCBz
-dGF0aWMgaW50IGNoZWNrX3NjaF90dChzdHJ1Y3QgdXNiX2RldmljZSAqdWRldiwNCiAJCWlmICgh
-KHN0YXJ0X3NzID09IDcgfHwgbGFzdF9zcyA8IDYpKQ0KIAkJCXJldHVybiAtRVJBTkdFOw0KIA0K
-LQkJZm9yIChpID0gMDsgaSA8IHNjaF9lcC0+Y3NfY291bnQ7IGkrKykNCi0JCQlpZiAodGVzdF9i
-aXQob2Zmc2V0ICsgaSwgdHQtPnNwbGl0X2JpdF9tYXApKQ0KKwkJZm9yIChpID0gMDsgaSA8IHNj
-aF9lcC0+Y3NfY291bnQ7IGkrKykgew0KKwkJCWlmICh0ZXN0X2JpdChvZmZzZXQgKyBpLCB0dC0+
-c3NfYml0X21hcCkpDQogCQkJCXJldHVybiAtRVJBTkdFOw0KIA0KKwkJCWlmICh0ZXN0X2JpdChv
-ZmZzZXQgKyBpLCB0dC0+Y3NfYml0X21hcCkpDQorCQkJCXJldHVybiAtRVJBTkdFOw0KKwkJfQ0K
-IAl9IGVsc2Ugew0KIAkJdTMyIGNzX2NvdW50ID0gRElWX1JPVU5EX1VQKHNjaF9lcC0+bWF4cGt0
-LCBGU19QQVlMT0FEX01BWCk7DQogDQpAQCAtNDI4LDggKzQzMywxMCBAQCBzdGF0aWMgaW50IGNo
-ZWNrX3NjaF90dChzdHJ1Y3QgdXNiX2RldmljZSAqdWRldiwNCiAJCWlmIChjc19jb3VudCA+IDcp
-DQogCQkJY3NfY291bnQgPSA3OyAvKiBIVyBsaW1pdCAqLw0KIA0KLQkJZm9yIChpID0gMDsgaSA8
-IGNzX2NvdW50ICsgMjsgaSsrKSB7DQotCQkJaWYgKHRlc3RfYml0KG9mZnNldCArIGksIHR0LT5z
-cGxpdF9iaXRfbWFwKSkNCisJCWlmICh0ZXN0X2JpdChvZmZzZXQsIHR0LT5zc19iaXRfbWFwKSkN
-CisJCQlyZXR1cm4gLUVSQU5HRTsNCisJCWZvciAoaSA9IDA7IGkgPCBjc19jb3VudDsgaSsrKSB7
-DQorCQkJaWYgKHRlc3RfYml0KG9mZnNldCArIDIgKyBpLCB0dC0+Y3NfYml0X21hcCkpDQogCQkJ
-CXJldHVybiAtRVJBTkdFOw0KIAkJfQ0KIA0KQEAgLTQ0NSwxMSArNDUyLDIyIEBAIHN0YXRpYyBp
-bnQgY2hlY2tfc2NoX3R0KHN0cnVjdCB1c2JfZGV2aWNlICp1ZGV2LA0KIAkJCXNjaF9lcC0+bnVt
-X2J1ZGdldF9taWNyb2ZyYW1lcyA9IHNjaF9lcC0+ZXNpdDsNCiAJfQ0KIA0KKwludW1fZXNpdCA9
-IFhIQ0lfTVRLX01BWF9FU0lUIC8gc2NoX2VwLT5lc2l0Ow0KKwlmb3IgKGkgPSAwOyBpIDwgbnVt
-X2VzaXQ7IGkrKykgew0KKwkJYmFzZSA9IHNjaF9lcC0+b2Zmc2V0ICsgaSAqIHNjaF9lcC0+ZXNp
-dDsNCisJCWZvciAoaiA9IDA7IGogPCBzY2hfZXAtPm51bV9idWRnZXRfbWljcm9mcmFtZXM7IGor
-Kykgew0KKwkJCXRtcCA9IHR0LT5mc19idXNfYndbYmFzZSArIGpdDQorCQkJICAgICAgKyBzY2hf
-ZXAtPmJ3X2Nvc3RfcGVyX21pY3JvZnJhbWU7DQorCQkJaWYgKHRtcCA+IEZTX1BBWUxPQURfTUFY
-KQ0KKwkJCQlyZXR1cm4gLUVSQU5HRTsNCisJCX0NCisJfQ0KKw0KIAlyZXR1cm4gMDsNCiB9DQog
-DQogc3RhdGljIHZvaWQgdXBkYXRlX3NjaF90dChzdHJ1Y3QgdXNiX2RldmljZSAqdWRldiwNCi0J
-c3RydWN0IG11M2hfc2NoX2VwX2luZm8gKnNjaF9lcCkNCisJc3RydWN0IG11M2hfc2NoX2VwX2lu
-Zm8gKnNjaF9lcCwgYm9vbCB1c2VkKQ0KIHsNCiAJc3RydWN0IG11M2hfc2NoX3R0ICp0dCA9IHNj
-aF9lcC0+c2NoX3R0Ow0KIAl1MzIgYmFzZSwgbnVtX2VzaXQ7DQpAQCAtNDU4LDExICs0NzYsNTIg
-QEAgc3RhdGljIHZvaWQgdXBkYXRlX3NjaF90dChzdHJ1Y3QgdXNiX2RldmljZSAqdWRldiwNCiAJ
-bnVtX2VzaXQgPSBYSENJX01US19NQVhfRVNJVCAvIHNjaF9lcC0+ZXNpdDsNCiAJZm9yIChpID0g
-MDsgaSA8IG51bV9lc2l0OyBpKyspIHsNCiAJCWJhc2UgPSBzY2hfZXAtPm9mZnNldCArIGkgKiBz
-Y2hfZXAtPmVzaXQ7DQotCQlmb3IgKGogPSAwOyBqIDwgc2NoX2VwLT5udW1fYnVkZ2V0X21pY3Jv
-ZnJhbWVzOyBqKyspDQotCQkJc2V0X2JpdChiYXNlICsgaiwgdHQtPnNwbGl0X2JpdF9tYXApOw0K
-KwkJZm9yIChqID0gMDsgaiA8IHNjaF9lcC0+bnVtX2J1ZGdldF9taWNyb2ZyYW1lczsgaisrKSB7
-DQorCQkJaWYgKHVzZWQpDQorCQkJCXNldF9iaXQoYmFzZSArIGosIHR0LT5zcGxpdF9iaXRfbWFw
-KTsNCisJCQllbHNlDQorCQkJCWNsZWFyX2JpdChiYXNlICsgaiwgdHQtPnNwbGl0X2JpdF9tYXAp
-Ow0KKwkJfQ0KKw0KKwkJaWYgKHNjaF9lcC0+ZXBfdHlwZSA9PSBJU09DX09VVF9FUCkgew0KKwkJ
-CWZvciAoaiA9IDA7IGogPCBzY2hfZXAtPm51bV9idWRnZXRfbWljcm9mcmFtZXM7IGorKykgew0K
-KwkJCQlpZiAodXNlZCkgew0KKwkJCQkJc2V0X2JpdChiYXNlICsgaiwgdHQtPnNzX2JpdF9tYXAp
-Ow0KKwkJCQkJc2V0X2JpdChiYXNlICsgaiwgdHQtPmNzX2JpdF9tYXApOw0KKwkJCQkJdHQtPmZz
-X2J1c19id1tiYXNlICsgal0gKz0NCisJCQkJCQlzY2hfZXAtPmJ3X2Nvc3RfcGVyX21pY3JvZnJh
-bWU7DQorCQkJCX0gZWxzZSB7DQorCQkJCQljbGVhcl9iaXQoYmFzZSArIGosIHR0LT5zc19iaXRf
-bWFwKTsNCisJCQkJCWNsZWFyX2JpdChiYXNlICsgaiwgdHQtPmNzX2JpdF9tYXApOw0KKwkJCQkJ
-dHQtPmZzX2J1c19id1tiYXNlICsgal0gLT0NCisJCQkJCQlzY2hfZXAtPmJ3X2Nvc3RfcGVyX21p
-Y3JvZnJhbWU7DQorCQkJCX0NCisJCQl9DQorCQl9IGVsc2Ugew0KKwkJCWlmICh1c2VkKQ0KKwkJ
-CQlzZXRfYml0KGJhc2UsIHR0LT5zc19iaXRfbWFwKTsNCisJCQllbHNlDQorCQkJCWNsZWFyX2Jp
-dChiYXNlLCB0dC0+c3NfYml0X21hcCk7DQorDQorCQkJZm9yIChqID0gMDsgaiA8IHNjaF9lcC0+
-Y3NfY291bnQ7IGorKykgew0KKwkJCQlpZiAodXNlZCkgew0KKwkJCQkJc2V0X2JpdChiYXNlICsg
-MiArIGosIHR0LT5jc19iaXRfbWFwKTsNCisNCisJCQkJCXR0LT5mc19idXNfYndbYmFzZSArIDIg
-KyBqXSArPQ0KKwkJCQkJCXNjaF9lcC0+YndfY29zdF9wZXJfbWljcm9mcmFtZTsNCisJCQkJfSBl
-bHNlIHsNCisJCQkJCWNsZWFyX2JpdChiYXNlICsgMiArIGosIHR0LT5jc19iaXRfbWFwKTsNCisJ
-CQkJCXR0LT5mc19idXNfYndbYmFzZSArIDIgKyBqXSAtPQ0KKwkJCQkJCXNjaF9lcC0+YndfY29z
-dF9wZXJfbWljcm9mcmFtZTsNCisJCQkJfQ0KKwkJCX0NCisJCX0NCiAJfQ0KIA0KLQlsaXN0X2Fk
-ZF90YWlsKCZzY2hfZXAtPnR0X2VuZHBvaW50LCAmdHQtPmVwX2xpc3QpOw0KKwlpZiAodXNlZCkN
-CisJCWxpc3RfYWRkX3RhaWwoJnNjaF9lcC0+dHRfZW5kcG9pbnQsICZ0dC0+ZXBfbGlzdCk7DQor
-CWVsc2UNCisJCWxpc3RfZGVsKCZzY2hfZXAtPnR0X2VuZHBvaW50KTsNCiB9DQogDQogc3RhdGlj
-IGludCBjaGVja19zY2hfYncoc3RydWN0IHVzYl9kZXZpY2UgKnVkZXYsDQpAQCAtNDcwLDYgKzUy
-OSw3IEBAIHN0YXRpYyBpbnQgY2hlY2tfc2NoX2J3KHN0cnVjdCB1c2JfZGV2aWNlICp1ZGV2LA0K
-IHsNCiAJdTMyIG9mZnNldDsNCiAJdTMyIGVzaXQ7DQorCXUzMiBib3VuZGFyeTsNCiAJdTMyIG1p
-bl9idzsNCiAJdTMyIG1pbl9pbmRleDsNCiAJdTMyIHdvcnN0X2J3Ow0KQEAgLTQ4NywxMCArNTQ3
-LDEzIEBAIHN0YXRpYyBpbnQgY2hlY2tfc2NoX2J3KHN0cnVjdCB1c2JfZGV2aWNlICp1ZGV2LA0K
-IAkgKi8NCiAJbWluX2J3ID0gfjA7DQogCW1pbl9pbmRleCA9IDA7DQorCWJvdW5kYXJ5ID0gZXNp
-dDsNCiAJbWluX2NzX2NvdW50ID0gc2NoX2VwLT5jc19jb3VudDsNCiAJbWluX251bV9idWRnZXQg
-PSBzY2hfZXAtPm51bV9idWRnZXRfbWljcm9mcmFtZXM7DQogCWZvciAob2Zmc2V0ID0gMDsgb2Zm
-c2V0IDwgZXNpdDsgb2Zmc2V0KyspIHsNCiAJCWlmIChpc19mc19vcl9scyh1ZGV2LT5zcGVlZCkp
-IHsNCisJCQlpZiAoc2NoX2VwLT5lcF90eXBlICE9IElTT0NfT1VUX0VQKQ0KKwkJCQlib3VuZGFy
-eSA9IGVzaXQgKyAxOw0KIAkJCXJldCA9IGNoZWNrX3NjaF90dCh1ZGV2LCBzY2hfZXAsIG9mZnNl
-dCk7DQogCQkJaWYgKHJldCkNCiAJCQkJY29udGludWU7DQpAQCAtNDk4LDcgKzU2MSw3IEBAIHN0
-YXRpYyBpbnQgY2hlY2tfc2NoX2J3KHN0cnVjdCB1c2JfZGV2aWNlICp1ZGV2LA0KIAkJCQl0dF9v
-ZmZzZXRfb2sgPSB0cnVlOw0KIAkJfQ0KIA0KLQkJaWYgKChvZmZzZXQgKyBzY2hfZXAtPm51bV9i
-dWRnZXRfbWljcm9mcmFtZXMpID4gc2NoX2VwLT5lc2l0KQ0KKwkJaWYgKChvZmZzZXQgKyBzY2hf
-ZXAtPm51bV9idWRnZXRfbWljcm9mcmFtZXMpID4gYm91bmRhcnkpDQogCQkJYnJlYWs7DQogDQog
-CQl3b3JzdF9idyA9IGdldF9tYXhfYncoc2NoX2J3LCBzY2hfZXAsIG9mZnNldCk7DQpAQCAtNTMy
-LDcgKzU5NSw3IEBAIHN0YXRpYyBpbnQgY2hlY2tfc2NoX2J3KHN0cnVjdCB1c2JfZGV2aWNlICp1
-ZGV2LA0KIAkJaWYgKCF0dF9vZmZzZXRfb2spDQogCQkJcmV0dXJuIC1FUkFOR0U7DQogDQotCQl1
-cGRhdGVfc2NoX3R0KHVkZXYsIHNjaF9lcCk7DQorCQl1cGRhdGVfc2NoX3R0KHVkZXYsIHNjaF9l
-cCwgMSk7DQogCX0NCiANCiAJLyogdXBkYXRlIGJ1cyBiYW5kd2lkdGggaW5mbyAqLw0KQEAgLTY5
-NiwxMiArNzU5LDEyIEBAIHZvaWQgeGhjaV9tdGtfZHJvcF9lcF9xdWlyayhzdHJ1Y3QgdXNiX2hj
-ZCAqaGNkLCBzdHJ1Y3QgdXNiX2RldmljZSAqdWRldiwNCiANCiAJbGlzdF9mb3JfZWFjaF9lbnRy
-eShzY2hfZXAsICZzY2hfYnctPmJ3X2VwX2xpc3QsIGVuZHBvaW50KSB7DQogCQlpZiAoc2NoX2Vw
-LT5lcCA9PSBlcCkgew0KLQkJCXVwZGF0ZV9idXNfYncoc2NoX2J3LCBzY2hfZXAsIDApOw0KLQkJ
-CWxpc3RfZGVsKCZzY2hfZXAtPmVuZHBvaW50KTsNCiAJCQlpZiAoaXNfZnNfb3JfbHModWRldi0+
-c3BlZWQpKSB7DQotCQkJCWxpc3RfZGVsKCZzY2hfZXAtPnR0X2VuZHBvaW50KTsNCisJCQkJdXBk
-YXRlX3NjaF90dCh1ZGV2LCBzY2hfZXAsIDApOw0KIAkJCQlkcm9wX3R0KHVkZXYpOw0KIAkJCX0N
-CisJCQl1cGRhdGVfYnVzX2J3KHNjaF9idywgc2NoX2VwLCAwKTsNCisJCQlsaXN0X2RlbCgmc2No
-X2VwLT5lbmRwb2ludCk7DQogCQkJa2ZyZWUoc2NoX2VwKTsNCiAJCQlicmVhazsNCiAJCX0NCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmggYi9kcml2ZXJzL3VzYi9ob3N0
-L3hoY2ktbXRrLmgNCmluZGV4IGE5M2NmZTguLjMyM2IyODEgMTAwNjQ0DQotLS0gYS9kcml2ZXJz
-L3VzYi9ob3N0L3hoY2ktbXRrLmgNCisrKyBiL2RyaXZlcnMvdXNiL2hvc3QveGhjaS1tdGsuaA0K
-QEAgLTIxLDEyICsyMSwxOCBAQA0KIA0KIC8qKg0KICAqIEBzcGxpdF9iaXRfbWFwOiB1c2VkIHRv
-IGF2b2lkIHNwbGl0IG1pY3JvZnJhbWVzIG92ZXJsYXkNCisgKiBAc3NfYml0X21hcDogdXNlZCB0
-byBhdm9pZCBzdGFydCBzcGxpdCBtaWNyb2ZyYW1lcyBvdmVybGF5DQorICogQGNzX2JpdF9tYXA6
-IHVzZWQgdG8gYXZvaWQgY29tcGxldGUgc3BsaXQgbWljcm9mcmFtZXMgb3ZlcmxheQ0KKyAqIEBm
-c19idXNfYnc6IGFycmF5IHRvIGtlZXAgdHJhY2sgb2YgYmFuZHdpZHRoIGFscmVhZHkgdXNlZCBh
-dCBmdWxsIHNwZWVkDQogICogQGVwX2xpc3Q6IEVuZHBvaW50cyB1c2luZyB0aGlzIFRUDQogICog
-QHVzYl90dDogdXNiIFRUIHJlbGF0ZWQNCiAgKiBAdHRfcG9ydDogVFQgcG9ydCBudW1iZXINCiAg
-Ki8NCiBzdHJ1Y3QgbXUzaF9zY2hfdHQgew0KIAlERUNMQVJFX0JJVE1BUChzcGxpdF9iaXRfbWFw
-LCBYSENJX01US19NQVhfRVNJVCk7DQorCURFQ0xBUkVfQklUTUFQKHNzX2JpdF9tYXAsIFhIQ0lf
-TVRLX01BWF9FU0lUKTsNCisJREVDTEFSRV9CSVRNQVAoY3NfYml0X21hcCwgWEhDSV9NVEtfTUFY
-X0VTSVQgKyAxKTsNCisJdTMyIGZzX2J1c19id1tYSENJX01US19NQVhfRVNJVF07DQogCXN0cnVj
-dCBsaXN0X2hlYWQgZXBfbGlzdDsNCiAJc3RydWN0IHVzYl90dCAqdXNiX3R0Ow0KIAlpbnQgdHRf
-cG9ydDsNCkBAIC00Miw3ICs0OCw3IEBAIHN0cnVjdCBtdTNoX3NjaF90dCB7DQogICogdHdvIGJh
-bmR3aWR0aCBkb21haW5zLCBvbmUgZm9yIElOIGVwcyBhbmQgYW5vdGhlciBmb3IgT1VUIGVwcy4N
-CiAgKi8NCiBzdHJ1Y3QgbXUzaF9zY2hfYndfaW5mbyB7DQotCXUzMiBidXNfYndbWEhDSV9NVEtf
-TUFYX0VTSVRdOw0KKwl1MzIgYnVzX2J3W1hIQ0lfTVRLX01BWF9FU0lUICsgMV07DQogCXN0cnVj
-dCBsaXN0X2hlYWQgYndfZXBfbGlzdDsNCiB9Ow0KIA0KLS0gDQoxLjkuMQ0K
+Hi Diana,
+
+On 8/26/20 11:33 AM, Diana Craciun wrote:
+> The software uses a memory-mapped I/O command interface (MC portals) to
+> communicate with the MC hardware. This command interface is used to
+> discover, enumerate, configure and remove DPAA2 objects. The DPAA2
+> objects use MSIs, so the command interface needs to be emulated
+> such that the correct MSI is configured in the hardware (the guest
+> has the virtual MSIs).
+What I don't get is all the regions are mmappable too.
+And this patch does not seem to introduce special handling with respect
+to MSIs. Please could you clarify?
+> 
+> This patch is adding read/write support for fsl-mc devices. The mc
+> commands are emulated by the userspace. The host is just passing
+> the correct command to the hardware.
+> 
+> Also the current patch limits userspace to write complete
+> 64byte command once and read 64byte response by one ioctl.
+> 
+> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+> ---
+>  drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 115 +++++++++++++++++++++-
+>  drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |   1 +
+>  2 files changed, 114 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> index 73834f488a94..27713aa86878 100644
+> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/types.h>
+>  #include <linux/vfio.h>
+>  #include <linux/fsl/mc.h>
+> +#include <linux/delay.h>
+>  
+>  #include "vfio_fsl_mc_private.h"
+>  
+> @@ -106,6 +107,9 @@ static int vfio_fsl_mc_regions_init(struct vfio_fsl_mc_device *vdev)
+>  		vdev->regions[i].size = resource_size(res);
+>  		vdev->regions[i].flags = VFIO_REGION_INFO_FLAG_MMAP;
+>  		vdev->regions[i].type = mc_dev->regions[i].flags & IORESOURCE_BITS;
+> +		vdev->regions[i].flags |= VFIO_REGION_INFO_FLAG_READ;
+> +		if (!(mc_dev->regions[i].flags & IORESOURCE_READONLY))
+> +			vdev->regions[i].flags |= VFIO_REGION_INFO_FLAG_WRITE;
+>  	}
+>  
+>  	vdev->num_regions = mc_dev->obj_desc.region_count;
+> @@ -114,6 +118,11 @@ static int vfio_fsl_mc_regions_init(struct vfio_fsl_mc_device *vdev)
+>  
+>  static void vfio_fsl_mc_regions_cleanup(struct vfio_fsl_mc_device *vdev)
+>  {
+> +	int i;
+> +
+> +	for (i = 0; i < vdev->num_regions; i++)
+> +		iounmap(vdev->regions[i].ioaddr);
+> +
+>  	vdev->num_regions = 0;
+>  	kfree(vdev->regions);
+>  }
+> @@ -311,13 +320,115 @@ static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
+>  static ssize_t vfio_fsl_mc_read(void *device_data, char __user *buf,
+>  				size_t count, loff_t *ppos)
+>  {
+> -	return -EINVAL;
+> +	struct vfio_fsl_mc_device *vdev = device_data;
+> +	unsigned int index = VFIO_FSL_MC_OFFSET_TO_INDEX(*ppos);
+> +	loff_t off = *ppos & VFIO_FSL_MC_OFFSET_MASK;
+> +	struct vfio_fsl_mc_region *region;
+> +	u64 data[8];
+> +	int i;
+> +
+> +	if (index >= vdev->num_regions)
+> +		return -EINVAL;
+> +
+> +	region = &vdev->regions[index];
+> +
+> +	if (!(region->flags & VFIO_REGION_INFO_FLAG_READ))
+> +		return -EINVAL;
+> +
+> +	if (!region->ioaddr) {
+> +		region->ioaddr = ioremap(region->addr, region->size);
+> +		if (!region->ioaddr)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	if (count != 64 || off != 0)
+> +		return -EINVAL;
+> +
+> +	for (i = 7; i >= 0; i--)
+> +		data[i] = readq(region->ioaddr + i * sizeof(uint64_t));
+> +
+> +	if (copy_to_user(buf, data, 64))
+> +		return -EFAULT;
+> +
+> +	return count;
+> +}
+> +
+> +#define MC_CMD_COMPLETION_TIMEOUT_MS    5000
+> +#define MC_CMD_COMPLETION_POLLING_MAX_SLEEP_USECS    500
+> +
+> +static int vfio_fsl_mc_send_command(void __iomem *ioaddr, uint64_t *cmd_data)
+> +{
+> +	int i;
+> +	enum mc_cmd_status status;
+> +	unsigned long timeout_usecs = MC_CMD_COMPLETION_TIMEOUT_MS * 1000;
+> +
+> +	/* Write at command parameter into portal */
+> +	for (i = 7; i >= 1; i--)
+> +		writeq_relaxed(cmd_data[i], ioaddr + i * sizeof(uint64_t));
+> +
+> +	/* Write command header in the end */
+> +	writeq(cmd_data[0], ioaddr);
+> +
+> +	/* Wait for response before returning to user-space
+> +	 * This can be optimized in future to even prepare response
+> +	 * before returning to user-space and avoid read ioctl.
+> +	 */
+> +	for (;;) {
+> +		u64 header;
+> +		struct mc_cmd_header *resp_hdr;
+> +
+> +		header = cpu_to_le64(readq_relaxed(ioaddr));
+> +
+> +		resp_hdr = (struct mc_cmd_header *)&header;
+> +		status = (enum mc_cmd_status)resp_hdr->status;
+> +		if (status != MC_CMD_STATUS_READY)
+> +			break;
+> +
+> +		udelay(MC_CMD_COMPLETION_POLLING_MAX_SLEEP_USECS);
+> +		timeout_usecs -= MC_CMD_COMPLETION_POLLING_MAX_SLEEP_USECS;
+> +		if (timeout_usecs == 0)
+> +			return -ETIMEDOUT;
+> +	}
+> +
+> +	return 0;
+>  }
+>  
+>  static ssize_t vfio_fsl_mc_write(void *device_data, const char __user *buf,
+>  				 size_t count, loff_t *ppos)
+>  {
+> -	return -EINVAL;
+> +	struct vfio_fsl_mc_device *vdev = device_data;
+> +	unsigned int index = VFIO_FSL_MC_OFFSET_TO_INDEX(*ppos);
+> +	loff_t off = *ppos & VFIO_FSL_MC_OFFSET_MASK;
+> +	struct vfio_fsl_mc_region *region;
+> +	u64 data[8];
+> +	int ret;
+> +
+> +	if (index >= vdev->num_regions)
+> +		return -EINVAL;
+> +
+> +	region = &vdev->regions[index];
+> +
+> +	if (!(region->flags & VFIO_REGION_INFO_FLAG_WRITE))
+> +		return -EINVAL;
+> +
+> +	if (!region->ioaddr) {
+> +		region->ioaddr = ioremap(region->addr, region->size);
+> +		if (!region->ioaddr)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	if (count != 64 || off != 0)
+> +		return -EINVAL;
+> +
+> +	if (copy_from_user(&data, buf, 64))
+> +		return -EFAULT;
+> +
+> +	ret = vfio_fsl_mc_send_command(region->ioaddr, data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return count;
+> +
+>  }
+>  
+>  static int vfio_fsl_mc_mmap_mmio(struct vfio_fsl_mc_region region,
+> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> index bbfca8b55f8a..e6804e516c4a 100644
+> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+> @@ -32,6 +32,7 @@ struct vfio_fsl_mc_region {
+>  	u32			type;
+>  	u64			addr;
+>  	resource_size_t		size;
+> +	void __iomem		*ioaddr;
+>  };
+>  
+>  struct vfio_fsl_mc_device {
+> 
+Thanks
+
+Eric
 
