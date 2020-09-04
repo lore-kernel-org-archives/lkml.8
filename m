@@ -2,201 +2,98 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2547C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884C3C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61B2C20829
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:21:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599247299;
-	bh=a8m6M7tcTmNRXgFR0//YuNWwbw8T+Sgyc6Rycfdtw74=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XkjbPv0TIt/s9aNiHA+bUPoPjGXOJYTbASH8GqwcjoPEwPGNm1/dVfDOGsU/NjdWX
-	 cTuQAc0viWfkvnfuImb/Fk+GFvXVIsEbS2niOtXPBDJzFlIiLlsJNuugCMpxzbDnyl
-	 Nk3xkXwGiLEP1BgcrLzaTKMCpdttgR+6ae33Y2i0=
+	by mail.kernel.org (Postfix) with ESMTP id 3C845207EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:23:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BH4oPuFd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgIDTVi (ORCPT
+        id S1727797AbgIDTX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 15:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbgIDTVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:21:36 -0400
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90DD220797;
-        Fri,  4 Sep 2020 19:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599247295;
-        bh=a8m6M7tcTmNRXgFR0//YuNWwbw8T+Sgyc6Rycfdtw74=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kr6bNPcbOiTVn9WlWnXCYJLMn8graWb/9Hgu/LoEuf4tuSzE7F71WtGDkuVUPSCcQ
-         KdWZyeOVNax3NjnqYTfLOQ+KsU7r0QIe7wrN91wTO89JSnHrB4/Uvw7dpuxsJ/QdPq
-         kde3ceMwazS08ORhWxbn41BKrQyp35SSE0z4dw78=
-Date:   Fri, 4 Sep 2020 12:21:34 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Baoquan He <bhe@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v2 03/10] mm/memory_hotplug: simplify page offlining
-Message-Id: <20200904122134.1000bb0bf6bc6baf7f5302a7@linux-foundation.org>
-In-Reply-To: <C2E636DD-EA64-4EC8-A33B-57DB26DB478C@redhat.com>
-References: <20200903145844.2ead558f5bc3ef3d5230d30f@linux-foundation.org>
-        <C2E636DD-EA64-4EC8-A33B-57DB26DB478C@redhat.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 4 Sep 2020 15:23:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbgIDTXZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 15:23:25 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D408FC061244;
+        Fri,  4 Sep 2020 12:23:24 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id c3so1346690plz.5;
+        Fri, 04 Sep 2020 12:23:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jo2LrNWEgpQNYtSAG1LE6gXG+UXK/dBbbm524XiWLvQ=;
+        b=BH4oPuFdRexT4P8uDX741Yv/+sZA1vdnpjjln90GMw7atpftoe+93ct8XXeIcVCnwd
+         sffSx6PBIsTefeSul8A8gg3h4zqNOortt3F/rFE+Z2mnfE9N2bm0WATpviihAjfEeWzf
+         8if2Ss1IWb0KVD3DsMyDI0o8W1r0yb9JHpmrz/884/leu8QAgCp8oDQt0Htz9mnleZLv
+         amizuo9mokRE9NCabAnnDkfrtb+N0IOovgMzMLERhQFJeV7nkVn/ekY6hfm2cyvGD4D0
+         FB5MbNAtRC/bxphvLNRSSz3eqc72rNqgUYkbh0YliNCUSbfHyrT2pHdMJSaUgXesRKF5
+         zNFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jo2LrNWEgpQNYtSAG1LE6gXG+UXK/dBbbm524XiWLvQ=;
+        b=uJ/lzd6L/YtfPpQYCFWj4pVnWpjYdYDihov9eHxs3NkvD/x1h1GnakpadyEGPIX315
+         N77ZG6PkFNijswwbcUAz5ZlYSvzldpLlu3fM7niFc5vgH1722GYQU3LLTTL5XcYYI1/l
+         yjXqK4lDxr9KH3j6+Kz1fDC4w4SMbagE6KhY0KHGvEBvw8ityOgpXdqCcrkVyRV2CW2Z
+         onpJV1HBQO3Jo+OAG2mef9prYo13ECqb9g/8cFzS3CkACik4nuzZpfWW7LHsAro9puxw
+         WHINH/vqcmOUpokqTXJHehDLM6uz1R21sCEZtVERIROBD3Y7xXSBleVsi2QCYBVELa4R
+         WnWw==
+X-Gm-Message-State: AOAM5339ha50eqlmX8H2r0I1e8Meu34Y2mJv2Zs2aarTTEaxIt4+VB1x
+        FCQRq56aJ741K6rOJinXRYg=
+X-Google-Smtp-Source: ABdhPJy+ubz9CdiTuEnQdhUjSGxr2R/t9AssWYIt5Ekmo+hyYet5x2rhHoqXjQk2TZbZDJ2pcxszvg==
+X-Received: by 2002:a17:90a:9503:: with SMTP id t3mr9571333pjo.171.1599247404237;
+        Fri, 04 Sep 2020 12:23:24 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l78sm187272pfd.26.2020.09.04.12.23.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 04 Sep 2020 12:23:23 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 12:23:22 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 00/16] 5.4.63-rc1 review
+Message-ID: <20200904192322.GA211974@roeck-us.net>
+References: <20200904120257.203708503@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904120257.203708503@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 4 Sep 2020 07:47:45 +0200 David Hildenbrand <david@redhat.com> wrote:
-
+On Fri, Sep 04, 2020 at 03:29:53PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.63 release.
+> There are 16 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
+> Responses should be made by Sun, 06 Sep 2020 12:02:48 +0000.
+> Anything received after that time might be too late.
 > 
-> > +         * PageBuddy on freed pages on other zones.
-> > +         */
-> > +        if (ret)
-> > +            drain_all_pages(zone);
-> > +    } while (test_pages_isolated(start_pfn, end_pfn, MEMORY_OFFLINE));
-> 
-> I think we have to do
-> 
-> ret = test_pages_isolated()
-> if (ret)
-> ...
-> } while (ret);
-> 
-> So keeping the old code flow. I cannot resend before next Tuesday.
 
-Here's what I now (effectively) have:
+Build results:
+	total: 157 pass: 157 fail: 0
+Qemu test results:
+	total: 430 pass: 430 fail: 0
 
+Tested-by: Guenter Roeck <linux@roeck-us.net>
 
-From: David Hildenbrand <david@redhat.com>
-Subject: mm/memory_hotplug: simplify page offlining
-
-We make sure that we cannot have any memory holes right at the beginning
-of offline_pages().  We no longer need walk_system_ram_range() and can
-call test_pages_isolated() and __offline_isolated_pages() directly.
-
-offlined_pages always corresponds to nr_pages, so we can simplify that.
-
-Link: https://lkml.kernel.org/r/20200819175957.28465-4-david@redhat.com
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Charan Teja Reddy <charante@codeaurora.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Michel Lespinasse <walken@google.com>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-
---- a/mm/memory_hotplug.c~mm-memory_hotplug-simplify-page-offlining
-+++ a/mm/memory_hotplug.c
-@@ -1383,28 +1383,6 @@ do_migrate_range(unsigned long start_pfn
- 	return ret;
- }
- 
--/* Mark all sections offline and remove all free pages from the buddy. */
--static int
--offline_isolated_pages_cb(unsigned long start, unsigned long nr_pages,
--			void *data)
--{
--	unsigned long *offlined_pages = (unsigned long *)data;
--
--	*offlined_pages += __offline_isolated_pages(start, start + nr_pages);
--	return 0;
--}
--
--/*
-- * Check all pages in range, recorded as memory resource, are isolated.
-- */
--static int
--check_pages_isolated_cb(unsigned long start_pfn, unsigned long nr_pages,
--			void *data)
--{
--	return test_pages_isolated(start_pfn, start_pfn + nr_pages,
--				   MEMORY_OFFLINE);
--}
--
- static int __init cmdline_parse_movable_node(char *p)
- {
- 	movable_node_enabled = true;
-@@ -1491,7 +1469,7 @@ static int count_system_ram_pages_cb(uns
- int __ref offline_pages(unsigned long start_pfn, unsigned long nr_pages)
- {
- 	const unsigned long end_pfn = start_pfn + nr_pages;
--	unsigned long pfn, system_ram_pages = 0, offlined_pages = 0;
-+	unsigned long pfn, system_ram_pages = 0;
- 	int ret, node, nr_isolate_pageblock;
- 	unsigned long flags;
- 	struct zone *zone;
-@@ -1589,9 +1567,7 @@ int __ref offline_pages(unsigned long st
- 			reason = "failure to dissolve huge pages";
- 			goto failed_removal_isolated;
- 		}
--		/* check again */
--		ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
--					    NULL, check_pages_isolated_cb);
-+
- 		/*
- 		 * per-cpu pages are drained in start_isolate_page_range, but if
- 		 * there are still pages that are not free, make sure that we
-@@ -1604,15 +1580,15 @@ int __ref offline_pages(unsigned long st
- 		 * because has_unmovable_pages explicitly checks for
- 		 * PageBuddy on freed pages on other zones.
- 		 */
-+		ret = test_pages_isolated(start_pfn, end_pfn, MEMORY_OFFLINE);
- 		if (ret)
- 			drain_all_pages(zone);
- 	} while (ret);
- 
--	/* Ok, all of our target is isolated.
--	   We cannot do rollback at this point. */
--	walk_system_ram_range(start_pfn, end_pfn - start_pfn,
--			      &offlined_pages, offline_isolated_pages_cb);
--	pr_info("Offlined Pages %ld\n", offlined_pages);
-+	/* Mark all sections offline and remove free pages from the buddy. */
-+	__offline_isolated_pages(start_pfn, end_pfn);
-+	pr_info("Offlined Pages %ld\n", nr_pages);
-+
- 	/*
- 	 * Onlining will reset pagetype flags and makes migrate type
- 	 * MOVABLE, so just need to decrease the number of isolated
-@@ -1623,11 +1599,11 @@ int __ref offline_pages(unsigned long st
- 	spin_unlock_irqrestore(&zone->lock, flags);
- 
- 	/* removal success */
--	adjust_managed_page_count(pfn_to_page(start_pfn), -offlined_pages);
--	zone->present_pages -= offlined_pages;
-+	adjust_managed_page_count(pfn_to_page(start_pfn), -nr_pages);
-+	zone->present_pages -= nr_pages;
- 
- 	pgdat_resize_lock(zone->zone_pgdat, &flags);
--	zone->zone_pgdat->node_present_pages -= offlined_pages;
-+	zone->zone_pgdat->node_present_pages -= nr_pages;
- 	pgdat_resize_unlock(zone->zone_pgdat, &flags);
- 
- 	init_per_zone_wmark_min();
-_
-
+Guenter
