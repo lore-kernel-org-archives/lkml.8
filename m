@@ -2,92 +2,97 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554CEC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C554FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D91220795
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AB1F20796
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:53:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yj2sIEDi"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Q7CFVqfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbgIDQxS (ORCPT
+        id S1727892AbgIDQxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:53:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54204 "EHLO
+        Fri, 4 Sep 2020 12:53:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbgIDQw3 (ORCPT
+        with ESMTP id S1727847AbgIDQxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:52:29 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF45C061245;
-        Fri,  4 Sep 2020 09:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=b/bAysrgpK7o8RV7Nv82fuLZpX69oef20JEl760QaI0=; b=Yj2sIEDi9HwV9AsgH+AxKTKHN7
-        W+kv//OVQBi7WV2UrM0IFMf6mP08zizSMg1p8bPnM2RAmAr2YVY9AdDRRZgZWfph8wxCwO41zP7IR
-        5/MVBD50aqAS/ojCHnYZnyEgWyY841ZSthA/o2Z8veXrwvyNI4jRRzAxQwAc7zMJmY58nmMuwYFia
-        oDwyMo6Hm1iyjfP5BQv3qzj7/dKad6eTc/RlZ2X0bQsslb8P7a7DYgSKkhp3NyG6/2FIUEO87Mt3k
-        jju4moRdueiqdLGeuRovOvkEiK9p/U1t9S+yisC/Um/zJaN9nLwp9E9JizLxUjC8oKeVrfBquFQuc
-        O7BAGcUQ==;
-Received: from [2001:4bb8:184:af1:704:22b1:700d:1395] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kEEwq-000134-Na; Fri, 04 Sep 2020 16:52:24 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH 4/8] asm-generic: prepare uaccess.h for a set_fs-less world
-Date:   Fri,  4 Sep 2020 18:52:12 +0200
-Message-Id: <20200904165216.1799796-5-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904165216.1799796-1-hch@lst.de>
-References: <20200904165216.1799796-1-hch@lst.de>
+        Fri, 4 Sep 2020 12:53:04 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 111A1C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 09:53:04 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id u13so4641162pgh.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 09:53:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lC0AlfwmZlpXeFpa/LGTAh3XxfRABk0wlmEHVW6V7fE=;
+        b=Q7CFVqfCLCtDBrZDi/ZGTtwMxmb2/Myx2mQsdKxdDh/3t33apZQYU3Iai4UApZLOLW
+         ANYnA2xCpzS7qfDQiff7ZIJKCKfWvTETq897Hgx4W3m3wYLvA721kbBrQIcFinJFuRga
+         yhzH/cAhqels7FptH8Qc5dNmobzyaVmwKNdJJqFVimdyTenmHo+YYiDvxB125mchBoNt
+         XQofTmLKgJfcTn5KPu45URFCUvXiOsa2gAqmhc3BFw4hRYMv4TDp40gXYvVZgyqv28rU
+         UbqLKx37auf+HdwMcqp9Geq4fdyk1NjHYl65+r96KX+LEnCnX8ZRjQa2xGTR+6C6AR62
+         8TNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lC0AlfwmZlpXeFpa/LGTAh3XxfRABk0wlmEHVW6V7fE=;
+        b=TlyuYsITJ4xvZUFwKSFw97lyXCVL/H2H/Wot0u4cH0sIS7LZthit4MyBhsj+TVK4jl
+         iUZGY1T9mbNVVoQ6KwSz3yfh91OSfdzJY9ehLmcs/XZHggC+cnU/PaGJl6xw9WYzT79c
+         WczMK0WRw2GAt2wMdIBpwD/w5O2eWI3rKZTeSFfYoOV/xdv3rPlMFnMugxCm+v8H9FzD
+         AziHSNNCcVrV6hXVcMS0oKDnDxBGzQlBQqGS6N0WMQvJolpunAPEW7xyB88qovnSuO9Z
+         FVEuM4L9A27OXoRKBPZwpkZYVRC9+lmBxpI4wZZ8jY2mOSBq8J3fl9huMeomfHEigOu5
+         Ef+Q==
+X-Gm-Message-State: AOAM531bFal5VNNHR/VLiHJ5Eb0BYIMa3Sja0wa7QOoEkWdT6PJQxUoT
+        m0T5GE6gODGIFPkXSJMb8jNMmg==
+X-Google-Smtp-Source: ABdhPJyvhH5BRWXhwxslu96Xy5h5enqyHsLxdiKc2cUiZyDMbeBs0eCAgFOnGT6mOyg9uccQ2aAtbg==
+X-Received: by 2002:a63:4810:: with SMTP id v16mr964781pga.374.1599238383613;
+        Fri, 04 Sep 2020 09:53:03 -0700 (PDT)
+Received: from [192.168.1.11] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id 19sm4650788pgz.42.2020.09.04.09.53.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2020 09:53:03 -0700 (PDT)
+Subject: Re: [PATCH 0/2] use generic_file_buffered_read()
+To:     Bean Huo <huobean@gmail.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     beanhuo@micron.com
+References: <20200904091341.28756-1-huobean@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <e857400e-f6e8-9d84-804e-88f3c34edb50@kernel.dk>
+Date:   Fri, 4 Sep 2020 10:53:02 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200904091341.28756-1-huobean@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Put all the set_fs related code under CONFIG_SET_FS so that
-asm-generic/uaccess.h can be used for set_fs-less builds.
+On 9/4/20 3:13 AM, Bean Huo wrote:
+> From: Bean Huo <beanhuo@micron.com>
+> 
+> 
+> Bean Huo (2):
+>   block: use generic_file_buffered_read()
+>   fs: isofs: use generic_file_buffered_read()
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/asm-generic/uaccess.h | 2 ++
- 1 file changed, 2 insertions(+)
+The change is fine, but the title/commit message should reflect that
+this is just a comment change. The way it currently reads, it sounds
+like a functional change where something is switched over to using
+generic_file_buffered_read().
 
-diff --git a/include/asm-generic/uaccess.h b/include/asm-generic/uaccess.h
-index 768502bbfb154e..a9e6da7cce25e2 100644
---- a/include/asm-generic/uaccess.h
-+++ b/include/asm-generic/uaccess.h
-@@ -83,6 +83,7 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n)
- #define INLINE_COPY_TO_USER
- #endif /* CONFIG_UACCESS_MEMCPY */
- 
-+#ifdef CONFIG_SET_FS
- #define MAKE_MM_SEG(s)	((mm_segment_t) { (s) })
- 
- #ifndef KERNEL_DS
-@@ -105,6 +106,7 @@ static inline void set_fs(mm_segment_t fs)
- #ifndef uaccess_kernel
- #define uaccess_kernel() (get_fs().seg == KERNEL_DS.seg)
- #endif
-+#endif /* CONFIG_SET_FS */
- 
- #define access_ok(addr, size) __access_ok((unsigned long)(addr),(size))
- 
 -- 
-2.28.0
+Jens Axboe
 
