@@ -2,153 +2,161 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58343C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D50FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24A4C2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2DE20770
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Ilb28TMf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SyjR3aW8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N/2YWXu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730895AbgIDPW3 (ORCPT
+        id S1730887AbgIDPW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:22:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40010 "EHLO
+        Fri, 4 Sep 2020 11:22:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730498AbgIDPV2 (ORCPT
+        with ESMTP id S1730160AbgIDPV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:21:28 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5DB9C061258
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:21:27 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id q9so6427725wmj.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:21:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0uif8G7qHTGRhCmGeHPmCwg86SJ2eGD23rP8ij/IiTw=;
-        b=Ilb28TMfg4uo67ZfwyzeEk/tbFpBcLHskbaHfCkZefZJv7c+N6XEFnVT439XAFb9k1
-         V5++oXIEY4Rv03Opj/9JbiTlh/NceXPQ3QvwqTc72OXlDwNCruSfXHpO83w9S4sxswKN
-         MPC839CR5hdleTR+524c8W5Qan0HT7ad8o9uZT+S4On2phkJPxsBGe8/bU2rQgWuwNnf
-         gbCzfDb9Ko/gv8iEsXU3d6+Xw66zCeBvl/tZgoZThGvcswPv4EpKNhrxwcpYHG28nTDj
-         ngiqTYQucFKxuvq8QILU8vUMW+Y4IkCyOqYuQebPZRmdxr6WZZBM7kI856d4EovK8ecA
-         pdLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0uif8G7qHTGRhCmGeHPmCwg86SJ2eGD23rP8ij/IiTw=;
-        b=H49m1fCP5n7d95/qZOkD8mOCBCI6Q/cunGzo3xprM0+F6yH4lUYxV1ZfouxKe/FdaA
-         qAi/JTDo0R52UZ/UyI4rzDxiWilE1OJZ6isrHSG4seQvpyNLn3DKLhHpoMgX6mfGEg2q
-         6qp/S2pIClSERDwEPFipW1F2C3yQgTN86ds7djbfRmb6o4Cwwbd7K7AQkfmSQEPTGkQx
-         wZw2iXM8ai83QJsLgyD4+JDFFBk/MAnTfVziIAOPFrvI3cQlIeFq7E/oZTvHWHSyENbD
-         92816RnM4xfkyEX49MeRuo3Yt7fElwiJrWRJ/eTAI1aJ7u3wda1vpAWTbVna2Vs0RAQe
-         iDFQ==
-X-Gm-Message-State: AOAM5329ioj8yw3QDdmuzEjJAVNAeEE3PEd9b+J69w0g/h2G7VDU9l70
-        m/T8X9RIkgQiZ70tGNg9IQruIA==
-X-Google-Smtp-Source: ABdhPJwReXIbSBcaWjilKYJdCmgalWKDDkGAhjHOmGsTWimou4pWtVIAHL5BLnlyUHrs9otkFQskoQ==
-X-Received: by 2002:a1c:a3c4:: with SMTP id m187mr8606644wme.159.1599232886611;
-        Fri, 04 Sep 2020 08:21:26 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id a11sm7789534wmm.18.2020.09.04.08.21.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:21:26 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4/8] rtc: rx8010: rename ret to err in rx8010_set_time()
-Date:   Fri,  4 Sep 2020 17:21:12 +0200
-Message-Id: <20200904152116.2157-5-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200904152116.2157-1-brgl@bgdev.pl>
-References: <20200904152116.2157-1-brgl@bgdev.pl>
+        Fri, 4 Sep 2020 11:21:59 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BB5BC061244;
+        Fri,  4 Sep 2020 08:21:59 -0700 (PDT)
+Date:   Fri, 04 Sep 2020 15:21:54 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599232915;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LaX8mwKBi/XAJYbEflwlLJF4Sx6k1YhDQbEOGqO2B2U=;
+        b=SyjR3aW8eL3UhKO08YYBRO1cqRRerjvSHPkcjV2QX7aKIVDo3hTaTc2xQSdudd8Q4guAqT
+        ChlgJGqzGeA1qaVLz+l4uHm0gLkaHg7iXw32xtKQ1HjSWXlwbXdVvqZKcYyiP7l8FvDJh9
+        oGIxsnPotxXLn5dZW3K0ZrA+veAScWGyrQFyXAMnJmlwtPKigD9X7mo/euOmBuRMJDzOlJ
+        H4VyUnkcnwVwO3JKXJVWDHfz97px+91bdRZ9beEX0O2AZ5ZFdzuZeVmZxAKtHXxqn9mXn4
+        WltVkuzEGq0F7CJWbU5U18UVMG3pI2BDX9CrtjETLvj/J1299itr1otZaCgJNw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599232915;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LaX8mwKBi/XAJYbEflwlLJF4Sx6k1YhDQbEOGqO2B2U=;
+        b=N/2YWXu3cC8cyAeel8JYKDuSEuIML+9C15GQPYaJa8gZQaLAWwIH3oU8vO8fqIpMNWGpAe
+        01pb02D81fIUmzDw==
+From:   "tip-bot2 for Akshay Gupta" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: ras/core] x86/mce: Increase maximum number of banks to 64
+Cc:     Akshay Gupta <Akshay.Gupta@amd.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200828192412.320052-1-Yazen.Ghannam@amd.com>
+References: <20200828192412.320052-1-Yazen.Ghannam@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <159923291431.20229.1749748339999502192.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+The following commit has been merged into the ras/core branch of tip:
 
-All other functions in this driver use 'err' for integer return values.
-Do the same in rx8010_set_time() for consistency.
+Commit-ID:     a0bc32b3cacf194dc479b342f006203fd1e1941a
+Gitweb:        https://git.kernel.org/tip/a0bc32b3cacf194dc479b342f006203fd1e1941a
+Author:        Akshay Gupta <Akshay.Gupta@amd.com>
+AuthorDate:    Fri, 28 Aug 2020 19:24:12 
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Fri, 04 Sep 2020 17:17:27 +02:00
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+x86/mce: Increase maximum number of banks to 64
+
+...because future AMD systems will support up to 64 MCA banks per CPU.
+
+MAX_NR_BANKS is used to allocate a number of data structures, and it is
+used as a ceiling for values read from MCG_CAP[Count]. Therefore, this
+change will have no functional effect on existing systems with 32 or
+fewer MCA banks per CPU.
+
+However, this will increase the size of the following structures:
+
+Global bitmaps:
+- core.c / mce_banks_ce_disabled
+- core.c / all_banks
+- core.c / valid_banks
+- core.c / toclear
+- Total: 32 new bits * 4 bitmaps = 16 new bytes
+
+Per-CPU bitmaps:
+- core.c / mce_poll_banks
+- intel.c / mce_banks_owned
+- Total: 32 new bits * 2 bitmaps = 8 new bytes
+
+The bitmaps are arrays of longs. So this change will only affect 32-bit
+execution, since there will be one additional long used. There will be
+no additional memory use on 64-bit execution, because the size of long
+is 64 bits.
+
+Global structs:
+- amd.c / struct smca_bank smca_banks[]: 16 bytes per bank
+- core.c / struct mce_bank_dev mce_bank_devs[]: 56 bytes per bank
+- Total: 32 new banks * (16 + 56) bytes = 2304 new bytes
+
+Per-CPU structs:
+- core.c / struct mce_bank mce_banks_array[]: 16 bytes per bank
+- Total: 32 new banks * 16 bytes = 512 new bytes
+
+32-bit
+Total global size increase: 2320 bytes
+Total per-CPU size increase: 520 bytes
+
+64-bit
+Total global size increase: 2304 bytes
+Total per-CPU size increase: 512 bytes
+
+This additional memory should still fit within the existing .data
+section of the kernel binary. However, in the case where it doesn't
+fit, an additional page (4kB) of memory will be added to the binary to
+accommodate the extra data which will be the maximum size increase of
+vmlinux.
+
+Signed-off-by: Akshay Gupta <Akshay.Gupta@amd.com>
+[ Adjust commit message and code comment. ]
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200828192412.320052-1-Yazen.Ghannam@amd.com
 ---
- drivers/rtc/rtc-rx8010.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ arch/x86/include/asm/mce.h | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/rtc/rtc-rx8010.c b/drivers/rtc/rtc-rx8010.c
-index 2038700a3e8e..67ff06a76629 100644
---- a/drivers/rtc/rtc-rx8010.c
-+++ b/drivers/rtc/rtc-rx8010.c
-@@ -140,7 +140,7 @@ static int rx8010_set_time(struct device *dev, struct rtc_time *dt)
- {
- 	struct rx8010_data *rx8010 = dev_get_drvdata(dev);
- 	u8 date[7];
--	int ctrl, flagreg, ret;
-+	int ctrl, flagreg, err;
+diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+index 6adced6..109af5c 100644
+--- a/arch/x86/include/asm/mce.h
++++ b/arch/x86/include/asm/mce.h
+@@ -200,12 +200,8 @@ void mce_setup(struct mce *m);
+ void mce_log(struct mce *m);
+ DECLARE_PER_CPU(struct device *, mce_device);
  
- 	if ((dt->tm_year < 100) || (dt->tm_year > 199))
- 		return -EINVAL;
-@@ -150,10 +150,10 @@ static int rx8010_set_time(struct device *dev, struct rtc_time *dt)
- 	if (ctrl < 0)
- 		return ctrl;
- 	rx8010->ctrlreg = ctrl | RX8010_CTRL_STOP;
--	ret = i2c_smbus_write_byte_data(rx8010->client, RX8010_CTRL,
-+	err = i2c_smbus_write_byte_data(rx8010->client, RX8010_CTRL,
- 					rx8010->ctrlreg);
--	if (ret < 0)
--		return ret;
-+	if (err < 0)
-+		return err;
+-/*
+- * Maximum banks number.
+- * This is the limit of the current register layout on
+- * Intel CPUs.
+- */
+-#define MAX_NR_BANKS 32
++/* Maximum number of MCA banks per CPU. */
++#define MAX_NR_BANKS 64
  
- 	date[RX8010_SEC - RX8010_SEC] = bin2bcd(dt->tm_sec);
- 	date[RX8010_MIN - RX8010_SEC] = bin2bcd(dt->tm_min);
-@@ -163,27 +163,27 @@ static int rx8010_set_time(struct device *dev, struct rtc_time *dt)
- 	date[RX8010_YEAR - RX8010_SEC] = bin2bcd(dt->tm_year - 100);
- 	date[RX8010_WDAY - RX8010_SEC] = bin2bcd(1 << dt->tm_wday);
- 
--	ret = i2c_smbus_write_i2c_block_data(rx8010->client,
-+	err = i2c_smbus_write_i2c_block_data(rx8010->client,
- 					     RX8010_SEC, 7, date);
--	if (ret < 0)
--		return ret;
-+	if (err < 0)
-+		return err;
- 
- 	/* clear STOP bit after changing clock/calendar */
- 	ctrl = i2c_smbus_read_byte_data(rx8010->client, RX8010_CTRL);
- 	if (ctrl < 0)
- 		return ctrl;
- 	rx8010->ctrlreg = ctrl & ~RX8010_CTRL_STOP;
--	ret = i2c_smbus_write_byte_data(rx8010->client, RX8010_CTRL,
-+	err = i2c_smbus_write_byte_data(rx8010->client, RX8010_CTRL,
- 					rx8010->ctrlreg);
--	if (ret < 0)
--		return ret;
-+	if (err < 0)
-+		return err;
- 
- 	flagreg = i2c_smbus_read_byte_data(rx8010->client, RX8010_FLAG);
- 	if (flagreg < 0)
- 		return flagreg;
- 
- 	if (flagreg & RX8010_FLAG_VLF)
--		ret = i2c_smbus_write_byte_data(rx8010->client, RX8010_FLAG,
-+		err = i2c_smbus_write_byte_data(rx8010->client, RX8010_FLAG,
- 						flagreg & ~RX8010_FLAG_VLF);
- 
- 	return 0;
--- 
-2.26.1
-
+ #ifdef CONFIG_X86_MCE_INTEL
+ void mce_intel_feature_init(struct cpuinfo_x86 *c);
