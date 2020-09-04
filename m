@@ -2,191 +2,610 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F68C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8DAC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF4220770
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6E0220770
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NMEOwjUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbgIDKxa (ORCPT
+        id S1729872AbgIDK4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 06:53:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:48300 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgIDKxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:53:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1A31101E;
-        Fri,  4 Sep 2020 03:53:15 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 659D43F71F;
-        Fri,  4 Sep 2020 03:53:12 -0700 (PDT)
-Subject: Re: [RFC 00/10] Add USB support for Hikey 970
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Wei Xu <xuwei5@hisilicon.com>
-References: <cover.1599214329.git.mchehab+huawei@kernel.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <84b7dfcd-05e9-53b2-e0a0-b03105937eb3@arm.com>
-Date:   Fri, 4 Sep 2020 11:53:10 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Fri, 4 Sep 2020 06:56:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgIDK4U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:56:20 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07824C061244;
+        Fri,  4 Sep 2020 03:56:20 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id ay8so5655362edb.8;
+        Fri, 04 Sep 2020 03:56:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dhNQ8D3BceLMp/Okz4MBRSXUN8u38ft8so41n8iznt0=;
+        b=NMEOwjUQa2ASkPKbGuDlRWMaaFYaPE+OriPMWRMr/hQyOREacWsQT5fF5dn28QwFF2
+         pMKY0keCbY4o9qv7xnSy3KGgdsYFJIdSWsNcb45/ke3LfcUjvzRRV7PYLPe9P4i4+9/0
+         lAy2aj0G1lOnIQlOjzafy4WC0h9wCtWYckWmGD01vD5BXV2Yt26ZCYDZ4jBtrXf5Ooo9
+         RAclKf9cteluO/Jrd//ksMZtrWPYJfFaxnN4aWUv2yzcDdFrrJMIKMZWZKbZJoZOgpqu
+         pp5j1CgUMB2K5GgqFXS2cxJ98I8l7CxraFI+4Gqk31RCjtrNdI5QpRKLM9OIMOXTYcsF
+         HtvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dhNQ8D3BceLMp/Okz4MBRSXUN8u38ft8so41n8iznt0=;
+        b=okxfzlTng41dBZnP1ncfn+brPc1nVrZm+SzjQ64HHhxRVSJKFpOhwzvvMb7XTgz9Aa
+         EPuANiaKKiOcwZpgfIbT8LWUAd9KNqZwonYItoTpukN39P38NLts354ah8awdSHQF4dT
+         bbcKuG5o6AiG0WncDIThDbUqT9RwK/jGeZsrafcmXHM8KCKcOceiV4gWOg/PqGXfxYmj
+         5f/pTlaUnA382V5jUnl5Giw3VJrWgVH7PU4twQaqiOe9mlh8FxubEy+r/12G33xktT0e
+         gVSz94TvUkqRVAN2L/pOszt2Upt8nySEqmkqKiCPM2RIxQL0baCUMpDJsY5VjAMZ8SNT
+         r+VA==
+X-Gm-Message-State: AOAM5311WQYtwKhaC0PPOhhROIzUwQ2FbDk2qtuRGeFvv3QG3eE5cU9A
+        6TSqWBawNJ/eIDc4FwBbESKRHYRd8jrozw==
+X-Google-Smtp-Source: ABdhPJxPPi6MdoeknOvOxBhaCc7DV7OibGUpN+irHItDyqYO9QFsFI/nxokrGXcstxzHb/l+phLcdw==
+X-Received: by 2002:a05:6402:847:: with SMTP id b7mr8169800edz.39.1599216978461;
+        Fri, 04 Sep 2020 03:56:18 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id g11sm5568391edj.85.2020.09.04.03.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 03:56:17 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: tegra: Convert to MSI domains
+Date:   Fri,  4 Sep 2020 12:56:13 +0200
+Message-Id: <20200904105613.444945-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <cover.1599214329.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-04 11:23, Mauro Carvalho Chehab wrote:
-> This RFC adds what seems to be needed for USB to work with Hikey 970.
-> While this driver works fine on Kernel 4.9 and 4.19, there's a hack there,
-> in the form of some special binding logic under dwg3 driver,  that seems to
->   be just adding some delay,  and doing some different initializations at
-> PM (basically, disabling autosuspend).
-> 
-> With upstream Kernel, however, I'm getting a hard to track
-> Kernel panic:
-> 
-> [    1.837458] SError Interrupt on CPU0, code 0xbf000002 -- SError
-> [    1.837462] CPU: 0 PID: 74 Comm: kworker/0:1 Not tainted 5.8.0+ #205
-> [    1.837463] Hardware name: HiKey970 (DT)
-> [    1.837465] Workqueue: events deferred_probe_work_func
-> [    1.837467] pstate: 20000005 (nzCv daif -PAN -UAO BTYPE=--)
-> [    1.837468] pc : _raw_spin_unlock_irqrestore+0x18/0x50
-> [    1.837469] lr : regmap_unlock_spinlock+0x14/0x20
-> [    1.837470] sp : ffff8000124dba60
-> [    1.837471] x29: ffff8000124dba60 x28: 0000000000000000
-> [    1.837474] x27: ffff0001b7e854c8 x26: ffff80001204ea18
-> [    1.837476] x25: 0000000000000005 x24: ffff800011f918f8
-> [    1.837479] x23: ffff800011fbb588 x22: ffff0001b7e40e00
-> [    1.837481] x21: 0000000000000100 x20: 0000000000000000
-> [    1.837483] x19: ffff0001b767ec00 x18: 00000000ff10c000
-> [    1.837485] x17: 0000000000000002 x16: 0000b0740fdb9950
-> [    1.837488] x15: ffff8000116c1198 x14: ffffffffffffffff
-> [    1.837490] x13: 0000000000000030 x12: 0101010101010101
-> [    1.837493] x11: 0000000000000020 x10: ffff0001bf17d130
-> [    1.837495] x9 : 0000000000000000 x8 : ffff0001b6938080
-> [    1.837497] x7 : 0000000000000000 x6 : 000000000000003f
-> [    1.837500] x5 : 0000000000000000 x4 : 0000000000000000
-> [    1.837502] x3 : ffff80001096a880 x2 : 0000000000000000
-> [    1.837505] x1 : ffff0001b7e40e00 x0 : 0000000100000001
-> [    1.837507] Kernel panic - not syncing: Asynchronous SError Interrupt
-> [    1.837509] CPU: 0 PID: 74 Comm: kworker/0:1 Not tainted 5.8.0+ #205
-> [    1.837510] Hardware name: HiKey970 (DT)
-> [    1.837511] Workqueue: events deferred_probe_work_func
-> [    1.837513] Call trace:
-> [    1.837514]  dump_backtrace+0x0/0x1e0
-> [    1.837515]  show_stack+0x18/0x24
-> [    1.837516]  dump_stack+0xc0/0x11c
-> [    1.837517]  panic+0x15c/0x324
-> [    1.837518]  nmi_panic+0x8c/0x90
-> [    1.837519]  arm64_serror_panic+0x78/0x84
-> [    1.837520]  do_serror+0x158/0x15c
-> [    1.837521]  el1_error+0x84/0x100
-> [    1.837522]  _raw_spin_unlock_irqrestore+0x18/0x50
-> [    1.837523]  regmap_write+0x58/0x80
-> [    1.837524]  hi3660_reset_deassert+0x28/0x34
-> [    1.837526]  reset_control_deassert+0x50/0x260
-> [    1.837527]  reset_control_deassert+0xf4/0x260
-> [    1.837528]  dwc3_probe+0x5dc/0xe6c
-> [    1.837529]  platform_drv_probe+0x54/0xb0
-> [    1.837530]  really_probe+0xe0/0x490
-> [    1.837531]  driver_probe_device+0xf4/0x160
-> [    1.837532]  __device_attach_driver+0x8c/0x114
-> [    1.837533]  bus_for_each_drv+0x78/0xcc
-> [    1.837534]  __device_attach+0x108/0x1a0
-> [    1.837535]  device_initial_probe+0x14/0x20
-> [    1.837537]  bus_probe_device+0x98/0xa0
-> [    1.837538]  deferred_probe_work_func+0x88/0xe0
-> [    1.837539]  process_one_work+0x1cc/0x350
-> [    1.837540]  worker_thread+0x2c0/0x470
-> [    1.837541]  kthread+0x154/0x160
-> [    1.837542]  ret_from_fork+0x10/0x30
-> [    1.837569] SMP: stopping secondary CPUs
-> [    1.837570] Kernel Offset: 0x1d0000 from 0xffff800010000000
-> [    1.837571] PHYS_OFFSET: 0x0
-> [    1.837572] CPU features: 0x240002,20882004
-> [    1.837573] Memory Limit: none
-> 
-> I suspect that the driver works downstream because of the extra
-> delay of probing an additional driver, as porting such driver
-> to upstream sometimes makes this driver to work. So, it could
-> be due to some race condition.
-> 
-> The problem could also be due to something wrong at DT,
-> as, with the additional driver, the DT bindings are different.
-> 
-> As I'm not familiar about the Serror error mechanism on ARM,
-> I'm wondering if someone could give me some hint about how
-> can I identify what's happening here.  Due to the panic(), I
-> can't check what wrong happened there. Not sure if it would
-> be safe to just hack the error handling part of Serror, in order
-> to let the boot to finish.
+From: Marc Zyngier <maz@kernel.org>
 
-As one of my colleagues so wonderfully puts it, SError is effectively 
-"part of the SoC has fallen off" - it's an asynchronous notification of 
-some serious error condition external to the CPU. In this case, it seems 
-quite likely from trying to access a hardware block before it's powered 
-up or has finished its reset cycle, and so some CPU access is raising an 
-error in the interconnect instead of completing as expected.
+In anticipation of the removal of the msi_controller structure, convert
+the Tegra host controller driver to MSI domains.
 
-Robin.
+We end-up with the usual two domain structure, the top one being a
+generic PCI/MSI domain, the bottom one being Tegra-specific and handling
+the actual HW interrupt allocation.
 
-> PS.: the driver/misc hisi_hikey_usb driver on this series came
-> from the John Stultz Hikey 960 tree.
-> 
-> Thanks!
-> Mauro
-> 
-> Mauro Carvalho Chehab (7):
->    phy: hisilicon: phy-hi3670-usb3: use a consistent namespace
->    phy: hisilicon: phy-hi3670-usb3: fix coding style
->    phy: hisilicon: phy-hi3670-usb3: change some DT properties
->    dt-bindings: phy: convert phy-kirin970-usb3.txt to yaml
->    MAINTAINERS: add myself as maintainer for Kirin 970 USB PHY
->    misc: hisi_hikey_usb: add support for Hikey 970
->    dts: hisilicon: add support for USB3 on Hikey 970
-> 
-> Yu Chen (3):
->    phy: hisilicon: add USB physical layer for Kirin 3670
->    phy: hisilicon: phy-hi3670-usb3: fix some issues at the init code
->    misc: hisi_hikey_usb: Driver to support onboard USB gpio hub on
->      Hikey960
-> 
->   .../bindings/phy/hisilicon,hi3670-usb3.yaml   |  72 ++
->   MAINTAINERS                                   |  16 +-
->   .../boot/dts/hisilicon/hi3670-hikey970.dts    | 103 +++
->   arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |  49 ++
->   drivers/misc/Kconfig                          |   9 +
->   drivers/misc/Makefile                         |   1 +
->   drivers/misc/hisi_hikey_usb.c                 | 272 +++++++
->   drivers/phy/hisilicon/Kconfig                 |  10 +
->   drivers/phy/hisilicon/Makefile                |   1 +
->   drivers/phy/hisilicon/phy-hi3670-usb3.c       | 671 ++++++++++++++++++
->   10 files changed, 1203 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/phy/hisilicon,hi3670-usb3.yaml
->   create mode 100644 drivers/misc/hisi_hikey_usb.c
->   create mode 100644 drivers/phy/hisilicon/phy-hi3670-usb3.c
-> 
+While at it, convert the normal interrupt handler to a chained handler,
+handle the controller's MSI IRQ edge triggered, support multiple MSIs
+per device and use the AFI_MSI_EN_VEC* registers to provide MSI masking.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+[treding@nvidia.com: fix, clean up and address TODOs from Marc's draft]
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+This is basically Marc's patch from here:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/tegra-msi&id=8ba6858f07a7554d4e56a6d5103cd914dcf23af0
+
+That didn't work as-is, but it was pretty easy to get it to build and
+run properly. Once I had that I went through Marc's list of TODOs and
+addressed them, which was also not very difficult.
+
+I haven't done any extensive testing, but I can boot fine over NFS with
+a PCI Ethernet card. Given how fundamental this is, I would expect that
+to be a good enough test.
+
+Marc, I've kept your authorship on this. There are substantial changes
+from your version, but you had laid out the plan for all these changes,
+so it seemed fair. However, let me know if you're not comfortable with
+taking responsibility for any potential bugs I've introduced.
+
+I had originally considered sending this out as a series with more
+intermediate steps, but it turns out most of the TODO's that Marc had
+listed are related, so this could've been at maximum two or three
+patches. That didn't seem worth splitting up for. I think most of this
+work is still all related to the MSI domain conversion, so it makes
+sense to keep it in one patch.
+
+ drivers/pci/controller/pci-tegra.c | 316 +++++++++++++++--------------
+ 1 file changed, 165 insertions(+), 151 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index c1d34353c29b..f7f92718ce40 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -21,6 +21,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/iopoll.h>
+ #include <linux/irq.h>
++#include <linux/irqchip/chained_irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+@@ -78,23 +79,8 @@
+ #define AFI_MSI_FPCI_BAR_ST	0x64
+ #define AFI_MSI_AXI_BAR_ST	0x68
+ 
+-#define AFI_MSI_VEC0		0x6c
+-#define AFI_MSI_VEC1		0x70
+-#define AFI_MSI_VEC2		0x74
+-#define AFI_MSI_VEC3		0x78
+-#define AFI_MSI_VEC4		0x7c
+-#define AFI_MSI_VEC5		0x80
+-#define AFI_MSI_VEC6		0x84
+-#define AFI_MSI_VEC7		0x88
+-
+-#define AFI_MSI_EN_VEC0		0x8c
+-#define AFI_MSI_EN_VEC1		0x90
+-#define AFI_MSI_EN_VEC2		0x94
+-#define AFI_MSI_EN_VEC3		0x98
+-#define AFI_MSI_EN_VEC4		0x9c
+-#define AFI_MSI_EN_VEC5		0xa0
+-#define AFI_MSI_EN_VEC6		0xa4
+-#define AFI_MSI_EN_VEC7		0xa8
++#define AFI_MSI_VEC(x)		(0x6c + ((x) * 4))
++#define AFI_MSI_EN_VEC(x)	(0x8c + ((x) * 4))
+ 
+ #define AFI_CONFIGURATION		0xac
+ #define  AFI_CONFIGURATION_EN_FPCI		(1 << 0)
+@@ -280,13 +266,15 @@
+ #define LINK_RETRAIN_TIMEOUT 100000 /* in usec */
+ 
+ struct tegra_msi {
+-	struct msi_controller chip;
+ 	DECLARE_BITMAP(used, INT_PCI_MSI_NR);
+ 	struct irq_domain *domain;
+ 	struct mutex lock;
+ 	void *virt;
+ 	dma_addr_t phys;
+ 	int irq;
++
++	struct irq_chip top, bottom;
++	struct msi_domain_info info;
+ };
+ 
+ /* used to differentiate between Tegra SoC generations */
+@@ -333,11 +321,6 @@ struct tegra_pcie_soc {
+ 	} ectl;
+ };
+ 
+-static inline struct tegra_msi *to_tegra_msi(struct msi_controller *chip)
+-{
+-	return container_of(chip, struct tegra_msi, chip);
+-}
+-
+ struct tegra_pcie {
+ 	struct device *dev;
+ 
+@@ -372,6 +355,11 @@ struct tegra_pcie {
+ 	struct dentry *debugfs;
+ };
+ 
++static inline struct tegra_pcie *msi_to_pcie(struct tegra_msi *msi)
++{
++	return container_of(msi, struct tegra_pcie, msi);
++}
++
+ struct tegra_pcie_port {
+ 	struct tegra_pcie *pcie;
+ 	struct device_node *np;
+@@ -1432,7 +1420,6 @@ static void tegra_pcie_phys_put(struct tegra_pcie *pcie)
+ 	}
+ }
+ 
+-
+ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+ {
+ 	struct device *dev = pcie->dev;
+@@ -1509,6 +1496,7 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+ phys_put:
+ 	if (soc->program_uphy)
+ 		tegra_pcie_phys_put(pcie);
++
+ 	return err;
+ }
+ 
+@@ -1551,56 +1539,25 @@ static void tegra_pcie_pme_turnoff(struct tegra_pcie_port *port)
+ 	afi_writel(pcie, val, AFI_PCIE_PME);
+ }
+ 
+-static int tegra_msi_alloc(struct tegra_msi *chip)
+-{
+-	int msi;
+-
+-	mutex_lock(&chip->lock);
+-
+-	msi = find_first_zero_bit(chip->used, INT_PCI_MSI_NR);
+-	if (msi < INT_PCI_MSI_NR)
+-		set_bit(msi, chip->used);
+-	else
+-		msi = -ENOSPC;
+-
+-	mutex_unlock(&chip->lock);
+-
+-	return msi;
+-}
+-
+-static void tegra_msi_free(struct tegra_msi *chip, unsigned long irq)
++static void tegra_pcie_msi_irq(struct irq_desc *desc)
+ {
+-	struct device *dev = chip->chip.dev;
+-
+-	mutex_lock(&chip->lock);
+-
+-	if (!test_bit(irq, chip->used))
+-		dev_err(dev, "trying to free unused MSI#%lu\n", irq);
+-	else
+-		clear_bit(irq, chip->used);
+-
+-	mutex_unlock(&chip->lock);
+-}
+-
+-static irqreturn_t tegra_pcie_msi_irq(int irq, void *data)
+-{
+-	struct tegra_pcie *pcie = data;
+-	struct device *dev = pcie->dev;
++	struct tegra_pcie *pcie = irq_desc_get_handler_data(desc);
++	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	struct tegra_msi *msi = &pcie->msi;
+-	unsigned int i, processed = 0;
++	struct device *dev = pcie->dev;
++	unsigned int i;
++
++	chained_irq_enter(chip, desc);
+ 
+ 	for (i = 0; i < 8; i++) {
+-		unsigned long reg = afi_readl(pcie, AFI_MSI_VEC0 + i * 4);
++		unsigned long reg = afi_readl(pcie, AFI_MSI_VEC(i));
+ 
+ 		while (reg) {
+ 			unsigned int offset = find_first_bit(&reg, 32);
+ 			unsigned int index = i * 32 + offset;
+ 			unsigned int irq;
+ 
+-			/* clear the interrupt */
+-			afi_writel(pcie, 1 << offset, AFI_MSI_VEC0 + i * 4);
+-
+-			irq = irq_find_mapping(msi->domain, index);
++			irq = irq_find_mapping(msi->domain->parent, index);
+ 			if (irq) {
+ 				if (test_bit(index, msi->used))
+ 					generic_handle_irq(irq);
+@@ -1615,81 +1572,168 @@ static irqreturn_t tegra_pcie_msi_irq(int irq, void *data)
+ 			}
+ 
+ 			/* see if there's any more pending in this vector */
+-			reg = afi_readl(pcie, AFI_MSI_VEC0 + i * 4);
+-
+-			processed++;
++			reg = afi_readl(pcie, AFI_MSI_VEC(i));
+ 		}
+ 	}
+ 
+-	return processed > 0 ? IRQ_HANDLED : IRQ_NONE;
++	chained_irq_exit(chip, desc);
++}
++
++static void tegra_msi_top_irq_ack(struct irq_data *d)
++{
++	irq_chip_ack_parent(d);
++}
++
++static void tegra_msi_top_irq_mask(struct irq_data *d)
++{
++	pci_msi_mask_irq(d);
++	irq_chip_mask_parent(d);
++}
++
++static void tegra_msi_top_irq_unmask(struct irq_data *d)
++{
++	pci_msi_unmask_irq(d);
++	irq_chip_unmask_parent(d);
++}
++
++static void tegra_msi_irq_ack(struct irq_data *d)
++{
++	struct tegra_msi *msi = irq_data_get_irq_chip_data(d);
++	struct tegra_pcie *pcie = msi_to_pcie(msi);
++	unsigned int index = d->hwirq / 32;
++
++	/* clear the interrupt */
++	afi_writel(pcie, BIT(d->hwirq % 32), AFI_MSI_VEC(index));
++}
++
++static void tegra_msi_irq_mask(struct irq_data *d)
++{
++	struct tegra_msi *msi = irq_data_get_irq_chip_data(d);
++	struct tegra_pcie *pcie = msi_to_pcie(msi);
++	unsigned int index = d->hwirq / 32;
++	u32 value;
++
++	value = afi_readl(pcie, AFI_MSI_EN_VEC(index));
++	value &= ~BIT(d->hwirq % 32);
++	afi_writel(pcie, value, AFI_MSI_EN_VEC(index));
++}
++
++static void tegra_msi_irq_unmask(struct irq_data *d)
++{
++	struct tegra_msi *msi = irq_data_get_irq_chip_data(d);
++	struct tegra_pcie *pcie = msi_to_pcie(msi);
++	unsigned int index = d->hwirq / 32;
++	u32 value;
++
++	value = afi_readl(pcie, AFI_MSI_EN_VEC(index));
++	value |= BIT(d->hwirq % 32);
++	afi_writel(pcie, value, AFI_MSI_EN_VEC(index));
+ }
+ 
+-static int tegra_msi_setup_irq(struct msi_controller *chip,
+-			       struct pci_dev *pdev, struct msi_desc *desc)
++static int tegra_msi_set_affinity(struct irq_data *d, const struct cpumask *mask, bool force)
+ {
+-	struct tegra_msi *msi = to_tegra_msi(chip);
+-	struct msi_msg msg;
+-	unsigned int irq;
++	return -EINVAL;
++}
++
++static void tegra_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
++{
++	struct tegra_msi *msi = irq_data_get_irq_chip_data(data);
++
++	msg->address_lo = lower_32_bits(msi->phys);
++	msg->address_hi = upper_32_bits(msi->phys);
++	msg->data = data->hwirq;
++}
++
++static int tegra_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				  unsigned int nr_irqs, void *args)
++{
++	struct tegra_msi *msi = domain->host_data;
++	unsigned int i;
+ 	int hwirq;
+ 
+-	hwirq = tegra_msi_alloc(msi);
+-	if (hwirq < 0)
+-		return hwirq;
++	mutex_lock(&msi->lock);
+ 
+-	irq = irq_create_mapping(msi->domain, hwirq);
+-	if (!irq) {
+-		tegra_msi_free(msi, hwirq);
+-		return -EINVAL;
+-	}
++	hwirq = bitmap_find_free_region(msi->used, INT_PCI_MSI_NR, order_base_2(nr_irqs));
+ 
+-	irq_set_msi_desc(irq, desc);
++	mutex_unlock(&msi->lock);
+ 
+-	msg.address_lo = lower_32_bits(msi->phys);
+-	msg.address_hi = upper_32_bits(msi->phys);
+-	msg.data = hwirq;
++	if (hwirq < 0)
++		return -ENOSPC;
++
++	for (i = 0; i < nr_irqs; i++)
++		irq_domain_set_info(domain, virq + i, hwirq + i, &msi->bottom, domain->host_data,
++				    handle_edge_irq, NULL, NULL);
+ 
+-	pci_write_msi_msg(irq, &msg);
++	tegra_cpuidle_pcie_irqs_in_use();
+ 
+ 	return 0;
+ }
+ 
+-static void tegra_msi_teardown_irq(struct msi_controller *chip,
+-				   unsigned int irq)
++static void tegra_msi_domain_free(struct irq_domain *domain, unsigned int virq,
++				  unsigned int nr_irqs)
+ {
+-	struct tegra_msi *msi = to_tegra_msi(chip);
+-	struct irq_data *d = irq_get_irq_data(irq);
+-	irq_hw_number_t hwirq = irqd_to_hwirq(d);
++	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
++	struct tegra_msi *msi = irq_data_get_irq_chip_data(d);
++
++	mutex_lock(&msi->lock);
+ 
+-	irq_dispose_mapping(irq);
+-	tegra_msi_free(msi, hwirq);
++	bitmap_release_region(msi->used, d->hwirq, order_base_2(nr_irqs));
++
++	mutex_unlock(&msi->lock);
+ }
+ 
+-static struct irq_chip tegra_msi_irq_chip = {
+-	.name = "Tegra PCIe MSI",
+-	.irq_enable = pci_msi_unmask_irq,
+-	.irq_disable = pci_msi_mask_irq,
+-	.irq_mask = pci_msi_mask_irq,
+-	.irq_unmask = pci_msi_unmask_irq,
++static const struct irq_domain_ops tegra_msi_domain_ops = {
++	.alloc = tegra_msi_domain_alloc,
++	.free = tegra_msi_domain_free,
+ };
+ 
+-static int tegra_msi_map(struct irq_domain *domain, unsigned int irq,
+-			 irq_hw_number_t hwirq)
++static int tegra_allocate_domains(struct tegra_msi *msi)
+ {
+-	irq_set_chip_and_handler(irq, &tegra_msi_irq_chip, handle_simple_irq);
+-	irq_set_chip_data(irq, domain->host_data);
++	struct tegra_pcie *pcie = container_of(msi, struct tegra_pcie, msi);
++	struct fwnode_handle *fwnode = of_node_to_fwnode(pcie->dev->of_node);
++	struct irq_domain *parent;
+ 
+-	tegra_cpuidle_pcie_irqs_in_use();
++	msi->top.name = "Tegra PCIe MSI";
++	msi->top.irq_ack = tegra_msi_top_irq_ack;
++	msi->top.irq_mask = tegra_msi_top_irq_mask;
++	msi->top.irq_unmask = tegra_msi_top_irq_unmask;
++
++	msi->info.flags = MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_PCI_MSIX;
++	msi->info.chip = &msi->top;
++
++	msi->bottom.name = "Tegra MSI";
++	msi->bottom.irq_ack = tegra_msi_irq_ack;
++	msi->bottom.irq_mask = tegra_msi_irq_mask;
++	msi->bottom.irq_unmask = tegra_msi_irq_unmask;
++	msi->bottom.irq_set_affinity = tegra_msi_set_affinity;
++	msi->bottom.irq_compose_msi_msg = tegra_compose_msi_msg;
++
++	parent = irq_domain_add_linear(NULL, INT_PCI_MSI_NR, &tegra_msi_domain_ops, msi);
++	if (!parent) {
++		dev_err(pcie->dev, "failed to create IRQ domain\n");
++		return -ENOMEM;
++	}
++
++	msi->domain = pci_msi_create_irq_domain(fwnode, &msi->info, parent);
++	if (!msi->domain) {
++		dev_err(pcie->dev, "failed to create MSI domain\n");
++		irq_domain_remove(parent);
++		return -ENOMEM;
++	}
+ 
+ 	return 0;
+ }
+ 
+-static const struct irq_domain_ops msi_domain_ops = {
+-	.map = tegra_msi_map,
+-};
++static void tegra_free_domains(struct tegra_msi *msi)
++{
++	struct irq_domain *parent = msi->domain->parent;
++
++	irq_domain_remove(msi->domain);
++	irq_domain_remove(parent);
++}
+ 
+ static int tegra_pcie_msi_setup(struct tegra_pcie *pcie)
+ {
+-	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
+ 	struct platform_device *pdev = to_platform_device(pcie->dev);
+ 	struct tegra_msi *msi = &pcie->msi;
+ 	struct device *dev = pcie->dev;
+@@ -1697,15 +1741,10 @@ static int tegra_pcie_msi_setup(struct tegra_pcie *pcie)
+ 
+ 	mutex_init(&msi->lock);
+ 
+-	msi->chip.dev = dev;
+-	msi->chip.setup_irq = tegra_msi_setup_irq;
+-	msi->chip.teardown_irq = tegra_msi_teardown_irq;
+-
+-	msi->domain = irq_domain_add_linear(dev->of_node, INT_PCI_MSI_NR,
+-					    &msi_domain_ops, &msi->chip);
+-	if (!msi->domain) {
+-		dev_err(dev, "failed to create IRQ domain\n");
+-		return -ENOMEM;
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		err = tegra_allocate_domains(msi);
++		if (err)
++			return err;
+ 	}
+ 
+ 	err = platform_get_irq_byname(pdev, "msi");
+@@ -1714,12 +1753,7 @@ static int tegra_pcie_msi_setup(struct tegra_pcie *pcie)
+ 
+ 	msi->irq = err;
+ 
+-	err = request_irq(msi->irq, tegra_pcie_msi_irq, IRQF_NO_THREAD,
+-			  tegra_msi_irq_chip.name, pcie);
+-	if (err < 0) {
+-		dev_err(dev, "failed to request IRQ: %d\n", err);
+-		goto free_irq_domain;
+-	}
++	irq_set_chained_handler_and_data(msi->irq, tegra_pcie_msi_irq, pcie);
+ 
+ 	/* Though the PCIe controller can address >32-bit address space, to
+ 	 * facilitate endpoints that support only 32-bit MSI target address,
+@@ -1740,14 +1774,14 @@ static int tegra_pcie_msi_setup(struct tegra_pcie *pcie)
+ 		goto free_irq;
+ 	}
+ 
+-	host->msi = &msi->chip;
+-
+ 	return 0;
+ 
+ free_irq:
+-	free_irq(msi->irq, pcie);
++	irq_set_chained_handler_and_data(msi->irq, NULL, NULL);
+ free_irq_domain:
+-	irq_domain_remove(msi->domain);
++	if (IS_ENABLED(CONFIG_PCI_MSI))
++		tegra_free_domains(msi);
++
+ 	return err;
+ }
+ 
+@@ -1762,16 +1796,6 @@ static void tegra_pcie_enable_msi(struct tegra_pcie *pcie)
+ 	/* this register is in 4K increments */
+ 	afi_writel(pcie, 1, AFI_MSI_BAR_SZ);
+ 
+-	/* enable all MSI vectors */
+-	afi_writel(pcie, 0xffffffff, AFI_MSI_EN_VEC0);
+-	afi_writel(pcie, 0xffffffff, AFI_MSI_EN_VEC1);
+-	afi_writel(pcie, 0xffffffff, AFI_MSI_EN_VEC2);
+-	afi_writel(pcie, 0xffffffff, AFI_MSI_EN_VEC3);
+-	afi_writel(pcie, 0xffffffff, AFI_MSI_EN_VEC4);
+-	afi_writel(pcie, 0xffffffff, AFI_MSI_EN_VEC5);
+-	afi_writel(pcie, 0xffffffff, AFI_MSI_EN_VEC6);
+-	afi_writel(pcie, 0xffffffff, AFI_MSI_EN_VEC7);
+-
+ 	/* and unmask the MSI interrupt */
+ 	reg = afi_readl(pcie, AFI_INTR_MASK);
+ 	reg |= AFI_INTR_MASK_MSI_MASK;
+@@ -1786,16 +1810,16 @@ static void tegra_pcie_msi_teardown(struct tegra_pcie *pcie)
+ 	dma_free_attrs(pcie->dev, PAGE_SIZE, msi->virt, msi->phys,
+ 		       DMA_ATTR_NO_KERNEL_MAPPING);
+ 
+-	if (msi->irq > 0)
+-		free_irq(msi->irq, pcie);
+-
+ 	for (i = 0; i < INT_PCI_MSI_NR; i++) {
+ 		irq = irq_find_mapping(msi->domain, i);
+ 		if (irq > 0)
+ 			irq_dispose_mapping(irq);
+ 	}
+ 
+-	irq_domain_remove(msi->domain);
++	irq_set_chained_handler_and_data(msi->irq, NULL, NULL);
++
++	if (IS_ENABLED(CONFIG_PCI_MSI))
++		tegra_free_domains(msi);
+ }
+ 
+ static int tegra_pcie_disable_msi(struct tegra_pcie *pcie)
+@@ -1807,16 +1831,6 @@ static int tegra_pcie_disable_msi(struct tegra_pcie *pcie)
+ 	value &= ~AFI_INTR_MASK_MSI_MASK;
+ 	afi_writel(pcie, value, AFI_INTR_MASK);
+ 
+-	/* disable all MSI vectors */
+-	afi_writel(pcie, 0, AFI_MSI_EN_VEC0);
+-	afi_writel(pcie, 0, AFI_MSI_EN_VEC1);
+-	afi_writel(pcie, 0, AFI_MSI_EN_VEC2);
+-	afi_writel(pcie, 0, AFI_MSI_EN_VEC3);
+-	afi_writel(pcie, 0, AFI_MSI_EN_VEC4);
+-	afi_writel(pcie, 0, AFI_MSI_EN_VEC5);
+-	afi_writel(pcie, 0, AFI_MSI_EN_VEC6);
+-	afi_writel(pcie, 0, AFI_MSI_EN_VEC7);
+-
+ 	return 0;
+ }
+ 
+-- 
+2.28.0
+
