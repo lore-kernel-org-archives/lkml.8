@@ -2,123 +2,258 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC168C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE07AC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A327B206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:03:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="hMeYX6Ul"
+	by mail.kernel.org (Postfix) with ESMTP id AD3C6206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:08:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbgIDID4 (ORCPT
+        id S1729677AbgIDIIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:03:56 -0400
-Received: from mail-db8eur05on2051.outbound.protection.outlook.com ([40.107.20.51]:28224
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        Fri, 4 Sep 2020 04:08:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10767 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728170AbgIDIDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:03:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b0KopomZmm3kuzvl01cewLoMRrMzj26j5fChkX0h84QvxQcPEt5BLyBqG60DZIF35CljgQ+rI4X0WbvkeAc8MdkC9PLQ3ZaRTVZ/qUbX1TqXgDhvKpLeiv3tVc3cPQqaq8yR0VKPg21nMAO9yqmRDEWY/adBqEb48hpE+3zqpaMur+0Z5DQLGseHVG2pUHJvQOktnkVFhUSW51Rmvt/kqT061ejni5LC8tb3JP3gyY44ESEP0UqRY/krIs6CvLaP8+L+olE6ZeV10qKvUuF3lCyGJQLz35pAZxst8xtE+geE9EpXS4IzX1WkMertPriddhuW0e2bib0XuDJbmTZjlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N19n63mlBQ7ikIa2ibUOY9oW+ihUmpP9tuCEQKbspos=;
- b=gJxfv+urUOUomfjX/otGFmF0vTmzqK5AZGz/hdr6oIrbhsgI8NJQ8j6UxnsgGh1gb8lt5OopMttkpRYtpOJ1gb7GaEQeMqClWdVSNAHhk/zrR+U6R0kYlwCIhGEW1VTaVHXVO2Btbi27I+MR14kXBHxKe8Yic8FouvQsJXDaTztTLy7tEwART3axfKouYL5Tm2sjh9Dgitge9QQdEQ0VMEF+xWw+jS9KP4shZ+ZkdjjZUBCG/zAGO6uPq11IhGZjXBB8+8NmpOBGdGxnwukDlfIXx+Q64Mb1Ex9ONX/jsZQwnTm5khLiG0hRF3uHL45LO3oMVmdAXkR5P3iAeuj+IQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N19n63mlBQ7ikIa2ibUOY9oW+ihUmpP9tuCEQKbspos=;
- b=hMeYX6UlfvFomR3oJEftZkplxSgG4+VJVHLb4WQFQuHlDXUiWljB5PptvNRUOnShJKIAh1s73V5IghpPYunaEz0SsNY+RvyEYxcM1EtM5n8wmEVcfLEP+/ezEyPph14W2ThCV6+Y9ytL3YZoHuMU4uGNXtsiftrejHOY3YzkweA=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VI1PR0402MB2815.eurprd04.prod.outlook.com
- (2603:10a6:800:ae::16) by VI1PR0402MB3583.eurprd04.prod.outlook.com
- (2603:10a6:803:e::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Fri, 4 Sep
- 2020 08:03:49 +0000
-Received: from VI1PR0402MB2815.eurprd04.prod.outlook.com
- ([fe80::a508:19fb:5b7e:5607]) by VI1PR0402MB2815.eurprd04.prod.outlook.com
- ([fe80::a508:19fb:5b7e:5607%9]) with mapi id 15.20.3348.016; Fri, 4 Sep 2020
- 08:03:49 +0000
-Subject: Re: [PATCH v4 00/10] vfio/fsl-mc: VFIO support for FSL-MC device
-To:     Auger Eric <eric.auger@redhat.com>, alex.williamson@redhat.com,
-        kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
-        laurentiu.tudor@nxp.com
-References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
- <ae46be70-82d3-6137-6169-beb4bf8ae707@redhat.com>
-From:   Diana Craciun OSS <diana.craciun@oss.nxp.com>
-Message-ID: <084feb8a-3f9b-efc1-e4f8-eb9a3e60b756@oss.nxp.com>
-Date:   Fri, 4 Sep 2020 11:03:44 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-In-Reply-To: <ae46be70-82d3-6137-6169-beb4bf8ae707@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR01CA0130.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:168::35) To VI1PR0402MB2815.eurprd04.prod.outlook.com
- (2603:10a6:800:ae::16)
+        id S1726251AbgIDIIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 04:08:22 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EFEB2D3A099A398AECF3;
+        Fri,  4 Sep 2020 16:08:16 +0800 (CST)
+Received: from [10.74.191.121] (10.74.191.121) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 4 Sep 2020 16:08:08 +0800
+Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
+ enqueue op for lockless qdisc
+To:     John Fastabend <john.fastabend@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+CC:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
+        "David Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Linux Kernel Network Developers" <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
+ <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com>
+ <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com>
+ <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
+ <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
+ <CAM_iQpXmpMdxF2JDOROaf+Tjk-8dASiXz53K-Ph_q7jVMe0oVw@mail.gmail.com>
+ <cd773132-c98e-18e1-67fd-bbef6babbf0f@huawei.com>
+ <CAM_iQpWbZdh5-UGBi6PM19EBgV+Bq7vmifgJPdak6X=R9yztnw@mail.gmail.com>
+ <c0543793-11fa-6ef1-f8ea-6a724ab2de8f@huawei.com>
+ <CAM_iQpWGaTSkg+-Em6u=NSWcyswX-xN=-1p0OAdaR___U1M4rg@mail.gmail.com>
+ <5f5198ae79b98_361ef20824@john-XPS-13-9370.notmuch>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <968db64f-a139-541f-e046-fba25e037d3e@huawei.com>
+Date:   Fri, 4 Sep 2020 16:08:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.122] (188.27.189.94) by AM0PR01CA0130.eurprd01.prod.exchangelabs.com (2603:10a6:208:168::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Fri, 4 Sep 2020 08:03:47 +0000
-X-Originating-IP: [188.27.189.94]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d90a27ba-b716-45f1-a94d-08d850a90dee
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3583:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB35834D7FA9BAE52471D14F9CBE2D0@VI1PR0402MB3583.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jbsgBcjli9k5NzwZJ7bO/Fc/pZJxzjbV+4xgadkGXuWJMXexcSKlI6NGNhFLZ/nLMpuf2v8cPYA7JHPNuISz0zM93Gpyx+5YviOyFF7Dj3Q0QVjFTn3S2zoSAt4mn/YTV9ITLkCW0Mooz+Mg+WwJEXjmOfgNia9NsKI43PGy/QHTniIEgq9k7J/brKbcA949HW0RA7DLjqUqGgg45RXWYOOm21iBHFNe3jTZP/e/W4qauyM3YsugUVPxLAvAVyasCtBxjGBDiHTOTaIeKEHrJWJGhsD19mjCWWIgQ1pOiMA8rCk5//bH1Dzq/YaUc3YXnyQu7FZwdaD62fA+0eA1vC76sslZynZ9OcwWD+I3aHzWENvy/m+frQSdJwG+IU16E7dsbRXUHsAsVWSHFLnv69AoyjFCLyGbHnLBtSJti3FhDqMBbGZ0VBxtkRfo2Uus9JgKywBp1DGKwE9QcZN1NQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB2815.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(346002)(366004)(376002)(136003)(39860400002)(2906002)(16576012)(52116002)(66556008)(53546011)(86362001)(4326008)(66946007)(31696002)(2616005)(31686004)(5660300002)(66476007)(83380400001)(956004)(186003)(8936002)(6666004)(478600001)(6486002)(8676002)(4744005)(966005)(26005)(316002)(16526019)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: JOhJJtfJ+bWmg/0Y+T1nteiBz1sXEyxnSd21rp5beuycH+oU6wuGCWtSPRzaqi3Jx4k19lDES7ck0YH9C1w/qHk1a5zUtYrM4JWg7q84yDR0VwE9yBVlSDY26kp28PVlpiGOQlFdN3gCwZfSjjc83HXQdNjlYDAPWqWr40lgqo84D7Y12oXGnPeZ83JQ9Uz1aHFt60J2MxGLciIwWPjZcy3Z8twU/RmShE3Dwh/pYaF2w2Lzlalo8n5w3vLrkFhSCmZyMTTAtxTZGQOf9Kv1aC0lIL0pbPXKucoGBqDaNRv3fIxQvN6ORs2RkgCBVaI00pcOg/Xw4KLOsJ1emU/zybZrmtvbpS1bSk8sEziL3LXXfWmNIg81jFZxf6muJmUEmz5YIPVdaZcJSIX9Q+nhCMM80fNSSIKA1RTk/Tzubp/l8DHDfV47OEoyRkJpRetnVXkCp8K/ajWDxggR762e0ETYvgcv2XvXMUXLiAuIg8zN79f5dqPBMutVb5yyEAiTrps4+P7mhRzy9ckWvVE27T3PeQhINOYVWYa/M2x9cFqR1QTK9WtJqpUJOruyvB9xET6HQ04aAFeBbN32hfAlQbm+UNaZbD3L4vPBXScda2QtCEfCmLImLMlu8vukBCsd2+Ng9cRQK6TaSY6mbx0N/Q==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d90a27ba-b716-45f1-a94d-08d850a90dee
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB2815.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2020 08:03:48.9153
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TJenP7JIf5kQ7rI3nlh+w+kBZ1ZO3uZ3nvZ+//KD3WcNTFG8d4V/I7BlAZkxoIR2a5f7xsZRjl+O3YSRFt/LSA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3583
+In-Reply-To: <5f5198ae79b98_361ef20824@john-XPS-13-9370.notmuch>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+On 2020/9/4 9:30, John Fastabend wrote:
+> Cong Wang wrote:
+>> On Wed, Sep 2, 2020 at 7:22 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>>
+>>> On 2020/9/3 9:48, Cong Wang wrote:
+>>>> On Wed, Sep 2, 2020 at 6:22 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>>>>
+>>>>> On 2020/9/3 8:35, Cong Wang wrote:
+>>>>>> On Tue, Sep 1, 2020 at 11:35 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>>>>>>
+>>>>>>> On 2020/9/2 12:41, Cong Wang wrote:
+>>>>>>>> On Tue, Sep 1, 2020 at 6:42 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>>>>>>>>
+>>>>>>>>> On 2020/9/2 2:24, Cong Wang wrote:
+>>>>>>>>>> On Mon, Aug 31, 2020 at 5:59 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>>>>>>>>>>
+>>>>>>>>>>> Currently there is concurrent reset and enqueue operation for the
+>>>>>>>>>>> same lockless qdisc when there is no lock to synchronize the
+>>>>>>>>>>> q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
+>>>>>>>>>>> qdisc_deactivate() called by dev_deactivate_queue(), which may cause
+>>>>>>>>>>> out-of-bounds access for priv->ring[] in hns3 driver if user has
+>>>>>>>>>>> requested a smaller queue num when __dev_xmit_skb() still enqueue a
+>>>>>>>>>>> skb with a larger queue_mapping after the corresponding qdisc is
+>>>>>>>>>>> reset, and call hns3_nic_net_xmit() with that skb later.
+>>>>>>>>>>
+>>>>>>>>>> Can you be more specific here? Which call path requests a smaller
+>>>>>>>>>> tx queue num? If you mean netif_set_real_num_tx_queues(), clearly
+>>>>>>>>>> we already have a synchronize_net() there.
+>>>>>>>>>
+>>>>>>>>> When the netdevice is in active state, the synchronize_net() seems to
+>>>>>>>>> do the correct work, as below:
+>>>>>>>>>
+>>>>>>>>> CPU 0:                                       CPU1:
+>>>>>>>>> __dev_queue_xmit()                       netif_set_real_num_tx_queues()
+>>>>>>>>> rcu_read_lock_bh();
+>>>>>>>>> netdev_core_pick_tx(dev, skb, sb_dev);
+>>>>>>>>>         .
+>>>>>>>>>         .                               dev->real_num_tx_queues = txq;
+>>>>>>>>>         .                                       .
+>>>>>>>>>         .                                       .
+>>>>>>>>>         .                               synchronize_net();
+>>>>>>>>>         .                                       .
+>>>>>>>>> q->enqueue()                                    .
+>>>>>>>>>         .                                       .
+>>>>>>>>> rcu_read_unlock_bh()                            .
+>>>>>>>>>                                         qdisc_reset_all_tx_gt
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> Right.
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>> but dev->real_num_tx_queues is not RCU-protected, maybe that is a problem
+>>>>>>>>> too.
+>>>>>>>>>
+>>>>>>>>> The problem we hit is as below:
+>>>>>>>>> In hns3_set_channels(), hns3_reset_notify(h, HNAE3_DOWN_CLIENT) is called
+>>>>>>>>> to deactive the netdevice when user requested a smaller queue num, and
+>>>>>>>>> txq->qdisc is already changed to noop_qdisc when calling
+>>>>>>>>> netif_set_real_num_tx_queues(), so the synchronize_net() in the function
+>>>>>>>>> netif_set_real_num_tx_queues() does not help here.
+>>>>>>>>
+>>>>>>>> How could qdisc still be running after deactivating the device?
+>>>>>>>
+>>>>>>> qdisc could be running during the device deactivating process.
+>>>>>>>
+>>>>>>> The main process of changing channel number is as below:
+>>>>>>>
+>>>>>>> 1. dev_deactivate()
+>>>>>>> 2. hns3 handware related setup
+>>>>>>> 3. netif_set_real_num_tx_queues()
+>>>>>>> 4. netif_tx_wake_all_queues()
+>>>>>>> 5. dev_activate()
+>>>>>>>
+>>>>>>> During step 1, qdisc could be running while qdisc is resetting, so
+>>>>>>> there could be skb left in the old qdisc(which will be restored back to
+>>>>>>> txq->qdisc during dev_activate()), as below:
+>>>>>>>
+>>>>>>> CPU 0:                                       CPU1:
+>>>>>>> __dev_queue_xmit():                      dev_deactivate_many():
+>>>>>>> rcu_read_lock_bh();                      qdisc_deactivate(qdisc);
+>>>>>>> q = rcu_dereference_bh(txq->qdisc);             .
+>>>>>>> netdev_core_pick_tx(dev, skb, sb_dev);          .
+>>>>>>>         .
+>>>>>>>         .                               rcu_assign_pointer(dev_queue->qdisc, qdisc_default);
+>>>>>>>         .                                       .
+>>>>>>>         .                                       .
+>>>>>>>         .                                       .
+>>>>>>>         .                                       .
+>>>>>>> q->enqueue()                                    .
+>>>>>>
+>>>>>>
+>>>>>> Well, like I said, if the deactivated bit were tested before ->enqueue(),
+>>>>>> there would be no packet queued after qdisc_deactivate().
+> 
+> Trying to unwind this through git history :/
+> 
+> Original code had a test_bit in dev_xmit_skb(),
+> 
+> 	if (q->flags & TCQ_F_NOLOCK) {
+> 		if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED, &q->state))) {
+> 			__qdisc_drop(skb, &to_free);
+> 			rc = NET_XMIT_DROP;
+> 		} else {
+> 			rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+> 			__qdisc_run(q);
+> 		}
+> 
+> 		if (unlikely(to_free))
+> 			kfree_skb_list(to_free);
+> 		return rc;
+> 	}
+> 
+> So we would never enqueue something on top of a deactivated qdisc. And to ensure
+> we don't have any in-flight enqueues we have to swap qdiscs, wait a grace
+> period, and then reset the qdisc. That _should_ be OK.
 
-On 9/3/2020 4:40 PM, Auger Eric wrote:
->> The patches are dependent on some changes in the mc-bus (bus/fsl-mc) 
->> driver. The changes were needed in order to re-use code and to export 
->> some more functions that are needed by the VFIO driver. Currenlty the 
->> mc-bus patches are under review: 
->> https://www.spinics.net/lists/kernel/msg3639226.html 
-> Could you share a branch with both series? This would help the review. 
-> Thanks Eric 
+Actually, the deactivated is not really needed to be checked after swapping qdiscs
+and waiting a grace period, because __dev_xmit_skb() only see the noop_qdisc now,
+so qdisc_reset() in safe from q->enqueue()?
 
-I have pushed both the series here: 
-https://source.codeaurora.org/external/qoriq/qoriq-components/linux-extras/log/?h=dpaa2_direct_assignment 
+> 
+> But, I'm still not entirely sure how you got here. In the drivers I did I always
+> stop the queue before messing with these things with netif_tx_stop_queue(). Then
+> we really should not get these packets into the driver.
+> 
+> In sch_direct_xmit():
+> 
+> 	if (likely(skb)) {
+> 		HARD_TX_LOCK(dev, txq, smp_processor_id());
+> 		if (!netif_xmit_frozen_or_stopped(txq))
+> 			skb = dev_hard_start_xmit(skb, dev, txq, &ret);
+> 
+> 		HARD_TX_UNLOCK(dev, txq);
+> 	} else {
+> 		if (root_lock)
+> 			spin_lock(root_lock);
+> 		return true;
+> 	}
+> 
+> Maybe I missed something? Does your driver use the netif_tx_stop/start APIs?
 
+The hns3 driver uses netif_tx_stop_all_queues() in hns3_nic_net_stop() before
+calling netif_carrier_off()
 
-Regards,
+and call netif_tx_wake_all_queues() and netif_carrier_on() when link is detected
+in hns3_link_status_change()
 
-Diana
+The main process of changing channel number is as below:
+1. dev_deactivate()
+2. hns3 handware related setup
+3. netif_set_real_num_tx_queues()
+4. netif_tx_wake_all_queues()
+5. dev_activate()
 
-PS: I apologize if you received the message twice, I have sent it by 
-mistake as html first.
+During step 1, qdisc could be running while qdisc is resetting, so
+there could be skb left in the old qdisc(which will be restored back to
+txq->qdisc during dev_activate()), and the skb left in the old qdisc does not
+get called with hns3's xmit function in step 1, but get called with hns3's xmit
+function after step 5, because the old qdisc will be restored back to dev_queue->qdisc
+after step 5, which still has the skb left.
+
+Hope I did not misunderstand your question.
+
+>  
+>>>>>
+>>>>> Only if the deactivated bit testing is also protected by qdisc->seqlock?
+>>>>> otherwise there is still window between setting and testing the deactivated bit.
+>>>>
+>>>> Can you be more specific here? Why testing or setting a bit is not atomic?
+>>>
+>>> testing a bit or setting a bit separately is atomic.
+>>> But testing a bit and setting a bit is not atomic, right?
+>>>
+>>>   cpu0:                   cpu1:
+>>>                         testing A bit
+>>> setting A bit                .
+>>>        .                     .
+>>>        .               qdisc enqueuing
+>>> qdisc reset
+>>>
+>>
+>> Well, this was not a problem until commit d518d2ed8640c1cbbb.
+>> Prior to that commit, qdsic can still be scheduled even with this
+>> race condition, that is, the packet just enqueued after resetting can
+>> still be dequeued with qdisc_run().
+>>
+>> It is amazing to see how messy the lockless qdisc is now.
+>>
+>> Thanks.
+> 
+> 
+> .
+> 
