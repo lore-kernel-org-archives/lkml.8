@@ -2,286 +2,594 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF697C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 00:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7125C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBB22075D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 00:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7463A206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:00:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CnJdCdzV"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="kp6yHcA/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729468AbgIDA7d (ORCPT
+        id S1729507AbgIDBAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 20:59:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48708 "EHLO
+        Thu, 3 Sep 2020 21:00:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbgIDA73 (ORCPT
+        with ESMTP id S1728294AbgIDBAg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 20:59:29 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E7FAC061244;
-        Thu,  3 Sep 2020 17:59:29 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id u3so4951748qkd.9;
-        Thu, 03 Sep 2020 17:59:29 -0700 (PDT)
+        Thu, 3 Sep 2020 21:00:36 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 981A0C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 18:00:35 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id b16so2395717pjp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 18:00:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2HYxr1hKgKaGFsZr9AvO6upFQnVYZ17jVCpmYOeLgcY=;
-        b=CnJdCdzVKYrGs+uNRNYqIfumGJgiShCsEexURQ0/7tgj/vXTfURyK6KLvbvcrvo7KW
-         1MeKyPZ5P1lcFHTF2NBQzhnAqa7oHnUOxHylRihPv41n8C9zuHi8E7BBRDUJRnpIjeYy
-         RLIZihOuzJc/BgBWB0oa9ay7bpuqtUvqokNfyIlgt+uvFlgeBXfyd7eH1W3unWtw+3AZ
-         DqYk6lQNbtbnopLxXZi+IKOb8DNvixcUQQgsw4B8XXiiF6Q+7wzfhUXWw+n+gguJLpVK
-         ZqK3JTtLOl8yAkZqWSYSUgkdsCYwA1I8HxQH8movk1b2JoN2KqsV07s5EHnPQYcM3aU2
-         SO3Q==
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oram5X6DesbN6wZOWgMyMckSsK1CsOcLRzH5D7LtJhk=;
+        b=kp6yHcA/MV/Uc1lKUUUQDqOtQHXE2Sd+LDdR0vs1s4+6KK42I1meH6CLbDaCWv3QCe
+         kZDqvUtNE9/KuwlAiHLmBfSeybgxRlCdEsKvYux8YfWbv/yRtJVMPiK0vpSyoSCFSk7/
+         tVvDZkDuQPg0vurWUBvc9kPWf6eyLcJ0d3M2Kwt0yQHQUo0QimXme99c/nMxL9NY7zsA
+         nmK+Bt3vyUsIORvB/dUKGwvVC0sXd5rajNeTEmFegKTXoQFwIkEk8PyoVq4WkezG5ksV
+         tQHCRu0fuURJ+ab7eclrDuSN8KFVPzmg4VUdLnrFzYhJVteDRkdf8HldP2CwxijCL3xv
+         X49Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2HYxr1hKgKaGFsZr9AvO6upFQnVYZ17jVCpmYOeLgcY=;
-        b=SOSorGCL4hRHQsNxTWn8FgTcLkpYZXTvmuMrYIBPQX+6jOF/BamaB3wlFjsaQWhxUi
-         sfy54c7YUQf4x1Vf1ooXCnifW/SDfUk9cNaZFZXnvrnUrKlWGnkjsjfZCm8uYj2zFs0i
-         Jje32wKz2/YTAKDzxa4FvaqcqR1W1QbnzFXHdM4MzOA+4wwBgYeNVdZ4jmGXCEcA3QIR
-         KLknacloHtk8jSBlp+hDiCtHAdpyhOC/VB1L/wjd6etYyj6i76f9zl6aXNKHzz5j552+
-         Gg3FPxhDVI01iXntISemh53anrZNbHz4ycLGBS3cfSK1OQ1l74wlOShTatkjobXvVFlp
-         Ulcg==
-X-Gm-Message-State: AOAM531I89kQPkJgj7Vt6XHD3JrMF5lTlWV2VoD94hyJpp/TNsJSOd+X
-        ZGF3dVL+WXKfTYxKHxpaLDw=
-X-Google-Smtp-Source: ABdhPJxnS6w5KmkUHJThgHcp2vNNPm45OiNcr2X3uCW5OEvCFhizpBKsLk0+EiMZ1NPmal6Hz0s+BQ==
-X-Received: by 2002:a05:620a:1348:: with SMTP id c8mr5588667qkl.443.1599181168513;
-        Thu, 03 Sep 2020 17:59:28 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id n144sm3223889qkn.69.2020.09.03.17.59.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Sep 2020 17:59:27 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 9197A27C0054;
-        Thu,  3 Sep 2020 20:59:26 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 03 Sep 2020 20:59:26 -0400
-X-ME-Sender: <xms:a5FRX4ocBu1meP34F9ABEvh0xKsT87gIzvUYsJ6WauEqO6-11P8mIA>
-    <xme:a5FRX-o-bKwQJZFHiL8NVmA7W5Ugg3Y5DC_UQImWRKaz-fCNRVe8Pt-EziVc3GFZ6
-    4bPEhi4JPllPFUpVg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegvddggeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhepvdelieegudfggeevjefhjeevueevieetjeeikedvgfejfeduheefhffggedv
-    geejnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
-    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
-    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:a5FRX9NdtY1xQGITa7LlFafa19vNYU41E64uMZAK6cA8967oW6oPXA>
-    <xmx:a5FRX_7w6wXBzKbhOl8c8jc8VpBXIEz9kF1dehkpX9cTp50o-ctsZw>
-    <xmx:a5FRX36UZSoJVlGDEEdLiKXg9DUC0RaRrmL6MOifm-ipIvJfyUpqRg>
-    <xmx:bpFRX_zjutQk7jV82DFpfIEytjUZpyN_bO5OnQC9XQX3ThzoSFQ9W64pqfQ>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C8D20306005B;
-        Thu,  3 Sep 2020 20:59:22 -0400 (EDT)
-Date:   Fri, 4 Sep 2020 08:59:21 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr, akiyks@gmail.com
-Subject: Re: [PATCH kcsan 6/9] tools/memory-model: Expand the cheatsheet.txt
- notion of relaxed
-Message-ID: <20200904005921.GA7503@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
- <20200831182037.2034-6-paulmck@kernel.org>
- <20200902035448.GC49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200902101412.GC1362448@hirez.programming.kicks-ass.net>
- <20200902123715.GD49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200903233037.GW29330@paulmck-ThinkPad-P72>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oram5X6DesbN6wZOWgMyMckSsK1CsOcLRzH5D7LtJhk=;
+        b=bXPfpjJ2k3AXbTQpmZZKCm2xfo4sdm8dD6m3oJMeRRsWVIxaZUgttNeFJ1lT77BkkK
+         qfH810CPs3tz/VFo/KOIkdBXGlWJ96SQKnVP7p9aV0vI6beMjdY2wyC3kZ+nwjqcgWih
+         7nmpqWuQ/XYnaiqi4cm8jY2F5tfyArwS58LfzJohaFh8SY/7rQDQ5WLlfzUhHx8Q+hYq
+         Qdw6ynCWRr45okfa5JhmGRNYjYoef8cZY/vcyOlvI4lGT9Ijba+RYMhvIHONzsiNXVze
+         b6Si0QG/mvJRd7ggrmkusGVqN7zukk86tOkLP67cV1MarsvidCv5n2n8hoEghTw8TuVa
+         lkQA==
+X-Gm-Message-State: AOAM5323nAAulkAI+BdPY7wHrM0pFByfCFkB62XvzHtDzScB/iGXC3Z4
+        z1ViyT7ZpJh5WHjH0jStLiq+Br8XlMGivse0
+X-Google-Smtp-Source: ABdhPJzE2c6kZP2D//FMws09H5mIVHfwc5irLrgQHwfoJqaFVIVJRv5NB4opWLZoEmoZmYvAkU728g==
+X-Received: by 2002:a17:90b:384c:: with SMTP id nl12mr5267868pjb.205.1599181234578;
+        Thu, 03 Sep 2020 18:00:34 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id a1sm4636057pfd.65.2020.09.03.18.00.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 18:00:33 -0700 (PDT)
+Subject: Re: [PATCH v1 09/10] powerpc/pseries/iommu: Make use of DDW even if
+ it does not map the partition
+To:     Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Joel Stanley <joel@jms.id.au>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Brian King <brking@linux.vnet.ibm.com>,
+        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
+        David Dai <zdai@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200817234033.442511-1-leobras.c@gmail.com>
+ <20200817234033.442511-10-leobras.c@gmail.com>
+ <d2d98195-982d-c40a-43bc-5853726ed1d6@ozlabs.ru>
+ <f3ccef770985b8dfd8d5cb2b9f7b55f2e734d402.camel@gmail.com>
+ <d309c872-c574-4eb5-0e6e-0a36f73e168e@ozlabs.ru>
+ <deb7163077326399b3a3170ecb777117f7f6737b.camel@gmail.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Message-ID: <d8bf9461-4ebf-e0ee-cf58-6eec1d1968dc@ozlabs.ru>
+Date:   Fri, 4 Sep 2020 11:00:25 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903233037.GW29330@paulmck-ThinkPad-P72>
+In-Reply-To: <deb7163077326399b3a3170ecb777117f7f6737b.camel@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 04:30:37PM -0700, Paul E. McKenney wrote:
-> On Wed, Sep 02, 2020 at 08:37:15PM +0800, Boqun Feng wrote:
-> > On Wed, Sep 02, 2020 at 12:14:12PM +0200, peterz@infradead.org wrote:
-> > > On Wed, Sep 02, 2020 at 11:54:48AM +0800, Boqun Feng wrote:
-> > > > On Mon, Aug 31, 2020 at 11:20:34AM -0700, paulmck@kernel.org wrote:
-> > > > > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > > > > 
-> > > > > This commit adds a key entry enumerating the various types of relaxed
-> > > > > operations.
-> > > > > 
-> > > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > > > ---
-> > > > >  tools/memory-model/Documentation/cheatsheet.txt | 27 ++++++++++++++-----------
-> > > > >  1 file changed, 15 insertions(+), 12 deletions(-)
-> > > > > 
-> > > > > diff --git a/tools/memory-model/Documentation/cheatsheet.txt b/tools/memory-model/Documentation/cheatsheet.txt
-> > > > > index 33ba98d..31b814d 100644
-> > > > > --- a/tools/memory-model/Documentation/cheatsheet.txt
-> > > > > +++ b/tools/memory-model/Documentation/cheatsheet.txt
-> > > > > @@ -5,7 +5,7 @@
-> > > > >  
-> > > > >  Store, e.g., WRITE_ONCE()            Y                                       Y
-> > > > >  Load, e.g., READ_ONCE()              Y                          Y   Y        Y
-> > > > > -Unsuccessful RMW operation           Y                          Y   Y        Y
-> > > > > +Relaxed operation                    Y                          Y   Y        Y
-> > > > >  rcu_dereference()                    Y                          Y   Y        Y
-> > > > >  Successful *_acquire()               R                   Y  Y   Y   Y    Y   Y
-> > > > >  Successful *_release()         C        Y  Y    Y     W                      Y
-> > > > > @@ -17,14 +17,17 @@ smp_mb__before_atomic()       CP        Y  Y    Y        a  a   a   a    Y
-> > > > >  smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
-> > > > >  
-> > > > >  
-> > > > > -Key:	C:	Ordering is cumulative
-> > > > > -	P:	Ordering propagates
-> > > > > -	R:	Read, for example, READ_ONCE(), or read portion of RMW
-> > > > > -	W:	Write, for example, WRITE_ONCE(), or write portion of RMW
-> > > > > -	Y:	Provides ordering
-> > > > > -	a:	Provides ordering given intervening RMW atomic operation
-> > > > > -	DR:	Dependent read (address dependency)
-> > > > > -	DW:	Dependent write (address, data, or control dependency)
-> > > > > -	RMW:	Atomic read-modify-write operation
-> > > > > -	SELF:	Orders self, as opposed to accesses before and/or after
-> > > > > -	SV:	Orders later accesses to the same variable
-> > > > > +Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
-> > > > > +		  operation, an unsuccessful RMW operation, or one of
-> > > > > +		  the atomic_read() and atomic_set() family of operations.
-> > > > 
-> > > > To be accurate, atomic_set() doesn't return any value, so it cannot be
-> > > > ordered against DR and DW ;-)
-> > > 
-> > > Surely DW is valid for any store.
-> > > 
-> > 
-> > IIUC, the DW colomn stands for whether the corresponding operation (in
-> > this case, it's atomic_set()) is ordered any write that depends on this
-> > operation. I don't think there is a write->write dependency, so DW for
-> > atomic_set() should not be Y, just as the DW for WRITE_ONCE().
-> > 
-> > > > I think we can split the Relaxed family into two groups:
-> > > > 
-> > > > void Relaxed: atomic_set() or atomic RMW operations that don't return
-> > > >               any value (e.g atomic_inc())
-> > > > 
-> > > > non-void Relaxed: a *_relaxed() RMW operation, an unsuccessful RMW
-> > > >                   operation, or atomic_read().
-> > > > 
-> > > > And "void Relaxed" is similar to WRITE_ONCE(), only has "Self" and "SV"
-> > > > equal "Y", while "non-void Relaxed" plays the same rule as "Relaxed"
-> > > > in this patch.
-> > > > 
-> > > > Thoughts?
-> > > 
-> > > I get confused by the mention of all this atomic_read() atomic_set()
-> > > crud in the first place, why are they called out specifically from any
-> > > other regular load/store ?
-> > 
-> > Agreed. Probably we should fold those two operations into "Load" and
-> > "Store" cases.
+
+
+On 02/09/2020 16:11, Leonardo Bras wrote:
+> On Mon, 2020-08-31 at 14:35 +1000, Alexey Kardashevskiy wrote:
+>>
+>> On 29/08/2020 04:36, Leonardo Bras wrote:
+>>> On Mon, 2020-08-24 at 15:17 +1000, Alexey Kardashevskiy wrote:
+>>>> On 18/08/2020 09:40, Leonardo Bras wrote:
+>>>>> As of today, if the biggest DDW that can be created can't map the whole
+>>>>> partition, it's creation is skipped and the default DMA window
+>>>>> "ibm,dma-window" is used instead.
+>>>>>
+>>>>> DDW is 16x bigger than the default DMA window,
+>>>>
+>>>> 16x only under very specific circumstances which are
+>>>> 1. phyp
+>>>> 2. sriov
+>>>> 3. device class in hmc (or what that priority number is in the lpar config).
+>>>
+>>> Yeah, missing details.
+>>>
+>>>>> having the same amount of
+>>>>> pages, but increasing the page size to 64k.
+>>>>> Besides larger DMA window,
+>>>>
+>>>> "Besides being larger"?
+>>>
+>>> You are right there.
+>>>
+>>>>> it performs better for allocations over 4k,
+>>>>
+>>>> Better how?
+>>>
+>>> I was thinking for allocations larger than (512 * 4k), since >2
+>>> hypercalls are needed here, and for 64k pages would still be just 1
+>>> hypercall up to (512 * 64k).
+>>> But yeah, not the usual case anyway.
+>>
+>> Yup.
+>>
+>>
+>>>>> so it would be nice to use it instead.
+>>>>
+>>>> I'd rather say something like:
+>>>> ===
+>>>> So far we assumed we can map the guest RAM 1:1 to the bus which worked
+>>>> with a small number of devices. SRIOV changes it as the user can
+>>>> configure hundreds VFs and since phyp preallocates TCEs and does not
+>>>> allow IOMMU pages bigger than 64K, it has to limit the number of TCEs
+>>>> per a PE to limit waste of physical pages.
+>>>> ===
+>>>
+>>> I mixed this in my commit message, it looks like this:
+>>>
+>>> ===
+>>> powerpc/pseries/iommu: Make use of DDW for indirect mapping
+>>>
+>>> So far it's assumed possible to map the guest RAM 1:1 to the bus, which
+>>> works with a small number of devices. SRIOV changes it as the user can
+>>> configure hundreds VFs and since phyp preallocates TCEs and does not
+>>> allow IOMMU pages bigger than 64K, it has to limit the number of TCEs
+>>> per a PE to limit waste of physical pages.
+>>>
+>>> As of today, if the assumed direct mapping is not possible, DDW
+>>> creation is skipped and the default DMA window "ibm,dma-window" is used
+>>> instead.
+>>>
+>>> The default DMA window uses 4k pages instead of 64k pages, and since
+>>> the amount of pages is the same,
+>>
+>> Is the amount really the same? I thought you can prioritize some VFs
+>> over others (== allocate different number of TCEs). Does it really
+>> matter if it is the same?
 > 
-> All good points.
+> On a conversation with Travis Pizel, he explained how it's supposed to
+> work, and I understood this:
 > 
-> How about like this, adding "Relaxed" to the WRITE_ONCE() and READ_ONCE()
-> rows and "RMW" to the "Relaxed operation" row?
+> When a VF is created, it will be assigned a capacity, like 4%, 20%, and
+> so on. The number of 'TCE entries' that are available to that partition
+> are proportional to that capacity.
+> 
+> If we use the default DMA window, the IOMMU pagesize/entry will be 4k,
+> and if we use DDW, we will get 64k pagesize. As the number of entries
+> will be the same (for the same capacity), the total space that can be
+> addressed by the IOMMU will be 16 times bigger. This sometimes enable
+> direct mapping, but sometimes it's still not enough.
+
+
+Good to know. This is still an implementation detail, QEMU does not 
+allocate TCEs like this.
+
+
+> 
+> On Travis words :
+> "A low capacity VF, with less resources available, will certainly have
+> less DMA window capability than a high capacity VF. But, an 8GB DMA
+> window (with 64k pages) is still 16x larger than an 512MB window (with
+> 4K pages).
+> A high capacity VF - for example, one that Leonardo has in his scenario
+> - will go from 8GB (using 4K pages) to 128GB (using 64K pages) - again,
+> 16x larger - but it's obviously still possible to create a partition
+> that exceeds 128GB of memory in size."
+
+
+Right except the default dma window is not 8GB, it is <=2GB.
+
+
+> 
+>>
+>>
+>>> making use of DDW instead of the
+>>> default DMA window for indirect mapping will expand in 16x the amount
+>>> of memory that can be mapped on DMA.
+>>
+>> Stop saying "16x", it is not guaranteed by anything :)
+>>
+>>
+>>> The DDW created will be used for direct mapping by default. [...]
+>>> ===
+>>>
+>>> What do you think?
+>>>
+>>>>> The DDW created will be used for direct mapping by default.
+>>>>> If it's not available, indirect mapping will be used instead.
+>>>>>
+>>>>> For indirect mapping, it's necessary to update the iommu_table so
+>>>>> iommu_alloc() can use the DDW created. For this,
+>>>>> iommu_table_update_window() is called when everything else succeeds
+>>>>> at enable_ddw().
+>>>>>
+>>>>> Removing the default DMA window for using DDW with indirect mapping
+>>>>> is only allowed if there is no current IOMMU memory allocated in
+>>>>> the iommu_table. enable_ddw() is aborted otherwise.
+>>>>>
+>>>>> As there will never have both direct and indirect mappings at the same
+>>>>> time, the same property name can be used for the created DDW.
+>>>>>
+>>>>> So renaming
+>>>>> define DIRECT64_PROPNAME "linux,direct64-ddr-window-info"
+>>>>> to
+>>>>> define DMA64_PROPNAME "linux,dma64-ddr-window-info"
+>>>>> looks the right thing to do.
+>>>>
+>>>> I know I suggested this but this does not look so good anymore as I
+>>>> suspect it breaks kexec (from older kernel to this one) so you either
+>>>> need to check for both DT names or just keep the old one. Changing the
+>>>> macro name is fine.
+>>>>
+>>>
+>>> Yeah, having 'direct' in the name don't really makes sense if it's used
+>>> for indirect mapping. I will just add this new define instead of
+>>> replacing the old one, and check for both.
+>>> Is that ok?
+>>
+>> No, having two of these does not seem right or useful. It is pseries
+>> which does not use petitboot (relies on grub instead so until the target
+>> kernel is started, there will be no ddw) so realistically we need this
+>> property for kexec/kdump which uses the same kernel but different
+>> initramdisk so for that purpose we need the same property name.
+>>
+>> But I can see myself annoyed when I try petitboot in the hacked pseries
+>> qemu and things may crash :) On this basis I'd suggest keeping the name
+>> and adding a comment next to it that it is not always "direct" anymore.
+>>
+> 
+> Keeping the same name should bring more problems than solve.
+> If we have indirect mapping and kexec() to an older kernel, it will
+> think direct mapping is enabled, and trying to use a DMA address
+> without doing H_PUT_* first may cause a crash.
+> 
+> I tested with a new property name, and it doesn't crash.
+> As the property is not found, it does try to create a new DDW, which
+> fails and it falls back to using the default DMA window.
+> The device that need the IOMMU don't work well, but when iommu_map()
+> fails, it doesn't try to use the DMA address as valid.
+
+
+Right, as discussed on slack.
+
+> 
+>>
+>>>>> To make sure the property differentiates both cases, a new u32 for flags
+>>>>> was added at the end of the property, where BIT(0) set means direct
+>>>>> mapping.
+>>>>>
+>>>>> Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+>>>>> ---
+>>>>>   arch/powerpc/platforms/pseries/iommu.c | 108 +++++++++++++++++++------
+>>>>>   1 file changed, 84 insertions(+), 24 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+>>>>> index 3a1ef02ad9d5..9544e3c91ced 100644
+>>>>> --- a/arch/powerpc/platforms/pseries/iommu.c
+>>>>> +++ b/arch/powerpc/platforms/pseries/iommu.c
+>>>>> @@ -350,8 +350,11 @@ struct dynamic_dma_window_prop {
+>>>>>   	__be64	dma_base;	/* address hi,lo */
+>>>>>   	__be32	tce_shift;	/* ilog2(tce_page_size) */
+>>>>>   	__be32	window_shift;	/* ilog2(tce_window_size) */
+>>>>> +	__be32	flags;		/* DDW properties, see bellow */
+>>>>>   };
+>>>>>   
+>>>>> +#define DDW_FLAGS_DIRECT	0x01
+>>>>
+>>>> This is set if ((1<<window_shift) >= ddw_memory_hotplug_max()), you
+>>>> could simply check window_shift and drop the flags.
+>>>>
+>>>
+>>> Yeah, it's better this way, I will revert this.
+>>>
+>>>>> +
+>>>>>   struct direct_window {
+>>>>>   	struct device_node *device;
+>>>>>   	const struct dynamic_dma_window_prop *prop;
+>>>>> @@ -377,7 +380,7 @@ static LIST_HEAD(direct_window_list);
+>>>>>   static DEFINE_SPINLOCK(direct_window_list_lock);
+>>>>>   /* protects initializing window twice for same device */
+>>>>>   static DEFINE_MUTEX(direct_window_init_mutex);
+>>>>> -#define DIRECT64_PROPNAME "linux,direct64-ddr-window-info"
+>>>>> +#define DMA64_PROPNAME "linux,dma64-ddr-window-info"
+>>>>>   
+>>>>>   static int tce_clearrange_multi_pSeriesLP(unsigned long start_pfn,
+>>>>>   					unsigned long num_pfn, const void *arg)
+>>>>> @@ -836,7 +839,7 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
+>>>>>   	if (ret)
+>>>>>   		return;
+>>>>>   
+>>>>> -	win = of_find_property(np, DIRECT64_PROPNAME, NULL);
+>>>>> +	win = of_find_property(np, DMA64_PROPNAME, NULL);
+>>>>>   	if (!win)
+>>>>>   		return;
+>>>>>   
+>>>>> @@ -852,7 +855,7 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
+>>>>>   			np, ret);
+>>>>>   }
+>>>>>   
+>>>>> -static bool find_existing_ddw(struct device_node *pdn, u64 *dma_addr)
+>>>>> +static bool find_existing_ddw(struct device_node *pdn, u64 *dma_addr, bool *direct_mapping)
+>>>>>   {
+>>>>>   	struct direct_window *window;
+>>>>>   	const struct dynamic_dma_window_prop *direct64;
+>>>>> @@ -864,6 +867,7 @@ static bool find_existing_ddw(struct device_node *pdn, u64 *dma_addr)
+>>>>>   		if (window->device == pdn) {
+>>>>>   			direct64 = window->prop;
+>>>>>   			*dma_addr = be64_to_cpu(direct64->dma_base);
+>>>>> +			*direct_mapping = be32_to_cpu(direct64->flags) & DDW_FLAGS_DIRECT;
+>>>>>   			found = true;
+>>>>>   			break;
+>>>>>   		}
+>>>>> @@ -901,8 +905,8 @@ static int find_existing_ddw_windows(void)
+>>>>>   	if (!firmware_has_feature(FW_FEATURE_LPAR))
+>>>>>   		return 0;
+>>>>>   
+>>>>> -	for_each_node_with_property(pdn, DIRECT64_PROPNAME) {
+>>>>> -		direct64 = of_get_property(pdn, DIRECT64_PROPNAME, &len);
+>>>>> +	for_each_node_with_property(pdn, DMA64_PROPNAME) {
+>>>>> +		direct64 = of_get_property(pdn, DMA64_PROPNAME, &len);
+>>>>>   		if (!direct64)
+>>>>>   			continue;
+>>>>>   
+>>>>> @@ -1124,7 +1128,8 @@ static void reset_dma_window(struct pci_dev *dev, struct device_node *par_dn)
+>>>>>   }
+>>>>>   
+>>>>>   static int ddw_property_create(struct property **ddw_win, const char *propname,
+>>>>> -			       u32 liobn, u64 dma_addr, u32 page_shift, u32 window_shift)
+>>>>> +			       u32 liobn, u64 dma_addr, u32 page_shift,
+>>>>> +			       u32 window_shift, bool direct_mapping)
+>>>>>   {
+>>>>>   	struct dynamic_dma_window_prop *ddwprop;
+>>>>>   	struct property *win64;
+>>>>> @@ -1144,6 +1149,36 @@ static int ddw_property_create(struct property **ddw_win, const char *propname,
+>>>>>   	ddwprop->dma_base = cpu_to_be64(dma_addr);
+>>>>>   	ddwprop->tce_shift = cpu_to_be32(page_shift);
+>>>>>   	ddwprop->window_shift = cpu_to_be32(window_shift);
+>>>>> +	if (direct_mapping)
+>>>>> +		ddwprop->flags = cpu_to_be32(DDW_FLAGS_DIRECT);
+>>>>> +
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int iommu_table_update_window(struct iommu_table **tbl, int nid, unsigned long liobn,
+>>>>> +				     unsigned long win_addr, unsigned long page_shift,
+>>>>> +				     unsigned long window_size)
+>>>>
+>>>> Rather strange helper imho. I'd extract the most of
+>>>> iommu_table_setparms_lpar() into iommu_table_setparms() (except
+>>>> of_parse_dma_window) and call new helper from where you call
+>>>> iommu_table_update_window; and do
+>>>> iommu_pseries_alloc_table/iommu_tce_table_put there.
+>>>>
+>>>
+>>> I don't see how to extract iommu_table_setparms_lpar() into
+>>> iommu_table_setparms(), they look to be used for different machine
+>>> types.
+>>>
+>>> Do mean you extracting most of iommu_table_setparms_lpar() (and maybe
+>>> iommu_table_setparms() ) into a new helper, which is called in both
+>>> functions and use it instead of iommu_table_update_window() ?
+>>
+>> Yes, this.
+> 
+> I will do that then, seems better. :)
+> 
+>>
+>>
+>>>>> +{
+>>>>> +	struct iommu_table *new_tbl, *old_tbl;
+>>>>> +
+>>>>> +	new_tbl = iommu_pseries_alloc_table(nid);
+>>>>> +	if (!new_tbl)
+>>>>> +		return -ENOMEM;
+>>>>> +
+>>>>> +	old_tbl = *tbl;
+>>>>> +	new_tbl->it_index = liobn;
+>>>>> +	new_tbl->it_offset = win_addr >> page_shift;
+>>>>> +	new_tbl->it_page_shift = page_shift;
+>>>>> +	new_tbl->it_size = window_size >> page_shift;
+>>>>> +	new_tbl->it_base = old_tbl->it_base;
+>>>>
+>>>> Should not be used in pseries.
+>>>>
+>>>
+>>> The point here is to migrate the values from the older tbl to the
+>>
+>> The actual window/table is new (on the hypervisor side), you are not
+>> migrating a single TCE, you deleted one whole window and created another
+>> whole window, calling it "migration" is confusing, especially when PAPR
+>> actually defines TCE migration.
+> 
+> Ok, I understand it's confusing now. I will avoid using this term from
+> now on.
+> 
+>>
+>>
+>>> newer. I Would like to understand why this is bad, if it will still be
+>>> 'unused' as the older tbl.
+>>
+>> Having explicit values is more readable imho.
+> 
+> Ok, I understand why it should be improved.!
+> 
+> Alexey, thank you for reviewing, and for helping me with my questions!
+
+
+Thanks for doing this all!
+
+
+> 
+> Best regards,
+> 
+>>
+>>
+>>>>> +	new_tbl->it_busno = old_tbl->it_busno;
+>>>>> +	new_tbl->it_blocksize = old_tbl->it_blocksize;
+>>>>
+>>>> 16 for pseries and does not change (may be even make it a macro).
+>>>>
+>>>>> +	new_tbl->it_type = old_tbl->it_type;
+>>>>
+>>>> TCE_PCI.
+>>>>
+>>>
+>>> Same as above.
+>>>
+>>>>> +	new_tbl->it_ops = old_tbl->it_ops;
+>>>>> +
+>>>>> +	iommu_init_table(new_tbl, nid, old_tbl->it_reserved_start, old_tbl->it_reserved_end);
+>>>>> +	iommu_tce_table_put(old_tbl);
+>>>>> +	*tbl = new_tbl;
+>>>>>   
+>>>>>   	return 0;
+>>>>>   }
+>>>>> @@ -1171,12 +1206,16 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>>>>>   	struct direct_window *window;
+>>>>>   	struct property *win64 = NULL;
+>>>>>   	struct failed_ddw_pdn *fpdn;
+>>>>> -	bool default_win_removed = false;
+>>>>> +	bool default_win_removed = false, maps_whole_partition = false;
+>>>>
+>>>> s/maps_whole_partition/direct_mapping/
+>>>>
+>>>
+>>> Sure, I will get it replaced.
+>>>
+>>>>> +	struct pci_dn *pci = PCI_DN(pdn);
+>>>>> +	struct iommu_table *tbl = pci->table_group->tables[0];
+>>>>>   
+>>>>>   	mutex_lock(&direct_window_init_mutex);
+>>>>>   
+>>>>> -	if (find_existing_ddw(pdn, &dev->dev.archdata.dma_offset))
+>>>>> -		goto out_unlock;
+>>>>> +	if (find_existing_ddw(pdn, &dev->dev.archdata.dma_offset, &maps_whole_partition)) {
+>>>>> +		mutex_unlock(&direct_window_init_mutex);
+>>>>> +		return maps_whole_partition;
+>>>>> +	}
+>>>>>   
+>>>>>   	/*
+>>>>>   	 * If we already went through this for a previous function of
+>>>>> @@ -1258,16 +1297,24 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>>>>>   			  query.page_size);
+>>>>>   		goto out_failed;
+>>>>>   	}
+>>>>> +
+>>>>>   	/* verify the window * number of ptes will map the partition */
+>>>>> -	/* check largest block * page size > max memory hotplug addr */
+>>>>>   	max_addr = ddw_memory_hotplug_max();
+>>>>>   	if (query.largest_available_block < (max_addr >> page_shift)) {
+>>>>> -		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %llu "
+>>>>> -			  "%llu-sized pages\n", max_addr,  query.largest_available_block,
+>>>>> -			  1ULL << page_shift);
+>>>>> -		goto out_failed;
+>>>>> +		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %llu %llu-sized pages\n",
+>>>>> +			max_addr, query.largest_available_block,
+>>>>> +			1ULL << page_shift);
+>>>>> +
+>>>>> +		len = order_base_2(query.largest_available_block << page_shift);
+>>>>> +	} else {
+>>>>> +		maps_whole_partition = true;
+>>>>> +		len = order_base_2(max_addr);
+>>>>>   	}
+>>>>> -	len = order_base_2(max_addr);
+>>>>> +
+>>>>> +	/* DDW + IOMMU on single window may fail if there is any allocation */
+>>>>> +	if (default_win_removed && !maps_whole_partition &&
+>>>>> +	    iommu_table_in_use(tbl))
+>>>>> +		goto out_failed;
+>>>>>   
+>>>>>   	ret = create_ddw(dev, ddw_avail, &create, page_shift, len);
+>>>>>   	if (ret != 0)
+>>>>> @@ -1277,8 +1324,8 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>>>>>   		create.liobn, dn);
+>>>>>   
+>>>>>   	win_addr = ((u64)create.addr_hi << 32) | create.addr_lo;
+>>>>> -	ret = ddw_property_create(&win64, DIRECT64_PROPNAME, create.liobn, win_addr,
+>>>>> -				  page_shift, len);
+>>>>> +	ret = ddw_property_create(&win64, DMA64_PROPNAME, create.liobn, win_addr,
+>>>>> +				  page_shift, len, maps_whole_partition);
+>>>>>   	if (ret) {
+>>>>>   		dev_info(&dev->dev,
+>>>>>   			 "couldn't allocate property, property name, or value\n");
+>>>>> @@ -1297,12 +1344,25 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>>>>>   	if (!window)
+>>>>>   		goto out_prop_del;
+>>>>>   
+>>>>> -	ret = walk_system_ram_range(0, memblock_end_of_DRAM() >> PAGE_SHIFT,
+>>>>> -			win64->value, tce_setrange_multi_pSeriesLP_walk);
+>>>>> -	if (ret) {
+>>>>> -		dev_info(&dev->dev, "failed to map direct window for %pOF: %d\n",
+>>>>> -			 dn, ret);
+>>>>> -		goto out_free_window;
+>>>>> +	if (maps_whole_partition) {
+>>>>> +		/* DDW maps the whole partition, so enable direct DMA mapping */
+>>>>> +		ret = walk_system_ram_range(0, memblock_end_of_DRAM() >> PAGE_SHIFT,
+>>>>> +					    win64->value, tce_setrange_multi_pSeriesLP_walk);
+>>>>> +		if (ret) {
+>>>>> +			dev_info(&dev->dev, "failed to map direct window for %pOF: %d\n",
+>>>>> +				 dn, ret);
+>>>>> +			goto out_free_window;
+>>>>> +		}
+>>>>> +	} else {
+>>>>> +		/* New table for using DDW instead of the default DMA window */
+>>>>> +		if (iommu_table_update_window(&tbl, pci->phb->node, create.liobn,
+>>>>> +					      win_addr, page_shift, 1UL << len))
+>>>>> +			goto out_free_window;
+>>>>> +
+>>>>> +		set_iommu_table_base(&dev->dev, tbl);
+>>>>> +		WARN_ON(dev->dev.archdata.dma_offset >= SZ_4G);
+>>>>
+>>>> What is this check for exactly? Why 4G, not >= 0, for example?
+>>>
+>>> I am not really sure, you suggested adding it here:
+>>> http://patchwork.ozlabs.org/project/linuxppc-dev/patch/20200716071658.467820-6-leobras.c@gmail.com/#2488874
+>>
+>> Ah right I did suggest this :) My bad. I think I suggested it before
+>> suggesting to keep the reserved area boundaries checked/adjusted to the
+>> window boundaries, may as well drop this. Thanks,
+>>
+>>
+>>> I can remove it if it's ok.
+>>>
+>>>>> +		goto out_unlock;
+>>>>> +
+>>>>>   	}
+>>>>>   
+>>>>>   	dev->dev.archdata.dma_offset = win_addr;
+>>>>> @@ -1340,7 +1400,7 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>>>>>   
+>>>>>   out_unlock:
+>>>>>   	mutex_unlock(&direct_window_init_mutex);
+>>>>> -	return win64;
+>>>>> +	return win64 && maps_whole_partition;
+>>>>>   }
+>>>>>   
+>>>>>   static void pci_dma_dev_setup_pSeriesLP(struct pci_dev *dev)
+>>>>>
 > 
 
-Much better now, thanks! However ...
-
-> The file contents are followed by a diff against the previous version.
-> 
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
->                                   Prior Operation     Subsequent Operation
->                                   ---------------  ---------------------------
->                                C  Self  R  W  RMW  Self  R  W  DR  DW  RMW  SV
->                               --  ----  -  -  ---  ----  -  -  --  --  ---  --
-> 
-> Relaxed store                        Y                                       Y
-> Relaxed load                         Y                          Y   Y        Y
-> Relaxed RMW operation                Y                          Y   Y        Y
-
-void Relaxed RMW operation is still missing ;-) Maybe:
-
-  void Relaxed RMW operation           Y                                       Y
-
-> rcu_dereference()                    Y                          Y   Y        Y
-> Successful *_acquire()               R                   Y  Y   Y   Y    Y   Y
-> Successful *_release()         C        Y  Y    Y     W                      Y
-> smp_rmb()                               Y       R        Y      Y        R
-> smp_wmb()                                  Y    W           Y       Y    W
-> smp_mb() & synchronize_rcu()  CP        Y  Y    Y        Y  Y   Y   Y    Y
-> Successful full non-void RMW  CP     Y  Y  Y    Y     Y  Y  Y   Y   Y    Y   Y
-> smp_mb__before_atomic()       CP        Y  Y    Y        a  a   a   a    Y
-> smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
-> 
-> 
-> Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
-> 		  operation, an unsuccessful RMW operation, READ_ONCE(),
-> 		  WRITE_ONCE(), or one of the atomic_read() and
-> 		  atomic_set() family of operations.
-
-And:
-		  a RMW operation that doesn't return any value (e.g
-		  atomic_inc()), IOW it's a void Relaxed operation.
-
-Thoughts?
-
-Regards,
-Boqun
-
-> 	C:	  Ordering is cumulative
-> 	P:	  Ordering propagates
-> 	R:	  Read, for example, READ_ONCE(), or read portion of RMW
-> 	W:	  Write, for example, WRITE_ONCE(), or write portion of RMW
-> 	Y:	  Provides ordering
-> 	a:	  Provides ordering given intervening RMW atomic operation
-> 	DR:	  Dependent read (address dependency)
-> 	DW:	  Dependent write (address, data, or control dependency)
-> 	RMW:	  Atomic read-modify-write operation
-> 	SELF:	  Orders self, as opposed to accesses before and/or after
-> 	SV:	  Orders later accesses to the same variable
-> 
-> ------------------------------------------------------------------------
-> 
-> diff --git a/tools/memory-model/Documentation/cheatsheet.txt b/tools/memory-model/Documentation/cheatsheet.txt
-> index 31b814d..4146b8d 100644
-> --- a/tools/memory-model/Documentation/cheatsheet.txt
-> +++ b/tools/memory-model/Documentation/cheatsheet.txt
-> @@ -3,9 +3,9 @@
->                                 C  Self  R  W  RMW  Self  R  W  DR  DW  RMW  SV
->                                --  ----  -  -  ---  ----  -  -  --  --  ---  --
->  
-> -Store, e.g., WRITE_ONCE()            Y                                       Y
-> -Load, e.g., READ_ONCE()              Y                          Y   Y        Y
-> -Relaxed operation                    Y                          Y   Y        Y
-> +Relaxed store                        Y                                       Y
-> +Relaxed load                         Y                          Y   Y        Y
-> +Relaxed RMW operation                Y                          Y   Y        Y
->  rcu_dereference()                    Y                          Y   Y        Y
->  Successful *_acquire()               R                   Y  Y   Y   Y    Y   Y
->  Successful *_release()         C        Y  Y    Y     W                      Y
-> @@ -18,8 +18,9 @@ smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
->  
->  
->  Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
-> -		  operation, an unsuccessful RMW operation, or one of
-> -		  the atomic_read() and atomic_set() family of operations.
-> +		  operation, an unsuccessful RMW operation, READ_ONCE(),
-> +		  WRITE_ONCE(), or one of the atomic_read() and
-> +		  atomic_set() family of operations.
->  	C:	  Ordering is cumulative
->  	P:	  Ordering propagates
->  	R:	  Read, for example, READ_ONCE(), or read portion of RMW
+-- 
+Alexey
