@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BF2C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AB4C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E06D7206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C6D206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599229531;
-	bh=7Igl/N2E3zZvyoS60wvEZZPsthK5fqko3m+FNuWCYYA=;
+	s=default; t=1599229552;
+	bh=Z43hsJRsfSylTDdOsmfHse5zoUozD+qAvb/fuNHvOm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GN3pNjkbIK6Nr4Gu4yD5eQ3Rs6wmExEiAqmxotHwxQm5KR51Im484cYEnK2av0icD
-	 pz49dC2JW0Lmld7XTjez9ZrlKkKgoCEvXha5Y99HyZ7sIq9ldGSO6CaxeUk7+FrFZl
-	 IpQiI7K44Ap0VR6tmU7eOqL3FaaHdve6jJkTsGi0=
+	b=N6MfE02o7oyoRsuECtRLjGdB+YAbGDf9ddKU6VBfxV5KlpHLU4QLjfnooB+UVfa0c
+	 EoqNxpAKW7eLUAe6A/A/f09ZWXREXv7/Dxu68b0izTweCjUhAhW0HVc/XdxQyzuaNO
+	 iykgFWFGcfETrBHCSyrF93YkucGkku/I/4MT1A6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730785AbgIDOWR (ORCPT
+        id S1730536AbgIDOZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:22:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36824 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 10:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730374AbgIDNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730465AbgIDNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 09:34:23 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFE0721707;
-        Fri,  4 Sep 2020 13:31:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AD2B2100A;
+        Fri,  4 Sep 2020 13:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226267;
-        bh=7Igl/N2E3zZvyoS60wvEZZPsthK5fqko3m+FNuWCYYA=;
+        s=default; t=1599226252;
+        bh=Z43hsJRsfSylTDdOsmfHse5zoUozD+qAvb/fuNHvOm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tiBnEGDzH8DYQzhD6TVrWZN2KXNbLiGcUGcw/SdwqiRUwWJInqSsl5klLAryxQEeN
-         c5Xg8peOUTDHM0sdb7WWs1ql4DpCj4IPtfpiyzMycDpODSKJSJUeug/42nNB5ftVId
-         iKTv+bW3aHiDLTJ6WJ4rYx251lJ4nKzvu9PyrUyI=
+        b=zrXGU7JARtDotpczgh8kMNxCGYRTzDxN4nxc00ntZqTKikmXE44MaalT2Su91j7N4
+         TYealU5OZUHRdsbhrB256xiDwn3RPvftLYaGorIy9Ognv3kg97AaGeLThg6ilSjwwE
+         YMQhDNVitR3NKOQcAHqTJ5dZNMbFGY+LJQ+L54lk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH 5.8 08/17] KVM: arm64: Add kvm_extable for vaxorcism code
-Date:   Fri,  4 Sep 2020 15:30:07 +0200
-Message-Id: <20200904120258.400721610@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Subject: [PATCH 5.8 02/17] HID: core: Sanitize event code and type when mapping input
+Date:   Fri,  4 Sep 2020 15:30:01 +0200
+Message-Id: <20200904120258.098166396@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200904120257.983551609@linuxfoundation.org>
 References: <20200904120257.983551609@linuxfoundation.org>
@@ -61,235 +59,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit e9ee186bb735bfc17fa81dbc9aebf268aee5b41e upstream.
+commit 35556bed836f8dc07ac55f69c8d17dce3e7f0e25 upstream.
 
-KVM has a one instruction window where it will allow an SError exception
-to be consumed by the hypervisor without treating it as a hypervisor bug.
-This is used to consume asynchronous external abort that were caused by
-the guest.
+When calling into hid_map_usage(), the passed event code is
+blindly stored as is, even if it doesn't fit in the associated bitmap.
 
-As we are about to add another location that survives unexpected exceptions,
-generalise this code to make it behave like the host's extable.
+This event code can come from a variety of sources, including devices
+masquerading as input devices, only a bit more "programmable".
 
-KVM's version has to be mapped to EL2 to be accessible on nVHE systems.
+Instead of taking the event code at face value, check that it actually
+fits the corresponding bitmap, and if it doesn't:
+- spit out a warning so that we know which device is acting up
+- NULLify the bitmap pointer so that we catch unexpected uses
 
-The SError vaxorcism code is a one instruction window, so has two entries
-in the extable. Because the KVM code is copied for VHE and nVHE, we end up
-with four entries, half of which correspond with code that isn't mapped.
+Code paths that can make use of untrusted inputs can now check
+that the mapping was indeed correct and bail out if not.
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/include/asm/kvm_asm.h |   15 +++++++++++
- arch/arm64/kernel/vmlinux.lds.S  |    8 ++++++
- arch/arm64/kvm/hyp/entry.S       |   15 ++++++-----
- arch/arm64/kvm/hyp/hyp-entry.S   |   51 +++++++++++++++++++++++----------------
- arch/arm64/kvm/hyp/switch.c      |   31 +++++++++++++++++++++++
- 5 files changed, 94 insertions(+), 26 deletions(-)
 
---- a/arch/arm64/include/asm/kvm_asm.h
-+++ b/arch/arm64/include/asm/kvm_asm.h
-@@ -146,6 +146,21 @@ extern char __smccc_workaround_1_smc[__S
- 	kern_hyp_va	\vcpu
- .endm
+---
+ drivers/hid/hid-input.c      |    4 ++++
+ drivers/hid/hid-multitouch.c |    2 ++
+ include/linux/hid.h          |   42 +++++++++++++++++++++++++++++-------------
+ 3 files changed, 35 insertions(+), 13 deletions(-)
+
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -1132,6 +1132,10 @@ static void hidinput_configure_usage(str
+ 	}
  
-+/*
-+ * KVM extable for unexpected exceptions.
-+ * In the same format _asm_extable, but output to a different section so that
-+ * it can be mapped to EL2. The KVM version is not sorted. The caller must
-+ * ensure:
-+ * x18 has the hypervisor value to allow any Shadow-Call-Stack instrumented
-+ * code to write to it, and that SPSR_EL2 and ELR_EL2 are restored by the fixup.
-+ */
-+.macro	_kvm_extable, from, to
-+	.pushsection	__kvm_ex_table, "a"
-+	.align		3
-+	.long		(\from - .), (\to - .)
-+	.popsection
-+.endm
+ mapped:
++	/* Mapping failed, bail out */
++	if (!bit)
++		return;
 +
- #endif
+ 	if (device->driver->input_mapped &&
+ 	    device->driver->input_mapped(device, hidinput, field, usage,
+ 					 &bit, &max) < 0) {
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -856,6 +856,8 @@ static int mt_touch_input_mapping(struct
+ 			code = BTN_0  + ((usage->hid - 1) & HID_USAGE);
  
- #endif /* __ARM_KVM_ASM_H__ */
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -21,6 +21,13 @@ ENTRY(_text)
+ 		hid_map_usage(hi, usage, bit, max, EV_KEY, code);
++		if (!*bit)
++			return -1;
+ 		input_set_capability(hi->input, EV_KEY, code);
+ 		return 1;
  
- jiffies = jiffies_64;
- 
-+
-+#define HYPERVISOR_EXTABLE					\
-+	. = ALIGN(SZ_8);					\
-+	__start___kvm_ex_table = .;				\
-+	*(__kvm_ex_table)					\
-+	__stop___kvm_ex_table = .;
-+
- #define HYPERVISOR_TEXT					\
- 	/*						\
- 	 * Align to 4 KB so that			\
-@@ -36,6 +43,7 @@ jiffies = jiffies_64;
- 	__hyp_idmap_text_end = .;			\
- 	__hyp_text_start = .;				\
- 	*(.hyp.text)					\
-+	HYPERVISOR_EXTABLE				\
- 	__hyp_text_end = .;
- 
- #define IDMAP_TEXT					\
---- a/arch/arm64/kvm/hyp/entry.S
-+++ b/arch/arm64/kvm/hyp/entry.S
-@@ -198,20 +198,23 @@ alternative_endif
- 	// This is our single instruction exception window. A pending
- 	// SError is guaranteed to occur at the earliest when we unmask
- 	// it, and at the latest just after the ISB.
--	.global	abort_guest_exit_start
- abort_guest_exit_start:
- 
- 	isb
- 
--	.global	abort_guest_exit_end
- abort_guest_exit_end:
- 
- 	msr	daifset, #4	// Mask aborts
-+	ret
- 
--	// If the exception took place, restore the EL1 exception
--	// context so that we can report some information.
--	// Merge the exception code with the SError pending bit.
--	tbz	x0, #ARM_EXIT_WITH_SERROR_BIT, 1f
-+	_kvm_extable	abort_guest_exit_start, 9997f
-+	_kvm_extable	abort_guest_exit_end, 9997f
-+9997:
-+	msr	daifset, #4	// Mask aborts
-+	mov	x0, #(1 << ARM_EXIT_WITH_SERROR_BIT)
-+
-+	// restore the EL1 exception context so that we can report some
-+	// information. Merge the exception code with the SError pending bit.
- 	msr	elr_el2, x2
- 	msr	esr_el2, x3
- 	msr	spsr_el2, x4
---- a/arch/arm64/kvm/hyp/hyp-entry.S
-+++ b/arch/arm64/kvm/hyp/hyp-entry.S
-@@ -15,6 +15,30 @@
- #include <asm/kvm_mmu.h>
- #include <asm/mmu.h>
- 
-+.macro save_caller_saved_regs_vect
-+	/* x0 and x1 were saved in the vector entry */
-+	stp	x2, x3,   [sp, #-16]!
-+	stp	x4, x5,   [sp, #-16]!
-+	stp	x6, x7,   [sp, #-16]!
-+	stp	x8, x9,   [sp, #-16]!
-+	stp	x10, x11, [sp, #-16]!
-+	stp	x12, x13, [sp, #-16]!
-+	stp	x14, x15, [sp, #-16]!
-+	stp	x16, x17, [sp, #-16]!
-+.endm
-+
-+.macro restore_caller_saved_regs_vect
-+	ldp	x16, x17, [sp], #16
-+	ldp	x14, x15, [sp], #16
-+	ldp	x12, x13, [sp], #16
-+	ldp	x10, x11, [sp], #16
-+	ldp	x8, x9,   [sp], #16
-+	ldp	x6, x7,   [sp], #16
-+	ldp	x4, x5,   [sp], #16
-+	ldp	x2, x3,   [sp], #16
-+	ldp	x0, x1,   [sp], #16
-+.endm
-+
- 	.text
- 	.pushsection	.hyp.text, "ax"
- 
-@@ -156,27 +180,14 @@ el2_sync:
- 
- 
- el2_error:
--	ldp	x0, x1, [sp], #16
-+	save_caller_saved_regs_vect
-+	stp     x29, x30, [sp, #-16]!
-+
-+	bl	kvm_unexpected_el2_exception
-+
-+	ldp     x29, x30, [sp], #16
-+	restore_caller_saved_regs_vect
- 
--	/*
--	 * Only two possibilities:
--	 * 1) Either we come from the exit path, having just unmasked
--	 *    PSTATE.A: change the return code to an EL2 fault, and
--	 *    carry on, as we're already in a sane state to handle it.
--	 * 2) Or we come from anywhere else, and that's a bug: we panic.
--	 *
--	 * For (1), x0 contains the original return code and x1 doesn't
--	 * contain anything meaningful at that stage. We can reuse them
--	 * as temp registers.
--	 * For (2), who cares?
--	 */
--	mrs	x0, elr_el2
--	adr	x1, abort_guest_exit_start
--	cmp	x0, x1
--	adr	x1, abort_guest_exit_end
--	ccmp	x0, x1, #4, ne
--	b.ne	__hyp_panic
--	mov	x0, #(1 << ARM_EXIT_WITH_SERROR_BIT)
- 	eret
- 	sb
- 
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -14,6 +14,7 @@
- 
- #include <asm/barrier.h>
- #include <asm/cpufeature.h>
-+#include <asm/extable.h>
- #include <asm/kprobes.h>
- #include <asm/kvm_asm.h>
- #include <asm/kvm_emulate.h>
-@@ -24,6 +25,9 @@
- #include <asm/processor.h>
- #include <asm/thread_info.h>
- 
-+extern struct exception_table_entry __start___kvm_ex_table;
-+extern struct exception_table_entry __stop___kvm_ex_table;
-+
- /* Check whether the FP regs were dirtied while in the host-side run loop: */
- static bool __hyp_text update_fp_enabled(struct kvm_vcpu *vcpu)
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -959,34 +959,49 @@ static inline void hid_device_io_stop(st
+  * @max: maximal valid usage->code to consider later (out parameter)
+  * @type: input event type (EV_KEY, EV_REL, ...)
+  * @c: code which corresponds to this usage and type
++ *
++ * The value pointed to by @bit will be set to NULL if either @type is
++ * an unhandled event type, or if @c is out of range for @type. This
++ * can be used as an error condition.
+  */
+ static inline void hid_map_usage(struct hid_input *hidinput,
+ 		struct hid_usage *usage, unsigned long **bit, int *max,
+-		__u8 type, __u16 c)
++		__u8 type, unsigned int c)
  {
-@@ -934,3 +938,30 @@ void __hyp_text __noreturn hyp_panic(str
+ 	struct input_dev *input = hidinput->input;
+-
+-	usage->type = type;
+-	usage->code = c;
++	unsigned long *bmap = NULL;
++	unsigned int limit = 0;
  
- 	unreachable();
- }
+ 	switch (type) {
+ 	case EV_ABS:
+-		*bit = input->absbit;
+-		*max = ABS_MAX;
++		bmap = input->absbit;
++		limit = ABS_MAX;
+ 		break;
+ 	case EV_REL:
+-		*bit = input->relbit;
+-		*max = REL_MAX;
++		bmap = input->relbit;
++		limit = REL_MAX;
+ 		break;
+ 	case EV_KEY:
+-		*bit = input->keybit;
+-		*max = KEY_MAX;
++		bmap = input->keybit;
++		limit = KEY_MAX;
+ 		break;
+ 	case EV_LED:
+-		*bit = input->ledbit;
+-		*max = LED_MAX;
++		bmap = input->ledbit;
++		limit = LED_MAX;
+ 		break;
+ 	}
 +
-+asmlinkage void __hyp_text kvm_unexpected_el2_exception(void)
-+{
-+	unsigned long addr, fixup;
-+	struct kvm_cpu_context *host_ctxt;
-+	struct exception_table_entry *entry, *end;
-+	unsigned long elr_el2 = read_sysreg(elr_el2);
-+
-+	entry = hyp_symbol_addr(__start___kvm_ex_table);
-+	end = hyp_symbol_addr(__stop___kvm_ex_table);
-+	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
-+
-+	while (entry < end) {
-+		addr = (unsigned long)&entry->insn + entry->insn;
-+		fixup = (unsigned long)&entry->fixup + entry->fixup;
-+
-+		if (addr != elr_el2) {
-+			entry++;
-+			continue;
-+		}
-+
-+		write_sysreg(fixup, elr_el2);
++	if (unlikely(c > limit || !bmap)) {
++		pr_warn_ratelimited("%s: Invalid code %d type %d\n",
++				    input->name, c, type);
++		*bit = NULL;
 +		return;
 +	}
 +
-+	hyp_panic(host_ctxt);
-+}
++	usage->type = type;
++	usage->code = c;
++	*max = limit;
++	*bit = bmap;
+ }
+ 
+ /**
+@@ -1000,7 +1015,8 @@ static inline void hid_map_usage_clear(s
+ 		__u8 type, __u16 c)
+ {
+ 	hid_map_usage(hidinput, usage, bit, max, type, c);
+-	clear_bit(c, *bit);
++	if (*bit)
++		clear_bit(usage->code, *bit);
+ }
+ 
+ /**
 
 
