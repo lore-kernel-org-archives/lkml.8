@@ -2,87 +2,121 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BE6C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37510C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61AFF2087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08822206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:14:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pcRvcBUq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbgIDINb (ORCPT
+        id S1729683AbgIDIOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:13:31 -0400
-Received: from lucky1.263xmail.com ([211.157.147.132]:46942 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbgIDINa (ORCPT
+        Fri, 4 Sep 2020 04:14:37 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:13762 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726575AbgIDIOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:13:30 -0400
-Received: from localhost (unknown [192.168.167.69])
-        by lucky1.263xmail.com (Postfix) with ESMTP id B15F7EDEB4;
-        Fri,  4 Sep 2020 16:13:27 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (250.19.126.124.broad.bjtelecom.net [124.126.19.250])
-        by smtp.263.net (postfix) whith ESMTP id P25134T140525449492224S1599207206899580_;
-        Fri, 04 Sep 2020 16:13:27 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <3c9aa3fde238f060dde26bc64024f6d6>
-X-RL-SENDER: penghao@uniontech.com
-X-SENDER: penghao@uniontech.com
-X-LOGIN-NAME: penghao@uniontech.com
-X-FST-TO: linux-usb@vger.kernel.org
-X-SENDER-IP: 124.126.19.250
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 5
-X-System-Flag: 0
-From:   Penghao <penghao@uniontech.com>
-To:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org
-Cc:     johan@kernel.org, hdegoede@redhat.com, dlaz@chromium.org,
-        stern@rowland.harvard.edu, kerneldev@karsmulder.nl,
-        penghao@uniontech.com, jonathan@jdcox.net, tomasz@meresinski.eu
-Subject: [PATCH v2] HID: quirks: Add USB_QUIRK_IGNORE_REMOTE_WAKEUP quirk for BYD zhaoxin notebook
-Date:   Fri,  4 Sep 2020 16:06:54 +0800
-Message-Id: <20200904080654.19780-1-penghao@uniontech.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 4 Sep 2020 04:14:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1599207276; x=1630743276;
+  h=references:from:to:cc:subject:message-id:in-reply-to:
+   date:mime-version;
+  bh=C+bBXo0rf5HHX2D82rfzwmnGYsZpnmPVAqTS90P4am0=;
+  b=pcRvcBUqHdlNCEP+t1VZnniPGamW6WX7EnuqYI7Bl7Y0efdw0QRverRr
+   kW4VRxL0b2hh9m2sDjX6065afA5bLOcbEHQsXXr++eK0Ntge4Z3P9D8fS
+   rEY7X6ns+JkKU+jyWkn6ktjp8n5OYLWwTDsFtld8zuHhvjLWkst4/pFab
+   iVDiqlaWcQ9r7LUzO8djT2+nBHpXs5aDs4Rxl2we1GvRQIJP0VxMguaVs
+   VolIIU2zGSCGGWQcU/paU+WXNsjA274rsrc7pML7U/hL6MJBz8cJFcma5
+   YdeWsoUPwDyFvFMUVV8Q2HtS2bAPqoSytlkhtu0y232oqNUVGIeYA0rHN
+   w==;
+IronPort-SDR: 8nv+Um/Ajp+8yrHw100jjMRAOk4Jxm6ZdpjZuFbSFSqzSHVNfarzUTxB4U/zHleMXwKqeSV43E
+ nPBHsUvfd8GH4ukaL7bmc21hsu8jj78TFnNccjxmDAJggvvVjdKuxZTG8Z1mZPuOjbMJ9sEhts
+ AGUYa4FtxwdKyya67QIctsoP6Sy9a6tLX6b96xzX/ULE3qrv5lpEP10xP5SCsNCbwZy/31TiMl
+ lKOqpWkVpu+zgj1+DCdXM8Huxgb0GC19DjdqLZn6dkM/iDU+Dr6VMlGJdc8JpNvqQUdoiZwVpQ
+ 28w=
+X-IronPort-AV: E=Sophos;i="5.76,389,1592895600"; 
+   d="scan'208";a="25333146"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Sep 2020 01:14:35 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 4 Sep 2020 01:14:33 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Fri, 4 Sep 2020 01:13:42 -0700
+References: <20200903232441.2694866-1-dianders@chromium.org> <20200903162412.6.Ib121debfb18e5f923a3cd38fe9c36aa086c650c5@changeid>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Douglas Anderson <dianders@chromium.org>
+CC:     Ulf Hansson <ulf.hansson@linaro.org>, <swboyd@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
+        Angelo Dureghello <angelo.dureghello@timesys.com>,
+        "Jerome Brunet" <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "Lars Povlsen" <lars.povlsen@microchip.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+Subject: Re: [PATCH 6/6] mmc: Set PROBE_PREFER_ASYNCHRONOUS for drivers that are newer than 5.4
+Message-ID: <87y2lqvu0m.fsf@soft-dev15.microsemi.net>
+In-Reply-To: <20200903162412.6.Ib121debfb18e5f923a3cd38fe9c36aa086c650c5@changeid>
+Date:   Fri, 4 Sep 2020 10:14:29 +0200
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a USB_QUIRK_IGNORE_REMOTE_WAKEUP quirk for the BYD zhaoxin notebook.
-This notebook come with usb touchpad. And we would like to disable touchpad
-wakeup on this notebook by default.
 
-Signed-off-by: Penghao <penghao@uniontech.com>
----
- drivers/usb/core/quirks.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Douglas Anderson writes:
 
-diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
-index 7c1198f80c23..fffe1f7f1098 100644
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -393,6 +393,10 @@ static const struct usb_device_id usb_quirk_list[] = {
- 	/* Generic RTL8153 based ethernet adapters */
- 	{ USB_DEVICE(0x0bda, 0x8153), .driver_info = USB_QUIRK_NO_LPM },
- 
-+	/* SONiX USB DEVICE Touchpad */
-+	{ USB_DEVICE(0x0c45, 0x7056), .driver_info =
-+			USB_QUIRK_IGNORE_REMOTE_WAKEUP },
-+
- 	/* Action Semiconductor flash disk */
- 	{ USB_DEVICE(0x10d6, 0x2200), .driver_info =
- 			USB_QUIRK_STRING_FETCH_255 },
+> This is like commit 3d3451124f3d ("mmc: sdhci-msm: Prefer asynchronous
+> probe") but applied to a whole pile of drivers.  This batch converts
+> the drivers that appeared to have been added after kernel 5.4.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+>  drivers/mmc/host/meson-mx-sdhc-mmc.c | 1 +
+>  drivers/mmc/host/owl-mmc.c           | 1 +
+>  drivers/mmc/host/sdhci-esdhc-mcf.c   | 1 +
+>  drivers/mmc/host/sdhci-milbeaut.c    | 1 +
+>  drivers/mmc/host/sdhci-of-sparx5.c   | 1 +
+>  5 files changed, 5 insertions(+)
+>
+
+[snip]
+
+> diff --git a/drivers/mmc/host/sdhci-of-sparx5.c b/drivers/mmc/host/sdhci-of-sparx5.c
+> index 747f108a0ace..28e4ee69e100 100644
+> --- a/drivers/mmc/host/sdhci-of-sparx5.c
+> +++ b/drivers/mmc/host/sdhci-of-sparx5.c
+> @@ -255,6 +255,7 @@ MODULE_DEVICE_TABLE(of, sdhci_sparx5_of_match);
+>  static struct platform_driver sdhci_sparx5_driver = {
+>         .driver = {
+>                 .name = "sdhci-sparx5",
+> +               .probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>                 .of_match_table = sdhci_sparx5_of_match,
+>                 .pm = &sdhci_pltfm_pmops,
+>         },
+
+Acked-by: Lars Povlsen <lars.povlsen@microchip.com>
+
 -- 
-2.11.0
-
-
-
+Lars Povlsen,
+Microchip
