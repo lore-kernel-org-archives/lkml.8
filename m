@@ -2,220 +2,81 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED272C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FE0C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B48D020791
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BA1C20748
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730038AbgIDJRJ (ORCPT
+        id S1729824AbgIDJRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 05:17:09 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:37741 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729797AbgIDJRI (ORCPT
+        Fri, 4 Sep 2020 05:17:15 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:50494 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729808AbgIDJRJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 05:17:08 -0400
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 3E07F100008;
-        Fri,  4 Sep 2020 09:17:02 +0000 (UTC)
-Date:   Fri, 4 Sep 2020 11:20:49 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v3 1/2] media: i2c: ov772x: Add support for BT656 mode
-Message-ID: <20200904092049.6lokfmln4vulswrn@uno.localdomain>
-References: <20200824190406.27478-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200824190406.27478-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200904012000.GA9369@pendragon.ideasonboard.com>
- <20200904075553.qjdyskcpext7fxcy@uno.localdomain>
- <20200904082104.GE4392@valkosipuli.retiisi.org.uk>
+        Fri, 4 Sep 2020 05:17:09 -0400
+Received: by mail-il1-f198.google.com with SMTP id l8so4357058ilo.17
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 02:17:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=A0XXOCOsCKpVbiOmCtSMND7R8pvo4WiohDym5VmGicM=;
+        b=C0CxY7jw52IT0E2/XCwtBz7iD/cNJBOR1H9hspHqIIu1J5M0Bhrd4HpFQQKkhZ2b32
+         2NZVNMju5mYbdtQXLagV1W/GQCtRnx96V6GrxHAKXJTwn16/Wd8QRVmXMBioTvfb4EG1
+         5ZJFCDSToo6o7WjCnmGEwJN7Pq1vq0nzYoBblc8pd9rI4tOjbppDLeyglupaQGkZS57O
+         l2axynCeUQuZzjCS3cmty03aAkjN8Uzo7G/g6HoqfPLvo1/x1/qqvsmH/RdL64Ay8qkt
+         sQKK1BrH1x3CndIKj+PDx0+BbfEgSDghr7/UtpiosYwxaZFEgorzrDV2qHP7i9d0SeNu
+         4e+A==
+X-Gm-Message-State: AOAM530CB3DQAJmci37rVHTdusnV6/h0eCz9PeMj1EG+WnN6KPYl5SNd
+        rmYLkLCp1GPV+p2/c9YWLWNsXdhkz6rSi2oQTCtuq/NpO60t
+X-Google-Smtp-Source: ABdhPJz4l9diDvi6JeZoFv4l/8t/lebVi6lVVRaf0FpautrVybTTmaZYgtTJ+rMvN9/aU+pvBmFLgHlR3xJZ/DGghivcPWtVoGV3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200904082104.GE4392@valkosipuli.retiisi.org.uk>
+X-Received: by 2002:a92:6606:: with SMTP id a6mr6903338ilc.128.1599211028247;
+ Fri, 04 Sep 2020 02:17:08 -0700 (PDT)
+Date:   Fri, 04 Sep 2020 02:17:08 -0700
+In-Reply-To: <000000000000a358f905ae6b5dc6@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000427d4405ae795514@google.com>
+Subject: Re: KASAN: use-after-free Read in dump_schedule
+From:   syzbot <syzbot+621fd33c0b53d15ee8de@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, leandro.maciel.dorileo@intel.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, vedang.patel@intel.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
+syzbot has bisected this issue to:
 
-On Fri, Sep 04, 2020 at 11:21:04AM +0300, Sakari Ailus wrote:
-> Hi Laurent, Jacopo,
->
-> On Fri, Sep 04, 2020 at 09:55:53AM +0200, Jacopo Mondi wrote:
-> > Hi Laurent,
-> >
-> > On Fri, Sep 04, 2020 at 04:20:00AM +0300, Laurent Pinchart wrote:
-> > > Hi Prabhakar,
-> > >
-> > > Thank you for the patch.
-> > >
-> > > On Mon, Aug 24, 2020 at 08:04:05PM +0100, Lad Prabhakar wrote:
-> > > > Add support to read the bus-type and enable BT656 mode if needed.
-> > > >
-> > > > Also fail probe if unsupported bus_type is detected.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > > > ---
-> > > >  drivers/media/i2c/ov772x.c | 32 ++++++++++++++++++++++++++++++++
-> > > >  1 file changed, 32 insertions(+)
-> > > >
-> > > > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-> > > > index 2cc6a678069a..67764d647526 100644
-> > > > --- a/drivers/media/i2c/ov772x.c
-> > > > +++ b/drivers/media/i2c/ov772x.c
-> > > > @@ -31,6 +31,7 @@
-> > > >  #include <media/v4l2-ctrls.h>
-> > > >  #include <media/v4l2-device.h>
-> > > >  #include <media/v4l2-event.h>
-> > > > +#include <media/v4l2-fwnode.h>
-> > > >  #include <media/v4l2-image-sizes.h>
-> > > >  #include <media/v4l2-subdev.h>
-> > > >
-> > > > @@ -434,6 +435,7 @@ struct ov772x_priv {
-> > > >  #ifdef CONFIG_MEDIA_CONTROLLER
-> > > >  	struct media_pad pad;
-> > > >  #endif
-> > > > +	struct v4l2_fwnode_endpoint ep;
-> > > >  };
-> > > >
-> > > >  /*
-> > > > @@ -581,6 +583,13 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
-> > > >  	if (priv->streaming == enable)
-> > > >  		goto done;
-> > > >
-> > > > +	if (priv->ep.bus_type == V4L2_MBUS_BT656) {
-> > > > +		ret = regmap_update_bits(priv->regmap, COM7, ITU656_ON_OFF,
-> > > > +					 enable ? ITU656_ON_OFF : ~ITU656_ON_OFF);
-> > > > +		if (ret)
-> > > > +			goto done;
-> > > > +	}
-> > > > +
-> > > >  	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
-> > > >  				 enable ? 0 : SOFT_SLEEP_MODE);
-> > > >  	if (ret)
-> > > > @@ -1354,6 +1363,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
-> > > >
-> > > >  static int ov772x_probe(struct i2c_client *client)
-> > > >  {
-> > > > +	struct fwnode_handle *endpoint;
-> > > >  	struct ov772x_priv	*priv;
-> > > >  	int			ret;
-> > > >  	static const struct regmap_config ov772x_regmap_config = {
-> > > > @@ -1415,6 +1425,28 @@ static int ov772x_probe(struct i2c_client *client)
-> > > >  		goto error_clk_put;
-> > > >  	}
-> > > >
-> > > > +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
-> > > > +						  NULL);
-> > > > +	if (!endpoint) {
-> > > > +		dev_err(&client->dev, "endpoint node not found\n");
-> > > > +		ret = -EINVAL;
-> > > > +		goto error_clk_put;
-> > > > +	}
-> > > > +
-> > > > +	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
-> > >
-> > > v4l2_fwnode_endpoint_parse() is deprecated for new drivers,
-> > > v4l2_fwnode_endpoint_alloc_parse() is recommended instead. Please note
-> > > that v4l2_fwnode_endpoint_free() then needs to be called in the error
-> > > path and in remove().
-> >
-> > Doesn't alloc_parse() differ from just _parse() as it reserve space
-> > for the 'link-frequencies' array ? As this device does not support
-> > CSI-2 and the 'link-frequencies' property is not allows in bindings,
-> > isn't using endpoint_parse() better as it saves a call to _free() ?
->
-> Yeah. I think the documentation needs to be updated.
->
-> The thinking was there would be other variable size properties that drivers
-> would need but that didn't happen. So feel free to continue use
-> v4l2_fwnode_endpoint_parse() where it does the job.
->
-> >
-> > Or are we deprecating that function unconditionally ? The
-> > documentation suggests "please use v4l2_fwnode_endpoint_alloc_parse()
-> > in new drivers" but here it doesn't seem required..
-> >
-> > >
-> > > On the other hand, not setting .bus_type and letting the parse()
-> > > function determine the but type automatically is also deprecated, and I
-> > > don't think forcing drivers to call v4l2_fwnode_endpoint_alloc_parse()
-> > > once for each bus type until one succeeds is a good API. As change will
-> > > be needed in that API, you can ignore v4l2_fwnode_endpoint_alloc_parse()
-> > > for the time being if you want.
-> >
-> > But indeed relying on auto-guessing of the bus type is deprecated since
-> > some time now (and the API could be improved, yes). Sorry I missed
-> > that yesterday.
->
-> There's one case where the bus type does not need to be set: when bindings
-> require it *and* at the same time you have no default configuration that
-> requires something to be set in the bus specific struct. Bindings where
-> bus-type is required were added later so I think the documentation should
-> be changed there, too.
->
-> I can send the patches.
->
-> >
-> > As we support parallel and bt.656 only I must be honest I don't mind
-> > it here as otherwise the code would be more complex for no real gain,
-> > but I defer this to Sakari which has been fighting the battle against
-> > auto-guessing since a long time now  :)
->
-> I think you should require bus-type property in bindings in that case.
->
-> But as it's an existing driver, bus-type will be optional. You'll need to
-> default to what was supported earlier. This is actually an interesting case
-> as bindings do not document it.
+commit 7b9eba7ba0c1b24df42b70b62d154b284befbccf
+Author: Leandro Dorileo <leandro.maciel.dorileo@intel.com>
+Date:   Mon Apr 8 17:12:17 2019 +0000
 
-For reference:
-https://patchwork.linuxtv.org/project/linux-media/patch/20200903131029.18334-3-jacopo+renesas@jmondi.org/
+    net/sched: taprio: fix picos_per_byte miscalculation
 
-But yes, we might have DTBs in the wild without bus-type specified :(
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15464af9900000
+start commit:   fc3abb53 Merge branch 'for-linus' of git://git.kernel.org/..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=17464af9900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13464af9900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e1c560d0f4e121c9
+dashboard link: https://syzkaller.appspot.com/bug?extid=621fd33c0b53d15ee8de
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1129d0e9900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17fb6a25900000
 
->
-> >
-> >
-> > >
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > >
-> > > > +	fwnode_handle_put(endpoint);
-> > > > +	if (ret) {
-> > > > +		dev_err(&client->dev, "Could not parse endpoint\n");
-> > > > +		goto error_clk_put;
-> > > > +	}
-> > > > +
-> > > > +	if (priv->ep.bus_type != V4L2_MBUS_PARALLEL &&
-> > > > +	    priv->ep.bus_type != V4L2_MBUS_BT656) {
-> > > > +		dev_err(&client->dev, "Unsupported bus type %d\n",
-> > > > +			priv->ep.bus_type);
-> > > > +		goto error_clk_put;
-> > > > +	}
-> > > > +
-> > > >  	ret = ov772x_video_probe(priv);
-> > > >  	if (ret < 0)
-> > > >  		goto error_gpio_put;
-> > >
-> > > --
-> > > Regards,
-> > >
-> > > Laurent Pinchart
->
-> --
-> Sakari Ailus
+Reported-by: syzbot+621fd33c0b53d15ee8de@syzkaller.appspotmail.com
+Fixes: 7b9eba7ba0c1 ("net/sched: taprio: fix picos_per_byte miscalculation")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
