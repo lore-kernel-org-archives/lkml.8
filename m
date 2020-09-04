@@ -2,39 +2,84 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140ADC31E40
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543F5C35269
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1464222245
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB8A25354
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="wn2eFHmE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgIDSAD (ORCPT
+        id S1727107AbgIDRaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 14:00:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46608 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726966AbgIDSAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 14:00:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4A8D9ABA2;
-        Fri,  4 Sep 2020 18:00:02 +0000 (UTC)
-From:   Cyril Hrubis <chrubis@suse.cz>
-To:     ltp@lists.linux.it
-Cc:     linux-kernel@vger.kernel.org, lkp@lists.01.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>
-Subject: [PATCH] syscalls/ptrace10: Add new regression test
-Date:   Fri,  4 Sep 2020 20:00:30 +0200
-Message-Id: <20200904180030.14838-1-chrubis@suse.cz>
-X-Mailer: git-send-email 2.26.2
+        Fri, 4 Sep 2020 13:30:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbgIDRaF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 13:30:05 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97391C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 10:30:04 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id e5so5204736qth.5
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 10:30:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DsXwsK4zCY7HkfSZjqg83ys549zTUY/sWT0C9/KbzMc=;
+        b=wn2eFHmE1kWbL2a8K8Yh+La67pFCOUsumdtML9qwrvWmq+yGf8nat6Qh+6sMJkEA8e
+         sq+oefUn+dYVfq0NzuFeab96xkK+5E4EfjJHloESInKi/fg91TCu4/F6vbtGlLWLD4eR
+         77i8FbuucNnLVjYwQ6yy8uHQhC7Swb2QqhPH4IZiwNfTpTIc9PFtuYl9li7QEneBtCF0
+         YX4kLuhatJjgHf1OdeaKm+I8b4oPmHDaPmRhkz9KvRtIVRYSvaE5F1QcYTNeytaibc+U
+         MfLIA9JMlDAE3fIOGTmyu4Td3L+ctfG1jsBj1+xrTSspKo4ZJd/UB+gG4TtpAu8pydVj
+         bQcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DsXwsK4zCY7HkfSZjqg83ys549zTUY/sWT0C9/KbzMc=;
+        b=Tgr4UfFMl+GShQgIM0/c+eDQ+2Hxk7oD4SfAeAXY6DmENYeYGw46wx5xyYBPyJSWCe
+         RLhKOV6n9TWnSM7dhJugqiv3cQn/Ap0esHD7dU7RJCo1vQo05BYNaq8GfD6fAivFA8Lz
+         Ur+F+KH6W0hKt2M3Ml9hk2+Meu/C09tmsHlSsmab0/RnJXtN3bgpaOyOkAvII7/mXNcm
+         yyi9oVRZThCe08oXwBYNcEvK1F4epdp2t/cTf9b3oylteMDKTeTAW1y7LzJjKelYQOSb
+         kWHrGmQSThZcmdB+MQAIvRjEKmG39ZhboZDEwwZtzZL8OmIVjsMaN+NJqaUYAKy5h7KM
+         OLxA==
+X-Gm-Message-State: AOAM530k9Yi52FSUBeW5C5WYaK78LfcRo1S3mueu4Ja2zD/TkZ386eGF
+        DGx6+NytcmaKRFKjl0gjzZYHzA==
+X-Google-Smtp-Source: ABdhPJwqgJ2k4b0aRGXeq53bb2KuhyjL7osl5nkksXjBIvFgVuAWNuDStYVzQTlFUxGZYemuzcTynQ==
+X-Received: by 2002:ac8:b46:: with SMTP id m6mr9497558qti.72.1599240603664;
+        Fri, 04 Sep 2020 10:30:03 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id i66sm5103330qkc.63.2020.09.04.10.30.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 10:30:03 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     freedreno@lists.freedesktop.org
+Cc:     AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), Harigovindan P <harigovi@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        linux-kernel@vger.kernel.org (open list),
+        Rob Clark <robdclark@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>,
+        zhengbin <zhengbin13@huawei.com>
+Subject: [PATCH 0/3] drm/msm/dsi: support SM8150 and SM8250
+Date:   Fri,  4 Sep 2020 13:28:35 -0400
+Message-Id: <20200904172859.25633-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,142 +87,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New regression test for a kernel commit:
+Add support for SM8150 and SM8250 DSI.
 
-commit bd14406b78e6daa1ea3c1673bda1ffc9efdeead0
-Author: Jiri Olsa <jolsa@kernel.org>
-Date:   Mon Aug 27 11:12:25 2018 +0200
+Note I haven't tested SM8150 recently, but DSI is almost identical to SM8250.
 
-    perf/hw_breakpoint: Modify breakpoint even if the new attr has disabled set
+Jonathan Marek (3):
+  drm/msm/dsi: remove unused clk_pre/clk_post in msm_dsi_dphy_timing
+  drm/msm/dsi: add DSI config for sm8150 and sm8250
+  drm/msm/dsi: add support for 7nm DSI PHY/PLL
 
-Signed-off-by: Cyril Hrubis <chrubis@suse.cz>
-CC: Andy Lutomirski <luto@kernel.org>
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Alexandre Chartre <alexandre.chartre@oracle.com>
----
+ .../devicetree/bindings/display/msm/dsi.txt   |   6 +-
+ drivers/gpu/drm/msm/Kconfig                   |   7 +
+ drivers/gpu/drm/msm/Makefile                  |   2 +
+ drivers/gpu/drm/msm/dsi/dsi.h                 |   2 +
+ drivers/gpu/drm/msm/dsi/dsi.xml.h             | 423 ++++++++
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c             |   5 +-
+ drivers/gpu/drm/msm/dsi/dsi_cfg.h             |   2 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c         | 102 ++
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.h         |   6 +-
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c     | 255 +++++
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll.c         |   4 +
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll.h         |  10 +
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_7nm.c     | 902 ++++++++++++++++++
+ 13 files changed, 1721 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+ create mode 100644 drivers/gpu/drm/msm/dsi/pll/dsi_pll_7nm.c
 
-This is a follow up for the ptrace08 fixes.
-
- runtest/syscalls                            |  1 +
- testcases/kernel/syscalls/ptrace/.gitignore |  1 +
- testcases/kernel/syscalls/ptrace/ptrace10.c | 86 +++++++++++++++++++++
- 3 files changed, 88 insertions(+)
- create mode 100644 testcases/kernel/syscalls/ptrace/ptrace10.c
-
-diff --git a/runtest/syscalls b/runtest/syscalls
-index 398145f65..163471bcd 100644
---- a/runtest/syscalls
-+++ b/runtest/syscalls
-@@ -993,6 +993,7 @@ ptrace05 ptrace05
- ptrace07 ptrace07
- ptrace08 ptrace08
- ptrace09 ptrace09
-+ptrace10 ptrace10
- 
- pwrite01 pwrite01
- pwrite02 pwrite02
-diff --git a/testcases/kernel/syscalls/ptrace/.gitignore b/testcases/kernel/syscalls/ptrace/.gitignore
-index 7639e1a9f..7ee3b3c47 100644
---- a/testcases/kernel/syscalls/ptrace/.gitignore
-+++ b/testcases/kernel/syscalls/ptrace/.gitignore
-@@ -5,3 +5,4 @@
- /ptrace07
- /ptrace08
- /ptrace09
-+/ptrace10
-diff --git a/testcases/kernel/syscalls/ptrace/ptrace10.c b/testcases/kernel/syscalls/ptrace/ptrace10.c
-new file mode 100644
-index 000000000..b5d6b9f8f
---- /dev/null
-+++ b/testcases/kernel/syscalls/ptrace/ptrace10.c
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2020 Cyril Hrubis <chrbis@suse.cz>
-+ *
-+ * After fix for CVE-2018-1000199 (see ptrace08.c) subsequent calls to POKEUSER
-+ * for x86 debug registers were ignored silently.
-+ *
-+ * This is a regression test for commit:
-+ *
-+ * commit bd14406b78e6daa1ea3c1673bda1ffc9efdeead0
-+ * Author: Jiri Olsa <jolsa@kernel.org>
-+ * Date:   Mon Aug 27 11:12:25 2018 +0200
-+ *
-+ *     perf/hw_breakpoint: Modify breakpoint even if the new attr has disabled set
-+ */
-+
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <stddef.h>
-+#include <sys/ptrace.h>
-+#include <sys/user.h>
-+#include <signal.h>
-+#include "tst_test.h"
-+
-+#if defined(__i386__) || defined(__x86_64__)
-+
-+static pid_t child_pid;
-+
-+static void child_main(void)
-+{
-+	raise(SIGSTOP);
-+	exit(0);
-+}
-+
-+static void run(void)
-+{
-+	int status;
-+	unsigned long addr;
-+
-+	child_pid = SAFE_FORK();
-+
-+	if (!child_pid)
-+		child_main();
-+
-+	if (SAFE_WAITPID(child_pid, &status, WUNTRACED) != child_pid)
-+		tst_brk(TBROK, "Received event from unexpected PID");
-+
-+	SAFE_PTRACE(PTRACE_ATTACH, child_pid, NULL, NULL);
-+	SAFE_PTRACE(PTRACE_POKEUSER, child_pid,
-+		(void *)offsetof(struct user, u_debugreg[0]), (void *)1);
-+	SAFE_PTRACE(PTRACE_POKEUSER, child_pid,
-+		(void *)offsetof(struct user, u_debugreg[0]), (void *)2);
-+
-+	addr = ptrace(PTRACE_PEEKUSER, child_pid,
-+	              (void*)offsetof(struct user, u_debugreg[0]), NULL);
-+
-+	if (addr == 2)
-+		tst_res(TPASS, "The rd0 was set on second PTRACE_POKEUSR");
-+	else
-+		tst_res(TFAIL, "The rd0 wasn't set on second PTRACE_POKEUSER");
-+
-+	SAFE_PTRACE(PTRACE_DETACH, child_pid, NULL, NULL);
-+	SAFE_KILL(child_pid, SIGCONT);
-+	child_pid = 0;
-+	tst_reap_children();
-+}
-+
-+static void cleanup(void)
-+{
-+	/* Main process terminated by tst_brk() with child still paused */
-+	if (child_pid)
-+		SAFE_KILL(child_pid, SIGKILL);
-+}
-+
-+static struct tst_test test = {
-+	.test_all = run,
-+	.cleanup = cleanup,
-+	.forks_child = 1,
-+	.tags = (const struct tst_tag[]) {
-+		{"linux-git", "bd14406b78e6"},
-+		{}
-+	}
-+};
-+#else
-+TST_TEST_TCONF("This test is only supported on x86 systems");
-+#endif
 -- 
-2.26.2
+2.26.1
 
