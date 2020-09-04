@@ -2,93 +2,78 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E568C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB5DC28E83
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 507F520791
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:29:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IN3m1r89"
+	by mail.kernel.org (Postfix) with ESMTP id 3A36720791
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730095AbgIDK3E (ORCPT
+        id S1730120AbgIDK3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 06:29:04 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:15347 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730034AbgIDK2x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:28:53 -0400
-X-UUID: 07771bdf2c1c4ee1ab180633629baa0e-20200904
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=W6qNdgT4XBpxvM+qKDnHlTrV/BrFHcflzIbO8Gjk/jY=;
-        b=IN3m1r89KoswFu3G3q/WjUwnve/HdkYvnt5t2G/75yVvGKnofYrpPUnyXkRaUTzN5ImRXXV9D6MlKN/DeygL95MarB5Awr6OZ9PXCVy0QYOdwTf4B8aHDzb59k7o+7QncEepnOw6xVuReZ1ttVelAKamGzp++oZhReYg/u+kYcY=;
-X-UUID: 07771bdf2c1c4ee1ab180633629baa0e-20200904
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1434882807; Fri, 04 Sep 2020 18:28:46 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 4 Sep 2020 18:28:41 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 4 Sep 2020 18:28:42 +0800
-Message-ID: <1599215324.29997.1.camel@mtkswgap22>
-Subject: Re: [PATCH v5] iommu/mediatek: check 4GB mode by reading infracfg
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        <iommu@lists.linux-foundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Yong Wu <yong.wu@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        "Christoph Hellwig" <hch@lst.de>
-Date:   Fri, 4 Sep 2020 18:28:44 +0800
-In-Reply-To: <20200904094233.GP6714@8bytes.org>
-References: <20200831105639.2856-1-miles.chen@mediatek.com>
-         <20200904094233.GP6714@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: 8CBC2E51C5EDEC8111200CFC22B3DC832000455B5036BDE4B17C4427343DBDC82000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Fri, 4 Sep 2020 06:29:08 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:42762 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726171AbgIDK3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:29:00 -0400
+Received: from bogon.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx+MTFFlJfq8AQAA--.90S2;
+        Fri, 04 Sep 2020 18:28:23 +0800 (CST)
+From:   Jinyang He <hejinyang@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH] MIPS: Make NUMA select SMP
+Date:   Fri,  4 Sep 2020 18:28:21 +0800
+Message-Id: <1599215301-2480-1-git-send-email-hejinyang@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dx+MTFFlJfq8AQAA--.90S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw45Wr18GryrGF4kXr18Xwb_yoWxKrg_tw
+        sFva48WF1Syr97Wryagws5Z340ya4rWF15AFsIqF1UZ343Xr15Jay7Jayktr17G3WDWFWr
+        ZrWruFnrZr42yjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb2xYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26F4j6r4UJw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r4DMxAIw28I
+        cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+        IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI
+        42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
+        IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
+        87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUqLZcUUUUU
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA5LTA0IGF0IDExOjQyICswMjAwLCBKb2VyZyBSb2VkZWwgd3JvdGU6DQo+
-IE9uIE1vbiwgQXVnIDMxLCAyMDIwIGF0IDA2OjU2OjM5UE0gKzA4MDAsIE1pbGVzIENoZW4gd3Jv
-dGU6DQo+ID4gSW4gcHJldmlvdXMgZGlzY3Vzc2lvbiBbMV0gYW5kIFsyXSwgd2UgZm91bmQgdGhh
-dCBpdCBpcyByaXNreSB0bw0KPiA+IHVzZSBtYXhfcGZuIG9yIHRvdGFscmFtX3BhZ2VzIHRvIHRl
-bGwgaWYgNEdCIG1vZGUgaXMgZW5hYmxlZC4NCj4gPiANCj4gPiBDaGVjayA0R0IgbW9kZSBieSBy
-ZWFkaW5nIGluZnJhY2ZnIHJlZ2lzdGVyLCByZW1vdmUgdGhlIHVzYWdlDQo+ID4gb2YgdGhlIHVu
-LWV4cG9ydGVkIHN5bWJvbCBtYXhfcGZuLg0KPiA+IA0KPiA+IFRoaXMgaXMgYSBzdGVwIHRvd2Fy
-ZHMgYnVpbGRpbmcgbXRrX2lvbW11IGFzIGEga2VybmVsIG1vZHVsZS4NCj4gPiANCj4gPiBbMV0g
-aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8yMDIwMDYwMzE2MTEzMi4yNDQxLTEtbWlsZXMu
-Y2hlbkBtZWRpYXRlay5jb20vDQo+ID4gWzJdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwv
-MjAyMDA2MDQwODAxMjAuMjYyOC0xLW1pbGVzLmNoZW5AbWVkaWF0ZWsuY29tLw0KPiA+IFszXSBo
-dHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjAwNzE1MjA1MTIwLkdBNzc4ODc2QGJvZ3Vz
-Lw0KPiA+IA0KPiA+IENjOiBNaWtlIFJhcG9wb3J0IDxycHB0QGxpbnV4LmlibS5jb20+DQo+ID4g
-Q2M6IERhdmlkIEhpbGRlbmJyYW5kIDxkYXZpZEByZWRoYXQuY29tPg0KPiA+IENjOiBZb25nIFd1
-IDx5b25nLnd1QG1lZGlhdGVrLmNvbT4NCj4gPiBDYzogWWluZ2pvZSBDaGVuIDx5aW5nam9lLmNo
-ZW5AbWVkaWF0ZWsuY29tPg0KPiA+IENjOiBDaHJpc3RvcGggSGVsbHdpZyA8aGNoQGxzdC5kZT4N
-Cj4gPiBDYzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gPiBDYzogTWF0dGhpYXMg
-QnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdtYWlsLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaWxl
-cyBDaGVuIDxtaWxlcy5jaGVuQG1lZGlhdGVrLmNvbT4NCj4gDQo+IFlvdSBmb3Jnb3QgdG8gYWRk
-IHRoZSB0YWdzIGhlcmUgZnJvbSB2NCwgYXQgbGVhc3QgTWF0dGhpYXMnIFJldmlld2VkLWJ5DQo+
-IGlzIG1pc3NpbmcuIFBsZWFzZSBhZGQgdGhlIG1pc3NpbmcgdGFncyBhbmQgcmVzZW5kLg0KDQpU
-aGFua3MgZm9yIHJlbWluZGluZy4gSSdsbCBhZGQgdGhlIHRhZyBhbmQgcmVzZW5kIHRoaXMgcGF0
-Y2ggQVNBUC4NCg0KTWlsZXMNCj4gDQo+IA0KPiAJSm9lcmcNCg0K
+While it does make sense to allow CONFIG_NUMA and !CONFIG_SMP
+in theory, it doesn't make much sense in practice. Follow other
+architectures and make CONFIG_NUMA select CONFIG_SMP.
+
+Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+---
+ arch/mips/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 99220e7..b8e3331 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -2657,6 +2657,7 @@ config ARCH_SPARSEMEM_ENABLE
+ config NUMA
+ 	bool "NUMA Support"
+ 	depends on SYS_SUPPORTS_NUMA
++	select SMP
+ 	help
+ 	  Say Y to compile the kernel to support NUMA (Non-Uniform Memory
+ 	  Access).  This option improves performance on systems with more
+-- 
+2.1.0
 
