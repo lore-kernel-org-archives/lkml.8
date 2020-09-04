@@ -2,163 +2,131 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF38C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1566C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB0D2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2186206E7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:47:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPEHwTgW"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="OSJLrqQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgIDPqt (ORCPT
+        id S1727001AbgIDPrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:46:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43910 "EHLO
+        Fri, 4 Sep 2020 11:47:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbgIDPq3 (ORCPT
+        with ESMTP id S1726776AbgIDPqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:46:29 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B4C2C061245
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:46:29 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id s29so2143383uae.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:46:29 -0700 (PDT)
+        Fri, 4 Sep 2020 11:46:45 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 884C2C061238
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:46:39 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id o5so7154979wrn.13
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:46:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gBjj6Z6R/+X4N410jUAaQIpfhsJ1Uab1XRHbJdH8dAw=;
-        b=YPEHwTgWCTHCsBvkvb5iNWOgPL18jzf9kn1lZwE7bMbG/qsoaRUJRlLUiUvn7UsbRU
-         xWLq78s6Zjx5M+gG58MQqK96A/z90GODiLUBY2tVybORIeD8qd024KcU4cb1NR6XsgSn
-         k983Ey58HmvF9RsaKL58l0jJP0KrwZnsNQM8PoZHbbnvUCuJHhjEw1GXNIBVxpF62edn
-         KMo2pe2VNgqUeJmIdtchr7g/1nTuwFfqudj/hGk0bfmJ7rFSBscLHMQulfYZ5FocwPKN
-         /nX3LomJ6Z444F3tjBV8ady3IH3z3bUSgaLw/RDtnRvhpMA957RyTett0X5LUpPhocoX
-         KTSw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DcRR0cvj/PHR5JcTPOP5KmS/Yg2MBZu1qA5qfQNGk0A=;
+        b=OSJLrqQlcETqpO5qPErz470rrP4H38PM0Pt8IMETO0NAQJtD9YhqhPpbnjVgO6z5Pc
+         zFTnWa4ltyNBOIYyvM+4tgoe3kWJWGZqE++V+EWXWa7BQTeJRGUXB+RdjUucwaB8vcA8
+         a87JibEI+hux9ZIBnOWbmMRMtjtepM2P3EDk7RX7CdRquBDpTnwVnZks1Czho5gigPzO
+         ZBW5pug6/6n5xkuc53cIUj/ofUMQo9ZoeuLagXDiIzxELjsil7e+coJ8Ky5yYDlrwcXU
+         cOpD7DsDHXxX3RQEoBjI4dZ0NGVoglP+yauppUuvEEQIuJHNgVPXVtwRoCNu/iQqYXLn
+         CGxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gBjj6Z6R/+X4N410jUAaQIpfhsJ1Uab1XRHbJdH8dAw=;
-        b=PUse2soax780ISWMuW1wnTRIpRwm7h1Yj9AzbJ6QdcAq4o/e/sbz2C7vXstva2I+U8
-         b/x9m8ZCHy4llJvACkNuKvKGGQCuB1g2PH4uqMv/+4XCLP5OfaK0N/Rix3s6o+OCW+wP
-         sv/l5Wdiu2CH9hQgWPJLmbNnEEkZdWv9Aa4KbPG5OtTIKMvgA6SEgvfszQoZDRaBK7Wo
-         dGAjWe8tXJFqvuu268HerskCpYIj/p/Vv4HXgX27hQ/OO9b7HBU6ddn+VIDP3tLDkFTT
-         KKC8h7uuYJMGdAL6/W1JqpafiCL5YNITQIqXnoz0AP5IbiB9K2NXPKHCoetaljIg04G/
-         gQgA==
-X-Gm-Message-State: AOAM531HjX3shjC6UMMj+FIgZdN243mvoGcntoMTU+vib3RHVix7UiMj
-        tguUgRy5R4PnZEE91BGj8dTw1tPiUfCyvw==
-X-Google-Smtp-Source: ABdhPJz05m5hSpYCmSQbWpOKBVEzlH3DjKyMFQ4KSZdcNDBW0yQL1a5a4yLx7QGcU9peb+xn/37kNw==
-X-Received: by 2002:ab0:6596:: with SMTP id v22mr5250526uam.63.1599234387727;
-        Fri, 04 Sep 2020 08:46:27 -0700 (PDT)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id s4sm914671vsc.2.2020.09.04.08.46.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 08:46:26 -0700 (PDT)
-Received: by mail-vs1-f52.google.com with SMTP id x203so3858138vsc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:46:26 -0700 (PDT)
-X-Received: by 2002:a67:8783:: with SMTP id j125mr5978201vsd.174.1599234385835;
- Fri, 04 Sep 2020 08:46:25 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DcRR0cvj/PHR5JcTPOP5KmS/Yg2MBZu1qA5qfQNGk0A=;
+        b=MocIsrWNsd0RknE7AdVR0DYqweIkFvXkozLgG8AMauIhpSDs/xpi7ApXLrzbYYQOAe
+         Z2tWS5Dmxf4/O3ZY9NeByFwPbxb8wjVrtth1xPxUini2UBOJyPOXy7X1NUA4O/3tXFb0
+         r8/NFtcNUZ83FdaeiETQf6fNF+QU8uIwUiqUvvZ+V8znEQSCyt/uKVBtmSzN41uRg5bv
+         9OqCRIqqwb7Rq4ZFiC0TWzF4cLtI3wMwvAm+C0dFA8XqWVY8Cqoww5jDKfHaIzDuWlsJ
+         BPqZKGOSoURXaVSzCQUmouVxmm2mZOBNgIsuVtEHwSeLmjsXs25r+VrZU/6XywkNnZAl
+         5c6g==
+X-Gm-Message-State: AOAM533eoeqWlLnAbGP4umybEpq2vRzHNK9A/qDnaOYSQfrjVrs6Aw9z
+        AifSlCMmYkOkEOZn1yXdjyDR/Q==
+X-Google-Smtp-Source: ABdhPJzydKpw4Z5FsNZ+t0aMz2hV1ayLaJITUh07WUEGRLKoHkz5Fpef/XIauwVmwQp52xf/HGURHw==
+X-Received: by 2002:adf:9d44:: with SMTP id o4mr8314372wre.361.1599234398291;
+        Fri, 04 Sep 2020 08:46:38 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id q4sm11983375wru.65.2020.09.04.08.46.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 08:46:37 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 06/23] gpiolib: switch to simpler IDA interface
+Date:   Fri,  4 Sep 2020 17:45:30 +0200
+Message-Id: <20200904154547.3836-7-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200904154547.3836-1-brgl@bgdev.pl>
+References: <20200904154547.3836-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <20200901195415.4840-1-m-karicheri2@ti.com> <20200901195415.4840-2-m-karicheri2@ti.com>
-In-Reply-To: <20200901195415.4840-2-m-karicheri2@ti.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Fri, 4 Sep 2020 17:45:48 +0200
-X-Gmail-Original-Message-ID: <CA+FuTScPZ5sfHBwbFKQza6w4G1UcO8DaqrcpFuSvr9svgMEepw@mail.gmail.com>
-Message-ID: <CA+FuTScPZ5sfHBwbFKQza6w4G1UcO8DaqrcpFuSvr9svgMEepw@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/1] net: hsr/prp: add vlan support
-To:     Murali Karicheri <m-karicheri2@ti.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, nsekhar@ti.com,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 9:54 PM Murali Karicheri <m-karicheri2@ti.com> wrote:
->
-> This patch add support for creating vlan interfaces
-> over hsr/prp interface.
->
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> ---
->  net/hsr/hsr_device.c  |  4 ----
->  net/hsr/hsr_forward.c | 16 +++++++++++++---
->  2 files changed, 13 insertions(+), 7 deletions(-)
->
-> diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
-> index ab953a1a0d6c..e1951579a3ad 100644
-> --- a/net/hsr/hsr_device.c
-> +++ b/net/hsr/hsr_device.c
-> @@ -477,10 +477,6 @@ void hsr_dev_setup(struct net_device *dev)
->
->         /* Prevent recursive tx locking */
->         dev->features |= NETIF_F_LLTX;
-> -       /* VLAN on top of HSR needs testing and probably some work on
-> -        * hsr_header_create() etc.
-> -        */
-> -       dev->features |= NETIF_F_VLAN_CHALLENGED;
->         /* Not sure about this. Taken from bridge code. netdev_features.h says
->          * it means "Does not change network namespaces".
->          */
-> diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
-> index cadfccd7876e..de21df30b0d9 100644
-> --- a/net/hsr/hsr_forward.c
-> +++ b/net/hsr/hsr_forward.c
-> @@ -208,6 +208,7 @@ static struct sk_buff *hsr_fill_tag(struct sk_buff *skb,
->                                     struct hsr_port *port, u8 proto_version)
->  {
->         struct hsr_ethhdr *hsr_ethhdr;
-> +       unsigned char *pc;
->         int lsdu_size;
->
->         /* pad to minimum packet size which is 60 + 6 (HSR tag) */
-> @@ -218,7 +219,18 @@ static struct sk_buff *hsr_fill_tag(struct sk_buff *skb,
->         if (frame->is_vlan)
->                 lsdu_size -= 4;
->
-> -       hsr_ethhdr = (struct hsr_ethhdr *)skb_mac_header(skb);
-> +       pc = skb_mac_header(skb);
-> +       if (frame->is_vlan)
-> +               /* This 4-byte shift (size of a vlan tag) does not
-> +                * mean that the ethhdr starts there. But rather it
-> +                * provides the proper environment for accessing
-> +                * the fields, such as hsr_tag etc., just like
-> +                * when the vlan tag is not there. This is because
-> +                * the hsr tag is after the vlan tag.
-> +                */
-> +               hsr_ethhdr = (struct hsr_ethhdr *)(pc + VLAN_HLEN);
-> +       else
-> +               hsr_ethhdr = (struct hsr_ethhdr *)pc;
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Instead, I would pass the header from the caller, which knows the
-offset because it moves the previous headers to make space.
+We don't need to specify any ranges when allocating IDs so we can switch
+to ida_alloc() and ida_free() instead of the ida_simple_ counterparts.
 
-Also, supporting VLAN probably also requires supporting 802.1ad QinQ,
-which means code should parse the headers instead of hardcoding
-VLAN_HLEN.
+ida_simple_get(ida, 0, 0, gfp) is equivalent to
+ida_alloc_range(ida, 0, UINT_MAX, gfp) which is equivalent to
+ida_alloc(ida, gfp). Note: IDR will never actually allocate an ID
+larger than INT_MAX.
 
->         hsr_set_path_id(hsr_ethhdr, port);
->         set_hsr_tag_LSDU_size(&hsr_ethhdr->hsr_tag, lsdu_size);
-> @@ -511,8 +523,6 @@ static int fill_frame_info(struct hsr_frame_info *frame,
->         if (frame->is_vlan) {
->                 vlan_hdr = (struct hsr_vlan_ethhdr *)ethhdr;
->                 proto = vlan_hdr->vlanhdr.h_vlan_encapsulated_proto;
-> -               /* FIXME: */
-> -               netdev_warn_once(skb->dev, "VLAN not yet supported");
->         }
->
->         frame->is_from_san = false;
-> --
-> 2.17.1
->
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpiolib.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 15c99cf560ee..591777bc2285 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -471,7 +471,7 @@ static void gpiodevice_release(struct device *dev)
+ 	struct gpio_device *gdev = dev_get_drvdata(dev);
+ 
+ 	list_del(&gdev->list);
+-	ida_simple_remove(&gpio_ida, gdev->id);
++	ida_free(&gpio_ida, gdev->id);
+ 	kfree_const(gdev->label);
+ 	kfree(gdev->descs);
+ 	kfree(gdev);
+@@ -582,7 +582,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 		gc->of_node = gdev->dev.of_node;
+ #endif
+ 
+-	gdev->id = ida_simple_get(&gpio_ida, 0, 0, GFP_KERNEL);
++	gdev->id = ida_alloc(&gpio_ida, GFP_KERNEL);
+ 	if (gdev->id < 0) {
+ 		ret = gdev->id;
+ 		goto err_free_gdev;
+@@ -753,7 +753,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ err_free_descs:
+ 	kfree(gdev->descs);
+ err_free_ida:
+-	ida_simple_remove(&gpio_ida, gdev->id);
++	ida_free(&gpio_ida, gdev->id);
+ err_free_gdev:
+ 	/* failures here can mean systems won't boot... */
+ 	pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__,
+-- 
+2.26.1
+
