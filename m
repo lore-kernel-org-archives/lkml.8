@@ -2,63 +2,63 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3ACC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4153DC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E94620772
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4562074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:55:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oZadVWzK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fH/8s/Vs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgIDPzf (ORCPT
+        id S1727024AbgIDPzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:55:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45310 "EHLO
+        Fri, 4 Sep 2020 11:55:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbgIDPzQ (ORCPT
+        with ESMTP id S1726984AbgIDPz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:55:16 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B1B1C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:55:16 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id b14so6738432qkn.4
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:55:16 -0700 (PDT)
+        Fri, 4 Sep 2020 11:55:26 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4262BC061247
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:55:24 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id x7so3235306qvi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:55:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4q/8n4d9Oz9Vv/K5aJK8Mp8Y2lRkWj0qSrttp/CroxE=;
-        b=oZadVWzKzjT6kVlQDdSaTMxHoRTYYXuhfeHAqu6JmmOp3XCU0blzfKn1tJhWzX2HeS
-         sK1QUgw4eOALlLrqiIa5mJ5RjG5DDMC/GfAoKvUlju9deCt1Z1cQt3mFi6Jp8dh8eAcL
-         b47lB644qnhBgKdHPTa65f3vcbqa8pR/OGmGhW1uCRNIq0IP9XUGZp7dua1GTQzH7pbj
-         3kOSW84l/lOtcT1dCSPEMna3Qn0g0ssFDfacD5B1snlLor1iC7Zmm6UoHviENlQKr4s3
-         lC89jtyARRDB8fr0n/NnuYQLdQ/YywQuWqkj40BnJg+qClOjhyEKiVWTZ/r3SCq8UT/u
-         +arA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=I9v8itQxrG/5qOmlIkuGPstFjTonnbsCxHmLWx5pBPk=;
+        b=fH/8s/VsjUJd9NSfQnY9KSqjr01isFkiTOEHv966Pm+qJr0SntP+xw7DkVPurY+FVA
+         TGhOoJlnm9Ues2qE+3G7rkDWz7QaZWbR3ioFcET9S2eEFANNMRSLMlEwWT+67pEu3h/J
+         gtFEX/W6HDjTk/bNacLk+NKv/yYQfcg4gHrZ8cvLLQd7heB4VMYFsmq5HuYBHzojcJzM
+         jvbXrNuQYord9V5/QeTX2bg15dsqvN7uIXH2fypYBVmveFk3IlBSq5h0rr0SsYd92wbL
+         r3AXp+pONiHH4M+LMJeGIBSd2WYLFWvUSPInCsoZgV6fJqA9+OEe5uEsFaU2oP25C6v1
+         PfpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4q/8n4d9Oz9Vv/K5aJK8Mp8Y2lRkWj0qSrttp/CroxE=;
-        b=EBu0TgnU2lV0VzvbRqGcPrjyHzvBygEDaqxn3F1nQctO6VoAUiku7JeKW1ado+qvP4
-         HKY2eeV/J0dIiAjYAwGaUo/wJcA80Ab4JNKO+0l9IaxEijink3SM/1rrLtc2R7+Wm2Db
-         9UO9p9YTk9gIe8gdfnoyOH2loe8/QHOD50GnozjhwS7ZZ+p9QenU6aeb2TBGOprgVv0h
-         moE6Wt5YkP6uW3DeIR9hKsN0FF3GGYCAN1EQNCglfJVCH5cuLxNT+PoLEzymYPk6ssn2
-         CK0VDiYIccBwa6VOy+NUTe/NL4/okHReIJngwfktHpPnjR+SFaCRpAStgcxPBaTR85k+
-         R8sA==
-X-Gm-Message-State: AOAM5331OjIXiAzBGRejBezSrU51r61lX/FG9ZHhBmh4XoF/vyV6MAX2
-        8kCUN3DMHoviJO3IF9okA4yu6Q==
-X-Google-Smtp-Source: ABdhPJxHXnDF5Yz7KMj3dP1Wot9aBwDE24PK5PObq0P6DKGWMzJC3jbF9SemUpoG0/uTgsf96ikT4Q==
-X-Received: by 2002:a37:314:: with SMTP id 20mr8208333qkd.274.1599234915063;
-        Fri, 04 Sep 2020 08:55:15 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=I9v8itQxrG/5qOmlIkuGPstFjTonnbsCxHmLWx5pBPk=;
+        b=Opyomir3Dt1ZBlpZluIEAyxNtFGGwQq0B5jESti2/D/qswfPjNe78R/IRINYXoCFME
+         IjbZ7CNsomIEngTzRMORFVLbUyqlI3uQ5jqI60EcKZPJoi/YCn07XtyjalFGNHVsRW/z
+         4KhXzJD4FCO45GMhPWzi1ODuJsHscUXkb682Ij7OI4+gKbhbOfhya9W606Vxt8oWAozJ
+         qA0ESoNdWI1RS3+NjP+AjBOv/L31A4ipSpu4CAkS8iSAle9+4dBU762iG/F41I7S26Um
+         wBSXXbncINwlQaiAp8tz07Z4Jzam7Q7BOx4Xn7qrznJ0ag/uk2fmE6BAo77+p8P0WbJQ
+         6A0Q==
+X-Gm-Message-State: AOAM5320l9GORbDN4Xeug0RhqSOql6dZdtM0fQu7j8r1XbCI4yuATsbI
+        PkgTi7PjbrL2KDhjHKErDZoczw==
+X-Google-Smtp-Source: ABdhPJxQteuxg6Yjoj7fVR6WxdpZueTzVWR2/XBC+gGtJOSWv7p5AUuXED5I8jk4ofSy9cwnePazOA==
+X-Received: by 2002:a0c:c988:: with SMTP id b8mr7690156qvk.192.1599234922927;
+        Fri, 04 Sep 2020 08:55:22 -0700 (PDT)
 Received: from localhost.localdomain (ec2-34-197-84-77.compute-1.amazonaws.com. [34.197.84.77])
-        by smtp.gmail.com with ESMTPSA id v18sm4724473qtq.15.2020.09.04.08.55.14
+        by smtp.gmail.com with ESMTPSA id v18sm4724473qtq.15.2020.09.04.08.55.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:55:14 -0700 (PDT)
+        Fri, 04 Sep 2020 08:55:22 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         Joerg Roedel <joro@8bytes.org>,
@@ -70,10 +70,12 @@ Cc:     Sibi Sankar <sibis@codeaurora.org>,
         linux-arm-kernel@lists.infradead.org,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org
-Subject: [PATCH v3 0/8] iommu/arm-smmu: Support maintaining bootloader mappings
-Date:   Fri,  4 Sep 2020 15:55:05 +0000
-Message-Id: <20200904155513.282067-1-bjorn.andersson@linaro.org>
+Subject: [PATCH v3 7/8] iommu/arm-smmu: Provide helper for allocating identity domain
+Date:   Fri,  4 Sep 2020 15:55:12 +0000
+Message-Id: <20200904155513.282067-8-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200904155513.282067-1-bjorn.andersson@linaro.org>
+References: <20200904155513.282067-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,30 +83,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on previous attempts and discussions this is the latest attempt at
-inheriting stream mappings set up by the bootloader, for e.g. boot splash or
-efifb.
+Some platform implementations needs to be able to allocate a domain for
+emulating identity mappings using a context bank without translation.
+Provide a helper function to allocate such a domain.
 
-Per Will's request this builds on the work by Jordan and Rob for the Adreno
-SMMU support. It applies cleanly ontop of v16 of their series, which can be
-found at
-https://lore.kernel.org/linux-arm-msm/20200901164707.2645413-1-robdclark@gmail.com/
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-Bjorn Andersson (8):
-  iommu/arm-smmu: Refactor context bank allocation
-  iommu/arm-smmu: Delay modifying domain during init
-  iommu/arm-smmu: Consult context bank allocator for identify domains
-  iommu/arm-smmu-qcom: Emulate bypass by using context banks
-  iommu/arm-smmu-qcom: Consistently initialize stream mappings
-  iommu/arm-smmu: Add impl hook for inherit boot mappings
-  iommu/arm-smmu: Provide helper for allocating identity domain
-  iommu/arm-smmu-qcom: Setup identity domain for boot mappings
+Changes since v2:
+- Extracted from previous arm_smmu_setup_identity() implementation
 
- drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 111 ++++++++++++++++++-
- drivers/iommu/arm/arm-smmu/arm-smmu.c      | 122 ++++++++++++++-------
- drivers/iommu/arm/arm-smmu/arm-smmu.h      |  14 ++-
- 3 files changed, 205 insertions(+), 42 deletions(-)
+ drivers/iommu/arm/arm-smmu/arm-smmu.c | 25 +++++++++++++++++++++++++
+ drivers/iommu/arm/arm-smmu/arm-smmu.h |  2 ++
+ 2 files changed, 27 insertions(+)
 
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+index 4c4d302cd747..3c06146dfdb9 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+@@ -1924,6 +1924,31 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
+ 	return 0;
+ }
+ 
++struct iommu_domain *arm_smmu_alloc_identity_domain(struct arm_smmu_device *smmu)
++{
++	struct iommu_domain *identity;
++	int ret;
++
++	/* Create a IDENTITY domain to use for all inherited streams */
++	identity = arm_smmu_domain_alloc(IOMMU_DOMAIN_IDENTITY);
++	if (!identity) {
++		dev_err(smmu->dev, "failed to create identity domain\n");
++		return ERR_PTR(-ENOMEM);
++	}
++
++	identity->pgsize_bitmap = smmu->pgsize_bitmap;
++	identity->type = IOMMU_DOMAIN_IDENTITY;
++	identity->ops = &arm_smmu_ops;
++
++	ret = arm_smmu_init_domain_context(identity, smmu, NULL);
++	if (ret < 0) {
++		dev_err(smmu->dev, "failed to initialize identity domain: %d\n", ret);
++		return ERR_PTR(ret);
++	}
++
++	return identity;
++}
++
+ struct arm_smmu_match_data {
+ 	enum arm_smmu_arch_version version;
+ 	enum arm_smmu_implementation model;
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+index f58164976e74..fbdf3d7ca70d 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+@@ -537,4 +537,6 @@ struct arm_smmu_device *qcom_adreno_smmu_impl_init(struct arm_smmu_device *smmu)
+ void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx);
+ int arm_mmu500_reset(struct arm_smmu_device *smmu);
+ 
++struct iommu_domain *arm_smmu_alloc_identity_domain(struct arm_smmu_device *smmu);
++
+ #endif /* _ARM_SMMU_H */
 -- 
 2.28.0
 
