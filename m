@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93161C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9078BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 470222074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1B12074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LaLhtGoK";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="mORnPJzp"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GT1OAVyg";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="BAchygiN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbgIDIXN (ORCPT
+        id S1729908AbgIDIXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:23:13 -0400
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:49928
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729850AbgIDIXI (ORCPT
+        Fri, 4 Sep 2020 04:23:22 -0400
+Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:39396
+        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729731AbgIDIWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:23:08 -0400
+        Fri, 4 Sep 2020 04:22:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599207787;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599207773;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-        bh=3keeEfNiCTvzmfIarvOhYL+zMj7DHdVzNrsSjCBJmHI=;
-        b=LaLhtGoKOhC3BP1EoNEtrkRHs1QW+b0FlCdM60Yw5Hq+mEK6vBE6gOJPQoGfzoF/
-        k0FyNgm0Qee4ioDUj6/lBjMr7/YCtl3WZ6dDUt8EUYF53mTwjmoj+9oVqeswPenwMmR
-        GUTZgifwf3EPR7SaAOugmcarzuAo3/K7o9s3JKt0=
+        bh=GQ5X4rYz/5gctr6bPJcOyx/KllBUBw64I/aL0YQXbbM=;
+        b=GT1OAVygLqRabFH/8WDxp1UTeMylLr5kaxyYgD57crvriQdGx5XlvKQlM5K9iBF1
+        6x1R7L54nFFcmNXC1z54e2oUiVtgZEIZyRv6pGmYP+iz0/tPe3IWRH2MFVHAIQXneQ1
+        oUth8HHkSB7Pkpuz/CRNjGOBC2bMAzTwlZSCy9Cs=
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599207787;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599207773;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=3keeEfNiCTvzmfIarvOhYL+zMj7DHdVzNrsSjCBJmHI=;
-        b=mORnPJzp3eHkUc8k9KOFUchAuHC7OEdVVCgid/8Miwb0dkNLIBpERbDSg7KiV9aI
-        VdLbyPrv9RjKcBMVvT2bOUMLK1fqkXZzd1RGFKZWp5wlYCpQ+RvR4SM+zxhulbn4aYt
-        H6GGBb2h5OkLOrqN60G20t3YqBJ/PvuFsPLDGe7s=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4118FC433B1
+        bh=GQ5X4rYz/5gctr6bPJcOyx/KllBUBw64I/aL0YQXbbM=;
+        b=BAchygiNygh22GpaFB6CToyF13iG7Qc5l6CP7MPcnx9erx2LCGb04kclxRZz5QnE
+        xSFzdhbGU11uTRt81+1tACenzmv0LZeAY3m1vuCKlwVFZaMn9sMeXb3xKOzsz6fIAbc
+        sKI+DPg4puEWse539ct74cft50+gAhzK5iPEXzQc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DA32BC433F1
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=wcheng@codeaurora.org
 From:   Wesley Cheng <wcheng@codeaurora.org>
@@ -49,63 +49,147 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
         jackp@codeaurora.org, sergei.shtylyov@gmail.com,
         Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v9 4/4] arm64: boot: dts: qcom: pm8150b: Add DTS node for PMIC VBUS booster
-Date:   Fri, 4 Sep 2020 08:23:07 +0000
-Message-ID: <0101017458364bb2-6157c88f-07cb-4a21-ac6b-442a09827ba0-000000@us-west-2.amazonses.com>
+Subject: [PATCH v9 2/4] dt-bindings: usb: Add Qualcomm PMIC type C controller dt-binding
+Date:   Fri, 4 Sep 2020 08:22:53 +0000
+Message-ID: <0101017458361303-16620b87-c433-4c00-a061-b1e688363539-000000@us-west-2.amazonses.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200904082223.25563-1-wcheng@codeaurora.org>
 References: <20200904082223.25563-1-wcheng@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2020.09.04-54.240.27.188
+X-SES-Outgoing: 2020.09.04-54.240.27.21
 Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the required DTS node for the USB VBUS output regulator, which is
-available on PM8150B.  This will provide the VBUS source to connected
-peripherals.
+Introduce the dt-binding for enabling USB type C orientation and role
+detection using the PM8150B.  The driver will be responsible for receiving
+the interrupt at a state change on the CC lines, reading the
+orientation/role, and communicating this information to the remote
+clients, which can include a role switch node and a type C switch.
 
 Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/pm8150b.dtsi   | 6 ++++++
- arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 4 ++++
- 2 files changed, 10 insertions(+)
+ .../bindings/usb/qcom,pmic-typec.yaml         | 108 ++++++++++++++++++
+ 1 file changed, 108 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-index 053c659734a7..b49caa63cd4c 100644
---- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-@@ -53,6 +53,12 @@ power-on@800 {
- 			status = "disabled";
- 		};
- 
-+		pm8150b_vbus: regulator@1100 {
-+			compatible = "qcom,pm8150b-vbus-reg";
-+			status = "disabled";
-+			reg = <0x1100>;
-+		};
+diff --git a/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+new file mode 100644
+index 000000000000..8582ab6a3cc4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+@@ -0,0 +1,108 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/usb/qcom,pmic-typec.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
- 		pm8150b_typec: typec@1500 {
- 			compatible = "qcom,pm8150b-usb-typec";
- 			status = "disabled";
-diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-index 6c6325c3af59..ba3b5b802954 100644
---- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-@@ -409,6 +409,10 @@ &ufs_mem_phy {
- 	vdda-pll-max-microamp = <19000>;
- };
- 
-+&pm8150b_vbus {
-+	status = "okay";
-+};
++title: Qualcomm PMIC based USB type C Detection Driver
 +
- &usb_1_hsphy {
- 	status = "okay";
- 	vdda-pll-supply = <&vdd_usb_hs_core>;
++maintainers:
++  - Wesley Cheng <wcheng@codeaurora.org>
++
++description: |
++  Qualcomm PMIC Type C Detect
++
++properties:
++  compatible:
++    enum:
++      - qcom,pm8150b-usb-typec
++
++  reg:
++    maxItems: 1
++    description: Type C base address
++
++  interrupts:
++    maxItems: 1
++    description: CC change interrupt from PMIC
++
++  connector:
++    $ref: /connector/usb-connector.yaml#
++    description: Connector type for remote endpoints
++    type: object
++
++    properties:
++      compatible:
++        enum:
++          - usb-c-connector
++
++      power-role: true
++      data-role: true
++
++      ports:
++        description: Remote endpoint connections
++        type: object
++
++        properties:
++          port@1:
++            description: Remote endpoints for the Super Speed path
++            type: object
++
++            properties:
++              endpoint@0:
++                description: Connection to USB type C mux node
++                type: object
++
++              endpoint@1:
++                description: Connection to role switch node
++                type: object
++
++    required:
++      - compatible
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - connector
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    pm8150b {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        pm8150b_typec: typec@1500 {
++            compatible = "qcom,pm8150b-usb-typec";
++            reg = <0x1500>;
++            interrupts = <0x2 0x15 0x5 IRQ_TYPE_EDGE_RISING>;
++
++            connector {
++                compatible = "usb-c-connector";
++                power-role = "dual";
++                data-role = "dual";
++                ports {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++                    port@0 {
++                        reg = <0>;
++                    };
++                    port@1 {
++                        reg = <1>;
++                        #address-cells = <1>;
++                        #size-cells = <0>;
++                        usb3_data_ss: endpoint@0 {
++                            reg = <0>;
++                            remote-endpoint = <&qmp_ss_mux>;
++                        };
++                        usb3_role: endpoint@1 {
++                            reg = <1>;
++                            remote-endpoint = <&dwc3_drd_switch>;
++                        };
++                    };
++                };
++            };
++        };
++    };
++...
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
