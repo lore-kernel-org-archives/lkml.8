@@ -2,232 +2,322 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D50DC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0083C2BB84
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 478312074A
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FDD92074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:17:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RM1NWk0R"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="Wm0zuFfb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730659AbgIDOR1 (ORCPT
+        id S1730640AbgIDORy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:17:27 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:42630 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730526AbgIDNne (ORCPT
+        Fri, 4 Sep 2020 10:17:54 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:10374 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730641AbgIDOR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:43:34 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200904133502euoutp02f305653e8ef739296b9b7171871e2746~xmAfSYwAH2890028900euoutp02i
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:35:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200904133502euoutp02f305653e8ef739296b9b7171871e2746~xmAfSYwAH2890028900euoutp02i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599226502;
-        bh=FFKEnEGLYycFGem4Izu1WZx/1I5qbSi6HYCqSDcVLTQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RM1NWk0RI2OURqRRGWw7QH+lJ7AkgNr43NsYcbWBSqX87xYu81YU5sOTM67IKGdx+
-         0peKSvHK1gl8SJXz51D3Q3/k/wInVplXY0LjSUo0G5mOfaI44bTgHmlh05xFQ71dms
-         uzbl/JUkPaDDH0EHFa8QC18zdeDE1MmQvJ4ZaFpo=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200904133501eucas1p2529f0bc87c0af4baebd81f9e3a264781~xmAewqEbQ1446814468eucas1p2f;
-        Fri,  4 Sep 2020 13:35:01 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id D7.66.05997.582425F5; Fri,  4
-        Sep 2020 14:35:01 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200904133501eucas1p2a2bc13658bf8433a10fcb8d5a173d57a~xmAeW9WOJ1447814478eucas1p2k;
-        Fri,  4 Sep 2020 13:35:01 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200904133501eusmtrp2f6963a47e96a1e719bc7222b3c1b5da4~xmAeWIaL40977009770eusmtrp2F;
-        Fri,  4 Sep 2020 13:35:01 +0000 (GMT)
-X-AuditID: cbfec7f4-65dff7000000176d-5d-5f5242850e4c
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id ED.AE.06314.482425F5; Fri,  4
-        Sep 2020 14:35:00 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200904133500eusmtip1774ac3ba3b0b581411835ea2c5a7ac96~xmAduhpK11924719247eusmtip1c;
-        Fri,  4 Sep 2020 13:35:00 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
-Subject: [PATCH v10 12/30] drm: msm: fix common struct sg_table related
- issues
-Date:   Fri,  4 Sep 2020 15:16:53 +0200
-Message-Id: <20200904131711.12950-13-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904131711.12950-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSWUwTURSGuZ0uQ0NlLBiuiJI0SqJRlsrDJCgqLplEFMQHg0ahygQItJAW
-        EDBR0KCmgmEJ2gAKgoBssu8CUpBKkIoCsg77IhpiDRWFIth2UN/++//fueeek4si/DaWNRoo
-        CSOlElGwgM1l1nSsvD8Q5+bl4/h1ZDueoO5k4OWKUha+UZOE4H0/vrHxjPlugBcUvWHgWS0u
-        uLZvkoFXTH9i4Ukt3Ry8tyGDjZe0Uxx8/tkvBG/VzLBwKqUdHDUnip8WA6JpOYtJ1KdRHKJ2
-        eYJFjD9QMYjK57eIkfVphEgZzAdE41AMm1A1DHOIh1WFgFiq2OVpdpF7yI8MDowgpQ6uvtyA
-        uWENCKUEkc2KGSQGrNnIgSkKMWf4RXWPLQdclI+9ALBsro5tCPiYFsDOeGc6WAKQymliyAFq
-        rEgtsKaZfADfrp6nGT3fT00xDAEbc4LyRbnxIkssTg8lmBkgBEtD4GelzhhYYJ4wZ15jLGBi
-        e2ByeZdR8zBXODb6nUk/zxYWlb1GDNpU71crZliGiyA2xoHpmvRN6AR89aEWobWFfp4qDq1t
-        4EZ9JoMuuAPgpLqEQx/iAey9rQA05QJH1atsw2wItheWNjjQ9jE4UJjHokfeAgcXtxpsRC+T
-        ax4jtM2D9+/yadoOpqle/mvb2vNxEyFg/sQZekFJ+j0Ml3MSgW3a/15ZABQCKzJcJvYnZUIJ
-        ed1eJhLLwiX+9tdCxBVA/7W61lXaOtCwdlUJMBQIzHgmR7x8+CxRhCxKrAQQRQSWPLfurit8
-        np8oKpqUhvhIw4NJmRLsQJkCK97B7IXLfMxfFEYGkWQoKf2bMlBT6xjgGLvTPC+0OcVsQCfs
-        eXeh09k16FxiP2/hrDA5EuROw9nDyGJjBDOxd4nyqtLZKQU6b+9V99FTYBbkru8OGso8bbLf
-        sm1Yx/XomJKkxt5UaG9QZJwW83V31ERfGhfyVx6lHK+uXHriN1jg/TsIocQeOW4/MbXw5Ei2
-        pC1zm4ApCxA57UOkMtEfgA/Lx1YDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsVy+t/xu7qtTkHxBhtFLHrPnWSy2DhjPavF
-        /20TmS2ufH3PZjHn+VlGi5WrjzJZLNhvbfHlykMmi02Pr7FaTNx/lt3i8q45bBZrj9xlt3i+
-        8AezxcEPT1gt7k4+wujA77Fm3hpGj73fFrB47Jx1l91j+7cHrB73u48zeWxeUu9x+99jZo/J
-        N5Yzeuy+2cDmcXzXLXaPvi2rGD0+b5IL4InSsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQz
-        NDaPtTIyVdK3s0lJzcksSy3St0vQy3h26wNjwV2lin0znjA3MP6R6WLk4JAQMJGYulKqi5GL
-        Q0hgKaPEgrs/2bsYOYHiMhInpzWwQtjCEn+udbFBFH1ilNj/4xFYEZuAoUTXW4iEiEAno8S0
-        7o/sIA6zwBJmib6pl9hAqoQF/CQ+HzoBNopFQFVi0sbTTCA2r4CdxL07H1kgVshLrN5wgBnE
-        5gSKb53xBKxeSMBW4sOcxSwTGPkWMDKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93ECIyjbcd+
-        bt7BeGlj8CFGAQ5GJR5eBvugeCHWxLLiytxDjBIczEoivE5nT8cJ8aYkVlalFuXHF5XmpBYf
-        YjQFOmois5Rocj4wxvNK4g1NDc0tLA3Njc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBK
-        NTDaPevftdRdViYiOkde6ppRfqLLrF4Bu1/n1D06U69u599whKe18IvqhjilvFNVnMd4t7xd
-        7MQqbXm/K7DrB4Pk7X2nRe8s8L+z07Fz/tzED99veK0UcNgsfj01XeykJk/f1O2mcbUWl2NW
-        yT05uKD/SkDYAplPYX8MHr2cdcin8TtfWfek/H4lluKMREMt5qLiRAAN31+euQIAAA==
-X-CMS-MailID: 20200904133501eucas1p2a2bc13658bf8433a10fcb8d5a173d57a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200904133501eucas1p2a2bc13658bf8433a10fcb8d5a173d57a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200904133501eucas1p2a2bc13658bf8433a10fcb8d5a173d57a
-References: <20200904131711.12950-1-m.szyprowski@samsung.com>
-        <CGME20200904133501eucas1p2a2bc13658bf8433a10fcb8d5a173d57a@eucas1p2.samsung.com>
+        Fri, 4 Sep 2020 10:17:27 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 084DTcUn021816;
+        Fri, 4 Sep 2020 09:35:14 -0400
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2174.outbound.protection.outlook.com [104.47.59.174])
+        by mx0a-00128a01.pphosted.com with ESMTP id 337gv6uykg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Sep 2020 09:35:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gpVu2l8PaAbpH2fcQgDYk2HfS/KTBPQJjIOSWXZ0oZ1RxBhkseOcwTKVXarr6dcdiBq7SCLl/Mo1aNvTRGJYC9IY2RIJ5SMFneV1EQttJS8mRBuRbEFr40l8XS9fJVkUrmEMbp2czpd3wI59pqqsMA4rrs32fMh6G4U4xoZHzai/WAlyScIT5jro7vV8MoI8phgO1SqiftZoY2RffqZztTyDxL6kIbqyv+Kr2XGPSxrsg9OOzkps39enZ9gc2RhLx1KhCbAmA31RlGHZ2osvUs1kS10pmafQ6JRSk/DbEJP3lB7zGHgNd+WMKoiaxHmYorw7nMgwKc6ecn7GBxOcSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6PYFShbb7td8RcLzcp/5QY51ZofAe6KvoYApXg1JFXk=;
+ b=DsRMqKiQn4UlRpTgejHQOKBY7/yCubUjTZos05XGFuzKk9BOGAWpP5Zg7qSYpC7b0tEbM5Hxi2Y3kuyWelXYV4JiLfJQT7bqbNOJs9VoblO/6DiTgKFtOMVZ/wZ1AB07iwF5hfmdX4PBPi7ZWsrVLciRTuTkRqYJRR2HCujwurKlE1r35TihIw7r4T0ReTBVOTfvwOA9e3JaTSG/0sPJjDqe+0k/FjJMtlykyIHsqVLNiU6P/nUDgcFnJx1TcuJNkGFB9H8x2DkEejtOGbXTz6YjDUu736k9OVy3VdsHtQpmoqgmUp9p7GBpxmOM4XNjrxnAUJcynMtfXwKfZ2/bOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6PYFShbb7td8RcLzcp/5QY51ZofAe6KvoYApXg1JFXk=;
+ b=Wm0zuFfb0EaM35arUDJJ5nCOjMajHDH/NdRbjGTN9XcNNvpAZKCVOz2Y3eMq8THO4hWETGQe2mlT2tyxCyM237lh5UL7xcJaHHqVLNzRTwmvv8QWBnuxN2CWN6ZPM4ZxAlq1f2RaLfa87s0f2p49vRv/oeTg3dy7+SMHTqsvMTI=
+Received: from BN6PR03MB2514.namprd03.prod.outlook.com (2603:10b6:404:15::16)
+ by BN6PR03MB2513.namprd03.prod.outlook.com (2603:10b6:404:14::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Fri, 4 Sep
+ 2020 13:35:12 +0000
+Received: from BN6PR03MB2514.namprd03.prod.outlook.com
+ ([fe80::f97b:3d4:9aa2:fec6]) by BN6PR03MB2514.namprd03.prod.outlook.com
+ ([fe80::f97b:3d4:9aa2:fec6%7]) with mapi id 15.20.3348.016; Fri, 4 Sep 2020
+ 13:35:12 +0000
+From:   "Pop, Cristian" <Cristian.Pop@analog.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC PATCH v2] iio: core: Add optional symbolic label to a device
+ channel
+Thread-Topic: [RFC PATCH v2] iio: core: Add optional symbolic label to a
+ device channel
+Thread-Index: AQHWefGasimkgzJai0eJZKBxcJKrA6lQjFiAgAfTFFCAACrC4A==
+Date:   Fri, 4 Sep 2020 13:35:12 +0000
+Message-ID: <BN6PR03MB251405FC8654C3539D7BD9C1E72D0@BN6PR03MB2514.namprd03.prod.outlook.com>
+References: <20200824083646.84886-1-cristian.pop@analog.com>
+ <20200830122425.3e00332b@archlinux>
+ <BN6PR03MB2514AE2330F47235028B4455E72D0@BN6PR03MB2514.namprd03.prod.outlook.com>
+In-Reply-To: <BN6PR03MB2514AE2330F47235028B4455E72D0@BN6PR03MB2514.namprd03.prod.outlook.com>
+Accept-Language: ro-RO, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY3BvcDJcYXBw?=
+ =?us-ascii?Q?ZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5?=
+ =?us-ascii?Q?ZTM1Ylxtc2dzXG1zZy03MmEwZDQ3ZC1lZWIzLTExZWEtOTQ1Ny0xODFkZWE1?=
+ =?us-ascii?Q?NDZmZTBcYW1lLXRlc3RcNzJhMGQ0N2UtZWViMy0xMWVhLTk0NTctMTgxZGVh?=
+ =?us-ascii?Q?NTQ2ZmUwYm9keS50eHQiIHN6PSI3MTkzIiB0PSIxMzI0MzcwMDEwOTE3MDc3?=
+ =?us-ascii?Q?MjYiIGg9Ik5UdXdQQmFqZms4VWR1dmlnZzNTQ3ZVSlBEbz0iIGlkPSIiIGJs?=
+ =?us-ascii?Q?PSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUVvQ0FBQk9j?=
+ =?us-ascii?Q?ekExd0lMV0FZZS9DSFRmOVpMZGg3OElkTi8xa3QwREFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFIQUFBQURhQVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFF?=
+ =?us-ascii?Q?QUFRQUJBQUFBRjRob1p3QUFBQUFBQUFBQUFBQUFBSjRBQUFCaEFHUUFhUUJm?=
+ =?us-ascii?Q?QUhNQVpRQmpBSFVBY2dCbEFGOEFjQUJ5QUc4QWFnQmxBR01BZEFCekFGOEFa?=
+ =?us-ascii?Q?Z0JoQUd3QWN3QmxBRjhBWmdCdkFITUFhUUIwQUdrQWRnQmxBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUVB?=
+ =?us-ascii?Q?QUFBQUFBQUFBZ0FBQUFBQW5nQUFBR0VBWkFCcEFGOEFjd0JsQUdNQWRRQnlB?=
+ =?us-ascii?Q?R1VBWHdCd0FISUFid0JxQUdVQVl3QjBBSE1BWHdCMEFHa0FaUUJ5QURFQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FBQUFB?=
+ =?us-ascii?Q?QUNlQUFBQVlRQmtBR2tBWHdCekFHVUFZd0IxQUhJQVpRQmZBSEFBY2dCdkFH?=
+ =?us-ascii?Q?b0FaUUJqQUhRQWN3QmZBSFFBYVFCbEFISUFNZ0FBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFBPT0iLz48L21ldGE+?=
+x-dg-rorf: true
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=analog.com;
+x-originating-ip: [188.27.129.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 57ff7d45-ce0a-4e93-7678-08d850d75991
+x-ms-traffictypediagnostic: BN6PR03MB2513:
+x-microsoft-antispam-prvs: <BN6PR03MB25134BF2D1E0C0569CDCB3EEE72D0@BN6PR03MB2513.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6MKTN4QAsLzJR9Ea5yLzsDH7exsRbXezdfsZwPLjrLYKN+YE39yIbxrirLPkCndqIQxaCRehrv7dCJnDWamnG8aKmQ+8CJU9xSTyzdZV0atWqopSUuVg9GbyEBstGD1tQL5tSAT/OpXUPdaKMgi1wisXVY2X/fB+AGUH5B3fQRDq6aHMOrEln+OSNQZlUQQ4/O7AsHO2svXpv5qwcM5YiNEN0DTPYVPpBmneYN3r72aovPBr6zvtxDRwG+cFqE3H0+D9Qa3V3JL2uQPe3P2jImLbERXSezyYeW4uTKpRyTU8ZpLaVRrXAjCJlHCcAYSCTJWm0EYv/gQi21IUbYwRGg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR03MB2514.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(136003)(396003)(39860400002)(346002)(26005)(4326008)(316002)(7696005)(33656002)(54906003)(52536014)(71200400001)(83380400001)(6506007)(53546011)(5660300002)(8936002)(2940100002)(8676002)(6916009)(64756008)(66446008)(55016002)(478600001)(9686003)(76116006)(86362001)(2906002)(66476007)(66946007)(66556008)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: pDpviubZ2CEvsUy/AcnFAlmJBK6hTnBEHrpWryujbPQTWgZjR0ssbqK//dab3fEtZvQUe3WRzye46Znzrvf0Quu+KsD8Kz6iiSm8W0KbkuNenSuGwXvXUQmskJSXWLqQVqLJvSpYQzoJoDgvI1ToHc21IFefMITvWYXcNVSBKj9yOJ6tahS0kUAGEJa1VESLbaT/wqRJDjhbXkgxSLG6yntRA7mZY53/LWcWPjCq1xFgLy9JtNSTZtM5GPdc3+/v1n/NqD7Nn/JfCGgLRmaG+D8sw5CnTNMNBV70vfRBfTyHY1fkdU/0gH/IUoeZm9lLz2JQp7WqZ9snaawi/Z/RNyMFUhML4TghwUjuA9KO/IKYsTrVyokKmGEo5d8lWYBwnUWSxLSENbOvhONVqoMLxwSdMVBj5JgNy4+sUb9J9qcX3MDBAErCmzalu8lQLwe88YJSbEWRxP78nRQ74JRLpDum9UWkSit8oQoVh5hKD/U9gjkiueNgTKTCz+Z+Enwgv0I4dFgfA5GoNlGAZgb/OVK2SC7hqP3i2Fnj+rixEP19/rG0k9mHWTUheSZQYrY597j6ekeCXHUxWd6dNN1rQopDkA2IUtrTcUzjOuTlZD2ssPermU+63hODbwpCDPRuGTSBr6nS3wiB6K9ButHzsw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR03MB2514.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57ff7d45-ce0a-4e93-7678-08d850d75991
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2020 13:35:12.3011
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6hDvonBjte0AmBdrUiUwmpv1CqBrZR1skcrfSV/Eo954RKaWWcCFpia4zVX7Hj5BeT6wxqIhcanpChBmNqcIuw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR03MB2513
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-04_07:2020-09-04,2020-09-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ bulkscore=0 phishscore=0 impostorscore=0 suspectscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 clxscore=1015 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009040123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-returns the number of the created entries in the DMA address space.
-However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-dma_unmap_sg must be called with the original number of the entries
-passed to the dma_map_sg().
 
-struct sg_table is a common structure used for describing a non-contiguous
-memory buffer, used commonly in the DRM and graphics subsystems. It
-consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-and DMA mapped pages (nents entry).
 
-It turned out that it was a common mistake to misuse nents and orig_nents
-entries, calling DMA-mapping functions with a wrong number of entries or
-ignoring the number of mapped entries returned by the dma_map_sg()
-function.
-
-To avoid such issues, lets use a common dma-mapping wrappers operating
-directly on the struct sg_table objects and use scatterlist page
-iterators where possible. This, almost always, hides references to the
-nents and orig_nents entries, making the code robust, easier to follow
-and copy/paste safe.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Rob Clark <robdclark@gmail.com>
----
- drivers/gpu/drm/msm/msm_gem.c    | 13 +++++--------
- drivers/gpu/drm/msm/msm_gpummu.c | 15 +++++++--------
- drivers/gpu/drm/msm/msm_iommu.c  |  2 +-
- 3 files changed, 13 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index b2f49152b4d4..8c7ae812b813 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -53,11 +53,10 @@ static void sync_for_device(struct msm_gem_object *msm_obj)
- 	struct device *dev = msm_obj->base.dev->dev;
- 
- 	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
--		dma_sync_sg_for_device(dev, msm_obj->sgt->sgl,
--			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+		dma_sync_sgtable_for_device(dev, msm_obj->sgt,
-+					    DMA_BIDIRECTIONAL);
- 	} else {
--		dma_map_sg(dev, msm_obj->sgt->sgl,
--			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+		dma_map_sgtable(dev, msm_obj->sgt, DMA_BIDIRECTIONAL, 0);
- 	}
- }
- 
-@@ -66,11 +65,9 @@ static void sync_for_cpu(struct msm_gem_object *msm_obj)
- 	struct device *dev = msm_obj->base.dev->dev;
- 
- 	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
--		dma_sync_sg_for_cpu(dev, msm_obj->sgt->sgl,
--			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+		dma_sync_sgtable_for_cpu(dev, msm_obj->sgt, DMA_BIDIRECTIONAL);
- 	} else {
--		dma_unmap_sg(dev, msm_obj->sgt->sgl,
--			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+		dma_unmap_sgtable(dev, msm_obj->sgt, DMA_BIDIRECTIONAL, 0);
- 	}
- }
- 
-diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
-index 310a31b05faa..53a7348476a1 100644
---- a/drivers/gpu/drm/msm/msm_gpummu.c
-+++ b/drivers/gpu/drm/msm/msm_gpummu.c
-@@ -30,21 +30,20 @@ static int msm_gpummu_map(struct msm_mmu *mmu, uint64_t iova,
- {
- 	struct msm_gpummu *gpummu = to_msm_gpummu(mmu);
- 	unsigned idx = (iova - GPUMMU_VA_START) / GPUMMU_PAGE_SIZE;
--	struct scatterlist *sg;
-+	struct sg_dma_page_iter dma_iter;
- 	unsigned prot_bits = 0;
--	unsigned i, j;
- 
- 	if (prot & IOMMU_WRITE)
- 		prot_bits |= 1;
- 	if (prot & IOMMU_READ)
- 		prot_bits |= 2;
- 
--	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
--		dma_addr_t addr = sg->dma_address;
--		for (j = 0; j < sg->length / GPUMMU_PAGE_SIZE; j++, idx++) {
--			gpummu->table[idx] = addr | prot_bits;
--			addr += GPUMMU_PAGE_SIZE;
--		}
-+	for_each_sgtable_dma_page(sgt, &dma_iter, 0) {
-+		dma_addr_t addr = sg_page_iter_dma_address(&dma_iter);
-+		int i;
-+
-+		for (i = 0; i < PAGE_SIZE; i += GPUMMU_PAGE_SIZE)
-+			gpummu->table[idx++] = (addr + i) | prot_bits;
- 	}
- 
- 	/* we can improve by deferring flush for multiple map() */
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 3a381a9674c9..6c31e65834c6 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -36,7 +36,7 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 	size_t ret;
- 
--	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
-+	ret = iommu_map_sgtable(iommu->domain, iova, sgt, prot);
- 	WARN_ON(!ret);
- 
- 	return (ret == len) ? 0 : -EINVAL;
--- 
-2.17.1
+> -----Original Message-----
+> From: Pop, Cristian
+> Sent: Friday, September 4, 2020 2:14 PM
+> To: Jonathan Cameron <jic23@kernel.org>
+> Cc: linux-iio@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: RE: [RFC PATCH v2] iio: core: Add optional symbolic label to a d=
+evice
+> channel
+>=20
+> Best ragards,
+> Cristian Pop
+>=20
+> > -----Original Message-----
+> > From: Jonathan Cameron <jic23@kernel.org>
+> > Sent: Sunday, August 30, 2020 2:24 PM
+> > To: Pop, Cristian <Cristian.Pop@analog.com>
+> > Cc: linux-iio@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [RFC PATCH v2] iio: core: Add optional symbolic label to
+> > a device channel
+> >
+> > [External]
+> >
+> > On Mon, 24 Aug 2020 11:36:46 +0300
+> > Cristian Pop <cristian.pop@analog.com> wrote:
+> >
+> > > If a label is defined in the device tree for this channel add that
+> > > to the channel specific attributes. This is useful for userspace to
+> > > be able to identify an individual channel.
+> > >
+> > > Signed-off-by: Cristian Pop <cristian.pop@analog.com>
+> > > ---
+> > >  Changes in v2:
+> > > 	- Move label check before "read_raw" callback.
+> > > 	- Move the responsability to of parsing channel labels, to the
+> > > 	  driver.
+> > >
+> > >  drivers/iio/industrialio-core.c | 10 ++++++++--
+> > >  include/linux/iio/iio.h         |  2 ++
+> > >  include/linux/iio/types.h       |  1 +
+> > >  3 files changed, 11 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/iio/industrialio-core.c
+> > > b/drivers/iio/industrialio-core.c index 1527f01a44f1..32277e94f02d
+> > > 100644
+> > > --- a/drivers/iio/industrialio-core.c
+> > > +++ b/drivers/iio/industrialio-core.c
+> > > @@ -135,6 +135,7 @@ static const char * const iio_modifier_names[] =
+=3D
+> > > {
+> > >  /* relies on pairs of these shared then separate */  static const
+> > > char * const iio_chan_info_postfix[] =3D {
+> > >  	[IIO_CHAN_INFO_RAW] =3D "raw",
+> > > +	[IIO_CHAN_INFO_LABEL] =3D "label",
+> > >  	[IIO_CHAN_INFO_PROCESSED] =3D "input",
+> > >  	[IIO_CHAN_INFO_SCALE] =3D "scale",
+> > >  	[IIO_CHAN_INFO_OFFSET] =3D "offset", @@ -653,14 +654,18 @@ static
+> > > ssize_t iio_read_channel_info(struct device
+> > *dev,
+> > >  	int ret;
+> > >  	int val_len =3D 2;
+> > >
+> > > -	if (indio_dev->info->read_raw_multi)
+> > > +	if (indio_dev->info->read_raw_multi) {
+> > >  		ret =3D indio_dev->info->read_raw_multi(indio_dev, this_attr- c,
+> > >
+> > 	INDIO_MAX_RAW_ELEMENTS,
+> > >  							vals, &val_len,
+> > >  							this_attr->address);
+> > > -	else
+> > > +	} else {
+> > >  		ret =3D indio_dev->info->read_raw(indio_dev, this_attr->c,
+> > >  				    &vals[0], &vals[1], this_attr->address);
+> > > +		if (ret < 0 && this_attr->address =3D=3D IIO_CHAN_INFO_LABEL
+> > &&
+> > > +			this_attr->c->label_name)
+> >
+> > I'm not keen on this. We shouldn't be calling read_raw at all in this p=
+ath.
+> > There is no way it can return a valid label.
+> >
+> > > +			return sprintf(buf, "%s\n", this_attr->c->label_name);
+> > > +	}
+> > >
+> > >  	if (ret < 0)
+> > >  		return ret;
+> > > @@ -1399,6 +1404,7 @@ static int iio_device_register_sysfs(struct
+> > > iio_dev
+> > *indio_dev)
+> > >  			attrcount_orig++;
+> > >  	}
+> > >  	attrcount =3D attrcount_orig;
+> > > +
+> >
+> > Please avoid unrelated white space changes.
+> >
+> > >  	/*
+> > >  	 * New channel registration method - relies on the fact a group doe=
+s
+> > >  	 * not need to be initialized if its name is NULL.
+> > > diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h index
+> > > a1be82e74c93..39209f3b62be 100644
+> > > --- a/include/linux/iio/iio.h
+> > > +++ b/include/linux/iio/iio.h
+> > > @@ -223,6 +223,7 @@ struct iio_event_spec {
+> > >   *			correspond to the first name that the channel is
+> > referred
+> > >   *			to by in the datasheet (e.g. IND), or the nearest
+> > >   *			possible compound name (e.g. IND-INC).
+> > > + * @label_name:		Unique name to identify which channel this is.
+> > >   * @modified:		Does a modifier apply to this channel. What
+> > these are
+> > >   *			depends on the channel type.  Modifier is set in
+> > >   *			channel2. Examples are IIO_MOD_X for axial sensors
+> > about
+> > > @@ -260,6 +261,7 @@ struct iio_chan_spec {
+> > >  	const struct iio_chan_spec_ext_info *ext_info;
+> > >  	const char		*extend_name;
+> > >  	const char		*datasheet_name;
+> > > +	const char		*label_name;
+> >
+> > This can't be part of chan_spec as that is constant in many drivers.
+> > We need a separate way of doing this. =20
+What do you mean by "chan_spec is constant in many drivers"? Instances of t=
+he "struct iio_chan_spec" are created in the driver. Also it makes sense fo=
+r me to add "const char              *label_name;" in this structure since =
+it is an attribute of the channel, and it doesn't change at runtime, only w=
+hen parsing the device tree and assigning the value to it, when an instance=
+ of "iio_chan_spec" is created.
+>> Don't use info_mask, but
+> > register it separately for each channel in a similar way to we do the
+> > name and label attributes for the whole device.
+Don't understand this part. "name" and "label" of the device are elements o=
+f "struct iio_dev", as "const char  *label_name;" is part of "struct iio_ch=
+an_spec", the equivalent structure for holding channel attributes.
+Who will hold the label values otherwise, if not the " iio_chan_spec " stru=
+cture?
+> > I would add a new callback to iio_info that is passed the
+> > iio_chan_spec and returns a const char * for the label name.
+I do agree with the callback, it can be a more generic callback, to return =
+strings, for other purposes also.
+Something like this:
+    int (*read_string)(struct iio_dev *indio_dev,  struct iio_chan_spec con=
+st *chan,  char *string,  long mask);
+or
+    int (*read_string)(struct iio_dev *indio_dev,  struct iio_chan_spec con=
+st *chan, const char **string, long mask);
+The callback will be called in "iio_read_channel_info", so I think that a s=
+ystem file will be created for it.
+> >
+> > The driver would be responsible for doing a lookup based on what it
+> > has cached from the dt parse, probably indexed off address or
+> > scan_index (that can be driver specific)
+> >
+> > To create the attribute you need to add this to
+> > iio_device_register_sysfs and use the various core functions to build
+> > the attribute name in a similar fashion to that done for info mask elem=
+ents.
+> >
+> > It will be more complex than your approach, but make it more
+> > 'separable' as a feature in drivers.
+> >
+> > Jonathan
+> >
+> >
+> > >  	unsigned		modified:1;
+> > >  	unsigned		indexed:1;
+> > >  	unsigned		output:1;
+> > > diff --git a/include/linux/iio/types.h b/include/linux/iio/types.h
+> > > index e6fd3645963c..c8f65f476eb2 100644
+> > > --- a/include/linux/iio/types.h
+> > > +++ b/include/linux/iio/types.h
+> > > @@ -34,6 +34,7 @@ enum iio_available_type {
+> > >
+> > >  enum iio_chan_info_enum {
+> > >  	IIO_CHAN_INFO_RAW =3D 0,
+> > > +	IIO_CHAN_INFO_LABEL,
+> > >  	IIO_CHAN_INFO_PROCESSED,
+> > >  	IIO_CHAN_INFO_SCALE,
+> > >  	IIO_CHAN_INFO_OFFSET,
 
