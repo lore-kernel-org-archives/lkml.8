@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222AAC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FD9C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7951206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39958206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599229628;
-	bh=OyJPEEMtX0OZO8ZGe/PWQVztakgqVmr0EUsWqA/IVP8=;
+	s=default; t=1599229630;
+	bh=JwQ7xpsQPSQRg6LDxLlqmQ2JIHnKRfij90mKN1gXFYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=biudiamThNSs6DHkoAptyfaZ6A7uUXK3rdoAUOrTilzE2dagjGapO3CKaxB83A8/8
-	 MRKoDr8UZ8xUJ5Mp5pNIWLqa+MgCqSrJwiG9PNfD4fGJNxkXehucsdyoaKHOmzO5PE
-	 BCtg+lzIioCsHDiiFNl2ArS5Szf2Dp+cR6ORUDRI=
+	b=VPWEBhIqWCy5wq08QOB75RLGhZU7k5qROdTmF9FSyobARFs43Wu3qzPtv1yYle70r
+	 bdLFKcS1WCmR8XGGZbG2lQASDlARIhmGdcYoJuSGSbFWsE1y2dNxpdsTa1Rqy8K1bd
+	 +kK2miVc9cIG7wPcdJDWtSgs1t8syAnbDPt+cnCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730568AbgIDO1D (ORCPT
+        id S1730534AbgIDO0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:27:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37298 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 10:26:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730460AbgIDNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730466AbgIDNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 09:34:23 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FBAE20E65;
-        Fri,  4 Sep 2020 13:30:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9447D215A4;
+        Fri,  4 Sep 2020 13:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226248;
-        bh=OyJPEEMtX0OZO8ZGe/PWQVztakgqVmr0EUsWqA/IVP8=;
+        s=default; t=1599226260;
+        bh=JwQ7xpsQPSQRg6LDxLlqmQ2JIHnKRfij90mKN1gXFYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U0mX0EnUxL4GumD+/nMnqWtduGR4TTth3msZQoO5LsQ800Y84TZOvDfWJNJwk3KGe
-         jT+4I8S2pU0rAsrxt6myVXi6Elz+A4Woym2U5HS1IZYAl9MobRA14Qxl2L3r7E9BFK
-         OqZPmTGa3GeJWaaqXpc6XUVbQpDTkoAR/7WwB5Kk=
+        b=H6AHYyO3GqRo3IC5qeXG/l9MlHYkZe7syAhPGBckTYKFBhrkF8Hr/3tnmYs153ftA
+         TQ4FREpjJfWcEu9a8brZFZZ7+cduakZ4ZlZ0MzMoQqlPpXWA9dHBa0v4DpFs6dSKvR
+         nK3Gh3CUA7CdeEyHO0VUh6Lg+FqhgKeokmt3bEhc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.8 11/17] arm64: tegra: Add missing timeout clock to Tegra194 SDMMC nodes
-Date:   Fri,  4 Sep 2020 15:30:10 +0200
-Message-Id: <20200904120258.543409905@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 05/17] selftests/x86/test_vsyscall: Improve the process_vm_readv() test
+Date:   Fri,  4 Sep 2020 15:30:04 +0200
+Message-Id: <20200904120258.245905910@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200904120257.983551609@linuxfoundation.org>
 References: <20200904120257.983551609@linuxfoundation.org>
@@ -60,70 +65,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit c956c0cd4f6f4aac4f095621b1c4e1c5ee1df877 upstream.
+commit 8891adc61dce2a8a41fc0c23262b681c3ec4b73a upstream.
 
-commit 5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
+The existing code accepted process_vm_readv() success or failure as long
+as it didn't return garbage.  This is too weak: if the vsyscall page is
+readable, then process_vm_readv() should succeed and, if the page is not
+readable, then it should fail.
 
-Tegra194 uses separate SDMMC_LEGACY_TM clock for data timeout and
-this clock is not enabled currently which is not recommended.
-
-Tegra194 SDMMC advertises 12Mhz as timeout clock frequency in host
-capability register.
-
-So, this clock should be kept enabled by SDMMC driver.
-
-Fixes: 5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
-Cc: stable <stable@vger.kernel.org> # 5.4
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Link: https://lore.kernel.org/r/1598548861-32373-7-git-send-email-skomatineni@nvidia.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/nvidia/tegra194.dtsi |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ tools/testing/selftests/x86/test_vsyscall.c |   22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -453,8 +453,9 @@
- 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
- 			reg = <0x03400000 0x10000>;
- 			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&bpmp TEGRA194_CLK_SDMMC1>;
--			clock-names = "sdhci";
-+			clocks = <&bpmp TEGRA194_CLK_SDMMC1>,
-+				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
-+			clock-names = "sdhci", "tmclk";
- 			resets = <&bpmp TEGRA194_RESET_SDMMC1>;
- 			reset-names = "sdhci";
- 			nvidia,pad-autocal-pull-up-offset-3v3-timeout =
-@@ -475,8 +476,9 @@
- 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
- 			reg = <0x03440000 0x10000>;
- 			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&bpmp TEGRA194_CLK_SDMMC3>;
--			clock-names = "sdhci";
-+			clocks = <&bpmp TEGRA194_CLK_SDMMC3>,
-+				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
-+			clock-names = "sdhci", "tmclk";
- 			resets = <&bpmp TEGRA194_RESET_SDMMC3>;
- 			reset-names = "sdhci";
- 			nvidia,pad-autocal-pull-up-offset-1v8 = <0x00>;
-@@ -498,8 +500,9 @@
- 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
- 			reg = <0x03460000 0x10000>;
- 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&bpmp TEGRA194_CLK_SDMMC4>;
--			clock-names = "sdhci";
-+			clocks = <&bpmp TEGRA194_CLK_SDMMC4>,
-+				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
-+			clock-names = "sdhci", "tmclk";
- 			assigned-clocks = <&bpmp TEGRA194_CLK_SDMMC4>,
- 					  <&bpmp TEGRA194_CLK_PLLC4>;
- 			assigned-clock-parents =
+--- a/tools/testing/selftests/x86/test_vsyscall.c
++++ b/tools/testing/selftests/x86/test_vsyscall.c
+@@ -462,6 +462,17 @@ static int test_vsys_x(void)
+ 	return 0;
+ }
+ 
++/*
++ * Debuggers expect ptrace() to be able to peek at the vsyscall page.
++ * Use process_vm_readv() as a proxy for ptrace() to test this.  We
++ * want it to work in the vsyscall=emulate case and to fail in the
++ * vsyscall=xonly case.
++ *
++ * It's worth noting that this ABI is a bit nutty.  write(2) can't
++ * read from the vsyscall page on any kernel version or mode.  The
++ * fact that ptrace() ever worked was a nice courtesy of old kernels,
++ * but the code to support it is fairly gross.
++ */
+ static int test_process_vm_readv(void)
+ {
+ #ifdef __x86_64__
+@@ -477,8 +488,12 @@ static int test_process_vm_readv(void)
+ 	remote.iov_len = 4096;
+ 	ret = process_vm_readv(getpid(), &local, 1, &remote, 1, 0);
+ 	if (ret != 4096) {
+-		printf("[OK]\tprocess_vm_readv() failed (ret = %d, errno = %d)\n", ret, errno);
+-		return 0;
++		/*
++		 * We expect process_vm_readv() to work if and only if the
++		 * vsyscall page is readable.
++		 */
++		printf("[%s]\tprocess_vm_readv() failed (ret = %d, errno = %d)\n", vsyscall_map_r ? "FAIL" : "OK", ret, errno);
++		return vsyscall_map_r ? 1 : 0;
+ 	}
+ 
+ 	if (vsyscall_map_r) {
+@@ -488,6 +503,9 @@ static int test_process_vm_readv(void)
+ 			printf("[FAIL]\tIt worked but returned incorrect data\n");
+ 			return 1;
+ 		}
++	} else {
++		printf("[FAIL]\tprocess_rm_readv() succeeded, but it should have failed in this configuration\n");
++		return 1;
+ 	}
+ #endif
+ 
 
 
