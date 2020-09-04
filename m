@@ -2,145 +2,143 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CF3C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F3EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC1AB20748
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E3B20748
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="h+w2LU1Q"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="LmK+uKDr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730131AbgIDJTj (ORCPT
+        id S1730142AbgIDJTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 05:19:39 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:60002 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730020AbgIDJTb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 05:19:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1599211170; x=1630747170;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=o6duENUzbkFkp2C7Ma8T2ODsQTBHZTrbxuc1hJaheSQ=;
-  b=h+w2LU1Qvw9JUaZHVfiiFMrse6sMdKQmGHVcF5/KBVamyb2vu16Oj/rK
-   lraMLliTbXkyG7FbAbYYbj+evI+xuRp23gxfXgWFEZOmkN8QJR3bRvY7U
-   qIOwA70P4m966Q1hJMhozJ9wSKm4VXHIKHxosDsSsJum2YKXOykzzqlq4
-   9qhe1RfOkTJO6npud68nxaIKcDej42xW8JJu/u+RLGd+N6e+eViZB7GHf
-   gZPzRGddtFOdn2zN9ghPv/ZT2/54zb5hOM3OjVlk47h9MiBX2Kg7lpgeg
-   Qw//gFXPbJp50LYR6gF07ZIpstzUpT+WYM8kw2tsjsBRPMCnLi4/f6gAR
-   w==;
-IronPort-SDR: q2e3qpfgqw6aym00g6OqT9sIQtYpZG+Up60/WsH2lyF+bFE2bmAmOveq9aZkWMsXRP+OrrJsT+
- /ckVmdT9Okb1RCofS+Qk5fmXlVpH7iJI4DoAkjhwMxYtOTyxueOYjNJkSwfGoP8NAxCzOUdQT6
- ifhozmW/6uO24mYBzeA25o76fD5sLkZoxnwW0k9aWL3quRuRtbG6B/i9fiszVUA9gE17d66fWa
- zR5TZrm6Mm0tAL3MUskMW+A/K5OvuBrEeoLJvNnY5xZsN6NfJV1yPSAcx4WVzUJR/65d/ue5du
- Nqs=
-X-IronPort-AV: E=Sophos;i="5.76,389,1592895600"; 
-   d="scan'208";a="90552474"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Sep 2020 02:19:26 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 4 Sep 2020 02:18:38 -0700
-Received: from soft-test08.microsemi.net (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Fri, 4 Sep 2020 02:19:22 -0700
-From:   Henrik Bjoernlund <henrik.bjoernlund@microchip.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <roopa@nvidia.com>,
-        <nikolay@nvidia.com>, <jiri@mellanox.com>, <idosch@mellanox.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>, <UNGLinuxDriver@microchip.com>
-CC:     Henrik Bjoernlund <henrik.bjoernlund@microchip.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH RFC 7/7] bridge: cfm: Bridge port remove.
-Date:   Fri, 4 Sep 2020 09:15:27 +0000
-Message-ID: <20200904091527.669109-8-henrik.bjoernlund@microchip.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904091527.669109-1-henrik.bjoernlund@microchip.com>
-References: <20200904091527.669109-1-henrik.bjoernlund@microchip.com>
+        Fri, 4 Sep 2020 05:19:48 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:38022 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730017AbgIDJTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 05:19:37 -0400
+Received: from zn.tnic (p2e584a6e.dip0.t-ipconnect.de [46.88.74.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D72771EC0407;
+        Fri,  4 Sep 2020 11:19:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1599211175;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KxTBrDiwxYh5BQZ1cs6kMKlODsllL3PGcIaID8vccUg=;
+        b=LmK+uKDr4XpT0WfjrtCXs5WiQ1DsXYEpaIgKEugy7mNLvMnRVWpTlVEmWPnKDHIZRd6AUs
+        GYUCbgrZZL0Df7/NFeqCk2uLfJ0CSYvmE1gMisKAfk2mKYdXZC1EZxjPZDk0fm/wpC3RU0
+        ucGOcpWegj2LkoI8U5a9XJhLTa9StG4=
+Date:   Fri, 4 Sep 2020 11:17:18 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Gregor Herburger <Gregor.Herburger@ew.tq-group.com>
+Cc:     "york.sun@nxp.com" <york.sun@nxp.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "rrichter@marvell.com" <rrichter@marvell.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: (EXT) Re: [PATCH v2 1/1] edac: fsl_ddr_edac: fix expected data
+ message
+Message-ID: <20200904091718.GC21499@zn.tnic>
+References: <kcEE.e0qfoTd8SOOr3lTVWaXz/A.AASg8YeC1gE@vtuxmail01.tq-net.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <kcEE.e0qfoTd8SOOr3lTVWaXz/A.AASg8YeC1gE@vtuxmail01.tq-net.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is addition of CFM functionality to delete MEP instances
-on a port that is removed from the bridge.
-A MEP can only exist on a port that is related to a bridge.
+Your mail client broke threading...
 
-Signed-off-by: Henrik Bjoernlund  <henrik.bjoernlund@microchip.com>
----
- net/bridge/br_cfm.c     | 13 +++++++++++++
- net/bridge/br_if.c      |  1 +
- net/bridge/br_private.h |  6 ++++++
- 3 files changed, 20 insertions(+)
+On Fri, Sep 04, 2020 at 06:52:24AM +0000, Gregor Herburger wrote:
 
-diff --git a/net/bridge/br_cfm.c b/net/bridge/br_cfm.c
-index b7fed2c1d8ec..c724ce020ce3 100644
---- a/net/bridge/br_cfm.c
-+++ b/net/bridge/br_cfm.c
-@@ -921,3 +921,16 @@ bool br_cfm_created(struct net_bridge *br)
- {
- 	return !list_empty(&br->mep_list);
- }
-+
-+/* Deletes the CFM instances on a specific bridge port
-+ * note: called under rtnl_lock
-+ */
-+void br_cfm_port_del(struct net_bridge *br, struct net_bridge_port *port)
-+{
-+	struct br_cfm_mep *mep;
-+
-+	list_for_each_entry_rcu(mep, &br->mep_list, head,
-+				lockdep_rtnl_is_held())
-+		if (mep->create.ifindex == port->dev->ifindex)
-+			mep_delete_implementation(br, mep);
-+}
-diff --git a/net/bridge/br_if.c b/net/bridge/br_if.c
-index a0e9a7937412..f7d2f472ae24 100644
---- a/net/bridge/br_if.c
-+++ b/net/bridge/br_if.c
-@@ -334,6 +334,7 @@ static void del_nbp(struct net_bridge_port *p)
- 	spin_unlock_bh(&br->lock);
- 
- 	br_mrp_port_del(br, p);
-+	br_cfm_port_del(br, p);
- 
- 	br_ifinfo_notify(RTM_DELLINK, NULL, p);
- 
-diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-index 53bcbdd21f34..5617255f0c0c 100644
---- a/net/bridge/br_private.h
-+++ b/net/bridge/br_private.h
-@@ -1369,6 +1369,7 @@ int br_cfm_parse(struct net_bridge *br, struct net_bridge_port *p,
- 		 struct nlattr *attr, int cmd, struct netlink_ext_ack *extack);
- int br_cfm_rx_frame_process(struct net_bridge_port *p, struct sk_buff *skb);
- bool br_cfm_created(struct net_bridge *br);
-+void br_cfm_port_del(struct net_bridge *br, struct net_bridge_port *p);
- int br_cfm_config_fill_info(struct sk_buff *skb, struct net_bridge *br);
- int br_cfm_status_fill_info(struct sk_buff *skb,
- 			    struct net_bridge *br,
-@@ -1393,6 +1394,11 @@ static inline bool br_cfm_created(struct net_bridge *br)
- 	return false;
- }
- 
-+static inline void br_cfm_port_del(struct net_bridge *br,
-+				   struct net_bridge_port *p)
-+{
-+}
-+
- static inline int br_cfm_config_fill_info(struct sk_buff *skb, struct net_bridge *br)
- {
- 	return -EOPNOTSUPP;
+> The cap_low, cap_high and syndrome are used in the printk following the if-Block.
+> This will make expected data / captured data look the same.
+
+Right.
+
+> @@ -334,18 +337,32 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
+>                 sbe_ecc_decode(cap_high, cap_low, syndrome,
+>                                 &bad_data_bit, &bad_ecc_bit);
+> 
+> +               exp_high = cap_high;
+> +               exp_low = cap_low;
+> +               exp_syndrome = syndrome;
+> +
+>                 if (bad_data_bit != -1)
+> +               {
+
+Opening brace is on the same line for if-statements.
+
+>                         fsl_mc_printk(mci, KERN_ERR,
+>                                 "Faulty Data bit: %d\n", bad_data_bit);
+> +
+> +                       if (bad_data_bit < 32)
+> +                               exp_low = cap_low ^ (1 << bad_data_bit);
+> +                       else
+> +                               exp_high = cap_high ^ (1 << (bad_data_bit - 32));
+> +               }
+> +
+>                 if (bad_ecc_bit != -1)
+> +               {
+
+Ditto.
+
+>                         fsl_mc_printk(mci, KERN_ERR,
+>                                 "Faulty ECC bit: %d\n", bad_ecc_bit);
+> 
+> +                       exp_syndrome = syndrome ^ (1 << bad_ecc_bit);
+> +               }
+> +
+>                 fsl_mc_printk(mci, KERN_ERR,
+>                         "Expected Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
+> -                       cap_high ^ (1 << (bad_data_bit - 32)),
+> -                       cap_low ^ (1 << bad_data_bit),
+> -                       syndrome ^ (1 << bad_ecc_bit));
+> +                       exp_high, exp_low, exp_syndrome);
+>         }
+> 
+>           fsl_mc_printk(mci, KERN_ERR,
+>                           "Captured Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
+>                           cap_high, cap_low, syndrome);
+> 
+> How about something like this?
+
+My only concern here is that you'll be printing "Expected Data ..."
+unconditionally even if either or both - bad_data_bit and bad_ecc_bit
+- are -1.
+
+If the driver cannot decode the data and/or ECC syndrome bits, then it
+should say so - not dump expected data and claim that it is a valid
+information.
+
+So maybe in addition to the above:
+
+	if (bad_data_bit != -1) {
+		...
+	} else {
+		fsl_mc_printk(..., "Unable to decode the Faulty Data bit");
+	}
+
+and the same for the ECC bit.
+
+And then print only the expected data for the bit which sbe_ecc_decode()
+found correctly and not say anything otherwise.
+
 -- 
-2.28.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
