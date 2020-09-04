@@ -2,107 +2,565 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752FBC52D5B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6BDC52D65
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33C302535B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B685C2539A
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="ViyTBUKF"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="REyWZldh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgIDRaQ (ORCPT
+        id S1728058AbgIDRhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:30:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgIDRaH (ORCPT
+        Fri, 4 Sep 2020 13:37:52 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:49812 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726800AbgIDRhu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:30:07 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A341FC061247
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 10:30:06 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id g72so7000077qke.8
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 10:30:06 -0700 (PDT)
+        Fri, 4 Sep 2020 13:37:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qMG1ps8fgPCdKYmX4D9C0vTU0mM7NukKZP7s8FwwQlE=;
-        b=ViyTBUKFruXN0VnmAsL8NgjxNce0CorHAmM5BdC1GhOcVAdeJNLMUmWeG2CnKftulb
-         FXUGbhhHvbRj0kchEEER/Eb9W2ilBzfHXqxWlpHzRHrvZE/4W9syeqz4vRreMGIBOXL6
-         msJsqURCahbJJZF6/2RDY/mhTzUH37BFK1kiYBealqQj/75yX0xAWMBOMD/Qd1yIT0Ci
-         mrvaCfUqs6QnP6V+lx6q9Ff1yg9E2hJfBCrFYHViAlbVVe4EB6B5UnpEd0E8NlRnITpQ
-         xWLdRmubcwWeXUGu28zFiqNI606wGvyaWuOO/K8A1fjjVKqssVvNOfnwF5DaW03GWGcA
-         C5EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qMG1ps8fgPCdKYmX4D9C0vTU0mM7NukKZP7s8FwwQlE=;
-        b=t+1phTYpOXYvee7ApGgCVt6uYVvKf5QSOnIjecxB3i00HEOejA3SN54/O+B1cvuyLU
-         t4wjtyGdafF5zRCEgTanjJrEJavfcDZJCzetArww9AxcjKFwQhfBlD7J/X4s49O4Ucou
-         1cwpUTmESWL/FHUoXT8DD65mVAR7N3nbU8uVHo2YqcqxbAtrGRKvYPwxu0BT+CtE7y3l
-         bUsMDMuDZ5V5covHJl523+yuFh4I37YRGKV4nasENYdBu1efFfocTosQ52fmNIajxuYg
-         qTaU2ae41Yrf4utBWTgMLXJV5CwGVSOx2hXBzu09B+v8rr39Sxb+9kliqgm7uCZ1XcUH
-         2FpA==
-X-Gm-Message-State: AOAM5312LMlH61850fN4kNtiBWQABKJCICGXjCSWBBVSYWEV1mAZ3C/j
-        fnyO74Clra/vN135NHZ3lJF7MA==
-X-Google-Smtp-Source: ABdhPJx58g/vQxNQERfeujwhlruc479tT6x7SVFypiBtCQJtMohP5A6VeGR8kjgBFY56JBEQXbOpDA==
-X-Received: by 2002:a37:2cc1:: with SMTP id s184mr9064820qkh.357.1599240605934;
-        Fri, 04 Sep 2020 10:30:05 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id i66sm5103330qkc.63.2020.09.04.10.30.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 10:30:05 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     freedreno@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Konrad Dybcio <konradybcio@gmail.com>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/3] drm/msm/dsi: remove unused clk_pre/clk_post in msm_dsi_dphy_timing
-Date:   Fri,  4 Sep 2020 13:28:36 -0400
-Message-Id: <20200904172859.25633-2-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200904172859.25633-1-jonathan@marek.ca>
-References: <20200904172859.25633-1-jonathan@marek.ca>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1599241068; x=1630777068;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=rZmxzJa++9MgO5sbtwcclbk5uyV6IgYtmIUjDOWHdJQ=;
+  b=REyWZldhnq1t1h6iA91O5bZq2JMp3/BpqhHAHMkAk5Rzbpii72N+KjsG
+   Ww1AAzpq7+8ceDs0kcQM0F5TeRRHC+1J0hu2ZNiPEGr3q1QIAasHE7ILS
+   NMWhuBreQeCMXhslbyhqqSl4Z6lHa6pu3gmGHy65EfNZX5mxbAgz5gZUU
+   0=;
+X-IronPort-AV: E=Sophos;i="5.76,390,1592870400"; 
+   d="scan'208";a="52178755"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 04 Sep 2020 17:37:46 +0000
+Received: from EX13D16EUB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com (Postfix) with ESMTPS id C8ED8A20F8;
+        Fri,  4 Sep 2020 17:37:45 +0000 (UTC)
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.85) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 4 Sep 2020 17:37:35 +0000
+From:   Andra Paraschiv <andraprs@amazon.com>
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "David Duncan" <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Karen Noel" <knoel@redhat.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm <kvm@vger.kernel.org>,
+        ne-devel-upstream <ne-devel-upstream@amazon.com>,
+        Andra Paraschiv <andraprs@amazon.com>
+Subject: [PATCH v8 01/18] nitro_enclaves: Add ioctl interface definition
+Date:   Fri, 4 Sep 2020 20:37:01 +0300
+Message-ID: <20200904173718.64857-2-andraprs@amazon.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+In-Reply-To: <20200904173718.64857-1-andraprs@amazon.com>
+References: <20200904173718.64857-1-andraprs@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.161.85]
+X-ClientProxiedBy: EX13D13UWB001.ant.amazon.com (10.43.161.156) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The clk_pre/clk_post values in shared_timings are used instead, and these
-are unused.
+The Nitro Enclaves driver handles the enclave lifetime management. This
+includes enclave creation, termination and setting up its resources such
+as memory and CPU.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+An enclave runs alongside the VM that spawned it. It is abstracted as a
+process running in the VM that launched it. The process interacts with
+the NE driver, that exposes an ioctl interface for creating an enclave
+and setting up its resources.
+
+Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
+Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+Reviewed-by: Alexander Graf <graf@amazon.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 ---
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.h | 2 --
- 1 file changed, 2 deletions(-)
+Changelog
 
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-index ef8672d7b123..886a9e3b44b5 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-@@ -50,8 +50,6 @@ extern const struct msm_dsi_phy_cfg dsi_phy_10nm_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_10nm_8998_cfgs;
- 
- struct msm_dsi_dphy_timing {
--	u32 clk_pre;
--	u32 clk_post;
- 	u32 clk_zero;
- 	u32 clk_trail;
- 	u32 clk_prepare;
+v7 -> v8
+
+* Add NE custom error codes for user space memory regions not backed by
+  pages multiple of 2 MiB, invalid flags and enclave CID.
+* Add max flag value for enclave image load info.
+
+v6 -> v7
+
+* Clarify in the ioctls documentation that the return value is -1 and
+  errno is set on failure.
+* Update the error code value for NE_ERR_INVALID_MEM_REGION_SIZE as it
+  gets in user space as value 25 (ENOTTY) instead of 515. Update the
+  NE custom error codes values range to not be the same as the ones
+  defined in include/linux/errno.h, although these are not propagated
+  to user space.
+
+v5 -> v6
+
+* Fix typo in the description about the NE CPU pool.
+* Update documentation to kernel-doc format.
+* Remove the ioctl to query API version.
+
+v4 -> v5
+
+* Add more details about the ioctl calls usage e.g. error codes, file
+  descriptors used.
+* Update the ioctl to set an enclave vCPU to not return a file
+  descriptor.
+* Add specific NE error codes.
+
+v3 -> v4
+
+* Decouple NE ioctl interface from KVM API.
+* Add NE API version and the corresponding ioctl call.
+* Add enclave / image load flags options.
+
+v2 -> v3
+
+* Remove the GPL additional wording as SPDX-License-Identifier is
+  already in place.
+
+v1 -> v2
+
+* Add ioctl for getting enclave image load metadata.
+* Update NE_ENCLAVE_START ioctl name to NE_START_ENCLAVE.
+* Add entry in Documentation/userspace-api/ioctl/ioctl-number.rst for NE
+  ioctls.
+* Update NE ioctls definition based on the updated ioctl range for major
+  and minor.
+---
+ .../userspace-api/ioctl/ioctl-number.rst      |   5 +-
+ include/linux/nitro_enclaves.h                |  11 +
+ include/uapi/linux/nitro_enclaves.h           | 359 ++++++++++++++++++
+ 3 files changed, 374 insertions(+), 1 deletion(-)
+ create mode 100644 include/linux/nitro_enclaves.h
+ create mode 100644 include/uapi/linux/nitro_enclaves.h
+
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index 2a198838fca9..5f7ff00f394e 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -328,8 +328,11 @@ Code  Seq#    Include File                                           Comments
+ 0xAC  00-1F  linux/raw.h
+ 0xAD  00                                                             Netfilter device in development:
+                                                                      <mailto:rusty@rustcorp.com.au>
+-0xAE  all    linux/kvm.h                                             Kernel-based Virtual Machine
++0xAE  00-1F  linux/kvm.h                                             Kernel-based Virtual Machine
+                                                                      <mailto:kvm@vger.kernel.org>
++0xAE  40-FF  linux/kvm.h                                             Kernel-based Virtual Machine
++                                                                     <mailto:kvm@vger.kernel.org>
++0xAE  20-3F  linux/nitro_enclaves.h                                  Nitro Enclaves
+ 0xAF  00-1F  linux/fsl_hypervisor.h                                  Freescale hypervisor
+ 0xB0  all                                                            RATIO devices in development:
+                                                                      <mailto:vgo@ratio.de>
+diff --git a/include/linux/nitro_enclaves.h b/include/linux/nitro_enclaves.h
+new file mode 100644
+index 000000000000..d91ef2bfdf47
+--- /dev/null
++++ b/include/linux/nitro_enclaves.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ */
++
++#ifndef _LINUX_NITRO_ENCLAVES_H_
++#define _LINUX_NITRO_ENCLAVES_H_
++
++#include <uapi/linux/nitro_enclaves.h>
++
++#endif /* _LINUX_NITRO_ENCLAVES_H_ */
+diff --git a/include/uapi/linux/nitro_enclaves.h b/include/uapi/linux/nitro_enclaves.h
+new file mode 100644
+index 000000000000..b945073fe544
+--- /dev/null
++++ b/include/uapi/linux/nitro_enclaves.h
+@@ -0,0 +1,359 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ */
++
++#ifndef _UAPI_LINUX_NITRO_ENCLAVES_H_
++#define _UAPI_LINUX_NITRO_ENCLAVES_H_
++
++#include <linux/types.h>
++
++/**
++ * DOC: Nitro Enclaves (NE) Kernel Driver Interface
++ */
++
++/**
++ * NE_CREATE_VM - The command is used to create a slot that is associated with
++ *		  an enclave VM.
++ *		  The generated unique slot id is an output parameter.
++ *		  The ioctl can be invoked on the /dev/nitro_enclaves fd, before
++ *		  setting any resources, such as memory and vCPUs, for an
++ *		  enclave. Memory and vCPUs are set for the slot mapped to an enclave.
++ *		  A NE CPU pool has to be set before calling this function. The
++ *		  pool can be set after the NE driver load, using
++ *		  /sys/module/nitro_enclaves/parameters/ne_cpus.
++ *		  Its format is the detailed in the cpu-lists section:
++ *		  https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html
++ *		  CPU 0 and its siblings have to remain available for the
++ *		  primary / parent VM, so they cannot be set for enclaves. Full
++ *		  CPU core(s), from the same NUMA node, need(s) to be included
++ *		  in the CPU pool.
++ *
++ * Context: Process context.
++ * Return:
++ * * Enclave file descriptor		- Enclave file descriptor used with
++ *					  ioctl calls to set vCPUs and memory
++ *					  regions, then start the enclave.
++ * *  -1				- There was a failure in the ioctl logic.
++ * On failure, errno is set to:
++ * * EFAULT				- copy_to_user() failure.
++ * * ENOMEM				- Memory allocation failure for internal
++ *					  bookkeeping variables.
++ * * NE_ERR_NO_CPUS_AVAIL_IN_POOL	- No NE CPU pool set / no CPUs available
++ *					  in the pool.
++ * * Error codes from get_unused_fd_flags() and anon_inode_getfile().
++ * * Error codes from the NE PCI device request.
++ */
++#define NE_CREATE_VM			_IOR(0xAE, 0x20, __u64)
++
++/**
++ * NE_ADD_VCPU - The command is used to set a vCPU for an enclave. The vCPU can
++ *		 be auto-chosen from the NE CPU pool or it can be set by the
++ *		 caller, with the note that it needs to be available in the NE
++ *		 CPU pool. Full CPU core(s), from the same NUMA node, need(s) to
++ *		 be associated with an enclave.
++ *		 The vCPU id is an input / output parameter. If its value is 0,
++ *		 then a CPU is chosen from the enclave CPU pool and returned via
++ *		 this parameter.
++ *		 The ioctl can be invoked on the enclave fd, before an enclave
++ *		 is started.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0					- Logic succesfully completed.
++ * *  -1				- There was a failure in the ioctl logic.
++ * On failure, errno is set to:
++ * * EFAULT				- copy_from_user() / copy_to_user() failure.
++ * * ENOMEM				- Memory allocation failure for internal
++ *					  bookkeeping variables.
++ * * EIO				- Current task mm is not the same as the one
++ *					  that created the enclave.
++ * * NE_ERR_NO_CPUS_AVAIL_IN_POOL	- No CPUs available in the NE CPU pool.
++ * * NE_ERR_VCPU_ALREADY_USED		- The provided vCPU is already used.
++ * * NE_ERR_VCPU_NOT_IN_CPU_POOL	- The provided vCPU is not available in the
++ *					  NE CPU pool.
++ * * NE_ERR_VCPU_INVALID_CPU_CORE	- The core id of the provided vCPU is invalid
++ *					  or out of range.
++ * * NE_ERR_NOT_IN_INIT_STATE		- The enclave is not in init state
++ *					  (init = before being started).
++ * * NE_ERR_INVALID_VCPU		- The provided vCPU is not in the available
++ *					  CPUs range.
++ * * Error codes from the NE PCI device request.
++ */
++#define NE_ADD_VCPU			_IOWR(0xAE, 0x21, __u32)
++
++/**
++ * NE_GET_IMAGE_LOAD_INFO - The command is used to get information needed for
++ *			    in-memory enclave image loading e.g. offset in
++ *			    enclave memory to start placing the enclave image.
++ *			    The image load info is an input / output parameter.
++ *			    It includes info provided by the caller - flags -
++ *			    and returns the offset in enclave memory where to
++ *			    start placing the enclave image.
++ *			    The ioctl can be invoked on the enclave fd, before
++ *			    an enclave is started.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0				- Logic succesfully completed.
++ * *  -1			- There was a failure in the ioctl logic.
++ * On failure, errno is set to:
++ * * EFAULT			- copy_from_user() / copy_to_user() failure.
++ * * NE_ERR_NOT_IN_INIT_STATE	- The enclave is not in init state (init =
++ *				  before being started).
++ * * NE_ERR_INVALID_FLAG_VALUE	- The value of the provided flag is invalid.
++ */
++#define NE_GET_IMAGE_LOAD_INFO		_IOWR(0xAE, 0x22, struct ne_image_load_info)
++
++/**
++ * NE_SET_USER_MEMORY_REGION - The command is used to set a memory region for an
++ *			       enclave, given the allocated memory from the
++ *			       userspace. Enclave memory needs to be from the
++ *			       same NUMA node as the enclave CPUs.
++ *			       The user memory region is an input parameter. It
++ *			       includes info provided by the caller - flags,
++ *			       memory size and userspace address.
++ *			       The ioctl can be invoked on the enclave fd,
++ *			       before an enclave is started.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0					- Logic succesfully completed.
++ * *  -1				- There was a failure in the ioctl logic.
++ * On failure, errno is set to:
++ * * EFAULT				- copy_from_user() failure.
++ * * EINVAL				- Invalid physical memory region(s) e.g.
++ *					  unaligned address.
++ * * EIO				- Current task mm is not the same as
++ *					  the one that created the enclave.
++ * * ENOMEM				- Memory allocation failure for internal
++ *					  bookkeeping variables.
++ * * NE_ERR_NOT_IN_INIT_STATE		- The enclave is not in init state
++ *					  (init = before being started).
++ * * NE_ERR_INVALID_MEM_REGION_SIZE	- The memory size of the region is not
++ *					  multiple of 2 MiB.
++ * * NE_ERR_INVALID_MEM_REGION_ADDR	- Invalid user space address given.
++ * * NE_ERR_UNALIGNED_MEM_REGION_ADDR	- Unaligned user space address given.
++ * * NE_ERR_MEM_REGION_ALREADY_USED	- The memory region is already used.
++ * * NE_ERR_MEM_NOT_HUGE_PAGE		- The memory region is not backed by
++ *					  huge pages.
++ * * NE_ERR_MEM_DIFFERENT_NUMA_NODE	- The memory region is not from the same
++ *					  NUMA node as the CPUs.
++ * * NE_ERR_MEM_MAX_REGIONS		- The number of memory regions set for
++ *					  the enclave reached maximum.
++ * * NE_ERR_INVALID_PAGE_SIZE		- The memory region is not backed by
++ *					  pages multiple of 2 MiB.
++ * * NE_ERR_INVALID_FLAG_VALUE		- The value of the provided flag is invalid.
++ * * Error codes from get_user_pages().
++ * * Error codes from the NE PCI device request.
++ */
++#define NE_SET_USER_MEMORY_REGION	_IOW(0xAE, 0x23, struct ne_user_memory_region)
++
++/**
++ * NE_START_ENCLAVE - The command is used to trigger enclave start after the
++ *		      enclave resources, such as memory and CPU, have been set.
++ *		      The enclave start info is an input / output parameter. It
++ *		      includes info provided by the caller - enclave cid and
++ *		      flags - and returns the cid (if input cid is 0).
++ *		      The ioctl can be invoked on the enclave fd, after an
++ *		      enclave slot is created and resources, such as memory and
++ *		      vCPUs are set for an enclave.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0					- Logic succesfully completed.
++ * *  -1				- There was a failure in the ioctl logic.
++ * On failure, errno is set to:
++ * * EFAULT				- copy_from_user() / copy_to_user() failure.
++ * * NE_ERR_NOT_IN_INIT_STATE		- The enclave is not in init state
++ *					  (init = before being started).
++ * * NE_ERR_NO_MEM_REGIONS_ADDED	- No memory regions are set.
++ * * NE_ERR_NO_VCPUS_ADDED		- No vCPUs are set.
++ * *  NE_ERR_FULL_CORES_NOT_USED	- Full core(s) not set for the enclave.
++ * * NE_ERR_ENCLAVE_MEM_MIN_SIZE	- Enclave memory is less than minimum
++ *					  memory size (64 MiB).
++ * * NE_ERR_INVALID_FLAG_VALUE		- The value of the provided flag is invalid.
++ * *  NE_ERR_INVALID_ENCLAVE_CID	- The provided enclave CID is invalid.
++ * * Error codes from the NE PCI device request.
++ */
++#define NE_START_ENCLAVE		_IOWR(0xAE, 0x24, struct ne_enclave_start_info)
++
++/**
++ * DOC: NE specific error codes
++ */
++
++/**
++ * NE_ERR_VCPU_ALREADY_USED - The provided vCPU is already used.
++ */
++#define NE_ERR_VCPU_ALREADY_USED		(256)
++/**
++ * NE_ERR_VCPU_NOT_IN_CPU_POOL - The provided vCPU is not available in the
++ *				 NE CPU pool.
++ */
++#define NE_ERR_VCPU_NOT_IN_CPU_POOL		(257)
++/**
++ * NE_ERR_VCPU_INVALID_CPU_CORE - The core id of the provided vCPU is invalid
++ *				  or out of range of the NE CPU pool.
++ */
++#define NE_ERR_VCPU_INVALID_CPU_CORE		(258)
++/**
++ * NE_ERR_INVALID_MEM_REGION_SIZE - The user space memory region size is not
++ *				    multiple of 2 MiB.
++ */
++#define NE_ERR_INVALID_MEM_REGION_SIZE		(259)
++/**
++ * NE_ERR_INVALID_MEM_REGION_ADDR - The user space memory region address range
++ *				    is invalid.
++ */
++#define NE_ERR_INVALID_MEM_REGION_ADDR		(260)
++/**
++ * NE_ERR_UNALIGNED_MEM_REGION_ADDR - The user space memory region address is
++ *				      not aligned.
++ */
++#define NE_ERR_UNALIGNED_MEM_REGION_ADDR	(261)
++/**
++ * NE_ERR_MEM_REGION_ALREADY_USED - The user space memory region is already used.
++ */
++#define NE_ERR_MEM_REGION_ALREADY_USED		(262)
++/**
++ * NE_ERR_MEM_NOT_HUGE_PAGE - The user space memory region is not backed by
++ *			      contiguous physical huge page(s).
++ */
++#define NE_ERR_MEM_NOT_HUGE_PAGE		(263)
++/**
++ * NE_ERR_MEM_DIFFERENT_NUMA_NODE - The user space memory region is backed by
++ *				    pages from different NUMA nodes than the CPUs.
++ */
++#define NE_ERR_MEM_DIFFERENT_NUMA_NODE		(264)
++/**
++ * NE_ERR_MEM_MAX_REGIONS - The supported max memory regions per enclaves has
++ *			    been reached.
++ */
++#define NE_ERR_MEM_MAX_REGIONS			(265)
++/**
++ * NE_ERR_NO_MEM_REGIONS_ADDED - The command to start an enclave is triggered
++ *				 and no memory regions are added.
++ */
++#define NE_ERR_NO_MEM_REGIONS_ADDED		(266)
++/**
++ * NE_ERR_NO_VCPUS_ADDED - The command to start an enclave is triggered and no
++ *			   vCPUs are added.
++ */
++#define NE_ERR_NO_VCPUS_ADDED			(267)
++/**
++ * NE_ERR_ENCLAVE_MEM_MIN_SIZE - The enclave memory size is lower than the
++ *				 minimum supported.
++ */
++#define NE_ERR_ENCLAVE_MEM_MIN_SIZE		(268)
++/**
++ * NE_ERR_FULL_CORES_NOT_USED - The command to start an enclave is triggered and
++ *				full CPU cores are not set.
++ */
++#define NE_ERR_FULL_CORES_NOT_USED		(269)
++/**
++ * NE_ERR_NOT_IN_INIT_STATE - The enclave is not in init state when setting
++ *			      resources or triggering start.
++ */
++#define NE_ERR_NOT_IN_INIT_STATE		(270)
++/**
++ * NE_ERR_INVALID_VCPU - The provided vCPU is out of range of the available CPUs.
++ */
++#define NE_ERR_INVALID_VCPU			(271)
++/**
++ * NE_ERR_NO_CPUS_AVAIL_IN_POOL - The command to create an enclave is triggered
++ *				  and no CPUs are available in the pool.
++ */
++#define NE_ERR_NO_CPUS_AVAIL_IN_POOL		(272)
++/**
++ * NE_ERR_INVALID_PAGE_SIZE - The user space memory region is not backed by pages
++ *			      multiple of 2 MiB.
++ */
++#define NE_ERR_INVALID_PAGE_SIZE		(273)
++/**
++ * NE_ERR_INVALID_FLAG_VALUE - The provided flag value is invalid.
++ */
++#define NE_ERR_INVALID_FLAG_VALUE		(274)
++/**
++ * NE_ERR_INVALID_ENCLAVE_CID - The provided enclave CID is invalid, either
++ *				being a well-known value or the CID of the
++ *				parent / primary VM.
++ */
++#define NE_ERR_INVALID_ENCLAVE_CID		(275)
++
++/**
++ * DOC: Image load info flags
++ */
++
++/**
++ * NE_EIF_IMAGE - Enclave Image Format (EIF)
++ */
++#define NE_EIF_IMAGE			(0x01)
++
++#define NE_IMAGE_LOAD_MAX_FLAG_VAL	(0x02)
++
++/**
++ * struct ne_image_load_info - Info necessary for in-memory enclave image
++ *			       loading (in / out).
++ * @flags:		Flags to determine the enclave image type
++ *			(e.g. Enclave Image Format - EIF) (in).
++ * @memory_offset:	Offset in enclave memory where to start placing the
++ *			enclave image (out).
++ */
++struct ne_image_load_info {
++	__u64	flags;
++	__u64	memory_offset;
++};
++
++/**
++ * DOC: User memory region flags
++ */
++
++/**
++ * NE_DEFAULT_MEMORY_REGION - Memory region for enclave general usage.
++ */
++#define NE_DEFAULT_MEMORY_REGION	(0x00)
++
++#define NE_MEMORY_REGION_MAX_FLAG_VAL	(0x01)
++
++/**
++ * struct ne_user_memory_region - Memory region to be set for an enclave (in).
++ * @flags:		Flags to determine the usage for the memory region (in).
++ * @memory_size:	The size, in bytes, of the memory region to be set for
++ *			an enclave (in).
++ * @userspace_addr:	The start address of the userspace allocated memory of
++ *			the memory region to set for an enclave (in).
++ */
++struct ne_user_memory_region {
++	__u64	flags;
++	__u64	memory_size;
++	__u64	userspace_addr;
++};
++
++/**
++ * DOC: Enclave start info flags
++ */
++
++/**
++ * NE_ENCLAVE_PRODUCTION_MODE - Start enclave in production mode.
++ */
++#define NE_ENCLAVE_PRODUCTION_MODE	(0x00)
++/**
++ * NE_ENCLAVE_DEBUG_MODE - Start enclave in debug mode.
++ */
++#define NE_ENCLAVE_DEBUG_MODE		(0x01)
++
++#define NE_ENCLAVE_START_MAX_FLAG_VAL	(0x02)
++
++/**
++ * struct ne_enclave_start_info - Setup info necessary for enclave start (in / out).
++ * @flags:		Flags for the enclave to start with (e.g. debug mode) (in).
++ * @enclave_cid:	Context ID (CID) for the enclave vsock device. If 0 as
++ *			input, the CID is autogenerated by the hypervisor and
++ *			returned back as output by the driver (in / out).
++ */
++struct ne_enclave_start_info {
++	__u64	flags;
++	__u64	enclave_cid;
++};
++
++#endif /* _UAPI_LINUX_NITRO_ENCLAVES_H_ */
 -- 
-2.26.1
+2.20.1 (Apple Git-117)
+
+
+
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
 
