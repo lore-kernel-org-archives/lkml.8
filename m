@@ -2,217 +2,293 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00795C49ECA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C42DC4CC60
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 546962534A
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E84253BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VSYVCsIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbgIDR1A (ORCPT
+        id S1728172AbgIDRjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:27:00 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:52256 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbgIDR0Q (ORCPT
+        Fri, 4 Sep 2020 13:39:10 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:24326 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725984AbgIDRin (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:26:16 -0400
-Received: from 89-64-89-131.dynamic.chello.pl (89.64.89.131) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.468)
- id 479dadb6a4c6bf8e; Fri, 4 Sep 2020 19:26:13 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Bob Moore <robert.moore@intel.com>
-Subject: [PATCH 4/6] ACPICA: Add support for using logical addresses of GPE blocks
-Date:   Fri, 04 Sep 2020 19:24:14 +0200
-Message-ID: <9373262.piL2bvXoCD@kreacher>
-In-Reply-To: <1748021.N9i9sLPJ40@kreacher>
-References: <1748021.N9i9sLPJ40@kreacher>
+        Fri, 4 Sep 2020 13:38:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1599241123; x=1630777123;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=IDJPC6h8zTuYLDlXHaoNCskbQsP9fULf+RfT7UZQ5Dc=;
+  b=VSYVCsIKvIBR/3zNkt1uORo9iKTF1e2vTupBHr0zW64zVTtRWsNumgmd
+   SR/M/f2wLEj6s6fA7ZxlKfjifAglC8099m42DeHVJHDouKen5PzEFG3/J
+   26/W1dIBp338d/8jLjYxgpdRWbH/dGniGxbI1xYv6nQlPaQMC4PKjCfF5
+   k=;
+X-IronPort-AV: E=Sophos;i="5.76,390,1592870400"; 
+   d="scan'208";a="52099875"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 04 Sep 2020 17:38:42 +0000
+Received: from EX13D16EUB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id B87E8A248E;
+        Fri,  4 Sep 2020 17:38:38 +0000 (UTC)
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.85) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 4 Sep 2020 17:38:27 +0000
+From:   Andra Paraschiv <andraprs@amazon.com>
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "David Duncan" <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Karen Noel" <knoel@redhat.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm <kvm@vger.kernel.org>,
+        ne-devel-upstream <ne-devel-upstream@amazon.com>,
+        Andra Paraschiv <andraprs@amazon.com>
+Subject: [PATCH v8 06/18] nitro_enclaves: Handle out-of-band PCI device events
+Date:   Fri, 4 Sep 2020 20:37:06 +0300
+Message-ID: <20200904173718.64857-7-andraprs@amazon.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+In-Reply-To: <20200904173718.64857-1-andraprs@amazon.com>
+References: <20200904173718.64857-1-andraprs@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+X-Originating-IP: [10.43.161.85]
+X-ClientProxiedBy: EX13D02UWC003.ant.amazon.com (10.43.162.199) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+In addition to the replies sent by the Nitro Enclaves PCI device in
+response to command requests, out-of-band enclave events can happen e.g.
+an enclave crashes. In this case, the Nitro Enclaves driver needs to be
+aware of the event and notify the corresponding user space process that
+abstracts the enclave.
 
-The logical address of every GPE block in system memory must be
-known before passing it to acpi_ev_initialize_gpe_block(), because
-memory cannot be mapped on the fly from an interrupt handler.
-Accordingly, the host OS must map every GPE block in system
-memory upfront and it can store the logical addresses of GPE
-blocks for future use.
+Register an MSI-X interrupt vector to be used for this kind of
+out-of-band events. The interrupt notifies that the state of an enclave
+changed and the driver logic scans the state of each running enclave to
+identify for which this notification is intended.
 
-If these logical addresses were known to ACPICA, it could use them
-instead of the corresponding physical addresses of GPE block for
-GPE register accesses and the memory mapping lookups carried out
-by acpi_os_read_memory() and acpi_os_write_memory() on every
-attempt to access a GPE register would not be necessary any more.
+Create an workqueue to handle the out-of-band events. Notify user space
+enclave process that is using a polling mechanism on the enclave fd.
 
-To allow that to happen, introduce the ACPI_GPE_USE_LOGICAL_ADDRESSES
-symbol to indicate whether or not the host OS wants ACPICA to use the
-logical addresses of GPE registers in system memory directly (which
-is the case if this symbol is defined).  Moreover, conditional on
-whether ACPI_GPE_USE_LOGICAL_ADDRESSES is defined, introduce two new
-global variables for storing the logical addresses of the FADT GPE
-blocks 0 and 1, respectively, acpi_gbl_xgpe0_block_logical_address and
-acpi_gbl_xgpe1_block_logical_address, make acpi_ev_gpe_initialize()
-pass their values instead of the physical addresses of the GPE blocks
-in question to acpi_ev_create_gpe_block() and modify
-acpi_hw_gpe_read() and acpi_hw_gpe_write() to access memory directly
-via the addresses stored in the struct acpi_gpe_address objects,
-which are expected to be the logical addresses of GPE registers if
-ACPI_GPE_USE_LOGICAL_ADDRESSES is defined.
-
-With the above changes in place, a host OS wanting ACPICA to
-access GPE registers directly through their logical addresses
-needs to define the ACPI_GPE_USE_LOGICAL_ADDRESSES symbol and
-make sure that the logical addresses of the FADT GPE blocks 0
-and 1 are stored in acpi_gbl_xgpe0_block_logical_address and
-acpi_gbl_xgpe1_block_logical_address, respectively, prior to
-calling acpi_ev_gpe_initialize().
-
-[If such a host OS also uses acpi_install_gpe_block() to add
- non-FADT GPE register blocks located in system memory, it must
- pass their logical addresses instead of their physical addresses
- to this function.]
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
+Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+Reviewed-by: Alexander Graf <graf@amazon.com>
 ---
- drivers/acpi/acpica/acglobal.h  |  6 ++++++
- drivers/acpi/acpica/evgpeinit.c | 23 +++++++++++++++++------
- drivers/acpi/acpica/hwgpe.c     | 10 ++++++++++
- 3 files changed, 33 insertions(+), 6 deletions(-)
+Changelog
 
-diff --git a/drivers/acpi/acpica/acglobal.h b/drivers/acpi/acpica/acglobal.h
-index 1030a0ce1599..5215ff1cbbbe 100644
---- a/drivers/acpi/acpica/acglobal.h
-+++ b/drivers/acpi/acpica/acglobal.h
-@@ -42,6 +42,12 @@ ACPI_GLOBAL(struct acpi_generic_address, acpi_gbl_xpm1a_enable);
- ACPI_GLOBAL(struct acpi_generic_address, acpi_gbl_xpm1b_status);
- ACPI_GLOBAL(struct acpi_generic_address, acpi_gbl_xpm1b_enable);
+v7 -> v8
+
+* No changes.
+
+v6 -> v7
+
+* No changes.
+
+v5 -> v6
+
+* Update documentation to kernel-doc format.
+
+v4 -> v5
+
+* Remove sanity checks for situations that shouldn't happen, only if
+  buggy system or broken logic at all.
+
+v3 -> v4
+
+* Use dev_err instead of custom NE log pattern.
+* Return IRQ_NONE when interrupts are not handled.
+
+v2 -> v3
+
+* Remove the WARN_ON calls.
+* Update static calls sanity checks.
+* Remove "ratelimited" from the logs that are not in the ioctl call
+  paths.
+
+v1 -> v2
+
+* Add log pattern for NE.
+* Update goto labels to match their purpose.
+---
+ drivers/virt/nitro_enclaves/ne_pci_dev.c | 116 +++++++++++++++++++++++
+ 1 file changed, 116 insertions(+)
+
+diff --git a/drivers/virt/nitro_enclaves/ne_pci_dev.c b/drivers/virt/nitro_enclaves/ne_pci_dev.c
+index e9e3ff882cc7..dcf529ba509d 100644
+--- a/drivers/virt/nitro_enclaves/ne_pci_dev.c
++++ b/drivers/virt/nitro_enclaves/ne_pci_dev.c
+@@ -199,6 +199,88 @@ static irqreturn_t ne_reply_handler(int irq, void *args)
+ 	return IRQ_HANDLED;
+ }
  
-+#ifdef ACPI_GPE_USE_LOGICAL_ADDRESSES
-+ACPI_GLOBAL(void *, acpi_gbl_xgpe0_block_logical_address);
-+ACPI_GLOBAL(void *, acpi_gbl_xgpe1_block_logical_address);
++/**
++ * ne_event_work_handler() - Work queue handler for notifying enclaves on a
++ *			     state change received by the event interrupt
++ *			     handler.
++ * @work:	Item containing the NE PCI device for which an out-of-band event
++ *		was issued.
++ *
++ * An out-of-band event is being issued by the Nitro Hypervisor when at least
++ * one enclave is changing state without client interaction.
++ *
++ * Context: Work queue context.
++ */
++static void ne_event_work_handler(struct work_struct *work)
++{
++	struct ne_pci_dev_cmd_reply cmd_reply = {};
++	struct ne_enclave *ne_enclave = NULL;
++	struct ne_pci_dev *ne_pci_dev =
++		container_of(work, struct ne_pci_dev, notify_work);
++	int rc = -EINVAL;
++	struct slot_info_req slot_info_req = {};
 +
-+#endif				/* ACPI_GPE_USE_LOGICAL_ADDRESSES */
++	mutex_lock(&ne_pci_dev->enclaves_list_mutex);
 +
- /*
-  * Handle both ACPI 1.0 and ACPI 2.0+ Integer widths. The integer width is
-  * determined by the revision of the DSDT: If the DSDT revision is less than
-diff --git a/drivers/acpi/acpica/evgpeinit.c b/drivers/acpi/acpica/evgpeinit.c
-index 6effd8076dcc..6d82d30d8f7b 100644
---- a/drivers/acpi/acpica/evgpeinit.c
-+++ b/drivers/acpi/acpica/evgpeinit.c
-@@ -32,6 +32,16 @@ ACPI_MODULE_NAME("evgpeinit")
-  * kernel boot time as well.
-  */
- 
-+#ifdef ACPI_GPE_USE_LOGICAL_ADDRESSES
-+#define ACPI_FADT_GPE_BLOCK_ADDRESS(N)	\
-+	acpi_gbl_FADT.xgpe##N##_block.space_id == \
-+					ACPI_ADR_SPACE_SYSTEM_MEMORY ? \
-+		(u64)acpi_gbl_xgpe##N##_block_logical_address : \
-+		acpi_gbl_FADT.xgpe##N##_block.address
-+#else
-+#define ACPI_FADT_GPE_BLOCK_ADDRESS(N)	acpi_gbl_FADT.xgpe##N##_block.address
-+#endif		/* ACPI_GPE_USE_LOGICAL_ADDRESSES */
++	/*
++	 * Iterate over all enclaves registered for the Nitro Enclaves
++	 * PCI device and determine for which enclave(s) the out-of-band event
++	 * is corresponding to.
++	 */
++	list_for_each_entry(ne_enclave, &ne_pci_dev->enclaves_list, enclave_list_entry) {
++		mutex_lock(&ne_enclave->enclave_info_mutex);
 +
- /*******************************************************************************
-  *
-  * FUNCTION:    acpi_ev_gpe_initialize
-@@ -49,6 +59,7 @@ acpi_status acpi_ev_gpe_initialize(void)
- 	u32 register_count1 = 0;
- 	u32 gpe_number_max = 0;
- 	acpi_status status;
-+	u64 address;
- 
- 	ACPI_FUNCTION_TRACE(ev_gpe_initialize);
- 
-@@ -85,8 +96,9 @@ acpi_status acpi_ev_gpe_initialize(void)
- 	 * If EITHER the register length OR the block address are zero, then that
- 	 * particular block is not supported.
- 	 */
--	if (acpi_gbl_FADT.gpe0_block_length &&
--	    acpi_gbl_FADT.xgpe0_block.address) {
-+	address = ACPI_FADT_GPE_BLOCK_ADDRESS(0);
++		/*
++		 * Enclaves that were never started cannot receive out-of-band
++		 * events.
++		 */
++		if (ne_enclave->state != NE_STATE_RUNNING)
++			goto unlock;
 +
-+	if (acpi_gbl_FADT.gpe0_block_length && address) {
- 
- 		/* GPE block 0 exists (has both length and address > 0) */
- 
-@@ -97,7 +109,6 @@ acpi_status acpi_ev_gpe_initialize(void)
- 		/* Install GPE Block 0 */
- 
- 		status = acpi_ev_create_gpe_block(acpi_gbl_fadt_gpe_device,
--						  acpi_gbl_FADT.xgpe0_block.
- 						  address,
- 						  acpi_gbl_FADT.xgpe0_block.
- 						  space_id, register_count0, 0,
-@@ -110,8 +121,9 @@ acpi_status acpi_ev_gpe_initialize(void)
- 		}
++		slot_info_req.slot_uid = ne_enclave->slot_uid;
++
++		rc = ne_do_request(ne_enclave->pdev, SLOT_INFO, &slot_info_req,
++				   sizeof(slot_info_req), &cmd_reply, sizeof(cmd_reply));
++		if (rc < 0)
++			dev_err(&ne_enclave->pdev->dev, "Error in slot info [rc=%d]\n", rc);
++
++		/* Notify enclave process that the enclave state changed. */
++		if (ne_enclave->state != cmd_reply.state) {
++			ne_enclave->state = cmd_reply.state;
++
++			ne_enclave->has_event = true;
++
++			wake_up_interruptible(&ne_enclave->eventq);
++		}
++
++unlock:
++		 mutex_unlock(&ne_enclave->enclave_info_mutex);
++	}
++
++	mutex_unlock(&ne_pci_dev->enclaves_list_mutex);
++}
++
++/**
++ * ne_event_handler() - Interrupt handler for PCI device out-of-band events.
++ *			This interrupt does not supply any data in the MMIO
++ *			region. It notifies a change in the state of any of
++ *			the launched enclaves.
++ * @irq:	Received interrupt for an out-of-band event.
++ * @args:	PCI device private data structure.
++ *
++ * Context: Interrupt context.
++ * Return:
++ * * IRQ_HANDLED on handled interrupt.
++ */
++static irqreturn_t ne_event_handler(int irq, void *args)
++{
++	struct ne_pci_dev *ne_pci_dev = (struct ne_pci_dev *)args;
++
++	queue_work(ne_pci_dev->event_wq, &ne_pci_dev->notify_work);
++
++	return IRQ_HANDLED;
++}
++
+ /**
+  * ne_setup_msix() - Setup MSI-X vectors for the PCI device.
+  * @pdev:	PCI device to setup the MSI-X for.
+@@ -243,8 +325,36 @@ static int ne_setup_msix(struct pci_dev *pdev)
+ 		goto free_irq_vectors;
  	}
  
--	if (acpi_gbl_FADT.gpe1_block_length &&
--	    acpi_gbl_FADT.xgpe1_block.address) {
-+	address = ACPI_FADT_GPE_BLOCK_ADDRESS(1);
++	ne_pci_dev->event_wq = create_singlethread_workqueue("ne_pci_dev_wq");
++	if (!ne_pci_dev->event_wq) {
++		rc = -ENOMEM;
 +
-+	if (acpi_gbl_FADT.gpe1_block_length && address) {
++		dev_err(&pdev->dev, "Cannot get wq for dev events [rc=%d]\n", rc);
++
++		goto free_reply_irq_vec;
++	}
++
++	INIT_WORK(&ne_pci_dev->notify_work, ne_event_work_handler);
++
++	/*
++	 * This IRQ gets triggered every time any enclave's state changes. Its
++	 * handler then scans for the changes and propagates them to the user
++	 * space.
++	 */
++	rc = request_irq(pci_irq_vector(pdev, NE_VEC_EVENT), ne_event_handler,
++			 0, "enclave_evt", ne_pci_dev);
++	if (rc < 0) {
++		dev_err(&pdev->dev, "Error in request irq event [rc=%d]\n", rc);
++
++		goto destroy_wq;
++	}
++
+ 	return 0;
  
- 		/* GPE block 1 exists (has both length and address > 0) */
++destroy_wq:
++	destroy_workqueue(ne_pci_dev->event_wq);
++free_reply_irq_vec:
++	free_irq(pci_irq_vector(pdev, NE_VEC_REPLY), ne_pci_dev);
+ free_irq_vectors:
+ 	pci_free_irq_vectors(pdev);
  
-@@ -137,7 +149,6 @@ acpi_status acpi_ev_gpe_initialize(void)
- 
- 			status =
- 			    acpi_ev_create_gpe_block(acpi_gbl_fadt_gpe_device,
--						     acpi_gbl_FADT.xgpe1_block.
- 						     address,
- 						     acpi_gbl_FADT.xgpe1_block.
- 						     space_id, register_count1,
-diff --git a/drivers/acpi/acpica/hwgpe.c b/drivers/acpi/acpica/hwgpe.c
-index a0e71f34c77a..37bb67ef3232 100644
---- a/drivers/acpi/acpica/hwgpe.c
-+++ b/drivers/acpi/acpica/hwgpe.c
-@@ -46,8 +46,13 @@ acpi_status acpi_hw_gpe_read(u64 *value, struct acpi_gpe_address *reg)
- 	u32 value32;
- 
- 	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
-+#ifdef ACPI_GPE_USE_LOGICAL_ADDRESSES
-+		*value = (u64)ACPI_GET8(reg->address);
-+		return_ACPI_STATUS(AE_OK);
-+#else
- 		return acpi_os_read_memory((acpi_physical_address)reg->address,
- 					    value, ACPI_GPE_REGISTER_WIDTH);
-+#endif
- 	}
- 
- 	status = acpi_os_read_port((acpi_io_address)reg->address,
-@@ -76,8 +81,13 @@ acpi_status acpi_hw_gpe_read(u64 *value, struct acpi_gpe_address *reg)
- acpi_status acpi_hw_gpe_write(u64 value, struct acpi_gpe_address *reg)
+@@ -261,6 +371,12 @@ static void ne_teardown_msix(struct pci_dev *pdev)
  {
- 	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
-+#ifdef ACPI_GPE_USE_LOGICAL_ADDRESSES
-+		ACPI_SET8(reg->address, value);
-+		return_ACPI_STATUS(AE_OK);
-+#else
- 		return acpi_os_write_memory((acpi_physical_address)reg->address,
- 					    value, ACPI_GPE_REGISTER_WIDTH);
-+#endif
- 	}
+ 	struct ne_pci_dev *ne_pci_dev = pci_get_drvdata(pdev);
  
- 	return acpi_os_write_port((acpi_io_address)reg->address, (u32)value,
++	free_irq(pci_irq_vector(pdev, NE_VEC_EVENT), ne_pci_dev);
++
++	flush_work(&ne_pci_dev->notify_work);
++	flush_workqueue(ne_pci_dev->event_wq);
++	destroy_workqueue(ne_pci_dev->event_wq);
++
+ 	free_irq(pci_irq_vector(pdev, NE_VEC_REPLY), ne_pci_dev);
+ 
+ 	pci_free_irq_vectors(pdev);
 -- 
-2.26.2
+2.20.1 (Apple Git-117)
 
 
 
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
 
