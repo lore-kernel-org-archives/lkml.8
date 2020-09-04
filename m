@@ -2,41 +2,41 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D11C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 504ADC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4BEF20684
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D662074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="dWO/l+ZH"
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="gXVvph7W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730517AbgIDOC4 (ORCPT
+        id S1730709AbgIDODN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:02:56 -0400
-Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:49456 "EHLO
+        Fri, 4 Sep 2020 10:03:13 -0400
+Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:49450 "EHLO
         relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730626AbgIDNqP (ORCPT
+        by vger.kernel.org with ESMTP id S1730318AbgIDNqS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:46:15 -0400
+        Fri, 4 Sep 2020 09:46:18 -0400
 Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id E7C2A820A7;
-        Fri,  4 Sep 2020 16:34:36 +0300 (MSK)
+        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id 9AEF8821B4;
+        Fri,  4 Sep 2020 16:34:39 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1599226476;
-        bh=8Wh+Wg5hnjwOIeo+BmHM6gr8ioNoxQk7Z7f/aOdGYrM=;
-        h=From:To:CC:Subject:Date;
-        b=dWO/l+ZH09ryVnf2pNQ0NUQjyasiykgLCXq6ZV+wGkxqLvuGGp9KGIVOzA/OGtQB+
-         QWQ9jyfFqyrGeaD6eOXhEKZCWFaBk3OAapMUUgKCEHym0w8ylMZjYJvQAiK4bZCEwR
-         AJHLqDxo32daz0q68Bl49gX7pur9oNjF81zuAeZE=
+        d=paragon-software.com; s=mail; t=1599226479;
+        bh=S8gDeoTCBo2l6VTbgmUNJMuSPx/Uom3dBfUMBREzyWI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=gXVvph7WfEzD6QLZF8B94soezMrfUekes2F01A/Bo6sTCuDQTJ3B2rQDE8MSTCWXB
+         +GkFHtoTtWQMRVtO0fCfk8w6vimmt0iySQpCFhfNGC/at0Mn4fM9xMP8TsdjMA77Mx
+         h0S+oC2qUwYc0TTLQUhmPeswwNMnu8u3MNiUb3kY=
 Received: from fsd-lkpg.ufsd.paragon-software.com (172.30.114.105) by
  vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 4 Sep 2020 16:34:36 +0300
+ 15.1.1847.3; Fri, 4 Sep 2020 16:34:39 +0300
 From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 To:     <linux-fsdevel@vger.kernel.org>
 CC:     <viro@zeniv.linux.org.uk>, <linux-kernel@vger.kernel.org>,
@@ -44,10 +44,12 @@ CC:     <viro@zeniv.linux.org.uk>, <linux-kernel@vger.kernel.org>,
         <willy@infradead.org>, <rdunlap@infradead.org>, <joe@perches.com>,
         <mark@harmstone.com>, <nborisov@suse.com>,
         Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Subject: [PATCH v4 00/10] NTFS read-write driver GPL implementation by Paragon Software
-Date:   Fri, 4 Sep 2020 16:32:21 +0300
-Message-ID: <20200904133231.1769292-1-almaz.alexandrovich@paragon-software.com>
+Subject: [PATCH v4 09/10] fs/ntfs3: Add NTFS3 in fs/Kconfig and fs/Makefile
+Date:   Fri, 4 Sep 2020 16:32:30 +0300
+Message-ID: <20200904133231.1769292-10-almaz.alexandrovich@paragon-software.com>
 X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200904133231.1769292-1-almaz.alexandrovich@paragon-software.com>
+References: <20200904133231.1769292-1-almaz.alexandrovich@paragon-software.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -59,105 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds NTFS Read-Write driver to fs/ntfs3.
+This adds NTFS3 in fs/Kconfig and fs/Makefile
 
-Having decades of expertise in commercial file systems development and huge
-test coverage, we at Paragon Software GmbH want to make our contribution to
-the Open Source Community by providing implementation of NTFS Read-Write
-driver for the Linux Kernel.
+Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+---
+ fs/Kconfig  | 1 +
+ fs/Makefile | 1 +
+ 2 files changed, 2 insertions(+)
 
-This is fully functional NTFS Read-Write driver. Current version works with
-NTFS(including v3.1) and normal/compressed/sparse files and supports journal replaying.
-
-We plan to support this version after the codebase once merged, and add new
-features and fix bugs. For example, full journaling support over JBD will be
-added in later updates.
-
-v2:
- - patch splitted to chunks (file-wise)
- - build issues fixed
- - sparse and checkpatch.pl errors fixed
- - NULL pointer dereference on mkfs.ntfs-formatted volume mount fixed
- - cosmetics + code cleanup
-
-v3:
- - added acl, noatime, no_acs_rules, prealloc mount options
- - added fiemap support
- - fixed encodings support
- - removed typedefs
- - adapted Kernel-way logging mechanisms
- - fixed typos and corner-case issues
-
-v4:
- - atomic_open() refactored
- - code style updated
- - bugfixes
-
-Konstantin Komarov (10):
-  fs/ntfs3: Add headers and misc files
-  fs/ntfs3: Add initialization of super block
-  fs/ntfs3: Add bitmap
-  fs/ntfs3: Add file operations and implementation
-  fs/ntfs3: Add attrib operations
-  fs/ntfs3: Add compression
-  fs/ntfs3: Add NTFS journal
-  fs/ntfs3: Add Kconfig, Makefile and doc
-  fs/ntfs3: Add NTFS3 in fs/Kconfig and fs/Makefile
-  fs/ntfs3: Add MAINTAINERS
-
- Documentation/filesystems/ntfs3.rst |  103 +
- MAINTAINERS                         |    7 +
- fs/Kconfig                          |    1 +
- fs/Makefile                         |    1 +
- fs/ntfs3/Kconfig                    |   23 +
- fs/ntfs3/Makefile                   |   11 +
- fs/ntfs3/attrib.c                   | 1302 +++++++
- fs/ntfs3/attrlist.c                 |  462 +++
- fs/ntfs3/bitfunc.c                  |  137 +
- fs/ntfs3/bitmap.c                   | 1546 ++++++++
- fs/ntfs3/debug.h                    |   45 +
- fs/ntfs3/dir.c                      |  642 ++++
- fs/ntfs3/file.c                     | 1235 +++++++
- fs/ntfs3/frecord.c                  | 2373 ++++++++++++
- fs/ntfs3/fslog.c                    | 5224 +++++++++++++++++++++++++++
- fs/ntfs3/fsntfs.c                   | 2233 ++++++++++++
- fs/ntfs3/index.c                    | 2655 ++++++++++++++
- fs/ntfs3/inode.c                    | 2073 +++++++++++
- fs/ntfs3/lznt.c                     |  452 +++
- fs/ntfs3/namei.c                    |  546 +++
- fs/ntfs3/ntfs.h                     | 1249 +++++++
- fs/ntfs3/ntfs_fs.h                  | 1001 +++++
- fs/ntfs3/record.c                   |  615 ++++
- fs/ntfs3/run.c                      | 1188 ++++++
- fs/ntfs3/super.c                    | 1415 ++++++++
- fs/ntfs3/upcase.c                   |   78 +
- fs/ntfs3/xattr.c                    | 1006 ++++++
- 27 files changed, 27623 insertions(+)
- create mode 100644 Documentation/filesystems/ntfs3.rst
- create mode 100644 fs/ntfs3/Kconfig
- create mode 100644 fs/ntfs3/Makefile
- create mode 100644 fs/ntfs3/attrib.c
- create mode 100644 fs/ntfs3/attrlist.c
- create mode 100644 fs/ntfs3/bitfunc.c
- create mode 100644 fs/ntfs3/bitmap.c
- create mode 100644 fs/ntfs3/debug.h
- create mode 100644 fs/ntfs3/dir.c
- create mode 100644 fs/ntfs3/file.c
- create mode 100644 fs/ntfs3/frecord.c
- create mode 100644 fs/ntfs3/fslog.c
- create mode 100644 fs/ntfs3/fsntfs.c
- create mode 100644 fs/ntfs3/index.c
- create mode 100644 fs/ntfs3/inode.c
- create mode 100644 fs/ntfs3/lznt.c
- create mode 100644 fs/ntfs3/namei.c
- create mode 100644 fs/ntfs3/ntfs.h
- create mode 100644 fs/ntfs3/ntfs_fs.h
- create mode 100644 fs/ntfs3/record.c
- create mode 100644 fs/ntfs3/run.c
- create mode 100644 fs/ntfs3/super.c
- create mode 100644 fs/ntfs3/upcase.c
- create mode 100644 fs/ntfs3/xattr.c
-
+diff --git a/fs/Kconfig b/fs/Kconfig
+index aa4c12282301..eae96d55ab67 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -145,6 +145,7 @@ menu "DOS/FAT/EXFAT/NT Filesystems"
+ source "fs/fat/Kconfig"
+ source "fs/exfat/Kconfig"
+ source "fs/ntfs/Kconfig"
++source "fs/ntfs3/Kconfig"
+ 
+ endmenu
+ endif # BLOCK
+diff --git a/fs/Makefile b/fs/Makefile
+index 1c7b0e3f6daa..b0b4ad8affa0 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -100,6 +100,7 @@ obj-$(CONFIG_SYSV_FS)		+= sysv/
+ obj-$(CONFIG_CIFS)		+= cifs/
+ obj-$(CONFIG_HPFS_FS)		+= hpfs/
+ obj-$(CONFIG_NTFS_FS)		+= ntfs/
++obj-$(CONFIG_NTFS3_FS)		+= ntfs3/
+ obj-$(CONFIG_UFS_FS)		+= ufs/
+ obj-$(CONFIG_EFS_FS)		+= efs/
+ obj-$(CONFIG_JFFS2_FS)		+= jffs2/
 -- 
 2.25.4
 
