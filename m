@@ -2,140 +2,182 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AEBC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D61C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBEE92098B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:44:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599227093;
-	bh=rRl7szRYiIqy5kj3LwgtNrpjQmW5mOVLLWGAuMf1VLk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gpJ4GvzkF5cQ9Bes5aIk9Nc9vI6MMPml8ybJFgsNPYYFY2H+hSsFy8mNQs108UbsU
-	 bihltpWaUQmSG/CAxLkPFAng1eSLoqkYtss52d/B5gxfazDDhd82Txiiv/CDTWdbJk
-	 H44IjrzzAnx1mhFtEb39cE/sUTTP9bIj6I5wkjd4=
+	by mail.kernel.org (Postfix) with ESMTP id 30A142087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:45:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="TnAiY36c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbgIDNou (ORCPT
+        id S1730576AbgIDNpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:44:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38076 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 09:45:10 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:57705 "EHLO mx1.tq-group.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbgIDNe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:34:26 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        id S1730328AbgIDNeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:34:24 -0400
+IronPort-SDR: DM3MuquYRSRq9WbnLzUQSo84yh/zNWWXi7R52buaJt0mNdADGqYp/8UTOUjmKaxWhM1BZh/GYb
+ NqXMgqBRtJz0EEZeePQszqSozGjvMN8IFd1jyiRCroG3+0hb5Y0K6NOo+B0p8e7XYl+Dboudh/
+ XGN/iL4VdivQvCnw/xNNyaSgWa49RWyUiK3kUWUSqZK9grt2IGpkU7geqwgG6dtbcnDW498FUR
+ 3xUo7kqdJi09fJU/ASvLcRLpc+cDTMGJKX3YGcNh+DJ/ar1/jxDyEWAj/4x3/Ehteie/lBDjMp
+ LVQ=
+X-IronPort-AV: E=Sophos;i="5.76,389,1592863200"; 
+   d="scan'208";a="13736690"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 04 Sep 2020 15:32:59 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Fri, 04 Sep 2020 15:32:59 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Fri, 04 Sep 2020 15:32:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1599226379; x=1630762379;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=tokluGbsiNNI7Hd85q03H4j+c/JJNOvxxnlL27i1dPw=;
+  b=TnAiY36c5ipMBKmcr+3u7XNns514JENQdHIZv3bDd9yvCoEXy9+kKT0V
+   tOge1Bug+9KGFaGgjV00FausmH+t9Kpqd3HF3Sv2/xX2WAGDTIQKQuCvr
+   tDsuAkKYpuRm9nAU8cUZdiIFib3dqWhBR+tTRS5NWhEb8E1A9iu0ZV6zp
+   0ICW9baWs8lOYsX3/Hje7Y1hBw72uAQC+iU07qFKD9BQbQ3EDfhiBmKMW
+   mPke8W/mwzclVMFJk3XMdHFppmqSX1ZxNrzYwHD7nkqp39UN78N8r3mTE
+   8g1JECxnO2bFMDd20b4Om4sG6q6u6NFgrFvPP11CXM3hKdZduvK3AHZb+
+   A==;
+IronPort-SDR: cZroEdyxCxno1ipoxac5Wbf2T1rxUymibbQcfithDemXdqhayuIpUPPbX/ugZOONlw0HggiSFH
+ iQXZ8f33ET0eALJGcmOnukIbhjojKvuQWLegbk7q7pW15oEguzEh1yL71+p5kdcVuErfo1x3Uh
+ ZmVG3Y/WDWtY9+3YV83Sdv2UP1kVku6kASwn57lQoiQy+LwQ1ZLXiaD1IOQRFDSv4HJRgrcdP+
+ XtlayloYc4+TgDcTJB/yTVcZKmaTIsZCwDNoQ8AkZNVwqFX+D3mxKn4sCI7/iQNrU3TWHTXqpf
+ Fjw=
+X-IronPort-AV: E=Sophos;i="5.76,389,1592863200"; 
+   d="scan'208";a="13736689"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 04 Sep 2020 15:32:59 +0200
+Received: from herburgerg-w.tq-net.de (herburgerg-w.tq-net.de [10.122.52.145])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 487B321741;
-        Fri,  4 Sep 2020 13:31:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226281;
-        bh=rRl7szRYiIqy5kj3LwgtNrpjQmW5mOVLLWGAuMf1VLk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zGpI25qEg8haGzg8p9ql8u3sJvkk0M+dgqDUOetuSRmyElkGMAOik9zuC+ui/yGY6
-         bY3yA56mVth/v13sKp3C8yXfycKsI9wivxGuoBZKeM0pCBAc0vjhgd6ikJgUmQshAV
-         qGTCVF1pIn6+d/79e24wxOwnKAbb7utTqwyyhv1w=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.8 13/17] arm64: tegra: Add missing timeout clock to Tegra210 SDMMC
-Date:   Fri,  4 Sep 2020 15:30:12 +0200
-Message-Id: <20200904120258.642434450@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904120257.983551609@linuxfoundation.org>
-References: <20200904120257.983551609@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 1F69C280065;
+        Fri,  4 Sep 2020 15:32:59 +0200 (CEST)
+Date:   Fri, 4 Sep 2020 15:32:58 +0200
+From:   Gregor Herburger <gregor.herburger@ew.tq-group.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     "york.sun@nxp.com" <york.sun@nxp.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "rrichter@marvell.com" <rrichter@marvell.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        gregor.herburger@ew.tq-group.com
+Subject: Re: [PATCH v2 1/1] edac: fsl_ddr_edac: fix expected data message
+Message-ID: <20200904133258.GA21716@herburgerg-w.tq-net.de>
+References: <kcEE.e0qfoTd8SOOr3lTVWaXz/A.AASg8YeC1gE@vtuxmail01.tq-net.de>
+ <20200904091718.GC21499@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200904091718.GC21499@zn.tnic>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+On Fri, Sep 04, 2020 at 11:17:18AM +0200, Borislav Petkov wrote:
+> Your mail client broke threading...
+> 
+Indeed. Guess I have to change the mail client. Sorry for that.
+> On Fri, Sep 04, 2020 at 06:52:24AM +0000, Gregor Herburger wrote:
+> 
+> > The cap_low, cap_high and syndrome are used in the printk following the if-Block.
+> > This will make expected data / captured data look the same.
+> 
+> Right.
+> 
+> > @@ -334,18 +337,32 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
+> >                 sbe_ecc_decode(cap_high, cap_low, syndrome,
+> >                                 &bad_data_bit, &bad_ecc_bit);
+> > 
+> > +               exp_high = cap_high;
+> > +               exp_low = cap_low;
+> > +               exp_syndrome = syndrome;
+> > +
+> >                 if (bad_data_bit != -1)
+> > +               {
+> 
+> Opening brace is on the same line for if-statements.
+> 
+> >                         fsl_mc_printk(mci, KERN_ERR,
+> >                                 "Faulty Data bit: %d\n", bad_data_bit);
+> > +
+> > +                       if (bad_data_bit < 32)
+> > +                               exp_low = cap_low ^ (1 << bad_data_bit);
+> > +                       else
+> > +                               exp_high = cap_high ^ (1 << (bad_data_bit - 32));
+> > +               }
+> > +
+> >                 if (bad_ecc_bit != -1)
+> > +               {
+> 
+> Ditto.
+> 
+> >                         fsl_mc_printk(mci, KERN_ERR,
+> >                                 "Faulty ECC bit: %d\n", bad_ecc_bit);
+> > 
+> > +                       exp_syndrome = syndrome ^ (1 << bad_ecc_bit);
+> > +               }
+> > +
+> >                 fsl_mc_printk(mci, KERN_ERR,
+> >                         "Expected Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
+> > -                       cap_high ^ (1 << (bad_data_bit - 32)),
+> > -                       cap_low ^ (1 << bad_data_bit),
+> > -                       syndrome ^ (1 << bad_ecc_bit));
+> > +                       exp_high, exp_low, exp_syndrome);
+> >         }
+> > 
+> >           fsl_mc_printk(mci, KERN_ERR,
+> >                           "Captured Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
+> >                           cap_high, cap_low, syndrome);
+> > 
+> > How about something like this?
+> 
+> My only concern here is that you'll be printing "Expected Data ..."
+> unconditionally even if either or both - bad_data_bit and bad_ecc_bit
+> - are -1.
+That shouldn't happen. The whole if-block is only executed when a single 
+bit correctable error has occured (DDR_EDE_SBE). So we always should have
+bad_data_bit or bad_ecc_bit (exclusively).
 
-commit 679f71fa0db2d777f39c7a5af7f7c0689fc713fa upstream.
+> 
+> If the driver cannot decode the data and/or ECC syndrome bits, then it
+> should say so - not dump expected data and claim that it is a valid
+> information.
+> 
+Ok, that is reaonable. But that shouldn't that go into sbe_ecc_decode()?.
+Currently sbe_ecc_decude() returns on the first error it finds. So we would
+have to rework this function.
 
-commit 742af7e7a0a1 ("arm64: tegra: Add Tegra210 support")
+> So maybe in addition to the above:
+> 
+> 	if (bad_data_bit != -1) {
+> 		...
+> 	} else {
+> 		fsl_mc_printk(..., "Unable to decode the Faulty Data bit");
+> 	}
+> 
+> and the same for the ECC bit.
+> 
+I suggest adding such an message to sbe_ecc_decode(). Also to add an
+return 0 on success and to check that before printing infos about single
+bit errors.
 
-Tegra210 uses separate SDMMC_LEGACY_TM clock for data timeout and
-this clock is not enabled currently which is not recommended.
-
-Tegra SDMMC advertises 12Mhz as timeout clock frequency in host
-capability register.
-
-So, this clock should be kept enabled by SDMMC driver.
-
-Fixes: 742af7e7a0a1 ("arm64: tegra: Add Tegra210 support")
-Cc: stable <stable@vger.kernel.org> # 5.4
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Link: https://lore.kernel.org/r/1598548861-32373-5-git-send-email-skomatineni@nvidia.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/arm64/boot/dts/nvidia/tegra210.dtsi |   20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
-
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -1180,8 +1180,9 @@
- 		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
- 		reg = <0x0 0x700b0000 0x0 0x200>;
- 		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC1>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC1>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 14>;
- 		reset-names = "sdhci";
- 		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8",
-@@ -1208,8 +1209,9 @@
- 		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
- 		reg = <0x0 0x700b0200 0x0 0x200>;
- 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC2>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC2>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 9>;
- 		reset-names = "sdhci";
- 		pinctrl-names = "sdmmc-1v8-drv";
-@@ -1225,8 +1227,9 @@
- 		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
- 		reg = <0x0 0x700b0400 0x0 0x200>;
- 		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC3>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC3>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 69>;
- 		reset-names = "sdhci";
- 		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8",
-@@ -1248,8 +1251,9 @@
- 		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
- 		reg = <0x0 0x700b0600 0x0 0x200>;
- 		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC4>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC4>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 15>;
- 		reset-names = "sdhci";
- 		pinctrl-names = "sdmmc-3v3-drv", "sdmmc-1v8-drv";
-
-
+> And then print only the expected data for the bit which sbe_ecc_decode()
+> found correctly and not say anything otherwise.
+> 
+Also i just noticed in the kernel log is no hint that this is an
+single bit error. Maybe we should add this too?
