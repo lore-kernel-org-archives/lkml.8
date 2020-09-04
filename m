@@ -2,120 +2,94 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9ACC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2608AC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48DEF20772
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:18:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599236323;
-	bh=FMUhyGV9mlQ4PCYa1i1PWK/1A/emXWY+TPq0ZXZJ+Bw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1gev2T7GRSbdE504lGO1j8/JUEFl7n40Zzst3DGrcD4mw9wmkPAl6ou1hG3L2aDl/
-	 EhuFP3NhVJTJkZ95SUhEjPeVrFf65404lLDYM9XGv77pui2Uohg5Rb24NcUlfTjTPx
-	 TxVycw3z7Zs6JRmKC+S5+NFlLAXAy0kQWZ4yJBD0=
+	by mail.kernel.org (Postfix) with ESMTP id E34B32067C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:21:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgIDQSl (ORCPT
+        id S1726369AbgIDQVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:18:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgIDQSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:18:35 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 4 Sep 2020 12:21:47 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59304 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726184AbgIDQVl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:21:41 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-218-rbseevaSOzmvEljWHFsisw-1; Fri, 04 Sep 2020 12:21:36 -0400
+X-MC-Unique: rbseevaSOzmvEljWHFsisw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DE0520772;
-        Fri,  4 Sep 2020 16:18:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599236314;
-        bh=FMUhyGV9mlQ4PCYa1i1PWK/1A/emXWY+TPq0ZXZJ+Bw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HbAHyP97Z8ZCtyx8SSEgAWNvz8yb4/xTqRy4hs+9Rq/6tNt3h6dIk4tJohGLw0Mw5
-         +L3tU9NdFfHoeth2IPPhKDGq8Ud1by7sjegtyVQOQNeYL6JfF4XGBGsF+EYR7RKFH1
-         /lFYEMDqn4W4hbMrdUDZRmM756+IleR+BG9ru6UY=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kEEQ4-009DqG-F0; Fri, 04 Sep 2020 17:18:32 +0100
-Date:   Fri, 04 Sep 2020 17:18:31 +0100
-Message-ID: <87d031qzvs.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jianyong Wu <jianyong.wu@arm.com>
-Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, richardcochran@gmail.com,
-        Mark.Rutland@arm.com, will@kernel.org, suzuki.poulose@arm.com,
-        steven.price@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, Steve.Capper@arm.com, justin.he@arm.com,
-        nd@arm.com
-Subject: Re: [PATCH v14 09/10] doc: add ptp_kvm introduction for arm64 support
-In-Reply-To: <20200904092744.167655-10-jianyong.wu@arm.com>
-References: <20200904092744.167655-1-jianyong.wu@arm.com>
-        <20200904092744.167655-10-jianyong.wu@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: jianyong.wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, suzuki.poulose@arm.com, steven.price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, justin.he@arm.com, nd@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6AE1F189E621;
+        Fri,  4 Sep 2020 16:21:34 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E453E7E40A;
+        Fri,  4 Sep 2020 16:21:30 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 084GLUdx030258;
+        Fri, 4 Sep 2020 12:21:30 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 084GLTGx030254;
+        Fri, 4 Sep 2020 12:21:29 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Fri, 4 Sep 2020 12:21:29 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>,
+        Jan Kara <jack@suse.cz>, "Theodore Ts'o" <tytso@mit.edu>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org
+Subject: make misbehavior on ext2 in dax mode (was: a crash when running
+ strace from persistent memory)
+In-Reply-To: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com>
+Message-ID: <alpine.LRH.2.02.2009041200570.27312@file01.intranet.prod.int.rdu2.redhat.com>
+References: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 04 Sep 2020 10:27:43 +0100,
-Jianyong Wu <jianyong.wu@arm.com> wrote:
-> 
-> ptp_kvm implementation depends on hypercall using SMCCC. So we
-> introduce a new SMCCC service ID. This doc explain how we define
-> and use this new ID.
-> 
-> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> ---
->  Documentation/virt/kvm/arm/ptp_kvm.rst | 72 ++++++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
->  create mode 100644 Documentation/virt/kvm/arm/ptp_kvm.rst
-> 
-> diff --git a/Documentation/virt/kvm/arm/ptp_kvm.rst b/Documentation/virt/kvm/arm/ptp_kvm.rst
-> new file mode 100644
-> index 000000000000..455591e2587a
-> --- /dev/null
-> +++ b/Documentation/virt/kvm/arm/ptp_kvm.rst
-> @@ -0,0 +1,72 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +PTP_KVM support for arm64
-> +=========================
-> +
-> +PTP_KVM is used for time sync between guest and host in a high precison.
-> +It needs get wall time and counter value from host and transfer these data
-> +to guest via hypercall service. So one more hypercall service should be
-> +added.
-> +
-> +This new SMCCC hypercall will be defined as:
-> +
-> +* ARM_SMCCC_HYP_KVM_PTP_FUNC_ID: 0xC6000001
-> +
-> +As we only support 64-bits ptp_kvm client, so we choose SMC64/HVC64
-> +calling convention.
 
-This isn't what the code does, as it is explicitly set as an SMC32
-service... Furthermore, we still run 32bit guests, and will do for the
-foreseeable future. Having removed KVM support for 32bit doesn't mean
-32bits are gone.
 
-	M.
+On Thu, 3 Sep 2020, Mikulas Patocka wrote:
 
--- 
-Without deviation from the norm, progress is not possible.
+> Hi
+> 
+> There's a bug when you run strace from dax-based filesystem.
+
+Hmm, so I've found another bug in dax mode.
+
+If you extract the Linux kernel tree on dax-based ext2 filesystem (use the 
+real ext2 driver, not ext4), and then you run make twice, the second 
+invocation will rebuild everything. It seems like a problem with 
+timestamps.
+
+mount -t ext2 -o dax /dev/pmem0 /mnt/ext2/
+cd /mnt/ext2/usr/src/git/linux-2.6
+make clean
+make -j12
+make -j12	<--- this rebuilds the whole tree, althought it shouldn't
+
+I wasn't able to bisect it because this bug seems to be present in every 
+kernel I tried (back to 4.16.0). Ext4 doesn't seem to have this bug.
+
+Mikulas
+
