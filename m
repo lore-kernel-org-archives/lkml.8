@@ -2,287 +2,263 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE24AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA118C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 917A52084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:49:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cdslCMWs"
+	by mail.kernel.org (Postfix) with ESMTP id AE50D2087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgIDTtV (ORCPT
+        id S1727956AbgIDTvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 15:49:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53214 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbgIDTtR (ORCPT
+        Fri, 4 Sep 2020 15:51:53 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:37708 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726265AbgIDTvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:49:17 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B004EC061245;
-        Fri,  4 Sep 2020 12:49:16 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id c17so5217266ybe.0;
-        Fri, 04 Sep 2020 12:49:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iKxO9iJ5L6PJ3FfNUJvxQcSb/6FSTKaJ7GKUZ/DrJ3k=;
-        b=cdslCMWs0Ce20BNa66hcBHDN4yQPS884urDnbWnXdJmjFI/rfi9tuzF8rpIb4vMERT
-         SESZmPA+PxkiGHc/HVwMo2NXf4RuTsrvAdB/AwnR6WaLFHvSPC+xr8CMrBQALqXo07KP
-         0xTuIelQAPen/Nf9sDYE+tNGOirtNpCN7pnc93Hgg6LunF6YiuWrIgr0D2JVuF1p5X2o
-         4cOAEeBloMkcH2WOz8Xwnbz7s07Q5HjJGmNFD/vlmz6AA38GdJcI3OfMfMMM0tryu9tS
-         U1MJlQqyEx5T7Mv54BGuiwnnPJ4nlMbNLwHEV36jiE7V+0NofuFZMNdgJQK5M/qL3oBJ
-         Gxkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iKxO9iJ5L6PJ3FfNUJvxQcSb/6FSTKaJ7GKUZ/DrJ3k=;
-        b=Q3SJpom290mLfK99xjm0IP99cv03QFvQtR8yOnREo6kcBy1gmOwK/kpg/zZCAmUf+1
-         zNvtaJSc9p0k6qwr9lir9kRJJUMsKfO5vbLvDuINYtzqTuiicEJHBgp5GL2PzPPFh8QO
-         9EiTZ6nyLQzIlWWDu53cenQ+s1LvKd66nW2LDMkpPgCyAVsU7eNgLjAUpT8VLbdrq9dE
-         joiut8tvCNlJrB9/lcBcjAdls0ZZNKZSBRQIp/51bpO111x59tHwOdkIw4UaFbVcWwYP
-         x3l59xQ9Xh12r58r0sIjxNIOanJrrWkj/SLF5wRV+qM68LO65Wuj2bFyWVrlGEekdZKI
-         lJ5g==
-X-Gm-Message-State: AOAM5339Ql2U3Rxn6zLC9VgL6HRYgLVfP4VEckrmy/rcPNmNF93+il6Z
-        C4biaaZM0a5czUmtKvNIMBVq4M9j0k8ERavnCRI=
-X-Google-Smtp-Source: ABdhPJwGwS4i852REew6ZZu38pwBVO5T5/QlNjqid6jCwKsd8EWOFKX/UJNWNDrnH2YjBKk4O4WjHOiGLT2Myzhsgh0=
-X-Received: by 2002:a5b:44d:: with SMTP id s13mr12441105ybp.403.1599248955889;
- Fri, 04 Sep 2020 12:49:15 -0700 (PDT)
+        Fri, 4 Sep 2020 15:51:52 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 721B1634C8C;
+        Fri,  4 Sep 2020 22:51:18 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1kEHjy-0001c3-Bp; Fri, 04 Sep 2020 22:51:18 +0300
+Date:   Fri, 4 Sep 2020 22:51:18 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v3 1/2] media: i2c: ov772x: Add support for BT656 mode
+Message-ID: <20200904195118.GH4392@valkosipuli.retiisi.org.uk>
+References: <20200824190406.27478-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200824190406.27478-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200904012000.GA9369@pendragon.ideasonboard.com>
+ <20200904075553.qjdyskcpext7fxcy@uno.localdomain>
+ <20200904082104.GE4392@valkosipuli.retiisi.org.uk>
+ <20200904092049.6lokfmln4vulswrn@uno.localdomain>
+ <20200904093626.GF4392@valkosipuli.retiisi.org.uk>
+ <20200904103550.3cdxick4lje34kxv@uno.localdomain>
+ <20200904110013.GG4392@valkosipuli.retiisi.org.uk>
+ <20200904134832.GC7518@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-References: <20200903223332.881541-1-haoluo@google.com> <20200903223332.881541-4-haoluo@google.com>
-In-Reply-To: <20200903223332.881541-4-haoluo@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 4 Sep 2020 12:49:04 -0700
-Message-ID: <CAEf4BzZPMwe=kz_K8P-6aeLiJo4rC69bMvju4=JEEv0CDEE9_w@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 3/6] bpf/selftests: ksyms_btf to test typed ksyms
-To:     Hao Luo <haoluo@google.com>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904134832.GC7518@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 3:35 PM Hao Luo <haoluo@google.com> wrote:
->
-> Selftests for typed ksyms. Tests two types of ksyms: one is a struct,
-> the other is a plain int. This tests two paths in the kernel. Struct
-> ksyms will be converted into PTR_TO_BTF_ID by the verifier while int
-> typed ksyms will be converted into PTR_TO_MEM.
->
-> Signed-off-by: Hao Luo <haoluo@google.com>
-> ---
->  .../testing/selftests/bpf/prog_tests/ksyms.c  | 31 +++------
->  .../selftests/bpf/prog_tests/ksyms_btf.c      | 63 +++++++++++++++++++
->  .../selftests/bpf/progs/test_ksyms_btf.c      | 23 +++++++
->  tools/testing/selftests/bpf/trace_helpers.c   | 26 ++++++++
->  tools/testing/selftests/bpf/trace_helpers.h   |  4 ++
->  5 files changed, 123 insertions(+), 24 deletions(-)
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/ksyms_btf.c
->  create mode 100644 tools/testing/selftests/bpf/progs/test_ksyms_btf.c
->
+On Fri, Sep 04, 2020 at 04:48:32PM +0300, Laurent Pinchart wrote:
+> On Fri, Sep 04, 2020 at 02:00:13PM +0300, Sakari Ailus wrote:
+> > On Fri, Sep 04, 2020 at 12:35:50PM +0200, Jacopo Mondi wrote:
+> > > On Fri, Sep 04, 2020 at 12:36:26PM +0300, Sakari Ailus wrote:
+> > > > On Fri, Sep 04, 2020 at 11:20:49AM +0200, Jacopo Mondi wrote:
+> > > > > On Fri, Sep 04, 2020 at 11:21:04AM +0300, Sakari Ailus wrote:
+> > > > > > On Fri, Sep 04, 2020 at 09:55:53AM +0200, Jacopo Mondi wrote:
+> > > > > > > On Fri, Sep 04, 2020 at 04:20:00AM +0300, Laurent Pinchart wrote:
+> > > > > > > > Hi Prabhakar,
+> > > > > > > >
+> > > > > > > > Thank you for the patch.
+> > > > > > > >
+> > > > > > > > On Mon, Aug 24, 2020 at 08:04:05PM +0100, Lad Prabhakar wrote:
+> > > > > > > > > Add support to read the bus-type and enable BT656 mode if needed.
+> > > > > > > > >
+> > > > > > > > > Also fail probe if unsupported bus_type is detected.
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > > > > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > > > > > > > ---
+> > > > > > > > >  drivers/media/i2c/ov772x.c | 32 ++++++++++++++++++++++++++++++++
+> > > > > > > > >  1 file changed, 32 insertions(+)
+> > > > > > > > >
+> > > > > > > > > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> > > > > > > > > index 2cc6a678069a..67764d647526 100644
+> > > > > > > > > --- a/drivers/media/i2c/ov772x.c
+> > > > > > > > > +++ b/drivers/media/i2c/ov772x.c
+> > > > > > > > > @@ -31,6 +31,7 @@
+> > > > > > > > >  #include <media/v4l2-ctrls.h>
+> > > > > > > > >  #include <media/v4l2-device.h>
+> > > > > > > > >  #include <media/v4l2-event.h>
+> > > > > > > > > +#include <media/v4l2-fwnode.h>
+> > > > > > > > >  #include <media/v4l2-image-sizes.h>
+> > > > > > > > >  #include <media/v4l2-subdev.h>
+> > > > > > > > >
+> > > > > > > > > @@ -434,6 +435,7 @@ struct ov772x_priv {
+> > > > > > > > >  #ifdef CONFIG_MEDIA_CONTROLLER
+> > > > > > > > >  	struct media_pad pad;
+> > > > > > > > >  #endif
+> > > > > > > > > +	struct v4l2_fwnode_endpoint ep;
+> > > > > > > > >  };
+> > > > > > > > >
+> > > > > > > > >  /*
+> > > > > > > > > @@ -581,6 +583,13 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
+> > > > > > > > >  	if (priv->streaming == enable)
+> > > > > > > > >  		goto done;
+> > > > > > > > >
+> > > > > > > > > +	if (priv->ep.bus_type == V4L2_MBUS_BT656) {
+> > > > > > > > > +		ret = regmaup_update_bits(priv->regmap, COM7, ITU656_ON_OFF,
+> > > > > > > > > +					 enable ? ITU656_ON_OFF : ~ITU656_ON_OFF);
+> > > > > > > > > +		if (ret)
+> > > > > > > > > +			goto done;
+> > > > > > > > > +	}
+> > > > > > > > > +
+> > > > > > > > >  	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
+> > > > > > > > >  				 enable ? 0 : SOFT_SLEEP_MODE);
+> > > > > > > > >  	if (ret)
+> > > > > > > > > @@ -1354,6 +1363,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
+> > > > > > > > >
+> > > > > > > > >  static int ov772x_probe(struct i2c_client *client)
+> > > > > > > > >  {
+> > > > > > > > > +	struct fwnode_handle *endpoint;
+> > > > > > > > >  	struct ov772x_priv	*priv;
+> > > > > > > > >  	int			ret;
+> > > > > > > > >  	static const struct regmap_config ov772x_regmap_config = {
+> > > > > > > > > @@ -1415,6 +1425,28 @@ static int ov772x_probe(struct i2c_client *client)
+> > > > > > > > >  		goto error_clk_put;
+> > > > > > > > >  	}
+> > > > > > > > >
+> > > > > > > > > +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
+> > > > > > > > > +						  NULL);
+> > > > > > > > > +	if (!endpoint) {
+> > > > > > > > > +		dev_err(&client->dev, "endpoint node not found\n");
+> > > > > > > > > +		ret = -EINVAL;
+> > > > > > > > > +		goto error_clk_put;
+> > > > > > > > > +	}
+> > > > > > > > > +
+> > > > > > > > > +	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
+> > > > > > > >
+> > > > > > > > v4l2_fwnode_endpoint_parse() is deprecated for new drivers,
+> > > > > > > > v4l2_fwnode_endpoint_alloc_parse() is recommended instead. Please note
+> > > > > > > > that v4l2_fwnode_endpoint_free() then needs to be called in the error
+> > > > > > > > path and in remove().
+> > > > > > >
+> > > > > > > Doesn't alloc_parse() differ from just _parse() as it reserve space
+> > > > > > > for the 'link-frequencies' array ? As this device does not support
+> > > > > > > CSI-2 and the 'link-frequencies' property is not allows in bindings,
+> > > > > > > isn't using endpoint_parse() better as it saves a call to _free() ?
+> > > > > >
+> > > > > > Yeah. I think the documentation needs to be updated.
+> > > > > >
+> > > > > > The thinking was there would be other variable size properties that drivers
+> > > > > > would need but that didn't happen. So feel free to continue use
+> > > > > > v4l2_fwnode_endpoint_parse() where it does the job.
+> > > > > >
+> > > > > > >
+> > > > > > > Or are we deprecating that function unconditionally ? The
+> > > > > > > documentation suggests "please use v4l2_fwnode_endpoint_alloc_parse()
+> > > > > > > in new drivers" but here it doesn't seem required..
+> > > > > > >
+> > > > > > > >
+> > > > > > > > On the other hand, not setting .bus_type and letting the parse()
+> > > > > > > > function determine the but type automatically is also deprecated, and I
+> > > > > > > > don't think forcing drivers to call v4l2_fwnode_endpoint_alloc_parse()
+> > > > > > > > once for each bus type until one succeeds is a good API. As change will
+> > > > > > > > be needed in that API, you can ignore v4l2_fwnode_endpoint_alloc_parse()
+> > > > > > > > for the time being if you want.
+> > > > > > >
+> > > > > > > But indeed relying on auto-guessing of the bus type is deprecated since
+> > > > > > > some time now (and the API could be improved, yes). Sorry I missed
+> > > > > > > that yesterday.
+> > > > > >
+> > > > > > There's one case where the bus type does not need to be set: when bindings
+> > > > > > require it *and* at the same time you have no default configuration that
+> > > > > > requires something to be set in the bus specific struct. Bindings where
+> > > > > > bus-type is required were added later so I think the documentation should
+> > > > > > be changed there, too.
+> > > > > >
+> > > > > > I can send the patches.
+> > > > > >
+> > > > > > >
+> > > > > > > As we support parallel and bt.656 only I must be honest I don't mind
+> > > > > > > it here as otherwise the code would be more complex for no real gain,
+> > > > > > > but I defer this to Sakari which has been fighting the battle against
+> > > > > > > auto-guessing since a long time now  :)
+> > > > > >
+> > > > > > I think you should require bus-type property in bindings in that case.
+> > > > > >
+> > > > > > But as it's an existing driver, bus-type will be optional. You'll need to
+> > > > > > default to what was supported earlier. This is actually an interesting case
+> > > > > > as bindings do not document it.
+> > > > >
+> > > > > For reference:
+> > > > > https://patchwork.linuxtv.org/project/linux-media/patch/20200903131029.18334-3-jacopo+renesas@jmondi.org/
+> > > > >
+> > > > > But yes, we might have DTBs in the wild without bus-type specified :(
+> > > >
+> > > > Shouldn't that be then that the bus-type is optional and defaults to
+> > > > parallel?
+> > > 
+> > > I think going forward we want to make it mandatory, don't we ? The
+> > > older dts will fail at dt validation time against the new yaml bindings, but
+> > > my understanding is that this is not a problem.
+> > 
+> > For new devices, yes. I still wouldn't make DT binding changes that render
+> > the old DT source invalid, at least unless it's absolutely mandatory. And
+> > that is not the case here.
+> > 
+> > I guess it may be a bit grey area. At least leave a comment in the driver
+> > on how the old bindings were so the code isn't accidentally "fixed".
+> > 
+> > > Binary compatibility, with the introduction of BT.656 support becomes
+> > > more complex instead :/
+> > > 
+> > > Before this series parallel was the only supported bus type and no
+> > > endpoint properties were required. The driver picked the default
+> > > settings for signal polarities and that was it.
+> > > 
+> > > With the introduction of BT.656 no signal polarity properties means
+> > > BT.656 when autoguess is in use. So going forward the bus-type shall
+> > > be explicitly set, but we might receive old DTBs with no bus-type and
+> > > no endpoint properties which assumes 'parallel' is in use.
+> > > 
+> > > One possible way forward could be:
+> > > - verify if bus-type is present in the fwnode
+> > > - if it is, we have a new DTB and we can rely on autoguess
+> 
+> It's not guessing if the bus type is specified :-)
+> 
+> > > - if it's not assume we have an old DTB that assumed 'parallel'. Parse
+> > >   the fwnode and if any relevant V4L2_MBUS_ flag is set use it,
+> > >   otherwise use the defaults.
+> > > 
+> > > If we make bus-type optional in new bindings, the old DTB with no
+> > > parallel endpoint properties would be identified as BT.656 breaking
+> > > capture operation, am I wrong ?
+> > 
+> > There's no technical reason why it has to be so.
+> > 
+> > You simply try endpoint parsing with parallel bus first, with the old
+> > defaults, and if that succeeds, then you don't attempt to parse it as
+> > Bt.656 anymore.
+> 
+> If bus-type is optional with new bindings,
+> v4l2_fwnode_endpoint_parse(V4L2_MBUS_PARALLEL) will always succeed if
+> the bus-type DT property isn't set.
 
-[...]
+Correct. And that's the idea, isn't it?
 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/ksyms_btf.c b/tools/testing/selftests/bpf/prog_tests/ksyms_btf.c
-> new file mode 100644
-> index 000000000000..7b6846342449
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/prog_tests/ksyms_btf.c
-> @@ -0,0 +1,63 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2020 Google */
-> +
-> +#include <test_progs.h>
-> +#include <bpf/libbpf.h>
-> +#include <bpf/btf.h>
-> +#include "test_ksyms_btf.skel.h"
-> +
-> +static int duration;
-> +
-> +void test_ksyms_btf(void)
-> +{
-> +       __u64 runqueues_addr, bpf_prog_active_addr;
-> +       struct test_ksyms_btf *skel;
-> +       struct test_ksyms_btf__data *data;
-> +       struct btf *btf;
-> +       int percpu_datasec;
-> +       int err;
-> +
-> +       err = kallsyms_find("runqueues", &runqueues_addr);
-> +       if (CHECK(err == -ENOENT, "kallsyms_fopen", "failed to open: %d\n", errno))
-> +               return;
-> +       if (CHECK(err == -EINVAL, "ksym_find", "symbol 'runqueues' not found\n"))
-> +               return;
-> +
-> +       err = kallsyms_find("bpf_prog_active", &bpf_prog_active_addr);
-> +       if (CHECK(err == -EINVAL, "ksym_find", "symbol 'bpf_prog_active' not found\n"))
-> +               return;
-> +
-> +       btf = libbpf_find_kernel_btf();
-> +       if (CHECK(IS_ERR(btf), "btf_exists", "failed to load kernel BTF: %ld\n",
-> +                 PTR_ERR(btf)))
-> +               return;
-> +
-> +       percpu_datasec = btf__find_by_name_kind(btf, ".data..percpu",
-> +                                               BTF_KIND_DATASEC);
-> +       if (percpu_datasec < 0) {
-> +               printf("%s:SKIP:no PERCPU DATASEC in kernel btf\n",
-> +                      __func__);
-> +               test__skip();
+> 
+> > > This might require a bit more work from Prabhakar I'm sorry. The old
+> > > bindings were clearly falling short once BT.656 becomes supported.
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
 
-leaking btf here
-
-> +               return;
-> +       }
-> +
-> +       skel = test_ksyms_btf__open_and_load();
-> +       if (CHECK(!skel, "skel_open", "failed to open and load skeleton\n"))
-
-here
-
-> +               return;
-> +
-> +       err = test_ksyms_btf__attach(skel);
-> +       if (CHECK(err, "skel_attach", "skeleton attach failed: %d\n", err))
-> +               goto cleanup;
-> +
-> +       /* trigger tracepoint */
-> +       usleep(1);
-> +
-> +       data = skel->data;
-> +       CHECK(data->out__runqueues != runqueues_addr, "runqueues",
-> +             "got %llu, exp %llu\n", data->out__runqueues, runqueues_addr);
-> +       CHECK(data->out__bpf_prog_active != bpf_prog_active_addr, "bpf_prog_active",
-> +             "got %llu, exp %llu\n", data->out__bpf_prog_active, bpf_prog_active_addr);
-
-u64 is not %llu on some arches, please cast explicitly to (unsigned long long)
-
-> +
-> +cleanup:
-
-... and here (I suggest to just jump from all those locations here for cleanup)
-
-> +       test_ksyms_btf__destroy(skel);
-> +}
-> diff --git a/tools/testing/selftests/bpf/progs/test_ksyms_btf.c b/tools/testing/selftests/bpf/progs/test_ksyms_btf.c
-> new file mode 100644
-> index 000000000000..e04e31117f84
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/test_ksyms_btf.c
-> @@ -0,0 +1,23 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2020 Google */
-> +
-> +#include "vmlinux.h"
-> +
-> +#include <bpf/bpf_helpers.h>
-> +
-> +__u64 out__runqueues = -1;
-> +__u64 out__bpf_prog_active = -1;
-
-this is addresses, not values, so _addr part would make it clearer.
-
-> +
-> +extern const struct rq runqueues __ksym; /* struct type global var. */
-> +extern const int bpf_prog_active __ksym; /* int type global var. */
-
-When we add non-per-CPU kernel variables, I wonder if the fact that we
-have both per-CPU and global kernel variables under the same __ksym
-section would cause any problems and confusion? It's not clear to me
-if we need to have a special __percpu_ksym section or not?..
-
-> +
-> +SEC("raw_tp/sys_enter")
-> +int handler(const void *ctx)
-> +{
-> +       out__runqueues = (__u64)&runqueues;
-> +       out__bpf_prog_active = (__u64)&bpf_prog_active;
-> +
-> +       return 0;
-> +}
-> +
-> +char _license[] SEC("license") = "GPL";
-> diff --git a/tools/testing/selftests/bpf/trace_helpers.c b/tools/testing/selftests/bpf/trace_helpers.c
-> index 4d0e913bbb22..ade555fe8294 100644
-> --- a/tools/testing/selftests/bpf/trace_helpers.c
-> +++ b/tools/testing/selftests/bpf/trace_helpers.c
-> @@ -90,6 +90,32 @@ long ksym_get_addr(const char *name)
->         return 0;
->  }
->
-> +/* open kallsyms and read symbol addresses on the fly. Without caching all symbols,
-> + * this is faster than load + find. */
-> +int kallsyms_find(const char *sym, unsigned long long *addr)
-> +{
-> +       char type, name[500];
-> +       unsigned long long value;
-> +       int err = 0;
-> +       FILE *f;
-> +
-> +       f = fopen("/proc/kallsyms", "r");
-> +       if (!f)
-> +               return -ENOENT;
-> +
-> +       while (fscanf(f, "%llx %c %499s%*[^\n]\n", &value, &type, name) > 0) {
-> +               if (strcmp(name, sym) == 0) {
-> +                       *addr = value;
-> +                       goto out;
-> +               }
-> +       }
-> +       err = -EINVAL;
-
-These error codes seem backward to me. If you fail to open
-/proc/kallsyms, that's an unexpected and invalid situation, so EINVAL
-makes a bit more sense there. But -ENOENT is clearly for cases where
-you didn't find what you were looking for, which is exactly this case.
-
-
-> +
-> +out:
-> +       fclose(f);
-> +       return err;
-> +}
-> +
->  void read_trace_pipe(void)
->  {
->         int trace_fd;
-> diff --git a/tools/testing/selftests/bpf/trace_helpers.h b/tools/testing/selftests/bpf/trace_helpers.h
-> index 25ef597dd03f..f62fdef9e589 100644
-> --- a/tools/testing/selftests/bpf/trace_helpers.h
-> +++ b/tools/testing/selftests/bpf/trace_helpers.h
-> @@ -12,6 +12,10 @@ struct ksym {
->  int load_kallsyms(void);
->  struct ksym *ksym_search(long key);
->  long ksym_get_addr(const char *name);
-> +
-> +/* open kallsyms and find addresses on the fly, faster than load + search. */
-> +int kallsyms_find(const char *sym, unsigned long long *addr);
-> +
->  void read_trace_pipe(void);
->
->  #endif
-> --
-> 2.28.0.526.ge36021eeef-goog
->
+-- 
+Sakari Ailus
