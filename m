@@ -2,180 +2,169 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,
+	CHARSET_FARAWAY_HEADER,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD41EC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4B4C28E83
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3B5205CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF1A205CB
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:31:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="N8ICZD2o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730198AbgIDJ3g (ORCPT
+        id S1730213AbgIDJbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 05:29:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:46838 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730182AbgIDJ3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 05:29:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A704143B;
-        Fri,  4 Sep 2020 02:29:29 -0700 (PDT)
-Received: from localhost.localdomain (entos-thunderx2-desktop.shanghai.arm.com [10.169.212.215])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 87DAE3F66F;
-        Fri,  4 Sep 2020 02:29:23 -0700 (PDT)
-From:   Jianyong Wu <jianyong.wu@arm.com>
-To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, maz@kernel.org,
-        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
-        suzuki.poulose@arm.com, steven.price@arm.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve.Capper@arm.com, justin.he@arm.com, jianyong.wu@arm.com,
-        nd@arm.com
-Subject: [PATCH v14 05/10] time: Add mechanism to recognize clocksource in time_get_snapshot
-Date:   Fri,  4 Sep 2020 17:27:39 +0800
-Message-Id: <20200904092744.167655-6-jianyong.wu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904092744.167655-1-jianyong.wu@arm.com>
-References: <20200904092744.167655-1-jianyong.wu@arm.com>
+        Fri, 4 Sep 2020 05:31:41 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:37492 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730079AbgIDJbX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 05:31:23 -0400
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200904093120epoutp04d1633d13d25e05a567f32687b8f9fb59~xirtiCXEb0864508645epoutp04b
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 09:31:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200904093120epoutp04d1633d13d25e05a567f32687b8f9fb59~xirtiCXEb0864508645epoutp04b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599211880;
+        bh=7eKjrrXMyPcGGy+prk+NmLZfDzVLo+N1HJeKK1CMHe4=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=N8ICZD2ofRhxbkY6uMXozC9b8pcHFxQnc2a+t4phOSdGAZdULXKtCDdaiDqt4D2L7
+         NJ/FdNPIqrXcdVLg0Al1bomHGsJGy8xG6uach0z/I0TybQPZs8nRMp4ddDRF/Xxf2C
+         kiiKrx/aL6urUraPH3tiSWfXmRcgeP01p4jksqr8=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20200904093119epcas2p1c407462349b2029df1c237c1471639e2~xirsskAH53257332573epcas2p1o;
+        Fri,  4 Sep 2020 09:31:19 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.40.188]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4BjXVY0YSKzMqYkk; Fri,  4 Sep
+        2020 09:31:17 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7F.65.19322.269025F5; Fri,  4 Sep 2020 18:31:14 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200904093114epcas2p36f311d20d3b7729bc965786c76f18ca1~xiroVHUUr2511625116epcas2p3q;
+        Fri,  4 Sep 2020 09:31:14 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200904093114epsmtrp1c64de14308dfb25465b57183c1bcac0d~xiroURU9a1961419614epsmtrp1X;
+        Fri,  4 Sep 2020 09:31:14 +0000 (GMT)
+X-AuditID: b6c32a45-7adff70000004b7a-a9-5f5209626cd4
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        47.0A.08303.269025F5; Fri,  4 Sep 2020 18:31:14 +0900 (KST)
+Received: from KORDD001994 (unknown [12.36.185.71]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200904093114epsmtip1d36b0b0c3b7c5c7200a14931c2e8fb37~xiroIHwxt0857908579epsmtip1B;
+        Fri,  4 Sep 2020 09:31:14 +0000 (GMT)
+From:   =?ks_c_5601-1987?B?sejDorHi?= <changki.kim@samsung.com>
+To:     "'Greg KH'" <gregkh@linuxfoundation.org>
+Cc:     <pmladek@suse.com>, <sergey.senozhatsky@gmail.com>,
+        <rostedt@goodmis.org>, <john.ogness@linutronix.de>,
+        <masahiroy@kernel.org>, <rd.dunlap@gmail.com>, <krzk@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200904090535.GA2440145@kroah.com>
+Subject: RE: printk: Add process name information to printk() output.
+Date:   Fri, 4 Sep 2020 18:31:13 +0900
+Message-ID: <000001d6829e$2226cc60$66746520$@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="ks_c_5601-1987"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQMW8ccY1/AbwLmEvIpBmAjIk1luugFhZewlAjg6wOumuolUIA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDJsWRmVeSWpSXmKPExsWy7bCmhW4SZ1C8wdaTNhbNi9ezWWy7Mp/R
+        4vz5DewWl3fNYbN4+OAGq8X/x19ZLV5s7mS12NfxgMli7efH7A6cHjtn3WX3aNl3i91j06pO
+        No93586xe+yfu4bdY/2WqywenzfJBbBH5dhkpCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoa
+        WlqYKynkJeam2iq5+AToumXmAJ2mpFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFVSi1IySkw
+        NCzQK07MLS7NS9dLzs+1MjQwMDIFqkzIydh/aQlzQRNvReeiN0wNjE85uxg5OSQETCR2T57L
+        3sXIxSEksINR4t/tzVDOJ0aJl98uskE4nxklzncsYYdpeXl6BitEYhejxNHD7cwQzgug/t+7
+        mUGq2ARsJdo7H4B1iAjoSHScOcECUsQscIFRouf7ZCaQBKeAocS7TfsZQWxhAVeJ1yffgTWw
+        CKhIXNn9FmwQr4ClxISGeYwQtqDEyZlPWEBsZgEjiSWr5zNB2PIS29/OYYY4T0Hi59NlQOdx
+        AC12krjf7AVRIiIxu7MNqmQLh8TvF8oQtovEjEXbWCFsYYlXx7dAfSkl8bK/Dcqul/jWvwDs
+        fgmBHkaJv13H2SASxhKznrUzguySEFCWOHIL6jQ+iY7Df9khwrwSHW1CEKaqRPdkfQhTWuLD
+        DpsJjEqzkLw1C8lbs5C8NQvJ/QsYWVYxiqUWFOempxYbFRgiR/YmRnCy1XLdwTj57Qe9Q4xM
+        HIyHGCU4mJVEeD3OBcYL8aYkVlalFuXHF5XmpBYfYjQFhvREZinR5Hxgus8riTc0NTIzM7A0
+        tTA1M7JQEufNVbwQJySQnliSmp2aWpBaBNPHxMEp1cBUsEqL4d4a+8hmf4GElKPV3P/S1q1W
+        VmRNY925pulcjnSKRJbq4kzGnp7EFct9xU7Pty6Km/fDRNE5/cVP5Vl8K26FfOSNurrLZaZU
+        okfRlDtGU2bwqBbd/xKrsu++WWyJV9Kbj96hp34sfrq1K1h9sf+F7pKJjlzM+pczVe83Td+n
+        cWHysewm4TsrLlQZivV/VrRRZyq3ib0RKXh7pxP7V+N5VkrJDWfP/E45f2/P1v9OszxEfq5J
+        /Nn67fh83ivzb6y7z3viwF0RprKbPK1LNi12+i1oumEZf+I1/+2xGxI3+NZm9WdXdURYFvns
+        ZS34sWeb08a3p5Z1Tw20ZKgx/Coltp2rS6JaTjycc6sSS3FGoqEWc1FxIgDa/2dwPwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCSnG4SZ1C8wZKZkhbNi9ezWWy7Mp/R
+        4vz5DewWl3fNYbN4+OAGq8X/x19ZLV5s7mS12NfxgMli7efH7A6cHjtn3WX3aNl3i91j06pO
+        No93586xe+yfu4bdY/2WqywenzfJBbBHcdmkpOZklqUW6dslcGXsv7SEuaCJt6Jz0RumBsan
+        nF2MnBwSAiYSL0/PYO1i5OIQEtjBKLFy/g82iIS0xPFXs9khbGGJ+y1HoIqeMUp8ujqRGSTB
+        JmAr0d75AKxIREBHouPMCRaQImaBW4wSKz48Yofo2MwosWbNRLAqTgFDiXeb9jOC2MICrhKv
+        T74Di7MIqEhc2f0WbCqvgKXEhIZ5jBC2oMTJmU9YQGxmoFsbD3dD2fIS29/OYYY4T0Hi59Nl
+        QOdxAF3hJHG/2QuiRERidmcb8wRG4VlIJs1CMmkWkkmzkLQsYGRZxSiZWlCcm55bbFhglJda
+        rlecmFtcmpeul5yfu4kRHHlaWjsY96z6oHeIkYmD8RCjBAezkgivx7nAeCHelMTKqtSi/Pii
+        0pzU4kOM0hwsSuK8X2ctjBMSSE8sSc1OTS1ILYLJMnFwSjUwbX1pfjfqtmVZo6ZyVwfnaT6V
+        kocp/u8OrT3Lk7OiJO9xQ0fBPNfYKz9LFqzvYWLYzdaYM8F9T5vZhddCZ0z7u0t2bOGYunf5
+        JIHZ0//utagx8Iz/yFojaPjITrhxwhsBw8Md118vC2fs/8jhv/uutcTB7QWnZh4Sa03PuH3d
+        4rjxxCWOinsSbogc7u1l7eK2EltQfuDuty3HNzhtj1q/ScXdSLGne5LJnrm5GbVxFycrnOjP
+        vqvocu+tievV1T9WX/Gdc8hg/SbupzvUjsav+pdSIia8YKL5H5tDhw0nR9/YL8MQOMNyTdbp
+        OLHd2nz3OcLTdvycsFKUV9eTKeTGOauN15wZv+9cabT1yg+J+0osxRmJhlrMRcWJAApa+msr
+        AwAA
+X-CMS-MailID: 20200904093114epcas2p36f311d20d3b7729bc965786c76f18ca1
+X-Msg-Generator: CA
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200904082449epcas2p4420d5df2083325b328a182c79f5c0948
+References: <CGME20200904082449epcas2p4420d5df2083325b328a182c79f5c0948@epcas2p4.samsung.com>
+        <20200904082438.20707-1-changki.kim@samsung.com>
+        <20200904090535.GA2440145@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+> On Fri, Sep 04, 2020 at 05:24:38PM +0900, Changki Kim wrote:
+> > Printk() meesages are the most basic and useful debug method.
+> > However, additional information needs in multi-processor.
+> > If we add messages with processor id and process name, we can find a
+> > problem only with messages when the problem occurs with H/W IP or CPU.
+> > This is very useful in narrowing down the scope of the problems.
+> >
+> > Therefore, instead of trying to help buffering, let's try to help
+> > reconstructing messages by saving caller information as of calling
+> > log_store() and adding it as "[$processor_id: $process_name:
+> $thread_id]"
+> > upon printing to consoles.
+> >
+> > Some examples for console output:
+> >
+> >   [    0.059580] [0:      swapper/0:    1] CPU: All CPU(s) started at
+EL1i
+> >   [    2.153157] [5:           init:    1] migov: complete to probe
+migov
+> >   [    7.441317] [4:           init:    1] NET: Registered protocol
+family 39
+> >   [   22.793389] [5:  kworker/u16:1:  184] SMP: stopping secondary CPUs
+> >
+> > Signed-off-by: Changki Kim <changki.kim@samsung.com>
+> > ---
+> >  kernel/printk/printk.c            | 20 ++++++++++++++++++--
+> >  kernel/printk/printk_ringbuffer.h |  7 +++++++
+> >  lib/Kconfig.debug                 | 16 ++++++++++++++++
+> >  3 files changed, 41 insertions(+), 2 deletions(-)
+> 
+> Isn't the CPU number already present if you want it today?  Why add it
+> again?
+> 
+> thanks,
+> 
+> greg k-h
 
-System time snapshots are not conveying information about the current
-clocksource which was used, but callers like the PTP KVM guest
-implementation have the requirement to evaluate the clocksource type to
-select the appropriate mechanism.
+CPU number isn't present now. If I enabled PRINTK_CALLER,
+then it is present cpu id or thread id.
+The config isn't always present cpu id.
+We need cpu id each each message.
 
-Introduce a clocksource id field in struct clocksource which is by default
-set to CSID_GENERIC (0). Clocksource implementations can set that field to
-a value which allows to identify the clocksource.
-
-Store the clocksource id of the current clocksource in the
-system_time_snapshot so callers can evaluate which clocksource was used to
-take the snapshot and act accordingly.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
----
- include/linux/clocksource.h     |  6 ++++++
- include/linux/clocksource_ids.h | 11 +++++++++++
- include/linux/timekeeping.h     | 12 +++++++-----
- kernel/time/clocksource.c       |  2 ++
- kernel/time/timekeeping.c       |  1 +
- 5 files changed, 27 insertions(+), 5 deletions(-)
- create mode 100644 include/linux/clocksource_ids.h
-
-diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
-index 86d143db6523..1290d0dce840 100644
---- a/include/linux/clocksource.h
-+++ b/include/linux/clocksource.h
-@@ -17,6 +17,7 @@
- #include <linux/timer.h>
- #include <linux/init.h>
- #include <linux/of.h>
-+#include <linux/clocksource_ids.h>
- #include <asm/div64.h>
- #include <asm/io.h>
- 
-@@ -62,6 +63,10 @@ struct module;
-  *			400-499: Perfect
-  *				The ideal clocksource. A must-use where
-  *				available.
-+ * @id:			Defaults to CSID_GENERIC. The id value is captured
-+ *			in certain snapshot functions to allow callers to
-+ *			validate the clocksource from which the snapshot was
-+ *			taken.
-  * @flags:		Flags describing special properties
-  * @enable:		Optional function to enable the clocksource
-  * @disable:		Optional function to disable the clocksource
-@@ -100,6 +105,7 @@ struct clocksource {
- 	const char		*name;
- 	struct list_head	list;
- 	int			rating;
-+	enum clocksource_ids	id;
- 	enum vdso_clock_mode	vdso_clock_mode;
- 	unsigned long		flags;
- 
-diff --git a/include/linux/clocksource_ids.h b/include/linux/clocksource_ids.h
-new file mode 100644
-index 000000000000..4d8e19e05328
---- /dev/null
-+++ b/include/linux/clocksource_ids.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_CLOCKSOURCE_IDS_H
-+#define _LINUX_CLOCKSOURCE_IDS_H
-+
-+/* Enum to give clocksources a unique identifier */
-+enum clocksource_ids {
-+	CSID_GENERIC		= 0,
-+	CSID_MAX,
-+};
-+
-+#endif
-diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
-index d5471d6fa778..17be3b6f9f37 100644
---- a/include/linux/timekeeping.h
-+++ b/include/linux/timekeeping.h
-@@ -3,6 +3,7 @@
- #define _LINUX_TIMEKEEPING_H
- 
- #include <linux/errno.h>
-+#include <linux/clocksource_ids.h>
- 
- /* Included from linux/ktime.h */
- 
-@@ -232,11 +233,12 @@ extern void timekeeping_inject_sleeptime64(const struct timespec64 *delta);
-  * @cs_was_changed_seq:	The sequence number of clocksource change events
-  */
- struct system_time_snapshot {
--	u64		cycles;
--	ktime_t		real;
--	ktime_t		raw;
--	unsigned int	clock_was_set_seq;
--	u8		cs_was_changed_seq;
-+	u64			cycles;
-+	ktime_t			real;
-+	ktime_t			raw;
-+	enum clocksource_ids	cs_id;
-+	unsigned int		clock_was_set_seq;
-+	u8			cs_was_changed_seq;
- };
- 
- /**
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index 02441ead3c3b..6b38d4993214 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -928,6 +928,8 @@ int __clocksource_register_scale(struct clocksource *cs, u32 scale, u32 freq)
- 
- 	clocksource_arch_init(cs);
- 
-+	if (WARN_ON_ONCE((unsigned int)cs->id >= CSID_MAX))
-+		cs->id = CSID_GENERIC;
- 	if (cs->vdso_clock_mode < 0 ||
- 	    cs->vdso_clock_mode >= VDSO_CLOCKMODE_MAX) {
- 		pr_warn("clocksource %s registered with invalid VDSO mode %d. Disabling VDSO support.\n",
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index 4c47f388a83f..c15dd42241bb 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -982,6 +982,7 @@ void ktime_get_snapshot(struct system_time_snapshot *systime_snapshot)
- 	do {
- 		seq = read_seqcount_begin(&tk_core.seq);
- 		now = tk_clock_read(&tk->tkr_mono);
-+		systime_snapshot->cs_id = tk->tkr_mono.clock->id;
- 		systime_snapshot->cs_was_changed_seq = tk->cs_was_changed_seq;
- 		systime_snapshot->clock_was_set_seq = tk->clock_was_set_seq;
- 		base_real = ktime_add(tk->tkr_mono.base,
--- 
-2.17.1
+Thanks.
 
