@@ -2,170 +2,266 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9CAC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58B2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67D62206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:08:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Igs8SeG/"
+	by mail.kernel.org (Postfix) with ESMTP id A3F55206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730354AbgIDOHl (ORCPT
+        id S1730614AbgIDOKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:07:41 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:60964 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730504AbgIDOFH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:05:07 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 084DM2qK005938;
-        Fri, 4 Sep 2020 15:23:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=9tDNNyjW1JFlsbbCLIY7DyEV8OK1r9OXdF3FnYfERXw=;
- b=Igs8SeG/ZKp3N0XD8OfxBgvi/CRjxUi0S9+7BaZJ9q139ip+kCpiFe6mmtCBU71yMNnc
- 4Z71DgRMm2U78YwyMo78Z4KWA6jt5CxjYxIGRsQ+kW9m5yaf7Sl1rTkJwCKPYIh/igvS
- U5TyC+njDLQHWmR28nlZ9XNq+t9q5Z5OB10PWGTV5ywvgm0H4Zci3iiovApvJWqUN5pI
- y+bDQc+Nz2GXdB6Ke+J2L4B9CFL6APrNREUMEWckiumicZ9V6SUqC1xfk15pm6DjtiTf
- yaDGGtDZmrtyP/g9qt/rYG6ub1C4qumM9c07c6Wq1dT6xGoXt2ik+C5hEbmpdJP6aKZ2 rw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 337csw9xvg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Sep 2020 15:23:04 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4FA1B10002A;
-        Fri,  4 Sep 2020 15:23:04 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 447B82B0EBD;
-        Fri,  4 Sep 2020 15:23:04 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 4 Sep 2020 15:23:03
- +0200
-From:   Christophe Kerello <christophe.kerello@st.com>
-To:     <robh+dt@kernel.org>, <alexandre.torgue@st.com>,
-        <linux@armlinux.org.uk>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Christophe Kerello <christophe.kerello@st.com>
-Subject: [PATCH 2/2] ARM: dts: stm32: add FMC2 EBI support for stm32mp157c
-Date:   Fri, 4 Sep 2020 15:20:43 +0200
-Message-ID: <1599225643-5558-3-git-send-email-christophe.kerello@st.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1599225643-5558-1-git-send-email-christophe.kerello@st.com>
-References: <1599225643-5558-1-git-send-email-christophe.kerello@st.com>
+        Fri, 4 Sep 2020 10:10:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53174 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730593AbgIDOJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 10:09:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B3513ABC1;
+        Fri,  4 Sep 2020 14:09:04 +0000 (UTC)
+From:   Cyril Hrubis <chrubis@suse.cz>
+To:     ltp@lists.linux.it
+Cc:     linux-kernel@vger.kernel.org, lkp@lists.01.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>
+Subject: [PATCH v2] syscall/ptrace08: Simplify the test.
+Date:   Fri,  4 Sep 2020 16:09:31 +0200
+Message-Id: <20200904140931.10153-1-chrubis@suse.cz>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-04_07:2020-09-04,2020-09-04 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds FMC2 External Bus Interface support on stm32mp157c.
+The original test was attempting to crash the kernel by setting a
+breakpoint on do_debug kernel function which, when triggered, caused an
+infinite loop in the kernel. The problem with this approach is that
+kernel internal function names are not stable at all and the name was
+changed recently, which made the test fail for no good reason.
 
-Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+The original kernel fix made it however poissible to set a kernel
+address as a breakpoint and instead disabled the breakpoint on userspace
+modification. The error checks were deffered to write to the dr7 that
+enabled the breakpoint again.
+
+So on newer kernels we do not allow to set the breakpoint to the kernel
+addres at all, which means that the POKEUSR to dr0 has to fail with an
+address in a kernel range and also we read back the breakpoint address
+and check that it wasn't set just to be sure.
+
+On older kernels we check that the POKEUSER to dr7 that enables the
+breakpoint fails properly after the dr0 has been set to an address in
+the kernel range.
+
+Signed-off-by: Cyril Hrubis <chrubis@suse.cz>
+CC: Andy Lutomirski <luto@kernel.org>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- arch/arm/boot/dts/stm32mp151.dtsi     | 43 +++++++++++++++++++++++------------
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 16 +++++++------
- 2 files changed, 38 insertions(+), 21 deletions(-)
+ testcases/kernel/syscalls/ptrace/ptrace08.c | 136 +++++++++++---------
+ 1 file changed, 76 insertions(+), 60 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-index bfe2902..4fd7572 100644
---- a/arch/arm/boot/dts/stm32mp151.dtsi
-+++ b/arch/arm/boot/dts/stm32mp151.dtsi
-@@ -1302,23 +1302,38 @@
- 			dma-requests = <48>;
- 		};
+diff --git a/testcases/kernel/syscalls/ptrace/ptrace08.c b/testcases/kernel/syscalls/ptrace/ptrace08.c
+index 591aa0dd2..1b84ce376 100644
+--- a/testcases/kernel/syscalls/ptrace/ptrace08.c
++++ b/testcases/kernel/syscalls/ptrace/ptrace08.c
+@@ -5,8 +5,17 @@
+  *
+  * CVE-2018-1000199
+  *
+- * Test error handling when ptrace(POKEUSER) modifies debug registers.
+- * Even if the call returns error, it may create breakpoint in kernel code.
++ * Test error handling when ptrace(POKEUSER) modified x86 debug registers even
++ * when the call returned error.
++ *
++ * When the bug was present we could create breakpoint in the kernel code,
++ * which shoudn't be possible at all. The original CVE caused a kernel crash by
++ * setting a breakpoint on do_debug kernel function which, when triggered,
++ * caused an infinite loop. However we do not have to crash the kernel in order
++ * to assert if kernel has been fixed or not. All we have to do is to try to
++ * set a breakpoint, on any kernel address, then read it back and check if the
++ * value has been set or not.
++ *
+  * Kernel crash partially fixed in:
+  *
+  *  commit f67b15037a7a50c57f72e69a6d59941ad90a0f0f
+@@ -26,69 +35,54 @@
+ #include "tst_safe_stdio.h"
  
--		fmc: nand-controller@58002000 {
--			compatible = "st,stm32mp15-fmc2";
--			reg = <0x58002000 0x1000>,
--			      <0x80000000 0x1000>,
--			      <0x88010000 0x1000>,
--			      <0x88020000 0x1000>,
--			      <0x81000000 0x1000>,
--			      <0x89010000 0x1000>,
--			      <0x89020000 0x1000>;
--			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
--			dmas = <&mdma1 20 0x10 0x12000a02 0x0 0x0>,
--			       <&mdma1 20 0x10 0x12000a08 0x0 0x0>,
--			       <&mdma1 21 0x10 0x12000a0a 0x0 0x0>;
--			dma-names = "tx", "rx", "ecc";
-+		fmc: memory-controller@58002000 {
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+			compatible = "st,stm32mp1-fmc2-ebi";
-+			reg = <0x58002000 0x1000>;
- 			clocks = <&rcc FMC_K>;
- 			resets = <&rcc FMC_R>;
- 			status = "disabled";
+ #if defined(__i386__) || defined(__x86_64__)
+-#define SYMNAME_SIZE 256
+-#define KERNEL_SYM "do_debug"
+ 
+-static unsigned long break_addr;
+ static pid_t child_pid;
+ 
+-static void setup(void)
+-{
+-	int fcount;
+-	char endl, symname[256];
+-	FILE *fr = SAFE_FOPEN("/proc/kallsyms", "r");
+-
+-	/* Find address of do_debug() in /proc/kallsyms */
+-	do {
+-		fcount = fscanf(fr, "%lx %*c %255s%c", &break_addr, symname,
+-			&endl);
+-
+-		if (fcount <= 0 && feof(fr))
+-			break;
+-
+-		if (fcount < 2) {
+-			fclose(fr);
+-			tst_brk(TBROK, "Unexpected data in /proc/kallsyms %d",
+-				fcount);
+-		}
+-
+-		if (fcount >= 3 && endl != '\n')
+-			while (!feof(fr) && fgetc(fr) != '\n');
+-	} while (!feof(fr) && strcmp(symname, KERNEL_SYM));
+-
+-	SAFE_FCLOSE(fr);
+-
+-	if (strcmp(symname, KERNEL_SYM))
+-		tst_brk(TBROK, "Cannot find address of kernel symbol \"%s\"",
+-			KERNEL_SYM);
+-
+-	if (!break_addr)
+-		tst_brk(TCONF, "Addresses in /proc/kallsyms are hidden");
++#if defined(__x86_64__)
++# define KERN_ADDR_MIN 0xffff800000000000
++# define KERN_ADDR_MAX 0xffffffffffffffff
++# define KERN_ADDR_BITS 64
++#elif defined(__i386__)
++# define KERN_ADDR_MIN 0xc0000000
++# define KERN_ADDR_MAX 0xffffffff
++# define KERN_ADDR_BITS 32
++#endif
+ 
+-	tst_res(TINFO, "Kernel symbol \"%s\" found at 0x%lx", KERNEL_SYM,
+-		break_addr);
+-}
++static int deffered_check;
+ 
+-static void debug_trap(void)
++static void setup(void)
+ {
+-	/* x86 instruction INT1 */
+-	asm volatile (".byte 0xf1");
++	/*
++	 * When running in compat mode we can't pass 64 address to ptrace so we
++	 * have to skip the test.
++	 */
++	if (tst_kernel_bits() != KERN_ADDR_BITS)
++		tst_brk(TCONF, "Cannot pass 64bit kernel address in compat mode");
 +
-+			ranges = <0 0 0x60000000 0x04000000>, /* EBI CS 1 */
-+				 <1 0 0x64000000 0x04000000>, /* EBI CS 2 */
-+				 <2 0 0x68000000 0x04000000>, /* EBI CS 3 */
-+				 <3 0 0x6c000000 0x04000000>, /* EBI CS 4 */
-+				 <4 0 0x80000000 0x10000000>; /* NAND */
 +
-+			nand-controller@4,0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "st,stm32mp1-fmc2-nfc";
-+				reg = <4 0x00000000 0x1000>,
-+				      <4 0x08010000 0x1000>,
-+				      <4 0x08020000 0x1000>,
-+				      <4 0x01000000 0x1000>,
-+				      <4 0x09010000 0x1000>,
-+				      <4 0x09020000 0x1000>;
-+				interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+				dmas = <&mdma1 20 0x2 0x12000a02 0x0 0x0>,
-+				       <&mdma1 20 0x2 0x12000a08 0x0 0x0>,
-+				       <&mdma1 21 0x2 0x12000a0a 0x0 0x0>;
-+				dma-names = "tx", "rx", "ecc";
-+				status = "disabled";
-+			};
- 		};
++	/*
++	 * The original fix for the kernel haven't rejected the kernel address
++	 * right away when breakpoint was modified from userspace it was
++	 * disabled and the EINVAL was returned when dr7 was written to enable
++	 * it again.
++	 */
++	if (tst_kvercmp(4, 17, 0) < 0)
++		deffered_check = 1;
+ }
  
- 		qspi: spi@58003000 {
-diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index 85628e1..a55e80c 100644
---- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -158,14 +158,16 @@
- 	pinctrl-0 = <&fmc_pins_a>;
- 	pinctrl-1 = <&fmc_sleep_pins_a>;
- 	status = "okay";
--	#address-cells = <1>;
--	#size-cells = <0>;
+ static void child_main(void)
+ {
+ 	raise(SIGSTOP);
+-	/* wait for SIGCONT from parent */
+-	debug_trap();
+ 	exit(0);
+ }
  
--	nand@0 {
--		reg = <0>;
--		nand-on-flash-bbt;
--		#address-cells = <1>;
--		#size-cells = <1>;
-+	nand-controller@4,0 {
-+		status = "okay";
+-static void run(void)
++static void ptrace_try_kern_addr(unsigned long kern_addr)
+ {
+ 	int status;
+-	pid_t child;
+ 
+-	child = child_pid = SAFE_FORK();
++	tst_res(TINFO, "Trying address 0x%lx", kern_addr);
 +
-+		nand@0 {
-+			reg = <0>;
-+			nand-on-flash-bbt;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+		};
- 	};
- };
++	child_pid = SAFE_FORK();
  
+ 	if (!child_pid)
+ 		child_main();
+@@ -102,23 +96,46 @@ static void run(void)
+ 	SAFE_PTRACE(PTRACE_POKEUSER, child_pid,
+ 		(void *)offsetof(struct user, u_debugreg[7]), (void *)1);
+ 
+-	/* Return value intentionally ignored here */
+-	ptrace(PTRACE_POKEUSER, child_pid,
++	TEST(ptrace(PTRACE_POKEUSER, child_pid,
+ 		(void *)offsetof(struct user, u_debugreg[0]),
+-		(void *)break_addr);
++		(void *)kern_addr));
++
++	if (deffered_check) {
++		TEST(ptrace(PTRACE_POKEUSER, child_pid,
++			(void *)offsetof(struct user, u_debugreg[7]), (void *)1));
++	}
++
++	if (TST_RET != -1) {
++		tst_res(TFAIL, "ptrace() breakpoint with kernel addr succeeded");
++	} else {
++		if (TST_ERR == EINVAL) {
++			tst_res(TPASS | TTERRNO,
++				"ptrace() breakpoint with kernel addr failed");
++		} else {
++			tst_res(TFAIL | TTERRNO,
++				"ptrace() breakpoint on kernel addr should return EINVAL, got");
++		}
++	}
++
++	unsigned long addr;
++
++	addr = ptrace(PTRACE_PEEKUSER, child_pid,
++	              (void*)offsetof(struct user, u_debugreg[0]), NULL);
++
++	if (!deffered_check && addr == kern_addr)
++		tst_res(TFAIL, "Was able to set breakpoint on kernel addr");
+ 
+ 	SAFE_PTRACE(PTRACE_DETACH, child_pid, NULL, NULL);
+ 	SAFE_KILL(child_pid, SIGCONT);
+ 	child_pid = 0;
++	tst_reap_children();
++}
+ 
+-	if (SAFE_WAITPID(child, &status, 0) != child)
+-		tst_brk(TBROK, "Received event from unexpected PID");
+-
+-	if (!WIFSIGNALED(status))
+-		tst_brk(TBROK, "Received unexpected event from child");
+-
+-	tst_res(TPASS, "Child killed by %s", tst_strsig(WTERMSIG(status)));
+-	tst_res(TPASS, "We're still here. Nothing bad happened, probably.");
++static void run(void)
++{
++	ptrace_try_kern_addr(KERN_ADDR_MIN);
++	ptrace_try_kern_addr(KERN_ADDR_MAX);
++	ptrace_try_kern_addr(KERN_ADDR_MIN + (KERN_ADDR_MAX - KERN_ADDR_MIN)/2);
+ }
+ 
+ static void cleanup(void)
+@@ -133,7 +150,6 @@ static struct tst_test test = {
+ 	.setup = setup,
+ 	.cleanup = cleanup,
+ 	.forks_child = 1,
+-	.taint_check = TST_TAINT_W | TST_TAINT_D,
+ 	.tags = (const struct tst_tag[]) {
+ 		{"linux-git", "f67b15037a7a"},
+ 		{"CVE", "2018-1000199"},
 -- 
-1.9.1
+2.26.2
 
