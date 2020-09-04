@@ -2,98 +2,101 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D280EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70B2C2BB84
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 914F62073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67AD22074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:05:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599231934;
+	bh=867FjhOk+mzHQgUnh6jMHK3GbZREmVppDKTnz4YHiq0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gLULOKztfKZ5e38/v1ZesuWLVkbTQZ4gXeH09+15NIe9QdBp5jFj7MQyPU3oE69vM
+	 KKniFy+1N9xlz0Q7mU5ZouaDMOApzmIo3O19vsnKv46Ge2sTuY4bWWgyx9krC5Jg8B
+	 mFVeCzI5RiOPrEwCDiDjqATzvpxdSxOmpETDZ31A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbgIDPEB (ORCPT
+        id S1730591AbgIDPFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:04:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729942AbgIDPEA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:04:00 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E35E5C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:03:59 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1kEDFh-00045v-PT; Fri, 04 Sep 2020 17:03:45 +0200
-Message-ID: <38c8ba6d1ca4e982626bbaefbec620fdce2cd024.camel@pengutronix.de>
-Subject: Re: [PATCH 10/13] arm64: dts: imx8mq: Add missing interrupts to GPC
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        Fri, 4 Sep 2020 11:05:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729942AbgIDPFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 11:05:32 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C88652073B;
+        Fri,  4 Sep 2020 15:05:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599231932;
+        bh=867FjhOk+mzHQgUnh6jMHK3GbZREmVppDKTnz4YHiq0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FekxRTd2x6gQ4TtWuiFI+cEd5fmAFAzgyGZb88EY+xVmwWiE09tnrKzmtNj1/yrtc
+         J5zeKexjYhQeEqx7lPj1ifV1iffHJ9oPjwkmEqqese1+1Rh1/wa8tpBi8qnW3TTfvd
+         EZ4/4ukg147oLEFRSNswQYVxTX0jvPWgzbcCmcjY=
+Date:   Fri, 4 Sep 2020 16:04:50 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Li Yang <leoyang.li@nxp.com>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Date:   Fri, 04 Sep 2020 17:04:04 +0200
-In-Reply-To: <20200904145312.10960-11-krzk@kernel.org>
-References: <20200904145312.10960-1-krzk@kernel.org>
-         <20200904145312.10960-11-krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        linux-spi <linux-spi@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: (EXT) Re: (EXT) Re: [PATCH] spi-imx: remove num-cs support, set
+ num_chipselect to 4
+Message-ID: <20200904150450.GG4625@sirena.org.uk>
+References: <20200903144028.20416-1-matthias.schiffer@ew.tq-group.com>
+ <CAOMZO5DGHoG_8X+fbrGCHR4g=sGdEaF7bYrHbC_2T=aUnfTs8g@mail.gmail.com>
+ <e1431dd2653dbffdfec39a2e7167db07836e30ac.camel@ew.tq-group.com>
+ <CAOMZO5C7yyA11EOQvU0Fq-uDd5RK-B7WmbtvAy8OtPzfThYXRg@mail.gmail.com>
+ <f753882996235439b9ef53747d24382e896dc4e7.camel@ew.tq-group.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="iAL9S67WQOXgEPD9"
+Content-Disposition: inline
+In-Reply-To: <f753882996235439b9ef53747d24382e896dc4e7.camel@ew.tq-group.com>
+X-Cookie: Heisenberg might have been here.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fr, 2020-09-04 at 16:53 +0200, Krzysztof Kozlowski wrote:
-> The i.MX General Power Controller v2 device node was missing interrupts
-> property necessary to route its interrupt to GIC.  This also fixes the
-> dbts_check warnings like:
-> 
->   arch/arm64/boot/dts/freescale/imx8mq-evk.dt.yaml: gpc@303a0000:
->     {'compatible': ... '$nodename': ['gpc@303a0000']} is not valid under any of the given schemas
->   arch/arm64/boot/dts/freescale/imx8mq-evk.dt.yaml: gpc@303a0000: 'interrupts' is a required property
-> 
-> Fixes: fdbcc04da246 ("arm64: dts: imx8mq: add GPC power domains")
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+--iAL9S67WQOXgEPD9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index aad3b9f2f35c..5e0e7d0f1bc4 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -623,6 +623,7 @@
->  			gpc: gpc@303a0000 {
->  				compatible = "fsl,imx8mq-gpc";
->  				reg = <0x303a0000 0x10000>;
-> +				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
->  				interrupt-parent = <&gic>;
->  				interrupt-controller;
->  				#interrupt-cells = <3>;
+On Fri, Sep 04, 2020 at 04:34:43PM +0200, Matthias Schiffer wrote:
 
+> Nevertheless, I don't see why we should deliberately remove the native
+> CS support - my understanding was that we try to avoid breaking changes
+> to DT interpretation even for unknown/out-of-tree DTS.
+
+Yes, we should try to maintain compatibility for anyone that was using
+it.
+
+--iAL9S67WQOXgEPD9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9SV5EACgkQJNaLcl1U
+h9DcEAf8CHYTzODfyhZC8xzQ9RJpGDI4cIHVRdmq3YrWs9MR+mGvb5pqZkHODFtN
+4kq9H7VMntoIotqG/LujjH6ipEqEBz6Byt+b9Rn9WvVs6BOP3jzhjfYoC3GbO5wa
+orr/piK+EB5hQoqSbylQr2FTNoEc+8ZlzQYHNMayfMYChox+4LJhYtkohhZsjsxs
+Ga5eXRQZJm3GJgiRd/lzhkawa1U9BzYb4DyRaQlsN0AT6fcgtuAP14m/FrsBw1nJ
+n6yZbU06fN1OwOGbBkVP4uItNuEpmIwDvjdJ4fg7eUG+6IojuLbobeg0/fxXqYXl
+B8aZVacFCvgnSvtuNdpJfp4JBdq6CA==
+=xWyE
+-----END PGP SIGNATURE-----
+
+--iAL9S67WQOXgEPD9--
