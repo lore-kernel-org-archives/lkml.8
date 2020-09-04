@@ -2,153 +2,104 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB61FC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C86BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA1420665
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:22:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="M07TCORu"
+	by mail.kernel.org (Postfix) with ESMTP id D36D82098B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:26:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599251175;
+	bh=L1otYr9ZeSuuSzxTfilG3HB7h1F12CDCP/vsB46T2lA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=WYymHMtKQper+WewzgEqXUV/zX/qSmaTXn1I6oR/1IHWxkpw2tBOuQoMdDBifKtzE
+	 iocpHRhWGpfQsHWONLm6k46oQsMm7hzFtNpEs2IL8fxInYCq+Zx/ccvefyITB08mqJ
+	 yWxj6ZOAG7vQ2cGOS+G7SOMf8aKpnSxYN3S6nfnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgIDUWQ (ORCPT
+        id S1727963AbgIDU0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 16:22:16 -0400
-Received: from mga03.intel.com ([134.134.136.65]:9745 "EHLO mga03.intel.com"
+        Fri, 4 Sep 2020 16:26:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbgIDUWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 16:22:09 -0400
-IronPort-SDR: TsX/z+G/ZIURnOUY64okZJfLAjwfKVGvhB8ekrmysOXcj+fPpnfQAcmzFcEmf1AsdmlGKKXLpj
- qvfazN9jxkbA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="157820581"
-X-IronPort-AV: E=Sophos;i="5.76,391,1592895600"; 
-   d="scan'208";a="157820581"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 13:22:07 -0700
-IronPort-SDR: vXn0+lmcXipaBvDYZLwTjlsGd34etSIDFRy7MAJYYA9GMecbkAOVaPr3KpeEpzccWmOp1Nd9bI
- VTiEXc43J3cg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,391,1592895600"; 
-   d="scan'208";a="503631125"
-Received: from fmsmsx605.amr.corp.intel.com ([10.18.126.85])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Sep 2020 13:22:07 -0700
-Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
- fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 4 Sep 2020 13:22:06 -0700
-Received: from fmsmsx102.amr.corp.intel.com (10.18.124.200) by
- fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 4 Sep 2020 13:22:06 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- FMSMSX102.amr.corp.intel.com (10.18.124.200) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 4 Sep 2020 13:22:04 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.177)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1713.5; Fri, 4 Sep 2020 13:22:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JVaTNK/+QZwzaSXlGOKDUUDXxrFdGts1C2rPk7oqtKjJQS/sUe+wC0N7o5dVKCZaoXtUqh68Jy+gvTmvBKVd7Q6pzvpgaAhJ6sz0Ap1qs32A2Pme/MVfwea4N3N0B3hm1V0/2hmX3nqH2DF0dhZPR6EZak0T5On9iBBl9xYnuaXmiWzQDVpAc/nfJqGXPMT8jndTaPzQAgIba0jBw3REm9Vwp8perSCgFHhXurS/khatEiLWpuiGjurw7hNhJba4ZRFXOFRanoxg5NPKmaBlQgurbuPw/21BbGlzid8lKBQ2VmUC34S73Tmne2EKB39oceIqmhjrZQaOE/G1KkbyFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ILDJtu5YC7A+S4WyCkPwAoqtLhhoRWR1mgEfigOUKdw=;
- b=NgB8EJ63msJ4A8lmzpfxyW0Ku4hjB3KDVw0UCQR4dPe1a1Q49QMi4s6YeJ3lIfXtc2mE1AqDCqoMwpVJjIga6L/PeaqzRP1aXUpfUn/0ZUDpfwyY2/WuAzEOsSwnbnlUX8CkVPoNfBl3xKazejYTpvu8AZk1CpTehmsSEcrV2Pd1zFlb5gl9tDRh7CUYpuBV5khwifaEooBiFDxrF5Kd/Tpio5lTu4VTtb1OrDVu8xUeG9qrHeWsZkOx5w0EV/eD6ZZb/Nxy+3VQImbJqwCPyul6vk85UignH4wXYheODsIf1O/eueyLLAU6oYOJJ7PR1VMHuLuq0iVYNwb3sojEzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ILDJtu5YC7A+S4WyCkPwAoqtLhhoRWR1mgEfigOUKdw=;
- b=M07TCORugOtpUjYza8Zc0ndY6NqtzxovXk0m/a2MbADWFscX86HTU6A3x08HRUYfaCwwomrL9RMV2oVeqzt1YIfDwHo8W85/qBaDk2ICRVm8SDkGmlJOc/dgyY/gxn97cLCKCe+0GTd1nj1TnOxnspulexiRYCnSz4D78gB8C2Y=
-Received: from DM6PR11MB2890.namprd11.prod.outlook.com (2603:10b6:5:63::20) by
- DM6PR11MB3547.namprd11.prod.outlook.com (2603:10b6:5:136::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3348.15; Fri, 4 Sep 2020 20:21:32 +0000
-Received: from DM6PR11MB2890.namprd11.prod.outlook.com
- ([fe80::25c4:e65e:4d75:f45f]) by DM6PR11MB2890.namprd11.prod.outlook.com
- ([fe80::25c4:e65e:4d75:f45f%7]) with mapi id 15.20.3326.025; Fri, 4 Sep 2020
- 20:21:32 +0000
-From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
-To:     Gal Hammer <ghammer@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Marcel Apfelbaum <mapfelba@redhat.com>
-Subject: RE: [PATCH] igb: read PBA number from flash
-Thread-Topic: [PATCH] igb: read PBA number from flash
-Thread-Index: AQHWfpDiRbLgLmN77kmbno2nW3PsbKlY9NCA
-Date:   Fri, 4 Sep 2020 20:21:31 +0000
-Message-ID: <DM6PR11MB289033DD7B7C778FA977F617BC2D0@DM6PR11MB2890.namprd11.prod.outlook.com>
-References: <20200830054529.3980-1-ghammer@redhat.com>
-In-Reply-To: <20200830054529.3980-1-ghammer@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [97.120.215.99]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9bf8821d-25ba-4316-9836-08d851101d11
-x-ms-traffictypediagnostic: DM6PR11MB3547:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB354741E5D56392049FB6B162BC2D0@DM6PR11MB3547.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 63hs91Zn3rjAYFuvkxY9XX3/N5WQILO9qbVfUDCtlkBpWB+XfgtCB0ZHvtvPBctNvoiFBkkIahhZ//jWkALwU4R+xjwcAqyvrCsS9j/Jbk2MXlwj4mgjbMjrIT++4uRgAK8906yU6yd8XZGTAicTUsWZT43H6jfNHsHKB8fChFwlsm0Iv2+2btDK0NIHuApgz4Xw3iFczLbscRixNLN2QubvUnxV6nWIN5VhMlEzHd8/aHhH7qJ8LQ09U80CEEREVfWHoqJ0Z4MDKbuZiDjfkUjnrmoy9SwOoxjIAB26x3+czI8+FE+F4gCCRQ8RF+A+0pxlt20icgQeMdn+LfpqjA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2890.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(39860400002)(366004)(346002)(376002)(8936002)(7696005)(6506007)(83380400001)(316002)(4744005)(53546011)(71200400001)(5660300002)(2906002)(52536014)(110136005)(8676002)(33656002)(478600001)(54906003)(186003)(76116006)(64756008)(66446008)(26005)(86362001)(9686003)(66946007)(4326008)(66556008)(55016002)(66476007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: L92g2eSnkKANf0PEZx2nGpYXirDrKHgl+g5+2EVC9nnUMxODq3SxHzyw5+YIM4MYit6FXMeHrogNghOcOc1h8m2Ow+c8Z0d6GQOh0CWShbiieZa5yxIyXI46VHMOY7IX7exkjQOYY9pf3lGp9oni63c2poH4UuEBi0UA9g56BQ675pWAfV82hnAKSmVvAuce65WJRL2VeiZvS/095HJaF4GXPrRrttz43iExAbAUiI8e9fo3JaOb4LtlPd/UiibCCsonUKKqVn+JdLnuZdn4sh1v/cd3GCqycBnmlZdcJRm9FjjyMuRWTSklb9SpPf4S8ZEynBnWMzh/Vi8i0cs3qdu+OxPsjX/FL+KLXADBkCmHwqkaFKH9oWUU1cxbboO8xJ9ShXJz3vYeo7bJ63S54kJcSiVjj7FnKJa66YRFFt0zb4BX2kCpKbyJ1K/DJmhOQiglRDO4qBViMDTRWdenzIHxbJzVcWmPtsmpfLIq9C9TVQJfvsnMUYLj5GIyQjMmNjX68JeavL1h+hyPHXG3DAhhMj531Rzc2pbiulFxHMaZKrA5J/QDzD9lfxdR6Cq0WrwbYktI+W9SYKj4Nxq4UZiRMzpCQjUI1pebgXYDNcZkvLtghZzjjNG6Ap+dHrKL06HJzOu210XLk9wm1oKCDg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726441AbgIDU0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 16:26:13 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1646F2084D;
+        Fri,  4 Sep 2020 20:26:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599251173;
+        bh=L1otYr9ZeSuuSzxTfilG3HB7h1F12CDCP/vsB46T2lA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Cd3J5d4nALeLfar9m7nBLo/1gM+TxTYxO/S47cRb6MJ7+kgtrizOW4ICSEjhxnmyB
+         AmtCEtVT303Fwg1Q1Yk4CvggqPfKQy6hrLN7quxVxcCvip/dUdvrPHzZ0E7rAlBW3H
+         SwdC6rEvdKz4epmP2gqx6XTad4ScR0qHeXdAhDZw=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 32DB140D3D; Fri,  4 Sep 2020 17:26:11 -0300 (-03)
+Date:   Fri, 4 Sep 2020 17:26:11 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] tools feature: Add missing -lzstd to the fast path feature
+ detection
+Message-ID: <20200904202611.GJ3753976@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB2890.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9bf8821d-25ba-4316-9836-08d851101d11
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2020 20:21:32.0854
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dhYXo7diLqN01Zet1/4MhVZOXgDaAVQfb/Thr8Wnf083QSi7IkCvk+Ra8IHF1+D0QgTmSFuz/CqZkEcW8V6rBQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3547
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Gal Hammer <ghammer@redhat.com>
-> Sent: Saturday, August 29, 2020 10:45 PM
-> To: linux-kernel@vger.kernel.org
-> Cc: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S . Miller
-> <davem@davemloft.net>; Jakub Kicinski <kuba@kernel.org>; intel-wired-
-> lan@lists.osuosl.org; netdev@vger.kernel.org; Marcel Apfelbaum
-> <mapfelba@redhat.com>; Gal Hammer <ghammer@redhat.com>
-> Subject: [PATCH] igb: read PBA number from flash
->=20
-> Fixed flash presence check for 82576 controllers so the part
-> number string is read and displayed correctly.
->=20
-> Signed-off-by: Gal Hammer <ghammer@redhat.com>
-> ---
->  drivers/net/ethernet/intel/igb/igb_main.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+We were failing that due to GTK2+ and then for the ZSTD test, which made
+test-all.c, the fast path feature detection file to fail and thus
+trigger building all of the feature tests, slowing down the test.
 
+Eventually the ZSTD test would be built and would succeed, since it had
+the needed -lzstd, avoiding:
+
+  $ cat /tmp/build/perf/feature/test-all.make.output
+  /usr/bin/ld: /tmp/ccRRJQ4u.o: in function `main_test_libzstd':
+  /home/acme/git/perf/tools/build/feature/test-libzstd.c:8: undefined reference to `ZSTD_createCStream'
+  /usr/bin/ld: /home/acme/git/perf/tools/build/feature/test-libzstd.c:9: undefined reference to `ZSTD_freeCStream'
+  collect2: error: ld returned 1 exit status
+  $
+
+Fix it by adding -lzstd to the test-all target.
+
+Now I need an entry to 'perf test' to make sure that
+/tmp/build/perf/feature/test-all.make.output is empty...
+
+Fixes: 3b1c5d9659718263 ("tools build: Implement libzstd feature check, LIBZSTD_DIR and NO_LIBZSTD defines")
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+---
+
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 977067e34dff064d..ec815ffc7777a02b 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -91,7 +91,7 @@ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(
+ ###############################
+ 
+ $(OUTPUT)test-all.bin:
+-	$(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -I/usr/include/slang -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma
++	$(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -I/usr/include/slang -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma -lzstd
+ 
+ $(OUTPUT)test-hello.bin:
+ 	$(BUILD)
