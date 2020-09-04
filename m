@@ -2,171 +2,171 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7B2C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE1BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04560206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4720720722
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:55:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="AJBFD2Wy";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="b9ZvJxqv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbgIDIzc (ORCPT
+        id S1729914AbgIDIzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:55:32 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45276 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbgIDIzb (ORCPT
+        Fri, 4 Sep 2020 04:55:43 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:63110 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726575AbgIDIzl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:55:31 -0400
-Received: by mail-lj1-f195.google.com with SMTP id c2so6980316ljj.12;
-        Fri, 04 Sep 2020 01:55:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=nu8oE74z5YBqiFxodPe/uvx/vJbyX2uHL0xvWWab5to=;
-        b=WX2C0bogxKF21ZGgpTKj5IiAbFMGfVOOSudtGTt9NR+J1Gw1vuJKsYfCmlXxdQcFGJ
-         PI4r+PwwzZsCUSvupspmBPazkULA+ngHWpvaRV+3+6PmNIdcMYPnB3gQlQYfac4BRDpi
-         Mpgs092vKbFixwuiGQN09UAvQmQ7gIJzS7pfEXCCU6wcVaXVfBnDsR5cR86POoc01FrG
-         XLwlORV+N5y+p2TNHZS+D6E9r3lwg7R6eyiiOMEmLbc2WDt7hemVftFBlHE1x51bZwrD
-         kpo9RlaikiCV2kaai0KwvXxrmveYK3sn84zLcMAasaCvnNZ0vBfNM1zBPLaxGKIECWvc
-         56Qg==
-X-Gm-Message-State: AOAM533jRkZlX28toJGYUq+5+ZNInZZmbZxbPtpWHCrhOZWXjnDW72ue
-        orOOgIAqgp2pQ2EN1sJlI6BEYxqz1x8=
-X-Google-Smtp-Source: ABdhPJweM51R4S6z0DWK6Y1+pL4HJMqhC3w/2hUrgyhp95P9gYPCxrKW9CZWpIYqytyoHaz9OYDkLg==
-X-Received: by 2002:a2e:9794:: with SMTP id y20mr3192952lji.269.1599209727867;
-        Fri, 04 Sep 2020 01:55:27 -0700 (PDT)
-Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.gmail.com with ESMTPSA id m13sm1175032lfl.30.2020.09.04.01.55.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 01:55:27 -0700 (PDT)
-Reply-To: efremov@linux.com
-To:     "Van Leeuwen, Pascal" <pvanleeuwen@rambus.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200827064402.7130-1-efremov@linux.com>
- <20200827064402.7130-2-efremov@linux.com>
- <CY4PR0401MB3652FFD58D9ED14F4805FC99C32F0@CY4PR0401MB3652.namprd04.prod.outlook.com>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Subject: Re: [PATCH v2 1/4] crypto: inside-secure - use kfree_sensitive()
-Message-ID: <8ac5cb88-7df5-1060-2fac-510541fca48b@linux.com>
-Date:   Fri, 4 Sep 2020 11:55:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <CY4PR0401MB3652FFD58D9ED14F4805FC99C32F0@CY4PR0401MB3652.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 4 Sep 2020 04:55:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1599209741; x=1630745741;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=d6f7YL2OKhwDdKRk1U2kHqWvAbfZy1bmjZUOIS8/UNQ=;
+  b=AJBFD2WygGvfstVXLIOeMQ+vVw6Kg7CMIeYn+DncaUNr6Gnv7bSxSNd2
+   du0XF5wsl90VjOaOXT0KB1S4poUMDtaZMrh5qL4PtLCSlNRPUXWE6k4/2
+   w7hvxJE4rqb8goq122oK+4hy1iyAy59TPzZSk1PPoWrV+CmaMSUhvsOuM
+   EDNZMtx4Q5XRKguROmosJMUbu5UQ2+zyu+fMq8SwPP2FJFLxqGV4TXBWs
+   iGMIBPvd04RFNjjzaO3cLL8vHbMIt77NNASXQSB3Vxn46FqVedwPMlyow
+   FYXGk+UImO2PjlF0z/0HAX73QnjMT99gMeRPtGk8NaiuJt0ZZiO0+cr1G
+   A==;
+IronPort-SDR: 7HhQMYrOoqZvi6ER8Jyhp+oEDQmDX+/2/CxaYnvKjdBAPyx5YQDZy3kbiQ6J3WQkNuI6HwaIca
+ HxEgIJe0CNMu1VDdfJCUQf2Aefp9I4+mSLL96Wx0f+eQUnewyNCT4hm5bt21Yo4FoDnbj0h915
+ Gk236FJpr9tdd/JNHAkFE1AXBNf33IKz64/baTQsAhILZqC/9LOi4V2W42m/J6CWyFnHMe67qj
+ 7v8PAiIGupivTMTRPMxp+85XlfXMLltDUmQXonjZeHkHhmpurmUfLoXEq5/z3lP/3dsuYARx8l
+ z4w=
+X-IronPort-AV: E=Sophos;i="5.76,389,1592895600"; 
+   d="scan'208";a="94410736"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Sep 2020 01:55:40 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 4 Sep 2020 01:55:31 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Fri, 4 Sep 2020 01:55:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PZzzSx1BWovzvWSI5xPK1Vgows6teu/3BwpjbdMScV46TZC89Pl7IJumY8W4zdyhhE7c4zaTzB9C+4NfmWM8Lycog0mBLwwEAp9vfhsVTvwButHRUE9f8AgsnIpwbGZ4HI7vPMInU/5igRCj1Iq0e0cFFExuD43DIa9xAEwdrpCGHlZHyOYS3HLIwleIyyBnFt3TDMKRjlf++D/eJxfdi1hmntrcGiEwD0rCP7o63OxmlKiTzHwkQh8FRIzCtio/3TVP8x4sTGh9FWTH6imI8b7pFVlPqGyv9cuumxKpz6XXxa70QyQB5kinyDE4L9UeB2n/IDFMHqgoIHgh7Eay/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d6f7YL2OKhwDdKRk1U2kHqWvAbfZy1bmjZUOIS8/UNQ=;
+ b=Ih3Zn7+LZX5M4VHJQA5nW4FdfUujP6y74jaLS+BDMXtTLl98yur+57HcMJDqiqvFwCcrF2ruh3sSCUcZ/QcW8ifF9CkPB+yTkHNZ5jvgSk1Q/SGwLZnebaZ8/FXwIXeI3jGeKmtKH9AomKpB4kS2Jr9og7+IErXqcV1ODsr4EBQBpMsszVp/RNRmaCj+76b9WJMPIblYiohpznmbdCFUORto/a6L9OhT8QuXEEGqt78dpYLlIjFz3Lu62DDXMXDRWno/0rIA9hbo0DwQlE0IBeh/MSJxTW8vGwtlRvzDj8VavnZgl9xeu5+Q06PKxPU7jyP74Ki5G8SzdQpSrfQazA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d6f7YL2OKhwDdKRk1U2kHqWvAbfZy1bmjZUOIS8/UNQ=;
+ b=b9ZvJxqv3cZz86g7fYlWgswj+ikSW5S5shEsu18tJ8kDf2aw95YHp4GwlHvnE7MJY484yAAzRT24VgvCthidkIVNSpnVJAz331+z1z+MTrN5U2MNJXZmQrpwRPpi0zaP4FVaVPMrzxY64mdGB+h3DUdJTqHVK9XhErsjoBJQFY4=
+Received: from CY4PR1101MB2341.namprd11.prod.outlook.com
+ (2603:10b6:903:b1::22) by CY4PR11MB0070.namprd11.prod.outlook.com
+ (2603:10b6:910:78::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Fri, 4 Sep
+ 2020 08:55:31 +0000
+Received: from CY4PR1101MB2341.namprd11.prod.outlook.com
+ ([fe80::c57b:e93f:98a8:c654]) by CY4PR1101MB2341.namprd11.prod.outlook.com
+ ([fe80::c57b:e93f:98a8:c654%11]) with mapi id 15.20.3348.016; Fri, 4 Sep 2020
+ 08:55:30 +0000
+From:   <Codrin.Ciubotariu@microchip.com>
+To:     <wsa@kernel.org>
+CC:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
+        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
+        <kamel.bouhara@bootlin.com>
+Subject: Re: Re: Re: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus
+ recovery
+Thread-Topic: Re: Re: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus
+ recovery
+Thread-Index: AQHWRkUH28LN6vyz50q8ydS45lftAKklUoAAgAF6cgCAI4blAIAOUeWA
+Date:   Fri, 4 Sep 2020 08:55:30 +0000
+Message-ID: <15466c95-f1ea-63a4-1429-24d9b7567c1c@microchip.com>
+References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+ <20200619141904.910889-5-codrin.ciubotariu@microchip.com>
+ <20200802170820.GC10193@kunai>
+ <65890aab-1d19-7e7e-abff-3c6ee05c8ade@microchip.com>
+ <20200826061444.GB1081@ninjato>
+In-Reply-To: <20200826061444.GB1081@ninjato>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [84.232.220.208]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 28e66f7c-3827-41e6-6e1c-08d850b04712
+x-ms-traffictypediagnostic: CY4PR11MB0070:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR11MB007080ED110C76346A3059A5E72D0@CY4PR11MB0070.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Wekr7cd6G+K2YkGbZPNSuPkg1ecUq+JRk7OS4ppKCHm6ufE7e+zle59FXdYEf/c//SsF1xqPX4geG9Mlfnre5IWDENux8pta2HKoIVASIpTySpim+Qexko330bxJxc4PdzMgIWrfu7xVb72WqjH8UyzrJtn9FGD4FiOHdgcWBFzdJfQF/MOx03Mh2/P+nbXTushEH0q7p1NlhsO7mNPYs62YiczZSIzH4noYi18J16MfrxS75R1WRmcohv5/qj7sWyn0Dh4neBwdlVRUp/NP+ALwty4BO5KinhqBcAbK8lFyYlI8vE6qVH0wl7cM0tFXuyxK2QiAoY4KCxWVo37cMZ3bImlF09V5VLJQ/6hfmAm//nuIpYD8XCfmvh7/hgC0qrLAGVtg2WB+FvrXniDmLw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR1101MB2341.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(376002)(366004)(396003)(346002)(39860400002)(66556008)(64756008)(6512007)(66446008)(76116006)(91956017)(6916009)(66476007)(66946007)(6486002)(83380400001)(8936002)(478600001)(4326008)(8676002)(2616005)(5660300002)(31686004)(53546011)(86362001)(26005)(31696002)(186003)(54906003)(71200400001)(2906002)(316002)(6506007)(36756003)(41533002)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: ClxthGaQVqoXf+ggxkPZORNQbRPiMriKDCo9IowgilMVs9Trt3FQQuhEGIliID8wH2ODtDu9OXFaEnNoS8zatWMeR6Zh7IY2+YilkNCJ7q3BPgcdPszwVzB69ePWUkGwhVRKpM3yT1YcxQ6ECp72hKP/If1R502cebG8oPTWTwoAK0ku0QbVNht4zMAZ9qv7r3W2H8KF+4xVEYexSBMRsSQQOjO6Dh5qOWLEcdb8X78kVSIGfQ4etZsBAQZmeLJWtl91AYVZTVCg+VZpX5NokGH8sGOdk4/pC0O4SH51ZfSRJL7/3ppsw8hvCEB7NVkg/GFxrpK0XxzDS/YOyXwB5W6X53xFXe6qByaMW3Udy1F6eOU9jdVGLpmsYYxHijLpXJO0AEmf43LGn9fP+d3INohw+76JHFcM1T7nQHpDrLt0b+l8JwRBkeuHJUYY/tpA6UyaJFFHbUKXBeM6Vf5L2kzgTJv4y37aUjsEM0H0w9ac2pKr89Lzb6HOn68TNYiwqiTa8XbsRD6jmFyYIgL25c0EW1QVB2GPOLWSDlB/J4cV3sOo1JH6IZZmh/yN6RxqG3Bfth/duvvVEhdddHVk7E+sLydcpkbuMBkbLIdJUWTNBkaLfA9qwucZ+K4GSFX6ZGag2+iFSNQ2U4hBFOMBCQ==
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <F03D349C753B32459467A66588A5B40D@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR1101MB2341.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28e66f7c-3827-41e6-6e1c-08d850b04712
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2020 08:55:30.8592
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LM00InGX560ruvvsdhtkuJ7WhcbmOHyZrmC3m16cj/t/Sk3h8RvuGDq6ZPCoYRopqXxBWa+14y+G7EUBD0aDUZpAnMkNTBbOepaXzz8SR3Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB0070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 26.08.2020 09:14, Wolfram Sang wrote:
+>=20
+>> Thanks, this would be great! I tested this on a sam9x60, with the HW
+>> feature for the 9 pulses disabled, with a picky audio codec as I2C devic=
+e.
+>> Please let me know of the result.
+>=20
+> I can't make use of the feature on the platform I had in mind, sadly. It
+> doesn't really support switching from/to GPIO pinctrl states. If that
+> ever changes, I will add bus recovery for that controller, but I think
+> this is low priority.
 
-On 9/2/20 4:10 PM, Van Leeuwen, Pascal wrote:
->> -----Original Message-----
->> From: linux-crypto-owner@vger.kernel.org <linux-crypto-owner@vger.kernel.org> On Behalf Of Denis Efremov
->> Sent: Thursday, August 27, 2020 8:44 AM
->> To: linux-crypto@vger.kernel.org
->> Cc: Denis Efremov <efremov@linux.com>; Corentin Labbe <clabbe.montjoie@gmail.com>; Herbert Xu
->> <herbert@gondor.apana.org.au>; linux-kernel@vger.kernel.org
->> Subject: [PATCH v2 1/4] crypto: inside-secure - use kfree_sensitive()
->>
->> <<< External Email >>>
->> Use kfree_sensitive() instead of open-coding it.
->>
->> Signed-off-by: Denis Efremov <efremov@linux.com>
->> ---
->>  drivers/crypto/inside-secure/safexcel_hash.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
->> index 16a467969d8e..5ffdc1cd5847 100644
->> --- a/drivers/crypto/inside-secure/safexcel_hash.c
->> +++ b/drivers/crypto/inside-secure/safexcel_hash.c
->> @@ -1082,8 +1082,7 @@ static int safexcel_hmac_init_pad(struct ahash_request *areq,
->>  }
->>
->>  /* Avoid leaking */
->> -memzero_explicit(keydup, keylen);
->> -kfree(keydup);
->> +kfree_sensitive(keydup);
->>
-> I'm not sure here ... I verified it does not break the driver (not a big surprise), but ...
-> 
-> memzero_explicit guarantees that it will not get optimized away and the keydata _always_
-> gets overwritten. Does kfree_sensitive also come with such a guarantee? I could not find a
-> hard statement on that in its documentation. Although the "sensitive" part surely suggests
-> it.
+The pinmux driver needs to have strict set to false, otherwise the=20
+switching is not available, not at this time at least. Perhaps there is=20
+room for improvement here, because the I2C bus is not using the pins=20
+while we are doing GPIO recovery.
 
-kfree_sensitive() uses memzero_explicit() internally.
+>=20
+> On the good side, there are patches which make i2c-mv64xxx another user
+> of your new mechanism, so everything is well, I think.
+>=20
 
-> Additionally, this remark is made in the documentation for kfree_sensitive: "this function
-> zeroes the whole allocated buffer which can be a good deal bigger than the requested buffer
-> size passed to kmalloc().  So be careful when using this function in performance sensitive
-> code"
-> 
-> While the memzero_explicit does not zeroize anything beyond keylen.
-> Which is all you really need here, so why would you want to zeroize potentially a lot more?
-> In any case the two are not fully equivalent.
+I saw them, I will try to take a look.
+I am not sure I'll have time the next week to work on what you asked me=20
+regarding sh_mobile and PXA, but I will look into it the week after that.
+Sorry about my delayed reply, I was on vacation.
 
-There are a number of predefined allocation sizes (power of 2) for faster alloc,
-i.e. https://elixir.bootlin.com/linux/latest/source/include/linux/slab.h#L349
-and it looks like that keys we free in this patches are in bounds of these sizes.
-As far as I understand, if a key is not a power of 2 len, the buffer will be zeroed to the closest
-power of 2 size. For small sizes like these, performance difference should be unnoticeable because
-of cache lines and how arch-optimized memzero() works. Key freeing doesn't look like a frequent event.
-
-Thanks,
-Denis
+Best regards,
+Codrin
