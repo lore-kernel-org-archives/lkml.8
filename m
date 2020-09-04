@@ -2,102 +2,124 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FEDC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0CCC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3711206A5
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 000C420665
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:56:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PHiRDDSP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZZZMzrj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgIDSzf (ORCPT
+        id S1726968AbgIDS4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 14:55:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44124 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726047AbgIDSzd (ORCPT
+        Fri, 4 Sep 2020 14:56:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbgIDS4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 14:55:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599245731;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oFPHcehcUmB19GUL5LiwgzkyVfpLa6gz216yp/zHq+4=;
-        b=PHiRDDSPY1/XIUs0LlCGyxEYAI+7xvL/0MIP5yjKMQYffm0rLQYcOlrTr0m8pa1JUz8/8H
-        nb3N7NTrydqaqUI/NdIHZ0pkfx+sgrkfUanevqTOoXu4UjMtVfd4iXISktRgS3EzQ4KDi3
-        4gMv0a8yc+3jopW7ySCEvFVisgYgEM0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-558-ZpJmevbXNOGJeEKRTCVFMg-1; Fri, 04 Sep 2020 14:55:29 -0400
-X-MC-Unique: ZpJmevbXNOGJeEKRTCVFMg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0819918A2240;
-        Fri,  4 Sep 2020 18:55:28 +0000 (UTC)
-Received: from treble (ovpn-117-138.rdu2.redhat.com [10.10.117.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E90F5C5DE;
-        Fri,  4 Sep 2020 18:55:27 +0000 (UTC)
-Date:   Fri, 4 Sep 2020 13:55:25 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org, mbenes@suse.cz,
-        raphael.gault@arm.com, benh@kernel.crashing.org
-Subject: Re: [PATCH v3 00/10] Make check implementation arch agnostic
-Message-ID: <20200904185525.zkx46hsbobghr2wb@treble>
-References: <20200904153028.32676-1-jthierry@redhat.com>
+        Fri, 4 Sep 2020 14:56:36 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA7E0C061244;
+        Fri,  4 Sep 2020 11:56:33 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id a65so7131972wme.5;
+        Fri, 04 Sep 2020 11:56:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PqnchSBC4ce9kD+elBEN3iqVRw/a6f6MQUzRH1fFwtc=;
+        b=tZZZMzrjjEL8v+mR735j/8/ps2TQQj/jEZVZZF2cGYWEuzCLOrEy6OTfbK+3sG1g8A
+         tY/mhZsOCxVPODmH+fwIEZ2D0wfOcX/UOkU7iJi3JamsPR7X1lMH7WlovmjRlGCd5zgJ
+         8YRW0eQrPu5uG86NQtQB5lIZa0+ryFcV9B/PwiT5ByHmi3c5u1lG3HZYC8T5HpylVszO
+         G8UixO8Zfk33vhZVFUwraq2kpWnJPCI5/NDIWe7wHcFUs/uP67GPvK/jovKr1LwJmfrB
+         Vdc2Xd9ThJMOqlFrzDXLBLmi3kKm2RXIRma2dtKP7y1LtoWQITgJSQuzU604AgErMVRq
+         T8Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PqnchSBC4ce9kD+elBEN3iqVRw/a6f6MQUzRH1fFwtc=;
+        b=tSX5NxbwxUfLQ0OgH+cZuiKKlpPxVfpXryyX4pMx2PwxUXtNePkuoj5sNGc1ICbljK
+         BfRUqIDmUvFkCymqvXUA/WNHcVFK0y/r3DVz4UlZGKYf34CNX0GsWzKPhxmNjQUyNRVz
+         BReyM0nS9Lj9FRUfLJnK2VhWJjn/nFmgA+l8Amn/ctw3d8MhifGIqeMQpJwJ4pMUZkub
+         YEcUw2bCojGRPvu9N1ptDLDwcrI9UnxSwBOhrjAbztl1Ts8XscjKVNgC6ru721mT54d8
+         W2doQBA6okgvlVlvv9823MSMBv+xUL0qDKi3/krzEsQUjha2cr26kPvDKgnrE4LTH0ER
+         nfLA==
+X-Gm-Message-State: AOAM532Oz/3fhB8RH1a91f5DwS6CFTTshDWsBEOY4grHA9basPX47kds
+        bvZDeRRMVUdZUWH9wHZuBuI=
+X-Google-Smtp-Source: ABdhPJxgM6f1WE13230F3a3T6BDFrVbbjErwvzWA8pwo99jUWDoEmKbIR1ZxSXjqXBh7FSk5TW3onQ==
+X-Received: by 2002:a1c:5605:: with SMTP id k5mr3663106wmb.142.1599245791497;
+        Fri, 04 Sep 2020 11:56:31 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id b76sm12892229wme.45.2020.09.04.11.56.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 11:56:30 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Dilip Kota <eswara.kota@linux.intel.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] PCI: keystone: Enable compile-testing on !ARM
+Date:   Fri,  4 Sep 2020 19:56:09 +0100
+Message-Id: <20200904185609.171636-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200904153028.32676-1-jthierry@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 04:30:18PM +0100, Julien Thierry wrote:
-> Hi,
-> 
-> The current implementation of the check subcommand has various x86 bits
-> here and there. In order to prepare objtool to provide check for other
-> architectures, add some abstraction over the x86 specific bits, relying
-> on objtool arch specific code to provide some necessary operations.
-> 
-> This is part of the effort to implement check for arm64, initiated [1]
-> by Raphael. The series is based on top of the separation of check & orc
-> subcommands series[2].
-> 
-> I've push both series base on top of tip/objtool/core at [3].
-> 
-> - The first two patches make it simpler for new arches to provide their
-> list of kernel headers, without worrying about modifications in the x86
-> headers.
-> - Patch 3 Moves arch specific macros to more suitable location
-> - Patches 4 and 5 add abstraction to handle alternatives
-> - Patch 6 adds abstraction to handle jump table
-> - Patches 7-10 makes unwind hint definitions shared across architectures
-> 
-> Changes since v2 [4]:
-> - Rebased on v5.9-rc1
-> - Under tools/objtool/arch/x86/, rename arch_special.c to special.c
-> - Rename include/linux/frame.h to inclide/linux/objtool.h
-> - Share unwind hint types across architectures
+Currently the Keystone driver can only be compile-tested on ARM, but
+this restriction seems unnecessary. Get rid of it to increase test
+coverage.
 
-Thanks.  These look good.  We're still trying to get our merge process
-worked out, and tip/objtool/core is now pretty old, but these apply well
-enough.
+Build-tested on x86 with allyesconfig.
 
-If there are no more comments I can fix up the few minor comments I had
-and then try to get them merged after your other set (once Peter and I
-figure out how to do that :-)
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/pci/controller/dwc/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 044a3761c44f..ca36691314ed 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -107,7 +107,7 @@ config PCI_KEYSTONE
+ 
+ config PCI_KEYSTONE_HOST
+ 	bool "PCI Keystone Host Mode"
+-	depends on ARCH_KEYSTONE || ARCH_K3 || ((ARM || ARM64) && COMPILE_TEST)
++	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
+ 	select PCI_KEYSTONE
+@@ -119,7 +119,7 @@ config PCI_KEYSTONE_HOST
+ 
+ config PCI_KEYSTONE_EP
+ 	bool "PCI Keystone Endpoint Mode"
+-	depends on ARCH_KEYSTONE || ARCH_K3 || ((ARM || ARM64) && COMPILE_TEST)
++	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+ 	depends on PCI_ENDPOINT
+ 	select PCIE_DW_EP
+ 	select PCI_KEYSTONE
 -- 
-Josh
+2.28.0
 
