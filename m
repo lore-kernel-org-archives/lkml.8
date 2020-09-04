@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C56C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C538C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1ECE2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4370420772
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:56:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nq7Yq52d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SJb3QhpY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgIDP4F (ORCPT
+        id S1727790AbgIDP4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45354 "EHLO
+        Fri, 4 Sep 2020 11:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgIDPz0 (ORCPT
+        with ESMTP id S1726369AbgIDPzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:55:26 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F10C06125C
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:55:21 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id b3so4911996qtg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:55:21 -0700 (PDT)
+        Fri, 4 Sep 2020 11:55:24 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89721C061258
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:55:20 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id n10so4978944qtv.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:55:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2fCr1AJs9wuitAEKSrgAGHFGKqH8nNlJ97BjXbXmjcA=;
-        b=nq7Yq52dWK2MdT4FH7gxEZp0TjsJOGIfGdo6BK1+4OqJeoDIhKTf2aDFJDTv6cwKiL
-         AAfJNraihxLVh8bWslR94j/0QKdKlYNtwIv3yMrxjDSCQOWEIxYc6ZiE65lUItOWUTtY
-         BqFB1frX+GcyJ5SqFnJy0mLNzYc7wuu3R+iYFenJhV6MSs9oxnxjXrbEGZ1RDpM5GY+T
-         y8WqyyGYcT8oYzHDGnZ8tQ7tfYTprXqknoa5mg/+T0r8ub6dJ9lD13U53ryGD9+UKow6
-         LAJ62Z/mLSjcPYmkMHcOGBIr5g7C3xlrml3u8u7TkDz6TWwCAA8+9cceeXtB6w+uWVVB
-         vqhQ==
+        bh=A7svwNgsY0UiMpV566sgNDGzXgT7VfisHtnxe6fo6Bo=;
+        b=SJb3QhpYN6eU3JoTjsYO9t+QvUwc0b/xpfl5OAl/hynvIxgP9pQtQGZ7Q8P6XbdYOx
+         4ZmHDqCeABKsnyHLKLa/r1yj5s7wu0jme98WGPofmclJAqP1x8v1Qtsto93CKB8eFPbS
+         d0rLzoytt+cTrw2VjSrbaM+Jqq9LKRqgmjXUemY119lVYuf68vDkVWFjJVhE+nfRUonE
+         c+jT35sndJqqYDxgbHkVUFha3/taxEbjypD0TJEBf074vc1FB/fhvmH75GtEaBIZeTux
+         WPHSblA16beNt6kLF9KBDd0tdQPNYaE9UaVzy8GYZnTEREbL71aqBcNgXIlp/WpxPsOV
+         eUBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2fCr1AJs9wuitAEKSrgAGHFGKqH8nNlJ97BjXbXmjcA=;
-        b=ezdYrloh42cb6wm/SuArUJ25tlTGRpdLAp+dDCQjk7cK1i+jsIqn7wQDH0IoMlPk0S
-         NoORRFhd2Rv0iS7g74etiGHV3WImibKTAJ/D1LzBhJXNPZvxdVr805fj/jLP21kHYwAV
-         INrpmYA0t9S7KD0gL3pzIlVcdTwLsVlrHzcSd6bMHI+sFWf2jmRe11hW7MoebmVN+KQc
-         DKYvHqE0a7COQgMHqsZfoMyk/5xVELkSmTVgMlPv9T65EZ5SceYQkhvaCGFeOSRCIHkf
-         8zon0XgTbardnj/qnufzRUWH4cqjXoaPhMil5mql8RDgRz7CDN8a4lsE65OW0liyuYXt
-         4UPw==
-X-Gm-Message-State: AOAM532WqXy15O2ftrwBLv8yj+Tq8aW6sNiRz9O0K9S4m6Jxy2RduEXg
-        GhSCJCd1MfMoujsR2Us1DN0vIA==
-X-Google-Smtp-Source: ABdhPJx6yG/QL52OZ4xkujRCTRW3+fj5Lott15EzPUVbvzCJ+ggkUIXMR0Jjrj7i70Ud68y/ORLM9w==
-X-Received: by 2002:ac8:66d3:: with SMTP id m19mr9426297qtp.276.1599234920832;
-        Fri, 04 Sep 2020 08:55:20 -0700 (PDT)
+        bh=A7svwNgsY0UiMpV566sgNDGzXgT7VfisHtnxe6fo6Bo=;
+        b=MJD6+6sTQzoEwN5dKvR8nM8U0OtxWqvpzxjEE3J1QyS58pnRWgs91rkXr8XW0UkuLQ
+         iEqB7w/PqbXHyy+6q7Q8PzHqma7oM0XMeVt/8RLd8jEPDabmFaadwQK1nBpHZcP6Tl+8
+         GIO6HF3zvyxqr86aegsfkmfbrGbDZnSfLG2OWj2d2FeAULoR00IkSfM5q+INjDGMac4T
+         jlUoluC20ukruMCOCHZJ2hn9f19iyr1978ykdDIWj/3+BaVXDSi9QhtsOuHwi+TPtsca
+         zzlWLyaa7wCBxQmPFvRE6QUF7ZjZ2QXooxFSPvoLnZ+iRacv6iiZLYYYBf7lBow27Qb1
+         Xwmg==
+X-Gm-Message-State: AOAM531NiBYCR5m1C0fp3eH4TYbtrkp5IJ8A9rLUrjQ2YPMUZMJdeyUe
+        O/TgU2l0FAxspKNbXe9PXbFMmg==
+X-Google-Smtp-Source: ABdhPJw7ASxjDOGw6iPxO7Q3Ca/q5gyDB0Ac6+j7ID3GwnYiQlbkA7Cf3QrRkFvCmJF9BhJscynS1w==
+X-Received: by 2002:ac8:7145:: with SMTP id h5mr9707917qtp.110.1599234919674;
+        Fri, 04 Sep 2020 08:55:19 -0700 (PDT)
 Received: from localhost.localdomain (ec2-34-197-84-77.compute-1.amazonaws.com. [34.197.84.77])
-        by smtp.gmail.com with ESMTPSA id v18sm4724473qtq.15.2020.09.04.08.55.19
+        by smtp.gmail.com with ESMTPSA id v18sm4724473qtq.15.2020.09.04.08.55.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:55:20 -0700 (PDT)
+        Fri, 04 Sep 2020 08:55:18 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         Joerg Roedel <joro@8bytes.org>,
@@ -70,9 +70,9 @@ Cc:     Sibi Sankar <sibis@codeaurora.org>,
         linux-arm-kernel@lists.infradead.org,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org
-Subject: [PATCH v3 5/8] iommu/arm-smmu-qcom: Consistently initialize stream mappings
-Date:   Fri,  4 Sep 2020 15:55:10 +0000
-Message-Id: <20200904155513.282067-6-bjorn.andersson@linaro.org>
+Subject: [PATCH v3 4/8] iommu/arm-smmu-qcom: Emulate bypass by using context banks
+Date:   Fri,  4 Sep 2020 15:55:09 +0000
+Message-Id: <20200904155513.282067-5-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200904155513.282067-1-bjorn.andersson@linaro.org>
 References: <20200904155513.282067-1-bjorn.andersson@linaro.org>
@@ -83,63 +83,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Firmware that traps writes to S2CR to translate BYPASS into FAULT also
-ignores writes of type FAULT. As such booting with "disable_bypass" set
-will result in all S2CR registers left as configured by the bootloader.
+Some firmware found on various Qualcomm platforms traps writes to S2CR
+of type BYPASS and writes FAULT into the register. In particular, this
+prevents us from marking the streams for the display controller as
+BYPASS to allow continued scanout of the screen through the
+initialization of the ARM SMMU.
 
-This has been seen to result in indeterministic results, as these
-mappings might linger and reference context banks that Linux is
-reconfiguring.
-
-Use the fact that BYPASS writes result in FAULT type to force all stream
-mappings to FAULT.
+This adds a Qualcomm specific cfg_probe function, which probes for the
+broken behavior of the S2CR registers and implements a custom
+alloc_context_bank() that when necessary allocates a context bank
+(without translation) for these domains as well.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v2:
-- None
- drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+- Move quirk from arm_smmudevice to qcom_smmu, as we localize the quirk
+  handling to the Qualcomm specific implemntation.
+
+ drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 52 ++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
 diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-index 284761a1cd8e..70a1eaa52e14 100644
+index 229fc8ff8cea..284761a1cd8e 100644
 --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
 +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-@@ -195,6 +195,7 @@ static int qcom_smmu_cfg_probe(struct arm_smmu_device *smmu)
- 	unsigned int last_s2cr = ARM_SMMU_GR0_S2CR(smmu->num_mapping_groups - 1);
- 	struct qcom_smmu *qsmmu = to_qcom_smmu(smmu);
- 	u32 reg;
-+	int i;
+@@ -11,8 +11,14 @@
  
- 	/*
- 	 * With some firmware writes to S2CR of type FAULT are ignored, and
-@@ -206,9 +207,24 @@ static int qcom_smmu_cfg_probe(struct arm_smmu_device *smmu)
- 	      FIELD_PREP(ARM_SMMU_S2CR_PRIVCFG, S2CR_PRIVCFG_DEFAULT);
- 	arm_smmu_gr0_write(smmu, last_s2cr, reg);
- 	reg = arm_smmu_gr0_read(smmu, last_s2cr);
--	if (FIELD_GET(ARM_SMMU_S2CR_TYPE, reg) != S2CR_TYPE_BYPASS)
-+	if (FIELD_GET(ARM_SMMU_S2CR_TYPE, reg) != S2CR_TYPE_BYPASS) {
- 		qsmmu->bypass_broken = true;
+ struct qcom_smmu {
+ 	struct arm_smmu_device smmu;
++	bool bypass_broken;
+ };
  
-+		/*
-+		 * With firmware ignoring writes of type FAULT, booting the
-+		 * Linux kernel with disable_bypass disabled (i.e. "enable
-+		 * bypass") the initialization during probe will leave mappings
-+		 * in an inconsistent state. Avoid this by configuring all
-+		 * S2CRs to BYPASS.
-+		 */
-+		for (i = 0; i < smmu->num_mapping_groups; i++) {
-+			smmu->s2crs[i].type = S2CR_TYPE_BYPASS;
-+			smmu->s2crs[i].privcfg = S2CR_PRIVCFG_DEFAULT;
-+			smmu->s2crs[i].cbndx = 0xff;
-+			smmu->s2crs[i].count = 0;
-+		}
-+	}
++static struct qcom_smmu *to_qcom_smmu(struct arm_smmu_device *smmu)
++{
++	return container_of(smmu, struct qcom_smmu, smmu);
++}
 +
- 	return 0;
+ #define QCOM_ADRENO_SMMU_GPU_SID 0
+ 
+ static bool qcom_adreno_smmu_is_gpu_device(struct device *dev)
+@@ -162,6 +168,50 @@ static const struct of_device_id qcom_smmu_client_of_match[] __maybe_unused = {
+ 	{ }
+ };
+ 
++static int qcom_smmu_alloc_context_bank(struct arm_smmu_domain *smmu_domain,
++					struct arm_smmu_device *smmu,
++					struct device *dev, int start)
++{
++	struct iommu_domain *domain = &smmu_domain->domain;
++	struct qcom_smmu *qsmmu = to_qcom_smmu(smmu);
++
++	/* Keep identity domains as bypass, unless bypass is broken */
++	if (domain->type == IOMMU_DOMAIN_IDENTITY && !qsmmu->bypass_broken)
++		return ARM_SMMU_CBNDX_BYPASS;
++
++	/*
++	 * The identity domain to emulate bypass is the only domain without a
++	 * dev, use the last context bank for this to avoid collisions with
++	 * active contexts during initialization.
++	 */
++	if (!dev)
++		start = smmu->num_context_banks - 1;
++
++	return __arm_smmu_alloc_bitmap(smmu->context_map, start, smmu->num_context_banks);
++}
++
++static int qcom_smmu_cfg_probe(struct arm_smmu_device *smmu)
++{
++	unsigned int last_s2cr = ARM_SMMU_GR0_S2CR(smmu->num_mapping_groups - 1);
++	struct qcom_smmu *qsmmu = to_qcom_smmu(smmu);
++	u32 reg;
++
++	/*
++	 * With some firmware writes to S2CR of type FAULT are ignored, and
++	 * writing BYPASS will end up as FAULT in the register. Perform a write
++	 * to S2CR to detect if this is the case with the current firmware.
++	 */
++	reg = FIELD_PREP(ARM_SMMU_S2CR_TYPE, S2CR_TYPE_BYPASS) |
++	      FIELD_PREP(ARM_SMMU_S2CR_CBNDX, 0xff) |
++	      FIELD_PREP(ARM_SMMU_S2CR_PRIVCFG, S2CR_PRIVCFG_DEFAULT);
++	arm_smmu_gr0_write(smmu, last_s2cr, reg);
++	reg = arm_smmu_gr0_read(smmu, last_s2cr);
++	if (FIELD_GET(ARM_SMMU_S2CR_TYPE, reg) != S2CR_TYPE_BYPASS)
++		qsmmu->bypass_broken = true;
++
++	return 0;
++}
++
+ static int qcom_smmu_def_domain_type(struct device *dev)
+ {
+ 	const struct of_device_id *match =
+@@ -200,6 +250,8 @@ static int qcom_smmu500_reset(struct arm_smmu_device *smmu)
  }
  
+ static const struct arm_smmu_impl qcom_smmu_impl = {
++	.alloc_context_bank = qcom_smmu_alloc_context_bank,
++	.cfg_probe = qcom_smmu_cfg_probe,
+ 	.def_domain_type = qcom_smmu_def_domain_type,
+ 	.reset = qcom_smmu500_reset,
+ };
 -- 
 2.28.0
 
