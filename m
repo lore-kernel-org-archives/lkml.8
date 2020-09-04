@@ -2,180 +2,148 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557FBC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8858CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10268206E7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G8Rfx90D"
+	by mail.kernel.org (Postfix) with ESMTP id 48F48206E7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgIDGJR (ORCPT
+        id S1727083AbgIDGKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 02:09:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbgIDGJO (ORCPT
+        Fri, 4 Sep 2020 02:10:12 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:12054 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgIDGKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 02:09:14 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4163EC061245
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 23:09:14 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id e14so3045062vsa.9
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 23:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ug4djtA5GZ9Jcit3pQqACaL05SGu8YRJeDr/hO2jPpU=;
-        b=G8Rfx90DHK4ZYfswSSLH6HpnzpkwheLzgRangJCN6O4g0PWanGj2nHjjGDTPCoO9Nf
-         xWnOZ6/OkLqjUKVYKlOXMXG/wuim9/+4Lld6jb5ZMG0RdBnx5BcrEkXGILkOLCswU783
-         jvIxh1NHB9JlNe08AHoKeBrdXPw95pexGZ+iEhUwJ76GFFQ8CpD49J8iPkPVEGc2BgI/
-         xnP/VL2J95FeQAZZ304tFrFjpeJ8WpU+VKzCVEWtFadg+Nssg+PdYA2gvN3B3PzcDGHg
-         TsgmKqSlGWo27zLby4VckCBLmTKYg/5IQAV1aOYTosxFSR1/lVgnK2hDCXb43Gnl1Tdv
-         Q2OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ug4djtA5GZ9Jcit3pQqACaL05SGu8YRJeDr/hO2jPpU=;
-        b=aaqelTagVEf3PFGMcj1F+8kEYauNOYzFtxPPXzUjTW1rDMgkn0W8QjOBWwl1qaWIqm
-         nI26kGZP/bi5rTdJO6xfctFzA7kPoHUJWInbuM8PESD8DCNkWqUEPbZgfJAWuBXOnbik
-         975GosGl9QUv4/NZkA4gn+s9iBWgtTz+GjBwWsAZkliVPkjjapH13BEsz3/mjKBOtKcj
-         gv4xZBGmCBKOkeNxfGajz7fub9itZNO/qr/S3eP9eRXl4/mzu4RWfJrddZ7CGFZyLZDp
-         Rkyo8rerfqH7R8ze0/4xsp0AAr27Wv72Ow7CnMclHibFSa2Rt1Xf01RZxPNNplimPcPf
-         dQ0A==
-X-Gm-Message-State: AOAM531iiHf+ggTolosyOUksThkE2ydSljYJSfwJLvS523DP+gI7tshc
-        rPxibZuOJ/GTeuKoHDqtIPuBFbX+iVMOm9dJ/lmA4A==
-X-Google-Smtp-Source: ABdhPJxKdB1QJpJEKTAddkB6TjKNR3jmY8BhaNTS68k9yGl8ABJujx6Xf7Yf+QrFjnS5AhQ1RytJYEHYVPKAcRKcYBU=
-X-Received: by 2002:a67:e45:: with SMTP id 66mr4494095vso.191.1599199753154;
- Thu, 03 Sep 2020 23:09:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAPDyKFrv+DTF8=twZZk_tenB-sLg6H-CFn9HVDVA5S2kK2=U5Q@mail.gmail.com>
- <20200901154417.GD20303@codeaurora.org> <20200901155014.GF2674@hirez.programming.kicks-ass.net>
- <20200901161340.GC29330@paulmck-ThinkPad-P72> <20200901174216.GJ29142@worktop.programming.kicks-ass.net>
- <CAPDyKFqPh7bg16AsitGv2QQHgwOPnWx9DiPPCMuD1EGA5TFFdg@mail.gmail.com>
- <20200902121355.GE1362448@hirez.programming.kicks-ass.net>
- <CAPDyKFrGj+8hOXi7sWxWNv2QP0=mx9pFKLG0JM-L5VNKUPDgeA@mail.gmail.com>
- <20200903135347.GC1362448@hirez.programming.kicks-ass.net>
- <CAPDyKFqduU65YmhBZ8PwDRTZDLtWhWX087LBy0bx56go+ra4Ow@mail.gmail.com> <20200903150819.GE1362448@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200903150819.GE1362448@hirez.programming.kicks-ass.net>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 4 Sep 2020 08:08:36 +0200
-Message-ID: <CAPDyKFqozsYk--rThgVZpuM86ohCNRCoRXum5NTxPOt2SoG2og@mail.gmail.com>
-Subject: Re: [RFC][PATCH] cpu_pm: Remove RCU abuse
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Saravana Kannan <saravanak@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        madhuparnabhowmik10@gmail.com,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 4 Sep 2020 02:10:11 -0400
+Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
+  by alexa-out.qualcomm.com with ESMTP; 03 Sep 2020 23:10:10 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Sep 2020 23:10:08 -0700
+Received: from gkohli-linux.qualcomm.com ([10.204.78.26])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 04 Sep 2020 11:40:00 +0530
+Received: by gkohli-linux.qualcomm.com (Postfix, from userid 427023)
+        id 8A20421265; Fri,  4 Sep 2020 11:39:58 +0530 (IST)
+From:   Gaurav Kohli <gkohli@codeaurora.org>
+To:     rostedt@goodmis.org, mingo@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Gaurav Kohli <gkohli@codeaurora.org>
+Subject: [PATCH] trace: Fix race in trace_open and buffer resize call
+Date:   Fri,  4 Sep 2020 11:39:57 +0530
+Message-Id: <1599199797-25978-1-git-send-email-gkohli@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 3 Sep 2020 at 17:08, <peterz@infradead.org> wrote:
->
-> On Thu, Sep 03, 2020 at 04:36:35PM +0200, Ulf Hansson wrote:
-> > On Thu, 3 Sep 2020 at 15:53, <peterz@infradead.org> wrote:
-> > >  static int cpu_pm_notify(enum cpu_pm_event event)
-> > >  {
-> > >         int ret;
-> > >
-> > > +       lockdep_assert_irqs_disabled();
-> >
-> > Nitpick, maybe the lockdep should be moved to a separate patch.
->
-> Well, the unregister relies on IRQs being disabled here, so I figured
-> asserting this was a good thing ;-)
+Below race can come, if trace_open and resize of
+cpu buffer is running parallely on different cpus
+CPUX                                CPUY
+				    ring_buffer_resize
+				    atomic_read(&buffer->resize_disabled)
+tracing_open
+tracing_reset_online_cpus
+ring_buffer_reset_cpu
+rb_reset_cpu
+				    rb_update_pages
+				    remove/insert pages
+resetting pointer
+This race can cause data abort or some times infinte loop in 
+rb_remove_pages and rb_insert_pages while checking pages 
+for sanity.
+Take ring buffer lock in trace_open to avoid resetting of cpu buffer.
 
-Okay, make sense then.
+Signed-off-by: Gaurav Kohli <gkohli@codeaurora.org>
 
->
-> Starting the audit below, this might not in fact be true, which then
-> invalidates the unregister implementation. In particular the notifier in
-> arch/arm/kernel/hw_breakpoint.c seems to unconditionally enable IRQs.
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 136ea09..55f9115 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -163,6 +163,8 @@ bool ring_buffer_empty_cpu(struct trace_buffer *buffer, int cpu);
+ 
+ void ring_buffer_record_disable(struct trace_buffer *buffer);
+ void ring_buffer_record_enable(struct trace_buffer *buffer);
++void ring_buffer_mutex_acquire(struct trace_buffer *buffer);
++void ring_buffer_mutex_release(struct trace_buffer *buffer);
+ void ring_buffer_record_off(struct trace_buffer *buffer);
+ void ring_buffer_record_on(struct trace_buffer *buffer);
+ bool ring_buffer_record_is_on(struct trace_buffer *buffer);
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 93ef0ab..638ec8f 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -3632,6 +3632,25 @@ void ring_buffer_record_enable(struct trace_buffer *buffer)
+ EXPORT_SYMBOL_GPL(ring_buffer_record_enable);
+ 
+ /**
++ * ring_buffer_mutex_acquire - prevent resetting of buffer
++ * during resize
++ */
++void ring_buffer_mutex_acquire(struct trace_buffer *buffer)
++{
++	mutex_lock(&buffer->mutex);
++}
++EXPORT_SYMBOL_GPL(ring_buffer_mutex_acquire);
++
++/**
++ * ring_buffer_mutex_release - prevent resetting of buffer
++ * during resize
++ */
++void ring_buffer_mutex_release(struct trace_buffer *buffer)
++{
++	mutex_unlock(&buffer->mutex);
++}
++EXPORT_SYMBOL_GPL(ring_buffer_mutex_release);
++/**
+  * ring_buffer_record_off - stop all writes into the buffer
+  * @buffer: The ring buffer to stop writes to.
+  *
+@@ -4918,6 +4937,8 @@ void ring_buffer_reset(struct trace_buffer *buffer)
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	int cpu;
+ 
++	/* prevent another thread from changing buffer sizes */
++	mutex_lock(&buffer->mutex);
+ 	for_each_buffer_cpu(buffer, cpu) {
+ 		cpu_buffer = buffer->buffers[cpu];
+ 
+@@ -4936,6 +4957,7 @@ void ring_buffer_reset(struct trace_buffer *buffer)
+ 		atomic_dec(&cpu_buffer->record_disabled);
+ 		atomic_dec(&cpu_buffer->resize_disabled);
+ 	}
++	mutex_unlock(&buffer->mutex);
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_reset);
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index f40d850..392e9aa 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2006,6 +2006,8 @@ void tracing_reset_online_cpus(struct array_buffer *buf)
+ 	if (!buffer)
+ 		return;
+ 
++	ring_buffer_mutex_acquire(buffer);
++
+ 	ring_buffer_record_disable(buffer);
+ 
+ 	/* Make sure all commits have finished */
+@@ -2016,6 +2018,8 @@ void tracing_reset_online_cpus(struct array_buffer *buf)
+ 	ring_buffer_reset_online_cpus(buffer);
+ 
+ 	ring_buffer_record_enable(buffer);
++
++	ring_buffer_mutex_release(buffer);
+ }
+ 
+ /* Must have trace_types_lock held */
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
 
-I see.
-
->
-> > > +       ret = raw_notifier_call_chain(&cpu_pm_notifier_chain, event, NULL);
-> >
-> > Converting to raw_notifiers seems reasonable - if we need to avoid the
-> > RCU usage.
-> >
-> > My point is, I wonder about if the notifier callbacks themselves are
-> > safe from RCU usage. For example, I would not be surprised if tracing
-> > is happening behind them.
->
-> A bunch of them seem to call into the clk domain stuff, and I think
-> there's tracepoints in that.
->
-> > Moreover, I am not sure that we really need to prevent and limit
-> > tracing from happening. Instead we could push rcu_idle_enter|exit()
-> > further down to the arch specific code in the cpuidle drivers, as you
-> > kind of all proposed earlier.
->
-> Well, at some point the CPU is in a really dodgy state, ISTR there being
-> ARM platforms where you have to manually leave the cache coherency
-> fabric and all sorts of insanity. There should be a definite cut-off on
-> tracing before that.
-
-That's probably the case for some platforms, but I don't see why we
-need to make everybody "suffer".
-
->
-> Also, what is the point of all this clock and power domain callbacks, if
-> not to put the CPU into an extremely low power state, surely you want to
-> limit the amount of code that's ran when the CPU is in such a state.
->
-> > In this way, we can step by step, move to a new "version" of
-> > cpu_pm_enter() that doesn't have to deal with rcu_irq_enter_irqson(),
-> > because RCU hasn't been pushed to idle yet.
->
-> That should be easy enough to audit. The thing is that mainline is now
-> generating (debug) splats, and some people are upset with this.
->
-> If you're ok with ARM not being lockdep clean while this is being
-> reworked I'm perfectly fine with that.
-
-I think the splats can easily be fixed. Short term.
-
-Adding RCU_NONIDLE (or similar) around pm_runtime calls in
-psci_enter_domain_idle_state() does the trick. I have a patch for
-that, it's tested and ready. Let me send it out.
-
-Perhaps we should just accept that this is needed, as to allow us to
-move step by step into a better situation, while also avoiding the
-current splats.
-
->
-> (There used to be a separate CONFIG for RCU-lockdep, but that seems to
-> have been removed)
-
-I don't think that would help. Infrastructure for testing will just
-enable that Kconfig anyway still complains to us.
-
-Kind regards
-Uffe
