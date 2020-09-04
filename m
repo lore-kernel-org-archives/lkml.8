@@ -2,91 +2,79 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA8FC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2056BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB5E42078E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:13:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="nM6Zz7ZO"
+	by mail.kernel.org (Postfix) with ESMTP id E1E22207EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:15:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730401AbgIDNNV (ORCPT
+        id S1730260AbgIDNPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:13:21 -0400
-Received: from crapouillou.net ([89.234.176.41]:53486 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730281AbgIDNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:12:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599225118; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=MXm0QlSyDYx4inR+MzDqXcasU+Usll3jHy53j4WydOI=;
-        b=nM6Zz7ZOpAmOozTxueV/UIxTIN09wSpZ6mEaQibnNwLNdTMCZvttPXBm/rdTidS0CvhkPb
-        hjlfkxMZ5mm/vfvkkNq8shoQAg0cDElTPoQIbFskF0+uCpGkRqwu39GuL1F+3ar8EowIUg
-        KqZHZ69ax9e5ZmgTZgbbopGPWGKumW4=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     od@zcrc.me, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 1/3] dt-bindings: i2c: ingenic: Add compatible string for the JZ4770
-Date:   Fri,  4 Sep 2020 15:11:50 +0200
-Message-Id: <20200904131152.17390-1-paul@crapouillou.net>
+        Fri, 4 Sep 2020 09:15:36 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:40260 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730010AbgIDNPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:15:25 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 521B7D1ABC89FC3C3E6C;
+        Fri,  4 Sep 2020 21:15:22 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 4 Sep 2020
+ 21:15:19 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <gustavoars@kernel.org>
+CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] can: peak_canfd: Remove unused macros
+Date:   Fri, 4 Sep 2020 21:12:47 +0800
+Message-ID: <20200904131247.23021-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The I2C controller in the JZ4770 SoC seems to work the exact same as in
-the JZ4780 SoC.
+CANFD_CLK_SEL_DIV_MASK and CANFD_OPTIONS_SET are
+never used after they were introduced. Remove them.
 
-We could use "ingenic,jz4780-i2c" as a fallback string in the Device
-Tree, but that would be awkward, since the JZ4780 is newer. Instead,
-add a "ingenic,jz4770-i2c" string and use it as fallback for the
-"ingenic,jz4780-i2c" string.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
 ---
- .../devicetree/bindings/i2c/ingenic,i2c.yaml         | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/net/can/peak_canfd/peak_pciefd_main.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/ingenic,i2c.yaml b/Documentation/devicetree/bindings/i2c/ingenic,i2c.yaml
-index 682ed1bbf5c6..0e7b4b8a7e48 100644
---- a/Documentation/devicetree/bindings/i2c/ingenic,i2c.yaml
-+++ b/Documentation/devicetree/bindings/i2c/ingenic,i2c.yaml
-@@ -17,9 +17,13 @@ properties:
-     pattern: "^i2c@[0-9a-f]+$"
+diff --git a/drivers/net/can/peak_canfd/peak_pciefd_main.c b/drivers/net/can/peak_canfd/peak_pciefd_main.c
+index 9469d4421afe..5f0f39d2fa28 100644
+--- a/drivers/net/can/peak_canfd/peak_pciefd_main.c
++++ b/drivers/net/can/peak_canfd/peak_pciefd_main.c
+@@ -83,7 +83,6 @@ MODULE_LICENSE("GPL v2");
+ #define CANFD_MISC_TS_RST		0x00000001	/* timestamp cnt rst */
  
-   compatible:
--    enum:
--      - ingenic,jz4780-i2c
--      - ingenic,x1000-i2c
-+    oneOf:
-+      - enum:
-+        - ingenic,jz4770-i2c
-+        - ingenic,x1000-i2c
-+      - items:
-+        - const: ingenic,jz4780-i2c
-+        - const: ingenic,jz4770-i2c
+ /* CAN-FD channel Clock SELector Source & DIVider */
+-#define CANFD_CLK_SEL_DIV_MASK		0x00000007
+ #define CANFD_CLK_SEL_DIV_60MHZ		0x00000000	/* SRC=240MHz only */
+ #define CANFD_CLK_SEL_DIV_40MHZ		0x00000001	/* SRC=240MHz only */
+ #define CANFD_CLK_SEL_DIV_30MHZ		0x00000002	/* SRC=240MHz only */
+@@ -116,8 +115,6 @@ MODULE_LICENSE("GPL v2");
+ #define CANFD_CTL_IRQ_CL_DEF	16	/* Rx msg max nb per IRQ in Rx DMA */
+ #define CANFD_CTL_IRQ_TL_DEF	10	/* Time before IRQ if < CL (x100 µs) */
  
-   reg:
-     maxItems: 1
-@@ -60,7 +64,7 @@ examples:
-     #include <dt-bindings/dma/jz4780-dma.h>
-     #include <dt-bindings/interrupt-controller/irq.h>
-     i2c@10054000 {
--      compatible = "ingenic,jz4780-i2c";
-+      compatible = "ingenic,jz4780-i2c", "ingenic,jz4770-i2c";
-       #address-cells = <1>;
-       #size-cells = <0>;
-       reg = <0x10054000 0x1000>;
+-#define CANFD_OPTIONS_SET	(CANFD_OPTION_ERROR | CANFD_OPTION_BUSLOAD)
+-
+ /* Tx anticipation window (link logical address should be aligned on 2K
+  * boundary)
+  */
 -- 
-2.28.0
+2.17.1
 
