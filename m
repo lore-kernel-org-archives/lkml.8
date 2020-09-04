@@ -2,106 +2,159 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA8CC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA70C2BB84
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C68292064E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A27E2064E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:40:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WrvT2Ryl"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iZxxLwxo";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="QpgdcYSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgIDQhc (ORCPT
+        id S1726339AbgIDQkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:37:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbgIDQh1 (ORCPT
+        Fri, 4 Sep 2020 12:40:47 -0400
+Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:48534
+        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725966AbgIDQkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:37:27 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 162B8C061244;
-        Fri,  4 Sep 2020 09:37:25 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id a65so6610912wme.5;
-        Fri, 04 Sep 2020 09:37:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SsHz0anaSIx736ObUUMRuw/XmIbkGGT4MP6ZPn22gyg=;
-        b=WrvT2RylSi8jZtli8/8LLTw8YYEpVRVlyTg2k9iI5UUoKWAqy3QZN4qlvOnmAqFWLt
-         qiwvK6qirQyR9FhYKZjU2I8i1Yk8fCkT2NvZL0Fm09RIyWqet80bPiwjo+um2TWeceun
-         9cV4iXaYZhdBNg1M9nNceU05KIjGDxGJTXnru5ejZZnM49bH4RNyZ0UAbfKbWa9rpLhY
-         rIb7vXwiHmghtmnueUAx4Pvq+7jR9ZqhDVo1eGd2mQqvdtFBhW4RDlKY6ku2KxB+45e3
-         N2l6Ko+F71lfYGMhdrezGLKT0iKfZzAQgU72EP5ia07OmIoY/L/SRjdiroieH5i73aU5
-         RdMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SsHz0anaSIx736ObUUMRuw/XmIbkGGT4MP6ZPn22gyg=;
-        b=PFOm3mAtTnREK8pUkADuIKbzk/MPSzGxXu03CKGTFuJJ/lwxIcPdmJP6y4+LJczlP3
-         B5a63BL19Sg34NM86lZmZAoGR/WThSPJJwVsOSOG53qikPOv7ep1MY87QhRj6Ng0Wnov
-         lx6PnkRYBnebqVO/37+5jy2yhvuFdRrrWO7GX4I/ONwG6tCJnjEIRAjFjTUA6k0dANEa
-         4fsBjzad81p8iGYXtQ1itZTen4YHnTO2vNnC3iDEMf6HQNVbb2BVW5WyUAmtwd2iXbyi
-         0VEDxfWdI7frM7JSmQKiZYz7XbwC//ZlsRP08pwra4ZaySGSRx++56Kp49jx0yYzkq41
-         +5zQ==
-X-Gm-Message-State: AOAM531PBMHK50Q5/kwPX8HARYC2Cl+teOmoVTYPRioshqZ1c45TkY0K
-        8tack2jW65V+3o0Q8tYtBaw=
-X-Google-Smtp-Source: ABdhPJzpRKILIo9HKs0tS47pLTsfUQuR58L9eN/1mexDCDJ0jQVJQryezGXFENcnjTn7imOXJ4AORg==
-X-Received: by 2002:a1c:dec2:: with SMTP id v185mr8313988wmg.1.1599237444498;
-        Fri, 04 Sep 2020 09:37:24 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id c10sm11980109wmk.30.2020.09.04.09.37.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 09:37:23 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH] spi: qup: Allow for compile-testing on !ARM
-Date:   Fri,  4 Sep 2020 17:37:10 +0100
-Message-Id: <20200904163709.110975-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Fri, 4 Sep 2020 12:40:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599237645;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=j4XVxVZyCl1nvm0HzA9cJkMT53izM1ras/rv8ANF328=;
+        b=iZxxLwxomH125oyY+8CYLCOliqDKkXPK2cnFSdqMWafW2raMYf7wNINtA5Gvsovr
+        eeXIG6uJE15o1WDcqRYbKzYeA3jpkk+Fn7x+cNwfZrEbMGKKcQnsCrju+ubAAn35+sB
+        LIjf9HXHqnGL4DsUiFjVqFf+sjHkmrmYVMb+0nHU=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599237645;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+        bh=j4XVxVZyCl1nvm0HzA9cJkMT53izM1ras/rv8ANF328=;
+        b=QpgdcYSbT4xa/xKmfYBHC+fbDffIJKs/+c7qVrXHyKaALo6+KjHBHNUCjFK5OYAp
+        hfiPtnhGqheHWKHCHVx6HmE6EPKSb7GSYAL4iSMUrioWBrwoGDRd+pDLpYViG5wv3P/
+        DukQWJPUn7DpstbVZqQvtRryVixpzsV4LO0ilzu0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A1C43C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=pillair@codeaurora.org
+From:   "Rakesh Pillai" <pillair@codeaurora.org>
+To:     "'Kalle Valo'" <kvalo@codeaurora.org>
+Cc:     <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1593193990-30366-1-git-send-email-pillair@codeaurora.org> <87y2ls4lbf.fsf@codeaurora.org>
+In-Reply-To: <87y2ls4lbf.fsf@codeaurora.org>
+Subject: RE: [PATCH] ath10k: Use bdf calibration variant for snoc targets
+Date:   Fri, 4 Sep 2020 16:40:44 +0000
+Message-ID: <0101017459fde1e4-001edcbb-cfa8-42f9-9865-2913f410e67c-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJRm8Tt2m+V2vXQfAtV0J7j7miBFwIt3U/7qFENAoA=
+Content-Language: en-us
+X-SES-Outgoing: 2020.09.04-54.240.27.186
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There seems no reason to restrict testing to ARM, so remove this
-constraint to improve test coverage.
+Hi Kalle,
 
-Build-tested with allyesconfig on x86.
 
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- drivers/spi/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> -----Original Message-----
+> From: Kalle Valo <kvalo@codeaurora.org>
+> Sent: Wednesday, September 2, 2020 2:17 PM
+> To: Rakesh Pillai <pillair@codeaurora.org>
+> Cc: ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH] ath10k: Use bdf calibration variant for snoc targets
+> 
+> Rakesh Pillai <pillair@codeaurora.org> writes:
+> 
+> > Board Data File (BDF) is loaded upon driver boot-up procedure.
+> > The right board data file is identified using bus and qmi-board-id.
+> >
+> > The problem, however, can occur when the (default) board data
+> > file cannot fulfill with the vendor requirements and it is
+> > necessary to use a different board data file.
+> >
+> > Add the support to get the variant field from DTSI and
+> > use tht information to load the vendor specific BDF.
+> >
+> > The device tree requires addition strings to define the variant name
+> >
+> >     wifi@a000000 {
+> >             status = "okay";
+> >             qcom,ath10k-calibration-variant = "xyz-v2";
+> >     };
+> >
+> >     wifi@a800000 {
+> >             status = "okay";
+> >             qcom,ath10k-calibration-variant = "xyz-v1";
+> >     };
+> >
+> > This would create the boarddata identifiers for the board-2.bin search
+> >
+> >  *  bus=snoc,qmi-board-id=16,qmi-chip-id=0,variant=xyz-v1
+> >  *  bus=snoc,qmi-board-id=17,qmi-chip-id=0,variant=xyz-v2
+> 
+> You mention nothing about qmi-chip-id in the commit log. Please document
+> what it is and also give some examples what kind of values there can be.
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 01b6c80d86c9..6dd7154d175b 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -637,7 +637,7 @@ config SPI_QCOM_QSPI
- 
- config SPI_QUP
- 	tristate "Qualcomm SPI controller with QUP interface"
--	depends on ARCH_QCOM || (ARM && COMPILE_TEST)
-+	depends on ARCH_QCOM || COMPILE_TEST
- 	help
- 	  Qualcomm Universal Peripheral (QUP) core is an AHB slave that
- 	  provides a common data path (an output FIFO and an input FIFO)
--- 
-2.28.0
+
+Let me add a bit more details about the chip-id and send v2 for this change.
+
+
+> 
+> > --- a/drivers/net/wireless/ath/ath10k/qmi.c
+> > +++ b/drivers/net/wireless/ath/ath10k/qmi.c
+> > @@ -576,6 +576,8 @@ static int ath10k_qmi_cap_send_sync_msg(struct
+> ath10k_qmi *qmi)
+> >  	if (resp->chip_info_valid) {
+> >  		qmi->chip_info.chip_id = resp->chip_info.chip_id;
+> >  		qmi->chip_info.chip_family = resp->chip_info.chip_family;
+> > +	} else {
+> > +		qmi->chip_info.chip_id = 0xFF;
+> >  	}
+> 
+> So you hard code chip_id to 0xff if it's not valid. Is it 100%
+> guaranteed that there never will be a chip id with 0xff?
+
+0x0 and 0xff are invalid chip id and are are not used.
+If the chip_id read fails, we fallback to the default board data.
+0xff is used to go to the default board data (Also this is in alignment with
+the current implementation of board_id)
+
+Does that make sense ?
+
+
+> 
+> >
+> >  	if (resp->board_info_valid)
+> > @@ -817,12 +819,18 @@ static void
+> ath10k_qmi_event_server_arrive(struct ath10k_qmi *qmi)
+> >  static int ath10k_qmi_fetch_board_file(struct ath10k_qmi *qmi)
+> >  {
+> >  	struct ath10k *ar = qmi->ar;
+> > +	int ret;
+> >
+> >  	ar->hif.bus = ATH10K_BUS_SNOC;
+> >  	ar->id.qmi_ids_valid = true;
+> >  	ar->id.qmi_board_id = qmi->board_info.board_id;
+> > +	ar->id.qmi_chip_id = qmi->chip_info.chip_id;
+> 
+> To me a safer, and cleaner, option would be to have
+> ar->id.qmi_chip_id_valid, and only add qmi-chip-id=%x to the board id if
+> qmi_chip_id_valid is true. That way there's not this magic 0xff value
+> hardcoded anywhere.
+> 
+> --
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingp
+> atches
 
