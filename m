@@ -2,129 +2,101 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FDDC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F60C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 218D32078E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:36:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCAldAMt"
+	by mail.kernel.org (Postfix) with ESMTP id 91DB72078E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:36:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599222996;
+	bh=MwzxdKHUg9teIgGqF5TR8b0dp/TMvkXmK35E0MMnmQ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kUit7ioovigK6s0KKCY6G+l/IFCzhISmSRgUuYAo70/YxmAEL4/tfz8pr5Q/qQEQo
+	 deJQ6XnBrXNSDYKa6R3lp4VJsttMzwrt6Nfbi65jwLwmuj2iNFzVeiVab3rHm/7C0k
+	 d3jmuqT+5cZzm6WvqVz8y24FRc+oL9DvFeLrWeaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbgIDMgE (ORCPT
+        id S1730227AbgIDMgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 08:36:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42682 "EHLO
+        Fri, 4 Sep 2020 08:36:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728588AbgIDMfw (ORCPT
+        with ESMTP id S1728588AbgIDMg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 08:35:52 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3A53C061244;
-        Fri,  4 Sep 2020 05:35:51 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e11so7770088ljn.6;
-        Fri, 04 Sep 2020 05:35:51 -0700 (PDT)
+        Fri, 4 Sep 2020 08:36:29 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B94AC061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 05:36:28 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id b79so5929466wmb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 05:36:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2zQq8tzm/HGpBwn2FA7z9vkYgOXhNDcv626gb3rtLwE=;
-        b=OCAldAMtHThOn6cxAkixmpOBbuF2X9s0hjde9Tm4VZ8jXAn4fc0CU0V0E2RC+MrSAx
-         PO/MBl0Fpj5m+Uv48bukVSPpyDZLREPp60yL4Bdz/b3V8pk8ntBt8vaMTm0pjJBYwK/Z
-         UY/n5drsmrgJ0teKn37TtYK4pSx/12iIAouBDcUugUICHq+YnSypY5ZOjKhD/S2hx564
-         ec80VlZN82cwFwYMUtcMo5QEXlHQgyQl6Vzj16KR6Zp2BGi4QHBbYfa5TGxRRbtLIDeJ
-         FKnlUqvV7+3cGblIac9jD5IeEEQz5yAj+vgMcxASDWMt/hGxKm17iRbqg3llT7K3wOuH
-         oq8g==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vfv4yM+SStFDIe7OBhyMliN8elYJvGGKotSeRXgb0gM=;
+        b=naRFOVVaDv9VsR8bno2+3JHgkMxRkxre196AgGgdr9TyFAPlH1cBstCAD3fSNe6EP0
+         gC0X81ehU84p685Bystdv4/S+W6RDTdTZLfQQrUlNExkJrt/JzxBVT2sYdjJ5IjWfdSG
+         bouvZiDr5XtIWwz12l3CfO+BxBJAAju3H+HYo5DD99dKp3dSnnrBF38eaQmD7WicAlOe
+         bP7F739+IKj5xXbqWCdfMa578xZWWWbmst5cH78mvKzkmyTV34yeypdEma+dbcnCzGVO
+         ZMkTy199FI3uU0PlzrV0XqPE0R6zBsDrMcGnc7AZxOnYWAB8cDUL2RB3pko/xyx9AM2U
+         3mKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2zQq8tzm/HGpBwn2FA7z9vkYgOXhNDcv626gb3rtLwE=;
-        b=jIcLkPZdi2Hkp5WsXE6OSMk9U5F8JXphxQ9r4NHK3YZvR14c7trQAIsn2cBy89ZUjJ
-         aHvHE1DzwVXf+eslfzXhuJqExdH0rsHQLDAuroxrDlVNOBM7KOLUG+XPm7NACg/xKgfV
-         +74UWd2+xpAFl3MyaC2XwbqvqpbYYN/pmdbLC+Z8R+dSvQSYji5Ebirug8GL1oKJdGyK
-         c9afYB7cLNobZLWuCM49Ei+Zx/s9AlM9qu2HqD2rzo+ROuXcNCJDEUcZeNW7j7ugVZnL
-         Q/0A+ocxgP0ZvSE7DRuT489bZusp//Pc3fuwGODXWgezezh+eFWmASaUKVTJOi6Bqryl
-         takg==
-X-Gm-Message-State: AOAM531q4YjUDHpAv5dPjr46HYc8ZmnG/p5Zq1F1Of+3OISpH790DhEc
-        X++F6GSJOG/Rth0fMKRys6T2aKepjXwIhQsL9Eo=
-X-Google-Smtp-Source: ABdhPJxij5kxwBOGgOGBLbBCNP/8Ao8v4wC249amU4OSMif6DmD1Mc+OWkrBWzi2bo09EbcDzXxuYJCUqFtAuBhX19U=
-X-Received: by 2002:a2e:390a:: with SMTP id g10mr3459414lja.218.1599222949595;
- Fri, 04 Sep 2020 05:35:49 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=vfv4yM+SStFDIe7OBhyMliN8elYJvGGKotSeRXgb0gM=;
+        b=sVg206+iaSEzfV/+yRGkVZy9V8j6r35TnNltIiLM3cSCl/2xd5WfeHyS+E5chivhBQ
+         35lDy8G6su3J2MmuhVh/bZz4Z+jeExCm1x+CrGd8wG5J9Kqmtpj4jldmzRo2xYoe8ZMk
+         PWYq5ninyuICZDy1KFy0mumzTNJ8swnF57dKmmTViflbjpIBokiwdXUITShH71PW5Srn
+         s2tZpMNofTmd4DAHKPGs2k1N5UKSJSLC0N1SQzpcRbX66jhb3vtga2nEvi3dsmAJZCyr
+         JiKMEbdkdOWvxLPCoN1uou69eqWQv6MVCPMhgSmKTTltpa59RWVQh2rEbCcTR+z1DMMB
+         ocyQ==
+X-Gm-Message-State: AOAM533iICfY+BfR92Rs0HrtEuqpq2cta1TTK+iOPZuEV4vYRn4lj+UA
+        AcmMMiUclx0/ovASHRjBPSs=
+X-Google-Smtp-Source: ABdhPJzqqmQBXQBK9XH/eqgG8tS7F55/RfJFY3Aaop0I3LTYLAB8sb0mxlFO12TcJHxO/g7n+eX1cw==
+X-Received: by 2002:a7b:c384:: with SMTP id s4mr7139669wmj.138.1599222987188;
+        Fri, 04 Sep 2020 05:36:27 -0700 (PDT)
+Received: from gmail.com (51B7BB2B.dsl.pool.telekom.hu. [81.183.187.43])
+        by smtp.gmail.com with ESMTPSA id b187sm10980223wmb.8.2020.09.04.05.36.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 05:36:26 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 14:36:24 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Add myself as SCHED_DEADLINE reviewer
+Message-ID: <20200904123624.GA3552@gmail.com>
+References: <4476a6da70949913a59dab9aacfbd12162c1fbd7.1599146667.git.bristot@redhat.com>
 MIME-Version: 1.0
-References: <20200903144028.20416-1-matthias.schiffer@ew.tq-group.com>
-In-Reply-To: <20200903144028.20416-1-matthias.schiffer@ew.tq-group.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 4 Sep 2020 09:35:38 -0300
-Message-ID: <CAOMZO5DGHoG_8X+fbrGCHR4g=sGdEaF7bYrHbC_2T=aUnfTs8g@mail.gmail.com>
-Subject: Re: [PATCH] spi-imx: remove num-cs support, set num_chipselect to 4
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4476a6da70949913a59dab9aacfbd12162c1fbd7.1599146667.git.bristot@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
 
-On Thu, Sep 3, 2020 at 11:40 AM Matthias Schiffer
-<matthias.schiffer@ew.tq-group.com> wrote:
->
-> The num-cs property is not considered useful, and no in-tree Device
-> Trees define it for spi-imx.
->
-> The default value to be used when no cs-gpios are defined is set to 4 to
-> give access to all native CS pins of modern i.MX SoCs (i.MX6 and newer).
->
-> In older SoCs, the number of CS pins varies (for example the i.MX27 has 3
-> CS pins on CSPI1 and CSPI2, and only a single CS on CSPI3). Attempting
-> to use the nonexisting CS pin would be an easy to notice DT
-> misconfiguration; making the driver catch this doesn't seem worthwhile.
->
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> ---
->  drivers/spi/spi-imx.c | 13 +------------
->  1 file changed, 1 insertion(+), 12 deletions(-)
->
-> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-> index 197f60632072..aece8482739b 100644
-> --- a/drivers/spi/spi-imx.c
-> +++ b/drivers/spi/spi-imx.c
-> @@ -1581,7 +1581,6 @@ static int spi_imx_probe(struct platform_device *pdev)
->         const struct spi_imx_devtype_data *devtype_data = of_id ? of_id->data :
->                 (struct spi_imx_devtype_data *)pdev->id_entry->driver_data;
->         bool slave_mode;
-> -       u32 val;
->
->         slave_mode = devtype_data->has_slavemode &&
->                         of_property_read_bool(np, "spi-slave");
-> @@ -1605,6 +1604,7 @@ static int spi_imx_probe(struct platform_device *pdev)
->         master->bits_per_word_mask = SPI_BPW_RANGE_MASK(1, 32);
->         master->bus_num = np ? -1 : pdev->id;
->         master->use_gpio_descriptors = true;
-> +       master->num_chipselect = 4;
+* Daniel Bristot de Oliveira <bristot@redhat.com> wrote:
 
-On an imx6q-sabresd, which only has one SPI chip-select via GPIO, this
-makes the SPI core to understand that it has 4 chip selects.
+> As discussed with Juri and Peter.
+> 
+> Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
 
-From spi_get_gpio_descs() in drivers/spi/spi.c:
+Welcome Daniel! :-)
 
-ctlr->num_chipselect = max_t(int, nb, ctlr->num_chipselect);
+I've applied the patch to tip:sched/core.
 
-It is 4 now after your patch, it was 3 after 8cdcd8aeee28 ("spi:
-imx/fsl-lpspi: Convert to GPIO descriptors") and 1 before such commit.
+Thanks,
 
-Couldn't we just remove master->num_chipselect from the spi-imx.c driver?
+	Ingo
