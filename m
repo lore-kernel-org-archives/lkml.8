@@ -2,184 +2,103 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638ADC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0D0C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35C0E20658
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 581DB204FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:52:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="KYTszfo0";
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="Rpc++GkE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbgIDNwZ (ORCPT
+        id S1730658AbgIDNwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:52:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730650AbgIDNrL (ORCPT
+        Fri, 4 Sep 2020 09:52:36 -0400
+Received: from smtp119.ord1d.emailsrvr.com ([184.106.54.119]:37980 "EHLO
+        smtp119.ord1d.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730643AbgIDNrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:47:11 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B401C061246
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 06:36:52 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1kEBtX-0007na-45; Fri, 04 Sep 2020 15:36:47 +0200
-Message-ID: <81a021cc6b58d46b85bb65a368c3eb9f1568a16f.camel@pengutronix.de>
-Subject: Re: [PATCH v10 05/30] drm: etnaviv: fix common struct sg_table
- related issues
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org
-Date:   Fri, 04 Sep 2020 15:37:06 +0200
-In-Reply-To: <20200904131711.12950-6-m.szyprowski@samsung.com>
-References: <20200904131711.12950-1-m.szyprowski@samsung.com>
-         <CGME20200904133456eucas1p10d0fe1628474fcd4803a7af4437be4e1@eucas1p1.samsung.com>
-         <20200904131711.12950-6-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 4 Sep 2020 09:47:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
+        s=20190322-9u7zjiwi; t=1599225717;
+        bh=VSHpuGItY/0L/qHMSAVCvrmqgedAh5jY8QrKza32y8I=;
+        h=From:To:Subject:Date:From;
+        b=KYTszfo0zOBWjnr7/t3qslMANLwmdktaASKJgnDos6ECvspUxqO/Es+IptuhZ/AXQ
+         XUZdt2CYu5yeZIKZoFFR87OkZZ8LWrwqFlVb6C661Ck727bsPLnrtrZuYB/yUbVhvI
+         dXzXiFT/eoGoAq2aJY4g/717QJ1VEOeWM8oh1krQ=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1599225717;
+        bh=VSHpuGItY/0L/qHMSAVCvrmqgedAh5jY8QrKza32y8I=;
+        h=From:To:Subject:Date:From;
+        b=Rpc++GkEQTxz+f6DcQ9i5buyTMyvuDZByklGKaOFP4KkwT9a1jo7YAdlcvi3PChyA
+         QFE7Dn5vG+6F2o28fDmKzo/XfFVc6sZF5eXBo8mDxSgc094y5nIqfHdFvEN37b24er
+         77UK35LjgZZ7nFK4XmLVSLWZ6B87hcoUkxcdKixc=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp23.relay.ord1d.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 9BFAB20113;
+        Fri,  4 Sep 2020 09:21:56 -0400 (EDT)
+From:   Ian Abbott <abbotti@mev.co.uk>
+To:     linux-input@vger.kernel.org
+Cc:     David Rheinsberg <david.rheinsberg@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Ian Abbott <abbotti@mev.co.uk>, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] HID: wiimote: narrow spinlock range in wiimote_hid_event()
+Date:   Fri,  4 Sep 2020 14:21:43 +0100
+Message-Id: <20200904132143.9496-3-abbotti@mev.co.uk>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200904132143.9496-1-abbotti@mev.co.uk>
+References: <20200904132143.9496-1-abbotti@mev.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-Classification-ID: ee464daf-2bdc-4db4-9ef3-697c4738b247-3-1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fr, 2020-09-04 at 15:16 +0200, Marek Szyprowski wrote:
-> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-> returns the number of the created entries in the DMA address space.
-> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-> dma_unmap_sg must be called with the original number of the entries
-> passed to the dma_map_sg().
-> 
-> struct sg_table is a common structure used for describing a non-contiguous
-> memory buffer, used commonly in the DRM and graphics subsystems. It
-> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-> and DMA mapped pages (nents entry).
-> 
-> It turned out that it was a common mistake to misuse nents and orig_nents
-> entries, calling DMA-mapping functions with a wrong number of entries or
-> ignoring the number of mapped entries returned by the dma_map_sg()
-> function.
-> 
-> To avoid such issues, lets use a common dma-mapping wrappers operating
-> directly on the struct sg_table objects and use scatterlist page
-> iterators where possible. This, almost always, hides references to the
-> nents and orig_nents entries, making the code robust, easier to follow
-> and copy/paste safe.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+In `wiimote_hid_event()`, the `wdata->state.lock` spinlock does not need
+to be held while searching `handlers[]` for a suitable handler function.
+Change it so the spinlock is only held during the call to the handler
+function itself.
 
-Acked-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+---
+ drivers/hid/hid-wiimote-core.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-> ---
->  drivers/gpu/drm/etnaviv/etnaviv_gem.c | 12 +++++-------
->  drivers/gpu/drm/etnaviv/etnaviv_mmu.c | 15 ++++-----------
->  2 files changed, 9 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-> index f06e19e7be04..eaf1949bc2e4 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-> @@ -27,7 +27,7 @@ static void etnaviv_gem_scatter_map(struct etnaviv_gem_object *etnaviv_obj)
->  	 * because display controller, GPU, etc. are not coherent.
->  	 */
->  	if (etnaviv_obj->flags & ETNA_BO_CACHE_MASK)
-> -		dma_map_sg(dev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL);
-> +		dma_map_sgtable(dev->dev, sgt, DMA_BIDIRECTIONAL, 0);
->  }
->  
->  static void etnaviv_gem_scatterlist_unmap(struct etnaviv_gem_object *etnaviv_obj)
-> @@ -51,7 +51,7 @@ static void etnaviv_gem_scatterlist_unmap(struct etnaviv_gem_object *etnaviv_obj
->  	 * discard those writes.
->  	 */
->  	if (etnaviv_obj->flags & ETNA_BO_CACHE_MASK)
-> -		dma_unmap_sg(dev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL);
-> +		dma_unmap_sgtable(dev->dev, sgt, DMA_BIDIRECTIONAL, 0);
->  }
->  
->  /* called with etnaviv_obj->lock held */
-> @@ -404,9 +404,8 @@ int etnaviv_gem_cpu_prep(struct drm_gem_object *obj, u32 op,
->  	}
->  
->  	if (etnaviv_obj->flags & ETNA_BO_CACHED) {
-> -		dma_sync_sg_for_cpu(dev->dev, etnaviv_obj->sgt->sgl,
-> -				    etnaviv_obj->sgt->nents,
-> -				    etnaviv_op_to_dma_dir(op));
-> +		dma_sync_sgtable_for_cpu(dev->dev, etnaviv_obj->sgt,
-> +					 etnaviv_op_to_dma_dir(op));
->  		etnaviv_obj->last_cpu_prep_op = op;
->  	}
->  
-> @@ -421,8 +420,7 @@ int etnaviv_gem_cpu_fini(struct drm_gem_object *obj)
->  	if (etnaviv_obj->flags & ETNA_BO_CACHED) {
->  		/* fini without a prep is almost certainly a userspace error */
->  		WARN_ON(etnaviv_obj->last_cpu_prep_op == 0);
-> -		dma_sync_sg_for_device(dev->dev, etnaviv_obj->sgt->sgl,
-> -			etnaviv_obj->sgt->nents,
-> +		dma_sync_sgtable_for_device(dev->dev, etnaviv_obj->sgt,
->  			etnaviv_op_to_dma_dir(etnaviv_obj->last_cpu_prep_op));
->  		etnaviv_obj->last_cpu_prep_op = 0;
->  	}
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
-> index 3607d348c298..15d9fa3879e5 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
-> @@ -73,13 +73,13 @@ static int etnaviv_iommu_map(struct etnaviv_iommu_context *context, u32 iova,
->  			     struct sg_table *sgt, unsigned len, int prot)
->  {	struct scatterlist *sg;
->  	unsigned int da = iova;
-> -	unsigned int i, j;
-> +	unsigned int i;
->  	int ret;
->  
->  	if (!context || !sgt)
->  		return -EINVAL;
->  
-> -	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
-> +	for_each_sgtable_dma_sg(sgt, sg, i) {
->  		u32 pa = sg_dma_address(sg) - sg->offset;
->  		size_t bytes = sg_dma_len(sg) + sg->offset;
->  
-> @@ -95,14 +95,7 @@ static int etnaviv_iommu_map(struct etnaviv_iommu_context *context, u32 iova,
->  	return 0;
->  
->  fail:
-> -	da = iova;
-> -
-> -	for_each_sg(sgt->sgl, sg, i, j) {
-> -		size_t bytes = sg_dma_len(sg) + sg->offset;
-> -
-> -		etnaviv_context_unmap(context, da, bytes);
-> -		da += bytes;
-> -	}
-> +	etnaviv_context_unmap(context, iova, da - iova);
->  	return ret;
->  }
->  
-> @@ -113,7 +106,7 @@ static void etnaviv_iommu_unmap(struct etnaviv_iommu_context *context, u32 iova,
->  	unsigned int da = iova;
->  	int i;
->  
-> -	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
-> +	for_each_sgtable_dma_sg(sgt, sg, i) {
->  		size_t bytes = sg_dma_len(sg) + sg->offset;
->  
->  		etnaviv_context_unmap(context, da, bytes);
+diff --git a/drivers/hid/hid-wiimote-core.c b/drivers/hid/hid-wiimote-core.c
+index e03a0ba5611a..41012681cafd 100644
+--- a/drivers/hid/hid-wiimote-core.c
++++ b/drivers/hid/hid-wiimote-core.c
+@@ -1625,12 +1625,12 @@ static int wiimote_hid_event(struct hid_device *hdev, struct hid_report *report,
+ 	if (size < 1)
+ 		return -EINVAL;
+ 
+-	spin_lock_irqsave(&wdata->state.lock, flags);
+-
+ 	for (i = 0; handlers[i].id; ++i) {
+ 		h = &handlers[i];
+ 		if (h->id == raw_data[0] && h->size < size) {
++			spin_lock_irqsave(&wdata->state.lock, flags);
+ 			h->func(wdata, &raw_data[1]);
++			spin_unlock_irqrestore(&wdata->state.lock, flags);
+ 			break;
+ 		}
+ 	}
+@@ -1639,8 +1639,6 @@ static int wiimote_hid_event(struct hid_device *hdev, struct hid_report *report,
+ 		hid_warn(hdev, "Unhandled report %hhu size %d\n", raw_data[0],
+ 									size);
+ 
+-	spin_unlock_irqrestore(&wdata->state.lock, flags);
+-
+ 	return 0;
+ }
+ 
+-- 
+2.28.0
 
