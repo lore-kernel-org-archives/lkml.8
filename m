@@ -2,284 +2,135 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDFEC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58915C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A01220758
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23FA820758
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbgIDBGq (ORCPT
+        id S1729560AbgIDBI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 21:06:46 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10809 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729172AbgIDBGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 21:06:43 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 745F3F9750CADEBF3E25;
-        Fri,  4 Sep 2020 09:06:40 +0800 (CST)
-Received: from [10.136.114.67] (10.136.114.67) by smtp.huawei.com
- (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 4 Sep 2020
- 09:06:38 +0800
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: change i_compr_blocks of inode to
- atomic value
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Daeho Jeong <daeho43@gmail.com>
-CC:     Daeho Jeong <daehojeong@google.com>, <kernel-team@android.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200903030320.330507-1-daeho43@gmail.com>
- <20200903174804.GB3619770@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <6bc6a14b-9cce-47ae-141e-88dec98829be@huawei.com>
-Date:   Fri, 4 Sep 2020 09:06:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200903174804.GB3619770@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.136.114.67]
-X-CFilter-Loop: Reflected
+        Thu, 3 Sep 2020 21:08:56 -0400
+Received: from mga05.intel.com ([192.55.52.43]:55029 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728107AbgIDBIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 21:08:55 -0400
+IronPort-SDR: HLm9ulUhaI/m6DrXW9VPEuOo6xP8XNnHQmURqI9vrMtKFW5Nil2fbgAvUX32cqj7zqBkkrgRc6
+ cUGaTVXTythg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="242498599"
+X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
+   d="scan'208";a="242498599"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 18:08:54 -0700
+IronPort-SDR: Bq9VjQRLBTDcnDw7F07+auyRRqOT7U2CjBVl2t8fb3NONHNDq8VMRg1vWjzu6ptLDqhnMilfs5
+ /HmoET/bj4Zw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
+   d="scan'208";a="326431226"
+Received: from allen-box.sh.intel.com ([10.239.159.139])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Sep 2020 18:08:52 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: [PATCH v2 1/1] iommu/vt-d: Use device numa domain if RHSA is missing
+Date:   Fri,  4 Sep 2020 09:03:03 +0800
+Message-Id: <20200904010303.2961-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/9/4 1:48, Jaegeuk Kim wrote:
-> On 09/03, Daeho Jeong wrote:
->> From: Daeho Jeong <daehojeong@google.com>
->>
->> writepages() can be concurrently invoked for the same file by different
->> threads such as a thread fsyncing the file and a kworker kernel thread.
->> So, changing i_compr_blocks without protection is racy and we need to
->> protect it by changing it with atomic type value. Plus, we don't need
->> a 64bit value for i_compr_blocks, so just we will use a atomic value,
->> not atomic64.
->>
->> Signed-off-by: Daeho Jeong <daehojeong@google.com>
->> ---
->> Changes in v2:
->>   - Change atomic64 to atomic and remove unnecessary part
->> ---
->>   fs/f2fs/f2fs.h  | 18 ++++++++----------
->>   fs/f2fs/file.c  | 22 ++++++++++++----------
->>   fs/f2fs/inode.c | 11 +++++++----
->>   fs/f2fs/super.c |  1 +
->>   4 files changed, 28 insertions(+), 24 deletions(-)
->>
->> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->> index f60414805e05..f6b8ac10a55c 100644
->> --- a/fs/f2fs/f2fs.h
->> +++ b/fs/f2fs/f2fs.h
->> @@ -801,7 +801,7 @@ struct f2fs_inode_info {
->>   	struct timespec64 i_disk_time[4];/* inode disk times */
->>   
->>   	/* for file compress */
->> -	u64 i_compr_blocks;			/* # of compressed blocks */
->> +	atomic_t i_compr_blocks;		/* # of compressed blocks */
->>   	unsigned char i_compress_algorithm;	/* algorithm type */
->>   	unsigned char i_log_cluster_size;	/* log of cluster size */
->>   	unsigned int i_cluster_size;		/* cluster size */
->> @@ -3936,12 +3936,9 @@ static inline u64 f2fs_disable_compressed_file(struct inode *inode)
->>   
->>   	if (!f2fs_compressed_file(inode))
->>   		return 0;
->> -	if (S_ISREG(inode->i_mode)) {
->> -		if (get_dirty_pages(inode))
->> -			return 1;
->> -		if (fi->i_compr_blocks)
->> -			return fi->i_compr_blocks;
->> -	}
->> +	if (S_ISREG(inode->i_mode) &&
->> +		(get_dirty_pages(inode) || atomic_read(&fi->i_compr_blocks)))
->> +		return 1;
-> 
-> Please keep the original flow in this patch which says swithing to atomic.
-> Instead, it'd be better to have another patch which cleans up
-> f2fs_disable_compressed_file() having "bool" as a return value.
+If there are multiple NUMA domains but the RHSA is missing in ACPI/DMAR
+table, we could default to the device NUMA domain as fall back. This could
+also benefit a vIOMMU use case where only single vIOMMU is exposed, hence
+no RHSA will be present but device numa domain can be correct.
 
-Agreed, maybe I mislead Daeho, let's keep the rule do one thing in one patch. :)
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ drivers/iommu/intel/iommu.c | 37 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 35 insertions(+), 2 deletions(-)
 
-Thanks,
+Change log:
+v1->v2:
+  - Add a comment as suggested by Kevin.
+    https://lore.kernel.org/linux-iommu/MWHPR11MB1645E6D6BD1EFDFA139AA37C8C520@MWHPR11MB1645.namprd11.prod.outlook.com/
 
-> 
->>   
->>   	fi->i_flags &= ~F2FS_COMPR_FL;
->>   	stat_dec_compr_inode(inode);
->> @@ -4057,16 +4054,17 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
->>   						u64 blocks, bool add)
->>   {
->>   	int diff = F2FS_I(inode)->i_cluster_size - blocks;
->> +	struct f2fs_inode_info *fi = F2FS_I(inode);
->>   
->>   	/* don't update i_compr_blocks if saved blocks were released */
->> -	if (!add && !F2FS_I(inode)->i_compr_blocks)
->> +	if (!add && !atomic_read(&fi->i_compr_blocks))
->>   		return;
->>   
->>   	if (add) {
->> -		F2FS_I(inode)->i_compr_blocks += diff;
->> +		atomic_add(diff, &fi->i_compr_blocks);
->>   		stat_add_compr_blocks(inode, diff);
->>   	} else {
->> -		F2FS_I(inode)->i_compr_blocks -= diff;
->> +		atomic_sub(diff, &fi->i_compr_blocks);
->>   		stat_sub_compr_blocks(inode, diff);
->>   	}
->>   	f2fs_mark_inode_dirty_sync(inode, true);
->> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->> index cc7f5670390f..adc4acad488a 100644
->> --- a/fs/f2fs/file.c
->> +++ b/fs/f2fs/file.c
->> @@ -564,7 +564,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
->>   	bool compressed_cluster = false;
->>   	int cluster_index = 0, valid_blocks = 0;
->>   	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
->> -	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
->> +	bool released = !atomic_read(&F2FS_I(dn->inode)->i_compr_blocks);
->>   
->>   	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
->>   		base = get_extra_isize(dn->inode);
->> @@ -3436,7 +3436,7 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
->>   	if (!f2fs_compressed_file(inode))
->>   		return -EINVAL;
->>   
->> -	blocks = F2FS_I(inode)->i_compr_blocks;
->> +	blocks = atomic_read(&F2FS_I(inode)->i_compr_blocks);
->>   	return put_user(blocks, (u64 __user *)arg);
->>   }
->>   
->> @@ -3535,7 +3535,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
->>   	if (ret)
->>   		goto out;
->>   
->> -	if (!F2FS_I(inode)->i_compr_blocks)
->> +	if (!atomic_read(&F2FS_I(inode)->i_compr_blocks))
->>   		goto out;
->>   
->>   	F2FS_I(inode)->i_flags |= F2FS_IMMUTABLE_FL;
->> @@ -3588,14 +3588,15 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
->>   
->>   	if (ret >= 0) {
->>   		ret = put_user(released_blocks, (u64 __user *)arg);
->> -	} else if (released_blocks && F2FS_I(inode)->i_compr_blocks) {
->> +	} else if (released_blocks &&
->> +			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
->>   		set_sbi_flag(sbi, SBI_NEED_FSCK);
->>   		f2fs_warn(sbi, "%s: partial blocks were released i_ino=%lx "
->> -			"iblocks=%llu, released=%u, compr_blocks=%llu, "
->> +			"iblocks=%llu, released=%u, compr_blocks=%u, "
->>   			"run fsck to fix.",
->>   			__func__, inode->i_ino, inode->i_blocks,
->>   			released_blocks,
->> -			F2FS_I(inode)->i_compr_blocks);
->> +			atomic_read(&F2FS_I(inode)->i_compr_blocks));
->>   	}
->>   
->>   	return ret;
->> @@ -3683,7 +3684,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
->>   	if (ret)
->>   		return ret;
->>   
->> -	if (F2FS_I(inode)->i_compr_blocks)
->> +	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
->>   		goto out;
->>   
->>   	f2fs_balance_fs(F2FS_I_SB(inode), true);
->> @@ -3747,14 +3748,15 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
->>   
->>   	if (ret >= 0) {
->>   		ret = put_user(reserved_blocks, (u64 __user *)arg);
->> -	} else if (reserved_blocks && F2FS_I(inode)->i_compr_blocks) {
->> +	} else if (reserved_blocks &&
->> +			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
->>   		set_sbi_flag(sbi, SBI_NEED_FSCK);
->>   		f2fs_warn(sbi, "%s: partial blocks were released i_ino=%lx "
->> -			"iblocks=%llu, reserved=%u, compr_blocks=%llu, "
->> +			"iblocks=%llu, reserved=%u, compr_blocks=%u, "
->>   			"run fsck to fix.",
->>   			__func__, inode->i_ino, inode->i_blocks,
->>   			reserved_blocks,
->> -			F2FS_I(inode)->i_compr_blocks);
->> +			atomic_read(&F2FS_I(inode)->i_compr_blocks));
->>   	}
->>   
->>   	return ret;
->> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
->> index 66969ae852b9..2ed935c13aed 100644
->> --- a/fs/f2fs/inode.c
->> +++ b/fs/f2fs/inode.c
->> @@ -442,7 +442,8 @@ static int do_read_inode(struct inode *inode)
->>   					(fi->i_flags & F2FS_COMPR_FL)) {
->>   		if (F2FS_FITS_IN_INODE(ri, fi->i_extra_isize,
->>   					i_log_cluster_size)) {
->> -			fi->i_compr_blocks = le64_to_cpu(ri->i_compr_blocks);
->> +			atomic_set(&fi->i_compr_blocks,
->> +					le64_to_cpu(ri->i_compr_blocks));
->>   			fi->i_compress_algorithm = ri->i_compress_algorithm;
->>   			fi->i_log_cluster_size = ri->i_log_cluster_size;
->>   			fi->i_cluster_size = 1 << fi->i_log_cluster_size;
->> @@ -460,7 +461,7 @@ static int do_read_inode(struct inode *inode)
->>   	stat_inc_inline_inode(inode);
->>   	stat_inc_inline_dir(inode);
->>   	stat_inc_compr_inode(inode);
->> -	stat_add_compr_blocks(inode, F2FS_I(inode)->i_compr_blocks);
->> +	stat_add_compr_blocks(inode, atomic_read(&fi->i_compr_blocks));
->>   
->>   	return 0;
->>   }
->> @@ -619,7 +620,8 @@ void f2fs_update_inode(struct inode *inode, struct page *node_page)
->>   			F2FS_FITS_IN_INODE(ri, F2FS_I(inode)->i_extra_isize,
->>   							i_log_cluster_size)) {
->>   			ri->i_compr_blocks =
->> -				cpu_to_le64(F2FS_I(inode)->i_compr_blocks);
->> +				cpu_to_le64(atomic_read(
->> +					&F2FS_I(inode)->i_compr_blocks));
->>   			ri->i_compress_algorithm =
->>   				F2FS_I(inode)->i_compress_algorithm;
->>   			ri->i_log_cluster_size =
->> @@ -768,7 +770,8 @@ void f2fs_evict_inode(struct inode *inode)
->>   	stat_dec_inline_dir(inode);
->>   	stat_dec_inline_inode(inode);
->>   	stat_dec_compr_inode(inode);
->> -	stat_sub_compr_blocks(inode, F2FS_I(inode)->i_compr_blocks);
->> +	stat_sub_compr_blocks(inode,
->> +			atomic_read(&F2FS_I(inode)->i_compr_blocks));
->>   
->>   	if (likely(!f2fs_cp_error(sbi) &&
->>   				!is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
->> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
->> index 83bf9a02f83f..813aa207824c 100644
->> --- a/fs/f2fs/super.c
->> +++ b/fs/f2fs/super.c
->> @@ -1011,6 +1011,7 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
->>   
->>   	/* Initialize f2fs-specific inode info */
->>   	atomic_set(&fi->dirty_pages, 0);
->> +	atomic_set(&fi->i_compr_blocks, 0);
->>   	init_rwsem(&fi->i_sem);
->>   	spin_lock_init(&fi->i_size_lock);
->>   	INIT_LIST_HEAD(&fi->dirty_list);
->> -- 
->> 2.28.0.526.ge36021eeef-goog
->>
->>
->>
->> _______________________________________________
->> Linux-f2fs-devel mailing list
->> Linux-f2fs-devel@lists.sourceforge.net
->> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> 
-> 
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> .
-> 
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 7f844d1c8cd9..69d5a87188f4 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -698,12 +698,47 @@ static int domain_update_iommu_superpage(struct dmar_domain *domain,
+ 	return fls(mask);
+ }
+ 
++static int domain_update_device_node(struct dmar_domain *domain)
++{
++	struct device_domain_info *info;
++	int nid = NUMA_NO_NODE;
++
++	assert_spin_locked(&device_domain_lock);
++
++	if (list_empty(&domain->devices))
++		return NUMA_NO_NODE;
++
++	list_for_each_entry(info, &domain->devices, link) {
++		if (!info->dev)
++			continue;
++
++		/*
++		 * There could possibly be multiple device numa nodes as devices
++		 * within the same domain may sit behind different IOMMUs. There
++		 * isn't perfect answer in such situation, so we select first
++		 * come first served policy.
++		 */
++		nid = dev_to_node(info->dev);
++		if (nid != NUMA_NO_NODE)
++			break;
++	}
++
++	return nid;
++}
++
+ /* Some capabilities may be different across iommus */
+ static void domain_update_iommu_cap(struct dmar_domain *domain)
+ {
+ 	domain_update_iommu_coherency(domain);
+ 	domain->iommu_snooping = domain_update_iommu_snooping(NULL);
+ 	domain->iommu_superpage = domain_update_iommu_superpage(domain, NULL);
++
++	/*
++	 * If RHSA is missing, we should default to the device numa domain
++	 * as fall back.
++	 */
++	if (domain->nid == NUMA_NO_NODE)
++		domain->nid = domain_update_device_node(domain);
+ }
+ 
+ struct context_entry *iommu_context_addr(struct intel_iommu *iommu, u8 bus,
+@@ -5096,8 +5131,6 @@ static struct iommu_domain *intel_iommu_domain_alloc(unsigned type)
+ 		if (type == IOMMU_DOMAIN_DMA)
+ 			intel_init_iova_domain(dmar_domain);
+ 
+-		domain_update_iommu_cap(dmar_domain);
+-
+ 		domain = &dmar_domain->domain;
+ 		domain->geometry.aperture_start = 0;
+ 		domain->geometry.aperture_end   =
+-- 
+2.17.1
+
