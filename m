@@ -2,165 +2,182 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348E0C32773
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140ADC31E40
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14EAA25349
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1464222245
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgIDR0z (ORCPT
+        id S1728033AbgIDSAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:26:55 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51326 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727114AbgIDR0R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:26:17 -0400
-Received: from 89-64-89-131.dynamic.chello.pl (89.64.89.131) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.468)
- id d8ffa229734c6c46; Fri, 4 Sep 2020 19:26:14 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Bob Moore <robert.moore@intel.com>
-Subject: [PATCH 3/6] ACPICA: Introduce special struct type for GPE register addresses
-Date:   Fri, 04 Sep 2020 19:23:04 +0200
-Message-ID: <17404025.GhfappsbzY@kreacher>
-In-Reply-To: <1748021.N9i9sLPJ40@kreacher>
-References: <1748021.N9i9sLPJ40@kreacher>
+        Fri, 4 Sep 2020 14:00:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46608 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726966AbgIDSAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 14:00:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 4A8D9ABA2;
+        Fri,  4 Sep 2020 18:00:02 +0000 (UTC)
+From:   Cyril Hrubis <chrubis@suse.cz>
+To:     ltp@lists.linux.it
+Cc:     linux-kernel@vger.kernel.org, lkp@lists.01.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>
+Subject: [PATCH] syscalls/ptrace10: Add new regression test
+Date:   Fri,  4 Sep 2020 20:00:30 +0200
+Message-Id: <20200904180030.14838-1-chrubis@suse.cz>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+New regression test for a kernel commit:
 
-Notice that the bit_width, bit_offset and access_width fields in
-struct acpi_generic_address are not used during GPE register
-accesses any more, so introduce a simplified address structure
-type, struct acpi_gpe_address, to represent addresses of GPE
-registers and use it instead of struct acpi_generic_address in
-struct acpi_gpe_register_info.
+commit bd14406b78e6daa1ea3c1673bda1ffc9efdeead0
+Author: Jiri Olsa <jolsa@kernel.org>
+Date:   Mon Aug 27 11:12:25 2018 +0200
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    perf/hw_breakpoint: Modify breakpoint even if the new attr has disabled set
+
+Signed-off-by: Cyril Hrubis <chrubis@suse.cz>
+CC: Andy Lutomirski <luto@kernel.org>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- drivers/acpi/acpica/achware.h  |  4 ++--
- drivers/acpi/acpica/aclocal.h  | 11 +++++++++--
- drivers/acpi/acpica/evgpeblk.c |  6 ------
- drivers/acpi/acpica/hwgpe.c    |  8 ++++----
- 4 files changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/acpi/acpica/achware.h b/drivers/acpi/acpica/achware.h
-index 4dba7229f9c1..6ab92e28330d 100644
---- a/drivers/acpi/acpica/achware.h
-+++ b/drivers/acpi/acpica/achware.h
-@@ -78,9 +78,9 @@ acpi_status acpi_hw_validate_io_block(u64 address, u32 bit_width, u32 count);
- /*
-  * hwgpe - GPE support
-  */
--acpi_status acpi_hw_gpe_read(u64 *value, struct acpi_generic_address *reg);
-+acpi_status acpi_hw_gpe_read(u64 *value, struct acpi_gpe_address *reg);
+This is a follow up for the ptrace08 fixes.
+
+ runtest/syscalls                            |  1 +
+ testcases/kernel/syscalls/ptrace/.gitignore |  1 +
+ testcases/kernel/syscalls/ptrace/ptrace10.c | 86 +++++++++++++++++++++
+ 3 files changed, 88 insertions(+)
+ create mode 100644 testcases/kernel/syscalls/ptrace/ptrace10.c
+
+diff --git a/runtest/syscalls b/runtest/syscalls
+index 398145f65..163471bcd 100644
+--- a/runtest/syscalls
++++ b/runtest/syscalls
+@@ -993,6 +993,7 @@ ptrace05 ptrace05
+ ptrace07 ptrace07
+ ptrace08 ptrace08
+ ptrace09 ptrace09
++ptrace10 ptrace10
  
--acpi_status acpi_hw_gpe_write(u64 value, struct acpi_generic_address *reg);
-+acpi_status acpi_hw_gpe_write(u64 value, struct acpi_gpe_address *reg);
- 
- u32 acpi_hw_get_gpe_register_bit(struct acpi_gpe_event_info *gpe_event_info);
- 
-diff --git a/drivers/acpi/acpica/aclocal.h b/drivers/acpi/acpica/aclocal.h
-index af58cd2dc9d3..f83b98fa13ac 100644
---- a/drivers/acpi/acpica/aclocal.h
-+++ b/drivers/acpi/acpica/aclocal.h
-@@ -454,11 +454,18 @@ struct acpi_gpe_event_info {
- 	u8 disable_for_dispatch;	/* Masked during dispatching */
- };
- 
-+/* GPE register address */
+ pwrite01 pwrite01
+ pwrite02 pwrite02
+diff --git a/testcases/kernel/syscalls/ptrace/.gitignore b/testcases/kernel/syscalls/ptrace/.gitignore
+index 7639e1a9f..7ee3b3c47 100644
+--- a/testcases/kernel/syscalls/ptrace/.gitignore
++++ b/testcases/kernel/syscalls/ptrace/.gitignore
+@@ -5,3 +5,4 @@
+ /ptrace07
+ /ptrace08
+ /ptrace09
++/ptrace10
+diff --git a/testcases/kernel/syscalls/ptrace/ptrace10.c b/testcases/kernel/syscalls/ptrace/ptrace10.c
+new file mode 100644
+index 000000000..b5d6b9f8f
+--- /dev/null
++++ b/testcases/kernel/syscalls/ptrace/ptrace10.c
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2020 Cyril Hrubis <chrbis@suse.cz>
++ *
++ * After fix for CVE-2018-1000199 (see ptrace08.c) subsequent calls to POKEUSER
++ * for x86 debug registers were ignored silently.
++ *
++ * This is a regression test for commit:
++ *
++ * commit bd14406b78e6daa1ea3c1673bda1ffc9efdeead0
++ * Author: Jiri Olsa <jolsa@kernel.org>
++ * Date:   Mon Aug 27 11:12:25 2018 +0200
++ *
++ *     perf/hw_breakpoint: Modify breakpoint even if the new attr has disabled set
++ */
 +
-+struct acpi_gpe_address {
-+	u8 space_id;	/* Address space where the register exists */
-+	u64 address;	/* 64-bit address of the register */
++#include <stdlib.h>
++#include <stdio.h>
++#include <stddef.h>
++#include <sys/ptrace.h>
++#include <sys/user.h>
++#include <signal.h>
++#include "tst_test.h"
++
++#if defined(__i386__) || defined(__x86_64__)
++
++static pid_t child_pid;
++
++static void child_main(void)
++{
++	raise(SIGSTOP);
++	exit(0);
++}
++
++static void run(void)
++{
++	int status;
++	unsigned long addr;
++
++	child_pid = SAFE_FORK();
++
++	if (!child_pid)
++		child_main();
++
++	if (SAFE_WAITPID(child_pid, &status, WUNTRACED) != child_pid)
++		tst_brk(TBROK, "Received event from unexpected PID");
++
++	SAFE_PTRACE(PTRACE_ATTACH, child_pid, NULL, NULL);
++	SAFE_PTRACE(PTRACE_POKEUSER, child_pid,
++		(void *)offsetof(struct user, u_debugreg[0]), (void *)1);
++	SAFE_PTRACE(PTRACE_POKEUSER, child_pid,
++		(void *)offsetof(struct user, u_debugreg[0]), (void *)2);
++
++	addr = ptrace(PTRACE_PEEKUSER, child_pid,
++	              (void*)offsetof(struct user, u_debugreg[0]), NULL);
++
++	if (addr == 2)
++		tst_res(TPASS, "The rd0 was set on second PTRACE_POKEUSR");
++	else
++		tst_res(TFAIL, "The rd0 wasn't set on second PTRACE_POKEUSER");
++
++	SAFE_PTRACE(PTRACE_DETACH, child_pid, NULL, NULL);
++	SAFE_KILL(child_pid, SIGCONT);
++	child_pid = 0;
++	tst_reap_children();
++}
++
++static void cleanup(void)
++{
++	/* Main process terminated by tst_brk() with child still paused */
++	if (child_pid)
++		SAFE_KILL(child_pid, SIGKILL);
++}
++
++static struct tst_test test = {
++	.test_all = run,
++	.cleanup = cleanup,
++	.forks_child = 1,
++	.tags = (const struct tst_tag[]) {
++		{"linux-git", "bd14406b78e6"},
++		{}
++	}
 +};
-+
- /* Information about a GPE register pair, one per each status/enable pair in an array */
- 
- struct acpi_gpe_register_info {
--	struct acpi_generic_address status_address;	/* Address of status reg */
--	struct acpi_generic_address enable_address;	/* Address of enable reg */
-+	struct acpi_gpe_address status_address;	/* Address of status reg */
-+	struct acpi_gpe_address enable_address;	/* Address of enable reg */
- 	u16 base_gpe_number;	/* Base GPE number for this register */
- 	u8 enable_for_wake;	/* GPEs to keep enabled when sleeping */
- 	u8 enable_for_run;	/* GPEs to keep enabled when running */
-diff --git a/drivers/acpi/acpica/evgpeblk.c b/drivers/acpi/acpica/evgpeblk.c
-index 150c916dca5e..f5298be4273a 100644
---- a/drivers/acpi/acpica/evgpeblk.c
-+++ b/drivers/acpi/acpica/evgpeblk.c
-@@ -233,12 +233,6 @@ acpi_ev_create_gpe_info_blocks(struct acpi_gpe_block_info *gpe_block)
- 
- 		this_register->status_address.space_id = gpe_block->space_id;
- 		this_register->enable_address.space_id = gpe_block->space_id;
--		this_register->status_address.bit_width =
--		    ACPI_GPE_REGISTER_WIDTH;
--		this_register->enable_address.bit_width =
--		    ACPI_GPE_REGISTER_WIDTH;
--		this_register->status_address.bit_offset = 0;
--		this_register->enable_address.bit_offset = 0;
- 
- 		/* Init the event_info for each GPE within this register */
- 
-diff --git a/drivers/acpi/acpica/hwgpe.c b/drivers/acpi/acpica/hwgpe.c
-index 6cc88524839d..a0e71f34c77a 100644
---- a/drivers/acpi/acpica/hwgpe.c
-+++ b/drivers/acpi/acpica/hwgpe.c
-@@ -29,7 +29,7 @@ acpi_hw_gpe_enable_write(u8 enable_mask,
-  * FUNCTION:    acpi_hw_gpe_read
-  *
-  * PARAMETERS:  value               - Where the value is returned
-- *              reg                 - GAS register structure
-+ *              reg                 - GPE register structure
-  *
-  * RETURN:      Status
-  *
-@@ -40,7 +40,7 @@ acpi_hw_gpe_enable_write(u8 enable_mask,
-  *
-  ******************************************************************************/
- 
--acpi_status acpi_hw_gpe_read(u64 *value, struct acpi_generic_address *reg)
-+acpi_status acpi_hw_gpe_read(u64 *value, struct acpi_gpe_address *reg)
- {
- 	acpi_status status;
- 	u32 value32;
-@@ -65,7 +65,7 @@ acpi_status acpi_hw_gpe_read(u64 *value, struct acpi_generic_address *reg)
-  * FUNCTION:    acpi_hw_gpe_write
-  *
-  * PARAMETERS:  value               - Value to be written
-- *              reg                 - GAS register structure
-+ *              reg                 - GPE register structure
-  *
-  * RETURN:      Status
-  *
-@@ -73,7 +73,7 @@ acpi_status acpi_hw_gpe_read(u64 *value, struct acpi_generic_address *reg)
-  *
-  ******************************************************************************/
- 
--acpi_status acpi_hw_gpe_write(u64 value, struct acpi_generic_address *reg)
-+acpi_status acpi_hw_gpe_write(u64 value, struct acpi_gpe_address *reg)
- {
- 	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
- 		return acpi_os_write_memory((acpi_physical_address)reg->address,
++#else
++TST_TEST_TCONF("This test is only supported on x86 systems");
++#endif
 -- 
 2.26.2
-
-
-
-
 
