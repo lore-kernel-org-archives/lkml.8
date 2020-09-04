@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5324C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F789C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0BF2078E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEFA52084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:38:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VakE5xzB"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WR07Ld5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgIDXiw (ORCPT
+        id S1728247AbgIDXi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 19:38:52 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56368 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727954AbgIDXis (ORCPT
+        Fri, 4 Sep 2020 19:38:56 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49662 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727986AbgIDXiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 19:38:48 -0400
+        Fri, 4 Sep 2020 19:38:52 -0400
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 084Ncjk8010553;
-        Fri, 4 Sep 2020 18:38:45 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 084NckJb082081;
+        Fri, 4 Sep 2020 18:38:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599262725;
-        bh=uXZMCP36lOtJZX1b2XkDr6j9kDkZTjkNJiSHuJFdBJs=;
+        s=ti-com-17Q1; t=1599262726;
+        bh=PKOejH6vx5nLOnIDQFUSZ/d82lIDZbEh+49+G1IcozA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=VakE5xzB8vjSOMrfqAiBvsM0wlVMPX3FlMO6Y+R9rQqX1OVJb/ATyfNCUrxDeaJ4z
-         HWEH9K4wgm/kp0vb73ClggbEe7gSzcWiOimkp7OHixGlQW/DFctWyJkh+HoWKFfIpQ
-         QUNd+HClPHUjBwXHZLt+oF0fqfmaRnAzV4v/zoGs=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 084Ncj9f107122
+        b=WR07Ld5NufEy4+SmhR3wafdWaNN2BmQMiHeK3mOxMlN6W3+xNwsMRrYm8W8JOfHfV
+         OCF4ANGWVewwp1EtXeao0jYIu+k1rba9u2aHqeKKroZMMMFGaSYwviYn8yWtkjTTaZ
+         nOUr5Douxl65RhPU2cemgx7qIGb3xVAuWKyTo2XY=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 084Ncke1107145
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 4 Sep 2020 18:38:45 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 4 Sep 2020 18:38:46 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 4 Sep
- 2020 18:38:44 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 18:38:46 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 4 Sep 2020 18:38:44 -0500
+ Frontend Transport; Fri, 4 Sep 2020 18:38:46 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 084NchkK054145;
-        Fri, 4 Sep 2020 18:38:44 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 084NcjJb039429;
+        Fri, 4 Sep 2020 18:38:45 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
 CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
@@ -57,9 +57,9 @@ CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
         <linux-arm-kernel@lists.infradead.org>,
         Sekhar Nori <nsekhar@ti.com>, Suman Anna <s-anna@ti.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH 2/4] arm64: dts: ti: k3-j7200-main: add main navss cpts node
-Date:   Sat, 5 Sep 2020 02:38:28 +0300
-Message-ID: <20200904233830.11370-3-grygorii.strashko@ti.com>
+Subject: [PATCH 3/4] arm64: dts: ti: k3-j7200-mcu: add mcu cpsw nuss node
+Date:   Sat, 5 Sep 2020 02:38:29 +0300
+Message-ID: <20200904233830.11370-4-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200904233830.11370-1-grygorii.strashko@ti.com>
 References: <20200904233830.11370-1-grygorii.strashko@ti.com>
@@ -71,36 +71,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT node for Main NAVSS CPTS module.
+Add DT node for The TI j7200 MCU SoC Gigabit Ethernet two ports Switch
+subsystem (MCU CPSW NUSS).
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-j7200-main.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ .../boot/dts/ti/k3-j7200-mcu-wakeup.dtsi      | 74 +++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-index cc4ff380a7bc..822c062e25c8 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-@@ -117,6 +117,18 @@
- 						<0x0c>; /* RX_UHCHAN */
- 			ti,sci-rm-range-rflow = <0x00>; /* GP RFLOW */
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
+index 9ecb7e0c9cf7..06cd6a80a499 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
+@@ -34,6 +34,20 @@
  		};
-+
-+		cpts@310d0000 {
-+			compatible = "ti,j721e-cpts";
-+			reg = <0x0 0x310d0000 0x0 0x400>;
-+			reg-names = "cpts";
-+			clocks = <&k3_clks 201 1>;
-+			clock-names = "cpts";
-+			interrupts-extended = <&main_navss_intr 391>;
-+			interrupt-names = "cpts";
-+			ti,cpts-periodic-outputs = <6>;
-+			ti,cpts-ext-ts-inputs = <8>;
-+		};
  	};
  
- 	main_pmx0: pinmux@11c000 {
++	mcu_conf: syscon@40f00000 {
++		compatible = "syscon", "simple-mfd";
++		reg = <0x0 0x40f00000 0x0 0x20000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x0 0x40f00000 0x20000>;
++
++		phy_gmii_sel: phy@4040 {
++			compatible = "ti,am654-phy-gmii-sel";
++			reg = <0x4040 0x4>;
++			#phy-cells = <1>;
++		};
++	};
++
+ 	chipid@43000014 {
+ 		compatible = "ti,am654-chipid";
+ 		reg = <0x0 0x43000014 0x0 0x4>;
+@@ -125,4 +139,64 @@
+ 			ti,sci-rm-range-rflow = <0x00>; /* GP RFLOW */
+ 		};
+ 	};
++
++	mcu_cpsw: ethernet@46000000 {
++		compatible = "ti,j721e-cpsw-nuss";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		reg = <0x0 0x46000000 0x0 0x200000>;
++		reg-names = "cpsw_nuss";
++		ranges = <0x0 0x0 0x0 0x46000000 0x0 0x200000>;
++		dma-coherent;
++		clocks = <&k3_clks 18 21>;
++		clock-names = "fck";
++		power-domains = <&k3_pds 18 TI_SCI_PD_EXCLUSIVE>;
++
++		dmas = <&mcu_udmap 0xf000>,
++		       <&mcu_udmap 0xf001>,
++		       <&mcu_udmap 0xf002>,
++		       <&mcu_udmap 0xf003>,
++		       <&mcu_udmap 0xf004>,
++		       <&mcu_udmap 0xf005>,
++		       <&mcu_udmap 0xf006>,
++		       <&mcu_udmap 0xf007>,
++		       <&mcu_udmap 0x7000>;
++		dma-names = "tx0", "tx1", "tx2", "tx3",
++			    "tx4", "tx5", "tx6", "tx7",
++			    "rx";
++
++		ethernet-ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			cpsw_port1: port@1 {
++				reg = <1>;
++				ti,mac-only;
++				label = "port1";
++				ti,syscon-efuse = <&mcu_conf 0x200>;
++				phys = <&phy_gmii_sel 1>;
++			};
++		};
++
++		davinci_mdio: mdio@f00 {
++			compatible = "ti,cpsw-mdio","ti,davinci_mdio";
++			reg = <0x0 0xf00 0x0 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			clocks = <&k3_clks 18 21>;
++			clock-names = "fck";
++			bus_freq = <1000000>;
++		};
++
++		cpts@3d000 {
++			compatible = "ti,am65-cpts";
++			reg = <0x0 0x3d000 0x0 0x400>;
++			clocks = <&k3_clks 18 2>;
++			clock-names = "cpts";
++			interrupts-extended = <&gic500 GIC_SPI 858 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "cpts";
++			ti,cpts-ext-ts-inputs = <4>;
++			ti,cpts-periodic-outputs = <2>;
++		};
++	};
+ };
 -- 
 2.17.1
 
