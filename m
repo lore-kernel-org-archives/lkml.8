@@ -2,162 +2,178 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1357C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF97C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5973020772
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16F920E65
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:17:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dyI5ZGsy"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="lJJQ9wzR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgIDQRW (ORCPT
+        id S1727119AbgIDQRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgIDQRC (ORCPT
+        Fri, 4 Sep 2020 12:17:24 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:34348 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726855AbgIDQRS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:17:02 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87FEFC061246
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 09:17:02 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z4so7307620wrr.4
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 09:17:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yTXlpKamjwyTHjWdGVSl8o9My/8vSac7U2q74lShFws=;
-        b=dyI5ZGsytzcdcWRj0unQ73fTavpB2h9/E3QDcENNqPWGUPeIAgVuCVYf5E9CXYIheb
-         tdrwRlNV2gi4ZFaFoj27J+LAUVtuvqJMjt/Ey7g8lE+l+NyLWKOTZDKLbMgdNzhOf+a5
-         51BXTgcSZZdENaAWwyIy/hPBOEf7IKKfMDB4XQvXSFWjv3C64g9kRU/JjzgIPG/dj8uG
-         +rETnQkX2RD3nTmQOWP8A8lwqlgKTtJ2FbcUIUP4Cudp3xRp1ypTDp3oF4mSpLkexC6x
-         QY8E7UzVvia6ipK255FQ+HH4lvwzi4JvF7CbkncZ56rzE650O2+tH1zIL3bqBidFsanl
-         Q0lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yTXlpKamjwyTHjWdGVSl8o9My/8vSac7U2q74lShFws=;
-        b=WvYdj+wHSaDjnkHC9uxJ0jaROJ36UHoVv2iL5tlOh1lmCL2/shEkX0ilkAA+SjrF6V
-         ura463+ggheom98R9Lpk4qPra2bFpKiQ0rlCmLvmHk6Hi/SxFKGcvSoSmhR2OM3UiXeL
-         4K4pR6x71VILJfPrrz06q5eh/UEoq0UClWTPjubUZoF8aCTeTenHbkfUv3U5ME+WhUjC
-         MJHvEzvy755cGkslwoYHaTSbpV6prqg04jQcGgA21Ncj6guKcUXiOUFK1PLNkV/tJxch
-         5RGDU0nbi79oACCwLRXu0xo0eekJxEkZiUo0fHGEdsdVIc1jclTK+8FNeqRYXxyTJGv9
-         YkZA==
-X-Gm-Message-State: AOAM530D8Y79xH2bqT47t6dJy/OYJQ23NXaVVHERm7ucnWb+kSOAYC1x
-        bplegxSUKzvtVvZaXE0+ihLVmObiI8WlWkja
-X-Google-Smtp-Source: ABdhPJyRjO0OWBmYvMWGSHUubFYExb4aVzT9XI4mHpo8wx252+E6vRKsGW4U1F73C/qh3l4HOGGW3g==
-X-Received: by 2002:adf:eb4c:: with SMTP id u12mr8234922wrn.161.1599236221084;
-        Fri, 04 Sep 2020 09:17:01 -0700 (PDT)
-Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac])
-        by smtp.gmail.com with ESMTPSA id d3sm5129543wrr.84.2020.09.04.09.16.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 09:17:00 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 2/2] soc: amlogic: meson-ee-pwrc: add support for the Meson AXG SoCs
-Date:   Fri,  4 Sep 2020 18:16:54 +0200
-Message-Id: <20200904161654.24141-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200904161654.24141-1-narmstrong@baylibre.com>
-References: <20200904161654.24141-1-narmstrong@baylibre.com>
+        Fri, 4 Sep 2020 12:17:18 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 084GGI3M007925;
+        Fri, 4 Sep 2020 11:16:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=PODMain02222019;
+ bh=76FaaRrunFbexsou6fbys/9Meax+ywrGh7TuEp7aeyM=;
+ b=lJJQ9wzRikUdH7JNwcF0swFR31NWj5uTxZI5DpMGFCffiwecVIpPPIT5rSh0i2dtAskP
+ N0koC/Q3n0LJrqm+k+lqlhubVlux3pqy6sX3Bzov+QwgVdxJ6JdA+zIamnyuwVJC3GJh
+ GhriNiO/UsdtlcATF9jp28FJeWznV88C0c32XzWwGw5HkzTGy9SFlhzklHDlRMCmHPml
+ qsYeUWdWWqb1DZWxmBIZHxPf0W5gCOQMio8usc8C+QRdgzAuauU0XlSDIIg9rTeMIbWG
+ ne5GyS5IYBaWkPpBkfNardRSSXbOCLcrC2b6dzdt7uDsknrtaL+5I/qM7Y7ORm8fZSf+ wQ== 
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0b-001ae601.pphosted.com with ESMTP id 337keqhmut-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 04 Sep 2020 11:16:51 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 4 Sep 2020
+ 17:16:49 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Fri, 4 Sep 2020 17:16:49 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 609552C3;
+        Fri,  4 Sep 2020 16:16:49 +0000 (UTC)
+Date:   Fri, 4 Sep 2020 16:16:49 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+CC:     Samuel Holland <samuel@sholland.org>, <devicetree@vger.kernel.org>,
+        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <linux-sunxi@googlegroups.com>, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
+        <peron.clem@gmail.com>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [linux-sunxi] [PATCH 05/16] ASoc: sun4i-i2s: Add 20 and 24 bit
+ support
+Message-ID: <20200904161649.GL10899@ediswmail.ad.cirrus.com>
+References: <20200704113902.336911-1-peron.clem@gmail.com>
+ <20200704113902.336911-6-peron.clem@gmail.com>
+ <1e320dfd-9388-54b2-dba9-7def0bf4bbad@sholland.org>
+ <9148679.oVN3Z7rve9@kista>
+ <fd714cb6-3650-1eb9-616d-33c00f1442eb@sholland.org>
+ <20200903074023.jccqp45br3er4h3g@gilmour.lan>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200903074023.jccqp45br3er4h3g@gilmour.lan>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ adultscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999
+ lowpriorityscore=0 suspectscore=0 impostorscore=0 mlxscore=0 clxscore=1011
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009040141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Power Controller in the Amlogic AXG SoCs is similar to the GXL one
-but with less VPU memory domains to enable and a supplementary Audio
-memory power domain.
+On Thu, Sep 03, 2020 at 09:40:23AM +0200, Maxime Ripard wrote:
+> On Wed, Sep 02, 2020 at 09:22:33PM -0500, Samuel Holland wrote:
+> > On 9/2/20 1:10 PM, Jernej Škrabec wrote:
+> > > Hi Samuel!
+> > > 
+> > > Dne petek, 10. julij 2020 ob 07:44:51 CEST je Samuel Holland napisal(a):
+> > >> On 7/4/20 6:38 AM, Clément Péron wrote:
+> > >>> From: Marcus Cooper <codekipper@gmail.com>
+> > >>>
+> > >>> Extend the functionality of the driver to include support of 20 and
+> > >>> 24 bits per sample.
+> > >>>
+> > >>> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > >>> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> > >>> ---
+> > >>>
+> > >>>  sound/soc/sunxi/sun4i-i2s.c | 11 +++++++++--
+> > >>>  1 file changed, 9 insertions(+), 2 deletions(-)
+> > >>>
+> > >>> diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+> > >>> index f78167e152ce..bc7f9343bc7a 100644
+> > >>> --- a/sound/soc/sunxi/sun4i-i2s.c
+> > >>> +++ b/sound/soc/sunxi/sun4i-i2s.c
+> > >>> @@ -577,6 +577,9 @@ static int sun4i_i2s_hw_params(struct
+> > >>> snd_pcm_substream *substream,> 
+> > >>>  	case 16:
+> > >>>  		width = DMA_SLAVE_BUSWIDTH_2_BYTES;
+> > >>>  		break;
+> > >>>
+> > >>> +	case 32:
+> > >>> +		width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> > >>> +		break;
+> > >>
+> > >> This breaks the sun4i variants, because sun4i_i2s_get_wss returns 4 for a 32
+> > >> bit width, but it needs to return 3.
+> > > 
+> > > I'm not sure what has WSS with physical width and DMA?
+> > 
+> > This is the change where creating a S24_LE stream no longer fails with -EINVAL.
+> > So this is the change where userspace stops downsampling 24-bit audio sources.
+> > So this is the change where playback of 24-bit audio sources breaks, because WSS
+> > is programmed wrong.
+> > 
+> > >> As a side note, I wonder why we use the physical width (the spacing between
+> > >> samples in RAM) to drive the slot width. S24_LE takes up 4 bytes per sample
+> > >> in RAM, which we need for DMA. But I don't see why we would want to
+> > >> transmit the padding over the wire. I would expect it to be transmitted the
+> > >> same as S24_3LE (which has no padding). It did not matter before, because
+> > >> the only supported format had no padding.
+> > > 
+> > > Allwinner DMA engines support only 1, 2, 4 and sometimes 8 bytes for bus 
+> > > width, so if sample is 24 bits in size, we have no other way but to transmit 
+> > > padding too.
+> > 
+> > I understand why we do 4 byte DMA from RAM <=> I2S FIFO; that was not my
+> > question. I'm referring to the actual wire format (FIFO <=> PCM_DIN/DOUT). The
+> > sample is already truncated from 32 bits to 24 bits in the FIFO -- that's what
+> > TXIM and RXOM in FIFO_CTRL control.
+> > 
+> > If a sample is 24 bits wide, why would we send 32 BCLKs for every LRCK? I would
+> > expect the slot width to match the sample resolution by default. But yet we have
+> > this code in the driver:
+> > 
+> >     unsigned int word_size = params_width(params);
+> >     unsigned int slot_width = params_physical_width(params);
+> > 
+> > I think slot_width should be the same as word_size, and I suggest changing it
+> > before adding 20/24-bit support.
+> 
+> Generally speaking, the slot width doesn't necessarily match the
+> physical width. With TDM for example you may very well have slots
+> larger than their samples.
+> 
+> That being said, S24 is explicitly a format where you send a sample of
+> 24 bits in a 32-bit word (in the lowest three bytes, little endian)
+> 
+> See:
+> https://elixir.bootlin.com/linux/v5.9-rc3/source/sound/core/pcm_misc.c#L75
+> https://mailman.alsa-project.org/pipermail/alsa-devel/2013-April/061073.html
+> 
+> 24 bits of data over three bytes like you suggest is S24_3LE
+> 
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/soc/amlogic/meson-ee-pwrc.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+My understanding is physical_width refers to the in memory
+representation, but shouldn't be used to control the slot width
+on the bus. If not specified otherwise (say through the set_tdm
+callback), and if the appropriate BCLK is supported, then the slot
+should be just large enough to hold the data.
 
-diff --git a/drivers/soc/amlogic/meson-ee-pwrc.c b/drivers/soc/amlogic/meson-ee-pwrc.c
-index 43665b77aa9e..81834eb166d0 100644
---- a/drivers/soc/amlogic/meson-ee-pwrc.c
-+++ b/drivers/soc/amlogic/meson-ee-pwrc.c
-@@ -15,6 +15,7 @@
- #include <linux/reset.h>
- #include <linux/clk.h>
- #include <dt-bindings/power/meson8-power.h>
-+#include <dt-bindings/power/meson-axg-power.h>
- #include <dt-bindings/power/meson-g12a-power.h>
- #include <dt-bindings/power/meson-gxbb-power.h>
- #include <dt-bindings/power/meson-sm1-power.h>
-@@ -141,6 +142,11 @@ static struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_vpu[] = {
- 	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
- };
- 
-+static struct meson_ee_pwrc_mem_domain axg_pwrc_mem_vpu[] = {
-+	VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
-+	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
-+};
-+
- static struct meson_ee_pwrc_mem_domain gxbb_pwrc_mem_vpu[] = {
- 	VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
- 	VPU_MEMPD(HHI_VPU_MEM_PD_REG1),
-@@ -190,6 +196,10 @@ static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_ge2d[] = {
- 	{ HHI_MEM_PD_REG0, GENMASK(25, 18) },
- };
- 
-+static struct meson_ee_pwrc_mem_domain axg_pwrc_mem_audio[] = {
-+	{ HHI_MEM_PD_REG0, GENMASK(5, 4) },
-+};
-+
- static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_audio[] = {
- 	{ HHI_MEM_PD_REG0, GENMASK(5, 4) },
- 	{ HHI_AUDIO_MEM_PD_REG0, GENMASK(1, 0) },
-@@ -237,6 +247,13 @@ static struct meson_ee_pwrc_domain_desc g12a_pwrc_domains[] = {
- 	[PWRC_G12A_ETH_ID] = MEM_PD("ETH", meson_pwrc_mem_eth),
- };
- 
-+static struct meson_ee_pwrc_domain_desc axg_pwrc_domains[] = {
-+	[PWRC_AXG_VPU_ID]  = VPU_PD("VPU", &gx_pwrc_vpu, axg_pwrc_mem_vpu,
-+				     pwrc_ee_get_power, 5, 2),
-+	[PWRC_AXG_ETHERNET_MEM_ID] = MEM_PD("ETH", meson_pwrc_mem_eth),
-+	[PWRC_AXG_AUDIO_ID] = MEM_PD("AUDIO", axg_pwrc_mem_audio),
-+};
-+
- static struct meson_ee_pwrc_domain_desc gxbb_pwrc_domains[] = {
- 	[PWRC_GXBB_VPU_ID]  = VPU_PD("VPU", &gx_pwrc_vpu, gxbb_pwrc_mem_vpu,
- 				     pwrc_ee_get_power, 12, 2),
-@@ -529,6 +546,11 @@ static struct meson_ee_pwrc_domain_data meson_ee_g12a_pwrc_data = {
- 	.domains = g12a_pwrc_domains,
- };
- 
-+static struct meson_ee_pwrc_domain_data meson_ee_axg_pwrc_data = {
-+	.count = ARRAY_SIZE(axg_pwrc_domains),
-+	.domains = axg_pwrc_domains,
-+};
-+
- static struct meson_ee_pwrc_domain_data meson_ee_gxbb_pwrc_data = {
- 	.count = ARRAY_SIZE(gxbb_pwrc_domains),
- 	.domains = gxbb_pwrc_domains,
-@@ -566,6 +588,10 @@ static const struct of_device_id meson_ee_pwrc_match_table[] = {
- 		.compatible = "amlogic,meson-gxbb-pwrc",
- 		.data = &meson_ee_gxbb_pwrc_data,
- 	},
-+	{
-+		.compatible = "amlogic,meson-axg-pwrc",
-+		.data = &meson_ee_axg_pwrc_data,
-+	},
- 	{
- 		.compatible = "amlogic,meson-g12a-pwrc",
- 		.data = &meson_ee_g12a_pwrc_data,
--- 
-2.22.0
-
+Thanks,
+Charles
