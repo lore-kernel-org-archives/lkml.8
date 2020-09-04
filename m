@@ -2,418 +2,136 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3C6C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF3DC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B27D20722
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941242087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:07:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="DyC1QQUr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hJEFGVhk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730041AbgIDLCK (ORCPT
+        id S1729882AbgIDLH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:02:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56148 "EHLO
+        Fri, 4 Sep 2020 07:07:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729582AbgIDLAl (ORCPT
+        with ESMTP id S1726171AbgIDLHt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 07:00:41 -0400
-Received: from mxout1.routing.net (mxout1.routing.net [IPv6:2a03:2900:1:a::a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D1F0C061246
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:00:39 -0700 (PDT)
-Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-        by mxout1.routing.net (Postfix) with ESMTP id 7695F4015A;
-        Fri,  4 Sep 2020 11:00:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1599217230;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ijU+V9LGg8duQNI23k95/QRwqGkghf0DR8qVS5zQXKM=;
-        b=DyC1QQUrVfbr9PPBOPEfQJI2jDEYTZowJ39GrKkk69VWbAUNzNMDJ9/w/kPzGQqUBXDJ9i
-        RFvwSrJyQ6RnhZmv8YZFPSFSdqW6QwKzE6lPobm0luwJFh4OrTIXYflT0r0Hjg1rM0dCDB
-        oRuCTc9w3P1T09DRWticyCTCQo8zsmk=
-Received: from localhost.localdomain (fttx-pool-217.61.147.193.bambit.de [217.61.147.193])
-        by mxbox3.masterlogin.de (Postfix) with ESMTPSA id BAA1A360469;
-        Fri,  4 Sep 2020 11:00:29 +0000 (UTC)
-From:   Frank Wunderlich <linux@fw-web.de>
-To:     linux-mediatek@lists.infradead.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Fri, 4 Sep 2020 07:07:49 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33785C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:07:49 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u18so5686039wmc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 04:07:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YAvy/uLp7+cWVzWcV7xfgGlutHlCEWW9xHSoG33J/ZM=;
+        b=hJEFGVhkBiKv0X9JtFq+P0TptyE7m8g1Hv8atN9oETRU18f720U2R9pjRGxc5WE6ru
+         MNpnlEYeH/pHp8cQ+akgH7rNybAHXwbEE76XXgOVzriCuj7sPzPlpti/J8l3vVQRevS7
+         RfOcFLZwsntcuwTRyQBOUkFdiT4bWpJRnvp2DC7DgoH5dlmXOynRNqMa6jslNPT8KVGf
+         nVTsCyg+8M3HcXYFG6OZnj7KyAQzUjDCe3QMDnSFPRNEOfhaYdA1sn+CTb0P7/qePNCP
+         fZTULBhyBnts/A40ISXfeNiv7ykKaZXJVjdM5V1DBIgkr05EKWAWo0wuF8hPowIm5weK
+         kPoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YAvy/uLp7+cWVzWcV7xfgGlutHlCEWW9xHSoG33J/ZM=;
+        b=hj3VzqJeXtLR9EFzian6G30XPwhYN0VayZs9hTn4vT51bJP6ja9/21qXmtLMUrpN4S
+         BNSP0KzivYLAKwGiXlTwQaQtVSQ+t7yhOeE7Yi6ocy0tKkh15jd4+WSmqALuzlcBd+7H
+         /6gm+PZmdX/DpTHHxV4kWWF9325LddNN/E23iAwCXbl6LVSrP3LYnGCusG9offVjeSKu
+         5nhbaZsvYumqKXaySiVs2A//7bBxuLloBnbYRogn03jt6JY7030Hjas1MzNF8nbaJl14
+         +NmHWICLyA4jBm8ezYz8NailfeYrMFyD1mYfuzisorC85UktJMFawhEapSJYsNj0VWh5
+         JRUQ==
+X-Gm-Message-State: AOAM531XFuOZ/cbssK/IMVy871uQSU69QZtjRpGUg+oM8495wTHTRFrr
+        N6gLnrW7hCeLlCIW/SfLsb3lkg==
+X-Google-Smtp-Source: ABdhPJyJMFbpGk2JfuZru3rTIMQyff/CzsQ264cZGW7mm28Ks3LDPLGUswtRAjDnUTNZ6YAtlD43aQ==
+X-Received: by 2002:a1c:7405:: with SMTP id p5mr7028460wmc.35.1599217667800;
+        Fri, 04 Sep 2020 04:07:47 -0700 (PDT)
+Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
+        by smtp.googlemail.com with ESMTPSA id q186sm11566637wma.45.2020.09.04.04.07.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Sep 2020 04:07:47 -0700 (PDT)
+Subject: Re: [PATCH v3] nvmem: mtk-efuse: Remove EFUSE register write support
+To:     Chih-En Hsu <chih-en.hsu@mediatek.com>,
         Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        David Woodhouse <dwmw@amazon.co.uk>
-Subject: [PATCH v6 2/4] arm: dts: mt7623: move display nodes to separate mt7623n.dtsi
-Date:   Fri,  4 Sep 2020 13:00:00 +0200
-Message-Id: <20200904110002.88966-3-linux@fw-web.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200904110002.88966-1-linux@fw-web.de>
-References: <20200904110002.88966-1-linux@fw-web.de>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com, Andrew-CT.Chen@mediatek.com,
+        Michael.Mei@mediatek.com
+References: <20200826083943.810-1-chih-en.hsu@mediatek.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <21d857b5-9b6a-7e77-a725-18a1adf3e92a@linaro.org>
+Date:   Fri, 4 Sep 2020 12:07:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200826083943.810-1-chih-en.hsu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Wunderlich <frank-w@public-files.de>
 
-mt7623a has no graphics support so move nodes from generic mt7623.dtsi
-to mt7623n.dtsi
 
-Fixes: 1f6ed224594 ("arm: dts: mt7623: add Mali-450 device node")
-Suggested-by: David Woodhouse <dwmw@amazon.co.uk>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
- arch/arm/boot/dts/mt7623.dtsi                 | 123 ----------------
- arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |   2 +-
- arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |   2 +-
- arch/arm/boot/dts/mt7623n.dtsi                | 134 ++++++++++++++++++
- 4 files changed, 136 insertions(+), 125 deletions(-)
- create mode 100644 arch/arm/boot/dts/mt7623n.dtsi
+On 26/08/2020 09:39, Chih-En Hsu wrote:
+> This patch is to remove function "mtk_reg_write" since
+> Mediatek EFUSE hardware only supports read functionality
+> for NVMEM consumers.
+> 
+> Fixes: ba360fd040e3 ("nvmem: mtk-efuse: remove nvmem regmap dependency")
+> Signed-off-by: Chih-En Hsu <chih-en.hsu@mediatek.com>
+> ---
+>   drivers/nvmem/mtk-efuse.c | 14 --------------
+>   1 file changed, 14 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index a106c0d90a52..d09b5671c91b 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -14,7 +14,6 @@
- #include <dt-bindings/power/mt2701-power.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/phy/phy.h>
--#include <dt-bindings/memory/mt2701-larb-port.h>
- #include <dt-bindings/reset/mt2701-resets.h>
- #include <dt-bindings/thermal/thermal.h>
- 
-@@ -297,17 +296,6 @@ timer: timer@10008000 {
- 		clock-names = "system-clk", "rtc-clk";
- 	};
- 
--	smi_common: smi@1000c000 {
--		compatible = "mediatek,mt7623-smi-common",
--			     "mediatek,mt2701-smi-common";
--		reg = <0 0x1000c000 0 0x1000>;
--		clocks = <&infracfg CLK_INFRA_SMI>,
--			 <&mmsys CLK_MM_SMI_COMMON>,
--			 <&infracfg CLK_INFRA_SMI>;
--		clock-names = "apb", "smi", "async";
--		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
--	};
--
- 	pwrap: pwrap@1000d000 {
- 		compatible = "mediatek,mt7623-pwrap",
- 			     "mediatek,mt2701-pwrap";
-@@ -339,17 +327,6 @@ sysirq: interrupt-controller@10200100 {
- 		reg = <0 0x10200100 0 0x1c>;
- 	};
- 
--	iommu: mmsys_iommu@10205000 {
--		compatible = "mediatek,mt7623-m4u",
--			     "mediatek,mt2701-m4u";
--		reg = <0 0x10205000 0 0x1000>;
--		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>;
--		clocks = <&infracfg CLK_INFRA_M4U>;
--		clock-names = "bclk";
--		mediatek,larbs = <&larb0 &larb1 &larb2>;
--		#iommu-cells = <1>;
--	};
--
- 	efuse: efuse@10206000 {
- 		compatible = "mediatek,mt7623-efuse",
- 			     "mediatek,mt8173-efuse";
-@@ -725,94 +702,6 @@ mmc0: mmc@11230000 {
- 		status = "disabled";
- 	};
- 
--	g3dsys: syscon@13000000 {
--		compatible = "mediatek,mt7623-g3dsys",
--			     "mediatek,mt2701-g3dsys",
--			     "syscon";
--		reg = <0 0x13000000 0 0x200>;
--		#clock-cells = <1>;
--		#reset-cells = <1>;
--	};
--
--	mali: gpu@13040000 {
--		compatible = "mediatek,mt7623-mali", "arm,mali-450";
--		reg = <0 0x13040000 0 0x30000>;
--		interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 171 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 172 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 173 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 174 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 175 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 176 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 177 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 178 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 179 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 180 IRQ_TYPE_LEVEL_LOW>;
--		interrupt-names = "gp", "gpmmu", "pp0", "ppmmu0", "pp1",
--				  "ppmmu1", "pp2", "ppmmu2", "pp3", "ppmmu3",
--				  "pp";
--		clocks = <&topckgen CLK_TOP_MMPLL>,
--			 <&g3dsys CLK_G3DSYS_CORE>;
--		clock-names = "bus", "core";
--		power-domains = <&scpsys MT2701_POWER_DOMAIN_MFG>;
--		resets = <&g3dsys MT2701_G3DSYS_CORE_RST>;
--	};
--
--	mmsys: syscon@14000000 {
--		compatible = "mediatek,mt7623-mmsys",
--			     "mediatek,mt2701-mmsys",
--			     "syscon";
--		reg = <0 0x14000000 0 0x1000>;
--		#clock-cells = <1>;
--	};
--
--	larb0: larb@14010000 {
--		compatible = "mediatek,mt7623-smi-larb",
--			     "mediatek,mt2701-smi-larb";
--		reg = <0 0x14010000 0 0x1000>;
--		mediatek,smi = <&smi_common>;
--		mediatek,larb-id = <0>;
--		clocks = <&mmsys CLK_MM_SMI_LARB0>,
--			 <&mmsys CLK_MM_SMI_LARB0>;
--		clock-names = "apb", "smi";
--		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
--	};
--
--	imgsys: syscon@15000000 {
--		compatible = "mediatek,mt7623-imgsys",
--			     "mediatek,mt2701-imgsys",
--			     "syscon";
--		reg = <0 0x15000000 0 0x1000>;
--		#clock-cells = <1>;
--	};
--
--	larb2: larb@15001000 {
--		compatible = "mediatek,mt7623-smi-larb",
--			     "mediatek,mt2701-smi-larb";
--		reg = <0 0x15001000 0 0x1000>;
--		mediatek,smi = <&smi_common>;
--		mediatek,larb-id = <2>;
--		clocks = <&imgsys CLK_IMG_SMI_COMM>,
--			 <&imgsys CLK_IMG_SMI_COMM>;
--		clock-names = "apb", "smi";
--		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
--	};
--
--	jpegdec: jpegdec@15004000 {
--		compatible = "mediatek,mt7623-jpgdec",
--			     "mediatek,mt2701-jpgdec";
--		reg = <0 0x15004000 0 0x1000>;
--		interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_LOW>;
--		clocks =  <&imgsys CLK_IMG_JPGDEC_SMI>,
--			  <&imgsys CLK_IMG_JPGDEC>;
--		clock-names = "jpgdec-smi",
--			      "jpgdec";
--		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
--		mediatek,larb = <&larb2>;
--		iommus = <&iommu MT2701_M4U_PORT_JPGDEC_WDMA>,
--			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
--	};
--
- 	vdecsys: syscon@16000000 {
- 		compatible = "mediatek,mt7623-vdecsys",
- 			     "mediatek,mt2701-vdecsys",
-@@ -821,18 +710,6 @@ vdecsys: syscon@16000000 {
- 		#clock-cells = <1>;
- 	};
- 
--	larb1: larb@16010000 {
--		compatible = "mediatek,mt7623-smi-larb",
--			     "mediatek,mt2701-smi-larb";
--		reg = <0 0x16010000 0 0x1000>;
--		mediatek,smi = <&smi_common>;
--		mediatek,larb-id = <1>;
--		clocks = <&vdecsys CLK_VDEC_CKGEN>,
--			 <&vdecsys CLK_VDEC_LARB>;
--		clock-names = "apb", "smi";
--		power-domains = <&scpsys MT2701_POWER_DOMAIN_VDEC>;
--	};
--
- 	hifsys: syscon@1a000000 {
- 		compatible = "mediatek,mt7623-hifsys",
- 			     "mediatek,mt2701-hifsys",
-diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-index 2b760f90f38c..344f8c65c4aa 100644
---- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-+++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-@@ -6,7 +6,7 @@
- 
- /dts-v1/;
- #include <dt-bindings/input/input.h>
--#include "mt7623.dtsi"
-+#include "mt7623n.dtsi"
- #include "mt6323.dtsi"
- 
- / {
-diff --git a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-index 0447748f9fa0..f8efcc364bc3 100644
---- a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-+++ b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-@@ -7,7 +7,7 @@
- 
- /dts-v1/;
- #include <dt-bindings/input/input.h>
--#include "mt7623.dtsi"
-+#include "mt7623n.dtsi"
- #include "mt6323.dtsi"
- 
- / {
-diff --git a/arch/arm/boot/dts/mt7623n.dtsi b/arch/arm/boot/dts/mt7623n.dtsi
-new file mode 100644
-index 000000000000..a47e82468895
---- /dev/null
-+++ b/arch/arm/boot/dts/mt7623n.dtsi
-@@ -0,0 +1,134 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright © 2017-2020 MediaTek Inc.
-+ * Author: Sean Wang <sean.wang@mediatek.com>
-+ *	   Ryder Lee <ryder.lee@mediatek.com>
-+ *
-+ */
-+
-+#include "mt7623.dtsi"
-+#include <dt-bindings/memory/mt2701-larb-port.h>
-+
-+/ {
-+	g3dsys: syscon@13000000 {
-+		compatible = "mediatek,mt7623-g3dsys",
-+			     "mediatek,mt2701-g3dsys",
-+			     "syscon";
-+		reg = <0 0x13000000 0 0x200>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+	mali: gpu@13040000 {
-+		compatible = "mediatek,mt7623-mali", "arm,mali-450";
-+		reg = <0 0x13040000 0 0x30000>;
-+		interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 171 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 172 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 173 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 174 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 175 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 176 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 177 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 178 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 179 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 180 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "gp", "gpmmu", "pp0", "ppmmu0", "pp1",
-+				  "ppmmu1", "pp2", "ppmmu2", "pp3", "ppmmu3",
-+				  "pp";
-+		clocks = <&topckgen CLK_TOP_MMPLL>,
-+			 <&g3dsys CLK_G3DSYS_CORE>;
-+		clock-names = "bus", "core";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_MFG>;
-+		resets = <&g3dsys MT2701_G3DSYS_CORE_RST>;
-+	};
-+
-+	mmsys: syscon@14000000 {
-+		compatible = "mediatek,mt7623-mmsys",
-+			     "mediatek,mt2701-mmsys",
-+			     "syscon";
-+		reg = <0 0x14000000 0 0x1000>;
-+		#clock-cells = <1>;
-+	};
-+
-+	larb0: larb@14010000 {
-+		compatible = "mediatek,mt7623-smi-larb",
-+			     "mediatek,mt2701-smi-larb";
-+		reg = <0 0x14010000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		mediatek,larb-id = <0>;
-+		clocks = <&mmsys CLK_MM_SMI_LARB0>,
-+			 <&mmsys CLK_MM_SMI_LARB0>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
-+	};
-+
-+	larb1: larb@16010000 {
-+		compatible = "mediatek,mt7623-smi-larb",
-+			     "mediatek,mt2701-smi-larb";
-+		reg = <0 0x16010000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		mediatek,larb-id = <1>;
-+		clocks = <&vdecsys CLK_VDEC_CKGEN>,
-+			 <&vdecsys CLK_VDEC_LARB>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_VDEC>;
-+	};
-+
-+	larb2: larb@15001000 {
-+		compatible = "mediatek,mt7623-smi-larb",
-+			     "mediatek,mt2701-smi-larb";
-+		reg = <0 0x15001000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		mediatek,larb-id = <2>;
-+		clocks = <&imgsys CLK_IMG_SMI_COMM>,
-+			 <&imgsys CLK_IMG_SMI_COMM>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
-+	};
-+
-+	imgsys: syscon@15000000 {
-+		compatible = "mediatek,mt7623-imgsys",
-+			     "mediatek,mt2701-imgsys",
-+			     "syscon";
-+		reg = <0 0x15000000 0 0x1000>;
-+		#clock-cells = <1>;
-+	};
-+
-+	iommu: mmsys_iommu@10205000 {
-+		compatible = "mediatek,mt7623-m4u",
-+			     "mediatek,mt2701-m4u";
-+		reg = <0 0x10205000 0 0x1000>;
-+		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&infracfg CLK_INFRA_M4U>;
-+		clock-names = "bclk";
-+		mediatek,larbs = <&larb0 &larb1 &larb2>;
-+		#iommu-cells = <1>;
-+	};
-+
-+	jpegdec: jpegdec@15004000 {
-+		compatible = "mediatek,mt7623-jpgdec",
-+			     "mediatek,mt2701-jpgdec";
-+		reg = <0 0x15004000 0 0x1000>;
-+		interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_LOW>;
-+		clocks =  <&imgsys CLK_IMG_JPGDEC_SMI>,
-+			  <&imgsys CLK_IMG_JPGDEC>;
-+		clock-names = "jpgdec-smi",
-+			      "jpgdec";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
-+		mediatek,larb = <&larb2>;
-+		iommus = <&iommu MT2701_M4U_PORT_JPGDEC_WDMA>,
-+			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
-+	};
-+
-+	smi_common: smi@1000c000 {
-+		compatible = "mediatek,mt7623-smi-common",
-+			     "mediatek,mt2701-smi-common";
-+		reg = <0 0x1000c000 0 0x1000>;
-+		clocks = <&infracfg CLK_INFRA_SMI>,
-+			 <&mmsys CLK_MM_SMI_COMMON>,
-+			 <&infracfg CLK_INFRA_SMI>;
-+		clock-names = "apb", "smi", "async";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
-+	};
-+};
--- 
-2.25.1
 
+Applied thanks!
+
+--srini
+
+> 
+> diff --git a/drivers/nvmem/mtk-efuse.c b/drivers/nvmem/mtk-efuse.c
+> index 856d9c3fc38e..6a537d959f14 100644
+> --- a/drivers/nvmem/mtk-efuse.c
+> +++ b/drivers/nvmem/mtk-efuse.c
+> @@ -28,19 +28,6 @@ static int mtk_reg_read(void *context,
+>   	return 0;
+>   }
+>   
+> -static int mtk_reg_write(void *context,
+> -			 unsigned int reg, void *_val, size_t bytes)
+> -{
+> -	struct mtk_efuse_priv *priv = context;
+> -	u32 *val = _val;
+> -	int i = 0, words = bytes / 4;
+> -
+> -	while (words--)
+> -		writel(*val++, priv->base + reg + (i++ * 4));
+> -
+> -	return 0;
+> -}
+> -
+>   static int mtk_efuse_probe(struct platform_device *pdev)
+>   {
+>   	struct device *dev = &pdev->dev;
+> @@ -61,7 +48,6 @@ static int mtk_efuse_probe(struct platform_device *pdev)
+>   	econfig.stride = 4;
+>   	econfig.word_size = 4;
+>   	econfig.reg_read = mtk_reg_read;
+> -	econfig.reg_write = mtk_reg_write;
+>   	econfig.size = resource_size(res);
+>   	econfig.priv = priv;
+>   	econfig.dev = dev;
+> 
