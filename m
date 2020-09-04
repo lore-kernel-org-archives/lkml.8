@@ -2,137 +2,191 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561A9C2BC84
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C23C28E83
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27D9E208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:29:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Ix/rnQmX"
+	by mail.kernel.org (Postfix) with ESMTP id DBC3E206D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729759AbgIDH3o (ORCPT
+        id S1729800AbgIDH3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 03:29:44 -0400
-Received: from de-smtp-delivery-102.mimecast.com ([62.140.7.102]:43341 "EHLO
-        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729710AbgIDH3j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 03:29:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-        t=1599204575;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=uJUATO4/EY2WXtEWe+OauJXndfAxySdduMFm0v1Smgs=;
-        b=Ix/rnQmXlz+f1vOfc7YU1QMb0m4WeVpdlXZVptHUWs8un1PitqHR5jrPWvGMS12mRiVu4/
-        JUExbhLqJoK5IhbTSR4tdocy6qsLDfHnZWbROHG3eQhRMdlK2GOHnIz0Z9Uz0ExisFcC9p
-        GS6IP64rDLbFm49XoJS3sLFvTbt9INM=
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com
- (mail-vi1eur05lp2170.outbound.protection.outlook.com [104.47.17.170])
- (Using TLS) by relay.mimecast.com with ESMTP id
- de-mta-8-FtvegQu_OKOEfd_9Z0LxLw-1; Fri, 04 Sep 2020 09:29:34 +0200
-X-MC-Unique: FtvegQu_OKOEfd_9Z0LxLw-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Apk9snTrl3a9lxvvGTu/neKLtI/Ru5OOc/jXuBNszTDJYw1AdVJC2hLAy9MJCZwbtqDVDyR+SAl8js601SNmxvt+qh3jKXnAuz8SrV5hUehWDcP5m0V8jkm9kSulCVE8p8a80mm/8BjARDBScjkQdB9GVtQM6xCDNiyavDUAVjswQGQfQgWKrk74GHhOs4cDSHIkwpb5WpTkhebt1R6JcsA+I1D+zw2mlVBGOqlLiM/qo1Txu994t4mnst1mODOctLCPzydizF7q1lxcQY7YsQW3Q2p12TN28YuAKklTcqcwXbz3sQ5qUf99Icj8C/PgjL1NtlG4bEGnjxc7fkENuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rBuO3FBRhw0o8kx/V7f+A2WDoFQK/EwFfxMTB6K6X9s=;
- b=HUxMcpxvMulNVxTa19+xhtlupgacsLbRwU1HWeSCxyjMupiaTSqmLXXny6Of54q4hOt3AnCzcSyb1JwUhJdnwFnMmvsAqHqNZ6evPgFYux/H4tpqD9sQsoUMpn0spRXyN0BBzMFl3oUJY/q1uyO1MFpbf8lUIKX0qeKjZbz8jRCi1mH6/8MyS7NrvqtaUfy+qKqNcPMxdPIQQSxxusKUqeunQrQoYD096z10d9WVVqWDbeeKJM7gvK8awI3Fqov07WxwkRKuO1lMM4gamB1fHmgalJuVgK73LbzW445ibRPeuUEpYokXD4zyAOXpwFVT/11EuSQAb3z1npzfUpaJTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=suse.com;
-Received: from VI1PR04MB4928.eurprd04.prod.outlook.com (2603:10a6:803:57::13)
- by VI1PR0401MB2654.eurprd04.prod.outlook.com (2603:10a6:800:58::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.25; Fri, 4 Sep
- 2020 07:29:32 +0000
-Received: from VI1PR04MB4928.eurprd04.prod.outlook.com
- ([fe80::859b:fe60:4cfd:efa3]) by VI1PR04MB4928.eurprd04.prod.outlook.com
- ([fe80::859b:fe60:4cfd:efa3%2]) with mapi id 15.20.3348.016; Fri, 4 Sep 2020
- 07:29:32 +0000
-From:   Chester Lin <clin@suse.com>
-To:     ardb@kernel.org, catalin.marinas@arm.com, will@kernel.org,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, corbet@lwn.net,
-        mark.rutland@arm.com, vincenzo.frascino@arm.com,
-        samitolvanen@google.com, masahiroy@kernel.org, mingo@kernel.org
-CC:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-        jlee@suse.com, clin@suse.com
-Subject: [PATCH 0/6] add ima_arch support for ARM64
-Date:   Fri,  4 Sep 2020 15:28:59 +0800
-Message-ID: <20200904072905.25332-1-clin@suse.com>
-X-Mailer: git-send-email 2.26.1
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR02CA0073.eurprd02.prod.outlook.com
- (2603:10a6:208:154::14) To VI1PR04MB4928.eurprd04.prod.outlook.com
- (2603:10a6:803:57::13)
+        Fri, 4 Sep 2020 03:29:54 -0400
+Received: from cmta20.telus.net ([209.171.16.93]:59586 "EHLO cmta20.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729724AbgIDH3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 03:29:40 -0400
+X-Greylist: delayed 488 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Sep 2020 03:29:39 EDT
+Received: from montezuma.home ([154.5.226.127])
+        by cmsmtp with SMTP
+        id E62IkLM3Dts7mE62JkUKB3; Fri, 04 Sep 2020 01:21:30 -0600
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=esGhMbhX c=1 sm=1 tr=0
+ a=f8b3WT/FcTuUJCJtQO1udw==:117 a=f8b3WT/FcTuUJCJtQO1udw==:17
+ a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=sdRlC8HA8of5HKNwkIoA:9 a=CjuIK1q_8ugA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=pHzHmUro8NiASowvMSCR:22 a=n87TN5wuljxrRezIQYnT:22
+Date:   Fri, 4 Sep 2020 00:21:26 -0700 (PDT)
+From:   Zwane Mwaikambo <zwane@yosper.io>
+To:     Lyude Paul <lyude@redhat.com>
+cc:     Daniel Vetter <daniel@ffwll.ch>, dkwon@redhat.com,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>, zwanem@gmail.com
+Subject: [PATCH]] drm/dp check aux_dev before use in
+ drm_dp_aux_dev_get_by_minor()
+In-Reply-To: <alpine.DEB.2.21.2008121314020.39850@montezuma.home>
+Message-ID: <alpine.DEB.2.21.2009031042400.44355@montezuma.home>
+References: <alpine.DEB.2.21.2008101004110.27032@montezuma.home> <20200811085830.GZ2352366@phenom.ffwll.local> <alpine.DEB.2.21.2008111514210.35094@montezuma.home> <CAKMK7uHxikojLQNbsnnfDfGZ3tFP9CRUTzvr+DsZghzQupaBGg@mail.gmail.com>
+ <a1141faf8c6a0a924d87132fb4a297cd6d47e09d.camel@redhat.com> <alpine.DEB.2.21.2008121314020.39850@montezuma.home>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from linux-8mug.suse.de (114.24.10.103) by AM0PR02CA0073.eurprd02.prod.outlook.com (2603:10a6:208:154::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Fri, 4 Sep 2020 07:29:26 +0000
-X-Mailer: git-send-email 2.26.1
-X-Originating-IP: [114.24.10.103]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 16f33a1c-5c94-4039-2796-08d850a443c4
-X-MS-TrafficTypeDiagnostic: VI1PR0401MB2654:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0401MB26542181D28E0057A0B4AF56AD2D0@VI1PR0401MB2654.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LWCKLiDMr40bvpPiKlgbf27VRGCqIjVlEScsMkxXBHg5vYlVx5G3ZXKswAgav54RSo2v5ePFsv3KJxJSY0yMbvtNH5F5oSp8eBTwbHO/krPHDu+0CaeXxe2SbmfqgODW1z1iVzfsELRYUc3Yww5Mno4Hn/AydFsaV+9AUOlBy9TGbpOaz63iMlG+EPyA6HioQA6DTBMCzWrIvMP3YNh+BesKo0CKoC4xQvmr0xW8AAbb9YV3zKPRwL9zTszzS21hxgP5sluPLfvQddMMiT2ScxV6uhD7oSg95pcPaZj56xI7MLjx+0gEqkhv8wEHmpQQrnquSb/bMrXqdHTBuBtlO4CY3c3QMuZMMtbtictnWRFTTlrOLn6lquUoPojPHDMl
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4928.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(346002)(136003)(376002)(396003)(366004)(83380400001)(86362001)(66476007)(478600001)(8676002)(7416002)(52116002)(66556008)(66946007)(2906002)(6512007)(8936002)(4326008)(316002)(186003)(107886003)(6666004)(26005)(5660300002)(16526019)(6506007)(956004)(36756003)(1076003)(2616005)(6486002)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: u7avlDniBIG2KApO6a/WFIOWI/nJGviADnsNBIGh5kKWt2GADakJq3T80xIUtY+7geeGblirIFprxQ/oiU0qGbrIB3pPt6NVnaOWVsp23TcSHAzK4qT9d3l6n2Qu/Ujp+43INpTahP1oFrkGNeGKzEYjSULo0hn6qTqUtBKkBMX8GGQPkdnIfyTP32jNauBE6wbYQfs8AR6MTNX6NoBVi2d+hIslbRwpQ1NEYbzjWzzGL6zYJW+qxu2HrHS7eHIO7LD4p1qK2t24hEs+SS5fVTHwvQ7FAQL0pWS+wAZhwH7qKJUPD+EPttLGAqTJhFCknmu7XWOcvV7ra5S6f7ZI8IqrJ/31Adm5SpMimi0g1qdkIn1uLvydtvKzkjbFk5yzboQD5ejIqnn52q/L0MYkqeI7x95Oi0MfbmAD7MLatCajgawcRu2nWF/6c8hqQPHeEgea7dyETsFQge7barvOBxcKP5CsbqclHHBPLogPNyUfN9e0QnqcqIQBj0i5tmaAVkrieIYYRqKB5reg3dc3pFydGssTByySblSw4Sjwn2PCcXWpNxASm0UhrctZjObHaGAMXe04CyyESq7pOuvwouv96w1heTDRmDu2rfS8gQDMfggOdutHuJJEzLYCxjHFh7mg/ikPvd6HZ0drRjPOaA==
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16f33a1c-5c94-4039-2796-08d850a443c4
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4928.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2020 07:29:31.9609
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 46wrDScoGkm0B4xHx/WOu1bR35JpIIYaSE+X9fhKs8iCp1got2JCM9nTFOdjxwKK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2654
+Content-Type: text/plain; charset=US-ASCII
+X-CMAE-Envelope: MS4wfI+UlnBQk2yWjWrY1QreIDLHfETiLDlU4IpvhwW3DoX+nGOKWR2Iz1jc1S0v+b3xZwxvif+MsK4pqy7sOuqY2UeeRyTHPvFXGyj7MrqjMLaFCmQCLTas
+ oCCvU2yV2sUMXOF0wx0FehKrP6Dq6W1xDoe+woBQRojgaaYVONPuPFeHx7nbLy4ID/lQPAg8Plh6IgpoJ915qK6JD7TlHwfEMkGmNUb9THz9PRcnKxGYRWh5
+ SqJ8DGtXOx8NUGACa6Yis1FXlX5cAfVjsAIrHtsGNbmALPKuFx03+9Y3oS+Ziq6fFWIEXuYtNDQKlpjdRN8/WjeLoLopSqusG5s+LmqaxOk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add IMA arch dependent support for ARM64. Some IMA functions can check
-arch-specific status before running. For example, the ima_load_data
-function or the boot param "ima_appraise=3D" should not be executed when
-UEFI secure boot is enabled. We want to fill the gap in order to complete
-the IMA support on ARM64.
+I observed this when unplugging a DP monitor whilst a computer is asleep 
+and then waking it up. This left DP chardev nodes still being present on 
+the filesystem and accessing these device nodes caused an oops because 
+drm_dp_aux_dev_get_by_minor() assumes a device exists if it is opened. 
+This can also be reproduced by creating a device node with mknod(1) and 
+issuing an open(2)
 
-Chester Lin (6):
-  efistub: pass uefi secureboot flag via fdt params
-  efi/arm: a helper to parse secure boot param in fdt params
-  efi: add secure boot flag
-  efi/arm: check secure boot status in efi init
-  arm64/ima: add ima arch support
-  docs/arm: add the description of uefi-secure-boot param
+[166164.933198] BUG: kernel NULL pointer dereference, address: 0000000000000018
+[166164.933202] #PF: supervisor read access in kernel mode
+[166164.933204] #PF: error_code(0x0000) - not-present page
+[166164.933205] PGD 0 P4D 0 
+[166164.933208] Oops: 0000 [#1] PREEMPT SMP NOPTI
+[166164.933211] CPU: 4 PID: 99071 Comm: fwupd Tainted: G        W         
+5.8.0-rc6+ #1
+[166164.933213] Hardware name: LENOVO 20RD002VUS/20RD002VUS, BIOS R16ET25W 
+(1.11 ) 04/21/2020
+[166164.933232] RIP: 0010:drm_dp_aux_dev_get_by_minor+0x29/0x70 
+[drm_kms_helper]
+[166164.933234] Code: 00 0f 1f 44 00 00 55 48 89 e5 41 54 41 89 fc 48 c7 
+c7 60 01 a4 c0 e8 26 ab 30 d7 44 89 e6 48 c7 c7 80 01 a4 c0 e8 47 94 d6 d6 
+<8b> 50 18 49 89 c4 48 8d 78 18 85 d2 74 33 8d 4a 01 89 d0 f0 0f b1
+[166164.933236] RSP: 0018:ffffb7d7c41cbbf0 EFLAGS: 00010246
+[166164.933237] RAX: 0000000000000000 RBX: ffff8a90001fe900 RCX: 0000000000000000
+[166164.933238] RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffffffffc0a40180
+[166164.933239] RBP: ffffb7d7c41cbbf8 R08: 0000000000000000 R09: ffff8a93e157d6d0
+[166164.933240] R10: 0000000000000000 R11: ffffffffc0a40188 R12: 0000000000000003
+[166164.933241] R13: ffff8a9402200e80 R14: ffff8a90001fe900 R15: 0000000000000000
+[166164.933244] FS:  00007f7fb041eb00(0000) GS:ffff8a9411500000(0000) 
+knlGS:0000000000000000
+[166164.933245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[166164.933246] CR2: 0000000000000018 CR3: 00000000352c2003 CR4: 00000000003606e0
+[166164.933247] Call Trace:
+[166164.933264]  auxdev_open+0x1b/0x40 [drm_kms_helper]
+[166164.933278]  chrdev_open+0xa7/0x1c0
+[166164.933282]  ? cdev_put.part.0+0x20/0x20
+[166164.933287]  do_dentry_open+0x161/0x3c0
+[166164.933291]  vfs_open+0x2d/0x30
+[166164.933297]  path_openat+0xb27/0x10e0
+[166164.933306]  ? atime_needs_update+0x73/0xd0
+[166164.933309]  do_filp_open+0x91/0x100
+[166164.933313]  ? __alloc_fd+0xb2/0x150
+[166164.933316]  do_sys_openat2+0x210/0x2d0
+[166164.933318]  do_sys_open+0x46/0x80
+[166164.933320]  __x64_sys_openat+0x20/0x30
+[166164.933328]  do_syscall_64+0x52/0xc0
+[166164.933336]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
- Documentation/arm/uefi.rst         |  2 ++
- arch/arm64/Kconfig                 |  1 +
- arch/arm64/kernel/Makefile         |  2 ++
- arch/arm64/kernel/ima_arch.c       | 37 ++++++++++++++++++++++++++++
- drivers/firmware/efi/arm-init.c    |  3 +++
- drivers/firmware/efi/fdtparams.c   | 23 ++++++++++++++++++
- drivers/firmware/efi/libstub/fdt.c | 39 +++++++++++++++++++++++++++++-
- include/linux/efi.h                |  2 ++
- 8 files changed, 108 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/kernel/ima_arch.c
 
---=20
-2.26.1
+(gdb) disassemble drm_dp_aux_dev_get_by_minor+0x29
+Dump of assembler code for function drm_dp_aux_dev_get_by_minor:
+   0x0000000000017b10 <+0>:     callq  0x17b15 <drm_dp_aux_dev_get_by_minor+5>
+   0x0000000000017b15 <+5>:     push   %rbp
+   0x0000000000017b16 <+6>:     mov    %rsp,%rbp
+   0x0000000000017b19 <+9>:     push   %r12
+   0x0000000000017b1b <+11>:    mov    %edi,%r12d
+   0x0000000000017b1e <+14>:    mov    $0x0,%rdi
+   0x0000000000017b25 <+21>:    callq  0x17b2a <drm_dp_aux_dev_get_by_minor+26>
+   0x0000000000017b2a <+26>:    mov    %r12d,%esi
+   0x0000000000017b2d <+29>:    mov    $0x0,%rdi
+   0x0000000000017b34 <+36>:    callq  0x17b39 <drm_dp_aux_dev_get_by_minor+41>
+   0x0000000000017b39 <+41>:    mov    0x18(%rax),%edx <=========
+   0x0000000000017b3c <+44>:    mov    %rax,%r12
+   0x0000000000017b3f <+47>:    lea    0x18(%rax),%rdi
+   0x0000000000017b43 <+51>:    test   %edx,%edx
+   0x0000000000017b45 <+53>:    je     0x17b7a <drm_dp_aux_dev_get_by_minor+106>
+   0x0000000000017b47 <+55>:    lea    0x1(%rdx),%ecx
+   0x0000000000017b4a <+58>:    mov    %edx,%eax
+   0x0000000000017b4c <+60>:    lock cmpxchg %ecx,(%rdi)
+   0x0000000000017b50 <+64>:    jne    0x17b76 <drm_dp_aux_dev_get_by_minor+102>
+   0x0000000000017b52 <+66>:    test   %edx,%edx
+   0x0000000000017b54 <+68>:    js     0x17b6d <drm_dp_aux_dev_get_by_minor+93>
+   0x0000000000017b56 <+70>:    test   %ecx,%ecx
+   0x0000000000017b58 <+72>:    js     0x17b6d <drm_dp_aux_dev_get_by_minor+93>
+   0x0000000000017b5a <+74>:    mov    $0x0,%rdi
+   0x0000000000017b61 <+81>:    callq  0x17b66 <drm_dp_aux_dev_get_by_minor+86>
+   0x0000000000017b66 <+86>:    mov    %r12,%rax
+   0x0000000000017b69 <+89>:    pop    %r12
+   0x0000000000017b6b <+91>:    pop    %rbp
+   0x0000000000017b6c <+92>:    retq   
+   0x0000000000017b6d <+93>:    xor    %esi,%esi
+   0x0000000000017b6f <+95>:    callq  0x17b74 <drm_dp_aux_dev_get_by_minor+100>
+   0x0000000000017b74 <+100>:   jmp    0x17b5a <drm_dp_aux_dev_get_by_minor+74>
+   0x0000000000017b76 <+102>:   mov    %eax,%edx
+   0x0000000000017b78 <+104>:   jmp    0x17b43 <drm_dp_aux_dev_get_by_minor+51>
+   0x0000000000017b7a <+106>:   xor    %r12d,%r12d
+   0x0000000000017b7d <+109>:   jmp    0x17b5a <drm_dp_aux_dev_get_by_minor+74>
+End of assembler dump.
 
+(gdb) list *drm_dp_aux_dev_get_by_minor+0x29
+0x17b39 is in drm_dp_aux_dev_get_by_minor (drivers/gpu/drm/drm_dp_aux_dev.c:65).
+60      static struct drm_dp_aux_dev *drm_dp_aux_dev_get_by_minor(unsigned index)
+61      {
+62              struct drm_dp_aux_dev *aux_dev = NULL;
+63
+64              mutex_lock(&aux_idr_mutex);
+65              aux_dev = idr_find(&aux_idr, index);
+66              if (!kref_get_unless_zero(&aux_dev->refcount))
+67                      aux_dev = NULL;
+68              mutex_unlock(&aux_idr_mutex);
+69
+(gdb) p/x &((struct drm_dp_aux_dev *)(0x0))->refcount
+$8 = 0x18
+
+Looking at the caller, checks on the minor are pushed down to 
+drm_dp_aux_dev_get_by_minor()
+
+static int auxdev_open(struct inode *inode, struct file *file)
+{
+    unsigned int minor = iminor(inode);
+    struct drm_dp_aux_dev *aux_dev;
+
+    aux_dev = drm_dp_aux_dev_get_by_minor(minor); <====
+    if (!aux_dev)
+        return -ENODEV;
+
+    file->private_data = aux_dev;
+    return 0;
+}
+
+
+Fixes: e94cb37b34eb8 ("Add a drm_aux-dev module for reading/writing dpcd registers")
+Cc: stable@vger.kernel.org
+Signed-off-by: Zwane Mwaikambo <zwane@yosper.io>
+---
+
+diff --git a/drivers/gpu/drm/drm_dp_aux_dev.c b/drivers/gpu/drm/drm_dp_aux_dev.c
+index 2510717d5a08..e25181bf2c48 100644
+--- a/drivers/gpu/drm/drm_dp_aux_dev.c
++++ b/drivers/gpu/drm/drm_dp_aux_dev.c
+@@ -63,7 +63,7 @@ static struct drm_dp_aux_dev *drm_dp_aux_dev_get_by_minor(unsigned index)
+ 
+ 	mutex_lock(&aux_idr_mutex);
+ 	aux_dev = idr_find(&aux_idr, index);
+-	if (!kref_get_unless_zero(&aux_dev->refcount))
++	if (aux_dev && !kref_get_unless_zero(&aux_dev->refcount))
+ 		aux_dev = NULL;
+ 	mutex_unlock(&aux_idr_mutex);
+ 
