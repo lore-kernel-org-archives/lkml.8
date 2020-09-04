@@ -5,54 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF90BC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5C6C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 792E0206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFDDF206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599229665;
-	bh=/VULTuInfm03Lezg/PEGNksKVEUO/TpaINRmGbUsIR0=;
+	s=default; t=1599229692;
+	bh=hiW7t2gMwZTXC1ND5nZmuUuf6D5qSIXToDKNw7CRQ0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dojVfxQtTJx6/xOpZ6Y4IGhxvGijmflx5kPTE245908O2cLbVXORnU3MPg7T3zjBk
-	 NuYq6J/JwKOZMG+Jgjhcnz6rMcsDv8PyLI0IwY436y9EFgoXZiEyfqpfLInDGc+Duo
-	 sjjzMg9r+2LpAOpWeN8SKA5osZWDDknxPzwPiH+Y=
+	b=JK7fv5iXTSswUPdvL1ZAJgML+682fIy5PxJqe10HOJkSqSAlg2xMhb2tJBQEkZ1oP
+	 J1U2nPviFUMH3uTe9f2WouWsSExtRKVrUGIXyCdsXliKZ8jK4WCLuPd6lQPVrKosxt
+	 q55yQRxtsx0Rv8ceoxnptFPdaj/0kG3u8T0rk4JI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730825AbgIDO11 (ORCPT
+        id S1730552AbgIDO2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:27:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37294 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 10:28:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730434AbgIDNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:34:23 -0400
+        id S1730429AbgIDNeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:34:22 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DFEE20C56;
-        Fri,  4 Sep 2020 13:30:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83F2120DD4;
+        Fri,  4 Sep 2020 13:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226234;
-        bh=/VULTuInfm03Lezg/PEGNksKVEUO/TpaINRmGbUsIR0=;
+        s=default; t=1599226232;
+        bh=hiW7t2gMwZTXC1ND5nZmuUuf6D5qSIXToDKNw7CRQ0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pJ9221QYFhsChfROEIGutZGsECk4Iqenk79hlAoALaOhFy/EiANaYVbEZPxyKutlE
-         Efowl2jUO27T/VmOUlUgWIb02J5cOh6Ycl2e3CYw4pFejzdCVK8481wwFzLC/+xFSd
-         ulE3eUcsHtR8VMBt+LfixfL2i++Jn5lYyghwW8oI=
+        b=E/YcQHo1jQHzd++CP6ZvNYIXFVUbOLnFrDyDfb/jD0HPn88fpNO6Hrnip7jaBeLvj
+         WzZfdy6qK8m9HUTqLwnf/+g8CBUBlMs0Zq4DAGg6mH5HPHHzJlgLyLvUsuKHI/5rka
+         +er51LmSYRlZDgSuLgvAEz3R4XdKSEuVdusOF4L8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@gmail.com>
-Subject: [PATCH 5.8 01/17] HID: core: Correctly handle ReportSize being zero
-Date:   Fri,  4 Sep 2020 15:30:00 +0200
-Message-Id: <20200904120258.050629588@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 10/16] arm64: tegra: Add missing timeout clock to Tegra194 SDMMC nodes
+Date:   Fri,  4 Sep 2020 15:30:03 +0200
+Message-Id: <20200904120257.711877559@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904120257.983551609@linuxfoundation.org>
-References: <20200904120257.983551609@linuxfoundation.org>
+In-Reply-To: <20200904120257.203708503@linuxfoundation.org>
+References: <20200904120257.203708503@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,63 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-commit bce1305c0ece3dc549663605e567655dd701752c upstream.
+commit c956c0cd4f6f4aac4f095621b1c4e1c5ee1df877 upstream.
 
-It appears that a ReportSize value of zero is legal, even if a bit
-non-sensical. Most of the HID code seems to handle that gracefully,
-except when computing the total size in bytes. When fed as input to
-memset, this leads to some funky outcomes.
+commit 5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
 
-Detect the corner case and correctly compute the size.
+Tegra194 uses separate SDMMC_LEGACY_TM clock for data timeout and
+this clock is not enabled currently which is not recommended.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Tegra194 SDMMC advertises 12Mhz as timeout clock frequency in host
+capability register.
+
+So, this clock should be kept enabled by SDMMC driver.
+
+Fixes: 5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
+Cc: stable <stable@vger.kernel.org> # 5.4
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Link: https://lore.kernel.org/r/1598548861-32373-7-git-send-email-skomatineni@nvidia.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-core.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -1598,6 +1598,17 @@ static void hid_output_field(const struc
- }
- 
- /*
-+ * Compute the size of a report.
-+ */
-+static size_t hid_compute_report_size(struct hid_report *report)
-+{
-+	if (report->size)
-+		return ((report->size - 1) >> 3) + 1;
-+
-+	return 0;
-+}
-+
-+/*
-  * Create a report. 'data' has to be allocated using
-  * hid_alloc_report_buf() so that it has proper size.
-  */
-@@ -1609,7 +1620,7 @@ void hid_output_report(struct hid_report
- 	if (report->id > 0)
- 		*data++ = report->id;
- 
--	memset(data, 0, ((report->size - 1) >> 3) + 1);
-+	memset(data, 0, hid_compute_report_size(report));
- 	for (n = 0; n < report->maxfield; n++)
- 		hid_output_field(report->device, report->field[n], data);
- }
-@@ -1739,7 +1750,7 @@ int hid_report_raw_event(struct hid_devi
- 		csize--;
- 	}
- 
--	rsize = ((report->size - 1) >> 3) + 1;
-+	rsize = hid_compute_report_size(report);
- 
- 	if (report_enum->numbered && rsize >= HID_MAX_BUFFER_SIZE)
- 		rsize = HID_MAX_BUFFER_SIZE - 1;
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -403,8 +403,9 @@
+ 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
+ 			reg = <0x03400000 0x10000>;
+ 			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bpmp TEGRA194_CLK_SDMMC1>;
+-			clock-names = "sdhci";
++			clocks = <&bpmp TEGRA194_CLK_SDMMC1>,
++				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
++			clock-names = "sdhci", "tmclk";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC1>;
+ 			reset-names = "sdhci";
+ 			nvidia,pad-autocal-pull-up-offset-3v3-timeout =
+@@ -425,8 +426,9 @@
+ 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
+ 			reg = <0x03440000 0x10000>;
+ 			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bpmp TEGRA194_CLK_SDMMC3>;
+-			clock-names = "sdhci";
++			clocks = <&bpmp TEGRA194_CLK_SDMMC3>,
++				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
++			clock-names = "sdhci", "tmclk";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC3>;
+ 			reset-names = "sdhci";
+ 			nvidia,pad-autocal-pull-up-offset-1v8 = <0x00>;
+@@ -448,8 +450,9 @@
+ 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
+ 			reg = <0x03460000 0x10000>;
+ 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bpmp TEGRA194_CLK_SDMMC4>;
+-			clock-names = "sdhci";
++			clocks = <&bpmp TEGRA194_CLK_SDMMC4>,
++				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
++			clock-names = "sdhci", "tmclk";
+ 			assigned-clocks = <&bpmp TEGRA194_CLK_SDMMC4>,
+ 					  <&bpmp TEGRA194_CLK_PLLC4>;
+ 			assigned-clock-parents =
 
 
