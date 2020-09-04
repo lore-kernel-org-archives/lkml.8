@@ -2,132 +2,169 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42F7C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E06DC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A698D2083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F892083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:38:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599226629;
-	bh=Qoayjoiq0uSKgxLGXmLIhulkMjEAiiCj6O1lrgz1Tlc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UN2S3wFzob9ixLhpZwyyn6SOfwt7Auv5PGpqXdH9vtTjhXZAJpwnPZtWuMHHSY0z+
-	 Rp006hRcdHb9I2QFcL0ydmmB3GLjRn6C/EXDbHMxe9k+ReMYyWzziGG1tmpOjXCO51
-	 +jdzlzHqwiDPZDfSYiphF3uffsYGKbhwclP/utBs=
+	s=default; t=1599226722;
+	bh=gNkloA6OY2ynQh0sJoasekwDdf2JY9Lev9yh/BkUr0M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cxQi+x9XRCHmBx09+d5N4Igm0j3xHQk6t2/+XPPCKNHNasd/6nh779arpI1sKddtP
+	 ylIBXrx1/nOswiVLwqXULP8pyX9OHIh32WeQ7xuQev091HAYwOaN+iuI2KrPtmb7//
+	 pvzzgnfCOUDepuNkViFzsT3fvlUS8jPfjqTNkADM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730524AbgIDNhB (ORCPT
+        id S1730206AbgIDNiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36246 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 09:38:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730432AbgIDNaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730448AbgIDNaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 09:30:21 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24BB82078E;
-        Fri,  4 Sep 2020 13:29:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B95220722;
+        Fri,  4 Sep 2020 13:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226198;
-        bh=Qoayjoiq0uSKgxLGXmLIhulkMjEAiiCj6O1lrgz1Tlc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eyxmaTQRaRvmE1DflhLk+UWc4eGgd/SgLFju+/Tw2yhO+37p/U5K4OSPkFgR1xD3O
-         V68ZA4PepjRflEJO+bRnuieFACMxbJTClN7MfM0lnAw7DR5D/8u+UPbwIyjLJ7KKdL
-         iB/eDPeJIy3fN191T3to8RMJUYJaRqzajxkXyHEw=
+        s=default; t=1599226189;
+        bh=gNkloA6OY2ynQh0sJoasekwDdf2JY9Lev9yh/BkUr0M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gTNvbUwV2Ec4Ey2W5AKq4v8f7+6TbXtBxqprA5h7Wck5jK1XoETBkqUOjL2mN/Wbe
+         sOsQ3+fql6uBpf3CVg7WIkRCc0hK8gVxFqh8ddGHRHHyTdXENHPaeRJ0ZtPURzjrOD
+         tTcXwfbsZnQvbbVjFut6ts3p4owkVdtfZuJsbg/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paul Clarke <pc@us.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Tony Jones <tonyj@suse.de>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 03/16] perf record/stat: Explicitly call out event modifiers in the documentation
-Date:   Fri,  4 Sep 2020 15:29:56 +0200
-Message-Id: <20200904120257.376680744@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 00/16] 5.4.63-rc1 review
+Date:   Fri,  4 Sep 2020 15:29:53 +0200
+Message-Id: <20200904120257.203708503@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904120257.203708503@linuxfoundation.org>
-References: <20200904120257.203708503@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.63-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.63-rc1
+X-KernelTest-Deadline: 2020-09-06T12:02+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+This is the start of the stable review cycle for the 5.4.63 release.
+There are 16 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit e48a73a312ebf19cc3d72aa74985db25c30757c1 upstream.
+Responses should be made by Sun, 06 Sep 2020 12:02:48 +0000.
+Anything received after that time might be too late.
 
-Event modifiers are not mentioned in the perf record or perf stat
-manpages.  Add them to orient new users more effectively by pointing
-them to the perf list manpage for details.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.63-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+and the diffstat can be found below.
 
-Fixes: 2055fdaf8703 ("perf list: Document precise event sampling for AMD IBS")
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paul Clarke <pc@us.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Tony Jones <tonyj@suse.de>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200901215853.276234-1-kim.phillips@amd.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+thanks,
 
----
- tools/perf/Documentation/perf-record.txt |    4 ++++
- tools/perf/Documentation/perf-stat.txt   |    4 ++++
- 2 files changed, 8 insertions(+)
+greg k-h
 
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -33,6 +33,10 @@ OPTIONS
-         - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
- 	  hexadecimal event descriptor.
- 
-+        - a symbolic or raw PMU event followed by an optional colon
-+	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-+	  linkperf:perf-list[1] man page for details on event modifiers.
-+
- 	- a symbolically formed PMU event like 'pmu/param1=0x3,param2/' where
- 	  'param1', 'param2', etc are defined as formats for the PMU in
- 	  /sys/bus/event_source/devices/<pmu>/format/*.
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -39,6 +39,10 @@ report::
- 	- a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
- 	  hexadecimal event descriptor.
- 
-+        - a symbolic or raw PMU event followed by an optional colon
-+	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-+	  linkperf:perf-list[1] man page for details on event modifiers.
-+
- 	- a symbolically formed event like 'pmu/param1=0x3,param2/' where
- 	  param1 and param2 are defined as formats for the PMU in
- 	  /sys/bus/event_source/devices/<pmu>/format/*
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.4.63-rc1
+
+Bodo Stroesser <bstroesser@ts.fujitsu.com>
+    scsi: target: tcmu: Optimize use of flush_dcache_page
+
+Bodo Stroesser <bstroesser@ts.fujitsu.com>
+    scsi: target: tcmu: Fix size in calls to tcmu_flush_dcache_range
+
+Sowjanya Komatineni <skomatineni@nvidia.com>
+    sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra186
+
+Sowjanya Komatineni <skomatineni@nvidia.com>
+    sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
+
+Sowjanya Komatineni <skomatineni@nvidia.com>
+    arm64: tegra: Add missing timeout clock to Tegra210 SDMMC
+
+Sowjanya Komatineni <skomatineni@nvidia.com>
+    arm64: tegra: Add missing timeout clock to Tegra186 SDMMC nodes
+
+Sowjanya Komatineni <skomatineni@nvidia.com>
+    arm64: tegra: Add missing timeout clock to Tegra194 SDMMC nodes
+
+Sowjanya Komatineni <skomatineni@nvidia.com>
+    dt-bindings: mmc: tegra: Add tmclk for Tegra210 and later
+
+James Morse <james.morse@arm.com>
+    KVM: arm64: Set HCR_EL2.PTW to prevent AT taking synchronous exception
+
+James Morse <james.morse@arm.com>
+    KVM: arm64: Survive synchronous exceptions caused by AT instructions
+
+James Morse <james.morse@arm.com>
+    KVM: arm64: Add kvm_extable for vaxorcism code
+
+Lucas Stach <l.stach@pengutronix.de>
+    drm/etnaviv: fix TS cache flushing on GPUs with BLT engine
+
+Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+    drm/sched: Fix passing zero to 'PTR_ERR' warning v2
+
+Kim Phillips <kim.phillips@amd.com>
+    perf record/stat: Explicitly call out event modifiers in the documentation
+
+Marc Zyngier <maz@kernel.org>
+    HID: core: Sanitize event code and type when mapping input
+
+Marc Zyngier <maz@kernel.org>
+    HID: core: Correctly handle ReportSize being zero
+
+
+-------------
+
+Diffstat:
+
+ .../bindings/mmc/nvidia,tegra20-sdhci.txt          | 32 ++++++++++-
+ Makefile                                           |  4 +-
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           | 20 ++++---
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 15 +++--
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 20 ++++---
+ arch/arm64/include/asm/kvm_arm.h                   |  3 +-
+ arch/arm64/include/asm/kvm_asm.h                   | 43 ++++++++++++++
+ arch/arm64/kernel/vmlinux.lds.S                    |  8 +++
+ arch/arm64/kvm/hyp/entry.S                         | 15 +++--
+ arch/arm64/kvm/hyp/hyp-entry.S                     | 65 ++++++++++++++--------
+ arch/arm64/kvm/hyp/switch.c                        | 39 +++++++++++--
+ drivers/gpu/drm/etnaviv/etnaviv_buffer.c           | 60 ++++++++++++++++++--
+ drivers/gpu/drm/etnaviv/state_blt.xml.h            |  2 +
+ drivers/gpu/drm/scheduler/sched_main.c             |  7 ++-
+ drivers/hid/hid-core.c                             | 15 ++++-
+ drivers/hid/hid-input.c                            |  4 ++
+ drivers/hid/hid-multitouch.c                       |  2 +
+ drivers/mmc/host/sdhci-tegra.c                     |  2 -
+ drivers/target/target_core_user.c                  | 15 +++--
+ include/linux/hid.h                                | 42 +++++++++-----
+ tools/perf/Documentation/perf-record.txt           |  4 ++
+ tools/perf/Documentation/perf-stat.txt             |  4 ++
+ 22 files changed, 329 insertions(+), 92 deletions(-)
 
 
