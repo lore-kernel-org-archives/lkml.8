@@ -2,112 +2,123 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E80B7C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAA0C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B911620791
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA5020748
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:37:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p5JO+kvk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I3TDcLBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgIDGgw (ORCPT
+        id S1729704AbgIDGhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 02:36:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43716 "EHLO
+        Fri, 4 Sep 2020 02:37:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbgIDGgu (ORCPT
+        with ESMTP id S1728588AbgIDGhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 02:36:50 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF6CC061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 23:36:50 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id h2so707964plr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 23:36:49 -0700 (PDT)
+        Fri, 4 Sep 2020 02:37:01 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E738C061251
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 23:37:01 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e33so3844028pgm.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 23:37:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=4yiHUblFAYV93CvP9TCqNN/f4GGkDG7hfCsIMIHesuc=;
-        b=p5JO+kvkSTjVbTMWKBPkg9HykrjsaWRYc58QNIUTjCx8kpmaiectCCjel03OqpNcwt
-         HNL2p3ToDviWW+w0BL0qhvQr9+CIeVHxe4Cn8XEtZknHz7/pJ2fwQTI20Z8hC4Z8dJCL
-         pwvWbQr76LblbhEaT9bbP4q4ifi8Z7otr7FKq0yKbPK39YWfSVaVxNRDAhkFi2Mo+6zn
-         1Jhiu+tl4wlC+o39bKRqRDy638iLpoZVBHeoBWhPBevQJEVwEJWm9OmbuqiwrZjL0hBr
-         WScJRhfoBvI59J4R7u1b3HRmd4gyLN/s1tDDiDYS2hlGKm2yufFOAUn/5hB4CLmF+NtJ
-         vOig==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=WyTTIBrYfLhw1AE2OmxNbGkbFO4+PPEQia9DHNRklGE=;
+        b=I3TDcLBfqvBB36KQuNi8T/eLNAHfsM44T0RM5Ps8hN+KwYWP2rU+S4nHkAPYdOuZfR
+         ibV7+QBaEV/UQMYgzQCZQx7mdmC5AaSnY6486ZnKsr2MIh+UyeIpI1IAIcRu7AZC94uD
+         WKRo89ykg3IOqPlpMSsk6ijFeGPKD1B8H8choJUUfmOt5Fd5ACBB0G8/i8VFlBDBTL3J
+         93UysHDs7pDcgPMdXWRSGnWQUsSzd4YZD7rxYvYY6V4oltd12aUmJH/zBw937wBOfM4l
+         7uNmNPBIpVinLOL5KEk+I3Uv2m2UCtV0yDj4ITXagzZEJPQR0pwzei8nx00q8cCBWh5O
+         b5Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4yiHUblFAYV93CvP9TCqNN/f4GGkDG7hfCsIMIHesuc=;
-        b=fTreTH+0Z7FdED/JSX2Bcxu3jmm1Q2o0/pSbOTfnEgiwjnBzjEihAvvAOsDz8Tu8cV
-         esuPlN5H5HHLWaNhcAtLKYDWbhpNLrdwQHxJzItEjEY/Y/KtV6616oBdzDho9ryBioqY
-         Ekaif6WzEVCe3aKXMTlZEOcdth3PKSa6jxXmCn/qOiy1zL8PCQMqGDW3zPOBFa2irCnN
-         2cj3Q2F1YPSqoQQL0x3+EkyASUApqGNUHQ/pbGOn+ROHd9MSRbCH7is8gucGVOnmiGhT
-         hm6f6MwPh7rheJosrbtTnO4H5Ccl/XEFzKgkTlbz2ZGOwoHxtRxWH3+T47oi8oRrWQMA
-         pxCg==
-X-Gm-Message-State: AOAM530cfW6hgmf7sK2j3/RKim9GXYx/rE1U9xV1S02K5AhZTD4eliEu
-        zRVAtuFKUtFNZuwROhmm+CTu
-X-Google-Smtp-Source: ABdhPJxwOUbjrSmhdjljqAK9JS6spFNyLSSqyellwHKkG/3SNMmXjPz4BrrffWwBh/blwdxEQXUaMw==
-X-Received: by 2002:a17:90b:164a:: with SMTP id il10mr6929868pjb.2.1599201409322;
-        Thu, 03 Sep 2020 23:36:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=WyTTIBrYfLhw1AE2OmxNbGkbFO4+PPEQia9DHNRklGE=;
+        b=VOWQeGf0rIk2Avggbgxigbt/sbxCI2cEY4Cdi8N+hAhMFDmDZHcdco3thQqsORZauy
+         CvOlEItl+qr+mhITjrab16L+5dFs/51oXj1izIatYMPPcL9Q7qtEBWIgnjJDaixe/vjP
+         DEh0MG8PzU7pLul8jyJDX/zWD27ZFAKW9yfubGdnFsqX+twCPZhvIANjHpMZSrYtoei7
+         nshIxL+1Be59qhlVv14fwD7EfQT4HMDivcPmqV4Z4AnRoML1hShCrIGo+RmlTu+49vpJ
+         VaOugonLa+QGXjLxps9wtwGPY8rS6aki/83AdiLdiw2MHqziZ5m5zEnTo5wqftc6U7qI
+         XflQ==
+X-Gm-Message-State: AOAM533uVgXEALncuzMVNL54rwEcJCQwFh8LATWXefp+Rv4Zq3WAL+PM
+        YRpYt+/4cSFLUnPp8URXXlvB
+X-Google-Smtp-Source: ABdhPJyr/Rcw0/Ofy5B3RUU31rbUyIK5BClaFYjL1wRSSPZEYJEQAHaBCNFPsLT0P1X0RV4OwH1XQQ==
+X-Received: by 2002:a63:da15:: with SMTP id c21mr6188721pgh.207.1599201420889;
+        Thu, 03 Sep 2020 23:37:00 -0700 (PDT)
 Received: from localhost.localdomain ([103.59.133.81])
-        by smtp.googlemail.com with ESMTPSA id 143sm5315040pfc.66.2020.09.03.23.36.46
+        by smtp.googlemail.com with ESMTPSA id 143sm5315040pfc.66.2020.09.03.23.36.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 23:36:48 -0700 (PDT)
+        Thu, 03 Sep 2020 23:37:00 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 0/6] Add initial support for Qualcomm RB5 platform
-Date:   Fri,  4 Sep 2020 12:06:31 +0530
-Message-Id: <20200904063637.28632-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 4/6] arm64: dts: qcom: qrb5165-rb5: Add onboard LED support
+Date:   Fri,  4 Sep 2020 12:06:35 +0530
+Message-Id: <20200904063637.28632-5-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200904063637.28632-1-manivannan.sadhasivam@linaro.org>
+References: <20200904063637.28632-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Only User4, WLAN and BT LEDs are added for now. These GPIOs are coming
+from PM8150. Rest are coming from LPG block which is not supported yet!
 
-This series adds initial support for Qualcomm Robotics RB5 Platform
-based on QRB5165 SoC which is a derivative of SM8250 SoC customized
-for robotics applications.
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/qrb5165-rb5.dts | 26 ++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-This board is one of the Consumer Edition boards of the 96Boards family
-manufactured by Thundercomm. This initial support includes regulators,
-UFS, debug UART, I2C, SPI, GPIO and LED peripherals.
-
-More information about this board can be found in Qualcomm website:
-https://www.qualcomm.com/products/qualcomm-robotics-rb5-platform
-
-This series functionally depends on following patches for proper working:
-
-irqchip: Fix probing deferal when using IRQCHIP_PLATFORM_DRIVER helpers
-arm64: dts: qcom: sm8250: add apps_smmu node
-
-Thanks,
-Mani
-
-Manivannan Sadhasivam (6):
-  dt-bindings: arm: qcom: Document SM8250 SoC and boards
-  arm64: dts: qcom: sm8250: Rename UART2 node to UART12
-  arm64: dts: qcom: Add basic devicetree support for QRB5165 RB5
-  arm64: dts: qcom: qrb5165-rb5: Add onboard LED support
-  arm64: dts: qcom: qrb5165-rb5: Add gpio-line-names for TLMM block
-  arm64: dts: qcom: qrb5165-rb5: Add gpio-line-names for PM8150(B&L)
-
- .../devicetree/bindings/arm/qcom.yaml         |   7 +
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- arch/arm64/boot/dts/qcom/qrb5165-rb5.dts      | 686 ++++++++++++++++++
- arch/arm64/boot/dts/qcom/sm8250-mtp.dts       |   4 +-
- arch/arm64/boot/dts/qcom/sm8250.dtsi          |  11 +-
- 5 files changed, 706 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
-
+diff --git a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+index f201e064b3e7..312316e23298 100644
+--- a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
++++ b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+@@ -32,6 +32,32 @@
+ 		regulator-always-on;
+ 	};
+ 
++	leds {
++		compatible = "gpio-leds";
++
++		user4 {
++			label = "green:user4";
++			gpios = <&pm8150_gpios 10 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "panic-indicator";
++			default-state = "off";
++		};
++
++		wlan {
++			label = "yellow:wlan";
++			gpios = <&pm8150_gpios 9 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "phy0tx";
++			default-state = "off";
++		};
++
++		bt {
++			label = "blue:bt";
++			gpios = <&pm8150_gpios 7 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "bluetooth-power";
++			default-state = "off";
++		};
++
++	};
++
+ 	vbat: vbat-regulator {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "VBAT";
 -- 
 2.17.1
 
