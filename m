@@ -2,149 +2,108 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F344C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B824C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B4CC205CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4CD0205CB
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:32:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X6cu6bl5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbgIDJcC (ORCPT
+        id S1730207AbgIDJcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 05:32:02 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2763 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730113AbgIDJbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 05:31:31 -0400
-Received: from lhreml727-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 5CD0B895E4646F83E718;
-        Fri,  4 Sep 2020 10:31:30 +0100 (IST)
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- lhreml727-chm.china.huawei.com (10.201.108.78) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Fri, 4 Sep 2020 10:31:29 +0100
-Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
- by fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Fri, 4 Sep 2020 11:31:29 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     <zohar@linux.ibm.com>, <mjg59@google.com>
-CC:     <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [PATCH v2 10/12] ima: Allow imasig requirement to be satisfied by EVM portable signatures
-Date:   Fri, 4 Sep 2020 11:26:41 +0200
-Message-ID: <20200904092643.20013-6-roberto.sassu@huawei.com>
-X-Mailer: git-send-email 2.27.GIT
-In-Reply-To: <20200904092339.19598-1-roberto.sassu@huawei.com>
-References: <20200904092339.19598-1-roberto.sassu@huawei.com>
+        Fri, 4 Sep 2020 05:32:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730031AbgIDJb2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 05:31:28 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE16C061245;
+        Fri,  4 Sep 2020 02:31:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AmeBKqJuZ2TYIisYso2pvDzyPT9l4D3l0ti74pdTg0Q=; b=X6cu6bl5JfSrh+TTxe5dm2zPRs
+        AiQRbmkSz8bxctpcVVoJUTd01rMGXmOZD1xc0lycH34bN7CSlyCqLAmrwqwCvYEoUSY+xKfGld4VF
+        JCRTmA9yOGr8HSQxXZZp0fcn1pu0evfCQDOhepKW7Fvx2z1bnS0GryJLJoZGx3ZlwXYUUOxjPfb7o
+        kNuyepr5MwWnzwadfXwDZlwm4lYlcJEpHE5ups2L1YChLhEQMmrIhMWEID06+tzQcEqI7jmdr7sob
+        gpJDg9cOQ61U1G3nEJzIW6pFYKekrsm8QtKX7dNM5NR2hG8PpFQEbMW+z/TGELU/RTLT1iNbZlPUN
+        SqJu+eqw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kE83m-0006Ta-7X; Fri, 04 Sep 2020 09:31:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EA057305C11;
+        Fri,  4 Sep 2020 11:31:04 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D727B214D7E3D; Fri,  4 Sep 2020 11:31:04 +0200 (CEST)
+Date:   Fri, 4 Sep 2020 11:31:04 +0200
+From:   peterz@infradead.org
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        X86 ML <x86@kernel.org>
+Subject: Re: [PATCH v2 05/28] objtool: Add a pass for generating __mcount_loc
+Message-ID: <20200904093104.GH1362448@hirez.programming.kicks-ass.net>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-6-samitolvanen@google.com>
+ <202009031450.31C71DB@keescook>
+ <CABCJKueF1RbpOKHsA8yS_yMujzHi8dzAVz8APwpMJyMTTGhmDA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.204.65.160]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- fraeml714-chm.china.huawei.com (10.206.15.33)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABCJKueF1RbpOKHsA8yS_yMujzHi8dzAVz8APwpMJyMTTGhmDA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-System administrators can require that all accessed files have a signature
-by specifying appraise_type=imasig in a policy rule.
+On Thu, Sep 03, 2020 at 03:03:30PM -0700, Sami Tolvanen wrote:
+> On Thu, Sep 3, 2020 at 2:51 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Thu, Sep 03, 2020 at 01:30:30PM -0700, Sami Tolvanen wrote:
+> > > From: Peter Zijlstra <peterz@infradead.org>
+> > >
+> > > Add the --mcount option for generating __mcount_loc sections
+> > > needed for dynamic ftrace. Using this pass requires the kernel to
+> > > be compiled with -mfentry and CC_USING_NOP_MCOUNT to be defined
+> > > in Makefile.
+> > >
+> > > Link: https://lore.kernel.org/lkml/20200625200235.GQ4781@hirez.programming.kicks-ass.net/
+> > > Signed-off-by: Peter Zijlstra <peterz@infradead.org>
+> >
+> > Hmm, I'm not sure why this hasn't gotten picked up yet. Is this expected
+> > to go through -tip or something else?
+> 
+> Note that I picked up this patch from Peter's original email, to which
+> I included a link in the commit message, but it wasn't officially
+> submitted as a patch. However, the previous discussion seems to have
+> died, so I included the patch in this series, as it cleanly solves the
+> problem of whitelisting non-call references to __fentry__. I was
+> hoping for Peter and Steven to comment on how they prefer to proceed
+> here.
 
-Currently, IMA signatures satisfy this requirement. Appended signatures may
-also satisfy this requirement, but are not applicable as IMA signatures.
-IMA/appended signatures ensure data source authentication for file content
-and prevent any change. EVM signatures instead ensure data source
-authentication for file metadata. Given that the digest or signature of the
-file content must be included in the metadata, EVM signatures provide the
-same file data guarantees of IMA signatures, as well as providing file
-metadata guarantees.
-
-This patch lets systems protected with EVM signatures pass appraisal
-verification if the appraise_type=imasig requirement is specified in the
-policy. This facilitates deployment in the scenarios where only EVM
-signatures are available.
-
-The patch makes the following changes:
-
-file xattr types:
-security.ima: IMA_XATTR_DIGEST/IMA_XATTR_DIGEST_NG
-security.evm: EVM_XATTR_PORTABLE_DIGSIG
-
-execve(), mmap(), open() behavior (with appraise_type=imasig):
-before: denied (file without IMA signature, imasig requirement not met)
-after: allowed (file with EVM portable signature, imasig requirement met)
-
-open(O_WRONLY) behavior (without appraise_type=imasig):
-before: allowed (file without IMA signature, not immutable)
-after: denied (file with EVM portable signature, immutable)
-
-In addition, similarly to IMA signatures, this patch temporarily allows
-new files without or with incomplete metadata to be opened so that content
-can be written.
-
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
----
- security/integrity/ima/ima_appraise.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
-
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index 4d682bc3a77f..95c7a1fc0d01 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -225,12 +225,16 @@ static int xattr_verify(enum ima_hooks func, struct integrity_iint_cache *iint,
- 		hash_start = 1;
- 		fallthrough;
- 	case IMA_XATTR_DIGEST:
--		if (iint->flags & IMA_DIGSIG_REQUIRED) {
--			*cause = "IMA-signature-required";
--			*status = INTEGRITY_FAIL;
--			break;
-+		if (*status != INTEGRITY_PASS_IMMUTABLE) {
-+			if (iint->flags & IMA_DIGSIG_REQUIRED) {
-+				*cause = "IMA-signature-required";
-+				*status = INTEGRITY_FAIL;
-+				break;
-+			}
-+			clear_bit(IMA_DIGSIG, &iint->atomic_flags);
-+		} else {
-+			set_bit(IMA_DIGSIG, &iint->atomic_flags);
- 		}
--		clear_bit(IMA_DIGSIG, &iint->atomic_flags);
- 		if (xattr_len - sizeof(xattr_value->type) - hash_start >=
- 				iint->ima_hash->length)
- 			/*
-@@ -400,6 +404,7 @@ int ima_appraise_measurement(enum ima_hooks func,
- 		cause = "missing-HMAC";
- 		goto out;
- 	case INTEGRITY_FAIL_IMMUTABLE:
-+		set_bit(IMA_DIGSIG, &iint->atomic_flags);
- 		fallthrough;
- 	case INTEGRITY_FAIL:		/* Invalid HMAC/signature. */
- 		cause = "invalid-HMAC";
-@@ -444,9 +449,12 @@ int ima_appraise_measurement(enum ima_hooks func,
- 				status = INTEGRITY_PASS;
- 		}
- 
--		/* Permit new files with file signatures, but without data. */
-+		/*
-+		 * Permit new files with file/EVM portable signatures, but
-+		 * without data.
-+		 */
- 		if (inode->i_size == 0 && iint->flags & IMA_NEW_FILE &&
--		    xattr_value && xattr_value->type == EVM_IMA_XATTR_DIGSIG) {
-+		    test_bit(IMA_DIGSIG, &iint->atomic_flags)) {
- 			status = INTEGRITY_PASS;
- 		}
- 
--- 
-2.27.GIT
-
+Right; so I'm obviously fine with this patch and I suppose I can pick it
+(and the next) into tip/objtool/core, provided Steve is okay with this
+approach.
