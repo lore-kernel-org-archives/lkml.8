@@ -2,409 +2,95 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509CCC47428
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4318C47438
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B7B25258
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:03:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=exactco.de header.i=@exactco.de header.b="DMSGyxKx"
+	by mail.kernel.org (Postfix) with ESMTP id 7A869248F3
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:03:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599242633;
+	bh=ccyx3QqIPtjL3bI9RNp1tboe5Yo1AeKfWAAnxyqAHV8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UcQ99unn3XoQlAhM+Q9qa+02KvO1GrzANbDPpEXUBTKSGBgc8s3qmXrXKDlQepzvG
+	 LOEPIWgoOCPAOM+whrisbszMbOHQj64eGzjtM91nxHwmlTqA4xh4sQGe/ykrPqB0HS
+	 v575HFjS+5bn0n9zk+vDlXM5ihdEdNRXOOkyTr6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgIDRY0 (ORCPT
+        id S1727004AbgIDRLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:24:26 -0400
-Received: from mx.exactcode.de ([144.76.154.42]:33410 "EHLO mx.exactcode.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgIDRYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:24:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=exactco.de; s=x;
-        h=Content-Transfer-Encoding:Content-Type:Mime-Version:References:In-Reply-To:From:Subject:Cc:To:Message-Id:Date; bh=ij7asy3N5HejYTAYL90DzKMQWR3ecrKsmP7wq9VvVTA=;
-        b=DMSGyxKxC31ybLoCt+IAF4IZ/01gfhlNv8PEpmEdX9h7s7+9SIcrRzT6vt8OJcBJjk0XZToLjo5i2uFo9sbHf/xO+k5x3r/LvekHLAhFOGuim2Nk9BJ+LHq87+/dpQuFoMzahgvnbZwV4IY9mTGoz7CnIB8oCek5ZXDISnZKabo=;
-Received: from exactco.de ([90.187.5.221])
-        by mx.exactcode.de with esmtp (Exim 4.82)
-        (envelope-from <rene@exactcode.com>)
-        id 1kEFSI-00055M-00; Fri, 04 Sep 2020 17:24:54 +0000
-Received: from [192.168.2.130] (helo=localhost)
-        by exactco.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.86_2)
-        (envelope-from <rene@exactcode.com>)
-        id 1kEFNc-0006Pg-6x; Fri, 04 Sep 2020 17:20:06 +0000
-Date:   Fri, 04 Sep 2020 19:24:20 +0200 (CEST)
-Message-Id: <20200904.192420.1602335139038402904.rene@exactcode.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, himanshu.madhani@oracle.com,
-        Joe Perches <joe@perches.com>
-Subject: [PATCH v3] use cpu_to_le{16,32} instead of __constant_cpu_to_*
-From:   Rene Rebe <rene@exactcode.com>
-In-Reply-To: <c7daea00-410d-2073-bf52-2abda9acdf8e@acm.org>
-References: <b7719680-e451-5687-1fb7-c8c059a880d4@acm.org>
-        <2C755628-1426-4BA4-B2A3-AD059BB0F605@exactcode.com>
-        <c7daea00-410d-2073-bf52-2abda9acdf8e@acm.org>
-X-Mailer: Mew version 6.8 on Emacs 27.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+        Fri, 4 Sep 2020 13:11:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgIDRLr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 13:11:47 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E4F1C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 10:11:47 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id b13so3368099qvl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 10:11:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Wg+0AXi/s7873Utji8lGdFF3pkA/ZiGcFAsTC0mgF5I=;
+        b=XCP0Z52zDX52O8oyqtuDs271FnpFMYUARRwf/flhD1j8rgajfs+xBsqJVST+lpzFhe
+         K0Sl/vXklct/Vu2RUQgkuZBh7rGJZYbZNpWYIhUDHfSv0JowLSXEcC8MoHmFwEbVRqoH
+         kVuRK6SITHf9paGSgkTS4ZX4NeOK4AgYL3ZfelmtVNyLFx9M4odCIN70cE+TwnZd4Vf3
+         3gzTmhFUKF0OzzUwt332Zhv3T4RHftwdruhrfYREpedbIsSeAhz7ZaECvyUJYr4dC6CI
+         3ua/MQpkEoBQuDRqC+1SrAtgFWKD9o07Wdr2Yxmy8kSmKTK1Pb6KYZUJZOufisecrfqy
+         ssjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Wg+0AXi/s7873Utji8lGdFF3pkA/ZiGcFAsTC0mgF5I=;
+        b=FQpDOjTDOh0ISlg+wkoa8pVswVVXBAQuXqWoiZSBgweZqHNxOSJjfPwhvAdnmlebmL
+         VeIW3lPpljh5JmhV3xhwtWNaH0gSbe5wVMofR3rti6xndyW0r5ktMDBcvt9oOgWZWJ5L
+         MHs/D+ScE3dBKfXLLuAgSfFQuzBK2eFzeBpF5ltEsmaBdTu84qeP6MJ/16GJG2rfxJyY
+         Y0yrx+c1iS+oFFU+snIMeLFyroEn/+Jmt8K/+VOLllDLlgJBidcMiD/IO9IYF5YhzyGY
+         idbLk9CTk5De4CllMCVyYQSITu8aOjL4i6iNylFvKSuZcrxi/+mrLJ7y/Fm9GRh6EHCD
+         avYA==
+X-Gm-Message-State: AOAM530XyhBB1AMxg0HwOF6WJlroSp4XMQt37c7IvmSwSuhD7nSX+p4i
+        3QkuaHbqJQudbtFtZCJyNJk=
+X-Google-Smtp-Source: ABdhPJyFDg5LmrqhLFVeV+w0tI7N3ZIpM4ib7aztm30+mn4A1PCYiBzR1ftDQ7JzH5bvPCLY5xCs4w==
+X-Received: by 2002:a0c:f945:: with SMTP id i5mr8675746qvo.80.1599239506420;
+        Fri, 04 Sep 2020 10:11:46 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:f2f5])
+        by smtp.gmail.com with ESMTPSA id g4sm4824209qth.30.2020.09.04.10.11.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 10:11:45 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 13:11:44 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     jiangshanlai@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] workqueue: Use wake_up_worker() to wake up first idle
+ worker
+Message-ID: <20200904171144.GD4295@mtj.thefacebook.com>
+References: <1595852969-21049-1-git-send-email-linmiaohe@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595852969-21049-1-git-send-email-linmiaohe@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joe Perches <joe@perches.com> wrote:
+On Mon, Jul 27, 2020 at 08:29:29PM +0800, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
+> 
+> Use wrapper function wake_up_worker() to wake up first idle worker.
+> 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 
-> > -               __constant_cpu_to_le16(NOTIFY_ACK_FLAGS_TERMINATE);=
+Applied to wq/for-5.10.
 
-> > +               cpu_to_le16(NOTIFY_ACK_FLAGS_TERMINATE);
-> =
+Thanks.
 
-> trivia: this now fits on a single line.
-
-> > Whether __constant_cpu_to_le16() is used or cpu_to_le16(), the comp=
-iler
-> > generates exactly the same code. The name of the cpu_to_le16() func=
-tion however
-> > is shorter. I recommend cpu_to_le16() because of its shorter name a=
-nd because
-> > that's what other kernel drivers use.
-
-As per recommendation, convert a few remaining __constant_cpu_to_le{16,=
-32}
-instances in the qla2xxx, qla4xxx and cifs to just cpu_to_le{16,32}.
-
-The later was apparently left over in f5307104e757 ("cifs: don't use
-__constant_cpu_to_le32()").
-
-Signed-off-by: Ren=E9 Rebe <rene@exactcode.de>
-
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/q=
-la_target.c
-index fbb80a043b4f..3de6bf94ccc0 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -3583,7 +3583,7 @@ static int __qlt_send_term_imm_notif(struct scsi_=
-qla_host *vha,
- =
-
- 	/* terminate */
- 	nack->u.isp24.flags |=3D
--		__constant_cpu_to_le16(NOTIFY_ACK_FLAGS_TERMINATE);
-+		cpu_to_le16(NOTIFY_ACK_FLAGS_TERMINATE);
- =
-
- 	nack->u.isp24.srr_rx_id =3D ntfy->u.isp24.srr_rx_id;
- 	nack->u.isp24.status =3D ntfy->u.isp24.status;
-diff --git a/drivers/scsi/qla2xxx/qla_tmpl.c b/drivers/scsi/qla2xxx/qla=
-_tmpl.c
-index 8dc82cfd38b2..f83b2f5fb490 100644
---- a/drivers/scsi/qla2xxx/qla_tmpl.c
-+++ b/drivers/scsi/qla2xxx/qla_tmpl.c
-@@ -912,7 +912,7 @@ qla27xx_driver_info(struct qla27xx_fwdt_template *t=
-mp)
- 	tmp->driver_info[0] =3D cpu_to_le32(
- 		v[3] << 24 | v[2] << 16 | v[1] << 8 | v[0]);
- 	tmp->driver_info[1] =3D cpu_to_le32(v[5] << 8 | v[4]);
--	tmp->driver_info[2] =3D __constant_cpu_to_le32(0x12345678);
-+	tmp->driver_info[2] =3D cpu_to_le32(0x12345678);
- }
- =
-
- static void
-diff --git a/drivers/scsi/qla4xxx/ql4_init.c b/drivers/scsi/qla4xxx/ql4=
-_init.c
-index 4a7ef971a387..cc4cd54eb7a8 100644
---- a/drivers/scsi/qla4xxx/ql4_init.c
-+++ b/drivers/scsi/qla4xxx/ql4_init.c
-@@ -120,8 +120,8 @@ int qla4xxx_init_rings(struct scsi_qla_host *ha)
- 		 * the interrupt_handler to think there are responses to be
- 		 * processed when there aren't.
- 		 */
--		ha->shadow_regs->req_q_out =3D __constant_cpu_to_le32(0);
--		ha->shadow_regs->rsp_q_in =3D __constant_cpu_to_le32(0);
-+		ha->shadow_regs->req_q_out =3D cpu_to_le32(0);
-+		ha->shadow_regs->rsp_q_in =3D cpu_to_le32(0);
- 		wmb();
- =
-
- 		writel(0, &ha->reg->req_q_in);
-diff --git a/drivers/scsi/qla4xxx/ql4_iocb.c b/drivers/scsi/qla4xxx/ql4=
-_iocb.c
-index a8df2d7eb069..dd25f917b5e6 100644
---- a/drivers/scsi/qla4xxx/ql4_iocb.c
-+++ b/drivers/scsi/qla4xxx/ql4_iocb.c
-@@ -161,7 +161,7 @@ static void qla4xxx_build_scsi_iocbs(struct srb *sr=
-b,
- =
-
- 	if (!scsi_bufflen(cmd) || cmd->sc_data_direction =3D=3D DMA_NONE) {
- 		/* No data being transferred */
--		cmd_entry->ttlByteCnt =3D __constant_cpu_to_le32(0);
-+		cmd_entry->ttlByteCnt =3D cpu_to_le32(0);
- 		return;
- 	}
- =
-
-diff --git a/drivers/scsi/qla4xxx/ql4_mbx.c b/drivers/scsi/qla4xxx/ql4_=
-mbx.c
-index bc8de7d402d5..02396da2acd4 100644
---- a/drivers/scsi/qla4xxx/ql4_mbx.c
-+++ b/drivers/scsi/qla4xxx/ql4_mbx.c
-@@ -646,8 +646,8 @@ int qla4xxx_initialize_fw_cb(struct scsi_qla_host *=
- ha)
- 	/* Fill in the request and response queue information. */
- 	init_fw_cb->rqq_consumer_idx =3D cpu_to_le16(ha->request_out);
- 	init_fw_cb->compq_producer_idx =3D cpu_to_le16(ha->response_in);
--	init_fw_cb->rqq_len =3D __constant_cpu_to_le16(REQUEST_QUEUE_DEPTH);
--	init_fw_cb->compq_len =3D __constant_cpu_to_le16(RESPONSE_QUEUE_DEPTH=
-);
-+	init_fw_cb->rqq_len =3D cpu_to_le16(REQUEST_QUEUE_DEPTH);
-+	init_fw_cb->compq_len =3D cpu_to_le16(RESPONSE_QUEUE_DEPTH);
- 	init_fw_cb->rqq_addr_lo =3D cpu_to_le32(LSDW(ha->request_dma));
- 	init_fw_cb->rqq_addr_hi =3D cpu_to_le32(MSDW(ha->request_dma));
- 	init_fw_cb->compq_addr_lo =3D cpu_to_le32(LSDW(ha->response_dma));
-@@ -657,20 +657,20 @@ int qla4xxx_initialize_fw_cb(struct scsi_qla_host=
- * ha)
- =
-
- 	/* Set up required options. */
- 	init_fw_cb->fw_options |=3D
--		__constant_cpu_to_le16(FWOPT_SESSION_MODE |
-+		cpu_to_le16(FWOPT_SESSION_MODE |
- 				       FWOPT_INITIATOR_MODE);
- =
-
- 	if (is_qla80XX(ha))
- 		init_fw_cb->fw_options |=3D
--		    __constant_cpu_to_le16(FWOPT_ENABLE_CRBDB);
-+		    cpu_to_le16(FWOPT_ENABLE_CRBDB);
- =
-
--	init_fw_cb->fw_options &=3D __constant_cpu_to_le16(~FWOPT_TARGET_MODE=
-);
-+	init_fw_cb->fw_options &=3D cpu_to_le16(~FWOPT_TARGET_MODE);
- =
-
- 	init_fw_cb->add_fw_options =3D 0;
- 	init_fw_cb->add_fw_options |=3D
--			__constant_cpu_to_le16(ADFWOPT_SERIALIZE_TASK_MGMT);
-+			cpu_to_le16(ADFWOPT_SERIALIZE_TASK_MGMT);
- 	init_fw_cb->add_fw_options |=3D
--			__constant_cpu_to_le16(ADFWOPT_AUTOCONN_DISABLE);
-+			cpu_to_le16(ADFWOPT_AUTOCONN_DISABLE);
- =
-
- 	if (qla4xxx_set_ifcb(ha, &mbox_cmd[0], &mbox_sts[0], init_fw_cb_dma)
- 		!=3D QLA_SUCCESS) {
-@@ -1614,7 +1614,7 @@ int qla4xxx_get_chap(struct scsi_qla_host *ha, ch=
-ar *username, char *password,
- =
-
- 	strlcpy(password, chap_table->secret, QL4_CHAP_MAX_SECRET_LEN);
- 	strlcpy(username, chap_table->name, QL4_CHAP_MAX_NAME_LEN);
--	chap_table->cookie =3D __constant_cpu_to_le16(CHAP_VALID_COOKIE);
-+	chap_table->cookie =3D cpu_to_le16(CHAP_VALID_COOKIE);
- =
-
- exit_get_chap:
- 	dma_pool_free(ha->chap_dma_pool, chap_table, chap_dma);
-@@ -1656,7 +1656,7 @@ int qla4xxx_set_chap(struct scsi_qla_host *ha, ch=
-ar *username, char *password,
- 	chap_table->secret_len =3D strlen(password);
- 	strncpy(chap_table->secret, password, MAX_CHAP_SECRET_LEN - 1);
- 	strncpy(chap_table->name, username, MAX_CHAP_NAME_LEN - 1);
--	chap_table->cookie =3D __constant_cpu_to_le16(CHAP_VALID_COOKIE);
-+	chap_table->cookie =3D cpu_to_le16(CHAP_VALID_COOKIE);
- =
-
- 	if (is_qla40XX(ha)) {
- 		chap_size =3D MAX_CHAP_ENTRIES_40XX * sizeof(*chap_table);
-@@ -1722,7 +1722,7 @@ int qla4xxx_get_uni_chap_at_index(struct scsi_qla=
-_host *ha, char *username,
- =
-
- 	mutex_lock(&ha->chap_sem);
- 	chap_table =3D (struct ql4_chap_table *)ha->chap_list + chap_index;
--	if (chap_table->cookie !=3D __constant_cpu_to_le16(CHAP_VALID_COOKIE)=
-) {
-+	if (chap_table->cookie !=3D cpu_to_le16(CHAP_VALID_COOKIE)) {
- 		rval =3D QLA_ERROR;
- 		goto exit_unlock_uni_chap;
- 	}
-@@ -1785,7 +1785,7 @@ int qla4xxx_get_chap_index(struct scsi_qla_host *=
-ha, char *username,
- 	for (i =3D 0; i < max_chap_entries; i++) {
- 		chap_table =3D (struct ql4_chap_table *)ha->chap_list + i;
- 		if (chap_table->cookie !=3D
--		    __constant_cpu_to_le16(CHAP_VALID_COOKIE)) {
-+		    cpu_to_le16(CHAP_VALID_COOKIE)) {
- 			if (i > MAX_RESRV_CHAP_IDX && free_index =3D=3D -1)
- 				free_index =3D i;
- 			continue;
-@@ -2106,18 +2106,18 @@ int qla4xxx_set_param_ddbentry(struct scsi_qla_=
-host *ha,
- =
-
- 	if (conn->max_recv_dlength)
- 		fw_ddb_entry->iscsi_max_rcv_data_seg_len =3D
--		  __constant_cpu_to_le16((conn->max_recv_dlength / BYTE_UNITS));
-+		  cpu_to_le16((conn->max_recv_dlength / BYTE_UNITS));
- =
-
- 	if (sess->max_r2t)
- 		fw_ddb_entry->iscsi_max_outsnd_r2t =3D cpu_to_le16(sess->max_r2t);
- =
-
- 	if (sess->first_burst)
- 		fw_ddb_entry->iscsi_first_burst_len =3D
--		       __constant_cpu_to_le16((sess->first_burst / BYTE_UNITS));
-+		       cpu_to_le16((sess->first_burst / BYTE_UNITS));
- =
-
- 	if (sess->max_burst)
- 		fw_ddb_entry->iscsi_max_burst_len =3D
--			__constant_cpu_to_le16((sess->max_burst / BYTE_UNITS));
-+			cpu_to_le16((sess->max_burst / BYTE_UNITS));
- =
-
- 	if (sess->time2wait)
- 		fw_ddb_entry->iscsi_def_time2wait =3D
-diff --git a/drivers/scsi/qla4xxx/ql4_nx.c b/drivers/scsi/qla4xxx/ql4_n=
-x.c
-index 038e19b1e3c2..484f5093ff71 100644
---- a/drivers/scsi/qla4xxx/ql4_nx.c
-+++ b/drivers/scsi/qla4xxx/ql4_nx.c
-@@ -3678,7 +3678,7 @@ qla4_82xx_read_flash_data(struct scsi_qla_host *h=
-a, uint32_t *dwptr,
- 			    "Do ROM fast read failed\n");
- 			goto done_read;
- 		}
--		dwptr[i] =3D __constant_cpu_to_le32(val);
-+		dwptr[i] =3D cpu_to_le32(val);
- 	}
- =
-
- done_read:
-@@ -3741,9 +3741,9 @@ qla4_8xxx_get_flt_info(struct scsi_qla_host *ha, =
-uint32_t flt_addr)
- 			goto no_flash_data;
- 	}
- =
-
--	if (*wptr =3D=3D __constant_cpu_to_le16(0xffff))
-+	if (*wptr =3D=3D cpu_to_le16(0xffff))
- 		goto no_flash_data;
--	if (flt->version !=3D __constant_cpu_to_le16(1)) {
-+	if (flt->version !=3D cpu_to_le16(1)) {
- 		DEBUG2(ql4_printk(KERN_INFO, ha, "Unsupported FLT detected: "
- 			"version=3D0x%x length=3D0x%x checksum=3D0x%x.\n",
- 			le16_to_cpu(flt->version), le16_to_cpu(flt->length),
-@@ -3846,7 +3846,7 @@ qla4_82xx_get_fdt_info(struct scsi_qla_host *ha)
- 	qla4_82xx_read_optrom_data(ha, (uint8_t *)ha->request_ring,
- 	    hw->flt_region_fdt << 2, OPTROM_BURST_SIZE);
- =
-
--	if (*wptr =3D=3D __constant_cpu_to_le16(0xffff))
-+	if (*wptr =3D=3D cpu_to_le16(0xffff))
- 		goto no_flash_data;
- =
-
- 	if (fdt->sig[0] !=3D 'Q' || fdt->sig[1] !=3D 'L' || fdt->sig[2] !=3D =
-'I' ||
-@@ -3903,7 +3903,7 @@ qla4_82xx_get_idc_param(struct scsi_qla_host *ha)=
-
- 	qla4_82xx_read_optrom_data(ha, (uint8_t *)ha->request_ring,
- 			QLA82XX_IDC_PARAM_ADDR , 8);
- =
-
--	if (*wptr =3D=3D __constant_cpu_to_le32(0xffffffff)) {
-+	if (*wptr =3D=3D cpu_to_le32(0xffffffff)) {
- 		ha->nx_dev_init_timeout =3D ROM_DEV_INIT_TIMEOUT;
- 		ha->nx_reset_timeout =3D ROM_DRV_RESET_ACK_TIMEOUT;
- 	} else {
-diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_o=
-s.c
-index bab87e47b238..40463b7046c0 100644
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -703,8 +703,7 @@ static int qla4xxx_get_chap_by_index(struct scsi_ql=
-a_host *ha,
- 	}
- =
-
- 	*chap_entry =3D (struct ql4_chap_table *)ha->chap_list + chap_index;
--	if ((*chap_entry)->cookie !=3D
--	     __constant_cpu_to_le16(CHAP_VALID_COOKIE)) {
-+	if ((*chap_entry)->cookie !=3D cpu_to_le16(CHAP_VALID_COOKIE)) {
- 		rval =3D QLA_ERROR;
- 		*chap_entry =3D NULL;
- 	} else {
-@@ -747,8 +746,7 @@ static int qla4xxx_find_free_chap_index(struct scsi=
-_qla_host *ha,
- 	for (i =3D 0; i < max_chap_entries; i++) {
- 		chap_table =3D (struct ql4_chap_table *)ha->chap_list + i;
- =
-
--		if ((chap_table->cookie !=3D
--		    __constant_cpu_to_le16(CHAP_VALID_COOKIE)) &&
-+		if ((chap_table->cookie !=3D cpu_to_le16(CHAP_VALID_COOKIE)) &&
- 		   (i > MAX_RESRV_CHAP_IDX)) {
- 				free_index =3D i;
- 				break;
-@@ -796,8 +794,7 @@ static int qla4xxx_get_chap_list(struct Scsi_Host *=
-shost, uint16_t chap_tbl_idx,
- 	mutex_lock(&ha->chap_sem);
- 	for (i =3D chap_tbl_idx; i < max_chap_entries; i++) {
- 		chap_table =3D (struct ql4_chap_table *)ha->chap_list + i;
--		if (chap_table->cookie !=3D
--		    __constant_cpu_to_le16(CHAP_VALID_COOKIE))
-+		if (chap_table->cookie !=3D cpu_to_le16(CHAP_VALID_COOKIE))
- 			continue;
- =
-
- 		chap_rec->chap_tbl_idx =3D i;
-@@ -928,7 +925,7 @@ static int qla4xxx_delete_chap(struct Scsi_Host *sh=
-ost, uint16_t chap_tbl_idx)
- 		goto exit_delete_chap;
- 	}
- =
-
--	chap_table->cookie =3D __constant_cpu_to_le16(0xFFFF);
-+	chap_table->cookie =3D cpu_to_le16(0xFFFF);
- =
-
- 	offset =3D FLASH_CHAP_OFFSET |
- 			(chap_tbl_idx * sizeof(struct ql4_chap_table));
-@@ -6050,7 +6047,7 @@ static int qla4xxx_get_bidi_chap(struct scsi_qla_=
-host *ha, char *username,
- 	for (i =3D 0; i < max_chap_entries; i++) {
- 		chap_table =3D (struct ql4_chap_table *)ha->chap_list + i;
- 		if (chap_table->cookie !=3D
--		    __constant_cpu_to_le16(CHAP_VALID_COOKIE)) {
-+		    cpu_to_le16(CHAP_VALID_COOKIE)) {
- 			continue;
- 		}
- =
-
-diff --git a/fs/cifs/smb2status.h b/fs/cifs/smb2status.h
-index 7505056e9580..3d5ef02f1416 100644
---- a/fs/cifs/smb2status.h
-+++ b/fs/cifs/smb2status.h
-@@ -29,7 +29,7 @@
-  *  C is set if "customer defined" error, N bit is reserved and MBZ
-  */
- =
-
--#define STATUS_SEVERITY_SUCCESS __constant_cpu_to_le32(0x0000)
-+#define STATUS_SEVERITY_SUCCESS cpu_to_le32(0x0000)
- #define STATUS_SEVERITY_INFORMATIONAL cpu_to_le32(0x0001)
- #define STATUS_SEVERITY_WARNING cpu_to_le32(0x0002)
- #define STATUS_SEVERITY_ERROR cpu_to_le32(0x0003)
-
-
--- =
-
-  Ren=E9 Rebe, ExactCODE GmbH, Lietzenburger Str. 42, DE-10789 Berlin
-  https://exactcode.com | https://t2sde.org | https://rene.rebe.de
+-- 
+tejun
