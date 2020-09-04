@@ -2,210 +2,180 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52A5C28E83
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557FBC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8837B206E7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10268206E7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:09:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G8Rfx90D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgIDGJD (ORCPT
+        id S1726655AbgIDGJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 02:09:03 -0400
-Received: from mga04.intel.com ([192.55.52.120]:2079 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbgIDGJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 02:09:02 -0400
-IronPort-SDR: /RnHB+lKBiO4sDk8W8tuLPmbY9++99wtVAXKuLYiGwMz4jrAihbgPd1puI4YORABzwoMBoKNA9
- E2OXG/PBKVuQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="155095685"
-X-IronPort-AV: E=Sophos;i="5.76,388,1592895600"; 
-   d="scan'208";a="155095685"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 23:09:01 -0700
-IronPort-SDR: WnIAQssWbM5cgI7sn0A2JEgKJnpLS33upoRBQzZKYQiiqXDGsSvnzo7Qerwh0SK61m69h8sMIn
- WqboLBUn+9tQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,388,1592895600"; 
-   d="scan'208";a="502788500"
-Received: from unknown (HELO [10.239.154.46]) ([10.239.154.46])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Sep 2020 23:08:53 -0700
-Subject: Re: [PATCH] i2c: virtio: add a virtio i2c frontend driver
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-i2c@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, mst@redhat.com, jasowang@redhat.com,
-        wsa+renesas@sang-engineering.com, wsa@kernel.org,
-        jarkko.nikula@linux.intel.com, jdelvare@suse.de,
-        Sergey.Semin@baikalelectronics.ru, krzk@kernel.org,
-        rppt@kernel.org, loic.poulain@linaro.org, tali.perry1@gmail.com,
-        bjorn.andersson@linaro.org, shuo.a.liu@intel.com,
-        conghui.chen@intel.com, yu1.wang@intel.com
-References: <0efc2605c8c06b4b1bf68cbad5536c4a900dc019.1599110284.git.jie.deng@intel.com>
- <20200903102008.GY1891694@smile.fi.intel.com>
-From:   Jie Deng <jie.deng@intel.com>
-Message-ID: <71587fa1-ded8-2f96-378f-fc1ecc18a1a1@intel.com>
-Date:   Fri, 4 Sep 2020 14:08:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.0.1
+        Fri, 4 Sep 2020 02:09:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgIDGJO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 02:09:14 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4163EC061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 23:09:14 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id e14so3045062vsa.9
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 23:09:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ug4djtA5GZ9Jcit3pQqACaL05SGu8YRJeDr/hO2jPpU=;
+        b=G8Rfx90DHK4ZYfswSSLH6HpnzpkwheLzgRangJCN6O4g0PWanGj2nHjjGDTPCoO9Nf
+         xWnOZ6/OkLqjUKVYKlOXMXG/wuim9/+4Lld6jb5ZMG0RdBnx5BcrEkXGILkOLCswU783
+         jvIxh1NHB9JlNe08AHoKeBrdXPw95pexGZ+iEhUwJ76GFFQ8CpD49J8iPkPVEGc2BgI/
+         xnP/VL2J95FeQAZZ304tFrFjpeJ8WpU+VKzCVEWtFadg+Nssg+PdYA2gvN3B3PzcDGHg
+         TsgmKqSlGWo27zLby4VckCBLmTKYg/5IQAV1aOYTosxFSR1/lVgnK2hDCXb43Gnl1Tdv
+         Q2OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ug4djtA5GZ9Jcit3pQqACaL05SGu8YRJeDr/hO2jPpU=;
+        b=aaqelTagVEf3PFGMcj1F+8kEYauNOYzFtxPPXzUjTW1rDMgkn0W8QjOBWwl1qaWIqm
+         nI26kGZP/bi5rTdJO6xfctFzA7kPoHUJWInbuM8PESD8DCNkWqUEPbZgfJAWuBXOnbik
+         975GosGl9QUv4/NZkA4gn+s9iBWgtTz+GjBwWsAZkliVPkjjapH13BEsz3/mjKBOtKcj
+         gv4xZBGmCBKOkeNxfGajz7fub9itZNO/qr/S3eP9eRXl4/mzu4RWfJrddZ7CGFZyLZDp
+         Rkyo8rerfqH7R8ze0/4xsp0AAr27Wv72Ow7CnMclHibFSa2Rt1Xf01RZxPNNplimPcPf
+         dQ0A==
+X-Gm-Message-State: AOAM531iiHf+ggTolosyOUksThkE2ydSljYJSfwJLvS523DP+gI7tshc
+        rPxibZuOJ/GTeuKoHDqtIPuBFbX+iVMOm9dJ/lmA4A==
+X-Google-Smtp-Source: ABdhPJxKdB1QJpJEKTAddkB6TjKNR3jmY8BhaNTS68k9yGl8ABJujx6Xf7Yf+QrFjnS5AhQ1RytJYEHYVPKAcRKcYBU=
+X-Received: by 2002:a67:e45:: with SMTP id 66mr4494095vso.191.1599199753154;
+ Thu, 03 Sep 2020 23:09:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200903102008.GY1891694@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <CAPDyKFrv+DTF8=twZZk_tenB-sLg6H-CFn9HVDVA5S2kK2=U5Q@mail.gmail.com>
+ <20200901154417.GD20303@codeaurora.org> <20200901155014.GF2674@hirez.programming.kicks-ass.net>
+ <20200901161340.GC29330@paulmck-ThinkPad-P72> <20200901174216.GJ29142@worktop.programming.kicks-ass.net>
+ <CAPDyKFqPh7bg16AsitGv2QQHgwOPnWx9DiPPCMuD1EGA5TFFdg@mail.gmail.com>
+ <20200902121355.GE1362448@hirez.programming.kicks-ass.net>
+ <CAPDyKFrGj+8hOXi7sWxWNv2QP0=mx9pFKLG0JM-L5VNKUPDgeA@mail.gmail.com>
+ <20200903135347.GC1362448@hirez.programming.kicks-ass.net>
+ <CAPDyKFqduU65YmhBZ8PwDRTZDLtWhWX087LBy0bx56go+ra4Ow@mail.gmail.com> <20200903150819.GE1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200903150819.GE1362448@hirez.programming.kicks-ass.net>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 4 Sep 2020 08:08:36 +0200
+Message-ID: <CAPDyKFqozsYk--rThgVZpuM86ohCNRCoRXum5NTxPOt2SoG2og@mail.gmail.com>
+Subject: Re: [RFC][PATCH] cpu_pm: Remove RCU abuse
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Saravana Kannan <saravanak@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        madhuparnabhowmik10@gmail.com,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/9/3 18:20, Andy Shevchenko wrote:
-> On Thu, Sep 03, 2020 at 01:34:45PM +0800, Jie Deng wrote:
->> Add an I2C bus driver for virtio para-virtualization.
->>
->> The controller can be emulated by the backend driver in
->> any device model software by following the virtio protocol.
->>
->> This driver communicates with the backend driver through a
->> virtio I2C message structure which includes following parts:
->>
->> - Header: i2c_msg addr, flags, len.
->> - Data buffer: the pointer to the i2c msg data.
->> - Status: the processing result from the backend.
->>
->> People may implement different backend drivers to emulate
->> different controllers according to their needs. A backend
->> example can be found in the device model of the open source
->> project ACRN. For more information, please refer to
->> https://projectacrn.org.
->>
->> The virtio device ID 34 is used for this I2C adpter since IDs
->> before 34 have been reserved by other virtio devices.
-> Seems it's slightly different version to what I have reviewed internally.
-> My comments below. (I admit that some of them maybe new)
+On Thu, 3 Sep 2020 at 17:08, <peterz@infradead.org> wrote:
 >
-> ...
-
-Yeah... Some new devices have been added into the virtio spec during 
-these days.
-
-
->> +/**
->> + * struct virtio_i2c_hdr - the virtio I2C message header structure
->> + * @addr: i2c_msg addr, the slave address
->> + * @flags: i2c_msg flags
->> + * @len: i2c_msg len
->> + */
->> +struct virtio_i2c_hdr {
->> +	__virtio16 addr;
->> +	__virtio16 flags;
->> +	__virtio16 len;
->> +} __packed;
-> As Misha noticed and somewhere I saw 0-day reports these should be carefully
-> taken care of.
+> On Thu, Sep 03, 2020 at 04:36:35PM +0200, Ulf Hansson wrote:
+> > On Thu, 3 Sep 2020 at 15:53, <peterz@infradead.org> wrote:
+> > >  static int cpu_pm_notify(enum cpu_pm_event event)
+> > >  {
+> > >         int ret;
+> > >
+> > > +       lockdep_assert_irqs_disabled();
+> >
+> > Nitpick, maybe the lockdep should be moved to a separate patch.
 >
-> ...
+> Well, the unregister relies on IRQs being disabled here, so I figured
+> asserting this was a good thing ;-)
 
-Sure. Will fix these.
+Okay, make sense then.
 
-
->> +static int virtio_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
->> +{
->> +	struct virtio_i2c *vi = i2c_get_adapdata(adap);
->> +	struct virtio_i2c_msg *vmsg_o, *vmsg_i;
->> +	struct virtqueue *vq = vi->vq;
->> +	unsigned long time_left;
->> +	int len, i, ret = 0;
->> +
->> +	vmsg_o = kzalloc(sizeof(*vmsg_o), GFP_KERNEL);
->> +	if (!vmsg_o)
->> +		return -ENOMEM;
->> +
->> +	mutex_lock(&vi->i2c_lock);
->> +	vmsg_o->buf = NULL;
->> +	for (i = 0; i < num; i++) {
->> +		ret = virtio_i2c_add_msg(vq, vmsg_o, &msgs[i]);
->> +		if (ret) {
->> +			dev_err(&adap->dev, "failed to add msg[%d] to virtqueue.\n", i);
->> +			goto err_unlock_free;
-> break;
-
-OK.
-
-
->> +		}
->> +
->> +		virtqueue_kick(vq);
->> +
->> +		time_left = wait_for_completion_timeout(&vi->completion, adap->timeout);
->> +		if (!time_left) {
->> +			dev_err(&adap->dev, "msg[%d]: addr=0x%x timeout.\n", i, msgs[i].addr);
->> +			ret = i;
->> +			goto err_unlock_free;
-> break;
 >
-> And so on.
-OK.
->> +		}
->> +
->> +		vmsg_i = (struct virtio_i2c_msg *)virtqueue_get_buf(vq, &len);
->> +		if (vmsg_i) {
->> +			/* vmsg_i should point to the same address with vmsg_o */
->> +			if (vmsg_i != vmsg_o) {
->> +				dev_err(&adap->dev, "msg[%d]: addr=0x%x virtqueue error.\n",
->> +					i, vmsg_i->hdr.addr);
->> +				ret = i;
->> +				goto err_unlock_free;
->> +			}
->> +			if (vmsg_i->status != VIRTIO_I2C_MSG_OK) {
->> +				dev_err(&adap->dev, "msg[%d]: addr=0x%x error=%d.\n",
->> +					i, vmsg_i->hdr.addr, vmsg_i->status);
->> +				ret = i;
->> +				goto err_unlock_free;
->> +			}
->> +			if ((vmsg_i->hdr.flags & I2C_M_RD) && vmsg_i->hdr.len)
->> +				memcpy(msgs[i].buf, vmsg_i->buf, vmsg_i->hdr.len);
->> +
->> +			kfree(vmsg_i->buf);
->> +			vmsg_i->buf = NULL;
->> +		}
->> +		reinit_completion(&vi->completion);
->> +	}
->> +	if (i == num)
->> +		ret = num;
-> And this conditional seems a dup of the for-loop successfully iterating over
-> entire queue.
-You are right.
-We may save several lines of code by using "Return (ret<0) ? ret : i" at 
-the end.
+> Starting the audit below, this might not in fact be true, which then
+> invalidates the unregister implementation. In particular the notifier in
+> arch/arm/kernel/hw_breakpoint.c seems to unconditionally enable IRQs.
 
+I see.
 
->> +err_unlock_free:
-> Redundant.
-OK.
->> +	mutex_unlock(&vi->i2c_lock);
->> +	kfree(vmsg_o->buf);
->> +	kfree(vmsg_o);
->> +	return ret;
->> +}
-> ...
 >
->> +	vi->adap.timeout = HZ / 10;
-> + Blank line.
-OK.
->> +	ret = i2c_add_adapter(&vi->adap);
->> +	if (ret) {
->> +		dev_err(&vdev->dev, "failed to add virtio-i2c adapter.\n");
->> +		virtio_i2c_del_vqs(vdev);
-> Usually we do clean up followed by message.
-I will change the order. Thank you.
->> +	}
->> +
->> +	return ret;
+> > > +       ret = raw_notifier_call_chain(&cpu_pm_notifier_chain, event, NULL);
+> >
+> > Converting to raw_notifiers seems reasonable - if we need to avoid the
+> > RCU usage.
+> >
+> > My point is, I wonder about if the notifier callbacks themselves are
+> > safe from RCU usage. For example, I would not be surprised if tracing
+> > is happening behind them.
 >
+> A bunch of them seem to call into the clk domain stuff, and I think
+> there's tracepoints in that.
+>
+> > Moreover, I am not sure that we really need to prevent and limit
+> > tracing from happening. Instead we could push rcu_idle_enter|exit()
+> > further down to the arch specific code in the cpuidle drivers, as you
+> > kind of all proposed earlier.
+>
+> Well, at some point the CPU is in a really dodgy state, ISTR there being
+> ARM platforms where you have to manually leave the cache coherency
+> fabric and all sorts of insanity. There should be a definite cut-off on
+> tracing before that.
+
+That's probably the case for some platforms, but I don't see why we
+need to make everybody "suffer".
+
+>
+> Also, what is the point of all this clock and power domain callbacks, if
+> not to put the CPU into an extremely low power state, surely you want to
+> limit the amount of code that's ran when the CPU is in such a state.
+>
+> > In this way, we can step by step, move to a new "version" of
+> > cpu_pm_enter() that doesn't have to deal with rcu_irq_enter_irqson(),
+> > because RCU hasn't been pushed to idle yet.
+>
+> That should be easy enough to audit. The thing is that mainline is now
+> generating (debug) splats, and some people are upset with this.
+>
+> If you're ok with ARM not being lockdep clean while this is being
+> reworked I'm perfectly fine with that.
+
+I think the splats can easily be fixed. Short term.
+
+Adding RCU_NONIDLE (or similar) around pm_runtime calls in
+psci_enter_domain_idle_state() does the trick. I have a patch for
+that, it's tested and ready. Let me send it out.
+
+Perhaps we should just accept that this is needed, as to allow us to
+move step by step into a better situation, while also avoiding the
+current splats.
+
+>
+> (There used to be a separate CONFIG for RCU-lockdep, but that seems to
+> have been removed)
+
+I don't think that would help. Infrastructure for testing will just
+enable that Kconfig anyway still complains to us.
+
+Kind regards
+Uffe
