@@ -2,108 +2,72 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441BAC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2594C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9E22074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59F820772
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599233225;
-	bh=g3o7tt+MugsYL++tcyWf98GZHjVPsCkdOLiyqZCrTPA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ys9NgL31TTwz0IHc/BFVEcm9otpdfwFPflljVoU3Okvb24MG8xFjKNTYTdhFT5mSI
-	 25MLikjfbuOKm9O+JcW+I/iD0GORNidb1xm8d0FoqbgYFBZ0kn/YFO6fQs1f6dgijb
-	 FDeM9QU6yHYAXQDROznS0K3UEaNmRDnmetPCdzm0=
+	s=default; t=1599233232;
+	bh=Yxplbxuim3UDb+I7XMO4inJ9jEGTvWmyLCzhew7HEXI=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=e/tl28m8OQrBGWKhO/BM8ptQQ+pKcdpt0KoQLiKwbutzPEsov4ZgcoXOU3DAe5rN2
+	 D9JQt4pCRei+o4annsreuEt/dGiaZVSDqJi1EA3Fl9nFAF1ls7Ps9aOED26jycynWy
+	 dfp59m25JhazfFya0Ejv8zLbiIBchQSV2lvRre/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbgIDP1C (ORCPT
+        id S1730950AbgIDPYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:27:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33180 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 11:24:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730970AbgIDPYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:24:33 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        id S1730818AbgIDPYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 11:24:15 -0400
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 144C62074D;
-        Fri,  4 Sep 2020 15:24:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6726D2074D
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 15:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599233072;
-        bh=g3o7tt+MugsYL++tcyWf98GZHjVPsCkdOLiyqZCrTPA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tvp3tLsxj+Tz4tpJJg9/Iws16vsVTfn4cqnHRQFd0/97FP/oVJnzW1uiArHnInweg
-         yGz6XtT17i0HHAGBbOOPnRfA+VHYNpfvEfTCJ+zJkorCGwS/UGzGh9ds4TZdcf7kin
-         EmQ/SZY+TweAb5oyuButZC0OsvZ4WUTx/H7H+8X0=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 03/14] dt-bindings: serial: fsl-imx-uart: Add i.MX 8M compatibles
-Date:   Fri,  4 Sep 2020 17:23:53 +0200
-Message-Id: <20200904152404.20636-4-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904152404.20636-1-krzk@kernel.org>
-References: <20200904152404.20636-1-krzk@kernel.org>
+        s=default; t=1599233054;
+        bh=Yxplbxuim3UDb+I7XMO4inJ9jEGTvWmyLCzhew7HEXI=;
+        h=From:Date:Subject:To:Cc:From;
+        b=0qKH2jIBKNeN8OfK6crv12heMS7DxRVIMQYfy6b+am2KCsEoRo5RHLfMA7IzdJvCi
+         ds/orGX3P1lkvuHIX40+vBafE54MeyJYvT9jnyaOFeEFFRlCEg5Z2FpVQ3LVhRZzxK
+         a88UoTxAPR1uHZKG4VHw83pUYInXZl8Q/bXeI/P4=
+Received: by mail-vk1-f182.google.com with SMTP id s127so1743371vkg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:24:14 -0700 (PDT)
+X-Gm-Message-State: AOAM532IbJbexZiC26BoXwd8rWk2siUljBZ1HGx5lP2mvJsWVG6r/rnW
+        O+tNfTJzmndR1j3lTBUAAitISd0exw/vaKDJT9A=
+X-Google-Smtp-Source: ABdhPJwaKjM9nt6Q7usJijC2V1M6V+XTmGf5vBBZMWYajW8XO2tpDiKRn/FMEU2e2yoHM5SkFi9xGjfgqWRzVRjqHhg=
+X-Received: by 2002:a1f:ab02:: with SMTP id u2mr5882925vke.80.1599233053578;
+ Fri, 04 Sep 2020 08:24:13 -0700 (PDT)
+MIME-Version: 1.0
+From:   Luis Chamberlain <mcgrof@kernel.org>
+Date:   Fri, 4 Sep 2020 09:24:02 -0600
+X-Gmail-Original-Message-ID: <CAB=NE6VTTOcrH0mZaR2wVdzWFjYctzegeKFuSnx4NsssaKTHZA@mail.gmail.com>
+Message-ID: <CAB=NE6VTTOcrH0mZaR2wVdzWFjYctzegeKFuSnx4NsssaKTHZA@mail.gmail.com>
+Subject: Dynamic source include for kconfig
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
-to fix dtbs_check warnings like:
+Hey Masahiro,
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
-    compatible:0: 'fsl,imx8mm-pwm' is not one of ['fsl,imx1-pwm', 'fsl,imx27-pwm']
-    From schema: Documentation/devicetree/bindings/pwm/imx-pwm.yaml
+I ended up needing to do a dyanmic include of kconfig files to support
+custom / private vagrant boxes in a project I maintain.  I figured out
+a way to do it, and not sure if it was intended, but it works:
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
-    compatible: ['fsl,imx8mm-pwm', 'fsl,imx27-pwm'] is too long
+https://github.com/mcgrof/kdevops/commit/404a55326198787758fac88af3c60dcaecf599fc
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
-    compatible: Additional items are not allowed ('fsl,imx27-pwm' was unexpected)
+A new helper for this sort of thing might be neat, if one follows a
+convention. Thoughts?
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-
----
-
-Changes since v1:
-1. Fix subject prefix
----
- Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
-index cba3f83ccd5f..3d896173b3b0 100644
---- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
-+++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
-@@ -36,6 +36,10 @@ properties:
-             - fsl,imx6sx-uart
-             - fsl,imx6ul-uart
-             - fsl,imx7d-uart
-+            - fsl,imx8mm-uart
-+            - fsl,imx8mn-uart
-+            - fsl,imx8mp-uart
-+            - fsl,imx8mq-uart
-           - const: fsl,imx6q-uart
- 
-   reg:
--- 
-2.17.1
-
+ Luis
