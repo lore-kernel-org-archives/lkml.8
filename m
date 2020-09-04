@@ -2,152 +2,119 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495DAC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D70C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 071542084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:39:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ymFjVPZQ"
+	by mail.kernel.org (Postfix) with ESMTP id F385620C56
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgIDXi7 (ORCPT
+        id S1727771AbgIDXxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 19:38:59 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49674 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbgIDXi5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 19:38:57 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 084NcrdZ082111;
-        Fri, 4 Sep 2020 18:38:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599262733;
-        bh=SFOxr4LelQLMmOM0t0kmRwoJ1V/WzAOrAR4/yWwZRUY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ymFjVPZQSCxQJitTpmf0tljabx7nR9kDw/CUdHTscyKs28He5zPTm9YpTbNl8wew5
-         AJipuBu8C2cbVNoxuibZHUg8HA8UQ/MY1HeLiRHJXddv6XMATt4WAedaVF6i4j5/Qh
-         vaZMlWDgPXW7m9EWOw4ZC4/wC55BKDFEJq1/cDhU=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 084NcrZt011937;
-        Fri, 4 Sep 2020 18:38:53 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 4 Sep
- 2020 18:38:53 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 4 Sep 2020 18:38:53 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 084Ncq5p057072;
-        Fri, 4 Sep 2020 18:38:52 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>, Suman Anna <s-anna@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH 4/4] arm64: dts: ti: k3-j7200-common-proc-board: add mcu cpsw nuss pinmux and phy defs
-Date:   Sat, 5 Sep 2020 02:38:30 +0300
-Message-ID: <20200904233830.11370-5-grygorii.strashko@ti.com>
+        Fri, 4 Sep 2020 19:53:16 -0400
+Received: from mga06.intel.com ([134.134.136.31]:64693 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbgIDXxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 19:53:15 -0400
+IronPort-SDR: mIccJCGemNXxJw/qt86/DaS0mejKUhY9YM6/TkhWpi1XYdTdF/H8jWrSNYRsooJStckFfABpAI
+ I6CUJX/wPeqg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="219386181"
+X-IronPort-AV: E=Sophos;i="5.76,391,1592895600"; 
+   d="scan'208";a="219386181"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 16:53:14 -0700
+IronPort-SDR: 7dpd2GJU632sDJcF50/Cxcbw+ivDO5YjBmChaWhWOlZsdsDphgEG780RbM+zvKcJiL3oSC3iP4
+ Mhx9VQZXA/mw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,391,1592895600"; 
+   d="scan'208";a="284656168"
+Received: from rhweight-mobl2.amr.corp.intel.com (HELO rhweight-mobl2.ra.intel.com) ([10.251.151.80])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Sep 2020 16:53:13 -0700
+From:   Russ Weight <russell.h.weight@intel.com>
+To:     mdf@kernel.org, lee.jones@linaro.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     trix@redhat.com, lgoncalv@redhat.com, yilun.xu@intel.com,
+        hao.wu@intel.com, matthew.gerlach@intel.com,
+        Russ Weight <russell.h.weight@intel.com>
+Subject: [PATCH v1 00/12] Intel FPGA Security Manager Class Driver
+Date:   Fri,  4 Sep 2020 16:52:53 -0700
+Message-Id: <20200904235305.6254-1-russell.h.weight@intel.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904233830.11370-1-grygorii.strashko@ti.com>
-References: <20200904233830.11370-1-grygorii.strashko@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The TI j7200 EVM base board has TI DP83867 PHY connected to external CPSW
-NUSS Port 1 in rgmii-rxid mode.
 
-Hence, add pinmux and Ethernet PHY configuration for TI j7200 SoC MCU
-Gigabit Ethernet two ports Switch subsystem (CPSW NUSS).
+These patches depend on the patchset: "add regmap-spi-avmm & Intel
+Max10 BMC chip support" which is currently under review.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- .../dts/ti/k3-j7200-common-proc-board.dts     | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
+           --------------------------------------------------
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-index e27069317c4e..52bde66930d1 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-@@ -6,6 +6,7 @@
- /dts-v1/;
- 
- #include "k3-j7200-som-p0.dtsi"
-+#include <dt-bindings/net/ti-dp83867.h>
- 
- / {
- 	chosen {
-@@ -14,6 +15,32 @@
- 	};
- };
- 
-+&wkup_pmx0 {
-+	mcu_cpsw_pins_default: mcu_cpsw_pins_default {
-+		pinctrl-single,pins = <
-+			J721E_WKUP_IOPAD(0x0068, PIN_OUTPUT, 0) /* MCU_RGMII1_TX_CTL */
-+			J721E_WKUP_IOPAD(0x006c, PIN_INPUT, 0) /* MCU_RGMII1_RX_CTL */
-+			J721E_WKUP_IOPAD(0x0070, PIN_OUTPUT, 0) /* MCU_RGMII1_TD3 */
-+			J721E_WKUP_IOPAD(0x0074, PIN_OUTPUT, 0) /* MCU_RGMII1_TD2 */
-+			J721E_WKUP_IOPAD(0x0078, PIN_OUTPUT, 0) /* MCU_RGMII1_TD1 */
-+			J721E_WKUP_IOPAD(0x007c, PIN_OUTPUT, 0) /* MCU_RGMII1_TD0 */
-+			J721E_WKUP_IOPAD(0x0088, PIN_INPUT, 0) /* MCU_RGMII1_RD3 */
-+			J721E_WKUP_IOPAD(0x008c, PIN_INPUT, 0) /* MCU_RGMII1_RD2 */
-+			J721E_WKUP_IOPAD(0x0090, PIN_INPUT, 0) /* MCU_RGMII1_RD1 */
-+			J721E_WKUP_IOPAD(0x0094, PIN_INPUT, 0) /* MCU_RGMII1_RD0 */
-+			J721E_WKUP_IOPAD(0x0080, PIN_INPUT, 0) /* MCU_RGMII1_TXC */
-+			J721E_WKUP_IOPAD(0x0084, PIN_INPUT, 0) /* MCU_RGMII1_RXC */
-+		>;
-+	};
-+
-+	mcu_mdio_pins_default: mcu_mdio1_pins_default {
-+		pinctrl-single,pins = <
-+			J721E_WKUP_IOPAD(0x009c, PIN_OUTPUT, 0) /* (L1) MCU_MDIO0_MDC */
-+			J721E_WKUP_IOPAD(0x0098, PIN_INPUT, 0) /* (L4) MCU_MDIO0_MDIO */
-+		>;
-+	};
-+};
-+
- &wkup_uart0 {
- 	/* Wakeup UART is used by System firmware */
- 	status = "disabled";
-@@ -62,3 +89,21 @@
- 	/* UART not brought out */
- 	status = "disabled";
- };
-+
-+&mcu_cpsw {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcu_cpsw_pins_default &mcu_mdio_pins_default>;
-+};
-+
-+&davinci_mdio {
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-+		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+	};
-+};
-+
-+&cpsw_port1 {
-+	phy-mode = "rgmii-rxid";
-+	phy-handle = <&phy0>;
-+};
+This patchset introduces the Intel Security Manager class driver
+for managing secure updates on Intel FPGA Cards. It also provides
+the n3000bmc-secure mfd sub-driver for the MAX10 BMC for the n3000
+Programmable Acceleration Cards (PAC). The n3000bmc-secure driver
+is implemented using the Intel Security Manager class driver.
+
+The Intel Security Manager class driver provides a common API for
+user-space tools to manage updates for Secure FPGA devices. Device
+drivers that instantiate the Intel Security Manager class driver will
+interact with the HW secure update engine in order to transfer
+new FPGA and BMC images to FLASH so that they will be automatically
+loaded when the FPGA card reboots.
+
+The API consists of sysfs nodes and supports the following functions:
+
+(1) Instantiate and monitor a secure update
+(2) Display security information including: Root Entry Hashes (REH),
+    Cancelled Code Signing Keys (CSK), and flash update counts for
+    both BMC and FPGA images.
+
+Secure updates make use of the request_firmware framework, which
+requires that image files are accessible under /lib/firmware. A request
+for a secure update returns immediately, while the update itself
+proceeds in the context of a kernel worker thread. Sysfs files provide
+a means for monitoring the progress of a secure update and for
+retrieving error information in the event of a failure.
+
+The n3000bmc-secure driver instantiates the Intel Security Manager
+class driver and provides the callback functions required to support
+secure updates on Intel n3000 PAC devices.
+
+Russ Weight (12):
+  fpga: fpga security manager class driver
+  fpga: create intel max10 bmc security engine
+  fpga: expose max10 flash update counts in sysfs
+  fpga: expose max10 canceled keys in sysfs
+  fpga: enable secure updates
+  fpga: add max10 secure update functions
+  fpga: expose sec-mgr update status
+  fpga: expose sec-mgr update errors
+  fpga: expose sec-mgr update size
+  fpga: enable sec-mgr update cancel
+  fpga: expose hardware error info in sysfs
+  fpga: add max10 get_hw_errinfo callback func
+
+ .../ABI/testing/sysfs-class-ifpga-sec-mgr     | 151 ++++
+ MAINTAINERS                                   |   8 +
+ drivers/fpga/Kconfig                          |  20 +
+ drivers/fpga/Makefile                         |   6 +
+ drivers/fpga/ifpga-sec-mgr.c                  | 669 ++++++++++++++++++
+ drivers/fpga/intel-m10-bmc-secure.c           | 557 +++++++++++++++
+ include/linux/fpga/ifpga-sec-mgr.h            | 201 ++++++
+ include/linux/mfd/intel-m10-bmc.h             | 116 +++
+ 8 files changed, 1728 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
+ create mode 100644 drivers/fpga/ifpga-sec-mgr.c
+ create mode 100644 drivers/fpga/intel-m10-bmc-secure.c
+ create mode 100644 include/linux/fpga/ifpga-sec-mgr.h
+
 -- 
 2.17.1
 
