@@ -2,102 +2,227 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9629BC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995E7C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C147206C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659F22074A
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:44:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qT/uDgXW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cAvWYReh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgIDFmd (ORCPT
+        id S1726769AbgIDFoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 01:42:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35432 "EHLO
+        Fri, 4 Sep 2020 01:44:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgIDFmc (ORCPT
+        with ESMTP id S1725812AbgIDFoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 01:42:32 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 027B4C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:42:32 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id d2so3233073lfj.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:42:31 -0700 (PDT)
+        Fri, 4 Sep 2020 01:44:02 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 792BEC061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:44:01 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k15so5412123wrn.10
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:44:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xWE10/K9CdFjBv2+wzy4YEN9T1BSrnV8vM6ktgt0toM=;
-        b=qT/uDgXWPcQsd24EQCgcu4CWbwJIAUTNgfme8/lkOFA42DoVWt1PbhTKdJAeq+lLYh
-         t3br+09SgcUwwvnFrR3qvf3CLAl2mRGkSHYS3Pr6pvhid2+AFFTfqbHiwovz8u+I3fj5
-         pb4I2pOBtRqpnuNAhG47SGVDkdrESBRMo3Y8npnZ14sYI/pSL7Zh3k95HjYfVSCLnbC2
-         VG+NdoOnziBzWvtu3Kgwo1B7x0etM+Bw1Ipzmo7xWiLEac7f9UGsB/X2bJpMBlEfR0fe
-         JSL8+DgFhkWYr+/0eEheK16utPiKIzEBDwc9fFp90jIwewySB+deOe6TKVKPO6e2HR+v
-         693Q==
+        bh=jQfL+d2YiLKHDBG+R/kOnBkkolF/QX4JbzkbEv0Q6pI=;
+        b=cAvWYReh3TMe1dlwi2WbYOY4y8puEJtVYm8OGp8kRwi2OVTiv+bz7oK0sjRvY+q+zW
+         BBUZT2bDw3vFYvUT+g7PwSMXz5ZI/GT9lpKA4JRjakH8vMBQ0yRpXLqGRec35AuAGnGc
+         k7jEp5qz4U2oJC6qIiXrIEXoF2unP2IdmB7AEzx68N2vpX01wnqEclGvwwMy0OXeJWH3
+         gVNzmJfQCkq0o817DEy1pNWYnRCCTB2VbHVxEFJiLepdyrC91xNSdkL/3EOy7rFH1KZS
+         fWpvJvH03LHmeK9iuB0z7kAUG0NvIomkmgTpqhNOHDjdQnjFL2Qynd+KhnsKfCncOFSp
+         QFOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xWE10/K9CdFjBv2+wzy4YEN9T1BSrnV8vM6ktgt0toM=;
-        b=Ut/BX0Ts3Ibe0XpVWy8IrLG+G2XjyVPTOU0SwLdG7ylIXQfY3sHf537DKEq/Hr2EP1
-         jDS7gG9DCYGBiEAC1OkAOozpuaDo/SJt20nC7bFXBRxNknZDmoJOUnB4hcLOntSIbHyO
-         7j8OumpQDLCk0ATrJLzl/NJQCn01WJeJsGf8iuHRBJSQMDcUI+Sex7qeW9Gc3SgMGTI5
-         yAYUpXF4jGDDy/JrkKabaC/t7IyF+n5czwMgE+lbQg6K3t29o9pGXLkSUtASrQFsJLNo
-         9XTmC+tsLqutmIZeCSnoQlRYG7KGjopnPT7IwWusyWqsNJFWFyxFqpJ9pdXz3pVP07/V
-         HqyA==
-X-Gm-Message-State: AOAM531faUJ9qkP/SZzLz3LDpfTxx8AhAQv6JFbi8EIcCWW3HL9p5hTu
-        UkkelWaNmEDc2j+TZsJ78O9VQ9cc3EoJ5ouXJ/I=
-X-Google-Smtp-Source: ABdhPJzD7zGzQHYFJeDWLorqEQq4ojs3xApgUz5COGWUj77dfYdgIGVzPuxgohSjOE0S2prMRS2X6XSProsry3Km0UI=
-X-Received: by 2002:ac2:44b7:: with SMTP id c23mr3019396lfm.128.1599198150454;
- Thu, 03 Sep 2020 22:42:30 -0700 (PDT)
+        bh=jQfL+d2YiLKHDBG+R/kOnBkkolF/QX4JbzkbEv0Q6pI=;
+        b=sJQsZGhKHbyPdDEYaFmdqFdG+z3MTClo8e5/LkgPxK5psU9xexBX0nTcWhYFwQOVVx
+         pMXFJal/0ECXudVcA9G5ZhNj2dT2vd4URcNHN3GzE/15CfwEvm59vDkq7+wMoiacum64
+         hD2jH3WzHXAv61xby4z8Mbchpa8qRlfQavjbyVXlAha7Ym8GjkYhCil3ld8kEKcx2qbh
+         GPrzb2awIGye4cEHv5y7DWVGFCVDElaWjT99YycRQAWNj8RSYU/dmvBWnjaBLKDzPVBd
+         +kaeDjBsE4kev0FmyFC1NRI+zIbQj4RK0iWY+WsYY3QeQskuruBxH/lausC4n6NpvIKP
+         7H4A==
+X-Gm-Message-State: AOAM531u1POnCgTIQq1cJlYQRY2sECfWf8/GERHDcH+ydx1GlpwtYsPU
+        LlL/Tep5Xy2rLIa5flZLqC9gSmEK2KR/vaf5cNk7xg==
+X-Google-Smtp-Source: ABdhPJybGCxrx4cEzGKIS1AOuVgwbAUhiZhd/eM5knd1tn0gdj1x3PFfwumShPXzdR+OTZq/hYSTGtvZfnzMwKLC6ns=
+X-Received: by 2002:a5d:458a:: with SMTP id p10mr5675209wrq.282.1599198239969;
+ Thu, 03 Sep 2020 22:43:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200902225911.209899-1-ndesaulniers@google.com>
- <CA+icZUXCLyGmYCnHSBJ+8s5QdbPRr+fsfpW43M7pYFEDFOOdJA@mail.gmail.com> <20200903172847.GA1928336@ubuntu-n2-xlarge-x86>
-In-Reply-To: <20200903172847.GA1928336@ubuntu-n2-xlarge-x86>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 4 Sep 2020 07:42:19 +0200
-Message-ID: <CANiq72nmm=pcaL1Vn+G3v3+Q8M=EcRNvvsFM9TG5soCpWzJ9sg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] set clang minimum version to 10.0.1
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Marco Elver <elver@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+References: <20200728085734.609930-1-irogers@google.com> <20200728085734.609930-5-irogers@google.com>
+ <969ef797-59ea-69d0-24b9-33bcdff106a1@intel.com> <CAP-5=fUCnBGX0L0Tt3_gmVnt+hvaouJMx6XFErFKk72+xuw9fw@mail.gmail.com>
+ <86324041-aafb-f556-eda7-6250ba678f24@intel.com> <CAP-5=fXfBkXovaK3DuSCnwfsnxqW7ZR8-LigtGATgs4gMpZP9A@mail.gmail.com>
+In-Reply-To: <CAP-5=fXfBkXovaK3DuSCnwfsnxqW7ZR8-LigtGATgs4gMpZP9A@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 3 Sep 2020 22:43:48 -0700
+Message-ID: <CAP-5=fXGpQ7awq7-99KJsPhwMS91hvFXEvN4YWfdoVpq7mRvDw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] perf record: Don't clear event's period if set by
+ a term
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Alexei Starovoitov <ast@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 7:28 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
+On Tue, Aug 4, 2020 at 8:50 AM Ian Rogers <irogers@google.com> wrote:
 >
-> I would say this should go through either Andrew or Masahiro. We do not
-> have a formal git tree plus I believe there are other things that need
-> to happen before we can push stuff to Linus.
+> On Tue, Aug 4, 2020 at 7:49 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >
+> > On 4/08/20 4:33 pm, Ian Rogers wrote:
+> > > On Tue, Aug 4, 2020 at 3:08 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> > >>
+> > >> On 28/07/20 11:57 am, Ian Rogers wrote:
+> > >>> If events in a group explicitly set a frequency or period with leader
+> > >>> sampling, don't disable the samples on those events.
+> > >>>
+> > >>> Prior to 5.8:
+> > >>> perf record -e '{cycles/period=12345000/,instructions/period=6789000/}:S'
+> > >>
+> > >> Might be worth explaining this use-case some more.
+> > >> Perhaps add it to the leader sampling documentation for perf-list.
+> > >>
+> > >>> would clear the attributes then apply the config terms. In commit
+> > >>> 5f34278867b7 leader sampling configuration was moved to after applying the
+> > >>> config terms, in the example, making the instructions' event have its period
+> > >>> cleared.
+> > >>> This change makes it so that sampling is only disabled if configuration
+> > >>> terms aren't present.
+> > >>>
+> > >>> Fixes: 5f34278867b7 ("perf evlist: Move leader-sampling configuration")
+> > >>> Signed-off-by: Ian Rogers <irogers@google.com>
+> > >>> ---
+> > >>>  tools/perf/util/record.c | 28 ++++++++++++++++++++--------
+> > >>>  1 file changed, 20 insertions(+), 8 deletions(-)
+> > >>>
+> > >>> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+> > >>> index a4cc11592f6b..01d1c6c613f7 100644
+> > >>> --- a/tools/perf/util/record.c
+> > >>> +++ b/tools/perf/util/record.c
+> > >>> @@ -2,6 +2,7 @@
+> > >>>  #include "debug.h"
+> > >>>  #include "evlist.h"
+> > >>>  #include "evsel.h"
+> > >>> +#include "evsel_config.h"
+> > >>>  #include "parse-events.h"
+> > >>>  #include <errno.h>
+> > >>>  #include <limits.h>
+> > >>> @@ -38,6 +39,9 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
+> > >>>       struct perf_event_attr *attr = &evsel->core.attr;
+> > >>>       struct evsel *leader = evsel->leader;
+> > >>>       struct evsel *read_sampler;
+> > >>> +     struct evsel_config_term *term;
+> > >>> +     struct list_head *config_terms = &evsel->config_terms;
+> > >>> +     int term_types, freq_mask;
+> > >>>
+> > >>>       if (!leader->sample_read)
+> > >>>               return;
+> > >>> @@ -47,16 +51,24 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
+> > >>>       if (evsel == read_sampler)
+> > >>>               return;
+> > >>>
+> > >>> +     /* Determine the evsel's config term types. */
+> > >>> +     term_types = 0;
+> > >>> +     list_for_each_entry(term, config_terms, list) {
+> > >>> +             term_types |= 1 << term->type;
+> > >>> +     }
+> > >>>       /*
+> > >>> -      * Disable sampling for all group members other than the leader in
+> > >>> -      * case the leader 'leads' the sampling, except when the leader is an
+> > >>> -      * AUX area event, in which case the 2nd event in the group is the one
+> > >>> -      * that 'leads' the sampling.
+> > >>> +      * Disable sampling for all group members except those with explicit
+> > >>> +      * config terms or the leader. In the case of an AUX area event, the 2nd
+> > >>> +      * event in the group is the one that 'leads' the sampling.
+> > >>>        */
+> > >>> -     attr->freq           = 0;
+> > >>> -     attr->sample_freq    = 0;
+> > >>> -     attr->sample_period  = 0;
+> > >>> -     attr->write_backward = 0;
+> > >>> +     freq_mask = (1 << EVSEL__CONFIG_TERM_FREQ) | (1 << EVSEL__CONFIG_TERM_PERIOD);
+> > >>> +     if ((term_types & freq_mask) == 0) {
+> > >>
+> > >> It would be nicer to have a helper e.g.
+> > >>
+> > >>         if (!evsel__have_config_term(evsel, FREQ) &&
+> > >>             !evsel__have_config_term(evsel, PERIOD)) {
+> > >
+> > > Sure. The point of doing it this way was to avoid repeatedly iterating
+> > > over the config term list.
+> >
+> > But perhaps it is premature optimization
+>
+> The alternative is more loc. I think we can bike shed on this but it's
+> not really changing the substance of the change. I'm keen to try to be
+> efficient where we can as we see issues at scale.
+>
+> Thanks,
+> Ian
 
-Note that a git.kernel.org repo/account isn't required to send PRs.
-The hard requirement is getting your keys signed. Putting stuff into
--next is also important.
+Ping. Do we want to turn this into multiple O(N) searches using a
+helper rather than 1 as coded here?
 
-> Given that this is not a regression or a bug fix, it should go into 5.10
-> in my opinion.
+Thanks,
+Ian
 
-It is a bit late, yeah.
-
-Cheers,
-Miguel
+> > >
+> > >>> +             attr->freq           = 0;
+> > >>> +             attr->sample_freq    = 0;
+> > >>> +             attr->sample_period  = 0;
+> > >>
+> > >> If we are not sampling, then maybe we should also put here:
+> > >>
+> > >>                 attr->write_backward = 0;
+> > >>
+> > >>> +     }
+> > >>
+> > >> Then, if we are sampling this evsel shouldn't the backward setting
+> > >> match the leader? e.g.
+> > >>
+> > >>         if (attr->sample_freq)
+> > >>                 attr->write_backward = leader->core.attr.write_backward;
+> > >
+> > > Perhaps that should be a follow up change? This change is trying to
+> > > make the behavior match the previous behavior.
+> >
+> > Sure
+> >
+> > >
+> > > Thanks,
+> > > Ian
+> > >
+> > >>> +     if ((term_types & (1 << EVSEL__CONFIG_TERM_OVERWRITE)) == 0)
+> > >>> +             attr->write_backward = 0;
+> > >>>
+> > >>>       /*
+> > >>>        * We don't get a sample for slave events, we make them when delivering
+> > >>>
+> > >>
+> >
