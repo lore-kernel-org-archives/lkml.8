@@ -2,158 +2,127 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 576D9C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6863FC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1873D2078E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:04:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599260654;
-	bh=1rEb6oJ/Q9tioEm7DsXCupEdYTkjmI5hngC5BIXq3hY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yShGEIPwJaztc1iI3VCKz+W+JL0vsWPHAOTYQddrgu2PGs3d82/NwOmqPH6pBwGAZ
-	 mTmG+Gh3IwiwTHPnlH++LI/ZMr7AUhzBduI1zlhNpn8X3L/64ITs/yytR/sogOJ4cS
-	 KV6x7WCGBaLPpRkoemwNRTC6f6HkFx5LRcUX5LFY=
+	by mail.kernel.org (Postfix) with ESMTP id 2507A2078E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:09:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X/efuQ+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbgIDXDp (ORCPT
+        id S1728251AbgIDXJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 19:03:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728162AbgIDXDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 19:03:44 -0400
-Received: from sol.localdomain (172-10-235-113.lightspeed.sntcca.sbcglobal.net [172.10.235.113])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF92B2078E;
-        Fri,  4 Sep 2020 23:03:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599260622;
-        bh=1rEb6oJ/Q9tioEm7DsXCupEdYTkjmI5hngC5BIXq3hY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aqt8lZtOvNKJeAA/aMCLl+iX0KV/RJSYfz0u8633/pYvvrmYgBQQyyGWjl3ICqmW5
-         HQVf14BQD38DUv1Vtj1flsEsam5Nf3RS1zTSk/wT5sBwhjjL2ogmCEoLOhcYGewmu5
-         m30TVebSdsadE9hP5TwtCazv7F/gCafG4Yw2VzBI=
-Date:   Fri, 4 Sep 2020 16:03:41 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-fscrypt@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fscrypt: Reduce object size of logging messages
-Message-ID: <20200904230341.GA6172@sol.localdomain>
-References: <d9e2693cc157bbc09df92a91a9ecad8dcc8438ce.camel@perches.com>
+        Fri, 4 Sep 2020 19:09:39 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53106 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728202AbgIDXJi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 19:09:38 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 084N9Yuu003062;
+        Fri, 4 Sep 2020 18:09:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599260974;
+        bh=kLA7asIFy8/k3yCuayCMt1ya2sDX6K7GGmE6k6YlavY=;
+        h=From:To:CC:Subject:Date;
+        b=X/efuQ+WhYEflz1byHBvE0EQVgNdHfB4fupdYGF4M3zhu59Z3wGfmbCa3ZEPiznSn
+         NIcwEcQ35/dFX2sCjOLckGjMkKVKQfvn1gRF6o91vrt23UVf25VGQUk2L4D6VXZ/IP
+         tExtyUD17m2c/oyQ1Zd8c7XlUEsUGi8EGsbKrHl8=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 084N9YAP066558
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 4 Sep 2020 18:09:34 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 4 Sep
+ 2020 18:09:34 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 4 Sep 2020 18:09:34 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 084N9X38005593;
+        Fri, 4 Sep 2020 18:09:33 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next 0/9] net: ethernet: ti: ale: add static configuration 
+Date:   Sat, 5 Sep 2020 02:09:15 +0300
+Message-ID: <20200904230924.9971-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d9e2693cc157bbc09df92a91a9ecad8dcc8438ce.camel@perches.com>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 03:10:15PM -0700, Joe Perches wrote:
-> Reduce the object size of logging messages by removing the
-> separate KERN_LEVEL argument and adding it to the format.
-> 
-> Miscellanea:
-> 
-> o Rename fscypt_msg to fscrypt_printk
-> 
-> x86-64 defconfig with fscrypto:
-> 
-> Original sizes:
-> $ size fs/crypto/built-in.a -t
->    text	   data	    bss	    dec	    hex	filename
->    3815	    300	     24	   4139	   102b	fs/crypto/crypto.o (ex fs/crypto/built-in.a)
->    4354	     84	      0	   4438	   1156	fs/crypto/fname.o (ex fs/crypto/built-in.a)
->    1484	     24	      0	   1508	    5e4	fs/crypto/hkdf.o (ex fs/crypto/built-in.a)
->    2910	     68	      0	   2978	    ba2	fs/crypto/hooks.o (ex fs/crypto/built-in.a)
->    7797	    664	     65	   8526	   214e	fs/crypto/keyring.o (ex fs/crypto/built-in.a)
->    5005	    493	      0	   5498	   157a	fs/crypto/keysetup.o (ex fs/crypto/built-in.a)
->    2805	      0	    544	   3349	    d15	fs/crypto/keysetup_v1.o (ex fs/crypto/built-in.a)
->    6391	     90	      0	   6481	   1951	fs/crypto/policy.o (ex fs/crypto/built-in.a)
->    1369	     40	      0	   1409	    581	fs/crypto/bio.o (ex fs/crypto/built-in.a)
->   35930	   1763	    633	  38326	   95b6	(TOTALS)
-> 
-> New sizes:
-> $ size fs/crypto/built-in.a -t
->    text	   data	    bss	    dec	    hex	filename
->    3874	    300	     24	   4198	   1066	fs/crypto/crypto.o (ex fs/crypto/built-in.a)
->    4347	     84	      0	   4431	   114f	fs/crypto/fname.o (ex fs/crypto/built-in.a)
->    1476	     24	      0	   1500	    5dc	fs/crypto/hkdf.o (ex fs/crypto/built-in.a)
->    2902	     68	      0	   2970	    b9a	fs/crypto/hooks.o (ex fs/crypto/built-in.a)
->    7781	    664	     65	   8510	   213e	fs/crypto/keyring.o (ex fs/crypto/built-in.a)
->    4961	    493	      0	   5454	   154e	fs/crypto/keysetup.o (ex fs/crypto/built-in.a)
->    2790	      0	    544	   3334	    d06	fs/crypto/keysetup_v1.o (ex fs/crypto/built-in.a)
->    6306	     90	      0	   6396	   18fc	fs/crypto/policy.o (ex fs/crypto/built-in.a)
->    1369	     40	      0	   1409	    581	fs/crypto/bio.o (ex fs/crypto/built-in.a)
->   35806	   1763	    633	  38202	   953a	(TOTALS)
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  fs/crypto/crypto.c          | 14 ++++++++------
->  fs/crypto/fscrypt_private.h | 12 ++++++------
->  2 files changed, 14 insertions(+), 12 deletions(-)
-> 
-> diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
-> index 9212325763b0..c82cc3907e43 100644
-> --- a/fs/crypto/crypto.c
-> +++ b/fs/crypto/crypto.c
-> @@ -329,25 +329,27 @@ int fscrypt_initialize(unsigned int cop_flags)
->  	return err;
->  }
->  
-> -void fscrypt_msg(const struct inode *inode, const char *level,
-> -		 const char *fmt, ...)
-> +void fscrypt_printk(const struct inode *inode, const char *fmt, ...)
->  {
->  	static DEFINE_RATELIMIT_STATE(rs, DEFAULT_RATELIMIT_INTERVAL,
->  				      DEFAULT_RATELIMIT_BURST);
->  	struct va_format vaf;
->  	va_list args;
-> +	int level;
->  
->  	if (!__ratelimit(&rs))
->  		return;
->  
->  	va_start(args, fmt);
-> -	vaf.fmt = fmt;
-> +	level = printk_get_level(fmt);
-> +	vaf.fmt = printk_skip_level(fmt);
->  	vaf.va = &args;
->  	if (inode)
-> -		printk("%sfscrypt (%s, inode %lu): %pV\n",
-> -		       level, inode->i_sb->s_id, inode->i_ino, &vaf);
-> +		printk("%c%cfscrypt (%s, inode %lu): %pV\n",
-> +		       KERN_SOH_ASCII, level, inode->i_sb->s_id, inode->i_ino,
-> +		       &vaf);
->  	else
-> -		printk("%sfscrypt: %pV\n", level, &vaf);
-> +		printk("%c%cfscrypt: %pV\n", KERN_SOH_ASCII, level, &vaf);
->  	va_end(args);
+Hi All,
 
-The problem with this approach is that if fscrypt_printk() is called without
-providing a log level in the format string (which one would assume would work,
-since printk() allows it), then the real format string will be truncated to just
-KERN_SOH because 'level' will be 0.
+As existing, as newly introduced CPSW ALE versions have differences in 
+supported features and ALE table formats. Especially it's actual for the
+recent AM65x/J721E/J7200 and future AM64x SoCs, which supports more
+features like: auto-aging, classifiers, Link aggregation, additional HW
+filtering, etc.
 
-Can you find a way to avoid that?
+The existing ALE configuration interface is not practical in terms of 
+adding new features and requires consumers to program a lot static
+parameters. And any attempt to add new features will case endless adding
+and maintaining different combination of flags and options. Because CPSW
+ALE configuration is static and fixed for SoC (or set of SoC), It is
+reasonable to add support for static ALE configurations inside ALE module.
 
-> -#define fscrypt_warn(inode, fmt, ...)		\
-> -	fscrypt_msg((inode), KERN_WARNING, fmt, ##__VA_ARGS__)
-> -#define fscrypt_err(inode, fmt, ...)		\
-> -	fscrypt_msg((inode), KERN_ERR, fmt, ##__VA_ARGS__)
-> +#define fscrypt_err(inode, fmt, ...)					\
-> +	fscrypt_printk(inode, KERN_ERR fmt, ##__VA_ARGS__)
-> +#define fscrypt_warn(inode, fmt, ...)					\
-> +	fscrypt_printk(inode, KERN_WARNING fmt, ##__VA_ARGS__)
+This series introduces static ALE configuration table for different ALE 
+variants and provides option for consumers to select required ALE
+configuration by providing ALE const char *dev_id identifier (Patch 2).
+And all existing driver have been switched to use new approach (Patches 3-6).
 
-It's probably best to keep the parentheses around 'inode'.
+After this ALE HW auto-ageing feature can be enabled for AM65x CPSW ALE 
+variant (Patch 7).
 
-- Eric
+Finally, Patches 8-9 introduces tables to describe the ALE VLAN entries 
+fields as the ALE VLAN entries are too much differ between different TI
+CPSW ALE versions. So, handling them using flags, defines and get/set
+functions are became over-complicated.
+
+Patch 1 - is preparation patch
+
+Grygorii Strashko (9):
+  net: ethernet: ti: ale: add cpsw_ale_get_num_entries api
+  net: ethernet: ti: ale: add static configuration
+  net: ethernet: ti: cpsw: use dev_id for ale configuration
+  net: netcp: ethss: use dev_id for ale configuration
+  net: ethernet: ti: am65-cpsw: use dev_id for ale configuration
+  net: ethernet: ti: ale: make usage of ale dev_id mandatory
+  net: ethernet: ti: am65-cpsw: enable hw auto ageing
+  net: ethernet: ti: ale: switch to use tables for vlan entry
+    description
+  net: ethernet: ti: ale: add support for multi port k3 cpsw versions
+
+ drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  10 +-
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c    |  16 +-
+ drivers/net/ethernet/ti/am65-cpsw-nuss.h    |   1 +
+ drivers/net/ethernet/ti/cpsw.c              |   6 -
+ drivers/net/ethernet/ti/cpsw_ale.c          | 421 ++++++++++++++++----
+ drivers/net/ethernet/ti/cpsw_ale.h          |   7 +
+ drivers/net/ethernet/ti/cpsw_ethtool.c      |   3 +-
+ drivers/net/ethernet/ti/cpsw_new.c          |   1 -
+ drivers/net/ethernet/ti/cpsw_priv.c         |   2 +-
+ drivers/net/ethernet/ti/cpsw_priv.h         |   2 -
+ drivers/net/ethernet/ti/netcp_ethss.c       |  18 +-
+ 11 files changed, 388 insertions(+), 99 deletions(-)
+
+-- 
+2.17.1
+
