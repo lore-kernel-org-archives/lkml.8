@@ -3,184 +3,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA66FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FEDC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8267B206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:51:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599245471;
-	bh=Twj18k+c6SsPkUog9LNw71943z1B88d4+qHItMScd4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=my8tCGabHGgs8Af5J5TA6xOmIeeerJlxGisGBVd6ElkbgO48emLHvvCiRYcJ+zU4c
-	 CU4dH9nRwPYpsgpS8aWgvUB7kGqqafJvfIIRjZyDuaq5sr8Cg/WHc/HfM6C5qmqSLX
-	 U/e4NiLv6HVgWcXhLQylaDf2Xr9vaijg3BbXGrNw=
+	by mail.kernel.org (Postfix) with ESMTP id C3711206A5
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:55:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PHiRDDSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgIDSvK (ORCPT
+        id S1726828AbgIDSzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 14:51:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgIDSvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 14:51:09 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 4 Sep 2020 14:55:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44124 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726047AbgIDSzd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 14:55:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599245731;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oFPHcehcUmB19GUL5LiwgzkyVfpLa6gz216yp/zHq+4=;
+        b=PHiRDDSPY1/XIUs0LlCGyxEYAI+7xvL/0MIP5yjKMQYffm0rLQYcOlrTr0m8pa1JUz8/8H
+        nb3N7NTrydqaqUI/NdIHZ0pkfx+sgrkfUanevqTOoXu4UjMtVfd4iXISktRgS3EzQ4KDi3
+        4gMv0a8yc+3jopW7ySCEvFVisgYgEM0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-558-ZpJmevbXNOGJeEKRTCVFMg-1; Fri, 04 Sep 2020 14:55:29 -0400
+X-MC-Unique: ZpJmevbXNOGJeEKRTCVFMg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9B5A20665;
-        Fri,  4 Sep 2020 18:51:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599245468;
-        bh=Twj18k+c6SsPkUog9LNw71943z1B88d4+qHItMScd4g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iB7/I4m6L5ixT8RwW+Sq/m27FvNI9TLhbt00GurT02Iuvm6pGlib+/R7T+sPbku3s
-         IO0iF5B/G5l1YRR+XTsXkhBI0WQV3EJsBp+GRPXdHdzzzPQ5PpMoU7Q4Ey/NkLhe45
-         tAOX/Rl6tNToULAzEA27OcLiwAylgNVxoMlPJvZw=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 16EF940D3D; Fri,  4 Sep 2020 15:51:06 -0300 (-03)
-Date:   Fri, 4 Sep 2020 15:51:06 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 2/5] perf record: Prevent override of
- attr->sample_period for libpfm4 events
-Message-ID: <20200904185106.GB3752059@kernel.org>
-References: <20200728085734.609930-1-irogers@google.com>
- <20200728085734.609930-3-irogers@google.com>
- <20200728155940.GC1319041@krava>
- <20200728160954.GD1319041@krava>
- <CAP-5=fVqto0LrwgW6dHQupp7jFA3wToRBonBaXXQW4wwYcTreg@mail.gmail.com>
- <CAP-5=fWNniZuYfYhz_Cz7URQ+2E4T4Kg3DJqGPtDg70i38Er_A@mail.gmail.com>
- <20200904160303.GD939481@krava>
- <CAP-5=fWOSi4B3g1DARkh6Di-gU4FgmjnhbPYRBdvSdLSy_KC5Q@mail.gmail.com>
- <20200904184803.GA3749996@kernel.org>
- <20200904185013.GA3752059@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0819918A2240;
+        Fri,  4 Sep 2020 18:55:28 +0000 (UTC)
+Received: from treble (ovpn-117-138.rdu2.redhat.com [10.10.117.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E90F5C5DE;
+        Fri,  4 Sep 2020 18:55:27 +0000 (UTC)
+Date:   Fri, 4 Sep 2020 13:55:25 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Julien Thierry <jthierry@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org, mbenes@suse.cz,
+        raphael.gault@arm.com, benh@kernel.crashing.org
+Subject: Re: [PATCH v3 00/10] Make check implementation arch agnostic
+Message-ID: <20200904185525.zkx46hsbobghr2wb@treble>
+References: <20200904153028.32676-1-jthierry@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200904185013.GA3752059@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200904153028.32676-1-jthierry@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Sep 04, 2020 at 03:50:13PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Sep 04, 2020 at 03:48:03PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Fri, Sep 04, 2020 at 09:22:10AM -0700, Ian Rogers escreveu:
-> > > On Fri, Sep 4, 2020 at 9:03 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > > > On Thu, Sep 03, 2020 at 10:41:14PM -0700, Ian Rogers wrote:
-> > > > > On Wed, Jul 29, 2020 at 4:24 PM Ian Rogers <irogers@google.com> wrote:
-> > > > > > On Tue, Jul 28, 2020 at 9:10 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > > > > > > On Tue, Jul 28, 2020 at 05:59:46PM +0200, Jiri Olsa wrote:
-> > > > > > > > On Tue, Jul 28, 2020 at 01:57:31AM -0700, Ian Rogers wrote:
-> > > > > > > [jolsa@krava perf]$ sudo ./perf test 17 -v
-> > > > > > > 17: Setup struct perf_event_attr                          :
-> > 
-> > > > > > > running './tests/attr/test-record-C0'
-> > > > > > > expected sample_period=4000, got 3000
-> > > > > > > FAILED './tests/attr/test-record-C0' - match failure
-> > 
-> > > > > > I'm not able to reproduce this. Do you have a build configuration or
-> > > > > > something else to look at? The test doesn't seem obviously connected
-> > > > > > with this patch.
-> > 
-> > > > > Jiri, any update? Thanks,
-> > 
-> > > > sorry, I rebased and ran it again and it passes for me now,
-> > > > so it got fixed along the way
-> > 
-> > > No worries, thanks for the update! It'd be nice to land this and the
-> > > other libpfm fixes.
-> > 
-> > I applied it and it generated this regression:
-> > 
-> > FAILED '/home/acme/libexec/perf-core/tests/attr/test-record-pfm-period' - match failure
-> > 
-> > I'll look at the other patches that are pending in this regard to see
-> > what needs to be squashed so that we don't break bisect.
+On Fri, Sep 04, 2020 at 04:30:18PM +0100, Julien Thierry wrote:
+> Hi,
 > 
-> So, more context:
+> The current implementation of the check subcommand has various x86 bits
+> here and there. In order to prepare objtool to provide check for other
+> architectures, add some abstraction over the x86 specific bits, relying
+> on objtool arch specific code to provide some necessary operations.
 > 
-> running '/home/acme/libexec/perf-core/tests/attr/test-record-pfm-period'
-> expected exclude_hv=0, got 1
-> FAILED '/home/acme/libexec/perf-core/tests/attr/test-record-pfm-period' - match failure
-> test child finished with -1
-> ---- end ----
-> Setup struct perf_event_attr: FAILED!
-> [root@five ~]#
+> This is part of the effort to implement check for arm64, initiated [1]
+> by Raphael. The series is based on top of the separation of check & orc
+> subcommands series[2].
 > 
-> Ian, can you take a look at this?
+> I've push both series base on top of tip/objtool/core at [3].
+> 
+> - The first two patches make it simpler for new arches to provide their
+> list of kernel headers, without worrying about modifications in the x86
+> headers.
+> - Patch 3 Moves arch specific macros to more suitable location
+> - Patches 4 and 5 add abstraction to handle alternatives
+> - Patch 6 adds abstraction to handle jump table
+> - Patches 7-10 makes unwind hint definitions shared across architectures
+> 
+> Changes since v2 [4]:
+> - Rebased on v5.9-rc1
+> - Under tools/objtool/arch/x86/, rename arch_special.c to special.c
+> - Rename include/linux/frame.h to inclide/linux/objtool.h
+> - Share unwind hint types across architectures
 
-Further tests I've performed:
+Thanks.  These look good.  We're still trying to get our merge process
+worked out, and tip/objtool/core is now pretty old, but these apply well
+enough.
 
-    Committer testing:
+If there are no more comments I can fix up the few minor comments I had
+and then try to get them merged after your other set (once Peter and I
+figure out how to do that :-)
 
-    Not linking with libpfm:
-
-      # ldd ~/bin/perf | grep libpfm
-      #
-
-    Before:
-
-      # perf record -c 10000 -e cycles/period=12345/,instructions sleep 0.0001
-      [ perf record: Woken up 1 times to write data ]
-      [ perf record: Captured and wrote 0.052 MB perf.data (258 samples) ]
-      # perf evlist -v
-      cycles/period=12345/: size: 120, { sample_period, sample_freq }: 12345, sample_type: IP|TID|TIME|ID, read_format: ID, disabled: 1, inherit: 1, mmap: 1, comm: 1, enable_on_exec: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-      instructions: size: 120, config: 0x1, { sample_period, sample_freq }: 10000, sample_type: IP|TID|TIME|ID, read_format: ID, disabled: 1, inherit: 1, enable_on_exec: 1, sample_id_all: 1, exclude_guest: 1
-      #
-
-    After:
-
-      #
-      # perf record -c 10000 -e cycles/period=12345/,instructions sleep 0.0001
-      [ perf record: Woken up 1 times to write data ]
-      [ perf record: Captured and wrote 0.053 MB perf.data (284 samples) ]
-      # perf evlist -v
-      cycles/period=12345/: size: 120, { sample_period, sample_freq }: 12345, sample_type: IP|TID|TIME|ID, read_format: ID, disabled: 1, inherit: 1, mmap: 1, comm: 1, enable_on_exec: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-      instructions: size: 120, config: 0x1, { sample_period, sample_freq }: 10000, sample_type: IP|TID|TIME|ID, read_format: ID, disabled: 1, inherit: 1, enable_on_exec: 1, sample_id_all: 1, exclude_guest: 1
-      #
-
-    Linking with libpfm:
-
-      # ldd ~/bin/perf | grep libpfm
-            libpfm.so.4 => /lib64/libpfm.so.4 (0x00007f54c7d75000)
-      #
-
-      # perf record -c 10000 --pfm-events=cycles:period=77777 sleep 1
-      [ perf record: Woken up 1 times to write data ]
-      [ perf record: Captured and wrote 0.043 MB perf.data (141 samples) ]
-      # perf evlist -v
-      cycles:period=77777: size: 120, { sample_period, sample_freq }: 10000, sample_type: IP|TID|TIME, read_format: ID, disabled: 1, inherit: 1, exclude_hv: 1, mmap: 1, comm: 1, enable_on_exec: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-      #
-
-    After:
-
-      # perf record -c 10000 --pfm-events=cycles:period=77777 sleep 1
-      [ perf record: Woken up 1 times to write data ]
-      [ perf record: Captured and wrote 0.039 MB perf.data (19 samples) ]
-      # perf evlist -v
-      cycles:period=77777: size: 120, { sample_period, sample_freq }: 77777, sample_type: IP|TID|TIME, read_format: ID, disabled: 1, inherit: 1, exclude_hv: 1, mmap: 1, comm: 1, enable_on_exec: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-      #
+-- 
+Josh
 
