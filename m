@@ -2,121 +2,115 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F2BC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBD2C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA142074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:07:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bls3T86m"
+	by mail.kernel.org (Postfix) with ESMTP id 2308F2074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgIDQHX (ORCPT
+        id S1728115AbgIDQHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:07:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727970AbgIDQHK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:07:10 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 293ACC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 09:07:09 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id 185so6953731oie.11
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 09:07:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=doLJDgNe0qt085BNPu/3Io3kfNCUU7JOawvznIdKbdg=;
-        b=Bls3T86mzryTn+qU1zsr/9PYb0zkdzQQ2ypAxX9SKP9tu98U+eVySYDoXF3jIyFa8G
-         XH3HYfOWR693y7ALBNUYECipnhoSVq9uQtmNNn8ZNJMY3gWyc7pbJWqOcy39gmSAsouj
-         U8vUn6yRiuL/09+Q3ZPurtyUqlRFuuSAdVbkVyt9CLW/Hw0QFIVg8PBZUUjOuAjxdnu1
-         Eak3IlxA4JLKEFyjL/fgoyooxv3/37UcREE9CZ1SSFV7DDDliFlyEcDpvFWUzCLDScXZ
-         bwWi0RyelmbdQqrcGz83/qEBJCTQpYYw3g4kHp1J/RwwCAauH4+RwTUXB4UB+CfxXbSP
-         lZ9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=doLJDgNe0qt085BNPu/3Io3kfNCUU7JOawvznIdKbdg=;
-        b=lYxeVGEJeuO4rororjHNHL1wcVQ6TdZO0njzhKaHYLrF7FHbrvYCG/BYqDKU1JRJ3h
-         tU0nlsJ40qwtGjGBDg0bcYcTxzVyy8U+WtiqEfbbQOiKmdU4k/P8vCKcVxgnMroQcXgb
-         wK1lgMfnUcocU5Z/LmBLTwk228zfkGUBs70oFLSLbW48LDXTOe4nwG+MJmqjuB6E0pBm
-         S7ffsRQg65xyDVaWGuVOyfgxOjzJ7C8m5+RcJWoQdhbNsgUEMGiy/R/ukkTluWcYvnOj
-         krS00KH2/DPyB7LZzG929Mssxbcr6j9AmxbgmxGiutBg+qjRIypJt7eAvP5Nl4sa2dJT
-         1r/A==
-X-Gm-Message-State: AOAM53206pP8WRfXzrWqCwAlsAK+8+3R2mzOkoIxb21JItPKbzvQDt5e
-        bpb6gDnqKxUBo5rLiO4cgJav5A==
-X-Google-Smtp-Source: ABdhPJyW9FGADBJOCZRrQYFZdHWHjGtQOzqZty0xfmulX35Zut5RGG3F7ZSeSB47qhRZIBUayNPRPA==
-X-Received: by 2002:a54:4f85:: with SMTP id g5mr5738063oiy.27.1599235628680;
-        Fri, 04 Sep 2020 09:07:08 -0700 (PDT)
-Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
-        by smtp.gmail.com with ESMTPSA id w1sm1370649oop.16.2020.09.04.09.07.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 09:07:07 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 11:06:58 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v16 20/20] arm: dts: qcom: sc7180: Set the compatible
- string for the GPU SMMU
-Message-ID: <20200904160658.GJ3715@yoga>
-References: <20200901164707.2645413-1-robdclark@gmail.com>
- <20200901164707.2645413-21-robdclark@gmail.com>
+        Fri, 4 Sep 2020 12:07:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:53522 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbgIDQHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:07:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56F40106F;
+        Fri,  4 Sep 2020 09:07:41 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.8.186])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8B143F66F;
+        Fri,  4 Sep 2020 09:07:39 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 17:07:36 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Haesung Kim <matia.kim@lge.com>
+Cc:     jirislaby@kernel.org, akpm@linux-foundation.org, mingo@kernel.org,
+        geert@linux-m68k.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] stacktrace: print real address of trace entries
+Message-ID: <20200904160736.GB21956@C02TD0UTHF1T.local>
+References: <1599213624-14632-1-git-send-email-matia.kim@lge.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200901164707.2645413-21-robdclark@gmail.com>
+In-Reply-To: <1599213624-14632-1-git-send-email-matia.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 01 Sep 11:46 CDT 2020, Rob Clark wrote:
+On Fri, Sep 04, 2020 at 07:00:24PM +0900, Haesung Kim wrote:
+> If function is marked as static and compiler decies to lnline function
+> with or without inline keyword, the function has no symbol.
+> We just know symbol located near the address of the inline function
+> by %pS type that shows symbol and offset. But we don't know function
+> name.
 
-> From: Rob Clark <robdclark@chromium.org>
+What exactly is output in this case today? Can't you get the real
+addr/symbol from scripts/faddr2line?
+
+> The real address let us extract the function name and location of
+> source code by debugging tools such as addr2line. This is helpful to
+> debug.
+
+Not logging the address was a deliberate decision to minimize leakage of
+the kernel's VA layout. This undermines that, and I don't think doing so
+is a good idea.
+
+If there is a problem with faddr2line we should work out how to improve
+that.
+
+Mark.
+
 > 
-> Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
-> split pagetables and per-instance pagetables for drm/msm.
-> 
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Signed-off-by: Haesung Kim <matia.kim@lge.com>
 > ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  kernel/stacktrace.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index d46b3833e52f..f3bef1cad889 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1937,7 +1937,7 @@ opp-180000000 {
->  		};
+> diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+> index 946f44a..b7168c5 100644
+> --- a/kernel/stacktrace.c
+> +++ b/kernel/stacktrace.c
+> @@ -24,12 +24,15 @@ void stack_trace_print(const unsigned long *entries, unsigned int nr_entries,
+>  		       int spaces)
+>  {
+>  	unsigned int i;
+> +	unsigned long ip;
 >  
->  		adreno_smmu: iommu@5040000 {
-> -			compatible = "qcom,sc7180-smmu-v2", "qcom,smmu-v2";
-> +			compatible = "qcom,sc7180-smmu-v2", "qcom,adreno-smmu", "qcom,smmu-v2";
->  			reg = <0 0x05040000 0 0x10000>;
->  			#iommu-cells = <1>;
->  			#global-interrupts = <2>;
+>  	if (WARN_ON(!entries))
+>  		return;
+>  
+>  	for (i = 0; i < nr_entries; i++)
+> -		printk("%*c%pS\n", 1 + spaces, ' ', (void *)entries[i]);
+> +		ip = entries[i];
+> +		printk("%*c[<%px>] %pS\n",
+> +			1 + spaces, ' ', (void *) ip, (void *) ip);
+>  }
+>  EXPORT_SYMBOL_GPL(stack_trace_print);
+>  
+> @@ -47,13 +50,15 @@ int stack_trace_snprint(char *buf, size_t size, const unsigned long *entries,
+>  			unsigned int nr_entries, int spaces)
+>  {
+>  	unsigned int generated, i, total = 0;
+> +	unsigned long ip;
+>  
+>  	if (WARN_ON(!entries))
+>  		return 0;
+>  
+>  	for (i = 0; i < nr_entries && size; i++) {
+> -		generated = snprintf(buf, size, "%*c%pS\n", 1 + spaces, ' ',
+> -				     (void *)entries[i]);
+> +		ip = entries[i];
+> +		generated = snprintf(buf, size, "%*c[<%px>] %pS\n",
+> +				     1 + spaces, ' ', (void *) ip, (void *) ip);
+>  
+>  		total += generated;
+>  		if (generated >= size) {
 > -- 
-> 2.26.2
+> 2.7.4
 > 
