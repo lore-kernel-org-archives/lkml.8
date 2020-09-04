@@ -2,133 +2,84 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFB8C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7FBC28E83
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2635C20791
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A17F20791
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbgIDK3X (ORCPT
+        id S1730154AbgIDK3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 06:29:23 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35547 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgIDK3O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:29:14 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1kE8xv-0001oE-SE; Fri, 04 Sep 2020 10:29:07 +0000
-Date:   Fri, 4 Sep 2020 12:29:07 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Josh Triplett <josh@joshtriplett.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-kselftest@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-api@vger.kernel.org, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH v2 2/4] exit: support non-blocking pidfds
-Message-ID: <20200904102907.2t6w6k7ud5i6ak2o@wittgenstein>
-References: <20200902102130.147672-1-christian.brauner@ubuntu.com>
- <20200902102130.147672-3-christian.brauner@ubuntu.com>
- <20200903235659.GC210207@localhost>
+        Fri, 4 Sep 2020 06:29:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47196 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730114AbgIDK3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:29:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 16A6DB7FC;
+        Fri,  4 Sep 2020 10:29:07 +0000 (UTC)
+Subject: Re: [PATCH 16/19] ataflop: use a separate gendisk for each media
+ format
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+References: <20200903080119.441674-1-hch@lst.de>
+ <20200903080119.441674-17-hch@lst.de>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <d0bb8f40-3d6b-9011-d266-6a2c35efbd46@suse.de>
+Date:   Fri, 4 Sep 2020 12:29:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200903235659.GC210207@localhost>
+In-Reply-To: <20200903080119.441674-17-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 04:56:59PM -0700, Josh Triplett wrote:
-> On Wed, Sep 02, 2020 at 12:21:28PM +0200, Christian Brauner wrote:
-> > Passing a non-blocking pidfd to waitid() currently has no effect, i.e.  is not
-> > supported. There are users which would like to use waitid() on pidfds that are
-> > O_NONBLOCK and mix it with pidfds that are blocking and both pass them to
-> > waitid().
-> > The expected behavior is to have waitid() return -EAGAIN for non-blocking
-> > pidfds and to block for blocking pidfds without needing to perform any
-> > additional checks for flags set on the pidfd before passing it to waitid().
-> > Non-blocking pidfds will return EAGAIN from waitid() when no child process is
-> > ready yet. Returning -EAGAIN for non-blocking pidfds makes it easier for event
-> > loops that handle EAGAIN specially.
-> > 
-> > It also makes the API more consistent and uniform. In essence, waitid() is
-> > treated like a read on a non-blocking pidfd or a recvmsg() on a non-blocking
-> > socket.
-> > With the addition of support for non-blocking pidfds we support the same
-> > functionality that sockets do. For sockets() recvmsg() supports MSG_DONTWAIT
-> > for pidfds waitid() supports WNOHANG. Both flags are per-call options. In
-> > contrast non-blocking pidfds and non-blocking sockets are a setting on an open
-> > file description affecting all threads in the calling process as well as other
-> > processes that hold file descriptors referring to the same open file
-> > description. Both behaviors, per call and per open file description, have
-> > genuine use-cases.
-> > 
-> > The implementation should be straightforward, we simply raise the WNOHANG flag
-> > when a non-blocking pidfd is passed and when do_wait() returns without finding
-> > an eligible task and the pidfd is non-blocking we set EAGAIN.  If no child
-> > process exists non-blocking pidfd users will continue to see ECHILD but if
-> > child processes exist but have not yet exited users will see EAGAIN.
-> > 
-> > A concrete use-case that was brought on-list was Josh's async pidfd library.
-> > Ever since the introduction of pidfds and more advanced async io various
-> > programming languages such as Rust have grown support for async event
-> > libraries. These libraries are created to help build epoll-based event loops
-> > around file descriptors. A common pattern is to automatically make all file
-> > descriptors they manage to O_NONBLOCK.
-> > 
-> > For such libraries the EAGAIN error code is treated specially. When a function
-> > is called that returns EAGAIN the function isn't called again until the event
-> > loop indicates the the file descriptor is ready.  Supporting EAGAIN when
-> > waiting on pidfds makes such libraries just work with little effort.
-> > 
-> > Link: https://lore.kernel.org/lkml/20200811181236.GA18763@localhost/
-> > Link: https://github.com/joshtriplett/async-pidfd
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Sargun Dhillon <sargun@sargun.me>
-> > Cc: Jann Horn <jannh@google.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: Oleg Nesterov <oleg@redhat.com>
-> > Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> > Suggested-by: Josh Triplett <josh@joshtriplett.org>
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+On 9/3/20 10:01 AM, Christoph Hellwig wrote:
+> The Atari floppy driver usually autodetects the media when used with the
+> ormal /dev/fd? devices, which also are the only nodes created by udev.
+> But it also supports various aliases that force a given media format.
+> That is currently supported using the blk_register_region framework
+> which finds the floppy gendisk even for a 'mismatched' dev_t.  The
+> problem with this (besides the code complexity) is that it creates
+> multiple struct block_device instances for the whole device of a
+> single gendisk, which can lead to interesting issues in code not
+> aware of that fact.
 > 
-> With or without the discussed change to WNOHANG behavior for
-> compatibility:
-> Reviewed-by: Josh Triplett <josh@joshtriplett.org>
-
-I think that WNOHANG compatibility change might be a good idea. So I've
-changed this to:
-
-	ret = do_wait(&wo);
-	if (!ret && !(options & WNOHANG) && (f_flags & O_NONBLOCK))
-		ret = -EAGAIN;
-
+> To fix this just create a separate gendisk for each of the aliases
+> if they are accessed.
 > 
-> Also, I think you should flip the order of patches 1 and 2, so that
-> there isn't a one-patch window in kernel history where you can create an
-> O_NONBLOCK pidfd with pidfd_open but it has no effect. I'd expect
-> userspace to use pidfd_open accepting or EINVAL-ing the flag as an
-> indication of whether it'll work.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   drivers/block/ataflop.c | 135 +++++++++++++++++++++++++---------------
+>   1 file changed, 86 insertions(+), 49 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Good point! I've changed the order now.
+Cheers,
 
-Thanks!
-Christian
+Hannes
+-- 
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
