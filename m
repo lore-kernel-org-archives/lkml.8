@@ -2,107 +2,110 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E38DC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 17:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172F3C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECFFC206E7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 17:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A557C25477
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:07:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JWXp42iJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgIDRAn (ORCPT
+        id S1726776AbgIDSHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:00:43 -0400
-Received: from mga04.intel.com ([192.55.52.120]:53983 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725966AbgIDRAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:00:40 -0400
-IronPort-SDR: 0f4189Bqs76H/HtoA8a7SQJYigg/cIqJzGCbf+0qsW4Nd9AphfxEuyVkrJG1du6ICq3dGafsFW
- 2CiJinTMFLOQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="155190475"
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="155190475"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 10:00:40 -0700
-IronPort-SDR: rejMaLGQY5hJ5pm1MW8zL5Nf/fl0eduSCfu+YhdKnsYihNxJm05y7VuBf7ivawSv6T+gsfB+ed
- ZN9/yeM38S8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="332221735"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 04 Sep 2020 10:00:31 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kEF4e-00EKYW-Kj; Fri, 04 Sep 2020 20:00:28 +0300
-Date:   Fri, 4 Sep 2020 20:00:28 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 10/23] gpio: mockup: fix resource leak in error path
-Message-ID: <20200904170028.GG1891694@smile.fi.intel.com>
-References: <20200904154547.3836-1-brgl@bgdev.pl>
- <20200904154547.3836-11-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904154547.3836-11-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Fri, 4 Sep 2020 14:07:00 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25303 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726047AbgIDSG6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 14:06:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599242817;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=ZgNkYrXayCXVqunlsQHYlfke0k0uTa2/dq5wz4jdf0U=;
+        b=JWXp42iJ5jirKaEb8/Zc3Cxaen3f/Q6n/BFMoQ+9qBU1J16QSWXlP3ROqMmGtqllfLxfzA
+        GeDlath/UrdZKDBHgXZzg/HYsOyBKDyOstLEGp0HVp9e3XYsbR2X+SoFpvUzTnTHFNVopW
+        1hplOU9veUkJ8aMpw7LJx2jdEnoVoz4=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-539-UhS_OZuCM4q7k8E4RWxZLQ-1; Fri, 04 Sep 2020 14:06:53 -0400
+X-MC-Unique: UhS_OZuCM4q7k8E4RWxZLQ-1
+Received: by mail-qt1-f200.google.com with SMTP id e14so4877249qtm.5
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 11:06:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZgNkYrXayCXVqunlsQHYlfke0k0uTa2/dq5wz4jdf0U=;
+        b=l24ESA4gaat2iUqh8SbV2CBswPGKmMJ4270AIQFO89ATLu1KDHgplvWh7ROxVAzFmN
+         jYoAiVi4XMJdqGO1cwgzfEQ8wO8ke12CPBSLeIuf2xP1vpP19+wlbNz9AuSMHfTyLWQI
+         Hr4M+s6ehW5J8ogIIBY6b2F4a5PZwKRcPD3mbhybyQGntRC2Y7LhQZ0LcC5+dw3JrIHZ
+         RaV4eIQ/VqL46kLqTL5Xq+1GfiS0lhp2mpP3qCVozxCCBNZNIfnnAe0pGRgZNeSKjx23
+         r4FuVuaINa69wniJ8b/sHQvShvJcGl35Llwx3ASjlPXoflrMkr2n2ouRgDiUWs0AN30T
+         B8LQ==
+X-Gm-Message-State: AOAM530kOeMioUx4t5oQQohXnFWlTcj3gg/5lpD12xueYguaOgHzL//d
+        ZrbhFXmm4LJJwbAFZq+g7OBhib4iDgVSMkUn1WdkFxKFnv39xhfrTQZ8j/H0XNX8zkPZNUvPYkG
+        eGmuQbcESq3IhcHbIfeNDK+6V
+X-Received: by 2002:ac8:6141:: with SMTP id d1mr9801724qtm.170.1599242813492;
+        Fri, 04 Sep 2020 11:06:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxWhBlbyE5VCadyyCOxenZ/m0J+9H6xdaEWBkgVjqJvelX1jGZb3lv+vRmA3FJV8b2LL6X7cA==
+X-Received: by 2002:ac8:6141:: with SMTP id d1mr9801702qtm.170.1599242813220;
+        Fri, 04 Sep 2020 11:06:53 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id t69sm4879928qka.73.2020.09.04.11.06.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 11:06:52 -0700 (PDT)
+From:   trix@redhat.com
+To:     syniurge@gmail.com, nehal-bakulchandra.shah@amd.com,
+        shyam-sundar.s-k@amd.com, natechancellor@gmail.com,
+        ndesaulniers@google.com
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, Tom Rix <trix@redhat.com>
+Subject: [PATCH] i2c: amd_mp2: handle num is 0 input for i2c_amd_xfer
+Date:   Fri,  4 Sep 2020 11:06:47 -0700
+Message-Id: <20200904180647.21080-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 05:45:34PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> If the module init function fails after creating the debugs directory,
-> it's never removed. Add proper cleanup calls to avoid this resource
-> leak.
+From: Tom Rix <trix@redhat.com>
 
-Does it fix existing bug?
+clang static analyzer reports this problem
 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/gpio/gpio-mockup.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> index 78c97f7b6893..19c092f814fd 100644
-> --- a/drivers/gpio/gpio-mockup.c
-> +++ b/drivers/gpio/gpio-mockup.c
-> @@ -550,6 +550,7 @@ static int __init gpio_mockup_init(void)
->  	err = platform_driver_register(&gpio_mockup_driver);
->  	if (err) {
->  		pr_err("error registering platform driver\n");
-> +		debugfs_remove_recursive(gpio_mockup_dbg_dir);
->  		return err;
->  	}
->  
-> @@ -580,6 +581,7 @@ static int __init gpio_mockup_init(void)
->  			pr_err("error registering device");
->  			platform_driver_unregister(&gpio_mockup_driver);
->  			gpio_mockup_unregister_pdevs();
-> +			debugfs_remove_recursive(gpio_mockup_dbg_dir);
->  			return PTR_ERR(pdev);
->  		}
->  
-> -- 
-> 2.26.1
-> 
+i2c-amd-mp2-plat.c:174:9: warning: Branch condition evaluates
+  to a garbage value
+        return err ? err : num;
+               ^~~
 
+err is not initialized, it depends on the being set in the
+transfer loop which will not happen if num is 0.  Surveying
+other master_xfer() implementations show all handle a 0 num.
+
+Because returning 0 is expected, initialize err to 0.
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/i2c/busses/i2c-amd-mp2-plat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-amd-mp2-plat.c b/drivers/i2c/busses/i2c-amd-mp2-plat.c
+index 17df9e8845b6..506433bc0ff2 100644
+--- a/drivers/i2c/busses/i2c-amd-mp2-plat.c
++++ b/drivers/i2c/busses/i2c-amd-mp2-plat.c
+@@ -155,7 +155,7 @@ static int i2c_amd_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+ 	struct amd_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
+ 	int i;
+ 	struct i2c_msg *pmsg;
+-	int err;
++	int err = 0;
+ 
+ 	/* the adapter might have been deleted while waiting for the bus lock */
+ 	if (unlikely(!i2c_dev->common.mp2_dev))
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.18.1
 
