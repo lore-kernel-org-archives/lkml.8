@@ -2,209 +2,222 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA20C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D836C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA4F205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:40:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599226842;
-	bh=XcG9GkBVTmVMCdpNi2uhzvlMRINLawkgoypdeuFEcGI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vaFwvge7nvOjwudY8/CTZRBUwg9sooxzzirbC4p/ng49+E/BCn0gn8/pY7tZWk9dG
-	 VBpoIkA7ELN84gcG+uQYyD8jNXeQbgMbMQVWg1CQtUJIJn6oSiU/N60oi7WXsCYPff
-	 w1KzZmQtlh1WeAJQFUwt2NXA+0QMY13jshJ+sV5M=
+	by mail.kernel.org (Postfix) with ESMTP id 1AC4B20C56
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:41:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="t/3vUViV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730382AbgIDNjf (ORCPT
+        id S1730478AbgIDNkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730451AbgIDNaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730447AbgIDNaV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 09:30:21 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFFA82074D;
-        Fri,  4 Sep 2020 13:30:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226203;
-        bh=XcG9GkBVTmVMCdpNi2uhzvlMRINLawkgoypdeuFEcGI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HJS5/+DkTEuGjXdPxRCLAjwmen9Yu+KDfORuIDwYGC5gL4Ar0VfVp0hTA756huU0E
-         FZ/orR6NA0cGsiR43YifLTed0xH+auFlj7axGtch1zgrj0FNDw/WkMW8dGyz+PNd8Z
-         VpcgQ23vUSH5QlQJiRNXuPO1t7/RtoPwPNv4vIU8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Walter Lozano <walter.lozano@collabora.com>,
-        Jonathan Marek <jonathan@marek.ca>
-Subject: [PATCH 5.4 05/16] drm/etnaviv: fix TS cache flushing on GPUs with BLT engine
-Date:   Fri,  4 Sep 2020 15:29:58 +0200
-Message-Id: <20200904120257.464056467@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904120257.203708503@linuxfoundation.org>
-References: <20200904120257.203708503@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E091C061245;
+        Fri,  4 Sep 2020 06:29:33 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2D53C540;
+        Fri,  4 Sep 2020 15:29:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1599226164;
+        bh=gaKQogjFkemHMpyyZ83iJjezV+gtGiFSIdmO7pGnQ3I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t/3vUViVhSO2SDIgevxig29k+/zBCmBsi0EwtNN/drZPC+MQc5uwwNrDJ+W+MKSW/
+         Bq6aNmoE905kePmpwCDjj7xi1raIBP8gRZZBZeo2SzWUeEvrCRuY9O62H8a+XLF19F
+         di6kYDU18fAuIDrx5jbE+ClIDsuyQrWCN1KvV6OM=
+Date:   Fri, 4 Sep 2020 16:29:00 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v3 1/2] media: i2c: ov772x: Add support for BT656 mode
+Message-ID: <20200904132900.GA7518@pendragon.ideasonboard.com>
+References: <20200824190406.27478-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200824190406.27478-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200904012000.GA9369@pendragon.ideasonboard.com>
+ <20200904075553.qjdyskcpext7fxcy@uno.localdomain>
+ <20200904082104.GE4392@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200904082104.GE4392@valkosipuli.retiisi.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+Hello,
 
-commit f232d9ec029ce3e2543b05213e2979e01e503408 upstream.
+On Fri, Sep 04, 2020 at 11:21:04AM +0300, Sakari Ailus wrote:
+> On Fri, Sep 04, 2020 at 09:55:53AM +0200, Jacopo Mondi wrote:
+> > On Fri, Sep 04, 2020 at 04:20:00AM +0300, Laurent Pinchart wrote:
+> > > On Mon, Aug 24, 2020 at 08:04:05PM +0100, Lad Prabhakar wrote:
+> > > > Add support to read the bus-type and enable BT656 mode if needed.
+> > > >
+> > > > Also fail probe if unsupported bus_type is detected.
+> > > >
+> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > > ---
+> > > >  drivers/media/i2c/ov772x.c | 32 ++++++++++++++++++++++++++++++++
+> > > >  1 file changed, 32 insertions(+)
+> > > >
+> > > > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> > > > index 2cc6a678069a..67764d647526 100644
+> > > > --- a/drivers/media/i2c/ov772x.c
+> > > > +++ b/drivers/media/i2c/ov772x.c
+> > > > @@ -31,6 +31,7 @@
+> > > >  #include <media/v4l2-ctrls.h>
+> > > >  #include <media/v4l2-device.h>
+> > > >  #include <media/v4l2-event.h>
+> > > > +#include <media/v4l2-fwnode.h>
+> > > >  #include <media/v4l2-image-sizes.h>
+> > > >  #include <media/v4l2-subdev.h>
+> > > >
+> > > > @@ -434,6 +435,7 @@ struct ov772x_priv {
+> > > >  #ifdef CONFIG_MEDIA_CONTROLLER
+> > > >  	struct media_pad pad;
+> > > >  #endif
+> > > > +	struct v4l2_fwnode_endpoint ep;
+> > > >  };
+> > > >
+> > > >  /*
+> > > > @@ -581,6 +583,13 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
+> > > >  	if (priv->streaming == enable)
+> > > >  		goto done;
+> > > >
+> > > > +	if (priv->ep.bus_type == V4L2_MBUS_BT656) {
+> > > > +		ret = regmap_update_bits(priv->regmap, COM7, ITU656_ON_OFF,
+> > > > +					 enable ? ITU656_ON_OFF : ~ITU656_ON_OFF);
+> > > > +		if (ret)
+> > > > +			goto done;
+> > > > +	}
+> > > > +
+> > > >  	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
+> > > >  				 enable ? 0 : SOFT_SLEEP_MODE);
+> > > >  	if (ret)
+> > > > @@ -1354,6 +1363,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
+> > > >
+> > > >  static int ov772x_probe(struct i2c_client *client)
+> > > >  {
+> > > > +	struct fwnode_handle *endpoint;
+> > > >  	struct ov772x_priv	*priv;
+> > > >  	int			ret;
+> > > >  	static const struct regmap_config ov772x_regmap_config = {
+> > > > @@ -1415,6 +1425,28 @@ static int ov772x_probe(struct i2c_client *client)
+> > > >  		goto error_clk_put;
+> > > >  	}
+> > > >
+> > > > +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
+> > > > +						  NULL);
+> > > > +	if (!endpoint) {
+> > > > +		dev_err(&client->dev, "endpoint node not found\n");
+> > > > +		ret = -EINVAL;
+> > > > +		goto error_clk_put;
+> > > > +	}
+> > > > +
+> > > > +	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
+> > >
+> > > v4l2_fwnode_endpoint_parse() is deprecated for new drivers,
+> > > v4l2_fwnode_endpoint_alloc_parse() is recommended instead. Please note
+> > > that v4l2_fwnode_endpoint_free() then needs to be called in the error
+> > > path and in remove().
+> > 
+> > Doesn't alloc_parse() differ from just _parse() as it reserve space
+> > for the 'link-frequencies' array ? As this device does not support
+> > CSI-2 and the 'link-frequencies' property is not allows in bindings,
+> > isn't using endpoint_parse() better as it saves a call to _free() ?
+> 
+> Yeah. I think the documentation needs to be updated.
+> 
+> The thinking was there would be other variable size properties that drivers
+> would need but that didn't happen. So feel free to continue use
+> v4l2_fwnode_endpoint_parse() where it does the job.
 
-As seen in the Vivante kernel driver, most GPUs with the BLT engine have
-a broken TS cache flush. The workaround is to temporarily set the BLT
-command to CLEAR_IMAGE, without actually executing the clear. Apparently
-this state change is enough to trigger the required TS cache flush. As
-the BLT engine is completely asychronous, we also need a few more stall
-states to synchronize the flush with the frontend.
+I thought the goal was to remove v4l2_fwnode_endpoint_parse() in the
+future. If Sakari is happy to keep it and see it used for parallel
+buses, I have no objection.
 
-Root-caused-by: Jonathan Marek <jonathan@marek.ca>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Cc: Walter Lozano <walter.lozano@collabora.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Or are we deprecating that function unconditionally ? The
+> > documentation suggests "please use v4l2_fwnode_endpoint_alloc_parse()
+> > in new drivers" but here it doesn't seem required..
+> > 
+> > > On the other hand, not setting .bus_type and letting the parse()
+> > > function determine the but type automatically is also deprecated, and I
+> > > don't think forcing drivers to call v4l2_fwnode_endpoint_alloc_parse()
+> > > once for each bus type until one succeeds is a good API. As change will
+> > > be needed in that API, you can ignore v4l2_fwnode_endpoint_alloc_parse()
+> > > for the time being if you want.
+> > 
+> > But indeed relying on auto-guessing of the bus type is deprecated since
+> > some time now (and the API could be improved, yes). Sorry I missed
+> > that yesterday.
+> 
+> There's one case where the bus type does not need to be set: when bindings
+> require it *and* at the same time you have no default configuration that
+> requires something to be set in the bus specific struct. Bindings where
+> bus-type is required were added later so I think the documentation should
+> be changed there, too.
+> 
+> I can send the patches.
 
----
- drivers/gpu/drm/etnaviv/etnaviv_buffer.c |   60 ++++++++++++++++++++++++++++---
- drivers/gpu/drm/etnaviv/state_blt.xml.h  |    2 +
- 2 files changed, 57 insertions(+), 5 deletions(-)
+This patch shows a common use case, with a source supporting both
+parallel and BT.656. Having to call v4l2_fwnode_endpoint_parse() twice,
+once for each bus type, isn't a very good API in my opinion. I'd like
+v4l2_fwnode_endpoint_parse() to be able to determine the bus type (using
+the bus-type property) *and* support defaults with a single call.
 
---- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-@@ -12,6 +12,7 @@
- 
- #include "common.xml.h"
- #include "state.xml.h"
-+#include "state_blt.xml.h"
- #include "state_hi.xml.h"
- #include "state_3d.xml.h"
- #include "cmdstream.xml.h"
-@@ -233,6 +234,8 @@ void etnaviv_buffer_end(struct etnaviv_g
- 	struct etnaviv_cmdbuf *buffer = &gpu->buffer;
- 	unsigned int waitlink_offset = buffer->user_size - 16;
- 	u32 link_target, flush = 0;
-+	bool has_blt = !!(gpu->identity.minor_features5 &
-+			  chipMinorFeatures5_BLT_ENGINE);
- 
- 	lockdep_assert_held(&gpu->lock);
- 
-@@ -248,16 +251,38 @@ void etnaviv_buffer_end(struct etnaviv_g
- 	if (flush) {
- 		unsigned int dwords = 7;
- 
-+		if (has_blt)
-+			dwords += 10;
-+
- 		link_target = etnaviv_buffer_reserve(gpu, buffer, dwords);
- 
- 		CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
- 		CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
-+		if (has_blt) {
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
-+			CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
-+			CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
-+		}
- 		CMD_LOAD_STATE(buffer, VIVS_GL_FLUSH_CACHE, flush);
--		if (gpu->exec_state == ETNA_PIPE_3D)
--			CMD_LOAD_STATE(buffer, VIVS_TS_FLUSH_CACHE,
--				       VIVS_TS_FLUSH_CACHE_FLUSH);
-+		if (gpu->exec_state == ETNA_PIPE_3D) {
-+			if (has_blt) {
-+				CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
-+				CMD_LOAD_STATE(buffer, VIVS_BLT_SET_COMMAND, 0x1);
-+				CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
-+			} else {
-+				CMD_LOAD_STATE(buffer, VIVS_TS_FLUSH_CACHE,
-+					       VIVS_TS_FLUSH_CACHE_FLUSH);
-+			}
-+		}
- 		CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
- 		CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
-+		if (has_blt) {
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
-+			CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
-+			CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
-+		}
- 		CMD_END(buffer);
- 
- 		etnaviv_buffer_replace_wait(buffer, waitlink_offset,
-@@ -323,6 +348,8 @@ void etnaviv_buffer_queue(struct etnaviv
- 	bool switch_mmu_context = gpu->mmu_context != mmu_context;
- 	unsigned int new_flush_seq = READ_ONCE(gpu->mmu_context->flush_seq);
- 	bool need_flush = switch_mmu_context || gpu->flush_seq != new_flush_seq;
-+	bool has_blt = !!(gpu->identity.minor_features5 &
-+			  chipMinorFeatures5_BLT_ENGINE);
- 
- 	lockdep_assert_held(&gpu->lock);
- 
-@@ -433,6 +460,15 @@ void etnaviv_buffer_queue(struct etnaviv
- 	 * 2 semaphore stall + 1 event + 1 wait + 1 link.
- 	 */
- 	return_dwords = 7;
-+
-+	/*
-+	 * When the BLT engine is present we need 6 more dwords in the return
-+	 * target: 3 enable/flush/disable + 4 enable/semaphore stall/disable,
-+	 * but we don't need the normal TS flush state.
-+	 */
-+	if (has_blt)
-+		return_dwords += 6;
-+
- 	return_target = etnaviv_buffer_reserve(gpu, buffer, return_dwords);
- 	CMD_LINK(cmdbuf, return_dwords, return_target);
- 
-@@ -447,11 +483,25 @@ void etnaviv_buffer_queue(struct etnaviv
- 		CMD_LOAD_STATE(buffer, VIVS_GL_FLUSH_CACHE,
- 				       VIVS_GL_FLUSH_CACHE_DEPTH |
- 				       VIVS_GL_FLUSH_CACHE_COLOR);
--		CMD_LOAD_STATE(buffer, VIVS_TS_FLUSH_CACHE,
--				       VIVS_TS_FLUSH_CACHE_FLUSH);
-+		if (has_blt) {
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_SET_COMMAND, 0x1);
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
-+		} else {
-+			CMD_LOAD_STATE(buffer, VIVS_TS_FLUSH_CACHE,
-+					       VIVS_TS_FLUSH_CACHE_FLUSH);
-+		}
- 	}
- 	CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
- 	CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
-+
-+	if (has_blt) {
-+		CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
-+		CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
-+		CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
-+		CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
-+	}
-+
- 	CMD_LOAD_STATE(buffer, VIVS_GL_EVENT, VIVS_GL_EVENT_EVENT_ID(event) |
- 		       VIVS_GL_EVENT_FROM_PE);
- 	CMD_WAIT(buffer);
---- a/drivers/gpu/drm/etnaviv/state_blt.xml.h
-+++ b/drivers/gpu/drm/etnaviv/state_blt.xml.h
-@@ -46,6 +46,8 @@ DEALINGS IN THE SOFTWARE.
- 
- /* This is a cut-down version of the state_blt.xml.h file */
- 
-+#define VIVS_BLT_SET_COMMAND					0x000140ac
-+
- #define VIVS_BLT_ENABLE						0x000140b8
- #define VIVS_BLT_ENABLE_ENABLE					0x00000001
- 
+Speaking of defaults, I wonder if it's a good idea to let that up to
+drivers, or if we should standardize on one set of defaults that would
+be shared by all DT bindings.
 
+> > As we support parallel and bt.656 only I must be honest I don't mind
+> > it here as otherwise the code would be more complex for no real gain,
+> > but I defer this to Sakari which has been fighting the battle against
+> > auto-guessing since a long time now  :)
+> 
+> I think you should require bus-type property in bindings in that case.
+> 
+> But as it's an existing driver, bus-type will be optional. You'll need to
+> default to what was supported earlier. This is actually an interesting case
+> as bindings do not document it.
+> 
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > >
+> > > > +	fwnode_handle_put(endpoint);
+> > > > +	if (ret) {
+> > > > +		dev_err(&client->dev, "Could not parse endpoint\n");
+> > > > +		goto error_clk_put;
+> > > > +	}
+> > > > +
+> > > > +	if (priv->ep.bus_type != V4L2_MBUS_PARALLEL &&
+> > > > +	    priv->ep.bus_type != V4L2_MBUS_BT656) {
+> > > > +		dev_err(&client->dev, "Unsupported bus type %d\n",
+> > > > +			priv->ep.bus_type);
+> > > > +		goto error_clk_put;
+> > > > +	}
+> > > > +
+> > > >  	ret = ov772x_video_probe(priv);
+> > > >  	if (ret < 0)
+> > > >  		goto error_gpio_put;
 
+-- 
+Regards,
+
+Laurent Pinchart
