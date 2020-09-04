@@ -2,232 +2,400 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931D7C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823C6C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60763204FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:50:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="pSDdDSvt"
+	by mail.kernel.org (Postfix) with ESMTP id 31A7F204FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599227443;
+	bh=aCMgZxuKB4Ty495mAdx52mNboYiskt3XWrrmM3GZpq8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=A3WetdSKm9CeZOAqO4PNBbmccpaRbjSxTH/luRiNj3dHZWjvf+VAg5HRgEbyvFXal
+	 nczhVqKsmy2vT4cNy05VNu8QhWYAcw9HNpuxAaMC9GzbGVSOpnjHwLlIcZBe1+yXIc
+	 SljOK5RC9+4A7abw3X6Jw4DDWnTtYkTN/fURSkGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbgIDNuP (ORCPT
+        id S1730655AbgIDNug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:50:15 -0400
-Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:49457 "EHLO
-        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730627AbgIDNqT (ORCPT
+        Fri, 4 Sep 2020 09:50:36 -0400
+Received: from condef-06.nifty.com ([202.248.20.71]:20136 "EHLO
+        condef-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730544AbgIDNrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:46:19 -0400
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id 7FE9982183;
-        Fri,  4 Sep 2020 16:34:39 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1599226479;
-        bh=ixGyvfOtF1m0Qt8mSIDj693P0IvczSm5D6Px5h32/OM=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=pSDdDSvtciqlNktcfputpB9pBNfeSwbPgEz4uCF38DHvOMroxPp7mJvXlQAy7k4wo
-         P6eyaPR7zFMK8+C5CB8WO0ZvlJxKmaTeh9zU3r5o3T7cMXNvekjwzsGiLflOlZ49Mn
-         su0UWol5UuHiTwfNBOGjuxmTafQIgyzFt4HWqOrQ=
-Received: from fsd-lkpg.ufsd.paragon-software.com (172.30.114.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 4 Sep 2020 16:34:39 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     <linux-fsdevel@vger.kernel.org>
-CC:     <viro@zeniv.linux.org.uk>, <linux-kernel@vger.kernel.org>,
-        <pali@kernel.org>, <dsterba@suse.cz>, <aaptel@suse.com>,
-        <willy@infradead.org>, <rdunlap@infradead.org>, <joe@perches.com>,
-        <mark@harmstone.com>, <nborisov@suse.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Subject: [PATCH v4 08/10] fs/ntfs3: Add Kconfig, Makefile and doc
-Date:   Fri, 4 Sep 2020 16:32:29 +0300
-Message-ID: <20200904133231.1769292-9-almaz.alexandrovich@paragon-software.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200904133231.1769292-1-almaz.alexandrovich@paragon-software.com>
-References: <20200904133231.1769292-1-almaz.alexandrovich@paragon-software.com>
+        Fri, 4 Sep 2020 09:47:16 -0400
+Received: from conuserg-11.nifty.com ([10.126.8.74])by condef-06.nifty.com with ESMTP id 084DeFBP003135;
+        Fri, 4 Sep 2020 22:40:15 +0900
+Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 084DVRDU018232;
+        Fri, 4 Sep 2020 22:31:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 084DVRDU018232
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1599226289;
+        bh=KhuHwbVOnaHwR/5Po5h9g9JE1ia7wMs0KH0UYL7hjd4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TnOeU5OotpjJG/3yzqnn14+3m1xxcfFCaY5s9pZCclr0d/QAjBYBzlWdez9P01L6m
+         bxQpfit6PIhtd4+auw0orDB+byH8dvLG+zNYn6xwzn2Ye/3/RHWKQ+5s7Hg4maBaap
+         gK86ISfHlAxBXIai9JqpqsDg7NdAcIeA+saiXsWlLTsAjT3CWUUp/g79sm22vLxDV0
+         FlOBRqtz3uBSf8G43FISiKpdJB9AW0nIzIZi695E2UoAvhFmGOFpgiXG3cygRaved8
+         C+No/iOvGQcDCp9jUXBY73wpFGore0tmzO7ESnlkKZthVOjSxSTPA5xkes2Owv/2M9
+         G7KJpFVICFZIQ==
+X-Nifty-SrcIP: [126.90.211.135]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>, Jessica Yu <jeyu@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Tony Luck <tony.luck@intel.com>, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] kbuild: preprocess module linker script
+Date:   Fri,  4 Sep 2020 22:31:21 +0900
+Message-Id: <20200904133122.133071-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.30.114.105]
-X-ClientProxiedBy: vdlg-exch-02.paragon-software.com (172.30.1.105) To
- vdlg-exch-02.paragon-software.com (172.30.1.105)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds Kconfig, Makefile and doc
+There was a request to preprocess the module linker script like we do
+for the vmlinux one (https://lkml.org/lkml/2020/8/21/512).
 
-Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+The difference between vmlinux.lds and module.lds is that the latter
+is needed for external module builds, thus must be cleaned up by
+'make mrproper' instead of 'make clean' (also, it must be created by
+'make modules_prepare').
+
+You cannot put it in arch/*/kernel/ because 'make clean' descends into
+it. I moved arch/*/kernel/module.lds to arch/*/include/asm/module.lds.h,
+which is included from scripts/module.lds.S.
+
+scripts/module.lds is fine because 'make clean' keeps all the build
+artifacts under scripts/.
+
+You can add arch-specific sections in <asm/module.lds.h>.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Tested-by: Jessica Yu <jeyu@kernel.org>
 ---
- Documentation/filesystems/ntfs3.rst | 103 ++++++++++++++++++++++++++++
- fs/ntfs3/Kconfig                    |  23 +++++++
- fs/ntfs3/Makefile                   |  11 +++
- 3 files changed, 137 insertions(+)
- create mode 100644 Documentation/filesystems/ntfs3.rst
- create mode 100644 fs/ntfs3/Kconfig
- create mode 100644 fs/ntfs3/Makefile
 
-diff --git a/Documentation/filesystems/ntfs3.rst b/Documentation/filesystems/ntfs3.rst
+ Makefile                                               |  1 -
+ arch/arm/Makefile                                      |  4 ----
+ .../{kernel/module.lds => include/asm/module.lds.h}    |  2 ++
+ arch/arm64/Makefile                                    |  4 ----
+ .../{kernel/module.lds => include/asm/module.lds.h}    |  2 ++
+ arch/ia64/Makefile                                     |  1 -
+ arch/ia64/{module.lds => include/asm/module.lds.h}     |  0
+ arch/m68k/Makefile                                     |  1 -
+ .../{kernel/module.lds => include/asm/module.lds.h}    |  0
+ arch/powerpc/Makefile                                  |  1 -
+ .../{kernel/module.lds => include/asm/module.lds.h}    |  0
+ arch/riscv/Makefile                                    |  3 ---
+ .../{kernel/module.lds => include/asm/module.lds.h}    |  3 ++-
+ arch/um/include/asm/Kbuild                             |  1 +
+ include/asm-generic/Kbuild                             |  1 +
+ include/asm-generic/module.lds.h                       | 10 ++++++++++
+ scripts/.gitignore                                     |  1 +
+ scripts/Makefile                                       |  2 ++
+ scripts/Makefile.modfinal                              |  5 ++---
+ scripts/{module-common.lds => module.lds.S}            |  3 +++
+ scripts/package/builddeb                               |  2 +-
+ 21 files changed, 27 insertions(+), 20 deletions(-)
+ rename arch/arm/{kernel/module.lds => include/asm/module.lds.h} (72%)
+ rename arch/arm64/{kernel/module.lds => include/asm/module.lds.h} (76%)
+ rename arch/ia64/{module.lds => include/asm/module.lds.h} (100%)
+ rename arch/m68k/{kernel/module.lds => include/asm/module.lds.h} (100%)
+ rename arch/powerpc/{kernel/module.lds => include/asm/module.lds.h} (100%)
+ rename arch/riscv/{kernel/module.lds => include/asm/module.lds.h} (84%)
+ create mode 100644 include/asm-generic/module.lds.h
+ rename scripts/{module-common.lds => module.lds.S} (93%)
+
+diff --git a/Makefile b/Makefile
+index 9cac6fde3479..3d9b56c6b47e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -506,7 +506,6 @@ KBUILD_CFLAGS_KERNEL :=
+ KBUILD_AFLAGS_MODULE  := -DMODULE
+ KBUILD_CFLAGS_MODULE  := -DMODULE
+ KBUILD_LDFLAGS_MODULE :=
+-export KBUILD_LDS_MODULE := $(srctree)/scripts/module-common.lds
+ KBUILD_LDFLAGS :=
+ CLANG_FLAGS :=
+ 
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 4e877354515f..a0cb15de9677 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -16,10 +16,6 @@ LDFLAGS_vmlinux	+= --be8
+ KBUILD_LDFLAGS_MODULE	+= --be8
+ endif
+ 
+-ifeq ($(CONFIG_ARM_MODULE_PLTS),y)
+-KBUILD_LDS_MODULE	+= $(srctree)/arch/arm/kernel/module.lds
+-endif
+-
+ GZFLAGS		:=-9
+ #KBUILD_CFLAGS	+=-pipe
+ 
+diff --git a/arch/arm/kernel/module.lds b/arch/arm/include/asm/module.lds.h
+similarity index 72%
+rename from arch/arm/kernel/module.lds
+rename to arch/arm/include/asm/module.lds.h
+index 79cb6af565e5..0e7cb4e314b4 100644
+--- a/arch/arm/kernel/module.lds
++++ b/arch/arm/include/asm/module.lds.h
+@@ -1,5 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
++#ifdef CONFIG_ARM_MODULE_PLTS
+ SECTIONS {
+ 	.plt : { BYTE(0) }
+ 	.init.plt : { BYTE(0) }
+ }
++#endif
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 55bc8546d9c7..232547ec07d8 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -115,10 +115,6 @@ endif
+ 
+ CHECKFLAGS	+= -D__aarch64__
+ 
+-ifeq ($(CONFIG_ARM64_MODULE_PLTS),y)
+-KBUILD_LDS_MODULE	+= $(srctree)/arch/arm64/kernel/module.lds
+-endif
+-
+ ifeq ($(CONFIG_DYNAMIC_FTRACE_WITH_REGS),y)
+   KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
+   CC_FLAGS_FTRACE := -fpatchable-function-entry=2
+diff --git a/arch/arm64/kernel/module.lds b/arch/arm64/include/asm/module.lds.h
+similarity index 76%
+rename from arch/arm64/kernel/module.lds
+rename to arch/arm64/include/asm/module.lds.h
+index 22e36a21c113..691f15af788e 100644
+--- a/arch/arm64/kernel/module.lds
++++ b/arch/arm64/include/asm/module.lds.h
+@@ -1,5 +1,7 @@
++#ifdef CONFIG_ARM64_MODULE_PLTS
+ SECTIONS {
+ 	.plt (NOLOAD) : { BYTE(0) }
+ 	.init.plt (NOLOAD) : { BYTE(0) }
+ 	.text.ftrace_trampoline (NOLOAD) : { BYTE(0) }
+ }
++#endif
+diff --git a/arch/ia64/Makefile b/arch/ia64/Makefile
+index 2876a7df1b0a..703b1c4f6d12 100644
+--- a/arch/ia64/Makefile
++++ b/arch/ia64/Makefile
+@@ -20,7 +20,6 @@ CHECKFLAGS	+= -D__ia64=1 -D__ia64__=1 -D_LP64 -D__LP64__
+ 
+ OBJCOPYFLAGS	:= --strip-all
+ LDFLAGS_vmlinux	:= -static
+-KBUILD_LDS_MODULE += $(srctree)/arch/ia64/module.lds
+ KBUILD_AFLAGS_KERNEL := -mconstant-gp
+ EXTRA		:=
+ 
+diff --git a/arch/ia64/module.lds b/arch/ia64/include/asm/module.lds.h
+similarity index 100%
+rename from arch/ia64/module.lds
+rename to arch/ia64/include/asm/module.lds.h
+diff --git a/arch/m68k/Makefile b/arch/m68k/Makefile
+index 4438ffb4bbe1..ea14f2046fb4 100644
+--- a/arch/m68k/Makefile
++++ b/arch/m68k/Makefile
+@@ -75,7 +75,6 @@ KBUILD_CPPFLAGS += -D__uClinux__
+ endif
+ 
+ KBUILD_LDFLAGS := -m m68kelf
+-KBUILD_LDS_MODULE += $(srctree)/arch/m68k/kernel/module.lds
+ 
+ ifdef CONFIG_SUN3
+ LDFLAGS_vmlinux = -N
+diff --git a/arch/m68k/kernel/module.lds b/arch/m68k/include/asm/module.lds.h
+similarity index 100%
+rename from arch/m68k/kernel/module.lds
+rename to arch/m68k/include/asm/module.lds.h
+diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+index 3e8da9cf2eb9..8935658fcd06 100644
+--- a/arch/powerpc/Makefile
++++ b/arch/powerpc/Makefile
+@@ -65,7 +65,6 @@ UTS_MACHINE := $(subst $(space),,$(machine-y))
+ ifdef CONFIG_PPC32
+ KBUILD_LDFLAGS_MODULE += arch/powerpc/lib/crtsavres.o
+ else
+-KBUILD_LDS_MODULE += $(srctree)/arch/powerpc/kernel/module.lds
+ ifeq ($(call ld-ifversion, -ge, 225000000, y),y)
+ # Have the linker provide sfpr if possible.
+ # There is a corresponding test in arch/powerpc/lib/Makefile
+diff --git a/arch/powerpc/kernel/module.lds b/arch/powerpc/include/asm/module.lds.h
+similarity index 100%
+rename from arch/powerpc/kernel/module.lds
+rename to arch/powerpc/include/asm/module.lds.h
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index fb6e37db836d..8edaa8bd86d6 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -53,9 +53,6 @@ endif
+ ifeq ($(CONFIG_CMODEL_MEDANY),y)
+ 	KBUILD_CFLAGS += -mcmodel=medany
+ endif
+-ifeq ($(CONFIG_MODULE_SECTIONS),y)
+-	KBUILD_LDS_MODULE += $(srctree)/arch/riscv/kernel/module.lds
+-endif
+ ifeq ($(CONFIG_PERF_EVENTS),y)
+         KBUILD_CFLAGS += -fno-omit-frame-pointer
+ endif
+diff --git a/arch/riscv/kernel/module.lds b/arch/riscv/include/asm/module.lds.h
+similarity index 84%
+rename from arch/riscv/kernel/module.lds
+rename to arch/riscv/include/asm/module.lds.h
+index 295ecfb341a2..4254ff2ff049 100644
+--- a/arch/riscv/kernel/module.lds
++++ b/arch/riscv/include/asm/module.lds.h
+@@ -1,8 +1,9 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Copyright (C) 2017 Andes Technology Corporation */
+-
++#ifdef CONFIG_MODULE_SECTIONS
+ SECTIONS {
+ 	.plt (NOLOAD) : { BYTE(0) }
+ 	.got (NOLOAD) : { BYTE(0) }
+ 	.got.plt (NOLOAD) : { BYTE(0) }
+ }
++#endif
+diff --git a/arch/um/include/asm/Kbuild b/arch/um/include/asm/Kbuild
+index 8d435f8a6dec..1c63b260ecc4 100644
+--- a/arch/um/include/asm/Kbuild
++++ b/arch/um/include/asm/Kbuild
+@@ -16,6 +16,7 @@ generic-y += kdebug.h
+ generic-y += mcs_spinlock.h
+ generic-y += mm-arch-hooks.h
+ generic-y += mmiowb.h
++generic-y += module.lds.h
+ generic-y += param.h
+ generic-y += pci.h
+ generic-y += percpu.h
+diff --git a/include/asm-generic/Kbuild b/include/asm-generic/Kbuild
+index 74b0612601dd..7cd4e627e00e 100644
+--- a/include/asm-generic/Kbuild
++++ b/include/asm-generic/Kbuild
+@@ -40,6 +40,7 @@ mandatory-y += mmiowb.h
+ mandatory-y += mmu.h
+ mandatory-y += mmu_context.h
+ mandatory-y += module.h
++mandatory-y += module.lds.h
+ mandatory-y += msi.h
+ mandatory-y += pci.h
+ mandatory-y += percpu.h
+diff --git a/include/asm-generic/module.lds.h b/include/asm-generic/module.lds.h
 new file mode 100644
-index 000000000000..02f59ff97d28
+index 000000000000..f210d5c1b78b
 --- /dev/null
-+++ b/Documentation/filesystems/ntfs3.rst
-@@ -0,0 +1,103 @@
-+.. SPDX-License-Identifier: GPL-2.0
++++ b/include/asm-generic/module.lds.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef __ASM_GENERIC_MODULE_LDS_H
++#define __ASM_GENERIC_MODULE_LDS_H
 +
-+=====
-+NTFS3
-+=====
++/*
++ * <asm/module.lds.h> can specify arch-specific sections for linking modules.
++ * Empty for the asm-generic header.
++ */
 +
++#endif /* __ASM_GENERIC_MODULE_LDS_H */
+diff --git a/scripts/.gitignore b/scripts/.gitignore
+index 0d1c8e217cd7..a6c11316c969 100644
+--- a/scripts/.gitignore
++++ b/scripts/.gitignore
+@@ -8,3 +8,4 @@ asn1_compiler
+ extract-cert
+ sign-file
+ insert-sys-cert
++/module.lds
+diff --git a/scripts/Makefile b/scripts/Makefile
+index bc018e4b733e..a5058bfdd0f6 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -29,6 +29,8 @@ endif
+ # The following programs are only built on demand
+ hostprogs += unifdef
+ 
++always-$(CONFIG_MODULES)	+= module.lds
 +
-+Summary and Features
-+====================
+ subdir-$(CONFIG_GCC_PLUGINS) += gcc-plugins
+ subdir-$(CONFIG_MODVERSIONS) += genksyms
+ subdir-$(CONFIG_SECURITY_SELINUX) += selinux
+diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+index 411c1e600e7d..ae01baf96f4e 100644
+--- a/scripts/Makefile.modfinal
++++ b/scripts/Makefile.modfinal
+@@ -33,11 +33,10 @@ quiet_cmd_ld_ko_o = LD [M]  $@
+       cmd_ld_ko_o =                                                     \
+ 	$(LD) -r $(KBUILD_LDFLAGS)					\
+ 		$(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)		\
+-		$(addprefix -T , $(KBUILD_LDS_MODULE))			\
+-		-o $@ $(filter %.o, $^);				\
++		-T scripts/module.lds -o $@ $(filter %.o, $^);		\
+ 	$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
+ 
+-$(modules): %.ko: %.o %.mod.o $(KBUILD_LDS_MODULE) FORCE
++$(modules): %.ko: %.o %.mod.o scripts/module.lds FORCE
+ 	+$(call if_changed,ld_ko_o)
+ 
+ targets += $(modules) $(modules:.ko=.mod.o)
+diff --git a/scripts/module-common.lds b/scripts/module.lds.S
+similarity index 93%
+rename from scripts/module-common.lds
+rename to scripts/module.lds.S
+index d61b9e8678e8..69b9b71a6a47 100644
+--- a/scripts/module-common.lds
++++ b/scripts/module.lds.S
+@@ -24,3 +24,6 @@ SECTIONS {
+ 
+ 	__jump_table		0 : ALIGN(8) { KEEP(*(__jump_table)) }
+ }
 +
-+NTFS3 is fully functional NTFS Read-Write driver. The driver works with
-+NTFS versions up to 3.1, normal/compressed/sparse files
-+and journal replaying. File system type to use on mount is 'ntfs3'.
-+
-+- This driver implements NTFS read/write support for normal, sparse and
-+  compressed files.
-+  NOTE: Operations with compressed files require increased memory consumption;
-+- Supports native journal replaying;
-+- Supports extended attributes;
-+- Supports NFS export of mounted NTFS volumes.
-+
-+Mount Options
-+=============
-+
-+The list below describes mount options supported by NTFS3 driver in addition to
-+generic ones.
-+
-+===============================================================================
-+
-+nls=name		These options inform the driver how to interpret path
-+			strings and translate them to Unicode and back. In case
-+			none of these options are set, or if specified codepage
-+			doesn't exist on the system, the default codepage will be
-+			used (CONFIG_NLS_DEFAULT).
-+			Examples:
-+				'nls=utf8'
-+
-+uid=
-+gid=
-+umask=			Controls the default permissions for files/directories created
-+			after the NTFS volume is mounted.
-+
-+fmask=
-+dmask=			Instead of specifying umask which applies both to
-+			files and directories, fmask applies only to files and
-+			dmask only to directories.
-+
-+nohidden		Files with the Windows-specific HIDDEN (FILE_ATTRIBUTE_HIDDEN)
-+			attribute will not be shown under Linux.
-+
-+sys_immutable		Files with the Windows-specific SYSTEM
-+			(FILE_ATTRIBUTE_SYSTEM) attribute will be marked as system
-+			immutable files.
-+
-+discard			Enable support of the TRIM command for improved performance
-+			on delete operations, which is recommended for use with the
-+			solid-state drives (SSD).
-+
-+force			Forces the driver to mount partitions even if 'dirty' flag
-+			(volume dirty) is set. Not recommended for use.
-+
-+sparse			Create new files as "sparse".
-+
-+showmeta		Use this parameter to show all meta-files (System Files) on
-+			a mounted NTFS partition.
-+			By default, all meta-files are hidden.
-+
-+prealloc		Preallocate space for files excessively when file size is
-+			increasing on writes. Decreases fragmentation in case of
-+			parallel write operations to different files.
-+
-+no_acs_rules		"No access rules" mount option sets access rights for
-+			files/folders to 777 and owner/group to root. This mount
-+			option absorbs all other permissions:
-+			- permissions change for files/folders will be reported
-+				as successful, but they will remain 777;
-+			- owner/group change will be reported as successful, but
-+				they will stay as root
-+
-+acl			Support POSIX ACLs (Access Control Lists). Effective if
-+			supported by Kernel. Not to be confused with NTFS ACLs.
-+			The option specified as acl enables support for POSIX ACLs.
-+
-+noatime			All files and directories will not update their last access
-+			time attribute if a partition is mounted with this parameter.
-+			This option can speed up file system operation.
-+
-+===============================================================================
-+
-+ToDo list
-+=========
-+
-+- Full journaling support (currently journal replaying is supported) over JBD.
-+
-+
-+References
-+==========
-+https://www.paragon-software.com/home/ntfs-linux-professional/
-+	- Commercial version of the NTFS driver for Linux.
-+
-+almaz.alexandrovich@paragon-software.com
-+	- Direct e-mail address for feedback and requests on the NTFS3 implementation.
-+
-diff --git a/fs/ntfs3/Kconfig b/fs/ntfs3/Kconfig
-new file mode 100644
-index 000000000000..92a9c68008c8
---- /dev/null
-+++ b/fs/ntfs3/Kconfig
-@@ -0,0 +1,23 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+config NTFS3_FS
-+	tristate "NTFS Read-Write file system support"
-+	select NLS
-+	help
-+	  Windows OS native file system (NTFS) support up to NTFS version 3.1.
-+
-+	  Y or M enables the NTFS3 driver with full features enabled (read,
-+	  write, journal replaying, sparse/compressed files support).
-+	  File system type to use on mount is "ntfs3". Module name (M option)
-+	  is also "ntfs3".
-+
-+	  Documentation: <file:Documentation/filesystems/ntfs3.rst>
-+
-+config NTFS3_64BIT_CLUSTER
-+	bool "64 bits per NTFS clusters"
-+	depends on NTFS3_FS && 64BIT
-+	help
-+	  Windows implementation of ntfs.sys uses 32 bits per clusters.
-+	  If activated 64 bits per clusters you will be able to use 4k cluster
-+	  for 16T+ volumes. Windows will not be able to mount such volumes.
-+
-+	  It is recommended to say N here.
-diff --git a/fs/ntfs3/Makefile b/fs/ntfs3/Makefile
-new file mode 100644
-index 000000000000..4d4fe198b8b8
---- /dev/null
-+++ b/fs/ntfs3/Makefile
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for the ntfs3 filesystem support.
-+#
-+
-+obj-$(CONFIG_NTFS3_FS) += ntfs3.o
-+
-+ntfs3-objs := bitfunc.o bitmap.o inode.o fsntfs.o frecord.o \
-+	    index.o attrlist.o record.o attrib.o run.o xattr.o\
-+	    upcase.o super.o file.o dir.o namei.o lznt.o\
-+	    fslog.o
++/* bring in arch-specific sections */
++#include <asm/module.lds.h>
+diff --git a/scripts/package/builddeb b/scripts/package/builddeb
+index 6df3c9f8b2da..44f212e37935 100755
+--- a/scripts/package/builddeb
++++ b/scripts/package/builddeb
+@@ -55,7 +55,7 @@ deploy_kernel_headers () {
+ 		cd $srctree
+ 		find . arch/$SRCARCH -maxdepth 1 -name Makefile\*
+ 		find include scripts -type f -o -type l
+-		find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform
++		find arch/$SRCARCH -name Kbuild.platforms -o -name Platform
+ 		find $(find arch/$SRCARCH -name include -o -name scripts -type d) -type f
+ 	) > debian/hdrsrcfiles
+ 
 -- 
-2.25.4
+2.25.1
 
