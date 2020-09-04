@@ -2,172 +2,157 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E27C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DB2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E13206E7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25306206E7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:23:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="L+roDPgf";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="A4eMt3P5"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ojjqpWec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgIDGVS (ORCPT
+        id S1727953AbgIDGXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 02:21:18 -0400
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:32932
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725812AbgIDGVQ (ORCPT
+        Fri, 4 Sep 2020 02:23:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbgIDGXg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 02:21:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599200475;
-        h=From:To:Cc:Subject:Date:Message-Id;
-        bh=4UE+WdooRrLUPdjnUAqjyyYoEy5h+nRczdfaVlmmdgQ=;
-        b=L+roDPgfmGdvRsH+zF3isndXWmoI8JdfBhuFIs6B4a2+bghvOeuwGuLg0MioHz1g
-        78XGokbnhw4OB8tXpm5xvYDWHiwnhlqm8/gvXkuVhuoUHuLIo/yKYzaodBHGqDHDC6M
-        lYuE1VubZmTpc1jZ+S/RQbuOrFKvkaNsPWUpsat8=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599200475;
-        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
-        bh=4UE+WdooRrLUPdjnUAqjyyYoEy5h+nRczdfaVlmmdgQ=;
-        b=A4eMt3P5Be+ArF6d3uGjE/jqjgLyiA78sn60Jj454XlytX0JR/A/ICN4WxP7PvXz
-        mZZDXuk8bztPxn1ZE/BErFnN3jYgTlN1U+UGWsB5065pridgVpMSS7tpaWtm0grHUqV
-        bGszdRxRXhWXWM6bWgEYF5iNtsC5aPZ9BuwDjLUM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7C427C433F0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=rjliao@codeaurora.org
-From:   Rocky Liao <rjliao@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
-        Rocky Liao <rjliao@codeaurora.org>
-Subject: [PATCH v1] Bluetooth: btusb: Add Qualcomm Bluetooth SoC WCN6855 support
-Date:   Fri, 4 Sep 2020 06:21:15 +0000
-Message-ID: <0101017457c6b819-d1292819-1fae-43af-8fb8-3bc572f53cd5-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.17.1
-X-SES-Outgoing: 2020.09.04-54.240.27.188
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Fri, 4 Sep 2020 02:23:36 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB68C061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 23:23:36 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id j11so7147128ejk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 23:23:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=odl0w8A6BZ14eaZf5+twGiuKDOnrbmecuN5/Yaz8/oo=;
+        b=ojjqpWecE+IkPOW+5SpwYQBRx/yD79nQhyco4r2lFVUCOh5H0Cr1Dy1pX7cgK9H1Pd
+         5mHnsrznQJn2cAsFFZKtW3+5Enerr8UtCIOZMgiXA8IU6eq684yTVy+ltW84b8edPuA5
+         GWO8i0yNSzT0h7eHggV3bB8dgDPvXI8vQQ4YlVfPc9CaGTwiPn3Sm0neAvs9mcE+qyDW
+         B3EwDAt/3KrXYMppj7nL29yd7EtuL+K5exBlB2FVhGDaevmfWq1ELbOZ+YMDxyaP5Ffz
+         UVVOCX7SvImAcV9dwVFFsEALtF/0k/buneaxJQAuA2+2vrLCTXk/PeVpB4TlNydmGePz
+         kWxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=odl0w8A6BZ14eaZf5+twGiuKDOnrbmecuN5/Yaz8/oo=;
+        b=SiEZD4KnnZko2FR7zxrB/G7/BTfKBMj9HQ6iahGlEVmxUSOEQEbtCAO7jPZIJAX0Gu
+         g5DNh8jtZE0DVIDfT9HmCiRskgojcbVSSEpaXOBHUdOaX2FwApyEbyV/NUCN8hlxVN/3
+         XMqADMRCCfEjheo3h58ZJfAb4HwEqlYrG/s1adBKkPsZh92v24pKt0JZfyzf12NLiGTe
+         v2eIhLd6F1hkEIGuMVsf57bE2HX/khfOZSo++onlzuvDGvER28D81uErndQYkOO0fvXA
+         UqvO3a8lJY+9LOeGWw2L3YKtJMZjTQO856QMzRZkrW69wdwmtR33CI5sUw54uNpgaguu
+         8/GA==
+X-Gm-Message-State: AOAM533f6/80DqbBnE4EyodX7UkhQST4PQlyYdsPrSrRTQtlNoNMkHHv
+        8DS0T0uTXS4SoQf9oA/BaE6cffXE5zSPYTLTKVSKBw==
+X-Google-Smtp-Source: ABdhPJwtUpezmosF/ZUdmD9Fxes7PYlkC/TPaY/EWOInsNECB3C8qDH8lwKRAT+ywrv2Mfdorq0AfjvlXJmfpyF0pvA=
+X-Received: by 2002:a17:906:11d2:: with SMTP id o18mr5730084eja.420.1599200614214;
+ Thu, 03 Sep 2020 23:23:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200831032006.1019978-1-warthog618@gmail.com> <20200831032006.1019978-5-warthog618@gmail.com>
+In-Reply-To: <20200831032006.1019978-5-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 4 Sep 2020 08:23:23 +0200
+Message-ID: <CAMpxmJVmMfND78VqF0cv=WF1PceGvRvWoQpdO6-8XVt84W9Aiw@mail.gmail.com>
+Subject: Re: [PATCH v6 04/20] gpio: uapi: define uAPI v2
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add support for WCN6855 i.e. patch and nvm download
-support.
+On Mon, Aug 31, 2020 at 5:21 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> Add a new version of the uAPI to address existing 32/64-bit alignment
+> issues, add support for debounce and event sequence numbers, allow
+> requested lines with different configurations, and provide some future
+> proofing by adding padding reserved for future use.
+>
+> The alignment issue relates to the gpioevent_data, which packs to different
+> sizes on 32-bit and 64-bit platforms. That creates problems for 32-bit apps
+> running on 64-bit kernels.  uAPI v2 addresses that particular issue, and
+> the problem more generally, by adding pad fields that explicitly pad
+> structs out to 64-bit boundaries, so they will pack to the same size now,
+> and even if some of the reserved padding is used for __u64 fields in the
+> future.
+>
+> The new structs have been analysed with pahole to ensure that they
+> are sized as expected and contain no implicit padding.
+>
+> The lack of future proofing in v1 makes it impossible to, for example,
+> add the debounce feature that is included in v2.
+> The future proofing is addressed by providing configurable attributes in
+> line config and reserved padding in all structs for future features.
+> Specifically, the line request, config, info, info_changed and event
+> structs receive updated versions and new ioctls.
+>
+> As the majority of the structs and ioctls were being replaced, it is
+> opportune to rework some of the other aspects of the uAPI:
+>
+> v1 has three different flags fields, each with their own separate
+> bit definitions.  In v2 that is collapsed to one - gpio_v2_line_flag.
+>
+> The handle and event requests are merged into a single request, the line
+> request, as the two requests were mostly the same other than the edge
+> detection provided by event requests.  As a byproduct, the v2 uAPI allows
+> for multiple lines producing edge events on the same line handle.
+> This is a new capability as v1 only supports a single line in an event
+> request.
+>
+> As a consequence, there are now only two types of file handle to be
+> concerned with, the chip and the line, and it is clearer which ioctls
+> apply to which type of handle.
+>
+> There is also some minor renaming of fields for consistency compared to
+> their v1 counterparts, e.g. offset rather than lineoffset or line_offset,
+> and consumer rather than consumer_label.
+>
+> Additionally, v1 GPIOHANDLES_MAX becomes GPIO_V2_LINES_MAX in v2 for
+> clarity, and the gpiohandle_data __u8 array becomes a bitmap in
+> gpio_v2_line_values.
+>
+> The v2 uAPI is mostly a reorganisation and extension of v1, so userspace
+> code, particularly libgpiod, should readily port to it.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
 
-Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
----
- drivers/bluetooth/btusb.c | 42 +++++++++++++++++++++++++++++++++++----
- 1 file changed, 38 insertions(+), 4 deletions(-)
+[snip]
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index fe80588c7bd3..e51e754ca9b8 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -59,6 +59,7 @@ static struct usb_driver btusb_driver;
- #define BTUSB_MEDIATEK		0x200000
- #define BTUSB_WIDEBAND_SPEECH	0x400000
- #define BTUSB_VALID_LE_STATES   0x800000
-+#define BTUSB_QCA_WCN6855	0x1000000
- 
- static const struct usb_device_id btusb_table[] = {
- 	/* Generic Bluetooth USB device */
-@@ -273,6 +274,10 @@ static const struct usb_device_id blacklist_table[] = {
- 	{ USB_DEVICE(0x13d3, 0x3496), .driver_info = BTUSB_QCA_ROME },
- 	{ USB_DEVICE(0x13d3, 0x3501), .driver_info = BTUSB_QCA_ROME },
- 
-+	/* QCA WCN6855 chipset */
-+	{ USB_DEVICE(0x0cf3, 0xe600), .driver_info = BTUSB_QCA_WCN6855 |
-+						     BTUSB_WIDEBAND_SPEECH },
-+
- 	/* Broadcom BCM2035 */
- 	{ USB_DEVICE(0x0a5c, 0x2009), .driver_info = BTUSB_BCM92035 },
- 	{ USB_DEVICE(0x0a5c, 0x200a), .driver_info = BTUSB_WRONG_SCO_MTU },
-@@ -3391,6 +3396,26 @@ static int btusb_set_bdaddr_ath3012(struct hci_dev *hdev,
- 	return 0;
- }
- 
-+static int btusb_set_bdaddr_wcn6855(struct hci_dev *hdev,
-+				const bdaddr_t *bdaddr)
-+{
-+	struct sk_buff *skb;
-+	u8 buf[6];
-+	long ret;
-+
-+	memcpy(buf, bdaddr, sizeof(bdaddr_t));
-+
-+	skb = __hci_cmd_sync(hdev, 0xfc14, sizeof(buf), buf, HCI_INIT_TIMEOUT);
-+	if (IS_ERR(skb)) {
-+		ret = PTR_ERR(skb);
-+		bt_dev_err(hdev, "Change address command failed (%ld)", ret);
-+		return ret;
-+	}
-+	kfree_skb(skb);
-+
-+	return 0;
-+}
-+
- #define QCA_DFU_PACKET_LEN	4096
- 
- #define QCA_GET_TARGET_VERSION	0x09
-@@ -3428,6 +3453,8 @@ static const struct qca_device_info qca_devices_table[] = {
- 	{ 0x00000201, 28, 4, 18 }, /* Rome 2.1 */
- 	{ 0x00000300, 28, 4, 18 }, /* Rome 3.0 */
- 	{ 0x00000302, 28, 4, 18 }, /* Rome 3.2 */
-+	{ 0x00130100, 40, 4, 18 }, /* WCN6855 1.0 */
-+	{ 0x00130200, 40, 4, 18 }  /* WCN6855 2.0 */
- };
- 
- static int btusb_qca_send_vendor_req(struct usb_device *udev, u8 request,
-@@ -3530,7 +3557,7 @@ static int btusb_setup_qca_load_rampatch(struct hci_dev *hdev,
- 	struct qca_rampatch_version *rver;
- 	const struct firmware *fw;
- 	u32 ver_rom, ver_patch;
--	u16 rver_rom, rver_patch;
-+	u32 rver_rom, rver_patch;
- 	char fwname[64];
- 	int err;
- 
-@@ -3552,6 +3579,9 @@ static int btusb_setup_qca_load_rampatch(struct hci_dev *hdev,
- 	rver_rom = le16_to_cpu(rver->rom_version);
- 	rver_patch = le16_to_cpu(rver->patch_version);
- 
-+	if (ver_rom & ~0xffffU)
-+		rver_rom = *(u16 *)(fw->data + 16) << 16 | rver_rom;
-+
- 	bt_dev_info(hdev, "QCA: patch rome 0x%x build 0x%x, "
- 		    "firmware rome 0x%x build 0x%x",
- 		    rver_rom, rver_patch, ver_rom, ver_patch);
-@@ -3625,9 +3655,6 @@ static int btusb_setup_qca(struct hci_dev *hdev)
- 		return err;
- 
- 	ver_rom = le32_to_cpu(ver.rom_version);
--	/* Don't care about high ROM versions */
--	if (ver_rom & ~0xffffU)
--		return 0;
- 
- 	for (i = 0; i < ARRAY_SIZE(qca_devices_table); i++) {
- 		if (ver_rom == qca_devices_table[i].rom_version)
-@@ -4063,6 +4090,13 @@ static int btusb_probe(struct usb_interface *intf,
- 		btusb_check_needs_reset_resume(intf);
- 	}
- 
-+	if (id->driver_info & BTUSB_QCA_WCN6855) {
-+		data->setup_on_usb = btusb_setup_qca;
-+		hdev->set_bdaddr = btusb_set_bdaddr_wcn6855;
-+		hdev->cmd_timeout = btusb_qca_cmd_timeout;
-+		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
-+	}
-+
- 	if (id->driver_info & BTUSB_AMP) {
- 		/* AMP controllers do not support SCO packets */
- 		data->isoc = NULL;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+> +
+> +/**
+> + * enum gpio_v2_line_flag - &struct gpio_v2_line_attribute.flags values
+> + */
+> +enum gpio_v2_line_flag {
+> +       GPIO_V2_LINE_FLAG_USED                  = 1ULL << 0, /* line is not available for request */
+> +       GPIO_V2_LINE_FLAG_ACTIVE_LOW            = 1ULL << 1,
+> +       GPIO_V2_LINE_FLAG_INPUT                 = 1ULL << 2,
+> +       GPIO_V2_LINE_FLAG_OUTPUT                = 1ULL << 3,
+> +       GPIO_V2_LINE_FLAG_EDGE_RISING           = 1ULL << 4,
+> +       GPIO_V2_LINE_FLAG_EDGE_FALLING          = 1ULL << 5,
+> +       GPIO_V2_LINE_FLAG_OPEN_DRAIN            = 1ULL << 6,
+> +       GPIO_V2_LINE_FLAG_OPEN_SOURCE           = 1ULL << 7,
+> +       GPIO_V2_LINE_FLAG_BIAS_PULL_UP          = 1ULL << 8,
+> +       GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN        = 1ULL << 9,
+> +       GPIO_V2_LINE_FLAG_BIAS_DISABLED         = 1ULL << 10,
+> +};
+> +
+>
 
+One more small thing I noticed: the uapi exports _BITULL() macro to
+user-space for bit definitions. I think it's worth using it here as
+it's more readable than (1ULL << X) IMO.
+
+Bart
+
+[snip]
