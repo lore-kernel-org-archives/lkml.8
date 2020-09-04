@@ -2,102 +2,291 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38305C47425
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D9EC35275
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4F025365
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D912530A
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgIDRaj (ORCPT
+        id S1727897AbgIDR0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:30:39 -0400
-Received: from smtp.h3c.com ([60.191.123.56]:31255 "EHLO h3cspam01-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727929AbgIDRa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:30:29 -0400
-Received: from h3cspam01-ex.h3c.com (localhost [127.0.0.2] (may be forged))
-        by h3cspam01-ex.h3c.com with ESMTP id 084FBdKJ014925
-        for <linux-kernel@vger.kernel.org>; Fri, 4 Sep 2020 23:11:39 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
-        by h3cspam01-ex.h3c.com with ESMTPS id 084F8aK1013840
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 4 Sep 2020 23:08:37 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from localhost.localdomain (10.99.212.201) by
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 4 Sep 2020 23:08:41 +0800
-From:   Xianting Tian <tian.xianting@h3c.com>
-To:     <kbusch@kernel.org>, <axboe@fb.com>, <hch@lst.de>,
-        <sagi@grimberg.me>
-CC:     <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Xianting Tian <tian.xianting@h3c.com>
-Subject: [PATCH] nvme: use kobj_to_dev() to get device
-Date:   Fri, 4 Sep 2020 23:01:40 +0800
-Message-ID: <20200904150140.12717-1-tian.xianting@h3c.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 4 Sep 2020 13:26:32 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:42296 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbgIDR0S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 13:26:18 -0400
+Received: from 89-64-89-131.dynamic.chello.pl (89.64.89.131) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.468)
+ id 5fe1a974ca9da149; Fri, 4 Sep 2020 19:26:15 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Bob Moore <robert.moore@intel.com>
+Subject: [PATCH 2/6] ACPICA: Introduce acpi_hw_gpe_read() and acpi_hw_gpe_write()
+Date:   Fri, 04 Sep 2020 19:22:10 +0200
+Message-ID: <10974679.vsXWU0Gk4m@kreacher>
+In-Reply-To: <1748021.N9i9sLPJ40@kreacher>
+References: <1748021.N9i9sLPJ40@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.99.212.201]
-X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
-X-DNSRBL: 
-X-MAIL: h3cspam01-ex.h3c.com 084F8aK1013840
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We already has the interface kobj_to_dev(), which can be used to get
-'struct device *' from kobj, so use it.
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
+Now that GPE blocks are validated at the initialization time, accesses
+to GPE registers can be made more straightforward by ommitting all of
+the redundant checks in acpi_hw_read() and acpi_hw_write() and only
+invoking the OS-provided helper for the given type of access (read or
+write) and the address space holding these registers.
+
+For this reason, introduce simplified routines for accessing GPE
+registers, acpi_hw_gpe_read() and acpi_hw_gpe_write(), designed in
+accordance with the above observation, and modify all of the code
+accessing GPE registers to use them instead of acpi_hw_read() and
+acpi_hw_write(), respectively.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/nvme/host/core.c     | 4 ++--
- drivers/nvme/host/lightnvm.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/acpi/acpica/achware.h  |  4 ++
+ drivers/acpi/acpica/evgpe.c    |  4 +-
+ drivers/acpi/acpica/evgpeblk.c |  4 +-
+ drivers/acpi/acpica/hwgpe.c    | 92 ++++++++++++++++++++++++++++------
+ 4 files changed, 84 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 154942fc6..eb50615ba 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3422,7 +3422,7 @@ static struct attribute *nvme_ns_id_attrs[] = {
- static umode_t nvme_ns_id_attrs_are_visible(struct kobject *kobj,
- 		struct attribute *a, int n)
- {
--	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct device *dev = kobj_to_dev(kobj);
- 	struct nvme_ns_ids *ids = &dev_to_ns_head(dev)->ids;
+diff --git a/drivers/acpi/acpica/achware.h b/drivers/acpi/acpica/achware.h
+index f1f644b58b15..4dba7229f9c1 100644
+--- a/drivers/acpi/acpica/achware.h
++++ b/drivers/acpi/acpica/achware.h
+@@ -78,6 +78,10 @@ acpi_status acpi_hw_validate_io_block(u64 address, u32 bit_width, u32 count);
+ /*
+  * hwgpe - GPE support
+  */
++acpi_status acpi_hw_gpe_read(u64 *value, struct acpi_generic_address *reg);
++
++acpi_status acpi_hw_gpe_write(u64 value, struct acpi_generic_address *reg);
++
+ u32 acpi_hw_get_gpe_register_bit(struct acpi_gpe_event_info *gpe_event_info);
  
- 	if (a == &dev_attr_uuid.attr) {
-@@ -3665,7 +3665,7 @@ static struct attribute *nvme_dev_attrs[] = {
- static umode_t nvme_dev_attrs_are_visible(struct kobject *kobj,
- 		struct attribute *a, int n)
- {
--	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct device *dev = kobj_to_dev(kobj);
- 	struct nvme_ctrl *ctrl = dev_get_drvdata(dev);
+ acpi_status
+diff --git a/drivers/acpi/acpica/evgpe.c b/drivers/acpi/acpica/evgpe.c
+index 3e39907fedd9..06b9c8dd11c9 100644
+--- a/drivers/acpi/acpica/evgpe.c
++++ b/drivers/acpi/acpica/evgpe.c
+@@ -656,14 +656,14 @@ acpi_ev_detect_gpe(struct acpi_namespace_node *gpe_device,
  
- 	if (a == &dev_attr_delete_controller.attr && !ctrl->ops->delete_ctrl)
-diff --git a/drivers/nvme/host/lightnvm.c b/drivers/nvme/host/lightnvm.c
-index 8e562d0f2..70c87ff0d 100644
---- a/drivers/nvme/host/lightnvm.c
-+++ b/drivers/nvme/host/lightnvm.c
-@@ -1241,7 +1241,7 @@ static struct attribute *nvm_dev_attrs[] = {
- static umode_t nvm_dev_attrs_visible(struct kobject *kobj,
- 				     struct attribute *attr, int index)
- {
--	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct device *dev = kobj_to_dev(kobj);
- 	struct gendisk *disk = dev_to_disk(dev);
- 	struct nvme_ns *ns = disk->private_data;
- 	struct nvm_dev *ndev = ns->ndev;
+ 	/* GPE currently enabled (enable bit == 1)? */
+ 
+-	status = acpi_hw_read(&enable_reg, &gpe_register_info->enable_address);
++	status = acpi_hw_gpe_read(&enable_reg, &gpe_register_info->enable_address);
+ 	if (ACPI_FAILURE(status)) {
+ 		goto error_exit;
+ 	}
+ 
+ 	/* GPE currently active (status bit == 1)? */
+ 
+-	status = acpi_hw_read(&status_reg, &gpe_register_info->status_address);
++	status = acpi_hw_gpe_read(&status_reg, &gpe_register_info->status_address);
+ 	if (ACPI_FAILURE(status)) {
+ 		goto error_exit;
+ 	}
+diff --git a/drivers/acpi/acpica/evgpeblk.c b/drivers/acpi/acpica/evgpeblk.c
+index eb5d98757fdc..150c916dca5e 100644
+--- a/drivers/acpi/acpica/evgpeblk.c
++++ b/drivers/acpi/acpica/evgpeblk.c
+@@ -251,14 +251,14 @@ acpi_ev_create_gpe_info_blocks(struct acpi_gpe_block_info *gpe_block)
+ 
+ 		/* Disable all GPEs within this register */
+ 
+-		status = acpi_hw_write(0x00, &this_register->enable_address);
++		status = acpi_hw_gpe_write(0x00, &this_register->enable_address);
+ 		if (ACPI_FAILURE(status)) {
+ 			goto error_exit;
+ 		}
+ 
+ 		/* Clear any pending GPE events within this register */
+ 
+-		status = acpi_hw_write(0xFF, &this_register->status_address);
++		status = acpi_hw_gpe_write(0xFF, &this_register->status_address);
+ 		if (ACPI_FAILURE(status)) {
+ 			goto error_exit;
+ 		}
+diff --git a/drivers/acpi/acpica/hwgpe.c b/drivers/acpi/acpica/hwgpe.c
+index 49c46d4dd070..6cc88524839d 100644
+--- a/drivers/acpi/acpica/hwgpe.c
++++ b/drivers/acpi/acpica/hwgpe.c
+@@ -24,6 +24,66 @@ static acpi_status
+ acpi_hw_gpe_enable_write(u8 enable_mask,
+ 			 struct acpi_gpe_register_info *gpe_register_info);
+ 
++/******************************************************************************
++ *
++ * FUNCTION:    acpi_hw_gpe_read
++ *
++ * PARAMETERS:  value               - Where the value is returned
++ *              reg                 - GAS register structure
++ *
++ * RETURN:      Status
++ *
++ * DESCRIPTION: Read from a GPE register in either memory or IO space.
++ *
++ * LIMITATIONS: <These limitations also apply to acpi_hw_gpe_write>
++ *      space_ID must be system_memory or system_IO.
++ *
++ ******************************************************************************/
++
++acpi_status acpi_hw_gpe_read(u64 *value, struct acpi_generic_address *reg)
++{
++	acpi_status status;
++	u32 value32;
++
++	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
++		return acpi_os_read_memory((acpi_physical_address)reg->address,
++					    value, ACPI_GPE_REGISTER_WIDTH);
++	}
++
++	status = acpi_os_read_port((acpi_io_address)reg->address,
++				   &value32, ACPI_GPE_REGISTER_WIDTH);
++	if (ACPI_FAILURE(status))
++		return_ACPI_STATUS(status);
++
++	*value = (u64)value32;
++
++	return_ACPI_STATUS(AE_OK);
++}
++
++/******************************************************************************
++ *
++ * FUNCTION:    acpi_hw_gpe_write
++ *
++ * PARAMETERS:  value               - Value to be written
++ *              reg                 - GAS register structure
++ *
++ * RETURN:      Status
++ *
++ * DESCRIPTION: Write to a GPE register in either memory or IO space.
++ *
++ ******************************************************************************/
++
++acpi_status acpi_hw_gpe_write(u64 value, struct acpi_generic_address *reg)
++{
++	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
++		return acpi_os_write_memory((acpi_physical_address)reg->address,
++					    value, ACPI_GPE_REGISTER_WIDTH);
++	}
++
++	return acpi_os_write_port((acpi_io_address)reg->address, (u32)value,
++				  ACPI_GPE_REGISTER_WIDTH);
++}
++
+ /******************************************************************************
+  *
+  * FUNCTION:	acpi_hw_get_gpe_register_bit
+@@ -79,7 +139,8 @@ acpi_hw_low_set_gpe(struct acpi_gpe_event_info *gpe_event_info, u32 action)
+ 
+ 	/* Get current value of the enable register that contains this GPE */
+ 
+-	status = acpi_hw_read(&enable_mask, &gpe_register_info->enable_address);
++	status = acpi_hw_gpe_read(&enable_mask,
++				  &gpe_register_info->enable_address);
+ 	if (ACPI_FAILURE(status)) {
+ 		return (status);
+ 	}
+@@ -118,9 +179,8 @@ acpi_hw_low_set_gpe(struct acpi_gpe_event_info *gpe_event_info, u32 action)
+ 
+ 		/* Write the updated enable mask */
+ 
+-		status =
+-		    acpi_hw_write(enable_mask,
+-				  &gpe_register_info->enable_address);
++		status = acpi_hw_gpe_write(enable_mask,
++					   &gpe_register_info->enable_address);
+ 	}
+ 	return (status);
+ }
+@@ -158,8 +218,8 @@ acpi_status acpi_hw_clear_gpe(struct acpi_gpe_event_info *gpe_event_info)
+ 	 */
+ 	register_bit = acpi_hw_get_gpe_register_bit(gpe_event_info);
+ 
+-	status =
+-	    acpi_hw_write(register_bit, &gpe_register_info->status_address);
++	status = acpi_hw_gpe_write(register_bit,
++				   &gpe_register_info->status_address);
+ 	return (status);
+ }
+ 
+@@ -227,7 +287,7 @@ acpi_hw_get_gpe_status(struct acpi_gpe_event_info *gpe_event_info,
+ 
+ 	/* GPE currently enabled (enable bit == 1)? */
+ 
+-	status = acpi_hw_read(&in_byte, &gpe_register_info->enable_address);
++	status = acpi_hw_gpe_read(&in_byte, &gpe_register_info->enable_address);
+ 	if (ACPI_FAILURE(status)) {
+ 		return (status);
+ 	}
+@@ -238,7 +298,7 @@ acpi_hw_get_gpe_status(struct acpi_gpe_event_info *gpe_event_info,
+ 
+ 	/* GPE currently active (status bit == 1)? */
+ 
+-	status = acpi_hw_read(&in_byte, &gpe_register_info->status_address);
++	status = acpi_hw_gpe_read(&in_byte, &gpe_register_info->status_address);
+ 	if (ACPI_FAILURE(status)) {
+ 		return (status);
+ 	}
+@@ -274,7 +334,8 @@ acpi_hw_gpe_enable_write(u8 enable_mask,
+ 
+ 	gpe_register_info->enable_mask = enable_mask;
+ 
+-	status = acpi_hw_write(enable_mask, &gpe_register_info->enable_address);
++	status = acpi_hw_gpe_write(enable_mask,
++				   &gpe_register_info->enable_address);
+ 	return (status);
+ }
+ 
+@@ -341,9 +402,8 @@ acpi_hw_clear_gpe_block(struct acpi_gpe_xrupt_info *gpe_xrupt_info,
+ 
+ 		/* Clear status on all GPEs in this register */
+ 
+-		status =
+-		    acpi_hw_write(0xFF,
+-				  &gpe_block->register_info[i].status_address);
++		status = acpi_hw_gpe_write(0xFF,
++					   &gpe_block->register_info[i].status_address);
+ 		if (ACPI_FAILURE(status)) {
+ 			return (status);
+ 		}
+@@ -481,14 +541,14 @@ acpi_hw_get_gpe_block_status(struct acpi_gpe_xrupt_info *gpe_xrupt_info,
+ 	for (i = 0; i < gpe_block->register_count; i++) {
+ 		gpe_register_info = &gpe_block->register_info[i];
+ 
+-		status = acpi_hw_read(&in_enable,
+-				      &gpe_register_info->enable_address);
++		status = acpi_hw_gpe_read(&in_enable,
++					  &gpe_register_info->enable_address);
+ 		if (ACPI_FAILURE(status)) {
+ 			continue;
+ 		}
+ 
+-		status = acpi_hw_read(&in_status,
+-				      &gpe_register_info->status_address);
++		status = acpi_hw_gpe_read(&in_status,
++					  &gpe_register_info->status_address);
+ 		if (ACPI_FAILURE(status)) {
+ 			continue;
+ 		}
 -- 
-2.17.1
+2.26.2
+
+
+
 
