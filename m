@@ -2,88 +2,59 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF58C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDE4C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 891F2206C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 624A3206C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbgIDI07 (ORCPT
+        id S1729813AbgIDI2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:26:59 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10768 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729582AbgIDI0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:26:55 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5359180C9C0A7CA6DE60;
-        Fri,  4 Sep 2020 16:26:53 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 4 Sep 2020 16:26:43 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>
-CC:     <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <wangxiongfeng2@huawei.com>
-Subject: [PATCH] EDAC/mc_sysfs: add missing newlines when printing 'max(dimm)_location'
-Date:   Fri, 4 Sep 2020 16:19:23 +0800
-Message-ID: <1599207563-41819-1-git-send-email-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Fri, 4 Sep 2020 04:28:13 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:42676 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729572AbgIDI2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 04:28:13 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1kE74d-0001Op-Rl; Fri, 04 Sep 2020 18:27:56 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 04 Sep 2020 18:27:55 +1000
+Date:   Fri, 4 Sep 2020 18:27:55 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Hadar Gat <hadar.gat@arm.com>, Matt Mackall <mpm@selenic.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwrng: cctrn - Simplify with dev_err_probe()
+Message-ID: <20200904082755.GA1214@gondor.apana.org.au>
+References: <20200826153233.27586-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826153233.27586-1-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I cat 'max_location' and 'dimm_location' by sysfs, it displays as
-follows. It's better to add a newline for easy reading.
+On Wed, Aug 26, 2020 at 05:32:33PM +0200, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/char/hw_random/cctrng.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 
-[root@localhost /]# cat /sys/devices/system/edac/mc/mc0/max_location
-memory 3 [root@localhost /]# cat /sys/devices/system/edac/mc/mc0/dimm0/dimm_location
-memory 0 [root@localhost /]#
-
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-
----
-I am not sure if there are some userspace tools using this file.
----
- drivers/edac/edac_mc_sysfs.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index 4e6aca5..5d7b079 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -474,8 +474,12 @@ static ssize_t dimmdev_location_show(struct device *dev,
- 				     struct device_attribute *mattr, char *data)
- {
- 	struct dimm_info *dimm = to_dimm(dev);
-+	ssize_t count;
- 
--	return edac_dimm_info_location(dimm, data, PAGE_SIZE);
-+	count = edac_dimm_info_location(dimm, data, PAGE_SIZE);
-+	count += snprintf(data + count, PAGE_SIZE - count, "\n");
-+
-+	return count;
- }
- 
- static ssize_t dimmdev_label_show(struct device *dev,
-@@ -821,6 +825,7 @@ static ssize_t mci_max_location_show(struct device *dev,
- 			     edac_layer_name[mci->layers[i].type],
- 			     mci->layers[i].size - 1);
- 	}
-+	p += sprintf(p, "\n");
- 
- 	return p - data;
- }
+Patch applied.  Thanks.
 -- 
-1.7.12.4
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
