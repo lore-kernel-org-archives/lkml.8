@@ -2,423 +2,161 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA75FC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE9AC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 787AF20709
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C05206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:13:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rJ7vpQZd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730780AbgIDONY (ORCPT
+        id S1730736AbgIDONk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:13:24 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26683 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730689AbgIDOLk (ORCPT
+        Fri, 4 Sep 2020 10:13:40 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:44698 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730591AbgIDNpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:11:40 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-373-nPynfocCOZmSC5MCEFP3RA-1; Fri, 04 Sep 2020 10:11:36 -0400
-X-MC-Unique: nPynfocCOZmSC5MCEFP3RA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 333FC1006708;
-        Fri,  4 Sep 2020 14:11:35 +0000 (UTC)
-Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F9FF19C59;
-        Fri,  4 Sep 2020 14:11:30 +0000 (UTC)
-Subject: Re: [PATCH v4 01/10] vfio/fsl-mc: Add VFIO framework skeleton for
- fsl-mc devices
-To:     Diana Craciun OSS <diana.craciun@oss.nxp.com>,
-        alex.williamson@redhat.com, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
-        laurentiu.tudor@nxp.com, Bharat Bhushan <Bharat.Bhushan@nxp.com>
-References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
- <20200826093315.5279-2-diana.craciun@oss.nxp.com>
- <4636da7d-0c97-4c14-cfac-bdb4c9e6cd83@redhat.com>
- <da339828-1696-7d46-3548-3b99746e92fe@oss.nxp.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <11a45457-81c6-287a-9a8f-4d789ba2e82f@redhat.com>
-Date:   Fri, 4 Sep 2020 16:11:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <da339828-1696-7d46-3548-3b99746e92fe@oss.nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Fri, 4 Sep 2020 09:45:24 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200904133507euoutp01e6e02826db9cd1cd8a0cf45415437b8b~xmAkOt0vK0722107221euoutp01s
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:35:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200904133507euoutp01e6e02826db9cd1cd8a0cf45415437b8b~xmAkOt0vK0722107221euoutp01s
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599226507;
+        bh=M6LUpUR0yeAQpj3I0Hzt+0kX5PVbzJKyJpNcEwtoCPI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rJ7vpQZd6k/ci8vZ9dNBFafOcWJX/a61zmJeRw8vmkv/yq5SIMF/EitQPqlxsDPO2
+         U9J28iMeduQMOl+NdItqrrrX9N4sh8F14oKzzyOh47arjiyL/WhbX/ZiCpeQWSDAAQ
+         VdVOh1bKD+cNEkHl9i4Q7uUdewBdzM4xDwM7Y7+s=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200904133506eucas1p16f875fb1a1d79b21dfd37ea6cc11a0ff~xmAjujuXO1156611566eucas1p1K;
+        Fri,  4 Sep 2020 13:35:06 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 0D.39.06318.A82425F5; Fri,  4
+        Sep 2020 14:35:06 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200904133506eucas1p170dd4d393f12bf79c9ba4a3c9532c29f~xmAjaoAAZ0117201172eucas1p1y;
+        Fri,  4 Sep 2020 13:35:06 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200904133506eusmtrp2d63e1b01372524ece3713ef834439e25~xmAjZ9k5q0977109771eusmtrp2J;
+        Fri,  4 Sep 2020 13:35:06 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-b1-5f52428aa09e
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 8E.A0.06017.A82425F5; Fri,  4
+        Sep 2020 14:35:06 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200904133505eusmtip163609e20523e3ff142d855a3f0b8eaa4~xmAiz6CsY1932019320eusmtip1S;
+        Fri,  4 Sep 2020 13:35:05 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH v10 21/30] drm: xen: fix common struct sg_table related
+ issues
+Date:   Fri,  4 Sep 2020 15:17:02 +0200
+Message-Id: <20200904131711.12950-22-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200904131711.12950-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSfSxVcRjH+51zz73HzbHTJX5RsbvVqg0Zf5zlTrHWzj9tprU2ltvFCcWl
+        e1DMMMrL9TJiCIuFvFO6EUrIa3IZMm8NsRnztrwU85LTQf99n8/3++x59uzBUUkDZox7KwMY
+        lVLhIxWKBTXtm73magcn+eXGCksqUduFUG8zqzBqryYFpQbXl4VUSVkbQuV9tqXWBqcQqnp6
+        CKMG6nOEVEXrDxG1UraMUc0rMxj1W5OKXCPo8pflgB4vrAP0p408AV27MYnRE/EdCP2uIJwe
+        251G6dThIkB/WRkU0A0jEUI6SVMK6NXqs466zmKZB+PjHcSoLO3uib1yS9uBf5Lek5jdcRAB
+        Fo+rgQ4OSRuYtLAiUgMxLiGLAVztTBbwxRqA9W2jKF+sApi29wI5bEkYikZ4owjAzZwicNRS
+        3b8LuJSQtILqRbWQ0wbkMwA7E3W5EEr+QaD2daeIM/RJR7gW24SpAY4LyHMwr8eDwwRpB0uK
+        p0T8NFNY9qYJ5bTOPn+fOYPxXCuC6RsyXl+HE0sLB3l9ON+hOdCn4V5d7r9NIRkF4JS2QsQX
+        CQAORGYCPmULx7VbQm4JlLwIq+oteWwP4yNrBByGpB4cXjzBYXRfPq/JQHlMwNhoCZ8+D7M6
+        Ko/GNvf1o7ymYUll/8FJU/bPMLEpSgamWf+H5QFQCoyYQNbXk2GtlcxjC1bhywYqPS3c/Xyr
+        wf5Lde92rH8AjdtuLYDEgVSXOHbVSS7BFEFssG8LgDgqNSAcerpdJYSHIjiEUfnJVYE+DNsC
+        THCB1IiwfjV3V0J6KgKYhwzjz6gOXQTXMY4AITvu2XoDGtd58/xbUbRh3Pf0EKMLJz+2C0+F
+        a9c2escXikeXXB4k22blGzWa6c3P0cTtgZ4r2yOzoTfCCsesSqU7X72UT+8vnXG702RmUtn1
+        KzotTGa4VTApaw1KrmD7bL45yzJu/oyTx+S7aOxDzQ2JbNnmbKshVe82XSsXP5IKWC+F1SVU
+        xSr+AqiFDBtOAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsVy+t/xu7pdTkHxBse3S1j0njvJZLFxxnpW
+        i//bJjJbXPn6ns1i5eqjTBYL9ltbfLnykMli0+NrrBaXd81hs1h75C67xYfV71ktDn54wmrx
+        fctkJgdejzXz1jB63Fm6k9Fj77cFLB7bvz1g9bjffZzJY/OSeo/b/x4ze0y+sZzR4/CHKywe
+        u282sHn0bVnF6PF5k1wAT5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6d
+        TUpqTmZZapG+XYJexvxVxxgL+vgq2v/dYWxgfMvdxcjJISFgItFzrY2pi5GLQ0hgKaNEX+MU
+        NoiEjMTJaQ2sELawxJ9rXWwQRZ8YJfY0PmcBSbAJGEp0vYVIiAh0MkpM6/7IDuIwC/xjkjix
+        dzsTSJWwgJ/E1u9XGbsYOThYBFQlFpxNAQnzCthJrFzxkB1ig7zE6g0HmEFsTqD41hlPwDYL
+        CdhKfJizmGUCI98CRoZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgVGz7djPLTsYu94FH2IU
+        4GBU4uFlsA+KF2JNLCuuzD3EKMHBrCTC63T2dJwQb0piZVVqUX58UWlOavEhRlOgmyYyS4km
+        5wMjOq8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA6NZYzFDSrT+
+        zEYH20lhl1sVs9t9z81h2F3m6iVk8K3lgOffF6wS1WH3/t2Pn5H8mKPzesEVxdblAt2tPhqM
+        UmZcT1V2b+T4dmKebaoJm6mZi98WBTX1ZcmFMh/O/edUiS8/v7z+0Ml9P1p/fdsk/2ReqVTa
+        kYvJOZf7vA9XtsqpFLx7u//+ESWW4oxEQy3mouJEAH4u/TOwAgAA
+X-CMS-MailID: 20200904133506eucas1p170dd4d393f12bf79c9ba4a3c9532c29f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200904133506eucas1p170dd4d393f12bf79c9ba4a3c9532c29f
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200904133506eucas1p170dd4d393f12bf79c9ba4a3c9532c29f
+References: <20200904131711.12950-1-m.szyprowski@samsung.com>
+        <CGME20200904133506eucas1p170dd4d393f12bf79c9ba4a3c9532c29f@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Diana,
+The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+returns the number of the created entries in the DMA address space.
+However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+dma_unmap_sg must be called with the original number of the entries
+passed to the dma_map_sg().
 
-On 9/4/20 3:59 PM, Diana Craciun OSS wrote:
-> Hi Eric,
-> 
-> On 9/3/2020 5:06 PM, Auger Eric wrote:
->> Hi Diana,
->>
->> On 8/26/20 11:33 AM, Diana Craciun wrote:
->>> From: Bharat Bhushan <Bharat.Bhushan@nxp.com>
->>>
->>> DPAA2 (Data Path Acceleration Architecture) consists in
->>> mechanisms for processing Ethernet packets, queue management,
->>> accelerators, etc.
->>>
->>> The Management Complex (mc) is a hardware entity that manages the DPAA2
->>> hardware resources. It provides an object-based abstraction for software
->>> drivers to use the DPAA2 hardware. The MC mediates operations such as
->>> create, discover, destroy of DPAA2 objects.
->>> The MC provides memory-mapped I/O command interfaces (MC portals) which
->>> DPAA2 software drivers use to operate on DPAA2 objects.
->>>
->>> A DPRC is a container object that holds other types of DPAA2 objects.
->>> Each object in the DPRC is a Linux device and bound to a driver.
->>> The MC-bus driver is a platform driver (different from PCI or platform
->>> bus). The DPRC driver does runtime management of a bus instance. It
->>> performs the initial scan of the DPRC and handles changes in the DPRC
->>> configuration (adding/removing objects).
->>>
->>> All objects inside a container share the same hardware isolation
->>> context, meaning that only an entire DPRC can be assigned to
->>> a virtual machine.
->>> When a container is assigned to a virtual machine, all the objects
->>> within that container are assigned to that virtual machine.
->>> The DPRC container assigned to the virtual machine is not allowed
->>> to change contents (add/remove objects) by the guest. The restriction
->>> is set by the host and enforced by the mc hardware.
->>>
->>> The DPAA2 objects can be directly assigned to the guest. However
->>> the MC portals (the memory mapped command interface to the MC) need
->>> to be emulated because there are commands that configure the
->>> interrupts and the isolation IDs which are virtual in the guest.
->>>
->>> Example:
->>> echo vfio-fsl-mc > /sys/bus/fsl-mc/devices/dprc.2/driver_override
->>> echo dprc.2 > /sys/bus/fsl-mc/drivers/vfio-fsl-mc/bind
->>>
->>> The dprc.2 is bound to the VFIO driver and all the objects within
->>> dprc.2 are going to be bound to the VFIO driver.
->>>
->>> This patch adds the infrastructure for VFIO support for fsl-mc
->>> devices. Subsequent patches will add support for binding and secure
->>> assigning these devices using VFIO.
->>>
->>> More details about the DPAA2 objects can be found here:
->>> Documentation/networking/device_drivers/freescale/dpaa2/overview.rst
->>>
->>> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
->>> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
->>> ---
->>>   MAINTAINERS                               |   6 +
->>>   drivers/vfio/Kconfig                      |   1 +
->>>   drivers/vfio/Makefile                     |   1 +
->>>   drivers/vfio/fsl-mc/Kconfig               |   9 ++
->>>   drivers/vfio/fsl-mc/Makefile              |   4 +
->>>   drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 160 ++++++++++++++++++++++
->>>   drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |  14 ++
->>>   include/uapi/linux/vfio.h                 |   1 +
->>>   8 files changed, 196 insertions(+)
->>>   create mode 100644 drivers/vfio/fsl-mc/Kconfig
->>>   create mode 100644 drivers/vfio/fsl-mc/Makefile
->>>   create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc.c
->>>   create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index 3b186ade3597..f3f9ea108588 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -18229,6 +18229,12 @@ F:    drivers/vfio/
->>>   F:    include/linux/vfio.h
->>>   F:    include/uapi/linux/vfio.h
->>>   +VFIO FSL-MC DRIVER
->>> +M:    Diana Craciun <diana.craciun@oss.nxp.com>
->>> +L:    kvm@vger.kernel.org
->>> +S:    Maintained
->>> +F:    drivers/vfio/fsl-mc/
->>> +
->>>   VFIO MEDIATED DEVICE DRIVERS
->>>   M:    Kirti Wankhede <kwankhede@nvidia.com>
->>>   L:    kvm@vger.kernel.org
->>> diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
->>> index fd17db9b432f..5533df91b257 100644
->>> --- a/drivers/vfio/Kconfig
->>> +++ b/drivers/vfio/Kconfig
->>> @@ -47,4 +47,5 @@ menuconfig VFIO_NOIOMMU
->>>   source "drivers/vfio/pci/Kconfig"
->>>   source "drivers/vfio/platform/Kconfig"
->>>   source "drivers/vfio/mdev/Kconfig"
->>> +source "drivers/vfio/fsl-mc/Kconfig"
->>>   source "virt/lib/Kconfig"
->>> diff --git a/drivers/vfio/Makefile b/drivers/vfio/Makefile
->>> index de67c4725cce..fee73f3d9480 100644
->>> --- a/drivers/vfio/Makefile
->>> +++ b/drivers/vfio/Makefile
->>> @@ -9,3 +9,4 @@ obj-$(CONFIG_VFIO_SPAPR_EEH) += vfio_spapr_eeh.o
->>>   obj-$(CONFIG_VFIO_PCI) += pci/
->>>   obj-$(CONFIG_VFIO_PLATFORM) += platform/
->>>   obj-$(CONFIG_VFIO_MDEV) += mdev/
->>> +obj-$(CONFIG_VFIO_FSL_MC) += fsl-mc/
->>> diff --git a/drivers/vfio/fsl-mc/Kconfig b/drivers/vfio/fsl-mc/Kconfig
->>> new file mode 100644
->>> index 000000000000..b1a527d6b6f2
->>> --- /dev/null
->>> +++ b/drivers/vfio/fsl-mc/Kconfig
->>> @@ -0,0 +1,9 @@
->>> +config VFIO_FSL_MC
->>> +    tristate "VFIO support for QorIQ DPAA2 fsl-mc bus devices"
->>> +    depends on VFIO && FSL_MC_BUS && EVENTFD
->>> +    help
->>> +      Driver to enable support for the VFIO QorIQ DPAA2 fsl-mc
->>> +      (Management Complex) devices. This is required to passthrough
->>> +      fsl-mc bus devices using the VFIO framework.
->>> +
->>> +      If you don't know what to do here, say N.
->>> diff --git a/drivers/vfio/fsl-mc/Makefile b/drivers/vfio/fsl-mc/Makefile
->>> new file mode 100644
->>> index 000000000000..0c6e5d2ddaae
->>> --- /dev/null
->>> +++ b/drivers/vfio/fsl-mc/Makefile
->>> @@ -0,0 +1,4 @@
->>> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
->>> +
->>> +vfio-fsl-mc-y := vfio_fsl_mc.o
->>> +obj-$(CONFIG_VFIO_FSL_MC) += vfio-fsl-mc.o
->>> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->>> b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->>> new file mode 100644
->>> index 000000000000..8b53c2a25b32
->>> --- /dev/null
->>> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->>> @@ -0,0 +1,160 @@
->>> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
->>> +/*
->>> + * Copyright 2013-2016 Freescale Semiconductor Inc.
->>> + * Copyright 2016-2017,2019-2020 NXP
->>> + */
->>> +
->>> +#include <linux/device.h>
->>> +#include <linux/iommu.h>
->>> +#include <linux/module.h>
->>> +#include <linux/mutex.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/types.h>
->>> +#include <linux/vfio.h>
->>> +#include <linux/fsl/mc.h>
->>> +
->>> +#include "vfio_fsl_mc_private.h"
->>> +
->>> +static int vfio_fsl_mc_open(void *device_data)
->>> +{
->>> +    if (!try_module_get(THIS_MODULE))
->>> +        return -ENODEV;
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static void vfio_fsl_mc_release(void *device_data)
->>> +{
->>> +    module_put(THIS_MODULE);
->>> +}
->>> +
->>> +static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
->>> +                  unsigned long arg)
->>> +{
->>> +    switch (cmd) {
->>> +    case VFIO_DEVICE_GET_INFO:
->>> +    {
->>> +        return -ENOTTY;
->>> +    }
->>> +    case VFIO_DEVICE_GET_REGION_INFO:
->>> +    {
->>> +        return -ENOTTY;
->>> +    }
->>> +    case VFIO_DEVICE_GET_IRQ_INFO:
->>> +    {
->>> +        return -ENOTTY;
->>> +    }
->>> +    case VFIO_DEVICE_SET_IRQS:
->>> +    {
->>> +        return -ENOTTY;
->>> +    }
->>> +    case VFIO_DEVICE_RESET:
->>> +    {
->>> +        return -ENOTTY;
->>> +    }
->>> +    default:
->>> +        return -ENOTTY;
->>> +    }
->>> +}
->>> +
->>> +static ssize_t vfio_fsl_mc_read(void *device_data, char __user *buf,
->>> +                size_t count, loff_t *ppos)
->>> +{
->>> +    return -EINVAL;
->>> +}
->>> +
->>> +static ssize_t vfio_fsl_mc_write(void *device_data, const char
->>> __user *buf,
->>> +                 size_t count, loff_t *ppos)
->>> +{
->>> +    return -EINVAL;
->>> +}
->>> +
->>> +static int vfio_fsl_mc_mmap(void *device_data, struct vm_area_struct
->>> *vma)
->>> +{
->>> +    return -EINVAL;
->>> +}
->>> +
->>> +static const struct vfio_device_ops vfio_fsl_mc_ops = {
->>> +    .name        = "vfio-fsl-mc",
->>> +    .open        = vfio_fsl_mc_open,
->>> +    .release    = vfio_fsl_mc_release,
->>> +    .ioctl        = vfio_fsl_mc_ioctl,
->>> +    .read        = vfio_fsl_mc_read,
->>> +    .write        = vfio_fsl_mc_write,
->>> +    .mmap        = vfio_fsl_mc_mmap,
->>> +};
->>> +
->>> +static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
->>> +{
->>> +    struct iommu_group *group;
->>> +    struct vfio_fsl_mc_device *vdev;
->>> +    struct device *dev = &mc_dev->dev;
->>> +    int ret;
->>> +
->>> +    group = vfio_iommu_group_get(dev);
->>> +    if (!group) {
->>> +        dev_err(dev, "%s: VFIO: No IOMMU group\n", __func__);
->>> +        return -EINVAL;
->>> +    }
->>> +
->>> +    vdev = devm_kzalloc(dev, sizeof(*vdev), GFP_KERNEL);
->>> +    if (!vdev) {
->>> +        vfio_iommu_group_put(group, dev);
->>> +        return -ENOMEM;
->>> +    }
->>> +
->>> +    vdev->mc_dev = mc_dev;
->>> +
->>> +    ret = vfio_add_group_dev(dev, &vfio_fsl_mc_ops, vdev);
->>> +    if (ret) {
->>> +        dev_err(dev, "%s: Failed to add to vfio group\n", __func__);
->>> +        vfio_iommu_group_put(group, dev);
->>> +        return ret;
->>> +    }
->>> +
->>> +    return ret;
->> nit: introduce out_group_put: as in other files
->> This will be usable also in subsequent patches
->>> +}
->>> +
->>> +static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
->>> +{
->>> +    struct vfio_fsl_mc_device *vdev;
->>> +    struct device *dev = &mc_dev->dev;
->>> +
->>> +    vdev = vfio_del_group_dev(dev);
->>> +    if (!vdev)
->>> +        return -EINVAL;
->>> +
->>> +    vfio_iommu_group_put(mc_dev->dev.iommu_group, dev);
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +/*
->>> + * vfio-fsl_mc is a meta-driver, so use driver_override interface to
->>> + * bind a fsl_mc container with this driver and match_id_table is NULL.
->>> + */
->>> +static struct fsl_mc_driver vfio_fsl_mc_driver = {
->>> +    .probe        = vfio_fsl_mc_probe,
->>> +    .remove        = vfio_fsl_mc_remove,
->>> +    .match_id_table = NULL,
->> not needed?
-> 
-> The driver will always match on driver_override, there is no need for
-> static ids.
-I rather meant do you really need to initialize it? I guess it is the
-same in vfio_platform and there is no such init.
+struct sg_table is a common structure used for describing a non-contiguous
+memory buffer, used commonly in the DRM and graphics subsystems. It
+consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+and DMA mapped pages (nents entry).
 
-Thanks
+It turned out that it was a common mistake to misuse nents and orig_nents
+entries, calling DMA-mapping functions with a wrong number of entries or
+ignoring the number of mapped entries returned by the dma_map_sg()
+function.
 
-Eric
-> 
->>> +    .driver    = {
->>> +        .name    = "vfio-fsl-mc",
->>> +        .owner    = THIS_MODULE,
->>> +    },
->>> +};
->>> +
->>> +static int __init vfio_fsl_mc_driver_init(void)
->>> +{
->>> +    return fsl_mc_driver_register(&vfio_fsl_mc_driver);
->>> +}
->>> +
->>> +static void __exit vfio_fsl_mc_driver_exit(void)
->>> +{
->>> +    fsl_mc_driver_unregister(&vfio_fsl_mc_driver);
->>> +}
->>> +
->>> +module_init(vfio_fsl_mc_driver_init);
->>> +module_exit(vfio_fsl_mc_driver_exit);
->>> +
->>> +MODULE_LICENSE("GPL v2");
->> Don't you need MODULE_LICENSE("Dual BSD/GPL"); ?
-> 
-> Yes, will change.
-> 
->>> +MODULE_DESCRIPTION("VFIO for FSL-MC devices - User Level meta-driver");
->>> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
->>> b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
->>> new file mode 100644
->>> index 000000000000..e79cc116f6b8
->>> --- /dev/null
->>> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
->>> @@ -0,0 +1,14 @@
->>> +/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
->>> +/*
->>> + * Copyright 2013-2016 Freescale Semiconductor Inc.
->>> + * Copyright 2016,2019-2020 NXP
->>> + */
->>> +
->>> +#ifndef VFIO_FSL_MC_PRIVATE_H
->>> +#define VFIO_FSL_MC_PRIVATE_H
->>> +
->>> +struct vfio_fsl_mc_device {
->>> +    struct fsl_mc_device        *mc_dev;
->>> +};
->>> +
->>> +#endif /* VFIO_FSL_MC_PRIVATE_H */
->>> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
->>> index 920470502329..95deac891378 100644
->>> --- a/include/uapi/linux/vfio.h
->>> +++ b/include/uapi/linux/vfio.h
->>> @@ -201,6 +201,7 @@ struct vfio_device_info {
->>>   #define VFIO_DEVICE_FLAGS_AMBA  (1 << 3)    /* vfio-amba device */
->>>   #define VFIO_DEVICE_FLAGS_CCW    (1 << 4)    /* vfio-ccw device */
->>>   #define VFIO_DEVICE_FLAGS_AP    (1 << 5)    /* vfio-ap device */
->>> +#define VFIO_DEVICE_FLAGS_FSL_MC (1 << 6)    /* vfio-fsl-mc device */
->>>       __u32    num_regions;    /* Max region index + 1 */
->>>       __u32    num_irqs;    /* Max IRQ index + 1 */
->>>   };
->>>
->> Thanks
->>
->> Eric
->>
-> 
-> Thanks,
-> Diana
-> 
+Fix the code to refer to proper nents or orig_nents entries. This driver
+reports the number of the pages in the imported scatterlist, so it should
+refer to sg_table->orig_nents entry.
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+---
+ drivers/gpu/drm/xen/xen_drm_front_gem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/xen/xen_drm_front_gem.c b/drivers/gpu/drm/xen/xen_drm_front_gem.c
+index 39ff95b75357..0e57c80058b2 100644
+--- a/drivers/gpu/drm/xen/xen_drm_front_gem.c
++++ b/drivers/gpu/drm/xen/xen_drm_front_gem.c
+@@ -216,7 +216,7 @@ xen_drm_front_gem_import_sg_table(struct drm_device *dev,
+ 		return ERR_PTR(ret);
+ 
+ 	DRM_DEBUG("Imported buffer of size %zu with nents %u\n",
+-		  size, sgt->nents);
++		  size, sgt->orig_nents);
+ 
+ 	return &xen_obj->base;
+ }
+-- 
+2.17.1
 
