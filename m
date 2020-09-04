@@ -2,506 +2,147 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705F1C2BC11
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B16FC53140
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94D5821973
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:01:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WgObfEim"
+	by mail.kernel.org (Postfix) with ESMTP id A6BAE2530F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgIDRkB (ORCPT
+        id S1727918AbgIDR0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:40:01 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:24564 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727963AbgIDRjl (ORCPT
+        Fri, 4 Sep 2020 13:26:35 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:65168 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbgIDR0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:39:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1599241180; x=1630777180;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rO1RD3swUWSwwGKlW8S7yBoh9aSmUUdMhAbwXbKQAQI=;
-  b=WgObfEimqguK+bCjgA7O4fTFOqJu3Grlu0Ej46jn4CR4uhMEyhYC4rOM
-   wZTFHw4X0Txo+U4CaM0pAtHR93CklNYgXadQOU8DQBg/EWEl1QW5yDp24
-   DxvZA0we2jO+udGzGYL9mEh5oK3Syk/VBjXu5yjx7BTT6sWpzfSDvQP95
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.76,390,1592870400"; 
-   d="scan'208";a="52100087"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 04 Sep 2020 17:39:39 +0000
-Received: from EX13D16EUB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id 027E3A1BFA;
-        Fri,  4 Sep 2020 17:39:37 +0000 (UTC)
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.145) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 4 Sep 2020 17:39:27 +0000
-From:   Andra Paraschiv <andraprs@amazon.com>
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "David Duncan" <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Karen Noel" <knoel@redhat.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm <kvm@vger.kernel.org>,
-        ne-devel-upstream <ne-devel-upstream@amazon.com>,
-        Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v8 11/18] nitro_enclaves: Add logic for setting an enclave memory region
-Date:   Fri, 4 Sep 2020 20:37:11 +0300
-Message-ID: <20200904173718.64857-12-andraprs@amazon.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20200904173718.64857-1-andraprs@amazon.com>
-References: <20200904173718.64857-1-andraprs@amazon.com>
+        Fri, 4 Sep 2020 13:26:18 -0400
+Received: from 89-64-89-131.dynamic.chello.pl (89.64.89.131) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.468)
+ id 83bc72f43659210a; Fri, 4 Sep 2020 19:26:16 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Bob Moore <robert.moore@intel.com>
+Subject: [PATCH 1/6] ACPICA: Validate GPE blocks at init time
+Date:   Fri, 04 Sep 2020 19:21:17 +0200
+Message-ID: <22545488.GHJRr5m80a@kreacher>
+In-Reply-To: <1748021.N9i9sLPJ40@kreacher>
+References: <1748021.N9i9sLPJ40@kreacher>
 MIME-Version: 1.0
-X-Originating-IP: [10.43.161.145]
-X-ClientProxiedBy: EX13D08UWC002.ant.amazon.com (10.43.162.168) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Another resource that is being set for an enclave is memory. User space
-memory regions, that need to be backed by contiguous memory regions,
-are associated with the enclave.
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-One solution for allocating / reserving contiguous memory regions, that
-is used for integration, is hugetlbfs. The user space process that is
-associated with the enclave passes to the driver these memory regions.
+Some of the checks done by acpi_hw_read() and acpi_hw_write(),
+which are used for accessing GPE registers, are redundant in the
+specific case of GPE registers and the ones that are not redundant
+can be done upfront at the initialization time so as to fail the
+initialization if they are not passed instead of failing every
+access to the affected GPE registers going forward (including
+accesses from the SCI interrupt handler).
 
-The enclave memory regions need to be from the same NUMA node as the
-enclave CPUs.
+Modify the GPE blocks initialization code accordingly.
 
-Add ioctl command logic for setting user space memory region for an
-enclave.
-
-Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
-Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-Reviewed-by: Alexander Graf <graf@amazon.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
-Changelog
+ drivers/acpi/acpica/achware.h  |  2 ++
+ drivers/acpi/acpica/evgpeblk.c | 17 +++++++++++++++++
+ drivers/acpi/acpica/hwvalid.c  | 30 ++++++++++++++++++++++++++++++
+ 3 files changed, 49 insertions(+)
 
-v7 -> v8
-
-* Add early check, while getting user pages, to be multiple of 2 MiB for
-  the pages that back the user space memory region.
-* Add custom error code for incorrect user space memory region flag.
-* Include in a separate function the sanity checks for each page of the
-  user space memory region.
-
-v6 -> v7
-
-* Update check for duplicate user space memory regions to cover
-  additional possible scenarios.
-
-v5 -> v6
-
-* Check for max number of pages allocated for the internal data
-  structure for pages.
-* Check for invalid memory region flags.
-* Check for aligned physical memory regions.
-* Update documentation to kernel-doc format.
-* Check for duplicate user space memory regions.
-* Use directly put_page() instead of unpin_user_pages(), to match the
-  get_user_pages() calls.
-
-v4 -> v5
-
-* Add early exit on set memory region ioctl function call error.
-* Remove log on copy_from_user() failure.
-* Exit without unpinning the pages on NE PCI dev request failure as
-  memory regions from the user space range may have already been added.
-* Add check for the memory region user space address to be 2 MiB
-  aligned.
-* Update logic to not have a hardcoded check for 2 MiB memory regions.
-
-v3 -> v4
-
-* Check enclave memory regions are from the same NUMA node as the
-  enclave CPUs.
-* Use dev_err instead of custom NE log pattern.
-* Update the NE ioctl call to match the decoupling from the KVM API.
-
-v2 -> v3
-
-* Remove the WARN_ON calls.
-* Update static calls sanity checks.
-* Update kzfree() calls to kfree().
-
-v1 -> v2
-
-* Add log pattern for NE.
-* Update goto labels to match their purpose.
-* Remove the BUG_ON calls.
-* Check if enclave max memory regions is reached when setting an enclave
-  memory region.
-* Check if enclave state is init when setting an enclave memory region.
----
- drivers/virt/nitro_enclaves/ne_misc_dev.c | 316 ++++++++++++++++++++++
- 1 file changed, 316 insertions(+)
-
-diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-index 0248db07fd6a..9912d78c0905 100644
---- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
-+++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-@@ -710,6 +710,285 @@ static int ne_add_vcpu_ioctl(struct ne_enclave *ne_enclave, u32 vcpu_id)
- 	return 0;
+diff --git a/drivers/acpi/acpica/achware.h b/drivers/acpi/acpica/achware.h
+index ebf6453d0e21..f1f644b58b15 100644
+--- a/drivers/acpi/acpica/achware.h
++++ b/drivers/acpi/acpica/achware.h
+@@ -73,6 +73,8 @@ acpi_status acpi_hw_read_port(acpi_io_address address, u32 *value, u32 width);
+ 
+ acpi_status acpi_hw_write_port(acpi_io_address address, u32 value, u32 width);
+ 
++acpi_status acpi_hw_validate_io_block(u64 address, u32 bit_width, u32 count);
++
+ /*
+  * hwgpe - GPE support
+  */
+diff --git a/drivers/acpi/acpica/evgpeblk.c b/drivers/acpi/acpica/evgpeblk.c
+index 132adff1e131..eb5d98757fdc 100644
+--- a/drivers/acpi/acpica/evgpeblk.c
++++ b/drivers/acpi/acpica/evgpeblk.c
+@@ -317,6 +317,23 @@ acpi_ev_create_gpe_block(struct acpi_namespace_node *gpe_device,
+ 		return_ACPI_STATUS(AE_OK);
+ 	}
+ 
++	/* Validate the space_ID */
++
++	if ((space_id != ACPI_ADR_SPACE_SYSTEM_MEMORY) &&
++	    (space_id != ACPI_ADR_SPACE_SYSTEM_IO)) {
++		ACPI_ERROR((AE_INFO,
++			    "Unsupported address space: 0x%X", space_id));
++		return_ACPI_STATUS(AE_SUPPORT);
++	}
++
++	if (space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
++		status = acpi_hw_validate_io_block(address,
++						   ACPI_GPE_REGISTER_WIDTH,
++						   register_count);
++		if (ACPI_FAILURE(status))
++			return_ACPI_STATUS(status);
++	}
++
+ 	/* Allocate a new GPE block */
+ 
+ 	gpe_block = ACPI_ALLOCATE_ZEROED(sizeof(struct acpi_gpe_block_info));
+diff --git a/drivers/acpi/acpica/hwvalid.c b/drivers/acpi/acpica/hwvalid.c
+index 4d94861e6093..b2ca7dfd3fc9 100644
+--- a/drivers/acpi/acpica/hwvalid.c
++++ b/drivers/acpi/acpica/hwvalid.c
+@@ -292,3 +292,33 @@ acpi_status acpi_hw_write_port(acpi_io_address address, u32 value, u32 width)
+ 
+ 	return (AE_OK);
  }
- 
-+/**
-+ * ne_sanity_check_user_mem_region() - Sanity check the user space memory
-+ *				       region received during the set user
-+ *				       memory region ioctl call.
-+ * @ne_enclave :	Private data associated with the current enclave.
-+ * @mem_region :	User space memory region to be sanity checked.
++
++/******************************************************************************
 + *
-+ * Context: Process context. This function is called with the ne_enclave mutex held.
-+ * Return:
-+ * * 0 on success.
-+ * * Negative return value on failure.
-+ */
-+static int ne_sanity_check_user_mem_region(struct ne_enclave *ne_enclave,
-+	struct ne_user_memory_region mem_region)
-+{
-+	struct ne_mem_region *ne_mem_region = NULL;
-+
-+	if (ne_enclave->mm != current->mm)
-+		return -EIO;
-+
-+	if (mem_region.memory_size & (NE_MIN_MEM_REGION_SIZE - 1)) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "User space memory size is not multiple of 2 MiB\n");
-+
-+		return -NE_ERR_INVALID_MEM_REGION_SIZE;
-+	}
-+
-+	if (!IS_ALIGNED(mem_region.userspace_addr, NE_MIN_MEM_REGION_SIZE)) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "User space address is not 2 MiB aligned\n");
-+
-+		return -NE_ERR_UNALIGNED_MEM_REGION_ADDR;
-+	}
-+
-+	if ((mem_region.userspace_addr & (NE_MIN_MEM_REGION_SIZE - 1)) ||
-+	    !access_ok((void __user *)(unsigned long)mem_region.userspace_addr,
-+		       mem_region.memory_size)) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Invalid user space address range\n");
-+
-+		return -NE_ERR_INVALID_MEM_REGION_ADDR;
-+	}
-+
-+	list_for_each_entry(ne_mem_region, &ne_enclave->mem_regions_list,
-+			    mem_region_list_entry) {
-+		u64 memory_size = ne_mem_region->memory_size;
-+		u64 userspace_addr = ne_mem_region->userspace_addr;
-+
-+		if ((userspace_addr <= mem_region.userspace_addr &&
-+		    mem_region.userspace_addr < (userspace_addr + memory_size)) ||
-+		    (mem_region.userspace_addr <= userspace_addr &&
-+		    (mem_region.userspace_addr + mem_region.memory_size) > userspace_addr)) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "User space memory region already used\n");
-+
-+			return -NE_ERR_MEM_REGION_ALREADY_USED;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * ne_sanity_check_user_mem_region_page() - Sanity check a page from the user space
-+ *					    memory region received during the set
-+ *					    user memory region ioctl call.
-+ * @ne_enclave :	Private data associated with the current enclave.
-+ * @mem_region_page:	Page from the user space memory region to be sanity checked.
++ * FUNCTION:    acpi_hw_validate_io_block
 + *
-+ * Context: Process context. This function is called with the ne_enclave mutex held.
-+ * Return:
-+ * * 0 on success.
-+ * * Negative return value on failure.
-+ */
-+static int ne_sanity_check_user_mem_region_page(struct ne_enclave *ne_enclave,
-+						struct page *mem_region_page)
-+{
-+	if (!PageHuge(mem_region_page)) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Not a hugetlbfs page\n");
-+
-+		return -NE_ERR_MEM_NOT_HUGE_PAGE;
-+	}
-+
-+	if (page_size(mem_region_page) & (NE_MIN_MEM_REGION_SIZE - 1)) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Page size not multiple of 2 MiB\n");
-+
-+		return -NE_ERR_INVALID_PAGE_SIZE;
-+	}
-+
-+	if (ne_enclave->numa_node != page_to_nid(mem_region_page)) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Page is not from NUMA node %d\n",
-+				    ne_enclave->numa_node);
-+
-+		return -NE_ERR_MEM_DIFFERENT_NUMA_NODE;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * ne_set_user_memory_region_ioctl() - Add user space memory region to the slot
-+ *				       associated with the current enclave.
-+ * @ne_enclave :	Private data associated with the current enclave.
-+ * @mem_region :	User space memory region to be associated with the given slot.
++ * PARAMETERS:  Address             Address of I/O port/register blobk
++ *              bit_width           Number of bits (8,16,32) in each register
++ *              count               Number of registers in the block
 + *
-+ * Context: Process context. This function is called with the ne_enclave mutex held.
-+ * Return:
-+ * * 0 on success.
-+ * * Negative return value on failure.
-+ */
-+static int ne_set_user_memory_region_ioctl(struct ne_enclave *ne_enclave,
-+	struct ne_user_memory_region mem_region)
++ * RETURN:      Status
++ *
++ * DESCRIPTION: Validates a block of I/O ports/registers.
++ *
++ ******************************************************************************/
++
++acpi_status acpi_hw_validate_io_block(u64 address, u32 bit_width, u32 count)
 +{
-+	long gup_rc = 0;
-+	unsigned long i = 0;
-+	unsigned long max_nr_pages = 0;
-+	unsigned long memory_size = 0;
-+	struct ne_mem_region *ne_mem_region = NULL;
-+	unsigned long nr_phys_contig_mem_regions = 0;
-+	struct page **phys_contig_mem_regions = NULL;
-+	int rc = -EINVAL;
++	acpi_status status;
 +
-+	rc = ne_sanity_check_user_mem_region(ne_enclave, mem_region);
-+	if (rc < 0)
-+		return rc;
++	while (count--) {
++		status = acpi_hw_validate_io_request((acpi_io_address)address,
++						     bit_width);
++		if (ACPI_FAILURE(status))
++			return_ACPI_STATUS(status);
 +
-+	ne_mem_region = kzalloc(sizeof(*ne_mem_region), GFP_KERNEL);
-+	if (!ne_mem_region)
-+		return -ENOMEM;
-+
-+	max_nr_pages = mem_region.memory_size / NE_MIN_MEM_REGION_SIZE;
-+
-+	ne_mem_region->pages = kcalloc(max_nr_pages, sizeof(*ne_mem_region->pages),
-+				       GFP_KERNEL);
-+	if (!ne_mem_region->pages) {
-+		rc = -ENOMEM;
-+
-+		goto free_mem_region;
++		address += ACPI_DIV_8(bit_width);
 +	}
 +
-+	phys_contig_mem_regions = kcalloc(max_nr_pages, sizeof(*phys_contig_mem_regions),
-+					  GFP_KERNEL);
-+	if (!phys_contig_mem_regions) {
-+		rc = -ENOMEM;
-+
-+		goto free_mem_region;
-+	}
-+
-+	do {
-+		i = ne_mem_region->nr_pages;
-+
-+		if (i == max_nr_pages) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Reached max nr of pages in the pages data struct\n");
-+
-+			rc = -ENOMEM;
-+
-+			goto put_pages;
-+		}
-+
-+		gup_rc = get_user_pages(mem_region.userspace_addr + memory_size, 1, FOLL_GET,
-+					ne_mem_region->pages + i, NULL);
-+		if (gup_rc < 0) {
-+			rc = gup_rc;
-+
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Error in get user pages [rc=%d]\n", rc);
-+
-+			goto put_pages;
-+		}
-+
-+		rc = ne_sanity_check_user_mem_region_page(ne_enclave, ne_mem_region->pages[i]);
-+		if (rc < 0)
-+			goto put_pages;
-+
-+		/*
-+		 * TODO: Update once handled non-contiguous memory regions
-+		 * received from user space or contiguous physical memory regions
-+		 * larger than 2 MiB e.g. 8 MiB.
-+		 */
-+		phys_contig_mem_regions[i] = ne_mem_region->pages[i];
-+
-+		memory_size += page_size(ne_mem_region->pages[i]);
-+
-+		ne_mem_region->nr_pages++;
-+	} while (memory_size < mem_region.memory_size);
-+
-+	/*
-+	 * TODO: Update once handled non-contiguous memory regions received
-+	 * from user space or contiguous physical memory regions larger than
-+	 * 2 MiB e.g. 8 MiB.
-+	 */
-+	nr_phys_contig_mem_regions = ne_mem_region->nr_pages;
-+
-+	if ((ne_enclave->nr_mem_regions + nr_phys_contig_mem_regions) >
-+	    ne_enclave->max_mem_regions) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Reached max memory regions %lld\n",
-+				    ne_enclave->max_mem_regions);
-+
-+		rc = -NE_ERR_MEM_MAX_REGIONS;
-+
-+		goto put_pages;
-+	}
-+
-+	for (i = 0; i < nr_phys_contig_mem_regions; i++) {
-+		u64 phys_region_addr = page_to_phys(phys_contig_mem_regions[i]);
-+		u64 phys_region_size = page_size(phys_contig_mem_regions[i]);
-+
-+		if (phys_region_size & (NE_MIN_MEM_REGION_SIZE - 1)) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Physical mem region size is not multiple of 2 MiB\n");
-+
-+			rc = -EINVAL;
-+
-+			goto put_pages;
-+		}
-+
-+		if (!IS_ALIGNED(phys_region_addr, NE_MIN_MEM_REGION_SIZE)) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Physical mem region address is not 2 MiB aligned\n");
-+
-+			rc = -EINVAL;
-+
-+			goto put_pages;
-+		}
-+	}
-+
-+	ne_mem_region->memory_size = mem_region.memory_size;
-+	ne_mem_region->userspace_addr = mem_region.userspace_addr;
-+
-+	list_add(&ne_mem_region->mem_region_list_entry, &ne_enclave->mem_regions_list);
-+
-+	for (i = 0; i < nr_phys_contig_mem_regions; i++) {
-+		struct ne_pci_dev_cmd_reply cmd_reply = {};
-+		struct slot_add_mem_req slot_add_mem_req = {};
-+
-+		slot_add_mem_req.slot_uid = ne_enclave->slot_uid;
-+		slot_add_mem_req.paddr = page_to_phys(phys_contig_mem_regions[i]);
-+		slot_add_mem_req.size = page_size(phys_contig_mem_regions[i]);
-+
-+		rc = ne_do_request(ne_enclave->pdev, SLOT_ADD_MEM,
-+				   &slot_add_mem_req, sizeof(slot_add_mem_req),
-+				   &cmd_reply, sizeof(cmd_reply));
-+		if (rc < 0) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Error in slot add mem [rc=%d]\n", rc);
-+
-+			kfree(phys_contig_mem_regions);
-+
-+			/*
-+			 * Exit here without put pages as memory regions may
-+			 * already been added.
-+			 */
-+			return rc;
-+		}
-+
-+		ne_enclave->mem_size += slot_add_mem_req.size;
-+		ne_enclave->nr_mem_regions++;
-+	}
-+
-+	kfree(phys_contig_mem_regions);
-+
-+	return 0;
-+
-+put_pages:
-+	for (i = 0; i < ne_mem_region->nr_pages; i++)
-+		put_page(ne_mem_region->pages[i]);
-+free_mem_region:
-+	kfree(phys_contig_mem_regions);
-+	kfree(ne_mem_region->pages);
-+	kfree(ne_mem_region);
-+
-+	return rc;
++	return_ACPI_STATUS(AE_OK);
 +}
-+
- /**
-  * ne_enclave_ioctl() - Ioctl function provided by the enclave file.
-  * @file:	File associated with this ioctl function.
-@@ -831,6 +1110,43 @@ static long ne_enclave_ioctl(struct file *file, unsigned int cmd, unsigned long
- 		return 0;
- 	}
- 
-+	case NE_SET_USER_MEMORY_REGION: {
-+		struct ne_user_memory_region mem_region = {};
-+		int rc = -EINVAL;
-+
-+		if (copy_from_user(&mem_region, (void __user *)arg, sizeof(mem_region)))
-+			return -EFAULT;
-+
-+		if (mem_region.flags >= NE_MEMORY_REGION_MAX_FLAG_VAL) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Incorrect flag for user memory region\n");
-+
-+			return -NE_ERR_INVALID_FLAG_VALUE;
-+		}
-+
-+		mutex_lock(&ne_enclave->enclave_info_mutex);
-+
-+		if (ne_enclave->state != NE_STATE_INIT) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Enclave is not in init state\n");
-+
-+			mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+			return -NE_ERR_NOT_IN_INIT_STATE;
-+		}
-+
-+		rc = ne_set_user_memory_region_ioctl(ne_enclave, mem_region);
-+		if (rc < 0) {
-+			mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+			return rc;
-+		}
-+
-+		mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+		return 0;
-+	}
-+
- 	default:
- 		return -ENOTTY;
- 	}
 -- 
-2.20.1 (Apple Git-117)
+2.26.2
 
 
 
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
 
