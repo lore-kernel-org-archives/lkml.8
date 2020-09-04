@@ -2,116 +2,146 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C7BC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 306ABC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 837A220722
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:50:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599231057;
-	bh=V8Yz+V8W8NYZRo8VeY1JNSeQmYJkrgRoqjg3jR2PUvI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=w9waG8pJnKkEjuAi1QfHHcYdaOJnNYT1YJ3YjBD8IlWFoF9Ie6DtXB4HefPZxafDY
-	 6xD/OqQfMQFeK0CtyzeXul/GwPROOWQBNMBWW6durv5t8opvR21U3vKw1igXuV/z6v
-	 5xZPRyTzgswmFMNmseW7l4edhpi7DaP4h0eQ0DCs=
+	by mail.kernel.org (Postfix) with ESMTP id 00BA720722
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:51:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="rkg1fR0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730366AbgIDOuz (ORCPT
+        id S1730469AbgIDOvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:50:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730297AbgIDOut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:50:49 -0400
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B4DA2087E;
-        Fri,  4 Sep 2020 14:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599231049;
-        bh=V8Yz+V8W8NYZRo8VeY1JNSeQmYJkrgRoqjg3jR2PUvI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=y95wpCM5PSO2ORRxz7Fe2lB1/nleDYKLCXyVJKIPxrzD+Cm2FcpGKTQr4ABNk7WpN
-         bs6iwoF36owHKD+TV2gjIM5KxNDth/QiqjlfBQU4nh6VtSPWEcuPgTEmzMxbSHhu4w
-         /VXGhZdFqNdK0ZtYbaasyscn4/ZK6pIUXUcs3x9s=
-Received: by mail-oi1-f178.google.com with SMTP id x19so6764660oix.3;
-        Fri, 04 Sep 2020 07:50:49 -0700 (PDT)
-X-Gm-Message-State: AOAM5326DRH+jMrJIqgmOLVok9BbHdB1uUhofYBdHm11nt3E6SS8PZQT
-        6U2PoFeErjrTTTePBLf3w6cr5I4UvDuSIdPK+A==
-X-Google-Smtp-Source: ABdhPJwwwgfM98sa3ThHsK9hFVILmKXcNAGTT6BvEX3rCBp0yuXzXiuMVee8h3wm41S3eOKWbUIm60zQEIEq/uvqGGE=
-X-Received: by 2002:aca:4cc7:: with SMTP id z190mr5643642oia.147.1599231048667;
- Fri, 04 Sep 2020 07:50:48 -0700 (PDT)
+        Fri, 4 Sep 2020 10:51:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730395AbgIDOv2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 10:51:28 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A35C061245
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 07:51:28 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id u13so4463352pgh.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 07:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YCwuwpY2wU3kaylQ/MILMMrzNaUrce3uBcy3VjkPLcA=;
+        b=rkg1fR0CBytwyrhRc4EikmMXthCT3N5jfBxjoYC1f2Aijxq260yyTxXzm4b5D4xdJM
+         ZKVT4z4WQErwkMaE8ZMEF5kV387p5w953ELxaWyRrcMcFaNIMd/pIHu2vTc6ka8IbldA
+         hN1HxRbl5w7Z+gn4dkdZqlZAWTXUcG4djEmjya3a1sZ9Cq7ik4SB9lfsBjPa4Du9VzzR
+         GSHooiSDCvBgzteocraC5W3zyoGKt6Eb9G1iJGLMUy/Rjv/q321puyjCYvdy4Biaet7b
+         58DB32pESS8ttLBfPtoF7SL2V2YnOQqyNBaMln7yqA4Y7deRnKGQywEeZRxmxcBN5/0T
+         YIlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YCwuwpY2wU3kaylQ/MILMMrzNaUrce3uBcy3VjkPLcA=;
+        b=GJB6jbGvFeGHfcUY3CXdY4WQ93GyU62SrfQ/fdBLqFi/PEdx/PRX4x4XFmu9g154SL
+         tO4s58RTK/dX7ZdXdEOfBLlSf+Fzkcjmw8ebOWk6Y9rSB3RVBEz6Ia8OdRbVNQjMHxAF
+         DxBT9XyVApNd6h/YXwxzE/WcTch9gcU/tUnD96oFKGE/m8YGNScbvLOK3t/6flx30zvh
+         yhsuLRZJj22kA0DOJxQ98n2m1kNP4/vY5Mwzy/G/xmOcliE5TtUMzOhtyw5l1uyFY8IK
+         NrQf1bzaixi+9iV7C9sTFc4+nH7JpqxdGs2L/lRhknmn19V1LqXuRYuTX1/LSBGCMJst
+         k5Ig==
+X-Gm-Message-State: AOAM5334NLADaCcdL7N72QZoRMzdw96BIIFj6/1+5l9CR+qpWDPKwai6
+        DvAWywdkGxaqFu0ay5Ku4ssJk9poSM3c5I9c
+X-Google-Smtp-Source: ABdhPJxbjl6x1jMUJXR8dYxxNsseOtmG1Vat/jx5qrNmxoLcT6SMRBzHwskY4FsPWRMLYnN5B3Nviw==
+X-Received: by 2002:a63:e249:: with SMTP id y9mr7554359pgj.117.1599231087194;
+        Fri, 04 Sep 2020 07:51:27 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c085:21cf::1188? ([2620:10d:c090:400::5:1a09])
+        by smtp.gmail.com with ESMTPSA id 82sm6041681pgd.6.2020.09.04.07.51.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2020 07:51:26 -0700 (PDT)
+Subject: Re: [PATCH] ext4: flag as supporting buffered async reads
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-ext4@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <fb90cc2d-b12c-738f-21a4-dd7a8ae0556a@kernel.dk>
+ <20200818181117.GA34125@mit.edu>
+ <990cc101-d4a1-f346-fe78-0fb5b963b406@kernel.dk>
+ <20c844c8-b649-3250-ff5b-b7420f72ff38@kernel.dk>
+ <20200822143326.GC199705@mit.edu>
+ <aff250ad-4c31-15c2-fa1d-3f3945cb7aa5@kernel.dk>
+ <7f0e2d99-5da2-237e-a894-0afddc0ace1e@kernel.dk>
+ <049a97db-c362-bcfb-59e5-4b1d2df59383@kernel.dk>
+ <5140ba6c-779c-2a71-b7f2-3c3220cdf19c@kernel.dk>
+ <68510957-c887-8e26-4a1a-a7a93488586a@kernel.dk>
+ <20200904035528.GE558530@mit.edu>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <73f14124-e660-de0d-95ad-7fb21f18cdef@kernel.dk>
+Date:   Fri, 4 Sep 2020 08:51:24 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200831082917.17117-1-jagan@amarulasolutions.com>
- <20200831082917.17117-6-jagan@amarulasolutions.com> <20200903162550.GA2896127@bogus>
- <CAMty3ZCXV9=VzVKiKJ740RcR+uYA7CHUzjrDL0vwQ1NOw9n4FQ@mail.gmail.com>
-In-Reply-To: <CAMty3ZCXV9=VzVKiKJ740RcR+uYA7CHUzjrDL0vwQ1NOw9n4FQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 4 Sep 2020 08:50:36 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJUOO5Ou+BAS6AC4dfZ4kv5sncq_PGG+1+sHhpWByCWhA@mail.gmail.com>
-Message-ID: <CAL_JsqJUOO5Ou+BAS6AC4dfZ4kv5sncq_PGG+1+sHhpWByCWhA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] dt-bindings: arm: rockchip: Add Engicam PX30.Core
- C.TOUCH 2.0
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200904035528.GE558530@mit.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 10:47 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> On Thu, Sep 3, 2020 at 9:55 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, 31 Aug 2020 13:59:15 +0530, Jagan Teki wrote:
-> > > PX30.Core is an EDIMM SOM based on Rockchip PX30 from Engicam.
-> > >
-> > > C.TOUCH 2.0 is a general purpose carrier board with capacitive
-> > > touch interface support.
-> > >
-> > > PX30.Core needs to mount on top of this Carrier board for creating
-> > > complete PX30.Core C.TOUCH 2.0 board.
-> > >
-> > > Add bindings for it.
-> > >
-> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > ---
-> > > Changes for v3:
-> > > - none
-> > > Changes for v2:
-> > > - new patch
-> > >
-> > >  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > >
-> >
-> >
-> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> > there's no need to repost patches *only* to add the tags. The upstream
-> > maintainer will do that for acks received on the version they apply.
-> >
-> > If a tag was not added on purpose, please state why and what changed.
->
-> Yes, it's on purpose. The previous binding was about C.TOUCH with LVDS
-> board and this one is C.TOUCH carrier only. ie the main reason I have
-> not included. I did mention in the cover-letter saying previous one
-> dropped and the C.TOUCH carrier added.
+On 9/3/20 9:55 PM, Theodore Y. Ts'o wrote:
+> Hi Jens,
+> 
+> Sorry, the past few months have been *crazy* insane.  Between Linux
+> Plumbers Conference organizing, having to deal with some interns at
+> $WORK, performance reviews, etc.., etc., it's been a perfect storm.
+> As a result, I was late getting the primary ext4 pull request to
+> Linus, and he's already yelled at me for a late pull request.
+> 
+> As a result, I'm being super paranoid about asking Linus for anything,
+> even a one-time change, if it's not a bug fix.  And what you are
+> asking for isn't a bug fix, but enabling a new feature.
 
-The changelog here says no changes...
+That's fine, we blew past the 5.9 window long ago imho. As mentioned,
+back in May we could have solved this by just adding your acked-by
+or reviewed-by to the patch like we did for xfs/btrfs. That removes the
+ext4 tree dependency. Obviously that's no longer a concern for 5.10, but
+I need to know if we're going one of two routes:
 
-Anyways,
+a) I'm queueing this up, in which case I'll still need that ack/review
+b) you're queueing it up, in which case you can just grab it
 
-Acked-by: Rob Herring <robh@kernel.org>
+I just don't want to end up in the same situation for 5.10, and then
+we're pushing this out 2 releases at that point...
+
+> Worse, right now, -rc1 and -rc2 is causing random crashes in my
+> gce-xfstests framework.  Sometimes it happens before we've run even a
+> single xfstests; sometimes it happens after we have successfully
+> completed all of the tests, and we're doing a shutdown of the VM under
+> test.  Other times it happens in the middle of a test run.  Given that
+> I'm seeing this at -rc1, which is before my late ext4 pull request to
+> Linus, it's probably not an ext4 related bug.  But it also means that
+> I'm partially blind in terms of my kernel testing at the moment.  So I
+> can't even tell Linus that I've run lots of tests and I'm 100%
+> confident your one-line change is 100% safe.
+> 
+> Next week after Labor Day, I should be completely done with the
+> performance review writeups that are on my plate, and I will hopefully
+> have a bit more time to try to debug these mysterious failures.  Or
+> maybe someone else will be able to figure out what the heck is going
+> wrong, and perhaps -rc3 will make all of these failures go away.
+> 
+> I'm sorry your frustrated; I'm frustrated too!  But until I can find
+> the time to do a full bisect (v5.8 works just fine.  v5.9-rc1 is
+> flakey as hell when booting my test config in a GCE VM), I'm not in a
+> position to send anything to Linus.
+
+That looks nasty, good luck! Hopefully the bisect will be helpful. FWIW,
+in the testing I've done (with this patch) on ext4 and with XFS, I
+haven't seen anything odd. That's using real hardware though, and qemu
+on the laptop, no GCE.
+
+-- 
+Jens Axboe
+
