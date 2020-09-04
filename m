@@ -2,272 +2,112 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A23EC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20A3C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33F0D2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 706362074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:34:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="OSKCiZVY";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="OSKCiZVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726850AbgIDPe0 (ORCPT
+        id S1726895AbgIDPep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:34:26 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45035 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726133AbgIDPeU (ORCPT
+        Fri, 4 Sep 2020 11:34:45 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:47250 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726111AbgIDPem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:34:20 -0400
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-221-yRV-NtpSMI2vUUN7CwMlBw-1; Fri, 04 Sep 2020 11:34:17 -0400
-X-MC-Unique: yRV-NtpSMI2vUUN7CwMlBw-1
-Received: by mail-ed1-f72.google.com with SMTP id c3so2838694edm.7
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:34:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zp25PJXZJmLzi/YG+rLvA4Ne+i/fMSHVG+Gz6qFfk/U=;
-        b=C6+pUC8DVah7t2TvN1qfqvhtwPzRiBKOM98aQ4V/AmjPT/JNnrCb83idu0gkcYWQAR
-         j9Q+ttWp2tC65/EzW9VJj1kP/gjg44GAwYmoUmOTBfMZFw4PorCOt83r0+g1p4WVx0U8
-         7ePFVC9NfRiCezz8JyVaIgmfW6gCp9aZZcXp++5eIocHsTjatbMOmz1c8uVvrT9Sjb6+
-         mFnDAOwFhOuDJyuHPR3/3Ihc9tmlmvpb9GGgRMVAPWko9cnD4R5N+BrdNANLWNBfB/LH
-         fnKZZX2Yy9mj/jE6alhtVu06/HIxSW42u1VhkomEQACjkN+XWPchiVK55aC98XyduGKk
-         z9Cw==
-X-Gm-Message-State: AOAM532DoY8fLH68g9asM+2C3UeISJJ2nM4xum05WhcOVNMU43uQICOS
-        3xyNSS1uyrpCDiqpCFz0TUubFHpHI3yp5LJoWxapbvmPXfyTiN5s7QKSKZUaJ/t7PtoGxYwpr16
-        zA1fvuunfElzxl7snHLyr6NmC
-X-Received: by 2002:a05:6402:b45:: with SMTP id bx5mr9428588edb.22.1599233655818;
-        Fri, 04 Sep 2020 08:34:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy704sUu7sJgjrolJNTiPBt89HfejW1hd5XF8q0Nja9ll1NI/l1yN+Popd+lrmjy+m0job6Cw==
-X-Received: by 2002:a05:6402:b45:: with SMTP id bx5mr9428562edb.22.1599233655615;
-        Fri, 04 Sep 2020 08:34:15 -0700 (PDT)
-Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id z17sm182797edi.90.2020.09.04.08.34.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:34:15 -0700 (PDT)
-From:   Julien Thierry <jthierry@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
-        raphael.gault@arm.com, benh@kernel.crashing.org,
-        Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH v3 07/10] headers: Rename frame.h
-Date:   Fri,  4 Sep 2020 16:30:25 +0100
-Message-Id: <20200904153028.32676-8-jthierry@redhat.com>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20200904153028.32676-1-jthierry@redhat.com>
-References: <20200904153028.32676-1-jthierry@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 4 Sep 2020 11:34:42 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id E23378EE112;
+        Fri,  4 Sep 2020 08:34:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1599233681;
+        bh=aqBYVVDxSPcR+4WRGd2XXdbYUrXI1R2tpGt8e2CxOqk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=OSKCiZVY/HICluT+E+gBea2klKfGTnSyh+e5emDR2r1NB8op0pvrrhFcgY6WpLXfi
+         BgwwbeRb5VG2jPAx3sUPZQpMPsfm8M1dAfUAh8brrNXhqqe8gVtdtzwSB3orIrDD7l
+         YoD02xMi9/Vnz3qACuvRNiD5YpaTVrPCKQCyS0ro=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0lY_VcvizQiN; Fri,  4 Sep 2020 08:34:41 -0700 (PDT)
+Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 432438EE064;
+        Fri,  4 Sep 2020 08:34:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1599233681;
+        bh=aqBYVVDxSPcR+4WRGd2XXdbYUrXI1R2tpGt8e2CxOqk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=OSKCiZVY/HICluT+E+gBea2klKfGTnSyh+e5emDR2r1NB8op0pvrrhFcgY6WpLXfi
+         BgwwbeRb5VG2jPAx3sUPZQpMPsfm8M1dAfUAh8brrNXhqqe8gVtdtzwSB3orIrDD7l
+         YoD02xMi9/Vnz3qACuvRNiD5YpaTVrPCKQCyS0ro=
+Message-ID: <1599233679.5231.4.camel@HansenPartnership.com>
+Subject: Re: [PATCH] dma-direct: zero out DMA_ATTR_NO_KERNEL_MAPPING buf
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Hillf Danton <hdanton@sina.com>, Christoph Hellwig <hch@lst.de>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Date:   Fri, 04 Sep 2020 08:34:39 -0700
+In-Reply-To: <20200904152550.17964-1-hdanton@sina.com>
+References: <20200904152550.17964-1-hdanton@sina.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Header frame.h is getting more code annotations to help objtool analyze
-object files.
+On Fri, 2020-09-04 at 23:25 +0800, Hillf Danton wrote:
+> The DMA buffer allocated is always cleared in DMA core and this is
+> making DMA_ATTR_NO_KERNEL_MAPPING non-special.
+> 
+> Fixes: d98849aff879 ("dma-direct: handle DMA_ATTR_NO_KERNEL_MAPPING
+> in common code")
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Signed-off-by: Hillf Danton <hdanton@sina.com>
+> ---
+> 
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -178,9 +178,17 @@ void *dma_direct_alloc_pages(struct devi
+>  
+>  	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
+>  	    !force_dma_unencrypted(dev)) {
+> +		int i;
+> +
+>  		/* remove any dirty cache lines on the kernel alias
+> */
+>  		if (!PageHighMem(page))
+>  			arch_dma_prep_coherent(page, size);
+> +
+> +		for (i = 0; i < size/PAGE_SIZE; i++) {
+> +			ret = kmap_atomic(page + i);
+> +			memset(ret, 0, PAGE_SIZE);
+> +			kunmap_atomic(ret);
 
-Rename the file to objtool.h.
+This is massively expensive on PARISC and likely other VIPT/VIVT
+architectures.  What's the reason for clearing it?  This could also be
+really inefficient even on PIPT architectures if the memory is device
+remote.
 
-Signed-off-by: Julien Thierry <jthierry@redhat.com>
----
- arch/x86/include/asm/nospec-branch.h | 2 +-
- arch/x86/kernel/kprobes/core.c       | 2 +-
- arch/x86/kernel/kprobes/opt.c        | 2 +-
- arch/x86/kernel/reboot.c             | 2 +-
- arch/x86/kvm/svm/svm.c               | 2 +-
- arch/x86/kvm/vmx/nested.c            | 2 +-
- arch/x86/kvm/vmx/vmx.c               | 2 +-
- arch/x86/xen/enlighten_pv.c          | 2 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c  | 3 +--
- include/linux/{frame.h => objtool.h} | 6 +++---
- kernel/bpf/core.c                    | 2 +-
- kernel/kexec_core.c                  | 2 +-
- 12 files changed, 14 insertions(+), 15 deletions(-)
- rename include/linux/{frame.h => objtool.h} (93%)
+If we really have to do this, it should likely be done in the arch or
+driver hooks because there are potentially more efficient ways we can
+do this knowing how the architecture behaves.
 
-diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
-index e7752b4038ff..86651e86289d 100644
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -4,7 +4,7 @@
- #define _ASM_X86_NOSPEC_BRANCH_H_
- 
- #include <linux/static_key.h>
--#include <linux/frame.h>
-+#include <linux/objtool.h>
- 
- #include <asm/alternative.h>
- #include <asm/alternative-asm.h>
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index fdadc37d72af..ae2488643029 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -38,9 +38,9 @@
- #include <linux/kdebug.h>
- #include <linux/kallsyms.h>
- #include <linux/ftrace.h>
--#include <linux/frame.h>
- #include <linux/kasan.h>
- #include <linux/moduleloader.h>
-+#include <linux/objtool.h>
- #include <linux/vmalloc.h>
- #include <linux/pgtable.h>
- 
-diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
-index 40f380461e6d..f39ce3f67863 100644
---- a/arch/x86/kernel/kprobes/opt.c
-+++ b/arch/x86/kernel/kprobes/opt.c
-@@ -16,7 +16,7 @@
- #include <linux/kdebug.h>
- #include <linux/kallsyms.h>
- #include <linux/ftrace.h>
--#include <linux/frame.h>
-+#include <linux/objtool.h>
- #include <linux/pgtable.h>
- 
- #include <asm/text-patching.h>
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 0ec7ced727fe..603f33645e75 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -10,7 +10,7 @@
- #include <linux/sched.h>
- #include <linux/tboot.h>
- #include <linux/delay.h>
--#include <linux/frame.h>
-+#include <linux/objtool.h>
- #include <linux/pgtable.h>
- #include <acpi/reboot.h>
- #include <asm/io.h>
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 03dd7bac8034..2ff0152ae6c2 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -19,7 +19,7 @@
- #include <linux/trace_events.h>
- #include <linux/slab.h>
- #include <linux/hashtable.h>
--#include <linux/frame.h>
-+#include <linux/objtool.h>
- #include <linux/psp-sev.h>
- #include <linux/file.h>
- #include <linux/pagemap.h>
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 23b58c28a1c9..ae4ff7c624a4 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- 
--#include <linux/frame.h>
-+#include <linux/objtool.h>
- #include <linux/percpu.h>
- 
- #include <asm/debugreg.h>
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 46ba2e03a892..e1f24749fa67 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -13,7 +13,6 @@
-  *   Yaniv Kamay  <yaniv@qumranet.com>
-  */
- 
--#include <linux/frame.h>
- #include <linux/highmem.h>
- #include <linux/hrtimer.h>
- #include <linux/kernel.h>
-@@ -22,6 +21,7 @@
- #include <linux/moduleparam.h>
- #include <linux/mod_devicetable.h>
- #include <linux/mm.h>
-+#include <linux/objtool.h>
- #include <linux/sched.h>
- #include <linux/sched/smt.h>
- #include <linux/slab.h>
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 22e741e0b10c..58382d26f153 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -32,7 +32,7 @@
- #include <linux/pci.h>
- #include <linux/gfp.h>
- #include <linux/edd.h>
--#include <linux/frame.h>
-+#include <linux/objtool.h>
- 
- #include <xen/xen.h>
- #include <xen/events.h>
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-index e9f448a5ebb3..15b5bde69324 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-@@ -24,7 +24,7 @@
-  *
-  */
- 
--#include <linux/frame.h>
-+#include <linux/objtool.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-@@ -599,4 +599,3 @@ int vmw_msg_ioctl(struct drm_device *dev, void *data,
- 
- 	return -EINVAL;
- }
--
-diff --git a/include/linux/frame.h b/include/linux/objtool.h
-similarity index 93%
-rename from include/linux/frame.h
-rename to include/linux/objtool.h
-index 303cda600e56..358175c9c2b5 100644
---- a/include/linux/frame.h
-+++ b/include/linux/objtool.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _LINUX_FRAME_H
--#define _LINUX_FRAME_H
-+#ifndef _LINUX_OBJTOOL_H
-+#define _LINUX_OBJTOOL_H
- 
- #ifdef CONFIG_STACK_VALIDATION
- /*
-@@ -32,4 +32,4 @@
- 
- #endif /* CONFIG_STACK_VALIDATION */
- 
--#endif /* _LINUX_FRAME_H */
-+#endif /* _LINUX_OBJTOOL_H */
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index ed0b3578867c..03e284873644 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -25,7 +25,7 @@
- #include <linux/moduleloader.h>
- #include <linux/bpf.h>
- #include <linux/btf.h>
--#include <linux/frame.h>
-+#include <linux/objtool.h>
- #include <linux/rbtree_latch.h>
- #include <linux/kallsyms.h>
- #include <linux/rcupdate.h>
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index c19c0dad1ebe..c5e5e5a11535 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -36,7 +36,7 @@
- #include <linux/syscore_ops.h>
- #include <linux/compiler.h>
- #include <linux/hugetlb.h>
--#include <linux/frame.h>
-+#include <linux/objtool.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
--- 
-2.21.3
+James
 
