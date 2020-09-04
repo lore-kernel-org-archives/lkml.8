@@ -2,154 +2,129 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD62C4742C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BED0C352A6
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0E921D93
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC6BC2535F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="MV0bTC2X"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="bzIEIgVC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgIDRlj (ORCPT
+        id S1727968AbgIDRaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:41:39 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:37493 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728088AbgIDRk4 (ORCPT
+        Fri, 4 Sep 2020 13:30:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727114AbgIDRaL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:40:56 -0400
+        Fri, 4 Sep 2020 13:30:11 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49F1BC061245
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 10:30:10 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id n133so6987636qkn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 10:30:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1599241257; x=1630777257;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3WH1JXdCdbpYmzmEhgenY7vg+t0Pb4yn9+A2i1nvGdc=;
-  b=MV0bTC2XzubinStFWBjlVJF8LC0xaung2G1F1iv9VywCOeO2P3J1zpks
-   w3y8+4/kGrByzn/Ifm44b57TTI41X2Qdnk7jRA0XC+PkEeemPeclD46r0
-   TYGYAlhDZkVxwJDpQyLBZM8fiya2wdBA/fxo7d3SMQEww+yrqxrF0/nSh
-   8=;
-X-IronPort-AV: E=Sophos;i="5.76,390,1592870400"; 
-   d="scan'208";a="72480161"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 04 Sep 2020 17:40:56 +0000
-Received: from EX13D16EUB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id 37C00289B9C;
-        Fri,  4 Sep 2020 17:40:52 +0000 (UTC)
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.145) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 4 Sep 2020 17:40:42 +0000
-From:   Andra Paraschiv <andraprs@amazon.com>
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "David Duncan" <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Karen Noel" <knoel@redhat.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm <kvm@vger.kernel.org>,
-        ne-devel-upstream <ne-devel-upstream@amazon.com>,
-        Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v8 18/18] MAINTAINERS: Add entry for the Nitro Enclaves driver
-Date:   Fri, 4 Sep 2020 20:37:18 +0300
-Message-ID: <20200904173718.64857-19-andraprs@amazon.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20200904173718.64857-1-andraprs@amazon.com>
-References: <20200904173718.64857-1-andraprs@amazon.com>
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+/ZP5kS5Rqe9m8HHOrySpxvpwfZsdKiW4+S2+xiaFZ4=;
+        b=bzIEIgVCyUxB7ogqA2p4KhVMr9nk3rC+fPN6Hwvq0fBPGWQt5Mt4Z0cSFjryKkIzZj
+         EsTgy7TNbDNNmA0+AahwO2952KkXEr/rn3BfHxyKf4S6sJEgWWkcIm7tO5qb5dy8GKDS
+         aapkBfizEHQa2F4zPqs58/spHZoNA5JsRkDJSvhY/h1KQs32JU1W7OpJLLlM9Mq1wXuD
+         /fA4dOoo/9xeE8tVZoZJRwKQaIt7xzusIqpXp+qzjR1z7rxpxD/VNiNlrEa47TGOfDFw
+         Bhik7MJsMwS4Pz4lGMcbrgnm++nSQNY/PsJ7HQrEfHlZAiYp4Con5PdddQN58Zk16cy+
+         CECA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+/ZP5kS5Rqe9m8HHOrySpxvpwfZsdKiW4+S2+xiaFZ4=;
+        b=PBhXgcTM7yoA1FdAE80fMIsfvVthM59Ni0+Q/IDTgv+ZIajOhnIOwdKiiFDBtKs9Ep
+         cO7mSXS22kkRxo3outiQeeq+zNiwHkHKXK3hThBLVkF8Qw634kGXqENmdDVADK27ZhNy
+         0/6M3uyH8gSLQl3SgteUJR4BYxRXgax1qpG/+vESV/5+M0g3csAsgGHbsRxKJPJNKtbB
+         ovTvYxjtxWg34qGis66nnbT3Kp7Yv8BcgZbGq58ol3QFLFSiEaV+Li4gUs7ZwLco89y6
+         ly4ZnPT9CNCevbh5+OP0OEJ2W960+huCm6lxT0HHqYqhMWSSNpa9JABItIHf8qFoK3EB
+         ll0w==
+X-Gm-Message-State: AOAM531MTbqgFdGXYHDpSo71urW68zIQj8G1+e7lZUH/0du7Z9prxiqO
+        HlkBUyJ3tCzgLsCYEJnaftOUjQ==
+X-Google-Smtp-Source: ABdhPJxx6sG7dra6NCCtL26WdGX0WCmMtUJHQnCyrMj/OFxjA/iW+opYNKti5P1y9A5inKrckUcvvA==
+X-Received: by 2002:a05:620a:545:: with SMTP id o5mr9093806qko.172.1599240609392;
+        Fri, 04 Sep 2020 10:30:09 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id i66sm5103330qkc.63.2020.09.04.10.30.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 10:30:08 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     freedreno@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/3] drm/msm/dsi: add DSI config for sm8150 and sm8250
+Date:   Fri,  4 Sep 2020 13:28:37 -0400
+Message-Id: <20200904172859.25633-3-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200904172859.25633-1-jonathan@marek.ca>
+References: <20200904172859.25633-1-jonathan@marek.ca>
 MIME-Version: 1.0
-X-Originating-IP: [10.43.161.145]
-X-ClientProxiedBy: EX13D06UWC001.ant.amazon.com (10.43.162.91) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-Reviewed-by: Alexander Graf <graf@amazon.com>
+This allows DSI driver to work with sm8150 and sm8250. The sdm845 config
+is re-used as the config is the same.
+
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
-Changelog
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c | 5 ++++-
+ drivers/gpu/drm/msm/dsi/dsi_cfg.h | 2 ++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-v7 -> v8
-
-* No changes.
-
-v6 -> v7
-
-* No changes.
-
-v5 -> v6
-
-* No changes.
-
-v4 -> v5
-
-* No changes.
-
-v3 -> v4
-
-* No changes.
-
-v2 -> v3
-
-* Update file entries to be in alphabetical order.
-
-v1 -> v2
-
-* No changes.
----
- MAINTAINERS | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e4647c84c987..73a9b4e9b04b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12269,6 +12269,19 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2.git
- F:	arch/nios2/
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+index f892f2cbe8bb..b2ff68a15791 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+@@ -265,9 +265,12 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
+ 		&msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
+ 		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
++	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_3_0,
++		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
++	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_0,
++		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
+ 		&sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+-
+ };
  
-+NITRO ENCLAVES (NE)
-+M:	Andra Paraschiv <andraprs@amazon.com>
-+M:	Alexandru Vasile <lexnv@amazon.com>
-+M:	Alexandru Ciobotaru <alcioa@amazon.com>
-+L:	linux-kernel@vger.kernel.org
-+S:	Supported
-+W:	https://aws.amazon.com/ec2/nitro/nitro-enclaves/
-+F:	Documentation/nitro_enclaves/
-+F:	drivers/virt/nitro_enclaves/
-+F:	include/linux/nitro_enclaves.h
-+F:	include/uapi/linux/nitro_enclaves.h
-+F:	samples/nitro_enclaves/
-+
- NOHZ, DYNTICKS SUPPORT
- M:	Frederic Weisbecker <fweisbec@gmail.com>
- M:	Thomas Gleixner <tglx@linutronix.de>
+ const struct msm_dsi_cfg_handler *msm_dsi_cfg_get(u32 major, u32 minor)
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+index efd469d1db45..ade9b609c7d9 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+@@ -21,6 +21,8 @@
+ #define MSM_DSI_6G_VER_MINOR_V2_1_0	0x20010000
+ #define MSM_DSI_6G_VER_MINOR_V2_2_0	0x20000000
+ #define MSM_DSI_6G_VER_MINOR_V2_2_1	0x20020001
++#define MSM_DSI_6G_VER_MINOR_V2_3_0	0x20030000
++#define MSM_DSI_6G_VER_MINOR_V2_4_0	0x20040000
+ #define MSM_DSI_6G_VER_MINOR_V2_4_1	0x20040001
+ 
+ #define MSM_DSI_V2_VER_MINOR_8064	0x0
 -- 
-2.20.1 (Apple Git-117)
-
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
+2.26.1
 
