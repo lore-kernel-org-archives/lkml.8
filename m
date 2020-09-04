@@ -2,227 +2,282 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 995E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CE9C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 659F22074A
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E934B206F2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:47:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cAvWYReh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HJtnTVnR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgIDFoF (ORCPT
+        id S1726328AbgIDFrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 01:44:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgIDFoC (ORCPT
+        Fri, 4 Sep 2020 01:47:55 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31593 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725812AbgIDFry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 01:44:02 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 792BEC061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:44:01 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k15so5412123wrn.10
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:44:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jQfL+d2YiLKHDBG+R/kOnBkkolF/QX4JbzkbEv0Q6pI=;
-        b=cAvWYReh3TMe1dlwi2WbYOY4y8puEJtVYm8OGp8kRwi2OVTiv+bz7oK0sjRvY+q+zW
-         BBUZT2bDw3vFYvUT+g7PwSMXz5ZI/GT9lpKA4JRjakH8vMBQ0yRpXLqGRec35AuAGnGc
-         k7jEp5qz4U2oJC6qIiXrIEXoF2unP2IdmB7AEzx68N2vpX01wnqEclGvwwMy0OXeJWH3
-         gVNzmJfQCkq0o817DEy1pNWYnRCCTB2VbHVxEFJiLepdyrC91xNSdkL/3EOy7rFH1KZS
-         fWpvJvH03LHmeK9iuB0z7kAUG0NvIomkmgTpqhNOHDjdQnjFL2Qynd+KhnsKfCncOFSp
-         QFOQ==
+        Fri, 4 Sep 2020 01:47:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599198471;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DMUyUiGxwLkuXRwzIZCI3aHeCKiCNs1za3sON+lkQV8=;
+        b=HJtnTVnRM9ngK5mAWqdBkqRQGujohSM+55W45Qra0hBTcjOY6B9kheujpwEqP+HXEvHWMk
+        AiekWO7AklCuakGv9g1Od9ro/9foVfusaioiwaDO4LKBq5Cxk1hxkmIttoa6DIlLQmR8ir
+        nlZ6ql90Dais2UDrPSn8hecntBDaRUE=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-533-Y-tLBApPMsWHLDV_nQtWiA-1; Fri, 04 Sep 2020 01:47:48 -0400
+X-MC-Unique: Y-tLBApPMsWHLDV_nQtWiA-1
+Received: by mail-ej1-f69.google.com with SMTP id q9so2093975ejr.21
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:47:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jQfL+d2YiLKHDBG+R/kOnBkkolF/QX4JbzkbEv0Q6pI=;
-        b=sJQsZGhKHbyPdDEYaFmdqFdG+z3MTClo8e5/LkgPxK5psU9xexBX0nTcWhYFwQOVVx
-         pMXFJal/0ECXudVcA9G5ZhNj2dT2vd4URcNHN3GzE/15CfwEvm59vDkq7+wMoiacum64
-         hD2jH3WzHXAv61xby4z8Mbchpa8qRlfQavjbyVXlAha7Ym8GjkYhCil3ld8kEKcx2qbh
-         GPrzb2awIGye4cEHv5y7DWVGFCVDElaWjT99YycRQAWNj8RSYU/dmvBWnjaBLKDzPVBd
-         +kaeDjBsE4kev0FmyFC1NRI+zIbQj4RK0iWY+WsYY3QeQskuruBxH/lausC4n6NpvIKP
-         7H4A==
-X-Gm-Message-State: AOAM531u1POnCgTIQq1cJlYQRY2sECfWf8/GERHDcH+ydx1GlpwtYsPU
-        LlL/Tep5Xy2rLIa5flZLqC9gSmEK2KR/vaf5cNk7xg==
-X-Google-Smtp-Source: ABdhPJybGCxrx4cEzGKIS1AOuVgwbAUhiZhd/eM5knd1tn0gdj1x3PFfwumShPXzdR+OTZq/hYSTGtvZfnzMwKLC6ns=
-X-Received: by 2002:a5d:458a:: with SMTP id p10mr5675209wrq.282.1599198239969;
- Thu, 03 Sep 2020 22:43:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200728085734.609930-1-irogers@google.com> <20200728085734.609930-5-irogers@google.com>
- <969ef797-59ea-69d0-24b9-33bcdff106a1@intel.com> <CAP-5=fUCnBGX0L0Tt3_gmVnt+hvaouJMx6XFErFKk72+xuw9fw@mail.gmail.com>
- <86324041-aafb-f556-eda7-6250ba678f24@intel.com> <CAP-5=fXfBkXovaK3DuSCnwfsnxqW7ZR8-LigtGATgs4gMpZP9A@mail.gmail.com>
-In-Reply-To: <CAP-5=fXfBkXovaK3DuSCnwfsnxqW7ZR8-LigtGATgs4gMpZP9A@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 3 Sep 2020 22:43:48 -0700
-Message-ID: <CAP-5=fXGpQ7awq7-99KJsPhwMS91hvFXEvN4YWfdoVpq7mRvDw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] perf record: Don't clear event's period if set by
- a term
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=DMUyUiGxwLkuXRwzIZCI3aHeCKiCNs1za3sON+lkQV8=;
+        b=VKVK90G3YUbH2mkbSuy7GBsydVPGdfenSgenBSQJDaYyAD6BglsWMphATsNk9THrLj
+         S+Am7DBGqHi/vB7Ww86PhSCJf6TPXEWcr7ajHaUaM7gwNrzEe+Xuw+Q6hXtBzdwoNNOJ
+         dIlAgff4/1ckdCpc6ociJRy79e80Ybr+NrOr/gcZ/xLpPA6HohTPw17gV5ylsJf2SesM
+         Nx1Uh2dOMa0duRCz+XGL9utcepeXi1dVVh+cbPluBLbHQSOOeQyrAJpgBY6ns3IioOuq
+         XOqz9wH01dphJ7Dgg5Es+xEo7otMJXAPY5Lb/CoQtjSZql3sRgOxOR/6syig9EkE8LcK
+         Pswg==
+X-Gm-Message-State: AOAM5322UWasPQAL/dv1YnSjtwIzN+n+EmogkUaOvE1v30np4xjCa/5x
+        8fgWD6Byxz8mMQ02FrauuPW3yY1o4c3Vfw9lPJB7B27QvR63AC9CYDtLf5guMV8e5pMOfVqKAgH
+        tfnDD/u3xs/UymmeIQCmPBFzi
+X-Received: by 2002:a17:907:2456:: with SMTP id yw22mr5574973ejb.337.1599198466998;
+        Thu, 03 Sep 2020 22:47:46 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxc7rW0RenuGiOtkeMtq2rHckaWFc9OQqwxT2i2Vodnsx4LZRtXkGxrD95FE5I2p2oH/MgoBA==
+X-Received: by 2002:a17:907:2456:: with SMTP id yw22mr5574963ejb.337.1599198466788;
+        Thu, 03 Sep 2020 22:47:46 -0700 (PDT)
+Received: from [192.168.3.122] (p4ff23fc5.dip0.t-ipconnect.de. [79.242.63.197])
+        by smtp.gmail.com with ESMTPSA id o3sm4966419edt.79.2020.09.03.22.47.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 22:47:46 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 03/10] mm/memory_hotplug: simplify page offlining
+Date:   Fri, 4 Sep 2020 07:47:45 +0200
+Message-Id: <C2E636DD-EA64-4EC8-A33B-57DB26DB478C@redhat.com>
+References: <20200903145844.2ead558f5bc3ef3d5230d30f@linux-foundation.org>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Baoquan He <bhe@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>
+In-Reply-To: <20200903145844.2ead558f5bc3ef3d5230d30f@linux-foundation.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+X-Mailer: iPhone Mail (17G68)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 8:50 AM Ian Rogers <irogers@google.com> wrote:
->
-> On Tue, Aug 4, 2020 at 7:49 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >
-> > On 4/08/20 4:33 pm, Ian Rogers wrote:
-> > > On Tue, Aug 4, 2020 at 3:08 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> > >>
-> > >> On 28/07/20 11:57 am, Ian Rogers wrote:
-> > >>> If events in a group explicitly set a frequency or period with leader
-> > >>> sampling, don't disable the samples on those events.
-> > >>>
-> > >>> Prior to 5.8:
-> > >>> perf record -e '{cycles/period=12345000/,instructions/period=6789000/}:S'
-> > >>
-> > >> Might be worth explaining this use-case some more.
-> > >> Perhaps add it to the leader sampling documentation for perf-list.
-> > >>
-> > >>> would clear the attributes then apply the config terms. In commit
-> > >>> 5f34278867b7 leader sampling configuration was moved to after applying the
-> > >>> config terms, in the example, making the instructions' event have its period
-> > >>> cleared.
-> > >>> This change makes it so that sampling is only disabled if configuration
-> > >>> terms aren't present.
-> > >>>
-> > >>> Fixes: 5f34278867b7 ("perf evlist: Move leader-sampling configuration")
-> > >>> Signed-off-by: Ian Rogers <irogers@google.com>
-> > >>> ---
-> > >>>  tools/perf/util/record.c | 28 ++++++++++++++++++++--------
-> > >>>  1 file changed, 20 insertions(+), 8 deletions(-)
-> > >>>
-> > >>> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-> > >>> index a4cc11592f6b..01d1c6c613f7 100644
-> > >>> --- a/tools/perf/util/record.c
-> > >>> +++ b/tools/perf/util/record.c
-> > >>> @@ -2,6 +2,7 @@
-> > >>>  #include "debug.h"
-> > >>>  #include "evlist.h"
-> > >>>  #include "evsel.h"
-> > >>> +#include "evsel_config.h"
-> > >>>  #include "parse-events.h"
-> > >>>  #include <errno.h>
-> > >>>  #include <limits.h>
-> > >>> @@ -38,6 +39,9 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
-> > >>>       struct perf_event_attr *attr = &evsel->core.attr;
-> > >>>       struct evsel *leader = evsel->leader;
-> > >>>       struct evsel *read_sampler;
-> > >>> +     struct evsel_config_term *term;
-> > >>> +     struct list_head *config_terms = &evsel->config_terms;
-> > >>> +     int term_types, freq_mask;
-> > >>>
-> > >>>       if (!leader->sample_read)
-> > >>>               return;
-> > >>> @@ -47,16 +51,24 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
-> > >>>       if (evsel == read_sampler)
-> > >>>               return;
-> > >>>
-> > >>> +     /* Determine the evsel's config term types. */
-> > >>> +     term_types = 0;
-> > >>> +     list_for_each_entry(term, config_terms, list) {
-> > >>> +             term_types |= 1 << term->type;
-> > >>> +     }
-> > >>>       /*
-> > >>> -      * Disable sampling for all group members other than the leader in
-> > >>> -      * case the leader 'leads' the sampling, except when the leader is an
-> > >>> -      * AUX area event, in which case the 2nd event in the group is the one
-> > >>> -      * that 'leads' the sampling.
-> > >>> +      * Disable sampling for all group members except those with explicit
-> > >>> +      * config terms or the leader. In the case of an AUX area event, the 2nd
-> > >>> +      * event in the group is the one that 'leads' the sampling.
-> > >>>        */
-> > >>> -     attr->freq           = 0;
-> > >>> -     attr->sample_freq    = 0;
-> > >>> -     attr->sample_period  = 0;
-> > >>> -     attr->write_backward = 0;
-> > >>> +     freq_mask = (1 << EVSEL__CONFIG_TERM_FREQ) | (1 << EVSEL__CONFIG_TERM_PERIOD);
-> > >>> +     if ((term_types & freq_mask) == 0) {
-> > >>
-> > >> It would be nicer to have a helper e.g.
-> > >>
-> > >>         if (!evsel__have_config_term(evsel, FREQ) &&
-> > >>             !evsel__have_config_term(evsel, PERIOD)) {
-> > >
-> > > Sure. The point of doing it this way was to avoid repeatedly iterating
-> > > over the config term list.
-> >
-> > But perhaps it is premature optimization
->
-> The alternative is more loc. I think we can bike shed on this but it's
-> not really changing the substance of the change. I'm keen to try to be
-> efficient where we can as we see issues at scale.
->
-> Thanks,
-> Ian
 
-Ping. Do we want to turn this into multiple O(N) searches using a
-helper rather than 1 as coded here?
 
-Thanks,
-Ian
+> Am 03.09.2020 um 23:58 schrieb Andrew Morton <akpm@linux-foundation.org>:
+>=20
+> =EF=BB=BFOn Wed, 19 Aug 2020 19:59:50 +0200 David Hildenbrand <david@redha=
+t.com> wrote:
+>=20
+>> We make sure that we cannot have any memory holes right at the beginning
+>> of offline_pages(). We no longer need walk_system_ram_range() and can
+>> call test_pages_isolated() and __offline_isolated_pages() directly.
+>>=20
+>> offlined_pages always corresponds to nr_pages, so we can simplify that.
+>=20
+> This patch ran afoul of Pavel's "mm/memory_hotplug: drain per-cpu pages
+> again during memory offline", here:
+>=20
+>> @@ -1481,7 +1459,7 @@ static int count_system_ram_pages_cb(unsigned long s=
+tart_pfn,
+>> int __ref offline_pages(unsigned long start_pfn, unsigned long nr_pages)
+>> {
+>>    const unsigned long end_pfn =3D start_pfn + nr_pages;
+>> -    unsigned long pfn, system_ram_pages =3D 0, offlined_pages =3D 0;
+>> +    unsigned long pfn, system_ram_pages =3D 0;
+>>    int ret, node, nr_isolate_pageblock;
+>>    unsigned long flags;
+>>    struct zone *zone;
+>> @@ -1579,16 +1557,12 @@ int __ref offline_pages(unsigned long start_pfn, u=
+nsigned long nr_pages)
+>>            reason =3D "failure to dissolve huge pages";
+>>            goto failed_removal_isolated;
+>>        }
+>> -        /* check again */
+>> -        ret =3D walk_system_ram_range(start_pfn, end_pfn - start_pfn,
+>> -                        NULL, check_pages_isolated_cb);
+>> -    } while (ret);
+>> -
+>> -    /* Ok, all of our target is isolated.
+>> -       We cannot do rollback at this point. */
+>> -    walk_system_ram_range(start_pfn, end_pfn - start_pfn,
+>> -                  &offlined_pages, offline_isolated_pages_cb);
+>> -    pr_info("Offlined Pages %ld\n", offlined_pages);
+>> +    } while (test_pages_isolated(start_pfn, end_pfn, MEMORY_OFFLINE));
+>> +
+>> +    /* Mark all sections offline and remove free pages from the buddy. *=
+/
+>> +    __offline_isolated_pages(start_pfn, end_pfn);
+>> +    pr_info("Offlined Pages %ld\n", nr_pages);
+>> +
+>>    /*
+>>     * Onlining will reset pagetype flags and makes migrate type
+>=20
+> I did this.  Looks OK?
+>=20
 
-> > >
-> > >>> +             attr->freq           = 0;
-> > >>> +             attr->sample_freq    = 0;
-> > >>> +             attr->sample_period  = 0;
-> > >>
-> > >> If we are not sampling, then maybe we should also put here:
-> > >>
-> > >>                 attr->write_backward = 0;
-> > >>
-> > >>> +     }
-> > >>
-> > >> Then, if we are sampling this evsel shouldn't the backward setting
-> > >> match the leader? e.g.
-> > >>
-> > >>         if (attr->sample_freq)
-> > >>                 attr->write_backward = leader->core.attr.write_backward;
-> > >
-> > > Perhaps that should be a follow up change? This change is trying to
-> > > make the behavior match the previous behavior.
-> >
-> > Sure
-> >
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > >>> +     if ((term_types & (1 << EVSEL__CONFIG_TERM_OVERWRITE)) == 0)
-> > >>> +             attr->write_backward = 0;
-> > >>>
-> > >>>       /*
-> > >>>        * We don't get a sample for slave events, we make them when delivering
-> > >>>
-> > >>
-> >
+Reading on my smartphone, it looks like you squashed both patches?
+
+> From: David Hildenbrand <david@redhat.com>
+> Subject: mm/memory_hotplug: simplify page offlining
+>=20
+> We make sure that we cannot have any memory holes right at the beginning
+> of offline_pages().  We no longer need walk_system_ram_range() and can
+> call test_pages_isolated() and __offline_isolated_pages() directly.
+>=20
+> offlined_pages always corresponds to nr_pages, so we can simplify that.
+>=20
+> Link: https://lkml.kernel.org/r/20200819175957.28465-4-david@redhat.com
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Charan Teja Reddy <charante@codeaurora.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Michel Lespinasse <walken@google.com>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> ---
+>=20
+> mm/memory_hotplug.c |   61 +++++++++++++++++-------------------------
+> 1 file changed, 25 insertions(+), 36 deletions(-)
+>=20
+> --- a/mm/memory_hotplug.c~mm-memory_hotplug-simplify-page-offlining
+> +++ a/mm/memory_hotplug.c
+> @@ -1383,28 +1383,6 @@ do_migrate_range(unsigned long start_pfn
+>    return ret;
+> }
+>=20
+> -/* Mark all sections offline and remove all free pages from the buddy. */=
+
+> -static int
+> -offline_isolated_pages_cb(unsigned long start, unsigned long nr_pages,
+> -            void *data)
+> -{
+> -    unsigned long *offlined_pages =3D (unsigned long *)data;
+> -
+> -    *offlined_pages +=3D __offline_isolated_pages(start, start + nr_pages=
+);
+> -    return 0;
+> -}
+> -
+> -/*
+> - * Check all pages in range, recorded as memory resource, are isolated.
+> - */
+> -static int
+> -check_pages_isolated_cb(unsigned long start_pfn, unsigned long nr_pages,
+> -            void *data)
+> -{
+> -    return test_pages_isolated(start_pfn, start_pfn + nr_pages,
+> -                   MEMORY_OFFLINE);
+> -}
+> -
+> static int __init cmdline_parse_movable_node(char *p)
+> {
+>    movable_node_enabled =3D true;
+> @@ -1491,7 +1469,7 @@ static int count_system_ram_pages_cb(uns
+> int __ref offline_pages(unsigned long start_pfn, unsigned long nr_pages)
+> {
+>    const unsigned long end_pfn =3D start_pfn + nr_pages;
+> -    unsigned long pfn, system_ram_pages =3D 0, offlined_pages =3D 0;
+> +    unsigned long pfn, system_ram_pages =3D 0;
+>    int ret, node, nr_isolate_pageblock;
+>    unsigned long flags;
+>    struct zone *zone;
+> @@ -1589,16 +1567,27 @@ int __ref offline_pages(unsigned long st
+>            reason =3D "failure to dissolve huge pages";
+>            goto failed_removal_isolated;
+>        }
+> -        /* check again */
+> -        ret =3D walk_system_ram_range(start_pfn, end_pfn - start_pfn,
+> -                        NULL, check_pages_isolated_cb);
+> -    } while (ret);
+> -
+> -    /* Ok, all of our target is isolated.
+> -       We cannot do rollback at this point. */
+> -    walk_system_ram_range(start_pfn, end_pfn - start_pfn,
+> -                  &offlined_pages, offline_isolated_pages_cb);
+> -    pr_info("Offlined Pages %ld\n", offlined_pages);
+> +
+> +        /*
+> +         * per-cpu pages are drained in start_isolate_page_range, but if
+> +         * there are still pages that are not free, make sure that we
+> +         * drain again, because when we isolated range we might
+> +         * have raced with another thread that was adding pages to pcp
+> +         * list.
+> +         *
+> +         * Forward progress should be still guaranteed because
+> +         * pages on the pcp list can only belong to MOVABLE_ZONE
+> +         * because has_unmovable_pages explicitly checks for
+> +         * PageBuddy on freed pages on other zones.
+> +         */
+> +        if (ret)
+> +            drain_all_pages(zone);
+> +    } while (test_pages_isolated(start_pfn, end_pfn, MEMORY_OFFLINE));
+
+I think we have to do
+
+ret =3D test_pages_isolated()
+if (ret)
+...
+} while (ret);
+
+So keeping the old code flow. I cannot resend before next Tuesday.
+
+> +
+> +    /* Mark all sections offline and remove free pages from the buddy. */=
+
+> +    __offline_isolated_pages(start_pfn, end_pfn);
+> +    pr_info("Offlined Pages %ld\n", nr_pages);
+> +
+>    /*
+>     * Onlining will reset pagetype flags and makes migrate type
+>     * MOVABLE, so just need to decrease the number of isolated
+> @@ -1609,11 +1598,11 @@ int __ref offline_pages(unsigned long st
+>    spin_unlock_irqrestore(&zone->lock, flags);
+>=20
+>    /* removal success */
+> -    adjust_managed_page_count(pfn_to_page(start_pfn), -offlined_pages);
+> -    zone->present_pages -=3D offlined_pages;
+> +    adjust_managed_page_count(pfn_to_page(start_pfn), -nr_pages);
+> +    zone->present_pages -=3D nr_pages;
+>=20
+>    pgdat_resize_lock(zone->zone_pgdat, &flags);
+> -    zone->zone_pgdat->node_present_pages -=3D offlined_pages;
+> +    zone->zone_pgdat->node_present_pages -=3D nr_pages;
+>    pgdat_resize_unlock(zone->zone_pgdat, &flags);
+>=20
+>    init_per_zone_wmark_min();
+> _
+>=20
+
