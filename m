@@ -2,153 +2,174 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF8FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7099DC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 537BE2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E2222074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:28:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FjGzQ3Bg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WCwnYIsJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgIDP2Q (ORCPT
+        id S1726669AbgIDP2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:28:16 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:36452 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730388AbgIDP2H (ORCPT
+        Fri, 4 Sep 2020 11:28:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:32388 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730889AbgIDP2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:28:07 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 084FJi3i188512;
-        Fri, 4 Sep 2020 15:28:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=oisI33Zpu5BicchVLKMPafK1jiLJVKXmuASoEoz4pKQ=;
- b=FjGzQ3Bgrhfw5U6SmoO0rXJaE2YqfhO1B3Fv07YuD8KaHwoZVPZlHZCJ76J7gEUpp8MR
- 4F+kTT0ma5v59fAi/cJ5hS/u9fPyXBMDLqIpRpGr0rk4v0WiYIKVtH+pKw7TL/6hvoeK
- MV3cL91q8emn5J+mWwXIzL04pLJYPWzpTtsSjs04XTlgVdx2GBR35vgzj47snfcdhTLU
- odgFgNscdvHfVF1NQRz9/LAN1CFsUtf1SCAhblZ6V6SbVcncNTGGvpvKQPbZX/EWPk9Q
- LXyzwfQA1TdhqA6X4FTabNaVy618QQLmKIduaPqBl125xSkm+hhMTtwdhlKAG9UL6haI jg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 339dmndgut-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 04 Sep 2020 15:28:03 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 084FLE6x117158;
-        Fri, 4 Sep 2020 15:26:03 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 33bhs4mxc5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 04 Sep 2020 15:26:02 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 084FQ0xh003470;
-        Fri, 4 Sep 2020 15:26:00 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 04 Sep 2020 08:26:00 -0700
-Date:   Fri, 4 Sep 2020 08:25:59 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ext4: flag as supporting buffered async reads
-Message-ID: <20200904152559.GB6088@magnolia>
-References: <990cc101-d4a1-f346-fe78-0fb5b963b406@kernel.dk>
- <20c844c8-b649-3250-ff5b-b7420f72ff38@kernel.dk>
- <20200822143326.GC199705@mit.edu>
- <aff250ad-4c31-15c2-fa1d-3f3945cb7aa5@kernel.dk>
- <7f0e2d99-5da2-237e-a894-0afddc0ace1e@kernel.dk>
- <049a97db-c362-bcfb-59e5-4b1d2df59383@kernel.dk>
- <5140ba6c-779c-2a71-b7f2-3c3220cdf19c@kernel.dk>
- <68510957-c887-8e26-4a1a-a7a93488586a@kernel.dk>
- <20200904035528.GE558530@mit.edu>
- <73f14124-e660-de0d-95ad-7fb21f18cdef@kernel.dk>
+        Fri, 4 Sep 2020 11:28:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599233286;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=umTLLbWNIKdgBaY8oamQNBodLX2YoAzBBUrL/6iK/FA=;
+        b=WCwnYIsJTFUlu4DrbEiSlwhkzlBMVLJv8O9IVFF6PqVC+ddpya/x1KgBMPudW+FGsQylNW
+        uAGWpJXDJWDDvnb5mriY6Ejq+7rCdWbzU1UPLE6v4koU9uQ3CgZv4TR8av9XX4etFzzGDg
+        R6GCuFm1yID/yVv5OI/35EUOfrD/wos=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-48-J7jT90cyPPyRUO-aN02Akg-1; Fri, 04 Sep 2020 11:28:01 -0400
+X-MC-Unique: J7jT90cyPPyRUO-aN02Akg-1
+Received: by mail-ej1-f71.google.com with SMTP id d8so627620ejt.14
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:28:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=umTLLbWNIKdgBaY8oamQNBodLX2YoAzBBUrL/6iK/FA=;
+        b=hLnRsMbPXySIU7o6BAiJuTKGPJ+Q++o1bRTuYfOQ6uNXjm2dfhx5gMvYO8rjzhaa2b
+         25GDdgMZ6PPfVfy4XRPVteCtBAlsFSv9Sg5sDjrfC0o+gjUr6jpn5CgYjd4liF3LfAjr
+         JtXc25M9m/9Vh0W66BXdW/rjSwEQxMNXIdsfQ3V+9rAPcqMrLOthZ78LqYSR1faR8NWc
+         PDo4oBRjpWhwXJ1Y/fwbITA04dgq8Am/RcscE9SbucMbEkpMtwX8Og7x9+BF5BtK31Ny
+         Xo5n3iq75GUqHo0igk9xXTKIrHOLnPZ822dT5DdU0T8qbCirzTCnwuUytmo9Ox9qMMCg
+         S7tA==
+X-Gm-Message-State: AOAM532+MQM/AG1Jgor8xkfM7OHl98L/AZnvYFKr8utwiPSDbxLdPbS3
+        dUDz60u9LPQfrfsWwpC+wwM7my5iduCKLKQU4bYbhGa46HQBPRHVKPIRcG30/iMCiqsj/gNd+JJ
+        p3rmbVGYAfnqERnU0lWZMrZQe
+X-Received: by 2002:a17:907:37b:: with SMTP id rs27mr8455510ejb.0.1599233280084;
+        Fri, 04 Sep 2020 08:28:00 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy7T7l9O/ybfKdjU+qvLUikdHdaUSCiILWHYrbM5ZVVa+YicRT10pKpVRojS1ZgFXyfzuKgUQ==
+X-Received: by 2002:a17:907:37b:: with SMTP id rs27mr8455494ejb.0.1599233279880;
+        Fri, 04 Sep 2020 08:27:59 -0700 (PDT)
+Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
+        by smtp.gmail.com with ESMTPSA id a18sm6357110ejy.71.2020.09.04.08.27.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 08:27:59 -0700 (PDT)
+From:   Julien Thierry <jthierry@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
+        raphael.gault@arm.com, benh@kernel.crashing.org,
+        Julien Thierry <jthierry@redhat.com>
+Subject: [PATCH v3 00/10] Make check implementation arch agnostic
+Date:   Fri,  4 Sep 2020 16:27:45 +0100
+Message-Id: <20200904152755.32372-1-jthierry@redhat.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73f14124-e660-de0d-95ad-7fb21f18cdef@kernel.dk>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9734 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 adultscore=0 suspectscore=1 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009040134
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9734 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=1
- spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009040134
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 08:51:24AM -0600, Jens Axboe wrote:
-> On 9/3/20 9:55 PM, Theodore Y. Ts'o wrote:
-> > Hi Jens,
-> > 
-> > Sorry, the past few months have been *crazy* insane.  Between Linux
-> > Plumbers Conference organizing, having to deal with some interns at
-> > $WORK, performance reviews, etc.., etc., it's been a perfect storm.
-> > As a result, I was late getting the primary ext4 pull request to
-> > Linus, and he's already yelled at me for a late pull request.
-> > 
-> > As a result, I'm being super paranoid about asking Linus for anything,
-> > even a one-time change, if it's not a bug fix.  And what you are
-> > asking for isn't a bug fix, but enabling a new feature.
-> 
-> That's fine, we blew past the 5.9 window long ago imho. As mentioned,
-> back in May we could have solved this by just adding your acked-by
-> or reviewed-by to the patch like we did for xfs/btrfs. That removes the
-> ext4 tree dependency. Obviously that's no longer a concern for 5.10, but
-> I need to know if we're going one of two routes:
-> 
-> a) I'm queueing this up, in which case I'll still need that ack/review
-> b) you're queueing it up, in which case you can just grab it
-> 
-> I just don't want to end up in the same situation for 5.10, and then
-> we're pushing this out 2 releases at that point...
-> 
-> > Worse, right now, -rc1 and -rc2 is causing random crashes in my
-> > gce-xfstests framework.  Sometimes it happens before we've run even a
-> > single xfstests; sometimes it happens after we have successfully
-> > completed all of the tests, and we're doing a shutdown of the VM under
-> > test.  Other times it happens in the middle of a test run.  Given that
-> > I'm seeing this at -rc1, which is before my late ext4 pull request to
-> > Linus, it's probably not an ext4 related bug.  But it also means that
-> > I'm partially blind in terms of my kernel testing at the moment.  So I
-> > can't even tell Linus that I've run lots of tests and I'm 100%
-> > confident your one-line change is 100% safe.
-> > 
-> > Next week after Labor Day, I should be completely done with the
-> > performance review writeups that are on my plate, and I will hopefully
-> > have a bit more time to try to debug these mysterious failures.  Or
-> > maybe someone else will be able to figure out what the heck is going
-> > wrong, and perhaps -rc3 will make all of these failures go away.
+Hi,
 
-FWIW I saw a strange crash in the xfs/iomap directio code that I could
-never reproduce again, but none of my newly onlined ext4 fstests vms
-have died, and I've been running a combination of 5.9-rc1 and 5.9-rc3 +
-other xfs goodies.  Good luck!
+The current implementation of the check subcommand has various x86 bits
+here and there. In order to prepare objtool to provide check for other
+architectures, add some abstraction over the x86 specific bits, relying
+on objtool arch specific code to provide some necessary operations.
 
---D
+This is part of the effort to implement check for arm64, initiated [1]
+by Raphael. The series is based on top of the separation of check & orc
+subcommands series[2].
 
-> > I'm sorry your frustrated; I'm frustrated too!  But until I can find
-> > the time to do a full bisect (v5.8 works just fine.  v5.9-rc1 is
-> > flakey as hell when booting my test config in a GCE VM), I'm not in a
-> > position to send anything to Linus.
-> 
-> That looks nasty, good luck! Hopefully the bisect will be helpful. FWIW,
-> in the testing I've done (with this patch) on ext4 and with XFS, I
-> haven't seen anything odd. That's using real hardware though, and qemu
-> on the laptop, no GCE.
-> 
-> -- 
-> Jens Axboe
-> 
+I've push both series base on top of tip/objtool/core at [3].
+
+- The first two patches make it simpler for new arches to provide their
+list of kernel headers, without worrying about modifications in the x86
+headers.
+- Patch 3 Moves arch specific macros to more suitable location
+- Patches 4 and 5 add abstraction to handle alternatives
+- Patch 6 adds abstraction to handle jump table
+- Patches 7-10 makes unwind hint definitions shared across architectures
+
+Changes since v2 [4]:
+- Rebased on v5.9-rc1
+- Under tools/objtool/arch/x86/, rename arch_special.c to special.c
+- Rename include/linux/frame.h to inclide/linux/objtool.h
+- Share unwind hint types across architectures
+
+[1] https://lkml.org/lkml/2019/8/16/400
+[2] https://lkml.org/lkml/2020/6/4/675
+[3] https://github.com/julien-thierry/linux/tree/arch-independent-check
+[4] https://lkml.org/lkml/2020/7/30/424
+
+Cheers,
+
+Julien
+
+-->
+
+Julien Thierry (9):
+  objtool: Group headers to check in a single list
+  objtool: Make sync-check consider the target architecture
+  objtool: Move macros describing structures to arch-dependent code
+  objtool: Abstract alternative special case handling
+  objtool: Make relocation in alternative handling arch dependent
+  headers: Rename frame.h
+  objtool: Only include valid definitions depending on source file type
+  objtool: Make unwind hints definitions available to other
+    architectures
+  objtool: Decode unwind hint register depending on architecture
+
+Raphael Gault (1):
+  objtool: Refactor switch-tables code to support other architectures
+
+ arch/x86/include/asm/nospec-branch.h          |   2 +-
+ arch/x86/include/asm/orc_types.h              |  34 ----
+ arch/x86/include/asm/unwind_hints.h           |  50 +-----
+ arch/x86/kernel/kprobes/core.c                |   2 +-
+ arch/x86/kernel/kprobes/opt.c                 |   2 +-
+ arch/x86/kernel/reboot.c                      |   2 +-
+ arch/x86/kernel/unwind_orc.c                  |  11 +-
+ arch/x86/kvm/svm/svm.c                        |   2 +-
+ arch/x86/kvm/vmx/nested.c                     |   2 +-
+ arch/x86/kvm/vmx/vmx.c                        |   2 +-
+ arch/x86/xen/enlighten_pv.c                   |   2 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg.c           |   3 +-
+ include/linux/frame.h                         |  35 -----
+ include/linux/objtool.h                       | 134 ++++++++++++++++
+ kernel/bpf/core.c                             |   2 +-
+ kernel/kexec_core.c                           |   2 +-
+ tools/arch/x86/include/asm/orc_types.h        |  34 ----
+ tools/include/linux/objtool.h                 | 134 ++++++++++++++++
+ tools/objtool/Makefile                        |   2 +-
+ tools/objtool/arch.h                          |   2 +
+ tools/objtool/arch/x86/Build                  |   1 +
+ tools/objtool/arch/x86/decode.c               |  37 +++++
+ tools/objtool/arch/x86/include/arch_special.h |  20 +++
+ tools/objtool/arch/x86/special.c              | 145 ++++++++++++++++++
+ tools/objtool/check.c                         | 137 ++---------------
+ tools/objtool/check.h                         |   7 +-
+ tools/objtool/objtool.h                       |   2 +
+ tools/objtool/orc_dump.c                      |   7 +-
+ tools/objtool/orc_gen.c                       |   5 +-
+ tools/objtool/special.c                       |  48 +-----
+ tools/objtool/special.h                       |  10 ++
+ tools/objtool/sync-check.sh                   |  27 ++--
+ tools/objtool/weak.c                          |   2 -
+ 33 files changed, 561 insertions(+), 346 deletions(-)
+ delete mode 100644 include/linux/frame.h
+ create mode 100644 include/linux/objtool.h
+ create mode 100644 tools/include/linux/objtool.h
+ create mode 100644 tools/objtool/arch/x86/include/arch_special.h
+ create mode 100644 tools/objtool/arch/x86/special.c
+
+--
+2.21.3
+
