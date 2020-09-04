@@ -2,73 +2,181 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B8EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B16C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A198D2087C
+	by mail.kernel.org (Postfix) with ESMTP id CD2E82084D
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:42:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599216170;
-	bh=DFTWqjK+p1fxUtSNHMS3CQCsb9VG5YY6ZHyEUoVL7D8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YpXkwTiAxIJnZUhKVGeTRpgK/97BYb97WrYkfRcXrSdkHNDXU+etYa6Sl69G+hn2+
-	 M48tp/7zIiIuuPp6bRkpq6/grGPXkSuKp3TeU6vJItJrepcdU7Ev7iZc7I4+0t0wLP
-	 6iIv/rAhONpPuuaU8NfMngXJu/qp2mJ7c4B85uyo=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lf0HxtXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730001AbgIDKmj (ORCPT
+        id S1729797AbgIDKmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 06:42:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730226AbgIDKlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:41:21 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE6F020770;
-        Fri,  4 Sep 2020 10:41:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599216081;
-        bh=DFTWqjK+p1fxUtSNHMS3CQCsb9VG5YY6ZHyEUoVL7D8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qwRJcxyeXYlNFR+cCrg4Aa77XUvivpKLnr6yiT5B+ojLFx4jNqsgjQHeEXNG17NEG
-         yA87BvgJEh5XKYq9P1rKxIkawbbvFv+Yl13+CPJO2FGGcEoNIZw/sPnWkoFVDIwVcz
-         2ZcLMh9mMH9PFGrGMXXtPSESteQbDUE1DVFnksqA=
-Date:   Fri, 4 Sep 2020 12:41:43 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL]: soundwire fixes for v5.9
-Message-ID: <20200904104143.GA2718648@kroah.com>
-References: <20200904100818.GZ2639@vkoul-mobl>
+        Fri, 4 Sep 2020 06:42:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729897AbgIDKmW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:42:22 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D76C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 03:42:22 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id x18so968121pll.6
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 03:42:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XIRGdkogEbr2UU4S8C5/CFso+vuQ+g2531Q9ZkBMLUI=;
+        b=lf0HxtXKMSyYzKLuSZFXF6q+/8QS2LhO8X4eKUQrQw27IOgZw9be6+E5iTpwCaRJ+Y
+         lyKPPcsNegehi3VOvhhhAzzIusL4QB6dXCsO35c7v0Fp5veXhVfZosJaSZi/G4qTNGSU
+         cNkdqloEiwKlqfMOBW/bWyzozp0NFaRbDqojxFe8k760+XTlP8ByHp+rwx8EnyDjtvtZ
+         vErWrDcP9K+WXouHmumZN4kVZWTPSbKMIf1ZJvFO55ui1QQ6Bw9Bw4DJBimDzQUAWIhs
+         TqJ+H/xKlfnggpy6RpbkxmV00XLVpT78HaH84BeTUwDcT9jJqwlqlYmtlKnFV3ce1ISp
+         xQrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XIRGdkogEbr2UU4S8C5/CFso+vuQ+g2531Q9ZkBMLUI=;
+        b=nniSXtJ7zCyWbSUVSjV6lXpm+oFsGS220Db/rtKvqgUV1z3nBLYkgnLl8au9bjyfDc
+         g0Drlh9RAUkM/ZVe6VyvEr8IyF2iSpgswd/HeCVYl26DgVBawpkyLSNosGjqKGPHyAuL
+         kASkZPItS9rozUbxjsQnuLECLNXq+DDKcFobaW6pYAbM0Gu/lmmVCyMwejtI26XFpmGT
+         K6ivPTqXdhnAsshAVg3UJul92NpjMqGxEaGRuW1LUfp3UCx3CyvyeapCDf914XUToX0h
+         E+FhfzwEd/b72rTfE2TpN4i+W0gB3Z+OV+3b6UHN/YCGRS8N78iNBS5Y0dpzLL7QkfDB
+         4/ng==
+X-Gm-Message-State: AOAM530kGHPIHvBkBQsKYGcbqIOx3dSC+Ct7fT0EC+dDP4hUDYw1e1YT
+        OPXt/svHUeMn6xIHMThMXdD/
+X-Google-Smtp-Source: ABdhPJx5DfeJqeWBG7RepL9K/iqki0O/TK0I5SNGWwxqxq5OmeX0PIlrHDrBhn1zJA8hoV9b6IRjYg==
+X-Received: by 2002:a17:90a:8589:: with SMTP id m9mr7675652pjn.109.1599216141746;
+        Fri, 04 Sep 2020 03:42:21 -0700 (PDT)
+Received: from mani ([103.59.133.81])
+        by smtp.gmail.com with ESMTPSA id s9sm4985194pgm.40.2020.09.04.03.42.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 04 Sep 2020 03:42:20 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 16:12:11 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>, swboyd@chromium.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Angelo Dureghello <angelo.dureghello@timesys.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Subject: Re: [PATCH 6/6] mmc: Set PROBE_PREFER_ASYNCHRONOUS for drivers that
+ are newer than 5.4
+Message-ID: <20200904104211.GA4056@mani>
+References: <20200903232441.2694866-1-dianders@chromium.org>
+ <20200903162412.6.Ib121debfb18e5f923a3cd38fe9c36aa086c650c5@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200904100818.GZ2639@vkoul-mobl>
+In-Reply-To: <20200903162412.6.Ib121debfb18e5f923a3cd38fe9c36aa086c650c5@changeid>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 03:38:18PM +0530, Vinod Koul wrote:
-> Hello Greg,
+On 0903, Douglas Anderson wrote:
+> This is like commit 3d3451124f3d ("mmc: sdhci-msm: Prefer asynchronous
+> probe") but applied to a whole pile of drivers.  This batch converts
+> the drivers that appeared to have been added after kernel 5.4.
 > 
-> I have two fixes for soundwire subsystem, please pull.
-> 
-> The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
-> 
->   Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git tags/soundwire-5.9-fixes
 
-Pulled and pushed out, thanks.
+Backporting made easy ;)
 
-greg k-h
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+For owl-mmc,
+
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Thanks,
+Mani
+
+> ---
+> 
+>  drivers/mmc/host/meson-mx-sdhc-mmc.c | 1 +
+>  drivers/mmc/host/owl-mmc.c           | 1 +
+>  drivers/mmc/host/sdhci-esdhc-mcf.c   | 1 +
+>  drivers/mmc/host/sdhci-milbeaut.c    | 1 +
+>  drivers/mmc/host/sdhci-of-sparx5.c   | 1 +
+>  5 files changed, 5 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/meson-mx-sdhc-mmc.c b/drivers/mmc/host/meson-mx-sdhc-mmc.c
+> index 53e3f6a4245a..7cd9c0ec2fcf 100644
+> --- a/drivers/mmc/host/meson-mx-sdhc-mmc.c
+> +++ b/drivers/mmc/host/meson-mx-sdhc-mmc.c
+> @@ -903,6 +903,7 @@ static struct platform_driver meson_mx_sdhc_driver = {
+>  	.remove  = meson_mx_sdhc_remove,
+>  	.driver  = {
+>  		.name = "meson-mx-sdhc",
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>  		.of_match_table = of_match_ptr(meson_mx_sdhc_of_match),
+>  	},
+>  };
+> diff --git a/drivers/mmc/host/owl-mmc.c b/drivers/mmc/host/owl-mmc.c
+> index df43f42855e2..ccf214a89eda 100644
+> --- a/drivers/mmc/host/owl-mmc.c
+> +++ b/drivers/mmc/host/owl-mmc.c
+> @@ -689,6 +689,7 @@ MODULE_DEVICE_TABLE(of, owl_mmc_of_match);
+>  static struct platform_driver owl_mmc_driver = {
+>  	.driver = {
+>  		.name	= "owl_mmc",
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>  		.of_match_table = owl_mmc_of_match,
+>  	},
+>  	.probe		= owl_mmc_probe,
+> diff --git a/drivers/mmc/host/sdhci-esdhc-mcf.c b/drivers/mmc/host/sdhci-esdhc-mcf.c
+> index 71bf086a9812..ca7a1690b2a8 100644
+> --- a/drivers/mmc/host/sdhci-esdhc-mcf.c
+> +++ b/drivers/mmc/host/sdhci-esdhc-mcf.c
+> @@ -509,6 +509,7 @@ static int sdhci_esdhc_mcf_remove(struct platform_device *pdev)
+>  static struct platform_driver sdhci_esdhc_mcf_driver = {
+>  	.driver	= {
+>  		.name = "sdhci-esdhc-mcf",
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>  	},
+>  	.probe = sdhci_esdhc_mcf_probe,
+>  	.remove = sdhci_esdhc_mcf_remove,
+> diff --git a/drivers/mmc/host/sdhci-milbeaut.c b/drivers/mmc/host/sdhci-milbeaut.c
+> index 4e7cc0680f94..148b37ac6564 100644
+> --- a/drivers/mmc/host/sdhci-milbeaut.c
+> +++ b/drivers/mmc/host/sdhci-milbeaut.c
+> @@ -333,6 +333,7 @@ static int sdhci_milbeaut_remove(struct platform_device *pdev)
+>  static struct platform_driver sdhci_milbeaut_driver = {
+>  	.driver = {
+>  		.name = "sdhci-milbeaut",
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>  		.of_match_table = of_match_ptr(mlb_dt_ids),
+>  	},
+>  	.probe	= sdhci_milbeaut_probe,
+> diff --git a/drivers/mmc/host/sdhci-of-sparx5.c b/drivers/mmc/host/sdhci-of-sparx5.c
+> index 747f108a0ace..28e4ee69e100 100644
+> --- a/drivers/mmc/host/sdhci-of-sparx5.c
+> +++ b/drivers/mmc/host/sdhci-of-sparx5.c
+> @@ -255,6 +255,7 @@ MODULE_DEVICE_TABLE(of, sdhci_sparx5_of_match);
+>  static struct platform_driver sdhci_sparx5_driver = {
+>  	.driver = {
+>  		.name = "sdhci-sparx5",
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>  		.of_match_table = sdhci_sparx5_of_match,
+>  		.pm = &sdhci_pltfm_pmops,
+>  	},
+> -- 
+> 2.28.0.526.ge36021eeef-goog
+> 
