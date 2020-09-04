@@ -2,266 +2,110 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3D7C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63377C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 771DA20684
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3615E206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:29:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EMjTlfHu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vHJpiwhq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbgIDL1t (ORCPT
+        id S1730112AbgIDL3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:27:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60380 "EHLO
+        Fri, 4 Sep 2020 07:29:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730224AbgIDL1k (ORCPT
+        with ESMTP id S1730199AbgIDL0C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 07:27:40 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60DBC061247
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:27:39 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x14so6341700wrl.12
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 04:27:39 -0700 (PDT)
+        Fri, 4 Sep 2020 07:26:02 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94500C061246
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:24:03 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id c19so7311964wmd.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 04:24:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=erzVCkG6u4B8KH8TDdWQurkzlfyvvTZQMwD1DF4GTNA=;
-        b=EMjTlfHuyvDcRxyjY9iQJUH7v3QH6uHOF5whif6JAm7KZKiX2+MN2Xdd8loS/OERcq
-         sfxPHVS//O1wfzaQwir2aQY3LnpWzGmxXw9elj2ATmbC8eZzM3rYj/vOaVainYJtDOoZ
-         n16B1RA9G6kM5vqHot0cK5z1wlMcL6zqw0hynHPOnGsHcfP1gNssyZSU15gHHyIxpfwT
-         MWI3Suzlv7yndH/GhN8WFoZKZL+zaJAT2KDInBYJQCj1j6fwTZ53Lb0+AziTQqcGzJZN
-         p8+vyeWjI4nOhRhqZZ/cq+IvZ3WAKqIdfLQos3a9DpmKcfIr/r+v5mrvqFqC/PcR6GWf
-         pPLA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8xEgg3o+gLGeESFHktGDRTpfevC+XglUUg4G3rHJx3I=;
+        b=vHJpiwhqX32vEN3zWtbXmY0ePGjmUa5Gzfg+sZKNvZv4hI2s8k2vIpGGM4s7zrwM2s
+         jzbK/FnKxl0PFFSZFeUybLHJBPyZ0oQFAtOhBfFBPwGTsThaPfNFEMz8DD8LWQtDFBhi
+         qvgVFDlw5kPPpWyvWBkwmP1bARRgi7L7CHtoRlDF24c4Jg/hCBgby3aVV8bZ2GogBnEB
+         Dy0rtNsF3LdNzB/rowH6JxMOmHt4+vf4ulr7kJGWT/KdbWTGoNqpgNLpmkcRrRlFgXGz
+         ROSroRFf1uZJnc5DlU+/S8d49BHzXztyHEZ2zrYq5BR45hPZwEwcq+D1xcPT6exLf14J
+         mtdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=erzVCkG6u4B8KH8TDdWQurkzlfyvvTZQMwD1DF4GTNA=;
-        b=aIjstihBNI9wPqxKoM16hTT4omoKyAGYRbrda7KUyG7+HJzmybw0vkzYZsqqeqNjY8
-         uRuBgIUPpyf4lEO9rOr0a9mwTANb6pXVQWxXiZeEvMA8encVZ0cCNat1Y91z2xlNqq4X
-         wDfJz2WWA3GVayPm0I7ODmtZBAvMWqnfD2J4OGYOfQ5RIed4Li0dSx3MU7w9hfEJbhbN
-         oUWFB7qTTotN9udOTCESAWowBwmSLsnCHYa3vaRs17kPgRCp4eljfa2RCc0bEW1EnkSm
-         HfilxrQubB+ppByabn2SuhyXtMw5IQTq6nGQ4jy5JPOTwwYI8oeqWjDmUxXoccPudSo0
-         H/xQ==
-X-Gm-Message-State: AOAM531poQ7xcR0KQVAdIhyrAhL3mEhPPRncQbHg5t2vPAclR6wbngEp
-        6avQlJVIwjkrSb8epUSCX8nKoA==
-X-Google-Smtp-Source: ABdhPJyrZ5pJE+dIVFGKrNJPZj3nIy0bgU/ZTsDc1WNBe8iYX+nzI/nCpe2pQKdaVOs04X6cacTeVA==
-X-Received: by 2002:a5d:6852:: with SMTP id o18mr7062275wrw.113.1599218855784;
-        Fri, 04 Sep 2020 04:27:35 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id 124sm10860162wmd.31.2020.09.04.04.27.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 04:27:34 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 12:27:32 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Alexandru Stan <amstan@chromium.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 1/3] backlight: pwm_bl: Fix interpolation
-Message-ID: <20200904112732.zdfzmjgpcds3jpzo@holly.lan>
-References: <20200721042522.2403410-1-amstan@chromium.org>
- <20200720212502.1.I4dcea1c90e9da3902d466033aa73351e19e49c49@changeid>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8xEgg3o+gLGeESFHktGDRTpfevC+XglUUg4G3rHJx3I=;
+        b=mANBHS+1G2JjYMZs1m5x0/rDIhk4MANcMGjTwh8Fk4xSJQFHq4n4VGsLmYRtALCi7B
+         QAXzsDBpIYTu97dQZX+SoQ4heoSRyJLkGf0K6m2p1GnldNw9AKfcv0avg+nA1yJmj1oz
+         RRFt+1d+cQhp5iNddiqVu8oG+yuH6Wgoy+79j5sbDBZGBsITGrbpu3erhSdqEQ/l/d75
+         9bpgMnPOTilEu2HbKO73NZZaocqlEQAnR0NdgNtURP4MTK/HSmubMA+PxpbkrSYiOxQK
+         lBO0tNe0z6q+XbUHOzYLp0ofwiJllA+IWMmdzQLszJjrQcYGDpuTD19jYQQgWoGc7oNs
+         /QLQ==
+X-Gm-Message-State: AOAM531KQ5w0F1DO6fbyCK1fRT3AjS2Lxj1gDy18eGXDMWzTCh0zHVqM
+        8ZZlHu/yA8BPLtOJfNBTYX9V7w==
+X-Google-Smtp-Source: ABdhPJyFCbGhweiu1wpz6oEb3pkbD1zvGYUpQ+bW5YR2Ya6HcJTdQVy88XJFyHuu6THd5DeOCRXbHg==
+X-Received: by 2002:a1c:4c05:: with SMTP id z5mr6687314wmf.47.1599218642188;
+        Fri, 04 Sep 2020 04:24:02 -0700 (PDT)
+Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
+        by smtp.googlemail.com with ESMTPSA id h8sm10573821wrw.68.2020.09.04.04.24.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Sep 2020 04:24:01 -0700 (PDT)
+Subject: Re: [PATCH v3 3/5] ASoC: qcom: Add support for lpass hdmi driver
+To:     Srinivasa Rao Mandadapu <srivasam@codeaurora.org>,
+        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        rohitkr@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     V Sujith Kumar Reddy <vsujithk@codeaurora.org>
+References: <1598855964-1042-1-git-send-email-srivasam@codeaurora.org>
+ <1598855964-1042-4-git-send-email-srivasam@codeaurora.org>
+ <ac1f0b9a-8e07-464c-b0df-6b8e5665a632@linaro.org>
+ <0101017458d94c82-96bbcff0-018e-4f5d-8273-7869c3599d32-000000@us-west-2.amazonses.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <b18ed556-09f5-1d2a-b8fc-56a52429addc@linaro.org>
+Date:   Fri, 4 Sep 2020 12:24:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720212502.1.I4dcea1c90e9da3902d466033aa73351e19e49c49@changeid>
+In-Reply-To: <0101017458d94c82-96bbcff0-018e-4f5d-8273-7869c3599d32-000000@us-west-2.amazonses.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 09:25:20PM -0700, Alexandru Stan wrote:
-> Whenever num-interpolated-steps was larger than the distance
-> between 2 consecutive brightness levels the table would get really
-> discontinuous. The slope of the interpolation would stick with
-> integers only and if it was 0 the whole line segment would get skipped.
-> 
-> Example settings:
-> 	brightness-levels = <0 1 2 4 8 16 32 64 128 256>;
-> 	num-interpolated-steps = <16>;
-> 
-> The distances between 1 2 4 and 8 would be 1, and only starting with 16
-> it would start to interpolate properly.
-> 
-> Let's change it so there's always interpolation happening, even if
-> there's no enough points available (read: values in the table would
-> appear more than once). This should match the expected behavior much
-> more closely.
-> 
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> Signed-off-by: Alexandru Stan <amstan@chromium.org>
-
-Apologies for the delay. Patch 2/3 meant I had some thinking to do...
-and then the holiday's took their toll.
-
-Overall this looks good, just some quibbles about broken 64-bit maths.
 
 
-> ---
-> 
->  drivers/video/backlight/pwm_bl.c | 70 ++++++++++++++------------------
->  1 file changed, 31 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> index 82b8d7594701..5193a72305a2 100644
-> --- a/drivers/video/backlight/pwm_bl.c
-> +++ b/drivers/video/backlight/pwm_bl.c
-> @@ -235,8 +235,7 @@ static int pwm_backlight_parse_dt(struct device *dev,
->  				  struct platform_pwm_backlight_data *data)
->  {
->  	struct device_node *node = dev->of_node;
-> -	unsigned int num_levels = 0;
-> -	unsigned int levels_count;
-> +	unsigned int num_levels;
->  	unsigned int num_steps = 0;
->  	struct property *prop;
->  	unsigned int *table;
-> @@ -265,12 +264,11 @@ static int pwm_backlight_parse_dt(struct device *dev,
->  	if (!prop)
->  		return 0;
->  
-> -	data->max_brightness = length / sizeof(u32);
-> +	num_levels = length / sizeof(u32);
->  
->  	/* read brightness levels from DT property */
-> -	if (data->max_brightness > 0) {
-> -		size_t size = sizeof(*data->levels) * data->max_brightness;
-> -		unsigned int i, j, n = 0;
-> +	if (num_levels > 0) {
-> +		size_t size = sizeof(*data->levels) * num_levels;
->  
->  		data->levels = devm_kzalloc(dev, size, GFP_KERNEL);
->  		if (!data->levels)
-> @@ -278,7 +276,7 @@ static int pwm_backlight_parse_dt(struct device *dev,
->  
->  		ret = of_property_read_u32_array(node, "brightness-levels",
->  						 data->levels,
-> -						 data->max_brightness);
-> +						 num_levels);
->  		if (ret < 0)
->  			return ret;
->  
-> @@ -303,7 +301,13 @@ static int pwm_backlight_parse_dt(struct device *dev,
->  		 * between two points.
->  		 */
->  		if (num_steps) {
-> -			if (data->max_brightness < 2) {
-> +			unsigned int num_input_levels = num_levels;
-> +			unsigned int i;
-> +			u32 x1, x2, x;
-> +			u32 y1, y2;
-> +			s64 dx, dy;
+On 04/09/2020 12:21, Srinivasa Rao Mandadapu wrote:
+>>
+>> Before going into detail review, I see real issue in the overall 
+>> approach here to add new interface to exiting lpass!!
+>>
+>> Intention of struct lpass_variant is to address differences between 
+>> SoCs or different lpass versions. But you should not duplicate this 
+>> and use it for addressing differences between each lpass interfaces!
+>> All the dai related register offsets should still go in to this 
+>> structure and driver should be able to know which dai its talking to 
+>> based on snd_soc_dai_driver id and select correct register offset.
+>>
+> Do You suggest to use separate structure like struct 
+> lpass_hdmi_interface in lpass_data?
 
-dx should be 32-bit. It will be truncated to 32-bit when passed to
-div_s64() so this type is actively misleading about how the maths
-works.
+No, you should just put every thing lpass_variant as you did but no "id" 
+thing in that.
 
-
-> +
-> +			if (num_input_levels < 2) {
->  				dev_err(dev, "can't interpolate\n");
->  				return -EINVAL;
->  			}
-> @@ -313,14 +317,7 @@ static int pwm_backlight_parse_dt(struct device *dev,
->  			 * taking in consideration the number of interpolated
->  			 * steps between two levels.
->  			 */
-> -			for (i = 0; i < data->max_brightness - 1; i++) {
-> -				if ((data->levels[i + 1] - data->levels[i]) /
-> -				   num_steps)
-> -					num_levels += num_steps;
-> -				else
-> -					num_levels++;
-> -			}
-> -			num_levels++;
-> +			num_levels = (num_input_levels - 1) * num_steps + 1;
->  			dev_dbg(dev, "new number of brightness levels: %d\n",
->  				num_levels);
->  
-> @@ -332,24 +329,25 @@ static int pwm_backlight_parse_dt(struct device *dev,
->  			table = devm_kzalloc(dev, size, GFP_KERNEL);
->  			if (!table)
->  				return -ENOMEM;
-> -
-> -			/* Fill the interpolated table. */
-> -			levels_count = 0;
-> -			for (i = 0; i < data->max_brightness - 1; i++) {
-> -				value = data->levels[i];
-> -				n = (data->levels[i + 1] - value) / num_steps;
-> -				if (n > 0) {
-> -					for (j = 0; j < num_steps; j++) {
-> -						table[levels_count] = value;
-> -						value += n;
-> -						levels_count++;
-> -					}
-> -				} else {
-> -					table[levels_count] = data->levels[i];
-> -					levels_count++;
-> +			/*
-> +			 * Fill the interpolated table[x] = y
-> +			 * by draw lines between each (x1, y1) to (x2, y2).
-> +			 */
-> +			dx = num_steps;
-> +			for (i = 0; i < num_input_levels - 1; i++) {
-> +				x1 = i * dx;
-> +				x2 = x1 + dx;
-> +				y1 = data->levels[i];
-> +				y2 = data->levels[i + 1];
-> +				dy = y2 - y1;
-
-This is an u32 expression being assigned to a s64. I could be rusty on
-my fixed point maths but won't this promote too late for the 64-bitness
-of dy to be useful?
-
-
-Daniel.
-
-> +
-> +				for (x = x1; x < x2; x++) {
-> +					table[x] = y1 +
-> +						div_s64(dy * (x - x1), dx);
->  				}
->  			}
-> -			table[levels_count] = data->levels[i];
-> +			/* Fill in the last point, since no line starts here. */
-> +			table[x2] = y2;
->  
->  			/*
->  			 * As we use interpolation lets remove current
-> @@ -358,15 +356,9 @@ static int pwm_backlight_parse_dt(struct device *dev,
->  			 */
->  			devm_kfree(dev, data->levels);
->  			data->levels = table;
-> -
-> -			/*
-> -			 * Reassign max_brightness value to the new total number
-> -			 * of brightness levels.
-> -			 */
-> -			data->max_brightness = num_levels;
->  		}
->  
-> -		data->max_brightness--;
-> +		data->max_brightness = num_levels - 1;
->  	}
->  
->  	return 0;
-> -- 
-> 2.27.0
+--srini
