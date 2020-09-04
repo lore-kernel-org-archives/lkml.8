@@ -2,216 +2,106 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A4DC10DAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F198FC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02D63206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8254206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:49:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O8SbpTj6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAXXI0j6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbgIDCrY (ORCPT
+        id S1729603AbgIDCtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 22:47:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36886 "EHLO
+        Thu, 3 Sep 2020 22:49:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729498AbgIDCrX (ORCPT
+        with ESMTP id S1728697AbgIDCtj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 22:47:23 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3C79C061244;
-        Thu,  3 Sep 2020 19:47:22 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id w186so5179445qkd.1;
-        Thu, 03 Sep 2020 19:47:22 -0700 (PDT)
+        Thu, 3 Sep 2020 22:49:39 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF12C061244;
+        Thu,  3 Sep 2020 19:49:38 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id q3so451090pls.11;
+        Thu, 03 Sep 2020 19:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kz3m+8wx1zjPfndL+ovPIpx43LfU3nilyG5FcsGL0YI=;
-        b=O8SbpTj61fCuMazPWfeQP3TbgvXv1SWlWeYoybOW/wtRdpU36mDowrty3+teqx/vfi
-         jbS0Ob/2wUR1H0QeLHCBYPVhPZcyMQzomiFndO7PSuMd73/ctnEMIcJYBWz5fouXNgFx
-         A+QFQgfP4hOEbNj+EA/Tk5K3EYNAz3A3keUF739DRe+oz/HUt81DHh7UNauW3T/BmZjE
-         qloEzrcVYYpEcXO8e52Q7QRpt/gEpXoAeaFpfu1/VdTJrbG4kVN+Wz45KHQ9RMKgxGVX
-         avU/n7D+tmT2z2aisPqJBlBV3pNXxZEi6+lxcVomd5lPpICuU/T3OeA8pmoRBSV+ib3M
-         9tTQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Bo4/9PBXNu/1dIB9MXSEsITbBb0mlowTelVR5S5i/8w=;
+        b=mAXXI0j6O4LJXriRLXXIZogwS2WEUvWNFeVokAem2wUeBSaWU30+LdknBKOgNPaYUK
+         /dmKiJ5GFhYNvoNwC193IPnS5tjxJl54A4oU4mnw/9ETxuHqiCyF5QlgHVQE3wSWhTka
+         aMSB0v8k0gJ+d5WBBVxSDW/HScppLnpNbbUkAYlH+PUmuecObH8yNWO4RbgaxA3atJfY
+         jRmna/jDj/zqEj9OnLYCxKWzNeqwXulRoW54vwDVDFgLs0Tr1XddXsQm7Zc7BJs4Ukd/
+         mOEMQl/NdQKxWzaY/hmqrfAocqgEBsXwi4m160XHBggV3yfPFRGE8BeiBEtssBA+od70
+         Wdaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kz3m+8wx1zjPfndL+ovPIpx43LfU3nilyG5FcsGL0YI=;
-        b=U1ollmKs2kVq0HXwWfL5JQDZIKuqwogR8TSUdTtjb2J0NizyZGZDdP3iC9tiFmPW6v
-         JguiQ2eTCRdjLLY2hbrpzVuWh+ph3Obj3Paa4qVmSY002SJvpbSe9F8CYiFtwn5BMDAi
-         5plI9i0iNUmAD8q1vgN7kqlAkas+/qCQyb2DzRBdUp/88fvjgv9dQ2vafLJiMWq/DlIl
-         +1ajUUg38HBUucm75ZOdNBesWmNN5Ofkxv0WutBRQBkrCcPe11j/NOoCxSmqxE0CPl4i
-         Vo2xSdBCB/RRcfhV9NPpqrbOnWP4YG+WpzXqudRYCUYIkXxLXYyCCtCmkjBCI+nJp/HB
-         OC+A==
-X-Gm-Message-State: AOAM532oVde8u+mj8ANcWo2hOgDLfyxDreLM1xb5j9V2QK1lE/cMP5p9
-        aUKXYvMHbC01X5JTIxdDHkM=
-X-Google-Smtp-Source: ABdhPJwrOIuPjHqe/6RExl21TyiZPu8Tj0Fcyx9KIUVEUnUYf4sdPUe9NI0p9kv2s6lcDjU8GC8/AA==
-X-Received: by 2002:a37:74c1:: with SMTP id p184mr5836777qkc.336.1599187641957;
-        Thu, 03 Sep 2020 19:47:21 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id g14sm3595958qkk.38.2020.09.03.19.47.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Sep 2020 19:47:21 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 7E44427C0054;
-        Thu,  3 Sep 2020 22:47:20 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 03 Sep 2020 22:47:20 -0400
-X-ME-Sender: <xms:t6pRXxx3uLBSuiHM2DCSygFN4SyaR3YLFZz2hWJD8S4xgfb7gG67Tg>
-    <xme:t6pRXxT7U1egR0Q31CdkKwoUeIFsNHBZzVSZs5b70EilkK4DGZgBlfc1pRYZHAD8t
-    6SpqVf7MBBnzWaJbg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegvddgieefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhepvdelieegudfggeevjefhjeevueevieetjeeikedvgfejfeduheefhffggedv
-    geejnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
-    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
-    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:t6pRX7U3JmhhZBt8XNmR4FgvabNZ4sj-DRrEEteFFyxbHAy7XDQ1Gw>
-    <xmx:t6pRXzjCEUSGHhf7eMG-KUphjtp3x2EubWs-wClv0pwUvcnD7W9IlQ>
-    <xmx:t6pRXzDG8ccGIpHZ2ZLgFzJwTAm0Zx3fkWy2rv_GLHlEFYIt_h_qag>
-    <xmx:uKpRX36-1Z9kNLnBXI3xYBetHefoms-ahZ0rND4rMsrwMY25IeWOQJambeA>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4530A306005F;
-        Thu,  3 Sep 2020 22:47:19 -0400 (EDT)
-Date:   Fri, 4 Sep 2020 10:47:17 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr, akiyks@gmail.com
-Subject: Re: [PATCH kcsan 6/9] tools/memory-model: Expand the cheatsheet.txt
- notion of relaxed
-Message-ID: <20200904024717.GC7503@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
- <20200831182037.2034-6-paulmck@kernel.org>
- <20200902035448.GC49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200902101412.GC1362448@hirez.programming.kicks-ass.net>
- <20200902123715.GD49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200903233037.GW29330@paulmck-ThinkPad-P72>
- <20200904005921.GA7503@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200904023955.GX29330@paulmck-ThinkPad-P72>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Bo4/9PBXNu/1dIB9MXSEsITbBb0mlowTelVR5S5i/8w=;
+        b=Okm0C5iPGmsH9CIND1Oc+Gd3PiHnD6+uAXfrPHqYMuntDlnmIMdoFazIat56ZzZml5
+         1MM3x97FzTLqFq8FP7bL/bd0ayn3OcbCklsygFBa8/JzHpNIlSN4lbU4mGv2F6LlzjhG
+         PQvQgR3iDKhjSWaYWJE6nBNJlGo5gM/RcJ0oHkePPtTvaDJTlw8+eNxUzgZEKJ4Um5Ww
+         SgUNNsx7tyQWFS1//6HVN7fNRFPBmnkzyeJZTkZ5cZirQv18Lym3uiSqOj1FrO1LB9PV
+         51KwNWmyg5mbFXNvrJKKg3XVYy6F2oEshbCJ1LlbwKm8pp+Yntz1QtXDISGScrR/BXzE
+         coaA==
+X-Gm-Message-State: AOAM530L8jki+v9dre6qD0sNPmufo+9WN2cfo/8jD0E/92smZ5nuQ5aK
+        KGreqm2HXXNOTYVFns0TJwb/C/4ZJ+F2qA==
+X-Google-Smtp-Source: ABdhPJyS/kWT3dPVeGZLPIDezmSRou3+sDO7XgPWY/SrIPeibY6kf9NwWOOFpTr8K+q6C5mTI/BSGg==
+X-Received: by 2002:a17:90a:f309:: with SMTP id ca9mr6214354pjb.0.1599187777840;
+        Thu, 03 Sep 2020 19:49:37 -0700 (PDT)
+Received: from [192.168.1.5] ([159.192.81.40])
+        by smtp.googlemail.com with ESMTPSA id v17sm4551312pfn.24.2020.09.03.19.49.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Sep 2020 19:49:37 -0700 (PDT)
+Subject: Re: [PATCH] ALSA: usb-audio: quirks: Add USB_QUIRK_DISCONNECT_SUSPEND
+ quirk for Lenovo A630Z TIO built-in usb audio card
+To:     Penghao <penghao@uniontech.com>, gregkh@linuxfoundation.org
+Cc:     johan@kernel.org, jonathan@jdcox.net, kai.heng.feng@canonical.com,
+        gustavo.padovan@collabora.com, tomasz@meresinski.eu,
+        hdegoede@redhat.com, kerneldev@karsmulder.nl,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200904014516.12298-1-penghao@uniontech.com>
+From:   Lars Melin <larsm17@gmail.com>
+Message-ID: <9fc6c4d7-4298-0b9d-b3a0-d6eb9573575e@gmail.com>
+Date:   Fri, 4 Sep 2020 09:49:32 +0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904023955.GX29330@paulmck-ThinkPad-P72>
+In-Reply-To: <20200904014516.12298-1-penghao@uniontech.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 07:39:55PM -0700, Paul E. McKenney wrote:
-> On Fri, Sep 04, 2020 at 08:59:21AM +0800, Boqun Feng wrote:
-> > On Thu, Sep 03, 2020 at 04:30:37PM -0700, Paul E. McKenney wrote:
-> 
-> [ . . . ]
-> 
-> > > How about like this, adding "Relaxed" to the WRITE_ONCE() and READ_ONCE()
-> > > rows and "RMW" to the "Relaxed operation" row?
-> > > 
-> > 
-> > Much better now, thanks! However ...
-> > 
-> > > The file contents are followed by a diff against the previous version.
-> > > 
-> > > 							Thanx, Paul
-> > > 
-> > > ------------------------------------------------------------------------
-> 
-> [ . . . ]
-> 
-> > > Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
-> > > 		  operation, an unsuccessful RMW operation, READ_ONCE(),
-> > > 		  WRITE_ONCE(), or one of the atomic_read() and
-> > > 		  atomic_set() family of operations.
-> > 
-> > And:
-> > 		  a RMW operation that doesn't return any value (e.g
-> > 		  atomic_inc()), IOW it's a void Relaxed operation.
-> 
-> Good point!  Please see below.
+On 9/4/2020 08:45, Penghao wrote:
+
+> --- a/drivers/usb/core/quirks.c
+> +++ b/drivers/usb/core/quirks.c
+> @@ -403,6 +403,10 @@ static const struct usb_device_id usb_quirk_list[] = {
+>   	{ USB_DEVICE(0x12d1, 0x15c3), .driver_info =
+>   			USB_QUIRK_DISCONNECT_SUSPEND },
+>   
+> +	/* Lenovo A630Z TIO build-in usb sound card */
+> +	{ USB_DEVICE9(0x17ef, 0xa012), driver_info =
+> +			USB_QUIRK_DISCONNECT_SUSPEND },
+> +
+>   	/* SKYMEDI USB_DRIVE */
+>   	{ USB_DEVICE(0x1516, 0x8628), .driver_info = USB_QUIRK_RESET_RESUME },
+>   
 > 
 
-Looks good to me ;-)
+This list was sorted in a beautiful ascending order of vid, pid before 
+you entered your quirk..
 
-
-Acked-by: Boqun Feng <boqun.feng@gmail.com>
-
-
-Regards,
-Boqun
-
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
->                                   Prior Operation     Subsequent Operation
->                                   ---------------  ---------------------------
->                                C  Self  R  W  RMW  Self  R  W  DR  DW  RMW  SV
->                               --  ----  -  -  ---  ----  -  -  --  --  ---  --
-> 
-> Relaxed store                        Y                                       Y
-> Relaxed load                         Y                          Y   Y        Y
-> Relaxed RMW operation                Y                          Y   Y        Y
-> rcu_dereference()                    Y                          Y   Y        Y
-> Successful *_acquire()               R                   Y  Y   Y   Y    Y   Y
-> Successful *_release()         C        Y  Y    Y     W                      Y
-> smp_rmb()                               Y       R        Y      Y        R
-> smp_wmb()                                  Y    W           Y       Y    W
-> smp_mb() & synchronize_rcu()  CP        Y  Y    Y        Y  Y   Y   Y    Y
-> Successful full non-void RMW  CP     Y  Y  Y    Y     Y  Y  Y   Y   Y    Y   Y
-> smp_mb__before_atomic()       CP        Y  Y    Y        a  a   a   a    Y
-> smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
-> 
-> 
-> Key:	Relaxed:  A relaxed operation is either READ_ONCE(), WRITE_ONCE(),
-> 		  a *_relaxed() RMW operation, an unsuccessful RMW
-> 		  operation, a non-value-returning RMW operation such
-> 		  as atomic_inc(), or one of the atomic*_read() and
-> 		  atomic*_set() family of operations.
-> 	C:	  Ordering is cumulative
-> 	P:	  Ordering propagates
-> 	R:	  Read, for example, READ_ONCE(), or read portion of RMW
-> 	W:	  Write, for example, WRITE_ONCE(), or write portion of RMW
-> 	Y:	  Provides ordering
-> 	a:	  Provides ordering given intervening RMW atomic operation
-> 	DR:	  Dependent read (address dependency)
-> 	DW:	  Dependent write (address, data, or control dependency)
-> 	RMW:	  Atomic read-modify-write operation
-> 	SELF:	  Orders self, as opposed to accesses before and/or after
-> 	SV:	  Orders later accesses to the same variable
-> 
-> ------------------------------------------------------------------------
-> 
-> diff --git a/tools/memory-model/Documentation/cheatsheet.txt b/tools/memory-model/Documentation/cheatsheet.txt
-> index 4146b8d..99d0087 100644
-> --- a/tools/memory-model/Documentation/cheatsheet.txt
-> +++ b/tools/memory-model/Documentation/cheatsheet.txt
-> @@ -17,10 +17,11 @@ smp_mb__before_atomic()       CP        Y  Y    Y        a  a   a   a    Y
->  smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
->  
->  
-> -Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
-> -		  operation, an unsuccessful RMW operation, READ_ONCE(),
-> -		  WRITE_ONCE(), or one of the atomic_read() and
-> -		  atomic_set() family of operations.
-> +Key:	Relaxed:  A relaxed operation is either READ_ONCE(), WRITE_ONCE(),
-> +		  a *_relaxed() RMW operation, an unsuccessful RMW
-> +		  operation, a non-value-returning RMW operation such
-> +		  as atomic_inc(), or one of the atomic*_read() and
-> +		  atomic*_set() family of operations.
->  	C:	  Ordering is cumulative
->  	P:	  Ordering propagates
->  	R:	  Read, for example, READ_ONCE(), or read portion of RMW
+rgds
+Lars
