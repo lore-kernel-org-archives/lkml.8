@@ -2,95 +2,184 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4D6C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638ADC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6F4E204FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:51:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="eYKsJWfO";
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="PExss+wQ"
+	by mail.kernel.org (Postfix) with ESMTP id 35C0E20658
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730647AbgIDNvi (ORCPT
+        id S1730432AbgIDNwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:51:38 -0400
-Received: from smtp119.ord1d.emailsrvr.com ([184.106.54.119]:60930 "EHLO
-        smtp119.ord1d.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730642AbgIDNrO (ORCPT
+        Fri, 4 Sep 2020 09:52:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730650AbgIDNrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:47:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
-        s=20190322-9u7zjiwi; t=1599225716;
-        bh=5SJnI8WDnM0hEpvsccPY+yQSaaqaRJ06uiCw7yBDmlg=;
-        h=From:To:Subject:Date:From;
-        b=eYKsJWfOiinOZwOPFa1lPI3lop0cBdFq6UdYRd7zYzVaKaThjIeNVkz/qOz4zWixa
-         J2RDMNmQr7D1LkUQyg0utINYinplmS5imXbuNsey67xPNJq6J40ATGE6HQzghG9/Hk
-         zM1JEbeUJo+oz4E4OKgz+hMmVqTDfGMcrs359B6E=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1599225716;
-        bh=5SJnI8WDnM0hEpvsccPY+yQSaaqaRJ06uiCw7yBDmlg=;
-        h=From:To:Subject:Date:From;
-        b=PExss+wQoqgJVlLurQZLNPXcgP0OwsxACB1jdFkaomusbvHYp7Qp7A2KZBpkI/KuA
-         6rzFTvGrXN45mBHNEOpsWTT+CAduuHShwkifgbJ2K/5NNNOQxyjY2Jgs4IqETOJ8cf
-         f2gf7x88pavZQ27MhqhbfoSy5mN6MRsgILy9/ny8=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp23.relay.ord1d.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 54E47200E6;
-        Fri,  4 Sep 2020 09:21:55 -0400 (EDT)
-From:   Ian Abbott <abbotti@mev.co.uk>
-To:     linux-input@vger.kernel.org
-Cc:     David Rheinsberg <david.rheinsberg@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Ian Abbott <abbotti@mev.co.uk>, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] HID: wiimote: make handlers[] const
-Date:   Fri,  4 Sep 2020 14:21:42 +0100
-Message-Id: <20200904132143.9496-2-abbotti@mev.co.uk>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904132143.9496-1-abbotti@mev.co.uk>
-References: <20200904132143.9496-1-abbotti@mev.co.uk>
+        Fri, 4 Sep 2020 09:47:11 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B401C061246
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 06:36:52 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1kEBtX-0007na-45; Fri, 04 Sep 2020 15:36:47 +0200
+Message-ID: <81a021cc6b58d46b85bb65a368c3eb9f1568a16f.camel@pengutronix.de>
+Subject: Re: [PATCH v10 05/30] drm: etnaviv: fix common struct sg_table
+ related issues
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org
+Date:   Fri, 04 Sep 2020 15:37:06 +0200
+In-Reply-To: <20200904131711.12950-6-m.szyprowski@samsung.com>
+References: <20200904131711.12950-1-m.szyprowski@samsung.com>
+         <CGME20200904133456eucas1p10d0fe1628474fcd4803a7af4437be4e1@eucas1p1.samsung.com>
+         <20200904131711.12950-6-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Classification-ID: ee464daf-2bdc-4db4-9ef3-697c4738b247-2-1
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The `handlers[]` array contents are never modified, so use the `const`
-qualifier.
+On Fr, 2020-09-04 at 15:16 +0200, Marek Szyprowski wrote:
+> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+> returns the number of the created entries in the DMA address space.
+> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+> dma_unmap_sg must be called with the original number of the entries
+> passed to the dma_map_sg().
+> 
+> struct sg_table is a common structure used for describing a non-contiguous
+> memory buffer, used commonly in the DRM and graphics subsystems. It
+> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+> and DMA mapped pages (nents entry).
+> 
+> It turned out that it was a common mistake to misuse nents and orig_nents
+> entries, calling DMA-mapping functions with a wrong number of entries or
+> ignoring the number of mapped entries returned by the dma_map_sg()
+> function.
+> 
+> To avoid such issues, lets use a common dma-mapping wrappers operating
+> directly on the struct sg_table objects and use scatterlist page
+> iterators where possible. This, almost always, hides references to the
+> nents and orig_nents entries, making the code robust, easier to follow
+> and copy/paste safe.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
----
- drivers/hid/hid-wiimote-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Acked-by: Lucas Stach <l.stach@pengutronix.de>
 
-diff --git a/drivers/hid/hid-wiimote-core.c b/drivers/hid/hid-wiimote-core.c
-index e484c3618dec..e03a0ba5611a 100644
---- a/drivers/hid/hid-wiimote-core.c
-+++ b/drivers/hid/hid-wiimote-core.c
-@@ -1586,7 +1586,7 @@ struct wiiproto_handler {
- 	void (*func)(struct wiimote_data *wdata, const __u8 *payload);
- };
- 
--static struct wiiproto_handler handlers[] = {
-+static const struct wiiproto_handler handlers[] = {
- 	{ .id = WIIPROTO_REQ_STATUS, .size = 6, .func = handler_status },
- 	{ .id = WIIPROTO_REQ_STATUS, .size = 2, .func = handler_status_K },
- 	{ .id = WIIPROTO_REQ_DATA, .size = 21, .func = handler_data },
-@@ -1618,7 +1618,7 @@ static int wiimote_hid_event(struct hid_device *hdev, struct hid_report *report,
- 							u8 *raw_data, int size)
- {
- 	struct wiimote_data *wdata = hid_get_drvdata(hdev);
--	struct wiiproto_handler *h;
-+	const struct wiiproto_handler *h;
- 	int i;
- 	unsigned long flags;
- 
--- 
-2.28.0
+> ---
+>  drivers/gpu/drm/etnaviv/etnaviv_gem.c | 12 +++++-------
+>  drivers/gpu/drm/etnaviv/etnaviv_mmu.c | 15 ++++-----------
+>  2 files changed, 9 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
+> index f06e19e7be04..eaf1949bc2e4 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
+> @@ -27,7 +27,7 @@ static void etnaviv_gem_scatter_map(struct etnaviv_gem_object *etnaviv_obj)
+>  	 * because display controller, GPU, etc. are not coherent.
+>  	 */
+>  	if (etnaviv_obj->flags & ETNA_BO_CACHE_MASK)
+> -		dma_map_sg(dev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL);
+> +		dma_map_sgtable(dev->dev, sgt, DMA_BIDIRECTIONAL, 0);
+>  }
+>  
+>  static void etnaviv_gem_scatterlist_unmap(struct etnaviv_gem_object *etnaviv_obj)
+> @@ -51,7 +51,7 @@ static void etnaviv_gem_scatterlist_unmap(struct etnaviv_gem_object *etnaviv_obj
+>  	 * discard those writes.
+>  	 */
+>  	if (etnaviv_obj->flags & ETNA_BO_CACHE_MASK)
+> -		dma_unmap_sg(dev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL);
+> +		dma_unmap_sgtable(dev->dev, sgt, DMA_BIDIRECTIONAL, 0);
+>  }
+>  
+>  /* called with etnaviv_obj->lock held */
+> @@ -404,9 +404,8 @@ int etnaviv_gem_cpu_prep(struct drm_gem_object *obj, u32 op,
+>  	}
+>  
+>  	if (etnaviv_obj->flags & ETNA_BO_CACHED) {
+> -		dma_sync_sg_for_cpu(dev->dev, etnaviv_obj->sgt->sgl,
+> -				    etnaviv_obj->sgt->nents,
+> -				    etnaviv_op_to_dma_dir(op));
+> +		dma_sync_sgtable_for_cpu(dev->dev, etnaviv_obj->sgt,
+> +					 etnaviv_op_to_dma_dir(op));
+>  		etnaviv_obj->last_cpu_prep_op = op;
+>  	}
+>  
+> @@ -421,8 +420,7 @@ int etnaviv_gem_cpu_fini(struct drm_gem_object *obj)
+>  	if (etnaviv_obj->flags & ETNA_BO_CACHED) {
+>  		/* fini without a prep is almost certainly a userspace error */
+>  		WARN_ON(etnaviv_obj->last_cpu_prep_op == 0);
+> -		dma_sync_sg_for_device(dev->dev, etnaviv_obj->sgt->sgl,
+> -			etnaviv_obj->sgt->nents,
+> +		dma_sync_sgtable_for_device(dev->dev, etnaviv_obj->sgt,
+>  			etnaviv_op_to_dma_dir(etnaviv_obj->last_cpu_prep_op));
+>  		etnaviv_obj->last_cpu_prep_op = 0;
+>  	}
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
+> index 3607d348c298..15d9fa3879e5 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
+> @@ -73,13 +73,13 @@ static int etnaviv_iommu_map(struct etnaviv_iommu_context *context, u32 iova,
+>  			     struct sg_table *sgt, unsigned len, int prot)
+>  {	struct scatterlist *sg;
+>  	unsigned int da = iova;
+> -	unsigned int i, j;
+> +	unsigned int i;
+>  	int ret;
+>  
+>  	if (!context || !sgt)
+>  		return -EINVAL;
+>  
+> -	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
+> +	for_each_sgtable_dma_sg(sgt, sg, i) {
+>  		u32 pa = sg_dma_address(sg) - sg->offset;
+>  		size_t bytes = sg_dma_len(sg) + sg->offset;
+>  
+> @@ -95,14 +95,7 @@ static int etnaviv_iommu_map(struct etnaviv_iommu_context *context, u32 iova,
+>  	return 0;
+>  
+>  fail:
+> -	da = iova;
+> -
+> -	for_each_sg(sgt->sgl, sg, i, j) {
+> -		size_t bytes = sg_dma_len(sg) + sg->offset;
+> -
+> -		etnaviv_context_unmap(context, da, bytes);
+> -		da += bytes;
+> -	}
+> +	etnaviv_context_unmap(context, iova, da - iova);
+>  	return ret;
+>  }
+>  
+> @@ -113,7 +106,7 @@ static void etnaviv_iommu_unmap(struct etnaviv_iommu_context *context, u32 iova,
+>  	unsigned int da = iova;
+>  	int i;
+>  
+> -	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
+> +	for_each_sgtable_dma_sg(sgt, sg, i) {
+>  		size_t bytes = sg_dma_len(sg) + sg->offset;
+>  
+>  		etnaviv_context_unmap(context, da, bytes);
 
