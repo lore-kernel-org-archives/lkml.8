@@ -2,129 +2,111 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BA9C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05763C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEF9D2064E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFAD32073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:43:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="pMgwV8Aw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgIDQmz (ORCPT
+        id S1727101AbgIDQne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:42:55 -0400
-Received: from mga06.intel.com ([134.134.136.31]:31602 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgIDQmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:42:55 -0400
-IronPort-SDR: vc3iZkitfcnB934+apVa/Rrpg57K149hZbxAnu1RGG8BVPha1VK8uZcRBDdSswgmrdSH0maY5u
- ZgCDAI2mECYw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="219337142"
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="219337142"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:42:54 -0700
-IronPort-SDR: tpi1BOHeyc/3bUdy1tLlVqxhknbQM6rWuITrHIw0cYx/ddFawv/kCVr0vngQSnYvIW4DfaPBrx
- cUNAWhEBhrRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="332217258"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 04 Sep 2020 09:42:52 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kEEat-00EKFU-4B; Fri, 04 Sep 2020 19:29:43 +0300
-Date:   Fri, 4 Sep 2020 19:29:43 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 08/23] gpio: mockup: use pr_fmt()
-Message-ID: <20200904162943.GT1891694@smile.fi.intel.com>
-References: <20200904154547.3836-1-brgl@bgdev.pl>
- <20200904154547.3836-9-brgl@bgdev.pl>
+        Fri, 4 Sep 2020 12:43:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgIDQnd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:43:33 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E371C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 09:43:31 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id 2so3460971pjx.5
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 09:43:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nAm7MkjzNXisCy7+ch7x2r9mkDHgpbPGhxOYS7CWrr8=;
+        b=pMgwV8AwEVjWFwQEo3b9bjaCVQOzRhRYlj67mzvuxz41dYkiFtbEa7de9YWFJBt4oo
+         C+yXh9XQ+jGgCfDBdLREUZlqAbm+cGapY3Icls5ablcKOZx/kSMafbPFxakLEtKhNhjz
+         sYjup3WZCwImNdUhySG86Xxpu9chVsn3Q833DtxkIBYkRWH9bvMQk1LelqvcaaeJCbRm
+         C22tw26aDLzp+dp0ZgmT7oQbrAeVg0uiUCPmTUSuEtre2JXyXXpTxk8JAngl06yauasd
+         PkYAqJjnVl5iEp1ju9BWgHrS9ZGl905m1H+404bcSDjZVgTv7aCdfLPI/h+z31GEggHm
+         gE7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nAm7MkjzNXisCy7+ch7x2r9mkDHgpbPGhxOYS7CWrr8=;
+        b=NHPeoxolrJbWbtf8RdLa/ri6L983jbQDBVy8TeBAnolvnJnsPiDiKxs/+nbFp5qT83
+         fz7PxlkCu0D9lrAWLyL16xo4HIN2C2BJk/n9/5S735G/KKmzrLVgGVvQfxKAc/o2BFt6
+         Lmtb9KBHvsIognC/uAAjCzLsEK5gS97ZCnhZSeWMgf3OqkcW9p9hokvwe/vCApciMdtC
+         TqkE4IiWjkfH8RWLp9eL5cBlDZv/1fnsdBq+WZYsymFl+c11Qt9f+Igl4XwtIiTsZARI
+         IXRrM4YZudbli6NhHoe3dOusP8yQwd17sTL7kfpv5tXwTpbnxtB9Z6IDMPM7TkvnAXtG
+         EAGw==
+X-Gm-Message-State: AOAM530jRxsImhLKi5eYlTS5FeCTnKrwiZGBUkABPhsKVrKQKZFwaEQr
+        rpLgQ1RR2oNIFKm04Nhl1bzw9k6Cl48rn29yB6HJTw==
+X-Google-Smtp-Source: ABdhPJzvtfKsPfB8wh9Y9fOxdFUYrY1cJ00wnwe/aHTdlspsZb2WXoGDwFjNhzzwMYfD4B6Wijlv9/qEBKeMX2COua4=
+X-Received: by 2002:a17:90b:360a:: with SMTP id ml10mr8567244pjb.198.1599237810537;
+ Fri, 04 Sep 2020 09:43:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904154547.3836-9-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200904162121.279578-1-anup.patel@wdc.com> <20200904162530.GA32095@lst.de>
+In-Reply-To: <20200904162530.GA32095@lst.de>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 4 Sep 2020 22:13:18 +0530
+Message-ID: <CAAhSdy2ru2xuOC76UvCBhUoDNEv=f_w0Q4N+9UmQaVnNyMaE-Q@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Allow drivers to provide custom read_cycles64 for
+ M-mode kernel
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 05:45:32PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> We don't need a custom logging helper. Let's use the standard pr_fmt()
-> macro which allows us to use all pr_*() routines with custom format.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/gpio/gpio-mockup.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> index 349782cdb4d7..73cd51459c2a 100644
-> --- a/drivers/gpio/gpio-mockup.c
-> +++ b/drivers/gpio/gpio-mockup.c
-> @@ -21,6 +21,9 @@
->  
->  #include "gpiolib.h"
+On Fri, Sep 4, 2020 at 9:55 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Fri, Sep 04, 2020 at 09:51:21PM +0530, Anup Patel wrote:
+> > The TIME CSR is usually not present on most RISC-V systems so the
+> > M-mode firmware will emulate the TIME CSR for the S-mode (MMU) kernel
+> > whereas the M-mode (NoMMU) kernel will have to use MMIO clocksource.
+> >
+> > Currently, the get_cycles() implementation in asm/timex.h does not
+> > consider the above fact so we provide alternate implementation of
+> > the get_cycles() for the M-mode (NoMMU) kernel which expects drivers
+> > to provide custom MMIO based read_cycles64() method.
+>
+> Please just go back to the previous working version without all the
+> crazy indirections.
+>
+> The whole timer and irq code has been turned into a giant maze of
+> indirections lately.
 
-> +#undef pr_fmt
-> +#define pr_fmt(fmt)		GPIO_MOCKUP_NAME ": " fmt
-> +
+I respectfully disagree. IMHO, the previous code made the RISC-V
+timer driver convoluted (both SBI call and CLINT in one place) and
+mandated CLINT for NoMMU kernel. In fact, RISC-V spec does not
+mandate CLINT or PLIC. The RISC-V SOC vendors are free to
+implement their own timer device, IPI device and interrupt controller.
 
-Just put definition to be first line of code before other inclusions and drop
-unnecessary #undef.
+We already have RISC-V systems (e.g. Andes AE350) where we
+have a different timer and IPI device instead of CLINT.
 
->  #define GPIO_MOCKUP_NAME	"gpio-mockup"
->  #define GPIO_MOCKUP_MAX_GC	10
->  /*
-> @@ -31,8 +34,6 @@
->  /* Maximum of three properties + the sentinel. */
->  #define GPIO_MOCKUP_MAX_PROP	4
->  
-> -#define gpio_mockup_err(...)	pr_err(GPIO_MOCKUP_NAME ": " __VA_ARGS__)
-> -
->  /*
->   * struct gpio_pin_status - structure describing a GPIO status
->   * @dir:       Configures direction of gpio as "in" or "out"
-> @@ -549,7 +550,7 @@ static int __init gpio_mockup_init(void)
->  
->  	err = platform_driver_register(&gpio_mockup_driver);
->  	if (err) {
-> -		gpio_mockup_err("error registering platform driver\n");
-> +		pr_err("error registering platform driver\n");
->  		return err;
->  	}
->  
-> @@ -577,7 +578,7 @@ static int __init gpio_mockup_init(void)
->  
->  		pdev = platform_device_register_full(&pdevinfo);
->  		if (IS_ERR(pdev)) {
-> -			gpio_mockup_err("error registering device");
-> +			pr_err("error registering device");
->  			platform_driver_unregister(&gpio_mockup_driver);
->  			gpio_mockup_unregister_pdevs();
->  			return PTR_ERR(pdev);
-> -- 
-> 2.26.1
-> 
+The current code is more flexible and allows SOC vendors to write
+their own timer driver under drivers/clocksource.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Regards,
+Anup
