@@ -2,131 +2,91 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E77C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D5BC28E83
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50052206F2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FBEE206E7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:12:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lo+Ecl82"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgIDGK7 (ORCPT
+        id S1728099AbgIDGML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 02:10:59 -0400
-Received: from mga17.intel.com ([192.55.52.151]:54234 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbgIDGK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 02:10:58 -0400
-IronPort-SDR: 3aAFKejwiiKBFV6wTuMLb4AcqP87yTum+cPPeET6xJlqoCnXmkveqA02CMPBdJcpIxyNpzSdcq
- C3fIf5UPEVlA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="137750994"
-X-IronPort-AV: E=Sophos;i="5.76,388,1592895600"; 
-   d="scan'208";a="137750994"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 23:10:58 -0700
-IronPort-SDR: hWkpxkd8JZl/EXkkDEZ49Tteg9MZaZngq6o6VuqGMRt8sDT/jYHm4g7c1CFok6+t0Y+x3peost
- VG1MRxyBDcBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,388,1592895600"; 
-   d="scan'208";a="284319611"
-Received: from linjian1-mobl.ccr.corp.intel.com (HELO yhuang-mobile.ccr.corp.intel.com) ([10.254.214.206])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Sep 2020 23:10:54 -0700
-From:   Huang Ying <ying.huang@intel.com>
-To:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Huang Ying <ying.huang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: [PATCH RESEND] x86, fakenuma: Fix invalid starting node ID
-Date:   Fri,  4 Sep 2020 14:10:47 +0800
-Message-Id: <20200904061047.612950-1-ying.huang@intel.com>
-X-Mailer: git-send-email 2.28.0
+        Fri, 4 Sep 2020 02:12:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgIDGMJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 02:12:09 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1A49C061244;
+        Thu,  3 Sep 2020 23:12:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=ytK8UiWzHHegMm41JlHypigctQNmCJQNBkvErIXfdHw=; b=lo+Ecl82biNs2e0KfP/1bUeKyR
+        0hXUqn3XQ+/Sl6r0zNPzXBQyduGVLY3nvMJ4sL1RIAXfFwGup/GUEpOu0gRrl7MN4+5oOmbCL1lrv
+        t/At9U5k+3LkGBWDvry8uLVCJewPrOVSH2UkS21T6RrxfruRqLIy0855WI0c67ZTmaLSwzACwCX5X
+        aUfJNAqQ+Nmn3XdqJoXFtLJRxbPFZKK8GQ++YQPRSrvoHqhg/CFC/vWmZJ8peJHQeqGO54pDqjmRY
+        RC2LDv7witgtssys4nUXLOB0J1RWhayaDEKuDo/6tQrL0lO2xaSNLoS4DN9NHgOubEJiW2fIR3ANU
+        iC24wndg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kE4xB-0001YN-Ds; Fri, 04 Sep 2020 06:12:05 +0000
+Subject: Re: linux-next: Tree for Sep 2 (lib/ubsan.c)
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+References: <20200902180950.4bc7c4de@canb.auug.org.au>
+ <3abfa193-a56e-66ba-1080-885906fa0196@infradead.org>
+Message-ID: <fdf322d4-cc01-2c85-67cd-86b2d6f4ebff@infradead.org>
+Date:   Thu, 3 Sep 2020 23:12:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <3abfa193-a56e-66ba-1080-885906fa0196@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit cc9aec03e58f ("x86/numa_emulation: Introduce uniform split
-capability") uses "-1" as the starting node ID, which causes the
-strange kernel log as following, when "numa=fake=32G" is added to the
-kernel command line.
+On 9/2/20 8:44 AM, Randy Dunlap wrote:
+> On 9/2/20 1:09 AM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Changes since 20200828:
+>>
+> 
+> 
+> on i386:
+> 
+> ../lib/ubsan.c: In function ‘ubsan_prologue’:
+> ../lib/ubsan.c:141:2: error: implicit declaration of function ‘kunit_fail_current_test’; did you mean ‘kunit_init_test’? [-Werror=implicit-function-declaration]
+>   kunit_fail_current_test();
+> 
+> 
+> Full randconfig file is attached.
+> 
 
-    Faking node -1 at [mem 0x0000000000000000-0x0000000893ffffff] (35136MB)
-    Faking node 0 at [mem 0x0000001840000000-0x000000203fffffff] (32768MB)
-    Faking node 1 at [mem 0x0000000894000000-0x000000183fffffff] (64192MB)
-    Faking node 2 at [mem 0x0000002040000000-0x000000283fffffff] (32768MB)
-    Faking node 3 at [mem 0x0000002840000000-0x000000303fffffff] (32768MB)
+Hi Brendan,
 
-And finally kernel BUG as following,
+Do you know anything about this build error?
 
-    BUG: Bad page state in process swapper  pfn:00011
-    page:(____ptrval____) refcount:0 mapcount:1 mapping:(____ptrval____) index:0x55cd7e44b270 pfn:0x11
-    failed to read mapping contents, not a valid kernel address?
-    flags: 0x5(locked|uptodate)
-    raw: 0000000000000005 000055cd7e44af30 000055cd7e44af50 0000000100000006
-    raw: 000055cd7e44b270 000055cd7e44b290 0000000000000000 000055cd7e44b510
-    page dumped because: page still charged to cgroup
-    page->mem_cgroup:000055cd7e44b510
-    Modules linked in:
-    CPU: 0 PID: 0 Comm: swapper Not tainted 5.9.0-rc2 #1
-    Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
-    Call Trace:
-     dump_stack+0x57/0x80
-     bad_page.cold+0x63/0x94
-     __free_pages_ok+0x33f/0x360
-     memblock_free_all+0x127/0x195
-     mem_init+0x23/0x1f5
-     start_kernel+0x219/0x4f5
-     secondary_startup_64+0xb6/0xc0
+I can't find kunit_fail_current_test() anywhere.
 
-Fixes this bug via using 0 as the starting node ID.  This restores the
-original behavior before the commit cc9aec03e58f ("x86/numa_emulation:
-Introduce uniform split capability").
-
-Fixes: cc9aec03e58f ("x86/numa_emulation: Introduce uniform split capability")
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
----
- arch/x86/mm/numa_emulation.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/mm/numa_emulation.c b/arch/x86/mm/numa_emulation.c
-index c5174b4e318b..683cd12f4793 100644
---- a/arch/x86/mm/numa_emulation.c
-+++ b/arch/x86/mm/numa_emulation.c
-@@ -321,7 +321,7 @@ static int __init split_nodes_size_interleave(struct numa_meminfo *ei,
- 					      u64 addr, u64 max_addr, u64 size)
- {
- 	return split_nodes_size_interleave_uniform(ei, pi, addr, max_addr, size,
--			0, NULL, NUMA_NO_NODE);
-+			0, NULL, 0);
- }
- 
- static int __init setup_emu2phys_nid(int *dfl_phys_nid)
+thanks.
 -- 
-2.28.0
+~Randy
 
