@@ -2,189 +2,115 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A049C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3F9C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F08CC20709
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88CC21548
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:49:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="E8HMmcq7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XC3+t30G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730013AbgIDLrm (ORCPT
+        id S1730022AbgIDLtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:47:42 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53672 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729297AbgIDLr3 (ORCPT
+        Fri, 4 Sep 2020 07:49:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728588AbgIDLsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 07:47:29 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 084BX1Mu180994;
-        Fri, 4 Sep 2020 07:47:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=4Sbnt809dMBXF6cKluyEYXfuJYTsWdN/zlL8Yb9u6rY=;
- b=E8HMmcq7MTFKqRrv7/lvPB7s8oTwc6WBUQ6cz2ETXBs29yrBiUN5azhCdUKrfM5O0duc
- M5c7wjfZRPpw+lin9pmpfOED8q5Ti6TuomZtDJ2Evb+uJkLd28japrdPH95Uhe4hggxA
- YRWJpSciy3IfJT/5u+m7DN9F71oIPxo74nKHtUSt+irBwVG85OuGKASRjAJgTkMxj4ve
- jhty50GvknBZDPKd+GgRzwFugbaQtrX95KJDh11dDRk0avcPU+vmjfSxZG1hxkp6mqBx
- neuQK+dyYmugDeGglXZ+zpPW6WesdT+JzR7dVJFItyOqy8dn8RVZtfHZFDEPyTJLF835 Rg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33bmh5rtvu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Sep 2020 07:47:14 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 084BX1FF180986;
-        Fri, 4 Sep 2020 07:47:14 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33bmh5rtuy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Sep 2020 07:47:13 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 084BfjPk029412;
-        Fri, 4 Sep 2020 11:47:11 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06fra.de.ibm.com with ESMTP id 337e9h46es-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Sep 2020 11:47:11 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 084Bl8lV32112904
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 4 Sep 2020 11:47:08 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B684FAE053;
-        Fri,  4 Sep 2020 11:47:08 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 76F45AE045;
-        Fri,  4 Sep 2020 11:47:06 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.87.223])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  4 Sep 2020 11:47:06 +0000 (GMT)
-Message-ID: <f18986930ddc2823994b549f1ff1cd742706e188.camel@linux.ibm.com>
-Subject: Re: [PATCH 5/6] arm64/ima: add ima arch support
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Chester Lin <clin@suse.com>, ardb@kernel.org,
-        catalin.marinas@arm.com, will@kernel.org,
-        dmitry.kasatkin@gmail.com, corbet@lwn.net, mark.rutland@arm.com,
-        vincenzo.frascino@arm.com, samitolvanen@google.com,
-        masahiroy@kernel.org, mingo@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-        jlee@suse.com
-Date:   Fri, 04 Sep 2020 07:47:05 -0400
-In-Reply-To: <20200904072905.25332-6-clin@suse.com>
-References: <20200904072905.25332-1-clin@suse.com>
-         <20200904072905.25332-6-clin@suse.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-04_06:2020-09-04,2020-09-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999
- adultscore=0 suspectscore=0 clxscore=1011 phishscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009040106
+        Fri, 4 Sep 2020 07:48:54 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20182C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:48:53 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id e17so5817503wme.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 04:48:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GC+xI1v+LH6EwCCui2W/bylz3lef9qs2WP5w5Vt2gQk=;
+        b=XC3+t30GNQR7ER8LucbrB4H8KErDli+kgNmGVOpcPZeTAIoh4R7GVULyA1GAefC1rA
+         iYVp4aj0kXEgCzvNc+7LWpENDQwjVOndNaddaYHuZbi2UpQRnDeBcq96OLf1OlvTWRw7
+         cJr9Yk6RUKUM9lpoGONtlaxxlXwQKPs0OM2e3RRfvm1GcG8NdNorGt8zdIFYfn8a0wl4
+         TVxZi9T180QNkUdqKOOk3grHclUZL0oHeNSu07pvsKQ+r2IVcHktOuR/mwtr1ypxW/VJ
+         RIQG4+SN82jWt4acFG4vC8r8b3iktrYkCnLNfJmwqa4UQZBK08944D78bOJ6L5+kQYO/
+         Zhtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GC+xI1v+LH6EwCCui2W/bylz3lef9qs2WP5w5Vt2gQk=;
+        b=DrWB6fyor4eESzngarZDJzkmD1rv4gjb+4kWw4CJSdZsuoTO2Jwd/OAkBKonEKDaYi
+         18XjjaTUmHSUhRJFhuYin4wgJinTQ4sdzFw6FudZdkA2ViT/TXnMvhSuiCEnmsNFZtNk
+         ueR0bz24ehTtDYp+FOh+XeWFgsIh/MH0I8In9uvdwj51S94qYIQfAykpnjpxSid6wwQW
+         fz2wFw7x/JBjZD0igx8H1w9uq469m+3XLBsON82NfA/PvB5pDLiYY2t/pzte0IvDhqp2
+         0kOGiwHgmIChyMYbOw0/91BvjC6J2j4bGXMNpP2BQMqPM6o3SEFxguL9bTCy1FrfZNA+
+         XUGA==
+X-Gm-Message-State: AOAM533xzdRcjdisd6H90r3IjdSLMus5hhaUTiZgKh7I9g83fo5TEAyW
+        JXjtVp4iE/jftwjqB8120VVN9UXyxbYJXg==
+X-Google-Smtp-Source: ABdhPJwy4VbJBI0m+gT1IvKW1eTOd1kIDsXiLbKJ1JXltWdN7a4qJUGSVTyqx9anLYZaP8TVx8pPnw==
+X-Received: by 2002:a05:600c:2f8f:: with SMTP id t15mr7509311wmn.41.1599220131751;
+        Fri, 04 Sep 2020 04:48:51 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id r129sm10609714wmr.40.2020.09.04.04.48.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Sep 2020 04:48:51 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        georgi.djakov@linaro.org
+Subject: [GIT PULL] interconnect fixes for 5.9
+Date:   Fri,  4 Sep 2020 14:48:50 +0300
+Message-Id: <20200904114850.4306-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-09-04 at 15:29 +0800, Chester Lin wrote:
-> Add arm64 IMA arch support. The arch policy is inherited from x86.
-> 
-> Signed-off-by: Chester Lin <clin@suse.com>
+Hello Greg,
 
-The "secureboot arch rules" comment should be updated to reflect that
-the policy is both "secure and trusted boot arch rules", both here and
-in x86.
+Here is a small pull request with interconnect fixes for 5.9-rc. Please
+take them into char-misc-linus when possible.
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Thanks,
+Georgi
 
-thanks,
+The following changes since commit f75aef392f869018f78cfedf3c320a6b3fcfda6b:
 
-Mimi
+  Linux 5.9-rc3 (2020-08-30 16:01:54 -0700)
 
-> ---
->  arch/arm64/Kconfig           |  1 +
->  arch/arm64/kernel/Makefile   |  2 ++
->  arch/arm64/kernel/ima_arch.c | 37 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 40 insertions(+)
->  create mode 100644 arch/arm64/kernel/ima_arch.c
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 6d232837cbee..b5518e7b604d 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -196,6 +196,7 @@ config ARM64
->  	select SWIOTLB
->  	select SYSCTL_EXCEPTION_TRACE
->  	select THREAD_INFO_IN_TASK
-> +	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
->  	help
->  	  ARM 64-bit (AArch64) Linux support.
->  
-> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-> index a561cbb91d4d..0300ab60785d 100644
-> --- a/arch/arm64/kernel/Makefile
-> +++ b/arch/arm64/kernel/Makefile
-> @@ -71,3 +71,5 @@ extra-y					+= $(head-y) vmlinux.lds
->  ifeq ($(CONFIG_DEBUG_EFI),y)
->  AFLAGS_head.o += -DVMLINUX_PATH="\"$(realpath $(objtree)/vmlinux)\""
->  endif
-> +
-> +obj-$(CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT)	+= ima_arch.o
-> diff --git a/arch/arm64/kernel/ima_arch.c b/arch/arm64/kernel/ima_arch.c
-> new file mode 100644
-> index 000000000000..46f5641c3da5
-> --- /dev/null
-> +++ b/arch/arm64/kernel/ima_arch.c
-> @@ -0,0 +1,37 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Copyright (C) 2018 IBM Corporation
-> + */
-> +#include <linux/efi.h>
-> +#include <linux/module.h>
-> +
-> +bool arch_ima_get_secureboot(void)
-> +{
-> +	if (efi_enabled(EFI_SECURE_BOOT))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +/* secureboot arch rules */
-> +static const char * const sb_arch_rules[] = {
-> +#if !IS_ENABLED(CONFIG_KEXEC_SIG)
-> +	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig",
-> +#endif /* CONFIG_KEXEC_SIG */
-> +	"measure func=KEXEC_KERNEL_CHECK",
-> +#if !IS_ENABLED(CONFIG_MODULE_SIG)
-> +	"appraise func=MODULE_CHECK appraise_type=imasig",
-> +#endif
-> +	"measure func=MODULE_CHECK",
-> +	NULL
-> +};
-> +
-> +const char * const *arch_get_ima_policy(void)
-> +{
-> +	if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY) && arch_ima_get_secureboot()) {
-> +		if (IS_ENABLED(CONFIG_MODULE_SIG))
-> +			set_module_sig_enforced();
-> +		return sb_arch_rules;
-> +	}
-> +	return NULL;
-> +}
+are available in the Git repository at:
 
+  https://git.linaro.org/people/georgi.djakov/linux.git tags/icc-5.9-rc4
 
+for you to fetch changes up to 91e045b93db79a2ef66e045ad0d1f8f9d348e1f4:
+
+  interconnect: qcom: Fix small BW votes being truncated to zero (2020-09-04 00:07:12 +0300)
+
+----------------------------------------------------------------
+interconnect fixes for v5.9
+
+This contains two fixes:
+- Fix the core to show correctly the bandwidth for disabled paths.
+- Fix a driver to make sure small values are not truncated.
+
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+
+----------------------------------------------------------------
+Matthias Kaehlcke (1):
+      interconnect: Show bandwidth for disabled paths as zero in debugfs
+
+Mike Tipton (1):
+      interconnect: qcom: Fix small BW votes being truncated to zero
+
+ drivers/interconnect/core.c           | 10 ++-
+ drivers/interconnect/qcom/bcm-voter.c | 27 +++++---
+ 2 files changed, 27 insertions(+), 10 deletions(-)
