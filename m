@@ -2,129 +2,216 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD86C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5750C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82CE4206C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:19:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tLCxElJ/"
+	by mail.kernel.org (Postfix) with ESMTP id 9A31A207EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:21:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729873AbgIDITu (ORCPT
+        id S1729731AbgIDIVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728118AbgIDITt (ORCPT
+        Fri, 4 Sep 2020 04:21:38 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:57498 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726425AbgIDIVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:19:49 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C86A7C061244;
-        Fri,  4 Sep 2020 01:19:46 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id 3so5836115oih.0;
-        Fri, 04 Sep 2020 01:19:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9p6cCuEJ0Kd4XEWKLM+mNWslgz5UQcFUd+4LCcx7ZxE=;
-        b=tLCxElJ/l2c0CzybrIMtews6zsJbIUMM6Urb9nFwT1WjtZihS0ItcqIdKmtgj3q087
-         /Q1s1+UAhDSXPuh/hVeYtM3UXmXva5bDMqzEcMTp2l3sEVfOaNvljJTDP6wq/VwpEOIa
-         py/273kg/t5RlW5auBar6bx61rt6GAT0DI2SIt49SxksD9rrjofkJYdpVn/hYc0GPOrT
-         XqiV0S7kUMN0I+ZWYU7z7f+Z1TzS0V9LTAlt5kjwoOMMOi5O0s/Egop6UssUK1+NanF8
-         dv1Pz8gvOtWeel7wI36IpDfnPvSHj4p6+FeviLCKpHZucy7kdy9zr7T+hWLuVJLK7hg5
-         Ppug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9p6cCuEJ0Kd4XEWKLM+mNWslgz5UQcFUd+4LCcx7ZxE=;
-        b=MwJu543EjUlUopUeOsBGWbZ8gAZS4FRMDYMQxKsXlZTkjIfOwcwQpmWLyRvzlEHGO1
-         x/0ymj6LGWnQT0t5bEqxu9C2BrBYeDnQYPXru8CLbRQ3vL6dtausrQgWJiZuAFJZI/Dj
-         vPv9F/ucLBqWznzM+DiZyp2Pni/q3J06+Mcy8NyNkPghPXWlgn/0rNx/IHckhYwWlpOt
-         IQUgLNM8nqw9JW/4D9ms4C2UfVgeJkjOA2BgSXF0PWGLCROFrG694O/iP4pR94f9h8VO
-         exV7jYSYH9Ho3onG9mmhR5s4KPV+LmDqPFl5QASG0U+cixuI/NtEKmUnT9Q0hDVrQcnT
-         cqHw==
-X-Gm-Message-State: AOAM530QZEmrmmoVphFLBRrwneMDN2G5rAOOJh4J+fp7SNwbF7IaOVEh
-        OF7PGYC5//XM+JJwC3HbjFR4PXpLqYaQP85wJ4dbu2Tw7Xw=
-X-Google-Smtp-Source: ABdhPJwCyTQ9yezSUlNXMX59CupY7j4Pkjl+sHL1KwRZOkTB/yM9lvExdwRpHDVdKBRtiiJDlPygN7eUuqFaElVFzPI=
-X-Received: by 2002:a05:6808:695:: with SMTP id k21mr4442094oig.124.1599207586094;
- Fri, 04 Sep 2020 01:19:46 -0700 (PDT)
+        Fri, 4 Sep 2020 04:21:38 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 1024C634C8C;
+        Fri,  4 Sep 2020 11:21:05 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1kE6y0-0001Zg-Vm; Fri, 04 Sep 2020 11:21:04 +0300
+Date:   Fri, 4 Sep 2020 11:21:04 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v3 1/2] media: i2c: ov772x: Add support for BT656 mode
+Message-ID: <20200904082104.GE4392@valkosipuli.retiisi.org.uk>
+References: <20200824190406.27478-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200824190406.27478-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200904012000.GA9369@pendragon.ideasonboard.com>
+ <20200904075553.qjdyskcpext7fxcy@uno.localdomain>
 MIME-Version: 1.0
-References: <20200903181926.5606-1-krzk@kernel.org> <CAHp75VeXTN5gTv2Pj33N9EB9i2U7R+uvgZ-Ad4_SMgKkrB0F3g@mail.gmail.com>
-In-Reply-To: <CAHp75VeXTN5gTv2Pj33N9EB9i2U7R+uvgZ-Ad4_SMgKkrB0F3g@mail.gmail.com>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Fri, 4 Sep 2020 11:19:34 +0300
-Message-ID: <CA+U=DsrYUke0YNMGw8zqgL=zfAjBY703mtLTWOTaixXNVCeCaA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] MAINTAINERS: Consolidate Analog Devices IIO
- entries and remove Beniamin Bia
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904075553.qjdyskcpext7fxcy@uno.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 10:42 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, Sep 3, 2020 at 9:19 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > Emails to Beniamin Bia bounce with no such address so remove him from
-> > maintainers.  After this removal, many entries for Analog Devices Inc
-> > IIO drivers look exactly the same so consolidate them.
-> >
-> > Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Cc: Michael Hennerich <Michael.Hennerich@analog.com>
-> > Cc: Jonathan Cameron <jic23@kernel.org>
-> > Cc: linux-iio <linux-iio@vger.kernel.org>
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->
-> ...
->
-> >  ANALOG DEVICES INC IIO DRIVERS
-> >  M:     Lars-Peter Clausen <lars@metafoo.de>
-> >  M:     Michael Hennerich <Michael.Hennerich@analog.com>
-> > @@ -1152,8 +1101,11 @@ W:       http://wiki.analog.com/
-> >  W:     http://ez.analog.com/community/linux-device-drivers
-> >  F:     Documentation/ABI/testing/sysfs-bus-iio-frequency-ad9523
-> >  F:     Documentation/ABI/testing/sysfs-bus-iio-frequency-adf4350
-> > +F:     Documentation/devicetree/bindings/iio/*/adi,*
-> > +F:     Documentation/devicetree/bindings/iio/dac/ad5758.txt
-> >  F:     drivers/iio/*/ad*
-> >  F:     drivers/iio/adc/ltc249*
-> > +F:     drivers/iio/amplifiers/hmc425a.c
-> >  F:     drivers/staging/iio/*/ad*
-> >  X:     drivers/iio/*/adjd*
->
-> >  STAGING - SEPS525 LCD CONTROLLER DRIVERS
-> >  M:     Michael Hennerich <michael.hennerich@analog.com>
-> > -M:     Beniamin Bia <beniamin.bia@analog.com>
-> >  L:     linux-fbdev@vger.kernel.org
-> >  S:     Supported
-> >  F:     Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
->
-> It's not related to this series, but I'm wondering why the above
-> binding is attached to a staging driver...
+Hi Laurent, Jacopo,
 
-Looks like a copy+paste error.
-Good catch.
+On Fri, Sep 04, 2020 at 09:55:53AM +0200, Jacopo Mondi wrote:
+> Hi Laurent,
+> 
+> On Fri, Sep 04, 2020 at 04:20:00AM +0300, Laurent Pinchart wrote:
+> > Hi Prabhakar,
+> >
+> > Thank you for the patch.
+> >
+> > On Mon, Aug 24, 2020 at 08:04:05PM +0100, Lad Prabhakar wrote:
+> > > Add support to read the bus-type and enable BT656 mode if needed.
+> > >
+> > > Also fail probe if unsupported bus_type is detected.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > ---
+> > >  drivers/media/i2c/ov772x.c | 32 ++++++++++++++++++++++++++++++++
+> > >  1 file changed, 32 insertions(+)
+> > >
+> > > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> > > index 2cc6a678069a..67764d647526 100644
+> > > --- a/drivers/media/i2c/ov772x.c
+> > > +++ b/drivers/media/i2c/ov772x.c
+> > > @@ -31,6 +31,7 @@
+> > >  #include <media/v4l2-ctrls.h>
+> > >  #include <media/v4l2-device.h>
+> > >  #include <media/v4l2-event.h>
+> > > +#include <media/v4l2-fwnode.h>
+> > >  #include <media/v4l2-image-sizes.h>
+> > >  #include <media/v4l2-subdev.h>
+> > >
+> > > @@ -434,6 +435,7 @@ struct ov772x_priv {
+> > >  #ifdef CONFIG_MEDIA_CONTROLLER
+> > >  	struct media_pad pad;
+> > >  #endif
+> > > +	struct v4l2_fwnode_endpoint ep;
+> > >  };
+> > >
+> > >  /*
+> > > @@ -581,6 +583,13 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
+> > >  	if (priv->streaming == enable)
+> > >  		goto done;
+> > >
+> > > +	if (priv->ep.bus_type == V4L2_MBUS_BT656) {
+> > > +		ret = regmap_update_bits(priv->regmap, COM7, ITU656_ON_OFF,
+> > > +					 enable ? ITU656_ON_OFF : ~ITU656_ON_OFF);
+> > > +		if (ret)
+> > > +			goto done;
+> > > +	}
+> > > +
+> > >  	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
+> > >  				 enable ? 0 : SOFT_SLEEP_MODE);
+> > >  	if (ret)
+> > > @@ -1354,6 +1363,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
+> > >
+> > >  static int ov772x_probe(struct i2c_client *client)
+> > >  {
+> > > +	struct fwnode_handle *endpoint;
+> > >  	struct ov772x_priv	*priv;
+> > >  	int			ret;
+> > >  	static const struct regmap_config ov772x_regmap_config = {
+> > > @@ -1415,6 +1425,28 @@ static int ov772x_probe(struct i2c_client *client)
+> > >  		goto error_clk_put;
+> > >  	}
+> > >
+> > > +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
+> > > +						  NULL);
+> > > +	if (!endpoint) {
+> > > +		dev_err(&client->dev, "endpoint node not found\n");
+> > > +		ret = -EINVAL;
+> > > +		goto error_clk_put;
+> > > +	}
+> > > +
+> > > +	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
+> >
+> > v4l2_fwnode_endpoint_parse() is deprecated for new drivers,
+> > v4l2_fwnode_endpoint_alloc_parse() is recommended instead. Please note
+> > that v4l2_fwnode_endpoint_free() then needs to be called in the error
+> > path and in remove().
+> 
+> Doesn't alloc_parse() differ from just _parse() as it reserve space
+> for the 'link-frequencies' array ? As this device does not support
+> CSI-2 and the 'link-frequencies' property is not allows in bindings,
+> isn't using endpoint_parse() better as it saves a call to _free() ?
 
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+Yeah. I think the documentation needs to be updated.
+
+The thinking was there would be other variable size properties that drivers
+would need but that didn't happen. So feel free to continue use
+v4l2_fwnode_endpoint_parse() where it does the job.
+
+> 
+> Or are we deprecating that function unconditionally ? The
+> documentation suggests "please use v4l2_fwnode_endpoint_alloc_parse()
+> in new drivers" but here it doesn't seem required..
+> 
+> >
+> > On the other hand, not setting .bus_type and letting the parse()
+> > function determine the but type automatically is also deprecated, and I
+> > don't think forcing drivers to call v4l2_fwnode_endpoint_alloc_parse()
+> > once for each bus type until one succeeds is a good API. As change will
+> > be needed in that API, you can ignore v4l2_fwnode_endpoint_alloc_parse()
+> > for the time being if you want.
+> 
+> But indeed relying on auto-guessing of the bus type is deprecated since
+> some time now (and the API could be improved, yes). Sorry I missed
+> that yesterday.
+
+There's one case where the bus type does not need to be set: when bindings
+require it *and* at the same time you have no default configuration that
+requires something to be set in the bus specific struct. Bindings where
+bus-type is required were added later so I think the documentation should
+be changed there, too.
+
+I can send the patches.
+
+> 
+> As we support parallel and bt.656 only I must be honest I don't mind
+> it here as otherwise the code would be more complex for no real gain,
+> but I defer this to Sakari which has been fighting the battle against
+> auto-guessing since a long time now  :)
+
+I think you should require bus-type property in bindings in that case.
+
+But as it's an existing driver, bus-type will be optional. You'll need to
+default to what was supported earlier. This is actually an interesting case
+as bindings do not document it.
+
+> 
+> 
+> >
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >
+> > > +	fwnode_handle_put(endpoint);
+> > > +	if (ret) {
+> > > +		dev_err(&client->dev, "Could not parse endpoint\n");
+> > > +		goto error_clk_put;
+> > > +	}
+> > > +
+> > > +	if (priv->ep.bus_type != V4L2_MBUS_PARALLEL &&
+> > > +	    priv->ep.bus_type != V4L2_MBUS_BT656) {
+> > > +		dev_err(&client->dev, "Unsupported bus type %d\n",
+> > > +			priv->ep.bus_type);
+> > > +		goto error_clk_put;
+> > > +	}
+> > > +
+> > >  	ret = ov772x_video_probe(priv);
+> > >  	if (ret < 0)
+> > >  		goto error_gpio_put;
+> >
+> > --
+> > Regards,
+> >
+> > Laurent Pinchart
+
+-- 
+Sakari Ailus
