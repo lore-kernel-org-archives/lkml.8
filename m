@@ -2,258 +2,152 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE07AC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58793C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD3C6206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B12A20791
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:08:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fxpeJ0Kk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbgIDIIc (ORCPT
+        id S1729731AbgIDIIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:08:32 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10767 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726251AbgIDIIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:08:22 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EFEB2D3A099A398AECF3;
-        Fri,  4 Sep 2020 16:08:16 +0800 (CST)
-Received: from [10.74.191.121] (10.74.191.121) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 4 Sep 2020 16:08:08 +0800
-Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
- enqueue op for lockless qdisc
-To:     John Fastabend <john.fastabend@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-CC:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        "David Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Linux Kernel Network Developers" <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
- <CAM_iQpVtb3Cks-LacZ865=C8r-_8ek1cy=n3SxELYGxvNgkPtw@mail.gmail.com>
- <511bcb5c-b089-ab4e-4424-a83c6e718bfa@huawei.com>
- <CAM_iQpW1c1TOKWLxm4uGvCUzK0mKKeDg1Y+3dGAC04pZXeCXcw@mail.gmail.com>
- <f81b534a-5845-ae7d-b103-434232c0f5ff@huawei.com>
- <CAM_iQpXmpMdxF2JDOROaf+Tjk-8dASiXz53K-Ph_q7jVMe0oVw@mail.gmail.com>
- <cd773132-c98e-18e1-67fd-bbef6babbf0f@huawei.com>
- <CAM_iQpWbZdh5-UGBi6PM19EBgV+Bq7vmifgJPdak6X=R9yztnw@mail.gmail.com>
- <c0543793-11fa-6ef1-f8ea-6a724ab2de8f@huawei.com>
- <CAM_iQpWGaTSkg+-Em6u=NSWcyswX-xN=-1p0OAdaR___U1M4rg@mail.gmail.com>
- <5f5198ae79b98_361ef20824@john-XPS-13-9370.notmuch>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <968db64f-a139-541f-e046-fba25e037d3e@huawei.com>
-Date:   Fri, 4 Sep 2020 16:08:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Fri, 4 Sep 2020 04:08:49 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35715 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728588AbgIDIIm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 04:08:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599206920;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SO1+KNA9ZAbDAbragBawZT9Ig1IFiDJv5+VVeyfD9cA=;
+        b=fxpeJ0Kk002XrhFJTls2z5wbf28lJzir51gkuZxmuRcyrBss0IkrmTcFf6BcV6VJk7+g+9
+        3MApSfBkpg+NReoMV79r66DlcNCmHWHSZuzAZtfXfF4XPLslrHd2hJCRxBaPQT5k5IPd+F
+        JtcwZnCmAN/E2zFrhKDiUz2RWGH1ZYk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-8-vmHYr-41PsCP_UiG7NElMA-1; Fri, 04 Sep 2020 04:08:36 -0400
+X-MC-Unique: vmHYr-41PsCP_UiG7NElMA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBA7656BE3;
+        Fri,  4 Sep 2020 08:08:34 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D0F01A4D6;
+        Fri,  4 Sep 2020 08:08:28 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 08488SAu016399;
+        Fri, 4 Sep 2020 04:08:28 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 08488Qmj016395;
+        Fri, 4 Sep 2020 04:08:26 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Fri, 4 Sep 2020 04:08:26 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>,
+        Jan Kara <jack@suse.cz>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Subject: Re: a crash when running strace from persistent memory
+In-Reply-To: <CAHk-=whpJp9W_eyhqJU3Y2JsnX45xMfQHFNQSsb9dNirdMFnaA@mail.gmail.com>
+Message-ID: <alpine.LRH.2.02.2009040402560.14993@file01.intranet.prod.int.rdu2.redhat.com>
+References: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com> <CAHk-=whpJp9W_eyhqJU3Y2JsnX45xMfQHFNQSsb9dNirdMFnaA@mail.gmail.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-In-Reply-To: <5f5198ae79b98_361ef20824@john-XPS-13-9370.notmuch>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/9/4 9:30, John Fastabend wrote:
-> Cong Wang wrote:
->> On Wed, Sep 2, 2020 at 7:22 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>>
->>> On 2020/9/3 9:48, Cong Wang wrote:
->>>> On Wed, Sep 2, 2020 at 6:22 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>>>>
->>>>> On 2020/9/3 8:35, Cong Wang wrote:
->>>>>> On Tue, Sep 1, 2020 at 11:35 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>>>>>>
->>>>>>> On 2020/9/2 12:41, Cong Wang wrote:
->>>>>>>> On Tue, Sep 1, 2020 at 6:42 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>>>>>>>>
->>>>>>>>> On 2020/9/2 2:24, Cong Wang wrote:
->>>>>>>>>> On Mon, Aug 31, 2020 at 5:59 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>>>>>>>>>>
->>>>>>>>>>> Currently there is concurrent reset and enqueue operation for the
->>>>>>>>>>> same lockless qdisc when there is no lock to synchronize the
->>>>>>>>>>> q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
->>>>>>>>>>> qdisc_deactivate() called by dev_deactivate_queue(), which may cause
->>>>>>>>>>> out-of-bounds access for priv->ring[] in hns3 driver if user has
->>>>>>>>>>> requested a smaller queue num when __dev_xmit_skb() still enqueue a
->>>>>>>>>>> skb with a larger queue_mapping after the corresponding qdisc is
->>>>>>>>>>> reset, and call hns3_nic_net_xmit() with that skb later.
->>>>>>>>>>
->>>>>>>>>> Can you be more specific here? Which call path requests a smaller
->>>>>>>>>> tx queue num? If you mean netif_set_real_num_tx_queues(), clearly
->>>>>>>>>> we already have a synchronize_net() there.
->>>>>>>>>
->>>>>>>>> When the netdevice is in active state, the synchronize_net() seems to
->>>>>>>>> do the correct work, as below:
->>>>>>>>>
->>>>>>>>> CPU 0:                                       CPU1:
->>>>>>>>> __dev_queue_xmit()                       netif_set_real_num_tx_queues()
->>>>>>>>> rcu_read_lock_bh();
->>>>>>>>> netdev_core_pick_tx(dev, skb, sb_dev);
->>>>>>>>>         .
->>>>>>>>>         .                               dev->real_num_tx_queues = txq;
->>>>>>>>>         .                                       .
->>>>>>>>>         .                                       .
->>>>>>>>>         .                               synchronize_net();
->>>>>>>>>         .                                       .
->>>>>>>>> q->enqueue()                                    .
->>>>>>>>>         .                                       .
->>>>>>>>> rcu_read_unlock_bh()                            .
->>>>>>>>>                                         qdisc_reset_all_tx_gt
->>>>>>>>>
->>>>>>>>>
->>>>>>>>
->>>>>>>> Right.
->>>>>>>>
->>>>>>>>
->>>>>>>>> but dev->real_num_tx_queues is not RCU-protected, maybe that is a problem
->>>>>>>>> too.
->>>>>>>>>
->>>>>>>>> The problem we hit is as below:
->>>>>>>>> In hns3_set_channels(), hns3_reset_notify(h, HNAE3_DOWN_CLIENT) is called
->>>>>>>>> to deactive the netdevice when user requested a smaller queue num, and
->>>>>>>>> txq->qdisc is already changed to noop_qdisc when calling
->>>>>>>>> netif_set_real_num_tx_queues(), so the synchronize_net() in the function
->>>>>>>>> netif_set_real_num_tx_queues() does not help here.
->>>>>>>>
->>>>>>>> How could qdisc still be running after deactivating the device?
->>>>>>>
->>>>>>> qdisc could be running during the device deactivating process.
->>>>>>>
->>>>>>> The main process of changing channel number is as below:
->>>>>>>
->>>>>>> 1. dev_deactivate()
->>>>>>> 2. hns3 handware related setup
->>>>>>> 3. netif_set_real_num_tx_queues()
->>>>>>> 4. netif_tx_wake_all_queues()
->>>>>>> 5. dev_activate()
->>>>>>>
->>>>>>> During step 1, qdisc could be running while qdisc is resetting, so
->>>>>>> there could be skb left in the old qdisc(which will be restored back to
->>>>>>> txq->qdisc during dev_activate()), as below:
->>>>>>>
->>>>>>> CPU 0:                                       CPU1:
->>>>>>> __dev_queue_xmit():                      dev_deactivate_many():
->>>>>>> rcu_read_lock_bh();                      qdisc_deactivate(qdisc);
->>>>>>> q = rcu_dereference_bh(txq->qdisc);             .
->>>>>>> netdev_core_pick_tx(dev, skb, sb_dev);          .
->>>>>>>         .
->>>>>>>         .                               rcu_assign_pointer(dev_queue->qdisc, qdisc_default);
->>>>>>>         .                                       .
->>>>>>>         .                                       .
->>>>>>>         .                                       .
->>>>>>>         .                                       .
->>>>>>> q->enqueue()                                    .
->>>>>>
->>>>>>
->>>>>> Well, like I said, if the deactivated bit were tested before ->enqueue(),
->>>>>> there would be no packet queued after qdisc_deactivate().
-> 
-> Trying to unwind this through git history :/
-> 
-> Original code had a test_bit in dev_xmit_skb(),
-> 
-> 	if (q->flags & TCQ_F_NOLOCK) {
-> 		if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED, &q->state))) {
-> 			__qdisc_drop(skb, &to_free);
-> 			rc = NET_XMIT_DROP;
-> 		} else {
-> 			rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
-> 			__qdisc_run(q);
-> 		}
-> 
-> 		if (unlikely(to_free))
-> 			kfree_skb_list(to_free);
-> 		return rc;
-> 	}
-> 
-> So we would never enqueue something on top of a deactivated qdisc. And to ensure
-> we don't have any in-flight enqueues we have to swap qdiscs, wait a grace
-> period, and then reset the qdisc. That _should_ be OK.
 
-Actually, the deactivated is not really needed to be checked after swapping qdiscs
-and waiting a grace period, because __dev_xmit_skb() only see the noop_qdisc now,
-so qdisc_reset() in safe from q->enqueue()?
 
-> 
-> But, I'm still not entirely sure how you got here. In the drivers I did I always
-> stop the queue before messing with these things with netif_tx_stop_queue(). Then
-> we really should not get these packets into the driver.
-> 
-> In sch_direct_xmit():
-> 
-> 	if (likely(skb)) {
-> 		HARD_TX_LOCK(dev, txq, smp_processor_id());
-> 		if (!netif_xmit_frozen_or_stopped(txq))
-> 			skb = dev_hard_start_xmit(skb, dev, txq, &ret);
-> 
-> 		HARD_TX_UNLOCK(dev, txq);
-> 	} else {
-> 		if (root_lock)
-> 			spin_lock(root_lock);
-> 		return true;
-> 	}
-> 
-> Maybe I missed something? Does your driver use the netif_tx_stop/start APIs?
+On Thu, 3 Sep 2020, Linus Torvalds wrote:
 
-The hns3 driver uses netif_tx_stop_all_queues() in hns3_nic_net_stop() before
-calling netif_carrier_off()
-
-and call netif_tx_wake_all_queues() and netif_carrier_on() when link is detected
-in hns3_link_status_change()
-
-The main process of changing channel number is as below:
-1. dev_deactivate()
-2. hns3 handware related setup
-3. netif_set_real_num_tx_queues()
-4. netif_tx_wake_all_queues()
-5. dev_activate()
-
-During step 1, qdisc could be running while qdisc is resetting, so
-there could be skb left in the old qdisc(which will be restored back to
-txq->qdisc during dev_activate()), and the skb left in the old qdisc does not
-get called with hns3's xmit function in step 1, but get called with hns3's xmit
-function after step 5, because the old qdisc will be restored back to dev_queue->qdisc
-after step 5, which still has the skb left.
-
-Hope I did not misunderstand your question.
-
->  
->>>>>
->>>>> Only if the deactivated bit testing is also protected by qdisc->seqlock?
->>>>> otherwise there is still window between setting and testing the deactivated bit.
->>>>
->>>> Can you be more specific here? Why testing or setting a bit is not atomic?
->>>
->>> testing a bit or setting a bit separately is atomic.
->>> But testing a bit and setting a bit is not atomic, right?
->>>
->>>   cpu0:                   cpu1:
->>>                         testing A bit
->>> setting A bit                .
->>>        .                     .
->>>        .               qdisc enqueuing
->>> qdisc reset
->>>
->>
->> Well, this was not a problem until commit d518d2ed8640c1cbbb.
->> Prior to that commit, qdsic can still be scheduled even with this
->> race condition, that is, the packet just enqueued after resetting can
->> still be dequeued with qdisc_run().
->>
->> It is amazing to see how messy the lockless qdisc is now.
->>
->> Thanks.
+> On Thu, Sep 3, 2020 at 12:24 PM Mikulas Patocka <mpatocka@redhat.com> wrote:
+> >
+> > There's a bug when you run strace from dax-based filesystem.
+> >
+> > -- create real or emulated persistent memory device (/dev/pmem0)
+> > mkfs.ext2 /dev/pmem0
+> > -- mount it
+> > mount -t ext2 -o dax /dev/pmem0 /mnt/test
+> > -- copy the system to it (well, you can copy just a few files that are
+> >    needed for running strace and ls)
+> > cp -ax / /mnt/test
+> > -- bind the system directories
+> > mount --bind /dev /mnt/test/dev
+> > mount --bind /proc /mnt/test/proc
+> > mount --bind /sys /mnt/test/sys
+> > -- run strace on the ls command
+> > chroot /mnt/test/ strace /bin/ls
+> >
+> > You get this warning and ls is killed with SIGSEGV.
+> >
+> > I bisected the problem and it is caused by the commit
+> > 17839856fd588f4ab6b789f482ed3ffd7c403e1f (gup: document and work around
+> > "COW can break either way" issue). When I revert the patch (on the kernel
+> > 5.9-rc3), the bug goes away.
 > 
+> Funky. I really don't see how it could cause that, but we have the
+> UDDF issue too, so I'm guessing I will have to fix it the radical way
+> with Peter Xu's series based on my "rip out COW special cases" patch.
 > 
-> .
+> Or maybe I'm just using that as an excuse for really wanting to apply
+> that series.. Because we can't just revert that GUP commit due to
+> security concerns.
 > 
+> > [   84.191504] WARNING: CPU: 6 PID: 1350 at mm/memory.c:2486 wp_page_copy.cold+0xdb/0xf6
+> 
+> I'm assuming this is the WARN_ON_ONCE(1) on line 2482, and you have
+> some extra debug patch that causes that line to be off by 4? Because
+> at least for me, line 2486 is actually an empty line in v5.9-rc3.
+
+Yes, that's it. I added a few printk to look at the control flow.
+
+> That said, I really think this is a pre-existing race, and all the
+> "COW can break either way" patch does is change the timing (presumably
+> due to the actual pattern of actually doing the COW changing).
+> 
+> See commit c3e5ea6ee574 ("mm: avoid data corruption on CoW fault into
+> PFN-mapped VMA") for background.
+> 
+> Mikulas, can you check that everything works ok for that case if you
+> apply Peter's series? See
+> 
+>     https://lore.kernel.org/lkml/20200821234958.7896-1-peterx@redhat.com/
+
+I applied these four patches and strace works well. There is no longer any 
+warning or crash.
+
+Mikulas
+
+> or if you have 'b4' installed, use
+> 
+>     b4 am 20200821234958.7896-1-peterx@redhat.com
+> 
+> to get the series..
+> 
+>                      Linus
+> 
+
