@@ -2,148 +2,106 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7035C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA8CC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89EC62083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68292064E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:37:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WrvT2Ryl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726286AbgIDQfa (ORCPT
+        id S1726490AbgIDQhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:35:30 -0400
-Received: from mga12.intel.com ([192.55.52.136]:22282 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbgIDQfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:35:25 -0400
-IronPort-SDR: N7G1NMA1vwgQZOyxy79IzchW1pPfH7PkEXNqYvcXOf+4iQvVX/gX2IOO38Od/e6Sd2bhLHM/BU
- afh1yvK+7vCQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="137300774"
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="137300774"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:35:22 -0700
-IronPort-SDR: /dqQJqsIa/VFbqalbeB6jnnHq/h+KBnDMOXQYnSozk9jvYwAZbYayzsGNojeOYVl2FHGANE9zP
- QJyMI8K2AIJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="332215807"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 04 Sep 2020 09:35:19 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kEEgH-00EKJ1-4s; Fri, 04 Sep 2020 19:35:17 +0300
-Date:   Fri, 4 Sep 2020 19:35:17 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 03/23] lib: uaccess: provide getline_from_user()
-Message-ID: <20200904163517.GW1891694@smile.fi.intel.com>
-References: <20200904154547.3836-1-brgl@bgdev.pl>
- <20200904154547.3836-4-brgl@bgdev.pl>
+        Fri, 4 Sep 2020 12:37:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbgIDQh1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:37:27 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 162B8C061244;
+        Fri,  4 Sep 2020 09:37:25 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id a65so6610912wme.5;
+        Fri, 04 Sep 2020 09:37:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SsHz0anaSIx736ObUUMRuw/XmIbkGGT4MP6ZPn22gyg=;
+        b=WrvT2RylSi8jZtli8/8LLTw8YYEpVRVlyTg2k9iI5UUoKWAqy3QZN4qlvOnmAqFWLt
+         qiwvK6qirQyR9FhYKZjU2I8i1Yk8fCkT2NvZL0Fm09RIyWqet80bPiwjo+um2TWeceun
+         9cV4iXaYZhdBNg1M9nNceU05KIjGDxGJTXnru5ejZZnM49bH4RNyZ0UAbfKbWa9rpLhY
+         rIb7vXwiHmghtmnueUAx4Pvq+7jR9ZqhDVo1eGd2mQqvdtFBhW4RDlKY6ku2KxB+45e3
+         N2l6Ko+F71lfYGMhdrezGLKT0iKfZzAQgU72EP5ia07OmIoY/L/SRjdiroieH5i73aU5
+         RdMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SsHz0anaSIx736ObUUMRuw/XmIbkGGT4MP6ZPn22gyg=;
+        b=PFOm3mAtTnREK8pUkADuIKbzk/MPSzGxXu03CKGTFuJJ/lwxIcPdmJP6y4+LJczlP3
+         B5a63BL19Sg34NM86lZmZAoGR/WThSPJJwVsOSOG53qikPOv7ep1MY87QhRj6Ng0Wnov
+         lx6PnkRYBnebqVO/37+5jy2yhvuFdRrrWO7GX4I/ONwG6tCJnjEIRAjFjTUA6k0dANEa
+         4fsBjzad81p8iGYXtQ1itZTen4YHnTO2vNnC3iDEMf6HQNVbb2BVW5WyUAmtwd2iXbyi
+         0VEDxfWdI7frM7JSmQKiZYz7XbwC//ZlsRP08pwra4ZaySGSRx++56Kp49jx0yYzkq41
+         +5zQ==
+X-Gm-Message-State: AOAM531PBMHK50Q5/kwPX8HARYC2Cl+teOmoVTYPRioshqZ1c45TkY0K
+        8tack2jW65V+3o0Q8tYtBaw=
+X-Google-Smtp-Source: ABdhPJzpRKILIo9HKs0tS47pLTsfUQuR58L9eN/1mexDCDJ0jQVJQryezGXFENcnjTn7imOXJ4AORg==
+X-Received: by 2002:a1c:dec2:: with SMTP id v185mr8313988wmg.1.1599237444498;
+        Fri, 04 Sep 2020 09:37:24 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id c10sm11980109wmk.30.2020.09.04.09.37.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 09:37:23 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH] spi: qup: Allow for compile-testing on !ARM
+Date:   Fri,  4 Sep 2020 17:37:10 +0100
+Message-Id: <20200904163709.110975-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904154547.3836-4-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 05:45:27PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Provide a uaccess helper that allows callers to copy a single line from
-> user memory. This is useful for debugfs write callbacks.
+There seems no reason to restrict testing to ARM, so remove this
+constraint to improve test coverage.
 
-Doesn't mm/util.c provides us something like this?
-strndup_user()?
+Build-tested with allyesconfig on x86.
 
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  include/linux/uaccess.h |  3 +++
->  lib/usercopy.c          | 37 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 40 insertions(+)
-> 
-> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-> index 94b285411659..5aedd8ac5c31 100644
-> --- a/include/linux/uaccess.h
-> +++ b/include/linux/uaccess.h
-> @@ -333,6 +333,9 @@ long strncpy_from_user_nofault(char *dst, const void __user *unsafe_addr,
->  		long count);
->  long strnlen_user_nofault(const void __user *unsafe_addr, long count);
->  
-> +ssize_t getline_from_user(char *dst, size_t dst_size,
-> +			  const char __user *src, size_t src_size);
-> +
->  /**
->   * get_kernel_nofault(): safely attempt to read from a location
->   * @val: read into this variable
-> diff --git a/lib/usercopy.c b/lib/usercopy.c
-> index b26509f112f9..55aaaf93d847 100644
-> --- a/lib/usercopy.c
-> +++ b/lib/usercopy.c
-> @@ -87,3 +87,40 @@ int check_zeroed_user(const void __user *from, size_t size)
->  	return -EFAULT;
->  }
->  EXPORT_SYMBOL(check_zeroed_user);
-> +
-> +/**
-> + * getline_from_user - Copy a single line from user
-> + * @dst: Where to copy the line to
-> + * @dst_size: Size of the destination buffer
-> + * @src: Where to copy the line from
-> + * @src_size: Size of the source user buffer
-> + *
-> + * Copies a number of characters from given user buffer into the dst buffer.
-> + * The number of bytes is limited to the lesser of the sizes of both buffers.
-> + * If the copied string contains a newline, its first occurrence is replaced
-> + * by a NULL byte in the destination buffer. Otherwise the function ensures
-> + * the copied string is NULL-terminated.
-> + *
-> + * Returns the number of copied bytes or a negative error number on failure.
-> + */
-> +
-> +ssize_t getline_from_user(char *dst, size_t dst_size,
-> +			  const char __user *src, size_t src_size)
-> +{
-> +	size_t size = min_t(size_t, dst_size, src_size);
-> +	char *c;
-> +	int ret;
-> +
-> +	ret = copy_from_user(dst, src, size);
-> +	if (ret)
-> +		return -EFAULT;
-> +
-> +	dst[size - 1] = '\0';
-> +
-> +	c = strchrnul(dst, '\n');
-> +	if (*c)
-> +		*c = '\0';
-> +
-> +	return c - dst;
-> +}
-> +EXPORT_SYMBOL(getline_from_user);
-> -- 
-> 2.26.1
-> 
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/spi/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index 01b6c80d86c9..6dd7154d175b 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -637,7 +637,7 @@ config SPI_QCOM_QSPI
+ 
+ config SPI_QUP
+ 	tristate "Qualcomm SPI controller with QUP interface"
+-	depends on ARCH_QCOM || (ARM && COMPILE_TEST)
++	depends on ARCH_QCOM || COMPILE_TEST
+ 	help
+ 	  Qualcomm Universal Peripheral (QUP) core is an AHB slave that
+ 	  provides a common data path (an output FIFO and an input FIFO)
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.28.0
 
