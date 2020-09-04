@@ -2,100 +2,90 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D6EC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24BAC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2F8B20748
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:59:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vj9H27nY"
+	by mail.kernel.org (Postfix) with ESMTP id 77FDA207EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:59:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599209956;
+	bh=/nrikZXWmGqWATpPaqK5tSj+3s+E2skRZx06vI2GbEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HNSdA9gEyEA395Jq/ID7P0k2fucckDt61ZlZwuuRXPg8bowj7tbHxwTbr1ZbYg9im
+	 pr0/k6itpsNy9LNy4W+oUgZtSVGgNodQ0jct0HYtI6jnfkjt744cWd4bIiZ4ucZzBK
+	 XyA57HoD4jeC/DsMzWGCgmKT9isKqjcgpQNoSxnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbgIDI66 (ORCPT
+        id S1729981AbgIDI7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:58:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729849AbgIDI64 (ORCPT
+        Fri, 4 Sep 2020 04:59:15 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39533 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729962AbgIDI7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:58:56 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF5B9C061245
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 01:58:55 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id r13so7100867ljm.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 01:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=e5bqL5TjHbwBbQQx08EWcQb2A9xnNxuFA36RwtHgwZA=;
-        b=vj9H27nYx9c3BTGbF47tdYeEfxFGyDB42r8FcChdlsq2Q/QAmh2XtJIHlpQp6swIoj
-         RMTZradXBRiPloHad/p0tj+CYFxCd0KLPu1rFIQDkAxZu9MvBT/H442q8ck4tszxddMW
-         FnwBQP08jLIPGtH9wX6JuEtRTf0htM/DhYKhe4TENRq7RI/4j2kFwh8YvydLBowPhWbO
-         tLXx1ZqjUnsur2XK8NUt/Y5qGRjIUPkEm0SKV8wa2QuRDfaK1aELXTFEaVa9NNaXEv87
-         f93oUQoAdT4bEQTpgSMejicznc2/XIjrvOG9WxQjK/3IwPnLOtbVXC1QNZALiagXtIma
-         mzyg==
+        Fri, 4 Sep 2020 04:59:06 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a17so5923472wrn.6;
+        Fri, 04 Sep 2020 01:59:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=e5bqL5TjHbwBbQQx08EWcQb2A9xnNxuFA36RwtHgwZA=;
-        b=c3xUXWPgVMbnBn1YKzENR980u2szDuGqz4cMn4G+/no1yAjwzzWzXvwGlzN/HRKi2l
-         TWPyX/NojhCf+aG3GXEUs4702LWnygY7uo/gFwz5pXghLESAD9T8KjSDFSwwO8hn59ea
-         obMsueuFwg4N9zbScTK/T/4NrphvtstONE8IDoZaZc4j1RWX9uyQXPwTnv3iJlXW9a6n
-         tpsg32uXcXuZHz37fkxI3LelPpWdWdhpQHfdITkNnDuzsq08aiN8YqV6s4p5bDBsJdMq
-         rhGODja72vW6aau0Oe486HfrLG75H+csL+P+S+lK5XFE6hODGGINIWozTl610i3BtAO8
-         BdNg==
-X-Gm-Message-State: AOAM5321wDpTUaDF5fycf4ukK5m/c7+ykLPFJeVewX3T5d7VLA/PFRUl
-        bAt8R2/IVy6v/MxK9q2ynu1nI9nKWT6Eu0FdsO2RRQ==
-X-Google-Smtp-Source: ABdhPJwBOG7Hh44q1D63QCcRhYO5V5+LCYkolaEWM8gLEkK+7LP+gf9P/+1WSp243uMeKZNw+XTvVtxuRO+q8WQ14gM=
-X-Received: by 2002:a2e:9988:: with SMTP id w8mr3563728lji.286.1599209934290;
- Fri, 04 Sep 2020 01:58:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H126aw9EZKOdIS9GqBp/bNQWMbMK1Mr9xym+R9dtw40=;
+        b=oVcxCRXqXPErXrfuBAiv1ZPo+s3jc/j9BCNUJ0O9lOc2xiSkbsqYohctl6iuIcza+n
+         NpmpdYuTXVZOsoWCA3Vpa19klmCkwgsIlLjIn0SVi5w8RpHZGSOglD1eLOFeabfhNQtr
+         wSQlZ2ervUsJdkt5TeH4wRAfSEdtJVCIQwKY2opmzWTVyWZ3w+2c3k/S3jsSoF1QWyVD
+         Tb0omyZaKdRukEBCqYhkV1XdZK9s/QUK1lg5elZMNMBYdPSjJf/4k7QVtvokAzr4b92n
+         QLQzsX/np351p3h5WKWedk56ShF5Oit2bIICWFyu+Ag07d5vjBeLEpaegwkXIMuYsGCp
+         yQEw==
+X-Gm-Message-State: AOAM532U2IljIik1g1STlKLPaLTru4Yv/HQxeg8v0N9Q3SAIXqeXgqjw
+        Dmn0YrogpAuCBUYIZuppVSg=
+X-Google-Smtp-Source: ABdhPJxzDt66wdKoFnKqYxwCcJ4DAJAvVkoRoLSK5EHTDsvXAoUV3GGc4kgE8bbwME+xepZV/EzipA==
+X-Received: by 2002:adf:e8c3:: with SMTP id k3mr6641944wrn.228.1599209944329;
+        Fri, 04 Sep 2020 01:59:04 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.106])
+        by smtp.googlemail.com with ESMTPSA id v2sm10764750wrn.44.2020.09.04.01.59.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 04 Sep 2020 01:59:03 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 10:59:01 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>
+Subject: Re: [PATCH 13/13] ARM: dts: exynos: Use S2MPS11 clock in S3C RTC in
+ SMDK5420
+Message-ID: <20200904085901.GA30093@kozik-lap>
+References: <20200901075417.22481-1-krzk@kernel.org>
+ <20200901075417.22481-14-krzk@kernel.org>
 MIME-Version: 1.0
-References: <20200828130602.42203-1-andre.przywara@arm.com> <19c6a67e-48f0-c0b6-3653-32a5a1f09e07@gmail.com>
-In-Reply-To: <19c6a67e-48f0-c0b6-3653-32a5a1f09e07@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 4 Sep 2020 10:58:43 +0200
-Message-ID: <CACRpkdbMbNd87145iwdL7=x501cvgU7wiZXNLF456sn6WvoodQ@mail.gmail.com>
-Subject: Re: [PATCH 00/10] dt-bindings: Convert SP805 to Json-schema (and fix users)
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chanho Min <chanho.min@lge.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Wei Xu <xuwei5@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200901075417.22481-14-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 9:34 PM Florian Fainelli <f.fainelli@gmail.com> wro=
-te:
-> On 8/28/20 6:05 AM, Andre Przywara wrote:
+On Tue, Sep 01, 2020 at 09:54:17AM +0200, Krzysztof Kozlowski wrote:
+> Use the 32 kHz clock from S2MPS11 PMIC in the S3C RTC node. Except
+> making the S3C RTC working, this also fixes dtbs_check warnings:
+> 
+>   arch/arm/boot/dts/exynos5420-smdk5420.dt.yaml: rtc@101e0000: clocks: [[2, 317]] is too short
+>   arch/arm/boot/dts/exynos5420-smdk5420.dt.yaml: rtc@101e0000: clock-names: ['rtc'] is too short
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts | 3 +++
 
-> What is the plan for merging this series? Should Rob pick up all changes
-> or since those are non critical changes, should we just leave it to the
-> SoC maintainers to pick up the changes in their tree?
+Applied.
 
-What about Andr=C3=A9 just send a pull request to the ARM SoC maintainers
-for the whole thing?
+Best regards,
+Krzysztof
 
-Yours,
-Linus Walleij
