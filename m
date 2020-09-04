@@ -2,106 +2,96 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB10C28E83
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 886C2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56F20205CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599199231;
-	bh=CufiwZgoptbCZRGNm9qMJI8XdSf+8qMLviIADfz6+sc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GohGmtMjxZ5zDi51iHMlijbObnvYt+m8c0vZKcX1Z4Tvx+m0t9fv9sQVVIOspd0zk
-	 0CMsv1ysW+bGMX0yXjydxeISy2TQT3viW+1epEHXkaq+xbbWGrIzkyiutSL6Czvc1f
-	 UhC3TSqNv6VhW905C8p6wZOJ5VlHxaVf1sQFHbrk=
+	by mail.kernel.org (Postfix) with ESMTP id 3D216206E7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:03:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="iRNNr3B2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgIDGA3 (ORCPT
+        id S1726445AbgIDGDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 02:00:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgIDGA2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 02:00:28 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48487C061244;
-        Thu,  3 Sep 2020 23:00:28 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id z23so6944785ejr.13;
-        Thu, 03 Sep 2020 23:00:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/RbKFcDe/9p0eCn6PVwL3hGGJ9h1UwG7+EMiD7IMIjA=;
-        b=BUUjH6498pxgKlkI7TBQkAxL4YAOzv1LuihEIjbUhMlESZB9pcmBNlol1CXWwjT3QA
-         GLzgR1b5EhnjoX1bPYt3Hi+Ahrt4TJ6gkdCjW6PB4FmtMV4zqNCGt9xlA+64OUjDtdeA
-         NrrDxCFEgrxrN8exnV279/ZKGMyixFaXASn2kADFjY4/3WaHmmuCEQmWp3MDs66/miJa
-         ksLSa3zmEexrNsV7V+5t1v6NG/6WmSqUBJCREH+GegDbN0ai4pgrWp5wyoeIwAAIN5yv
-         83ERivChI0D+Ky59cSCS2nhTILw7TgtSN99hoNpdlqipXI1DUcgXY1dIukd08J8Jc2wL
-         oG1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=/RbKFcDe/9p0eCn6PVwL3hGGJ9h1UwG7+EMiD7IMIjA=;
-        b=j/uWxs8e/YTk6ynojrmJOSkTjnFZBhz1cXVjh32q5hfmhMw+jA7WekioDnbvv1Zz+V
-         Scb3Jz748Mlsia2Wp+1K0R1BB/w4ZC/sLgXRvH8XfZ/1ExyJF7ZtB5es8HwaIBt7DEKN
-         eQxjWler0W0LHcLBLOldy4jAEyAdQy6s6irog3xcUqpNGuazuDQ8BsFCxDUV84lF+iTz
-         sn+PI90v/kXDKmy/h0wBsQwEcAVf998kzybKCBR+S1hFBPmuYngIGPKIwsMh7PgXliR+
-         v/tnqNHp5WDrTER50wOmVNMA/ojhpbsGHsQdvQvXZP3QrXnr954O1R+wyqyDpJAAkCpB
-         YfVA==
-X-Gm-Message-State: AOAM532gAMFb8FKiRLYD8yJtHZPJAst7wIwed7RImHSa4iIvAYTnwnYc
-        ufkSX/YvSV4/xNfnuq5nRRk=
-X-Google-Smtp-Source: ABdhPJw7qUGl/jQF6c84gFZcHhRqBS1gA5FSgsoreOSwdAggSpDPGO0dfyGq/1ecMqRsqPeYMPizIw==
-X-Received: by 2002:a17:906:a1d7:: with SMTP id bx23mr5864845ejb.273.1599199226711;
-        Thu, 03 Sep 2020 23:00:26 -0700 (PDT)
-Received: from gmail.com (563BA415.dsl.pool.telekom.hu. [86.59.164.21])
-        by smtp.gmail.com with ESMTPSA id r26sm5332257ejb.102.2020.09.03.23.00.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 23:00:26 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 08:00:24 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: remove the last set_fs() in common code, and remove it for x86
- and powerpc v3
-Message-ID: <20200904060024.GA2779810@gmail.com>
-References: <20200903142242.925828-1-hch@lst.de>
+        Fri, 4 Sep 2020 02:03:45 -0400
+Received: from www.zeus03.de ([194.117.254.33]:46214 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725812AbgIDGDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 02:03:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=2j2B6NemcV8Dxeu6oSNbEuFBis/7
+        VkF6rkRjkhOxqCQ=; b=iRNNr3B2DUSgFPPfphdXJmRk/r1Ok2OTR4IJi6L6UwsU
+        MPi5BE0sy8aFqkiipm4rjGfBw60v2jM9lSB/+FAxwJuBrjKUBlLgwP3heNdbi8As
+        l7F+An0yjq9qwJ0nZefjKOi+l+kJJgLrO0X5SXFv5XSFtGMj8gYFkUqRAUJGCkI=
+Received: (qmail 3465450 invoked from network); 4 Sep 2020 08:03:41 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 Sep 2020 08:03:41 +0200
+X-UD-Smtp-Session: l3s3148p1@lax2oXauHqEgAwDPXwlxANIWpbLKE1Uh
+Date:   Fri, 4 Sep 2020 08:03:38 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     ulf.hansson@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mmc: renesas_sdhi: Drop local dma_parms
+Message-ID: <20200904060338.GA1506@ninjato>
+References: <85e1fc97dbec3dea96102785a5e308ccb5e91cfe.1599167798.git.robin.murphy@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
 Content-Disposition: inline
-In-Reply-To: <20200903142242.925828-1-hch@lst.de>
+In-Reply-To: <85e1fc97dbec3dea96102785a5e308ccb5e91cfe.1599167798.git.robin.murphy@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Christoph Hellwig <hch@lst.de> wrote:
+--Q68bSM7Ycu6FN28Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Hi all,
-> 
-> this series removes the last set_fs() used to force a kernel address
-> space for the uaccess code in the kernel read/write/splice code, and then
-> stops implementing the address space overrides entirely for x86 and
-> powerpc.
+On Thu, Sep 03, 2020 at 10:18:06PM +0100, Robin Murphy wrote:
+> Since commit 9495b7e92f71 ("driver core: platform: Initialize dma_parms
+> for platform devices"), struct platform_device already provides a
+> dma_parms structure, so we can save allocating another one.
+>=20
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 
-Cool! For the x86 bits:
+Double-checked the mentioned commit above:
 
-  Acked-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Thanks,
+No regression and same performance when checksumming a large file:
 
-	Ingo
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+Thanks for the patch!
+
+
+--Q68bSM7Ycu6FN28Q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9R2LYACgkQFA3kzBSg
+KbYNPQ/+LySpPJv7gjCKYrfj8+CLJgz77TYtIdkVeOYKkZWvz5CEvrYPquOJ6Otx
+9z66asp0e9aupqEevqSy/sdFcvBnCnUfzGWfm6aY7C2bvTW/ay7hSk9mqHz4yoMd
+LqS9oXdRfL9pfurPh68MFx0kM2HWTCV38YF6Hm9Rwlnwct/Ea2l48YpZx9dpiYm1
+M2SkP5DvhBlMJAlJ2bE3m6RqSN7O7gQtPmNCHrT+ixiLiv3mQCPtO3YAY8CMcaeu
+igP4qvt5drOLPyNqlCsdJLLzu9H9I8aSg6RkkUVxnLIT7q3JLYa/oGuwGfAkX0ne
+wnX4fZS06sM3i2ZS3UVHHt9nUKbGKre/yGoCNFzS4XNwLwqXBvClVKNCeyJHS59T
+rnF3MCNWKskFCblmRB9VTOOKlNDnEVjv0Nmx91SY4ijQIr87Fxe5GcEGcJRYNRlE
+JL12rNV0xUk0oLNP/ZEEIWsy90k/p5H/U+P/Zp2bz7cay+VuoMSrH9dJ7aGhN8WQ
+kyKmM95BVYc/9GeXt/Zwl24pMzskICwwJWA4T3joNo3tuJrJ0hjsi/XUrYXrFeuq
+bLojTEqnSvq1FMga6sqFASH89bmZ4sdurAncU4bEIil4bRzXrS0om19xlkKqMVu3
+wqnbh3+0ASBDxHZdkJZVvnoifhoahlzosNNvhW27FBFSvZ8du6Q=
+=Q1Tk
+-----END PGP SIGNATURE-----
+
+--Q68bSM7Ycu6FN28Q--
