@@ -2,113 +2,215 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C01C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C692AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B894520665
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:07:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599250064;
-	bh=yYyih0tRkyXvxF6zrp5M82q33ztuOVBW3TzBHsnDAx0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=LWJFzOK9cqvV0GnHVRERY91dK95rEDoguo7kGm7FYkS0SLyvvHklIbRcPDp4Xc28R
-	 t1o0mDS8b1IAgE/C2Rs6PtzvFEgQh/fJSjfMYoYT4h1LX4QcRKtkwx0SCt4aJ5L3uL
-	 d0O4onNX+XihK1vIiTpqECZ8kfIo5ouZPwCdRTWI=
+	by mail.kernel.org (Postfix) with ESMTP id 7F76520665
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:09:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPIZQibe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgIDUHl (ORCPT
+        id S1728056AbgIDUJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 16:07:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56028 "EHLO
+        Fri, 4 Sep 2020 16:09:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgIDUHk (ORCPT
+        with ESMTP id S1726618AbgIDUJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 16:07:40 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 106E3C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:07:40 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id e14so7450917ile.6
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 13:07:40 -0700 (PDT)
+        Fri, 4 Sep 2020 16:09:18 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DE3C061244;
+        Fri,  4 Sep 2020 13:09:17 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id 189so5233692ybw.3;
+        Fri, 04 Sep 2020 13:09:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0Jg9VU73gZ+7YHgdtpsBvolMRud2ea97/XzW1kHoQ78=;
-        b=PB+WB4sz8fYgYJMqBSzJbVeHpt5v77NIMVtsh4XbQARfKhY9t0ZaCueiNQz0/7CMR1
-         hm0a99JGfI9ytjZRLutJBw/b2CPPRvNkJrl62eU1EiX5dvmUkMtUfoz3q8V7b6sp9FB9
-         UtSm3ADy+f4knG3zf+JoT7g85QyI6f7MF1evI=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uWNlgVh0yJEXVh67zXzBiMLoKh/QPEENQysqWrLrBfY=;
+        b=fPIZQibe3OCy6m11/3UIIt0QAdrJCX7o4t0WmyRpOY3ydCV+yVq11LHmeo8etYFRmP
+         1ECbrqTqqawW/+zBAJD7usPMW9pxRzgNvr+BYBHE9mvRsj4iywyGW2bPcGNHhwO5gyFC
+         XsIJ0Z/LXX+XlAG7rofTJ5ChcidjMe3qYaDeKBByev+SmUOILXPK/sLopoL80JizPreX
+         K6tsGXenJVu9cwevQ+vr6g6zwCM6hKfy1LYZFbmX1HTazbDj95+NapQK/WAPRXNeQrJ8
+         QLw/3xpwvELNlSlhy4ZXdh0I+qXzNeCGwSRiY3B4kBRj9G2pTDEREefiX2x3CHS6v5Xw
+         nZGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0Jg9VU73gZ+7YHgdtpsBvolMRud2ea97/XzW1kHoQ78=;
-        b=geUHLZWtyhuEUuGWgbWFygzb4ZiWgkqBLCtbAQhargXisSqoaIJnWTcvHcU1CaLhoN
-         aKOcaEgEhOvDJqFSKb/yyzxhSnoyIAVOHNmCCMo+cnx1O3kpAeVKAbxYUJ4JEw1p8OJO
-         rgqPa6pQQpMwRdF65pH+dlF/2W6Kfn6sOsK15/mn9RYBdU87gWw8gf9VknG2bfrtJHAV
-         YsO5MBwcSkHcL0kj6HxG3DHI2DY9NQK4uUryZ+G/XzWSz0NAO5Wh1YMIYHwm4k7llli5
-         HLcDnmJ3VpquECmP251YgkTimAOLBp42WeCzn82RJMXwOsCfFVfee92IoZpx9wWU4SQF
-         lH3Q==
-X-Gm-Message-State: AOAM531/cBbK5PosmB+e0WfO8WuSmOMrt+wkr+u39zBPGcV0NrjQNRqx
-        ML1ehy8kJpRWmJTpX+qNZfyJQw==
-X-Google-Smtp-Source: ABdhPJx2z9SZSRZAaYo6HLa5BLLirn0uRTUuecWU949nQ+tKxHKypa4/EcuE2B+91TTm77OGO2nRPA==
-X-Received: by 2002:a92:aa54:: with SMTP id j81mr9402231ili.291.1599250059312;
-        Fri, 04 Sep 2020 13:07:39 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id r11sm3648169ilt.76.2020.09.04.13.07.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 13:07:38 -0700 (PDT)
-Subject: Re: [PATCH 5.4 00/16] 5.4.63-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20200904120257.203708503@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <319c61f6-98d6-fc2f-171c-b771bb528d10@linuxfoundation.org>
-Date:   Fri, 4 Sep 2020 14:07:37 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uWNlgVh0yJEXVh67zXzBiMLoKh/QPEENQysqWrLrBfY=;
+        b=tGq+5d7psbA503MH5qcf2GtXPoqkPmQnyr+qoqwp2ZEa5S5WXKBtcRPjHeJZbdtFWl
+         ZqefbZMj1WFmOHQNxUIrXAgsokEtK5/xNqR8vu0oeyTlqr9L/m3pSqbGN8CSyPjapf2Z
+         8u48343XoQ3LKcByv/mYRXXcofoT52ir3WBlR1Wg5CTkFW4DUXU8AyAGtQUSLRV0Aesx
+         T79yjKoqbncXvHetTLNRolcDBcHUFlFKYM36qj3nq7rj1ZdiYcrdVeiexlie+DTLhxIw
+         /zJxVoXx6ZV/C+9jYMpAu/gM2dMDFIqlNPUQDviuLHtk5e9vDyh6+PQvzkYXSQiwIJ0q
+         7qwA==
+X-Gm-Message-State: AOAM531GBnNzPyXF4A598PD33+YLN44s7Iy8jo2Cc25bzFCtOzb1zmYp
+        YoTNE0tylGcpJJ25anqBXwJSCFfKWf8cTLStcxs=
+X-Google-Smtp-Source: ABdhPJyLK2KMEUcu0TKLCER3H0ox87fGV5Gz0FMyx0hwwDF1hlzrl0EXnJ+Os47sTp9amfewM52ykuZM4q7BJDoq2mU=
+X-Received: by 2002:a25:6885:: with SMTP id d127mr11696195ybc.27.1599250156878;
+ Fri, 04 Sep 2020 13:09:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200904120257.203708503@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200903223332.881541-1-haoluo@google.com> <20200903223332.881541-6-haoluo@google.com>
+In-Reply-To: <20200903223332.881541-6-haoluo@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 4 Sep 2020 13:09:06 -0700
+Message-ID: <CAEf4Bza2W9jO3FRCf_y44SwhUHr=WoCLigqLh3pUMMOaUBF64w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 5/6] bpf: Introduce bpf_this_cpu_ptr()
+To:     Hao Luo <haoluo@google.com>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/20 7:29 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.63 release.
-> There are 16 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 06 Sep 2020 12:02:48 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.63-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Thu, Sep 3, 2020 at 3:35 PM Hao Luo <haoluo@google.com> wrote:
+>
+> Add bpf_this_cpu_ptr() to help access percpu var on this cpu. This
+> helper always returns a valid pointer, therefore no need to check
+> returned value for NULL. Also note that all programs run with
+> preemption disabled, which means that the returned pointer is stable
+> during all the execution of the program.
+>
+> Signed-off-by: Hao Luo <haoluo@google.com>
+> ---
 
-Compiled and booted on my test system. No dmesg regressions.
+looks good, few small things, but otherwise:
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-thanks,
--- Shuah
+>  include/linux/bpf.h            |  1 +
+>  include/uapi/linux/bpf.h       | 14 ++++++++++++++
+>  kernel/bpf/verifier.c          | 10 +++++++---
+>  kernel/trace/bpf_trace.c       | 14 ++++++++++++++
+>  tools/include/uapi/linux/bpf.h | 14 ++++++++++++++
+>  5 files changed, 50 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index 6b2034f7665e..506fdd5d0463 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -307,6 +307,7 @@ enum bpf_return_type {
+>         RET_PTR_TO_ALLOC_MEM_OR_NULL,   /* returns a pointer to dynamically allocated memory or NULL */
+>         RET_PTR_TO_BTF_ID_OR_NULL,      /* returns a pointer to a btf_id or NULL */
+>         RET_PTR_TO_MEM_OR_BTF_ID_OR_NULL, /* returns a pointer to a valid memory or a btf_id or NULL */
+> +       RET_PTR_TO_MEM_OR_BTF_ID,       /* returns a pointer to a valid memory or a btf_id */
+>  };
+>
+>  /* eBPF function prototype used by verifier to allow BPF_CALLs from eBPF programs
+> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> index d0ec94d5bdbf..e7ca91c697ed 100644
+> --- a/include/uapi/linux/bpf.h
+> +++ b/include/uapi/linux/bpf.h
+> @@ -3612,6 +3612,19 @@ union bpf_attr {
+>   *             bpf_per_cpu_ptr() must check the returned value.
+>   *     Return
+>   *             A generic pointer pointing to the kernel percpu variable on *cpu*.
+> + *
+> + * void *bpf_this_cpu_ptr(const void *percpu_ptr)
+> + *     Description
+> + *             Take a pointer to a percpu ksym, *percpu_ptr*, and return a
+> + *             pointer to the percpu kernel variable on this cpu. See the
+> + *             description of 'ksym' in **bpf_per_cpu_ptr**\ ().
+> + *
+> + *             bpf_this_cpu_ptr() has the same semantic as this_cpu_ptr() in
+> + *             the kernel. Different from **bpf_per_cpu_ptr**\ (), it would
+> + *             never return NULL.
+> + *     Return
+> + *             A generic pointer pointing to the kernel percpu variable on
+
+what's "a generic pointer"? is it as opposed to sk_buff pointer or something?
+
+> + *             this cpu.
+>   */
+>  #define __BPF_FUNC_MAPPER(FN)          \
+>         FN(unspec),                     \
+> @@ -3764,6 +3777,7 @@ union bpf_attr {
+>         FN(d_path),                     \
+>         FN(copy_from_user),             \
+>         FN(bpf_per_cpu_ptr),            \
+> +       FN(bpf_this_cpu_ptr),           \
+>         /* */
+>
+>  /* integer value in 'imm' field of BPF_CALL instruction selects which helper
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index a702600ff581..e070d2abc405 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -5016,8 +5016,10 @@ static int check_helper_call(struct bpf_verifier_env *env, int func_id, int insn
+>                 regs[BPF_REG_0].type = PTR_TO_MEM_OR_NULL;
+>                 regs[BPF_REG_0].id = ++env->id_gen;
+>                 regs[BPF_REG_0].mem_size = meta.mem_size;
+> -       } else if (fn->ret_type == RET_PTR_TO_MEM_OR_BTF_ID_OR_NULL) {
+> +       } else if (fn->ret_type == RET_PTR_TO_MEM_OR_BTF_ID_OR_NULL ||
+> +                  fn->ret_type == RET_PTR_TO_MEM_OR_BTF_ID) {
+>                 const struct btf_type *t;
+> +               bool not_null = fn->ret_type == RET_PTR_TO_MEM_OR_BTF_ID;
+
+nit: this is fine, but I'd inline it below
+
+>
+>                 mark_reg_known_zero(env, regs, BPF_REG_0);
+>                 t = btf_type_skip_modifiers(btf_vmlinux, meta.ret_btf_id, NULL);
+> @@ -5034,10 +5036,12 @@ static int check_helper_call(struct bpf_verifier_env *env, int func_id, int insn
+>                                         tname, PTR_ERR(ret));
+>                                 return -EINVAL;
+>                         }
+> -                       regs[BPF_REG_0].type = PTR_TO_MEM_OR_NULL;
+> +                       regs[BPF_REG_0].type = not_null ?
+> +                               PTR_TO_MEM : PTR_TO_MEM_OR_NULL;
+>                         regs[BPF_REG_0].mem_size = tsize;
+>                 } else {
+> -                       regs[BPF_REG_0].type = PTR_TO_BTF_ID_OR_NULL;
+> +                       regs[BPF_REG_0].type = not_null ?
+> +                               PTR_TO_BTF_ID : PTR_TO_BTF_ID_OR_NULL;
+>                         regs[BPF_REG_0].btf_id = meta.ret_btf_id;
+>                 }
+>         } else if (fn->ret_type == RET_PTR_TO_BTF_ID_OR_NULL) {
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index d474c1530f87..466acf82a9c7 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1160,6 +1160,18 @@ static const struct bpf_func_proto bpf_per_cpu_ptr_proto = {
+>         .arg2_type      = ARG_ANYTHING,
+>  };
+>
+> +BPF_CALL_1(bpf_this_cpu_ptr, const void *, percpu_ptr)
+> +{
+> +       return (u64)this_cpu_ptr(percpu_ptr);
+
+see previous comment, this might trigger unnecessary compilation
+warnings on 32-bit arches
+
+> +}
+> +
+> +static const struct bpf_func_proto bpf_this_cpu_ptr_proto = {
+> +       .func           = bpf_this_cpu_ptr,
+> +       .gpl_only       = false,
+> +       .ret_type       = RET_PTR_TO_MEM_OR_BTF_ID,
+> +       .arg1_type      = ARG_PTR_TO_PERCPU_BTF_ID,
+> +};
+> +
+
+[...]
