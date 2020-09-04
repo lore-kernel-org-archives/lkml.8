@@ -2,105 +2,142 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E87C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC6CC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D50020E65
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:55:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="nBQKq2tZ"
+	by mail.kernel.org (Postfix) with ESMTP id A537B2065E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:55:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599227755;
+	bh=m9pIERxvWHUgsDqBqgVJI3JMc/1+doudOyGmLox0dOo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sqQwe6yf4/LRq9TKy0nK6xfZ1llb3STmTlPsgvC6ZOtrD5azPaLEiPAKzBUZ8Fu6J
+	 6jX0DvbQqR5I3wP4I2Skhvlvznr2zdBk6MdEAhNaUaCkBxaDw6Jbuk775VNJxirTNf
+	 TzMaIU0LGN2A5H5a+gOhDciln/+PuJHa7/HO+X5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730708AbgIDNyl (ORCPT
+        id S1730674AbgIDNzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:54:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730581AbgIDNxp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:53:45 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B0AC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 06:53:44 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id q4so3847171qvr.10
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 06:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=6QhKTbTEeY1hMpwGRn3I4+LPI2vg1nOM4QWM63CXncA=;
-        b=nBQKq2tZPHnHW6+VjusqM7szXA10nJIkygMDcuxIOkW1Cr311hBbBCr2AU9gMR5Clc
-         3C8/3M/R0g35KUMJ+X+SMr3E+wfpTlr1WHpcdCWuL0nssZaWcqyeERm25cn3LIyfPoQz
-         fpMpl4DgjhIPtuz46UcOQwO7E9frYXls10Y1w4UsL2Pn76eFN4PtI3rfAHrAdgZrGhql
-         M8DkLpjUPpoSva9fXKh9llb5tB1j8EpfNZBrOnWaKRpkuJctbiG4XiyypLCAf9Q81n95
-         1drRRPeUEzVtEp1RwvYCBDIQPhxNTwsS9s/7JjfrzNbLFyrSEa0dpY+OHbnhKxNjM0Ry
-         o5Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=6QhKTbTEeY1hMpwGRn3I4+LPI2vg1nOM4QWM63CXncA=;
-        b=XG9U52zqeqkGaFR4oEzS2a8u3dyzJutKGRwZUJNXtW9IPRRPoW612E10ujDcEvuVXx
-         k+i3l9wdfYunz1hyjNoE7Sp1o7B9YjvHZf1V8rlO0SpxpLYveRxIhgpJbB4OIQVY36ks
-         bXNPMioNUXsrdxNidOvreDVwHk6XHy6zLvSrAhdUJRBzKUK+isTGxBJwvMAI+/DCpd/4
-         4t+osh3DBIOxZpwY6CucjEHEGggfBxzwilsmIFZ+8dk51+2SsE6rz2a4HVSVaqEnjBmK
-         aP30MFxZi1DggGqHTR8T8hJ9TVDhaeHtLvhkkBE35YmL4JmcNkDZamo05BvRUig/LdCh
-         rQCQ==
-X-Gm-Message-State: AOAM5312ti5VbVL/N/Xlv2UQMgpX8v5p3XTXU7Luaw1xg3RAIK15eYHp
-        SN5haUyTfE5FSIKHV/ecX1Tp2H7C
-X-Google-Smtp-Source: ABdhPJxQcGmIFWhXaDJlfBg9IY86LASa1SjfOzRlyC9IPT6aHtPDVbg/sEqfYFy1y9Rg9qWeo6OqFTmg
-X-Received: from gnomeregan.cam.corp.google.com ([2620:15c:6:14:1ea0:b8ff:fe76:1e48])
- (user=brho job=sendgmr) by 2002:a05:6214:292:: with SMTP id
- l18mr6631318qvv.5.1599227623676; Fri, 04 Sep 2020 06:53:43 -0700 (PDT)
-Date:   Fri,  4 Sep 2020 09:53:32 -0400
-In-Reply-To: <20200728163416.556521-22-hch@lst.de>
-Message-Id: <20200904135332.1130070-1-brho@google.com>
-Mime-Version: 1.0
-References: <20200728163416.556521-22-hch@lst.de>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH] init: fix error check in clean_path()
-From:   Barret Rhoden <brho@google.com>
-To:     hch@lst.de
-Cc:     gregkh@linuxfoundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-raid@vger.kernel.org, rafael@kernel.org,
-        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        luto@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 4 Sep 2020 09:55:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730640AbgIDNz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:55:28 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9941208DB;
+        Fri,  4 Sep 2020 13:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599226213;
+        bh=m9pIERxvWHUgsDqBqgVJI3JMc/1+doudOyGmLox0dOo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TqzyshBwE96PixGuiiQSTt6PLl3/wdfJ7DUhdOtGeULfbW/9mFHQKLpw+2zRmR+8K
+         MlvydhjQzMg98kIOwDtYehzBIUvsREPqBnyWz+GInnLfp4BxJ9QXfbD8HT4z5ZPxxY
+         CBp5KKamYJXg1hT4p3s7g8UHG3XSJYSDXQklGAzg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 09/16] dt-bindings: mmc: tegra: Add tmclk for Tegra210 and later
+Date:   Fri,  4 Sep 2020 15:30:02 +0200
+Message-Id: <20200904120257.654794262@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200904120257.203708503@linuxfoundation.org>
+References: <20200904120257.203708503@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-init_stat() returns 0 on success, same as vfs_lstat().  When it replaced
-vfs_lstat(), the '!' was dropped.
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-Fixes: 716308a5331b ("init: add an init_stat helper")
-Signed-off-by: Barret Rhoden <brho@google.com>
+commit f7f86e8ac0ad7cd6792a80137f5a550924966916 upstream.
+
+commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+
+Tegra210 and later uses separate SDMMC_LEGACY_TM clock for data
+timeout.
+
+So, this patch adds "tmclk" to Tegra sdhci clock property in the
+device tree binding.
+
+Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+Cc: stable <stable@vger.kernel.org> # 5.4
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Link: https://lore.kernel.org/r/1598548861-32373-4-git-send-email-skomatineni@nvidia.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
+ Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt |   32 +++++++++-
+ 1 file changed, 29 insertions(+), 3 deletions(-)
 
-Andy: this was broken in virtme.  "/init: source: not found"
-
- init/initramfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/init/initramfs.c b/init/initramfs.c
-index e6dbfb767057..1f97c0328a7a 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -297,7 +297,7 @@ static void __init clean_path(char *path, umode_t fmode)
- {
- 	struct kstat st;
+--- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+@@ -15,8 +15,15 @@ Required properties:
+   - "nvidia,tegra210-sdhci": for Tegra210
+   - "nvidia,tegra186-sdhci": for Tegra186
+   - "nvidia,tegra194-sdhci": for Tegra194
+-- clocks : Must contain one entry, for the module clock.
+-  See ../clocks/clock-bindings.txt for details.
++- clocks: For Tegra210, Tegra186 and Tegra194 must contain two entries.
++	  One for the module clock and one for the timeout clock.
++	  For all other Tegra devices, must contain a single entry for
++	  the module clock. See ../clocks/clock-bindings.txt for details.
++- clock-names: For Tegra210, Tegra186 and Tegra194 must contain the
++	       strings 'sdhci' and 'tmclk' to represent the module and
++	       the timeout clocks, respectively.
++	       For all other Tegra devices must contain the string 'sdhci'
++	       to represent the module clock.
+ - resets : Must contain an entry for each entry in reset-names.
+   See ../reset/reset.txt for details.
+ - reset-names : Must include the following entries:
+@@ -99,7 +106,7 @@ Optional properties for Tegra210, Tegra1
  
--	if (init_stat(path, &st, AT_SYMLINK_NOFOLLOW) &&
-+	if (!init_stat(path, &st, AT_SYMLINK_NOFOLLOW) &&
- 	    (st.mode ^ fmode) & S_IFMT) {
- 		if (S_ISDIR(st.mode))
- 			init_rmdir(path);
--- 
-2.28.0.526.ge36021eeef-goog
+ Example:
+ sdhci@700b0000 {
+-	compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
++	compatible = "nvidia,tegra124-sdhci";
+ 	reg = <0x0 0x700b0000 0x0 0x200>;
+ 	interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+ 	clocks = <&tegra_car TEGRA210_CLK_SDMMC1>;
+@@ -107,6 +114,25 @@ sdhci@700b0000 {
+ 	resets = <&tegra_car 14>;
+ 	reset-names = "sdhci";
+ 	pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
++	pinctrl-0 = <&sdmmc1_3v3>;
++	pinctrl-1 = <&sdmmc1_1v8>;
++	nvidia,pad-autocal-pull-up-offset-3v3 = <0x00>;
++	nvidia,pad-autocal-pull-down-offset-3v3 = <0x7d>;
++	nvidia,pad-autocal-pull-up-offset-1v8 = <0x7b>;
++	nvidia,pad-autocal-pull-down-offset-1v8 = <0x7b>;
++	status = "disabled";
++};
++
++sdhci@700b0000 {
++	compatible = "nvidia,tegra210-sdhci";
++	reg = <0x0 0x700b0000 0x0 0x200>;
++	interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&tegra_car TEGRA210_CLK_SDMMC1>,
++		 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
++	clock-names = "sdhci", "tmclk";
++	resets = <&tegra_car 14>;
++	reset-names = "sdhci";
++	pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
+ 	pinctrl-0 = <&sdmmc1_3v3>;
+ 	pinctrl-1 = <&sdmmc1_1v8>;
+ 	nvidia,pad-autocal-pull-up-offset-3v3 = <0x00>;
+
 
