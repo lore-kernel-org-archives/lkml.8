@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB2AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A002CC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 804BF20797
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7065B20770
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599231264;
-	bh=GYXHc/jut7pyPvpbDTvNUMgHaA0UiB4OSxKbRiZPMsI=;
+	s=default; t=1599231268;
+	bh=rpsSuPF55D8wUkxcwd9feqYT0zQ6KFywXHAw7ktgB80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FqOyfG8u4+1JuafF4/CiQXgdxyagjFDz2HIhqnsJCaWupHu2fjZNHroXohLYEYowt
-	 l3pt6ZvP7rSz4DgIYCjCQ7tnZ2ZuJUY6Zd73gf7Jtf2AUZdszCzh4kZZtpQYtS1z4Q
-	 akYCAlmSRMeYz7/jESu7ITn0b7VpFMut/8H5Z6OQ=
+	b=iJElt2csqm6OM7ZjpkY1FPOHTG/QCuQyTNkrsjPq5lyOPFGL9n3OWb1M5ohOd46H2
+	 gbABzSKjD+Uh29jpEWFAYNAgbxQThL5+l5li46Xr/4ki/w85ACg8ooOypvyP4qLxjT
+	 gXW871KoEfnqFMwh5dgFBbrntAUvKb4Yunj2lKwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730808AbgIDOyN (ORCPT
+        id S1730846AbgIDOy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:54:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48462 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 10:54:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730641AbgIDOx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:53:58 -0400
+        id S1730815AbgIDOyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 10:54:20 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C42312074D;
-        Fri,  4 Sep 2020 14:53:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D4D120722;
+        Fri,  4 Sep 2020 14:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599231237;
-        bh=GYXHc/jut7pyPvpbDTvNUMgHaA0UiB4OSxKbRiZPMsI=;
+        s=default; t=1599231260;
+        bh=rpsSuPF55D8wUkxcwd9feqYT0zQ6KFywXHAw7ktgB80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z2OqzhmPGzQ/3fVGEmEDa+858JjkTrG3uchgH4EXNUGRgb39BVd142y63QM7C29wX
-         /APyTsfKAcmAF0kHAaWmt7rQKJ5B8T3nZ5MULOV2BjKGO6YdkD4a3Ow/8t0A8z+TnS
-         943ZuS7A2hUE46zt1WshIBflnP+IMPXugvdkmCWg=
+        b=JvV9pFWC3wErh0W+nTssH8qc19UqAU6Gr91Qlc56nQb2/BCiK1FfnlfgOUtWssA3X
+         3fL2Ao7O7XBk3M5t0Zkx4Gcm616faoXTUxKKUZ1RYBQGWrpod+i60sROoY9MO9C0QA
+         6Sx6tlTQYQ/ORbwGcJEl8bN5GGPSCJZAgzcM/oq8=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
@@ -58,9 +58,9 @@ To:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
         dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 06/13] dt-bindings: mfd: rohm,bd71837-pmic: Add common properties
-Date:   Fri,  4 Sep 2020 16:53:05 +0200
-Message-Id: <20200904145312.10960-7-krzk@kernel.org>
+Subject: [PATCH 10/13] arm64: dts: imx8mq: Add missing interrupts to GPC
+Date:   Fri,  4 Sep 2020 16:53:09 +0200
+Message-Id: <20200904145312.10960-11-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200904145312.10960-1-krzk@kernel.org>
 References: <20200904145312.10960-1-krzk@kernel.org>
@@ -69,37 +69,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add common properties appearing in DTSes (clock-names,
-clock-output-names) to fix dtbs_check warnings like:
+The i.MX General Power Controller v2 device node was missing interrupts
+property necessary to route its interrupt to GIC.  This also fixes the
+dbts_check warnings like:
 
-  arch/arm64/boot/dts/freescale/imx8mq-librem5-r2.dt.yaml:
-    pmic@4b: 'clock-names', 'clock-output-names', do not match any of the regexes: 'pinctrl-[0-9]+'
+  arch/arm64/boot/dts/freescale/imx8mq-evk.dt.yaml: gpc@303a0000:
+    {'compatible': ... '$nodename': ['gpc@303a0000']} is not valid under any of the given schemas
+  arch/arm64/boot/dts/freescale/imx8mq-evk.dt.yaml: gpc@303a0000: 'interrupts' is a required property
 
+Fixes: fdbcc04da246 ("arm64: dts: imx8mq: add GPC power domains")
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../devicetree/bindings/mfd/rohm,bd71837-pmic.yaml          | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
-index 65018a019e1d..ecce0d5e3a95 100644
---- a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
-@@ -32,9 +32,15 @@ properties:
-   clocks:
-     maxItems: 1
- 
-+  clock-names:
-+    maxItems: 1
-+
-   "#clock-cells":
-     const: 0
- 
-+  clock-output-names:
-+    maxItems: 1
-+
- # The BD718x7 supports two different HW states as reset target states. States
- # are called as SNVS and READY. At READY state all the PMIC power outputs go
- # down and OTP is reload. At the SNVS state all other logic and external
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index aad3b9f2f35c..5e0e7d0f1bc4 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -623,6 +623,7 @@
+ 			gpc: gpc@303a0000 {
+ 				compatible = "fsl,imx8mq-gpc";
+ 				reg = <0x303a0000 0x10000>;
++				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+ 				interrupt-parent = <&gic>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <3>;
 -- 
 2.17.1
 
