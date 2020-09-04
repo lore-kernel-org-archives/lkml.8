@@ -2,244 +2,398 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B38C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051EDC10DAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED1D420709
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79EB208B3
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbgIDB5w (ORCPT
+        id S1729564AbgIDB60 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 21:57:52 -0400
-Received: from mga12.intel.com ([192.55.52.136]:25205 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728484AbgIDB5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 21:57:51 -0400
-IronPort-SDR: Vch5F0pNReBAOgQTHei/snMIA7X/Wg90206vxFwZRkP830cL46HWAWGHO3MYyc5gl+9nf65nMW
- 8NE4Yn0/X/dw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="137202445"
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="137202445"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 18:57:50 -0700
-IronPort-SDR: gTyN4VMmZz9V1s1j6AMZApLUZNlaun6tcWZBe70QEXN29wYdu6ppqk3WmfYmq9gboDKJMjUbEU
- ygAm323bzgEQ==
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="478274625"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.128]) ([10.238.4.128])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 18:57:48 -0700
-Reply-To: like.xu@intel.com
-Subject: Re: [PATCH v13 00/10] Guest Last Branch Recording Enabling (KVM part)
-To:     Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        Wei Wang <wei.w.wang@intel.com>
-References: <20200726153229.27149-1-like.xu@linux.intel.com>
- <6d4d7b00-cbca-9875-24bd-e6c4efaf0586@intel.com>
-From:   "Xu, Like" <like.xu@intel.com>
-Organization: Intel OTC
-Message-ID: <1bd46904-5620-5395-ff89-5176c16c477e@intel.com>
-Date:   Fri, 4 Sep 2020 09:57:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <6d4d7b00-cbca-9875-24bd-e6c4efaf0586@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 3 Sep 2020 21:58:26 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3499 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728484AbgIDB6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 21:58:25 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 405E8A5929C0D77BF2C8;
+        Fri,  4 Sep 2020 09:58:21 +0800 (CST)
+Received: from dggemi712-chm.china.huawei.com (10.3.20.111) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Fri, 4 Sep 2020 09:58:20 +0800
+Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
+ dggemi712-chm.china.huawei.com (10.3.20.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Fri, 4 Sep 2020 09:58:20 +0800
+Received: from dggemi761-chm.china.huawei.com ([10.9.49.202]) by
+ dggemi761-chm.china.huawei.com ([10.9.49.202]) with mapi id 15.01.1913.007;
+ Fri, 4 Sep 2020 09:58:20 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+CC:     Roman Gushchin <guro@fb.com>, Joonsoo Kim <js1304@gmail.com>,
+        Rik van Riel <riel@surriel.com>,
+        Aslan Bakirov <aslan@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: RE: [RFC PATCH] cma: make number of CMA areas dynamic, remove
+ CONFIG_CMA_AREAS
+Thread-Topic: [RFC PATCH] cma: make number of CMA areas dynamic, remove
+ CONFIG_CMA_AREAS
+Thread-Index: AQHWgZ6q5kW1Gz5+A0q7Q/uhiyJlbalXnXHA
+Date:   Fri, 4 Sep 2020 01:58:20 +0000
+Message-ID: <6b4f0324c6db41a7975267f2ec42e577@hisilicon.com>
+References: <20200903030204.253433-1-mike.kravetz@oracle.com>
+In-Reply-To: <20200903030204.253433-1-mike.kravetz@oracle.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.126.203.41]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
 
-Do you have time or plan to review this patch series in this kernel cycle
-since we have merged perf patches in the upstream to make it happen ?
 
-Thanks,
-Like Xu
+> -----Original Message-----
+> From: Mike Kravetz [mailto:mike.kravetz@oracle.com]
+> Sent: Thursday, September 3, 2020 3:02 PM
+> To: linux-mm@kvack.org; linux-kernel@vger.kernel.org;
+> linux-arm-kernel@lists.infradead.org; linux-mips@vger.kernel.org
+> Cc: Roman Gushchin <guro@fb.com>; Song Bao Hua (Barry Song)
+> <song.bao.hua@hisilicon.com>; Joonsoo Kim <js1304@gmail.com>; Rik van
+> Riel <riel@surriel.com>; Aslan Bakirov <aslan@fb.com>; Michal Hocko
+> <mhocko@kernel.org>; Andrew Morton <akpm@linux-foundation.org>; Mike
+> Kravetz <mike.kravetz@oracle.com>
+> Subject: [RFC PATCH] cma: make number of CMA areas dynamic, remove
+> CONFIG_CMA_AREAS
+> 
+> The number of distinct CMA areas is limited by the constant
+> CONFIG_CMA_AREAS.  In most environments, this was set to a default
+> value of 7.  Not too long ago, support was added to allocate hugetlb
+> gigantic pages from CMA.  More recent changes to make dma_alloc_coherent
+> NUMA-aware on arm64 added more potential users of CMA areas.  Along
+> with the dma_alloc_coherent changes, the default value of CMA_AREAS
+> was bumped up to 19 if NUMA is enabled.
+> 
+> It seems that the number of CMA users is likely to grow.  Instead of
+> using a static array for cma areas, use a simple linked list.  These
+> areas are used before normal memory allocators, so use the memblock
+> allocator.
 
-On 2020/8/14 16:48, Xu, Like wrote:
-> Are there no interested reviewers or users?
->
-> Just a kindly ping.
->
-> On 2020/7/26 23:32, Like Xu wrote:
->> Hi Paolo,
->>
->> Please review this new version for the Kernel 5.9 release, and
->> Sean may not review them as he said in the previous email
->> https://lore.kernel.org/kvm/20200710162819.GF1749@linux.intel.com/
->>
->> You may cherry-pick the perf patches "3cb9d5464c1c..e1ad1ac2deb8"
->> from the branch "tip/perf/core" of scm/linux/kernel/git/tip/tip.git
->> as PeterZ said in the previous email
->> https://lore.kernel.org/kvm/20200703075646.GJ117543@hirez.programming.kicks-ass.net/ 
->>
->>
->> We may also apply the qemu-devel patch to the upstream qemu and try
->> the QEMU command lines with '-cpu host' or '-cpu host,pmu=true,lbr=true'.
->>
->> The following error will be gone forever with the patchset:
->>
->>    $ perf record -b lbr ${WORKLOAD}
->>    or $ perf record --call-graph lbr ${WORKLOAD}
->>    Error:
->>    cycles: PMU Hardware doesn't support sampling/overflow-interrupts. 
->> Try 'perf stat'
->>
->> Please check more details in each commit and feel free to test.
->>
->> v12->v13 Changelog:
->> - remove perf patches since they're queued in the tip/perf/core;
->> - add a minor patch to refactor MSR_IA32_DEBUGCTLMSR set/get handler;
->> - add a minor patch to expose vmx_set_intercept_for_msr();
->> - add a minor patch to initialize perf_capabilities in the 
->> intel_pmu_init();
->> - spilt the big patch to three pieces (0004-0006) for better 
->> understanding and review
->> - make the LBR_FMT exposure patch as the last step to enable guest LBR;
->>
->> Previous:
->> https://lore.kernel.org/kvm/20200613080958.132489-1-like.xu@linux.intel.com/ 
->>
->>
->> ---
->>
->> The last branch recording (LBR) is a performance monitor unit (PMU)
->> feature on Intel processors that records a running trace of the most
->> recent branches taken by the processor in the LBR stack. This patch
->> series is going to enable this feature for plenty of KVM guests.
->>
->> The user space could configure whether it's enabled or not for each
->> guest via MSR_IA32_PERF_CAPABILITIES msr. As a first step, a guest
->> could only enable LBR feature if its cpu model is the same as the
->> host since the LBR feature is still one of model specific features.
->>
->> If it's enabled on the guest, the guest LBR driver would accesses the
->> LBR MSR (including IA32_DEBUGCTLMSR and records MSRs) as host does.
->> The first guest access on the LBR related MSRs is always interceptible.
->> The KVM trap would create a special LBR event (called guest LBR event)
->> which enables the callstack mode and none of hardware counter is assigned.
->> The host perf would enable and schedule this event as usual.
->>
->> Guest's first access to a LBR registers gets trapped to KVM, which
->> creates a guest LBR perf event. It's a regular LBR perf event which gets
->> the LBR facility assigned from the perf subsystem. Once that succeeds,
->> the LBR stack msrs are passed through to the guest for efficient accesses.
->> However, if another host LBR event comes in and takes over the LBR
->> facility, the LBR msrs will be made interceptible, and guest following
->> accesses to the LBR msrs will be trapped and meaningless.
->>
->> Because saving/restoring tens of LBR MSRs (e.g. 32 LBR stack entries) in
->> VMX transition brings too excessive overhead to frequent vmx transition
->> itself, the guest LBR event would help save/restore the LBR stack msrs
->> during the context switching with the help of native LBR event callstack
->> mechanism, including LBR_SELECT msr.
->>
->> If the guest no longer accesses the LBR-related MSRs within a scheduling
->> time slice and the LBR enable bit is unset, vPMU would release its guest
->> LBR event as a normal event of a unused vPMC and the pass-through
->> state of the LBR stack msrs would be canceled.
->>
->> ---
->>
->> LBR testcase:
->> echo 1 > /proc/sys/kernel/watchdog
->> echo 25 > /proc/sys/kernel/perf_cpu_time_max_percent
->> echo 5000 > /proc/sys/kernel/perf_event_max_sample_rate
->> echo 0 > /proc/sys/kernel/perf_cpu_time_max_percent
->> ./perf record -b ./br_instr a
->>
->> - Perf report on the host:
->> Samples: 72K of event 'cycles', Event count (approx.): 72512
->> Overhead  Command   Source Shared Object           Source 
->> Symbol                           Target Symbol                           
->> Basic Block Cycles
->>    12.12%  br_instr  br_instr                       [.] 
->> cmp_end                             [.] 
->> lfsr_cond                           1
->>    11.05%  br_instr  br_instr                       [.] 
->> lfsr_cond                           [.] 
->> cmp_end                             5
->>     8.81%  br_instr  br_instr                       [.] 
->> lfsr_cond                           [.] 
->> cmp_end                             4
->>     5.04%  br_instr  br_instr                       [.] 
->> cmp_end                             [.] 
->> lfsr_cond                           20
->>     4.92%  br_instr  br_instr                       [.] 
->> lfsr_cond                           [.] 
->> cmp_end                             6
->>     4.88%  br_instr  br_instr                       [.] 
->> cmp_end                             [.] 
->> lfsr_cond                           6
->>     4.58%  br_instr  br_instr                       [.] 
->> cmp_end                             [.] 
->> lfsr_cond                           5
->>
->> - Perf report on the guest:
->> Samples: 92K of event 'cycles', Event count (approx.): 92544
->> Overhead  Command   Source Shared Object  Source 
->> Symbol                                   Target 
->> Symbol                                   Basic Block Cycles
->>    12.03%  br_instr  br_instr              [.] 
->> cmp_end                                     [.] 
->> lfsr_cond                                   1
->>    11.09%  br_instr  br_instr              [.] 
->> lfsr_cond                                   [.] 
->> cmp_end                                     5
->>     8.57%  br_instr  br_instr              [.] 
->> lfsr_cond                                   [.] 
->> cmp_end                                     4
->>     5.08%  br_instr  br_instr              [.] 
->> lfsr_cond                                   [.] 
->> cmp_end                                     6
->>     5.06%  br_instr  br_instr              [.] 
->> cmp_end                                     [.] 
->> lfsr_cond                                   20
->>     4.87%  br_instr  br_instr              [.] 
->> cmp_end                                     [.] 
->> lfsr_cond                                   6
->>     4.70%  br_instr  br_instr              [.] 
->> cmp_end                                     [.] 
->> lfsr_cond                                   5
->>
->> Conclusion: the profiling results on the guest are similar to that on 
->> the host.
->>
->> Like Xu (10):
->>    KVM: x86: Move common set/get handler of MSR_IA32_DEBUGCTLMSR to VMX
->>    KVM: x86/vmx: Make vmx_set_intercept_for_msr() non-static and expose it
->>    KVM: vmx/pmu: Initialize vcpu perf_capabilities once in intel_pmu_init()
->>    KVM: vmx/pmu: Clear PMU_CAP_LBR_FMT when guest LBR is disabled
->>    KVM: vmx/pmu: Create a guest LBR event when vcpu sets DEBUGCTLMSR_LBR
->>    KVM: vmx/pmu: Pass-through LBR msrs to when the guest LBR event is 
->> ACTIVE
->>    KVM: vmx/pmu: Reduce the overhead of LBR pass-through or cancellation
->>    KVM: vmx/pmu: Emulate legacy freezing LBRs on virtual PMI
->>    KVM: vmx/pmu: Expose LBR_FMT in the MSR_IA32_PERF_CAPABILITIES
->>    KVM: vmx/pmu: Release guest LBR event via lazy release mechanism
->>
->>   arch/x86/kvm/pmu.c              |  12 +-
->>   arch/x86/kvm/pmu.h              |   5 +
->>   arch/x86/kvm/vmx/capabilities.h |  22 ++-
->>   arch/x86/kvm/vmx/pmu_intel.c    | 296 +++++++++++++++++++++++++++++++-
->>   arch/x86/kvm/vmx/vmx.c          |  44 ++++-
->>   arch/x86/kvm/vmx/vmx.h          |  28 +++
->>   arch/x86/kvm/x86.c              |  15 +-
->>   7 files changed, 395 insertions(+), 27 deletions(-)
->>
->
+Hello Mike, It seems it is a good idea. Thanks for addressing this.
+
+I was focusing on per-numa cma feature in my patchset and I didn't take care of this
+while I thought we should do something for the number of cma areas.
+
+> 
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> ---
+>  arch/arm/mm/dma-mapping.c              | 29 ++++++++++++-------
+>  arch/mips/configs/cu1000-neo_defconfig |  1 -
+>  arch/mips/configs/cu1830-neo_defconfig |  1 -
+>  include/linux/cma.h                    | 12 --------
+>  mm/Kconfig                             | 12 --------
+>  mm/cma.c                               | 40 +++++++++++++-------------
+>  mm/cma.h                               |  4 +--
+>  mm/cma_debug.c                         |  6 ++--
+>  8 files changed, 44 insertions(+), 61 deletions(-)
+> 
+> diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
+> index 8a8949174b1c..a35a760cc0f4 100644
+> --- a/arch/arm/mm/dma-mapping.c
+> +++ b/arch/arm/mm/dma-mapping.c
+> @@ -383,25 +383,34 @@ postcore_initcall(atomic_pool_init);
+>  struct dma_contig_early_reserve {
+>  	phys_addr_t base;
+>  	unsigned long size;
+> +	struct list_head areas;
+>  };
+> 
+> -static struct dma_contig_early_reserve dma_mmu_remap[MAX_CMA_AREAS]
+> __initdata;
+> -
+> -static int dma_mmu_remap_num __initdata;
+> +static __initdata LIST_HEAD(dma_mmu_remap_areas);
+> 
+>  void __init dma_contiguous_early_fixup(phys_addr_t base, unsigned long
+> size)
+>  {
+> -	dma_mmu_remap[dma_mmu_remap_num].base = base;
+> -	dma_mmu_remap[dma_mmu_remap_num].size = size;
+> -	dma_mmu_remap_num++;
+> +	struct dma_contig_early_reserve *d;
+> +
+> +	d = memblock_alloc(sizeof(struct dma_contig_early_reserve),
+
+sizeof(*d)?
+
+> +			sizeof(void *));
+> +	if (!d) {
+> +		pr_err("Unable to allocate dma_contig_early_reserve struct!\n");
+> +		return;
+> +	}
+> +
+> +	d->base = base;
+> +	d->size = size;
+> +	list_add_tail(&d->areas, &dma_mmu_remap_areas);
+>  }
+> 
+>  void __init dma_contiguous_remap(void)
+>  {
+> -	int i;
+> -	for (i = 0; i < dma_mmu_remap_num; i++) {
+> -		phys_addr_t start = dma_mmu_remap[i].base;
+> -		phys_addr_t end = start + dma_mmu_remap[i].size;
+> +	struct dma_contig_early_reserve *d;
+> +
+> +	list_for_each_entry(d, &dma_mmu_remap_areas, areas) {
+> +		phys_addr_t start = d->base;
+> +		phys_addr_t end = start + d->size;
+>  		struct map_desc map;
+>  		unsigned long addr;
+> 
+> diff --git a/arch/mips/configs/cu1000-neo_defconfig
+> b/arch/mips/configs/cu1000-neo_defconfig
+> index e924c817f73d..b86f3fd420f2 100644
+> --- a/arch/mips/configs/cu1000-neo_defconfig
+> +++ b/arch/mips/configs/cu1000-neo_defconfig
+> @@ -31,7 +31,6 @@ CONFIG_HZ_100=y
+>  # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+>  # CONFIG_COMPACTION is not set
+>  CONFIG_CMA=y
+> -CONFIG_CMA_AREAS=7
+>  CONFIG_NET=y
+>  CONFIG_PACKET=y
+>  CONFIG_UNIX=y
+> diff --git a/arch/mips/configs/cu1830-neo_defconfig
+> b/arch/mips/configs/cu1830-neo_defconfig
+> index cbfb62900273..98a31334fc57 100644
+> --- a/arch/mips/configs/cu1830-neo_defconfig
+> +++ b/arch/mips/configs/cu1830-neo_defconfig
+> @@ -31,7 +31,6 @@ CONFIG_HZ_100=y
+>  # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+>  # CONFIG_COMPACTION is not set
+>  CONFIG_CMA=y
+> -CONFIG_CMA_AREAS=7
+>  CONFIG_NET=y
+>  CONFIG_PACKET=y
+>  CONFIG_UNIX=y
+> diff --git a/include/linux/cma.h b/include/linux/cma.h
+> index 217999c8a762..ea9a3dab0c20 100644
+> --- a/include/linux/cma.h
+> +++ b/include/linux/cma.h
+> @@ -6,18 +6,6 @@
+>  #include <linux/types.h>
+>  #include <linux/numa.h>
+> 
+> -/*
+> - * There is always at least global CMA area and a few optional
+> - * areas configured in kernel .config.
+> - */
+> -#ifdef CONFIG_CMA_AREAS
+> -#define MAX_CMA_AREAS	(1 + CONFIG_CMA_AREAS)
+> -
+> -#else
+> -#define MAX_CMA_AREAS	(0)
+> -
+> -#endif
+> -
+>  #define CMA_MAX_NAME 64
+> 
+>  struct cma;
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index 7d56281ff41e..a52345093f4d 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -513,18 +513,6 @@ config CMA_DEBUGFS
+>  	help
+>  	  Turns on the DebugFS interface for CMA.
+> 
+> -config CMA_AREAS
+> -	int "Maximum count of the CMA areas"
+> -	depends on CMA
+> -	default 19 if NUMA
+> -	default 7
+> -	help
+> -	  CMA allows to create CMA areas for particular purpose, mainly,
+> -	  used as device private area. This parameter sets the maximum
+> -	  number of CMA area in the system.
+> -
+> -	  If unsure, leave the default value "7" in UMA and "19" in NUMA.
+> -
+>  config MEM_SOFT_DIRTY
+>  	bool "Track memory changes"
+>  	depends on CHECKPOINT_RESTORE && HAVE_ARCH_SOFT_DIRTY &&
+> PROC_FS
+> diff --git a/mm/cma.c b/mm/cma.c
+> index 7f415d7cda9f..2bd61137b2ca 100644
+> --- a/mm/cma.c
+> +++ b/mm/cma.c
+> @@ -36,8 +36,9 @@
+> 
+>  #include "cma.h"
+> 
+> -struct cma cma_areas[MAX_CMA_AREAS];
+> -unsigned cma_area_count;
+> +/* modify here */
+> +LIST_HEAD(cma_areas);
+> +static unsigned int cma_area_count;
+>  static DEFINE_MUTEX(cma_mutex);
+> 
+>  phys_addr_t cma_get_base(const struct cma *cma)
+> @@ -143,10 +144,10 @@ static void __init cma_activate_area(struct cma
+> *cma)
+> 
+>  static int __init cma_init_reserved_areas(void)
+>  {
+> -	int i;
+> +	struct cma *c;
+> 
+> -	for (i = 0; i < cma_area_count; i++)
+> -		cma_activate_area(&cma_areas[i]);
+> +	list_for_each_entry(c, &cma_areas, areas)
+> +		cma_activate_area(c);
+> 
+>  	return 0;
+>  }
+> @@ -172,15 +173,14 @@ int __init cma_init_reserved_mem(phys_addr_t
+> base, phys_addr_t size,
+>  	struct cma *cma;
+>  	phys_addr_t alignment;
+> 
+> -	/* Sanity checks */
+> -	if (cma_area_count == ARRAY_SIZE(cma_areas)) {
+> -		pr_err("Not enough slots for CMA reserved regions!\n");
+> -		return -ENOSPC;
+> -	}
+> +	/* Do not attempt allocations after memblock allocator is torn down */
+> +	if (slab_is_available())
+> +		return -EINVAL;
+> 
+>  	if (!size || !memblock_is_region_reserved(base, size))
+>  		return -EINVAL;
+> 
+> +
+
+Is this empty line relevant?
+
+>  	/* ensure minimal alignment required by mm core */
+>  	alignment = PAGE_SIZE <<
+>  			max_t(unsigned long, MAX_ORDER - 1, pageblock_order);
+> @@ -192,12 +192,17 @@ int __init cma_init_reserved_mem(phys_addr_t
+> base, phys_addr_t size,
+>  	if (ALIGN(base, alignment) != base || ALIGN(size, alignment) != size)
+>  		return -EINVAL;
+> 
+> +	cma = memblock_alloc(sizeof(struct cma), sizeof(long));
+
+sizeof(*cma)?
+
+It seems we are going to write cma-> count, order_per_bit, debugfs fields.
+To avoid false sharing of the cacheline of struct cma, it is better to align with
+SMP_CACHE_BYTES.
+
+On the other hand, it seems we are unlikely to write the cma 
+> +	if (!cma) {
+> +		pr_err("Unable to allocate CMA descriptor!\n");
+> +		return -ENOSPC;
+> +	}
+> +	list_add_tail(&cma->areas, &cma_areas);
+> +
+>  	/*
+>  	 * Each reserved area must be initialised later, when more kernel
+>  	 * subsystems (like slab allocator) are available.
+>  	 */
+> -	cma = &cma_areas[cma_area_count];
+> -
+>  	if (name)
+>  		snprintf(cma->name, CMA_MAX_NAME, name);
+>  	else
+> @@ -253,11 +258,6 @@ int __init cma_declare_contiguous_nid(phys_addr_t
+> base,
+>  	pr_debug("%s(size %pa, base %pa, limit %pa alignment %pa)\n",
+>  		__func__, &size, &base, &limit, &alignment);
+> 
+> -	if (cma_area_count == ARRAY_SIZE(cma_areas)) {
+> -		pr_err("Not enough slots for CMA reserved regions!\n");
+> -		return -ENOSPC;
+> -	}
+> -
+>  	if (!size)
+>  		return -EINVAL;
+> 
+> @@ -530,10 +530,10 @@ bool cma_release(struct cma *cma, const struct
+> page *pages, unsigned int count)
+> 
+>  int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
+>  {
+> -	int i;
+> +	struct cma *c;
+> 
+> -	for (i = 0; i < cma_area_count; i++) {
+> -		int ret = it(&cma_areas[i], data);
+> +	list_for_each_entry(c, &cma_areas, areas) {
+> +		int ret = it(c, data);
+> 
+>  		if (ret)
+>  			return ret;
+> diff --git a/mm/cma.h b/mm/cma.h
+> index 42ae082cb067..fed800b63819 100644
+> --- a/mm/cma.h
+> +++ b/mm/cma.h
+> @@ -15,11 +15,11 @@ struct cma {
+>  	spinlock_t mem_head_lock;
+>  	struct debugfs_u32_array dfs_bitmap;
+>  #endif
+> +	struct list_head areas;
+>  	char name[CMA_MAX_NAME];
+>  };
+> 
+> -extern struct cma cma_areas[MAX_CMA_AREAS];
+> -extern unsigned cma_area_count;
+> +extern struct list_head cma_areas;
+> 
+>  static inline unsigned long cma_bitmap_maxno(struct cma *cma)
+>  {
+> diff --git a/mm/cma_debug.c b/mm/cma_debug.c
+> index d5bf8aa34fdc..c39695d50224 100644
+> --- a/mm/cma_debug.c
+> +++ b/mm/cma_debug.c
+> @@ -188,12 +188,12 @@ static void cma_debugfs_add_one(struct cma *cma,
+> struct dentry *root_dentry)
+>  static int __init cma_debugfs_init(void)
+>  {
+>  	struct dentry *cma_debugfs_root;
+> -	int i;
+> +	struct cma *c;
+> 
+>  	cma_debugfs_root = debugfs_create_dir("cma", NULL);
+> 
+> -	for (i = 0; i < cma_area_count; i++)
+> -		cma_debugfs_add_one(&cma_areas[i], cma_debugfs_root);
+> +	list_for_each_entry(c, &cma_areas, areas)
+> +		cma_debugfs_add_one(c, cma_debugfs_root);
+> 
+>  	return 0;
+>  }
+> --
+> 2.25.4
+
+Thanks
+Barry
 
