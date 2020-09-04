@@ -2,93 +2,99 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF32C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D47C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BFAF2065E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:57:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599227834;
-	bh=2iZTMjJAf9QaoVGMuJs7cq21Dk7HyyqjCyXnvWCnIDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oU4CY6QmRqy7xSuxX8zXpnhujEs2nOOxtrqIScjpwJG/Sp6A9QR0TOLmUkNVnuNcE
-	 VeBudNWD9uiLghEOwZglL5GujiVXSZxC2vLoGIRtiq1+bZKZcOFBPWzKWUl0d//KrF
-	 NtDzgbdyCQC0a4+vVF39DyYdM32XQrHtol18+b4A=
+	by mail.kernel.org (Postfix) with ESMTP id C458A2065E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:57:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="fdRk2pV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730742AbgIDN5M (ORCPT
+        id S1730702AbgIDN5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:57:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730534AbgIDN5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:57:00 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABDBC2065E;
-        Fri,  4 Sep 2020 13:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599227820;
-        bh=2iZTMjJAf9QaoVGMuJs7cq21Dk7HyyqjCyXnvWCnIDM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CtpyBjpJASTV0+hw2qZcXQv2tah2h1hZnQj66L3t3agRpviksC+wxf/wzBmSLfWJ2
-         R0vd5IUlCcvIQwmj442+FCv8Iu/unsxwcU71Ty9abGP2hCjEDkQHr6Mx+Z3uCvuW2p
-         GaiKo7W8lD0Kih0SyzKNt51ZcSXU+30jvUGltY0w=
-Date:   Fri, 4 Sep 2020 15:57:21 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Penghao <penghao@uniontech.com>
-Cc:     johan@kernel.org, jonathan@jdcox.net, kai.heng.feng@canonical.com,
-        gustavo.padovan@collabora.com, tomasz@meresinski.eu,
-        hdegoede@redhat.com, kerneldev@karsmulder.nl,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: usb-audio: quirks: Add
- USB_QUIRK_DISCONNECT_SUSPEND quirk for Lenovo A630Z TIO built-in usb audio
- card
-Message-ID: <20200904135721.GA3182607@kroah.com>
-References: <20200904014516.12298-1-penghao@uniontech.com>
+        Fri, 4 Sep 2020 09:57:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730734AbgIDN4z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:56:55 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A69F0C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 06:56:54 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k15so6821394wrn.10
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 06:56:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B3CfhOVBGf9H9WuZ53+AjLGNuQZrbQHmVtlD/DJasis=;
+        b=fdRk2pV//7myN++zX937AgchN/lF0cwlO5vO83mfaGxBG4q2HNIp6zqYMK+Zt8XOrY
+         NjIrgYIWeNUh7JSDxmG4kHraRhjqpHbzpktsGfa+SbGMh8a1sbPyoF7IpXSqtyfgCZgb
+         FjYvTaKTlO6LYbE6ZfU35PIcl9HijlW13E5wiZ3iwZzpaAqnbWl0F90OQZckY/wZU1gf
+         A7VBE9ubp+vKLCJg6fKumSbKRAtz1MrQAzug3FVEuNdgU48dFmCQgmCLn7cJ0gcWBPA2
+         7tqETp6BTfcc3ari0Ghn5Ue2uktePy4RJzl6OEpDYyEMYCo7NS+BaGeEN2Hb/6BUmrOC
+         /SQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B3CfhOVBGf9H9WuZ53+AjLGNuQZrbQHmVtlD/DJasis=;
+        b=DuQjmLciBdahbgniMOva/Uq2pYAznn1HyMaPByrMIKdxRL2vbHWxKVzL/Ex7gIx4lC
+         7o56lYi/VEXS5P+wUcnk12I9RvyJKjZooVcO5j5UcFRcnwR7OL1swJLfPA2hD7LgYYwx
+         jTz08vQLfgvVi0H/TSmfYgkY3/5WYf5T0esUu0z0hQZFqnJQyo8CyPLK8ARBiyUr4IFQ
+         JaHQ7VTbgNG5YbhxhSQtsdravPJafpNR/CN9gvSkgNuDgoPbkIqd84itOUfD7lqWml7Z
+         DtPB6WtAcnQDWvSU+/ilUzs2vW27mxv8YRxAQMf0tcRr226dpOGrK3ZKK5xsP8ebvzWN
+         FlFA==
+X-Gm-Message-State: AOAM533KyfcbqaAQ7BSXRSJ/mzc00aBEyN/5cOcrc8FGkd0oTa5TTE6b
+        0v+wMIlYNJCLAeIYtsxuinBvFSzk+ooQqYKtJxtjT0pYQ6Q=
+X-Google-Smtp-Source: ABdhPJy/VGdC6pW/0FhrX+k0bZPZot8TzrPX4TwKJOQtaQsxu0J0wg1pUbQsc0YgMyp5M+kryqPhp8FcaB2m6mL+Fk0=
+X-Received: by 2002:adf:eecb:: with SMTP id a11mr7878596wrp.356.1599227813312;
+ Fri, 04 Sep 2020 06:56:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904014516.12298-1-penghao@uniontech.com>
+References: <mhng-32c8d053-acbd-4c72-b41d-8d6042ac639d@palmerdabbelt-glaptop1>
+ <CAHk-=wi_tf4qsiBj5UD0GG3wz8Hi5NrHzqdrx+CwtfAY+_UiGg@mail.gmail.com>
+ <20200904083109.GA9182@infradead.org> <CAAhSdy3S8FfMAWih_VoBHw0xd-7c=urzuJ+PPdug9iX_pWyTsQ@mail.gmail.com>
+ <20200904094617.GA27846@infradead.org> <CAAhSdy2x0ROqoTzzZRZgKCTL99WPy-8e4CQ921sf-=GQDm_gxA@mail.gmail.com>
+ <f1be6ee1-0802-82ca-ffdb-4c294925cd9a@kylinos.com.cn> <20200904130044.GA7842@infradead.org>
+In-Reply-To: <20200904130044.GA7842@infradead.org>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 4 Sep 2020 19:26:41 +0530
+Message-ID: <CAAhSdy2N8L015z0-RirjXLjdzt+OrCtzzKzivsMeQXoH9Nc8Cw@mail.gmail.com>
+Subject: Re: [GIT PULL] RISC-V Fixes for 5.9-rc2
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Qiu Wenbo <qiuwenbo@kylinos.com.cn>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 09:45:16AM +0800, Penghao wrote:
-> Add a USB_QUIRK_DISCONNECT_SUSPEND quirk for the Lenovo TIO built-in
-> usb-audio.when A630Z going into S3,the system immediately wakeup 7-8
-> seconds later by usb-audio disconnect interrupt.to avoids the issue.
-> 
-> Seeking a better fix, we've tried a lot of things, including:
->  - Check that the device's power/wakeup is disabled
->  - Check that remote wakeup is off at the USB level
->  - All the quirks in drivers/usb/core/quirks.c e.g. USB_QUIRK_RESET_RESUME,
->    USB_QUIRK_RESET, USB_QUIRK_IGNORE_REMOTE_WAKEUP, USB_QUIRK_NO_LPM.
-> 
-> but none of that makes any difference.
-> 
-> There are no errors in the logs showing any suspend/resume-related issues.
-> When the system wakes up due to the modem, log-wise it appears to be a
-> normal resume.
-> 
-> Introduce a quirk to disable the port during suspend when the modem is
-> detected.
-> 
-> Signed-off-by: Penghao <penghao@uniontech.com>
-> ---
->  drivers/usb/core/quirks.c | 4 ++++
->  1 file changed, 4 insertions(+)
+On Fri, Sep 4, 2020 at 6:30 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Fri, Sep 04, 2020 at 08:58:25PM +0800, Qiu Wenbo wrote:
+> > I can confirm this patch also breaks K210 support. It seems that
+> > csr_read(CSR_TIME) will trigger an illegal instruction exception on K210.
+>
+> CSR_TIME is trapped by just about every implementation I know (which is
+> explicitly allowed by the spec).  That is why we should never use it
+> from common M-mode code.
 
-Odd subject line, this is not ALSA: or the usb-audio driver :(
+Finally, I was able to replicate this issue by manually hacking QEMU to
+not emulatie TIME CSR for virt machine.
 
-Please fix up and properly order the entry.
+It seems this issue is only seen on older QEMU and Kendrtye K210.
 
-thanks,
+I am working on a fix for this issue.
 
-greg k-h
+Thanks for reporting.
+
+Regards,
+Anup
