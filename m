@@ -2,115 +2,116 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43E3C2BB84
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA76C2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93B0520684
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD1320684
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:18:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="x6CSQIUD"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="CJ4sNtaV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgIDTRx (ORCPT
+        id S1727114AbgIDTSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 15:17:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48378 "EHLO
+        Fri, 4 Sep 2020 15:18:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbgIDTRw (ORCPT
+        with ESMTP id S1726265AbgIDTSu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:17:52 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB37C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 12:17:52 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id h12so4809536pgm.7
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 12:17:52 -0700 (PDT)
+        Fri, 4 Sep 2020 15:18:50 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7643C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 12:18:49 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id b124so5108030pfg.13
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 12:18:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=bZwqC1RcOwlSN3VEcYwP2ZtgIrDiEXbG7sY4kaAsweU=;
-        b=x6CSQIUDYYG2v4g+T0cscHCIBlh9iTfFZW03yanbsjgJxLAL4AQz9CjBE1qyGMdrqo
-         wt0F5NfuED1VyMq3uZ95/R3r3O0Ue8y5C6osV6vbTZHzAqcijpX/eFhHKTha+M+GXcHP
-         wdqbF15HIimeJcXcjXd0/VgBv8XevcXgu+5FUyb4+YB+zD0k98hPUf4oQ61xDTE01W+V
-         feYePReyeY767cT7m4Gz23yifMx/fSaXEqMKJE3rJOr+zzTLqVhN0pCL4sFLe+41s4/t
-         m9kqBm5MV0dz8865fwwT6vB0bP9kwXL84+HzFjmrnqK7Qt0nQ9kabNrsSZT1vqKWvTwb
-         yNew==
+        bh=BQ3Za1ulBYpN6P3MWzPM8LHHd18bcHtpU18gBebPUd8=;
+        b=CJ4sNtaVT/wZNtZnBVnxz7DODlBAmOVNmIGMPjv6QcCUBziyn96kTlpdgR76NVKTQD
+         kikQUpeq5K2YSKosNrj/D/vyT/Nv14u8Xrci14GTIppj2owJuAZ8i+6xoyQgGX79vDIP
+         a+h4rbgnL/5/aKwRBzcPda/hRo9OSnIkF89Nw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=bZwqC1RcOwlSN3VEcYwP2ZtgIrDiEXbG7sY4kaAsweU=;
-        b=LOfULqsh81jASxezn0rRzCXSz5e7xR0gtbxMtAHmxmnRMEGJdhOX4a0fjoqvlNIGxh
-         nZNiBvkQ/gZTQjWp39WLRnbOfwtIfXJpl0Xb7NoQvqDAjdPL+l5TAzb2LWmJpUxfCZ1J
-         9mXxiIJFIfFnir4c2JE30+R0tU29Zr3nI4mCfu/Jj+mb0NPuXCJ9W8ual6kG45noP0d1
-         hEKY+zZYMA7yndJfUKuibIczYHPppWsizRlbvvOGjgiodyrGOddZ5BVuEpzEtRaFPsXh
-         b30wd/fy/OCyuxY38kpyJBUOInoJqyYT1bVDC1avC+aibefQbI0VyNvLkYVd6BppKZe1
-         F2pA==
-X-Gm-Message-State: AOAM531u8iaGbVxl8acBzcAu3iJNvP4EwinBNXVwTy/PGYcN5g0gSDxN
-        rw4pbEpQrtKb8KqybKZE+4HGKSSE3jp8wg==
-X-Google-Smtp-Source: ABdhPJwNswuWQ4CWTtTWToMlX4aX5Q9ul6jEdoZSRJQBH76X9BowhFVtHj1ksJtxW8ygzGY1V4qw6g==
-X-Received: by 2002:a63:7b16:: with SMTP id w22mr8160772pgc.17.1599247071532;
-        Fri, 04 Sep 2020 12:17:51 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id s67sm7842917pfs.117.2020.09.04.12.17.50
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BQ3Za1ulBYpN6P3MWzPM8LHHd18bcHtpU18gBebPUd8=;
+        b=Idq7zqLMcwnrTF1VLSCh7IGo05/k9q87jlPU3+tTbTXlAWPeecbdIalgDZ4V0Jl9rk
+         ZRAiLCKq0fLv/0g087ypbxwCbbfwFAnehUWhTMAWha/FWXCbVw3Y/+CFbYAhEEuS0vLb
+         BDrBGU+RddxeR+6ZU6MpqvryGXhGObxAX5TYaSFlRiFO4na/ivnWmzKUjXSH2Cu0b9ah
+         CyXXWft52q+7ASs4GwMj4///ypRHGVQ+2ej3D00bCK4tL5UJAbWGXlv40Xuw7FcHij7F
+         C2Xfx58rJ1QSgvODhzoxMy7+gdBu8n1q+rU6dPgnKq+cQC8CTWHPoVOrPZjy246s9sGX
+         lItw==
+X-Gm-Message-State: AOAM532FPi4LlaRTpluTPMbGo8nYp+HAEdr7sgx6fsvCl4yi4tgKQwZb
+        xBED215l3qO8xFcwgpHiw2ISew==
+X-Google-Smtp-Source: ABdhPJxL1HrEmjVqHII42Qjc4LuSWAD0dWbQkB6r3vNPeYT1NHHcj1jRE7Uwi0GsLh3NqWV7jmmcNw==
+X-Received: by 2002:a62:5e45:: with SMTP id s66mr9893108pfb.230.1599247129115;
+        Fri, 04 Sep 2020 12:18:49 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:b9ea:24bf:6b2b:1eee])
+        by smtp.gmail.com with ESMTPSA id t4sm5986001pje.56.2020.09.04.12.18.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 12:17:50 -0700 (PDT)
-Date:   Fri, 04 Sep 2020 12:17:50 -0700 (PDT)
-X-Google-Original-Date: Fri, 04 Sep 2020 12:17:45 PDT (-0700)
-Subject:     Re: [PATCH v2 0/3] Get cache information from userland
-In-Reply-To: <cover.1598515355.git.zong.li@sifive.com>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>,
-        david.abdurachmanov@sifive.com, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, zong.li@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     zong.li@sifive.com
-Message-ID: <mhng-6b86dc70-671f-4e9f-b136-1a03e68f7d88@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 04 Sep 2020 12:18:48 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Tom Cubie <tom@radxa.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 0/3] extcon: Add Type-C Virtual PD
+Date:   Sat,  5 Sep 2020 00:48:27 +0530
+Message-Id: <20200904191830.387296-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 01:22:25 PDT (-0700), zong.li@sifive.com wrote:
-> There are no standard CSR registers to provide cache information, the
-> way for RISC-V is to get this information from DT. Currently, AT_L1I_X,
-> AT_L1D_X and AT_L2_X are present in glibc header, and sysconf syscall
-> could use them to get information of cache through AUX vector. We
-> exploit 'struct cacheinfo' to obtain the information of cache, then we
-> don't need additional variable or data structure to record it.
->
-> We also need some works in glibc, but we have to support the function in
-> kernel first by rule of glibc, then post the patch to glibc site.
->
-> The result of 'getconf -a' as follows:
->
-> LEVEL1_ICACHE_SIZE                 32768
-> LEVEL1_ICACHE_ASSOC                8
-> LEVEL1_ICACHE_LINESIZE             64
-> LEVEL1_DCACHE_SIZE                 32768
-> LEVEL1_DCACHE_ASSOC                8
-> LEVEL1_DCACHE_LINESIZE             64
-> LEVEL2_CACHE_SIZE                  2097152
-> LEVEL2_CACHE_ASSOC                 32
-> LEVEL2_CACHE_LINESIZE              64
->
-> Changed in v2:
->   - Add error checking for parsing cache properties.
->
-> Zong Li (3):
->   riscv: Set more data to cacheinfo
->   riscv: Define AT_VECTOR_SIZE_ARCH for ARCH_DLINFO
->   riscv: Add cache information in AUX vector
->
->  arch/riscv/include/asm/cacheinfo.h   |  5 ++
->  arch/riscv/include/asm/elf.h         | 13 ++++
->  arch/riscv/include/uapi/asm/auxvec.h | 24 ++++++++
->  arch/riscv/kernel/cacheinfo.c        | 91 +++++++++++++++++++++++-----
->  4 files changed, 117 insertions(+), 16 deletions(-)
+USB Type-C protocol supports various modes of operations
+includes PD, USB3, and Altmode. If the platform design
+supports a Type-C connector then configuring these modes
+can be done via enumeration.
 
-Thanks, these are on for-next.
+However, there are some platforms that design these modes
+of operations as separate protocol connectors like design
+Display Port from on-chip USB3 controller. So accessing
+Type-C Altmode Display Port via onboard Display Port 
+connector instead of a Type-C connector.
+ 
+These kinds of platforms require an explicit extcon driver
+in order to handle Power Delivery and Port Detection.
+
+This series support this Type-C Virtual PD and enable the
+same in ROCK Pi 4C SBC.
+
+Any inputs?
+Jagan.
+
+Jagan Teki (3):
+  dt-bindings: extcon: Document Type-C Virtual PD driver
+  extcon: Add Type-C Virtual PD driver
+  arm64: dts: rk3399-rock-pi-4c: Enable Display Port
+
+ .../extcon/extcon-usbc-virtual-pd.yaml        |  66 ++++
+ MAINTAINERS                                   |   6 +
+ .../boot/dts/rockchip/rk3399-rock-pi-4c.dts   |  16 +
+ drivers/extcon/Kconfig                        |  10 +
+ drivers/extcon/Makefile                       |   1 +
+ drivers/extcon/extcon-usbc-virtual-pd.c       | 285 ++++++++++++++++++
+ 6 files changed, 384 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-virtual-pd.yaml
+ create mode 100644 drivers/extcon/extcon-usbc-virtual-pd.c
+
+-- 
+2.25.1
+
