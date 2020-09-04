@@ -2,134 +2,166 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50360C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3E4C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14805206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7F12074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:41:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4Iyt6hm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YnlEN4f7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbgIDPkf (ORCPT
+        id S1726577AbgIDPlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:40:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42950 "EHLO
+        Fri, 4 Sep 2020 11:41:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgIDPkY (ORCPT
+        with ESMTP id S1726109AbgIDPlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:40:24 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9A5CC061244;
-        Fri,  4 Sep 2020 08:40:23 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id z15so1330872plo.7;
-        Fri, 04 Sep 2020 08:40:23 -0700 (PDT)
+        Fri, 4 Sep 2020 11:41:02 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 595A9C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:41:02 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g4so7197564wrs.5
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:41:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IQDo8FpZy7wFoQHqQEGpuc/VN48kIyQ/D/5kCAdKndk=;
-        b=M4Iyt6hmbuC0Nc1C+qmGy0wqKy3g7yP3OwrgHydu/W17QGa5LA0SEC8NOWK8g7RdN/
-         tvQa78oWiD6OWtUkE/xRkoZj8WnVN538mg1l7XKcHv0mszsqV8zEu5QZGBcY1B6lCgyu
-         QTJSSBiNSHwy7BK59Zu8tiXVOLAm1qjSwSWtct41vqcHSJFOl7VlHhxggz3zsmiENGiG
-         HGkLwmTYFk9IGB5qMYbuWT5gpIrJ0zMU6XbaEjyUG5znsZQTvpxae1OT84ZyyMHoTxwD
-         Lm1Bc9Bw3al/mmId8M40rDWu6D5fJpIoB/zoxBoHvRuyc50AMuvMFSgcSEH3iJ+p3kDN
-         nd7w==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2TzoBat9rSOZ6f++r+CepUVmCJOu3zYkmgghF9mksEs=;
+        b=YnlEN4f7iF+L8Q2CLkv0licnnoCK1sE20W+PiA6DQxq9uzUghg6CdEFLBuBsZab07N
+         kWBC+5MR8a30w/2UZmUW0CFe9NU3v5xelGM/wUSAByE7li5cGhXYGk44PpEZLPP4ghCC
+         LwI2/fuDs+iBM00pNEHsfT8B87WYLBzlRSgKnef+klltPoKq7QcUE49JhbE0Kc0x6dRe
+         DLfLwu9x0k8ET5+QM7n/g0XxhdpsXtt31PonhoyMWQVABgWPqfLO+sjDxNOY3WmOYvul
+         kKCGsCWVfLeYgoW6s9vHiHY0YOPYFSMlskcwTd8aa7j3IgT1u4s6B60J8mu2IpvwuVgD
+         5YXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IQDo8FpZy7wFoQHqQEGpuc/VN48kIyQ/D/5kCAdKndk=;
-        b=onnhuTO2HfgdJDSbjiQrQ5FL6a4iZnYz/zW4rUUKD9qi7hahnzXRKVGU9pZ1Z034Y7
-         RMeH3lFyX7hRKgkpzI1Qc+3awpBbqk04ymCcBjvtqOj4WwbI5KF3BTmPXjzhwBT27ar0
-         0CfBt+NI4Sm4uC4hxBQFXshKJko8FIO8D+CCQjJVUKBzzkDJBT7M+mBFU47z2Q/Dh8oT
-         vkC97R7A6OWGxUMOd2jlvyYQL1PjH526US/MxAsN4xMx0+RB8zecGdhsOucR+okDrbLs
-         csgTqY4ko27BxWLCgucUAqnxT46kRnS+Gu7eu9U2JT49J45ax6t9mTmEELA8taljWyV2
-         JRwA==
-X-Gm-Message-State: AOAM533JiTf95FuK+0L8lggPhHzOxcWWwOy8IgBAvUSqwMPAbl1ne+ZM
-        L02YyHDUDrqIzw6DHEoI22Y=
-X-Google-Smtp-Source: ABdhPJzX0Yhp5J3UeAfE+CsyKGNiSh6rI3Mpd1uBXgvYBR9CDaJEgfIYRv4WtYU7vXCEQXAc+2pKlA==
-X-Received: by 2002:a17:90b:4c0f:: with SMTP id na15mr8514030pjb.119.1599234023415;
-        Fri, 04 Sep 2020 08:40:23 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id v17sm6889773pfn.24.2020.09.04.08.40.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 08:40:22 -0700 (PDT)
-Subject: Re: [PATCH 00/10] dt-bindings: Convert SP805 to Json-schema (and fix
- users)
-To:     =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chanho Min <chanho.min@lge.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Wei Xu <xuwei5@hisilicon.com>
-References: <20200828130602.42203-1-andre.przywara@arm.com>
- <19c6a67e-48f0-c0b6-3653-32a5a1f09e07@gmail.com>
- <CACRpkdbMbNd87145iwdL7=x501cvgU7wiZXNLF456sn6WvoodQ@mail.gmail.com>
- <302c54fd-5183-c8d0-7038-f6e60c7bb056@gmail.com>
- <26416b9b-d390-d7df-ee1f-8ec7ca08ba72@arm.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <1eea5f98-b437-1fda-d967-facf878c704c@gmail.com>
-Date:   Fri, 4 Sep 2020 08:40:12 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2TzoBat9rSOZ6f++r+CepUVmCJOu3zYkmgghF9mksEs=;
+        b=rxnW1+qNrgLir2R9YGk9BTqILLOqKLLHtBV5xenfDSzK7J3F6YUG0eKhofB9o82zvP
+         BNs7FXulDpdYk5/kTz1QlLIiO3lR+cWo4c9jCNoFSLjaWEjUF642j/SPe9i1rxtjLJhd
+         0RvcQcRN3YF9ioTK19pstpU1oWAlmBS4n3CV6DCSRI4RhaETpELcBY0Fjc2C8oaEfjZm
+         iaVXXqZqRMZzjZIc+0Ey7UsT5TkBIdQw6+sYu5ZhAiKUCxMmdbhV8XhmU78ups2kfIuh
+         eDr8bJUwVXDDIVO2r0zSKENZ+6cqKxCANIfiy0kBi323tpUhy3DtiaO6GeKJRM6o98xR
+         JNpw==
+X-Gm-Message-State: AOAM53102cXXf4aYoWtERis2YHVuQ2wjqmikH9uA2ybIq8Y+Kf2w4TCR
+        XgKySsm5Bsuaa6DrVyXOUtF2cw==
+X-Google-Smtp-Source: ABdhPJz9OexeGYtGOyyjCI7anjKl2LCCfHPKb7HFS1IgEZtNKIcVFCxXhMEfjgz2pFwwFZuU6kqojw==
+X-Received: by 2002:a5d:60c6:: with SMTP id x6mr8233226wrt.26.1599234060917;
+        Fri, 04 Sep 2020 08:41:00 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id y5sm2733111wrh.6.2020.09.04.08.40.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 08:41:00 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 16:40:58 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        LKML <linux-kernel@vger.kernel.org>,
+        Patch Tracking <patches@linaro.org>
+Subject: Re: [PATCH v2 3/3] kgdb: Add NOKPROBE labels on the trap handler
+ functions
+Message-ID: <20200904154058.qdrdkkctfs66ouw2@holly.lan>
+References: <20200716151943.2167652-1-daniel.thompson@linaro.org>
+ <20200716151943.2167652-4-daniel.thompson@linaro.org>
+ <CAD=FV=UBMa4pt7Xg2sKXHdjo6tVaQWBQFtT_aoDJ+Xt1HrPD+Q@mail.gmail.com>
+ <20200720081323.5f3xojhu6v23jgqi@holly.lan>
+ <CAD=FV=VipxFspgHJZ0uKURyfE4e3GB-w3gyJZdRn5CF9aLT8fg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <26416b9b-d390-d7df-ee1f-8ec7ca08ba72@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=VipxFspgHJZ0uKURyfE4e3GB-w3gyJZdRn5CF9aLT8fg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/4/2020 8:35 AM, André Przywara wrote:
-> On 04/09/2020 16:29, Florian Fainelli wrote:
-> 
+On Tue, Jul 21, 2020 at 02:22:08PM -0700, Doug Anderson wrote:
 > Hi,
 > 
->> On 9/4/2020 1:58 AM, Linus Walleij wrote:>> On Fri, Aug 28, 2020 at 9:34 PM Florian Fainelli
->>> <f.fainelli@gmail.com> wrote:
->>>> On 8/28/20 6:05 AM, Andre Przywara wrote:
->>>
->>>> What is the plan for merging this series? Should Rob pick up all changes
->>>> or since those are non critical changes, should we just leave it to the
->>>> SoC maintainers to pick up the changes in their tree?
->>>
->>> What about André just send a pull request to the ARM SoC maintainers
->>> for the whole thing?
->>
->> I already applied some of the patches, if we got that route please CC me
->> so I can drop them from my local queue. Thanks
+> On Mon, Jul 20, 2020 at 1:13 AM Daniel Thompson
+> <daniel.thompson@linaro.org> wrote:
+> >
+> > On Fri, Jul 17, 2020 at 03:39:58PM -0700, Doug Anderson wrote:
+> > > Hi,
+> > >
+> > > On Thu, Jul 16, 2020 at 8:20 AM Daniel Thompson
+> > > <daniel.thompson@linaro.org> wrote:
+> > > >
+> > > > Currently kgdb honours the kprobe blocklist but doesn't place its own
+> > > > trap handling code on the list. Add labels to discourage attempting to
+> > > > use kgdb to debug itself.
+> > > >
+> > > > These changes do not make it impossible to provoke recursive trapping
+> > > > since they do not cover all the calls that can be made on kgdb's entry
+> > > > logic. However going much further whilst we are sharing the kprobe
+> > > > blocklist risks reducing the capabilities of kprobe and this would be a
+> > > > bad trade off (especially so given kgdb's users are currently conditioned
+> > > > to avoid recursive traps).
+> > > >
+> > > > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > > > ---
+> > > >  kernel/debug/debug_core.c | 8 ++++++++
+> > > >  1 file changed, 8 insertions(+)
+> > >
+> > > I could just be missing something, but...
+> > >
+> > > I understand not adding "NOKPROBE_SYMBOL" to generic kernel functions
+> > > that kgdb happens to call, but I'm not quite sure I understand why all
+> > > of the kdb / kgdb code itself shouldn't be in the blocklist.  I
+> > > certainly don't object to the functions you added to the blocklist, I
+> > > guess I'm must trying to understand why it's a bad idea to add more or
+> > > how you came up with the list of functions that you did.
+> >
+> > Relatively early in the trap handler execution (just after we bring the
+> > other CPUs to a halt) all breakpoints are replaced with the original
+> > opcodes. Therefore I only marked up functions that run between the trap
+> > firing and the breakpoints being removed (and also between the
+> > breakpoints being reinstated and trap exit).
 > 
-> I would for sure drop these from any PR.
-> 
-> Rob, are you happy with the actual binding conversion? If you are
-> willing to take it as it is (Viresh has already acked), I could then
-> split off the DT fixes and either chase the maintainers or send ARM SoC
-> a PR. But this really depends on the binding being good.
+> Ah, OK!  Could that be added to the commit message?
 
-We had discussed this in an another leg of this thread that starts here:
+Will do.
+ 
+> Also, shouldn't you mark kgdb_arch_set_breakpoint()?  What about
+> dbg_activate_sw_breakpoints()?  I haven't gone and extensively
+> searched, but those two jump out to me as ones that were missed.
 
-https://lore.kernel.org/linux-devicetree/CAL_JsqKvcGAotS6xL7pu+wM8X33PLCQCuoaXYmWrA3j3OdoR5A@mail.gmail.com/
---
-Florian
+Agree. I think I over-focusses on the entry path. I will review the
+exit path more closely.
+
+> I suppose that means that if someone tried to set a breakpoint on a
+> kgdb function that wasn't one of the ones that you listed then the
+> system would happily report that the breakpoint has been set (no error
+> given) but that the breakpoint would just have no effect?  It wouldn't
+> crash (which is good), it just wouldn't detect that the breakpoint was
+> useless.
+
+Assuming the kgdb function is used exclusively from the trap handler
+then this is correct.
+
+> However, if these were in the NOKPROBE_SYMBOL then you'd get
+> a nice error message.  Is there no way we could use a linker script to
+> just mark everything using a linker script or somesuch?
+
+You'd still get odd effects with library functions that are used inside
+and outside the debugger (which can be breakpointed but don't trigger
+inside kgdb). Arguably the effect is clearer to users if they can see
+kdb/kgdb functions behaving the same way as library functions. It's odd
+but it won't promote false expectations from users.
+
+
+Daniel.
