@@ -2,226 +2,161 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB21C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE10FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 621F72073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32682064E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:47:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EgsDNr8j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgIDQqd (ORCPT
+        id S1726858AbgIDQrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:46:33 -0400
-Received: from mga14.intel.com ([192.55.52.115]:38323 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbgIDQqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:46:30 -0400
-IronPort-SDR: RmDoBhPz3+AOg4i4rw7fU//aOpnyAT09P+PnbucYNnvmf1+Ub7c8J6SoP5bJPrI5WhqYEAsIlv
- MddELV633yJg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="157049925"
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="157049925"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:46:29 -0700
-IronPort-SDR: 5nfdZh0odi1GPWvmHT8qDp4N/HZ4vZ/mKiF4aFzd77Hoieka0M6bTzZJKB8O0mkDnX2STpgcMH
- L0DUX+UiMfJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="332217966"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 04 Sep 2020 09:46:27 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kEEr2-00EKPX-Gx; Fri, 04 Sep 2020 19:46:24 +0300
-Date:   Fri, 4 Sep 2020 19:46:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 14/23] gpio: mockup: use the generic 'gpio-line-names'
- property
-Message-ID: <20200904164624.GA1891694@smile.fi.intel.com>
-References: <20200904154547.3836-1-brgl@bgdev.pl>
- <20200904154547.3836-15-brgl@bgdev.pl>
+        Fri, 4 Sep 2020 12:47:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbgIDQq7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:46:59 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D04C061244;
+        Fri,  4 Sep 2020 09:46:59 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id ef16so3308640qvb.8;
+        Fri, 04 Sep 2020 09:46:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TBpouKohZ4xnNFvQAORhEKmSrdyDNk10oVx1FtC9Bws=;
+        b=EgsDNr8jq4DF077DE8FFLRkR59IU61+j8V/Ka9V7oYrWIFPZmMCFtBwfask+T/m7M7
+         ABkQRjkqmQNhqKh2VT7i4UJ/Wt90Z38MeTrYGvULyHJ82SQ6PsuQNCiKdiLa9nveFUpl
+         R04cMMdDGxXDTRPRVqK11KOxC3g2sVS1/0YvzjlCoZCwTT0+M1Yo/uJWYoNvcaH8IrzS
+         D4wFxN5u+Z5lTv8jIxdDc9Kz7W6pwsymzzpENZP0uaCYmJuezDkqwdXmmIDXl+AlvX5a
+         XlvvIg2z5oM4vk2ffrT0qm6Rw0F7DcmoUiFJgFt2a2LOiExIWcNVg47MKAjj5MqzSRpP
+         R2uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TBpouKohZ4xnNFvQAORhEKmSrdyDNk10oVx1FtC9Bws=;
+        b=g+tYxbV7BsPwjGudb6bg1xkdjgCdRJZ3foys09dQqAsd2x7tRwrDgwAx97+Vl8/mbZ
+         bQynJ/see74USOaLKE0Ox1CTRO70zYkEAxSgDNlAClvFF65S3K75K5L/p03WJWos1hUc
+         UypN5BbFj8wiaNqR1Zt1YBLFwre0Z0C9IJNweflNa/5oXQbEawnvhmseJq8/peFprbGX
+         OmxLHqQJHE0bvhoi4VXJKkpQ9x+pePUl8/0ARupETlmRgKtBuT47Nt11B4pZpBVM2tDr
+         L6eu6MqkCzokc2VcA1i5Mc2055fWBDoO7aKzJOR3NJKauGeyvHWMVwlMn5Jpv7TJMc2Z
+         mRyg==
+X-Gm-Message-State: AOAM532BTdTavX90ZfYt2gBt2cfvLkZ9OYZC04qLvZ/71b3HbTu4E8Bm
+        7DHP9v184aI+Pmc9wbZx6nbxj3oajrhkUs0/SvY=
+X-Google-Smtp-Source: ABdhPJwyy/xhHl+JQi8gUbkrBFV9qdIEd42p3ahcLsVYoc0LxBY3nBUW4K/0j87szLhObsiHhZk2WUEKzePSgoAinVs=
+X-Received: by 2002:ad4:4ae9:: with SMTP id cp9mr8657659qvb.96.1599238018778;
+ Fri, 04 Sep 2020 09:46:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904154547.3836-15-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200817220238.603465-1-robdclark@gmail.com> <20200904091117.GH6714@8bytes.org>
+In-Reply-To: <20200904091117.GH6714@8bytes.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 4 Sep 2020 09:47:45 -0700
+Message-ID: <CAF6AEGtFoUQZv3HOpjXckExvXGVsqgPVe-rjq+wLXWM9+pjWkA@mail.gmail.com>
+Subject: Re: [PATCH 00/20] iommu/arm-smmu + drm/msm: per-process GPU pgtables
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Brian Masney <masneyb@onstation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Eric Anholt <eric@anholt.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hanna Hawa <hannah@marvell.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        "moderated list:ARM SMMU DRIVERS" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Pritesh Raithatha <praithatha@nvidia.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>, Takashi Iwai <tiwai@suse.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Wambui Karuga <wambui.karugax@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 05:45:38PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> GPIO line names are currently created by the driver from the chip label.
-> We'll want to support custom formats for line names (for instance: to
-> name all lines the same) for user-space tests so create them in the
-> module init function and pass them to the driver using the standard
-> 'gpio-line-names' property.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/gpio/gpio-mockup.c | 70 +++++++++++++++++++++-----------------
->  1 file changed, 38 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> index ce83f1df1933..96976ba66598 100644
-> --- a/drivers/gpio/gpio-mockup.c
-> +++ b/drivers/gpio/gpio-mockup.c
-> @@ -18,6 +18,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/property.h>
->  #include <linux/slab.h>
-> +#include <linux/string_helpers.h>
->  #include <linux/uaccess.h>
->  
->  #include "gpiolib.h"
-> @@ -378,29 +379,6 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
->  	return;
->  }
->  
-> -static int gpio_mockup_name_lines(struct device *dev,
-> -				  struct gpio_mockup_chip *chip)
-> -{
-> -	struct gpio_chip *gc = &chip->gc;
-> -	char **names;
-> -	int i;
-> -
-> -	names = devm_kcalloc(dev, gc->ngpio, sizeof(char *), GFP_KERNEL);
-> -	if (!names)
-> -		return -ENOMEM;
-> -
-> -	for (i = 0; i < gc->ngpio; i++) {
-> -		names[i] = devm_kasprintf(dev, GFP_KERNEL,
-> -					  "%s-%d", gc->label, i);
-> -		if (!names[i])
-> -			return -ENOMEM;
-> -	}
-> -
-> -	gc->names = (const char *const *)names;
-> -
-> -	return 0;
-> -}
-> -
->  static void gpio_mockup_dispose_mappings(void *data)
->  {
->  	struct gpio_mockup_chip *chip = data;
-> @@ -468,12 +446,6 @@ static int gpio_mockup_probe(struct platform_device *pdev)
->  	for (i = 0; i < gc->ngpio; i++)
->  		chip->lines[i].dir = GPIO_LINE_DIRECTION_IN;
->  
-> -	if (device_property_read_bool(dev, "named-gpio-lines")) {
-> -		rv = gpio_mockup_name_lines(dev, chip);
-> -		if (rv)
-> -			return rv;
-> -	}
-> -
->  	chip->irq_sim_domain = devm_irq_domain_create_sim(dev, NULL,
->  							  gc->ngpio);
->  	if (IS_ERR(chip->irq_sim_domain))
-> @@ -524,6 +496,27 @@ static void gpio_mockup_unregister_devices(void)
->  	}
->  }
->  
-> +static __init char **gpio_mockup_make_line_names(const char *label,
-> +						 unsigned int num_lines)
-> +{
-> +	unsigned int i;
-> +	char **names;
-> +
-> +	names = kcalloc(num_lines + 1, sizeof(char *), GFP_KERNEL);
-> +	if (!names)
-> +		return NULL;
-> +
-> +	for (i = 0; i < num_lines; i++) {
-> +		names[i] = kasprintf(GFP_KERNEL, "%s-%u", label, i);
-> +		if (!names[i]) {
-> +			kfree_strarray(names, i);
-> +			return NULL;
-> +		}
-> +	}
-> +
-> +	return names;
-> +}
-> +
->  static int __init gpio_mockup_init(void)
->  {
->  	struct property_entry properties[GPIO_MOCKUP_MAX_PROP];
-> @@ -531,6 +524,7 @@ static int __init gpio_mockup_init(void)
->  	struct gpio_mockup_device *mockup_dev;
->  	int i, prop, num_chips, err = 0, base;
->  	struct platform_device_info pdevinfo;
-> +	char **line_names;
->  	u16 ngpio;
->  
->  	if ((gpio_mockup_num_ranges < 2) ||
-> @@ -563,6 +557,7 @@ static int __init gpio_mockup_init(void)
->  		memset(properties, 0, sizeof(properties));
->  		memset(&pdevinfo, 0, sizeof(pdevinfo));
->  		prop = 0;
-> +		line_names = NULL;
->  
->  		snprintf(chip_label, sizeof(chip_label),
->  			 "gpio-mockup-%c", i + 'A');
-> @@ -578,9 +573,18 @@ static int __init gpio_mockup_init(void)
->  				 : gpio_mockup_range_ngpio(i) - base;
->  		properties[prop++] = PROPERTY_ENTRY_U16("nr-gpios", ngpio);
->  
-> -		if (gpio_mockup_named_lines)
-> -			properties[prop++] = PROPERTY_ENTRY_BOOL(
-> -						"named-gpio-lines");
-> +		if (gpio_mockup_named_lines) {
-> +			line_names = gpio_mockup_make_line_names(chip_label,
-> +								 ngpio);
-> +			if (!line_names) {
-> +				err = -ENOMEM;
-> +				goto err_out;
-> +			}
-> +
-> +			properties[prop++] = PROPERTY_ENTRY_STRING_ARRAY_LEN(
-> +						"gpio-line-names",
-> +						line_names, ngpio);
-> +		}
+On Fri, Sep 4, 2020 at 2:11 AM Joerg Roedel <joro@8bytes.org> wrote:
+>
+> On Mon, Aug 17, 2020 at 03:01:25PM -0700, Rob Clark wrote:
+> > Jordan Crouse (12):
+> >   iommu/arm-smmu: Pass io-pgtable config to implementation specific
+> >     function
+> >   iommu/arm-smmu: Add support for split pagetables
+> >   iommu/arm-smmu: Prepare for the adreno-smmu implementation
+> >   iommu/arm-smmu-qcom: Add implementation for the adreno GPU SMMU
+> >   dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
+> >   drm/msm: Add a context pointer to the submitqueue
+> >   drm/msm: Drop context arg to gpu->submit()
+> >   drm/msm: Set the global virtual address range from the IOMMU domain
+> >   drm/msm: Add support to create a local pagetable
+> >   drm/msm: Add support for private address space instances
+> >   drm/msm/a6xx: Add support for per-instance pagetables
+> >   arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
+> >
+> > Rob Clark (8):
+> >   drm/msm: remove dangling submitqueue references
+> >   iommu: add private interface for adreno-smmu
+> >   drm/msm/gpu: add dev_to_gpu() helper
+> >   drm/msm: set adreno_smmu as gpu's drvdata
+> >   iommu/arm-smmu: constify some helpers
+> >   arm: dts: qcom: sc7180: Set the compatible string for the GPU SMMU
+> >   iommu/arm-smmu: add a way for implementations to influence SCTLR
+> >   drm/msm: show process names in gem_describe
+>
+> Can the DRM parts be merged independently from the IOMMU parts or does
+> this need to be queued together? If it needs to be together I defer the
+> decission to Will through which tree this should go.
+>
 
-Indentation here looks quite deep. Maybe introduce a helper in between where
-you assign properties?
+Hi,
 
->  		pdevinfo.name = "gpio-mockup";
->  		pdevinfo.id = i;
-> @@ -588,11 +592,13 @@ static int __init gpio_mockup_init(void)
->  
->  		mockup_dev = kzalloc(sizeof(*mockup_dev), GFP_KERNEL);
->  		if (!mockup_dev) {
-> +			kfree_strarray(line_names, ngpio);
->  			err = -ENOMEM;
->  			goto err_out;
->  		}
->  
->  		mockup_dev->pdev = platform_device_register_full(&pdevinfo);
-> +		kfree_strarray(line_names, ngpio);
->  		if (IS_ERR(mockup_dev->pdev)) {
->  			pr_err("error registering device");
->  			kfree(mockup_dev);
-> -- 
-> 2.26.1
-> 
+v16 of this series re-ordered the patches and has some notes at the
+top of the cover letter[1] about a potential way to land it.. tl;dr:
+the drm parts can and adreno-smmu-priv.h can go independently of
+iommu.  And the first four iommu patches can go in independently of
+drm.  But the last two iommu patches have a dependency on the drm
+patches.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Note that I'll send one more revision of the series shortly (I have a
+small fixup for one of the drm patches for an issue found in testing,
+and Bjorn had some suggestions about "iommu/arm-smmu: Prepare for the
+adreno-smmu implementation" that I need to look at.
 
+BR,
+-R
 
+[1] https://lkml.org/lkml/2020/9/1/1469
