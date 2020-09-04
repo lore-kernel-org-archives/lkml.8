@@ -2,258 +2,238 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED81C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6B2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5401421527
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B952084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbgIDL4M (ORCPT
+        id S1730022AbgIDL6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:56:12 -0400
-Received: from mga17.intel.com ([192.55.52.151]:18862 "EHLO mga17.intel.com"
+        Fri, 4 Sep 2020 07:58:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57000 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgIDL4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 07:56:04 -0400
-IronPort-SDR: r6ms9fWef2U8iWfk3BrffXJwFKXqIfe9nGuuwsGWJSNoOkJ8NrIWURlOvQbE0bLrSUHcJS2NWw
- sNF7zEUJfy4g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="137780964"
-X-IronPort-AV: E=Sophos;i="5.76,389,1592895600"; 
-   d="scan'208";a="137780964"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 04:56:02 -0700
-IronPort-SDR: aZCKaJZwpyuOqsS9X/Mx39D0LYJ3IwvfBtppRR/RFrVVBbkRkbL4nWxh594vXYRhMGw1xocQwn
- rCgAj8bZXOQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,389,1592895600"; 
-   d="scan'208";a="334861195"
-Received: from pipper-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.56.104])
-  by fmsmga002.fm.intel.com with ESMTP; 04 Sep 2020 04:55:56 -0700
-Date:   Fri, 4 Sep 2020 14:55:55 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Haitao Huang <haitao.huang@linux.intel.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jethro Beekman <jethro@fortanix.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, josh@joshtriplett.org,
-        kai.huang@intel.com, kai.svahn@intel.com, kmoy@google.com,
-        ludloff@google.com, luto@kernel.org, nhorman@redhat.com,
-        puiterwijk@redhat.com, rientjes@google.com, tglx@linutronix.de,
-        yaozhangx@google.com
-Subject: Re: [PATCH v36 12/24] x86/sgx: Add SGX_IOC_ENCLAVE_CREATE
-Message-ID: <20200904115555.GA39023@linux.intel.com>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-13-jarkko.sakkinen@linux.intel.com>
- <op.0p9xohs2wjvjmi@hhuan26-mobl1.amr.corp.intel.com>
+        id S1729942AbgIDL5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 07:57:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 963CCAC37;
+        Fri,  4 Sep 2020 11:57:49 +0000 (UTC)
+From:   Cyril Hrubis <chrubis@suse.cz>
+To:     ltp@lists.linux.it
+Cc:     linux-kernel@vger.kernel.org, lkp@lists.01.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>
+Subject: [PATCH] syscall/ptrace08: Simplify the test.
+Date:   Fri,  4 Sep 2020 13:58:17 +0200
+Message-Id: <20200904115817.8024-1-chrubis@suse.cz>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <op.0p9xohs2wjvjmi@hhuan26-mobl1.amr.corp.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 11:41:14AM -0500, Haitao Huang wrote:
-> On Thu, 16 Jul 2020 08:52:51 -0500, Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> 
-> > Add an ioctl that performs ENCLS[ECREATE], which creates SGX Enclave
-> > Control Structure for the enclave. SECS contains attributes about the
-> > enclave that are used by the hardware and cannot be directly accessed by
-> > software, as SECS resides in the EPC.
-> > 
-> > One essential field in SECS is a field that stores the SHA256 of the
-> > measured enclave pages. This field, MRENCLAVE, is initialized by the
-> > ECREATE instruction and updated by every EADD and EEXTEND operation.
-> > Finally, EINIT locks down the value.
-> > 
-> > Acked-by: Jethro Beekman <jethro@fortanix.com>
-> > Tested-by: Jethro Beekman <jethro@fortanix.com>
-> > Tested-by: Haitao Huang <haitao.huang@linux.intel.com>
-> > Tested-by: Chunyang Hui <sanqian.hcy@antfin.com>
-> > Tested-by: Jordan Hand <jorhand@linux.microsoft.com>
-> > Tested-by: Nathaniel McCallum <npmccallum@redhat.com>
-> > Tested-by: Seth Moore <sethmo@google.com>
-> > Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Co-developed-by: Suresh Siddha <suresh.b.siddha@intel.com>
-> > Signed-off-by: Suresh Siddha <suresh.b.siddha@intel.com>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
-> >  arch/x86/include/uapi/asm/sgx.h               |  25 ++
-> >  arch/x86/kernel/cpu/sgx/Makefile              |   1 +
-> >  arch/x86/kernel/cpu/sgx/driver.c              |  12 +
-> >  arch/x86/kernel/cpu/sgx/driver.h              |   1 +
-> >  arch/x86/kernel/cpu/sgx/ioctl.c               | 226 ++++++++++++++++++
-> >  6 files changed, 266 insertions(+)
-> >  create mode 100644 arch/x86/include/uapi/asm/sgx.h
-> >  create mode 100644 arch/x86/kernel/cpu/sgx/ioctl.c
-> > 
-> > diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > index 59472cd6a11d..35f713e3a267 100644
-> > --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > @@ -323,6 +323,7 @@ Code  Seq#    Include File
-> > Comments
-> >                                                                       <mailto:tlewis@mindspring.com>
-> >  0xA3  90-9F  linux/dtlk.h
-> >  0xA4  00-1F  uapi/linux/tee.h
-> > Generic TEE subsystem
-> > +0xA4  00-1F  uapi/asm/sgx.h
-> > Intel SGX subsystem (a legit conflict as TEE and SGX do not co-exist)
-> >  0xAA  00-3F  linux/uapi/linux/userfaultfd.h
-> >  0xAB  00-1F  linux/nbd.h
-> >  0xAC  00-1F  linux/raw.h
-> > diff --git a/arch/x86/include/uapi/asm/sgx.h
-> > b/arch/x86/include/uapi/asm/sgx.h
-> > new file mode 100644
-> > index 000000000000..3787d278e84b
-> > --- /dev/null
-> > +++ b/arch/x86/include/uapi/asm/sgx.h
-> > @@ -0,0 +1,25 @@
-> > +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) WITH
-> > Linux-syscall-note */
-> > +/*
-> > + * Copyright(c) 2016-19 Intel Corporation.
-> > + */
-> > +#ifndef _UAPI_ASM_X86_SGX_H
-> > +#define _UAPI_ASM_X86_SGX_H
-> > +
-> > +#include <linux/types.h>
-> > +#include <linux/ioctl.h>
-> > +
-> > +#define SGX_MAGIC 0xA4
-> > +
-> > +#define SGX_IOC_ENCLAVE_CREATE \
-> > +	_IOW(SGX_MAGIC, 0x00, struct sgx_enclave_create)
-> > +
-> > +/**
-> > + * struct sgx_enclave_create - parameter structure for the
-> > + *                             %SGX_IOC_ENCLAVE_CREATE ioctl
-> > + * @src:	address for the SECS page data
-> > + */
-> > +struct sgx_enclave_create  {
-> > +	__u64	src;
-> > +};
-> > +
-> > +#endif /* _UAPI_ASM_X86_SGX_H */
-> > diff --git a/arch/x86/kernel/cpu/sgx/Makefile
-> > b/arch/x86/kernel/cpu/sgx/Makefile
-> > index 3fc451120735..91d3dc784a29 100644
-> > --- a/arch/x86/kernel/cpu/sgx/Makefile
-> > +++ b/arch/x86/kernel/cpu/sgx/Makefile
-> > @@ -1,4 +1,5 @@
-> >  obj-y += \
-> >  	driver.o \
-> >  	encl.o \
-> > +	ioctl.o \
-> >  	main.o
-> > diff --git a/arch/x86/kernel/cpu/sgx/driver.c
-> > b/arch/x86/kernel/cpu/sgx/driver.c
-> > index b52520407f5b..5559bc18de41 100644
-> > --- a/arch/x86/kernel/cpu/sgx/driver.c
-> > +++ b/arch/x86/kernel/cpu/sgx/driver.c
-> > @@ -118,10 +118,22 @@ static unsigned long sgx_get_unmapped_area(struct
-> > file *file,
-> >  	return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
-> >  }
-> > +#ifdef CONFIG_COMPAT
-> > +static long sgx_compat_ioctl(struct file *filep, unsigned int cmd,
-> > +			      unsigned long arg)
-> > +{
-> > +	return sgx_ioctl(filep, cmd, arg);
-> > +}
-> > +#endif
-> > +
-> >  static const struct file_operations sgx_encl_fops = {
-> >  	.owner			= THIS_MODULE,
-> >  	.open			= sgx_open,
-> >  	.release		= sgx_release,
-> > +	.unlocked_ioctl		= sgx_ioctl,
-> > +#ifdef CONFIG_COMPAT
-> > +	.compat_ioctl		= sgx_compat_ioctl,
-> > +#endif
-> >  	.mmap			= sgx_mmap,
-> >  	.get_unmapped_area	= sgx_get_unmapped_area,
-> >  };
-> > diff --git a/arch/x86/kernel/cpu/sgx/driver.h
-> > b/arch/x86/kernel/cpu/sgx/driver.h
-> > index f7ce40dedc91..e4063923115b 100644
-> > --- a/arch/x86/kernel/cpu/sgx/driver.h
-> > +++ b/arch/x86/kernel/cpu/sgx/driver.h
-> > @@ -9,6 +9,7 @@
-> >  #include <linux/rwsem.h>
-> >  #include <linux/sched.h>
-> >  #include <linux/workqueue.h>
-> > +#include <uapi/asm/sgx.h>
-> >  #include "sgx.h"
-> > #define SGX_EINIT_SPIN_COUNT	20
-> > diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c
-> > b/arch/x86/kernel/cpu/sgx/ioctl.c
-> > new file mode 100644
-> > index 000000000000..7981c411b05a
-> > --- /dev/null
-> > +++ b/arch/x86/kernel/cpu/sgx/ioctl.c
-> > @@ -0,0 +1,226 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> > +// Copyright(c) 2016-19 Intel Corporation.
-> > +
-> > +#include <asm/mman.h>
-> > +#include <linux/mman.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/file.h>
-> > +#include <linux/hashtable.h>
-> > +#include <linux/highmem.h>
-> > +#include <linux/ratelimit.h>
-> > +#include <linux/sched/signal.h>
-> > +#include <linux/shmem_fs.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/suspend.h>
-> > +#include "driver.h"
-> > +#include "encl.h"
-> > +#include "encls.h"
-> > +
-> > +static u32 sgx_calc_ssa_frame_size(u32 miscselect, u64 xfrm)
-> > +{
-> > +	u32 size_max = PAGE_SIZE;
-> > +	u32 size;
-> > +	int i;
-> > +
-> > +	for (i = 2; i < 64; i++) {
-> > +		if (!((1 << i) & xfrm))
-> > +			continue;
-> > +
-> 
-> Potential overflow for signed integer shift. Originally spotted and fixed in
-> OOT from Colin I. K.: https://github.com/intel/linux-sgx-driver/pull/16
-> 
-> Thanks
-> Haitao
+The original test was attempting to crash the kernel by setting a
+breakpoint on do_debug kernel function which, when triggered, caused an
+infinite loop in the kernel. The problem with this approach is that
+kernel internal function names are not stable at all and the name was
+changed recently, which made the test fail for no good reason.
 
-Thank you. It is true that this also applies to the mainline SGX.
+So this patch changes the test to read the breakpoint address back
+instead, which also means that we can drop the /proc/kallsyms parsing as
+well.
 
-I fixed this and added this entry to v37 changelog:
+Signed-off-by: Cyril Hrubis <chrubis@suse.cz>
+CC: Andy Lutomirski <luto@kernel.org>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Alexandre Chartre <alexandre.chartre@oracle.com>
+---
+ testcases/kernel/syscalls/ptrace/ptrace08.c | 120 ++++++++++----------
+ 1 file changed, 60 insertions(+), 60 deletions(-)
 
-* Fixed signed integer shift overflow.
-  https://github.com/intel/linux-sgx-driver/pull/16/commits/d27ca6071b2b28e2e789d265eda796dd9fc65a64
-
-/Jarkko
+diff --git a/testcases/kernel/syscalls/ptrace/ptrace08.c b/testcases/kernel/syscalls/ptrace/ptrace08.c
+index 591aa0dd2..5587f0bbb 100644
+--- a/testcases/kernel/syscalls/ptrace/ptrace08.c
++++ b/testcases/kernel/syscalls/ptrace/ptrace08.c
+@@ -5,8 +5,17 @@
+  *
+  * CVE-2018-1000199
+  *
+- * Test error handling when ptrace(POKEUSER) modifies debug registers.
+- * Even if the call returns error, it may create breakpoint in kernel code.
++ * Test error handling when ptrace(POKEUSER) modified x86 debug registers even
++ * when the call returned error.
++ *
++ * When the bug was present we could create breakpoint in the kernel code,
++ * which shoudn't be possible at all. The original CVE caused a kernel crash by
++ * setting a breakpoint on do_debug kernel function which, when triggered,
++ * caused an infinite loop. However we do not have to crash the kernel in order
++ * to assert if kernel has been fixed or not. All we have to do is to try to
++ * set a breakpoint, on any kernel address, then read it back and check if the
++ * value has been set or not.
++ *
+  * Kernel crash partially fixed in:
+  *
+  *  commit f67b15037a7a50c57f72e69a6d59941ad90a0f0f
+@@ -26,69 +35,42 @@
+ #include "tst_safe_stdio.h"
+ 
+ #if defined(__i386__) || defined(__x86_64__)
+-#define SYMNAME_SIZE 256
+-#define KERNEL_SYM "do_debug"
+ 
+-static unsigned long break_addr;
+ static pid_t child_pid;
+ 
+-static void setup(void)
+-{
+-	int fcount;
+-	char endl, symname[256];
+-	FILE *fr = SAFE_FOPEN("/proc/kallsyms", "r");
+-
+-	/* Find address of do_debug() in /proc/kallsyms */
+-	do {
+-		fcount = fscanf(fr, "%lx %*c %255s%c", &break_addr, symname,
+-			&endl);
+-
+-		if (fcount <= 0 && feof(fr))
+-			break;
+-
+-		if (fcount < 2) {
+-			fclose(fr);
+-			tst_brk(TBROK, "Unexpected data in /proc/kallsyms %d",
+-				fcount);
+-		}
+-
+-		if (fcount >= 3 && endl != '\n')
+-			while (!feof(fr) && fgetc(fr) != '\n');
+-	} while (!feof(fr) && strcmp(symname, KERNEL_SYM));
+-
+-	SAFE_FCLOSE(fr);
+-
+-	if (strcmp(symname, KERNEL_SYM))
+-		tst_brk(TBROK, "Cannot find address of kernel symbol \"%s\"",
+-			KERNEL_SYM);
+-
+-	if (!break_addr)
+-		tst_brk(TCONF, "Addresses in /proc/kallsyms are hidden");
+-
+-	tst_res(TINFO, "Kernel symbol \"%s\" found at 0x%lx", KERNEL_SYM,
+-		break_addr);
+-}
++#if defined(__x86_64__)
++# define KERN_ADDR_MIN 0xffff800000000000
++# define KERN_ADDR_MAX 0xffffffffffffffff
++# define KERN_ADDR_BITS 64
++#elif defined(__i386__)
++# define KERN_ADDR_MIN 0xc0000000
++# define KERN_ADDR_MAX 0xffffffff
++# define KERN_ADDR_BITS 32
++#endif
+ 
+-static void debug_trap(void)
++static void setup(void)
+ {
+-	/* x86 instruction INT1 */
+-	asm volatile (".byte 0xf1");
++	/*
++	 * When running in compat mode we can't pass 64 address to ptrace so we
++	 * have to skip the test.
++	 */
++	if (tst_kernel_bits() != KERN_ADDR_BITS)
++		tst_brk(TCONF, "Cannot pass 64bit kernel address in compat mode");
+ }
+ 
+ static void child_main(void)
+ {
+ 	raise(SIGSTOP);
+-	/* wait for SIGCONT from parent */
+-	debug_trap();
+ 	exit(0);
+ }
+ 
+-static void run(void)
++static void ptrace_try_kern_addr(unsigned long kern_addr)
+ {
+ 	int status;
+-	pid_t child;
+ 
+-	child = child_pid = SAFE_FORK();
++	tst_res(TINFO, "Trying address 0x%lx", kern_addr);
++
++	child_pid = SAFE_FORK();
+ 
+ 	if (!child_pid)
+ 		child_main();
+@@ -103,22 +85,41 @@ static void run(void)
+ 		(void *)offsetof(struct user, u_debugreg[7]), (void *)1);
+ 
+ 	/* Return value intentionally ignored here */
+-	ptrace(PTRACE_POKEUSER, child_pid,
++	TEST(ptrace(PTRACE_POKEUSER, child_pid,
+ 		(void *)offsetof(struct user, u_debugreg[0]),
+-		(void *)break_addr);
++		(void *)kern_addr));
++
++	if (TST_RET != -1) {
++		tst_res(TFAIL, "ptrace() breakpoint with kernel addr succeeded");
++	} else {
++		if (TST_ERR == EINVAL) {
++			tst_res(TPASS | TTERRNO,
++				"ptrace() breakpoint with kernel addr failed");
++		} else {
++			tst_res(TFAIL | TTERRNO,
++				"ptrace() breakpoint on kernel addr should return EINVAL, got");
++		}
++	}
++
++	unsigned long addr;
++
++	addr = ptrace(PTRACE_PEEKUSER, child_pid,
++	              (void*)offsetof(struct user, u_debugreg[0]), NULL);
++
++	if (addr == kern_addr)
++		tst_res(TFAIL, "Was able to set breakpoint on kernel addr");
+ 
+ 	SAFE_PTRACE(PTRACE_DETACH, child_pid, NULL, NULL);
+ 	SAFE_KILL(child_pid, SIGCONT);
+ 	child_pid = 0;
++	tst_reap_children();
++}
+ 
+-	if (SAFE_WAITPID(child, &status, 0) != child)
+-		tst_brk(TBROK, "Received event from unexpected PID");
+-
+-	if (!WIFSIGNALED(status))
+-		tst_brk(TBROK, "Received unexpected event from child");
+-
+-	tst_res(TPASS, "Child killed by %s", tst_strsig(WTERMSIG(status)));
+-	tst_res(TPASS, "We're still here. Nothing bad happened, probably.");
++static void run(void)
++{
++	ptrace_try_kern_addr(KERN_ADDR_MIN);
++	ptrace_try_kern_addr(KERN_ADDR_MAX);
++	ptrace_try_kern_addr(KERN_ADDR_MIN + (KERN_ADDR_MAX - KERN_ADDR_MIN)/2);
+ }
+ 
+ static void cleanup(void)
+@@ -133,7 +134,6 @@ static struct tst_test test = {
+ 	.setup = setup,
+ 	.cleanup = cleanup,
+ 	.forks_child = 1,
+-	.taint_check = TST_TAINT_W | TST_TAINT_D,
+ 	.tags = (const struct tst_tag[]) {
+ 		{"linux-git", "f67b15037a7a"},
+ 		{"CVE", "2018-1000199"},
+-- 
+2.26.2
