@@ -2,233 +2,208 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24D0C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09041C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79DB0206F2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF72F206F2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:08:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rvfn1Bnh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8nlPOOl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgIDFGU (ORCPT
+        id S1726544AbgIDFII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 01:06:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58154 "EHLO
+        Fri, 4 Sep 2020 01:08:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgIDFGT (ORCPT
+        with ESMTP id S1725765AbgIDFIG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 01:06:19 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CEDCC061245
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:06:18 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id s10so611279plp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:06:18 -0700 (PDT)
+        Fri, 4 Sep 2020 01:08:06 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01FA9C061244;
+        Thu,  3 Sep 2020 22:08:05 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id o68so3972387pfg.2;
+        Thu, 03 Sep 2020 22:08:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CBbMB4VPz7Fp/I3o67RU25C6dBsW7GnQgeenEJJuSTw=;
-        b=Rvfn1BnhAg+y/6coc//ePKxc7FZWsnd+hdeOXshn2MhZk5umuXuTThMjqB6FCKmbff
-         sgSmeAxPftQyIsN6rRK6yq6eE7RaKVePVWgHwoeNSSWVlwgKrcDJ9eZp4zkRGgypdDQQ
-         C8GSqzK7knDsU4dsHYYwNo5gJbV1fMaQaIi0A34jEORfJ0nVevNrVUM708Yy5cu4u5ox
-         pRFflSiQUPMq7Z3rLGXpxE7EJlqUxp4P0XK/B2In77Y5KUmqSe7eeQ8alxgankoZD0tV
-         lajoUaOcV/2iBqQknr7bnsXqKGXOMcKtv25aMGxMJ4MEh9AhAOHCGnEQZhTTh/bX4ZUn
-         PoGg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=ecJ6br0bOEqdX8tcGVb8URqHSI/ob4YFt4Jw7wg6Ia0=;
+        b=b8nlPOOlOHQn+lEuwRWvHwAQqNuifcifVvLhsW8dvfjkY2mdTgiNGgEZxWaJmpzntt
+         Hn5HT5oTuWCRlToi3q+vgzgSY5+yDEcx96qOfweqjZtU8k35kLoDOGUt0WyUgPQkeX/K
+         jxcDECeyA4ppLcPAegF1f6k6xyvXc2oxUiUaUz6iGTU+qAH14iUfq8ih9LwBhAenkeTC
+         654edaVTafviomkG9HcSFRCR1Jvv85Rl3uLJNKrRY9efCwuKgTiWSPWqmQwYFrtxW9vg
+         smwup7jheDRfTdfWyEHUenuexoJk5EO/aHfVZM3nRrUD2Hu5EzTVHCQtXJCsnn7M38P/
+         wxrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CBbMB4VPz7Fp/I3o67RU25C6dBsW7GnQgeenEJJuSTw=;
-        b=E52Go8G7r0hB+yvkY25Slp+4muBIffCd+5nzyR26wUIryakU8KWRhZWy2rDYXMp7vH
-         Je8Car4xSa4V5ZDYqj5Sw597Yn2q9nIzgB+nV4xhKd4rdM7tIMpmOK9YxwHS8UYial+4
-         VQ39ctJVjXXxkxF6o2suMfBdMWlapJpS9s8Cv4KJRVKGy/f8DAK12LlaDj+NiRo9G3fa
-         VIA4AfHOZI6HHExc37Hlb+5Ld7drWtTmuxS7COrww1Xb7JyynouDi3Wr7FRY274ZI9wf
-         AazqPDu42UmGg4w8DBYvRMRRS7xAUHj4NpHfFyF0P3t+U1ghdE3NqzkzFnurKSP1zIw3
-         gMvA==
-X-Gm-Message-State: AOAM533SAdz8B1SrcdDlP2DqYW0rFbH2l73SoMfTXZw2cXptiOlrHvb9
-        yfJv72yXt3COSiMS6aArxKisWA==
-X-Google-Smtp-Source: ABdhPJwyHx/64jYDWTs4ttIoXGIjsEOyTW7OJHFB9S6rqlWJHC8IE9cTP+9hhRz8wSvzYxnEaCUYlg==
-X-Received: by 2002:a17:902:9a90:: with SMTP id w16mr7481201plp.188.1599195977499;
-        Thu, 03 Sep 2020 22:06:17 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id c5sm4254341pgj.0.2020.09.03.22.06.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Sep 2020 22:06:16 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 10:36:04 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     rjw@rjwysocki.net, sudeep.holla@arm.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq,cppc: fix issue when hotplugging out policy->cpu
-Message-ID: <20200904050604.yoar2c6fofcikipp@vireshk-i7>
-References: <20200903111955.31029-1-ionela.voinescu@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903111955.31029-1-ionela.voinescu@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=ecJ6br0bOEqdX8tcGVb8URqHSI/ob4YFt4Jw7wg6Ia0=;
+        b=fjTIkzaltBvB1IKehc4LTibjnpYzKVHDMlQtG56/dOPLxdUI2dkruNvXBhRMychrUL
+         Outgo6/TOB/DrrdwV9DQTGDJ3J3ZkBF//BNz/hMkaqEz/Q3D/fooxAMpZ+DSkMNj08MB
+         qb+zhvg+6RPj7qsgdrGdV1V8MAYutpczSFJDrwRlxVgHo0fcBGDM6avJfPRNhRAvyKZL
+         KeSOrcH/c7oASKHHZGO813mcHCJurfoGYNwHV9kKFzP5TnFkzTm8DWfnFxz3EJEZ9oDZ
+         RD7O170Bqq73cNON9vuu/oIjQaAJwWX/9BsZn9ZVSwAqoZwJpgEV8K2V8RbJRdrVCYNG
+         5lnA==
+X-Gm-Message-State: AOAM532StL1QltuiR5ban617H1s5G84oOGlWI+Ij+e1QTmut4O7DaTEd
+        4U5Lt7ocYm7dIH4byENGVnc=
+X-Google-Smtp-Source: ABdhPJzeF5lk/iuosObv9Ll4NXB/zgMfsHAkWm96fxL4NlgqZBhQmtxFHr4hu82v5C4PM6zQQ+qTzw==
+X-Received: by 2002:a63:43c7:: with SMTP id q190mr5619640pga.6.1599196085186;
+        Thu, 03 Sep 2020 22:08:05 -0700 (PDT)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id d17sm2406504pfq.157.2020.09.03.22.08.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 22:08:04 -0700 (PDT)
+Date:   Thu, 03 Sep 2020 22:07:57 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     Kehuan Feng <kehuan.feng@gmail.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Jike Song <albcamus@gmail.com>, Josh Hunt <johunt@akamai.com>,
+        Jonas Bonn <jonas.bonn@netrounds.com>,
+        Michael Zhivich <mzhivich@akamai.com>,
+        David Miller <davem@davemloft.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Message-ID: <5f51cbad3cc2_3eceb208fc@john-XPS-13-9370.notmuch>
+In-Reply-To: <CAM_iQpXZMeAGkq_=rG6KEabFNykszpRU_Hnv65Qk7yesvbRDrw@mail.gmail.com>
+References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
+ <20200623134259.8197-1-mzhivich@akamai.com>
+ <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
+ <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
+ <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
+ <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com>
+ <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
+ <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com>
+ <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
+ <20200822032800.16296-1-hdanton@sina.com>
+ <CACS=qqKhsu6waaXndO5tQL_gC9TztuUQpqQigJA2Ac0y12czMQ@mail.gmail.com>
+ <20200825032312.11776-1-hdanton@sina.com>
+ <CACS=qqK-5g-QM_vczjY+A=3fi3gChei4cAkKweZ4Sn2L537DQA@mail.gmail.com>
+ <20200825162329.11292-1-hdanton@sina.com>
+ <CACS=qqKgiwdCR_5+z-vkZ0X8DfzOPD7_ooJ_imeBnx+X1zw2qg@mail.gmail.com>
+ <CACS=qqKptAQQGiMoCs1Zgs9S4ZppHhasy1AK4df2NxnCDR+vCw@mail.gmail.com>
+ <5f46032e.1c69fb81.9880c.7a6cSMTPIN_ADDED_MISSING@mx.google.com>
+ <CACS=qq+Yw734DWhETNAULyBZiy_zyjuzzOL-NO30AB7fd2vUOQ@mail.gmail.com>
+ <20200827125747.5816-1-hdanton@sina.com>
+ <CACS=qq+a0H=e8yLFu95aE7Hr0bQ9ytCBBn2rFx82oJnPpkBpvg@mail.gmail.com>
+ <CAM_iQpV-JMURzFApp-Zhxs3QN9j=Zdf6yqwOP=E42ERDHxe6Hw@mail.gmail.com>
+ <dd73f551d1fc89e457ffabd106cbf0bf401b747b.camel@redhat.com>
+ <CAM_iQpXZMeAGkq_=rG6KEabFNykszpRU_Hnv65Qk7yesvbRDrw@mail.gmail.com>
+Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-09-20, 12:19, Ionela Voinescu wrote:
-> An issue is observed in the cpufreq CPPC driver when having dependency
-> domains (PSD) and the policy->cpu is hotplugged out.
+Cong Wang wrote:
+> On Thu, Sep 3, 2020 at 1:40 AM Paolo Abeni <pabeni@redhat.com> wrote:
+> >
+> > On Wed, 2020-09-02 at 22:01 -0700, Cong Wang wrote:
+> > > Can you test the attached one-line fix? I think we are overthinking,
+> > > probably all
+> > > we need here is a busy wait.
+> >
+> > I think that will solve, but I also think that will kill NOLOCK
+> > performances due to really increased contention.
 > 
-> Considering a platform with 4 CPUs and 2 PSD domains (CPUs 0 and 1 in
-> PSD-1, CPUs 2 and 3 in PSD-2), cppc_cpufreq_cpu_init() will be called
-> for the two cpufreq policies that are created and it will set
-> all_cpu_data[policy->cpu]->cpu = policy->cpu.
-> 
-> Therefore all_cpu_data[0]->cpu=0, and all_cpu_data[2]->cpu=2. But for
-> CPUs 1 and 3, all_cpu_data[{1,3}]->cpu will remain 0 from the structure
-> allocation.
-> 
-> If CPU 2 is hotplugged out, CPU 3 will become policy->cpu. But its
-> all_cpu_data[3]->cpu will remain 0. Later, when the .target() function
-> is called for policy2, the cpu argument to cppc_set_perf() will be 0 and
-> therefore it will use the performance controls of CPU 0, which will
-> result in a performance level change for the wrong domain.
-> 
-> While the possibility of setting a correct CPU value in the per-cpu
-> cppc_cpudata structure is available, it can be noticed that this cpu value
-> is not used at all outside the .target() function, where it's not actually
-> necessary. Therefore, remove the cpu variable from the cppc_cpudata
-> structure and use policy->cpu in the .target() function as done for the
-> other CPPC cpufreq functions.
-> 
-> Fixes: 5477fb3bd1e8  ("ACPI / CPPC: Add a CPUFreq driver for use with CPPC")
-> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> 
-> Testing was done on a Juno R2 platform (with the proper ACPI/CPPC setup):
-> CPUs 0, 1, 2, 3 are in PSD-0 (policy0), CPUs 4 and 5 are in PSD-4
-> (policy4).
-> 
-> Before the fix:
-> 
-> root@sqwt-ubuntu:~# dmesg | grep address
-> [    2.165177] ACPI CPPC: ACPI desired perf address 0: - ffff80001004d200
-> [    2.174226] ACPI CPPC: ACPI desired perf address 1: - ffff800010055200
-> [    2.183231] ACPI CPPC: ACPI desired perf address 2: - ffff80001005d200
-> [    2.192234] ACPI CPPC: ACPI desired perf address 3: - ffff800010065200
-> [    2.201245] ACPI CPPC: ACPI desired perf address 4: - ffff80001006d218
-> [    2.210256] ACPI CPPC: ACPI desired perf address 5: - ffff800011ff1218
-> [..]
-> [    2.801940] ACPI CPPC: Writing to address for CPU 0:ffff80001004d200: 38300
-> [    2.835286] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 102400
-> [..]
-> root@sqwt-ubuntu:~# cd /sys/devices/system/cpu/cpufreq/
-> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 600000 > policy4/scaling_setspeed
-> [   72.098758] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 51200
-> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 1200000 > policy4/scaling_setspeed
-> [   85.430645] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 102400
-> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 0 > ../cpu4/online
-> [  102.606380] CPPC Cpufreq:CPPC: Calculate: (6285/261)*4266=102727.
-> [  102.612491] CPPC Cpufreq:CPPC: Core rate = 1203832, arch timer rate: 50000000
-> [  102.619659] ACPI CPPC: Writing to address for CPU 0:ffff80001004d200: 102400
-> [  102.626898] CPU4: shutdown
-> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 600000 > policy4/scaling_setspeed
-> [  141.116882] ACPI CPPC: Writing to address for CPU 0:ffff80001004d200: 51200
-> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 1200000 > policy4/scaling_setspeed
-> [  159.288273] ACPI CPPC: Writing to address for CPU 0:ffff80001004d200: 102400
-> 
-> 
-> After the fix:
-> 
-> root@sqwt-ubuntu:~# cd /sys/devices/system/cpu/cpufreq/
-> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 600000 > policy4/scaling_setspeed
-> [  139.903322] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 51200
-> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 1200000 > policy4/scaling_setspeed
-> [  147.279040] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 102400
-> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 0 > ../cpu4/online
-> [  153.598686] CPPC Cpufreq:CPPC: Calculate: (6171/253)*4266=104053.
-> [  153.604797] CPPC Cpufreq:CPPC: Core rate = 1219371, arch timer rate: 50000000
-> [  153.611960] ACPI CPPC: Writing to address for CPU 5:ffff800011ff1218: 102400
-> [  153.619190] CPU4: shutdown
-> [  153.621911] psci: CPU4 killed (polled 0 ms)
-> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 600000 > policy4/scaling_setspeed
-> [  170.122495] ACPI CPPC: Writing to address for CPU 5:ffff800011ff1218: 51200
-> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 1200000 > policy4/scaling_setspeed
-> [  177.206342] ACPI CPPC: Writing to address for CPU 5:ffff800011ff1218: 102400
-> 
-> Thanks,
-> Ionela.
-> 
->  drivers/cpufreq/cppc_cpufreq.c | 8 ++++----
->  include/acpi/cppc_acpi.h       | 1 -
->  2 files changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
-> index f29e8d0553a8..54457f5fe49e 100644
-> --- a/drivers/cpufreq/cppc_cpufreq.c
-> +++ b/drivers/cpufreq/cppc_cpufreq.c
-> @@ -149,8 +149,9 @@ static int cppc_cpufreq_set_target(struct cpufreq_policy *policy,
->  		unsigned int target_freq,
->  		unsigned int relation)
->  {
-> -	struct cppc_cpudata *cpu;
->  	struct cpufreq_freqs freqs;
-> +	int cpu_num = policy->cpu;
-> +	struct cppc_cpudata *cpu;
->  	u32 desired_perf;
->  	int ret = 0;
->  
-> @@ -166,12 +167,12 @@ static int cppc_cpufreq_set_target(struct cpufreq_policy *policy,
->  	freqs.new = target_freq;
->  
->  	cpufreq_freq_transition_begin(policy, &freqs);
-> -	ret = cppc_set_perf(cpu->cpu, &cpu->perf_ctrls);
-> +	ret = cppc_set_perf(cpu_num, &cpu->perf_ctrls);
->  	cpufreq_freq_transition_end(policy, &freqs, ret != 0);
->  
->  	if (ret)
->  		pr_debug("Failed to set target on CPU:%d. ret:%d\n",
-> -				cpu->cpu, ret);
-> +				cpu_num, ret);
->  
->  	return ret;
->  }
-> @@ -247,7 +248,6 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  
->  	cpu = all_cpu_data[policy->cpu];
->  
-> -	cpu->cpu = cpu_num;
->  	ret = cppc_get_perf_caps(policy->cpu, &cpu->perf_caps);
->  
->  	if (ret) {
-> diff --git a/include/acpi/cppc_acpi.h b/include/acpi/cppc_acpi.h
-> index a6a9373ab863..451132ec83c9 100644
-> --- a/include/acpi/cppc_acpi.h
-> +++ b/include/acpi/cppc_acpi.h
-> @@ -124,7 +124,6 @@ struct cppc_perf_fb_ctrs {
->  
->  /* Per CPU container for runtime CPPC management. */
->  struct cppc_cpudata {
-> -	int cpu;
->  	struct cppc_perf_caps perf_caps;
->  	struct cppc_perf_ctrls perf_ctrls;
->  	struct cppc_perf_fb_ctrs perf_fb_ctrs;
+> Yeah, we somehow end up with more locks (seqlock, skb array lock)
+> for lockless qdisc. What an irony... ;)
 
-With the way things are designed, I believe this is one of the bugs
-out of many.
+I went back to the original nolock implementation code to try and figure
+out how this was working in the first place.
 
-The structure cppc_cpudata must be shared across all CPUs of the same
-policy, so they all end up using the same set of values for different
-variables. i.e. it shouldn't be a per-cpu thing at all. Just allocate
-it from cpufreq_driver->init and store in policy->driver_data for use
-elsewhere.
+After initial patch series we have this in __dev_xmit_skb()
 
-That would be a proper fix IMO, we just avoided one of the bugs here
-otherwise.
+	if (q->flags & TCQ_F_NOLOCK) {
+		if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED, &q->state))) {
+			__qdisc_drop(skb, &to_free);
+			rc = NET_XMIT_DROP;
+		} else {
+			rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+			__qdisc_run(q);
+		}
 
--- 
-viresh
+		if (unlikely(to_free))
+			kfree_skb_list(to_free);
+		return rc;
+	}
+
+One important piece here is we used __qdisc_run(q) instead of
+what we have there now qdisc_run(q). Here is the latest code,
+
+
+	if (q->flags & TCQ_F_NOLOCK) { 
+		rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+		qdisc_run(q);
+		...
+
+__qdisc_run is going to always go into a qdisc_restart loop and
+dequeue packets. There is no check here to see if another CPU
+is running or not. Compare that to qdisc_run()
+
+	static inline void qdisc_run(struct Qdisc *q)
+	{
+		if (qdisc_run_begin(q)) {
+			__qdisc_run(q);
+			qdisc_run_end(q);
+		}
+	}
+
+Here we have all the racing around qdisc_is_running() that seems
+unsolvable.
+
+Seems we flipped __qdisc_run to qdisc_run here 32f7b44d0f566
+("sched: manipulate __QDISC_STATE_RUNNING in qdisc_run_* helpers"). 
+Its not clear to me from thatpatch though why it was even done
+there?
+
+Maybe this would unlock us,
+
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 7df6c9617321..9b09429103f1 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3749,7 +3749,7 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
+ 
+ 	if (q->flags & TCQ_F_NOLOCK) {
+ 		rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+-		qdisc_run(q);
++		__qdisc_run(q);
+ 
+ 		if (unlikely(to_free))
+ 			kfree_skb_list(to_free);
+
+
+Per other thread we also need the state deactivated check added
+back.
+
+> 
+> >
+> > At this point I fear we could consider reverting the NOLOCK stuff.
+> > I personally would hate doing so, but it looks like NOLOCK benefits are
+> > outweighed by its issues.
+> 
+> I agree, NOLOCK brings more pains than gains. There are many race
+> conditions hidden in generic qdisc layer, another one is enqueue vs.
+> reset which is being discussed in another thread.
+
+Sure. Seems they crept in over time. I had some plans to write a
+lockless HTB implementation. But with fq+EDT with BPF it seems that
+it is no longer needed, we have a more generic/better solution.  So
+I dropped it. Also most folks should really be using fq, fq_codel,
+etc. by default anyways. Using pfifo_fast alone is not ideal IMO.
+
+Thanks,
+John
