@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AB8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD61C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 861C3206E7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64D62206E7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:48:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="iirBcZw4"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="T29hggUB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgIDPsE (ORCPT
+        id S1727861AbgIDPsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:48:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44002 "EHLO
+        Fri, 4 Sep 2020 11:48:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbgIDPrf (ORCPT
+        with ESMTP id S1727025AbgIDPrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:47:35 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94138C0619EB
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:46:59 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id s13so6473747wmh.4
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:46:59 -0700 (PDT)
+        Fri, 4 Sep 2020 11:47:32 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 183E3C0619E9
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:46:57 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a17so7192134wrn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:46:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+T4nqXaC8fjBrWkDJbcI/m89Hs0Il9eeYVZ91EUv4bE=;
-        b=iirBcZw4EgxyAFB9yrfqfHzrbIqBRMnGr84pnWLTSHWiDS/j7p4d7c1IpfTuH6U0yE
-         kqQ+3Cup4oeN2ka7rRGBWA1VgzzhuxJJja+zLHmjZw2eXRU3Yosp3+5A4U7XPXJ5vbVj
-         B0EwMLnRv8Z1xZQRMOZVAeXAcgdCFJ6591m6BtMaR7vygL5ntSU++35wP4FwhLKD8mki
-         n4OL3b5QGP86X4QLHPRhSu46PuWJoc+QP4LeR4B2yVVJitaWtbOymwB3MJF/uM5Vx81y
-         RLijD9+Rt/EUhWQrtLvqh/+1KBK6+11K8JaHcwSvMvX79X8NocXKzJGbiecv0fBZjslV
-         A7vA==
+        bh=grMpfwJBPKz8x8JwdVkKa3ogOmUgQ5L3HbriAAtXMOE=;
+        b=T29hggUBZSkRV9pQbFKSYoyB5ydrOKR+eklkTQqELriqTYpxPUnHKrAQ5JKk0Op74Q
+         DCxlFEGrV8egWnu5H/c03dcSHHYXjjtqm8rjAsFcvt8PJHS4qak+49XcjgQgBcjgMiI8
+         qIDpYQbwqZE2cgT0bB0aDZPqm12ei0JuBbnIxH43DhRDxfoh/lX2p3N0pYHOzXJyZ1Q/
+         Q4s6DClwAfE/qxdvNwJgGGMk1CJwX6CFhO4oRx/5G5B4T22zAxPoaWisGxGE1YFintKM
+         ACUm9cOFgKwYlDa0KUtbdHlwxYdxWEiIki7K6drA8WjMT3VnCj12hhleiJbWcgTF2y0N
+         lMxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+T4nqXaC8fjBrWkDJbcI/m89Hs0Il9eeYVZ91EUv4bE=;
-        b=oz99CJO6ncHyYF3WzWsq/vr05+5VYICoddVqjKDW9lTNxKDKf+/YM7W7D4l85Lozrk
-         cex9J/wNvn9zMbGTV7W4ko7KpGtklofuF6vFOW67JsbeN47tRCEuG9wvFR9tpM81Bt/b
-         praIYTJmjWzHolHGKptPPEPw4k8LnpPHvScBcVWR5Y2OOf2sv50//8Z3wL6ykCnqU9IT
-         QRbOlUAuKkYtl2coegGLinhpMvC4Alr4uoiEUgkZnCVK2GMYs9xHyzO/htac56vym0WN
-         n1n4VoQi9HE8sDZ+sCd7XdrIaQ+sX/fqsSggEkFC/6NfMEi7oe88ftftE34rFXtxRoi7
-         +fTQ==
-X-Gm-Message-State: AOAM530J5p8DOHCFoDCdMpY04l84eZyTY09Rz/NgVs3L19V16Dtxmszg
-        HK3Yfvr6eoaw3Xe8U5ry70dTMA==
-X-Google-Smtp-Source: ABdhPJyjc2MlVjuY6G3UNUTfVft9wTllA8VYq1OpvEDtNds22hkn1ilbEsjGyby0vTpaSIVU2cgT8Q==
-X-Received: by 2002:a7b:cb0d:: with SMTP id u13mr8555846wmj.144.1599234418241;
-        Fri, 04 Sep 2020 08:46:58 -0700 (PDT)
+        bh=grMpfwJBPKz8x8JwdVkKa3ogOmUgQ5L3HbriAAtXMOE=;
+        b=hWG3jfJWC56dcORm1eRqrrIajRZjQPUW3z1GldpQqZWzw+MY5gzNsyP5T1somjKXid
+         wxW5lVSBh+U+YgnUnIGjGhN5d3kxTBVxoq+Nsp5SRKnot4agYcAjKiV2y+YUsKsbw+6t
+         tAfk2nDuojyVBgb0A/aM8vsOoZnEPZpzVRc41mWE1bdq55YlnUn2oEIPgRHVYoVNJKO7
+         OJHu8s35mze7VzW0wnVQR96yVhQWcrLshcnx5sdRWughxeMt8z0nNbix2A7EblWXHY6B
+         l+0nFC6tL+13mH2Ho0ZKlFj3zW59zbW14uHyGXGrs1KnuPM39c4OtuHrAbrFjgGuOXFs
+         CS7Q==
+X-Gm-Message-State: AOAM533VGbBw/aLtexq55+lBYLhmYfeRrJqNvyPTIeHKLZ6AFbbEFlCi
+        POQgJNi4O8aXwLeULbuAJOBeSA==
+X-Google-Smtp-Source: ABdhPJwF/TdbSD80yVhLNOeAq70EYhl8a4L44K/4AYYY/Rbp36+YEs1GetDpBBcfGubtwwMDMcnZNA==
+X-Received: by 2002:adf:ed12:: with SMTP id a18mr8803147wro.178.1599234415760;
+        Fri, 04 Sep 2020 08:46:55 -0700 (PDT)
 Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id q4sm11983375wru.65.2020.09.04.08.46.57
+        by smtp.gmail.com with ESMTPSA id q4sm11983375wru.65.2020.09.04.08.46.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:46:57 -0700 (PDT)
+        Fri, 04 Sep 2020 08:46:55 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -68,9 +68,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
 Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 23/23] Documentation: gpio: add documentation for gpio-mockup
-Date:   Fri,  4 Sep 2020 17:45:47 +0200
-Message-Id: <20200904154547.3836-24-brgl@bgdev.pl>
+Subject: [PATCH 21/23] gpio: mockup: provide a way to delete dummy chips
+Date:   Fri,  4 Sep 2020 17:45:45 +0200
+Message-Id: <20200904154547.3836-22-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200904154547.3836-1-brgl@bgdev.pl>
 References: <20200904154547.3836-1-brgl@bgdev.pl>
@@ -83,109 +83,109 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-There's some documentation for gpio-mockup's debugfs interface in the
-driver's source but it's not much. Add proper documentation for this
-testing module.
+Add a new debugfs attribute 'delete_device' to which the chip label can
+be written to dynamically remove the associated dummy device.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- .../admin-guide/gpio/gpio-mockup.rst          | 87 +++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100644 Documentation/admin-guide/gpio/gpio-mockup.rst
+ drivers/gpio/gpio-mockup.c | 70 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 69 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/gpio/gpio-mockup.rst b/Documentation/admin-guide/gpio/gpio-mockup.rst
-new file mode 100644
-index 000000000000..1d452ee55f8d
---- /dev/null
-+++ b/Documentation/admin-guide/gpio/gpio-mockup.rst
-@@ -0,0 +1,87 @@
-+.. SPDX-License-Identifier: GPL-2.0-only
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index 1353239dc315..9d2de78a45c2 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -19,6 +19,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/property.h>
+ #include <linux/slab.h>
++#include <linux/string.h>
+ #include <linux/string_helpers.h>
+ #include <linux/uaccess.h>
+ 
+@@ -668,14 +669,81 @@ static int __init gpio_mockup_register_chips_from_params(void)
+ 	return 0;
+ }
+ 
+-static int __init gpio_mockup_init(void)
++static ssize_t gpio_mockup_debugfs_delete_device_write(struct file *file,
++						const char __user *usr_buf,
++						size_t size, loff_t *ppos)
+ {
++	struct gpio_mockup_device *mockup_dev;
++	char label[GPIO_MOCKUP_LABEL_SIZE];
++	struct list_head *curr;
++	struct device *dev;
++	const char *prop;
+ 	int ret;
+ 
++	if (*ppos != 0)
++		return -EINVAL;
 +
-+GPIO Testing Driver
-+===================
++	ret = getline_from_user(label, sizeof(label), usr_buf, size);
++	if (ret < 0)
++		return ret;
 +
-+The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
-+chips for testing purposes. There are two ways of configuring the chips exposed
-+by the module. The lines can be accessed using the standard GPIO character
-+device interface as well as manipulated using the dedicated debugfs directory
-+structure.
++	mutex_lock(&gpio_mockup_devices_lock);
 +
-+Creating simulated chips using debugfs
-+--------------------------------------
++	list_for_each(curr, &gpio_mockup_devices) {
++		mockup_dev = list_entry(curr, struct gpio_mockup_device, list);
++		dev = &mockup_dev->pdev->dev;
 +
-+When the gpio-mockup module is loaded (or builtin) it creates its own directory
-+in debugfs. Assuming debugfs is mounted at /sys/kernel/debug/, the directory
-+will be located at /sys/kernel/debug/gpio-mockup/. Inside this directory there
-+are two attributes: new_device and delete_device.
++		ret = device_property_read_string(dev, "chip-label", &prop);
++		if (ret) {
++			mutex_unlock(&gpio_mockup_devices_lock);
++			return ret;
++		}
 +
-+New chips can be created by writing a single line containing a number of
-+options to "new_device". For example:
++		if (sysfs_streq(label, prop)) {
++			gpio_mockup_unregister_one_device(mockup_dev);
++			mutex_unlock(&gpio_mockup_devices_lock);
++			return size;
++		}
++	}
 +
-+.. code-block:: sh
++	mutex_unlock(&gpio_mockup_devices_lock);
++	return -ENODEV;
++}
 +
-+    $ echo "label=my-mockup num_lines=4 named_lines" > /sys/kernel/debug/gpio-mockup/new_device
++static const struct file_operations gpio_mockup_debugfs_delete_device_ops = {
++	.owner = THIS_MODULE,
++	.open = gpio_mockup_debugfs_open,
++	.write = gpio_mockup_debugfs_delete_device_write,
++	.llseek = no_llseek,
++	.release = single_release,
++};
 +
-+Supported options:
++static int __init gpio_mockup_debugfs_init(void)
++{
++	struct dentry *entry;
 +
-+    num_lines=<num_lines> - number of GPIO lines to expose
+ 	gpio_mockup_dbg_dir = debugfs_create_dir("gpio-mockup", NULL);
+ 	if (IS_ERR(gpio_mockup_dbg_dir))
+ 		return PTR_ERR(gpio_mockup_dbg_dir);
+ 
++	entry = debugfs_create_file("delete_device", 0200, gpio_mockup_dbg_dir,
++				NULL, &gpio_mockup_debugfs_delete_device_ops);
++	if (IS_ERR(entry)) {
++		debugfs_remove_recursive(gpio_mockup_dbg_dir);
++		return PTR_ERR(entry);
++	}
 +
-+    label=<label> - label of the dummy chip
++	return 0;
++}
 +
-+    named_lines - defines whether dummy lines should be named, the names are
-+                  of the form X-Y where X is the chip's label and Y is the
-+                  line's offset
++static int __init gpio_mockup_init(void)
++{
++	int ret;
 +
-+Note: only num_lines is mandatory.
++	ret = gpio_mockup_debugfs_init();
++	if (ret)
++		return ret;
 +
-+Chips can be dynamically removed by writing the chip's label to
-+"delete_device". For example:
-+
-+.. code-block:: sh
-+
-+    echo "gpio-mockup.0" > /sys/kernel/debug/gpio-mockup/delete_device
-+
-+Creating simulated chips using module params
-+--------------------------------------------
-+
-+Note: this is an older, now deprecated method kept for backward compatibility
-+for user-space tools.
-+
-+When loading the gpio-mockup driver a number of parameters can be passed to the
-+module.
-+
-+    gpio_mockup_ranges
-+
-+        This parameter takes an argument in the form of an array of integer
-+        pairs. Each pair defines the base GPIO number (if any) and the number
-+        of lines exposed by the chip. If the base GPIO is -1, the gpiolib
-+        will assign it automatically.
-+
-+        Example: gpio_mockup_ranges=-1,8,-1,16,405,4
-+
-+        The line above creates three chips. The first one will expose 8 lines,
-+        the second 16 and the third 4. The base GPIO for the third chip is set
-+        to 405 while for two first chips it will be assigned automatically.
-+
-+    gpio_named_lines
-+
-+        This parameter doesn't take any arguments. It lets the driver know that
-+        GPIO lines exposed by it should be named.
-+
-+        The name format is: gpio-mockup-X-Y where X is the letter associated
-+        with the mockup chip and Y is the line offset.
-+
-+Manipulating simulated lines
-+----------------------------
-+
-+Each mockup chip creates its own subdirectory in /sys/kernel/debug/gpio-mockup/.
-+The directory is named after the chip's label. A symlink is also created, named
-+after the chip's name, which points to the label directory.
-+
-+Inside each subdirectory, there's a separate attribute for each GPIO line. The
-+name of the attribute represents the line's offset in the chip.
-+
-+Reading from a line attribute returns the current value. Writing to it (0 or 1)
-+changes its pull.
+ 	ret = platform_driver_register(&gpio_mockup_driver);
+ 	if (ret) {
+ 		pr_err("error registering platform driver\n");
 -- 
 2.26.1
 
