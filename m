@@ -2,163 +2,235 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE62DC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42A2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2F9206A5
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3387206A5
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:54:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DaUPYH+2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nq2T1guw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbgIDHxb (ORCPT
+        id S1729784AbgIDHx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 03:53:31 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:53122 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729906AbgIDHv7 (ORCPT
+        Fri, 4 Sep 2020 03:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgIDHxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 03:51:59 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0847plBw017998;
-        Fri, 4 Sep 2020 02:51:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599205907;
-        bh=lTz57oIbDoqLeHnWKHJxRenng3YXT0XKq15ddYdluKo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=DaUPYH+2757JRUdw13TTDhbvlD70HWXqKG7B2H24QXAE+ExTNkml5Zs4IFB+qlbv3
-         zl/ZtlWcx2yabJz3o35CQf/fODUFirzPnM1PUsQUJS6vGdKqp6I5u7goCC6UDxKcOj
-         gulzalJWX+hDorzv4LaN9fVPs/UViTK0Rld/mmP4=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0847plda003469
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 4 Sep 2020 02:51:47 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 4 Sep
- 2020 02:51:46 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 4 Sep 2020 02:51:46 -0500
-Received: from a0393678-ssd.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0847osNA058796;
-        Fri, 4 Sep 2020 02:51:42 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, Rob Herring <robh@kernel.org>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tom Joseph <tjoseph@cadence.com>, <linux-pci@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-ntb@googlegroups.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v3 09/17] PCI: endpoint: Add pci_epf_ops for epf drivers to expose function specific attrs
-Date:   Fri, 4 Sep 2020 13:20:44 +0530
-Message-ID: <20200904075052.8911-10-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904075052.8911-1-kishon@ti.com>
-References: <20200904075052.8911-1-kishon@ti.com>
+        Fri, 4 Sep 2020 03:53:51 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F33C061244;
+        Fri,  4 Sep 2020 00:53:50 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id c10so5083189otm.13;
+        Fri, 04 Sep 2020 00:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=ocqyzNbaVOZzIdeNzDcK80VX4YtlWAaQQv8brVA+uok=;
+        b=Nq2T1guwkVW6AjrlGB9fPWghdM0XIdzmNU+vWvRDonxY/2F48APQtj4A9ML40oPSWE
+         gNy8jSSGdU/uh49Nuan13e7J01chRakHa4cvFV++kD5GeMvnRK1PDFvkGNc11TFwom7Y
+         X9gk1f6AN8nHnX/8jO+ovjwlYDnt3SAXJthIpS7uYfZmc8twAz/gjOTHw685POv0Jv7t
+         oLDono45aa0F3e/AIav+77dHNgpenH801GxKxi70IabKBrJOGTmp5Z8C8a62JfBwA/NG
+         vIKTVveaTADqVm296iwl2bKAzCQxo7MrtbLxsNRjrVkJS+tWusn1LVp3UFBKfFzXbACg
+         fq5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=ocqyzNbaVOZzIdeNzDcK80VX4YtlWAaQQv8brVA+uok=;
+        b=G1PcEh8H+WISVvAMdLiHzWhvnSeAGaZlXYMrgwHtgMsqLyIAW+wgkKwRH8yga+CS95
+         EoaT7jGWW4q1r2aPqHvgCrh6GUCJV1IpZYzAIfE9LRrzgabc2i7cH0h++lZtwq6F+47z
+         WsVF2c/LQVxDsRSGdhwEpnL2oOkGUnjVxdwcJgGuS8x/ozqAKlHEMSnlj+9JUUjIJ8Ka
+         32ycPtelzTAvwkP6UZOEDQzO+UuxEeZhcYIts5KTtaLy/5oXGSc1vQzYEp+VS+RZfFT7
+         Lj3DFBVNyKJQ+IbCyPSy+UzH2tmM0WEdC91RmtznkQM4WqY0X/tZdlT5Ek4UBm33IEDG
+         dMpA==
+X-Gm-Message-State: AOAM533qTAy1WlRxZUmIKqUKJDs/QfDpp9NCc3rSGS1M5rG5iyMyUddn
+        vrBd8MdLut7qm1fr5FtG5JUciVh8UvkKU8e5fnQ=
+X-Google-Smtp-Source: ABdhPJx8Fu6Q8WDEpmADLpI04M/+EN/6EVFvaEQovvgjSVbHG1rjYRSusAY1dEH9lP0YugsHKl4rs5v2AOHao6YXKcg=
+X-Received: by 2002:a9d:7656:: with SMTP id o22mr4302332otl.109.1599206029992;
+ Fri, 04 Sep 2020 00:53:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200624203200.78870-1-samitolvanen@google.com> <20200903203053.3411268-1-samitolvanen@google.com>
+In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 4 Sep 2020 09:53:38 +0200
+Message-ID: <CA+icZUW_=L5n4gAPV_sL+TaLJ0SMZOWHSNOpWD9M3fSLDCv_kw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/28] Add support for Clang LTO
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In addition to the attributes that are generic across function drivers
-documented in Documentation/PCI/endpoint/pci-endpoint-cfs.rst, there
-could be function specific attributes that has to be exposed by the
-function driver to be configured by the user. Add ->add_cfs()
-in pci_epf_ops to be populated by the function driver if it has to
-expose any function specific attributes and pci_epf_type_add_cfs() to
-be invoked by pci-ep-cfs.c when sub-directory to main function directory
-is created.
+On Thu, Sep 3, 2020 at 10:30 PM 'Sami Tolvanen' via Clang Built Linux
+<clang-built-linux@googlegroups.com> wrote:
+>
+> This patch series adds support for building x86_64 and arm64 kernels
+> with Clang's Link Time Optimization (LTO).
+>
+> In addition to performance, the primary motivation for LTO is
+> to allow Clang's Control-Flow Integrity (CFI) to be used in the
+> kernel. Google has shipped millions of Pixel devices running three
+> major kernel versions with LTO+CFI since 2018.
+>
+> Most of the patches are build system changes for handling LLVM
+> bitcode, which Clang produces with LTO instead of ELF object files,
+> postponing ELF processing until a later stage, and ensuring initcall
+> ordering.
+>
+> Note that patches 1-4 are not directly related to LTO, but are
+> needed to compile LTO kernels with ToT Clang, so I'm including them
+> in the series for your convenience:
+>
+>  - Patches 1-3 are required for building the kernel with ToT Clang,
+>    and IAS, and patch 4 is needed to build allmodconfig with LTO.
+>
+>  - Patches 3-4 are already in linux-next, but not yet in 5.9-rc.
+>
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/endpoint/pci-epf-core.c | 32 +++++++++++++++++++++++++++++
- include/linux/pci-epf.h             |  5 +++++
- 2 files changed, 37 insertions(+)
+I jumped to Sami's clang-cfi Git tree which includes clang-lto v2.
 
-diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-index 79329ec6373c..7646c8660d42 100644
---- a/drivers/pci/endpoint/pci-epf-core.c
-+++ b/drivers/pci/endpoint/pci-epf-core.c
-@@ -20,6 +20,38 @@ static DEFINE_MUTEX(pci_epf_mutex);
- static struct bus_type pci_epf_bus_type;
- static const struct device_type pci_epf_type;
- 
-+/**
-+ * pci_epf_type_add_cfs() - Help function drivers to expose function specific
-+ *                          attributes in configfs
-+ * @epf: the EPF device that has to be configured using configfs
-+ * @group: the parent configfs group (corresponding to entries in
-+ *         pci_epf_device_id)
-+ *
-+ * Invoke to expose function specific attributes in configfs. If the function
-+ * driver does not have anything to expose (attributes configured by user),
-+ * return NULL.
-+ */
-+struct config_group *pci_epf_type_add_cfs(struct pci_epf *epf,
-+					  struct config_group *group)
-+{
-+	struct config_group *epf_type_group;
-+
-+	if (!epf->driver) {
-+		dev_err(&epf->dev, "epf device not bound to driver\n");
-+		return NULL;
-+	}
-+
-+	if (!epf->driver->ops->add_cfs)
-+		return NULL;
-+
-+	mutex_lock(&epf->lock);
-+	epf_type_group = epf->driver->ops->add_cfs(epf, group);
-+	mutex_unlock(&epf->lock);
-+
-+	return epf_type_group;
-+}
-+EXPORT_SYMBOL_GPL(pci_epf_type_add_cfs);
-+
- /**
-  * pci_epf_unbind() - Notify the function driver that the binding between the
-  *		      EPF device and EPC device has been lost
-diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-index 1dc66824f5a8..b241e7dd171f 100644
---- a/include/linux/pci-epf.h
-+++ b/include/linux/pci-epf.h
-@@ -62,10 +62,13 @@ struct pci_epf_header {
-  * @bind: ops to perform when a EPC device has been bound to EPF device
-  * @unbind: ops to perform when a binding has been lost between a EPC device
-  *	    and EPF device
-+ * @add_cfs: ops to initialize function specific configfs attributes
-  */
- struct pci_epf_ops {
- 	int	(*bind)(struct pci_epf *epf);
- 	void	(*unbind)(struct pci_epf *epf);
-+	struct config_group *(*add_cfs)(struct pci_epf *epf,
-+					struct config_group *group);
- };
- 
- /**
-@@ -188,4 +191,6 @@ void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
- 			enum pci_epc_interface_type type);
- int pci_epf_bind(struct pci_epf *epf);
- void pci_epf_unbind(struct pci_epf *epf);
-+struct config_group *pci_epf_type_add_cfs(struct pci_epf *epf,
-+					  struct config_group *group);
- #endif /* __LINUX_PCI_EPF_H */
--- 
-2.17.1
+My LLVM toolchain is version 11.0.0.0-rc2+ more precisely git
+97ac9e82002d6b12831ca2c78f739cca65a4fa05.
 
+If this is OK, feel free to add my...
+
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+
+- Sedat -
+
+[1] https://github.com/samitolvanen/linux/commits/clang-cfi
+
+> ---
+> Changes in v2:
+>
+>   - Fixed -Wmissing-prototypes warnings with W=1.
+>
+>   - Dropped cc-option from -fsplit-lto-unit and added .thinlto-cache
+>     scrubbing to make distclean.
+>
+>   - Added a comment about Clang >=11 being required.
+>
+>   - Added a patch to disable LTO for the arm64 KVM nVHE code.
+>
+>   - Disabled objtool's noinstr validation with LTO unless enabled.
+>
+>   - Included Peter's proposed objtool mcount patch in the series
+>     and replaced recordmcount with the objtool pass to avoid
+>     whitelisting relocations that are not calls.
+>
+>   - Updated several commit messages with better explanations.
+>
+>
+> Arvind Sankar (2):
+>   x86/boot/compressed: Disable relocation relaxation
+>   x86/asm: Replace __force_order with memory clobber
+>
+> Luca Stefani (1):
+>   RAS/CEC: Fix cec_init() prototype
+>
+> Nick Desaulniers (1):
+>   lib/string.c: implement stpcpy
+>
+> Peter Zijlstra (1):
+>   objtool: Add a pass for generating __mcount_loc
+>
+> Sami Tolvanen (23):
+>   objtool: Don't autodetect vmlinux.o
+>   kbuild: add support for objtool mcount
+>   x86, build: use objtool mcount
+>   kbuild: add support for Clang LTO
+>   kbuild: lto: fix module versioning
+>   kbuild: lto: postpone objtool
+>   kbuild: lto: limit inlining
+>   kbuild: lto: merge module sections
+>   kbuild: lto: remove duplicate dependencies from .mod files
+>   init: lto: ensure initcall ordering
+>   init: lto: fix PREL32 relocations
+>   PCI: Fix PREL32 relocations for LTO
+>   modpost: lto: strip .lto from module names
+>   scripts/mod: disable LTO for empty.c
+>   efi/libstub: disable LTO
+>   drivers/misc/lkdtm: disable LTO for rodata.o
+>   arm64: export CC_USING_PATCHABLE_FUNCTION_ENTRY
+>   arm64: vdso: disable LTO
+>   KVM: arm64: disable LTO for the nVHE directory
+>   arm64: allow LTO_CLANG and THINLTO to be selected
+>   x86, vdso: disable LTO only for vDSO
+>   x86, relocs: Ignore L4_PAGE_OFFSET relocations
+>   x86, build: allow LTO_CLANG and THINLTO to be selected
+>
+>  .gitignore                            |   1 +
+>  Makefile                              |  65 ++++++-
+>  arch/Kconfig                          |  67 +++++++
+>  arch/arm64/Kconfig                    |   2 +
+>  arch/arm64/Makefile                   |   1 +
+>  arch/arm64/kernel/vdso/Makefile       |   4 +-
+>  arch/arm64/kvm/hyp/nvhe/Makefile      |   4 +-
+>  arch/x86/Kconfig                      |   3 +
+>  arch/x86/Makefile                     |   5 +
+>  arch/x86/boot/compressed/Makefile     |   2 +
+>  arch/x86/boot/compressed/pgtable_64.c |   9 -
+>  arch/x86/entry/vdso/Makefile          |   5 +-
+>  arch/x86/include/asm/special_insns.h  |  28 +--
+>  arch/x86/kernel/cpu/common.c          |   4 +-
+>  arch/x86/tools/relocs.c               |   1 +
+>  drivers/firmware/efi/libstub/Makefile |   2 +
+>  drivers/misc/lkdtm/Makefile           |   1 +
+>  drivers/ras/cec.c                     |   9 +-
+>  include/asm-generic/vmlinux.lds.h     |  11 +-
+>  include/linux/init.h                  |  79 +++++++-
+>  include/linux/pci.h                   |  19 +-
+>  kernel/trace/Kconfig                  |   5 +
+>  lib/string.c                          |  24 +++
+>  scripts/Makefile.build                |  55 +++++-
+>  scripts/Makefile.lib                  |   6 +-
+>  scripts/Makefile.modfinal             |  31 ++-
+>  scripts/Makefile.modpost              |  26 ++-
+>  scripts/generate_initcall_order.pl    | 270 ++++++++++++++++++++++++++
+>  scripts/link-vmlinux.sh               |  94 ++++++++-
+>  scripts/mod/Makefile                  |   1 +
+>  scripts/mod/modpost.c                 |  16 +-
+>  scripts/mod/modpost.h                 |   9 +
+>  scripts/mod/sumversion.c              |   6 +-
+>  scripts/module-lto.lds                |  26 +++
+>  tools/objtool/builtin-check.c         |  13 +-
+>  tools/objtool/builtin.h               |   2 +-
+>  tools/objtool/check.c                 |  83 ++++++++
+>  tools/objtool/check.h                 |   1 +
+>  tools/objtool/objtool.h               |   1 +
+>  39 files changed, 883 insertions(+), 108 deletions(-)
+>  create mode 100755 scripts/generate_initcall_order.pl
+>  create mode 100644 scripts/module-lto.lds
+>
+>
+> base-commit: e28f0104343d0c132fa37f479870c9e43355fee4
+> --
+> 2.28.0.402.g5ffc5be6b7-goog
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200903203053.3411268-1-samitolvanen%40google.com.
