@@ -2,148 +2,160 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B27C28E83
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EECC2BC84
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8A332067C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B415206D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:02:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ss8Um3kc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgIDHAg (ORCPT
+        id S1728163AbgIDHCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 03:00:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35444 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgIDHAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 03:00:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 10272AD5F;
-        Fri,  4 Sep 2020 07:00:20 +0000 (UTC)
-Subject: Re: [PATCH v5 3/3] xen: add helpers to allocate unpopulated memory
-To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
-        Yan Yankovskyi <yyankovskyi@gmail.com>,
-        dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org,
-        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200901083326.21264-1-roger.pau@citrix.com>
- <20200901083326.21264-4-roger.pau@citrix.com>
- <b1713f26-8202-ac1e-c18a-4989312219b9@suse.com>
- <20200903163837.GM753@Air-de-Roger>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <6fd73d30-5525-7f00-1e9c-d7bb96ea34a6@suse.com>
-Date:   Fri, 4 Sep 2020 09:00:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 4 Sep 2020 03:02:36 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:60201 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgIDHCX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 03:02:23 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200904070221euoutp02763c5e95763b3b7c8dc83b23ca990315~xgpoegmHw2871628716euoutp02n
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 07:02:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200904070221euoutp02763c5e95763b3b7c8dc83b23ca990315~xgpoegmHw2871628716euoutp02n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599202941;
+        bh=GElZ8nRDfQZGXdl9mZOXUOC0do4xtZsOVmmu33lDiM0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Ss8Um3kcvL9aAuiO3NyE8TCk8wZzPyarLqfRiyNGdo+Pvni/wv4zakkbpF8TIIm5m
+         ju6tL7H/A7k5LiM9hCK+WqMzNSbShCnsxsSzsOawkFA2DCx8mxPhA4QjIoWis8SkSQ
+         cWPcNfM5KSMk53jOZNsBE1eZkfWhKP3Pb3xd4tjM=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200904070220eucas1p1cd894fc5775cdc872bb05e062c97d089~xgpoMIp9k2108221082eucas1p1q;
+        Fri,  4 Sep 2020 07:02:20 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 10.9D.06318.C76E15F5; Fri,  4
+        Sep 2020 08:02:20 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200904070220eucas1p29c63e03c10163f153b70e37d4a4ad0d9~xgpn2m7vZ2350823508eucas1p2b;
+        Fri,  4 Sep 2020 07:02:20 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200904070220eusmtrp1283f3745cee48ad685fb9c5a9616cbbd~xgpn16HNu1044210442eusmtrp1U;
+        Fri,  4 Sep 2020 07:02:20 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-cb-5f51e67c62ba
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 17.16.06017.C76E15F5; Fri,  4
+        Sep 2020 08:02:20 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200904070219eusmtip1403d55af07f71eb3aeefb19e701bf38a~xgpnXYF1g3186731867eusmtip1X;
+        Fri,  4 Sep 2020 07:02:19 +0000 (GMT)
+Subject: Re: [PATCH v2 2/3] ARM: dts: exynos: Add assigned clock parent to
+ CMU in Exynos4412 Odroid
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Sylwester Nawrocki <snawrocki@kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <d5468bf5-516f-58a8-4544-fe7fc377e7b1@samsung.com>
+Date:   Fri, 4 Sep 2020 09:02:23 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20200903163837.GM753@Air-de-Roger>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200903181425.5015-2-krzk@kernel.org>
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGKsWRmVeSWpSXmKPExsWy7djPc7o1zwLjDeYeMrSYf+Qcq0X/49fM
+        FufPb2C32PT4GqvF5V1z2CxmnN/HZNG69wi7RfvTl8wOHB6bVnWyeWxeUu/xeZNcAHMUl01K
+        ak5mWWqRvl0CV8bdN4dYCvbzVDR9Ps7WwLiGq4uRk0NCwETi9Pm5rF2MXBxCAisYJS7NOMkM
+        khAS+MIocWaaLUTiM6PEv5/TmGA6Zk6fA9WxnFHiV+trNgjnPaPEhY2r2UGqhAVSJbYtaGQB
+        SYiAtF+efA1sLrOArsT0d2/AbDYBQ4mut11sIDavgJ3E/VUTweIsAioSnz9fAVsnKhAncezU
+        IxaIGkGJkzOfgNmcQGfsuPWVFWKmvMT2t3Og5otL3HoynwlksYTAKnaJ5dtOsUHc7SLxc1M3
+        O4QtLPHq+BYoW0bi9OQeFoiGZkaJh+fWskM4PUBnN81ghKiylrhz7hfQJA6gFZoS63fpQ4Qd
+        JQ5d7WECCUsI8EnceCsIcQSfxKRt05khwrwSHW1CENVqErOOr4Nbe/DCJeYJjEqzkLw2C8k7
+        s5C8Mwth7wJGllWM4qmlxbnpqcXGeanlesWJucWleel6yfm5mxiBqef0v+NfdzDu+5N0iFGA
+        g1GJh/fG+4B4IdbEsuLK3EOMEhzMSiK8TmdPxwnxpiRWVqUW5ccXleakFh9ilOZgURLnNV70
+        MlZIID2xJDU7NbUgtQgmy8TBKdXAyGGyqM0178BixZs1y4InJLgt+mvS4XHOSv2de/VUn808
+        gdbdX72K/7sVHbRSWTrrTJVd2pz/mZ/3CytZJp0x23rzit23w6Zy2vG7gptiK/hS/xyRv1xr
+        yvNqjtSOZlvlUt37H99fYl/9snqWumgOy/zYooBe8Wn3vgtxbn/30GRinUHX9PPMSizFGYmG
+        WsxFxYkAM3gMkDkDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsVy+t/xu7o1zwLjDX41ilvMP3KO1aL/8Wtm
+        i/PnN7BbbHp8jdXi8q45bBYzzu9jsmjde4Tdov3pS2YHDo9NqzrZPDYvqff4vEkugDlKz6Yo
+        v7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+Pum0MsBft5
+        Kpo+H2drYFzD1cXIySEhYCIxc/oc1i5GLg4hgaWMEgsb1zNDJGQkTk5rYIWwhSX+XOtigyh6
+        yyix/8sjoAQHh7BAqsTcHmOQuIjAZ0aJZ42bwJqZBXQlpr97wwzRsJFRYvGqX4wgCTYBQ4mu
+        tyCTODl4Bewk7q+aCNbAIqAi8fnzFSYQW1QgTuJMzwuoGkGJkzOfsIDYnECn7rj1lRVigZnE
+        vM0PoZbJS2x/OwfKFpe49WQ+0wRGoVlI2mchaZmFpGUWkpYFjCyrGEVSS4tz03OLjfSKE3OL
+        S/PS9ZLzczcxAmNt27GfW3Ywdr0LPsQowMGoxMN7431AvBBrYllxZe4hRgkOZiURXqezp+OE
+        eFMSK6tSi/Lji0pzUosPMZoCPTeRWUo0OR+YBvJK4g1NDc0tLA3Njc2NzSyUxHk7BA7GCAmk
+        J5akZqemFqQWwfQxcXBKNTDGaFhcmHLf6e4G98tlaxVi13I/kHU6uW7XRZ2cGzvZc38Xx/2d
+        fuyPn16s21tn6w+fuFcxTNqYO4nD+Mah9xF1//QVe0+rt15Y532ctarzldYmW/Z8BdZbD3lf
+        /PmzteP8tGuRaRbMa4KV+y44lotf/Rdy1c50ZrTBSgOxidpbc/LSK9vMz21RYinOSDTUYi4q
+        TgQA3vADQMsCAAA=
+X-CMS-MailID: 20200904070220eucas1p29c63e03c10163f153b70e37d4a4ad0d9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200903181440eucas1p251f5f467fdacf8d74d3c20418052eb38
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200903181440eucas1p251f5f467fdacf8d74d3c20418052eb38
+References: <20200903181425.5015-1-krzk@kernel.org>
+        <CGME20200903181440eucas1p251f5f467fdacf8d74d3c20418052eb38@eucas1p2.samsung.com>
+        <20200903181425.5015-2-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.09.20 18:38, Roger Pau Monné wrote:
-> On Thu, Sep 03, 2020 at 05:30:07PM +0200, Jürgen Groß wrote:
->> On 01.09.20 10:33, Roger Pau Monne wrote:
->>> To be used in order to create foreign mappings. This is based on the
->>> ZONE_DEVICE facility which is used by persistent memory devices in
->>> order to create struct pages and kernel virtual mappings for the IOMEM
->>> areas of such devices. Note that on kernels without support for
->>> ZONE_DEVICE Xen will fallback to use ballooned pages in order to
->>> create foreign mappings.
->>>
->>> The newly added helpers use the same parameters as the existing
->>> {alloc/free}_xenballooned_pages functions, which allows for in-place
->>> replacement of the callers. Once a memory region has been added to be
->>> used as scratch mapping space it will no longer be released, and pages
->>> returned are kept in a linked list. This allows to have a buffer of
->>> pages and prevents resorting to frequent additions and removals of
->>> regions.
->>>
->>> If enabled (because ZONE_DEVICE is supported) the usage of the new
->>> functionality untangles Xen balloon and RAM hotplug from the usage of
->>> unpopulated physical memory ranges to map foreign pages, which is the
->>> correct thing to do in order to avoid mappings of foreign pages depend
->>> on memory hotplug.
->>>
->>> Note the driver is currently not enabled on Arm platforms because it
->>> would interfere with the identity mapping required on some platforms.
->>>
->>> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
->>
->> Sorry, I just got a build error for x86 32-bit build:
->>
->> WARNING: unmet direct dependencies detected for ZONE_DEVICE
->>    Depends on [n]: MEMORY_HOTPLUG [=n] && MEMORY_HOTREMOVE [=n] &&
->> SPARSEMEM_VMEMMAP [=n] && ARCH_HAS_PTE_DEVMAP [=n]
->>    Selected by [y]:
->>    - XEN_UNPOPULATED_ALLOC [=y] && XEN [=y] && X86 [=y]
->>    GEN     Makefile
->>    CC      kernel/bounds.s
->>    CALL    /home/gross/korg/src/scripts/atomic/check-atomics.sh
->>    UPD     include/generated/bounds.h
->>    CC      arch/x86/kernel/asm-offsets.s
->> In file included from /home/gross/korg/src/include/linux/mmzone.h:19:0,
->>                   from /home/gross/korg/src/include/linux/gfp.h:6,
->>                   from /home/gross/korg/src/include/linux/slab.h:15,
->>                   from /home/gross/korg/src/include/linux/crypto.h:19,
->>                   from /home/gross/korg/src/arch/x86/kernel/asm-offsets.c:9:
->> /home/gross/korg/src/include/linux/page-flags-layout.h:95:2: error: #error
->> "Not enough bits in page flags"
->>   #error "Not enough bits in page flags"
->>    ^~~~~
->> make[2]: *** [/home/gross/korg/src/scripts/Makefile.build:114:
->> arch/x86/kernel/asm-offsets.s] Error 1
->> make[1]: *** [/home/gross/korg/src/Makefile:1175: prepare0] Error 2
->> make[1]: Leaving directory '/home/gross/korg/x8632'
->> make: *** [Makefile:185: __sub-make] Error 2
-> 
-> Sorry for this. I've tested a 32bit build but I think it was before
-> the last Kconfig changes. I'm a little unsure how to solve this, as
-> ZONE_DEVICE doesn't select the required options for it to run, but
-> rather depends on them to be available.
-> 
-> You can trigger something similar on x86-64 by doing:
-> 
-> $ make ARCH=x86_64 xen.config
-> Using .config as base
-> Merging ./kernel/configs/xen.config
-> Merging ./arch/x86/configs/xen.config
-> #
-> # merged configuration written to .config (needs make)
-> #
-> scripts/kconfig/conf  --olddefconfig Kconfig
-> 
-> WARNING: unmet direct dependencies detected for ZONE_DEVICE
->    Depends on [n]: MEMORY_HOTPLUG [=y] && MEMORY_HOTREMOVE [=n] && SPARSEMEM_VMEMMAP [=y] && ARCH_HAS_PTE_DEVMAP [=y]
->    Selected by [y]:
->    - XEN_UNPOPULATED_ALLOC [=y] && XEN [=y] && X86_64 [=y]
-> #
-> # configuration written to .config
-> #
-> 
-> I think the only solution is to have XEN_UNPOPULATED_ALLOC depend on
-> ZONE_DEVICE rather than select it?
+Hi Krzysztof,
 
-Yes, I think so.
+On 03.09.2020 20:14, Krzysztof Kozlowski wrote:
+> Commit 68605101460e ("ARM: dts: exynos: Add support for audio over HDMI
+> for Odroid X/X2/U3") added assigned clocks under Clock Management Unit.
+>
+> However the dtschema expects "clocks" property if "assigned-clocks" are
+> used.  Add reference to input clock, the parent used in
+> "assigned-clock-parents" to silence the dtschema warnings:
+>
+>    arch/arm/boot/dts/exynos4412-odroidu3.dt.yaml: clock-controller@10030000: 'clocks' is a dependency of 'assigned-clocks'
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>   arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> index ca3c78e0966c..9375df064076 100644
+> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> @@ -120,6 +120,7 @@
+>   };
+>   
+>   &clock {
+> +	clocks = <&clock CLK_FOUT_EPLL>;
 
-I've folded that in and now build is fine.
+This should be one of xusbxti or xxti, because this is the proper input 
+clock for the clock controller. However in case of Exynos4, those clocks 
+needs much more cleanup. For the historical reasons, they don't use 
+generic 'fixed-clock' property, but the custom one and they are no 
+instantiated by clock framework, but the exynos4 clock driver...
 
+>   	assigned-clocks = <&clock CLK_FOUT_EPLL>;
+>   	assigned-clock-rates = <45158401>;
+>   };
 
-Juergen
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
